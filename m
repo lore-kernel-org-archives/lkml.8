@@ -2,95 +2,192 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA33C2D0F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2EE4CA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 750F2206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCD3E206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:37:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g/lee58W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UvAjbsDt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729436AbgELRh2 (ORCPT
+        id S1730307AbgELRhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 13:37:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39224 "EHLO
+        Tue, 12 May 2020 13:37:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgELRh2 (ORCPT
+        with ESMTP id S1729583AbgELRhb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 13:37:28 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BD7EC061A0C;
-        Tue, 12 May 2020 10:37:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=DCkW+DNwr19hHmbXKVQoMr/Q7HG5L/LhiN+F8TjAGHA=; b=g/lee58WDHlh6RZ1NYB30oncDC
-        h8/N48R0jv5QVh1AS1ck3dp87ajwfNSb2XFkFlzwOm6Lrvz4DbEKzrX4TbjTPLrlwAfhAPYo50AbY
-        NLuC918tr0E19pPKzhhk7CL/2KwjaHRNijuFi7TGPH/HLrQLeaUPp+xCkwVJX9tGRRD0nfPmzRucu
-        GTAZQYPgl44qeE3pU0/C7s5eNBrypBMduYCU8c5sH1DELcS3t/MuUWD/WgP4+gVda1Ap1SLH4ssq7
-        pF+Iks4knEALHxb8oiEOmcu3GVTnA0rGAEkz/ivIFa26/hoyDcORcNKs3WQVxDoE3G1EYlYuyvrNA
-        baG93URA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jYYqL-0007T4-8d; Tue, 12 May 2020 17:37:25 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 44E68300261;
-        Tue, 12 May 2020 19:37:22 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 367782B956661; Tue, 12 May 2020 19:37:22 +0200 (CEST)
-Date:   Tue, 12 May 2020 19:37:22 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Pratik Rajesh Sampat <psampat@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        rafael.j.wysocki@intel.com, dsmythies@telus.net,
-        daniel.lezcano@linaro.org, ego@linux.vnet.ibm.com,
-        svaidy@linux.ibm.com, pratik.sampat@in.ibm.com,
-        pratik.r.sampat@gmail.com
-Subject: Re: [RFC 1/1] Weighted approach to gather and use history in TEO
- governor
-Message-ID: <20200512173722.GM2978@hirez.programming.kicks-ass.net>
-References: <20200511141055.43029-1-psampat@linux.ibm.com>
- <20200511141055.43029-2-psampat@linux.ibm.com>
+        Tue, 12 May 2020 13:37:31 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD742C061A0C;
+        Tue, 12 May 2020 10:37:30 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id a4so6474217pgc.0;
+        Tue, 12 May 2020 10:37:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mF3zM7DhrrKYo8fPBJUmFWHaEp8ZgiUqVWZDdjfP8EA=;
+        b=UvAjbsDtM+eHXX5ax4LqffM7L/5Xq+FzLfDHIWEqqddK+2uVi4s6bL9BMLLFjLJKrP
+         8wJsUO4dVpi6sv0gcbo/SSR69hwuOhPXzdBVZlVyfoXWnTBhwB4BYudZcNCoDfAMCCwC
+         jukGPK172sa3aiFaxbVi+1DSLkdnE/B62Smegov8yZGJn4woOPyRkTF9MdGCwyUU1TV7
+         Hj+r4elv+d6U6fMy1hwrJ4pLKqqZMh3lfH4x23mOhIndFWQSsKle3NUSWdhSGemJV8Jy
+         VC8II7BfqWKh1oKGMMNHIQ9VY325rIbns9Uz6WMtJRlVv953dZ0HRV4bxQyz90AP/KJr
+         CoLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mF3zM7DhrrKYo8fPBJUmFWHaEp8ZgiUqVWZDdjfP8EA=;
+        b=NLARMRzcnlfE0RCC2gDMi74o1Kwt1qDQGyvinO1COv2IoOYIki83JSjNmBFGKUBPu0
+         omXL22x7ITEgJl8YHOVWj//xsqbFPPVQM906KhM8aHx5nQbMqy+jOznzXabFLKsjgzsU
+         OqTPkrWbxwCzGP74h2+smhfXXymGREQx6w0kM7SZNHuA/t/Rpz3wTMSi4vouXa1HtBU3
+         CaDi5Z3PjkD77KHy9CC6nTuuX8HIQnAq82Dq6HhDhT8ElWBVIpscZKO384hj31/O/Zf0
+         /RgvV8Id7qgA4Rjyoli1kmj4FXblKnMyqexl1hYvRQzaCZY2DIZTgPVQnobP0S7XXOjd
+         NVlQ==
+X-Gm-Message-State: AGi0PuZbPhe+F1fHzYF494EqWzwGwtzD+AAHvSLHqIWscfHkrt9swFLc
+        iNaopxPdu+bEIzt7Xdwa5Ag=
+X-Google-Smtp-Source: APiQypJQAaLWOPYFbOyHRW289VI02mzFUNboy7l7mm7GIlYwSF8U+4IFpD5KlkLZ3mL7AEHEmPAzog==
+X-Received: by 2002:aa7:8f2c:: with SMTP id y12mr23315202pfr.80.1589305050040;
+        Tue, 12 May 2020 10:37:30 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id 141sm12753685pfz.171.2020.05.12.10.37.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 10:37:29 -0700 (PDT)
+Date:   Tue, 12 May 2020 10:37:27 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Sean Young <sean@mess.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH 2/3] input: serio: allow more than one byte to be sent at
+ once
+Message-ID: <20200512173727.GC89269@dtor-ws>
+References: <20200507135337.2343-1-sean@mess.org>
+ <20200507135337.2343-2-sean@mess.org>
+ <20200507202546.GM89269@dtor-ws>
+ <20200507205918.GA13370@gofer.mess.org>
+ <20200511065118.GA1293993@kroah.com>
+ <20200512090724.GA31990@gofer.mess.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200511141055.43029-2-psampat@linux.ibm.com>
+In-Reply-To: <20200512090724.GA31990@gofer.mess.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 12, 2020 at 10:07:24AM +0100, Sean Young wrote:
+> On Mon, May 11, 2020 at 08:51:18AM +0200, Greg KH wrote:
+> > On Thu, May 07, 2020 at 09:59:18PM +0100, Sean Young wrote:
+> > > On Thu, May 07, 2020 at 01:25:46PM -0700, Dmitry Torokhov wrote:
+> > > > On Thu, May 07, 2020 at 02:53:36PM +0100, Sean Young wrote:
+> > > > > serio drivers can only send one byte at a time. If the underlying tty
+> > > > > is a usb serial port, then each byte will be put into separate usb
+> > > > > urbs, which is not efficient.
+> > > > > 
+> > > > > Additionally, the Infrared Toy device refuses to transmit IR if the
+> > > > > IR data is sent one byte at a time. IR data is formatted in u16 values,
+> > > > > and the firmware expects complete u16 values in the packet.
+> > > > > 
+> > > > > https://github.com/DangerousPrototypes/USB_IR_Toy/blob/master/Firmware-main/IRs.c#L240
+> > > > 
+> > > > Ummm, serial protocol data size is at most 9 bits so I have no earthly
+> > > > idea how they expect to get 16.
+> > > 
+> > > serio is a layer on top several serial protocols, including ttys. ttys allow
+> > > more than one byte to be written at a time, see struct tty_operations:
+> > > 
+> > >         int  (*write)(struct tty_struct * tty,
+> > >                       const unsigned char *buf, int count);
+> > > 
+> > > ttys would be very inefficient if you could only write one byte at a time,
+> > > and they are very serial.
+> > > 
+> > > This patch exposes the underlying tty write() functionality to serio. When
+> > > the underlying tty is a usb serial port this makes for far fewer usb packets
+> > > being used to send the same data, and fixes my driver problem, and it
+> > > would reduce the number of calls in a few other cases too.
+> > > 
+> > > I'm happy to rework the patch if there are comments on the style or
+> > > approach.
+> > 
+> > Why not just use the ir-usb.c driver for this device instead?
+> 
+> So this device is the infrared kind which rc-core (in drivers/media/rc/)
+> supports, remotes and such things (not for serial IR). So by using a 
+> rc-core driver, it can use kernel IR decoding, BPF decoding, lirc chardev
+> and rc keymaps, etc.
+> 
+> This device is a PIC18F2550 type device, which is a usb serial port
+> microcontroller type with some firmware and IR diodes:
+> 	http://dangerousprototypes.com/docs/USB_IR_Toy_v2
+> 
+> serio supports a whole bunch of usb serial devices which can be attached
+> via inputattach(1). Not all of these are input devices, for example there
+> are two cec devices too.
+> 
+> Now, in many of these drivers, multiple bytes need to be written to the
+> device in order to send it a command, for example in
+> drivers/input/touchscreen/elo.c:
+> 
+>         for (i = 0; i < ELO10_PACKET_LEN; i++) {
+>                 csum += packet[i];
+>                 if (serio_write(elo->serio, packet[i]))
+>                         goto out;
+>         }
+> 
+> So if serio had an interface for sending a buffer, that would be less
+> call overhead. In fact, if the underlying serio is a serial usb port,
+> that would much more efficient on the usb layer too (one usb roundtrips in
+> stead of ELO10_PACKET_LEN roundtrips), like so:
+> 
+> 	serio_write_buf(elo->serio, packet, ELO10_PACKET_LEN);
+> 
+> So what I'm suggesting is extending the serio interface to allow sending
+> a buffer of bytes. Of course serio isn't just usb serial ports. There quite
+> a few instances of serio_register_port() in the kernel. Many of them
+> can be extended to support sending a buffer rather than a single byte,
+> if this makes sense. For example the ps2 serio port takes a mutex for every
+> byte, so this could be more efficient by reducing it to one mutex lock
+> per buffer.
+> 
+> Now it would be nice to have a discussion about this rather than being
+> dismissed with:
+> 
+> > > > Ummm, serial protocol data size is at most 9 bits so I have no earthly
+> > > > idea how they expect to get 16.
+> 
+> Which is just a tad insulting.
 
-Just a quick note..
+That was not meant to be insulting, however serial protocol defines that
+the data size is at most 9 bits, so expecting that one can transmit
+anything more than that _atomically_ is wrong. If your device/firmware
+requires 16 bits to be transferred as indivisible units, then serial
+port abstraction is wrong one to be used.
 
-On Mon, May 11, 2020 at 07:40:55PM +0530, Pratik Rajesh Sampat wrote:
+Now serio is layer "above" serial ports (but does not have to have
+an underlying serial port) that provides byte-oriented communication
+that is expected to mostly flow into host. Its does not expect heavy
+data flows coming from the host and into the device (if you look at all
+the touchscreens, psmouse, etc, they all send initialization sequences
+to the device, and then all the data flows into the host). Therefore
+there is little benefit in optimizing serio writes.
 
-> +	/*
-> +	 * Rearrange the weight distribution of the state, increase the weight
-> +	 * by the LEARNING RATE % for the idle state that was supposed to be
-> +	 * chosen and reduce by the same amount for rest of the states
-> +	 *
-> +	 * If the weights are greater than (100 - LEARNING_RATE) % or lesser
-> +	 * than LEARNING_RATE %, do not increase or decrease the confidence
-> +	 * respectively
-> +	 */
-> +	for (i = 0; i < drv->state_count; i++) {
-> +		unsigned int delta;
-> +
-> +		if (idx == -1)
-> +			break;
-> +		if (i ==  idx) {
-> +			delta = (LEARNING_RATE * cpu_data->state_mat[last_idx][i]) / 100;
+You are using performance clams as a clutch for the requirement of
+sending u16s, but as I mentioned it is wrong if you use serial ports
+abstraction layer. Greg mentioned ir-usb. You can maybe enhance it, or
+create a similar driver that connects USB to rc-core and ensures that
+you can communicate with the device with exact format it needs.
 
-100 is a crap number to divide by as a computer. We bio-puddings happend
-to have 10 digits, so 100 makes sense to us, but it does not to our
-binary friends.
+Thanks.
 
-
+-- 
+Dmitry
