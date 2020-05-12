@@ -2,94 +2,89 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 506FBCA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 497DDC2D0F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C68720731
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3187320747
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:36:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730946AbgELTfO (ORCPT
+        id S1731044AbgELTgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 15:35:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgELTfN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 15:35:13 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9868C061A0C;
-        Tue, 12 May 2020 12:35:13 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477:9e51:a893:b0fe:602a])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 118B412832C6C;
-        Tue, 12 May 2020 12:35:13 -0700 (PDT)
-Date:   Tue, 12 May 2020 12:35:12 -0700 (PDT)
-Message-Id: <20200512.123512.1831107664735178245.davem@davemloft.net>
-To:     grygorii.strashko@ti.com
-Cc:     arnd@arndb.de, netdev@vger.kernel.org, tony@atomide.com,
-        linux@armlinux.org.uk, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, clay@daemons.net, dmurphy@ti.com
-Subject: Re: [PATCH net v4] net: ethernet: ti: Remove TI_CPTS_MOD workaround
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200512100230.17752-1-grygorii.strashko@ti.com>
-References: <20200512100230.17752-1-grygorii.strashko@ti.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 12 May 2020 12:35:13 -0700 (PDT)
+        Tue, 12 May 2020 15:36:32 -0400
+Received: from mga09.intel.com ([134.134.136.24]:3616 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725554AbgELTgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 15:36:32 -0400
+IronPort-SDR: eTuqzTjgcB3rGk45rbI/kqKYnDMBIGC0McAZmY46Ov5YctQ/f1cxYBwdpo2W4UHRt4giVNibvA
+ Hu+dsmyNUkyw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 12:36:31 -0700
+IronPort-SDR: ZYUQ5kB+gY223GVFoupNeCkopSW/1uaZBLkZHNJzaJTSIm5J1c652glBiqdrSeADbcS8ZvyVQi
+ ueuQRJdmjcGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,384,1583222400"; 
+   d="scan'208";a="252977756"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 12 May 2020 12:36:27 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jYahW-000D7f-CF; Wed, 13 May 2020 03:36:26 +0800
+Date:   Wed, 13 May 2020 03:36:18 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Vishal Sagar <vishal.sagar@xilinx.com>,
+        Hyun Kwon <hyunk@xilinx.com>,
+        laurent.pinchart@ideasonboard.com, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Michal Simek <monstr@monstr.eu>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Jacopo Mondi <jacopo@jmondi.org>
+Cc:     kbuild-all@lists.01.org, Hyun Kwon <hyun.kwon@xilinx.com>,
+        Vishal Sagar <vishal.sagar@xilinx.com>
+Subject: [RFC PATCH] media: v4l: xilinx: xcsi2rxss_enum_mbus_code() can be
+ static
+Message-ID: <20200512193617.GA20694@f5a3dcfd553e>
+References: <20200512151947.120348-3-vishal.sagar@xilinx.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512151947.120348-3-vishal.sagar@xilinx.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Date: Tue, 12 May 2020 13:02:30 +0300
 
-> From: Clay McClure <clay@daemons.net>
-> 
-> My recent commit b6d49cab44b5 ("net: Make PTP-specific drivers depend on
-> PTP_1588_CLOCK") exposes a missing dependency in defconfigs that select
-> TI_CPTS without selecting PTP_1588_CLOCK, leading to linker errors of the
-> form:
-> 
-> drivers/net/ethernet/ti/cpsw.o: in function `cpsw_ndo_stop':
-> cpsw.c:(.text+0x680): undefined reference to `cpts_unregister'
->  ...
-> 
-> That's because TI_CPTS_MOD (which is the symbol gating the _compilation_ of
-> cpts.c) now depends on PTP_1588_CLOCK, and so is not enabled in these
-> configurations, but TI_CPTS (which is the symbol gating _calls_ to the cpts
-> functions) _is_ enabled. So we end up compiling calls to functions that
-> don't exist, resulting in the linker errors.
-> 
-> This patch fixes build errors and restores previous behavior by:
->  - ensure PTP_1588_CLOCK=y in TI specific configs and CPTS will be built
->  - remove TI_CPTS_MOD and, instead, add dependencies from CPTS in
->    TI_CPSW/TI_KEYSTONE_NETCP/TI_CPSW_SWITCHDEV as below:
-> 
->    config TI_CPSW_SWITCHDEV
->    ...
->     depends on TI_CPTS || !TI_CPTS
-> 
->    which will ensure proper dependencies PTP_1588_CLOCK -> TI_CPTS ->
-> TI_CPSW/TI_KEYSTONE_NETCP/TI_CPSW_SWITCHDEV and build type selection.
-> 
-> Note. For NFS boot + CPTS all of above configs have to be built-in.
-> 
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Dan Murphy <dmurphy@ti.com>
-> Cc: Tony Lindgren <tony@atomide.com>
-> Fixes: b6d49cab44b5 ("net: Make PTP-specific drivers depend on PTP_1588_CLOCK")
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Clay McClure <clay@daemons.net>
-> [grygorii.strashko@ti.com: rewording, add deps cpsw/netcp from cpts, drop IS_REACHABLE]
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: kbuild test robot <lkp@intel.com>
+---
+ xilinx-csi2rxss.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Applied, thanks.
+diff --git a/drivers/media/platform/xilinx/xilinx-csi2rxss.c b/drivers/media/platform/xilinx/xilinx-csi2rxss.c
+index cac08149ae7a8..3c2e9ff166db1 100644
+--- a/drivers/media/platform/xilinx/xilinx-csi2rxss.c
++++ b/drivers/media/platform/xilinx/xilinx-csi2rxss.c
+@@ -813,9 +813,9 @@ static int xcsi2rxss_set_format(struct v4l2_subdev *sd,
+  *
+  * Return: -EINVAL or zero on success
+  */
+-int xcsi2rxss_enum_mbus_code(struct v4l2_subdev *sd,
+-			     struct v4l2_subdev_pad_config *cfg,
+-			     struct v4l2_subdev_mbus_code_enum *code)
++static int xcsi2rxss_enum_mbus_code(struct v4l2_subdev *sd,
++				    struct v4l2_subdev_pad_config *cfg,
++				    struct v4l2_subdev_mbus_code_enum *code)
+ {
+ 	struct xcsi2rxss_state *state = to_xcsi2rxssstate(sd);
+ 	u32 dt, n;
