@@ -2,147 +2,194 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C97C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B185C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 735C6206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:11:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZKR2a98x"
+	by mail.kernel.org (Postfix) with ESMTP id E2B3F20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:12:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbgELPL2 (ORCPT
+        id S1730429AbgELPMG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 11:11:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44768 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725888AbgELPL1 (ORCPT
+        Tue, 12 May 2020 11:12:06 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34124 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725888AbgELPMF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 11:11:27 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F696C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 08:11:26 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id y24so23815395wma.4
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 08:11:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LyoECAT36i8bO5QxWOOhIIYUcxOgBZAsoJFxVPKvt6I=;
-        b=ZKR2a98xYHPdTkB+W2l2sMwRBoJk77ZyEzNIwcoGwiKV9bAbweE4tLsR9g7cG1Bm+F
-         6qibsKpJARmJxO9FyFgpcohBYQrEA6Pwo6uOLcLhntSmxoOtJetL2YfJRzu8JuA+wLC/
-         4hDdu2gRASZpm1CgGZHVJ/8PMd5lCSBo6Aw2PmNuueWRwrIYS3e5SDhNkXNJ+kszNIwa
-         qSTGoe7iIoaGQBy6QZxLYfYz8Jj1PPstLjXUiGW6rTELuPzBdgLnUgODxzA0/SfdNrpM
-         QRI24qiGd+gEzSdn6KOjwohgrJaGKGmBIPsSaXMXYqf7gJHDtKdCdPtsYnK1mndR9uep
-         qOSQ==
+        Tue, 12 May 2020 11:12:05 -0400
+Received: by mail-oi1-f194.google.com with SMTP id c12so17511131oic.1;
+        Tue, 12 May 2020 08:12:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LyoECAT36i8bO5QxWOOhIIYUcxOgBZAsoJFxVPKvt6I=;
-        b=DfeugsihrzjEOFvgHNbpFNX2ncrmkQblpgbHtz8MNT8KxZt+Re+u49PL9E06674tZE
-         Lrr1KJMwMSC4KdZJOOrzeQ0MsUEYAHVnElnu24Frpg9cKUepf7NjmOBq2yG4W4895dvl
-         CXFx6dnBJzMKxCUS8jjUVoUHRd0LFVxQOUifAR3MU2axSy9bR2xjDqcLEAcRVLFSEhNg
-         rFCe40bcsr6sIVR0g+k9GXIwKVob9FZNW1IVGXlWIF4Os4Hl4Rx4xAktezpL+aaPwiWu
-         K7a6ZcdbBWAINA6QDHsgcLPTdgFwvEiSQdoEXBiz17t1max2z+VWUhb0Ld48naYB1ZCj
-         DMhA==
-X-Gm-Message-State: AOAM530LGgTTLVNnYLZXN8SGkbaIu7bhLE9wI0HjXqMIxZwAkNQmnPqn
-        JZlcejNqo5mvevMwdOP6TgB60g==
-X-Google-Smtp-Source: ABdhPJyjLsXc7vLO4481w5CdnVSV9amTZl3i6r9RUnZaHjQHlNbUcLUUXHD79itPtLbuTMt6YduFXA==
-X-Received: by 2002:a7b:cb88:: with SMTP id m8mr3148842wmi.37.1589296284344;
-        Tue, 12 May 2020 08:11:24 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id t4sm24983251wri.54.2020.05.12.08.11.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 08:11:23 -0700 (PDT)
-Date:   Tue, 12 May 2020 16:11:20 +0100
-From:   Quentin Perret <qperret@google.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Benjamin Segall <bsegall@google.com>,
-        Mel Gorman <mgorman@suse.de>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Todd Kjos <tkjos@google.com>,
-        "Cc: Android Kernel" <kernel-team@android.com>
-Subject: Re: [PATCH 00/14] Modularize schedutil
-Message-ID: <20200512151120.GB101124@google.com>
-References: <20200508111612.GA252673@google.com>
- <20200508113141.GB5298@hirez.programming.kicks-ass.net>
- <20200508130507.GA10541@google.com>
- <CAJZ5v0iaa_VCtN608QKTYZ-A6QG_7bwxihxSgoEGv1LcSK-ksA@mail.gmail.com>
- <20200511090049.GA229633@google.com>
- <CAJZ5v0jKMgFsR0dXDt4si5hT9QF2evaoMS-13y-Qde8UpcaARg@mail.gmail.com>
- <20200512092102.GA16151@google.com>
- <CAJZ5v0hm3Tv2yZKLzM9a+kJuB1V5_eFOEKT-uM318dzeKV3_Qw@mail.gmail.com>
- <20200512135813.GA101124@google.com>
- <CAJZ5v0hN708uvurZ-3oo90qUJFw3=Eg0OmtTaOKXQgNPXhCkFg@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HzlyqNlSRCN2hpflyNPf3oc5CNOSPNV0Q0m7tMpCbzI=;
+        b=fJcbu0BQuzEcnOtdzNiBYbyA4sWDft1nEIwiaXzlbnSJ4VGxRIi6UjcCr02OXTPSTa
+         IwhPsUCkF7ZBd9/lP1vUYadDjo1RvcGz7lvrh0i57UjzLSLJppNCa0mH2kMv8pP5w+6s
+         ZHkg/w45zAYGLfTWu2pg+cxgNq0Q4L5e66WhF+ClnGRqnRwWT78RjUBxWC5j1pa4e/CT
+         jpl+5R8/c9MjghWeqTmMbYvWeIf9UHQADnMiPXWSPCcZPuh5wsjqpgHtPce5/uPU/Nru
+         1guwi3z5kVMhZZwcULjzCppIBk9ldIcIdoggm6OyKJDEE3yfn/wsxzN2HWQnCO4oUW6f
+         gvbw==
+X-Gm-Message-State: AGi0PuZeHGSVnYQiamPJGuND8jVkICTAtNAEud1vT5W89TeQkFV4mzs1
+        KaS4rmzdP4H1cVFa7BVOrIKvUFm8spH2CstmxEA=
+X-Google-Smtp-Source: APiQypI8wlhO/mByPRRQWUkC2gMabCbPzFePjOCfbVR2cRo00ZIARfxutyIyWa6LKjtHIoxcreDrSMCgGeitz8vBDRI=
+X-Received: by 2002:aca:895:: with SMTP id 143mr22811576oii.153.1589296324268;
+ Tue, 12 May 2020 08:12:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0hN708uvurZ-3oo90qUJFw3=Eg0OmtTaOKXQgNPXhCkFg@mail.gmail.com>
+References: <20200511224430.HDJjRC68z%akpm@linux-foundation.org> <3b612c3e-ce52-ba92-eb02-0fa7fd38819f@infradead.org>
+In-Reply-To: <3b612c3e-ce52-ba92-eb02-0fa7fd38819f@infradead.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 12 May 2020 17:11:53 +0200
+Message-ID: <CAMuHMdVuKaFW+0XXXSDCJHGpXNjirCTqzGbpiA5pP51OqtJN9A@mail.gmail.com>
+Subject: Re: mmotm 2020-05-11-15-43 uploaded (mm/memcontrol.c, huge pages)
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux-Next <linux-next@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.cz>, mm-commits@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday 12 May 2020 at 16:08:56 (+0200), Rafael J. Wysocki wrote:
-> If some piece of kernel code is modular, it still needs to be build.
-> The difference is when and how it gets loaded, so can you possibly
-> elaborate here?
+On Tue, May 12, 2020 at 6:44 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+> On 5/11/20 3:44 PM, Andrew Morton wrote:
+> > The mm-of-the-moment snapshot 2020-05-11-15-43 has been uploaded to
+> >
+> >    http://www.ozlabs.org/~akpm/mmotm/
+> >
+> > mmotm-readme.txt says
+> >
+> > README for mm-of-the-moment:
+> >
+> > http://www.ozlabs.org/~akpm/mmotm/
+> >
+> > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> > more than once a week.
+> >
+> > You will need quilt to apply these patches to the latest Linus release (5.x
+> > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+> > http://ozlabs.org/~akpm/mmotm/series
+> >
+> > The file broken-out.tar.gz contains two datestamp files: .DATE and
+> > .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+> > followed by the base kernel version against which this patch series is to
+> > be applied.
+> >
+> > This tree is partially included in linux-next.  To see which patches are
+> > included in linux-next, consult the `series' file.  Only the patches
+> > within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
+> > linux-next.
+> >
+> >
+> > A full copy of the full kernel tree with the linux-next and mmotm patches
+> > already applied is available through git within an hour of the mmotm
+> > release.  Individual mmotm releases are tagged.  The master branch always
+> > points to the latest release, so it's constantly rebasing.
+> >
+> >       https://github.com/hnaz/linux-mm
+> >
+> > The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
+> > contains daily snapshots of the -mm tree.  It is updated more frequently
+> > than mmotm, and is untested.
+> >
+> > A git copy of this tree is also available at
+> >
+> >       https://github.com/hnaz/linux-mm
+>
+> on x86_64:
+>
+> In file included from ../arch/x86/include/asm/atomic.h:5:0,
+>                  from ../include/linux/atomic.h:7,
+>                  from ../include/linux/page_counter.h:5,
+>                  from ../mm/memcontrol.c:25:
+> ../mm/memcontrol.c: In function ‘memcg_stat_show’:
+> ../include/linux/compiler.h:394:38: error: call to ‘__compiletime_assert_383’ declared with attribute error: BUILD_BUG failed
+>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+>                                       ^
+> ../include/linux/compiler.h:375:4: note: in definition of macro ‘__compiletime_assert’
+>     prefix ## suffix();    \
+>     ^~~~~~
+> ../include/linux/compiler.h:394:2: note: in expansion of macro ‘_compiletime_assert’
+>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+>   ^~~~~~~~~~~~~~~~~~~
+> ../include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
+>  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+>                                      ^~~~~~~~~~~~~~~~~~
+> ../include/linux/build_bug.h:59:21: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
+>  #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
+>                      ^~~~~~~~~~~~~~~~
+> ../include/linux/huge_mm.h:319:28: note: in expansion of macro ‘BUILD_BUG’
+>  #define HPAGE_PMD_SHIFT ({ BUILD_BUG(); 0; })
+>                             ^~~~~~~~~
+> ../include/linux/huge_mm.h:115:26: note: in expansion of macro ‘HPAGE_PMD_SHIFT’
+>  #define HPAGE_PMD_ORDER (HPAGE_PMD_SHIFT-PAGE_SHIFT)
+>                           ^~~~~~~~~~~~~~~
+> ../include/linux/huge_mm.h:116:26: note: in expansion of macro ‘HPAGE_PMD_ORDER’
+>  #define HPAGE_PMD_NR (1<<HPAGE_PMD_ORDER)
+>                           ^~~~~~~~~~~~~~~
+> ../mm/memcontrol.c:3746:10: note: in expansion of macro ‘HPAGE_PMD_NR’
+>     nr *= HPAGE_PMD_NR;
+>           ^~~~~~~~~~~~
+>   CC      arch/x86/kernel/jump_label.o
+> ../mm/memcontrol.c: In function ‘memory_stat_format’:
+> ../include/linux/compiler.h:394:38: error: call to ‘__compiletime_assert_356’ declared with attribute error: BUILD_BUG failed
+>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+>                                       ^
+> ../include/linux/compiler.h:375:4: note: in definition of macro ‘__compiletime_assert’
+>     prefix ## suffix();    \
+>     ^~~~~~
+> ../include/linux/compiler.h:394:2: note: in expansion of macro ‘_compiletime_assert’
+>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+>   ^~~~~~~~~~~~~~~~~~~
+> ../include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
+>  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+>                                      ^~~~~~~~~~~~~~~~~~
+> ../include/linux/build_bug.h:59:21: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
+>  #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
+>                      ^~~~~~~~~~~~~~~~
+> ../include/linux/huge_mm.h:319:28: note: in expansion of macro ‘BUILD_BUG’
+>  #define HPAGE_PMD_SHIFT ({ BUILD_BUG(); 0; })
+>                             ^~~~~~~~~
+> ../include/linux/huge_mm.h:115:26: note: in expansion of macro ‘HPAGE_PMD_SHIFT’
+>  #define HPAGE_PMD_ORDER (HPAGE_PMD_SHIFT-PAGE_SHIFT)
+>                           ^~~~~~~~~~~~~~~
+> ../include/linux/huge_mm.h:116:26: note: in expansion of macro ‘HPAGE_PMD_ORDER’
+>  #define HPAGE_PMD_NR (1<<HPAGE_PMD_ORDER)
+>                           ^~~~~~~~~~~~~~~
+> ../mm/memcontrol.c:1405:10: note: in expansion of macro ‘HPAGE_PMD_NR’
+>           HPAGE_PMD_NR * PAGE_SIZE);
+>           ^~~~~~~~~~~~
+>
+>
+>
+> Full randconfig file is attached.
+>
+> This might be relevant to mm-memcontrol-switch-to-native-nr_anon_thps-counter.patch
 
-Sure thing, sorry if that wasn't clear.
+noreply@ellerman.id.au pointed me to a similar failure for m68k/allmodconfig:
+http://kisskb.ellerman.id.au/kisskb/buildresult/14236262/
 
-The end goal with GKI is the following: Google will release a single
-binary kernel image (signed, etc etc) that all devices using a given
-Android version will be required to use. That image is however going to
-be only for the core of the kernel (no drivers or anything of the sort).
-Vendors and OEMs, on their end, will be responsible to build and ship
-GKI-compatible modules for their respective devices. So, Android devices
-will eventually ship with a Google-issued GKI, plus a bunch of
-vendor-provided modules loaded during boot.
+I've bisected it to 157f1f1385447604 ("mm: memcontrol: switch to native
+NR_ANON_THPS counter").
 
-This is a significant shift from the current model where vendors
-completely own the kernel, and are largely free to use the kernel config
-they want. Today, those who don't use schedutil are free to turn the
-config off, for example.
+Gr{oetje,eeting}s,
 
-But GKI changes that. The 'core' GKI config is effectively imposed to
-the entire ecosystem. As of now, because it is 'bool' we have no choice
-but to compile schedutil in the core GKI as some (most) partners use it.
-But as you can imagine, that is not the preferred option of those who
-_don't_ use schedutil. Modularizing avoids any potential friction since
-the vendors who want to use it will be able load the module, and the
-others will simply not. That really is the reason for that series.
+                        Geert
 
-Then there is an important question: why should upstream care about all
-that stuff? That's obviously debatable, but my biased opinion is that
-GKI is a good thing(TM). It's our opportunity to put some order in the
-android ecosystem and to reduce the delta with mainline. That'll
-definitely take time, and there will be Android-specific churn in GKI in
-the beginning, but we'd like to keep that as small as possible, and to
-converge to 0 looking forwards.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-I hope that helps!
-
-Thanks,
-Quentin
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
