@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37ABDC55185
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27970C81831
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 129BB214DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 001F52186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:01:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UTuKroDY"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kjN0kVdl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729563AbgELJBR (ORCPT
+        id S1729577AbgELJBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 05:01:17 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:40482 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729528AbgELJBO (ORCPT
+        Tue, 12 May 2020 05:01:19 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:34299 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729535AbgELJBP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 05:01:14 -0400
+        Tue, 12 May 2020 05:01:15 -0400
 Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200512090111euoutp028739a8473e5d1fcc37a736b7d0050561~OPFkE_ObG0455404554euoutp020
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 09:01:11 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200512090111euoutp028739a8473e5d1fcc37a736b7d0050561~OPFkE_ObG0455404554euoutp020
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200512090113euoutp01bd93a9267fb927937f0494d98025194b~OPFl8XQzI2628826288euoutp01N
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 09:01:13 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200512090113euoutp01bd93a9267fb927937f0494d98025194b~OPFl8XQzI2628826288euoutp01N
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1589274071;
-        bh=v1NY4pbtYG+juWgfrfxrCjmXAIPdJOdpmFsCdy/mpko=;
+        s=mail20170921; t=1589274073;
+        bh=NhVbnJ+jqa6Cm7UcCSShQXuCIUUkP8fYD45Nu0/gv44=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UTuKroDYFG+Ztb9VeQiVrStBDoCIzw8Cv5OoM4uG8agYG+NvJjX0f04Sja0xnYKE/
-         3WHn5I5AWxjWmjtNw4ytAd664jXdTP3nGO5VqRQqizz4e/X2tmgX2ytrcC+VjxCaUf
-         YiYEerp1lQITYY6aubW4KtnfvqlB8TVCxFBD4sc4=
+        b=kjN0kVdlQY1j5bVaOTTBeKY7yRJWLWeRK8vtjLFmeXN+9Bx8kD2SQc1/cDOAfwwdY
+         qELap4716r3WtBMV2ij01C/WCf7iIkgfm3Pj0GyfSWK8hfb/LRTqTGkAIYTk4Z2b/c
+         xZq6lDNQhYFYlrHDTJdY48DysW2xpJXWhXurckb8=
 Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200512090111eucas1p29d2808f50f3acaaf8ab3f7915123cc9b~OPFjufSKA2180321803eucas1p2s;
-        Tue, 12 May 2020 09:01:11 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 43.6B.60698.6D56ABE5; Tue, 12
-        May 2020 10:01:11 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200512090110eucas1p1b8de7671df480c071718c96f8ebdbc42~OPFjQF0c21612616126eucas1p1R;
-        Tue, 12 May 2020 09:01:10 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200512090110eusmtrp2d8014dc9f85646e24c2f56e4489d5b22~OPFjPDRdS0472504725eusmtrp29;
-        Tue, 12 May 2020 09:01:10 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-01-5eba65d68291
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200512090113eucas1p1ef8c5da040086e7cd941a733488a5719~OPFloZoPF3053130531eucas1p1c;
+        Tue, 12 May 2020 09:01:13 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id A5.6B.60698.9D56ABE5; Tue, 12
+        May 2020 10:01:13 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200512090112eucas1p280707473d14730b8d3054fe9b0781a05~OPFlYNMQO2661426614eucas1p2U;
+        Tue, 12 May 2020 09:01:12 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200512090112eusmtrp15f7e3d008cd5e61e09ab2b1e8f14459b~OPFlXhG0_0188101881eusmtrp1B;
+        Tue, 12 May 2020 09:01:12 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-0b-5eba65d9f4ae
 Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id B6.35.08375.6D56ABE5; Tue, 12
-        May 2020 10:01:10 +0100 (BST)
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id D2.F2.07950.8D56ABE5; Tue, 12
+        May 2020 10:01:12 +0100 (BST)
 Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
         eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200512090110eusmtip1f11cf2af42f26902c242496f1c645079~OPFiqnM4i1352513525eusmtip1D;
-        Tue, 12 May 2020 09:01:09 +0000 (GMT)
+        20200512090112eusmtip1e6afa75d409d6f8bde05c4af7510a21e~OPFk0YbqY1148011480eusmtip1T;
+        Tue, 12 May 2020 09:01:12 +0000 (GMT)
 From:   Marek Szyprowski <m.szyprowski@samsung.com>
 To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
         linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
@@ -67,80 +67,59 @@ Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
         linux-arm-kernel@lists.infradead.org,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-Subject: [PATCH v4 06/38] drm: core: fix common struct sg_table related
- issues
-Date:   Tue, 12 May 2020 11:00:26 +0200
-Message-Id: <20200512090058.14910-6-m.szyprowski@samsung.com>
+        Inki Dae <inki.dae@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH v4 10/38] drm: exynos: use common helper for a scatterlist
+ contiguity check
+Date:   Tue, 12 May 2020 11:00:30 +0200
+Message-Id: <20200512090058.14910-10-m.szyprowski@samsung.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200512090058.14910-1-m.szyprowski@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMKsWRmVeSWpSXmKPExsWy7djPc7rXU3fFGSy6zmTRe+4kk8XGGetZ
-        Lf5vm8hsceXrezaLlauPMlks2G9t8eXKQyaLTY+vsVpc3jWHzWLtkbvsFgs/bmWxaOtcxmpx
-        8MMTVostbyayOvB5rJm3htFj77cFLB6bVnWyeWz/9oDVY97JQI/73ceZPDYvqfe4/e8xs8fk
-        G8sZPXbfbGDz6NuyitFj8+lqj8+b5AJ4o7hsUlJzMstSi/TtErgy2vcfYyp4qVax7EkLYwPj
-        KoUuRk4OCQETieWrD7GA2EICKxglfr/w7mLkArK/MEq8+H+FGcL5zCjxuOkSC0zH2b7/LBCJ
-        5YwS59Y9ZoJrOfLyHCNIFZuAoUTX2y42EFtEoJVR4kQvD0gRs8ACZomfn9vAioQFAiR+//sI
-        NpZFQFXizaGHTCA2r4CtxOWlh5kg1slLrN5wgBnE5hSwk7g//w/YagmBa+wSF9d8B0pwADku
-        EieucEHUC0u8Or6FHcKWkfi/cz4TRH0zo8TDc2vZIZweRonLTTMYIaqsJe6c+8UGMohZQFNi
-        /S59iLCjxLGZe9gh5vNJ3HgrCBJmBjInbZsOtZZXoqNNCKJaTWLW8XVwaw9euMQMYXtI9F1Z
-        AQ2go4wSsxc8YZnAKD8LYdkCRsZVjOKppcW56anFxnmp5XrFibnFpXnpesn5uZsYgUnr9L/j
-        X3cw7vuTdIhRgINRiYe3w2hnnBBrYllxZe4hRgkOZiUR3pZMoBBvSmJlVWpRfnxRaU5q8SFG
-        aQ4WJXFe40UvY4UE0hNLUrNTUwtSi2CyTBycUg2M2/J7FWq0T/S4h3QafIsujdheLLEy+vKG
-        6/PUTvJcO+BRX+wR/mf1RKdacbkMH9cnKsF5GiqL9+VsKrqTc1G2XXyjZu17nsPnt5uoWxhY
-        PpNJTFgXm79dxaFJiddHftej/772Hs01f992n3o2R6fr+cwbe3ZMFVx0k419d8nkmy6PzfVS
-        GjKVWIozEg21mIuKEwH7tmjVVgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGIsWRmVeSWpSXmKPExsVy+t/xu7rXUnfFGVx8omrRe+4kk8XGGetZ
-        Lf5vm8hsceXrezaLlauPMlks2G9t8eXKQyaLTY+vsVpc3jWHzWLtkbvsFgs/bmWxaOtcxmpx
-        8MMTVostbyayOvB5rJm3htFj77cFLB6bVnWyeWz/9oDVY97JQI/73ceZPDYvqfe4/e8xs8fk
-        G8sZPXbfbGDz6NuyitFj8+lqj8+b5AJ4o/RsivJLS1IVMvKLS2yVog0tjPQMLS30jEws9QyN
-        zWOtjEyV9O1sUlJzMstSi/TtEvQy2vcfYyp4qVax7EkLYwPjKoUuRk4OCQETibN9/1m6GLk4
-        hASWMkocu/uNFSIhI3FyWgOULSzx51oXG0TRJ0aJo++XsoAk2AQMJbreQiREBDoZJaZ1f2QH
-        cZgFVjBLvNo3F6xKWMBP4vTB/0wgNouAqsSbQw/BbF4BW4nLSw8zQayQl1i94QAziM0pYCdx
-        f/4fsF4hgUKJR1ffskxg5FvAyLCKUSS1tDg3PbfYUK84Mbe4NC9dLzk/dxMjMI62Hfu5eQfj
-        pY3BhxgFOBiVeHg7jHbGCbEmlhVX5h5ilOBgVhLhbckECvGmJFZWpRblxxeV5qQWH2I0BTpq
-        IrOUaHI+MMbzSuINTQ3NLSwNzY3Njc0slMR5OwQOxggJpCeWpGanphakFsH0MXFwSjUw1jRV
-        s698x8ixcK6H3TPhprSLbyUS133TV69Yx3LK8ZJAhGVU+PaZj5/tfsQoIM5hmtTb8/fYpicB
-        Zw7I+/O1BMi9dPoXfuD191UMW99/2stxdVuHRv8Byz3VD8wn5b1o/7WKa4ZqrPr7j7Nf3thp
-        /P6UtpDLrcKTXY8P8h8/dV16tqD+Cl1/OSWW4oxEQy3mouJEACasQyO5AgAA
-X-CMS-MailID: 20200512090110eucas1p1b8de7671df480c071718c96f8ebdbc42
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCKsWRmVeSWpSXmKPExsWy7djP87o3U3fFGWx9yGXRe+4kk8XGGetZ
+        Lf5vm8hsceXrezaLlauPMllMuj+BxWLBfmuLL1ceMllsenyN1eLyrjlsFjPO72OyWHvkLrvF
+        wQ9PWC1mTH7J5sDnsWbeGkaPvd8WsHhs//aA1eN+93Emj81L6j1u/3vM7DH5xnJGj903G9g8
+        +rasYvT4vEkugCuKyyYlNSezLLVI3y6BK+PB9i2sBbd4Kl43TWJtYDzI1cXIySEhYCLx8N5c
+        ZhBbSGAFo8T/1ypdjFxA9hdGienT2hghnM+MEudvLmOC6Xj56w07RGI5o0TXs7XMcC1/eueD
+        zWITMJToetvFBmKLCLQySpzo5QEpYhboYJa4NnE+0FwODmGBWImlffUgJouAqsS04yIg5bwC
+        dhJb1rczQiyTl1i94QDYSE6g+P35f1hAxkgIHGOXeLHpLxtEkYvE+lOboWxhiVfHt7BD2DIS
+        pyf3QDU0M0o8PLeWHcLpYZS43DQDaoW1xJ1zv9hArmAW0JRYv0sfIuwosW/bUnaQsIQAn8SN
+        t4IgYWYgc9K26cwQYV6JjjYhiGo1iVnH18GtPXjhElSJh8SmOSmQ4DnKKLF84wOmCYzysxB2
+        LWBkXMUonlpanJueWmycl1quV5yYW1yal66XnJ+7iRGYlk7/O/51B+O+P0mHGAU4GJV4eDuM
+        dsYJsSaWFVfmHmKU4GBWEuFtyQQK8aYkVlalFuXHF5XmpBYfYpTmYFES5zVe9DJWSCA9sSQ1
+        OzW1ILUIJsvEwSnVwMjSycz0RC/dt0w9rmzSlvfxDFYexQ4Vb+tDNKfPvT2HMaXh3q5P8/xq
+        /1nbRs6dk+lyO7CuaCv/ZqE97x4fnbYj5sf1x/0eIYobfPJuNczkDDtTs1Jrq52N8r37n99f
+        c5GMM99Z9eD7dXOJ/w7b1cKPz/h912S36Mp/6R/EA18d58pdwy/zc6MSS3FGoqEWc1FxIgCa
+        4y+URwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprGIsWRmVeSWpSXmKPExsVy+t/xu7o3UnfFGTyebW7Re+4kk8XGGetZ
+        Lf5vm8hsceXrezaLlauPMllMuj+BxWLBfmuLL1ceMllsenyN1eLyrjlsFjPO72OyWHvkLrvF
+        wQ9PWC1mTH7J5sDnsWbeGkaPvd8WsHhs//aA1eN+93Emj81L6j1u/3vM7DH5xnJGj903G9g8
+        +rasYvT4vEkugCtKz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSez
+        LLVI3y5BL+PB9i2sBbd4Kl43TWJtYDzI1cXIySEhYCLx8tcbdhBbSGApo8SH18IQcRmJk9Ma
+        WCFsYYk/17rYuhi5gGo+MUrs7l3OBJJgEzCU6HoLkRAR6GSUmNb9kR3EYRaYwCxxv2U1Yxcj
+        B4ewQLTE4521ICaLgKrEtOMiIL28AnYSW9a3M0IskJdYveEAM4jNCRS/P/8PC8RBhRKPrr5l
+        mcDIt4CRYRWjSGppcW56brGRXnFibnFpXrpecn7uJkZgnGw79nPLDsaud8GHGAU4GJV4eDuM
+        dsYJsSaWFVfmHmKU4GBWEuFtyQQK8aYkVlalFuXHF5XmpBYfYjQFumkis5Rocj4whvNK4g1N
+        Dc0tLA3Njc2NzSyUxHk7BA7GCAmkJ5akZqemFqQWwfQxcXBKNTCumcBn9k/UZ9c6Duk1Zedm
+        ha14rH/czPF1gMqN4xfaP+saP574S7v/1ZMNLyvXXxStP7pIfynvltmxk8S9mP/mXtu3yHqr
+        +YkT8yd+mbNwvV9ijRHjlAlCr8/Us/9c+b7+7Pd7B7ZPak1o9vlc8frRBuduAbbdzM+ME/Y6
+        fcwTPbnIctNXadl1rEosxRmJhlrMRcWJABokKdCpAgAA
+X-CMS-MailID: 20200512090112eucas1p280707473d14730b8d3054fe9b0781a05
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200512090110eucas1p1b8de7671df480c071718c96f8ebdbc42
+X-RootMTR: 20200512090112eucas1p280707473d14730b8d3054fe9b0781a05
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200512090110eucas1p1b8de7671df480c071718c96f8ebdbc42
+X-CMS-RootMailID: 20200512090112eucas1p280707473d14730b8d3054fe9b0781a05
 References: <20200512085710.14688-1-m.szyprowski@samsung.com>
         <20200512090058.14910-1-m.szyprowski@samsung.com>
-        <CGME20200512090110eucas1p1b8de7671df480c071718c96f8ebdbc42@eucas1p1.samsung.com>
+        <CGME20200512090112eucas1p280707473d14730b8d3054fe9b0781a05@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
-returns the number of the created entries in the DMA address space.
-However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
-dma_unmap_sg must be called with the original number of the entries
-passed to the dma_map_sg().
-
-struct sg_table is a common structure used for describing a non-contiguous
-memory buffer, used commonly in the DRM and graphics subsystems. It
-consists of a scatterlist with memory pages and DMA addresses (sgl entry),
-as well as the number of scatterlist entries: CPU pages (orig_nents entry)
-and DMA mapped pages (nents entry).
-
-It turned out that it was a common mistake to misuse nents and orig_nents
-entries, calling DMA-mapping functions with a wrong number of entries or
-ignoring the number of mapped entries returned by the dma_map_sg()
-function.
-
-To avoid such issues, lets use a common dma-mapping wrappers operating
-directly on the struct sg_table objects and use scatterlist page
-iterators where possible. This, almost always, hides references to the
-nents and orig_nents entries, making the code robust, easier to follow
-and copy/paste safe.
+Use common helper for checking the contiguity of the imported dma-buf.
 
 Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 ---
@@ -148,106 +127,44 @@ For more information, see '[PATCH v4 00/38] DRM: fix struct sg_table nents
 vs. orig_nents misuse' thread:
 https://lore.kernel.org/dri-devel/20200512085710.14688-1-m.szyprowski@samsung.com/T/
 ---
- drivers/gpu/drm/drm_cache.c            |  2 +-
- drivers/gpu/drm/drm_gem_shmem_helper.c | 14 +++++++++-----
- drivers/gpu/drm/drm_prime.c            | 11 ++++++-----
- 3 files changed, 16 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/exynos/exynos_drm_gem.c | 23 +++--------------------
+ 1 file changed, 3 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_cache.c b/drivers/gpu/drm/drm_cache.c
-index 03e01b0..0fe3c49 100644
---- a/drivers/gpu/drm/drm_cache.c
-+++ b/drivers/gpu/drm/drm_cache.c
-@@ -127,7 +127,7 @@ static void drm_cache_flush_clflush(struct page *pages[],
- 		struct sg_page_iter sg_iter;
- 
- 		mb(); /*CLFLUSH is ordered only by using memory barriers*/
--		for_each_sg_page(st->sgl, &sg_iter, st->nents, 0)
-+		for_each_sgtable_page(st, &sg_iter, 0)
- 			drm_clflush_page(sg_page_iter_page(&sg_iter));
- 		mb(); /*Make sure that all cache line entry is flushed*/
- 
-diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
-index df31e57..00a43e8 100644
---- a/drivers/gpu/drm/drm_gem_shmem_helper.c
-+++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
-@@ -117,8 +117,8 @@ void drm_gem_shmem_free_object(struct drm_gem_object *obj)
- 		kvfree(shmem->pages);
- 	} else {
- 		if (shmem->sgt) {
--			dma_unmap_sg(obj->dev->dev, shmem->sgt->sgl,
--				     shmem->sgt->nents, DMA_BIDIRECTIONAL);
-+			dma_unmap_sgtable(obj->dev->dev, shmem->sgt,
-+					  DMA_BIDIRECTIONAL, 0);
- 			sg_free_table(shmem->sgt);
- 			kfree(shmem->sgt);
- 		}
-@@ -395,8 +395,7 @@ void drm_gem_shmem_purge_locked(struct drm_gem_object *obj)
- 
- 	WARN_ON(!drm_gem_shmem_is_purgeable(shmem));
- 
--	dma_unmap_sg(obj->dev->dev, shmem->sgt->sgl,
--		     shmem->sgt->nents, DMA_BIDIRECTIONAL);
-+	dma_unmap_sgtable(obj->dev->dev, shmem->sgt, DMA_BIDIRECTIONAL, 0);
- 	sg_free_table(shmem->sgt);
- 	kfree(shmem->sgt);
- 	shmem->sgt = NULL;
-@@ -623,12 +622,17 @@ struct sg_table *drm_gem_shmem_get_pages_sgt(struct drm_gem_object *obj)
- 		goto err_put_pages;
- 	}
- 	/* Map the pages for use by the h/w. */
--	dma_map_sg(obj->dev->dev, sgt->sgl, sgt->nents, DMA_BIDIRECTIONAL);
-+	ret = dma_map_sgtable(obj->dev->dev, sgt, DMA_BIDIRECTIONAL, 0);
-+	if (ret)
-+		goto err_free_sgt;
- 
- 	shmem->sgt = sgt;
- 
- 	return sgt;
- 
-+err_free_sgt:
-+	sg_free_table(sgt);
-+	kfree(sgt);
- err_put_pages:
- 	drm_gem_shmem_put_pages(shmem);
- 	return ERR_PTR(ret);
-diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
-index dfdf4d4..5ed22dd 100644
---- a/drivers/gpu/drm/drm_prime.c
-+++ b/drivers/gpu/drm/drm_prime.c
-@@ -617,6 +617,7 @@ struct sg_table *drm_gem_map_dma_buf(struct dma_buf_attachment *attach,
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_gem.c b/drivers/gpu/drm/exynos/exynos_drm_gem.c
+index 0df57ee..a49a8ea 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_gem.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_gem.c
+@@ -431,27 +431,10 @@ struct drm_gem_object *
  {
- 	struct drm_gem_object *obj = attach->dmabuf->priv;
- 	struct sg_table *sgt;
-+	int ret;
+ 	struct exynos_drm_gem *exynos_gem;
  
- 	if (WARN_ON(dir == DMA_NONE))
+-	if (sgt->nents < 1)
++	/* check if the entries in the sg_table are contiguous */
++	if (drm_prime_get_contiguous_size(sgt) < attach->dmabuf->size) {
++		DRM_ERROR("buffer chunks must be mapped contiguously");
  		return ERR_PTR(-EINVAL);
-@@ -626,11 +627,12 @@ struct sg_table *drm_gem_map_dma_buf(struct dma_buf_attachment *attach,
- 	else
- 		sgt = obj->dev->driver->gem_prime_get_sg_table(obj);
- 
--	if (!dma_map_sg_attrs(attach->dev, sgt->sgl, sgt->nents, dir,
--			      DMA_ATTR_SKIP_CPU_SYNC)) {
-+	ret = dma_map_sgtable(attach->dev, sgt, dir,
-+			      DMA_ATTR_SKIP_CPU_SYNC);
-+	if (ret) {
- 		sg_free_table(sgt);
- 		kfree(sgt);
--		sgt = ERR_PTR(-ENOMEM);
-+		sgt = ERR_PTR(ret);
+-
+-	/*
+-	 * Check if the provided buffer has been mapped as contiguous
+-	 * into DMA address space.
+-	 */
+-	if (sgt->nents > 1) {
+-		dma_addr_t next_addr = sg_dma_address(sgt->sgl);
+-		struct scatterlist *s;
+-		unsigned int i;
+-
+-		for_each_sg(sgt->sgl, s, sgt->nents, i) {
+-			if (!sg_dma_len(s))
+-				break;
+-			if (sg_dma_address(s) != next_addr) {
+-				DRM_ERROR("buffer chunks must be mapped contiguously");
+-				return ERR_PTR(-EINVAL);
+-			}
+-			next_addr = sg_dma_address(s) + sg_dma_len(s);
+-		}
  	}
  
- 	return sgt;
-@@ -652,8 +654,7 @@ void drm_gem_unmap_dma_buf(struct dma_buf_attachment *attach,
- 	if (!sgt)
- 		return;
- 
--	dma_unmap_sg_attrs(attach->dev, sgt->sgl, sgt->nents, dir,
--			   DMA_ATTR_SKIP_CPU_SYNC);
-+	dma_unmap_sgtable(attach->dev, sgt, dir, DMA_ATTR_SKIP_CPU_SYNC);
- 	sg_free_table(sgt);
- 	kfree(sgt);
- }
+ 	exynos_gem = exynos_drm_gem_init(dev, attach->dmabuf->size);
 -- 
 1.9.1
 
