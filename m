@@ -2,89 +2,143 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF07BC54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B23C54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AFD72075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:40:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C373220674
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:41:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DdsH+HVD"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Pr+YL81U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729630AbgELLk6 (ORCPT
+        id S1729639AbgELLlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 07:40:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40050 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729294AbgELLk5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 07:40:57 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3795DC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 04:40:57 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id e25so13242808ljg.5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 04:40:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gBh2Ij2Mc6h1eHLqGqNAJkOw3+vCEXsNgr9h5z6JXHE=;
-        b=DdsH+HVDDy5Lk88AKbz9Gwhh8b52rNXxINS4xMWgwDF9EzFtPlwwQAOyKpPTClcpPa
-         6jdvgWcUtP5wPYp37W3M2+Mem1mqzhq++9PcWbyaqJ8gHc1zi6NgMfrL3PzO9/CafO8b
-         JBeN2FUzaty9be3xf5OFXu91V2fktRRIhP47AuIa9/EUo9+OxbgktJ0rPnWpdsVOGCch
-         +lF7y4MIBOUpciZuYEG1/RUNkBnkI55ce524lSvcCeQXqOsBFMc4UTG7X4yayGrrlug8
-         0FD80EJ0z4UI21COSMt2BAcOGiKrHzufzzzQj2C/w82DgQNrapc9oNhDS0Dxw+lcAgqJ
-         cz/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gBh2Ij2Mc6h1eHLqGqNAJkOw3+vCEXsNgr9h5z6JXHE=;
-        b=VnDXI6zuhA8BEMbpGOOm4UHYl8oYmIzBm9QRcrDtQrh9+6z41K9jdxZVluFpbkALne
-         DZHLWlxBoLItkW7nd5jGUmZZM7nbQMUipV0zc7tSSJtk3YP1HKApzWDoDs76xgkHs6oI
-         j5yrcL+BVSmZtaja/n76Q7omLn9YzSosPagIHwhgEYclGq8QptT9VOUL/8Gt25px/haO
-         q8XmoOZ4YgP6+de1q/M+O1AGh1MjRuuwQhrzrHtduKiolkm8anP4SUZuqw6JoJul1noA
-         gvkqClRFUFhh0oKLr5NpuBX4a7Mf97PDjb1rS/48y3qza2OCWxI6KEI09oPyp/zc4JKj
-         nnSQ==
-X-Gm-Message-State: AOAM533o3lTfC3dgLNyr0ESiJvgy6HDT4B7NzM8ZfQqXn0ZmeP00vghE
-        qmAMcRuIkvnVWy8a5H/VZhdwk9gLQN4SSYg8UD1kTA==
-X-Google-Smtp-Source: ABdhPJyheSvf/myT4amp2PYksMYzI0WE9OfPY7CV27uprn8yiolw1+hJowASwtw1CCetz1J8xzyyI9ikYuKe4P+PnmA=
-X-Received: by 2002:a2e:b609:: with SMTP id r9mr139112ljn.125.1589283655695;
- Tue, 12 May 2020 04:40:55 -0700 (PDT)
+        Tue, 12 May 2020 07:41:22 -0400
+Received: from mout.web.de ([217.72.192.78]:53177 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729294AbgELLlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 07:41:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1589283660;
+        bh=A+4xEyEwZKXYezjnPWr+qg/gcElrcDOJ0XA+qR0Nbvc=;
+        h=X-UI-Sender-Class:Cc:Subject:To:From:Date;
+        b=Pr+YL81UIty3FpX1jV65A6XwyoHywg3HZdQge8ilxlSMS91Gcte3MRvhJOIODJIA/
+         Ns7qH0925J4T7IMtd9mfJJhQG/ZEAxb8hRt/C3iD4ODYKdCgHdpvaYKGpoYwoLE2qU
+         lWJgt/+HlRpKX2H4yYBElu8eeP+s8KYq3KMpiqnk=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.36.232]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LnB9V-1itvKj2Nx7-00hJOx; Tue, 12
+ May 2020 13:41:00 +0200
+Cc:     linux-kernel@vger.kernel.org, opensource.kernel@vivo.com,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Lukasz Luba <lukasz.luba@arm.com>
+Subject: Re: [PATCH v2] memory/samsung: reduce unnecessary mutex lock area
+To:     Bernard Zhao <bernard@vivo.com>,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <edf839ce-cc61-73dc-e017-b49648b94d1c@web.de>
+Date:   Tue, 12 May 2020 13:40:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200427102812.23251-1-ckeepax@opensource.cirrus.com> <20200427102812.23251-3-ckeepax@opensource.cirrus.com>
-In-Reply-To: <20200427102812.23251-3-ckeepax@opensource.cirrus.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 12 May 2020 13:40:44 +0200
-Message-ID: <CACRpkdZA9vs+ppSybk=kbByyOmbsmmEcMWpytn_LX_b0Kqftqw@mail.gmail.com>
-Subject: Re: [PATCH 3/6] pinctrl: lochnagar: Move binding over to dtschema
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, patches@opensource.cirrus.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:nr0aRieGx1rEENbBLBwLoDX+QXFqpgLMLhbkMbn4ANo3yd24ccF
+ CQM58RfOOMMoju9fJMifKnCzr68v6+tpQaLGhSGPF9six/LniCwhCdayPYMCnXGWclRdt4A
+ mtVW6eHWTdz2WBlfQplX4ItxEEnU6dngi1y2qOWqw48lU/07Ze9pwjPoYsKp0BHuZ8m2A1V
+ tz1YINJ2UOKxEKfjbWbiQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:gogZXhDZGJQ=:pU28Sia5hIOMKCWyNsloQ/
+ eCuMncCaD9NAKf4iYHNxjniUZiqYWmjnyAiXrO1bDoBjvzpgNgzsbIMdOXcFPHzeNdSOISpNU
+ 6aL6HaE4BRsPOpb7Tt2wpNJtyp8WNcd8PbujqcYHdlBw2QZ/KWj2TP9U0aM/ooqStpE8mkaB/
+ OTFCHgdAW75Bj9Y3x7glwKKQSUWK9ziETUV+1/t5FYVdX3kdhYPFz5GxP4+VRVK9aAnHwD96h
+ 8YCNxv2Vd+v9W0MEfiraxv1UTQtlowsk+mlMWA/i+CI4Kc00aMU8QDG5KptNJVdob+KeYlmuI
+ dFB72gufxZy8RYXCAVTGU6+oiErneGImwAHuk/TxUPbwALJInK9nQfWuUcZUfbkanNPGTdvG8
+ dfiZhRnVUMIwnERF6WCVDD6fv1SLGdo9G9Am/LzEBqPW/TVqCyDc0H6mJpeZaK4unPSnNFjTF
+ F6qmUI90Bem8ug1CU2oriQZwEU3zr3/zwOIs2H3wqVA6LxepQR5HcvxotRV/vQ+QQ2pFubkXI
+ LUWqquqOCzZXw/NjK6A1mCg2kyJLPId0rOhXW40uNRa/UI7IdGV5UMIWRIsrF4AfnZFSRBKVi
+ TTPRprK+4HINxIzyeH1qPGgWPPEQT0F1H5Tx5pHqhn0yzuQd/fyGKnw0wC5uMnaNRcV2lqGUH
+ 790MYgCkf/dXGRjY4hHB5+R5kjOGkAulzNr1+rkfi8tq8/PzPt/y9IOHe2cOr7sAgT8U2Ic8Z
+ en+W2NGHJCjamJl5PP5hGPGX1wCftQaJNPsfWREaEbJ5ZzyyVFvH05qSTyjF9RQp//byIs3tB
+ Ho5GlFyC/PLXWXbtdHJGm5/bbijJY8zvTXsuzuTWu0/edIJOP0xC6W7gs6LJWqCaPvXSiVEKH
+ hBC3/VrhvJ2buGmObgbZkR2qa9TKbuKeMtpK/e5y7eR+nwiBCIiIJyay5kB4wn/c5Wj3vUQfr
+ c0jYjmVsU1kzmnntQGViVRc/02GcSeU7fMKC2Zz+HnP29XTcHPY6SQ01eaT0zbnrik29oOQzq
+ X7PQ+25oXCpW9/94I2f82FqNpDVk2DhZkdcfvpWMOzV7FsLYoCzoCjKjfHqC5PpDLzIzlT/yE
+ yj79nSDgD8X0l5/QRLZLYQRb+nh5dJXW8koUtM+svIlrpctop8OBUqJTRKP6XIBVuctkBx8Xg
+ WSCftCupU7rXM3Wn/LCLWcy6g6Rj7NytfLXhriRF5XSrsGqpi/iAOps1EvVrVv+RmURHUETrF
+ RxsCZSq9VQLj/0Gfk
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 27, 2020 at 12:28 PM Charles Keepax
-<ckeepax@opensource.cirrus.com> wrote:
+> Maybe dmc->df->lock seems not needed to protect "if (ret)
+> & dev_warn" branch. Maybe this change speed up the code a bit.
 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+I suggest to improve also this commit message.
 
-Patch applied.
+* Please reduce uncertainty.
 
-Yours,
-Linus Walleij
+* An imperative wording is probably preferred, isn't it?
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
+Documentation/process/submitting-patches.rst?id=3D152036d1379ffd6985262743=
+dcf6b0f9c75f83a4#n151
+
+* Will it be more appropriate to refer to the transformation =E2=80=9CRedu=
+ce the lock scope=E2=80=9D?
+
+* Would you like to add the tag =E2=80=9CFixes=E2=80=9D to the change desc=
+ription?
+
+Regards,
+Markus
