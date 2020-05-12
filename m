@@ -2,110 +2,109 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7685C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9CCC54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA7A206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:14:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="H6BELK16"
+	by mail.kernel.org (Postfix) with ESMTP id D2393206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:15:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730335AbgELOOR (ORCPT
+        id S1730337AbgELOPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:14:17 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:60201 "EHLO ozlabs.org"
+        Tue, 12 May 2020 10:15:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:55872 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729756AbgELOOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:14:16 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49M0D64dCtz9sSg;
-        Wed, 13 May 2020 00:14:14 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589292854;
-        bh=1cWnbL5AnU1SFC0c6TK6Gmn0CFWs8l55Kduttq/IPBc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=H6BELK16xMJ2pPpr+UvXaiBbKGmOhUn7bxK76Gg57Dkar9kEWyLwnyW/P1b2MQAqh
-         yNkxrWhpzf3ryB5QqKNp0h3xLHb0PT9A1xbi79LQ6HQCjJ04doU9MZH/dyrTx7v729
-         FOJsspgpTqgCvUud/mLNhM0leHidjocdVxqTrssRI4ERTOVlYi+0lf3nJbE+TPt72w
-         /VEVe+wgNKvMDeHJ020KnVEOtDX+uMu7hxmm5h5UhyHZh6D2G8Z4nLBhDdYVvmGnyw
-         kOOkvLnF9QJiOwym262pZMHjGHCH1SXjaejvx2Q4Zd8j0DdU1ZDnhk2VapNsF0V0uA
-         rudi+ySeklhZQ==
-Date:   Wed, 13 May 2020 00:14:12 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     David Howells <dhowells@redhat.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the fsinfo tree
-Message-ID: <20200513001412.12598111@canb.auug.org.au>
-In-Reply-To: <CAK7LNAQ-=A0nDZK0FTzgJ6oJ-VbV33F1rVjvBAWgybSsUXaPVA@mail.gmail.com>
-References: <20200512195712.690f02bb@canb.auug.org.au>
-        <CAK7LNAQ-=A0nDZK0FTzgJ6oJ-VbV33F1rVjvBAWgybSsUXaPVA@mail.gmail.com>
+        id S1729519AbgELOPn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 10:15:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B69A530E;
+        Tue, 12 May 2020 07:15:42 -0700 (PDT)
+Received: from gaia (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DBB263F71E;
+        Tue, 12 May 2020 07:15:41 -0700 (PDT)
+Date:   Tue, 12 May 2020 15:15:35 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: Kmemleak infrastructure improvement for task_struct leaks and
+ call_rcu()
+Message-ID: <20200512141535.GA14943@gaia>
+References: <20200507171607.GD3180@gaia>
+ <40B2408F-05DD-4A82-BF97-372EA09FA873@lca.pw>
+ <20200509094455.GA4351@gaia>
+ <3F734E14-8E37-4967-B080-A25D0C58199C@lca.pw>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/_l.XWYgKS2wyJTKroYQkitq";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3F734E14-8E37-4967-B080-A25D0C58199C@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/_l.XWYgKS2wyJTKroYQkitq
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, May 10, 2020 at 05:27:41PM -0400, Qian Cai wrote:
+> On May 9, 2020, at 5:44 AM, Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > On Thu, May 07, 2020 at 01:29:04PM -0400, Qian Cai wrote:
+> >> On May 7, 2020, at 1:16 PM, Catalin Marinas <catalin.marinas@arm.com> wrote:
+> >>> I don't mind adding additional tracking info if it helps with debugging.
+> >>> But if it's for improving false positives, I'd prefer to look deeper
+> >>> into figure out why the pointer reference graph tracking failed.
+> >> 
+> >> No, the task struct leaks are real leaks. It is just painful to figure
+> >> out the missing or misplaced put_task_struct() from the kmemleak
+> >> reports at the moment.
+> > 
+> > We could log the callers to get_task_struct() and put_task_struct(),
+> > something like __builtin_return_address(0) (how does this work if the
+> > function is inlined?). If it's not the full backtrace, it shouldn't slow
+> > down kmemleak considerably. I don't think it's worth logging only the
+> > first/last calls to get/put. You'd hope that put is called in reverse
+> > order to get.
+> > 
+> > I think it may be better if this is added as a new allocation pointed to
+> > from kmemleak_object rather than increasing this structure since it will
+> > be added on a case by case basis. When dumping the leak information, it
+> > would also dump the get/put calls, in the order they were called. We
+> > could add some simple refcount tracking (++ for get, -- for put) to
+> > easily notice any imbalance.
+> > 
+> > I'm pretty busy next week but happy to review if you have a patch ;).
+> 
+> I am still thinking about a more generic way for all those
+> refcount-based leaks without needing of manual annotation of all those
+> places. Today, I had another one,
+> 
+> unreferenced object 0xe6ff008924f28500 (size 128):
+>   comm "qemu-kvm", pid 4835, jiffies 4295141828 (age 6944.120s)
+>   hex dump (first 32 bytes):
+>     01 00 00 00 6b 6b 6b 6b 00 00 00 00 ad 4e ad de  ....kkkk.....N..
+>     ff ff ff ff 6b 6b 6b 6b ff ff ff ff ff ff ff ff  ....kkkk........
+>   backtrace:
+>     [<000000005ed1a868>] slab_post_alloc_hook+0x74/0x9c
+>     [<00000000c65ee7dc>] kmem_cache_alloc_trace+0x2b4/0x3d4
+>     [<000000009efa9e6e>] do_eventfd+0x54/0x1ac
+>     [<000000001146e724>] __arm64_sys_eventfd2+0x34/0x44
+>     [<0000000096fc3a61>] do_el0_svc+0x128/0x1dc
+>     [<000000005ae8f980>] el0_sync_handler+0xd0/0x268
+>     [<0000000043f2c790>] el0_sync+0x164/0x180
+> 
+> That is eventfd_ctx_fileget() / eventfd_ctx_put() pairs.
 
-Hi Masahiro,
+In this case it uses kref_get() to increment the refcount. We could add
+a kmemleak_add_trace() which allocates a new array and stores the stack
+trace, linked to the original object. Similarly for kref_put().
 
-On Tue, 12 May 2020 23:00:13 +0900 Masahiro Yamada <masahiroy@kernel.org> w=
-rote:
->
-> I also failed to build it, but the error message
-> was different.
->=20
-> The following worked for me at least.
-> (Ubuntu 20.04).
->=20
-> diff --git a/samples/vfs/Makefile b/samples/vfs/Makefile
-> index 97e54c8be358..539fb3a56af3 100644
-> --- a/samples/vfs/Makefile
-> +++ b/samples/vfs/Makefile
-> @@ -1,7 +1,8 @@
->  # SPDX-License-Identifier: GPL-2.0-only
-> -userprogs :=3D test-fsmount test-mntinfo test-statx
-> +userprogs :=3D test-fsinfo test-fsmount test-mntinfo test-statx
->  always-y :=3D $(userprogs)
->=20
->  userccflags +=3D -I usr/include
->=20
-> -test-fsinfo-userldflags +=3D -static -lm
-> +test-fsinfo-userldflags :=3D -static
-> +test-fsinfo-userldlibs :=3D -lm
+If we do this for each inc/dec call, I'd leave it off as default and
+only enable it explicitly by cmdline argument or
+/sys/kerne/debug/kmemleak when needed. In most cases you'd hope there is
+no leak, so no point in tracking additional metadata. But if you do hit
+a problem, just enable the additional tracking to help with the
+debugging.
 
-Thanks, I will change the merge resolution to that.
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/_l.XWYgKS2wyJTKroYQkitq
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl66rzQACgkQAVBC80lX
-0GzpAwf8CjORtl+idsPwU7zqDqXLTgf4EKM4io4mY2wFnrtp3L7Xvg8ZqI5K2HkK
-J3WUhxRvEwWHnSjBf1UW5rM45oNBsBzA848Ju8Ei0kv/GM1jWtsYrAvK0vPh8gI9
-zo6M/ACAq+rDvyb8ZCSherYUkbtgwV9jBhNp2xb3iTNQkto1WiEc3NcOPI9ojysd
-a+01MC2QeYLhmVbcMQwXC98D9iGgtwWEjJtCGSAKR9+I/iIFJvoORlG77azABIZv
-EHWtgosIsp4OhmWujsFlpJHm+cd9TL0A+imgu+wazPpLrdNIBUuAes5141LOXKbd
-aZAwLQk+kQtExSy8z1dkfi50hDoDHg==
-=5fez
------END PGP SIGNATURE-----
-
---Sig_/_l.XWYgKS2wyJTKroYQkitq--
+-- 
+Catalin
