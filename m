@@ -2,99 +2,214 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A06D9C54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD8FC54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 743C820733
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DED0E2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:02:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lL6lcuIb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729344AbgELKBr (ORCPT
+        id S1729368AbgELKCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 06:01:47 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2192 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725889AbgELKBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 06:01:47 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 7C7D7900A0AC61A3F0CA;
-        Tue, 12 May 2020 11:01:45 +0100 (IST)
-Received: from [127.0.0.1] (10.210.169.134) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 12 May
- 2020 11:01:44 +0100
-Subject: Re: [PATCH] scsi: hisi_sas: display correct proc_name in sysfs
-To:     Jason Yan <yanaijie@huawei.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Xiang Chen <chenxiang66@hisilicon.com>
-References: <20200512063318.13825-1-yanaijie@huawei.com>
- <66c3318d-e8fa-9ff4-c7f4-ebe23925b807@huawei.com>
- <dacd7cbe-3d84-2b35-e63a-af6179aa5221@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <920c5d36-5637-1fba-034b-8ea3d41c131c@huawei.com>
-Date:   Tue, 12 May 2020 11:00:53 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 12 May 2020 06:02:51 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:59336 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725889AbgELKCu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 06:02:50 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04CA2bK8048126;
+        Tue, 12 May 2020 05:02:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589277757;
+        bh=BGrIbY3cp+/L7d+Mq2hbW6lY+Zs3bK2D/B59HXAbyJQ=;
+        h=From:To:CC:Subject:Date;
+        b=lL6lcuIbtrbAGkkKLFH9xPCH56NnLBn6xzo0LnGxJmANkKZ5vT0BhSOU7FwVJityx
+         VTdaySDWyo3nfL+msZ4wU4TOc1/1anVBda10cHGnwQuR1nqzX8SlACAqAFkRl05ZKl
+         nNf0p+0+d33o2ekLkuy/OSB0zVEfjYv2X2wuSvL8=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04CA2bPv084175
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 May 2020 05:02:37 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 12
+ May 2020 05:02:37 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 12 May 2020 05:02:37 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04CA2aB0014537;
+        Tue, 12 May 2020 05:02:36 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Arnd Bergmann <arnd@arndb.de>, <netdev@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Russell King <linux@armlinux.org.uk>
+CC:     <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        Clay McClure <clay@daemons.net>, Dan Murphy <dmurphy@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net v4] net: ethernet: ti: Remove TI_CPTS_MOD workaround
+Date:   Tue, 12 May 2020 13:02:30 +0300
+Message-ID: <20200512100230.17752-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <dacd7cbe-3d84-2b35-e63a-af6179aa5221@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.210.169.134]
-X-ClientProxiedBy: lhreml733-chm.china.huawei.com (10.201.108.84) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/05/2020 10:35, Jason Yan wrote:
-> 
-> 
-> 在 2020/5/12 16:23, John Garry 写道:
->> On 12/05/2020 07:33, Jason Yan wrote:
->>> The 'proc_name' entry in sysfs for hisi_sas is 'null' now becuase it is
->>> not initialized in scsi_host_template. It looks like:
->>>
->>> [root@localhost ~]# cat /sys/class/scsi_host/host2/proc_name
->>> (null)
->>>
->>
->> hmmm.. it would be good to tell us what this buys us, apart from the 
->> proc_name file.
->>
-> 
-> When there is more than one storage cards(or controllers) in the system, 
-> I'm tring to find out which host is belong to which card. And then I 
-> found this in scsi_host in sysfs but the output is '(null)' which is odd.
+From: Clay McClure <clay@daemons.net>
 
-"dmesg | grep host" would give this info, like:
+My recent commit b6d49cab44b5 ("net: Make PTP-specific drivers depend on
+PTP_1588_CLOCK") exposes a missing dependency in defconfigs that select
+TI_CPTS without selecting PTP_1588_CLOCK, leading to linker errors of the
+form:
 
-root@(none)$ dmesg | grep host0
-[    8.877245] scsi host0: hisi_sas_v2_hw
+drivers/net/ethernet/ti/cpsw.o: in function `cpsw_ndo_stop':
+cpsw.c:(.text+0x680): undefined reference to `cpts_unregister'
+ ...
 
-> 
->> I mean, if we had the sht show_info method implemented, then it could 
->> be useful (which is even marked as obsolete now).
->>
-> 
-> I found this is interesting while in the sysfs filesystem we have a 
-> procfs stuff in it.
+That's because TI_CPTS_MOD (which is the symbol gating the _compilation_ of
+cpts.c) now depends on PTP_1588_CLOCK, and so is not enabled in these
+configurations, but TI_CPTS (which is the symbol gating _calls_ to the cpts
+functions) _is_ enabled. So we end up compiling calls to functions that
+don't exist, resulting in the linker errors.
 
-It's only the name of the procfs entry, if it exists.
+This patch fixes build errors and restores previous behavior by:
+ - ensure PTP_1588_CLOCK=y in TI specific configs and CPTS will be built
+ - remove TI_CPTS_MOD and, instead, add dependencies from CPTS in
+   TI_CPSW/TI_KEYSTONE_NETCP/TI_CPSW_SWITCHDEV as below:
 
-And, since .show_info is obsolete, I don't see why .proc_name is not 
-also obsolete.
+   config TI_CPSW_SWITCHDEV
+   ...
+    depends on TI_CPTS || !TI_CPTS
 
-> I was planned to rename this entry to 'name' and use 
-> the struct member 'name' directly in struct scsi_host_template. But this 
-> may break userspace applications.
-> 
+   which will ensure proper dependencies PTP_1588_CLOCK -> TI_CPTS ->
+TI_CPSW/TI_KEYSTONE_NETCP/TI_CPSW_SWITCHDEV and build type selection.
 
-Thanks,
-John
+Note. For NFS boot + CPTS all of above configs have to be built-in.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Dan Murphy <dmurphy@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>
+Fixes: b6d49cab44b5 ("net: Make PTP-specific drivers depend on PTP_1588_CLOCK")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Clay McClure <clay@daemons.net>
+[grygorii.strashko@ti.com: rewording, add deps cpsw/netcp from cpts, drop IS_REACHABLE]
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+---
+
+v3: https://lkml.org/lkml/2020/5/8/356
+v2: https://lkml.org/lkml/2020/5/4/751
+
+ arch/arm/configs/keystone_defconfig  |  1 +
+ arch/arm/configs/omap2plus_defconfig |  1 +
+ drivers/net/ethernet/ti/Kconfig      | 16 ++++++----------
+ drivers/net/ethernet/ti/Makefile     |  2 +-
+ 4 files changed, 9 insertions(+), 11 deletions(-)
+
+diff --git a/arch/arm/configs/keystone_defconfig b/arch/arm/configs/keystone_defconfig
+index 11e2211f9007..84a3b055f253 100644
+--- a/arch/arm/configs/keystone_defconfig
++++ b/arch/arm/configs/keystone_defconfig
+@@ -147,6 +147,7 @@ CONFIG_I2C_DAVINCI=y
+ CONFIG_SPI=y
+ CONFIG_SPI_DAVINCI=y
+ CONFIG_SPI_SPIDEV=y
++CONFIG_PTP_1588_CLOCK=y
+ CONFIG_PINCTRL_SINGLE=y
+ CONFIG_GPIOLIB=y
+ CONFIG_GPIO_SYSFS=y
+diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
+index 395588209b27..c3f749650d5d 100644
+--- a/arch/arm/configs/omap2plus_defconfig
++++ b/arch/arm/configs/omap2plus_defconfig
+@@ -274,6 +274,7 @@ CONFIG_SPI_TI_QSPI=m
+ CONFIG_HSI=m
+ CONFIG_OMAP_SSI=m
+ CONFIG_SSI_PROTOCOL=m
++CONFIG_PTP_1588_CLOCK=y
+ CONFIG_PINCTRL_SINGLE=y
+ CONFIG_DEBUG_GPIO=y
+ CONFIG_GPIO_SYSFS=y
+diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+index 8e348780efb6..62f809b67469 100644
+--- a/drivers/net/ethernet/ti/Kconfig
++++ b/drivers/net/ethernet/ti/Kconfig
+@@ -49,6 +49,7 @@ config TI_CPSW_PHY_SEL
+ config TI_CPSW
+ 	tristate "TI CPSW Switch Support"
+ 	depends on ARCH_DAVINCI || ARCH_OMAP2PLUS || COMPILE_TEST
++	depends on TI_CPTS || !TI_CPTS
+ 	select TI_DAVINCI_MDIO
+ 	select MFD_SYSCON
+ 	select PAGE_POOL
+@@ -64,6 +65,7 @@ config TI_CPSW_SWITCHDEV
+ 	tristate "TI CPSW Switch Support with switchdev"
+ 	depends on ARCH_DAVINCI || ARCH_OMAP2PLUS || COMPILE_TEST
+ 	depends on NET_SWITCHDEV
++	depends on TI_CPTS || !TI_CPTS
+ 	select PAGE_POOL
+ 	select TI_DAVINCI_MDIO
+ 	select MFD_SYSCON
+@@ -77,23 +79,16 @@ config TI_CPSW_SWITCHDEV
+ 	  will be called cpsw_new.
+ 
+ config TI_CPTS
+-	bool "TI Common Platform Time Sync (CPTS) Support"
+-	depends on TI_CPSW || TI_KEYSTONE_NETCP || TI_CPSW_SWITCHDEV || COMPILE_TEST
++	tristate "TI Common Platform Time Sync (CPTS) Support"
++	depends on ARCH_OMAP2PLUS || ARCH_KEYSTONE || COMPILE_TEST
+ 	depends on COMMON_CLK
+-	depends on POSIX_TIMERS
++	depends on PTP_1588_CLOCK
+ 	---help---
+ 	  This driver supports the Common Platform Time Sync unit of
+ 	  the CPSW Ethernet Switch and Keystone 2 1g/10g Switch Subsystem.
+ 	  The unit can time stamp PTP UDP/IPv4 and Layer 2 packets, and the
+ 	  driver offers a PTP Hardware Clock.
+ 
+-config TI_CPTS_MOD
+-	tristate
+-	depends on TI_CPTS
+-	depends on PTP_1588_CLOCK
+-	default y if TI_CPSW=y || TI_KEYSTONE_NETCP=y || TI_CPSW_SWITCHDEV=y
+-	default m
+-
+ config TI_K3_AM65_CPSW_NUSS
+ 	tristate "TI K3 AM654x/J721E CPSW Ethernet driver"
+ 	depends on ARCH_K3 && OF && TI_K3_UDMA_GLUE_LAYER
+@@ -114,6 +109,7 @@ config TI_KEYSTONE_NETCP
+ 	select TI_DAVINCI_MDIO
+ 	depends on OF
+ 	depends on KEYSTONE_NAVIGATOR_DMA && KEYSTONE_NAVIGATOR_QMSS
++	depends on TI_CPTS || !TI_CPTS
+ 	---help---
+ 	  This driver supports TI's Keystone NETCP Core.
+ 
+diff --git a/drivers/net/ethernet/ti/Makefile b/drivers/net/ethernet/ti/Makefile
+index 53792190e9c2..cb26a9d21869 100644
+--- a/drivers/net/ethernet/ti/Makefile
++++ b/drivers/net/ethernet/ti/Makefile
+@@ -13,7 +13,7 @@ obj-$(CONFIG_TI_DAVINCI_EMAC) += ti_davinci_emac.o
+ ti_davinci_emac-y := davinci_emac.o davinci_cpdma.o
+ obj-$(CONFIG_TI_DAVINCI_MDIO) += davinci_mdio.o
+ obj-$(CONFIG_TI_CPSW_PHY_SEL) += cpsw-phy-sel.o
+-obj-$(CONFIG_TI_CPTS_MOD) += cpts.o
++obj-$(CONFIG_TI_CPTS) += cpts.o
+ obj-$(CONFIG_TI_CPSW) += ti_cpsw.o
+ ti_cpsw-y := cpsw.o davinci_cpdma.o cpsw_ale.o cpsw_priv.o cpsw_sl.o cpsw_ethtool.o
+ obj-$(CONFIG_TI_CPSW_SWITCHDEV) += ti_cpsw_new.o
+-- 
+2.17.1
+
