@@ -2,171 +2,120 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E055C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0B6C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D733C206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:09:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZUEDTd9"
+	by mail.kernel.org (Postfix) with ESMTP id 2D78E20722
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:09:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589292552;
+	bh=XlLg66om9qePZXeASi6fwsBTwuJ8dfQeSI2ucy4Tfaw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xU++5i2Q8jdoiP7paBYBBlf6t1iISfgC/aZKM32MSSHtC4bSPb8qeKySGL3hEJf4t
+	 kcX3r4QDZ2ZmeB7X2duvZBxKYssXqxL4K7LyhN/68/6M87R47Der/OF8ASUK6hvlml
+	 tkpbjL1O9E2kgLeK112ENebxYZHGq7CMxPOylOeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730148AbgELOJI (ORCPT
+        id S1730168AbgELOJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:09:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35014 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727859AbgELOJH (ORCPT
+        Tue, 12 May 2020 10:09:11 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43257 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727859AbgELOJK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:09:07 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 646EBC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 07:09:07 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id y22so1019711qki.3
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 07:09:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6/uIsxWQn8xUBY6PuZWN340e2D798d3iUe7b5tSjlu4=;
-        b=jZUEDTd9Pbyxy86CFcIgLT3Xq+vWSzd+naUcc1wuiyzIb19DQ3oPCcriApygsVi/fK
-         zrkvdQQXLd6B5ygxVuuhgIOblr764uGadJG12herxFL/OnZGWAxs3AvytnCp8AYjkLf9
-         AqJY1azQlzlJSaWOHOh83tez8n8MOC1Lhlcr8pfzy4pFO+ZVJgEfNTTF7+NOEnnregS6
-         peS9ohxm1hfKJkiszWpAM9KzYzMWIFOwR7vHD7sgXhvWOSJWTH2ozLigW6NH09vYbwLN
-         SMFUzsAxlvufVKdXZJNvlCMtJBQZRNj+v8sT1B9SkK0Ex2ZfMMvilbOHJg2Xk4NBWnVB
-         Huog==
+        Tue, 12 May 2020 10:09:10 -0400
+Received: by mail-ot1-f67.google.com with SMTP id a68so2069586otb.10;
+        Tue, 12 May 2020 07:09:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6/uIsxWQn8xUBY6PuZWN340e2D798d3iUe7b5tSjlu4=;
-        b=lghNUfFVKfqkdHwudpcyLH3Yoj9Cj31jrDwfVp3zlCXo3KQQpfdyA8eWZ9f18er3/N
-         mTjGMLhbR1+mxWi8TRtJio5oiKwwr39eMQVKpKSZO4ERP+3CbTvHV24T930evA9LH2Ia
-         SO7D2+yaO+01wi1qJIgzxiOn7C/98zKBwdf+k1SVNDGrN4F9/NkqL/QwT9TYPR8foMGq
-         yT0s1pn7diTNYFZYjCLYcbCMtAbmiX03nA3Y+E9zYTY1UOE9fgOF71ntGJV2zlR1RrAW
-         isfDqFpgRxr1sxWIGTBKpQGVywmgvVn/sX6DXbzPipxVGPzj1Hg3+r2E4KGq1wJatIby
-         pJJg==
-X-Gm-Message-State: AGi0PuboAbUR2S8rSooEDtjkuM241+m4Te5NRLAEx9Q+N+ovtokVaa5d
-        XaLKeWBkrTRyC2C2YOJ66PyfJtfHXJg=
-X-Google-Smtp-Source: APiQypJ8FVdVJ3xWnl/Fd4UGJ/K3PE6MEveItln32QIJw4YM3ctMkuWaD2olNha5f8IyPkoIMDh1lQ==
-X-Received: by 2002:a05:620a:816:: with SMTP id s22mr21389690qks.348.1589292546495;
-        Tue, 12 May 2020 07:09:06 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id c25sm5880872qkm.119.2020.05.12.07.09.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 07:09:06 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D1EB740AFD; Tue, 12 May 2020 11:09:02 -0300 (-03)
-Date:   Tue, 12 May 2020 11:09:02 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>
-Subject: Re: [PATCH perf/urgent] perf tools: Fix is_bpf_image function logic
-Message-ID: <20200512140902.GK28888@kernel.org>
-References: <20200512122310.3154754-1-jolsa@kernel.org>
- <20200512133223.GI28888@kernel.org>
- <20200512133609.GA3158213@krava>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XlLg66om9qePZXeASi6fwsBTwuJ8dfQeSI2ucy4Tfaw=;
+        b=i9SaClcqX8A0nYi/p1xB3lptVwUFTpWevNUsQwd2d2M4MvDWFweIyh/QEZIUpUmiQQ
+         O6RQcNqFwDc9nG2JLtjIEcQSTwZGHtekKXOz37LH9VXKBZoJV0gxnyxIExW6ABCJkJHb
+         jYmh+DelMCS0UdilEcr2DSlY4HaQX+n4q5fZTA3C5gDjAVg/ZzFscZjJc4RSm34Oj0G+
+         mWz0mYyTVLg5r2KgqF8Ze4LCWqJXJRYq15ghnDD4r1FATqDasDTvCeTWfdTqfS3yDPN4
+         UotzLWAVoJMkXdDsFSlEEnUX/0+8vc/mKM7PzxF3aqIqJp9rsko9wcvqFdPmBJEAYV5I
+         VT9g==
+X-Gm-Message-State: AGi0Pubvq3rpq9Tlky6liYyQksOqOmNRE7F4Gh1BgHQ8/70nQtmno4Hv
+        Yv7MLvVRXUPvEu1QlHEQkwMY9nWjjoXuKzXuGWo=
+X-Google-Smtp-Source: APiQypLSjiwX7PHp/boQvrrT9A2LLBsxN4GgnX7T8BCX5CQ4Qti5EIdMckwEZSBnSBOrvY/RjAqINo6HDSkgtHeujTs=
+X-Received: by 2002:a9d:6356:: with SMTP id y22mr3701328otk.167.1589292548150;
+ Tue, 12 May 2020 07:09:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512133609.GA3158213@krava>
-X-Url:  http://acmel.wordpress.com
+References: <20200508081128.GM5298@hirez.programming.kicks-ass.net>
+ <20200508103721.GA3860390@kroah.com> <20200508111612.GA252673@google.com>
+ <20200508113141.GB5298@hirez.programming.kicks-ass.net> <20200508130507.GA10541@google.com>
+ <CAJZ5v0iaa_VCtN608QKTYZ-A6QG_7bwxihxSgoEGv1LcSK-ksA@mail.gmail.com>
+ <20200511090049.GA229633@google.com> <CAJZ5v0jKMgFsR0dXDt4si5hT9QF2evaoMS-13y-Qde8UpcaARg@mail.gmail.com>
+ <20200512092102.GA16151@google.com> <CAJZ5v0hm3Tv2yZKLzM9a+kJuB1V5_eFOEKT-uM318dzeKV3_Qw@mail.gmail.com>
+ <20200512135813.GA101124@google.com>
+In-Reply-To: <20200512135813.GA101124@google.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 12 May 2020 16:08:56 +0200
+Message-ID: <CAJZ5v0hN708uvurZ-3oo90qUJFw3=Eg0OmtTaOKXQgNPXhCkFg@mail.gmail.com>
+Subject: Re: [PATCH 00/14] Modularize schedutil
+To:     Quentin Perret <qperret@google.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Benjamin Segall <bsegall@google.com>,
+        Mel Gorman <mgorman@suse.de>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Todd Kjos <tkjos@google.com>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, May 12, 2020 at 03:36:09PM +0200, Jiri Olsa escreveu:
-> On Tue, May 12, 2020 at 10:32:23AM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Tue, May 12, 2020 at 02:23:10PM +0200, Jiri Olsa escreveu:
-> > > Adrian reported that is_bpf_image is not working the way it was
-> > > intended - passing on trampolines and dispatcher names. Instead
-> > > it returned true for all the bpf names.
-> > > 
-> > > The reason even this logic worked properly is that all bpf objects,
-> > > even trampolines and dispatcher, were assigned DSO_BINARY_TYPE__BPF_IMAGE
-> > > binary_type.
-> > > 
-> > > The later for bpf_prog objects, the binary_type was fixed in bpf load event
-> > > processing, which is executed after the ksymbol code.
-> > > 
-> > > Fixing the is_bpf_image logic, so it properly recognizes trampoline
-> > > and dispatcher objects.
-> > 
-> > This is not applying on top of torvalds/master, not tip/perf/urgent, and
-> 
-> right.. it's on top of your's perf/core.. I can rebase on perf/urgent
+On Tue, May 12, 2020 at 3:58 PM Quentin Perret <qperret@google.com> wrote:
+>
+> On Tuesday 12 May 2020 at 12:25:17 (+0200), Rafael J. Wysocki wrote:
+> > Still, IMO it would be fair to say that if uclamps are used, schedutil
+> > is very likely to be preferred.
+> >
+> > Kconfig can be made select schedutil when enabling uclamps or similar
+> > to express that preference.
+>
+> Right, fair enough. Making schedutil default to y when uclamp is
+> compiled in should do the trick (and avoid using 'select'). Would that
+> work for you?
 
-You don't need to, this hasn't hit torvalds/master, it'll be in the next
-merge window, the one for 5.8.
- 
-> > you forgot to add the Fixes: line, lemme try to find this...
-> 
-> oops, sorry
-> 
->Fixes: 3c29d4483e85 ("perf annotate: Add basic support for bpf_image")
+I think so.
 
-I did it already, and:
+> > What you are proposing is basically to add complexity and the reason
+> > for doing that seems to be convenience (and that's not the users'
+> > convenience for that matter) which is not really super-convincing.
+>
+> Forcing our users to build in their products something they don't want
+> to use tends to be a very real problem for what we're trying to achieve,
+> so it's certainly not just convenience from our perspective. I can
+> understand that yours might be different, though.
 
-[acme@five perf]$ git tag --contains 3c29d4483e85
-perf-core-for-mingo-5.8-20200420
-perf-core-for-mingo-5.8-20200506
-perf-for-bpf-2020-05-06
-[acme@five perf]$
+I would like to understand the nature of the problem here.
 
-So can't go to perf/urgent at the moment.
+If some piece of kernel code is modular, it still needs to be build.
+The difference is when and how it gets loaded, so can you possibly
+elaborate here?
 
-- Arnaldo
- 
-> jirka
-> 
-> > 
-> > - Arnaldo
-> >  
-> > > Reported-by: Adrian Hunter <adrian.hunter@intel.com>
-> > > Signed-off-by: Jiri Olsa <jolsa@redhat.com>
-> > > ---
-> > >  tools/perf/util/machine.c | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> > > index 8ed2135893bb..d5384807372b 100644
-> > > --- a/tools/perf/util/machine.c
-> > > +++ b/tools/perf/util/machine.c
-> > > @@ -738,8 +738,8 @@ int machine__process_switch_event(struct machine *machine __maybe_unused,
-> > >  
-> > >  static int is_bpf_image(const char *name)
-> > >  {
-> > > -	return strncmp(name, "bpf_trampoline_", sizeof("bpf_trampoline_") - 1) ||
-> > > -	       strncmp(name, "bpf_dispatcher_", sizeof("bpf_dispatcher_") - 1);
-> > > +	return strncmp(name, "bpf_trampoline_", sizeof("bpf_trampoline_") - 1) == 0 ||
-> > > +	       strncmp(name, "bpf_dispatcher_", sizeof("bpf_dispatcher_") - 1) == 0;
-> > >  }
-> > >  
-> > >  static int machine__process_ksymbol_register(struct machine *machine,
-> > > -- 
-> > > 2.25.4
-> > > 
-> > 
-> > -- 
-> > 
-> > - Arnaldo
-> > 
-> 
-
--- 
-
-- Arnaldo
+Cheers!
