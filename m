@@ -2,126 +2,135 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F168C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FE1C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 416DE206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4DE206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:32:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PeWJGwrl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="muylQ8X1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729901AbgELNcN (ORCPT
+        id S1730025AbgELNc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 09:32:13 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:35946 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727783AbgELNcN (ORCPT
+        Tue, 12 May 2020 09:32:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728085AbgELNc3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 09:32:13 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589290332; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Pnp7vCHkgD7FucXCkrRb8JTH8OxBN3TyDHzUXyTSUpI=; b=PeWJGwrlLWaUfCWUv0nsPzq5p/xBmxCoTFaXjjhjPpUo35ZPOVnK8LY1Ui5Yvd5VB9GDpREe
- JtX1wG84KlgdkAn+zC4hxfotNIJ8w6Co1KiLXmyGFJmPRL05G9Zsr+TXhTdIlW4KIS5rkMu3
- G1YS4VF8wThAQ6dtdE72eK2WVl0=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ebaa538.7f2f9deb0a78-smtp-out-n02;
- Tue, 12 May 2020 13:31:36 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 13511C433BA; Tue, 12 May 2020 13:31:35 +0000 (UTC)
-Received: from [192.168.0.102] (unknown [183.83.139.238])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: charante)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2BEBEC433CB;
-        Tue, 12 May 2020 13:31:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2BEBEC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
-Subject: Re: [PATCH] mm, page_alloc: reset the zone->watermark_boost early
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        vinmenon@codeaurora.org
-References: <1589204408-5152-1-git-send-email-charante@codeaurora.org>
- <20200511131155.0b40ee443c3367e8f748b16f@linux-foundation.org>
-From:   Charan Teja Kalla <charante@codeaurora.org>
-Message-ID: <1cf5e778-eae1-fc71-aed4-d84d664d79dd@codeaurora.org>
-Date:   Tue, 12 May 2020 19:01:22 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 12 May 2020 09:32:29 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E01CDC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 06:32:27 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id di6so6252022qvb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 06:32:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=69F/dO93fLWYVW8s/bQK6cRsZlBg6dqg0tqZZwynyLA=;
+        b=muylQ8X139wB63+0Qh/pwLoK53v4mik8qjCVpPJpyJf53eQEMMR6PurmKE9dyxIR7I
+         /+bPOaWFQfeS3ZeV5wI3Pl4rZhRUpbAMxkDDvDLN5Zym8ipIF4s0IBCQ+e6xm9WQO5bJ
+         Pg1JJK9BSDavqN4sCQXC48cOLXXi+DEiOZBlwZpqN2KAoSYfn9VmE1wgF2qORfkrZyCQ
+         7yLK4VkvUTzZiUdV5CLTJpmjAQwml+TXBJQiffzJM6vhKFKuH90KSBr3P2uORBpRPHtf
+         wVu3U1mATW4jaNac8rITBT3+FwMEtzc71HyMbhu+k9Ha8AaaED47FuGwJdLBmTnJSprD
+         G0MA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=69F/dO93fLWYVW8s/bQK6cRsZlBg6dqg0tqZZwynyLA=;
+        b=oJhuKy+M+t9pRLeuqQBgYC8mTxBD27LMrTulHTVApK9gQKvlUXwKjp+3LLaGO6PqL/
+         yZ0MWZZoV70AnMxPPhy43GVa2SmunsYRYKMt/sZzaVjiCLL6XtU8Nh2ujTexaNwB2puM
+         4yx6qIt0IRAvNU1CJiafaOUBzivXm/ck/RVg9Kc+uVu546yJqdV05JU30/yU0HBlYQb8
+         kpUaEs5HnPpVUx/9d/aNFKIQq88KMzblkkW24GhkUtWb+14P1geQ3g6RxLgk2edpGava
+         q60QzpWJXeDwMvv8yf8sT5R2qnuNtsZcR0Ilrc/twzmazfYFenKT7LJ477Ywx2amLpi7
+         7few==
+X-Gm-Message-State: AGi0PubBHk3x44gh61vWLv9LbBrEZp/sQkTDgmwtnrWvJHn8idfkJdN5
+        iTxR/X0OcCWrLab9t9zswqK9qhgtH20=
+X-Google-Smtp-Source: APiQypI/YHlqjPtAKhGhaErqCvwMKBqpTkZORBd9/ThbR1XGiYR9CooTLIxYpWFi+wmHXeA0I9b/9Q==
+X-Received: by 2002:a05:6214:146b:: with SMTP id c11mr20236348qvy.191.1589290347065;
+        Tue, 12 May 2020 06:32:27 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id a21sm9266794qtw.24.2020.05.12.06.32.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 06:32:26 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id A64E840AFD; Tue, 12 May 2020 10:32:23 -0300 (-03)
+Date:   Tue, 12 May 2020 10:32:23 -0300
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH perf/urgent] perf tools: Fix is_bpf_image function logic
+Message-ID: <20200512133223.GI28888@kernel.org>
+References: <20200512122310.3154754-1-jolsa@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200511131155.0b40ee443c3367e8f748b16f@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512122310.3154754-1-jolsa@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Thank you Andrew for the reply.
-
-On 5/12/2020 1:41 AM, Andrew Morton wrote:
-> On Mon, 11 May 2020 19:10:08 +0530 Charan Teja Reddy <charante@codeaurora.org> wrote:
+Em Tue, May 12, 2020 at 02:23:10PM +0200, Jiri Olsa escreveu:
+> Adrian reported that is_bpf_image is not working the way it was
+> intended - passing on trampolines and dispatcher names. Instead
+> it returned true for all the bpf names.
 > 
->> Updating the zone watermarks by any means, like extra_free_kbytes,
->> min_free_kbytes, water_mark_scale_factor e.t.c, when watermark_boost is
->> set will result into the higher low and high watermarks than the user
->> asks. This can be avoided by resetting the zone->watermark_boost to zero
->> early.
+> The reason even this logic worked properly is that all bpf objects,
+> even trampolines and dispatcher, were assigned DSO_BINARY_TYPE__BPF_IMAGE
+> binary_type.
 > 
-> Does this solve some problem which has been observed in testing?
-
-Sorry, what are those issues observed in testing? It would be helpful
-If you post them here. 
-
+> The later for bpf_prog objects, the binary_type was fixed in bpf load event
+> processing, which is executed after the ksymbol code.
 > 
->> ...
->>
->> --- a/mm/page_alloc.c
->> +++ b/mm/page_alloc.c
->> @@ -7746,9 +7746,9 @@ static void __setup_per_zone_wmarks(void)
->>  			    mult_frac(zone_managed_pages(zone),
->>  				      watermark_scale_factor, 10000));
->>  
->> +		zone->watermark_boost = 0;
->>  		zone->_watermark[WMARK_LOW]  = min_wmark_pages(zone) + tmp;
->>  		zone->_watermark[WMARK_HIGH] = min_wmark_pages(zone) + tmp * 2;
->> -		zone->watermark_boost = 0;
->>  
->>  		spin_unlock_irqrestore(&zone->lock, flags);
->>  	}
+> Fixing the is_bpf_image logic, so it properly recognizes trampoline
+> and dispatcher objects.
+
+This is not applying on top of torvalds/master, not tip/perf/urgent, and
+you forgot to add the Fixes: line, lemme try to find this...
+
+- Arnaldo
+ 
+> Reported-by: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Jiri Olsa <jolsa@redhat.com>
+> ---
+>  tools/perf/util/machine.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> This could only be a problem if code is accessing these things without
-> holding zone->lock.  Is that ever the case?
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index 8ed2135893bb..d5384807372b 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -738,8 +738,8 @@ int machine__process_switch_event(struct machine *machine __maybe_unused,
+>  
+>  static int is_bpf_image(const char *name)
+>  {
+> -	return strncmp(name, "bpf_trampoline_", sizeof("bpf_trampoline_") - 1) ||
+> -	       strncmp(name, "bpf_dispatcher_", sizeof("bpf_dispatcher_") - 1);
+> +	return strncmp(name, "bpf_trampoline_", sizeof("bpf_trampoline_") - 1) == 0 ||
+> +	       strncmp(name, "bpf_dispatcher_", sizeof("bpf_dispatcher_") - 1) == 0;
+>  }
+>  
+>  static int machine__process_ksymbol_register(struct machine *machine,
+> -- 
+> 2.25.4
 > 
-
-This is a problem even when accessing these things with zone->lock
-held because we are directly using the macro min_wmark_pages(zone)
-which leads to the issue. Pasting macro here for reference.
-
-#define min_wmark_pages(z) (z->_watermark[WMARK_MIN] + z->watermark_boost)
-
-Steps that lead to the issue is like below:
-1) On the extfrag event, we try to boost the watermark by storing the
-   value in ->watermark_boost.
-
-2) User changes the value of extra|min_free_kbytes or watermark_scale_factor.
-  
-   In __setup_perzone_wmarks, we directly store the user asked
-   watermarks in the zones structure. In this step, the value
-   is always offsets by ->watermark_boost as we use the min_wmark_pages() macro.
-
-3) Later, when kswapd woke up, it resets the zone's watermark_boost to zero. 
-
-Step 2 from the above is what resulting into the issue.
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+
+- Arnaldo
