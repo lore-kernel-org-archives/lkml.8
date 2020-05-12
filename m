@@ -2,138 +2,125 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4796C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FA7C54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91A5A206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF011206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:33:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iE1w5kIF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GzrS3eiC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730632AbgELPcQ (ORCPT
+        id S1730630AbgELPd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 11:32:16 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:59055 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726388AbgELPcQ (ORCPT
+        Tue, 12 May 2020 11:33:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48226 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgELPd1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 11:32:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589297534;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3znfxGl3Y8dtZtdYEiFhfu/pKUx/1DihfE1tclQt+xI=;
-        b=iE1w5kIFrZ8lziTDGQeWbNCfQZAvyEQvSSE/CVg3DLkOmNzmqRMAQl3iGLkRDsjGIaZ6lS
-        9f+o07Jw3d+Ch9B6IX/P/vVrj1B3FyS740jKAtZv+rfdKdKDJTMm+u6Aox6WX+FzMjKL3c
-        7OJ+QaqO0h7lqPyIAy6y6YbSTkpx3Fs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-370-_q3gu77AM26zTzK1ED8dgQ-1; Tue, 12 May 2020 11:32:13 -0400
-X-MC-Unique: _q3gu77AM26zTzK1ED8dgQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3E5B419200C0;
-        Tue, 12 May 2020 15:32:11 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-116-85.rdu2.redhat.com [10.10.116.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E5FE6E9E0;
-        Tue, 12 May 2020 15:32:10 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id AE9CE220C05; Tue, 12 May 2020 11:32:09 -0400 (EDT)
-Date:   Tue, 12 May 2020 11:32:09 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, x86@kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Gavin Shan <gshan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/8] KVM: x86: Interrupt-based mechanism for async_pf
- 'page present' notifications
-Message-ID: <20200512153209.GC138129@redhat.com>
-References: <20200511164752.2158645-1-vkuznets@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511164752.2158645-1-vkuznets@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Tue, 12 May 2020 11:33:27 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FA01C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 08:33:26 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id j6so13446040qvn.9
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 08:33:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=O4K/En/qONOrXfLbIOD+SAfMhnyVUMpgoQRYv855ayg=;
+        b=GzrS3eiCs4SWgs4rXVtiEMJ5SY1GXLMgdf+qBsR1IoUXVpZsXVpKigGa12lkVWAeES
+         nbe2Elcxtg2LuveNS2Px9o/JYn84n+Q0tZZj4UqAecRv3vcGjequfkIUje6fFsU0MZaa
+         6+NOS04ajywceQ72ucEPik8OzGjPWQgFIJYor7hHEzjo/OYF0zvatTXTJ0c5cuoWNBbZ
+         Li2KKhjp/RYNgmDybwQjFf4dmzhNU03lnqxMqoAkU22lOK+r/Q/cLmi76LaGFv6kgTJ9
+         w3zFOKZsF4kdH0OFyPD2Lxf1app6kZmNFZgRImcHZVIDluWoSH5thOwa19pPv0UCcofu
+         DhoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=O4K/En/qONOrXfLbIOD+SAfMhnyVUMpgoQRYv855ayg=;
+        b=dVb5rxDa5jb9IY1c2dUpNZEUk/CtQZQ2N6MqU657jRfjgn2pGknBqWDu1IK04v0SZy
+         QG8GpCAqKA95QEGB1lNxxt5Vof2Oo5tiCU2HjstR1M7eVIoZCLoLXTEGeNOHK/PpGNlE
+         m9RqltDGCAPBfQvujgO36G02hCwy89ffyrbpAYzbYmYuw9eqRCEzFmjfqVa0RIDug6pW
+         wum39EAdvxr27KDN8BNUanDPTAOcq7A3s6d3Ltl1oymt/2v3+tvztDvb5lbnx1SDorcq
+         u2SIRmblNYIAjID5J/3H/4QHTHPKNL64sqyFqrE+WMYl0iwwYKxU7ZCohTqsiJ1tLm8C
+         5IlA==
+X-Gm-Message-State: AGi0Pua7jhydUpWIKyikBWKbiz71Pn/Pcxs9Bn7LEnYvEo2dg6bnmTY6
+        nO6APoyrgDkmBCW+1bB/qn1PeUHlrshClXXX
+X-Google-Smtp-Source: APiQypKfnEEfyHaQw/SU5Vb20eSqgtjr049W054488qV7bm/XNr+knjg4rY6hU/wZl2lbj72dlKv7q3OsyQPU6cX
+X-Received: by 2002:a0c:9ad5:: with SMTP id k21mr14928022qvf.2.1589297605130;
+ Tue, 12 May 2020 08:33:25 -0700 (PDT)
+Date:   Tue, 12 May 2020 17:33:19 +0200
+Message-Id: <29bd753d5ff5596425905b0b07f51153e2345cc1.1589297433.git.andreyknvl@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
+Subject: [PATCH 1/3] kasan: consistently disable debugging features
+From:   Andrey Konovalov <andreyknvl@google.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc:     Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vitaly,
+KASAN is incompatible with some kernel debugging/tracing features.
+There's been multiple patches that disable those feature for some of
+KASAN files one by one. Instead of prolonging that, disable these
+features for all KASAN files at once.
 
-Are there any corresponding qemu patches as well to enable new
-functionality. Wanted to test it.
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+---
+ mm/kasan/Makefile | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-Thanks
-Vivek
-
-On Mon, May 11, 2020 at 06:47:44PM +0200, Vitaly Kuznetsov wrote:
-> Concerns were expressed around (ab)using #PF for KVM's async_pf mechanism,
-> it seems that re-using #PF exception for a PV mechanism wasn't a great
-> idea after all. The Grand Plan is to switch to using e.g. #VE for 'page
-> not present' events and normal APIC interrupts for 'page ready' events.
-> This series does the later.
-> 
-> Changes since RFC:
-> - Using #PF for 'page ready' is deprecated and removed [Paolo Bonzini]
-> - 'reason' field in 'struct kvm_vcpu_pv_apf_data' is not used for 'page ready'
->   notifications and 'pageready_token' is not used for 'page not present' events
->   [Paolo Bonzini]
-> - Renamed MSR_KVM_ASYNC_PF2 -> MSR_KVM_ASYNC_PF_INT [Peter Xu]
-> - Drop 'enabled' field from MSR_KVM_ASYNC_PF_INT [Peter Xu]
-> - Other minor changes supporting the above.
-> 
-> Vitaly Kuznetsov (8):
->   Revert "KVM: async_pf: Fix #DF due to inject "Page not Present" and
->     "Page Ready" exceptions simultaneously"
->   KVM: x86: extend struct kvm_vcpu_pv_apf_data with token info
->   KVM: introduce kvm_read_guest_offset_cached()
->   KVM: x86: interrupt based APF page-ready event delivery
->   KVM: x86: acknowledgment mechanism for async pf page ready
->     notifications
->   KVM: x86: announce KVM_FEATURE_ASYNC_PF_INT
->   KVM: x86: Switch KVM guest to using interrupts for page ready APF
->     delivery
->   KVM: x86: drop KVM_PV_REASON_PAGE_READY case from
->     kvm_handle_page_fault()
-> 
->  Documentation/virt/kvm/cpuid.rst     |   6 ++
->  Documentation/virt/kvm/msr.rst       | 106 ++++++++++++++------
->  arch/s390/include/asm/kvm_host.h     |   2 +
->  arch/x86/entry/entry_32.S            |   5 +
->  arch/x86/entry/entry_64.S            |   5 +
->  arch/x86/include/asm/hardirq.h       |   3 +
->  arch/x86/include/asm/irq_vectors.h   |   6 +-
->  arch/x86/include/asm/kvm_host.h      |   7 +-
->  arch/x86/include/asm/kvm_para.h      |   6 ++
->  arch/x86/include/uapi/asm/kvm_para.h |  11 ++-
->  arch/x86/kernel/irq.c                |   9 ++
->  arch/x86/kernel/kvm.c                |  42 ++++++--
->  arch/x86/kvm/cpuid.c                 |   3 +-
->  arch/x86/kvm/mmu/mmu.c               |  10 +-
->  arch/x86/kvm/x86.c                   | 142 ++++++++++++++++++---------
->  include/linux/kvm_host.h             |   3 +
->  include/uapi/linux/kvm.h             |   1 +
->  virt/kvm/async_pf.c                  |  10 ++
->  virt/kvm/kvm_main.c                  |  19 +++-
->  19 files changed, 295 insertions(+), 101 deletions(-)
-> 
-> -- 
-> 2.25.4
-> 
+diff --git a/mm/kasan/Makefile b/mm/kasan/Makefile
+index 08b43de2383b..434d503a6525 100644
+--- a/mm/kasan/Makefile
++++ b/mm/kasan/Makefile
+@@ -1,23 +1,28 @@
+ # SPDX-License-Identifier: GPL-2.0
+ KASAN_SANITIZE := n
+-UBSAN_SANITIZE_common.o := n
+-UBSAN_SANITIZE_generic.o := n
+-UBSAN_SANITIZE_generic_report.o := n
+-UBSAN_SANITIZE_tags.o := n
++UBSAN_SANITIZE := n
+ KCOV_INSTRUMENT := n
+ 
++# Disable ftrace to avoid recursion.
+ CFLAGS_REMOVE_common.o = $(CC_FLAGS_FTRACE)
+ CFLAGS_REMOVE_generic.o = $(CC_FLAGS_FTRACE)
+ CFLAGS_REMOVE_generic_report.o = $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_init.o = $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_quarantine.o = $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_report.o = $(CC_FLAGS_FTRACE)
+ CFLAGS_REMOVE_tags.o = $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_tags_report.o = $(CC_FLAGS_FTRACE)
+ 
+ # Function splitter causes unnecessary splits in __asan_load1/__asan_store1
+ # see: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=63533
+-
+ CFLAGS_common.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+ CFLAGS_generic.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+ CFLAGS_generic_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
++CFLAGS_init.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
++CFLAGS_quarantine.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
++CFLAGS_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+ CFLAGS_tags.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
++CFLAGS_tags_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+ 
+ obj-$(CONFIG_KASAN) := common.o init.o report.o
+ obj-$(CONFIG_KASAN_GENERIC) += generic.o generic_report.o quarantine.o
+-- 
+2.26.2.645.ge9eca65c58-goog
 
