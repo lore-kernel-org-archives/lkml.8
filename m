@@ -2,80 +2,69 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1F9C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9717BC54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E68620736
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 659002075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:28:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589279291;
-	bh=uUUBbP8EaZMPnIIp30nshyT98I1oZwm7gc2V5X55qwM=;
+	s=default; t=1589279303;
+	bh=zpiNmb4UCtavZMNo6BKDHyMlep5F58zW98wc3jsNU58=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=MsDmmGaz6cK7FuMwIDrX85Pq1igEIZIKMYtgCO+XIBOiRxjFWmB0IGwfdTtSYmUm4
-	 MszBIIpcL5lN3L5aORS6wWcR9KMBUAF1m86Ori/xNFJwVL2W8jUssNvvPZUWrsyjtN
-	 3wn07b6IxmrTUvb+rw0/2zmZL2qRHxo/uj7/9h+s=
+	b=Twl4xlmz68dlMGZA+EEi3EeXDYR94wOBQPYLOjit9b9xBGwybwT/K1rKorQiKj0Ys
+	 pIdnfqJ4edD3zvTPkIUboi2x1RlSfXBpNGA5/VtBVeKXwIaygGqdBdsgf8xrwlHU9/
+	 LId86P1E1utsUnb7Zz9bwpp1I924q+I+1CuAF+gY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729432AbgELK2K (ORCPT
+        id S1729452AbgELK2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 06:28:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53010 "EHLO mail.kernel.org"
+        Tue, 12 May 2020 06:28:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729229AbgELK2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 06:28:10 -0400
+        id S1728416AbgELK2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 06:28:22 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79873206A3;
-        Tue, 12 May 2020 10:28:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36D03206A3;
+        Tue, 12 May 2020 10:28:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589279290;
-        bh=uUUBbP8EaZMPnIIp30nshyT98I1oZwm7gc2V5X55qwM=;
+        s=default; t=1589279301;
+        bh=zpiNmb4UCtavZMNo6BKDHyMlep5F58zW98wc3jsNU58=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=gxn8SyvAfBlFzIgPrZCy4c8NABKRXC2ezSM7qka0kxq/wAqzD6aPu0VACynXnIdQj
-         JgwLs8oz7XctyGrHluBZ+gUVaGDEvEYytJGQr7DtByCJE/OdNMwKpXpH/Xj8RAiNhm
-         hYyRXQzqX3hexI48WFaiCl81HLS1lcBn2naCGnKo=
-Date:   Tue, 12 May 2020 11:28:07 +0100
+        b=ihzpMPLAN81AlB25/9+LOE8ebLXxL9p8Pg4XBABQl/FDbwirChiSg0NqiDbyUICtM
+         CGM3YqXUwIwt0UNR/9lK5dRG+l4pBg5YaLuyq113Cjw8m0Y1V1cZAX+J0g7yVWJ43j
+         y8SHmOZ37Vf+QufDa9IByqy9+ylQ/+DwQk6gn05c=
+Date:   Tue, 12 May 2020 11:28:19 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Yongbo Zhang <giraffesnn123@gmail.com>
-Cc:     Chen Li <licheng0822@thundersoft.com>, alsa-devel@alsa-project.org,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20200512093003.28332-1-giraffesnn123@gmail.com>
-References: <20200511160731.GA3618@sirena.org.uk> <20200512093003.28332-1-giraffesnn123@gmail.com>
-Subject: Re: [PATCH v2] SoC: rsnd: add interrupt support for SSI BUSIF buffer
-Message-Id: <158927928738.28481.10666315188457403591.b4-ty@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <1587720562-15293-1-git-send-email-hayashi.kunihiko@socionext.com>
+References: <1587720562-15293-1-git-send-email-hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH v2] dt-bindings: spi: Convert UniPhier SPI controller to json-schema
+Message-Id: <158927929911.28665.8593031021251686663.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 May 2020 17:30:03 +0800, Yongbo Zhang wrote:
-> SSI BUSIF buffer is possible to overflow or underflow, especially in a
-> hypervisor environment. If there is no interrupt support, it will eventually
-> lead to errors in pcm data.
-> This patch adds overflow and underflow interrupt support for SSI BUSIF buffer.
-> 
-> Reported-by: Chen Li <licheng0822@thundersoft.com>
-> Signed-off-by: Yongbo Zhang <giraffesnn123@gmail.com>
-> Tested-by: Chen Li <licheng0822@thundersoft.com>
-> Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> Acked-by: Mark Brown <broonie@kernel.org>
-> 
-> [...]
+On Fri, 24 Apr 2020 18:29:22 +0900, Kunihiko Hayashi wrote:
+> Convert UniPhier SPI controller binding to DT schema format.
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.8
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.8
 
 Thanks!
 
-[1/1] SoC: rsnd: add interrupt support for SSI BUSIF buffer
-      commit: 66c705d07d784fb6b4622c6e47b6acae357472db
+[1/1] spi: Convert UniPhier SPI controller to json-schema
+      commit: 5483ef03e075c1625c66ba728b55ef67f7cb3ed1
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
