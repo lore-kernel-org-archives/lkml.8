@@ -6,135 +6,142 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AF4C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09311C54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E3C8206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1CAE206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:23:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730126AbgELOWg (ORCPT
+        id S1730207AbgELOXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:22:36 -0400
-Received: from muru.com ([72.249.23.125]:53996 "EHLO muru.com"
+        Tue, 12 May 2020 10:23:14 -0400
+Received: from mga02.intel.com ([134.134.136.20]:24333 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728085AbgELOWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:22:35 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id E8BE48047;
-        Tue, 12 May 2020 14:23:22 +0000 (UTC)
-Date:   Tue, 12 May 2020 07:22:30 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, netdev@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        Clay McClure <clay@daemons.net>, Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH net v4] net: ethernet: ti: Remove TI_CPTS_MOD workaround
-Message-ID: <20200512142230.GF37466@atomide.com>
-References: <20200512100230.17752-1-grygorii.strashko@ti.com>
+        id S1728085AbgELOXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 10:23:14 -0400
+IronPort-SDR: ZiBXA76rb1/qZhNuKw1vgwQ2DC1XW3Kk46lXmqcYNjWIsc9o1haLQW2ZQ6LJ1X5Z1cPX6+KvQx
+ T88Ij9y0cT7g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 07:23:11 -0700
+IronPort-SDR: GlzZtu1sGARwiLFsda7n5jP+UidS5IcfVek8rox5EIDoV01vzHRDGFl9rq8vjh2j1rPhVTZ4+J
+ 9F++snUjWrew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,384,1583222400"; 
+   d="scan'208";a="371578153"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 12 May 2020 07:22:52 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 12 May 2020 17:22:51 +0300
+Date:   Tue, 12 May 2020 17:22:51 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Benson Leung <bleung@chromium.org>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH 2/4] usb: typec: mux: intel_pmc_mux: Support for static
+ SBU/HSL orientation
+Message-ID: <20200512142251.GD2085641@kuha.fi.intel.com>
+References: <20200507150900.12102-1-heikki.krogerus@linux.intel.com>
+ <20200507150900.12102-3-heikki.krogerus@linux.intel.com>
+ <20200507224041.GA247416@google.com>
+ <20200508111840.GG645261@kuha.fi.intel.com>
+ <20200511133202.GA2085641@kuha.fi.intel.com>
+ <20200511175719.GA136540@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200512100230.17752-1-grygorii.strashko@ti.com>
+In-Reply-To: <20200511175719.GA136540@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Prashant,
 
-* Grygorii Strashko <grygorii.strashko@ti.com> [200512 10:03]:
-> From: Clay McClure <clay@daemons.net>
+On Mon, May 11, 2020 at 10:57:19AM -0700, Prashant Malani wrote:
+> Hi Heikki,
 > 
-> My recent commit b6d49cab44b5 ("net: Make PTP-specific drivers depend on
-> PTP_1588_CLOCK") exposes a missing dependency in defconfigs that select
-> TI_CPTS without selecting PTP_1588_CLOCK, leading to linker errors of the
-> form:
+> Thanks a lot for looking into this. Kindly see my response inline:
 > 
-> drivers/net/ethernet/ti/cpsw.o: in function `cpsw_ndo_stop':
-> cpsw.c:(.text+0x680): undefined reference to `cpts_unregister'
->  ...
-> 
-> That's because TI_CPTS_MOD (which is the symbol gating the _compilation_ of
-> cpts.c) now depends on PTP_1588_CLOCK, and so is not enabled in these
-> configurations, but TI_CPTS (which is the symbol gating _calls_ to the cpts
-> functions) _is_ enabled. So we end up compiling calls to functions that
-> don't exist, resulting in the linker errors.
-> 
-> This patch fixes build errors and restores previous behavior by:
->  - ensure PTP_1588_CLOCK=y in TI specific configs and CPTS will be built
->  - remove TI_CPTS_MOD and, instead, add dependencies from CPTS in
->    TI_CPSW/TI_KEYSTONE_NETCP/TI_CPSW_SWITCHDEV as below:
-> 
->    config TI_CPSW_SWITCHDEV
->    ...
->     depends on TI_CPTS || !TI_CPTS
-> 
->    which will ensure proper dependencies PTP_1588_CLOCK -> TI_CPTS ->
-> TI_CPSW/TI_KEYSTONE_NETCP/TI_CPSW_SWITCHDEV and build type selection.
-> 
-> Note. For NFS boot + CPTS all of above configs have to be built-in.
+> On Mon, May 11, 2020 at 04:32:02PM +0300, Heikki Krogerus wrote:
+> > On Fri, May 08, 2020 at 02:18:44PM +0300, Heikki Krogerus wrote:
+> > > Hi Prashant,
+> > > 
+> > > On Thu, May 07, 2020 at 03:40:41PM -0700, Prashant Malani wrote:
+> > > > > +static int sbu_orientation(struct pmc_usb_port *port)
+> > > > > +{
+> > > > > +	if (port->sbu_orientation)
+> > > > > +		return port->sbu_orientation - 1;
+> > > > > +
+> > > > > +	return port->orientation - 1;
+> > > > > +}
+> > > > > +
+> > > > > +static int hsl_orientation(struct pmc_usb_port *port)
+> > > > > +{
+> > > > > +	if (port->hsl_orientation)
+> > > > > +		return port->hsl_orientation - 1;
+> > > > > +
+> > > > > +	return port->orientation - 1;
+> > > > > +}
+> > > > > +
+> > > > >  static int pmc_usb_command(struct pmc_usb_port *port, u8 *msg, u32 len)
+> > > > >  {
+> > > > >  	u8 response[4];
+> > > > > @@ -151,8 +170,9 @@ pmc_usb_mux_dp(struct pmc_usb_port *port, struct typec_mux_state *state)
+> > > > >  
+> > > > >  	req.mode_data = (port->orientation - 1) << PMC_USB_ALTMODE_ORI_SHIFT;
+> > > > >  	req.mode_data |= (port->role - 1) << PMC_USB_ALTMODE_UFP_SHIFT;
+> > > > > -	req.mode_data |= (port->orientation - 1) << PMC_USB_ALTMODE_ORI_AUX_SHIFT;
+> > > > > -	req.mode_data |= (port->orientation - 1) << PMC_USB_ALTMODE_ORI_HSL_SHIFT;
+> > > > > +
+> > > > > +	req.mode_data |= sbu_orientation(port) << PMC_USB_ALTMODE_ORI_AUX_SHIFT;
+> > > > 
+> > > > I'm curious to know what would happen when sbu-orientation == "normal".
+> > > > That means |port->sbu_orientation| == 1.
+> > > > 
+> > > > It sounds like what should happen is the AUX_SHIFT orientation
+> > > > setting should follow what |port->orientation| is, but here it
+> > > > looks like it will always be set to |port->sbu_orientation - 1|, i.e 0,
+> > > > even if port->orientation == TYPEC_ORIENTATION_REVERSE, i.e 2, meaning
+> > > > it should be set to 1 ?
+> > > 
+> > > I'll double check this, and get back to you..
+> > 
+> > This is not exactly an answer to your question, but it seems that
+> > those bits are only valid if "Alternate-Direct" message is used.
+> > Currently the driver does not support that message.
+> Could you kindly provide some detail on when "Alternate-Direct" would be
+> preferred to the current method?
 
-This builds and boots on BBB and beagle x15 with NFSroot so:
+Alternate Mode Direct request is supposed to be used if an alternate
+mode is entered directly from disconnected state.
 
-Tested-by: Tony Lindgren <tony@atomide.com>
+> Also, is there anything on the PMC side which is preventing the use of
+> "Alternate-Direct" messages? It seems like the state transition diagram
+> there would be simpler, although I'm likely missing significant details
+> here.
 
-However, there's at least one more issue left that shows up at least
-on ti81xx dra62x-j5eco-evm on v5.7-rc5 that has commit b46b2b7ba6e1
-("ARM: dts: Fix dm814x Ethernet by changing to use rgmii-id mode").
+So we actually should use the "direct" request if we are in
+disconnected state to enter alt modes if I understood correctly. But
+otherwise we should use the normal Alternate Mode request and not the
+Alternate Mode "direct" request. And I'm afraid I don't know why.
 
-I think this is a different issue though, any ideas?
+> > I think the correct thing to do now is to remove the two lines from
+> > the driver where those bits (ORI-HSL and ORI-Aux) are set.
+> I see. How would orientation then be handled in a retimer configuration
+> where AUX/SBU is flipped by the retimer itself?
 
-Regards,
+Note that if we send a separate "connection" request first, then we
+already tell the HSL and SBU orientation as part of the payload of
+that request. That is why there is no need to tell about the HSL and
+SBU orientation with the normal Alternate Mode Request.
 
-Tony
+So we have already handled the HSL and SBU orientation by the time
+this function is called.
 
 
-[    7.278339] 8<--- cut here ---
-[    7.281421] Unhandled fault: external abort on non-linefetch (0x1008) at 0xf0169004
-[    7.289116] pgd = (ptrval)
-[    7.291836] [f0169004] *pgd=ae83a811, *pte=4a101653, *ppte=4a101453
-[    7.298154] Internal error: : 1008 [#1] SMP ARM
-[    7.302707] Modules linked in:
-[    7.305789] CPU: 0 PID: 73 Comm: kworker/0:3 Not tainted 5.7.0-rc5-dirty #1969
-[    7.313042] Hardware name: Generic ti814x (Flattened Device Tree)
-[    7.319190] Workqueue: pm pm_runtime_work
-[    7.323241] PC is at davinci_mdio_runtime_suspend+0xc/0x8c
-[    7.328753] LR is at __rpm_callback+0x84/0x154
-[    7.333218] pc : [<c0703c98>]    lr : [<c063f2a4>]    psr: a0000013
-[    7.339513] sp : eed7be80  ip : fffffffa  fp : 00000008
-[    7.344761] r10: ffffe000  r9 : eed3ba40  r8 : 00000000
-[    7.350010] r7 : 00000000  r6 : c063c810  r5 : c063c810  r4 : eed1c010
-[    7.356568] r3 : f0169000  r2 : 000000d4  r1 : eed1c010  r0 : eed1c010
-[    7.363129] Flags: NzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-[    7.370297] Control: 10c5387d  Table: 80004019  DAC: 00000051
-[    7.376069] Process kworker/0:3 (pid: 73, stack limit = 0x(ptrval))
-[    7.382367] Stack: (0xeed7be80 to 0xeed7c000)
-[    7.386755] be80: eed1c010 c063c810 c063c810 00000000 00000000 c0e051c8 ffffe000 c063f2a4
-[    7.394978] bea0: eed1c010 c063c810 0000000a 00000000 00000000 c063f394 eed1c010 c063c810
-[    7.403202] bec0: 0000000a c063f4f0 c0e00018 ef4e2400 ee979880 c0e088c0 00000000 00000001
-[    7.411425] bee0: 00000000 ef4e2400 eed7bf44 c09293e8 00000000 ea441c81 0efa67ff eed1c0f4
-[    7.419648] bf00: eed5ca80 ef4e2000 ff7edc00 00000000 00000000 c0ebf890 ffffe000 c0640af0
-[    7.427871] bf20: eed1c0f4 c0155338 ee979880 ef4e2000 00000008 eed5ca80 eed5ca94 ef4e2000
-[    7.436094] bf40: 00000008 ef4e2018 c0e03d00 ef4e2000 ffffe000 c0155eb0 ffffe000 eed5ca80
-[    7.444318] bf60: c0155e84 00000000 eed5a880 eed5a840 eed7a000 eed5ca80 c0155e84 ee915eac
-[    7.452542] bf80: eed5a85c c015bf38 00000001 eed5a880 c015be04 00000000 00000000 00000000
-[    7.460763] bfa0: 00000000 00000000 00000000 c0100168 00000000 00000000 00000000 00000000
-[    7.468985] bfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[    7.477207] bfe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
-[    7.485450] [<c0703c98>] (davinci_mdio_runtime_suspend) from [<c063f2a4>] (__rpm_callback+0x84/0x154)
-[    7.494720] [<c063f2a4>] (__rpm_callback) from [<c063f394>] (rpm_callback+0x20/0x80)
-[    7.502506] [<c063f394>] (rpm_callback) from [<c063f4f0>] (rpm_suspend+0xfc/0x6ac)
-[    7.510117] [<c063f4f0>] (rpm_suspend) from [<c0640af0>] (pm_runtime_work+0x88/0xa4)
-[    7.517916] [<c0640af0>] (pm_runtime_work) from [<c0155338>] (process_one_work+0x228/0x568)
-[    7.526317] [<c0155338>] (process_one_work) from [<c0155eb0>] (worker_thread+0x2c/0x5d4)
-[    7.534460] [<c0155eb0>] (worker_thread) from [<c015bf38>] (kthread+0x134/0x148)
-[    7.541900] [<c015bf38>] (kthread) from [<c0100168>] (ret_from_fork+0x14/0x2c)
-[    7.549155] Exception stack(0xeed7bfb0 to 0xeed7bff8)
-[    7.554233] bfa0:                                     00000000 00000000 00000000 00000000
-[    7.562455] bfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[    7.570676] bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
-[    7.577331] Code: e8bd8070 e92d47f0 e5909040 e5993004 (e5935004)
-[    7.583459] ---[ end trace 42a064f19df2a2ea ]---
-[    7.588333] 8<--- cut here ---
+thanks,
+
+-- 
+heikki
