@@ -2,107 +2,112 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E721C54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E60FC47255
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2988B2071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:12:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589249528;
-	bh=PVzRHToGk0jwAIcAzV66HkkiRBnnVy9N/wVjUwQVUc4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gH3NDC48d3tIpCXmdDp2VLH+dvyEtz/mqmDObYiMtW8cnX8MQfBF3l/fe2AtWAqwL
-	 4jo7b9joJEpwl/J1CKIOEXMbAOCOmFuLeb0gol7UbO1JmfbRcA2xxK8KFyCiFX+REg
-	 eVutfQ0VLJ5W2fDWvYjW/sKAapBU0QuMLqzMrWJg=
+	by mail.kernel.org (Postfix) with ESMTP id 820432071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:12:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbgELCMH (ORCPT
+        id S1728613AbgELCMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 22:12:07 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:33399 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727892AbgELCMH (ORCPT
+        Mon, 11 May 2020 22:12:41 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:34880 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727892AbgELCMl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 22:12:07 -0400
-Received: by mail-oi1-f194.google.com with SMTP id o24so16964126oic.0;
-        Mon, 11 May 2020 19:12:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a6FnCmniEb0SZj05Hm52FA7/odoyQ0dRtkEViBqLyQk=;
-        b=gFCMk08jK4+HJJmHisoizBRuhbsTZeCEPRBsDlvZUnl8lwLuaYv2APt+Rdfq1cmmsP
-         6SKEy/7ASYxoPa3ZKJUv0IKrqMVDMMCIFVkY1SOALbRjL41tzyosDPHO9WYtocgu0iqH
-         j9RtLFD5GEdVL7FmS2bVRNQlq2nDFRof5hannXi/SIKjhUaTtFkhINDpPvezZPrLilF0
-         shd9UIgUTNgbjC29OAZJNoOHqa9NVOt4e90hn5sQClSGjog1WPD+u0Bx9r92LEAr3SIY
-         wi/aCG/VvEl0yzAXyYi/Z0BWePx0Wic3fGLlnp0KQfTpTrKGTluEvIPxSLchkfFhENR/
-         lBhg==
-X-Gm-Message-State: AGi0PubAkR+oT/fuYFOBvxgEVDk/0BnSODfRw41BEXclNIzXoGxJO3EG
-        mBXmW1GuYLMl7tXro0XCOQ==
-X-Google-Smtp-Source: APiQypLyUokqa9+HwgdwMV+wpVX5omYrQpTlGxbxo5UJ8ncdqjh4nKtXr+dGUhC/l1K5SQDIn8SHuA==
-X-Received: by 2002:a54:4512:: with SMTP id l18mr21349336oil.81.1589249526246;
-        Mon, 11 May 2020 19:12:06 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t6sm3146401otb.27.2020.05.11.19.12.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 19:12:05 -0700 (PDT)
-Received: (nullmailer pid 20842 invoked by uid 1000);
-        Tue, 12 May 2020 02:12:04 -0000
-Date:   Mon, 11 May 2020 21:12:04 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        palmer@dabbelt.com, paul.walmsley@sifive.com, atish.patra@wdc.com,
-        devicetree@vger.kernel.org
-Subject: Re: [RFC PATCH 4/4] dt-bindings: net: phy: extend dt binding for
- VSC8541 ethernet-phy
-Message-ID: <20200512021204.GA12999@bogus>
-References: <1588072608-7747-1-git-send-email-sagar.kadam@sifive.com>
- <1588072608-7747-5-git-send-email-sagar.kadam@sifive.com>
+        Mon, 11 May 2020 22:12:41 -0400
+X-IronPort-AV: E=Sophos;i="5.73,381,1583164800"; 
+   d="scan'208";a="91931189"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 12 May 2020 10:12:38 +0800
+Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
+        by cn.fujitsu.com (Postfix) with ESMTP id E26BF4BCC89B;
+        Tue, 12 May 2020 10:12:34 +0800 (CST)
+Received: from [10.167.220.69] (10.167.220.69) by
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Tue, 12 May 2020 10:12:35 +0800
+Message-ID: <5EBA0611.1070608@cn.fujitsu.com>
+Date:   Tue, 12 May 2020 10:12:33 +0800
+From:   Xiao Yang <yangx.jy@cn.fujitsu.com>
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.2; zh-CN; rv:1.9.2.18) Gecko/20110616 Thunderbird/3.1.11
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588072608-7747-5-git-send-email-sagar.kadam@sifive.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+To:     Xiao Yang <yangx.jy@cn.fujitsu.com>
+CC:     <linux-kernel@vger.kernel.org>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <acme@kernel.org>, <joe@perches.com>,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v2] tools/perf/util/*.c: Use "%zu" output format for size_t
+ type
+References: <20200226010818.8639-1-yangx.jy@cn.fujitsu.com>
+In-Reply-To: <20200226010818.8639-1-yangx.jy@cn.fujitsu.com>
+Content-Type: text/plain; charset="GB2312"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.167.220.69]
+X-ClientProxiedBy: G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) To
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206)
+X-yoursite-MailScanner-ID: E26BF4BCC89B.AF650
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: yangx.jy@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 04:16:48AM -0700, Sagar Shrikant Kadam wrote:
-> Adding a OUI (Organizationally Unique Identifier) for VSC8541-01
-> device to dt node requires a corresponding dt-binding entry as well
-> so that checkpatch doesn't complain with a warning:
-> 
-> DT compatible string "ethernet-phy-id0007.0771" appears un-documented
-> 
-> Here extend the existing dt binding of VSC8531 device to include
-> VSC8541 device example.
+Hi,
 
-Checkpatch.pl is just dumb here and can be ignored. We have the regex 
-that documents this compatible. We don't need every VID/PID listed.
+Ping!
 
+Thanks,
+Xiao Yang
+On 2020/2/26 9:08, Xiao Yang wrote:
+> Avoid the following errors when building perf on i386:
+> -----------------------------------------------
+> util/session.c: In function 'perf_session__process_compressed_event':
+> util/session.c:91:11: error: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t {aka unsigned int}' [-Werror=format=]
+>    pr_debug("decomp (B): %ld to %ld\n", src_size, decomp_size);
+> ...
+> til/zstd.c: In function 'zstd_decompress_stream':
+> util/zstd.c:102:11: error: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t {aka unsigned int}' [-Werror=format=]
+>      pr_err("failed to decompress (B): %ld ->  %ld, dst_size %ld : %s\n",
+> ...
+> -----------------------------------------------
 > 
-> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+> Reported-by: kernel test robot<lkp@intel.com>
+> Signed-off-by: Xiao Yang<yangx.jy@cn.fujitsu.com>
 > ---
->  Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt | 3 +++
->  1 file changed, 3 insertions(+)
+>   tools/perf/util/session.c | 2 +-
+>   tools/perf/util/zstd.c    | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-> index 5ff37c6..774448a 100644
-> --- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-> +++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-> @@ -68,3 +68,6 @@ Example:
->                  vsc8531,led-0-mode	= <LINK_1000_ACTIVITY>;
->                  vsc8531,led-1-mode	= <LINK_100_ACTIVITY>;
->          };
-> +        vsc8541_0: ethernet-phy@0 {
-> +                compatible = "ethernet-phy-id0007.0771";
-> +	};
-> -- 
-> 2.7.4
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index d0d7d25b23e3..55c3d2fefd41 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -88,7 +88,7 @@ static int perf_session__process_compressed_event(struct perf_session *session,
+>   		session->decomp_last = decomp;
+>   	}
 > 
+> -	pr_debug("decomp (B): %ld to %ld\n", src_size, decomp_size);
+> +	pr_debug("decomp (B): %zu to %zu\n", src_size, decomp_size);
+> 
+>   	return 0;
+>   }
+> diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
+> index d2202392ffdb..a051237cacf2 100644
+> --- a/tools/perf/util/zstd.c
+> +++ b/tools/perf/util/zstd.c
+> @@ -99,7 +99,7 @@ size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size
+>   	while (input.pos<  input.size) {
+>   		ret = ZSTD_decompressStream(data->dstream,&output,&input);
+>   		if (ZSTD_isError(ret)) {
+> -			pr_err("failed to decompress (B): %ld ->  %ld, dst_size %ld : %s\n",
+> +			pr_err("failed to decompress (B): %zu ->  %zu, dst_size %zu : %s\n",
+>   			       src_size, output.size, dst_size, ZSTD_getErrorName(ret));
+>   			break;
+>   		}
+
+
+
