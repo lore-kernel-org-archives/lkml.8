@@ -2,153 +2,281 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D58BC54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 05:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 591AAC54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 05:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3600820736
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 05:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2892B20733
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 05:47:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589262252;
-	bh=cDx7ZPUkhE4EbFGfhirZQ/hDhNapsXc6nReD8eaKRCw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zAASA5G1T3KOiDNXMbfEzKTdvc8RclPRB75NbGY/9sT6qMFRfe/uddUM+gtsFOIBD
-	 DSB4U6PQFnjhqD2+s3JYZ2ViQpy6RZhp/oq53cEg1MKmvy9ALoB1RZFB2F7b4/zeLR
-	 R8n6et9Uqb/+hl1MwkphbbCtaJ8QTc0JzBaeTbzU=
+	s=default; t=1589262447;
+	bh=W6eUgeDr2duvIyP0lyFlVdNwqTK56bfsailXDlUtewg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Iq6sFG2AWDhXgJxUk06JiU3QJHHFk7+96ogf3QvbypTNvLBQ9m567S3u+0xT6xHBb
+	 xNkQhEke17zPjOkHzD3wvMKcjfoBzHxpT/rIKtW/iX5k6Y5QU91sar70uVNarwxxEa
+	 VXtCDlCog1mw/2rtWoPcdlReE6FKfCGLtG2HxCnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbgELFoL (ORCPT
+        id S1728304AbgELFr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 01:44:11 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:34245 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbgELFoK (ORCPT
+        Tue, 12 May 2020 01:47:26 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:18221 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbgELFrZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 01:44:10 -0400
-Received: by mail-pj1-f65.google.com with SMTP id l73so96519pjb.1;
-        Mon, 11 May 2020 22:44:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GP5Aq+uFAcHSWqf5TbEfKkqCWH10YwxwBjLnjkDpTgw=;
-        b=iykkvtPajnLR2cEz1UTvVbqN0frqRWsE1PajfI6ssASpG9/XDkGCQ4Tu9UdHN3Jo0Z
-         kJmyoUf+O4Z4Rhl+LVjTxSSe7b2KVX/58Huvkhwsgcta3Wmc2pvyb8n3zzLMq8O1PKAq
-         Gi9h8Bj5t/0l4odcpISBmBs0Odu5tWvDM9HSj8Rnsk8810Mqb3zFTDuCyQUrQyXKuh3N
-         CODGvU38ZSSvP5gPygmcaMkTgLePRej+fQBhjJ5e3Qn+03+gQdmUyGVFGsYEUJyG7kRR
-         CMt587coANvMRz8W8geuU9k9Ihgl/XFRPQVkOHOAYuAi/56dim53M4qe0JAafAcuvZYs
-         9P8A==
-X-Gm-Message-State: AOAM532WXanVou9L609t5eScBiLYHS7QwH25XYxynfybSxhR5RFp3/gX
-        7aeTVERcZSQ1UA8DDq4yhhY=
-X-Google-Smtp-Source: ABdhPJy5FNalWj7ad0WRBq8wpf33KSe4zNF7L5vvmMJu5PysnhTwIrnkXKA904loq4xm9a62tNMEDQ==
-X-Received: by 2002:a17:902:b618:: with SMTP id b24mr2897635pls.155.1589262250172;
-        Mon, 11 May 2020 22:44:10 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id s9sm10913434pfc.179.2020.05.11.22.44.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 22:44:09 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 986C640E88; Tue, 12 May 2020 05:44:08 +0000 (UTC)
-Date:   Tue, 12 May 2020 05:44:08 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Xiaoming Ni <nixiaoming@huawei.com>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Helge Deller <deller@gmx.de>,
-        Parisc List <linux-parisc@vger.kernel.org>, yzaikin@google.com,
-        linux-fsdevel@vger.kernel.org,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: linux-next: manual merge of the vfs tree with the parisc-hd tree
-Message-ID: <20200512054408.GZ11244@42.do-not-panic.com>
-References: <20200511111123.68ccbaa3@canb.auug.org.au>
- <99095805-8cbe-d140-e2f1-0c5a3e84d7e7@huawei.com>
- <20200512003305.GX11244@42.do-not-panic.com>
- <202005112219.0FB0A7A@keescook>
+        Tue, 12 May 2020 01:47:25 -0400
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 04C5kpFe011058;
+        Tue, 12 May 2020 14:46:52 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 04C5kpFe011058
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1589262412;
+        bh=Y4CSQCxX6HAtnNhBU0tpzYr3DlItdMgGqz9SOPIEeBI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=vKm7GrcQ7LkapiE20ThRI6vSfO+Jqi4WvBvYfn++A6wd28hZzqeHPuAeXsZhfrJB6
+         hY/8StTbH4WMiuZMTPJzRTVVAGyOPT5X94Z4UzY6QRgCrKn1Ev60udz0D1mPcE2w4E
+         LHHNUw7kMxv0lVLuucojOxVbm+rGHgSRc9BVF/4OgNYe8+sGgVyaObYE8t9C0JJzJ3
+         gHS5PKiNgqJR98bPoBrcDZI8/pt0GFg/mmVboaT8ykI9RKjEAhN9/cF8twQGhChHZn
+         Vcv1bTVLQUKwCVYNNUBaSdTmxOHnhz1bJr1vKfI2jNPBjFGgVriSG2DnGRD6uRT6ME
+         WCd2tyb1pIZgA==
+X-Nifty-SrcIP: [209.85.217.41]
+Received: by mail-vs1-f41.google.com with SMTP id g2so7139654vsb.4;
+        Mon, 11 May 2020 22:46:52 -0700 (PDT)
+X-Gm-Message-State: AGi0PubTm4m2ylCmsGKk1tRSkMStej5Wt570ceKEtc31LU71Q6f85l7A
+        0vOK/7bHiK5D5y02IoodKSkvgk1xHVdWb9FbmMk=
+X-Google-Smtp-Source: APiQypKiCHG9qj0WL3c4VsFRZFhkkZZH//F+MLSQvxfE6GgQj6+gJGmQUsPynQRXCzeoggwBrR9BjfEFH5dvSnHxAdE=
+X-Received: by 2002:a67:db0d:: with SMTP id z13mr14345298vsj.155.1589262411057;
+ Mon, 11 May 2020 22:46:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202005112219.0FB0A7A@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200504031340.7103-1-nick.desaulniers@gmail.com> <CA+icZUUOaqeKeh6n4BJq2k6XQWAfNghUj57j42ZX5qyd3iOmLw@mail.gmail.com>
+In-Reply-To: <CA+icZUUOaqeKeh6n4BJq2k6XQWAfNghUj57j42ZX5qyd3iOmLw@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 12 May 2020 14:46:15 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR+pm-_nd5=B2OeLpimW42FXxm8TQUMru9DR_asT3qYnA@mail.gmail.com>
+Message-ID: <CAK7LNAR+pm-_nd5=B2OeLpimW42FXxm8TQUMru9DR_asT3qYnA@mail.gmail.com>
+Subject: Re: [PATCH] Makefile: support compressed debug info
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Nick Desaulniers <nick.desaulniers@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 10:22:04PM -0700, Kees Cook wrote:
-> On Tue, May 12, 2020 at 12:33:05AM +0000, Luis Chamberlain wrote:
-> > On Mon, May 11, 2020 at 09:55:16AM +0800, Xiaoming Ni wrote:
-> > > On 2020/5/11 9:11, Stephen Rothwell wrote:
-> > > > Hi all,
-> > > > 
-> > > > Today's linux-next merge of the vfs tree got a conflict in:
-> > > > 
-> > > >    kernel/sysctl.c
-> > > > 
-> > > > between commit:
-> > > > 
-> > > >    b6522fa409cf ("parisc: add sysctl file interface panic_on_stackoverflow")
-> > > > 
-> > > > from the parisc-hd tree and commit:
-> > > > 
-> > > >    f461d2dcd511 ("sysctl: avoid forward declarations")
-> > > > 
-> > > > from the vfs tree.
-> > > > 
-> > > > I fixed it up (see below) and can carry the fix as necessary. This
-> > > > is now fixed as far as linux-next is concerned, but any non trivial
-> > > > conflicts should be mentioned to your upstream maintainer when your tree
-> > > > is submitted for merging.  You may also want to consider cooperating
-> > > > with the maintainer of the conflicting tree to minimise any particularly
-> > > > complex conflicts.
-> > > > 
-> > > 
-> > > 
-> > > Kernel/sysctl.c contains more than 190 interface files, and there are a
-> > > large number of config macro controls. When modifying the sysctl interface
-> > > directly in kernel/sysctl.c , conflicts are very easy to occur.
-> > > 
-> > > At the same time, the register_sysctl_table() provided by the system can
-> > > easily add the sysctl interface, and there is no conflict of kernel/sysctl.c
-> > > .
-> > > 
-> > > Should we add instructions in the patch guide (coding-style.rst
-> > > submitting-patches.rst):
-> > > Preferentially use register_sysctl_table() to add a new sysctl interface,
-> > > centralize feature codes, and avoid directly modifying kernel/sysctl.c ?
-> > 
-> > Yes, however I don't think folks know how to do this well. So I think we
-> > just have to do at least start ourselves, and then reflect some of this
-> > in the docs.  The reason that this can be not easy is that we need to
-> > ensure that at an init level we haven't busted dependencies on setting
-> > this. We also just don't have docs on how to do this well.
-> > 
-> > > In addition, is it necessary to transfer the architecture-related sysctl
-> > > interface to arch/xxx/kernel/sysctl.c ?
-> > 
-> > Well here's an initial attempt to start with fs stuff in a very
-> > conservative way. What do folks think?
-> > 
-> > [...]
-> > +static unsigned long zero_ul;
-> > +static unsigned long long_max = LONG_MAX;
-> 
-> I think it'd be nice to keep these in one place for others to reuse,
-> though that means making them non-static. (And now that I look at them,
-> I thought they were supposed to be const?)
+Hi Sedat,
 
-So much spring cleaning to do. I can add the const and share it.
-It seems odd to stuff this into a sysctl.h, types.h doesn't seem
-right... I can't think of something proper, so I'll just move them
-to sysctl.h for now.
 
-Any thought on the approach though? I mean, I realize that this will
-require more of the subsystem specific folks to look at the code and
-review, but if this seems fair, I'll get the ball rolling.
+On Tue, May 5, 2020 at 1:25 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+>
+> On Mon, May 4, 2020 at 5:13 AM Nick Desaulniers
+> <nick.desaulniers@gmail.com> wrote:
+> >
+> > As debug information gets larger and larger, it helps significantly save
+> > the size of vmlinux images to compress the information in the debug
+> > information sections. Note: this debug info is typically split off from
+> > the final compressed kernel image, which is why vmlinux is what's used
+> > in conjunction with GDB. Minimizing the debug info size should have no
+> > impact on boot times, or final compressed kernel image size.
+> >
+> > All of the debug sections will have a `C` flag set.
+> > $ readelf -S <object file>
+> >
+> > $ bloaty vmlinux.gcc75.compressed.dwarf4 -- \
+> >     vmlinux.gcc75.uncompressed.dwarf4
+> >
+> >     FILE SIZE        VM SIZE
+> >  --------------  --------------
+> >   +0.0%     +18  [ = ]       0    [Unmapped]
+> >  -73.3%  -114Ki  [ = ]       0    .debug_aranges
+> >  -76.2% -2.01Mi  [ = ]       0    .debug_frame
+> >  -73.6% -2.89Mi  [ = ]       0    .debug_str
+> >  -80.7% -4.66Mi  [ = ]       0    .debug_abbrev
+> >  -82.9% -4.88Mi  [ = ]       0    .debug_ranges
+> >  -70.5% -9.04Mi  [ = ]       0    .debug_line
+> >  -79.3% -10.9Mi  [ = ]       0    .debug_loc
+> >  -39.5% -88.6Mi  [ = ]       0    .debug_info
+> >  -18.2%  -123Mi  [ = ]       0    TOTAL
+> >
+> > $ bloaty vmlinux.clang11.compressed.dwarf4 -- \
+> >     vmlinux.clang11.uncompressed.dwarf4
+> >
+> >     FILE SIZE        VM SIZE
+> >  --------------  --------------
+> >   +0.0%     +23  [ = ]       0    [Unmapped]
+> >  -65.6%    -871  [ = ]       0    .debug_aranges
+> >  -77.4% -1.84Mi  [ = ]       0    .debug_frame
+> >  -82.9% -2.33Mi  [ = ]       0    .debug_abbrev
+> >  -73.1% -2.43Mi  [ = ]       0    .debug_str
+> >  -84.8% -3.07Mi  [ = ]       0    .debug_ranges
+> >  -65.9% -8.62Mi  [ = ]       0    .debug_line
+> >  -86.2% -40.0Mi  [ = ]       0    .debug_loc
+> >  -42.0% -64.1Mi  [ = ]       0    .debug_info
+> >  -22.1%  -122Mi  [ = ]       0    TOTAL
+> >
+>
+> Hi Nick,
+>
+> thanks for the patch.
+>
+> I have slightly modified it to adapt to Linux v5.7-rc4 (what was your base?).
+>
+> Which linker did you use and has it an impact if you switch from
+> ld.bfd to ld.lld?
+>
+> I tried a first normal run and in a 2nd one with
+> CONFIG_DEBUG_INFO_COMPRESSED=y both with clang-10 and ld.lld-10.
+>
+> My numbers (sizes in MiB):
+>
+> [ diffconfig ]
+>
+> $ scripts/diffconfig /boot/config-5.7.0-rc4-1-amd64-clang
+> /boot/config-5.7.0-rc4-2-amd64-clang
+>  BUILD_SALT "5.7.0-rc4-1-amd64-clang" -> "5.7.0-rc4-2-amd64-clang"
+> +DEBUG_INFO_COMPRESSED y
+>
+> [ compiler and linker ]
+>
+> $ clang-10 -v
+> ClangBuiltLinux clang version 10.0.1
+> (https://github.com/llvm/llvm-project
+> 92d5c1be9ee93850c0a8903f05f36a23ee835dc2)
+> Target: x86_64-unknown-linux-gnu
+> Thread model: posix
+> InstalledDir: /home/dileks/src/llvm-toolchain/install/bin
+> Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/10
+> Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/8
+> Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/9
+> Selected GCC installation: /usr/lib/gcc/x86_64-linux-gnu/10
+> Candidate multilib: .;@m64
+> Candidate multilib: 32;@m32
+> Candidate multilib: x32;@mx32
+> Selected multilib: .;@m64
+>
+> $ ld.lld-10 -v
+> LLD 10.0.1 (https://github.com/llvm/llvm-project
+> 92d5c1be9ee93850c0a8903f05f36a23ee835dc2) (compatible with GNU
+> linkers)
+>
+> [ sizes vmlinux ]
+>
+> $ du -m 5.7.0-rc4-*/vmlinux*
+> 409     5.7.0-rc4-1-amd64-clang/vmlinux
+> 7       5.7.0-rc4-1-amd64-clang/vmlinux.compressed
+> 404     5.7.0-rc4-1-amd64-clang/vmlinux.o
+> 324     5.7.0-rc4-2-amd64-clang/vmlinux
+> 7       5.7.0-rc4-2-amd64-clang/vmlinux.compressed
+> 299     5.7.0-rc4-2-amd64-clang/vmlinux.o
+>
+> [ readelf (.debug_info as example) ]
+>
+> $ readelf -S vmlinux.o
+>   [33] .debug_info       PROGBITS         0000000000000000  01d6a5e8
+>        0000000006be1ee6  0000000000000000           0     0     1
+>
+> $ readelf -S vmlinux.o
+>   [33] .debug_info       PROGBITS         0000000000000000  01749f18
+>        0000000002ef04d2  0000000000000000   C       0     0     1 <---
+> XXX: "C (compressed)" Flag
+>
+> Key to Flags:
+>   W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
+>   L (link order), O (extra OS processing required), G (group), T (TLS),
+>   C (compressed), x (unknown), o (OS specific), E (exclude),
+>   l (large), p (processor specific)
+>
+> [ sizes linux-image debian packages ]
+>
+> $ du -m 5.7.0-rc4-*/linux-image*.deb
+> 47      5.7.0-rc4-1-amd64-clang/linux-image-5.7.0-rc4-1-amd64-clang_5.7.0~rc4-1~bullseye+dileks1_amd64.deb
+> 424     5.7.0-rc4-1-amd64-clang/linux-image-5.7.0-rc4-1-amd64-clang-dbg_5.7.0~rc4-1~bullseye+dileks1_amd64.deb
+> 47      5.7.0-rc4-2-amd64-clang/linux-image-5.7.0-rc4-2-amd64-clang_5.7.0~rc4-2~bullseye+dileks1_amd64.deb
+> 771     5.7.0-rc4-2-amd64-clang/linux-image-5.7.0-rc4-2-amd64-clang-dbg_5.7.0~rc4-2~bullseye+dileks1_amd64.deb
+>
+> [ sizes linux-git dir (compilation finished ]
+>
+> 5.7.0-rc4-1-amd64-clang: 17963   /home/dileks/src/linux-kernel/linux
+> 5.7.0-rc4-2-amd64-clang: 14328   /home/dileks/src/linux-kernel/linux
+>
+> [ xz compressed linux-image-dbg packages ]
+>
+> $ file linux-image-5.7.0-rc4-1-amd64-clang-dbg_5.7.0~rc4-1~bullseye+dileks1_amd64.deb
+> linux-image-5.7.0-rc4-1-amd64-clang-dbg_5.7.0~rc4-1~bullseye+dileks1_amd64.deb:
+> Debian binary package (format 2.0), with control.tar.xz, data
+> compression xz
+> $ file linux-image-5.7.0-rc4-2-amd64-clang-dbg_5.7.0~rc4-2~bullseye+dileks1_amd64.deb
+> linux-image-5.7.0-rc4-2-amd64-clang-dbg_5.7.0~rc4-2~bullseye+dileks1_amd64.deb:
+> Debian binary package (format 2.0), with control.tar.xz, data
+> compression xz
+>
+> [ file-lists ]
+>
+> $ dpkg --contents
+> linux-image-5.7.0-rc4-1-amd64-clang-dbg_5.7.0~rc4-1~bullseye+dileks1_amd64.deb
+> | wc -l
+> 4395
+> $ dpkg --contents
+> linux-image-5.7.0-rc4-2-amd64-clang-dbg_5.7.0~rc4-2~bullseye+dileks1_amd64.deb
+> | wc -l
+> 4395
+>
+> [ file-lists vmlinux ]
+>
+> $ dpkg --contents
+> linux-image-5.7.0-rc4-1-amd64-clang-dbg_5.7.0~rc4-1~bullseye+dileks1_amd64.deb
+> | grep vmlinux
+> -rwxr-xr-x root/root 428588312 2020-05-04 06:15
+> ./usr/lib/debug/lib/modules/5.7.0-rc4-1-amd64-clang/vmlinux
+> lrwxrwxrwx root/root         0 2020-05-04 06:15
+> ./usr/lib/debug/boot/vmlinux-5.7.0-rc4-1-amd64-clang ->
+> ../lib/modules/5.7.0-rc4-1-amd64-clang/vmlinux
+> lrwxrwxrwx root/root         0 2020-05-04 06:15
+> ./usr/lib/debug/vmlinux-5.7.0-rc4-1-amd64-clang ->
+> lib/modules/5.7.0-rc4-1-amd64-clang/vmlinux
+>
+> $ dpkg --contents
+> linux-image-5.7.0-rc4-2-amd64-clang-dbg_5.7.0~rc4-2~bullseye+dileks1_amd64.deb
+> | grep vmlinux
+> -rwxr-xr-x root/root 339341456 2020-05-04 12:24
+> ./usr/lib/debug/lib/modules/5.7.0-rc4-2-amd64-clang/vmlinux
+> lrwxrwxrwx root/root         0 2020-05-04 12:24
+> ./usr/lib/debug/boot/vmlinux-5.7.0-rc4-2-amd64-clang ->
+> ../lib/modules/5.7.0-rc4-2-amd64-clang/vmlinux
+> lrwxrwxrwx root/root         0 2020-05-04 12:24
+> ./usr/lib/debug/vmlinux-5.7.0-rc4-2-amd64-clang ->
+> lib/modules/5.7.0-rc4-2-amd64-clang/vmlinux
+>
+> [ conclusion ]
+>
+> As you can see there is a size-reduction in case of vmlinux/vmlinux.o
+> (debug) files...
+> ...and my linux-git directory in total is smaller: 17963M vs. 14328M.
+>
+> But the resulting linux-image-dbg file is much fatter: 424M vs. 711M.
+> XZ-compressing the gz/zlib-compressed vmlinux (debug) file results in
+> a fatter linux-image-dbg package.
 
-  Luis
+
+I also confirmed that, but this would not
+be a blocker of this patch.
+
+Users can disable CONFIG_DEBUG_INFO_COMPRESSED
+if they care about the debug package size.
+
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
