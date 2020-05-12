@@ -2,88 +2,120 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85016C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C7AC54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67A6D20661
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC8320661
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:57:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Y2F7MFOH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728525AbgELJxe (ORCPT
+        id S1729270AbgELJ5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 05:53:34 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:36000 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbgELJxe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 05:53:34 -0400
-Received: from penelope.horms.nl (tulip.horms.nl [83.161.246.101])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id AB32C25AD50;
-        Tue, 12 May 2020 19:53:31 +1000 (AEST)
-Received: by penelope.horms.nl (Postfix, from userid 7100)
-        id 57B76717; Tue, 12 May 2020 11:53:29 +0200 (CEST)
-Date:   Tue, 12 May 2020 11:53:29 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Hai Nguyen Pham <hai.pham.ud@renesas.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iommu/renesas: fix unused-function warning
-Message-ID: <20200512095329.GA18408@vergenet.net>
-References: <20200508220224.688985-1-arnd@arndb.de>
+        Tue, 12 May 2020 05:57:23 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:48483 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726891AbgELJ5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 05:57:22 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49LtWh03RCz9sRR;
+        Tue, 12 May 2020 19:57:19 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589277440;
+        bh=AZatOeJTv47JARaRkWyl6WC5Er0s9tdcpcNGfDPfUu4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Y2F7MFOHl2m3fMN9GDs4OWL7tc+6N+yJxjczOjySbsbBhCUZvuCFm9KhwrbU0MyQG
+         cOgsPNjS8ICDZ1ssKlZ0B+0qXEa3qLDYXApEtmR0kH3JFCZfkQy+JSBCyXr8iAD1tV
+         0brngN2IwATTStZ7kCgHvURgJWTvMmtxshWvnfda0992me71ycdr+wn8JBvOxRQTNm
+         wGKlrITWzXwrIBg0mzbupha/rGXoZrOaClHsFZ/Zuis72R/CBZiBYPebYetVBVDd2/
+         DVais4I/mZ2ofr/jgs1KMLzJJtxNauc4Ho7/OB3vCOVGOgw80fMYgDL6smEEjGiv3S
+         McMyD0lA4lsJQ==
+Date:   Tue, 12 May 2020 19:57:12 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: linux-next: build failure after merge of the fsinfo tree
+Message-ID: <20200512195712.690f02bb@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508220224.688985-1-arnd@arndb.de>
-Organisation: Horms Solutions BV
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/AKHzWBb2aZhTunEiz5gpX2P";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 09, 2020 at 12:02:16AM +0200, Arnd Bergmann wrote:
-> gcc warns because the only reference to ipmmu_find_group
-> is inside of an #ifdef:
-> 
-> drivers/iommu/ipmmu-vmsa.c:878:28: error: 'ipmmu_find_group' defined but not used [-Werror=unused-function]
-> 
-> Change the #ifdef to an equivalent IS_ENABLED().
-> 
-> Fixes: 6580c8a78424 ("iommu/renesas: Convert to probe/release_device() call-backs")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+--Sig_/AKHzWBb2aZhTunEiz5gpX2P
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Simon Horman <horms@verge.net.au>
+Hi all,
 
-> ---
->  drivers/iommu/ipmmu-vmsa.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/iommu/ipmmu-vmsa.c b/drivers/iommu/ipmmu-vmsa.c
-> index fb7e702dee23..4c2972f3153b 100644
-> --- a/drivers/iommu/ipmmu-vmsa.c
-> +++ b/drivers/iommu/ipmmu-vmsa.c
-> @@ -903,11 +903,8 @@ static const struct iommu_ops ipmmu_ops = {
->  	.probe_device = ipmmu_probe_device,
->  	.release_device = ipmmu_release_device,
->  	.probe_finalize = ipmmu_probe_finalize,
-> -#if defined(CONFIG_ARM) && !defined(CONFIG_IOMMU_DMA)
-> -	.device_group = generic_device_group,
-> -#else
-> -	.device_group = ipmmu_find_group,
-> -#endif
-> +	.device_group = IS_ENABLED(CONFIG_ARM) && !IS_ENABLED(CONFIG_IOMMU_DMA)
-> +			? generic_device_group : ipmmu_find_group,
->  	.pgsize_bitmap = SZ_1G | SZ_2M | SZ_4K,
->  	.of_xlate = ipmmu_of_xlate,
->  };
-> -- 
-> 2.26.0
-> 
+After merging the fsinfo tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
+
+/usr/lib/gcc-cross/x86_64-linux-gnu/9/../../../../x86_64-linux-gnu/bin/ld: =
+cannot find /usr/lib/x86_64-linux-gnu/libm-2.30.a
+/usr/lib/gcc-cross/x86_64-linux-gnu/9/../../../../x86_64-linux-gnu/bin/ld: =
+cannot find /usr/lib/x86_64-linux-gnu/libmvec.a
+
+I don't know if this is a quirk of the build system or Debian's cross
+compiler setup.  Both those files exist in /usr/x86_64-linux-gnu/lib/.
+
+Masahiro, any thoughts?
+
+I have disabled the building of test_fsinfo for now:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Tue, 12 May 2020 19:49:33 +1000
+Subject: [PATCH] disable building fo test-fsinfo for now
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ samples/vfs/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/samples/vfs/Makefile b/samples/vfs/Makefile
+index f5bc5dfdf045..97e54c8be358 100644
+--- a/samples/vfs/Makefile
++++ b/samples/vfs/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+-userprogs :=3D test-fsinfo test-fsmount test-mntinfo test-statx
++userprogs :=3D test-fsmount test-mntinfo test-statx
+ always-y :=3D $(userprogs)
+=20
+ userccflags +=3D -I usr/include
+--=20
+2.26.2
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/AKHzWBb2aZhTunEiz5gpX2P
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEyBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl66cvkACgkQAVBC80lX
+0Gxu9wf2LLj9CiDJL0K6ih3CzMRdA/xfvqQ2orRn1omirRJXZpfBhmFxWZ7MrPsJ
+AQvUus63utb0XWnPn6zqt3NEBXFUXDlN5oyAJZBlT1lyqrT0JhY3klm9dm6zNi60
+CVdZPQbDpxc2qeu9idbKKoq1kZDAcg3R+Xd8NxxuRZJVItru07EAaXY1veqKGyWd
+2p0Lol8vFS1vMkNT03BHyWtQysEa9gK+NQ13T8VRdCQ45iW0rC2TLafbJvYAWmMZ
+8lLX8AIGldn8W45qz7xm7lNS/DQRk7qjF3Gm94hPbbz57FRdp4CJXLN20o5tZLmk
+XuVbrhQ+b90q4maOAIGEzLt0oX9c
+=FZTT
+-----END PGP SIGNATURE-----
+
+--Sig_/AKHzWBb2aZhTunEiz5gpX2P--
