@@ -2,107 +2,118 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC32DC54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D86C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BECA420674
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F1C620674
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:36:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Eg2qcb4o"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="c1xrQ8l4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgELIeY (ORCPT
+        id S1729173AbgELIgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 04:34:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38744 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725776AbgELIeX (ORCPT
+        Tue, 12 May 2020 04:36:04 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:45742 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbgELIgD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 04:34:23 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86A47C061A0C;
-        Tue, 12 May 2020 01:34:23 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Lrgw5n0kz9sRf;
-        Tue, 12 May 2020 18:34:20 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589272461;
-        bh=O051q6DOp21xQD2sFea3GmHWzoHD/M6j7rwcAM5DlLw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Eg2qcb4o+Eh8zrWZtJRrOk1MAWE487Rnsc32ic5koHv49vs5QyE7GpDTJQe6yrFbX
-         bWySJjRRD27sYyW+6JF6WlHM64vrYc4pUAiJ0uXrbhquu3F0B5faMX+hg+S1sYFWjv
-         +EIFycbJPjSBKLmbqU2WFwyDG5xEWhNONnUADsw6Jk3I0N3L/plmsnXBx+toSG4x7+
-         GhfUG9ruoavk3T2BHaTLyhowr+oJg1Uu27m51H8euDYiunxXKP3Tx24RRdtXhnk1pK
-         5KcyyRZK72NaRUzcYsyEV71Z39BmpABJGQ+3JH3hLa0FRPj/R1NMFNUt6MYF/+iuyd
-         K7KTAUdvEymxw==
-Date:   Tue, 12 May 2020 18:34:19 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: linux-next: manual merge of the notifications tree with Linus' tree
-Message-ID: <20200512183419.5b61fde0@canb.auug.org.au>
+        Tue, 12 May 2020 04:36:03 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04C8Ziu9024445;
+        Tue, 12 May 2020 03:35:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589272544;
+        bh=w6SvlgwOineI01tS7SoCMkc0epnn0527dHvSR50zF18=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=c1xrQ8l4vT0z9iC94p7vdwa4vk2QOJPfW/urGqOOHCsTS1WrDxL+UjE3l2miLzVfX
+         fKyaqZVtIicorRPjJToWyxmLgDRpkvcJpvtv1Yz6onG9mRnKg3kCtI9tBgWvHxB7KA
+         wOEEBdNpBQn0U9tfmWJsDXll7bHKt39Z7UlywPME=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04C8ZiJf056062
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 May 2020 03:35:44 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 12
+ May 2020 03:35:43 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 12 May 2020 03:35:43 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04C8Zdpg056802;
+        Tue, 12 May 2020 03:35:41 -0500
+Subject: Re: [PATCH net v3] net: ethernet: ti: fix build and remove
+ TI_CPTS_MOD workaround
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Networking <netdev@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Russell King <linux@armlinux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Clay McClure <clay@daemons.net>, Dan Murphy <dmurphy@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>
+References: <20200508095914.20509-1-grygorii.strashko@ti.com>
+ <CAK8P3a0qfFzJGya-Ydst8dwC8d7wydfNG-4Ef9zkycEd8WLOCA@mail.gmail.com>
+ <7df7a64c-f564-b0cc-9100-93c9e417c2fc@ti.com>
+ <CAK8P3a0-6vRpHJugnUFhNNAALmqx4CUW9ffTOojxu5a80tAQTw@mail.gmail.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <b0e2bd21-f670-f05a-6e23-4c6c75a94868@ti.com>
+Date:   Tue, 12 May 2020 11:35:40 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/rnDs+im=zRFGoSEyfF05XPI";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <CAK8P3a0-6vRpHJugnUFhNNAALmqx4CUW9ffTOojxu5a80tAQTw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/rnDs+im=zRFGoSEyfF05XPI
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Arnd,
 
-Hi all,
+On 08/05/2020 14:25, Arnd Bergmann wrote:
+> On Fri, May 8, 2020 at 1:14 PM Grygorii Strashko
+> <grygorii.strashko@ti.com> wrote:
+>> On 08/05/2020 13:10, Arnd Bergmann wrote:
+>>> On Fri, May 8, 2020 at 11:59 AM Grygorii Strashko
+> 
+>>>> That's because TI_CPTS_MOD (which is the symbol gating the _compilation_ of
+>>>> cpts.c) now depends on PTP_1588_CLOCK, and so is not enabled in these
+>>>> configurations, but TI_CPTS (which is the symbol gating _calls_ to the cpts
+>>>> functions) _is_ enabled. So we end up compiling calls to functions that
+>>>> don't exist, resulting in the linker errors.
+>>>>
+>>>> This patch fixes build errors and restores previous behavior by:
+>>>>    - ensure PTP_1588_CLOCK=y in TI specific configs and CPTS will be built
+>>>>    - use IS_REACHABLE(CONFIG_TI_CPTS) in code instead of IS_ENABLED()
+>>>
+>>> I don't understand what IS_REACHABLE() is needed for once all the other
+>>> changes are in place. I'd hope we can avoid that. Do you still see
+>>> failures without
+>>> that or is it just a precaution. I can do some randconfig testing on your patch
+>>> to see what else might be needed to avoid IS_REACHABLE().
+>>
+>> I've not changed this part of original patch, but seems you're right.
+>>
+>> I can drop it and resend, but, unfortunately, i do not have time today for full build testing.
+> 
+> I have applied to patch locally to my randconfig tree, with the IS_REACHABLE()
+> changes taken out.
+> 
 
-Today's linux-next merge of the notifications tree got a conflict in:
+What will be the conclusion here?
 
-  fs/io_uring.c
-
-between commit:
-
-  2fb3e82284fc ("io_uring: punt splice async because of inode mutex")
-
-from Linus' tree and commit:
-
-  317f078cce34 ("pipe: Add general notification queue support")
-
-from the notifications tree.
-
-I fixed it up (the former removed the code modified by the latter) and
-can carry the fix as necessary. This is now fixed as far as linux-next
-is concerned, but any non trivial conflicts should be mentioned to your
-upstream maintainer when your tree is submitted for merging.  You may
-also want to consider cooperating with the maintainer of the conflicting
-tree to minimise any particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/rnDs+im=zRFGoSEyfF05XPI
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl66X4wACgkQAVBC80lX
-0Gzpkwf8CDZEVQKpubOvAhmTp7J/4xpSzjcfZN8N6+CDC9QfxrrSNDhxWvFMMn7C
-vAfXzkRusX2ByiAFbG0kLm953LlFJ89w1SZjiGB3YgXy4kjBQE5jbW8r668Ea770
-fgklwAP5op2ndUV3m2a10G+nGAiDgvLwGcsDrU7F2JbGM0pMEtZ+NMsE+LQzIJlR
-+47IXnL3C0aVuNrOn4KpiOy/KlGXArWVG5n4l+Bb728XWn8/hZT16AHg99T15stR
-GYLTiwhF7lNZ6hwkDqLGlzP1LLZI+NVTPOV+RGtCpBPjJ4AvZW7JxgfEO3po6sa3
-D9lEawnqIvO9ow5svs3QhYzXH/BCvw==
-=1twA
------END PGP SIGNATURE-----
-
---Sig_/rnDs+im=zRFGoSEyfF05XPI--
+-- 
+Best regards,
+grygorii
