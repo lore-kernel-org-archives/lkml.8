@@ -2,121 +2,102 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FFAC2D0FA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63370C2D0FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32E5A206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F91D20740
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:59:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589324298;
-	bh=IG7ctD2YCoDDUQ8s+e3OABRWevBYaSivGtSptefac3E=;
+	s=default; t=1589324380;
+	bh=Eyd7st7jzBSpczQ4xek/WNfsM86tzA7WjjbH5A0rUB8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XFKq9cC00Sm2BERrcu7Gov5jeAEyO7flyFeC4QRo//v9xcdzqmoZL14C4cP4VK38m
-	 mvtgAi51+WeFF2JoeEfKNPL9RAlCKgMZ7L025azI/4XDq49UkPbmAy1LBiTCZsiKSf
-	 P+ONk5H9Klbk7UIr87h6zqsCqDbin5o6Hy2+Uom0=
+	b=HNWa9B3M0bydwS3fZVySnFHkpMAgxU8DEbBC4wSmVkzATjaDIhLEsGzKtFmZ7HnwW
+	 164WG1qLF3N3Jlas5fA8ItY3/zxv4SfRnx+v+2TXdF1iry4xcT3ON4a1ENmOsC0mNq
+	 +T9jJ2DDlCsONaQr44sJbdfK+hDzCaOnuc0gA81w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731610AbgELW6Q (ORCPT
+        id S1731308AbgELW7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:58:16 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44718 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgELW6P (ORCPT
+        Tue, 12 May 2020 18:59:39 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43106 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgELW7j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 18:58:15 -0400
-Received: by mail-ot1-f65.google.com with SMTP id j4so11921546otr.11;
-        Tue, 12 May 2020 15:58:15 -0700 (PDT)
+        Tue, 12 May 2020 18:59:39 -0400
+Received: by mail-oi1-f193.google.com with SMTP id i22so3177502oik.10;
+        Tue, 12 May 2020 15:59:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cBiUIrWE+UaIH5tajkgyIKVaNp7k7WAC/qZUFSsrV2E=;
-        b=Quy2hnWtTrPiaE6w/mM3yp7OIxqHlGJ5eM+iUum/AwdpHUe4Rg7MFlDGRaqQAnX1SX
-         E6FRZh8GGJ30bZwIrjJFxV1DzHtfhqIuo2/1nqAtZns97/R9JtUPlr3SJ7qEgghjXZ/1
-         yVN/FGL/MFQE1W24lrgq7TbHWabnYGDdBC9pvebbrORwN4kLkUKVynIIh4Z0ky7AYaFm
-         7j1iTAz0Ed6ci4wuk29R8zsU9PD7wLeeoBfC7+omGslPMb1ZHYocGFpWQkOdEe/Lv37e
-         oI+4tl5lVY8WLmlm8yUVBsQhHG5EXMR9MpWhiKf/TCO2LW0ZBLSFK9e9LyckdmNOBVn7
-         MQmw==
-X-Gm-Message-State: AGi0PuYRrcYZUMViwY50619klgPsRgqJLAmWkrR+uJzMK7lM4wCfkBB7
-        +gOLrJlN6G1cUJOLJ7foTw==
-X-Google-Smtp-Source: APiQypL7PdOIK7Is7Nz5WrJlgO2HUyJLl2vgiulZfCULhki8ejQCn9T9ykjPsFKJznmjeuGro1Uq+g==
-X-Received: by 2002:a05:6830:22f8:: with SMTP id t24mr18122890otc.148.1589324294619;
-        Tue, 12 May 2020 15:58:14 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=0UC4NbtLglXj+TePtbIPb7+gcptlXoZoh2pEtHEUCdg=;
+        b=ONP4em11G1MnCeufAY1klKQ2GA69hGoP2t5BUaEL0Rr/LV/OXT1zZEnls/IcFWFTc7
+         4/4QZUQfX6fOH+TZSjmgRWzLPUEDehJ8L8T73vQZE84QH/NOgSveUdOylrmyjTVZutu9
+         WOt07OF2+dD/F7NDstb61H9zaIIsCyq4hvBMeWhfim1BQWjGp1a00ypwQmObB03yRopf
+         yL0MMTfhfil6lPFe3XCF9fh+J/jZY1hAPPGYjguLdhXmh3yuvYjy1AzeshnWFoZ0dpog
+         RXmbxmAoe2sxDW7gEEBV8RWaE7zxZgjPSK9/dq+o2d/xU5q81qX7YgCDPSVfQag3aO3S
+         YcRQ==
+X-Gm-Message-State: AGi0Puai7zfETdhQ1rtMFygVvv6yV85d3HrjdfNEsW2lqO0Zz+cEXiFE
+        HZ/cc6WbqMYTKA9OjNDmlYKeXb2r9A==
+X-Google-Smtp-Source: APiQypJNCS339xpAgtFKhpCcyzza/wCoFmF0mONWvXrTllgReQwOwZqhcFngIPk8xyiw+d5K8DlIwQ==
+X-Received: by 2002:aca:5a04:: with SMTP id o4mr25251710oib.137.1589324378254;
+        Tue, 12 May 2020 15:59:38 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w62sm5632505oia.32.2020.05.12.15.58.12
+        by smtp.gmail.com with ESMTPSA id f9sm3806492ote.30.2020.05.12.15.59.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 15:58:13 -0700 (PDT)
-Received: (nullmailer pid 32342 invoked by uid 1000);
-        Tue, 12 May 2020 22:58:12 -0000
-Date:   Tue, 12 May 2020 17:58:12 -0500
+        Tue, 12 May 2020 15:59:37 -0700 (PDT)
+Received: (nullmailer pid 2033 invoked by uid 1000);
+        Tue, 12 May 2020 22:59:36 -0000
+Date:   Tue, 12 May 2020 17:59:36 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sandy Huang <hjc@rock-chips.com>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        Sean Wang <sean.wang@mediatek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jyri Sarha <jsarha@ti.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Olivier Moysan <olivier.moysan@st.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-bluetooth@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-mips@vger.kernel.org
-Subject: Re: [PATCH] docs: dt: fix broken links due to txt->yaml renames
-Message-ID: <20200512225812.GA28862@bogus>
-References: <967df5c3303b478b76199d4379fe40f5094f3f9b.1588584538.git.mchehab+huawei@kernel.org>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Sebastian Reichel <sre@kernel.org>, Angus Ainslie <angus@akkea.ca>,
+        Yauhen Kharuzhy <jekhor@gmail.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 8/8] power: bq25890: document IBAT compensation DT
+ properties
+Message-ID: <20200512225936.GA312@bogus>
+References: <cover.1588621247.git.mirq-linux@rere.qmqm.pl>
+ <7bf8bb5654bf67e14b59c5f94d024ac6ef5ff0ce.1588621247.git.mirq-linux@rere.qmqm.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <967df5c3303b478b76199d4379fe40f5094f3f9b.1588584538.git.mchehab+huawei@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7bf8bb5654bf67e14b59c5f94d024ac6ef5ff0ce.1588621247.git.mirq-linux@rere.qmqm.pl>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 04, 2020 at 11:30:20AM +0200, Mauro Carvalho Chehab wrote:
-> There are some new broken doc links due to yaml renames
-> at DT. Developers should really run:
+On Mon, May 04, 2020 at 09:47:48PM +0200, Michał Mirosław wrote:
+> Document newly introduced IBAT compensation settings.
 > 
-> 	./scripts/documentation-file-ref-check
-> 
-> in order to solve those issues while submitting patches.
-> This tool can even fix most of the issues with:
-> 
-> 	./scripts/documentation-file-ref-check --fix
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 > ---
+> v2: initial version
+> ---
+>  Documentation/devicetree/bindings/power/supply/bq25890.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> PS.: This patch is against today's linux-next.
+> diff --git a/Documentation/devicetree/bindings/power/supply/bq25890.txt b/Documentation/devicetree/bindings/power/supply/bq25890.txt
+> index dc9c8f76e06c..bd214945d9dc 100644
+> --- a/Documentation/devicetree/bindings/power/supply/bq25890.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/bq25890.txt
+> @@ -32,6 +32,10 @@ Optional properties:
+>  - ti,thermal-regulation-threshold: integer, temperature above which the charge
+>      current is lowered, to avoid overheating (in degrees Celsius). If omitted,
+>      the default setting will be used (120 degrees);
+> +- ti,ibatcomp-resistance: integer, value of a resistor in series with
+> +    the battery (in uOhm);
+> +- ti,ibatcomp-clamp-voltage: integer, maximum charging voltage adjustment due
+> +    to expected voltage drop on in-series resistor (in uV);
 
-That's not a base anyone can apply this patch against.
+Need a unit suffix as defined in property-units.txt
 
-> 
-> 
->  .../devicetree/bindings/display/bridge/sii902x.txt          | 2 +-
->  .../devicetree/bindings/display/rockchip/rockchip-drm.yaml  | 2 +-
->  .../devicetree/bindings/net/mediatek-bluetooth.txt          | 2 +-
->  .../devicetree/bindings/sound/audio-graph-card.txt          | 2 +-
->  .../devicetree/bindings/sound/st,sti-asoc-card.txt          | 2 +-
->  Documentation/mips/ingenic-tcu.rst                          | 2 +-
->  MAINTAINERS                                                 | 6 +++---
->  7 files changed, 9 insertions(+), 9 deletions(-)
+Rob
