@@ -2,204 +2,198 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5E5C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31008C54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A13A20722
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C828206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:39:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="cXCNu1Mf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TKLmCx0Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730552AbgELOi6 (ORCPT
+        id S1730350AbgELOj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:38:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39698 "EHLO
+        Tue, 12 May 2020 10:39:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730200AbgELOi5 (ORCPT
+        with ESMTP id S1726168AbgELOjZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:38:57 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A096C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 07:38:57 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id ep1so6499055qvb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 07:38:57 -0700 (PDT)
+        Tue, 12 May 2020 10:39:25 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 918E8C061A0C;
+        Tue, 12 May 2020 07:39:25 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t7so5476586plr.0;
+        Tue, 12 May 2020 07:39:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=L9o5Ql/wJ8VxyH0z8y3vpicAM4usviuC5KgT7eHgDMU=;
-        b=cXCNu1MfDx5eYFPd7c6gTg0i50xmDSoslbyxhoCoz93DQFAZu2wYP9sqvuzxCkeHG0
-         7mGaneCZdDJviKZScutXZGVwXaW/vlcmJfywyqgSEdqcp3+kzCrL05qHvVMuVLtabPg5
-         9n30gE7zVo1Tnh7OO709fzt32otHtPxKU2FD6dAf/sTgL+pAj9l7GhMjeCOvljecQC2f
-         GHMjLN1qGVLcK9qvd9ISMKns/4UANUR3cnSsvIJd5jhm/8zcSijtVxWOBtrIM9Bxz+zA
-         C0Ag5nECRh27eh1JQ4KSZcT/640melp2kVrWKTUCfU62A46JbosV1PPr9DaNDpIm8FsW
-         ZaeQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Y/ffNZH2j8wRUIyx9mV+rSX8Z5whOOVlhkgSxFYbJXI=;
+        b=TKLmCx0Z3nSct1EOvFmsKQeoDh1jNhdmWpIph9rYq+t1ulWmHFqigYOIS8eYuQ+Ydo
+         koI5YeaTePI5jiL3R4Q68kwWZN95KmTq9NPzZAvvGDmsfsm4Goy/EgblS9vZGYjTe+WW
+         O04n0Oh+7Bi+isekZwHrf74PdFlqtL39q3L+M+HGY2IbBzMCSBUMlvglzBXYgp7OuHq0
+         qM9zaSCwHJBBTE/yF/yjFDAISM26wvaXpxnDS3WK90kV0gKDdDQmHFZscc4F8Ew7U4xy
+         ZGSo5YHdQPr9aK5jGykK54dqoE6qGk1Rw4Opl3lnkX5u0IyEm2tyNPXQDD85C2wlBwGI
+         SwVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=L9o5Ql/wJ8VxyH0z8y3vpicAM4usviuC5KgT7eHgDMU=;
-        b=bpfUPt86iMcGg+miBCU7Rt7c3XCTyqW8I+HjzVfvJ3PV5CrnvLcAv4I1ypmnyxzLbv
-         3LuyFxi4b37hMdHHYXaVzRy3mGw2TqYzu4DQ2wUcUsknA1eNTU3a37H5v6uy8ND54qtc
-         I/GJzrX3Dq4/mhIRg4TZQpaeL32+CGM6uS4f9okDa95FlLTllTD90L2DT91GMgrOiI0+
-         seVi9I/RdZS/N6GXvVTrQjpLDs0XR8OjA/hkIZXQ38ft+UoOJREezXzAtJt2oOp0WDI2
-         mZ+vQQGcitIJuYuhxM9KeyL25bmbx/h0AIdQXFulMUIbBCvlNTzDQdEK4hY9aeLk4lo4
-         dnIA==
-X-Gm-Message-State: AGi0PuZPIT6ZDM4qMkJ0ZDP3ERsMAor+Qu6p+g9qS3QJK6nxiuM9axSe
-        +a/n+Rgn94b7XINPKgwPzGJ8+A==
-X-Google-Smtp-Source: APiQypLe98ffTpD+ModFHxmfVzzas7YPY7outMKiARGHM1PinDOJxc6XfXOdiPQPtUCSVF8z8TEg8g==
-X-Received: by 2002:a0c:eb09:: with SMTP id j9mr21513809qvp.196.1589294336641;
-        Tue, 12 May 2020 07:38:56 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id i3sm8524665qkf.39.2020.05.12.07.38.54
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 May 2020 07:38:55 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH 12/19] mm: memcontrol: convert anon and file-thp to new
- mem_cgroup_charge() API
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20200508183105.225460-13-hannes@cmpxchg.org>
-Date:   Tue, 12 May 2020 10:38:54 -0400
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Joonsoo Kim <js1304@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Roman Gushchin <guro@fb.com>, Linux-MM <linux-mm@kvack.org>,
-        cgroups@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        kernel-team@fb.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <45AA36A9-0C4D-49C2-BA3C-08753BBC30FB@lca.pw>
-References: <20200508183105.225460-1-hannes@cmpxchg.org>
- <20200508183105.225460-13-hannes@cmpxchg.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Y/ffNZH2j8wRUIyx9mV+rSX8Z5whOOVlhkgSxFYbJXI=;
+        b=jKTVs/NqihfdjaDiPd+7cWR2x2ZJ+0PlKvx8JcDAjW0shpQc7TYakUij6DwvNzpgLv
+         xFHx1dCTqWBO0zaJDVEmAxC4qK2IaaCpYp3JavDtZMlLXUgsZajeDsAAo220nEn/7PTS
+         WV1hmnJT3hP8qBsoHnPsMrVZfBpywIDn3becTNGe2gLxZVnJWde9t/Qq0OW2ZYwKcUHo
+         i4Ce5XyYDk4gxLKugKOCHS2v8cZB6z8uuDEEHilN8yHZm2E+X3HwLshh0ZFpXqKRFFvb
+         tzlD9M9rfMODKXBmo2D3rywNmY6S9u48QVHB/W3u3de6OGQMq8zaSE36ygJ2eRP9TutB
+         NbjA==
+X-Gm-Message-State: AGi0Pua282HaO7RGr24VKECDf/shNCarFLvVERR0+R9Hhc9bWFWMLGAt
+        jDpW84NdMJF/+4UmLHf/5rI=
+X-Google-Smtp-Source: APiQypKxegfwSSaRnWsTzw6sOpVrUsSqsFX0oyju3ae91ekOvIu13KHd5uYSHZj6P1e9d5GyHTZaiQ==
+X-Received: by 2002:a17:902:261:: with SMTP id 88mr19849899plc.308.1589294364981;
+        Tue, 12 May 2020 07:39:24 -0700 (PDT)
+Received: from [192.168.11.3] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
+        by smtp.gmail.com with ESMTPSA id m63sm12573686pfb.101.2020.05.12.07.39.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 May 2020 07:39:24 -0700 (PDT)
+Subject: Re: [PATCH 0/3] tools/memory-model, Documentation/litmus-test: Sort
+ out location of litmus test and README
+To:     paulmck@kernel.org, Joel Fernandes <joel@joelfernandes.org>
+Cc:     Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org,
+        vpillai@digitalocean.com, Jonathan Corbet <corbet@lwn.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Daniel Lustig <dlustig@nvidia.com>, linux-doc@vger.kernel.org,
+        Akira Yokosawa <akiyks@gmail.com>
+References: <20200323015735.236279-1-joel@joelfernandes.org>
+ <7809dbfa-7a76-8663-799a-908c4ead8d30@gmail.com>
+ <21e1ba24-22d0-8083-770c-53d320ba5420@gmail.com>
+ <20200511173348.GX2869@paulmck-ThinkPad-P72>
+ <20200512021309.GA197229@google.com>
+ <bff04d71-1666-a5a8-54bf-d0c9f8737b47@gmail.com>
+ <20200512121936.GA228684@google.com>
+ <20200512141944.GC2869@paulmck-ThinkPad-P72>
+From:   Akira Yokosawa <akiyks@gmail.com>
+Message-ID: <2ad1db9a-cd47-51a0-4bbf-5e6b64b73cbd@gmail.com>
+Date:   Tue, 12 May 2020 23:39:19 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200512141944.GC2869@paulmck-ThinkPad-P72>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 12 May 2020 07:19:44 -0700, Paul E. McKenney wrote:
+> On Tue, May 12, 2020 at 08:19:36AM -0400, Joel Fernandes wrote:
+>> On Tue, May 12, 2020 at 08:50:45PM +0900, Akira Yokosawa wrote:
+>> [...]
+>>>> I think on top of this patch, I'd like to add a reference to the to the
+>>>> litmus test in tools/memory-model/ from Documentation/rcu/.
+>>>
+>>> Sounds reasonable to me. But for most people, it never changes its location.
+>>> Please find inline comments below.
+>>>
+>>>>
+>>>> Just to mention my rationale for Documentation/litmus-tests/rcu/, I was
+>>>> basically looking for a central place for RCU related litmus tests in the
+>>>> kernel sources and the idea of this new directory came up.
+>>>>
+>>>> For Akira's series,
+>>>> Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+>>>
+>>> Thank you!
+>>>
+>>>>
+>>>> And could we add the following patch on top of Akira's series so we still
+>>>> maintain a reference to the moved RCU test?> 
+>>>> ---8<-----------------------
+>>>>
+>>>> From 52fdb57551cc769d8bd690f4f2b22de36ddece99 Mon Sep 17 00:00:00 2001
+>>>> From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+>>>> Date: Mon, 11 May 2020 22:06:46 -0400
+>>>> Subject: [PATCH] docs: litmus-tests: Clarify about the RCU pre-initialization
+>>>>  test
+>>>>
+>>>> Since this test was moved to tools/memory-model/, make sure that it is
+>>>> at least referenced from Documentation/litmus-tests/'s README.
+>>>>
+>>>> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+>>>> ---
+>>>>  Documentation/litmus-tests/README | 6 ++++--
+>>>>  1 file changed, 4 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/litmus-tests/README b/Documentation/litmus-tests/README
+>>>> index ac0b270b456c1..53f09e74734a4 100644
+>>>> --- a/Documentation/litmus-tests/README
+>>>> +++ b/Documentation/litmus-tests/README
+>>>> @@ -11,7 +11,6 @@ tools/memory-model/README.
+>>>>  
+>>>>  atomic (/atomic derectory)
+>>>>  --------------------------
+>>>> -
+>>>>  Atomic-RMW+mb__after_atomic-is-stronger-than-acquire.litmus
+>>>>      Test that an atomic RMW followed by a smp_mb__after_atomic() is
+>>>>      stronger than a normal acquire: both the read and write parts of
+>>>> @@ -23,8 +22,11 @@ Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+>>>>  
+>>>>  RCU (/rcu directory)
+>>>>  --------------------
+>>>> -
+>>>
+>>> I loosely followed the convention of ReST documents in putting these empty
+>>> lines.  But I don't mind if they are removed.
+>>>
+>>>>  RCU+sync+read.litmus
+>>>>  RCU+sync+free.litmus
+>>>>      Both the above litmus tests demonstrate the RCU grace period guarantee
+>>>>      that an RCU read-side critical section can never span a grace period.
+>>>> +
+>>>> +MP+onceassign+derefonce.litmus (moved to tools/memory-model/litmus-tests/)
+>>>
+>>> As I said above, for those who don't follow developments in the lkmm branch, 
+>>> MP+onceassign+derefonce.litmus stays in tools/memory-model/litmus-tests/.
+>>> So,
+>>>
+>>> +MP+onceassign+derefonce.litmus (under tools/memory-model/litmus-tests/)
+>>>
+>>> looks better to me.
+>>
+>> Yes it stays under tools/.. but is referenced here. Sounds like you agree and
+>> the only change from my follow-up patch that you want is to change "moved to"
+>> to "under".
+>>
+>> If so, Paul do you mind applying my patch and fixing this up? Or do you want
+>> to apply Akira's 3-patch series first and then have me send you another one
+>> on top?
+> 
+> Let's get something that you, Akira, and Alan are good with, then I will
+> apply that, either on top of or in place of the current commits (just
+> tell me which).
 
+OK.
+I'm submitting a patch [4/3] with Alan's suggested-by and Joel's and my
+co-developed-by tags.
+The explanation under tools/memory-model/litmus-tests/README also need the same
+rewording.
 
-> On May 8, 2020, at 2:30 PM, Johannes Weiner <hannes@cmpxchg.org> =
-wrote:
->=20
-> With the page->mapping requirement gone from memcg, we can charge anon
-> and file-thp pages in one single step, right after they're allocated.
->=20
-> This removes two out of three API calls - especially the tricky commit
-> step that needed to happen at just the right time between when the
-> page is "set up" and when it's "published" - somewhat vague and fluid
-> concepts that varied by page type. All we need is a freshly allocated
-> page and a memcg context to charge.
->=20
-> v2: prevent double charges on pre-allocated hugepages in khugepaged
->=20
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> Reviewed-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> ---
-> include/linux/mm.h      |  4 +---
-> kernel/events/uprobes.c | 11 +++--------
-> mm/filemap.c            |  2 +-
-> mm/huge_memory.c        |  9 +++------
-> mm/khugepaged.c         | 35 ++++++++++-------------------------
-> mm/memory.c             | 36 ++++++++++--------------------------
-> mm/migrate.c            |  5 +----
-> mm/swapfile.c           |  6 +-----
-> mm/userfaultfd.c        |  5 +----
-> 9 files changed, 31 insertions(+), 82 deletions(-)
-[]
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
->=20
-> @@ -1198,10 +1193,11 @@ static void collapse_huge_page(struct =
-mm_struct *mm,
-> out_up_write:
-> 	up_write(&mm->mmap_sem);
-> out_nolock:
-> +	if (*hpage)
-> +		mem_cgroup_uncharge(*hpage);
-> 	trace_mm_collapse_huge_page(mm, isolated, result);
-> 	return;
-> out:
-> -	mem_cgroup_cancel_charge(new_page, memcg);
-> 	goto out_up_write;
-> }
-[]
+        Thanks, Akira
 
-Some memory pressure will crash this new code. It looks like somewhat =
-racy.
-
-if (!page->mem_cgroup)
-
-where page =3D=3D NULL in mem_cgroup_uncharge().
-
-[ 2244.414421][  T726] BUG: Kernel NULL pointer dereference on read at =
-0x0000002c
-[ 2244.414454][  T726] Faulting instruction address: 0xc0000000004f7e44
-[ 2244.414467][  T726] Oops: Kernel access of bad area, sig: 11 [#1]
-[ 2244.414488][  T726] LE PAGE_SIZE=3D64K MMU=3DRadix SMP NR_CPUS=3D256 =
-DEBUG_PAGEALLOC NUMA PowerNV
-[ 2244.414501][  T726] Modules linked in: brd ext4 crc16 mbcache jbd2 =
-loop kvm_hv kvm ip_tables x_tables xfs sd_mod bnx2x ahci tg3 libahci =
-libphy mdio libata firmware_class dm_mirror dm_region_hash dm_log dm_mod
-[ 2244.414556][  T726] CPU: 11 PID: 726 Comm: khugepaged Not tainted =
-5.7.0-rc5-next-20200512+ #8
-[ 2244.414579][  T726] NIP:  c0000000004f7e44 LR: c0000000004df95c CTR: =
-c0000000001c1400
-[ 2244.414600][  T726] REGS: c000001a2398f6e0 TRAP: 0300   Not tainted  =
-(5.7.0-rc5-next-20200512+)
-[ 2244.414630][  T726] MSR:  9000000000009033 <SF,HV,EE,ME,IR,DR,RI,LE>  =
-CR: 24000244  XER: 20040000
-[ 2244.414656][  T726] CFAR: c0000000004df958 DAR: 000000000000002c =
-DSISR: 40000000 IRQMASK: 0=20
-[ 2244.414656][  T726] GPR00: c0000000004df95c c000001a2398f970 =
-c00000000168a700 fffffffffffffff4=20
-[ 2244.414656][  T726] GPR04: ffffffffffffffff c000000000bd0980 =
-0000000000000005 0000000000000080=20
-[ 2244.414656][  T726] GPR08: 0000001ffc030000 0000000000000001 =
-0000000000000000 c00000000152bb58=20
-[ 2244.414656][  T726] GPR12: 0000000024000222 c000001fffff5680 =
-c0000001d818ce00 c0000001d818cd00=20
-[ 2244.414656][  T726] GPR16: 0000000000000000 c000001a2398fce0 =
-fe7fffffffffefff fffffffffffffe7f=20
-[ 2244.414656][  T726] GPR20: c000201320aa53c8 000000000000001e =
-0000000000000017 c00020047636b868=20
-[ 2244.414656][  T726] GPR24: 0000000000000000 0000000000000000 =
-c000000001756080 c000001a2398fce0=20
-[ 2244.414656][  T726] GPR28: c000001a2398fa20 00007ffeeda00000 =
-c000200f28547928 c000200f28547880=20
-[ 2244.414865][  T726] NIP [c0000000004f7e44] =
-mem_cgroup_uncharge+0x34/0xb0
-mem_cgroup_uncharge at mm/memcontrol.c:6563
-[ 2244.414895][  T726] LR [c0000000004df95c] =
-collapse_huge_page+0x24c/0x1000
-collapse_huge_page at mm/khugepaged.c:1197
-[ 2244.414924][  T726] Call Trace:
-[ 2244.414940][  T726] [c000001a2398f970] [0000000000000001] 0x1 =
-(unreliable)
-[ 2244.414970][  T726] [c000001a2398f9c0] [c0000000004df814] =
-collapse_huge_page+0x104/0x1000
-collapse_huge_page at mm/khugepaged.c:1064 (discriminator 10)
-[ 2244.414991][  T726] [c000001a2398faf0] [c0000000004e0f84] =
-khugepaged_scan_pmd+0x874/0xc70
-[ 2244.415021][  T726] [c000001a2398fbf0] [c0000000004e2a90] =
-khugepaged+0x900/0x1920
-[ 2244.415043][  T726] [c000001a2398fdb0] [c000000000155aa4] =
-kthread+0x1c4/0x1d0
-[ 2244.415075][  T726] [c000001a2398fe20] [c00000000000cb28] =
-ret_from_kernel_thread+0x5c/0x74
-[ 2244.415095][  T726] Instruction dump:
-[ 2244.415113][  T726] 384228f0 7c0802a6 60000000 f821ffb1 e92d0c70 =
-f9210048 39200000 3d22ffec=20
-[ 2244.415146][  T726] 3929f9f4 81290000 2f890000 409d0048 <e9230038> =
-2fa90000 419e003c 7c0802a6=20
-[ 2244.415181][  T726] ---[ end trace 3488eb8818913a26 ]---=
+> 
+> 							Thanx, Paul
+> 
