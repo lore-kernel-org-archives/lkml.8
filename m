@@ -5,68 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8992AC47077
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6747CA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67F52206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:21:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AD12206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:22:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h9cfQdPv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N8yrxXEX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730340AbgELRUu (ORCPT
+        id S1730985AbgELRWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 13:20:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36640 "EHLO
+        Tue, 12 May 2020 13:22:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730083AbgELRUs (ORCPT
+        with ESMTP id S1730366AbgELRUu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 13:20:48 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1673C061A0C;
-        Tue, 12 May 2020 10:20:46 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id w7so16523487wre.13;
-        Tue, 12 May 2020 10:20:46 -0700 (PDT)
+        Tue, 12 May 2020 13:20:50 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D217DC061A0C;
+        Tue, 12 May 2020 10:20:48 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id y24so24432602wma.4;
+        Tue, 12 May 2020 10:20:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Zs2KCCPbWFJ5KPRGeDvzehmmeOcMn4PR9pSIwaMke0k=;
-        b=h9cfQdPvJ0LLYQFauKf4X958ixztZuWuen8Rc5FL9sDZMwl1g3AxCGqJ6WbdZWhaaj
-         79eGadiOI4T9eFdubJ2dXF2RZQuuYGytPv2wdElRR2MUkdlZY+zZIXO9I1RCCAtmcH16
-         F3SrE+e+fWxv0gU9lkfcl7SO8wvcGsUvKVG8AZLTh1tKW1EmNOJ63eJQxfrpfi0dzHM3
-         gTIMxRaG1OUQFlWZ987yPh/T2GeDZ1Af38BXiZVjUVsvybeDedS8kPcGKy5Eh4x4sCxx
-         bRt+yyZ3p8QdU+C54kv2cKWLEy5YN8czybCBNNA7TJ+/pDACvm1nM74uM7Bveqv8OmKK
-         cxeA==
+        bh=YTQRQXPmLJpZRnFTd2BFC4XaesOJF0QpFiy/VbePCOQ=;
+        b=N8yrxXEX+fKMW2bsHqepE1RpjVkQNZQbjvXduTDvZrq2KRuQvSdbebB0AQ4Xi9m4g8
+         9bu7ch+jYOTeZ+pGtuFwYXtsOVPYjmII1eXVsa3rXp5eYCWQprp3v4PskPGuEMQo8kMJ
+         RcriabGw2Ctid+EbE8I2gLoO0hf2TgpN8s5I+8+3NfIvntZLTgjl30LhtFfVRNFguGUL
+         BHZ4bnFIL0PKfisVPzbi+/TiXIyID65mqrJet8K2ECL8s+s6Ze877l3EL5CndQVbRWw6
+         aEcxFW6IgGJmn28MRuFaojVmbcn9mU8V2EFQgpLIaWSs8UY3wZ4VCZACw+bgZRC71jF9
+         346A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Zs2KCCPbWFJ5KPRGeDvzehmmeOcMn4PR9pSIwaMke0k=;
-        b=Unc/7mXoduostcCxbuUtxvGBfRSTTvmAcSRytTOKbX+hpj6E5woEtK0qtYtzOFHFly
-         TueWy7YLrww55Y6OJ9ZbjJfYWvbuDs07vs0lV1dlfGwGOL6+eEmn202JPDniEKOMrTEp
-         D/IEWt5S7vjTeG9MV/opAkgXzpX0u7EGd1DkH9nvZdgRIRDfmee5FHrjgjCBc7ta8FRX
-         u7XFKMNXZZ5ytBVLeraIRXBzu69Yt6TKFo2Bg7TZ4CP09lKRyBNe53iywj90j5mVUZ7a
-         i11ZO3H35pivDgG4nV30CvRKsAV8E18PBDfsxJL3gYCjdnuWyiJ6gA85UFIbP2nHHdYY
-         g6NA==
-X-Gm-Message-State: AGi0PuaR5Npv+ZSopjNsGxtTL6Xe7OlCGdhSOLR46uX2RiEyQooufgtR
-        8EirnvDE+fbJRhyLU2Ai9yXVf/wT
-X-Google-Smtp-Source: APiQypIiYiOTbWrLpbhnbs5Fa64YShxgoZBImJMiLpdGNz6Y1ij60ZorlpMOsaITDIDjMrWFOxOwwg==
-X-Received: by 2002:a5d:514b:: with SMTP id u11mr26694000wrt.53.1589304045151;
-        Tue, 12 May 2020 10:20:45 -0700 (PDT)
+        bh=YTQRQXPmLJpZRnFTd2BFC4XaesOJF0QpFiy/VbePCOQ=;
+        b=Evpl3cS/1pwhwFoUn7eqljgR4p+W/gtPwbea9fxqu0rcHG43j0GN88ymdot+/3USal
+         664SI0y6UP2WPtKbUQ0AfKBxrj8efc9zKmHRUA2jaLpLDkg0g2UQihrtNNmiI5QMglXS
+         r7cjdLGnEp23DgFFCFWnPI4YMvpeHaJtZu+00kmdOsaCjiUWs0kresmFLG/Px+6/vidh
+         jmil9IU3zWZlCCXGlj9owb3757m05YmlTMDx7CruaR4McA9rik3+BFAc4oqmARxVqXpb
+         eRkGqCea/raBaSuZKUtSOnnNXNk7FS8sXUwtfWcnNVob9JQHfuUfVPDE9pxqhYJebQhb
+         ce3A==
+X-Gm-Message-State: AGi0PuYIj1hObIxmE1/YfJq0hPCTbp01VZWZSm5pad4tDQla9Ij8RuCN
+        5svLtQfymUx2XilOaJiohqs=
+X-Google-Smtp-Source: APiQypKASE1iZYqexikV0AgtsS/7QAmtfB/d0Brn+1rRruYZIZfA4awLZ/OMgfYf1OrYzCr//tlUKA==
+X-Received: by 2002:a1c:ed0b:: with SMTP id l11mr40539443wmh.31.1589304047522;
+        Tue, 12 May 2020 10:20:47 -0700 (PDT)
 Received: from localhost.localdomain ([86.121.118.29])
-        by smtp.gmail.com with ESMTPSA id a15sm23999743wrw.56.2020.05.12.10.20.43
+        by smtp.gmail.com with ESMTPSA id a15sm23999743wrw.56.2020.05.12.10.20.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 10:20:44 -0700 (PDT)
+        Tue, 12 May 2020 10:20:47 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     andrew@lunn.ch, f.fainelli@gmail.com, vivien.didelot@gmail.com
 Cc:     davem@davemloft.net, kuba@kernel.org, jiri@mellanox.com,
         idosch@idosch.org, rmk+kernel@armlinux.org.uk,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 net-next 01/15] net: dsa: provide an option for drivers to always receive bridge VLANs
-Date:   Tue, 12 May 2020 20:20:25 +0300
-Message-Id: <20200512172039.14136-2-olteanv@gmail.com>
+Subject: [PATCH v3 net-next 03/15] net: dsa: sja1105: keep the VLAN awareness state in a driver variable
+Date:   Tue, 12 May 2020 20:20:27 +0300
+Message-Id: <20200512172039.14136-4-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200512172039.14136-1-olteanv@gmail.com>
 References: <20200512172039.14136-1-olteanv@gmail.com>
@@ -75,137 +75,170 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-DSA assumes that a bridge which has vlan filtering disabled is not
-vlan aware, and ignores all vlan configuration. However, the kernel
-software bridge code allows configuration in this state.
+Soon we'll add a third operating mode to the driver. Introduce a
+vlan_state to make things more easy to manage, and use it where
+applicable.
 
-This causes the kernel's idea of the bridge vlan state and the
-hardware state to disagree, so "bridge vlan show" indicates a correct
-configuration but the hardware lacks all configuration. Even worse,
-enabling vlan filtering on a DSA bridge immediately blocks all traffic
-which, given the output of "bridge vlan show", is very confusing.
-
-Provide an option that drivers can set to indicate they want to receive
-vlan configuration even when vlan filtering is disabled. At the very
-least, this is safe for Marvell DSA bridges, which do not look up
-ingress traffic in the VTU if the port is in 8021Q disabled state. It is
-also safe for the Ocelot switch family. Whether this change is suitable
-for all DSA bridges is not known.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
 Changes in v3:
-Rename again to configure_vlan_while_not_filtering, and add a helper
-function for skipping VLAN configuration.
+Remove sja1105_can_use_vlan_as_tags.
 
 Changes in v2:
-Rename variable from vlan_bridge_vtu to configure_vlans_while_disabled.
+Be much more thorough, and make sure that things like virtual links and
+FDB operations still work properly.
 
- include/net/dsa.h  |  7 +++++++
- net/dsa/dsa_priv.h |  1 +
- net/dsa/port.c     | 14 ++++++++++++++
- net/dsa/slave.c    |  8 ++++----
- 4 files changed, 26 insertions(+), 4 deletions(-)
+ drivers/net/dsa/sja1105/sja1105.h      |  6 ++++++
+ drivers/net/dsa/sja1105/sja1105_main.c | 18 +++++++++++++-----
+ drivers/net/dsa/sja1105/sja1105_vl.c   | 24 ++++++++++++++----------
+ 3 files changed, 33 insertions(+), 15 deletions(-)
 
-diff --git a/include/net/dsa.h b/include/net/dsa.h
-index 312c2f067e65..50389772c597 100644
---- a/include/net/dsa.h
-+++ b/include/net/dsa.h
-@@ -282,6 +282,13 @@ struct dsa_switch {
- 	 */
- 	bool			vlan_filtering_is_global;
+diff --git a/drivers/net/dsa/sja1105/sja1105.h b/drivers/net/dsa/sja1105/sja1105.h
+index a64ace07b89f..5b2b275d01a7 100644
+--- a/drivers/net/dsa/sja1105/sja1105.h
++++ b/drivers/net/dsa/sja1105/sja1105.h
+@@ -178,6 +178,11 @@ struct sja1105_flow_block {
+ 	int num_virtual_links;
+ };
  
-+	/* Pass .port_vlan_add and .port_vlan_del to drivers even for bridges
-+	 * that have vlan_filtering=0. All drivers should ideally set this (and
-+	 * then the option would get removed), but it is unknown whether this
-+	 * would break things or not.
-+	 */
-+	bool			configure_vlan_while_not_filtering;
++enum sja1105_vlan_state {
++	SJA1105_VLAN_UNAWARE,
++	SJA1105_VLAN_FILTERING_FULL,
++};
 +
- 	/* In case vlan_filtering_is_global is set, the VLAN awareness state
- 	 * should be retrieved from here and not from the per-port settings.
+ struct sja1105_private {
+ 	struct sja1105_static_config static_config;
+ 	bool rgmii_rx_delay[SJA1105_NUM_PORTS];
+@@ -193,6 +198,7 @@ struct sja1105_private {
+ 	 * the switch doesn't confuse them with one another.
  	 */
-diff --git a/net/dsa/dsa_priv.h b/net/dsa/dsa_priv.h
-index a1a0ae242012..adecf73bd608 100644
---- a/net/dsa/dsa_priv.h
-+++ b/net/dsa/dsa_priv.h
-@@ -138,6 +138,7 @@ int dsa_port_bridge_join(struct dsa_port *dp, struct net_device *br);
- void dsa_port_bridge_leave(struct dsa_port *dp, struct net_device *br);
- int dsa_port_vlan_filtering(struct dsa_port *dp, bool vlan_filtering,
- 			    struct switchdev_trans *trans);
-+bool dsa_port_skip_vlan_configuration(struct dsa_port *dp);
- int dsa_port_ageing_time(struct dsa_port *dp, clock_t ageing_clock,
- 			 struct switchdev_trans *trans);
- int dsa_port_mtu_change(struct dsa_port *dp, int new_mtu,
-diff --git a/net/dsa/port.c b/net/dsa/port.c
-index ebc8d6cbd1d4..e23ece229c7e 100644
---- a/net/dsa/port.c
-+++ b/net/dsa/port.c
-@@ -257,6 +257,20 @@ int dsa_port_vlan_filtering(struct dsa_port *dp, bool vlan_filtering,
- 	return 0;
- }
+ 	struct mutex mgmt_lock;
++	enum sja1105_vlan_state vlan_state;
+ 	struct sja1105_tagger_data tagger_data;
+ 	struct sja1105_ptp_data ptp_data;
+ 	struct sja1105_tas_data tas_data;
+diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
+index d5de9305df25..e7b675909288 100644
+--- a/drivers/net/dsa/sja1105/sja1105_main.c
++++ b/drivers/net/dsa/sja1105/sja1105_main.c
+@@ -1303,7 +1303,7 @@ int sja1105pqrs_fdb_add(struct dsa_switch *ds, int port,
+ 	l2_lookup.vlanid = vid;
+ 	l2_lookup.iotag = SJA1105_S_TAG;
+ 	l2_lookup.mask_macaddr = GENMASK_ULL(ETH_ALEN * 8 - 1, 0);
+-	if (dsa_port_is_vlan_filtering(dsa_to_port(ds, port))) {
++	if (priv->vlan_state != SJA1105_VLAN_UNAWARE) {
+ 		l2_lookup.mask_vlanid = VLAN_VID_MASK;
+ 		l2_lookup.mask_iotag = BIT(0);
+ 	} else {
+@@ -1366,7 +1366,7 @@ int sja1105pqrs_fdb_del(struct dsa_switch *ds, int port,
+ 	l2_lookup.vlanid = vid;
+ 	l2_lookup.iotag = SJA1105_S_TAG;
+ 	l2_lookup.mask_macaddr = GENMASK_ULL(ETH_ALEN * 8 - 1, 0);
+-	if (dsa_port_is_vlan_filtering(dsa_to_port(ds, port))) {
++	if (priv->vlan_state != SJA1105_VLAN_UNAWARE) {
+ 		l2_lookup.mask_vlanid = VLAN_VID_MASK;
+ 		l2_lookup.mask_iotag = BIT(0);
+ 	} else {
+@@ -1412,7 +1412,7 @@ static int sja1105_fdb_add(struct dsa_switch *ds, int port,
+ 	 * for what gets printed in 'bridge fdb show'.  In the case of zero,
+ 	 * no VID gets printed at all.
+ 	 */
+-	if (!dsa_port_is_vlan_filtering(dsa_to_port(ds, port)))
++	if (priv->vlan_state != SJA1105_VLAN_FILTERING_FULL)
+ 		vid = 0;
  
-+/* This enforces legacy behavior for switch drivers which assume they can't
-+ * receive VLAN configuration when enslaved to a bridge with vlan_filtering=0
-+ */
-+bool dsa_port_skip_vlan_configuration(struct dsa_port *dp)
-+{
-+	struct dsa_switch *ds = dp->ds;
-+
-+	if (!dp->bridge_dev)
-+		return false;
-+
-+	return (!ds->configure_vlan_while_not_filtering &&
-+		!br_vlan_enabled(dp->bridge_dev));
-+}
-+
- int dsa_port_ageing_time(struct dsa_port *dp, clock_t ageing_clock,
- 			 struct switchdev_trans *trans)
+ 	return priv->info->fdb_add_cmd(ds, port, addr, vid);
+@@ -1423,7 +1423,7 @@ static int sja1105_fdb_del(struct dsa_switch *ds, int port,
  {
-diff --git a/net/dsa/slave.c b/net/dsa/slave.c
-index 61b0de52040a..886490fb203d 100644
---- a/net/dsa/slave.c
-+++ b/net/dsa/slave.c
-@@ -314,7 +314,7 @@ static int dsa_slave_vlan_add(struct net_device *dev,
- 	if (obj->orig_dev != dev)
+ 	struct sja1105_private *priv = ds->priv;
+ 
+-	if (!dsa_port_is_vlan_filtering(dsa_to_port(ds, port)))
++	if (priv->vlan_state != SJA1105_VLAN_FILTERING_FULL)
+ 		vid = 0;
+ 
+ 	return priv->info->fdb_del_cmd(ds, port, addr, vid);
+@@ -1462,7 +1462,7 @@ static int sja1105_fdb_dump(struct dsa_switch *ds, int port,
+ 		u64_to_ether_addr(l2_lookup.macaddr, macaddr);
+ 
+ 		/* We need to hide the dsa_8021q VLANs from the user. */
+-		if (!dsa_port_is_vlan_filtering(dsa_to_port(ds, port)))
++		if (priv->vlan_state == SJA1105_VLAN_UNAWARE)
+ 			l2_lookup.vlanid = 0;
+ 		cb(macaddr, l2_lookup.vlanid, l2_lookup.lockeds, data);
+ 	}
+@@ -1917,6 +1917,7 @@ static int sja1105_vlan_filtering(struct dsa_switch *ds, int port, bool enabled)
+ 	struct sja1105_l2_lookup_params_entry *l2_lookup_params;
+ 	struct sja1105_general_params_entry *general_params;
+ 	struct sja1105_private *priv = ds->priv;
++	enum sja1105_vlan_state state;
+ 	struct sja1105_table *table;
+ 	struct sja1105_rule *rule;
+ 	u16 tpid, tpid2;
+@@ -1940,6 +1941,13 @@ static int sja1105_vlan_filtering(struct dsa_switch *ds, int port, bool enabled)
+ 		tpid2 = ETH_P_SJA1105;
+ 	}
+ 
++	if (!enabled)
++		state = SJA1105_VLAN_UNAWARE;
++	else
++		state = SJA1105_VLAN_FILTERING_FULL;
++
++	priv->vlan_state = state;
++
+ 	table = &priv->static_config.tables[BLK_IDX_GENERAL_PARAMS];
+ 	general_params = table->entries;
+ 	/* EtherType used to identify inner tagged (C-tag) VLAN traffic */
+diff --git a/drivers/net/dsa/sja1105/sja1105_vl.c b/drivers/net/dsa/sja1105/sja1105_vl.c
+index aa9b0b92f437..312401995b54 100644
+--- a/drivers/net/dsa/sja1105/sja1105_vl.c
++++ b/drivers/net/dsa/sja1105/sja1105_vl.c
+@@ -353,14 +353,14 @@ int sja1105_vl_redirect(struct sja1105_private *priv, int port,
+ 	struct sja1105_rule *rule = sja1105_rule_find(priv, cookie);
+ 	int rc;
+ 
+-	if (dsa_port_is_vlan_filtering(dsa_to_port(priv->ds, port)) &&
+-	    key->type != SJA1105_KEY_VLAN_AWARE_VL) {
++	if (priv->vlan_state == SJA1105_VLAN_UNAWARE &&
++	    key->type != SJA1105_KEY_VLAN_UNAWARE_VL) {
+ 		NL_SET_ERR_MSG_MOD(extack,
+-				   "Can only redirect based on {DMAC, VID, PCP}");
++				   "Can only redirect based on DMAC");
  		return -EOPNOTSUPP;
- 
--	if (dp->bridge_dev && !br_vlan_enabled(dp->bridge_dev))
-+	if (dsa_port_skip_vlan_configuration(dp))
- 		return 0;
- 
- 	vlan = *SWITCHDEV_OBJ_PORT_VLAN(obj);
-@@ -381,7 +381,7 @@ static int dsa_slave_vlan_del(struct net_device *dev,
- 	if (obj->orig_dev != dev)
+-	} else if (key->type != SJA1105_KEY_VLAN_UNAWARE_VL) {
++	} else if (key->type != SJA1105_KEY_VLAN_AWARE_VL) {
+ 		NL_SET_ERR_MSG_MOD(extack,
+-				   "Can only redirect based on DMAC");
++				   "Can only redirect based on {DMAC, VID, PCP}");
  		return -EOPNOTSUPP;
+ 	}
  
--	if (dp->bridge_dev && !br_vlan_enabled(dp->bridge_dev))
-+	if (dsa_port_skip_vlan_configuration(dp))
- 		return 0;
+@@ -602,14 +602,18 @@ int sja1105_vl_gate(struct sja1105_private *priv, int port,
+ 		return -ERANGE;
+ 	}
  
- 	/* Do not deprogram the CPU port as it may be shared with other user
-@@ -1240,7 +1240,7 @@ static int dsa_slave_vlan_rx_add_vid(struct net_device *dev, __be16 proto,
- 	 * need to emulate the switchdev prepare + commit phase.
- 	 */
- 	if (dp->bridge_dev) {
--		if (!br_vlan_enabled(dp->bridge_dev))
-+		if (dsa_port_skip_vlan_configuration(dp))
- 			return 0;
+-	if (dsa_port_is_vlan_filtering(dsa_to_port(priv->ds, port)) &&
+-	    key->type != SJA1105_KEY_VLAN_AWARE_VL) {
++	if (priv->vlan_state == SJA1105_VLAN_UNAWARE &&
++	    key->type != SJA1105_KEY_VLAN_UNAWARE_VL) {
++		dev_err(priv->ds->dev, "1: vlan state %d key type %d\n",
++			priv->vlan_state, key->type);
+ 		NL_SET_ERR_MSG_MOD(extack,
+-				   "Can only gate based on {DMAC, VID, PCP}");
++				   "Can only gate based on DMAC");
+ 		return -EOPNOTSUPP;
+-	} else if (key->type != SJA1105_KEY_VLAN_UNAWARE_VL) {
++	} else if (key->type != SJA1105_KEY_VLAN_AWARE_VL) {
++		dev_err(priv->ds->dev, "2: vlan state %d key type %d\n",
++			priv->vlan_state, key->type);
+ 		NL_SET_ERR_MSG_MOD(extack,
+-				   "Can only gate based on DMAC");
++				   "Can only gate based on {DMAC, VID, PCP}");
+ 		return -EOPNOTSUPP;
+ 	}
  
- 		/* br_vlan_get_info() returns -EINVAL or -ENOENT if the
-@@ -1274,7 +1274,7 @@ static int dsa_slave_vlan_rx_kill_vid(struct net_device *dev, __be16 proto,
- 	 * need to emulate the switchdev prepare + commit phase.
- 	 */
- 	if (dp->bridge_dev) {
--		if (!br_vlan_enabled(dp->bridge_dev))
-+		if (dsa_port_skip_vlan_configuration(dp))
- 			return 0;
- 
- 		/* br_vlan_get_info() returns -EINVAL or -ENOENT if the
 -- 
 2.17.1
 
