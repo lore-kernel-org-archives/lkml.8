@@ -2,159 +2,133 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB95C47255
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E00CC47255
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56773206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:17:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589242627;
-	bh=vaxPrzMQgzs6ENhzYwziVwmvg4wnwj0qRcGKNBMJNbM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VekcAHe36CMzcDVEzvongl84XE/Pw0ueCnEsyKiDcYBylk5+vreX+EP559/sSP5Vi
-	 jfRd298Uea5G7LQCI5/01WsgQ8MXixyVoneAryHdj/rr6X9/R9jmmO6Snii9/WpfRo
-	 kyUsRltMh1HUMEbi+9BVFom+nANKI+dY9xMjy49A=
+	by mail.kernel.org (Postfix) with ESMTP id 5287E206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:20:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgELARG (ORCPT
+        id S1728154AbgELAUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 20:17:06 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:36434 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbgELARG (ORCPT
+        Mon, 11 May 2020 20:20:31 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:24252 "EHLO
+        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725855AbgELAUb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 20:17:06 -0400
-Received: by mail-pj1-f68.google.com with SMTP id q24so8544109pjd.1;
-        Mon, 11 May 2020 17:17:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=picn1x3gPFHZt1GE3SbWrOjaNrLu9kmjRnRGCx89OGA=;
-        b=hRxPjmMqYXM/GCatJOttwEa+PGPDruvRsHUmZ2FQwwMdxO0wLLr2jk1n08lXd4w7p6
-         nm3gLXQo+2E4ByTz2/68uXg1s+96vrz2b/skL3BL3TAwl/sF8ZKPr0mJwXRIIytydmSt
-         Ce9xhkWjm/zBB6efkOs1a14Xaj7ft3VdwPPHleDKiumWQ6/ENCrfrNRaCEFVaOHnbnEN
-         VuCz2YJZ8zoVryrnukxKRRAjJtbA/M3uvFm0gKJ5ETTEWNZYWPi/Ryjk5TDPdZeElTkV
-         3KUofbQQ7oHbETgjiVLokerwoT8OeBlOgfgPPcJKNsXmDjAfXaGgJBReVFQrgVr87PYb
-         UdWg==
-X-Gm-Message-State: AGi0PuZ2Yk3ge9yVt0QlV/MLqhLmgwdvRLtsQZlHTglxsF68oqYoB1SY
-        feKMLMUvp1lgY5ywAoGQWSw=
-X-Google-Smtp-Source: APiQypK3/MmgB/38T+zj6P5GKJBercO86vwrP/6vbdQbNQ94quNaQbp82oMztuLmA+W6ugTyboiWNg==
-X-Received: by 2002:a17:90a:2004:: with SMTP id n4mr26897179pjc.190.1589242625277;
-        Mon, 11 May 2020 17:17:05 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id fu12sm11110748pjb.20.2020.05.11.17.17.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 17:17:03 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 1579B40E88; Tue, 12 May 2020 00:17:03 +0000 (UTC)
-Date:   Tue, 12 May 2020 00:17:03 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Rafael Aquini <aquini@redhat.com>
-Cc:     Tso Ted <tytso@mit.edu>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, keescook@chromium.org,
-        yzaikin@google.com
-Subject: Re: [PATCH] kernel: sysctl: ignore invalid taint bits introduced via
- kernel.tainted and taint the kernel with TAINT_USER on writes
-Message-ID: <20200512001702.GW11244@42.do-not-panic.com>
-References: <20200511215904.719257-1-aquini@redhat.com>
- <20200511231045.GV11244@42.do-not-panic.com>
- <20200511235914.GF367616@optiplex-lnx>
+        Mon, 11 May 2020 20:20:31 -0400
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
+ 15.0.1156.6; Mon, 11 May 2020 17:19:27 -0700
+Received: from [0.0.0.0] (oddjob.vmware.com [10.253.4.32])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 53A74404D5;
+        Mon, 11 May 2020 17:19:26 -0700 (PDT)
+Subject: Re: [Linux-graphics-maintainer] [PATCH v3 15/25] drm: vmwgfx: fix
+ common struct sg_table related issues
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <iommu@lists.linux-foundation.org>,
+        <linaro-mm-sig@lists.linaro.org>, <linux-kernel@vger.kernel.org>
+CC:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Airlie <airlied@linux.ie>,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200505083926.28503-1-m.szyprowski@samsung.com>
+ <20200505084614.30424-1-m.szyprowski@samsung.com>
+ <CGME20200505084632eucas1p231212e9cea88e755da8eaf1fb012d2c6@eucas1p2.samsung.com>
+ <20200505084614.30424-15-m.szyprowski@samsung.com>
+From:   Roland Scheidegger <sroland@vmware.com>
+Message-ID: <8adef36a-1f35-e8df-3b7b-2f994a204be1@vmware.com>
+Date:   Tue, 12 May 2020 02:19:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511235914.GF367616@optiplex-lnx>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200505084614.30424-15-m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
+Received-SPF: None (EX13-EDG-OU-001.vmware.com: sroland@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 07:59:14PM -0400, Rafael Aquini wrote:
-> On Mon, May 11, 2020 at 11:10:45PM +0000, Luis Chamberlain wrote:
-> > On Mon, May 11, 2020 at 05:59:04PM -0400, Rafael Aquini wrote:
-> > > diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> > > index 8a176d8727a3..f0a4fb38ac62 100644
-> > > --- a/kernel/sysctl.c
-> > > +++ b/kernel/sysctl.c
-> > > @@ -2623,17 +2623,32 @@ static int proc_taint(struct ctl_table *table, int write,
-> > >  		return err;
-> > >  
-> > >  	if (write) {
-> > > +		int i;
-> > > +
-> > > +		/*
-> > > +		 * Ignore user input that would make us committing
-> > > +		 * arbitrary invalid TAINT flags in the loop below.
-> > > +		 */
-> > > +		tmptaint &= (1UL << TAINT_FLAGS_COUNT) - 1;
-> > 
-> > This looks good but we don't pr_warn() of information lost on intention.
-> >
+I'm not exactly an expert on this, but looks alright to me.
+Acked-by: Roland Scheidegger <sroland@vmware.com>
+
+Am 05.05.20 um 10:46 schrieb Marek Szyprowski:
+> The Documentation/DMA-API-HOWTO.txt states that dma_map_sg returns the
+> numer of the created entries in the DMA address space. However the
+> subsequent calls to dma_sync_sg_for_{device,cpu} and dma_unmap_sg must be
+> called with the original number of the entries passed to dma_map_sg. The
+> sg_table->nents in turn holds the result of the dma_map_sg call as stated
+> in include/linux/scatterlist.h. A common mistake was to ignore a result
+> of the dma_map_sg function and don't use the sg_table->orig_nents at all.
 > 
-> Are you thinking in sth like:
+> To avoid such issues, lets use common dma-mapping wrappers operating
+> directly on the struct sg_table objects and adjust references to the
+> nents and orig_nents respectively.
 > 
-> +               if (tmptaint > TAINT_FLAGS_MAX) {
-> +                       tmptaint &= TAINT_FLAGS_MAX;
-> +                       pr_warn("proc_taint: out-of-range invalid input ignored"
-> +                               " tainted_mask adjusted to 0x%x\n", tmptaint);
-> +               }
-> ?
-
-Sure that would clarify this.
-
-> > > +
-> > >  		/*
-> > >  		 * Poor man's atomic or. Not worth adding a primitive
-> > >  		 * to everyone's atomic.h for this
-> > >  		 */
-> > > -		int i;
-> > >  		for (i = 0; i < BITS_PER_LONG && tmptaint >> i; i++) {
-> > >  			if ((tmptaint >> i) & 1)
-> > >  				add_taint(i, LOCKDEP_STILL_OK);
-> > >  		}
-> > > +
-> > > +		/*
-> > > +		 * Users with SYS_ADMIN capability can include any arbitrary
-> > > +		 * taint flag by writing to this interface. If that's the case,
-> > > +		 * we also need to mark the kernel "tainted by user".
-> > > +		 */
-> > > +		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
-> > 
-> > I'm in favor of this however I'd like to hear from Ted on if it meets
-> > the original intention. I would think he had a good reason not to add
-> > it here.
-> >
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+> For more information, see '[PATCH v3 00/25] DRM: fix struct sg_table nents
+> vs. orig_nents misuse' thread: https://lkml.org/lkml/2020/5/5/187
+> ---
+>  drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c | 17 ++++-------------
+>  1 file changed, 4 insertions(+), 13 deletions(-)
 > 
-> Fair enough. The impression I got by reading Ted's original commit
-> message is that the intent was to have TAINT_USER as the flag set 
-> via this interface, even though the code was allowing for any 
-> arbitrary value.
+> diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c b/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c
+> index bf0bc46..e50ae8b 100644
+> --- a/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c
+> +++ b/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c
+> @@ -362,8 +362,7 @@ static void vmw_ttm_unmap_from_dma(struct vmw_ttm_tt *vmw_tt)
+>  {
+>  	struct device *dev = vmw_tt->dev_priv->dev->dev;
+>  
+> -	dma_unmap_sg(dev, vmw_tt->sgt.sgl, vmw_tt->sgt.nents,
+> -		DMA_BIDIRECTIONAL);
+> +	dma_unmap_sgtable(dev, vmw_tt->sgt, DMA_BIDIRECTIONAL);
+>  	vmw_tt->sgt.nents = vmw_tt->sgt.orig_nents;
+>  }
+>  
+> @@ -383,16 +382,8 @@ static void vmw_ttm_unmap_from_dma(struct vmw_ttm_tt *vmw_tt)
+>  static int vmw_ttm_map_for_dma(struct vmw_ttm_tt *vmw_tt)
+>  {
+>  	struct device *dev = vmw_tt->dev_priv->dev->dev;
+> -	int ret;
+> -
+> -	ret = dma_map_sg(dev, vmw_tt->sgt.sgl, vmw_tt->sgt.orig_nents,
+> -			 DMA_BIDIRECTIONAL);
+> -	if (unlikely(ret == 0))
+> -		return -ENOMEM;
+>  
+> -	vmw_tt->sgt.nents = ret;
+> -
+> -	return 0;
+> +	return dma_map_sgtable(dev, vmw_tt->sgt, DMA_BIDIRECTIONAL);
+>  }
+>  
+>  /**
+> @@ -449,10 +440,10 @@ static int vmw_ttm_map_dma(struct vmw_ttm_tt *vmw_tt)
+>  		if (unlikely(ret != 0))
+>  			goto out_sg_alloc_fail;
+>  
+> -		if (vsgt->num_pages > vmw_tt->sgt.nents) {
+> +		if (vsgt->num_pages > vmw_tt->sgt.orig_nents) {
+>  			uint64_t over_alloc =
+>  				sgl_size * (vsgt->num_pages -
+> -					    vmw_tt->sgt.nents);
+> +					    vmw_tt->sgt.orig_nents);
+>  
+>  			ttm_mem_global_free(glob, over_alloc);
+>  			vmw_tt->sg_alloc_size -= over_alloc;
+> 
 
-That wasn't my reading, it was that the user did something very odd
-with user input which we don't like as kernel developers, and it gives
-us a way to prove: hey you did something stupid, sorry but I cannot
-support your kernel panic.
-
-> I think it's OK to let the user fiddle with
-> the flags, as it's been allowed since the introduction of
-> this interface, but we need to reflect that fact in the
-> tainting itself. Since TAINT_USER is not used anywhere,
-
-I see users of TAINT_USER sprinkled around
-
-> this change perfectly communicates that fact without
-> the need for introducing yet another taint flag.
-
-I'd be happy if we don't have introduce yet-anothe flag as well.
-But since Ted introduced it, without using the flag on the proc_taint()
-I'd like confirmation we won't screw things up with existing test cases
-which assume proc_taint() won't set this up. We'd therefore regress
-userspace.
-
-This is why I'd like for us to be careful with this flag.
-
-  Luis
