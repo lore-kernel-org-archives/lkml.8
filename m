@@ -2,154 +2,89 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD58C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E97C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E491205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0111206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:33:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OiYty1LL"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GsTepM5o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730725AbgELPdc (ORCPT
+        id S1730747AbgELPd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 11:33:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgELPda (ORCPT
+        Tue, 12 May 2020 11:33:57 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:37380 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730382AbgELPd4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 11:33:30 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83BECC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 08:33:30 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id j21so14482062qtq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 08:33:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=A/fbgfde0XyUO2F69Y6u/rjH6iJE5L1jOqri/XRSNJ0=;
-        b=OiYty1LLPBdF9b+KHB2sQJZthi1uyyrFmJ6OMV73nN6Q4lo54stAQRQor8jfW6sCTc
-         Jheo5t2EO42la+M4i9sc+hkE2rA0GvVjYQW+u2Ro5JHiTuqnwlRxa48GOgySDwPYN2pO
-         0um6Tqg+blJsLtI3JQoZagq1/RzZUhQJAtGJAw7FaMgUayoENLooHv95+lY4HSRXOoaB
-         4NZri7zOA151tsPJXto8ruKSn0FfIwd4lE/J99eya7bghAXMNfVgwJ5LmfYGuJwZ3S6f
-         wRNrqXxmmplHDmwdfu1lTsk4RudKLZ4YASyfO+XQqb0GZy+W3yaEpGVRM++vy/lP64E4
-         ossg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=A/fbgfde0XyUO2F69Y6u/rjH6iJE5L1jOqri/XRSNJ0=;
-        b=uIaQlpWgxYlhIF+2xiLfbGQtXKrmj858tSKV5NWwJwAsRYUg4bMVdN2AE+T1gUReSz
-         UqgQybTBpdwkJcx2uilHJ4xAGzkQ56a/eAYNKYkDREEcUs48YxP4gBXAooBwZhceDf5c
-         02YEsVe4nBerCdeyCUu+9DL6h17lJ7lLG8x+qF6/RmZ5E/Tt7y2zxXmcaZlLcL3cgxbn
-         iAya6TM8/Cvgt5tOY8NoJvnCTYHSP2aTSxQ4zxqHjxLl6yKAjwYX8loppnPbHcTplBoZ
-         bBOm+1GzNrm5CLvPR0cjGuCdgeUYiEQI748vnQn8QG6eezJxqtV36h/ehkWu1QvBSUMB
-         IA7w==
-X-Gm-Message-State: AGi0PuYFLu6XFmg+Lmmov/zpIPErkgtYLpC1PYqVJL6EZMyhb6p2stT9
-        xKC5/YpLgDPK8jy9bYv8nzm0wkpimN/SnfwS
-X-Google-Smtp-Source: APiQypIERxlPnFV/TJVvio2/Q0FI1L3ad5PuT996yCjeBj3CqaKpCQfb+sN8sSbhvhX0uf7wDrrwnvfEFDCph/jL
-X-Received: by 2002:a05:6214:1812:: with SMTP id o18mr21635775qvw.64.1589297609674;
- Tue, 12 May 2020 08:33:29 -0700 (PDT)
-Date:   Tue, 12 May 2020 17:33:21 +0200
-In-Reply-To: <29bd753d5ff5596425905b0b07f51153e2345cc1.1589297433.git.andreyknvl@google.com>
-Message-Id: <45b445a76a79208918f0cc44bfabebaea909b54d.1589297433.git.andreyknvl@google.com>
-Mime-Version: 1.0
-References: <29bd753d5ff5596425905b0b07f51153e2345cc1.1589297433.git.andreyknvl@google.com>
-X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
-Subject: [PATCH 3/3] kasan: add missing functions declarations to kasan.h
-From:   Andrey Konovalov <andreyknvl@google.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc:     Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Leon Romanovsky <leon@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 12 May 2020 11:33:56 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589297636; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=dze1SlsXMpqtXCRYq9gWZjlDDJ3FZrxJhv0pJVE1AgI=; b=GsTepM5oeoXyrqdu2gRit+2lsWsBNVwPo7sCJZFuKo4mBVKTVWQ9bWfnewYFlL/UVDFcOA2i
+ j8xbi59uKddlb3fyCQVFKZPEh2Sspzvra+a/ywStrsbtiQfgbxgorM3gYt7Ct1oUAqgeTQES
+ lEmDm2WHAywE4Fo16QGavGJVv0s=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebac19b.7fa3d65d7ed8-smtp-out-n05;
+ Tue, 12 May 2020 15:32:43 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BE76EC433BA; Tue, 12 May 2020 15:32:43 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CEFC9C433CB;
+        Tue, 12 May 2020 15:32:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CEFC9C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v1 6/6] bus: mhi: core: Introduce sysfs entries for MHI
+To:     Bhaumik Bhatt <bbhatt@codeaurora.org>,
+        manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hemantk@codeaurora.org
+References: <1589250796-32020-1-git-send-email-bbhatt@codeaurora.org>
+ <1589250796-32020-7-git-send-email-bbhatt@codeaurora.org>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <7a77e057-a053-89df-4f6e-6e0aa1cce256@codeaurora.org>
+Date:   Tue, 12 May 2020 09:32:41 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <1589250796-32020-7-git-send-email-bbhatt@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KASAN is currently missing declarations for __asan_report* and
-__hwasan* functions. This can lead to compiler warnings.
+On 5/11/2020 8:33 PM, Bhaumik Bhatt wrote:
+> Introduce sysfs entries to enable userspace clients the ability to read
+> the serial number and the OEM PK Hash values obtained from BHI. OEMs
+> need to read these device-specific hardware information values through
+> userspace for factory testing purposes and cannot be exposed via degbufs
+> as it may remain disabled for performance reasons. Also, update the
+> documentation for ABI to include these entries.
+> 
+> Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+> ---
+>   Documentation/ABI/stable/sysfs-bus-mhi | 25 ++++++++++++++++
+>   drivers/bus/mhi/core/init.c            | 53 ++++++++++++++++++++++++++++++++++
+>   2 files changed, 78 insertions(+)
+>   create mode 100644 Documentation/ABI/stable/sysfs-bus-mhi
 
-Reported-by: Leon Romanovsky <leon@kernel.org>
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
----
- mm/kasan/kasan.h | 34 ++++++++++++++++++++++++++++++++--
- 1 file changed, 32 insertions(+), 2 deletions(-)
+I think you need to update MAINTAINERS as well.
 
-diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
-index e8f37199d885..cfade6413528 100644
---- a/mm/kasan/kasan.h
-+++ b/mm/kasan/kasan.h
-@@ -212,8 +212,6 @@ static inline const void *arch_kasan_set_tag(const void *addr, u8 tag)
- asmlinkage void kasan_unpoison_task_stack_below(const void *watermark);
- void __asan_register_globals(struct kasan_global *globals, size_t size);
- void __asan_unregister_globals(struct kasan_global *globals, size_t size);
--void __asan_loadN(unsigned long addr, size_t size);
--void __asan_storeN(unsigned long addr, size_t size);
- void __asan_handle_no_return(void);
- void __asan_alloca_poison(unsigned long addr, size_t size);
- void __asan_allocas_unpoison(const void *stack_top, const void *stack_bottom);
-@@ -228,6 +226,8 @@ void __asan_load8(unsigned long addr);
- void __asan_store8(unsigned long addr);
- void __asan_load16(unsigned long addr);
- void __asan_store16(unsigned long addr);
-+void __asan_loadN(unsigned long addr, size_t size);
-+void __asan_storeN(unsigned long addr, size_t size);
- 
- void __asan_load1_noabort(unsigned long addr);
- void __asan_store1_noabort(unsigned long addr);
-@@ -239,6 +239,21 @@ void __asan_load8_noabort(unsigned long addr);
- void __asan_store8_noabort(unsigned long addr);
- void __asan_load16_noabort(unsigned long addr);
- void __asan_store16_noabort(unsigned long addr);
-+void __asan_loadN_noabort(unsigned long addr, size_t size);
-+void __asan_storeN_noabort(unsigned long addr, size_t size);
-+
-+void __asan_report_load1_noabort(unsigned long addr);
-+void __asan_report_store1_noabort(unsigned long addr);
-+void __asan_report_load2_noabort(unsigned long addr);
-+void __asan_report_store2_noabort(unsigned long addr);
-+void __asan_report_load4_noabort(unsigned long addr);
-+void __asan_report_store4_noabort(unsigned long addr);
-+void __asan_report_load8_noabort(unsigned long addr);
-+void __asan_report_store8_noabort(unsigned long addr);
-+void __asan_report_load16_noabort(unsigned long addr);
-+void __asan_report_store16_noabort(unsigned long addr);
-+void __asan_report_load_n_noabort(unsigned long addr, size_t size);
-+void __asan_report_store_n_noabort(unsigned long addr, size_t size);
- 
- void __asan_set_shadow_00(const void *addr, size_t size);
- void __asan_set_shadow_f1(const void *addr, size_t size);
-@@ -247,4 +262,19 @@ void __asan_set_shadow_f3(const void *addr, size_t size);
- void __asan_set_shadow_f5(const void *addr, size_t size);
- void __asan_set_shadow_f8(const void *addr, size_t size);
- 
-+void __hwasan_load1_noabort(unsigned long addr);
-+void __hwasan_store1_noabort(unsigned long addr);
-+void __hwasan_load2_noabort(unsigned long addr);
-+void __hwasan_store2_noabort(unsigned long addr);
-+void __hwasan_load4_noabort(unsigned long addr);
-+void __hwasan_store4_noabort(unsigned long addr);
-+void __hwasan_load8_noabort(unsigned long addr);
-+void __hwasan_store8_noabort(unsigned long addr);
-+void __hwasan_load16_noabort(unsigned long addr);
-+void __hwasan_store16_noabort(unsigned long addr);
-+void __hwasan_loadN_noabort(unsigned long addr, size_t size);
-+void __hwasan_storeN_noabort(unsigned long addr, size_t size);
-+
-+void __hwasan_tag_memory(unsigned long addr, u8 tag, unsigned long size);
-+
- #endif
 -- 
-2.26.2.645.ge9eca65c58-goog
-
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
