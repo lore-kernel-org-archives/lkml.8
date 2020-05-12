@@ -2,114 +2,197 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79775CA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 671EBCA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CEB420736
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:59:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589299174;
-	bh=GcSuARZnjzHzIHxazwT2+9mc/w9gn8B3hHEScotCwcU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bzAljA5DoeAQF1sJavvQE884epc0Y3YLGq0peRC1YMQpo2OPDcllHCssvKhma1l9Y
-	 FCm/z68yRIWy1irWk9db8QD+KEPMOuKByAehaemkJeCy3WtN0icoIsR/LoSinabKye
-	 4UdLxDKp4i5OKR2uZh3VHcXWEwBhOWCh5KXMR7o4=
+	by mail.kernel.org (Postfix) with ESMTP id 402AD2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:01:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g1IhbIyj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730681AbgELP7d (ORCPT
+        id S1728007AbgELQBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 11:59:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726055AbgELP7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 11:59:33 -0400
-Received: from localhost (unknown [171.76.78.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 12 May 2020 12:01:34 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54842 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726889AbgELQBe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 12:01:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589299292;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4myntAchWEpin/XtVoBTO15NuL8q/7dRSSUM/RxIEHk=;
+        b=g1IhbIyjGgNmyFIHmxl/5gOLhA0usa8cidK6eXuuRGiTdjfSqvfisi4hvR+vxuwaTLLl7Q
+        CahjlbaOMf+qMVb1T6/TtVET0aUVPhzF8KsePxN6ApXiRLu86h7XKWoRn4bECEbHKIkfrf
+        fJ2ePLL+8KQZM1YiqLw68I11ISyHWPE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-202-MWSI24zBNwCNDxlHahR5lA-1; Tue, 12 May 2020 12:01:28 -0400
+X-MC-Unique: MWSI24zBNwCNDxlHahR5lA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED7282054F;
-        Tue, 12 May 2020 15:59:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589299172;
-        bh=GcSuARZnjzHzIHxazwT2+9mc/w9gn8B3hHEScotCwcU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=v7lI9soG/SmwG2yUhc9KJyezmXo/Gk4Jf220jVov/Caf09EzhlUcyfLclXTbdZa/l
-         8emUysqo5CvmTlokYxi6Q8LOHC4Murg51DmwS1atarMjEqU3O/Sj0M0ygc2zKgr5Cc
-         EHEEqJooAKAed1/nPEOCTQ8HawNLFwvCvLrRWEac=
-Date:   Tue, 12 May 2020 21:29:27 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
-        broonie@kernel.org, srinivas.kandagatla@linaro.org,
-        jank@cadence.com, mengdong.lin@intel.com,
-        slawomir.blauciak@intel.com, sanyog.r.kale@intel.com,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        rander.wang@linux.intel.com, bard.liao@intel.com
-Subject: Re: [PATCH 3/3] soundwire: bus_type: add sdw_master_device support
-Message-ID: <20200512155927.GA4297@vkoul-mobl>
-References: <20200429185145.12891-1-yung-chuan.liao@linux.intel.com>
- <20200429185145.12891-4-yung-chuan.liao@linux.intel.com>
- <20200511063227.GS1375924@vkoul-mobl>
- <e214d308-1b92-a7a5-3c76-da05dca99cc5@linux.intel.com>
- <20200512033035.GV1375924@vkoul-mobl>
- <84f09843-3245-5fa4-530f-c915b28e9bc5@linux.intel.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 32943A0C11;
+        Tue, 12 May 2020 16:01:27 +0000 (UTC)
+Received: from optiplex-lnx (unknown [10.3.128.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E79F578B20;
+        Tue, 12 May 2020 16:01:24 +0000 (UTC)
+Date:   Tue, 12 May 2020 12:01:21 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Tso Ted <tytso@mit.edu>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, keescook@chromium.org,
+        yzaikin@google.com
+Subject: Re: [PATCH] kernel: sysctl: ignore invalid taint bits introduced via
+ kernel.tainted and taint the kernel with TAINT_USER on writes
+Message-ID: <20200512160121.GH367616@optiplex-lnx>
+References: <20200511215904.719257-1-aquini@redhat.com>
+ <20200511231045.GV11244@42.do-not-panic.com>
+ <20200511235914.GF367616@optiplex-lnx>
+ <20200512001702.GW11244@42.do-not-panic.com>
+ <20200512010313.GA725253@optiplex-lnx>
+ <20200512050405.GY11244@42.do-not-panic.com>
+ <20200512144906.GG367616@optiplex-lnx>
+ <20200512154654.GA11244@42.do-not-panic.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <84f09843-3245-5fa4-530f-c915b28e9bc5@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200512154654.GA11244@42.do-not-panic.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12-05-20, 09:36, Pierre-Louis Bossart wrote:
-> On 5/11/20 10:30 PM, Vinod Koul wrote:
-> > On 11-05-20, 14:00, Pierre-Louis Bossart wrote:
-> > > > > +	md = &bus->md;
-> > > > > +	md->dev.bus = &sdw_bus_type;
-> > > > > +	md->dev.type = &sdw_master_type;
-> > > > > +	md->dev.parent = parent;
-> > > > > +	md->dev.of_node = parent->of_node;
-> > > > > +	md->dev.fwnode = fwnode;
-> > > > > +	md->dev.dma_mask = parent->dma_mask;
-> > > > > +
-> > > > > +	dev_set_name(&md->dev, "sdw-master-%d", bus->link_id);
+On Tue, May 12, 2020 at 03:46:54PM +0000, Luis Chamberlain wrote:
+> On Tue, May 12, 2020 at 10:49:06AM -0400, Rafael Aquini wrote:
+> > On Tue, May 12, 2020 at 05:04:05AM +0000, Luis Chamberlain wrote:
+> > > On Mon, May 11, 2020 at 09:03:13PM -0400, Rafael Aquini wrote:
+> > > > On Tue, May 12, 2020 at 12:17:03AM +0000, Luis Chamberlain wrote:
+> > > > > On Mon, May 11, 2020 at 07:59:14PM -0400, Rafael Aquini wrote:
+> > > > > > On Mon, May 11, 2020 at 11:10:45PM +0000, Luis Chamberlain wrote:
+> > > > > > > On Mon, May 11, 2020 at 05:59:04PM -0400, Rafael Aquini wrote:
+> > > > > > > > diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> > > > > > > > index 8a176d8727a3..f0a4fb38ac62 100644
+> > > > > > > > --- a/kernel/sysctl.c
+> > > > > > > > +++ b/kernel/sysctl.c
+> > > > > > > > @@ -2623,17 +2623,32 @@ static int proc_taint(struct ctl_table *table, int write,
+> > > > > > > >  		return err;
+> > > > > > > >  
+> > > > > > > >  	if (write) {
+> > > > > > > > +		int i;
+> > > > > > > > +
+> > > > > > > > +		/*
+> > > > > > > > +		 * Ignore user input that would make us committing
+> > > > > > > > +		 * arbitrary invalid TAINT flags in the loop below.
+> > > > > > > > +		 */
+> > > > > > > > +		tmptaint &= (1UL << TAINT_FLAGS_COUNT) - 1;
+> > > > > > > 
+> > > > > > > This looks good but we don't pr_warn() of information lost on intention.
+> > > > > > >
+> > > > > > 
+> > > > > > Are you thinking in sth like:
+> > > > > > 
+> > > > > > +               if (tmptaint > TAINT_FLAGS_MAX) {
+> > > > > > +                       tmptaint &= TAINT_FLAGS_MAX;
+> > > > > > +                       pr_warn("proc_taint: out-of-range invalid input ignored"
+> > > > > > +                               " tainted_mask adjusted to 0x%x\n", tmptaint);
+> > > > > > +               }
+> > > > > > ?
+> > > > > 
+> > > > > Sure that would clarify this.
+> > > > > 
+> > > > > > > > +
+> > > > > > > >  		/*
+> > > > > > > >  		 * Poor man's atomic or. Not worth adding a primitive
+> > > > > > > >  		 * to everyone's atomic.h for this
+> > > > > > > >  		 */
+> > > > > > > > -		int i;
+> > > > > > > >  		for (i = 0; i < BITS_PER_LONG && tmptaint >> i; i++) {
+> > > > > > > >  			if ((tmptaint >> i) & 1)
+> > > > > > > >  				add_taint(i, LOCKDEP_STILL_OK);
+> > > > > > > >  		}
+> > > > > > > > +
+> > > > > > > > +		/*
+> > > > > > > > +		 * Users with SYS_ADMIN capability can include any arbitrary
+> > > > > > > > +		 * taint flag by writing to this interface. If that's the case,
+> > > > > > > > +		 * we also need to mark the kernel "tainted by user".
+> > > > > > > > +		 */
+> > > > > > > > +		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
+> > > > > > > 
+> > > > > > > I'm in favor of this however I'd like to hear from Ted on if it meets
+> > > > > > > the original intention. I would think he had a good reason not to add
+> > > > > > > it here.
+> > > > > > >
+> > > > > > 
+> > > > > > Fair enough. The impression I got by reading Ted's original commit
+> > > > > > message is that the intent was to have TAINT_USER as the flag set 
+> > > > > > via this interface, even though the code was allowing for any 
+> > > > > > arbitrary value.
+> > > > > 
+> > > > > That wasn't my reading, it was that the user did something very odd
+> > > > > with user input which we don't like as kernel developers, and it gives
+> > > > > us a way to prove: hey you did something stupid, sorry but I cannot
+> > > > > support your kernel panic.
+> > > > > 
+> > > > > > I think it's OK to let the user fiddle with
+> > > > > > the flags, as it's been allowed since the introduction of
+> > > > > > this interface, but we need to reflect that fact in the
+> > > > > > tainting itself. Since TAINT_USER is not used anywhere,
+> > > > > 
+> > > > > I see users of TAINT_USER sprinkled around
+> > > > >
 > > > > 
-> > > > This give nice sdw-master-0. In DT this comes from reg property. I dont
-> > > > seem to recall if the ACPI/Disco spec treats link_id as unique across
-> > > > the system, can you check that please, if not we would need to update
-> > > > this.
-> > > Table 3 in the Disco for Soundwire 1.0 spec: "all LinkID values are relative
-> > > to the immediate parent Device."
+> > > > I meant in the original commit that introduced it
+> > > > (commit 34f5a39899f3f3e815da64f48ddb72942d86c366). Sorry I
+> > > > miscomunicated that.
+> > > > 
+> > > > In its current usage, it seems that the other places adding TAINT_USER
+> > > > match with what is being proposed here: To signal when we have user 
+> > > > fiddling with kernel / module parameters.
 > > > 
-> > > There isn't any known implementation with more than one controller.
+> > > drivers/base/regmap/regmap-debugfs.c requires *manual* code changes
+> > > to compile / enable some knob. i915 complains about unsafe module
+> > > params such as module_param_cb_unsafe() core_param_unsafe(). Then
+> > > drivers/soundwire/cadence_master.c is for when a debugfs dangerous
+> > > param was used.
+> > > 
+> > > This still doesn't rule out the use of proc_taint() for testing taint,
+> > > and that adding it may break some tests. So even though this would
+> > > only affect some tests scripts, I can't say that adding this taint won't
+> > > cause some headaches to someone. I wouldn't encourage its use on
+> > > proc_taint() from what I can see so far.
+> > >
 > > 
-> > But then it can come in "future" right. So lets try to make it future
-> > proof by not using the link_id (we can expose that as a sysfs if people
-> > want to know). So a global unique id needs to allocated (hint: idr or
-> > equivalent) and used as master_id
+> > OK, I´ll repost without the hunk forcing the taint. If we eventually
+> > come to the conclusion that tainting in proc_taint() is the right thing
+> > to do, we can do that part of the change later.
 > 
-> Can you clarify if you are asking for a global ID for Intel/ACPI platforms,
-> or for DT as well? I can't figure out from the soundwire-controller.yaml
-> definitions if there is already a notion of unique ID.
+> Just add another taint, we have 64 bits and according to you we won't
+> ever run out. TAINT_CUSTOM or whatever.
+>
 
-If ACPI was unique, then I was planning to update the definition below
-to include that. Given that it is not the case, let's make it agnostic to
-underlying firmware.
-
+I don't think this deserves a custom taint, and TAINT_USER should be the
+one to add here, as it clearly communicates what's being done at this
+point. If we cannot compromise on utilizing it, then lets just forget
+about forcing any other flag at this point. As per tracking which
+taint flags a user has forced via this interface, I do have another
+idea that I still have to iron out, but I'll propose it soon enough.
+ 
+> > Do you think we should use printk_ratelimited() in the ignore message,
+> > instead? 
 > 
-> properties:
->   $nodename:
->     pattern: "^soundwire(@.*)?$"
-> 
->    soundwire@c2d0000 {
->         #address-cells = <2>;
->         #size-cells = <0>;
->         reg = <0x0c2d0000 0x2000>;
+> No, that's for when there are many prints at the same time, you probably
+> want pr_warn_once().
 
--- 
-~Vinod
+OK.
+
