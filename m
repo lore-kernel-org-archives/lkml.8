@@ -2,61 +2,63 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F03C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6E6C54E8F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD36A206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF46D20733
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:03:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jhsgIyTP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LPWF55UR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728840AbgELHDp (ORCPT
+        id S1728917AbgELHDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 03:03:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52926 "EHLO
+        Tue, 12 May 2020 03:03:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725814AbgELHDo (ORCPT
+        with ESMTP id S1725813AbgELHDs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 03:03:44 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54A3BC061A0C;
-        Tue, 12 May 2020 00:03:44 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id t7so5006473plr.0;
-        Tue, 12 May 2020 00:03:44 -0700 (PDT)
+        Tue, 12 May 2020 03:03:48 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1300C061A0C;
+        Tue, 12 May 2020 00:03:48 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id r10so5248269pgv.8;
+        Tue, 12 May 2020 00:03:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=mipxNW7wlMfxMGzhO28Zqov8GTbtGeGtVOGitUJWy1g=;
-        b=jhsgIyTPnDqRWSwbXSvTHyprY40KS9vAbW6rcrOxqvOdnjjSCNpBTwLTElgpNEzgCv
-         B/hU4Z8wkqrvGJHq59AS0U9JQ6yXrwGMFmB8kBkBvf7nXAqmNJ0jZaejbMa5GQZuvEBS
-         eLoZmX4dAQxHnMwTz0F++g+Q9cMlfwGAGLMmpOWVa6HNkUWlnh6e16A5ZPiiELLtULyY
-         z563mUjwWwpWancdRnp0L6fRRlwklxrRA5iRY5cvzd2FlBcT9lSknFeoiEuJJfdTgctn
-         X/bMM/ECf64aLI5IcgeQibHurIkmnmOFetTDvjvalW3B8d+rNzxbwXeZHB3ykoTPHH3C
-         BXeQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=bqTEGNao+ElhEnj/Er0d6hjqKNpR+gP54ehE1oHzSA8=;
+        b=LPWF55UROuEWJsOORU7U3+3zwOAe2UaXEmuS2uejERwD0rhyP3WitMtpOAoNwHvHU2
+         NX+yscBSTSkr9Wa9VfWpHIKrjVnbzDikWvV7SWyj/lCuFIMi0Rs55FtGRUJiLGbuciOf
+         ZeM2r2GiggPTprvgevhrPTnuAyQHNkqREn+F+leuyIL5NelVeiP45LEiS4wJhXJdnUwu
+         vPlz7NgQ6QvEMchdDHECRyGJ2dnNL7p/uIwOGAKRREdxmcO8YqQBUEcQ7NmHC+oViwdn
+         3WLo829Nbutk0Ily2PSuPzaXt+x17AQIdrrZDecbsHiEpgOgdJPmrQBB/tm/+Glstjwt
+         Alng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=mipxNW7wlMfxMGzhO28Zqov8GTbtGeGtVOGitUJWy1g=;
-        b=UFr7yaIu0YjZIBuRKLeuhVtj51nywKQxPcmurcM7ayCMbA3aq8ZC/QGhDRfzymoO9y
-         /Yl447E8IvjnUrOgYjbslZTYyZvYRA9P6adjABWMVH86X1b1VioJAmhPFsYhh7KnCZbq
-         n55YbyQDarYIL/5xAIOVxz1SQvfDphatVfSheNVUxChdNLnJdZoowIAXcPYY5l582h+g
-         jqzm8jGA38enQVLhauUbsPtHU2sInyiyy4cb8RoohInKCrwiOFTXw95adXWk+uAQHeVf
-         7wqMbdlyeVwHcfZOAs+BBa5JOqj/hbtUGpNVMLSWq4HCJFT7Tl8HOlKklQuA5OZU+N6o
-         7QpA==
-X-Gm-Message-State: AGi0PuanuOCLTGecuwhgUMTRhHkBvby+Vmsc0R4AjWCIt3IzcYcT91fb
-        s+E8bWpfya+feAs4pohjOYjdBK1zo/U=
-X-Google-Smtp-Source: APiQypKGhdYXmj/mC8uQ3bBGAeu+OpMtK+0m3u5lxy4OVl4GniR0xQaSDQxS0oHIcUIBNStrnMsqkg==
-X-Received: by 2002:a17:90a:db53:: with SMTP id u19mr25689708pjx.41.1589267023718;
-        Tue, 12 May 2020 00:03:43 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=bqTEGNao+ElhEnj/Er0d6hjqKNpR+gP54ehE1oHzSA8=;
+        b=iue2Gcbwh8HFWOY9auBfWIhWM1mRNbhy9lnMSLyYlwjixhv7FzJQRMlJtpuTAyI6ud
+         mYQ+x9O/xoVBB8zjzljKs025HQF7wHYyadhltiL/OCcdOHk3QIash6V4hxU4a2AcANbp
+         bh/3OOzcIefYEGD2ZNlgENlln8r7kzaW3EBINmaTuQdug6XknNRIc+VWMMD4klKhROII
+         EEzV9VWJl65eFIZze/CjTaeXZ7vEwwvAklqIVjiuDDuRCbYvjF5nw7KNFzROEO3FzFHC
+         FDP3ybklocXhjW81ffPbPFka5FxqL+I4Khly9Oq0fc3uB5z1B809OM0zHq5yXwdHr5LS
+         agSw==
+X-Gm-Message-State: AOAM530z1ps77CZxFHFDoS5rBwybyIomZ+RDuHT4Lrf0MuexiVpSkRFB
+        rv+0ovLunFTem9dD1t69nYQ=
+X-Google-Smtp-Source: ABdhPJw4UTugBpoiim+tCN/b06/fdorrDYjqGtUCIFAw9V2NA7waop88fc4+97RURQX7/VgfyPmi7A==
+X-Received: by 2002:a63:b506:: with SMTP id y6mr727619pge.107.1589267028282;
+        Tue, 12 May 2020 00:03:48 -0700 (PDT)
 Received: from fmin-OptiPlex-7060.nreal.work ([103.206.190.146])
-        by smtp.gmail.com with ESMTPSA id 62sm11016369pfu.181.2020.05.12.00.03.39
+        by smtp.gmail.com with ESMTPSA id 62sm11016369pfu.181.2020.05.12.00.03.44
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 May 2020 00:03:43 -0700 (PDT)
+        Tue, 12 May 2020 00:03:47 -0700 (PDT)
 From:   dillon.minfei@gmail.com
 To:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
         alexandre.torgue@st.com, thierry.reding@gmail.com,
@@ -67,10 +69,12 @@ Cc:     devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
         dillon.minfei@gmail.com
-Subject: [PATCH v3 0/5] Enable ilitek ili9341 on stm32f429-disco board
-Date:   Tue, 12 May 2020 15:03:32 +0800
-Message-Id: <1589267017-17294-1-git-send-email-dillon.minfei@gmail.com>
+Subject: [PATCH v3 1/5] ARM: dts: stm32: Add pin map for ltdc, spi5 on stm32f429-disco board
+Date:   Tue, 12 May 2020 15:03:33 +0800
+Message-Id: <1589267017-17294-2-git-send-email-dillon.minfei@gmail.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1589267017-17294-1-git-send-email-dillon.minfei@gmail.com>
+References: <1589267017-17294-1-git-send-email-dillon.minfei@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -78,46 +82,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: dillon min <dillon.minfei@gmail.com>
 
-This patchset has following changes:
+This patch adds the pin configuration for ltdc, spi5 controller
+on stm32f429-disco board.
 
-V3:
-    merge original tiny/ili9341.c driver to panel/panel-ilitek-ili9341.c
-    to support serial spi & parallel rgb interface in one driver.
-    update ilitek,ili9341.yaml dts binding documentation.
-    update stm32f429-disco dts binding
+Signed-off-by: dillon min <dillon.minfei@gmail.com>
+---
+ arch/arm/boot/dts/stm32f4-pinctrl.dtsi | 67 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
-V2: 
-    verify ilitek,ili9341.yaml with make O=../linux-stm32 dt_binding_check
-    DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/panel/
-    ilitek,ili9341.yaml
-
-V1:
-    add ili9341 drm panel driver
-    add ltdc, spi5 controller for stm32f429-disco
-    add ltdc, spi5 pin map for stm32f429-disco
-    add docs about ili9341
-    fix ltdc driver loading hang in clk set rate bug
-
-dillon min (5):
-  ARM: dts: stm32: Add pin map for ltdc, spi5 on stm32f429-disco board
-  dt-bindings: display: panel: Add ilitek ili9341 panel bindings
-  ARM: dts: stm32: enable ltdc binding with ili9341 on stm32429-disco
-    board
-  clk: stm32: Fix stm32f429 ltdc driver loading hang in clk set rate.
-    keep ltdc     clk running after kernel startup
-  drm/panel: Add ilitek ili9341 driver
-
- .../bindings/display/panel/ilitek,ili9341.yaml     |  68 ++
- arch/arm/boot/dts/stm32f4-pinctrl.dtsi             |  67 ++
- arch/arm/boot/dts/stm32f429-disco.dts              |  39 ++
- drivers/clk/clk-stm32f4.c                          |   5 +-
- drivers/gpu/drm/panel/Kconfig                      |  12 +
- drivers/gpu/drm/panel/Makefile                     |   1 +
- drivers/gpu/drm/panel/panel-ilitek-ili9341.c       | 700 +++++++++++++++++++++
- 7 files changed, 890 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/panel/ilitek,ili9341.yaml
- create mode 100644 drivers/gpu/drm/panel/panel-ilitek-ili9341.c
-
+diff --git a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
+index 392fa14..0eb107f 100644
+--- a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
+@@ -316,6 +316,73 @@
+ 				};
+ 			};
+ 
++			ltdc_pins_f429_disco: ltdc-1 {
++				pins {
++					pinmux = <STM32_PINMUX('C', 6,  AF14)>,
++						/* LCD_HSYNC */
++						 <STM32_PINMUX('A', 4,  AF14)>,
++						 /* LCD_VSYNC */
++						 <STM32_PINMUX('G', 7,  AF14)>,
++						 /* LCD_CLK */
++						 <STM32_PINMUX('C', 10, AF14)>,
++						 /* LCD_R2 */
++						 <STM32_PINMUX('B', 0,  AF9)>,
++						 /* LCD_R3 */
++						 <STM32_PINMUX('A', 11, AF14)>,
++						 /* LCD_R4 */
++						 <STM32_PINMUX('A', 12, AF14)>,
++						 /* LCD_R5 */
++						 <STM32_PINMUX('B', 1,  AF9)>,
++						 /* LCD_R6*/
++						 <STM32_PINMUX('G', 6,  AF14)>,
++						 /* LCD_R7 */
++						 <STM32_PINMUX('A', 6,  AF14)>,
++						 /* LCD_G2 */
++						 <STM32_PINMUX('G', 10, AF9)>,
++						 /* LCD_G3 */
++						 <STM32_PINMUX('B', 10, AF14)>,
++						 /* LCD_G4 */
++						 <STM32_PINMUX('D', 6,  AF14)>,
++						 /* LCD_B2 */
++						 <STM32_PINMUX('G', 11, AF14)>,
++						 /* LCD_B3*/
++						 <STM32_PINMUX('B', 11, AF14)>,
++						 /* LCD_G5 */
++						 <STM32_PINMUX('C', 7,  AF14)>,
++						 /* LCD_G6 */
++						 <STM32_PINMUX('D', 3,  AF14)>,
++						 /* LCD_G7 */
++						 <STM32_PINMUX('G', 12, AF9)>,
++						 /* LCD_B4 */
++						 <STM32_PINMUX('A', 3,  AF14)>,
++						 /* LCD_B5 */
++						 <STM32_PINMUX('B', 8,  AF14)>,
++						 /* LCD_B6 */
++						 <STM32_PINMUX('B', 9,  AF14)>,
++						 /* LCD_B7 */
++						 <STM32_PINMUX('F', 10, AF14)>;
++						 /* LCD_DE */
++					slew-rate = <2>;
++				};
++			};
++
++			spi5_pins: spi5-0 {
++				pins1 {
++					pinmux = <STM32_PINMUX('F', 7, AF5)>,
++						/* SPI5_CLK */
++						 <STM32_PINMUX('F', 9, AF5)>;
++						/* SPI5_MOSI */
++					bias-disable;
++					drive-push-pull;
++					slew-rate = <0>;
++				};
++				pins2 {
++					pinmux = <STM32_PINMUX('F', 8, AF5)>;
++						/* SPI5_MISO */
++					bias-disable;
++				};
++			};
++
+ 			dcmi_pins: dcmi-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('A', 4, AF13)>, /* DCMI_HSYNC */
 -- 
 2.7.4
 
