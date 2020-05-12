@@ -2,125 +2,183 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A52E1C54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9888EC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81E2C20673
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:53:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DQ705lHO"
+	by mail.kernel.org (Postfix) with ESMTP id 78F0420675
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:53:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729511AbgELKxj (ORCPT
+        id S1729523AbgELKxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 06:53:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727859AbgELKxi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 06:53:38 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 731AAC061A0C;
-        Tue, 12 May 2020 03:53:38 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Lvmb3mLsz9sSg;
-        Tue, 12 May 2020 20:53:35 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589280816;
-        bh=bIy8uBq3y/Wu/2YykH70JeSclHrTB2b071QiJhS3muA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=DQ705lHOxNB/nDGtDO2EX28brQg1tiHZtV5kXSukX8zVzBd1qI6U5XTIXy2P/tMts
-         Z6T0PmAdBYon5pwDiaajARbZ7UswEHVPSkelBWheMZ7Yi+ZC5K13Jb82jIOfCB8xt4
-         ttL/UuqKSpenBtfU0J8kK3ng2GZEreL7hloneTGPII/jlAI+BbXkm8r8V+aNN1Q9Yn
-         C/7+xA/6r2JngyNs1t5wIM9OI4DFnD9NtMroqrFeRfJ2mFRLg5VcL9JEPAlwM6j39S
-         D+/hZ7as36GNv4Z4fli11szow7JbnnHxjmYf+Aq2+I79d6ScZgqPgHI8HHDzx/0xuw
-         f13Cq7Z9He06w==
-Date:   Tue, 12 May 2020 20:53:33 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: linux-next: manual merge of the akpm-current tree with the userns
- tree
-Message-ID: <20200512205333.21bcd7f4@canb.auug.org.au>
+        Tue, 12 May 2020 06:53:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:52276 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727859AbgELKxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 06:53:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0DB830E;
+        Tue, 12 May 2020 03:53:47 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.28.99])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CFB633F71E;
+        Tue, 12 May 2020 03:53:45 -0700 (PDT)
+Date:   Tue, 12 May 2020 11:53:43 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu
+Subject: Re: [PATCH] arm64/cpufeature: Add ID_AA64MMFR0_PARANGE_MASK
+Message-ID: <20200512105343.GB60359@C02TD0UTHF1T.local>
+References: <1589249606-27177-1-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_//JwsautAs_8SD41GUF6=ikD";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589249606-27177-1-git-send-email-anshuman.khandual@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_//JwsautAs_8SD41GUF6=ikD
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, May 12, 2020 at 07:43:26AM +0530, Anshuman Khandual wrote:
+> This replaces multiple open encoding (0x7) with ID_AA64MMFR0_PARANGE_MASK
+> thus cleaning the clutter. It modifies an existing ID_AA64MMFR0 helper and
+> introduces a new one i.e id_aa64mmfr0_iparange() and id_aa64mmfr0_parange()
+> respectively.
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: kvmarm@lists.cs.columbia.edu
+> 
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> This applies after (https://patchwork.kernel.org/patch/11541893/).
+> 
+>  arch/arm64/include/asm/cpufeature.h | 11 ++++++++++-
+>  arch/arm64/kernel/cpufeature.c      |  5 ++---
+>  arch/arm64/kvm/reset.c              |  9 +++++----
+>  3 files changed, 17 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
+> index 1291ad5a9ccb..320cfc5b6025 100644
+> --- a/arch/arm64/include/asm/cpufeature.h
+> +++ b/arch/arm64/include/asm/cpufeature.h
+> @@ -706,8 +706,17 @@ void arm64_set_ssbd_mitigation(bool state);
+>  
+>  extern int do_emulate_mrs(struct pt_regs *regs, u32 sys_reg, u32 rt);
+>  
+> -static inline u32 id_aa64mmfr0_parange_to_phys_shift(int parange)
+> +#define ID_AA64MMFR0_PARANGE_MASK 0x7
 
-Hi all,
+We already have ID_AA64MMFR0_PARANGE_SHIFT in <asm/sysreg.h>, so if we
+need this it should live there too.
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
+The ARM ARM tells me ID_AA64MMFR0_EL1.PARange is bits 3:0, so this
+should be 0xf.
 
-  include/linux/binfmts.h
+Given it's a standard 4-bit field, do we even need this? We have helpers
+that assume 4 bits for standard fields, e.g.
+cpuid_feature_extract_unsigned_field().
 
-between commit:
+> +
+> +static inline u32 id_aa64mmfr0_parange(u64 mmfr0)
+>  {
+> +	return mmfr0 & ID_AA64MMFR0_PARANGE_MASK;
+> +}
 
-  96ecee29b0b5 ("exec: Merge install_exec_creds into setup_new_exec")
+	return cpuid_feature_extract_unsigned_field(mmfr0,
+		ID_AA64MMFR0_PARANGE_SHIFT);
 
-from the userns tree and commit:
+> +
+> +static inline u32 id_aa64mmfr0_iparange(u64 mmfr0)
+> +{
+> +	int parange = id_aa64mmfr0_parange(mmfr0);
+> +
+>  	switch (parange) {
+>  	case 0: return 32;
+>  	case 1: return 36;
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index 30917fe7942a..2c62f7c64a3c 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -2185,7 +2185,7 @@ static void verify_sve_features(void)
+>  void verify_hyp_capabilities(void)
+>  {
+>  	u64 safe_mmfr1, mmfr0, mmfr1;
+> -	int parange, ipa_max;
+> +	int ipa_max;
+>  	unsigned int safe_vmid_bits, vmid_bits;
+>  
+>  	safe_mmfr1 = read_sanitised_ftr_reg(SYS_ID_AA64MMFR1_EL1);
+> @@ -2201,8 +2201,7 @@ void verify_hyp_capabilities(void)
+>  	}
+>  
+>  	/* Verify IPA range */
+> -	parange = mmfr0 & 0x7;
+> -	ipa_max = id_aa64mmfr0_parange_to_phys_shift(parange);
+> +	ipa_max = id_aa64mmfr0_iparange(mmfr0);
 
-  4bdbcefd2bd8 ("exec: simplify the copy_strings_kernel calling convention")
+Why drop id_aa64mmfr0_parange_to_phys_shift()?
 
-from the akpm-current tree.
+>  	if (ipa_max < get_kvm_ipa_limit()) {
+>  		pr_crit("CPU%d: IPA range mismatch\n", smp_processor_id());
+>  		cpu_die_early();
+> diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
+> index 841b492ff334..2e4da75d79ea 100644
+> --- a/arch/arm64/kvm/reset.c
+> +++ b/arch/arm64/kvm/reset.c
+> @@ -347,10 +347,10 @@ u32 get_kvm_ipa_limit(void)
+>  
+>  void kvm_set_ipa_limit(void)
+>  {
+> -	unsigned int ipa_max, pa_max, va_max, parange;
+> +	unsigned int ipa_max, pa_max, va_max;
+>  
+> -	parange = read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1) & 0x7;
+> -	pa_max = id_aa64mmfr0_parange_to_phys_shift(parange);
+> +	pa_max = id_aa64mmfr0_iparange(read_sanitised_ftr_reg
+> +						(SYS_ID_AA64MMFR0_EL1));
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+Weird style here. the '(' should be kept next to the function name.
 
---=20
-Cheers,
-Stephen Rothwell
+>
+>  	/* Clamp the IPA limit to the PA size supported by the kernel */
+>  	ipa_max = (pa_max > PHYS_MASK_SHIFT) ? PHYS_MASK_SHIFT : pa_max;
+> @@ -411,7 +411,8 @@ int kvm_arm_setup_stage2(struct kvm *kvm, unsigned long type)
+>  		phys_shift = KVM_PHYS_SHIFT;
+>  	}
+>  
+> -	parange = read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1) & 7;
+> +	parange = id_aa64mmfr0_parange(read_sanitised_ftr_reg
+> +						(SYS_ID_AA64MMFR0_EL1));
 
-diff --cc include/linux/binfmts.h
-index 1b48e2154766,3d3afe094c97..000000000000
---- a/include/linux/binfmts.h
-+++ b/include/linux/binfmts.h
-@@@ -143,8 -144,8 +143,7 @@@ extern int setup_arg_pages(struct linux
-  extern int transfer_args_to_stack(struct linux_binprm *bprm,
-  				  unsigned long *sp_location);
-  extern int bprm_change_interp(const char *interp, struct linux_binprm *bp=
-rm);
-- extern int copy_strings_kernel(int argc, const char *const *argv,
-- 			       struct linux_binprm *bprm);
-+ int copy_string_kernel(const char *arg, struct linux_binprm *bprm);
- -extern void install_exec_creds(struct linux_binprm *bprm);
-  extern void set_binfmt(struct linux_binfmt *new);
-  extern ssize_t read_code(struct file *, unsigned long, loff_t, size_t);
- =20
+Can't we add a system_ipa_range() helper, and avoid more boilerplate in
+each of these?
 
---Sig_//JwsautAs_8SD41GUF6=ikD
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+e.g.
 
------BEGIN PGP SIGNATURE-----
+int system_ipa_range(void)
+{
+	u64 mmfr0;
+	int parange;
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl66gC0ACgkQAVBC80lX
-0GwFTwf/fgxys6r7HXBshJ770Jj2sSDI7ik7yBFmGg85LkbdNd8nQO4F81sk8E+t
-GryYhFNeThKgf1/Sc6GN6c2JFIJdDQCtYcpeckcAGdXaDsLiB2oTjDv0V6/QWrbf
-bxE2svJ0tQig8c495zmBvvDidPVGh4ieg6vGYTT4hLdMDPMtgC+KA2HS3+xjI+ke
-u0OS8KjDonJWuosgqhoUdnP1pqst5eZsMlO2GwGR923pBHDv33ay2uh3JfK52v2B
-B9BKIUEHaoqXg9u+icygOVUL3GB+uHao/0Vzej15DxvbNZSVq6TFhiB+9u8JXnQv
-VQaUfiV69JTpqJQQJdV9aiuQHjSi4w==
-=/NAz
------END PGP SIGNATURE-----
+	mmfr0 = read_sanitised_ftr_reg(SYS_ID_AA64MMFR0_EL1);
+	parange = cpuid_feature_extract_unsigned_field(mmfr0,
+		ID_AA64MMFR0_PARANGE_SHIFT);
+	
+	return parange;
+}
 
---Sig_//JwsautAs_8SD41GUF6=ikD--
+... we do similar for the system_supports_xxx() helpers.
+
+Thanks,
+Mark.
