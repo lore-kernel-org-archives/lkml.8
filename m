@@ -2,99 +2,199 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB19C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F6CC54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84439206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4380206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:24:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sz8qwUSe"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="L+T/oTmt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730596AbgELPYP (ORCPT
+        id S1730669AbgELPYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 11:24:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726300AbgELPYP (ORCPT
+        Tue, 12 May 2020 11:24:24 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:37482 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726300AbgELPYX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 11:24:15 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAEBAC061A0C;
-        Tue, 12 May 2020 08:24:13 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id r66so18551469oie.5;
-        Tue, 12 May 2020 08:24:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=R4bBQNOyVmEDF5yOENpfq3TI5XtdI9DFH4GYyVIMd9g=;
-        b=sz8qwUSeKjGwoqq32JHD6h8tg3zu/28HnMyoetmhxXOroV9T5tS7TvARTprBXLPKyy
-         s9E2vH3rn2DeNVEJT8YPiNu70XCh+LD7HabhYjWc5BcP2sTXxzFlj2cZyWovCN5HRBIi
-         VDR4i9Kz17t3hqfHwiuidSPUnHR2I3W8DaM1wQ/V0eXB/K10tsbtyEQVGZvIzGw93ziC
-         QEC6qztYxfq7I2dki8/kfbzVZMkc8FXMISI/XvfT/unx8KjysP3P3kO1JvKL6gCE8mOV
-         CWB8sHQF3L/VbeysZY1SOeqPSWrbrwVUqUl/DLB3MoI9MxewPUnBrMrmvwbWEgdQbGrB
-         LBpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=R4bBQNOyVmEDF5yOENpfq3TI5XtdI9DFH4GYyVIMd9g=;
-        b=QZPNcyUQzA4gBfkhPgdQ5EL/fKx4nfQbnkUMt2Ad86yO7AE/7P5kh9VPGn4GjGIrdC
-         HULn28t3pwuCcRbLVauApvQ97Y1z8lqYpxRdQf+X8wo84CGdAZQTDBp0muQqMcf/9o+F
-         Q4r5giiL8Ut5clUe6uAh/HsApYRb0OQtYwfMZvmq4JIVRA5wEqUhA1pzOTckOR1qgJp2
-         z+d+U0ML7s968X9dShAM675RTBs//Yq9qVwzp7tAB1oM2jEqQDW8JW87oC+Sec0D9gOm
-         qIEQPk0diiE0mbxjHZU41EiuGJV2E2K4NN04rHljt3MstimRCBk/mT3oWxY/16kA0DZ6
-         ycTQ==
-X-Gm-Message-State: AGi0PuaLV+uMC78NoXkv7DPiPBRI725YJrDAAt8lihWBQCMQgpGoOkNH
-        BGKjp4UV3OKMNOVrLI0nc55GS/c6
-X-Google-Smtp-Source: APiQypIw806N9r5xWuOSJN3CM95Q9xSnXDIknnD+QUSQVprA0SJ5s6IxZ0Wx8e2ecMO88TTQ0zo9/Q==
-X-Received: by 2002:aca:fc45:: with SMTP id a66mr24071661oii.5.1589297053062;
-        Tue, 12 May 2020 08:24:13 -0700 (PDT)
-Received: from localhost.localdomain (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id k8sm3746481ood.24.2020.05.12.08.24.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 May 2020 08:24:11 -0700 (PDT)
-Subject: Re: [PATCH -next] net/wireless/rtl8225: Remove unused variable
- rtl8225z2_tx_power_ofdm
-To:     ChenTao <chentao107@huawei.com>, herton@canonical.com,
-        htl10@users.sourceforge.net, kvalo@codeaurora.org
-Cc:     davem@davemloft.net, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200512111408.157738-1-chentao107@huawei.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <377df527-267a-2405-5519-8ae956636248@lwfinger.net>
-Date:   Tue, 12 May 2020 10:24:10 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 12 May 2020 11:24:23 -0400
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04CFIae5000767;
+        Tue, 12 May 2020 10:24:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=PODMain02222019;
+ bh=R876TaLuvENQfw7hHUL+esaIQkLeVGHIvM+NnGt1qYA=;
+ b=L+T/oTmtcFmxnBm55LBFKRJ3rNQ4DslhVm+bzcWnJljMTbwFq/DKFaBGeM/4Xkfx51LD
+ AneDe0WSmjpiKeHMw9nRs5FVOtXjQZAACgjW65k+INEXhmbl/lJlSAlahwgu21OSkKez
+ YNaGUtAPk+yH+Vv6L/aisigr5oO/i4nbrehGqeo9C7kRKy8BcJa68fwgnqRute3LxX5q
+ BQV1trPXCcsv64JJ0TJHYbLn65b8d69lpp3C3odb64uQA9hfWhY2yc8mxG9SdntLJfWc
+ 23GX+av74qxkVD5q1lSs3/cEgoGwEpGMUu/3+n6iFvkwzHyv8bUV7DqnjLeMrDcaNoVv ww== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex02.ad.cirrus.com ([87.246.76.36])
+        by mx0a-001ae601.pphosted.com with ESMTP id 30wsx3msj9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 12 May 2020 10:24:01 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 12 May
+ 2020 16:23:59 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
+ Transport; Tue, 12 May 2020 16:23:59 +0100
+Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 296982C8;
+        Tue, 12 May 2020 15:23:59 +0000 (UTC)
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <robh+dt@kernel.org>, <lee.jones@linaro.org>, <broonie@kernel.org>,
+        <mturquette@baylibre.com>, <sboyd@kernel.org>, <jdelvare@suse.com>,
+        <linux@roeck-us.net>, <linus.walleij@linaro.org>
+CC:     <lgirdwood@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <patches@opensource.cirrus.com>
+Subject: [PATCH 2/5] ASoC: lochnagar: Move binding over to dtschema
+Date:   Tue, 12 May 2020 16:23:55 +0100
+Message-ID: <20200512152359.11839-2-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200512152359.11839-1-ckeepax@opensource.cirrus.com>
+References: <20200512152359.11839-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-In-Reply-To: <20200512111408.157738-1-chentao107@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ ip4:5.172.152.52 -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
+ mlxscore=0 adultscore=0 priorityscore=1501 suspectscore=0 phishscore=0
+ mlxlogscore=999 malwarescore=0 spamscore=0 clxscore=1015 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2005120116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/12/20 6:14 AM, ChenTao wrote:
-> Fix the following warning:
-> 
-> drivers/net/wireless/realtek/rtl818x/rtl8187/rtl8225.c:609:17: warning:
-> ‘rtl8225z2_tx_power_ofdm’ defined but not used
->   static const u8 rtl8225z2_tx_power_ofdm[] = {
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: ChenTao <chentao107@huawei.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
 
-The patch is OK, but the subject is wrong. It should be "[PATCH-next] rtl8187: 
-Remove ...."
+No changes since v2.
 
-With that change, ACKed-by: Larry Finger <Larry.Finger@lwfinger.net>
+Thanks,
+Charles
 
-Larry
+ .../devicetree/bindings/sound/cirrus,lochnagar.txt | 39 ----------------
+ .../bindings/sound/cirrus,lochnagar.yaml           | 52 ++++++++++++++++++++++
+ 2 files changed, 52 insertions(+), 39 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/cirrus,lochnagar.yaml
+
+diff --git a/Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
+deleted file mode 100644
+index 41ae2699f07a9..0000000000000
+--- a/Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
++++ /dev/null
+@@ -1,39 +0,0 @@
+-Cirrus Logic Lochnagar Audio Development Board
+-
+-Lochnagar is an evaluation and development board for Cirrus Logic
+-Smart CODEC and Amp devices. It allows the connection of most Cirrus
+-Logic devices on mini-cards, as well as allowing connection of
+-various application processor systems to provide a full evaluation
+-platform.  Audio system topology, clocking and power can all be
+-controlled through the Lochnagar, allowing the device under test
+-to be used in a variety of possible use cases.
+-
+-This binding document describes the binding for the audio portion
+-of the driver.
+-
+-This binding must be part of the Lochnagar MFD binding:
+-  [4] ../mfd/cirrus,lochnagar.txt
+-
+-Required properties:
+-
+-  - compatible : One of the following strings:
+-                 "cirrus,lochnagar2-soundcard"
+-
+-  - #sound-dai-cells : Must be set to 1.
+-
+-  - clocks : Contains an entry for each entry in clock-names.
+-  - clock-names : Must include the following clocks:
+-      "mclk" Master clock source for the sound card, should normally
+-      be set to LOCHNAGAR_SOUNDCARD_MCLK provided by the Lochnagar
+-      clock driver.
+-
+-Example:
+-
+-lochnagar-sc {
+-	compatible = "cirrus,lochnagar2-soundcard";
+-
+-	#sound-dai-cells = <1>;
+-
+-	clocks = <&lochnagar_clk LOCHNAGAR_SOUNDCARD_MCLK>;
+-	clock-names = "mclk";
+-};
+diff --git a/Documentation/devicetree/bindings/sound/cirrus,lochnagar.yaml b/Documentation/devicetree/bindings/sound/cirrus,lochnagar.yaml
+new file mode 100644
+index 0000000000000..cea612d3d4a7d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/cirrus,lochnagar.yaml
+@@ -0,0 +1,52 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/cirrus,lochnagar.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Cirrus Logic Lochnagar Audio Development Board
++
++maintainers:
++  - patches@opensource.cirrus.com
++
++description: |
++  Lochnagar is an evaluation and development board for Cirrus Logic
++  Smart CODEC and Amp devices. It allows the connection of most Cirrus
++  Logic devices on mini-cards, as well as allowing connection of various
++  application processor systems to provide a full evaluation platform.
++  Audio system topology, clocking and power can all be controlled through
++  the Lochnagar, allowing the device under test to be used in a variety of
++  possible use cases.
++
++  This binding document describes the binding for the audio portion of the
++  driver.
++
++  This binding must be part of the Lochnagar MFD binding:
++    [1] ../mfd/cirrus,lochnagar.yaml
++
++properties:
++  compatible:
++    enum:
++      - cirrus,lochnagar2-soundcard
++
++  '#sound-dai-cells':
++    description:
++      The first cell indicating the audio interface.
++    const: 1
++
++  clocks:
++    description:
++      Master clock source for the sound card, should normally be set to
++      LOCHNAGAR_SOUNDCARD_MCLK provided by the Lochnagar clock driver.
++    maxItems: 1
++
++  clock-names:
++    const: mclk
++
++required:
++  - compatible
++  - '#sound-dai-cells'
++  - clocks
++  - clock-names
++
++additionalProperties: false
+-- 
+2.11.0
+
