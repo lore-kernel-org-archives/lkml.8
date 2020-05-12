@@ -2,309 +2,201 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C17EEC54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB41C54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 954B320714
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 491CC207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:59:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zxl5nYqS"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Jfw/Q8OA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729212AbgELI7a (ORCPT
+        id S1729295AbgELI76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 04:59:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42614 "EHLO
+        Tue, 12 May 2020 04:59:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726193AbgELI7a (ORCPT
+        by vger.kernel.org with ESMTP id S1729243AbgELI75 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 04:59:30 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E91BC061A0C;
-        Tue, 12 May 2020 01:59:25 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id f4so6661870iov.11;
-        Tue, 12 May 2020 01:59:25 -0700 (PDT)
+        Tue, 12 May 2020 04:59:57 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90B15C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 01:59:57 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id e1so415659wrt.5
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 01:59:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=mgvGrSBn4Z3elWdlR4h/uRqag8YgI6/1Az/oywN8U8E=;
-        b=Zxl5nYqS0K/mIp5V3EW+D703aILU7OmO8imXcJybeSM/rpI1MtzeH1Irj1rSHgmSYU
-         hLJ6ZZDAK4P5DcNa8WsZ6BZu7iZ9IXSR9DPXx/MPtVt6eMFZ17lxMToXsliumHJEm1FE
-         hRi90/h9I6wgaomceBJthVWY8HUx0445GQZqZf3fIgNljBeG7DCMqbFeD2SLM/umsdyC
-         f/AFJLR+vlZM8iRsL+me+tVBE90JQqOrDlL/Hl/k/OmfaRg46n4oQ8xmA5I280uos66J
-         2qEy8Va7BECc+gxkreeQJvD+S4Y+1dPUkkID1UofxT2BVN8mxEgg75KohjMiV5LKS/m3
-         KT4g==
+        d=ffwll.ch; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5KglkhzKOknxegoh1rG3YIcHJTSInQ4UYexVPjKH+PE=;
+        b=Jfw/Q8OAuPLQhbinu2k0zHhh0xSeFKQ+ThNX/lWWS+g5EnktPdt71Fw1SPCOSwO1DT
+         I3yyprPxJEMCBedaNFOI15C4V0uzgHiDSLQJrIbB/b3hkg3kxfmRKfXkWgRlvRkrLTZN
+         b2clRwBLTEBEySfCkrQHDGAQCbz2YgFZxsQMk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=mgvGrSBn4Z3elWdlR4h/uRqag8YgI6/1Az/oywN8U8E=;
-        b=JTiULvLMCcBBox8iSYEblYdZSuDrc8Pd63/IGt5Ti8G61qJcUxo1qUoqZQNjjfij9z
-         PxlvnYkccPO8KsdgZbwcBVGXwen4GUrSw0wDlBwptjdXLTuH87cHSOBtffoetJEeSBrY
-         PcgjVDAcB6zqSdhBxqvQHmS/C0YRjNc8Op6qd2+n2Ia0luRg/FZ3EtGnfQICfKq7lKpw
-         ibuQ2SKnv8ZTavJouvmZ3pY3d4TgDWnxuVR17qMK+c+AFq2WwzLoS9u3JYF119BSq/3A
-         ZQuiRzsIpunyMZOQVpaj4SrKPp6Tr0IMGL2C0RuZOIiB8UuHoMa1z9of1hEZZ8cyiBOd
-         kDqw==
-X-Gm-Message-State: AGi0PuZ+5RyGVwJpgvJ1i+8YawnFtjDqkwXl3fVrlxclOLlUKdplDOnh
-        qXFQgbidM86CdPeCQJS2OCAkGkvLnyCrEG/3HXvPb0Ku
-X-Google-Smtp-Source: APiQypLjt9tWT6TF4DF/oazBQeHsILYmzpx19gDHVXsIHQ19acIXI3z0zTrILNX8Q1iAp0L/kH2cBd3ymvNJCzMNczY=
-X-Received: by 2002:a5e:c814:: with SMTP id y20mr19147281iol.135.1589273964630;
- Tue, 12 May 2020 01:59:24 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5KglkhzKOknxegoh1rG3YIcHJTSInQ4UYexVPjKH+PE=;
+        b=WTCzGciGo6YTeajD07P0qjItr8XXe1yLTrn9cJLtfAEyLB6cbfuENRP486U8SSKRwY
+         rek645wDtkxiM8NRBCxKBRLYtkNw+IcPeJ/V5Fz2L2qdDYlx7wZ+XyxJ4J3r/RSGaEyJ
+         S0dX3a2OxUUiWO+KZdrrY8i/bckAe8nHL0MAHDzqmtAUZpBampb8dQnr/WBYUOmtOxzs
+         m9r0oobgZaTf0EnWx2bgjzXzFe09SPptL951X+X4inCS/L+7vsC8d25puGlZSExjwmXK
+         HrDrqBMqBsY8AnP/F/77KjUwWAROIyjLFQ6DHGzeg2LBZ1L2hSgrQ7s6CgbicGfyN9Lm
+         F46Q==
+X-Gm-Message-State: AGi0PuYC4mCGEuro1Sqgi/Gl5ju93VxOGhSRC/WYBYrK7iWqwZmrd5pL
+        6hyDVe7Jwv8V3nyO7672JtFdpg==
+X-Google-Smtp-Source: APiQypLFrNQ+vP1/FoQClKLQ9dOM5ud5CMkP+EXrISMxOesIEptzvE+zOlFydX6AdELQrZnabHpwnA==
+X-Received: by 2002:adf:f4c4:: with SMTP id h4mr24357427wrp.142.1589273996049;
+        Tue, 12 May 2020 01:59:56 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id y10sm18845457wrd.95.2020.05.12.01.59.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 01:59:55 -0700 (PDT)
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+To:     DRI Development <dri-devel@lists.freedesktop.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+        linux-rdma@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Subject: [RFC 00/17] dma-fence lockdep annotations
+Date:   Tue, 12 May 2020 10:59:27 +0200
+Message-Id: <20200512085944.222637-1-daniel.vetter@ffwll.ch>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200504031340.7103-1-nick.desaulniers@gmail.com>
- <CA+icZUUOaqeKeh6n4BJq2k6XQWAfNghUj57j42ZX5qyd3iOmLw@mail.gmail.com> <CAK7LNAR+pm-_nd5=B2OeLpimW42FXxm8TQUMru9DR_asT3qYnA@mail.gmail.com>
-In-Reply-To: <CAK7LNAR+pm-_nd5=B2OeLpimW42FXxm8TQUMru9DR_asT3qYnA@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Tue, 12 May 2020 10:59:13 +0200
-Message-ID: <CA+icZUUdRk9TYOSb5mzqBrfAsHYCRAy0ciNtKZJxbTdv-KaHpQ@mail.gmail.com>
-Subject: Re: [PATCH] Makefile: support compressed debug info
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Nick Desaulniers <nick.desaulniers@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 7:47 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Hi Sedat,
->
->
-> On Tue, May 5, 2020 at 1:25 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
-> >
-> > On Mon, May 4, 2020 at 5:13 AM Nick Desaulniers
-> > <nick.desaulniers@gmail.com> wrote:
-> > >
-> > > As debug information gets larger and larger, it helps significantly save
-> > > the size of vmlinux images to compress the information in the debug
-> > > information sections. Note: this debug info is typically split off from
-> > > the final compressed kernel image, which is why vmlinux is what's used
-> > > in conjunction with GDB. Minimizing the debug info size should have no
-> > > impact on boot times, or final compressed kernel image size.
-> > >
-> > > All of the debug sections will have a `C` flag set.
-> > > $ readelf -S <object file>
-> > >
-> > > $ bloaty vmlinux.gcc75.compressed.dwarf4 -- \
-> > >     vmlinux.gcc75.uncompressed.dwarf4
-> > >
-> > >     FILE SIZE        VM SIZE
-> > >  --------------  --------------
-> > >   +0.0%     +18  [ = ]       0    [Unmapped]
-> > >  -73.3%  -114Ki  [ = ]       0    .debug_aranges
-> > >  -76.2% -2.01Mi  [ = ]       0    .debug_frame
-> > >  -73.6% -2.89Mi  [ = ]       0    .debug_str
-> > >  -80.7% -4.66Mi  [ = ]       0    .debug_abbrev
-> > >  -82.9% -4.88Mi  [ = ]       0    .debug_ranges
-> > >  -70.5% -9.04Mi  [ = ]       0    .debug_line
-> > >  -79.3% -10.9Mi  [ = ]       0    .debug_loc
-> > >  -39.5% -88.6Mi  [ = ]       0    .debug_info
-> > >  -18.2%  -123Mi  [ = ]       0    TOTAL
-> > >
-> > > $ bloaty vmlinux.clang11.compressed.dwarf4 -- \
-> > >     vmlinux.clang11.uncompressed.dwarf4
-> > >
-> > >     FILE SIZE        VM SIZE
-> > >  --------------  --------------
-> > >   +0.0%     +23  [ = ]       0    [Unmapped]
-> > >  -65.6%    -871  [ = ]       0    .debug_aranges
-> > >  -77.4% -1.84Mi  [ = ]       0    .debug_frame
-> > >  -82.9% -2.33Mi  [ = ]       0    .debug_abbrev
-> > >  -73.1% -2.43Mi  [ = ]       0    .debug_str
-> > >  -84.8% -3.07Mi  [ = ]       0    .debug_ranges
-> > >  -65.9% -8.62Mi  [ = ]       0    .debug_line
-> > >  -86.2% -40.0Mi  [ = ]       0    .debug_loc
-> > >  -42.0% -64.1Mi  [ = ]       0    .debug_info
-> > >  -22.1%  -122Mi  [ = ]       0    TOTAL
-> > >
-> >
-> > Hi Nick,
-> >
-> > thanks for the patch.
-> >
-> > I have slightly modified it to adapt to Linux v5.7-rc4 (what was your base?).
-> >
-> > Which linker did you use and has it an impact if you switch from
-> > ld.bfd to ld.lld?
-> >
-> > I tried a first normal run and in a 2nd one with
-> > CONFIG_DEBUG_INFO_COMPRESSED=y both with clang-10 and ld.lld-10.
-> >
-> > My numbers (sizes in MiB):
-> >
-> > [ diffconfig ]
-> >
-> > $ scripts/diffconfig /boot/config-5.7.0-rc4-1-amd64-clang
-> > /boot/config-5.7.0-rc4-2-amd64-clang
-> >  BUILD_SALT "5.7.0-rc4-1-amd64-clang" -> "5.7.0-rc4-2-amd64-clang"
-> > +DEBUG_INFO_COMPRESSED y
-> >
-> > [ compiler and linker ]
-> >
-> > $ clang-10 -v
-> > ClangBuiltLinux clang version 10.0.1
-> > (https://github.com/llvm/llvm-project
-> > 92d5c1be9ee93850c0a8903f05f36a23ee835dc2)
-> > Target: x86_64-unknown-linux-gnu
-> > Thread model: posix
-> > InstalledDir: /home/dileks/src/llvm-toolchain/install/bin
-> > Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/10
-> > Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/8
-> > Found candidate GCC installation: /usr/lib/gcc/x86_64-linux-gnu/9
-> > Selected GCC installation: /usr/lib/gcc/x86_64-linux-gnu/10
-> > Candidate multilib: .;@m64
-> > Candidate multilib: 32;@m32
-> > Candidate multilib: x32;@mx32
-> > Selected multilib: .;@m64
-> >
-> > $ ld.lld-10 -v
-> > LLD 10.0.1 (https://github.com/llvm/llvm-project
-> > 92d5c1be9ee93850c0a8903f05f36a23ee835dc2) (compatible with GNU
-> > linkers)
-> >
-> > [ sizes vmlinux ]
-> >
-> > $ du -m 5.7.0-rc4-*/vmlinux*
-> > 409     5.7.0-rc4-1-amd64-clang/vmlinux
-> > 7       5.7.0-rc4-1-amd64-clang/vmlinux.compressed
-> > 404     5.7.0-rc4-1-amd64-clang/vmlinux.o
-> > 324     5.7.0-rc4-2-amd64-clang/vmlinux
-> > 7       5.7.0-rc4-2-amd64-clang/vmlinux.compressed
-> > 299     5.7.0-rc4-2-amd64-clang/vmlinux.o
-> >
-> > [ readelf (.debug_info as example) ]
-> >
-> > $ readelf -S vmlinux.o
-> >   [33] .debug_info       PROGBITS         0000000000000000  01d6a5e8
-> >        0000000006be1ee6  0000000000000000           0     0     1
-> >
-> > $ readelf -S vmlinux.o
-> >   [33] .debug_info       PROGBITS         0000000000000000  01749f18
-> >        0000000002ef04d2  0000000000000000   C       0     0     1 <---
-> > XXX: "C (compressed)" Flag
-> >
-> > Key to Flags:
-> >   W (write), A (alloc), X (execute), M (merge), S (strings), I (info),
-> >   L (link order), O (extra OS processing required), G (group), T (TLS),
-> >   C (compressed), x (unknown), o (OS specific), E (exclude),
-> >   l (large), p (processor specific)
-> >
-> > [ sizes linux-image debian packages ]
-> >
-> > $ du -m 5.7.0-rc4-*/linux-image*.deb
-> > 47      5.7.0-rc4-1-amd64-clang/linux-image-5.7.0-rc4-1-amd64-clang_5.7.0~rc4-1~bullseye+dileks1_amd64.deb
-> > 424     5.7.0-rc4-1-amd64-clang/linux-image-5.7.0-rc4-1-amd64-clang-dbg_5.7.0~rc4-1~bullseye+dileks1_amd64.deb
-> > 47      5.7.0-rc4-2-amd64-clang/linux-image-5.7.0-rc4-2-amd64-clang_5.7.0~rc4-2~bullseye+dileks1_amd64.deb
-> > 771     5.7.0-rc4-2-amd64-clang/linux-image-5.7.0-rc4-2-amd64-clang-dbg_5.7.0~rc4-2~bullseye+dileks1_amd64.deb
-> >
-> > [ sizes linux-git dir (compilation finished ]
-> >
-> > 5.7.0-rc4-1-amd64-clang: 17963   /home/dileks/src/linux-kernel/linux
-> > 5.7.0-rc4-2-amd64-clang: 14328   /home/dileks/src/linux-kernel/linux
-> >
-> > [ xz compressed linux-image-dbg packages ]
-> >
-> > $ file linux-image-5.7.0-rc4-1-amd64-clang-dbg_5.7.0~rc4-1~bullseye+dileks1_amd64.deb
-> > linux-image-5.7.0-rc4-1-amd64-clang-dbg_5.7.0~rc4-1~bullseye+dileks1_amd64.deb:
-> > Debian binary package (format 2.0), with control.tar.xz, data
-> > compression xz
-> > $ file linux-image-5.7.0-rc4-2-amd64-clang-dbg_5.7.0~rc4-2~bullseye+dileks1_amd64.deb
-> > linux-image-5.7.0-rc4-2-amd64-clang-dbg_5.7.0~rc4-2~bullseye+dileks1_amd64.deb:
-> > Debian binary package (format 2.0), with control.tar.xz, data
-> > compression xz
-> >
-> > [ file-lists ]
-> >
-> > $ dpkg --contents
-> > linux-image-5.7.0-rc4-1-amd64-clang-dbg_5.7.0~rc4-1~bullseye+dileks1_amd64.deb
-> > | wc -l
-> > 4395
-> > $ dpkg --contents
-> > linux-image-5.7.0-rc4-2-amd64-clang-dbg_5.7.0~rc4-2~bullseye+dileks1_amd64.deb
-> > | wc -l
-> > 4395
-> >
-> > [ file-lists vmlinux ]
-> >
-> > $ dpkg --contents
-> > linux-image-5.7.0-rc4-1-amd64-clang-dbg_5.7.0~rc4-1~bullseye+dileks1_amd64.deb
-> > | grep vmlinux
-> > -rwxr-xr-x root/root 428588312 2020-05-04 06:15
-> > ./usr/lib/debug/lib/modules/5.7.0-rc4-1-amd64-clang/vmlinux
-> > lrwxrwxrwx root/root         0 2020-05-04 06:15
-> > ./usr/lib/debug/boot/vmlinux-5.7.0-rc4-1-amd64-clang ->
-> > ../lib/modules/5.7.0-rc4-1-amd64-clang/vmlinux
-> > lrwxrwxrwx root/root         0 2020-05-04 06:15
-> > ./usr/lib/debug/vmlinux-5.7.0-rc4-1-amd64-clang ->
-> > lib/modules/5.7.0-rc4-1-amd64-clang/vmlinux
-> >
-> > $ dpkg --contents
-> > linux-image-5.7.0-rc4-2-amd64-clang-dbg_5.7.0~rc4-2~bullseye+dileks1_amd64.deb
-> > | grep vmlinux
-> > -rwxr-xr-x root/root 339341456 2020-05-04 12:24
-> > ./usr/lib/debug/lib/modules/5.7.0-rc4-2-amd64-clang/vmlinux
-> > lrwxrwxrwx root/root         0 2020-05-04 12:24
-> > ./usr/lib/debug/boot/vmlinux-5.7.0-rc4-2-amd64-clang ->
-> > ../lib/modules/5.7.0-rc4-2-amd64-clang/vmlinux
-> > lrwxrwxrwx root/root         0 2020-05-04 12:24
-> > ./usr/lib/debug/vmlinux-5.7.0-rc4-2-amd64-clang ->
-> > lib/modules/5.7.0-rc4-2-amd64-clang/vmlinux
-> >
-> > [ conclusion ]
-> >
-> > As you can see there is a size-reduction in case of vmlinux/vmlinux.o
-> > (debug) files...
-> > ...and my linux-git directory in total is smaller: 17963M vs. 14328M.
-> >
-> > But the resulting linux-image-dbg file is much fatter: 424M vs. 711M.
-> > XZ-compressing the gz/zlib-compressed vmlinux (debug) file results in
-> > a fatter linux-image-dbg package.
->
->
-> I also confirmed that, but this would not
-> be a blocker of this patch.
->
+Hi all,
 
-Hi Masahiro,
+I've dragged my feet for years on this, hoping that cross-release lockdep
+would do this for us, but well that never really happened unfortunately.
+So here we are.
 
-No, it is not a blocker.
-I have this patch now in my Linux v5.7-rc5 series.
+Cc'ed quite a pile of people since this is about the cross-driver contract
+around dma_fences. Which is heavily used for dma_buf, and I'm hearing more
+noises that rdma folks are looking into this, hence also on cc.
 
-I see a lot of more benefits concerning disc-usage - in my linux-git
-and a reduced vmlinux file when I wanted to test with QEMU.
+There's a bunch of different parts to this RFC:
 
-Feel free to add:
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+- The annotations itself, in the 2nd patch after the prep patch to add
+  might_sleep annotations. Commit message has all the motivation for what
+  kind of deadlocks I want to catch, best you just read it.
 
-- Sedat -
+  Since lockdep doesn't understand cross-release natively we need to
+  cobble something together using rwlocks and a few more tricks, but from
+  the test rollout in a few places in drm/vkms, amdgpu & i915 I think what
+  I have now seems to actually work. Downside is that we have to
+  explicitly annotate all code involved in eventual dma_fence signalling.
 
-> Users can disable CONFIG_DEBUG_INFO_COMPRESSED
-> if they care about the debug package size.
->
->
->
->
->
-> --
-> Best Regards
-> Masahiro Yamada
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/CAK7LNAR%2Bpm-_nd5%3DB2OeLpimW42FXxm8TQUMru9DR_asT3qYnA%40mail.gmail.com.
+- Second important part is locking down the current dma-fence cross-driver
+  contract, using lockdep priming like we already do for dma_resv_lock.
+  I've just started with my own take on what we probably need to make the
+  current code work (-ish), but both amdgpu and i915 have issues with
+  that. So this needs some careful discussions, and also some thought on
+  how we land it all eventually to not break lockdep completely for
+  everyone.
+
+  The important patch for that is "dma-fence: prime lockdep annotations"
+  plus of course the various annotations patches and driver hacks to
+  highlight some of the issues caught.
+
+  Note that depending upon what exactly we end up deciding we might need
+  to improve the annotations for fs_reclaim_acquire/release - for
+  dma_fence_wait in mmu notifiers we can only allow GFP_NOWAIT (afaiui),
+  and currently fs_reclaim_acquire/release only has a lockdep class for
+  __GFP_FS only, we'd need to add another one for __GFP_DIRECT_RECLAIM in
+  general maybe.
+
+- Finally there's clearly some gaps in the current dma_fence driver
+  interfaces: Amdgpu's hang recovery is essentially impossible to fix
+  as-is - it needs to reset the display state and you can't get at modeset
+  locks from tdr without deadlock potential. i915 has an internal trick
+  (but it stops working once we involve real cross-driver fences) for this
+  issues, but then for i915 modeset reset is only needed on very ancient
+  gen2/3. Modern hw is a lot more reasonable.
+
+  I'm kinda hoping that the annotations and priming for basic command
+  submission and atomic modeset paths could be merged soonish, while we
+  the tdr side clearly needs a pile more work to get going. But since we
+  have to explicitly annotate all code paths anyway we can hide bugs in
+  e.g. tdr code by simply not yet annotating those functions.
+
+  I'm trying to lay out at least one idea for solving the tdr issue in the
+  patch titled "drm/scheduler: use dma-fence annotations in tdr work".
+
+Finally, once we have some agreement on where we're going with all this,
+we also need some documentation. Currently that's missing because I don't
+want to re-edit the text all the time while we still figure out the
+details of the exact cross-driver semantics.
+
+My goal here is that with this we can lock down the cross-driver contract
+for the last bit of the dma_buf/resv/fence story and make sure this stops
+being such a wobbly thing where everyone just does whatever they feel
+like.
+
+Ideas, thoughts, reviews, testing (with specific annotations for that
+driver) on other drivers very much welcome.
+
+Cheers, Daniel
+
+Cc: linux-media@vger.kernel.org
+Cc: linaro-mm-sig@lists.linaro.org
+Cc: linux-rdma@vger.kernel.org
+Cc: amd-gfx@lists.freedesktop.org
+Cc: intel-gfx@lists.freedesktop.org
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Christian König <christian.koenig@amd.com>
+
+Daniel Vetter (17):
+  dma-fence: add might_sleep annotation to _wait()
+  dma-fence: basic lockdep annotations
+  dma-fence: prime lockdep annotations
+  drm/vkms: Annotate vblank timer
+  drm/vblank: Annotate with dma-fence signalling section
+  drm/atomic-helper: Add dma-fence annotations
+  drm/amdgpu: add dma-fence annotations to atomic commit path
+  drm/scheduler: use dma-fence annotations in main thread
+  drm/amdgpu: use dma-fence annotations in cs_submit()
+  drm/amdgpu: s/GFP_KERNEL/GFP_ATOMIC in scheduler code
+  drm/amdgpu: DC also loves to allocate stuff where it shouldn't
+  drm/amdgpu/dc: Stop dma_resv_lock inversion in commit_tail
+  drm/scheduler: use dma-fence annotations in tdr work
+  drm/amdgpu: use dma-fence annotations for gpu reset code
+  Revert "drm/amdgpu: add fbdev suspend/resume on gpu reset"
+  drm/amdgpu: gpu recovery does full modesets
+  drm/i915: Annotate dma_fence_work
+
+ drivers/dma-buf/dma-fence.c                   | 56 +++++++++++++++++++
+ drivers/dma-buf/dma-resv.c                    |  1 +
+ drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c        |  5 ++
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c    | 22 ++++++--
+ drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c     |  2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ids.c       |  2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c      |  2 +-
+ drivers/gpu/drm/amd/amdgpu/atom.c             |  2 +-
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 18 +++++-
+ drivers/gpu/drm/amd/display/dc/core/dc.c      |  4 +-
+ drivers/gpu/drm/drm_atomic_helper.c           | 16 ++++++
+ drivers/gpu/drm/drm_vblank.c                  |  8 ++-
+ drivers/gpu/drm/i915/i915_sw_fence_work.c     |  3 +
+ drivers/gpu/drm/scheduler/sched_main.c        | 11 ++++
+ drivers/gpu/drm/vkms/vkms_crtc.c              |  8 ++-
+ include/linux/dma-fence.h                     | 13 +++++
+ 16 files changed, 160 insertions(+), 13 deletions(-)
+
+-- 
+2.26.2
+
