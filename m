@@ -2,105 +2,240 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 632C6C54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3891FC54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39A7520714
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1165520714
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:35:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="NvN3bHID"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgELGeT (ORCPT
+        id S1728760AbgELGfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 02:34:19 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4776 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726193AbgELGeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 02:34:19 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 08DC394D13A5D7A5300A;
-        Tue, 12 May 2020 14:34:13 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Tue, 12 May 2020
- 14:34:05 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <john.garry@huawei.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Jason Yan <yanaijie@huawei.com>,
-        Xiang Chen <chenxiang66@hisilicon.com>
-Subject: [PATCH] scsi: hisi_sas: display correct proc_name in sysfs
-Date:   Tue, 12 May 2020 14:33:18 +0800
-Message-ID: <20200512063318.13825-1-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.21.3
+        Tue, 12 May 2020 02:35:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48536 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726289AbgELGfd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 02:35:33 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9590EC061A0F
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:35:32 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id s10so12648204iog.7
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:35:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=hmqc9TQ9Quh7+US/Jmh4IXg0bVpfrPAKCJNshFYSv+Q=;
+        b=NvN3bHIDGwK+p0qEwYf7zjtLlsxm2ceG5S0GYtDcV8aLAqcsJfqOTGl1gkyIlhzl56
+         Z9+A/IMEvGy4ZRM0/h9CnkQShR6M/HA4DFloyhf88t+b64r/X4SaOrgaUi+rdf2GGmha
+         cvaSBe+ut2HCvfoRg2GMxsWf6PqOgRKYk0l6PWeo1znnU/k7z8yLPqV2DkosG+22KThS
+         +pXuvun5l0Uwje9BpaVzjG2kJpbk1JW2IVBJFyar1BKa7F61PvPqDdP1c4wfHS485XIc
+         MlKgocOGFtkGz3BKYGLQ6g5TKWxZpOJYjdJlC9flK8333jlQOL1oOx4rRvibwF2SEbz1
+         RWdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=hmqc9TQ9Quh7+US/Jmh4IXg0bVpfrPAKCJNshFYSv+Q=;
+        b=rKtMjta2adjVjbDuh9x4DLuZts91+WT9owCgzPLEWhoD622L9gcQCwqVGe+izZBZpj
+         VjckYZ8jkjeA+XvS/guZW3wMaxlAe2aTyGhGefr1fdll+ZRlOcc9T3qNRNUk3/Uih7xQ
+         thxHXPxEl5RUfdyvP5n3GKD5OrOWAezlaD28EOp/16bNQIhhRcSyYG4al7uLuouV9cwQ
+         WCp4s/bBuF3E/8M2Sx3ZUp+WP12lputh6kdfEPYUjrP7annQX0dJPRNv69esWpsjWgp8
+         rshmo5CFteMKS6LuwewOSz9eVesfrVgcrI/PEjkFY+NmVVUnaO/ewWEV1Cd1bxEby0mf
+         jgoA==
+X-Gm-Message-State: AGi0PubztMoRE2269OMEbmL/W9NpUUVXTGw8MRVub0Y8W0Ybh2LFz2vb
+        +HxN667C65fQyPiyXRJugtPSP8T2PP+8YEXBDuogZw==
+X-Google-Smtp-Source: APiQypLWnzw4EWWNr1vmFUqwTdjDAprfuZXfBBKAg6Df7mrHkghpjwc+KH+GGaVrIhljRYARBkWpEGcIU/MDkPlDt6c=
+X-Received: by 2002:a05:6638:68f:: with SMTP id i15mr19299578jab.136.1589265331761;
+ Mon, 11 May 2020 23:35:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+References: <20200511150759.18766-1-brgl@bgdev.pl> <20200511150759.18766-10-brgl@bgdev.pl>
+ <dab80587-a196-e0ab-ae97-f8e5cc4a71d4@gmail.com>
+In-Reply-To: <dab80587-a196-e0ab-ae97-f8e5cc4a71d4@gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 12 May 2020 08:35:21 +0200
+Message-ID: <CAMRc=MeAMHs3jYh5KpbO5pAqO_cTmc71US_aVAFqRpNBnEYVMg@mail.gmail.com>
+Subject: Re: [PATCH v2 09/14] net: ethernet: mtk-eth-mac: new driver
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 'proc_name' entry in sysfs for hisi_sas is 'null' now becuase it is
-not initialized in scsi_host_template. It looks like:
+pon., 11 maj 2020 o 21:24 Florian Fainelli <f.fainelli@gmail.com> napisa=C5=
+=82(a):
+>
+>
+>
+> On 5/11/2020 8:07 AM, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > This adds the driver for the MediaTek Ethernet MAC used on the MT8* SoC
+> > family. For now we only support full-duplex.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > ---
+>
+> [snip]
+>
+> > +static int mtk_mac_ring_pop_tail(struct mtk_mac_ring *ring,
+> > +                              struct mtk_mac_ring_desc_data *desc_data=
+)
+> > +{
+> > +     struct mtk_mac_ring_desc *desc =3D &ring->descs[ring->tail];
+> > +     unsigned int status;
+> > +
+> > +     /* Let the device release the descriptor. */
+> > +     dma_rmb();
+> > +     status =3D desc->status;
+> > +
+> > +     if (!(status & MTK_MAC_DESC_BIT_COWN))
+> > +             return -1;
+> > +
+> > +     desc_data->len =3D status & MTK_MAC_DESC_MSK_LEN;
+> > +     desc_data->flags =3D status & ~MTK_MAC_DESC_MSK_LEN;
+> > +     desc_data->dma_addr =3D desc->data_ptr;
+> > +     desc_data->skb =3D ring->skbs[ring->tail];
+> > +
+> > +     desc->data_ptr =3D 0;
+> > +     desc->status =3D MTK_MAC_DESC_BIT_COWN;
+> > +     if (status & MTK_MAC_DESC_BIT_EOR)
+> > +             desc->status |=3D MTK_MAC_DESC_BIT_EOR;
+>
+> Don't you need a dma_wmb() for the device to observe the new descriptor
+> here?
+>
 
-[root@localhost ~]# cat /sys/class/scsi_host/host2/proc_name
-(null)
+HW has released the descriptor (set the COWN bit) and I just clear all
+other bits here really. Yeah, I guess it won't hurt to make sure.
 
-While the other driver's entry looks like:
+> [snip]
+>
+> > +static void mtk_mac_dma_unmap_tx(struct mtk_mac_priv *priv,
+> > +                              struct mtk_mac_ring_desc_data *desc_data=
+)
+> > +{
+> > +     struct device *dev =3D mtk_mac_get_dev(priv);
+> > +
+> > +     return dma_unmap_single(dev, desc_data->dma_addr,
+> > +                             desc_data->len, DMA_TO_DEVICE);
+>
+> If you stored a pointer to the sk_buff you transmitted, then you would
+> need an expensive read to the descriptor to determine the address and
+> length, and you would also not be at the mercy of the HW putting
+> incorrect values there.
+>
 
-linux-vnMQMU:~ # cat /sys/class/scsi_host/host0/proc_name
-megaraid_sas
+You mean store the mapped addresses? Yeah I can do that but I'll still
+need to read the descriptor memory to verify it was released by HW.
 
-Cc: John Garry <john.garry@huawei.com>
-Cc: Xiang Chen <chenxiang66@hisilicon.com>
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
----
- drivers/scsi/hisi_sas/hisi_sas_v1_hw.c | 1 +
- drivers/scsi/hisi_sas/hisi_sas_v2_hw.c | 1 +
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 1 +
- 3 files changed, 3 insertions(+)
+> sp
+> > +static void mtk_mac_dma_init(struct mtk_mac_priv *priv)
+> > +{
+> > +     struct mtk_mac_ring_desc *desc;
+> > +     unsigned int val;
+> > +     int i;
+> > +
+> > +     priv->descs_base =3D (struct mtk_mac_ring_desc *)priv->ring_base;
+> > +
+> > +     for (i =3D 0; i < MTK_MAC_NUM_DESCS_TOTAL; i++) {
+> > +             desc =3D &priv->descs_base[i];
+> > +
+> > +             memset(desc, 0, sizeof(*desc));
+> > +             desc->status =3D MTK_MAC_DESC_BIT_COWN;
+> > +             if ((i =3D=3D MTK_MAC_NUM_TX_DESCS - 1) ||
+> > +                 (i =3D=3D MTK_MAC_NUM_DESCS_TOTAL - 1))
+> > +                     desc->status |=3D MTK_MAC_DESC_BIT_EOR;
+> > +     }
+> > +
+> > +     mtk_mac_ring_init(&priv->tx_ring, priv->descs_base, 0);
+> > +     mtk_mac_ring_init(&priv->rx_ring,
+> > +                       priv->descs_base + MTK_MAC_NUM_TX_DESCS,
+> > +                       MTK_MAC_NUM_RX_DESCS);
+> > +
+> > +     /* Set DMA pointers. */
+> > +     val =3D (unsigned int)priv->dma_addr;
+>
+> You would probably add a WARN_ON() or something that catches the upper
+> 32-bits of the dma_addr being set, see my comment about the DMA mask
+> setting.
+>
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-index fa25766502a2..c205bff20943 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-@@ -1757,6 +1757,7 @@ static struct device_attribute *host_attrs_v1_hw[] = {
- 
- static struct scsi_host_template sht_v1_hw = {
- 	.name			= DRV_NAME,
-+	.proc_name		= DRV_NAME,
- 	.module			= THIS_MODULE,
- 	.queuecommand		= sas_queuecommand,
- 	.target_alloc		= sas_target_alloc,
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-index e05faf315dcd..c725cffe141e 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-@@ -3533,6 +3533,7 @@ static struct device_attribute *host_attrs_v2_hw[] = {
- 
- static struct scsi_host_template sht_v2_hw = {
- 	.name			= DRV_NAME,
-+	.proc_name		= DRV_NAME,
- 	.module			= THIS_MODULE,
- 	.queuecommand		= sas_queuecommand,
- 	.target_alloc		= sas_target_alloc,
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-index 374885aa8d77..59b1421607dd 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-@@ -3071,6 +3071,7 @@ static int debugfs_set_bist_v3_hw(struct hisi_hba *hisi_hba, bool enable)
- 
- static struct scsi_host_template sht_v3_hw = {
- 	.name			= DRV_NAME,
-+	.proc_name		= DRV_NAME,
- 	.module			= THIS_MODULE,
- 	.queuecommand		= sas_queuecommand,
- 	.target_alloc		= sas_target_alloc,
--- 
-2.21.3
+Can it still happen if I check the return value of dma_set_mask_and_coheren=
+t()?
 
+> [snip]
+>
+> > +static void mtk_mac_tx_complete_all(struct mtk_mac_priv *priv)
+> > +{
+> > +     struct net_device *ndev =3D priv_to_netdev(priv);
+> > +     struct mtk_mac_ring *ring =3D &priv->tx_ring;
+> > +     int ret;
+> > +
+> > +     for (;;) {
+> > +             mtk_mac_lock(priv);
+> > +
+> > +             if (!mtk_mac_ring_descs_available(ring)) {
+> > +                     mtk_mac_unlock(priv);
+> > +                     break;
+> > +             }
+> > +
+> > +             ret =3D mtk_mac_tx_complete_one(priv);
+> > +             if (ret) {
+> > +                     mtk_mac_unlock(priv);
+> > +                     break;
+> > +             }
+> > +
+> > +             if (netif_queue_stopped(ndev))
+> > +                     netif_wake_queue(ndev);
+> > +
+> > +             mtk_mac_unlock(priv);
+> > +     }
+>
+> Where do you increment the net_device statistics to indicate the bytes
+> and packets transmitted?
+>
+
+I don't. I use the counters provided by HW for that.
+
+> [snip]
+>
+> > +     mtk_mac_set_mode_rmii(priv);
+> > +
+> > +     dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+>
+> Your code assumes that DMA addresses are not going to be >=3D 4GB so you
+> should be checking this function's return code and abort here otherwise
+> your driver will fail in surprisingly difficult ways to debug.
+
+Sure, thanks.
+
+Bart
