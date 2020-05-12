@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACFAC2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FABC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7465D24936
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46F5724936
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:25:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732037AbgELWZF (ORCPT
+        id S1732046AbgELWZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:25:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55592 "EHLO
+        Tue, 12 May 2020 18:25:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731780AbgELWXd (ORCPT
+        by vger.kernel.org with ESMTP id S1731320AbgELWXd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 May 2020 18:23:33 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FC7CC061A0E
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31D8AC061A0C
         for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:23:33 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jYdIB-0004fW-UT; Wed, 13 May 2020 00:22:29 +0200
+        id 1jYdIf-00054n-Hb; Wed, 13 May 2020 00:22:59 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 0F6891006FB;
-        Wed, 13 May 2020 00:22:27 +0200 (CEST)
-Message-Id: <20200512213810.104271669@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 027561006A1;
+        Wed, 13 May 2020 00:22:57 +0200 (CEST)
+Message-Id: <20200512213812.569940685@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 12 May 2020 23:01:06 +0200
+Date:   Tue, 12 May 2020 23:01:30 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -58,7 +58,8 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
         Zhao Yakui <yakui.zhao@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V5 07/38] x86/entry/64: Move do_softirq_own_stack() to C
+Subject: [patch V5 31/38] x86/entry: Convert reschedule interrupt to
+ IDTENTRY_SYSVEC_SIMPLE
 References: <20200512210059.056244513@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -71,59 +72,202 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The first step to get rid of the ENTER/LEAVE_IRQ_STACK ASM macro maze.  Use
-the new C code helpers to move do_softirq_own_stack() out of ASM code.
+The scheduler IPI does not need the full interrupt entry handling logic
+when the entry is from kernel mode.
+
+Even if tracing is enabled the only requirement is that RCU is watching and
+preempt_count has the hardirq bit on.
+
+The NOHZ tick state does not have to be adjusted. If the tick is not
+running then the CPU is in idle and the idle exit will restore the
+tick. Softinterrupts are not raised here, so handling them on return is not
+required either.
+
+User mode entry must go through the regular entry path as it will invoke
+the scheduler on return so context tracking needs to be in the correct
+state.
+
+Use IDTENTRY_SYSVEC_SIMPLE and remove the tracepoint static key
+conditional which is incomplete vs. tracing anyway because e.g.
+ack_APIC_irq() calls out into instrumentable code.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
-V5: Convert to the new helpers
----
- arch/x86/entry/entry_64.S |   13 -------------
- arch/x86/kernel/irq_64.c  |    9 +++++++++
- 2 files changed, 9 insertions(+), 13 deletions(-)
+ arch/x86/entry/entry_64.S                |    4 ----
+ arch/x86/include/asm/entry_arch.h        |    3 ---
+ arch/x86/include/asm/hw_irq.h            |    3 ---
+ arch/x86/include/asm/idtentry.h          |    1 +
+ arch/x86/include/asm/trace/common.h      |    4 ----
+ arch/x86/include/asm/trace/irq_vectors.h |   17 +----------------
+ arch/x86/kernel/idt.c                    |    2 +-
+ arch/x86/kernel/smp.c                    |   19 ++++---------------
+ arch/x86/kernel/tracepoint.c             |   17 -----------------
+ 9 files changed, 7 insertions(+), 63 deletions(-)
 
 --- a/arch/x86/entry/entry_64.S
 +++ b/arch/x86/entry/entry_64.S
-@@ -1145,19 +1145,6 @@ SYM_FUNC_START(asm_call_on_stack)
- 	ret
- SYM_FUNC_END(asm_call_on_stack)
+@@ -956,10 +956,6 @@ apicinterrupt3 \num \sym \do_sym
+ POP_SECTION_IRQENTRY
+ .endm
  
--/* Call softirq on interrupt stack. Interrupts are off. */
--.pushsection .text, "ax"
--SYM_FUNC_START(do_softirq_own_stack)
--	pushq	%rbp
--	mov	%rsp, %rbp
--	ENTER_IRQ_STACK regs=0 old_rsp=%r11
--	call	__do_softirq
--	LEAVE_IRQ_STACK regs=0
--	leaveq
--	ret
--SYM_FUNC_END(do_softirq_own_stack)
--.popsection
+-#ifdef CONFIG_SMP
+-apicinterrupt RESCHEDULE_VECTOR			reschedule_interrupt		smp_reschedule_interrupt
+-#endif
 -
- #ifdef CONFIG_XEN_PV
  /*
-  * A note on the "critical region" in our callback handler.
---- a/arch/x86/kernel/irq_64.c
-+++ b/arch/x86/kernel/irq_64.c
-@@ -20,6 +20,7 @@
- #include <linux/sched/task_stack.h>
+  * Reload gs selector with exception handling
+  * edi:  new selector
+--- a/arch/x86/include/asm/entry_arch.h
++++ b/arch/x86/include/asm/entry_arch.h
+@@ -10,6 +10,3 @@
+  * is no hardware IRQ pin equivalent for them, they are triggered
+  * through the ICC by us (IPIs)
+  */
+-#ifdef CONFIG_SMP
+-BUILD_INTERRUPT(reschedule_interrupt,RESCHEDULE_VECTOR)
+-#endif
+--- a/arch/x86/include/asm/hw_irq.h
++++ b/arch/x86/include/asm/hw_irq.h
+@@ -28,9 +28,6 @@
+ #include <asm/irq.h>
+ #include <asm/sections.h>
  
- #include <asm/cpu_entry_area.h>
-+#include <asm/irq_stack.h>
- #include <asm/io_apic.h>
- #include <asm/apic.h>
+-/* Interrupt handlers registered during init_IRQ */
+-extern asmlinkage void reschedule_interrupt(void);
+-
+ #ifdef	CONFIG_X86_LOCAL_APIC
+ struct irq_data;
+ struct pci_dev;
+--- a/arch/x86/include/asm/idtentry.h
++++ b/arch/x86/include/asm/idtentry.h
+@@ -576,6 +576,7 @@ DECLARE_IDTENTRY_SYSVEC(X86_PLATFORM_IPI
+ #endif
  
-@@ -70,3 +71,11 @@ int irq_init_percpu_irqstack(unsigned in
- 		return 0;
- 	return map_irq_stack(cpu);
+ #ifdef CONFIG_SMP
++DECLARE_IDTENTRY(RESCHEDULE_VECTOR,			sysvec_reschedule_ipi);
+ DECLARE_IDTENTRY_SYSVEC(IRQ_MOVE_CLEANUP_VECTOR,	sysvec_irq_move_cleanup);
+ DECLARE_IDTENTRY_SYSVEC(REBOOT_VECTOR,			sysvec_reboot);
+ DECLARE_IDTENTRY_SYSVEC(CALL_FUNCTION_SINGLE_VECTOR,	sysvec_call_function_single);
+--- a/arch/x86/include/asm/trace/common.h
++++ b/arch/x86/include/asm/trace/common.h
+@@ -5,12 +5,8 @@
+ DECLARE_STATIC_KEY_FALSE(trace_pagefault_key);
+ #define trace_pagefault_enabled()			\
+ 	static_branch_unlikely(&trace_pagefault_key)
+-DECLARE_STATIC_KEY_FALSE(trace_resched_ipi_key);
+-#define trace_resched_ipi_enabled()			\
+-	static_branch_unlikely(&trace_resched_ipi_key)
+ #else
+ static inline bool trace_pagefault_enabled(void) { return false; }
+-static inline bool trace_resched_ipi_enabled(void) { return false; }
+ #endif
+ 
+ #endif
+--- a/arch/x86/include/asm/trace/irq_vectors.h
++++ b/arch/x86/include/asm/trace/irq_vectors.h
+@@ -10,9 +10,6 @@
+ 
+ #ifdef CONFIG_X86_LOCAL_APIC
+ 
+-extern int trace_resched_ipi_reg(void);
+-extern void trace_resched_ipi_unreg(void);
+-
+ DECLARE_EVENT_CLASS(x86_irq_vector,
+ 
+ 	TP_PROTO(int vector),
+@@ -37,18 +34,6 @@ DEFINE_EVENT_FN(x86_irq_vector, name##_e
+ 	TP_PROTO(int vector),			\
+ 	TP_ARGS(vector), NULL, NULL);
+ 
+-#define DEFINE_RESCHED_IPI_EVENT(name)		\
+-DEFINE_EVENT_FN(x86_irq_vector, name##_entry,	\
+-	TP_PROTO(int vector),			\
+-	TP_ARGS(vector),			\
+-	trace_resched_ipi_reg,			\
+-	trace_resched_ipi_unreg);		\
+-DEFINE_EVENT_FN(x86_irq_vector, name##_exit,	\
+-	TP_PROTO(int vector),			\
+-	TP_ARGS(vector),			\
+-	trace_resched_ipi_reg,			\
+-	trace_resched_ipi_unreg);
+-
+ /*
+  * local_timer - called when entering/exiting a local timer interrupt
+  * vector handler
+@@ -99,7 +84,7 @@ TRACE_EVENT_PERF_PERM(irq_work_exit, is_
+ /*
+  * reschedule - called when entering/exiting a reschedule vector handler
+  */
+-DEFINE_RESCHED_IPI_EVENT(reschedule);
++DEFINE_IRQ_VECTOR_EVENT(reschedule);
+ 
+ /*
+  * call_function - called when entering/exiting a call function interrupt
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -109,7 +109,7 @@ static const __initconst struct idt_data
+  */
+ static const __initconst struct idt_data apic_idts[] = {
+ #ifdef CONFIG_SMP
+-	INTG(RESCHEDULE_VECTOR,			reschedule_interrupt),
++	INTG(RESCHEDULE_VECTOR,			asm_sysvec_reschedule_ipi),
+ 	INTG(CALL_FUNCTION_VECTOR,		asm_sysvec_call_function),
+ 	INTG(CALL_FUNCTION_SINGLE_VECTOR,	asm_sysvec_call_function_single),
+ 	INTG(IRQ_MOVE_CLEANUP_VECTOR,		asm_sysvec_irq_move_cleanup),
+--- a/arch/x86/kernel/smp.c
++++ b/arch/x86/kernel/smp.c
+@@ -220,26 +220,15 @@ static void native_stop_other_cpus(int w
+ 
+ /*
+  * Reschedule call back. KVM uses this interrupt to force a cpu out of
+- * guest mode
++ * guest mode.
+  */
+-__visible void __irq_entry smp_reschedule_interrupt(struct pt_regs *regs)
++DEFINE_IDTENTRY_SYSVEC_SIMPLE(sysvec_reschedule_ipi)
+ {
+ 	ack_APIC_irq();
++	trace_reschedule_entry(RESCHEDULE_VECTOR);
+ 	inc_irq_stat(irq_resched_count);
+-
+-	if (trace_resched_ipi_enabled()) {
+-		/*
+-		 * scheduler_ipi() might call irq_enter() as well, but
+-		 * nested calls are fine.
+-		 */
+-		irq_enter();
+-		trace_reschedule_entry(RESCHEDULE_VECTOR);
+-		scheduler_ipi();
+-		trace_reschedule_exit(RESCHEDULE_VECTOR);
+-		irq_exit();
+-		return;
+-	}
+ 	scheduler_ipi();
++	trace_reschedule_exit(RESCHEDULE_VECTOR);
  }
-+
-+void do_softirq_own_stack(void)
-+{
-+	if (irqstack_active())
-+		__do_softirq();
-+	else
-+		run_on_irqstack(__do_softirq, NULL);
-+}
+ 
+ DEFINE_IDTENTRY_SYSVEC(sysvec_call_function)
+--- a/arch/x86/kernel/tracepoint.c
++++ b/arch/x86/kernel/tracepoint.c
+@@ -25,20 +25,3 @@ void trace_pagefault_unreg(void)
+ {
+ 	static_branch_dec(&trace_pagefault_key);
+ }
+-
+-#ifdef CONFIG_SMP
+-
+-DEFINE_STATIC_KEY_FALSE(trace_resched_ipi_key);
+-
+-int trace_resched_ipi_reg(void)
+-{
+-	static_branch_inc(&trace_resched_ipi_key);
+-	return 0;
+-}
+-
+-void trace_resched_ipi_unreg(void)
+-{
+-	static_branch_dec(&trace_resched_ipi_key);
+-}
+-
+-#endif
 
