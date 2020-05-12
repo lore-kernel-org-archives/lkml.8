@@ -2,225 +2,121 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4594C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A54CC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADD4620747
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:59:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589320767;
-	bh=4dasN4F5KmkSKWYO6iCX27SovkkmrwOz4v79E3noBoE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=l+2SU/oNGlkUyzMmg0vMySbwkxb6GsAzp2hnuZ6tmFAkUrCFi1NI4xNKZ92d5Ux5T
-	 o3JxbeS87PAdMrh1REL/z+PdMAFU4LHQZy6himsCo1jlErjU75U04ll/33K1jvhUTD
-	 OcL+PBfimUmP63XRxKqua+g8cacFuEJoFyxw+eEI=
+	by mail.kernel.org (Postfix) with ESMTP id EAD5320747
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:00:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z/kjEVE7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731561AbgELV71 (ORCPT
+        id S1731492AbgELWAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 17:59:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37418 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728313AbgELV70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 17:59:26 -0400
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEE0320747;
-        Tue, 12 May 2020 21:59:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589320765;
-        bh=4dasN4F5KmkSKWYO6iCX27SovkkmrwOz4v79E3noBoE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YP8cdrrciz6AD9mCNgRNuJ+8S0lvXGBwqGJDrSI3wsmZuR3wa9tIBQq17NCfG4NIB
-         VEawFqp/icGBa36IKtrVNQyqEalQcCR4mR6xMppuuWZm7r3wGLAub9CheUDp5AcFtj
-         x9b8IX516ah2hZFdoFmwu0PaGIRDtcOuiGZ77vHg=
-Received: by mail-ot1-f49.google.com with SMTP id v17so3876397ote.0;
-        Tue, 12 May 2020 14:59:24 -0700 (PDT)
-X-Gm-Message-State: AGi0PubcxI9B6ddOH7OCrahvVNrApfuUU2Cs+8Q8d2gfarfzZSK5DYDn
-        gCmz+NL6+BGEs/Kk2a9ZCoYWIp8Dlkk1xZCT+w==
-X-Google-Smtp-Source: APiQypL834c2wGEHb5CE5fdAX3mpa8t0DYv6uZcEwNHKazXdfkA0BR+2q+GjZ5cn3tT0/I4L/tNi+T2+uBKaDwLcHj4=
-X-Received: by 2002:a05:6830:4d6:: with SMTP id s22mr18608313otd.129.1589320764152;
- Tue, 12 May 2020 14:59:24 -0700 (PDT)
+        Tue, 12 May 2020 18:00:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51940 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728313AbgELWAV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 18:00:21 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FB09C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:00:21 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id b8so5982058plm.11
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:00:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=+79i6CNjIBAM9t+ay0r61vFhVwB4nVo6+b6hHSQ4Fro=;
+        b=Z/kjEVE7ijoWI2BF5GmEwAS2TVMlcwmQ3piX8x8xKGksNXYU58li/dNrs7QXxUoz7v
+         WcPUKAYo4D+A3Vjcp2GxS4KQ9NMekKqFlUGG2RHxbDNQhoqZoY/xpwrNADyPpkJA3XMs
+         ldEER+nN+tYegKNCyBNg4B35WbSpqTnd27sU0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=+79i6CNjIBAM9t+ay0r61vFhVwB4nVo6+b6hHSQ4Fro=;
+        b=nTypM/v14XvnlZkdNwcYlrA7jq+KXpTsUugqG+So6mcUHU8FJR7TUZAUFwny6U912a
+         itX9hUNcKrPouzBjh6TwZnepZqbEVUI0HQNFuACaKEa4g/kiZ7Cc5AdLsXwBkYiNSV6y
+         +bYKrZ0kNiv2tpGsYDIBcBdb5p/ZekOWGaGFTic2wfLbwdqL4oVr/jzKG6zfXDCyGf0G
+         2Kxh1Kc8uL4IEQ+qHEpbFiIhveHYBzUvb754o3OZqiP7plN91QzLz0v3Q/MsivrWY97U
+         UcUUPsFzkgvabkOFSOVqK0dP2fpPyeXno2vOCXW0bUATQKyWQ61LqubJrZZbQPtAOXFV
+         xUwA==
+X-Gm-Message-State: AGi0PubjnnCNku2rDwhEpiBojJyxup3S5+kP5SANPNOQ1lQu3Dthatnv
+        jV3s9jXl1qDH94sfpvn+fx1ACQ==
+X-Google-Smtp-Source: APiQypKLh7L5M6Z91bm0o0e2Xo3kz9JFIjZHGl9tokP3YDbmJ9kq2VCMFUVZ8H/2dEcftnriFb6DmQ==
+X-Received: by 2002:a17:90a:6343:: with SMTP id v3mr31509425pjs.127.1589320820943;
+        Tue, 12 May 2020 15:00:20 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id j2sm13193542pfb.73.2020.05.12.15.00.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 15:00:20 -0700 (PDT)
+Date:   Tue, 12 May 2020 15:00:19 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v5 5/6] doc: Add documentation for the
+ fs.open_mayexec_enforce sysctl
+Message-ID: <202005121459.158C3AE75@keescook>
+References: <20200505153156.925111-1-mic@digikod.net>
+ <20200505153156.925111-6-mic@digikod.net>
 MIME-Version: 1.0
-References: <20200423174543.17161-1-michael@walle.cc> <20200423174543.17161-6-michael@walle.cc>
- <20200511211359.GB3518@bogus> <f0fafa63047f00e912013b137e4db15c@walle.cc>
-In-Reply-To: <f0fafa63047f00e912013b137e4db15c@walle.cc>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 12 May 2020 16:59:12 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJBAghgdKmH1OfpH0B508st7Gx3GMtjufjZvBWM_c6GAQ@mail.gmail.com>
-Message-ID: <CAL_JsqJBAghgdKmH1OfpH0B508st7Gx3GMtjufjZvBWM_c6GAQ@mail.gmail.com>
-Subject: Re: [PATCH v3 05/16] mfd: Add support for Kontron sl28cpld management controller
-To:     Michael Walle <michael@walle.cc>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux HWMON List <linux-hwmon@vger.kernel.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200505153156.925111-6-mic@digikod.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 4:45 PM Michael Walle <michael@walle.cc> wrote:
->
-> Am 2020-05-11 23:13, schrieb Rob Herring:
-> > On Thu, Apr 23, 2020 at 07:45:32PM +0200, Michael Walle wrote:
-> >> This patch adds core support for the board management controller found
-> >> on the SMARC-sAL28 board. It consists of the following functions:
-> >>  - watchdog
-> >>  - GPIO controller
-> >>  - PWM controller
-> >>  - fan sensor
-> >>  - interrupt controller
-> >>
-> >> At the moment, this controller is used on the Kontron SMARC-sAL28
-> >> board.
-> >>
-> >> Please note that the MFD driver is defined as bool in the Kconfig
-> >> because the next patch will add interrupt support.
-> >>
-> >> Signed-off-by: Michael Walle <michael@walle.cc>
-> >> ---
-> >>  drivers/mfd/Kconfig    |  19 +++++
-> >>  drivers/mfd/Makefile   |   2 +
-> >>  drivers/mfd/sl28cpld.c | 153
-> >> +++++++++++++++++++++++++++++++++++++++++
-> >>  3 files changed, 174 insertions(+)
-> >>  create mode 100644 drivers/mfd/sl28cpld.c
-> >>
-> >> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> >> index 0a59249198d3..be0c8d93c526 100644
-> >> --- a/drivers/mfd/Kconfig
-> >> +++ b/drivers/mfd/Kconfig
-> >> @@ -2060,5 +2060,24 @@ config SGI_MFD_IOC3
-> >>        If you have an SGI Origin, Octane, or a PCI IOC3 card,
-> >>        then say Y. Otherwise say N.
-> >>
-> >> +config MFD_SL28CPLD
-> >> +    bool "Kontron sl28 core driver"
-> >> +    depends on I2C=y
-> >> +    depends on OF
-> >> +    select REGMAP_I2C
-> >> +    select MFD_CORE
-> >> +    help
-> >> +      This option enables support for the board management controller
-> >> +      found on the Kontron sl28 CPLD. You have to select individual
-> >> +      functions, such as watchdog, GPIO, etc, under the corresponding
-> >> menus
-> >> +      in order to enable them.
-> >> +
-> >> +      Currently supported boards are:
-> >> +
-> >> +            Kontron SMARC-sAL28
-> >> +
-> >> +      To compile this driver as a module, choose M here: the module will
-> >> be
-> >> +      called sl28cpld.
-> >> +
-> >>  endmenu
-> >>  endif
-> >> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> >> index f935d10cbf0f..9bc38863b9c7 100644
-> >> --- a/drivers/mfd/Makefile
-> >> +++ b/drivers/mfd/Makefile
-> >> @@ -259,3 +259,5 @@ obj-$(CONFIG_MFD_ROHM_BD718XX)   += rohm-bd718x7.o
-> >>  obj-$(CONFIG_MFD_STMFX)     += stmfx.o
-> >>
-> >>  obj-$(CONFIG_SGI_MFD_IOC3)  += ioc3.o
-> >> +
-> >> +obj-$(CONFIG_MFD_SL28CPLD)  += sl28cpld.o
-> >> diff --git a/drivers/mfd/sl28cpld.c b/drivers/mfd/sl28cpld.c
-> >> new file mode 100644
-> >> index 000000000000..1e5860cc7ffc
-> >> --- /dev/null
-> >> +++ b/drivers/mfd/sl28cpld.c
-> >> @@ -0,0 +1,153 @@
-> >> +// SPDX-License-Identifier: GPL-2.0-only
-> >> +/*
-> >> + * MFD core for the sl28cpld.
-> >> + *
-> >> + * Copyright 2019 Kontron Europe GmbH
-> >> + */
-> >> +
-> >> +#include <linux/i2c.h>
-> >> +#include <linux/interrupt.h>
-> >> +#include <linux/kernel.h>
-> >> +#include <linux/mfd/core.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/of_platform.h>
-> >> +#include <linux/regmap.h>
-> >> +
-> >> +#define SL28CPLD_VERSION    0x03
-> >> +#define SL28CPLD_WATCHDOG_BASE      0x04
-> >> +#define SL28CPLD_HWMON_FAN_BASE     0x0b
-> >> +#define SL28CPLD_PWM0_BASE  0x0c
-> >> +#define SL28CPLD_PWM1_BASE  0x0e
-> >> +#define SL28CPLD_GPIO0_BASE 0x10
-> >> +#define SL28CPLD_GPIO1_BASE 0x15
-> >> +#define SL28CPLD_GPO_BASE   0x1a
-> >> +#define SL28CPLD_GPI_BASE   0x1b
-> >> +#define SL28CPLD_INTC_BASE  0x1c
-> >
-> > If you want to use 'reg' in the binding, these are the numbers you
-> > should be using rather than making up numbering!
->
-> My motivation is that I don't want to hardcode the internal addresses
-> of the management controller in the device tree. For example if they
-> will move around with a later update of the controller, so a driver can
-> be compatible with both the old and the new version. If they are in the
-> device tree, only one register layout is possible.
+On Tue, May 05, 2020 at 05:31:55PM +0200, Mickaël Salaün wrote:
+> This sysctl enables to propagate executable permission to userspace
+> thanks to the O_MAYEXEC flag.
+> 
+> Signed-off-by: Mickaël Salaün <mic@digikod.net>
+> Reviewed-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+> Cc: Aleksa Sarai <cyphar@cyphar.com>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Kees Cook <keescook@chromium.org>
 
-I don't understand, if the addresses change, then the above defines
-have to change. So your driver is only compatible with 1 version. If
-you change the CPLD, then that's a h/w change and your h/w description
-(DT) should change. That can either be the compatible string changing
-and updating the driver with new match data such as register offsets
-or all the differences are in DT and there's no kernel change.
+I think this should be folded into the patch that adds the sysctl.
 
-> > However, I still don't think you need any child nodes. All the data in
-> > the DT binding is right here in the driver already. There's no
-> > advantage
-> > to putting child nodes in DT, because this driver still has to be
-> > updated if you add more nodes.
->
-> But then any phandle will reference the mfd device. And for example
-> there
-> are two different interrupt controllers, that is the INTC and the
-> GPIO[01],
-> which will then be combined into one device tree node, right?
-
-You either have to add a cell for 'bank' or divide the 1st cell into a
-bank and index. Both have been done before.
-
-To go the other direction, AIUI you shouldn't need OF_MFD_CELL_REG
-entries if you have the child devices in DT. Pick one way or the
-other. It's ultimately a judgement call. For a one-off device, sub
-devices in DT doesn't really buy you anything. If you have sub-blocks
-showing up multiple devices, then sub devices makes sense. If there's
-only 2-3 combinations, then it's a toss up.
-
-Rob
+-- 
+Kees Cook
