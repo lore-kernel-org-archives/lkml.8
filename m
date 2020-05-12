@@ -2,225 +2,253 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC052C2D0F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB8CCA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F79B205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CC23206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:17:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jt8V3ism"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730283AbgELRQ5 convert rfc822-to-8bit (ORCPT
+        id S1730294AbgELRRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 13:16:57 -0400
-Received: from mail-oo1-f67.google.com ([209.85.161.67]:33365 "EHLO
-        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726367AbgELRQ4 (ORCPT
+        Tue, 12 May 2020 13:17:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36104 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgELRRU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 13:16:56 -0400
-Received: by mail-oo1-f67.google.com with SMTP id b3so1180916oob.0;
-        Tue, 12 May 2020 10:16:55 -0700 (PDT)
+        Tue, 12 May 2020 13:17:20 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BE4AC061A0C;
+        Tue, 12 May 2020 10:17:20 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id s20so5641764plp.6;
+        Tue, 12 May 2020 10:17:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tXAZoRNX8tZ/6EQMyUYBzacN+LIvXZZRD9xf5drn8ZI=;
+        b=jt8V3ismwXLipKUvEGIMwtCvLxCayPzDHUVwVVqdhbu/LlVrfl6jPdX3JP57nZdIsu
+         g4xW2/EOFGSjH2iEfO2iu6UrtEYKUSSCi8jtc4p7a4WOhIQtiVjcmd0NYUN47GMYyKey
+         lSZPZfLD7zkSOMMsjBvDUbCfFvyEJlNMvAXPIfbdCUgGX1JdSXSMBH/7Xk6c59/qzCp2
+         euoE1gq0j7FvG+cz5REZ4AV0r6ZZDWu4f+u6JGipMwoDzTIdx3QS/nrBf1KUC2kwduH9
+         B7tFKVIcmhB6HK1jxE7nNtNm5yaqjo6Ad2khV8m1QyAfQctd0Ysiy/GSCN+wqU/BbvG5
+         tRTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zrV9Na5hegEtMEkEu1KEFc/uSwqOLQP7YJGf/jtNHQc=;
-        b=hbVi0dlBG/Af5wmbiKFsEhCGPHSB+mnXUqoEKaOh06WyX46hhMTDkbOnnwa2ukvqHH
-         BPqhAf/SSxeGWFHzCoAUmr01q4ssaKrXOn98LFuj0CXyUDysFyEgzi/MJp0jGe+W5nSL
-         V1OMICH7EHwkp1vrqwelSEe3vS+IfQP385kMGRrm7AoQk8Xi3jSnrsFfYlHhbLyor8a9
-         s5dcFLWkCtysHISkta9+17KFD9Zr9t4nuVsdIjinnoA3yxkWpbQzevGVOuuRKOaDmhUT
-         hV99HQrQTU7LkPTuE35fi3aR6VMjqlWpVcJS2FbksV/e0x7k1B8HkOWISl6+ZWDq2Tf8
-         ZidQ==
-X-Gm-Message-State: AGi0PuaTr3nJTW5myctIFsZmydh8h6GOwAthtFDtK7beIyKwyHwX5b5G
-        Nr0B2WhaFBJF9MA0UDGT7MIA3C2zmXyLxub0/wCoPw==
-X-Google-Smtp-Source: APiQypJ90cuUdqwS9GCMEDW5toqUx3hGQCswz4bCNJ1HffyAlcgQWXh/NB2EC2pbtqykmvgZCLvi8ISszTO5rm0LxwI=
-X-Received: by 2002:a4a:d44a:: with SMTP id p10mr19049986oos.11.1589303814627;
- Tue, 12 May 2020 10:16:54 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tXAZoRNX8tZ/6EQMyUYBzacN+LIvXZZRD9xf5drn8ZI=;
+        b=XQFUTQKlwCWkeZWtlPHekrhLSnUF/NabR3ZjUutm14tk9DTcpzwyOuXmvZrfUFdVkm
+         Q4MWBJKRfWD+s3BRfBUxdj0vFYgXJqYN2kVw/x7dz7TJUcx6w7WKYQNLY4Ta35c5R0lI
+         lBTJ0EVMzNsMmwHFZLH8ITmop9tsHl47k1GsK6Y66/b+GkTMGQD7ohZIz02kZaW2S0Ap
+         syvncLKPau5crR9fpg48VkSM6yOeYCzoei8+d0S7cUHXQ86r/bG1vkzGvpuAW1xN4P4b
+         cc9rh4MKCmWsJhTsEByS9/ctT4ffWd/KYttT+euXkwY/noYKWSFqzMPC2+LFdRbe8ZVD
+         WJ/Q==
+X-Gm-Message-State: AGi0Pua7inv1plSXSlaE3SYKCe2p9utL1RTSuvkHed/8ZJat187+pr1S
+        43O2C9ePsWfTkhkwTzKXUhs=
+X-Google-Smtp-Source: APiQypIl47oYaeGY2xTNApuTgWo0XK5qKmvLWZ+Gd8ugRvIUZeXXu+5hhwWlJSqXVkXCMsSgx+Ic8w==
+X-Received: by 2002:a17:90a:20ea:: with SMTP id f97mr29734906pjg.157.1589303839987;
+        Tue, 12 May 2020 10:17:19 -0700 (PDT)
+Received: from workstation-portable ([103.87.56.156])
+        by smtp.gmail.com with ESMTPSA id x185sm12451341pfx.155.2020.05.12.10.17.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 10:17:19 -0700 (PDT)
+Date:   Tue, 12 May 2020 22:47:10 +0530
+From:   Amol Grover <frextrite@gmail.com>
+To:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Cc:     sfr@canb.auug.org.au, kuba@kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH net 2/2 RESEND] ipmr: Add lockdep expression to
+ ipmr_for_each_table macro
+Message-ID: <20200512171710.GA3200@workstation-portable>
+References: <20200509072243.3141-1-frextrite@gmail.com>
+ <20200509072243.3141-2-frextrite@gmail.com>
+ <20200509141938.028fa959@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <20200512051705.GB9585@madhuparna-HP-Notebook>
 MIME-Version: 1.0
-References: <20200511224430.HDJjRC68z%akpm@linux-foundation.org>
- <3b612c3e-ce52-ba92-eb02-0fa7fd38819f@infradead.org> <20200512121750.GA397968@cmpxchg.org>
-In-Reply-To: <20200512121750.GA397968@cmpxchg.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 12 May 2020 19:16:43 +0200
-Message-ID: <CAMuHMdXquJ9321qJmZj8fyWrzc3u_-AbKFQD9SoZ-A=wsRyVww@mail.gmail.com>
-Subject: Re: mmotm 2020-05-11-15-43 uploaded (mm/memcontrol.c, huge pages)
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux-Next <linux-next@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.cz>, mm-commits@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512051705.GB9585@madhuparna-HP-Notebook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Johannes,
-
-On Tue, May 12, 2020 at 2:20 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> On Mon, May 11, 2020 at 09:41:24PM -0700, Randy Dunlap wrote:
-> > On 5/11/20 3:44 PM, Andrew Morton wrote:
-> > > The mm-of-the-moment snapshot 2020-05-11-15-43 has been uploaded to
-> > >
-> > >    http://www.ozlabs.org/~akpm/mmotm/
-> > >
-> > > mmotm-readme.txt says
-> > >
-> > > README for mm-of-the-moment:
-> > >
-> > > http://www.ozlabs.org/~akpm/mmotm/
-> > >
-> > > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> > > more than once a week.
-> > >
-> > > You will need quilt to apply these patches to the latest Linus release (5.x
-> > > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-> > > http://ozlabs.org/~akpm/mmotm/series
-> > >
-> > > The file broken-out.tar.gz contains two datestamp files: .DATE and
-> > > .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-> > > followed by the base kernel version against which this patch series is to
-> > > be applied.
-> > >
-> > > This tree is partially included in linux-next.  To see which patches are
-> > > included in linux-next, consult the `series' file.  Only the patches
-> > > within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
-> > > linux-next.
-> > >
-> > >
-> > > A full copy of the full kernel tree with the linux-next and mmotm patches
-> > > already applied is available through git within an hour of the mmotm
-> > > release.  Individual mmotm releases are tagged.  The master branch always
-> > > points to the latest release, so it's constantly rebasing.
-> > >
-> > >     https://github.com/hnaz/linux-mm
-> > >
-> > > The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
-> > > contains daily snapshots of the -mm tree.  It is updated more frequently
-> > > than mmotm, and is untested.
-> > >
-> > > A git copy of this tree is also available at
-> > >
-> > >     https://github.com/hnaz/linux-mm
->
-> Thanks for the report, Randy.
->
-> ---
->
-> Randy reports:
->
-> > on x86_64:
+On Tue, May 12, 2020 at 10:47:05AM +0530, Madhuparna Bhowmik wrote:
+> On Sat, May 09, 2020 at 02:19:38PM -0700, Jakub Kicinski wrote:
+> > On Sat,  9 May 2020 12:52:44 +0530 Amol Grover wrote:
+> > > ipmr_for_each_table() uses list_for_each_entry_rcu() for
+> > > traversing outside of an RCU read-side critical section but
+> > > under the protection of pernet_ops_rwsem. Hence add the
+> > > corresponding lockdep expression to silence the following
+> > > false-positive warning at boot:
+> > 
+> > Thanks for the fix, the warning has been annoying me as well!
+> > 
+> > > [    0.645292] =============================
+> > > [    0.645294] WARNING: suspicious RCU usage
+> > > [    0.645296] 5.5.4-stable #17 Not tainted
+> > > [    0.645297] -----------------------------
+> > > [    0.645299] net/ipv4/ipmr.c:136 RCU-list traversed in non-reader section!!
+> > 
+> > please provide a fuller stack trace, it would have helped the review
+> > 
+> > > Signed-off-by: Amol Grover <frextrite@gmail.com>
+> > > ---
+> > >  net/ipv4/ipmr.c | 7 ++++---
+> > >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
+> > > index 99c864eb6e34..950ffe9943da 100644
+> > > --- a/net/ipv4/ipmr.c
+> > > +++ b/net/ipv4/ipmr.c
+> > > @@ -109,9 +109,10 @@ static void mroute_clean_tables(struct mr_table *mrt, int flags);
+> > >  static void ipmr_expire_process(struct timer_list *t);
+> > >  
+> > >  #ifdef CONFIG_IP_MROUTE_MULTIPLE_TABLES
+> > > -#define ipmr_for_each_table(mrt, net) \
+> > > -	list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list, \
+> > > -				lockdep_rtnl_is_held())
+> > > +#define ipmr_for_each_table(mrt, net)					\
+> > > +	list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list,	\
+> > > +				lockdep_rtnl_is_held() ||		\
+> > > +				lockdep_is_held(&pernet_ops_rwsem))
+> > 
+> > This is a strange condition, IMHO. How can we be fine with either
+> > lock.. This is supposed to be the writer side lock, one can't have 
+> > two writer side locks..
+> > 
+> > I think what is happening is this:
+> > 
+> > ipmr_net_init() -> ipmr_rules_init() -> ipmr_new_table()
+> > 
+> > ipmr_new_table() returns an existing table if there is one, but
+> > obviously none can exist at init.  So a better fix would be:
+> > 
+> > #define ipmr_for_each_table(mrt, net)					\
+> > 	list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list,	\
+> > 				lockdep_rtnl_is_held() ||		\
+> > 				list_empty(&net->ipv4.mr_tables))
 > >
-> > In file included from ../arch/x86/include/asm/atomic.h:5:0,
-> >                  from ../include/linux/atomic.h:7,
-> >                  from ../include/linux/page_counter.h:5,
-> >                  from ../mm/memcontrol.c:25:
-> > ../mm/memcontrol.c: In function ‘memcg_stat_show’:
-> > ../include/linux/compiler.h:394:38: error: call to ‘__compiletime_assert_383’ declared with attribute error: BUILD_BUG failed
-> >   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-> >                                       ^
-> > ../include/linux/compiler.h:375:4: note: in definition of macro ‘__compiletime_assert’
-> >     prefix ## suffix();    \
-> >     ^~~~~~
-> > ../include/linux/compiler.h:394:2: note: in expansion of macro ‘_compiletime_assert’
-> >   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-> >   ^~~~~~~~~~~~~~~~~~~
-> > ../include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
-> >  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-> >                                      ^~~~~~~~~~~~~~~~~~
-> > ../include/linux/build_bug.h:59:21: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
-> >  #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
-> >                      ^~~~~~~~~~~~~~~~
-> > ../include/linux/huge_mm.h:319:28: note: in expansion of macro ‘BUILD_BUG’
-> >  #define HPAGE_PMD_SHIFT ({ BUILD_BUG(); 0; })
->
-> The THP page size macros are CONFIG_TRANSPARENT_HUGEPAGE only.
->
-> We already ifdef most THP-related code in memcg, but not these
-> particular stats. Memcg used to track the pages as they came in, and
-> PageTransHuge() + hpage_nr_pages() work when THP is not compiled in.
->
-> Switching to native vmstat counters, memcg doesn't see the pages, it
-> only gets a count of THPs. To translate that to bytes, it has to know
-> how big the THPs are - and that's only available for CONFIG_THP.
->
-> Add the necessary ifdefs. /proc/meminfo, smaps etc. also don't show
-> the THP counters when the feature is compiled out. The event counts
-> (THP_FAULT_ALLOC, THP_COLLAPSE_ALLOC) were already conditional also.
->
-> Style touchup: HPAGE_PMD_NR * PAGE_SIZE is silly. Use HPAGE_PMD_SIZE.
->
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> ---
->
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 738d071ba1ef..47c685088a2c 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -1401,9 +1401,11 @@ static char *memory_stat_format(struct mem_cgroup *memcg)
->                        (u64)memcg_page_state(memcg, NR_WRITEBACK) *
->                        PAGE_SIZE);
->
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
->         seq_buf_printf(&s, "anon_thp %llu\n",
->                        (u64)memcg_page_state(memcg, NR_ANON_THPS) *
-> -                      HPAGE_PMD_NR * PAGE_SIZE);
-> +                      HPAGE_PMD_SIZE);
-> +#endif
->
->         for (i = 0; i < NR_LRU_LISTS; i++)
->                 seq_buf_printf(&s, "%s %llu\n", lru_list_name(i),
-> @@ -3752,7 +3754,9 @@ static int memcg_numa_stat_show(struct seq_file *m, void *v)
->  static const unsigned int memcg1_stats[] = {
->         NR_FILE_PAGES,
->         NR_ANON_MAPPED,
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
->         NR_ANON_THPS,
-> +#endif
->         NR_SHMEM,
->         NR_FILE_MAPPED,
->         NR_FILE_DIRTY,
-> @@ -3763,7 +3767,9 @@ static const unsigned int memcg1_stats[] = {
->  static const char *const memcg1_stat_names[] = {
->         "cache",
->         "rss",
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
->         "rss_huge",
-> +#endif
->         "shmem",
->         "mapped_file",
->         "dirty",
-> @@ -3794,8 +3800,10 @@ static int memcg_stat_show(struct seq_file *m, void *v)
->                 if (memcg1_stats[i] == MEMCG_SWAP && !do_memsw_account())
->                         continue;
->                 nr = memcg_page_state_local(memcg, memcg1_stats[i]);
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
->                 if (memcg1_stats[i] == NR_ANON_THPS)
->                         nr *= HPAGE_PMD_NR;
-> +#endif
->                 seq_printf(m, "%s %lu\n", memcg1_stat_names[i], nr * PAGE_SIZE);
->         }
 
-Fixes the build issue with m68k/allmodconfig, too.
-Not boot-tested.
+Jakub, I agree, this condition looks better (and correct) than the one I
+proposed. I'll do the changes as necessary. Also, do you want me to add
+the full trace to the git commit body as well? I omitted it on purpose
+to not make it messy.
 
-Gr{oetje,eeting}s,
+> (adding Stephen)
+> 
+> Hi Jakub,
+> 
+> Thank you for your suggestion about this patch.
+> Here is a stack trace for ipmr.c:
+> 
+> [    1.515015] TCP: Hash tables configured (established 8192 bind 8192)
+> [    1.516790] UDP hash table entries: 512 (order: 3, 49152 bytes, linear)
+> [    1.518177] UDP-Lite hash table entries: 512 (order: 3, 49152 bytes, linear)
+> [    1.519805]
+> [    1.520178] =============================
+> [    1.520982] WARNING: suspicious RCU usage
+> [    1.521798] 5.7.0-rc2-00006-gb35af6a26b7c6f #1 Not tainted
+> [    1.522910] -----------------------------
+> [    1.523671] net/ipv4/ipmr.c:136 RCU-list traversed in non-reader section!!
+> [    1.525218]
+> [    1.525218] other info that might help us debug this:
+> [    1.525218]
+> [    1.526731]
+> [    1.526731] rcu_scheduler_active = 2, debug_locks = 1
+> [    1.528004] 1 lock held by swapper/1:
+> [    1.528714]  #0: c20be1d8 (pernet_ops_rwsem){+.+.}-{3:3}, at: register_pernet_subsys+0xd/0x30
+> [    1.530433]
+> [    1.530433] stack backtrace:
+> [    1.531262] CPU: 0 PID: 1 Comm: swapper Not tainted 5.7.0-rc2-00006-gb35af6a26b7c6f #1
+> [    1.532729] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+> [    1.534305] Call Trace:
+> [    1.534758]  ? ipmr_get_table+0x3c/0x70
+> [    1.535430]  ? ipmr_new_table+0x1c/0x60
+> [    1.536173]  ? ipmr_net_init+0x7b/0x170
+> [    1.536923]  ? register_pernet_subsys+0xd/0x30
+> [    1.537810]  ? ops_init+0x1a0/0x1e0
+> [    1.538518]  ? kmem_cache_create_usercopy+0x28a/0x350
+> [    1.539752]  ? register_pernet_operations+0xc9/0x1c0
+> [    1.540630]  ? ipv4_offload_init+0x65/0x65
+> [    1.541451]  ? register_pernet_subsys+0x19/0x30
+> [    1.542357]  ? ip_mr_init+0x28/0xff
+> [    1.543079]  ? inet_init+0x17b/0x249
+> [    1.543773]  ? do_one_initcall+0xc5/0x240
+> [    1.544532]  ? parse_args+0x192/0x350
+> [    1.545266]  ? rcu_read_lock_sched_held+0x2f/0x60
+> [    1.546180]  ? trace_initcall_level+0x61/0x93
+> [    1.547061]  ? kernel_init_freeable+0x112/0x18a
+> [    1.547978]  ? kernel_init_freeable+0x12b/0x18a
+> [    1.548974]  ? rest_init+0x220/0x220
+> [    1.549792]  ? kernel_init+0x8/0x100
+> [    1.550548]  ? rest_init+0x220/0x220
+> [    1.551288]  ? schedule_tail_wrapper+0x6/0x8
+> [    1.552136]  ? rest_init+0x220/0x220
+> [    1.552873]  ? ret_from_fork+0x2e/0x38
+> 
 
-                        Geert
+Thank you for the stacktrace Madhuparna.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> ALso, there is a similar warning for ip6mr.c :
+> 
+> =============================
+> WARNING: suspicious RCU usage
+> 5.7.0-rc4-next-20200507-syzkaller #0 Not tainted
+> -----------------------------
+> net/ipv6/ip6mr.c:124 RCU-list traversed in non-reader section!!
+> 
+> other info that might help us debug this:
+> 
+> rcu_scheduler_active = 2, debug_locks = 1
+> 1 lock held by swapper/0/1:
+> #0: ffffffff8a7aae30 (pernet_ops_rwsem){+.+.}-{3:3}, at: register_pernet_subsys+0x16/0x40 net/core/net_namespace.c:1257
+> 
+> stack backtrace:
+> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc4-next-20200507-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+> __dump_stack lib/dump_stack.c:77 [inline]
+> dump_stack+0x18f/0x20d lib/dump_stack.c:118
+> ip6mr_get_table+0x153/0x180 net/ipv6/ip6mr.c:124
+> ip6mr_new_table+0x1b/0x70 net/ipv6/ip6mr.c:382
+> ip6mr_rules_init net/ipv6/ip6mr.c:236 [inline]
+> ip6mr_net_init+0x133/0x3f0 net/ipv6/ip6mr.c:1310
+> ops_init+0xaf/0x420 net/core/net_namespace.c:151
+> __register_pernet_operations net/core/net_namespace.c:1140 [inline]
+> register_pernet_operations+0x346/0x840 net/core/net_namespace.c:1217
+> register_pernet_subsys+0x25/0x40 net/core/net_namespace.c:1258
+> ip6_mr_init+0x49/0x152 net/ipv6/ip6mr.c:1363
+> inet6_init+0x1d7/0x6dc net/ipv6/af_inet6.c:1037
+> do_one_initcall+0x10a/0x7d0 init/main.c:1159
+> do_initcall_level init/main.c:1232 [inline]
+> do_initcalls init/main.c:1248 [inline]
+> do_basic_setup init/main.c:1268 [inline]
+> kernel_init_freeable+0x501/0x5ae init/main.c:1454
+> kernel_init+0xd/0x1bb init/main.c:1359
+> ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:351
+> Segment Routing with IPv6
+> mip6: Mobile IPv6
+> sit: IPv6, IPv4 and MPLS over IPv4 tunneling driver
+> ip6_gre: GRE over IPv6 tunneling driver
+> 
+> > Thoughts?
+> 
+> Do you think a similar fix (the one you suggested) is also applicable
+> in the ip6mr case.
+> 
+> Thank you,
+> Madhuparna
