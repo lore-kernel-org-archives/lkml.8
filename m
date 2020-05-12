@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A06B4C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A02DEC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E1712312A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B6172492C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731716AbgELWXW (ORCPT
+        id S1731733AbgELWXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:23:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55516 "EHLO
+        Tue, 12 May 2020 18:23:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731369AbgELWXS (ORCPT
+        by vger.kernel.org with ESMTP id S1731369AbgELWXX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 18:23:18 -0400
+        Tue, 12 May 2020 18:23:23 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02D89C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:23:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCB23C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:23:22 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jYdIK-0004mL-GB; Wed, 13 May 2020 00:22:37 +0200
+        id 1jYdIH-0004jL-JN; Wed, 13 May 2020 00:22:34 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id D256F1006FB;
-        Wed, 13 May 2020 00:22:35 +0200 (CEST)
-Message-Id: <20200512213810.823798026@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 15AF91006A1;
+        Wed, 13 May 2020 00:22:32 +0200 (CEST)
+Message-Id: <20200512213810.518709291@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 12 May 2020 23:01:13 +0200
+Date:   Tue, 12 May 2020 23:01:10 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -58,7 +58,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
         Zhao Yakui <yakui.zhao@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V5 14/38] x86/entry: Remove the transition leftovers
+Subject: [patch V5 11/38] rcu: Provide __rcu_is_watching()
 References: <20200512210059.056244513@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -71,127 +71,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that all exceptions are converted over the sane flag is not longer
-needed. Also the vector argument of idtentry_body on 64 bit is pointless
-now.
+Same as rcu_is_watching() but without the preempt_disable/enable() pair
+inside the function. It is merked noinstr so it ends up in the
+non-instrumentable text section.
+
+This is useful for non-preemptible code especially in the low level entry
+section. Using rcu_is_watching() there results in a call to the
+preempt_schedule_notrace() thunk which triggers noinstr section warnings in
+objtool.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- arch/x86/entry/entry_32.S       |    3 +--
- arch/x86/entry/entry_64.S       |   26 ++++----------------------
- arch/x86/include/asm/idtentry.h |    6 +++---
- 3 files changed, 8 insertions(+), 27 deletions(-)
+V5: New patch
+---
+ include/linux/rcutiny.h |    1 +
+ include/linux/rcutree.h |    1 +
+ kernel/rcu/tree.c       |    5 +++++
+ 3 files changed, 7 insertions(+)
 
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -734,9 +734,8 @@
-  * @asmsym:		ASM symbol for the entry point
-  * @cfunc:		C function to be called
-  * @has_error_code:	Hardware pushed error code on stack
-- * @sane:		Compatibility flag with 64bit
-  */
--.macro idtentry vector asmsym cfunc has_error_code:req sane=0
-+.macro idtentry vector asmsym cfunc has_error_code:req
- SYM_CODE_START(\asmsym)
- 	ASM_CLAC
- 	cld
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -497,27 +497,14 @@ SYM_CODE_END(spurious_entries_start)
+--- a/include/linux/rcutiny.h
++++ b/include/linux/rcutiny.h
+@@ -86,6 +86,7 @@ static inline void rcu_scheduler_startin
+ static inline void rcu_end_inkernel_boot(void) { }
+ static inline bool rcu_inkernel_boot_has_ended(void) { return true; }
+ static inline bool rcu_is_watching(void) { return true; }
++static inline bool __rcu_is_watching(void) { return true; }
+ static inline void rcu_momentary_dyntick_idle(void) { }
+ static inline void kfree_rcu_scheduler_running(void) { }
+ static inline bool rcu_gp_might_be_stalled(void) { return false; }
+--- a/include/linux/rcutree.h
++++ b/include/linux/rcutree.h
+@@ -58,6 +58,7 @@ extern int rcu_scheduler_active __read_m
+ void rcu_end_inkernel_boot(void);
+ bool rcu_inkernel_boot_has_ended(void);
+ bool rcu_is_watching(void);
++bool __rcu_is_watching(void);
+ #ifndef CONFIG_PREEMPTION
+ void rcu_all_qs(void);
+ #endif
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -984,6 +984,11 @@ static void rcu_disable_urgency_upon_qs(
+ 	}
+ }
  
++noinstr bool __rcu_is_watching(void)
++{
++	return !rcu_dynticks_curr_cpu_in_eqs();
++}
++
  /**
-  * idtentry_body - Macro to emit code calling the C function
-- * @vector:		Vector number
-  * @cfunc:		C function to be called
-  * @has_error_code:	Hardware pushed error code on stack
-- * @sane:		Sane variant which handles irq tracing, context tracking in C
-  */
--.macro idtentry_body vector cfunc has_error_code:req sane=0
-+.macro idtentry_body cfunc has_error_code:req
- 
- 	call	error_entry
- 	UNWIND_HINT_REGS
- 
--	.if \sane == 0
--	TRACE_IRQS_OFF
--
--#ifdef CONFIG_CONTEXT_TRACKING
--	testb	$3, CS(%rsp)
--	jz	.Lfrom_kernel_no_ctxt_tracking_\@
--	CALL_enter_from_user_mode
--.Lfrom_kernel_no_ctxt_tracking_\@:
--#endif
--	.endif
--
- 	movq	%rsp, %rdi			/* pt_regs pointer into 1st argument*/
- 
- 	.if \has_error_code == 1
-@@ -527,11 +514,7 @@ SYM_CODE_END(spurious_entries_start)
- 
- 	call	\cfunc
- 
--	.if \sane == 0
--	jmp	error_exit
--	.else
- 	jmp	error_return
--	.endif
- .endm
- 
- /**
-@@ -540,12 +523,11 @@ SYM_CODE_END(spurious_entries_start)
-  * @asmsym:		ASM symbol for the entry point
-  * @cfunc:		C function to be called
-  * @has_error_code:	Hardware pushed error code on stack
-- * @sane:		Sane variant which handles irq tracing, context tracking in C
+  * rcu_is_watching - see if RCU thinks that the current CPU is not idle
   *
-  * The macro emits code to set up the kernel context for straight forward
-  * and simple IDT entries. No IST stack, no paranoid entry checks.
-  */
--.macro idtentry vector asmsym cfunc has_error_code:req sane=0
-+.macro idtentry vector asmsym cfunc has_error_code:req
- SYM_CODE_START(\asmsym)
- 	UNWIND_HINT_IRET_REGS offset=\has_error_code*8
- 	ASM_CLAC
-@@ -568,7 +550,7 @@ SYM_CODE_START(\asmsym)
- .Lfrom_usermode_no_gap_\@:
- 	.endif
- 
--	idtentry_body \vector \cfunc \has_error_code \sane
-+	idtentry_body \cfunc \has_error_code
- 
- _ASM_NOKPROBE(\asmsym)
- SYM_CODE_END(\asmsym)
-@@ -643,7 +625,7 @@ SYM_CODE_START(\asmsym)
- 
- 	/* Switch to the regular task stack and use the noist entry point */
- .Lfrom_usermode_switch_stack_\@:
--	idtentry_body vector noist_\cfunc, has_error_code=0 sane=1
-+	idtentry_body noist_\cfunc, has_error_code=0
- 
- _ASM_NOKPROBE(\asmsym)
- SYM_CODE_END(\asmsym)
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -281,10 +281,10 @@ static __always_inline void __##func(str
-  * The ASM variants for DECLARE_IDTENTRY*() which emit the ASM entry stubs.
-  */
- #define DECLARE_IDTENTRY(vector, func)					\
--	idtentry vector asm_##func func has_error_code=0 sane=1
-+	idtentry vector asm_##func func has_error_code=0
- 
- #define DECLARE_IDTENTRY_ERRORCODE(vector, func)			\
--	idtentry vector asm_##func func has_error_code=1 sane=1
-+	idtentry vector asm_##func func has_error_code=1
- 
- /* Special case for 32bit IRET 'trap'. Do not emit ASM code */
- #define DECLARE_IDTENTRY_SW(vector, func)
-@@ -322,7 +322,7 @@ static __always_inline void __##func(str
- 
- /* XEN NMI and DB wrapper */
- #define DECLARE_IDTENTRY_XEN(vector, func)				\
--	idtentry vector asm_exc_xen##func exc_##func has_error_code=0 sane=1
-+	idtentry vector asm_exc_xen##func exc_##func has_error_code=0
- 
- #endif /* __ASSEMBLY__ */
- 
 
