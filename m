@@ -2,119 +2,131 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3976BC54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC21EC54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1898B20736
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:15:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D0AD2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:18:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GZmCrcjg"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Fqvh8jYP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729398AbgELKPZ (ORCPT
+        id S1729334AbgELKSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 06:15:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54962 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726891AbgELKPW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 06:15:22 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1684FC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 03:15:22 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id b188so12912297qkd.9
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 03:15:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iPvMln8fETCvIb1O9zDTgMvwvAqRofofWlm0c6p2k1M=;
-        b=GZmCrcjgtcCm4s480qly1KJ1qHt6LNr4Iqs2eH8PDxX04Qxu6dMhKOGW1hLPe3zrEe
-         HCQ/K3D2cSoKKhNEZlK9rPNbzsz8y5vG/ieUSGjoJfwCdfjD/OQtWeN99+W+ZwqwNLPi
-         VweR6RdSPSguDgiGOrHfa7LLfrIfctHl7/Ps/VCjcQ1GM4+1CdQoI+fj31etUHtPw4ov
-         PdCKXYSfad49Vm/PAdXR6W4snDYYMeYTScbrv4dC9bQrLcgo9o9hJjGXew04FyUpJvO+
-         xLqPVvkFgTRtbZ6ju7q6drxXDMYVH2qcLoRELr8dBNWKA4X57yGeH+f8Qjd826AdiE9a
-         rOtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iPvMln8fETCvIb1O9zDTgMvwvAqRofofWlm0c6p2k1M=;
-        b=X0hwCteS0iqfuvCVhRGQfz9kDrkFbeVqYZ7PZx1LvphwYHGJn06uUZBzJaFBTtWwFn
-         gIzfWr/S1DPWl8HENKdncKsRZs8WpR0kWcJSuqAyDGytLaTc9thVVds1NsPk00Gaxx7W
-         pKmE3tEw5Bz7Wn05u20jQr7/uoi1LFrAOjZHiqKZezCS9GTEXNL8fy4MJLbU7sMFK6+4
-         wE1kmjFPom6X7PhxLcmGn7kK5K2Ebps06FNjO/TJKlJ9gl6zV9vLEVdvxJUFnRClRg7D
-         OACFpZaFIvpAEz5X97l4f/g7WGoK2Ca1l8k9J05IHrKKHsXc8jqi2L93OmUqHKq5a+K5
-         or7g==
-X-Gm-Message-State: AGi0PuYx5bSFMl1WblppIeXfwnwHzqlKVblfwwC2uBhrRpTP5CLPQirG
-        IGF4OUsc/D5A9wsLQzcgAuwk5knFXl09eXkUDeqDPQ==
-X-Google-Smtp-Source: APiQypJ+DqbeC1O5KOyrpWyqx704axL30zwPYq7143oUeeXsMkdaCiq01Ps1n85YwDuFFgsTbC2lJqCPXxOu54bj/Ws=
-X-Received: by 2002:a37:4b0c:: with SMTP id y12mr19417043qka.43.1589278520977;
- Tue, 12 May 2020 03:15:20 -0700 (PDT)
+        Tue, 12 May 2020 06:18:18 -0400
+Received: from ozlabs.org ([203.11.71.1]:59819 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726891AbgELKSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 06:18:18 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Ltzr0hsNz9sSg;
+        Tue, 12 May 2020 20:18:15 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589278696;
+        bh=ix19I6h1qe83/nMpXpSgQ/SwrlaGpJzfs1+vdoDLdDY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Fqvh8jYPQbGgMrW1fDt6cXrgNNpFN6fXg6tJXJlsuAfK7J+f2mUTVQGqMwTrtxJ7v
+         SYaa42I6K7jtxVytEqJI2pJj+XLAYg0y0OcYJO68jPafBnSUV2QLl9ZEE0EYqJC7CR
+         N1ITMrY1MkzONEjcOxI5uJ49pAA6p7KpXDFTVvN2D0doD9JXBIZtPw4N3YWm7aZIzL
+         TQmXCkmnsUPGKz4B54UVnCAUQFREz7f+ruMTMydlLqmYX2PtPgt3tgzHzQJ6U+041F
+         aUO25BkpzkR6w/ulkIHm350hi0H6W8j+LiQJsJZ3mW7sQmjLQG715qipUW9jBNlibN
+         moSsmck+qEUbQ==
+Date:   Tue, 12 May 2020 20:18:11 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build failure after merge of the pidfd tree
+Message-ID: <20200512201811.12480da0@canb.auug.org.au>
 MIME-Version: 1.0
-References: <000000000000dc82ac05a55f3005@google.com> <c8f94666-3e55-2421-78c6-c2cdd0f24d16@redhat.com>
-In-Reply-To: <c8f94666-3e55-2421-78c6-c2cdd0f24d16@redhat.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 12 May 2020 12:15:09 +0200
-Message-ID: <CACT4Y+bjwR1KUkGxU9iRM+hOnMq7id5E=i84RYv41ygrv-KCEQ@mail.gmail.com>
-Subject: Re: INFO: task hung in do_read_cache_page (3)
-To:     Mike Christie <mchristi@redhat.com>
-Cc:     syzbot <syzbot+518c54e255b5031adde4@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Jan Kara <jack@suse.cz>, Josef Bacik <josef@toxicpanda.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        william.kucharski@oracle.com, Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/kvU3d8jCt7mdCfQJ7mgN.rv";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 7:31 PM Mike Christie <mchristi@redhat.com> wrote:
->
-> On 5/11/20 8:19 AM, syzbot wrote:
-> > syzbot has bisected this bug to:
-> >
-> > commit 2da22da573481cc4837e246d0eee4d518b3f715e
-> > Author: Mike Christie <mchristi@redhat.com>
-> > Date:   Tue Aug 13 16:39:52 2019 +0000
-> >
-> >     nbd: fix zero cmd timeout handling v2
-> >
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11d6ab14100000
-> > start commit:   e99332e7 gcc-10: mark more functions __init to avoid secti..
-> > git tree:       upstream
-> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=13d6ab14100000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=15d6ab14100000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=8a96cf498e199d8b
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=518c54e255b5031adde4
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=146e45ec100000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=164444a4100000
-> >
-> > Reported-by: syzbot+518c54e255b5031adde4@syzkaller.appspotmail.com
-> > Fixes: 2da22da57348 ("nbd: fix zero cmd timeout handling v2")
-> >
-> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> >
->
-> How do you adjust/modify what is expected from the test or what is
-> reported as an error?
->
-> The patch added back behavior that got removed. With the patch we expect
-> the hung task warnings, because we specifically want to hold onto
-> running commands for longer than 120/hung_task_timeout seconds
+--Sig_/kvU3d8jCt7mdCfQJ7mgN.rv
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hi Mike,
+Hi all,
 
-All task hung messages are considered a kernel bug. So far this was
-always true as far as I can tell. Tasks that are blocked for any
-prolonged period should be killable.
+After merging the pidfd tree, today's linux-next build (x86_64
+allnoconfig) failed like this:
+
+fs/nsfs.c:232:6: error: redefinition of 'proc_ns_file'
+  232 | bool proc_ns_file(const struct file *file)
+      |      ^~~~~~~~~~~~
+In file included from fs/nsfs.c:6:
+include/linux/proc_fs.h:194:20: note: previous definition of 'proc_ns_file'=
+ was here
+  194 | static inline bool proc_ns_file(const struct file *file)
+      |                    ^~~~~~~~~~~~
+
+Caused by commit
+
+  1e76b8ad203a ("nsproxy: attach to namespaces via pidfds")
+
+I have applied the following hack for today:
+
+=46rom 07065344c6fb39c440b0de5f75842066bc97a675 Mon Sep 17 00:00:00 2001
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Tue, 12 May 2020 20:08:51 +1000
+Subject: [PATCH] nsproxy: protect proc_ns_file() when CONFIG_PROC_FS is not=
+ set
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ fs/nsfs.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fs/nsfs.c b/fs/nsfs.c
+index 800c1d0eb0d0..9215ad7597d6 100644
+--- a/fs/nsfs.c
++++ b/fs/nsfs.c
+@@ -229,10 +229,12 @@ int ns_get_name(char *buf, size_t size, struct task_s=
+truct *task,
+ 	return res;
+ }
+=20
++#ifdef CONFIG_PROC_FS
+ bool proc_ns_file(const struct file *file)
+ {
+ 	return file->f_op =3D=3D &ns_file_operations;
+ }
++#endif
+=20
+ struct file *proc_ns_fget(int fd)
+ {
+--=20
+2.26.2
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/kvU3d8jCt7mdCfQJ7mgN.rv
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl66d+MACgkQAVBC80lX
+0Gzp1wf/R0aGCQvo2aR4sWsYOu0Iy3zpldtgYIIOi1PiB9UHF01Z+h28BFZw9/yh
+Kd0UIDKglqPQYMi/JALwPr5RbixCe8kai6vL5dRcvxKOaFLAE+r/hLvOixNkvlFf
+jn/Q1ww1BATg5io7I9iTpICLJI/X8pFkB/QnB0cC9tqi/dKGwPGwxwNPCiDW4el5
+VRXKI8YToha16G/3Q6bOKy5gdPFdtGLZtYPj/BJ4zmcCA0rvZYCX2/6CJkyMZhqt
+38rPjA6ixjOCsRbwgqwNjLY9OpmMLtgnzN20hz+vcKhgO3e9uxcJjImz9q9/nQov
+bD6WtZzszUjGJTCXtNEzVBmjH61k6g==
+=cu3k
+-----END PGP SIGNATURE-----
+
+--Sig_/kvU3d8jCt7mdCfQJ7mgN.rv--
