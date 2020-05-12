@@ -2,88 +2,119 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 102BCC2D0FA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9742C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D644D20747
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F9FA20575
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589321025;
-	bh=WF1ZOC7ddCOvDm9qPy5ZFh7ldSEKUGXz1ZFduTbexHU=;
+	s=default; t=1589321028;
+	bh=I8MDOfqh+s4ez23DZdor13L+ZXK6v9ZA+T1oqw22WSA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Mc27qM8qmNkLZjEtJL6vxXiV+A9hxnVKVgkhux4Xo9v3IZ3M6j2B/CYXAkAec0Khd
-	 n72u9CU/PZ85WQO6GhvYJPNZPj/W2DgQvLSSi6hP566wbWVK7R91lCK1PYOOffBHUw
-	 1Zx/ACbhJ3hZTQfX8L/FtNGe8BpkGGFp/en6Lw+4=
+	b=mWWoaLMuIAnIvITH+Bne8RuGWg/DnnD5R1WRWaH6KKZkAYbaUYp2KnrzhuDY7t9IU
+	 cjeev62go7Q1CcF7xst6gWjJ62qbognl+SgoNzG7UhM4D50jnGIOCLw239wS6gn0sL
+	 2+wkB7H3IbFmwb/xmBxeH6caFMpqrfDxy7qHaapQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731600AbgELWDp (ORCPT
+        id S1731590AbgELWDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 12 May 2020 18:03:45 -0400
-Received: from mail-oo1-f66.google.com ([209.85.161.66]:36227 "EHLO
-        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731370AbgELWDo (ORCPT
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:53276 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728313AbgELWDo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 May 2020 18:03:44 -0400
-Received: by mail-oo1-f66.google.com with SMTP id z6so2147085ooz.3;
-        Tue, 12 May 2020 15:03:44 -0700 (PDT)
+Received: by mail-pj1-f65.google.com with SMTP id hi11so10202018pjb.3;
+        Tue, 12 May 2020 15:03:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jsnWB/RZuG/6JISv3zODzhF3cX24dCFlPTbEBhn7oxU=;
-        b=GbuakF+ugPaYSahW/kxfS8vYFTnOvfXMiplU9HM/EyrioEJh5ilPGlg8aqkJBYU0QY
-         cZTnHcYT8aXoyxmqnX0LvSdFAKatXPaWyNcAVgOFvNaX1VJwaWqAlclSt7lRmr+bX+gi
-         8A4Sgc8qQ2D9aoLwgnemI5WiOKzJB7tiUZGh4IeegP5V4wQAW/rgKHSvv3b/1RyQCcLe
-         /Kix+iQVcUuS9DPXhEm7/ZIak0o9Z0v0tWAxReEHOwAknYjsj5/mwTeO7mXqU20KLCA9
-         NjVp906erwAucnwdmv4pbapok3NpZdWWQ/W2EPh5WH7taqZy84GDs3CBk6srZ5SL74BD
-         G8ag==
-X-Gm-Message-State: AGi0PubLvtpqfjVmNMFaxVw6078GdbJgFRdF4QdWIAluQ7O/YIfiNSmJ
-        wNCZIJJDCwEbbKcDuTpzPQ==
-X-Google-Smtp-Source: APiQypLQGiX0rauKDDSSe0EY7yJ93FyTpXKE0zOptqWqXNeKHsfI9Bzl2DiMfh+5vOQd4k68p6Km5Q==
-X-Received: by 2002:a4a:6441:: with SMTP id d1mr19963201oof.10.1589321023626;
+        bh=jPas3FVTQ077tq4XLx1f6zCjNgfjXBxht/KPP+7OEug=;
+        b=az4dz60fUx0TGGjY0OrzgvIn5nL20WbvyWATzslSo72V9Xh97IG4zxDBaUFWstzD83
+         1cJAssqckTzhAJrErel+8Jy5DyzW1W+EHs6SWD/zvCpQmYoe43upNVCoRYFlUXxu/laS
+         Is4FhS9BzLfVBg5gKkA+WS/y8VQHD2eEITkyk9CVaPatEyRsmHwBluvFJsqxGaKIRKor
+         UVPiDusOgvr3IQXwqYS9QqdfNlhVYE6/LZy0l1zRgjL1Qge5g5UnmNltUJcOj2EIadNx
+         aYnCPDUqT3COouxtUA8A631HOJExzblSCrybWmvJalZnexGSuifiJhfImrPJhtJUBKLQ
+         fCdA==
+X-Gm-Message-State: AGi0PuaTP6oVnQzFYJJlsyhQWfZc2pCYQSdyDWzr3/1eW/7jJ4QieZ/r
+        UGk++10ynz+ne2w/ovCeJRU=
+X-Google-Smtp-Source: APiQypLRR8P3Hy27Aan2ceEueeRcL0xTQS/0wfLdqo/lGe83BBK2NFiFKG1bubvoAzbVD2Yk3HpUbQ==
+X-Received: by 2002:a17:902:c281:: with SMTP id i1mr21719181pld.85.1589321023383;
         Tue, 12 May 2020 15:03:43 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j186sm5659962oia.31.2020.05.12.15.03.42
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id o27sm681142pgd.18.2020.05.12.15.03.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 15:03:43 -0700 (PDT)
-Received: (nullmailer pid 14161 invoked by uid 1000);
-        Tue, 12 May 2020 22:03:42 -0000
-Date:   Tue, 12 May 2020 17:03:42 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        vkoul@kernel.org, narmstrong@baylibre.com, kishon@ti.com,
-        hexdump0815@googlemail.com, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/6] dt-bindings: phy: meson8b-usb2: Add compatible
- string for Meson8m2
-Message-ID: <20200512220341.GA14126@bogus>
-References: <20200502114752.1048500-1-martin.blumenstingl@googlemail.com>
- <20200502114752.1048500-3-martin.blumenstingl@googlemail.com>
+        Tue, 12 May 2020 15:03:42 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 76A134063E; Tue, 12 May 2020 22:03:41 +0000 (UTC)
+Date:   Tue, 12 May 2020 22:03:41 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Xiaoming Ni <nixiaoming@huawei.com>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Helge Deller <deller@gmx.de>,
+        Parisc List <linux-parisc@vger.kernel.org>, yzaikin@google.com,
+        linux-fsdevel@vger.kernel.org,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: linux-next: manual merge of the vfs tree with the parisc-hd tree
+Message-ID: <20200512220341.GE11244@42.do-not-panic.com>
+References: <20200511111123.68ccbaa3@canb.auug.org.au>
+ <99095805-8cbe-d140-e2f1-0c5a3e84d7e7@huawei.com>
+ <20200512003305.GX11244@42.do-not-panic.com>
+ <87y2pxs73w.fsf@x220.int.ebiederm.org>
+ <20200512172413.GC11244@42.do-not-panic.com>
+ <87k11hrqzc.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200502114752.1048500-3-martin.blumenstingl@googlemail.com>
+In-Reply-To: <87k11hrqzc.fsf@x220.int.ebiederm.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat,  2 May 2020 13:47:48 +0200, Martin Blumenstingl wrote:
-> The USB2 PHY on Meson8m2 is identical to the one on Meson8b but
-> different to the one on Meson8. The only known difference is that Meson8
-> does not set the ACA_ENABLE bit while Meson8b and Meson8m2 do.
-> Add an explicit compatible string for Meson8m2 so those differences can
-> be taken care of.
+On Tue, May 12, 2020 at 12:40:55PM -0500, Eric W. Biederman wrote:
+> Luis Chamberlain <mcgrof@kernel.org> writes:
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  .../devicetree/bindings/phy/amlogic,meson8b-usb2-phy.yaml        | 1 +
->  1 file changed, 1 insertion(+)
+> > On Tue, May 12, 2020 at 06:52:35AM -0500, Eric W. Biederman wrote:
+> >> Luis Chamberlain <mcgrof@kernel.org> writes:
+> >> 
+> >> > +static struct ctl_table fs_base_table[] = {
+> >> > +	{
+> >> > +		.procname	= "fs",
+> >> > +		.mode		= 0555,
+> >> > +		.child		= fs_table,
+> >> > +	},
+> >> > +	{ }
+> >> > +};
+> >>   ^^^^^^^^^^^^^^^^^^^^^^^^ You don't need this at all.
+> >> > > +static int __init fs_procsys_init(void)
+> >> > +{
+> >> > +	struct ctl_table_header *hdr;
+> >> > +
+> >> > +	hdr = register_sysctl_table(fs_base_table);
+> >>               ^^^^^^^^^^^^^^^^^^^^^ Please use register_sysctl instead.
+> >> 	AKA
+> >>         hdr = register_sysctl("fs", fs_table);
+> >
+> > Ah, much cleaner thanks!
 > 
+> It is my hope you we can get rid of register_sysctl_table one of these
+> days.  It was the original interface but today it is just a
+> compatibility wrapper.
+> 
+> I unfortunately ran out of steam last time before I finished converting
+> everything over.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Let's give it one more go. I'll start with the fs stuff.
+
+  Luis
