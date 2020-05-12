@@ -2,188 +2,126 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19242C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F168C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECB39206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 416DE206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:32:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PeWJGwrl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730097AbgELNab (ORCPT
+        id S1729901AbgELNcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 09:30:31 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35188 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726891AbgELNab (ORCPT
+        Tue, 12 May 2020 09:32:13 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:35946 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727783AbgELNcN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 09:30:31 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04CD4erx011485;
-        Tue, 12 May 2020 09:30:10 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30yv20sce2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 May 2020 09:30:10 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04CD5kj2013895;
-        Tue, 12 May 2020 09:30:10 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30yv20sccu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 May 2020 09:30:09 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04CDL6oC024738;
-        Tue, 12 May 2020 13:30:08 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03fra.de.ibm.com with ESMTP id 30wm56anbd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 May 2020 13:30:08 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04CDU5DL48627818
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 May 2020 13:30:05 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BA2BC42056;
-        Tue, 12 May 2020 13:30:05 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 770434204D;
-        Tue, 12 May 2020 13:29:58 +0000 (GMT)
-Received: from srikart450.in.ibm.com (unknown [9.199.47.102])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 12 May 2020 13:29:58 +0000 (GMT)
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+        Tue, 12 May 2020 09:32:13 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589290332; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Pnp7vCHkgD7FucXCkrRb8JTH8OxBN3TyDHzUXyTSUpI=; b=PeWJGwrlLWaUfCWUv0nsPzq5p/xBmxCoTFaXjjhjPpUo35ZPOVnK8LY1Ui5Yvd5VB9GDpREe
+ JtX1wG84KlgdkAn+zC4hxfotNIJ8w6Co1KiLXmyGFJmPRL05G9Zsr+TXhTdIlW4KIS5rkMu3
+ G1YS4VF8wThAQ6dtdE72eK2WVl0=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebaa538.7f2f9deb0a78-smtp-out-n02;
+ Tue, 12 May 2020 13:31:36 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 13511C433BA; Tue, 12 May 2020 13:31:35 +0000 (UTC)
+Received: from [192.168.0.102] (unknown [183.83.139.238])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: charante)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2BEBEC433CB;
+        Tue, 12 May 2020 13:31:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2BEBEC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
+Subject: Re: [PATCH] mm, page_alloc: reset the zone->watermark_boost early
 To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Christopher Lameter <cl@linux.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        David Hildenbrand <david@redhat.com>
-Subject: [PATCH v4 3/3] mm/page_alloc: Keep memoryless cpuless node 0 offline
-Date:   Tue, 12 May 2020 18:59:37 +0530
-Message-Id: <20200512132937.19295-4-srikar@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200512132937.19295-1-srikar@linux.vnet.ibm.com>
-References: <20200512132937.19295-1-srikar@linux.vnet.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-12_03:2020-05-11,2020-05-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- suspectscore=0 bulkscore=0 clxscore=1015 spamscore=0 phishscore=0
- priorityscore=1501 mlxlogscore=999 adultscore=0 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2005120094
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        vinmenon@codeaurora.org
+References: <1589204408-5152-1-git-send-email-charante@codeaurora.org>
+ <20200511131155.0b40ee443c3367e8f748b16f@linux-foundation.org>
+From:   Charan Teja Kalla <charante@codeaurora.org>
+Message-ID: <1cf5e778-eae1-fc71-aed4-d84d664d79dd@codeaurora.org>
+Date:   Tue, 12 May 2020 19:01:22 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200511131155.0b40ee443c3367e8f748b16f@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently Linux kernel with CONFIG_NUMA on a system with multiple
-possible nodes, marks node 0 as online at boot.  However in practice,
-there are systems which have node 0 as memoryless and cpuless.
 
-This can cause numa_balancing to be enabled on systems with only one node
-with memory and CPUs. The existence of this dummy node which is cpuless and
-memoryless node can confuse users/scripts looking at output of lscpu /
-numactl.
+Thank you Andrew for the reply.
 
-By marking, N_ONLINE as NODE_MASK_NONE, lets stop assuming that Node 0 is
-always online.
+On 5/12/2020 1:41 AM, Andrew Morton wrote:
+> On Mon, 11 May 2020 19:10:08 +0530 Charan Teja Reddy <charante@codeaurora.org> wrote:
+> 
+>> Updating the zone watermarks by any means, like extra_free_kbytes,
+>> min_free_kbytes, water_mark_scale_factor e.t.c, when watermark_boost is
+>> set will result into the higher low and high watermarks than the user
+>> asks. This can be avoided by resetting the zone->watermark_boost to zero
+>> early.
+> 
+> Does this solve some problem which has been observed in testing?
 
-v5.7-rc3
- available: 2 nodes (0,2)
- node 0 cpus:
- node 0 size: 0 MB
- node 0 free: 0 MB
- node 2 cpus: 0 1 2 3 4 5 6 7
- node 2 size: 32625 MB
- node 2 free: 31490 MB
- node distances:
- node   0   2
-   0:  10  20
-   2:  20  10
+Sorry, what are those issues observed in testing? It would be helpful
+If you post them here. 
 
-proc and sys files
-------------------
- /sys/devices/system/node/online:            0,2
- /proc/sys/kernel/numa_balancing:            1
- /sys/devices/system/node/has_cpu:           2
- /sys/devices/system/node/has_memory:        2
- /sys/devices/system/node/has_normal_memory: 2
- /sys/devices/system/node/possible:          0-31
+> 
+>> ...
+>>
+>> --- a/mm/page_alloc.c
+>> +++ b/mm/page_alloc.c
+>> @@ -7746,9 +7746,9 @@ static void __setup_per_zone_wmarks(void)
+>>  			    mult_frac(zone_managed_pages(zone),
+>>  				      watermark_scale_factor, 10000));
+>>  
+>> +		zone->watermark_boost = 0;
+>>  		zone->_watermark[WMARK_LOW]  = min_wmark_pages(zone) + tmp;
+>>  		zone->_watermark[WMARK_HIGH] = min_wmark_pages(zone) + tmp * 2;
+>> -		zone->watermark_boost = 0;
+>>  
+>>  		spin_unlock_irqrestore(&zone->lock, flags);
+>>  	}
+> 
+> This could only be a problem if code is accessing these things without
+> holding zone->lock.  Is that ever the case?
+> 
 
-v5.7-rc3 + patch
-------------------
- available: 1 nodes (2)
- node 2 cpus: 0 1 2 3 4 5 6 7
- node 2 size: 32625 MB
- node 2 free: 31487 MB
- node distances:
- node   2
-   2:  10
+This is a problem even when accessing these things with zone->lock
+held because we are directly using the macro min_wmark_pages(zone)
+which leads to the issue. Pasting macro here for reference.
 
-proc and sys files
-------------------
-/sys/devices/system/node/online:            2
-/proc/sys/kernel/numa_balancing:            0
-/sys/devices/system/node/has_cpu:           2
-/sys/devices/system/node/has_memory:        2
-/sys/devices/system/node/has_normal_memory: 2
-/sys/devices/system/node/possible:          0-31
+#define min_wmark_pages(z) (z->_watermark[WMARK_MIN] + z->watermark_boost)
 
-Note: On Powerpc, cpu_to_node of possible but not present cpus would
-previously return 0. Hence this commit depends on commit ("powerpc/numa: Set
-numa_node for all possible cpus") and commit ("powerpc/numa: Prefer node id
-queried from vphn"). Without the 2 commits, Powerpc system might crash.
+Steps that lead to the issue is like below:
+1) On the extfrag event, we try to boost the watermark by storing the
+   value in ->watermark_boost.
 
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc: Christopher Lameter <cl@linux.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
-Cc: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Cc: David Hildenbrand <david@redhat.com>
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
----
-Changelog v1:->v2:
-- Rebased to v5.7-rc3
-Link v2: https://lore.kernel.org/linuxppc-dev/20200428093836.27190-1-srikar@linux.vnet.ibm.com/t/#u
+2) User changes the value of extra|min_free_kbytes or watermark_scale_factor.
+  
+   In __setup_perzone_wmarks, we directly store the user asked
+   watermarks in the zones structure. In this step, the value
+   is always offsets by ->watermark_boost as we use the min_wmark_pages() macro.
 
- mm/page_alloc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+3) Later, when kswapd woke up, it resets the zone's watermark_boost to zero. 
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 69827d4..03b8959 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -116,8 +116,10 @@ struct pcpu_drain {
-  */
- nodemask_t node_states[NR_NODE_STATES] __read_mostly = {
- 	[N_POSSIBLE] = NODE_MASK_ALL,
-+#ifdef CONFIG_NUMA
-+	[N_ONLINE] = NODE_MASK_NONE,
-+#else
- 	[N_ONLINE] = { { [0] = 1UL } },
--#ifndef CONFIG_NUMA
- 	[N_NORMAL_MEMORY] = { { [0] = 1UL } },
- #ifdef CONFIG_HIGHMEM
- 	[N_HIGH_MEMORY] = { { [0] = 1UL } },
+Step 2 from the above is what resulting into the issue.
+
 -- 
-1.8.3.1
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
