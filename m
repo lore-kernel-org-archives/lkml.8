@@ -2,202 +2,121 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F023C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FFAC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18EE420753
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:57:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Fo9KNuvX"
+	by mail.kernel.org (Postfix) with ESMTP id 32E5A206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:58:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589324298;
+	bh=IG7ctD2YCoDDUQ8s+e3OABRWevBYaSivGtSptefac3E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XFKq9cC00Sm2BERrcu7Gov5jeAEyO7flyFeC4QRo//v9xcdzqmoZL14C4cP4VK38m
+	 mvtgAi51+WeFF2JoeEfKNPL9RAlCKgMZ7L025azI/4XDq49UkPbmAy1LBiTCZsiKSf
+	 P+ONk5H9Klbk7UIr87h6zqsCqDbin5o6Hy2+Uom0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731581AbgELW5G (ORCPT
+        id S1731610AbgELW6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:57:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60834 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgELW5F (ORCPT
+        Tue, 12 May 2020 18:58:16 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44718 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgELW6P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 18:57:05 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4384C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:57:05 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id v15so3129494qvr.8
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:57:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=uw6rcMifPeMm4u4SGK3ZasDqkkdkPJx5dwRBOhb9iZ0=;
-        b=Fo9KNuvX7TEGQgNrP52TRDep9vxdmN6lPqGfnpBGIBh9wjAB8AKtPP/Vqb7ViMW3Di
-         xeZMTfN09TVP/s7ZQCmIHH6jhRiLYTAVIXIXOKudV3tl//5uF0X1/kzjgfSM0Oj4ULck
-         l9NVd3YzTKjAgXRt1YRh1wvOsXex1hNf1OeCa15HKUtQo0QJ1FzMZDMAoeG3lnguurKt
-         0JWFTTsPu0tf03pF6ik2qK3NFsWA5Jd1mhl1QDdfSF2jSgYTBz4rzbkZ+kU8mbOSG5kh
-         QZvtN4Ycns0x0bwu3qCEvWkT/drJsG/nWpo8qETwaKR0X3pbeDhn9MS07P7Sp57k0GJK
-         6zwg==
+        Tue, 12 May 2020 18:58:15 -0400
+Received: by mail-ot1-f65.google.com with SMTP id j4so11921546otr.11;
+        Tue, 12 May 2020 15:58:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uw6rcMifPeMm4u4SGK3ZasDqkkdkPJx5dwRBOhb9iZ0=;
-        b=bRh4PyquBOl8AwcQ6mWOjqZbgG3d92NcU3/GiozILvwbKqnzoJxvlxwZHA83qXP3bv
-         PplJQbTJtcStm7WvAjdW9zZC2m+zeld50r13BYXfKJyL3YXkhNbk9wQ2IvLWB9z3rNpw
-         3hU/DzYarLPVmc5FlYdNSt8T89wXdFyoiyydM/ag5BBuhvY7+7xC2McdE47dEFtznOzv
-         mNK9ri8wxe8Dx0ZD4pVyO8AjyTZ0PHp0NZdyZ8nkCSgBX/JBjQkvJMmgdSy4lc3i5DgV
-         ZMOIEv5z2ojLgq6mFFWkAfvyIl5k8jxS9Kb897NP53zlh3yldADo3arYDR0eF4VbeZMJ
-         KsiQ==
-X-Gm-Message-State: AGi0PuYNiXVROfC859oMVIZ5UI3mLpaCb+nYJQI9+3IdAZZjwN5CE8Q9
-        i+BMjtdU23yzUdYzrqqxapj9Cw==
-X-Google-Smtp-Source: APiQypIVWK4DOItsAwZSF++TtWpZGg68EDxJaQnUCromDwnEvmQDQRxuDhdiWxCkFJmry65ErRlOuQ==
-X-Received: by 2002:ad4:4d44:: with SMTP id m4mr18915485qvm.236.1589324224935;
-        Tue, 12 May 2020 15:57:04 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:2627])
-        by smtp.gmail.com with ESMTPSA id h185sm12160202qkc.19.2020.05.12.15.57.03
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cBiUIrWE+UaIH5tajkgyIKVaNp7k7WAC/qZUFSsrV2E=;
+        b=Quy2hnWtTrPiaE6w/mM3yp7OIxqHlGJ5eM+iUum/AwdpHUe4Rg7MFlDGRaqQAnX1SX
+         E6FRZh8GGJ30bZwIrjJFxV1DzHtfhqIuo2/1nqAtZns97/R9JtUPlr3SJ7qEgghjXZ/1
+         yVN/FGL/MFQE1W24lrgq7TbHWabnYGDdBC9pvebbrORwN4kLkUKVynIIh4Z0ky7AYaFm
+         7j1iTAz0Ed6ci4wuk29R8zsU9PD7wLeeoBfC7+omGslPMb1ZHYocGFpWQkOdEe/Lv37e
+         oI+4tl5lVY8WLmlm8yUVBsQhHG5EXMR9MpWhiKf/TCO2LW0ZBLSFK9e9LyckdmNOBVn7
+         MQmw==
+X-Gm-Message-State: AGi0PuYRrcYZUMViwY50619klgPsRgqJLAmWkrR+uJzMK7lM4wCfkBB7
+        +gOLrJlN6G1cUJOLJ7foTw==
+X-Google-Smtp-Source: APiQypL7PdOIK7Is7Nz5WrJlgO2HUyJLl2vgiulZfCULhki8ejQCn9T9ykjPsFKJznmjeuGro1Uq+g==
+X-Received: by 2002:a05:6830:22f8:: with SMTP id t24mr18122890otc.148.1589324294619;
+        Tue, 12 May 2020 15:58:14 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w62sm5632505oia.32.2020.05.12.15.58.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 15:57:04 -0700 (PDT)
-Date:   Tue, 12 May 2020 18:56:45 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 06/19] mm: memcg/slab: obj_cgroup API
-Message-ID: <20200512225645.GA488426@cmpxchg.org>
-References: <20200422204708.2176080-1-guro@fb.com>
- <20200422204708.2176080-7-guro@fb.com>
- <20200507210314.GD161043@cmpxchg.org>
- <20200507222631.GA81857@carbon.dhcp.thefacebook.com>
+        Tue, 12 May 2020 15:58:13 -0700 (PDT)
+Received: (nullmailer pid 32342 invoked by uid 1000);
+        Tue, 12 May 2020 22:58:12 -0000
+Date:   Tue, 12 May 2020 17:58:12 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sandy Huang <hjc@rock-chips.com>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        Sean Wang <sean.wang@mediatek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jyri Sarha <jsarha@ti.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Olivier Moysan <olivier.moysan@st.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-bluetooth@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-mips@vger.kernel.org
+Subject: Re: [PATCH] docs: dt: fix broken links due to txt->yaml renames
+Message-ID: <20200512225812.GA28862@bogus>
+References: <967df5c3303b478b76199d4379fe40f5094f3f9b.1588584538.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200507222631.GA81857@carbon.dhcp.thefacebook.com>
+In-Reply-To: <967df5c3303b478b76199d4379fe40f5094f3f9b.1588584538.git.mchehab+huawei@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 03:26:31PM -0700, Roman Gushchin wrote:
-> On Thu, May 07, 2020 at 05:03:14PM -0400, Johannes Weiner wrote:
-> > On Wed, Apr 22, 2020 at 01:46:55PM -0700, Roman Gushchin wrote:
-> > > --- a/mm/memcontrol.c
-> > > +++ b/mm/memcontrol.c
-> > > @@ -257,6 +257,78 @@ struct cgroup_subsys_state *vmpressure_to_css(struct vmpressure *vmpr)
-> > >  }
-> > >  
-> > >  #ifdef CONFIG_MEMCG_KMEM
-> > > +extern spinlock_t css_set_lock;
-> > > +
-> > > +static void obj_cgroup_release(struct percpu_ref *ref)
-> > > +{
-> > > +	struct obj_cgroup *objcg = container_of(ref, struct obj_cgroup, refcnt);
-> > > +	struct mem_cgroup *memcg;
-> > > +	unsigned int nr_bytes;
-> > > +	unsigned int nr_pages;
-> > > +	unsigned long flags;
-> > > +
-> > > +	nr_bytes = atomic_read(&objcg->nr_charged_bytes);
-> > > +	WARN_ON_ONCE(nr_bytes & (PAGE_SIZE - 1));
-> > > +	nr_pages = nr_bytes >> PAGE_SHIFT;
-> > 
-> > What guarantees that we don't have a partial page in there at this
-> > point? I guess any outstanding allocations would pin the objcg, so
-> > when it's released all objects have been freed.
+On Mon, May 04, 2020 at 11:30:20AM +0200, Mauro Carvalho Chehab wrote:
+> There are some new broken doc links due to yaml renames
+> at DT. Developers should really run:
 > 
-> Right, this is exactly the reason why there can't be a partial page
-> at this point.
+> 	./scripts/documentation-file-ref-check
 > 
-> > 
-> > But if that's true, how can we have full pages remaining in there now?
+> in order to solve those issues while submitting patches.
+> This tool can even fix most of the issues with:
 > 
-> Imagine the following sequence:
-> 1) CPU0: objcg == stock->cached_objcg
-> 2) CPU1: we do a small allocation (e.g. 92 bytes), page is charged
-> 3) CPU1: a process from another memcg is allocating something, stock if flushed,
->    objcg->nr_charged_bytes = PAGE_SIZE - 92
-> 5) CPU0: we do release this object, 92 bytes are added to stock->nr_bytes
-> 6) CPU0: stock is flushed, 92 bytes are added to objcg->nr_charged_bytes
+> 	./scripts/documentation-file-ref-check --fix
 > 
-> In the result, nr_charged_bytes == PAGE_SIZE. This PAGE will be uncharged
-> in obj_cgroup_release().
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
 > 
-> I've double checked this, it's actually pretty easy to trigger in the real life.
+> PS.: This patch is against today's linux-next.
 
-Ah, so no outstanding allocations, but a full page split between the
-percpu cache and objcg->nr_charged_bytes.
+That's not a base anyone can apply this patch against.
 
-Would it simplify things if refill_obj_stock() drained on >= PAGE_SIZE
-stock instead of > PAGE_SIZE?
-
-Otherwise, the scenario above would be good to have as a comment as
-the drain on release is not self-explanatory.
-
-> > > +int obj_cgroup_charge(struct obj_cgroup *objcg, gfp_t gfp, size_t size)
-> > > +{
-> > > +	struct mem_cgroup *memcg;
-> > > +	unsigned int nr_pages, nr_bytes;
-> > > +	int ret;
-> > > +
-> > > +	if (consume_obj_stock(objcg, size))
-> > > +		return 0;
-> > > +
-> > > +	rcu_read_lock();
-> > > +	memcg = obj_cgroup_memcg(objcg);
-> > > +	css_get(&memcg->css);
-> > > +	rcu_read_unlock();
-> > > +
-> > > +	nr_pages = size >> PAGE_SHIFT;
-> > > +	nr_bytes = size & (PAGE_SIZE - 1);
-> > > +
-> > > +	if (nr_bytes)
-> > > +		nr_pages += 1;
-> > > +
-> > > +	ret = __memcg_kmem_charge(memcg, gfp, nr_pages);
-> > 
-> > If consume_obj_stock() fails because some other memcg is cached,
-> > should this try to consume the partial page in objcg->nr_charged_bytes
-> > before getting more pages?
 > 
-> We can definitely do it, but I'm not sure if it's good for the performance.
 > 
-> Dealing with nr_charged_bytes will require up to two atomic writes,
-> so calling __memcg_kmem_charge() can be faster if memcg is cached
-> on percpu stock.
-
-Hm, but it's the slowpath. And sooner or later somebody has to deal
-with the remaining memory in there.
-
-> > > +	if (!ret && nr_bytes)
-> > > +		refill_obj_stock(objcg, PAGE_SIZE - nr_bytes);
-> > 
-> > This will put the cgroup into the cache if the allocation resulted in
-> > a partially free page.
-> > 
-> > But if this was a page allocation, we may have objcg->nr_cache_bytes
-> > from a previous subpage allocation that we should probably put back
-> > into the stock.
-> 
-> Yeah, we can do this, but I don't know if there will be any benefits.
-
-It's mostly about understanding the code.
-
-> Actually we don't wanna to touch objcg->nr_cache_bytes too often, as
-> it can become a contention point if there are many threads allocating
-> in the memory cgroup.
-> 
-> So maybe we want to do the opposite: relax it a bit and stop flushing
-> it on every stock refill and flush only if it exceeds a certain value.
-
-That could be useful, yes.
-
-> > It's not a common case, I'm just trying to understand what
-> > objcg->nr_cache_bytes holds and when it does so.
-> 
-> So it's actually a centralized leftover from the rounding of the actual
-> charge to the page size.
-
-It would be good to add code comments explaining this.
-
-Thanks!
+>  .../devicetree/bindings/display/bridge/sii902x.txt          | 2 +-
+>  .../devicetree/bindings/display/rockchip/rockchip-drm.yaml  | 2 +-
+>  .../devicetree/bindings/net/mediatek-bluetooth.txt          | 2 +-
+>  .../devicetree/bindings/sound/audio-graph-card.txt          | 2 +-
+>  .../devicetree/bindings/sound/st,sti-asoc-card.txt          | 2 +-
+>  Documentation/mips/ingenic-tcu.rst                          | 2 +-
+>  MAINTAINERS                                                 | 6 +++---
+>  7 files changed, 9 insertions(+), 9 deletions(-)
