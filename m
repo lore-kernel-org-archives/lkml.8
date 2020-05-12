@@ -2,143 +2,167 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00113C54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16678C54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2230206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E458C206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589293117;
-	bh=uE+0mI4HOJHfvUrEj0x1JKycYetQgyV0lV8D2/7r7mI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mpakozV603SyRJ+6fVij8kxlAeimNgKe54QRp9L8U+qil9qQsJOQaGP6mJJAiQ1v/
-	 l55yCDUougm5s2obyHlNa7wG2al/+Xw1Om2OQIt1R55JhDo1q98UHYhSbB9IJzCt0u
-	 UNSdMmWnuA5si6lZpw24Wp+4eZQxubmJimiHXpOY=
+	s=default; t=1589293185;
+	bh=Gjm45Rqn3VEbRl0jgQIeOb5BdynO5iWb0uAqsggLPow=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=lyBzzjFnoRK49cx9G5Sa6L2VPigZvXITm71ZHAtITpvdaUcarlp6DP7qsKdV5l1ce
+	 eD4ZiHo9RpB93vTRk1CNsIPlbqRqLqrdWBlED4RSdMpEvw2Zl8PJ5CCCLYQyvZNumC
+	 tL8RWo4PDMlKleIHWBbf2BNSooFwov69O7ODTb78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730193AbgELOSh (ORCPT
+        id S1730174AbgELOTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:18:37 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41804 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729583AbgELOSg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:18:36 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 63so3217307oto.8;
-        Tue, 12 May 2020 07:18:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zfs2hAY/NiesXQzcF+Dz6T3qLZIhaZ4TvR72I/v5n/4=;
-        b=h4I/ZMjOPHZt6LML5siOmRpUkWdNabnSPAaDTdnaPzDH93/vzLEx+q063UvNQLXiz5
-         UdZK9l0yKantT3PpIQF9EqrrGtyevLJIC1XONWQVSUsySH0s7fYwLMj6NiV39qBZHBIM
-         kz91C/WykGPGz0uKojJMImQul+77jvsMuKDMCZUdf3KKJqe577BqrlusnPownpp2SCV/
-         IEqcJYEDAc9RJDNPdA/lBsY/UnK0kk+rpxK4FjSZXLObsTy+STFzSsZMb369KDDDZdPv
-         XbUOf1jr0v8iBTzPv1zecj0n4FkHTa1dphbygqTkOnIwBBPIegqxGjDJvliPqGWFWWRr
-         BVqw==
-X-Gm-Message-State: AGi0PuaJWanz9roT3/TG5SwHBIdz14EMNM7y11U8NdNEtnpswheCR02B
-        Mj5qu/6aDqZcsFvrWv2b+CEloBSU9g==
-X-Google-Smtp-Source: APiQypK7ywar5BYmiexHrXYIk47tsu1t0a/sBmW76o29L0I4ng8de/0MFHPvPlf+dPXqm0l78vRDRw==
-X-Received: by 2002:a9d:51c4:: with SMTP id d4mr15829366oth.249.1589293115368;
-        Tue, 12 May 2020 07:18:35 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d10sm592500ote.10.2020.05.12.07.18.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 07:18:34 -0700 (PDT)
-Received: (nullmailer pid 9519 invoked by uid 1000);
-        Tue, 12 May 2020 14:18:34 -0000
-Date:   Tue, 12 May 2020 09:18:34 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc:     linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        ceggers@arri.de, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] nvmem: skip nodes with compatibles other than
- "nvmem-cell"
-Message-ID: <20200512141834.GA3023@bogus>
-References: <20200428111829.2215-1-a.fatoum@pengutronix.de>
+        Tue, 12 May 2020 10:19:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46420 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728283AbgELOTp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 10:19:45 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BF20206D3;
+        Tue, 12 May 2020 14:19:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589293184;
+        bh=Gjm45Rqn3VEbRl0jgQIeOb5BdynO5iWb0uAqsggLPow=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=l5HgKGzsvXwvFqLtyJu9XTQqJgF7hoxkpEGT/blvlYIoROwJweOkBxTAknabEBMcq
+         vosoGVKPjnZGz6L49H8iRgHGn1COtgf1+zYjygxqzyoLCKMARVVfW8517PtcS5rOge
+         iD/agKM71MJh7IkoH99mp3QGwLZfOXPUPoGOgZZ0=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 234E23522FA4; Tue, 12 May 2020 07:19:44 -0700 (PDT)
+Date:   Tue, 12 May 2020 07:19:44 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Akira Yokosawa <akiyks@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        linux-kernel@vger.kernel.org, vpillai@digitalocean.com,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Daniel Lustig <dlustig@nvidia.com>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH 0/3] tools/memory-model, Documentation/litmus-test: Sort
+ out location of litmus test and README
+Message-ID: <20200512141944.GC2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200323015735.236279-1-joel@joelfernandes.org>
+ <7809dbfa-7a76-8663-799a-908c4ead8d30@gmail.com>
+ <21e1ba24-22d0-8083-770c-53d320ba5420@gmail.com>
+ <20200511173348.GX2869@paulmck-ThinkPad-P72>
+ <20200512021309.GA197229@google.com>
+ <bff04d71-1666-a5a8-54bf-d0c9f8737b47@gmail.com>
+ <20200512121936.GA228684@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200428111829.2215-1-a.fatoum@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200512121936.GA228684@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 01:18:25PM +0200, Ahmad Fatoum wrote:
-> The nvmem cell binding applies to all objects which match "^.*@[0-9a-f]+$",
-> without taking a compatible into account. This precludes extension of e.g.
-> eeprom nodes by any child nodes other than nvmem. Consider following example:
+On Tue, May 12, 2020 at 08:19:36AM -0400, Joel Fernandes wrote:
+> On Tue, May 12, 2020 at 08:50:45PM +0900, Akira Yokosawa wrote:
+> [...]
+> > > I think on top of this patch, I'd like to add a reference to the to the
+> > > litmus test in tools/memory-model/ from Documentation/rcu/.
+> > 
+> > Sounds reasonable to me. But for most people, it never changes its location.
+> > Please find inline comments below.
+> > 
+> > > 
+> > > Just to mention my rationale for Documentation/litmus-tests/rcu/, I was
+> > > basically looking for a central place for RCU related litmus tests in the
+> > > kernel sources and the idea of this new directory came up.
+> > > 
+> > > For Akira's series,
+> > > Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > 
+> > Thank you!
+> > 
+> > > 
+> > > And could we add the following patch on top of Akira's series so we still
+> > > maintain a reference to the moved RCU test?> 
+> > > ---8<-----------------------
+> > > 
+> > > From 52fdb57551cc769d8bd690f4f2b22de36ddece99 Mon Sep 17 00:00:00 2001
+> > > From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+> > > Date: Mon, 11 May 2020 22:06:46 -0400
+> > > Subject: [PATCH] docs: litmus-tests: Clarify about the RCU pre-initialization
+> > >  test
+> > > 
+> > > Since this test was moved to tools/memory-model/, make sure that it is
+> > > at least referenced from Documentation/litmus-tests/'s README.
+> > > 
+> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > ---
+> > >  Documentation/litmus-tests/README | 6 ++++--
+> > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/Documentation/litmus-tests/README b/Documentation/litmus-tests/README
+> > > index ac0b270b456c1..53f09e74734a4 100644
+> > > --- a/Documentation/litmus-tests/README
+> > > +++ b/Documentation/litmus-tests/README
+> > > @@ -11,7 +11,6 @@ tools/memory-model/README.
+> > >  
+> > >  atomic (/atomic derectory)
+> > >  --------------------------
+> > > -
+> > >  Atomic-RMW+mb__after_atomic-is-stronger-than-acquire.litmus
+> > >      Test that an atomic RMW followed by a smp_mb__after_atomic() is
+> > >      stronger than a normal acquire: both the read and write parts of
+> > > @@ -23,8 +22,11 @@ Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+> > >  
+> > >  RCU (/rcu directory)
+> > >  --------------------
+> > > -
+> > 
+> > I loosely followed the convention of ReST documents in putting these empty
+> > lines.  But I don't mind if they are removed.
+> > 
+> > >  RCU+sync+read.litmus
+> > >  RCU+sync+free.litmus
+> > >      Both the above litmus tests demonstrate the RCU grace period guarantee
+> > >      that an RCU read-side critical section can never span a grace period.
+> > > +
+> > > +MP+onceassign+derefonce.litmus (moved to tools/memory-model/litmus-tests/)
+> > 
+> > As I said above, for those who don't follow developments in the lkmm branch, 
+> > MP+onceassign+derefonce.litmus stays in tools/memory-model/litmus-tests/.
+> > So,
+> > 
+> > +MP+onceassign+derefonce.litmus (under tools/memory-model/litmus-tests/)
+> > 
+> > looks better to me.
 > 
-> 	eeprom@0 {
-> 		reg = <0 64>;
-> 		#address-cells = <1>;
-> 		#size-cells = <1>;
+> Yes it stays under tools/.. but is referenced here. Sounds like you agree and
+> the only change from my follow-up patch that you want is to change "moved to"
+> to "under".
 > 
-> 		partitions {
-> 			compatible = "fixed-partitions";
-> 			#address-cells = <1>;
-> 			#size-cells = <1>;
-> 			bits = <64 64 64>; /* to verify it's skipped */
-> 
-> 			part@0 {
-> 				reg = <0x00 16>;
-> 			};
-> 		};
-> 
-> 		no-cell@10 {
-> 			compatible = "not-nvmem-cell";
-> 			reg = <0x10 4>;
-> 			bits = <64 64 64>; /* to verify it's skipped */
-> 		};
-> 
-> 		cell-old@14 {
-> 			reg = <0x14 0x2>;
-> 		};
-> 
-> 		cell-new@16 {
-> 			compatible = "nvmem-cell";
-> 			reg = <0x16 4>;
-> 		};
-> 	};
-> 
-> Without this series, the NVMEM driver interprets all direct children of eeprom@0
-> as NVMEM cells and driver probe fails, because the partitions node lacks a reg
-> property, e.g.:
-> 
->   nvmem 0-00000: nvmem: invalid reg on /eeprom@0
-> 
-> Running dtbs_check on the snippet will skip partitions (it doesn't match above
-> regex), but will flag no-cell@10 and cell-new@16 as invalid.
-> 
-> With this series applied, the driver will skip partitions and no-cell@10,
-> because they have a compatible but it's not "nvmem-cell".
+> If so, Paul do you mind applying my patch and fixing this up? Or do you want
+> to apply Akira's 3-patch series first and then have me send you another one
+> on top?
 
-Because you have to support no compatible (forever), there's no point 
-adding this compatible.
+Let's get something that you, Akira, and Alan are good with, then I will
+apply that, either on top of or in place of the current commits (just
+tell me which).
 
-> Both cell-old@14 and cell-new@16 will be interpreted as cells.
-> 
-> Likewise, running dtbs_check on the snippet will skip partitions (compatible
-> doesn't match and regex doesn't either) and no-cell@10, but accept the other two.
-> 
-> This series resolves an existing clash between this nvmem-cell binding and
-> the barebox bootloader binding that extends the fixed-partitions MTD
-> binding to EEPROMs[1]. It's also a building block for getting nvmem cells and
-> partitions in MTD devices to co-exist in the same device tree node[2].
-
-This violates having multiple nodes at the same address because you are 
-independently overlaying partitions and nvmem cells on same address 
-ranges. It also seems seems pretty fragile if you want to update 
-partitions.
-
-I think instead, nvmem cells should be contained within a partition. 
-The partition should then have a compatible to indicate it contains 
-nvmem cells.
-
-Rob
+							Thanx, Paul
