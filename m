@@ -2,88 +2,67 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D914C47255
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C2AC47255
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B3BD206DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2733206DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:02:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgELAAu (ORCPT
+        id S1728227AbgELACx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 20:00:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44008 "EHLO
+        Mon, 11 May 2020 20:02:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725836AbgELAAu (ORCPT
+        by vger.kernel.org with ESMTP id S1725836AbgELACw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 20:00:50 -0400
+        Mon, 11 May 2020 20:02:52 -0400
 Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 402B3C061A0C;
-        Mon, 11 May 2020 17:00:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9D19C061A0C;
+        Mon, 11 May 2020 17:02:52 -0700 (PDT)
 Received: from localhost (unknown [IPv6:2601:601:9f00:477::d71])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id DC6AA12118540;
-        Mon, 11 May 2020 17:00:49 -0700 (PDT)
-Date:   Mon, 11 May 2020 17:00:49 -0700 (PDT)
-Message-Id: <20200511.170049.154263930278676490.davem@davemloft.net>
-To:     kuba@kernel.org
-Cc:     joe@perches.com, netdev@vger.kernel.org, andrew@lunn.ch,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3] checkpatch: warn about uses of ENOTSUPP
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6E64E120ED551;
+        Mon, 11 May 2020 17:02:52 -0700 (PDT)
+Date:   Mon, 11 May 2020 17:02:51 -0700 (PDT)
+Message-Id: <20200511.170251.223893682017560321.davem@davemloft.net>
+To:     viro@zeniv.linux.org.uk
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCHES] uaccess-related stuff in net/*
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200511170807.2252749-1-kuba@kernel.org>
-References: <20200511170807.2252749-1-kuba@kernel.org>
+In-Reply-To: <20200511044328.GP23230@ZenIV.linux.org.uk>
+References: <20200511044328.GP23230@ZenIV.linux.org.uk>
 X-Mailer: Mew version 6.8 on Emacs 26.3
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 11 May 2020 17:00:50 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 11 May 2020 17:02:52 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
-Date: Mon, 11 May 2020 10:08:07 -0700
+From: Al Viro <viro@zeniv.linux.org.uk>
+Date: Mon, 11 May 2020 05:43:28 +0100
 
-> ENOTSUPP often feels like the right error code to use, but it's
-> in fact not a standard Unix error. E.g.:
+> 	Assorted uaccess-related work in net/*.  First, there's
+> getting rid of compat_alloc_user_space() mess in MCAST_...
+> [gs]etsockopt() - no need to play with copying to/from temporary
+> object on userland stack, etc., when ->compat_[sg]etsockopt()
+> instances in question can easly do everything without that.
+> That's the first 13 patches.  Then there's a trivial bit in
+> net/batman-adv (completely unrelated to everything else) and
+> finally getting the atm compat ioctls into simpler shape.
 > 
-> $ python
->>>> import errno
->>>> errno.errorcode[errno.ENOTSUPP]
-> Traceback (most recent call last):
->   File "<stdin>", line 1, in <module>
-> AttributeError: module 'errno' has no attribute 'ENOTSUPP'
-> 
-> There were numerous commits converting the uses back to EOPNOTSUPP
-> but in some cases we are stuck with the high error code for backward
-> compatibility reasons.
-> 
-> Let's try prevent more ENOTSUPPs from getting into the kernel.
-> 
-> Recent example:
-> https://lore.kernel.org/netdev/20200510182252.GA411829@lunn.ch/
-> 
-> v3 (Joe):
->  - fix the "not file" condition.
-> 
-> v2 (Joe):
->  - add a link to recent discussion,
->  - don't match when scanning files, not patches to avoid sudden
->    influx of conversion patches.
-> https://lore.kernel.org/netdev/20200511165319.2251678-1-kuba@kernel.org/
-> 
-> v1:
-> https://lore.kernel.org/netdev/20200510185148.2230767-1-kuba@kernel.org/
-> 
-> Suggested-by: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-> Acked-by: Joe Perches <joe@perches.com>
+> 	Please, review and comment.  Individual patches in followups,
+> the entire branch (on top of current net/master) is in
+> git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git #uaccess.net
 
-Applied, thanks Jakub.
+I have no problems with this series:
+
+Acked-by: David S. Miller <davem@davemloft.net>
