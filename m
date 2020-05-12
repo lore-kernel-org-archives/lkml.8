@@ -2,216 +2,162 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35ABCC2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BBFC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C90D20747
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F13F206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:57:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BGByk4t/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="El/bqf4w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731004AbgELTzq (ORCPT
+        id S1731045AbgELT5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 15:55:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60676 "EHLO
+        Tue, 12 May 2020 15:57:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbgELTzp (ORCPT
+        with ESMTP id S1728275AbgELT5n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 15:55:45 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1073EC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:55:44 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id a5so8663976vsm.7
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:55:44 -0700 (PDT)
+        Tue, 12 May 2020 15:57:43 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78C9EC061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:57:42 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id y25so6891313pfn.5
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:57:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=souGqEVdFUGfbVs6klo3kTV/o0WFTA0pV6SMGDZE5jU=;
-        b=BGByk4t/lgEtRVy7AtXqVevMTDz90sCHvuLDrt76134g9D/XItf0Ktm7vUPpyEWdwi
-         64DApzPuvJouI1yo+2vRRdSKpZdFDmGG2oTRKHPbFbZyBiJLkDrFaj/fzoyYXcNETbmG
-         q3eEQXEDH2DKbwb5Xffuev5oBuFRf934QYOjhcke0Mi5oyne/vHEpY5Ks7qT0Lg7zcMT
-         b0e1tttnIX3fK3KgNQ9DFs3S1FB2Gkehy1pqFjtJ6ekv0TzPSS2WGT6Xx+vIUb7lXKH0
-         Qo4rs067MNBl/CbM4MzosrXxY4CrZAn/jO3iycnbI4WFbyEYQnBQnaZ389icQNz0QWt5
-         Z38A==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1psTwvcMYpTlpczp4vTp5xf7H5Bk+BZ23G7yvOHtOms=;
+        b=El/bqf4wDveDEiTDXcScWyBiRrWf6eAeAsz3ooMr11JsFE6beIk89EXPcqbHIcH7F0
+         4tNzcwqc8QmWjPm1A+BqT9XyEKpx81sYFEb/7J8JlcE1iOs21Vb6ZnyWV3wSimw6DPGD
+         n302fYLzBN0oMvb6jFlLMTizkbyEIvVlwfiKbKrthHm5RsZauiF4i5MxNIjGGqu2QA07
+         0TjGDYtgWuOH+pylHcfQrjJGLxVq3i81tsX00lMhd/+3/Da0c5k9OHij/ruxvFraAb1K
+         Waks40En5VF8A9SUKdd764BkePOn20EoCmMprVnlXjeQb1nm/0SiF4DNbzooWUv5IHt/
+         l2sQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=souGqEVdFUGfbVs6klo3kTV/o0WFTA0pV6SMGDZE5jU=;
-        b=Jyux/WacjfOzFuFxWkgiymJl1ZFjDCyQABVwq5P/4gZUxbd2WNWYyKred2D1VyQxJm
-         8aH5cOff0alWWDzFSW0wEeH4qDwqGMUSdNNImatCwujnPv+ErPU23vHHjDa4l/kSd226
-         lHosGwySUgyq4YaEXxWUCtO4d2F51IHEWakjunl3mFdMFf3SFkCrVDJeGPp3gWNnbKXi
-         yMD/VymBBLaNf7d6nJ0GyKF0i6NtQHbqCoeuem3wy1fInkNsOjm8ueiFNkOATyYsubiH
-         SujWXdh0bkDLCE2nocJxSnw8qWRDC04GeH8k6xIkbqf6WmdfBvsAs0l6bPrGT4/bfiuV
-         FLNg==
-X-Gm-Message-State: AGi0PuYejQbKfzNW12qr49bVpYRILg+CzO8WXFzvT4t6A8k20eiymlyU
-        PnFJgZ9fStQGD/CRIr5lUDDBL4ddTL6TRZMsoJD6Kw==
-X-Google-Smtp-Source: APiQypJALX0PEkw6GFYEO7ce5qnOamFXHlAc7QIRs/F4gM/2LXdipawuW0G4sPiNSihRRxaPNxzRlrtB0yEpIkUujs8=
-X-Received: by 2002:a67:dd98:: with SMTP id i24mr18420597vsk.239.1589313342705;
- Tue, 12 May 2020 12:55:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1psTwvcMYpTlpczp4vTp5xf7H5Bk+BZ23G7yvOHtOms=;
+        b=I3MNGMsNewLAlFEroAOHlElSJBALPSQg9PCIKb5hJYjuMGJ7VqbC4Zb6RO9TLMmgn4
+         I2xhNO9US+cZ6RpgIVd4kpkvYjbrKlrxvubRwcRAwsNLqVSHx/Hf/b3Rrz8b83Htl4Wx
+         CtL/HEwVwTAWbwk/CBE8eE0StEgrOdqSNXzV3cwjlLpE4PdkR6y2qsYke7ASn9rcFAVu
+         J2efVQPKI7Cx3ypYSJsejMv+CXb5e1vRROTGK1GNfkSw08C394Q0tQDqE0GQ8R9TTLTi
+         3+JCIi8iYDdC6EagNnGyYET3gflmtTxm2gfmeWZwrRjfuPyiG5V3Idz97R1RnKNpfF6p
+         EdLA==
+X-Gm-Message-State: AGi0PuY7mQ7dXoWHMSfOcAlWg357knP83IWJ/1RsSA7jNoDaBCV59lq5
+        +hbA6rK0Fyh8gowTQILToFGQCQ==
+X-Google-Smtp-Source: APiQypL0VtphI0YrUqP9ATJ5zZvSYtoaqUqrSdwWQ7JLvFmjvSe5bb+FGzlag56wLCaSIPLRqA7QdQ==
+X-Received: by 2002:a63:554c:: with SMTP id f12mr21482392pgm.163.1589313461706;
+        Tue, 12 May 2020 12:57:41 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id t7sm3065968pjf.30.2020.05.12.12.57.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 12:57:41 -0700 (PDT)
+Date:   Tue, 12 May 2020 12:56:08 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Cc:     agross@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+        robh+dt@kernel.org, jassisinghbrar@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4 2/8] dt-bindings: clock: Add schema for QCOM IPQ apss
+ pll
+Message-ID: <20200512195608.GH2165@builder.lan>
+References: <1588573224-3038-1-git-send-email-sivaprak@codeaurora.org>
+ <1588573224-3038-3-git-send-email-sivaprak@codeaurora.org>
 MIME-Version: 1.0
-References: <20200302193630.68771-1-minchan@kernel.org> <20200302193630.68771-6-minchan@kernel.org>
- <14089609-5fb1-b082-716f-c2e129d27c48@suse.cz> <20200311004251.GB87930@google.com>
- <20200508183653.GB125527@google.com> <20200508160415.65ff359a9e312c613336587b@linux-foundation.org>
- <20200509124817.xmrvsrq3mla6b76k@wittgenstein> <20200509231441.GC61301@google.com>
-In-Reply-To: <20200509231441.GC61301@google.com>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Tue, 12 May 2020 12:55:30 -0700
-Message-ID: <CAJuCfpFKYdfbG02vevRhWHhMhA4e_rRVNfCabcT0Pf_qNUgAnQ@mail.gmail.com>
-Subject: Re: [PATCH v7 5/7] mm: support both pid and pidfd for process_madvise
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        Oleksandr Natalenko <oleksandr@redhat.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com,
-        Christian Brauner <christian@brauner.io>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588573224-3038-3-git-send-email-sivaprak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 9, 2020 at 4:14 PM Minchan Kim <minchan@kernel.org> wrote:
->
-> Hi Christian,
->
-> On Sat, May 09, 2020 at 02:48:17PM +0200, Christian Brauner wrote:
-> > On Fri, May 08, 2020 at 04:04:15PM -0700, Andrew Morton wrote:
-> > > On Fri, 8 May 2020 11:36:53 -0700 Minchan Kim <minchan@kernel.org> wrote:
-> > >
-> > > >
-> > > > ...
-> > > >
-> > > > Per Vlastimil's request, I changed "which and advise" with "idtype and
-> > > > advice" in function prototype of description.
-> > > > Could you replace the part in the description? Code is never changed.
-> > > >
-> > >
-> > > Done, but...
-> > >
-> > > >
-> > > > ...
-> > > >
-> > > > There is a demand[1] to support pid as well pidfd for process_madvise to
-> > > > reduce unnecessary syscall to get pidfd if the user has control of the
-> > > > target process(ie, they could guarantee the process is not gone or pid is
-> > > > not reused).
-> > > >
-> > > > This patch aims for supporting both options like waitid(2).  So, the
-> > > > syscall is currently,
-> > > >
-> > > >         int process_madvise(idtype_t idtype, id_t id, void *addr,
-> > > >                 size_t length, int advice, unsigned long flags);
-> > > >
-> > > > @which is actually idtype_t for userspace libray and currently, it
-> > > > supports P_PID and P_PIDFD.
-> > >
-> > > What does "@which is actually idtype_t for userspace libray" mean?  Can
-> > > you clarify and expand?
-> >
-> > If I may clarify, the only case where we've supported both pidfd and pid
-> > in the same system call is waitid() to avoid adding a dedicated system
-> > call for waiting and because waitid() already had this (imho insane)
-> > argument type switching. The idtype_t thing comes from waitid() and is
-> > located int sys/wait.h and is defined as
-> >
-> > "The type idtype_t is defined as an enumeration type whose possible
-> > values include at least the following:
-> >
-> > P_ALL
-> > P_PID
-> > P_PGID
-> > "
-> >
-> > int waitid(idtype_t idtype, id_t id, siginfo_t *infop, int options);
-> > If idtype is P_PID, waitid() shall wait for the child with a process ID equal to (pid_t)id.
-> > If idtype is P_PGID, waitid() shall wait for any child with a process group ID equal to (pid_t)id.
-> > If idtype is P_ALL, waitid() shall wait for any children and id is ignored.
-> >
-> > I'm personally not a fan of this idtype_t thing and think this should
-> > just have been
-> > > >         int pidfd_madvise(int pidfd, void *addr,
-> > > >                 size_t length, int advice, unsigned long flags);
-> > and call it a day.
->
-> That was the argument at that time, Daniel and I didn't want to have
-> pid along with pidfd even though Kirill strongly wanted to have it.
-> However you said " Overall, I don't particularly care how or if you
-> integrate pidfd here." at that time.
->
-> https://lore.kernel.org/linux-mm/20200113104256.5ujbplyec2sk4onn@wittgenstein/
->
-> I asked a question to Kirll at that time.
->
-> "
-> > Sounds like that you want to support both options for every upcoming API
-> > which deals with pid. I'm not sure how it's critical for process_madvise
-> > API this case. In general, we sacrifice some performance for the nicer one
-> > and later, once it's reported as hurdle for some workload, we could fix it
-> > via introducing new flag. What I don't like at this moment is to make
-> > syscall complicated with potential scenarios without real workload.
->
-> Yes, I suggest allowing both options for every new process api
-> "
-> https://lore.kernel.org/linux-mm/9d849087-3359-c4ab-fbec-859e8186c509@virtuozzo.com/
->
-> You didn't give the opinion at that time, either(I expected you will
-> make some voice then). What I could do to proceed work was separate it
-> as different patch like this one to get more attention in future.
-> And now it works.
->
-> Let me clarify my side: I still don't like to introduce pid for new API
-> since we have pidfd. Since you just brought this issue again, I want to
-> hear *opinions* from others, again.
+On Sun 03 May 23:20 PDT 2020, Sivaprakash Murugesan wrote:
 
+> Add dt-binding for apss pll found on QCOM IPQ platforms
+> 
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 
-IIRC Kirill's main complaint was that if we support only pidfds and
-userspace has a pid of the process then it would have to convert that
-pid into pidfd before calling process_madvise, which involves
-additional syscall(s). The overhead would be more tangible if there
-are multiple processes needing to be madvised.
-I'm not sure how often such a need arises to madvise multiple
-processes in a bulk like that and how critical is the overhead of
-obtaining pidfd. With pid reuse possibility pid-based API will still
-have the issue of possibly sending the request to a wrong process, so
-this pidfd obtaining overhead arguably makes the usage more robust and
-therefore is not a pure loss.
+This seems quite similar to the existing qcom,a53pll binding, can't you
+just describe both in the same binding?
 
-I don't have a real strong opinion against supporting pid in this
-syscall but I think API maintainers should decide going forward
-whether new APIs should support pid along with pidfd or switch to
-pidfd only.
-Thanks!
+> ---
+>  .../bindings/clock/qcom,ipq-apsspll.yaml           | 49 ++++++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,ipq-apsspll.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,ipq-apsspll.yaml b/Documentation/devicetree/bindings/clock/qcom,ipq-apsspll.yaml
+> new file mode 100644
+> index 0000000..dd12ec4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,ipq-apsspll.yaml
+> @@ -0,0 +1,49 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/qcom,ipq-apsspll.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm IPQ APSS PLL Binding
+> +
+> +maintainers:
+> +  - Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> +
+> +description:
+> +  The APSS PLL is the main clock that feds the CPUs on QCOM IPQ platforms.
+> +  It can support frequencies above 1GHz.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,ipq-apss-pll
 
->
-> >
-> > Also, if I may ask, why is the flag argument "unsigned long"?
-> > That's pretty unorthodox. The expectation is that flag arguments are
-> > not word-size dependent and should usually use "unsigned int". All new
-> > system calls follow this pattern too.
->
-> Nothing special in this flag: Let me change it as "unsigned int".
-> I will send the change once we have an agreement on "pidfd" argument.
->
-> Thanks for the review, Christian!
+Allow me to claim that this is not the last IPQ, with an APSS PLL, which
+means that this compatible is no good.
+
+I think you want a compatible on the format qcom,ipq<numbers>-a53pll.
+
+Regards,
+Bjorn
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  '#clock-cells':
+> +    const: 0
+> +
+> +  clocks:
+> +    items:
+> +      - description: board XO clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: xo
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - '#clock-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    a53pll_ipq: clock@b116000 {
+> +        compatible = "qcom,ipq-apss-pll";
+> +        reg = <0x0b116000 0x40>;
+> +        #clock-cells = <0>;
+> +        clocks = <&xo>;
+> +        clock-names = "xo";
+> +    };
+> -- 
+> 2.7.4
+> 
