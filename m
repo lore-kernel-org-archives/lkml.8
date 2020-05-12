@@ -2,207 +2,98 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 477DEC2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CAACA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2326420740
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:47:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bskdv2W4"
+	by mail.kernel.org (Postfix) with ESMTP id D7818206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:50:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731127AbgELTrj (ORCPT
+        id S1730903AbgELTuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 15:47:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbgELTrj (ORCPT
+        Tue, 12 May 2020 15:50:19 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:43423 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbgELTuS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 15:47:39 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1441C061A0C;
-        Tue, 12 May 2020 12:47:38 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id a4so11590656lfh.12;
-        Tue, 12 May 2020 12:47:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=WjAjlpYE7fH5pN8t/yMbFuqxjvx54OxzSi4iAN7+wSY=;
-        b=bskdv2W4eahWyCznKY14CJaqMIlwg1JIs4kKKX9w4GzFWU7e5GH7ZXA1LwZHDIPzDT
-         n4snYo2v4TATLedeAxkTEdRcKvMT/CxWV3nd3GPFERWcvLQKolJsNKPU2MKqiWtdwdeO
-         XoXLDSo8xKC9uec54bfG3/D+hSLz/dbu+JhrUVaquJh8vthl42QxRpOIVIDvuA1ntvig
-         c/I4kqJXBFyt6uetmUKea55s5kCjd+EJzobnIOWqFKa30dhKGCRRKBbcmhlUL8BN16fa
-         tk/In/Hd9csTY3mtXo6f3pTZKG2DDMXEMa/KePTBMQrKEwXqZtzBLAYscY5foP+509Ev
-         W7CA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=WjAjlpYE7fH5pN8t/yMbFuqxjvx54OxzSi4iAN7+wSY=;
-        b=add6R0G5jjxLv3z4IdgBZV5dvi4cQg04oq+iWOdNK4kSycQqyMT/5mc9ZQt+RjJbMt
-         QDUnKkARvjifO2PeYZ0fMB4VpQCwqjhzn1FsfltyPc/QpH+HCxT6BAOzUPWAr8eZidZ7
-         bHwLRyJUGiT/NgpwK8oJbbq14jNKfr4fapTMyC0ZSnuh6JnVs14QDWAYt4nO3NtN4fa3
-         18tD0ieirJmNqOgT0hfeerW96ddUY6jc78S8oQsaTr6FhLHfMTjstzxjCPVLO6A2U0Fq
-         Mi9W7ue5yGDMyDuaIpmElA16DV/HzOrD05mgDbq92d+IUX+NHduzQxP3gF/3NV7wG7Vy
-         cWvg==
-X-Gm-Message-State: AOAM5331FsWfR6o2ZRKMiOdlgoMV9k+340cQk9sfheUzmS8TH20fd6CB
-        LuYu9AbCqwtO3p4rDasRjbc=
-X-Google-Smtp-Source: ABdhPJz6Agc6qFrTkJ/HFpA/zp3IZ9qUzNEsSTFeJF1MqVWcGIkxmnqj1kooNcNu8xzXwyR6SNTsIA==
-X-Received: by 2002:ac2:558e:: with SMTP id v14mr15473478lfg.138.1589312857125;
-        Tue, 12 May 2020 12:47:37 -0700 (PDT)
-Received: from mobilestation ([95.79.139.244])
-        by smtp.gmail.com with ESMTPSA id r12sm13097599ljc.12.2020.05.12.12.47.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 12:47:36 -0700 (PDT)
-Date:   Tue, 12 May 2020 22:47:34 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] dmaengine: dw: Introduce max burst length hw
- config
-Message-ID: <20200512194734.j5xvm3khijpp5tkh@mobilestation>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-6-Sergey.Semin@baikalelectronics.ru>
- <20200508114153.GK185537@smile.fi.intel.com>
- <20200512140820.ssjv6pl7busqqi3t@mobilestation>
- <20200512191208.GG185537@smile.fi.intel.com>
+        Tue, 12 May 2020 15:50:18 -0400
+Received: from mail-qk1-f169.google.com ([209.85.222.169]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MAgIQ-1jNYHp0ihE-00B6ut for <linux-kernel@vger.kernel.org>; Tue, 12 May
+ 2020 21:50:17 +0200
+Received: by mail-qk1-f169.google.com with SMTP id i14so13838126qka.10
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:50:17 -0700 (PDT)
+X-Gm-Message-State: AOAM531Twh7mf9NUGMsI4X+/5DM9aVqw7zlhsLZQxovS1fASuLeGqap4
+        7N9TjLIIl3H2XVHhdPhQ51qd0ubXkAPSv1Nnyvc=
+X-Google-Smtp-Source: ABdhPJwKJd3U0klcU7IDRjkuleiIc4wPNOMiOc0saxTFEWTaSUun13tPHi7rCexv4xkXDUCA3EAbyG/iGjnOgQ+uULY=
+X-Received: by 2002:a37:bc7:: with SMTP id 190mr2657025qkl.286.1589313016016;
+ Tue, 12 May 2020 12:50:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512191208.GG185537@smile.fi.intel.com>
+References: <CAK8P3a1JS3_2fWrhNTZx0eTWjJa-GTb4AscTPqydpSP5EB15Yw@mail.gmail.com>
+ <20200414151748.GA5624@afzalpc> <CAK8P3a0JW9x-Wk9Ec3+zLjPHbWAvPQx8MF-xe-PnWUgEjRAuTg@mail.gmail.com>
+ <20200415135407.GA6553@afzalpc> <20200503145017.GA5074@afzalpc>
+ <CAK8P3a3OC5UO72rTDWi6+XgmExJmkATEjscq8hns8Bng06OpcQ@mail.gmail.com>
+ <20200504091018.GA24897@afzalpc> <CAK8P3a25sZ9B+AE=EJyJZSU91CkBLLR6p2nixw_=UAbczg3RiQ@mail.gmail.com>
+ <20200511142113.GA31707@afzalpc> <CAK8P3a0=+aBJLTvHOskTv=tba_s5b5MzWrYG8mxH3iLNy4hfBw@mail.gmail.com>
+ <20200512104758.GA12980@afzalpc>
+In-Reply-To: <20200512104758.GA12980@afzalpc>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 12 May 2020 21:49:59 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1DQWG1+ab2+vQ2XCAKYxPUjJk5g3W3094j-adDXSQfzQ@mail.gmail.com>
+Message-ID: <CAK8P3a1DQWG1+ab2+vQ2XCAKYxPUjJk5g3W3094j-adDXSQfzQ@mail.gmail.com>
+Subject: Re: ARM: static kernel in vmalloc space
+To:     afzal mohammed <afzal.mohd.ma@gmail.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:blbAoHz0+CqER1w53waskxa/mVPfQBIA/zs3Fq8lPgn02aAoN47
+ NTjfMzxYskcWg4MRCwhReK/i5MnwJucBCAMw1LS4XmyVL/jTL8Gv2b+v72PG9EBbcPRbJ1c
+ jf4fi8UJP+IbaETb9YkiAq1MNLtkAYcd5eclSWZTjBn7za/NjOiAVhxDpuH6IafuHNynY6m
+ HN6ieMnUNrs7GtnG7QPEA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:d9K5INitm8A=:NzYMwt2C46/nI537H/luU9
+ n5wh8nO6TfZhr22Q02qvXH23v/VHtUeQOY8aQBYiTC2uHBJJYEX61svXKadtaBhX2tNyOL3oa
+ f7wWH8aotE1rk2JbJROv4V9PIJYMrv2K/MbtVNPXztgOkA4styc8xf7lEEQWLhZieKzZUcrP/
+ YfU73qx2sfJHRZSs9FBceZVRPz1RyLBh2cTH3gexGbkJLS2GkagEade/uuiD7g/PYcWgAzO0l
+ 1InMbU1BwFXp4qR7PaTfRCy1TdGnhzwnvBgd3vScqL+ZLPmiOJ+1uIiPVPFsMzT2qu757qEQe
+ byiC9LonIq/gdwxH6nYMr0RueQA36JgMBkC6ovSpZfQBfmvrnS3nlSylsJ1PEyLtqpzNjZBaK
+ moRE5Oj/5o4dfDqsFaNeno1ahTglqCKwPU0AUcF0B5yG3lLj9sLa43IPxEyS0/YPtteRJeBqR
+ DJ5B8+Yr0louUgq+lz+l3Fruz+Dn5ph8FeC0X8b0R4dT/wfPopOpAKsIvItBaWOVpJ0wpL2fC
+ k2cFxTwjRvI1R8+kQtHVV+mMeyabhiQtqB1n5WtTZObLF+Kluc3b23m62iKgK+Gq6Z1lhP5Iz
+ OMmQBa8NH2cOId76aMNZ2zl4fI00hldwtr9W8Bj3iYK086IQavLGVRF9HRUJjfLZaMS+tpia1
+ MC4vngH59l69JG4GoDx0wdIFVHQUWlc79KWL9YHMJf4ElHV8+g0HgwcwomtRGPv9yDVFpykMJ
+ VLXNYOon3eLHzucYVp4b1wLZ6Qp9fBfyyOjJj7fQXlYvBDqcu311ADU/PZaLuQikWFXmLNocK
+ fomf85JMPce6oHb4Pr5MJXPEWc6iknqd4tX60GvSkEaxONYZ7U=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 10:12:08PM +0300, Andy Shevchenko wrote:
-> On Tue, May 12, 2020 at 05:08:20PM +0300, Serge Semin wrote:
-> > On Fri, May 08, 2020 at 02:41:53PM +0300, Andy Shevchenko wrote:
-> > > On Fri, May 08, 2020 at 01:53:03PM +0300, Serge Semin wrote:
-> > > > IP core of the DW DMA controller may be synthesized with different
-> > > > max burst length of the transfers per each channel. According to Synopsis
-> > > > having the fixed maximum burst transactions length may provide some
-> > > > performance gain. At the same time setting up the source and destination
-> > > > multi size exceeding the max burst length limitation may cause a serious
-> > > > problems. In our case the system just hangs up. In order to fix this
-> > > > lets introduce the max burst length platform config of the DW DMA
-> > > > controller device and don't let the DMA channels configuration code
-> > > > exceed the burst length hardware limitation. Depending on the IP core
-> > > > configuration the maximum value can vary from channel to channel.
-> > > > It can be detected either in runtime from the DWC parameter registers
-> > > > or from the dedicated dts property.
-> > > 
-> > > I'm wondering what can be the scenario when your peripheral will ask something
-> > > which is not supported by DMA controller?
-> > 
-> > I may misunderstood your statement, because seeing your activity around my
-> > patchsets including the SPI patchset and sometimes very helpful comments,
-> > this question answer seems too obvious to see you asking it.
-> > 
-> > No need to go far for an example. See the DW APB SSI driver. Its DMA module
-> > specifies the burst length to be 16, while not all of ours channels supports it.
-> > Yes, originally it has been developed for the Intel Midfield SPI, but since I
-> > converted the driver into a generic code we can't use a fixed value. For instance
-> > in our hardware only two DMA channels of total 16 are capable of bursting up to
-> > 16 bytes (data items) at a time, the rest of them are limited with up to 4 bytes
-> > burst length. While there are two SPI interfaces, each of which need to have two
-> > DMA channels for communications. So I need four channels in total to allocate to
-> > provide the DMA capability for all interfaces. In order to set the SPI controller
-> > up with valid optimized parameters the max-burst-length is required. Otherwise we
-> > can end up with buffers overrun/underrun.
-> 
-> Right, and we come to the question which channel better to be used by SPI and
-> the rest devices. Without specific filter function you can easily get into a
-> case of inverted optimizations, when SPI got channels with burst = 4, while
-> it's needed 16, and other hardware otherwise. Performance wise it's worse
-> scenario which we may avoid in the first place, right?
+On Tue, May 12, 2020 at 12:48 PM afzal mohammed <afzal.mohd.ma@gmail.com> wrote:
+>
+> On Mon, May 11, 2020 at 05:29:29PM +0200, Arnd Bergmann wrote:
+>
+> > What do you currently do with the module address space?
+>
+> In the current setup, module address space was untouched, i.e. virtual
+> address difference b/n text & module space is far greater than 32MB, at
+> least > (2+768+16)MB and modules can't be loaded unless ARM_MODULE_PLTS
+> is enabled (this was checked now)
+>
+> > easiest way is to just always put modules into vmalloc space, as we already
+> > do with CONFIG_ARM_MODULE_PLTS when the special area gets full,
+> > but that could be optimized once the rest works.
+>
+> Okay
 
-If we start thinking like you said, we'll get stuck at a problem of which interfaces
-should get faster DMA channels and which one should be left with slowest. In general
-this task can't be solved, because without any application-specific requirement
-they all are equally valuable and deserve to have the best resources allocated.
-So we shouldn't assume that some interface is better or more valuable than
-another, therefore in generic DMA client code any filtering is redundant.
+Any idea which bit you want to try next? Creating a raw_copy_{from,to}_user()
+based on get_user_pages()/kmap_atomic()/memcpy() is probably a good
+next thing to do. I think it can be done one page at a time with only
+checking for
+get_fs(), access_ok(), and page permissions, while get_user()/put_user()
+need to handle a few more corner cases.
 
-> 
-> > > Peripheral needs to supply a lot of configuration parameters specific to the
-> > > DMA controller in use (that's why we have struct dw_dma_slave).
-> > > So, seems to me the feasible approach is supply correct data in the first place.
-> > 
-> > How to supply a valid data if clients don't know the DMA controller limitations
-> > in general?
-> 
-> This is a good question. DMA controllers are quite different and having unified
-> capabilities structure for all is almost impossible task to fulfil. That's why
-> custom filter function(s) can help here. Based on compatible string you can
-> implement whatever customized quirks like two functions, for example, to try 16
-> burst size first and fallback to 4 if none was previously found.
-
-Right. As I said in the previous email it's up to the corresponding platforms to
-decide the criteria of the filtering including the max-burst length value.
-Even though the DW DMA channels resources aren't uniform on Baikal-T1 SoC I also
-won't do the filter-based channel allocation, because I can't predict the SoC
-application. Some of them may be used on a platform with active SPI interface
-utilization, some with specific requirements to UARTs and so on.
-
-> 
-> > > If you have specific channels to acquire then you probably need to provide a
-> > > custom xlate / filter functions. Because above seems a bit hackish workaround
-> > > of dynamic channel allocation mechanism.
-> > 
-> > No, I don't have a specific channel to acquire and in general you may use any
-> > returned from the DMA subsystem (though some platforms may need a dedicated
-> > channels to use, in this case xlate / filter is required). In our SoC any DW DMAC
-> > channel can be used for any DMA-capable peripherals like SPI, I2C, UART. But the
-> > their DMA settings must properly and optimally configured. It can be only done
-> > if you know the DMA controller parameters like max burst length, max block-size,
-> > etc.
-> > 
-> > So no. The change proposed by this patch isn't workaround, but a useful feature,
-> > moreover expected to be supported by the generic DMA subsystem.
-> 
-> See above.
-> 
-> > > But let's see what we can do better. Since maximum is defined on the slave side
-> > > device, it probably needs to define minimum as well, otherwise it's possible
-> > > that some hardware can't cope underrun bursts.
-> > 
-> > There is no need to define minimum if such limit doesn't exists except a
-> > natural 1. Moreover it doesn't exist for all DMA controllers seeing noone has
-> > added such capability into the generic DMA subsystem so far.
-> 
-> There is a contract between provider and consumer about DMA resource. That's
-> why both sides should participate in fulfilling it. Theoretically it may be a
-> hardware that doesn't support minimum burst available in DMA by a reason. For
-> such we would need minimum to be provided as well.
-
-I don't think 'theoretical' consideration counts when implementing something in
-kernel. That 'theoretical' may never happen, but you'll end up supporting a
-dummy functionality. Practicality is what kernel developers normally place
-before anything else.
-
--Sergey
-
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+        Arnd
