@@ -2,200 +2,145 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72208C2D0F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFA7C2D0F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FEBF20769
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D02F020740
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:02:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="RFrsodxT"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="FylPsE15"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731236AbgELVAc (ORCPT
+        id S1731212AbgELVCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 17:00:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42540 "EHLO
+        Tue, 12 May 2020 17:02:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725938AbgELVAb (ORCPT
+        by vger.kernel.org with ESMTP id S1726885AbgELVCC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 17:00:31 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8090DC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 14:00:31 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id a21so15275843ljj.11
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 14:00:31 -0700 (PDT)
+        Tue, 12 May 2020 17:02:02 -0400
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CE41C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 14:02:02 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id v63so6967596pfb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 14:02:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=TDdEsiy1lD5BaG8worU3pfEwiy8TVHZ/OK/6hiOMkBQ=;
-        b=RFrsodxTsCdMDcQ0B7Lm3EsixY3LdaI1+OVIps49ZoFWYCOGlDFAB5lJO7dN6wAQOV
-         scwBlc1HXjxzj4mfj9JHfkqfA+0XS6g3aaghfXVv80FYYVFhuABYTTGrXdoL6ncQf4dT
-         pWsdlUJcelgB/v7AjD/q4992ZpzmFZEhY3OZjXIPO0JVggQepdu9n60DxKT3dEm3xErg
-         KFTkRFuOhVZqSbtzQjEkDmUGl4XWywDr0kwTM7ZdOOktys4+RqaKmUhXtvMaRldPBBBu
-         zrS/bzo8arfMKgwFRWigGHY8QYGOEdQJA6J4aK36/kwgVulFFtUyS/7dSCEOl1PmBohB
-         m5vQ==
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ayvF8u1Trz98kPzut/fpymP+skmFBSVYrYtlr1DmSGU=;
+        b=FylPsE15RtP6ywL7le1gyvsxrmPItQoeC/5Ryg5WHuwi0HcfkcvPiSWmUjVKs8lCMX
+         bmDljyY3/7gvmviPldTdLfU4Gs8NapeSyUdlJsTReKuUfoyOHDeg65aEuEAKZWWskEYx
+         ZbZUOyUzIJptP/QoXJsD/1wRwyX3QKwfRhEYzozjKVwvpZWNK+GnE594UG/v3AhgeGfv
+         gofkpVIahbbP3/7V7MmAgKiAeY7fZ0ppG22okSItXuwTjx6U9Jcki7Sq5Yi7wkbznQz1
+         Ch87INmwG2hjL+9unZhTUzOOtMPkkYN6BDbMCi/1bDTHkBy0AvM5TQwMGDjbf5JZ+L5m
+         ZXVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=TDdEsiy1lD5BaG8worU3pfEwiy8TVHZ/OK/6hiOMkBQ=;
-        b=KyLgM42MorTGlGg90UNMHHb5YQJYZ8g3rbv+Fq9g0lMVsru0W8C321lUBDV84BAUV+
-         KHW/jZKkeUjIe11mFscSqd1AE1/nGhh0HS7RMe7dMInWXDVV3qR0/KAtG1yx+POzioiM
-         +BL9EXPDY6uf2ScT84+PDfyGx8V8eHSVicTuv3iUBeccu0YIMH3P0c8dhzWJYNN0WD16
-         aC7Q3c4KMk3L3mt067nbGDM8xcyoPkdtUk23k7eIGgudfe45hdqKzuPUFHuVg8WefjaZ
-         v0TK5WEJMCcLocKw5zDzzsurp348YUKq1ysa2sMMPlOuiSACFWUl129X9j2Gb07z5Zqo
-         EzFA==
-X-Gm-Message-State: AOAM532te+5MZ9p+z4l/zhW8Lfi953WDJW2KqmLf+Hk569vSpVoSb8l2
-        Nt+1sIlJE+eG1Tu935A55sWbxf6L22pY8CTUTjYmMw==
-X-Google-Smtp-Source: ABdhPJwf2XbHn64f/pzEGlh7y/CxqM3rg7OqY0mu+g2r0Irzp74CC5oIv2nH/0mHE3u+OoFIutEpx9VWuzzH0188Js4=
-X-Received: by 2002:a2e:96cd:: with SMTP id d13mr14284184ljj.219.1589317229927;
- Tue, 12 May 2020 14:00:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200306002112.255361-1-dbasehore@chromium.org>
- <ecbfb5f8-615a-4a88-5dac-de17158125bf@gmail.com> <CAGAzgsqpjZxh7PEL_Dy7HrFeFGm7+=F6cL3QG9KmK9CHvDWZ9g@mail.gmail.com>
- <6dc9ef16-9671-6ce8-27e6-aa1f4c009ee2@gmail.com> <CAGAzgsrNrq+S+-5KEFVnJn6S5DRn1fKkToD5=KR911T9AOAF-w@mail.gmail.com>
- <736ad1d2-4a28-87e8-62f7-28a5582c9fcf@gmail.com>
-In-Reply-To: <736ad1d2-4a28-87e8-62f7-28a5582c9fcf@gmail.com>
-From:   Sean Paul <sean@poorly.run>
-Date:   Tue, 12 May 2020 16:59:53 -0400
-Message-ID: <CAMavQKJtbha_o==X+MX6GmjfAMYvdLyubvCFg48Tbn1mdgo40w@mail.gmail.com>
-Subject: Re: [PATCH v10 0/2] Panel rotation patches
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     "dbasehore ." <dbasehore@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=ayvF8u1Trz98kPzut/fpymP+skmFBSVYrYtlr1DmSGU=;
+        b=dPbeSnkN4qheNPEIAdijPP7awIeFvhTMWNhXp0STOsdiJiV0ZMq07q/qQ8iC+kf80L
+         JcGIPJRoyBPZ+xMxFu62/ERdHE2/6uZ2pB4PBH5M+UAKJIHBTyh9F6i1ECJ07wbT/WAV
+         XZnnyW6Wfu3aebSfXoqOXL4h1mmAc9tIxq3/1AEJE5KldgvxddGUZCaOG6ZJhH3vLp9d
+         wKLNrh0qyR//dhbLUMco3ygccxnZkLYS0Qu7ZpSVJkHCwGgKCT0sFCP2YzzssmuC0SRa
+         jtSlM1gNw1ikJixvAxKfAXn906ECBQhn4b4+wWWPUkHeIotrHwxqQ8Sz0EVH1BkuwACN
+         I8Zw==
+X-Gm-Message-State: AGi0PuaLHtdHO0FduaPfAscCggQOvsGzQQMgSnlXE3kzKtrcs1igb7VL
+        PEAUe2QLPmfm4k3E/5fSbhJ1ayTugAE=
+X-Google-Smtp-Source: APiQypKlB/jxdOAsAkgCZwJcJ3f8Oon0jsH3vtTXx3EiO/PQpimL6MarV7shEWha7UHZ3nX7tUkusw==
+X-Received: by 2002:aa7:9258:: with SMTP id 24mr23618884pfp.35.1589317321647;
+        Tue, 12 May 2020 14:02:01 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id s123sm12859105pfs.170.2020.05.12.14.02.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 14:02:00 -0700 (PDT)
+Date:   Tue, 12 May 2020 14:02:00 -0700 (PDT)
+X-Google-Original-Date: Tue, 12 May 2020 13:54:00 PDT (-0700)
+Subject:     Re: [PATCH -next] riscv: perf: RISCV_BASE_PMU should be closeable
+In-Reply-To: <20200507150445.174390-2-wangkefeng.wang@huawei.com>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        wangkefeng.wang@huawei.com, alankao@andestech.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     wangkefeng.wang@huawei.com
+Message-ID: <mhng-58148e77-03b6-4c56-98ea-0d0cbf99d522@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 7:03 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->
-> 15.04.2020 00:32, dbasehore . =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Tue, Apr 14, 2020 at 2:18 PM Dmitry Osipenko <digetx@gmail.com> wrot=
-e:
-> >>
-> >> 14.04.2020 22:32, dbasehore . =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >>> Hi Dmitry, sorry for the late reply.
-> >>>
-> >>> On Sun, Mar 8, 2020 at 12:25 PM Dmitry Osipenko <digetx@gmail.com> wr=
-ote:
-> >>>>
-> >>>> 06.03.2020 03:21, Derek Basehore =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >>>>> This adds the plumbing for reading panel rotation from the devicetr=
-ee
-> >>>>> and sets up adding a panel property for the panel orientation on
-> >>>>> Mediatek SoCs when a rotation is present.
-> >>>>
-> >>>> Hello Derek and everyone,
-> >>>>
-> >>>> I'm looking at adding display rotation support to NVIDIA Tegra DRM
-> >>>> driver because some devices have display panel physically mounted
-> >>>> upside-down, and thus, display controller's scan-out needs to be rot=
-ated
-> >>>> by 180=C2=B0 in this case.
-> >>>>
-> >>>> Derek, yours panel-rotation patches add support for assigning panel'=
-s
-> >>>> orientation to the connector, but then only primary display plane
-> >>>> receives rotation value in [1], while rotation needs to be applied t=
-o
-> >>>> all available overlay/cursor planes and this should happen in other
-> >>>> places than [1] as well.
-> >>>
-> >>> This is intended. We don't correct the output in the kernel. We
-> >>> instead rely on notifying userspace that the panel is rotated, then w=
-e
-> >>> handle it there.
-> >>>
-> >>>>
-> >>>> [1] drm_client_modeset_commit_atomic()
-> >>>>
-> >>>> Please also note that in a case of the scan-out rotation, plane's
-> >>>> coordinates need to be changed in accordance to the display's rotati=
-on.
-> >>>>
-> >>>> I looked briefly through the DRM code and my understanding that the =
-DRM
-> >>>> core currently doesn't support use-case where scan-out needs to rota=
-ted
-> >>>> based on a panel's orientation, correct? Is it the use-case you're
-> >>>> working on for the Mediatek driver?
-> >>>
-> >>> Yes, we rely on userspace to rotate the output. The major reason for
-> >>> this is because there may not be a "free" hardware rotation that can
-> >>> be applied to the overlay. Sean Paul and others also preferred that
-> >>> userspace control what is output to the screen instead of the kernel
-> >>> taking care of it. This code just adds the drm property to the panel.
-> >>>
-> >>
-> >> Could you please explain what that userspace is?
-> >
-> > This was added for Chrome OS, which uses its own graphics stack,
-> > Ozone, instead of Xorg.
-> >
->
-> Thank you very much for the clarification.
->
-> It's probably not a big problem for something monolithic and customized
-> like ChromeOS to issue a software update in order to take into account
-> all specifics of a particular device, but this doesn't work nicely for a
-> generic software, like a usual Linux distro.
->
-> >> AFAIK, things like Xorg modesetting don't support that orientation pro=
-perty.
->
-> In my case it's not only the display panel which is upside-down, but
-> also the touchscreen. Hence both display output and touchscreen input
-> need to be rotated at once, otherwise you'll end up with either display
-> or input being upside-down.
->
-> The 180=C2=B0 rotation should be free on NVIDIA Tegra. There are no known
-> limitations for the planes and BSP kernel video driver handles the
-> plane's coordinates/framebuffer rotation within the driver.
->
-> The kernel's input subsystem allows us to transparently (for userspace)
-> remap the touchscreen input (by specifying generic touchscreen
-> device-tree properties), while this is not the case for the DRM subsystem=
-.
->
-> @Thierry, @Sean, @Daniel, could you please help me to understand how a
-> coordinated display / input rotation could be implemented, making the
-> rotation transparent to the user (i.e. avoiding xorg.conf hacking and
-> etc)? It should be nice if display's output could be flipped within the
-> DRM driver, hiding this fact from userspace.
+On Thu, 07 May 2020 08:04:45 PDT (-0700), wangkefeng.wang@huawei.com wrote:
+> As 178e9fc47aae("perf: riscv: preliminary RISC-V support") said,
+> For RISCV_BASE_PMU, 'this option can also be disable to reduce kernel size',
+> but it could not work well, we need diable both RISCV_BASE_PMU and
+> PERF_EVENTS manually, or build error will occur when only disable
+> RISCV_BASE_PMU.
 
-I think the right thing to do is to fix userspace to respect this
-property, since that has the most communal benefit.
+I'm worried this belies a larger issue related to how this PMU stuff works, but
+we have only one PMU right now so it's not a pressing issue.  I've taken this
+onto fixes.
 
-However(!!) if you don't want to do that, how about inspecting the
-info->panel_orientation value after drm_panel_attach in tegra driver
-and then adjusting rotation values in the driver. Of course, you
-wouldn't want to expose the panel orientation property since you don't
-want userspaces to be double-rotating on you, but it's optional so
-you'd be fine.
+Thanks!
 
 >
-> Will it be okay if we'll add a transparent-rotation support specifically
-> to the Tegra DRM driver? For example if device-tree contains
-> nvidia,display-flip-y property, then the Tegra DRM driver will take care
-> of rotating coordinates/framebuffer of the display planes.
-
-I don't think this is necessary, but it also wouldn't really be
-appropriate to put software attributes into devicetree anyways.
-
-Sean
+> Cc: Alan Kao <alankao@andestech.com>
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+>  arch/riscv/include/asm/perf_event.h | 8 ++------
+>  arch/riscv/kernel/Makefile          | 2 +-
+>  2 files changed, 3 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/perf_event.h b/arch/riscv/include/asm/perf_event.h
+> index 0234048b12bc..062efd3a1d5d 100644
+> --- a/arch/riscv/include/asm/perf_event.h
+> +++ b/arch/riscv/include/asm/perf_event.h
+> @@ -12,19 +12,14 @@
+>  #include <linux/ptrace.h>
+>  #include <linux/interrupt.h>
+>
+> +#ifdef CONFIG_RISCV_BASE_PMU
+>  #define RISCV_BASE_COUNTERS	2
+>
+>  /*
+>   * The RISCV_MAX_COUNTERS parameter should be specified.
+>   */
+>
+> -#ifdef CONFIG_RISCV_BASE_PMU
+>  #define RISCV_MAX_COUNTERS	2
+> -#endif
+> -
+> -#ifndef RISCV_MAX_COUNTERS
+> -#error "Please provide a valid RISCV_MAX_COUNTERS for the PMU."
+> -#endif
+>
+>  /*
+>   * These are the indexes of bits in counteren register *minus* 1,
+> @@ -82,6 +77,7 @@ struct riscv_pmu {
+>  	int		irq;
+>  };
+>
+> +#endif
+>  #ifdef CONFIG_PERF_EVENTS
+>  #define perf_arch_bpf_user_pt_regs(regs) (struct user_regs_struct *)regs
+>  #endif
+> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+> index 1f5736e996fd..b355cf485671 100644
+> --- a/arch/riscv/kernel/Makefile
+> +++ b/arch/riscv/kernel/Makefile
+> @@ -43,7 +43,7 @@ obj-$(CONFIG_MODULE_SECTIONS)	+= module-sections.o
+>  obj-$(CONFIG_FUNCTION_TRACER)	+= mcount.o ftrace.o
+>  obj-$(CONFIG_DYNAMIC_FTRACE)	+= mcount-dyn.o
+>
+> -obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o
+> +obj-$(CONFIG_RISCV_BASE_PMU)	+= perf_event.o
+>  obj-$(CONFIG_PERF_EVENTS)	+= perf_callchain.o
+>  obj-$(CONFIG_HAVE_PERF_REGS)	+= perf_regs.o
+>  obj-$(CONFIG_RISCV_SBI)		+= sbi.o
