@@ -2,116 +2,101 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49958C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33415C54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2288F20733
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12E9D206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:36:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Vw+D7EeD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cCKlHK9w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729190AbgELHgH (ORCPT
+        id S1729056AbgELHg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 03:36:07 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:15742 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729021AbgELHgG (ORCPT
+        Tue, 12 May 2020 03:36:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58066 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727859AbgELHg4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 03:36:06 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589268966; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=WYkjPn3kNYCXdEOxwxPSbshKe2uDidq2LAMu5m1i9/4=;
- b=Vw+D7EeDjK/PbdALXJ9wgaDtEYibGS0d6hEdiaOQ+HqmGJTVzXwPNLsjYFXEvyTcJJmTvTRi
- kT/3hmYT8U8p0qJYs0dDxScRyWSzYr7VNPnM7UifGn6MMtqbgEBk4b3tBOm2QyFUcRjSiBFM
- YG+2tyZISQ0e40HkSJgkV2r+Wdg=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eba51dc.7fb1586fdb20-smtp-out-n04;
- Tue, 12 May 2020 07:35:56 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6B366C43637; Tue, 12 May 2020 07:35:55 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1A7E8C4478F;
-        Tue, 12 May 2020 07:35:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1A7E8C4478F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] wil6210: Replace zero-length array with flexible-array
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200507151120.GA4469@embeddedor>
-References: <20200507151120.GA4469@embeddedor>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Maya Erez <merez@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200512073555.6B366C43637@smtp.codeaurora.org>
-Date:   Tue, 12 May 2020 07:35:55 +0000 (UTC)
+        Tue, 12 May 2020 03:36:56 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12941C061A0C;
+        Tue, 12 May 2020 00:36:56 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id fu13so8985786pjb.5;
+        Tue, 12 May 2020 00:36:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=oJmUzMw42DTbrXzzUYd7Ks8dtTTCqqycjSbTZSaOap0=;
+        b=cCKlHK9w4o+2S8+AIROccI9rcib+ct01tsHVfjDmeGmiPY0Wn0Dc73yHEqH3sN4XQk
+         AAIp3z9L5wcSNtfz5GuHrOsNcWQ2KyOnD3Mi+3rQJ0sEoBWI2zysRtB+iQg9+1Az0oKU
+         5mDgji33MT0GJE0sltyWnLxivbDrec0xxp5llL9doCR9UattDLmvRJZA3E9cQ5Nh7y4z
+         0KrhW+XCAj7kNMMAE0Hv36lDa+4DAVCVTwdoCieHnyRhaoVzpSBcSfY/3/29ZqBdYYIY
+         rtcUQe5HLpU0QMXT3xVnsISP5f39SHz3Q6vhH9mXoYgiTZOhIjiDwgnZ6DipQhF8ulxU
+         1jpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=oJmUzMw42DTbrXzzUYd7Ks8dtTTCqqycjSbTZSaOap0=;
+        b=eaSVwOb+xd1mdunXUeHY4oNDYKmjes7nxzGBXZ5JTJhCnLVh/ULXWhU1AHu/hKjKZT
+         FqLJ1c4/KU1PrtDzoHzHNWULPY2zjuEN2sWNXbjyH/40L6mGmooLTu66A7uKRGCZ0G+L
+         f+/Ci0OGSmbq88ZUE7S+6kjHXAHW+Ph2mpW6HUAp0KFdH6Mv4cgzU8C4bikIMEZYCyMs
+         6Gg8eka0t1LacBuXWnVPtHinJzE90du2/NN10ECQWUgK3SKDUqKWK2TWjgnM9z1mlcd2
+         7IEhr0GWFFcWJtzSTVkkjueblYUe6h67YjAFh2b+3k00r8qxWOwIucYctkhe+yXLnm4o
+         rElg==
+X-Gm-Message-State: AGi0PuY3PI1sn8sO2LlTahNWhrMaIXwUYQPNX0OxdcsE0TXBFWiMK14o
+        i/b+2Q/Ed0YpI1WTGaiI+G9Zv9zDCLQ=
+X-Google-Smtp-Source: APiQypKmaZEGYk0fHOt/kEOG6LJdizurDE2nYIhhfFMWLuELWHUAe3JTjq8LUtwXSDcZzGgVK06Iag==
+X-Received: by 2002:a17:90b:78e:: with SMTP id l14mr27370151pjz.144.1589269015605;
+        Tue, 12 May 2020 00:36:55 -0700 (PDT)
+Received: from fmin-OptiPlex-7060.nreal.work ([103.206.190.146])
+        by smtp.gmail.com with ESMTPSA id 5sm11732471pjf.19.2020.05.12.00.36.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 May 2020 00:36:55 -0700 (PDT)
+From:   dillon.minfei@gmail.com
+To:     robh+dt@kernel.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, broonie@kernel.org, p.zabel@pengutronix.de
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com, dillonhua@gmail.com,
+        dillon.minfei@gmail.com
+Subject: [PATCH v2 0/3] Enable l3gd20 on stm32f429-disco board
+Date:   Tue, 12 May 2020 15:36:47 +0800
+Message-Id: <1589269010-18472-1-git-send-email-dillon.minfei@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+From: dillon min <dillon.minfei@gmail.com>
 
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+This patchset is for enable l3gd20 on stm32f429-disco board
+has following changes:
 
-Patch applied to ath-next branch of ath.git, thanks.
+V2:
+    1, insert blank line at stm32f420-disco.dts line 143
+    2, add more description for l3gd20 in commit message
 
-104f3d95d8d6 wil6210: Replace zero-length array with flexible-array
+V1:
+    1, enable spi5 controller on stm32f429-disco (dts)
+    2, add spi5 pinmap for stm32f429-disco  (dts)
+    3, add SPI_SIMPLEX_RX, SPI_3WIRE_RX support for stm32f4
+
+dillon min (3):
+  ARM: dts: stm32: Add pin map for spi5 on stm32f429-disco board
+  ARM: dts: stm32: enable l3gd20 on stm32429-disco board
+  spi: stm32: Add SPI_SIMPLEX_RX, SPI_3WIRE_RX support for stm32f4
+
+ arch/arm/boot/dts/stm32f4-pinctrl.dtsi | 17 +++++++++++++++++
+ arch/arm/boot/dts/stm32f429-disco.dts  | 25 +++++++++++++++++++++++++
+ drivers/spi/spi-stm32.c                | 29 +++++++++++++++++++++++++----
+ 3 files changed, 67 insertions(+), 4 deletions(-)
 
 -- 
-https://patchwork.kernel.org/patch/11534175/
+2.7.4
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
