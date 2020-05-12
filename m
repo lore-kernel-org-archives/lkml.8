@@ -2,74 +2,170 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B97CBC2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFE5C2D0FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 899BF20769
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:46:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589319978;
-	bh=ulLHlolQRXsWXYiTML1BrCYngQd1LDZaMS96rMIfDoI=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=t/wRzmgDF9QX9n7Mc/diJX2hbQiTnOZTT87AkSrNvOsQ0lG3gKmgx0MoqTDE3VvDZ
-	 Dit9I0Jd3V0ECWy1fmhXYlJuX+3+JBOgb3akSWUDKVT0W/+0/nrXpI14Stf7ttMS+O
-	 YbTw7gmvNEmNeCbF63G2Hv6wMrZ1dfv+ODMTXhZ8=
+	by mail.kernel.org (Postfix) with ESMTP id 9088120731
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:47:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731406AbgELVqR (ORCPT
+        id S1731411AbgELVrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 17:46:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56018 "EHLO mail.kernel.org"
+        Tue, 12 May 2020 17:47:24 -0400
+Received: from muru.com ([72.249.23.125]:54218 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731065AbgELVqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 17:46:17 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B883620731;
-        Tue, 12 May 2020 21:46:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589319976;
-        bh=ulLHlolQRXsWXYiTML1BrCYngQd1LDZaMS96rMIfDoI=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=W+OUlqzrI5Ge8FBittf7LcuviYyZbh7RW04rzXj0LXbJmBI7zFX31BvgYAIo1XAQM
-         XL8YFWUp3Nkbad2exsH3fZKlopfu4Zg7IUCUf1Q0UnAw/lmuhbuuVc7STGue7Ix1Pc
-         C1xok6HYkI+k+YIz7N4plBlZmqeamDeYPfz3+OZc=
-Content-Type: text/plain; charset="utf-8"
+        id S1728362AbgELVrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 17:47:24 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 0C4148047;
+        Tue, 12 May 2020 21:48:09 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>
+Cc:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: [PATCHv8 0/6] n_gsm serdev support and GNSS driver for droid4
+Date:   Tue, 12 May 2020 14:47:07 -0700
+Message-Id: <20200512214713.40501-1-tony@atomide.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200512204543.22090-5-robh@kernel.org>
-References: <20200512204543.22090-1-robh@kernel.org> <20200512204543.22090-5-robh@kernel.org>
-Subject: Re: [PATCH 5/5] dt-bindings: Fix incorrect 'reg' property sizes
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Date:   Tue, 12 May 2020 14:46:16 -0700
-Message-ID: <158931997603.215346.13048447179585746005@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rob Herring (2020-05-12 13:45:43)
-> The examples template is a 'simple-bus' with a size of 1 cell for
-> #address-cells and #size-cells. The schema was only checking the entries
-> had between 2 and 4 cells which really only errors on I2C or SPI type
-> devices with a single cell.
->=20
-> The easiest fix in most cases is to change the 'reg' property to for 1 ce=
-ll
-> address and size. In some cases with child devices having 2 cells, that
-> doesn't make sense so a bus node is needed.
->=20
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
+Hi all,
 
-Acked-by: Stephen Boyd <sboyd@kernel.org> # clk
+Here's the updated set of these patches fixed up for Johan's and
+Pavel's earlier comments.
+
+This series does the following:
+
+1. Adds functions to n_gsm.c for serdev-ngsm.c driver to use
+
+2. Adds a generic serdev-ngsm.c driver that brings up the TS 27.010
+   TTY ports configured in devicetree with help of n_gsm.c
+
+3. Allows the use of standard Linux device drivers for dedicated
+   TS 27.010 channels for devices like GNSS and ALSA found on some
+   modems for example
+
+4. Adds a gnss-motmdm consumer driver for the GNSS device found on
+   the Motorola Mapphone MDM6600 modem on devices like droid4
+
+I've placed the serdev-ngsm.c under drivers/tty/serdev as it still
+seems to make most sense with no better places available. It's no
+longer an MFD driver as it really does not need to care what channel
+specific consumer drivers might be configured for the generic driver.
+Now serdev-ngsm just uses of_platform_populate() to probe whatever
+child nodes it might find.
+
+I'm not attached having the driver in drivers/tty/serdev. I just
+don't have any better locations in mind. So using Johan's earlier
+i2c example, the drivers/tty/serdev/serdev-ngsm.c driver is now a
+generic protocol and bus driver, so it's getting closer to the
+the drivers/i2c/busses analogy maybe :) Please do suggest better
+locations other than MFD and misc if you have better ideas.
+
+Now without the chardev support, the /dev/gsmtty* using apps need
+to use "U1234AT+CFUN?" format for the packets. The advantage is
+less kernel code, and we keep the existing /dev/gsmtty* interface.
+
+If we still really need the custom chardev support, that can now
+be added as needed with the channel specific consumer driver(s),
+but looks like this won't be needed based on Pavel's ofono work.
+
+Regards,
+
+Tony
+
+
+Changes since v7 (was accidentally posted as v6 again):
+- Updated gsm_serdev_register_tty_port() and gsd_dlci_data() to use
+  receive_buf() to have the dlci handling follow the same path as
+  for gsm_serdev_register_dlci()
+
+- Updated for Pavel's comments and acks, did not keep the ack for
+  n_gsm.c as that has changed
+
+- Moved the GNSS driver binding to serdev-ngsm.yaml as suggested
+  by Rob
+
+- Folded in a a fix from kbuild test robot <lkp@intel.com>
+  to make motmdm_gnss_send_command() static
+
+Changes since v6:
+- Based on comments from Johan, moved back to using the existing
+  TS 27.010 TTYs created by n_gsm.c instaed of adding custom chardev
+  support to deal with the Motorola custom protocol
+
+- Based on comments from Johan, made the serdev-ngsm driver generic
+  with just minimal quirk handling for the Motorola modem
+
+- Dropped the Motorola custom protocol on top of TS 27.010 handling
+  from serdev-ngsm.c as this can now be easily handled by the channel
+  specific drivers as needed
+
+- Added few more helpers to n_gsm.c for serdev-ngsm.c to use
+
+- Added the channel specific GNSS driver for the Motorola modem
+
+Changes since v5:
+- Cosmetic fixes for issues noted by Pavel
+
+Changes since v4:
+- Use drivers/tty/serdev/protocol directory for the driver instead of
+  drivers/mfd as discussed on the lists for v3 set of patches
+- Fix remove to call kfree only after removing device from the list
+
+Changes since v3:
+- Update list of folks in Cc, looks like I sent v3 only to Lee and lkml
+- Init privdata before motmdm_register_dlci calls gsm_serdev_register_dlci
+- Update binding based on Rob's comments for license and "allOf"
+
+Changes since v2:
+- Drop useless send_command indirection, use static motmdm_send_command
+
+Changes since v1:
+
+- Simplified usage and got rid of few pointless inline functions
+- Added consumer MFD driver, devicetree binding, and dts changes
+
+
+Tony Lindgren (6):
+  tty: n_gsm: Add support for serdev drivers
+  dt-bindings: serdev: ngsm: Add binding for serdev-ngsm
+  dt-bindings: serdev: ngsm: Add binding for GNSS child node
+  serdev: ngsm: Add generic serdev-ngsm driver
+  gnss: motmdm: Add support for Motorola Mapphone MDM6600 modem
+  ARM: dts: omap4-droid4: Configure modem for serdev-ngsm
+
+ .../bindings/serdev/serdev-ngsm.yaml          |  73 +++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ .../boot/dts/motorola-mapphone-common.dtsi    |  14 +
+ drivers/gnss/Kconfig                          |   8 +
+ drivers/gnss/Makefile                         |   3 +
+ drivers/gnss/motmdm.c                         | 419 ++++++++++++++++
+ drivers/tty/n_gsm.c                           | 435 +++++++++++++++++
+ drivers/tty/serdev/Kconfig                    |  10 +
+ drivers/tty/serdev/Makefile                   |   1 +
+ drivers/tty/serdev/serdev-ngsm.c              | 449 ++++++++++++++++++
+ include/linux/serdev-gsm.h                    | 165 +++++++
+ 11 files changed, 1579 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml
+ create mode 100644 drivers/gnss/motmdm.c
+ create mode 100644 drivers/tty/serdev/serdev-ngsm.c
+ create mode 100644 include/linux/serdev-gsm.h
+
+-- 
+2.26.2
