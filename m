@@ -2,128 +2,135 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96639C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1122C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73E4420722
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A8FE20722
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589279600;
-	bh=iOtZ2eVyp6uykbgj4qii/+7h1t5fhrWXPOp64vb39Pk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=asbTw9zm7i0ZO3GthB2gMHUsIeyaT9tvS5xPKibtd4EXK2GjNbSBcR4Q6yUR2WWhk
-	 TgXpazANP4BfXIApx/m3H/O8qQN9kM8kVsvPf5wPQnHC76grox6GLiWvymS6DyU2E1
-	 2PJ7g2g2mnP2DIzNDnBPTsjBN1Pflycrafw99HhQ=
+	s=default; t=1589280001;
+	bh=4u2DdZnbBOfH5sHqCv28xYPkeReFp8gr/JDYY65Yi48=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Rjw+M8KbOaBXaauaE0+PLzi3U7WwRIGDFuKKs4GW8Nbr20rVJAA8dqe2NF/eGL3sK
+	 hwl62Dtwz11+UeDkdIYgia3DdCp6KtywiX+uHMS+pN6aJCgf1fN7NiA54lDm3DTgrn
+	 1Kphhn5dp9kVvgoqlxR4IofaYjzZdPOagAGkLsDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729555AbgELKdT (ORCPT
+        id S1729429AbgELKkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 06:33:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35740 "EHLO mail.kernel.org"
+        Tue, 12 May 2020 06:40:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729336AbgELKdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 06:33:19 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S1725889AbgELKkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 06:40:00 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D009206DD;
-        Tue, 12 May 2020 10:33:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 704F5206DD;
+        Tue, 12 May 2020 10:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589279598;
-        bh=iOtZ2eVyp6uykbgj4qii/+7h1t5fhrWXPOp64vb39Pk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lUBRFPsWwF1B/9EwmQHd1AszTkgFtKc1UlbdnkEZkL8PWqW/9u4peAjCF+tt6E6/k
-         E2WpIRHdC4aCOqXDTK9uUqPZlo4WtTgZZUCSs3QizExQM/zrBSNpO0mlLX1X4Nxi/Y
-         nxYlTjJe8u1e3cUxYpbX6qxs71/8IbdwTgrMks64=
-Date:   Tue, 12 May 2020 11:33:16 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Steve Lee <steves.lee.maxim@gmail.com>
-Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        ckeepax@opensource.cirrus.com, geert@linux-m68k.org,
-        rf@opensource.wolfsonmicro.com, shumingf@realtek.com,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        krzk@kernel.org, dmurphy@ti.com, jack.yu@realtek.com,
-        nuno.sa@analog.com, steves.lee@maximintegrated.com,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
-        ryan.lee.maxim@gmail.com
-Subject: Re: [PATCH 2/2] ASoC: max98390: Added Amplifier Driver
-Message-ID: <20200512103316.GB5110@sirena.org.uk>
-References: <20200509031919.9006-1-steves.lee@maximintegrated.com>
- <20200511110346.GE8216@sirena.org.uk>
- <CABff4NQXs622x1X6ZvNABHNZoTMS57f4Y5sdo1Cng3JeTgboCw@mail.gmail.com>
+        s=default; t=1589279999;
+        bh=4u2DdZnbBOfH5sHqCv28xYPkeReFp8gr/JDYY65Yi48=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DH7HX+hu1vbOs62ildJh2vK9t5KtpaxktDPdEB2tlwDGMYkOHWB0chJU3wK/ybod+
+         00KZ8Y8NlXgVSt7iCdPyn4FUppYC6i8BgaHGniYIk9O+v++8uFsAvJdnscAAUkxFIs
+         wFKe1QtNCeHngIo2hJJCTyHLv3lcBRKywcaxXsFY=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jYSKL-00BcWZ-MH; Tue, 12 May 2020 11:39:57 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gatW/ieO32f1wygP"
-Content-Disposition: inline
-In-Reply-To: <CABff4NQXs622x1X6ZvNABHNZoTMS57f4Y5sdo1Cng3JeTgboCw@mail.gmail.com>
-X-Cookie: The only perfect science is hind-sight.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 12 May 2020 11:39:57 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu
+Subject: Re: [PATCH] arm64/cpufeature: Add ID_AA64MMFR0_PARANGE_MASK
+In-Reply-To: <1589249606-27177-1-git-send-email-anshuman.khandual@arm.com>
+References: <1589249606-27177-1-git-send-email-anshuman.khandual@arm.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <b01bb1772b291e23ea82ff5855ee7e12@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will@kernel.org, james.morse@arm.com, linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Anshuman,
 
---gatW/ieO32f1wygP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 2020-05-12 03:13, Anshuman Khandual wrote:
+> This replaces multiple open encoding (0x7) with 
+> ID_AA64MMFR0_PARANGE_MASK
+> thus cleaning the clutter. It modifies an existing ID_AA64MMFR0 helper 
+> and
+> introduces a new one i.e id_aa64mmfr0_iparange() and 
+> id_aa64mmfr0_parange()
+> respectively.
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: kvmarm@lists.cs.columbia.edu
+> 
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> This applies after (https://patchwork.kernel.org/patch/11541893/).
+> 
+>  arch/arm64/include/asm/cpufeature.h | 11 ++++++++++-
+>  arch/arm64/kernel/cpufeature.c      |  5 ++---
+>  arch/arm64/kvm/reset.c              |  9 +++++----
+>  3 files changed, 17 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/cpufeature.h
+> b/arch/arm64/include/asm/cpufeature.h
+> index 1291ad5a9ccb..320cfc5b6025 100644
+> --- a/arch/arm64/include/asm/cpufeature.h
+> +++ b/arch/arm64/include/asm/cpufeature.h
+> @@ -706,8 +706,17 @@ void arm64_set_ssbd_mitigation(bool state);
+> 
+>  extern int do_emulate_mrs(struct pt_regs *regs, u32 sys_reg, u32 rt);
+> 
+> -static inline u32 id_aa64mmfr0_parange_to_phys_shift(int parange)
+> +#define ID_AA64MMFR0_PARANGE_MASK 0x7
 
-On Tue, May 12, 2020 at 06:13:05PM +0900, Steve Lee wrote:
-> On Mon, May 11, 2020 at 8:03 PM Mark Brown <broonie@kernel.org> wrote:
+I still disagree with this 7. Per the letter of the architecture, it
+is wrong and should be 0xf, just like any other property described
+in an ID register.
 
-> > > +static const char * const max98390_current_limit_text[] = {
-> > > +     "0.00A", "0.50A", "1.00A", "1.05A", "1.10A", "1.15A", "1.20A", "1.25A",
-> > > +     "1.30A", "1.35A", "1.40A", "1.45A", "1.50A", "1.55A", "1.60A", "1.65A",
+> +
+> +static inline u32 id_aa64mmfr0_parange(u64 mmfr0)
+>  {
+> +	return mmfr0 & ID_AA64MMFR0_PARANGE_MASK;
+> +}
+> +
+> +static inline u32 id_aa64mmfr0_iparange(u64 mmfr0)
 
-> > This looks like it should be in DT too.
+There is also no such thing as an IPA range in the architecture.
+Everything is PA. The only thing that actually describe an IPA
+range is what KVM makes of it.
 
-> Since this control  is needed while running system according to system
-> battery situation.
-> I'd keep this mixer for further use.
+Overall, this patch confuses me more than anything else. I'd rather
+you fix ID_AA64MMFR0_PARANGE_MASK to have the right value and be
+done with it.
 
-That's...  interesting for a current limit, and sounds like it would
-have issues for the common case use of current limits to protect the
-hardware.
-
-> > > +static int max98390_dsm_calib_get(struct snd_kcontrol *kcontrol,
-> > > +             struct snd_ctl_elem_value *ucontrol)
-> > > +{
-> > > +     struct snd_soc_component *component =
-> > > +             snd_soc_kcontrol_component(kcontrol);
-> > > +
-> > > +     dev_warn(component->dev, "Get dsm_calib_get not supported\n");
-> > > +
-> > > +     return 0;
-> > > +}
-
-> > Just don't implement the operation if you can't implement it.
-
-> If this not exist as dummy operation and all mixer was not working and
-> could not implement better idea.
-
-Could you be more specific about what you mean by "not working" or how
-simply not initializing the value returned fixes things please?
-
-> Could you consider it as with warn message ?
-
-No, if there's a problem here we should fix it properly.
-
---gatW/ieO32f1wygP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl66e2sACgkQJNaLcl1U
-h9CQogf/R4loaD+oS7rnJp6kgm9vB0jnWzpi3rqYFNStSnuHqRBItJeYQU5jCjuT
-A+pMPMF6GX70+4mnWRA7Lj54J5JDWqGX39pARZYckUdT82q/xwi5EJdjPN18wqQn
-sP/GFgc+qi8It3N+2HJOXtHuUO+MhG12PpRVJ87lH3JVzM1pmOFsBjsb82DXTQL0
-lmq8EqokSzxiY4M1b7bNjIyEqI6Lm53IGo16zfqapaNdjbvN14Y7/Ma4oVcBUhXA
-0fezppgi5AzD8HgWAVhPHxfaCCUrIjW2mE8c31K6oHma6SkvXT+Ys045NXX4YUJw
-qz/dy7x/0rIvjJKMcOFFXHYU/KPRPw==
-=msPs
------END PGP SIGNATURE-----
-
---gatW/ieO32f1wygP--
+         M.
+-- 
+Jazz is not dead. It just smells funny...
