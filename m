@@ -2,232 +2,185 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F023C54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BA0C54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D0B8206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDD1E206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:24:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQf4epHs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgELHWU (ORCPT
+        id S1728837AbgELHYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 03:22:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50344 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725813AbgELHWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 03:22:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D4916B1A2;
-        Tue, 12 May 2020 07:22:19 +0000 (UTC)
-Subject: Re: [PATCH] tty: hvc: Fix data abort due to race in hvc_open
-To:     Greg KH <gregkh@linuxfoundation.org>, rananta@codeaurora.org
-Cc:     andrew@daynix.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-References: <20200428032601.22127-1-rananta@codeaurora.org>
- <20200506094851.GA2787548@kroah.com>
- <98bbe7afabf48d8e8fe839fdc9e836a5@codeaurora.org>
- <20200510064819.GB3400311@kroah.com>
- <77d889be4e0cb0e6e30f96199e2d843d@codeaurora.org>
- <20200511073913.GA1347819@kroah.com>
-From:   Jiri Slaby <jslaby@suse.cz>
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- mQINBE6S54YBEACzzjLwDUbU5elY4GTg/NdotjA0jyyJtYI86wdKraekbNE0bC4zV+ryvH4j
- rrcDwGs6tFVrAHvdHeIdI07s1iIx5R/ndcHwt4fvI8CL5PzPmn5J+h0WERR5rFprRh6axhOk
- rSD5CwQl19fm4AJCS6A9GJtOoiLpWn2/IbogPc71jQVrupZYYx51rAaHZ0D2KYK/uhfc6neJ
- i0WqPlbtIlIrpvWxckucNu6ZwXjFY0f3qIRg3Vqh5QxPkojGsq9tXVFVLEkSVz6FoqCHrUTx
- wr+aw6qqQVgvT/McQtsI0S66uIkQjzPUrgAEtWUv76rM4ekqL9stHyvTGw0Fjsualwb0Gwdx
- ReTZzMgheAyoy/umIOKrSEpWouVoBt5FFSZUyjuDdlPPYyPav+hpI6ggmCTld3u2hyiHji2H
- cDpcLM2LMhlHBipu80s9anNeZhCANDhbC5E+NZmuwgzHBcan8WC7xsPXPaiZSIm7TKaVoOcL
- 9tE5aN3jQmIlrT7ZUX52Ff/hSdx/JKDP3YMNtt4B0cH6ejIjtqTd+Ge8sSttsnNM0CQUkXps
- w98jwz+Lxw/bKMr3NSnnFpUZaxwji3BC9vYyxKMAwNelBCHEgS/OAa3EJoTfuYOK6wT6nadm
- YqYjwYbZE5V/SwzMbpWu7Jwlvuwyfo5mh7w5iMfnZE+vHFwp/wARAQABtBtKaXJpIFNsYWJ5
- IDxqc2xhYnlAc3VzZS5jej6JAjgEEwECACIFAk6S6NgCGwMGCwkIBwMCBhUIAgkKCwQWAgMB
- Ah4BAheAAAoJEL0lsQQGtHBJgDsP/j9wh0vzWXsOPO3rDpHjeC3BT5DKwjVN/KtP7uZttlkB
- duReCYMTZGzSrmK27QhCflZ7Tw0Naq4FtmQSH8dkqVFugirhlCOGSnDYiZAAubjTrNLTqf7e
- 5poQxE8mmniH/Asg4KufD9bpxSIi7gYIzaY3hqvYbVF1vYwaMTujojlixvesf0AFlE4x8WKs
- wpk43fmo0ZLcwObTnC3Hl1JBsPujCVY8t4E7zmLm7kOB+8EHaHiRZ4fFDWweuTzRDIJtVmrH
- LWvRDAYg+IH3SoxtdJe28xD9KoJw4jOX1URuzIU6dklQAnsKVqxz/rpp1+UVV6Ky6OBEFuoR
- 613qxHCFuPbkRdpKmHyE0UzmniJgMif3v0zm/+1A/VIxpyN74cgwxjhxhj/XZWN/LnFuER1W
- zTHcwaQNjq/I62AiPec5KgxtDeV+VllpKmFOtJ194nm9QM9oDSRBMzrG/2AY/6GgOdZ0+qe+
- 4BpXyt8TmqkWHIsVpE7I5zVDgKE/YTyhDuqYUaWMoI19bUlBBUQfdgdgSKRMJX4vE72dl8BZ
- +/ONKWECTQ0hYntShkmdczcUEsWjtIwZvFOqgGDbev46skyakWyod6vSbOJtEHmEq04NegUD
- al3W7Y/FKSO8NqcfrsRNFWHZ3bZ2Q5X0tR6fc6gnZkNEtOm5fcWLY+NVz4HLaKrJuQINBE6S
- 54YBEADPnA1iy/lr3PXC4QNjl2f4DJruzW2Co37YdVMjrgXeXpiDvneEXxTNNlxUyLeDMcIQ
- K8obCkEHAOIkDZXZG8nr4mKzyloy040V0+XA9paVs6/ice5l+yJ1eSTs9UKvj/pyVmCAY1Co
- SNN7sfPaefAmIpduGacp9heXF+1Pop2PJSSAcCzwZ3PWdAJ/w1Z1Dg/tMCHGFZ2QCg4iFzg5
- Bqk4N34WcG24vigIbRzxTNnxsNlU1H+tiB81fngUp2pszzgXNV7CWCkaNxRzXi7kvH+MFHu2
- 1m/TuujzxSv0ZHqjV+mpJBQX/VX62da0xCgMidrqn9RCNaJWJxDZOPtNCAWvgWrxkPFFvXRl
- t52z637jleVFL257EkMI+u6UnawUKopa+Tf+R/c+1Qg0NHYbiTbbw0pU39olBQaoJN7JpZ99
- T1GIlT6zD9FeI2tIvarTv0wdNa0308l00bas+d6juXRrGIpYiTuWlJofLMFaaLYCuP+e4d8x
- rGlzvTxoJ5wHanilSE2hUy2NSEoPj7W+CqJYojo6wTJkFEiVbZFFzKwjAnrjwxh6O9/V3O+Z
- XB5RrjN8hAf/4bSo8qa2y3i39cuMT8k3nhec4P9M7UWTSmYnIBJsclDQRx5wSh0Mc9Y/psx9
- B42WbV4xrtiiydfBtO6tH6c9mT5Ng+d1sN/VTSPyfQARAQABiQIfBBgBAgAJBQJOkueGAhsM
- AAoJEL0lsQQGtHBJN7UQAIDvgxaW8iGuEZZ36XFtewH56WYvVUefs6+Pep9ox/9ZXcETv0vk
- DUgPKnQAajG/ViOATWqADYHINAEuNvTKtLWmlipAI5JBgE+5g9UOT4i69OmP/is3a/dHlFZ3
- qjNk1EEGyvioeycJhla0RjakKw5PoETbypxsBTXk5EyrSdD/I2Hez9YGW/RcI/WC8Y4Z/7FS
- ITZhASwaCOzy/vX2yC6iTx4AMFt+a6Z6uH/xGE8pG5NbGtd02r+m7SfuEDoG3Hs1iMGecPyV
- XxCVvSV6dwRQFc0UOZ1a6ywwCWfGOYqFnJvfSbUiCMV8bfRSWhnNQYLIuSv/nckyi8CzCYIg
- c21cfBvnwiSfWLZTTj1oWyj5a0PPgGOdgGoIvVjYXul3yXYeYOqbYjiC5t99JpEeIFupxIGV
- ciMk6t3pDrq7n7Vi/faqT+c4vnjazJi0UMfYnnAzYBa9+NkfW0w5W9Uy7kW/v7SffH/2yFiK
- 9HKkJqkN9xYEYaxtfl5pelF8idoxMZpTvCZY7jhnl2IemZCBMs6s338wS12Qro5WEAxV6cjD
- VSdmcD5l9plhKGLmgVNCTe8DPv81oDn9s0cIRLg9wNnDtj8aIiH8lBHwfUkpn32iv0uMV6Ae
- sLxhDWfOR4N+wu1gzXWgLel4drkCJcuYK5IL1qaZDcuGR8RPo3jbFO7Y
-Message-ID: <0f7791f5-0a53-59f6-7277-247a789f30c2@suse.cz>
-Date:   Tue, 12 May 2020 09:22:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200511073913.GA1347819@kroah.com>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 12 May 2020 03:24:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56166 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbgELHYk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 03:24:40 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09430C061A0C;
+        Tue, 12 May 2020 00:24:40 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id h4so20536421wmb.4;
+        Tue, 12 May 2020 00:24:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=khsQQ8VJ5Tff/i0Hz7O7BvH/fLbHsQV/p8Ig95SYjfQ=;
+        b=iQf4epHsIwHxz7PfeY0em2LSHNzVAwJ2pQuTSG8uKJX0aFXEAasTOm4Gg8Gtkeaaq0
+         8tACOKLWsS6MKyahxI2JVwspVhOPfeCHJwnKF33sQ9VEUrFm/6lek+ESZQwlycVuIeS6
+         jPGVIzzrjDu3DuABwRSFRz0mBAMjxzPZS2I4AO7uQZRJidSQPdVpF491vYMg1di/aMO1
+         drJVi75PJCN3l5ib5azwGJUTGfM2XiMmIosH2Hc2Dv1PXfZiQySSSJjlM0W2TnbHk3Y4
+         8p6Z5CRFadd8IHFXdMKQdVoUeCw0PBqx61isncR/LcvGKa5RoXYTmUOD/4uYeBwfoccv
+         dGww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=khsQQ8VJ5Tff/i0Hz7O7BvH/fLbHsQV/p8Ig95SYjfQ=;
+        b=K99Bf2+EJIxjXzkxjivD2y68je5ukI9nBrQTsAzLwU9Ah183mTn/wtVv+DJgD59Uoy
+         p6S1gX/DA/5GKk8nnMvBZjIeRNMk7C9EWZhMUh2OBmgYFzbMNFGiayuWUtLMEZz2i8RJ
+         x+J6RK4yvqmurI4/+4hqrzV11bjQgdcWwgYtisLFmf3z60suJsX5kD8vQGfJZqnl5QEW
+         k//f1veQsTDak4WxEsHMJDJkH8xOHFUATxDBabNLLpEKx0wRYdElWLNIuYiicgCH3MuT
+         hrReMK7J9szBCTRi5AucPP0np9PRlih5p6S9R52phKF1BVVuyLm/TeBpARd8UfK2Q0Iw
+         Q/dg==
+X-Gm-Message-State: AGi0Pub7A8fblwcimSAyvw63Woo+bVnpxtBBnwG+Dljtg/JH90acOO0c
+        Evn2l663WzcD1XqpjJgNHfs=
+X-Google-Smtp-Source: APiQypIFnh+o15hlQrsxwXRceIh6hJrYLP6JuLHt0SOBNmVimCpRbRykx+o1oAaPDyDdVdqAO+a3IQ==
+X-Received: by 2002:a1c:f20c:: with SMTP id s12mr38204462wmc.83.1589268278210;
+        Tue, 12 May 2020 00:24:38 -0700 (PDT)
+Received: from macbook-pro-alvaro.lan (198.red-83-49-57.dynamicip.rima-tde.net. [83.49.57.198])
+        by smtp.gmail.com with ESMTPSA id v124sm30170851wme.45.2020.05.12.00.24.37
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 May 2020 00:24:37 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH v3] mtd: rawnand: brcmnand: correctly verify erased pages
+From:   =?utf-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>
+In-Reply-To: <20200512091637.198dd0c2@xps13>
+Date:   Tue, 12 May 2020 09:24:32 +0200
+Cc:     computersforpeace@gmail.com, kdasu.kdev@gmail.com, richard@nod.at,
+        vigneshr@ti.com, sumit.semwal@linaro.org,
+        linux-mtd@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <50E32C0E-7485-4180-A072-F7F1CFB45B06@gmail.com>
+References: <20200505082055.2843847-1-noltari@gmail.com>
+ <20200512065111.716801-1-noltari@gmail.com> <20200512091637.198dd0c2@xps13>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11. 05. 20, 9:39, Greg KH wrote:
-> On Mon, May 11, 2020 at 12:23:58AM -0700, rananta@codeaurora.org wrote:
->> On 2020-05-09 23:48, Greg KH wrote:
->>> On Sat, May 09, 2020 at 06:30:56PM -0700, rananta@codeaurora.org wrote:
->>>> On 2020-05-06 02:48, Greg KH wrote:
->>>>> On Mon, Apr 27, 2020 at 08:26:01PM -0700, Raghavendra Rao Ananta wrote:
->>>>>> Potentially, hvc_open() can be called in parallel when two tasks calls
->>>>>> open() on /dev/hvcX. In such a scenario, if the
->>>>>> hp->ops->notifier_add()
->>>>>> callback in the function fails, where it sets the tty->driver_data to
->>>>>> NULL, the parallel hvc_open() can see this NULL and cause a memory
->>>>>> abort.
->>>>>> Hence, serialize hvc_open and check if tty->private_data is NULL
->>>>>> before
->>>>>> proceeding ahead.
->>>>>>
->>>>>> The issue can be easily reproduced by launching two tasks
->>>>>> simultaneously
->>>>>> that does nothing but open() and close() on /dev/hvcX.
->>>>>> For example:
->>>>>> $ ./simple_open_close /dev/hvc0 & ./simple_open_close /dev/hvc0 &
->>>>>>
->>>>>> Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
->>>>>> ---
->>>>>>  drivers/tty/hvc/hvc_console.c | 16 ++++++++++++++--
->>>>>>  1 file changed, 14 insertions(+), 2 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/tty/hvc/hvc_console.c
->>>>>> b/drivers/tty/hvc/hvc_console.c
->>>>>> index 436cc51c92c3..ebe26fe5ac09 100644
->>>>>> --- a/drivers/tty/hvc/hvc_console.c
->>>>>> +++ b/drivers/tty/hvc/hvc_console.c
->>>>>> @@ -75,6 +75,8 @@ static LIST_HEAD(hvc_structs);
->>>>>>   */
->>>>>>  static DEFINE_MUTEX(hvc_structs_mutex);
->>>>>>
->>>>>> +/* Mutex to serialize hvc_open */
->>>>>> +static DEFINE_MUTEX(hvc_open_mutex);
->>>>>>  /*
->>>>>>   * This value is used to assign a tty->index value to a hvc_struct
->>>>>> based
->>>>>>   * upon order of exposure via hvc_probe(), when we can not match it
->>>>>> to
->>>>>> @@ -346,16 +348,24 @@ static int hvc_install(struct tty_driver
->>>>>> *driver, struct tty_struct *tty)
->>>>>>   */
->>>>>>  static int hvc_open(struct tty_struct *tty, struct file * filp)
->>>>>>  {
->>>>>> -	struct hvc_struct *hp = tty->driver_data;
->>>>>> +	struct hvc_struct *hp;
->>>>>>  	unsigned long flags;
->>>>>>  	int rc = 0;
->>>>>>
->>>>>> +	mutex_lock(&hvc_open_mutex);
->>>>>> +
->>>>>> +	hp = tty->driver_data;
->>>>>> +	if (!hp) {
->>>>>> +		rc = -EIO;
->>>>>> +		goto out;
->>>>>> +	}
->>>>>> +
->>>>>>  	spin_lock_irqsave(&hp->port.lock, flags);
->>>>>>  	/* Check and then increment for fast path open. */
->>>>>>  	if (hp->port.count++ > 0) {
->>>>>>  		spin_unlock_irqrestore(&hp->port.lock, flags);
->>>>>>  		hvc_kick();
->>>>>> -		return 0;
->>>>>> +		goto out;
->>>>>>  	} /* else count == 0 */
->>>>>>  	spin_unlock_irqrestore(&hp->port.lock, flags);
->>>>>
->>>>> Wait, why isn't this driver just calling tty_port_open() instead of
->>>>> trying to open-code all of this?
->>>>>
->>>>> Keeping a single mutext for open will not protect it from close, it will
->>>>> just slow things down a bit.  There should already be a tty lock held by
->>>>> the tty core for open() to keep it from racing things, right?
->>>> The tty lock should have been held, but not likely across
->>>> ->install() and
->>>> ->open() callbacks, thus resulting in a race between hvc_install() and
->>>> hvc_open(),
->>>
->>> How?  The tty lock is held in install, and should not conflict with
->>> open(), otherwise, we would be seeing this happen in all tty drivers,
->>> right?
->>>
->> Well, I was expecting the same, but IIRC, I see that the open() was being
->> called in parallel for the same device node.
-> 
-> So open and install are happening at the same time?  And the tty_lock()
-> does not protect the needed fields from being protected properly?  If
-> not, what fields are being touched without the lock?
-> 
->> Is it expected that the tty core would allow only one thread to
->> access the dev-node, while blocking the other, or is it the client
->> driver's responsibility to handle the exclusiveness?
-> 
-> The tty core should handle this correctly, for things that can mess
-> stuff up (like install and open at the same time).  A driver should not
-> have to worry about that.
-> 
->>>> where hvc_install() sets a data and the hvc_open() clears it.
->>>> hvc_open()
->>>> doesn't
->>>> check if the data was set to NULL and proceeds.
->>>
->>> What data is being set that hvc_open is checking?
->> hvc_install sets tty->private_data to hp, while hvc_open sets it to NULL (in
->> one of the paths).
-> 
-> I see no use of private_data in drivers/tty/hvc/ so what exactly are you
-> referring to?
+Hi Miqu=C3=A8l
 
-He likely means tty->driver_data. And there exactly lays the issue.
+> El 12 may 2020, a las 9:16, Miquel Raynal <miquel.raynal@bootlin.com> =
+escribi=C3=B3:
+>=20
+> Hi =C3=81lvaro,
+>=20
+> =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com> wrote on Tue, 12 =
+May 2020
+> 08:51:11 +0200:
+>=20
+>> The current code checks that the whole OOB area is erased.
+>> This is a problem when JFFS2 cleanmarkers are added to the OOB, since =
+it will
+>> fail due to the usable OOB bytes not being 0xff.
+>> Correct this by only checking that data and ECC bytes aren't 0xff.
+>>=20
+>> Fixes: 02b88eea9f9c ("mtd: brcmnand: Add check for erased page =
+bitflips")
+>> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+>> ---
+>> v3: Fix commit log and merge nand_check_erased_ecc_chunk calls.
+>> v2: Add Fixes tag
+>>=20
+>> drivers/mtd/nand/raw/brcmnand/brcmnand.c | 19 ++++++++++++++-----
+>> 1 file changed, 14 insertions(+), 5 deletions(-)
+>>=20
+>> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c =
+b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+>> index e4e3ceeac38f..80fe01f03516 100644
+>> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+>> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+>> @@ -2018,8 +2018,9 @@ static int brcmnand_read_by_pio(struct mtd_info =
+*mtd, struct nand_chip *chip,
+>> static int brcmstb_nand_verify_erased_page(struct mtd_info *mtd,
+>> 		  struct nand_chip *chip, void *buf, u64 addr)
+>> {
+>> +	struct mtd_oob_region oobecc;
+>> 	int i, sas;
+>> -	void *oob =3D chip->oob_poi;
+>> +	void *oob;
+>> 	int bitflips =3D 0;
+>> 	int page =3D addr >> chip->page_shift;
+>> 	int ret;
+>> @@ -2035,11 +2036,19 @@ static int =
+brcmstb_nand_verify_erased_page(struct mtd_info *mtd,
+>> 	if (ret)
+>> 		return ret;
+>>=20
+>> -	for (i =3D 0; i < chip->ecc.steps; i++, oob +=3D sas) {
+>> +	for (i =3D 0; i < chip->ecc.steps; i++) {
+>> 		ecc_chunk =3D buf + chip->ecc.size * i;
+>> -		ret =3D nand_check_erased_ecc_chunk(ecc_chunk,
+>> -						  chip->ecc.size,
+>> -						  oob, sas, NULL, 0,
+>> +
+>> +		if (mtd->ooblayout->ecc(mtd, i, &oobecc)) {
+>=20
+> Please use the mtdcore.c's helpers
+> (mtd_ooblayout_set/get_data/free/ecc/bytes).
+>=20
+> Also, what are you trying to discriminate with the return code of the
+> function? Shouldn't this function "always" work?
 
-commit bdb498c20040616e94b05c31a0ceb3e134b7e829
-Author: Jiri Slaby <jslaby@suse.cz>
-Date:   Tue Aug 7 21:48:04 2012 +0200
+Just making sure it doesn=E2=80=99t return an ERANGE in case =
+chip->ecc.size doesn=E2=80=99t match the sections from =
+mtd->ooblayout->ecc, which shouldn=E2=80=99t happen, so I think we can =
+remove that...
 
-    TTY: hvc_console, add tty install
+>=20
+>> +			oob =3D NULL;
+>> +			oobecc.length =3D 0;
+>> +		} else {
+>> +			oob =3D chip->oob_poi + oobecc.offset;
+>> +		}
+>> +
+>> +		ret =3D nand_check_erased_ecc_chunk(ecc_chunk, =
+chip->ecc.size,
+>> +						  oob, oobecc.length,
+>> +						  NULL, 0,
+>> 						  chip->ecc.strength);
+>=20
+> As I told you, this helper takes "maid data" then "spare area" then
+> "ecc bytes". The names are pretty important here as you want to avoid
+> checking the spare OOB bytes on purpose, so maybe you could have more
+> meaningful names and call "ecc" instead of "oob" the ecc region?
 
-added hvc_install but did not move 'tty->driver_data = NULL;' from
-hvc_open's fail path to hvc_cleanup.
+Actually I thought you meant the commit log, not the code itself...
 
-IOW hvc_open now NULLs tty->driver_data even for another task which
-opened the tty earlier. The same holds for "tty_port_tty_set(&hp->port,
-NULL);" there. And actually "tty_port_put(&hp->port);" is also incorrect
-for the 2nd task opening the tty.
+>=20
+>> 		if (ret < 0)
+>> 			return ret;
+>=20
+>=20
+> Thanks,
+> Miqu=C3=A8l
 
-So, a mutex with tty->driver_data check in open is not definitely the
-way to go. This mess needs to be sorted out properly. Sure, a good start
-would be a conversion to tty_port_open. Right after dropping "tty: hvc:
-Fix data abort due to race in hvc_open" from tty/tty-next :).
+Regards,
+=C3=81lvaro.
 
-What I *don't* understand is why hp->ops->notifier_add fails, given the
-open does not allow multiple opens anyway?
-
-thanks,
--- 
-js
-suse labs
