@@ -2,130 +2,116 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6503EC54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49958C54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D84320733
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:36:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589268963;
-	bh=mwdUCDRsQcd4tBUSrGY2SY7Tr80S7IIqcEq7gM+QFyo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M4+883cZXyt7/azaAPGutONBJax/D7tuEhhvyo5TTwpBiH9d7iknFiNLCyiDo7C/i
-	 V5j+OUCQotMMade1heDh6DNItjZ2VuBPRSIwhcKlk6l+l/ncDBwWqEyMjcarhDsuK6
-	 bpXiHP0e6IOsC9ZLlABzY1tnDyZngpdhOthQSL2A=
+	by mail.kernel.org (Postfix) with ESMTP id 2288F20733
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:36:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Vw+D7EeD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbgELHgC (ORCPT
+        id S1729190AbgELHgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 03:36:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728949AbgELHgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 03:36:01 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        Tue, 12 May 2020 03:36:07 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:15742 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729021AbgELHgG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 03:36:06 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589268966; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=WYkjPn3kNYCXdEOxwxPSbshKe2uDidq2LAMu5m1i9/4=;
+ b=Vw+D7EeDjK/PbdALXJ9wgaDtEYibGS0d6hEdiaOQ+HqmGJTVzXwPNLsjYFXEvyTcJJmTvTRi
+ kT/3hmYT8U8p0qJYs0dDxScRyWSzYr7VNPnM7UifGn6MMtqbgEBk4b3tBOm2QyFUcRjSiBFM
+ YG+2tyZISQ0e40HkSJgkV2r+Wdg=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eba51dc.7fb1586fdb20-smtp-out-n04;
+ Tue, 12 May 2020 07:35:56 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6B366C43637; Tue, 12 May 2020 07:35:55 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5F32206B7;
-        Tue, 12 May 2020 07:35:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589268960;
-        bh=mwdUCDRsQcd4tBUSrGY2SY7Tr80S7IIqcEq7gM+QFyo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=t5R7cSJlDsOP/Rq15vISPrYY6nRgt0EcIH9XTuDyRC2GPJ6DWnRnmhKdfTiy4a30Y
-         VJDL7O2w+OjJd6KbOlyAT9++Kn8lwIjNjkC+57eIGAzvYLg5+3SymfzalRlvTKRmLj
-         Akz/XtkhIvyCU63jhozKZ3BdSOgowTXCmGBDg64I=
-Date:   Tue, 12 May 2020 08:35:53 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <agross@kernel.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-serial@vger.kernel.org, Sumit Garg <sumit.garg@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Frank Rowand <frowand.list@gmail.com>, bp@alien8.de,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Dave Martin <Dave.Martin@arm.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        jinho lim <jordan.lim@samsung.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 05/11] arm64: Add call_break_hook() to early_brk64()
- for early kgdb
-Message-ID: <20200512073552.GA1538@willie-the-truck>
-References: <20200428211351.85055-1-dianders@chromium.org>
- <20200428141218.v3.5.I22067ad43e77ddfd4b64c2d49030628480f9e8d9@changeid>
- <20200511145908.GA22040@willie-the-truck>
- <CAD=FV=W1F-B7SUwxebhhH2HS+fN4sYv4RHvvKud5a+00J0T=SA@mail.gmail.com>
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1A7E8C4478F;
+        Tue, 12 May 2020 07:35:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1A7E8C4478F
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=W1F-B7SUwxebhhH2HS+fN4sYv4RHvvKud5a+00J0T=SA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] wil6210: Replace zero-length array with flexible-array
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200507151120.GA4469@embeddedor>
+References: <20200507151120.GA4469@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Maya Erez <merez@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200512073555.6B366C43637@smtp.codeaurora.org>
+Date:   Tue, 12 May 2020 07:35:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 03:45:02PM -0700, Doug Anderson wrote:
-> On Mon, May 11, 2020 at 7:59 AM Will Deacon <will@kernel.org> wrote:
-> > On Tue, Apr 28, 2020 at 02:13:45PM -0700, Douglas Anderson wrote:
-> > > diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
-> > > index 48222a4760c2..59c353dfc8e9 100644
-> > > --- a/arch/arm64/kernel/debug-monitors.c
-> > > +++ b/arch/arm64/kernel/debug-monitors.c
-> > > @@ -297,7 +297,7 @@ void unregister_kernel_break_hook(struct break_hook *hook)
-> > >       unregister_debug_hook(&hook->node);
-> > >  }
-> > >
-> > > -static int call_break_hook(struct pt_regs *regs, unsigned int esr)
-> > > +int call_break_hook(struct pt_regs *regs, unsigned int esr)
-> > >  {
-> > >       struct break_hook *hook;
-> > >       struct list_head *list;
-> > > diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-> > > index cf402be5c573..a8173f0c1774 100644
-> > > --- a/arch/arm64/kernel/traps.c
-> > > +++ b/arch/arm64/kernel/traps.c
-> > > @@ -1044,6 +1044,9 @@ int __init early_brk64(unsigned long addr, unsigned int esr,
-> > >       if ((comment & ~KASAN_BRK_MASK) == KASAN_BRK_IMM)
-> > >               return kasan_handler(regs, esr) != DBG_HOOK_HANDLED;
-> > >  #endif
-> > > +     if (call_break_hook(regs, esr) == DBG_HOOK_HANDLED)
-> > > +             return 0;
-> >
-> > I think this just means we're not running debug_traps_init() early enough,
-> > and actually the KASAN early handler is unnecessary too.
-> >
-> > If we call debug_traps_init() directly from setup_arch() and drop the
-> > arch_initcall(), can we then drop early_brk64 entirely?
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
 > 
-> It seems to work in my testing.  ...but the worry I have is the
-> comment right before trap_init().  It says:
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
 > 
-> /* This registration must happen early, before debug_traps_init(). */
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> sizeof(flexible-array-member) triggers a warning because flexible array
+> members have incomplete type[1]. There are some instances of code in
+> which the sizeof operator is being incorrectly/erroneously applied to
+> zero-length arrays and the result is zero. Such instances may be hiding
+> some bugs. So, this work (flexible-array member conversions) will also
+> help to get completely rid of those sorts of issues.
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-I /think/ the reason for this is because debug_traps_init() replaces the
-BRK vector, so if that runs before the break hooks have been registered
-for e.g. BUG() then BUG() won't work during that window. Hmm, so dropping
-early_brk64 is problematic after all. Damn.
+Patch applied to ath-next branch of ath.git, thanks.
 
-Is trap_init() early enough for you? If so, we could call debug_traps_init()
-from traps_init() after registering the break hooks.
+104f3d95d8d6 wil6210: Replace zero-length array with flexible-array
 
-Will
+-- 
+https://patchwork.kernel.org/patch/11534175/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
