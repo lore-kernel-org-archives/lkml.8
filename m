@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 808CDC54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 413E6C54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BDAC20708
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA8D20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:03:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WSajbawT"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SbK6HaO+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728572AbgELCDW (ORCPT
+        id S1728595AbgELCD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 22:03:22 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:58669 "EHLO
+        Mon, 11 May 2020 22:03:28 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:29790 "EHLO
         mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728524AbgELCDU (ORCPT
+        by vger.kernel.org with ESMTP id S1728536AbgELCDV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 22:03:20 -0400
+        Mon, 11 May 2020 22:03:21 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589249000; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1589249001; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=JFe5jJsc8mR74mgiCC9H6ktYU5WkCtR8x4l1RwjvGMA=; b=WSajbawTyTfalE0FlMPne9d8KoayqPSxsdJL5ZV9bpGzECAr91+mQg0mUxzeqrXK4AkxySL6
- xZ1zTh29UhbJPH8lv8emxwHcn459to2wFPGW2V3aaOE8dVKqFnFW+ACyvRGQgrd14lfYXXj6
- sw6gwS9pHKPHp0lL247aUGmedhs=
+ bh=ubUHGIqluRbZVp5rB1az2CaAVRj7QgCCGuQL32nMMbU=; b=SbK6HaO+SluSjpmnw+vIysFCxQUlvUBOvxBJdLk+QfgfXfrbSHUyeIFiSHusu0GSKoeJEhfb
+ UBxwbrycINHlxIVFjfewk6LB+k1qFVjM6KBamdmuyAa7kvnmCOzRzag5XJjwasa1mV3ZkOtv
+ VU7GeMFp7tJudqDET6ilAJooTNs=
 X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eba03e7.7fc765f123b0-smtp-out-n03;
- Tue, 12 May 2020 02:03:19 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5eba03e5.7f97719ced50-smtp-out-n01;
+ Tue, 12 May 2020 02:03:17 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6B6C9C433F2; Tue, 12 May 2020 02:03:19 +0000 (UTC)
+        id AB08DC4478F; Tue, 12 May 2020 02:03:17 +0000 (UTC)
 Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: hemantk)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D937AC43636;
-        Tue, 12 May 2020 02:03:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D937AC43636
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 07648C433BA;
+        Tue, 12 May 2020 02:03:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 07648C433BA
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
 From:   Hemant Kumar <hemantk@codeaurora.org>
@@ -50,9 +50,9 @@ To:     manivannan.sadhasivam@linaro.org
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         jhugo@codeaurora.org, bbhatt@codeaurora.org,
         Hemant Kumar <hemantk@codeaurora.org>
-Subject: [PATCH v1 4/5] bus: mhi: core: Do not process SYS_ERROR if RDDM is supported
-Date:   Mon, 11 May 2020 19:03:08 -0700
-Message-Id: <1589248989-23824-5-git-send-email-hemantk@codeaurora.org>
+Subject: [PATCH v1 2/5] bus: mhi: core: Handle disable transitions in state worker
+Date:   Mon, 11 May 2020 19:03:06 -0700
+Message-Id: <1589248989-23824-3-git-send-email-hemantk@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1589248989-23824-1-git-send-email-hemantk@codeaurora.org>
 References: <1589248989-23824-1-git-send-email-hemantk@codeaurora.org>
@@ -61,45 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Devices that support RDDM do not require processing SYS_ERROR as it is
-deemed redundant. Avoid SYS_ERROR processing if RDDM is supported by
-the device.
+Mission mode transition is handled by state worker thread but
+power off is not. There is a possibility while mission mode
+transition is in progress which calls MHI client driver probe,
+power off is issued by MHI controller. This results into client
+driver probe and remove running in parallel and causes use after
+free situation. By queuing disable transition work when mission
+mode is in progress prevents the race condition.
 
 Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
 Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
 ---
- drivers/bus/mhi/core/main.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/bus/mhi/core/init.c     |  1 +
+ drivers/bus/mhi/core/internal.h |  1 +
+ drivers/bus/mhi/core/pm.c       | 11 ++++++++++-
+ 3 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-index 467c0ba..1f622ce 100644
---- a/drivers/bus/mhi/core/main.c
-+++ b/drivers/bus/mhi/core/main.c
-@@ -397,9 +397,9 @@ irqreturn_t mhi_intvec_threaded_handler(int irq_number, void *priv)
- 	}
- 	write_unlock_irq(&mhi_cntrl->pm_lock);
+diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
+index 3a853c5..12207cc 100644
+--- a/drivers/bus/mhi/core/init.c
++++ b/drivers/bus/mhi/core/init.c
+@@ -35,6 +35,7 @@
+ 	[DEV_ST_TRANSITION_SBL] = "SBL",
+ 	[DEV_ST_TRANSITION_MISSION_MODE] = "MISSION_MODE",
+ 	[DEV_ST_TRANSITION_SYS_ERR] = "SYS_ERR",
++	[DEV_ST_TRANSITION_DISABLE] = "DISABLE",
+ };
  
--	/* If device in RDDM don't bother processing SYS error */
--	if (mhi_cntrl->ee == MHI_EE_RDDM) {
--		if (mhi_cntrl->ee != ee) {
-+	 /* If device supports RDDM don't bother processing SYS error */
-+	if (mhi_cntrl->rddm_image) {
-+		if (mhi_cntrl->ee == MHI_EE_RDDM && mhi_cntrl->ee != ee) {
- 			mhi_cntrl->status_cb(mhi_cntrl, MHI_CB_EE_RDDM);
- 			wake_up_all(&mhi_cntrl->state_event);
+ const char * const mhi_state_str[MHI_STATE_MAX] = {
+diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
+index f01283b..b1f640b 100644
+--- a/drivers/bus/mhi/core/internal.h
++++ b/drivers/bus/mhi/core/internal.h
+@@ -387,6 +387,7 @@ enum dev_st_transition {
+ 	DEV_ST_TRANSITION_SBL,
+ 	DEV_ST_TRANSITION_MISSION_MODE,
+ 	DEV_ST_TRANSITION_SYS_ERR,
++	DEV_ST_TRANSITION_DISABLE,
+ 	DEV_ST_TRANSITION_MAX,
+ };
+ 
+diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
+index d9964d4..345f197 100644
+--- a/drivers/bus/mhi/core/pm.c
++++ b/drivers/bus/mhi/core/pm.c
+@@ -657,6 +657,10 @@ void mhi_pm_st_worker(struct work_struct *work)
+ 			mhi_pm_disable_transition
+ 				(mhi_cntrl, MHI_PM_SYS_ERR_PROCESS);
+ 			break;
++		case DEV_ST_TRANSITION_DISABLE:
++			mhi_pm_disable_transition
++				(mhi_cntrl, MHI_PM_SHUTDOWN_PROCESS);
++			break;
+ 		default:
+ 			break;
  		}
-@@ -735,6 +735,11 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
- 			{
- 				enum mhi_pm_state new_state;
- 
-+				/* skip SYS_ERROR handling if RDDM supported */
-+				if (mhi_cntrl->ee == MHI_EE_RDDM ||
-+				    mhi_cntrl->rddm_image)
-+					break;
+@@ -1011,7 +1015,12 @@ void mhi_power_down(struct mhi_controller *mhi_cntrl, bool graceful)
+ 				to_mhi_pm_state_str(MHI_PM_LD_ERR_FATAL_DETECT),
+ 				to_mhi_pm_state_str(mhi_cntrl->pm_state));
+ 	}
+-	mhi_pm_disable_transition(mhi_cntrl, MHI_PM_SHUTDOWN_PROCESS);
 +
- 				dev_dbg(dev, "System error detected\n");
- 				write_lock_irq(&mhi_cntrl->pm_lock);
- 				new_state = mhi_tryset_pm_state(mhi_cntrl,
++	mhi_queue_state_transition(mhi_cntrl, DEV_ST_TRANSITION_DISABLE);
++
++	/* Wait for shutdown to complete */
++	flush_work(&mhi_cntrl->st_worker);
++
+ 	mhi_deinit_free_irq(mhi_cntrl);
+ 
+ 	if (!mhi_cntrl->pre_init) {
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
