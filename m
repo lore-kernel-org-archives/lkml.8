@@ -2,284 +2,106 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6902C54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C010C54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE54420736
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AE6A20736
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:50:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WuwUwnSQ"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="lNCp3F2Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbgELHtU (ORCPT
+        id S1728959AbgELHuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 03:49:20 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25621 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725823AbgELHtT (ORCPT
+        Tue, 12 May 2020 03:50:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728525AbgELHuQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 03:49:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589269756;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=5JqiYyP0ucXwE+/MaSHWpuy5KzcgTLa37etzUq/4WP0=;
-        b=WuwUwnSQulYtSvwjjt7V6OdRFTWSsNisaP1G4ZibmU9OdBR0sEXsXbQHIlPKupy/CJcLOm
-        Gb98Jl+uuS2zN8y480aX/RwiIBFhAnxijCV8NASYeVlBl8NlV209T/aMWLI4BgIEVCpqhi
-        orzFh4U/G1dT63szyoyyvwd56R8lhzc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-136-yiXSoRdbNsm59Wz8a6iiiw-1; Tue, 12 May 2020 03:49:11 -0400
-X-MC-Unique: yiXSoRdbNsm59Wz8a6iiiw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B31F580B70D;
-        Tue, 12 May 2020 07:49:09 +0000 (UTC)
-Received: from [10.36.113.77] (ovpn-113-77.ams2.redhat.com [10.36.113.77])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C55756C796;
-        Tue, 12 May 2020 07:49:06 +0000 (UTC)
-Subject: Re: [PATCH v2 3/3] mm/page_alloc: Keep memoryless cpuless node 0
- offline
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mel Gorman <mgorman@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Christopher Lameter <cl@linux.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200428093836.27190-1-srikar@linux.vnet.ibm.com>
- <20200428093836.27190-4-srikar@linux.vnet.ibm.com>
- <20200428165912.ca1eadefbac56d740e6e8fd1@linux-foundation.org>
- <20200429014145.GD19958@linux.vnet.ibm.com>
- <20200429122211.GD28637@dhcp22.suse.cz>
- <20200430071820.GF19958@linux.vnet.ibm.com>
- <20200504093712.GL22838@dhcp22.suse.cz>
- <20200508130304.GA1961@linux.vnet.ibm.com>
- <3bfe7469-1d8c-baa4-6d9d-f4786492eaa8@redhat.com>
- <ce9d47bc-f92c-dd22-0d59-e8d59c913526@redhat.com>
- <20200511174731.GD1961@linux.vnet.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <45d50d80-c998-9372-42eb-ca753a7258b9@redhat.com>
-Date:   Tue, 12 May 2020 09:49:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 12 May 2020 03:50:16 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AD13C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 00:50:15 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id a9so9715520lfb.8
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 00:50:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0WcvL1fwWHBcoJrzzXl8Y9z1jSMK5TQ31/Tsh0Md1tM=;
+        b=lNCp3F2Ygx600BVUbC8Dg65qCe8TRx2s/0qFe+EqHdwdxv8YFEdJi6IcfbzWVt2HMY
+         MalNqPo0hm6pS+0/z3OeeB9uZfVhY09wz6Di5PMa/AW14vJUx72Kf52Zbt0ijbNPSCFW
+         jxBe1qKSLXTDwcfPqRa14svgGfsA4qQ4zAdmGPrrCVk42hnFa6qnDI+WmBD2TU3kx1CX
+         1yXMOF/tFh6ipOPxz/o0vqXDO0wD+mraXvv02dfmalJ78h04Lw+15lAQtS24wuJvb2gr
+         RkZ0SAcnyQgKHD+Rn2r8MZE0HzLSK3hhMf/tZuc2DoDnA+EDkvHt5TBXt94hi3IV5Oxt
+         0HiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0WcvL1fwWHBcoJrzzXl8Y9z1jSMK5TQ31/Tsh0Md1tM=;
+        b=iy698dckxpMGdJYLvxTRWjJ7CehRnaGygrCXH5EaQb57cdSDqbVjnqqiMCZ6vFLBRd
+         9ghnvyF0qDmQ3qNCpL9zILwxN5DECximuBRQmNlxTsasaMmiQBptBKk577EDCrTb63r6
+         9YjCqOIG0U4Go4DTcczRC6uOrmb2xC2tvbYtu34WYrWr3a4h6ZqRSoV4aZyTPtOqpANQ
+         eLPrhsdyO28Rp8Be72nJJaB5LEc1Z7rW45t+EzS1JxLbFCDk09aDU7Yqx/lSzNi5vOZH
+         Z8XZiiDyv3cQtdfxfImXeGig6vQY9VLDVPwsudmING5G8t70gvvduyPsYdzJMLZAf/ni
+         GsvA==
+X-Gm-Message-State: AOAM530sT/48FInMHwgyEWLzMTD3TZNgPkI0vlj/z5tdhN2jCtO+ItCP
+        XXkGFnqKYsLaCnhljOVqeJ2hDw==
+X-Google-Smtp-Source: ABdhPJz1U/AKQVEmTfopcIhAFk7bSfKlU8QA5XuMgd57DBQmKEFzrpOVHrwsLbl+e3E3ff+YR113KA==
+X-Received: by 2002:ac2:5199:: with SMTP id u25mr13532900lfi.80.1589269813516;
+        Tue, 12 May 2020 00:50:13 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:61b:c4fe:68d6:9937:777b:c884? ([2a00:1fa0:61b:c4fe:68d6:9937:777b:c884])
+        by smtp.gmail.com with ESMTPSA id y129sm13395002lfc.23.2020.05.12.00.50.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 May 2020 00:50:12 -0700 (PDT)
+Subject: Re: [PATCH] dt-bindings: sh_eth: Sort compatible string in increasing
+ number of the SoC
+To:     Rob Herring <robh@kernel.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Simon Horman <horms+renesas@verge.net.au>,
+        linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org
+References: <1587724695-27295-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200511212204.GA1071@bogus>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <bba5ab6f-d077-544a-5085-4f7cdc9aa0ca@cogentembedded.com>
+Date:   Tue, 12 May 2020 10:50:06 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200511174731.GD1961@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200511212204.GA1071@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.05.20 19:47, Srikar Dronamraju wrote:
-> * David Hildenbrand <david@redhat.com> [2020-05-08 15:42:12]:
-> 
-> Hi David,
-> 
-> Thanks for the steps to tryout.
-> 
->>>
->>> #! /bin/bash
->>> sudo x86_64-softmmu/qemu-system-x86_64 \
->>>     --enable-kvm \
->>>     -m 4G,maxmem=20G,slots=2 \
->>>     -smp sockets=2,cores=2 \
->>>     -numa node,nodeid=0,cpus=0-1,mem=4G -numa node,nodeid=1,cpus=2-3,mem=0G \
+Hello!
+
+On 12.05.2020 0:22, Rob Herring wrote:
+
+>> Sort the items in the compatible string list in increasing number of SoC.
 >>
->> Sorry, this line has to be
+>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>> ---
+>>   Documentation/devicetree/bindings/net/renesas,ether.yaml | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
 >>
->> -numa node,nodeid=0,cpus=0-3,mem=4G -numa node,nodeid=1,mem=0G \
->>
->>>     -kernel /home/dhildenb/git/linux/arch/x86_64/boot/bzImage \
->>>     -append "console=ttyS0 rd.shell rd.luks=0 rd.lvm=0 rd.md=0 rd.dm=0" \
->>>     -initrd /boot/initramfs-5.2.8-200.fc30.x86_64.img \
->>>     -machine pc,nvdimm \
->>>     -nographic \
->>>     -nodefaults \
->>>     -chardev stdio,id=serial \
->>>     -device isa-serial,chardev=serial \
->>>     -chardev socket,id=monitor,path=/var/tmp/monitor,server,nowait \
->>>     -mon chardev=monitor,mode=readline
->>>
->>> to get a cpu-less and memory-less node 1. Never tried with node 0.
->>>
 > 
-> I tried 
-> 
-> qemu-system-x86_64 -enable-kvm -m 4G,maxmem=20G,slots=2 -smp sockets=2,cores=2 -cpu host -numa node,nodeid=0,cpus=0-3,mem=4G -numa node,nodeid=1,mem=0G -vga none -nographic -serial mon:stdio /home/srikar/fedora.qcow2
-> 
-> and the resulting guest was.
-> 
-> [root@localhost ~]# numactl -H
-> available: 1 nodes (0)
-> node 0 cpus: 0 1 2 3
-> node 0 size: 3927 MB
-> node 0 free: 3316 MB
-> node distances:
-> node   0
->   0:  10
-> 
-> [root@localhost ~]# lscpu
-> Architecture:        x86_64
-> CPU op-mode(s):      32-bit, 64-bit
-> Byte Order:          Little Endian
-> Address sizes:       40 bits physical, 48 bits virtual
-> CPU(s):              4
-> On-line CPU(s) list: 0-3
-> Thread(s) per core:  1
-> Core(s) per socket:  2
-> Socket(s):           2
-> NUMA node(s):        1
-> Vendor ID:           GenuineIntel
-> CPU family:          6
-> Model:               46
-> Model name:          Intel(R) Xeon(R) CPU           X7560  @ 2.27GHz
-> Stepping:            6
-> CPU MHz:             2260.986
-> BogoMIPS:            4521.97
-> Virtualization:      VT-x
-> Hypervisor vendor:   KVM
-> Virtualization type: full
-> L1d cache:           32K
-> L1i cache:           32K
-> L2 cache:            4096K
-> L3 cache:            16384K
-> NUMA node0 CPU(s):   0-3
-> Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc arch_perfmon rep_good nopl xtopology cpuid tsc_known_freq pni vmx ssse3 cx16 sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer hypervisor lahf_lm cpuid_fault pti ssbd ibrs ibpb tpr_shadow vnmi flexpriority ept vpid tsc_adjust arat umip arch_capabilities
-> 
-> [root@localhost ~]# cat /sys/devices/system/node/online
-> 0
-> [root@localhost ~]# cat /sys/devices/system/node/possible
-> 0-1
-> 
-> ---------------------------------------------------------------------------------
-> 
-> I also tried
-> 
-> qemu-system-x86_64 -enable-kvm -m 4G,maxmem=20G,slots=2 -smp sockets=2,cores=2 -cpu host -numa node,nodeid=1,cpus=0-3,mem=4G -numa node,nodeid=0,mem=0G -vga none -nographic -serial mon:stdio /home/srikar/fedora.qcow2
-> 
-> and the resulting guest was.
-> 
-> [root@localhost ~]# numactl -H
-> available: 1 nodes (0)
-> node 0 cpus: 0 1 2 3
-> node 0 size: 3927 MB
-> node 0 free: 3316 MB
-> node distances:
-> node   0
->   0:  10
-> 
-> [root@localhost ~]# lscpu
-> Architecture:        x86_64
-> CPU op-mode(s):      32-bit, 64-bit
-> Byte Order:          Little Endian
-> Address sizes:       40 bits physical, 48 bits virtual
-> CPU(s):              4
-> On-line CPU(s) list: 0-3
-> Thread(s) per core:  1
-> Core(s) per socket:  2
-> Socket(s):           2
-> NUMA node(s):        1
-> Vendor ID:           GenuineIntel
-> CPU family:          6
-> Model:               46
-> Model name:          Intel(R) Xeon(R) CPU           X7560  @ 2.27GHz
-> Stepping:            6
-> CPU MHz:             2260.986
-> BogoMIPS:            4521.97
-> Virtualization:      VT-x
-> Hypervisor vendor:   KVM
-> Virtualization type: full
-> L1d cache:           32K
-> L1i cache:           32K
-> L2 cache:            4096K
-> L3 cache:            16384K
-> NUMA node0 CPU(s):   0-3
-> Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc arch_perfmon rep_good nopl xtopology cpuid tsc_known_freq pni vmx ssse3 cx16 sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer hypervisor lahf_lm cpuid_fault pti ssbd ibrs ibpb tpr_shadow vnmi flexpriority ept vpid tsc_adjust arat umip arch_capabilities
-> 
-> [root@localhost ~]# cat /sys/devices/system/node/online
-> 0
-> [root@localhost ~]# cat /sys/devices/system/node/possible
-> 0-1
-> 
-> Even without my patch, both the combinations, I am still unable to see a
-> cpuless, memoryless node being online. And the interesting part being even
+> Applied, thanks!
 
-Yeah, I think on x86, all memory-less and cpu-less nodes are offline as
-default. Especially when hotunplugging cpus/memory, we set them offline
-as well.
+    Mhm, there was v2 with a corrected subject?
 
-But as Michal mentioned, the node handling code is complicated and
-differs between various architectures.
-
-> if I mark node 0 as cpuless,memoryless and node 1 as actual node, the system
-> somewhere marks node 0 as the actual node.
-
-Is the kernel maybe mapping PXM 1 to node 0 in that case, because it
-always requires node 0 to be online/contain memory? Would be interesting
-what happens if you hotplug a DIMM to (QEMU )node 0 - if PXM 0 will be
-mapped to node 1 then as well.
-
-
--- 
-Thanks,
-
-David / dhildenb
-
+MBR, Sergei
