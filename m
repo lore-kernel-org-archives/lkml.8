@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2548FC2D0FA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D445C2D0F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFE8520747
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48E5820747
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:45:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589316353;
-	bh=NmG8SVoFCnlyWQ7xE7+NWsL3AT5FUgQLIAtoK3zjpqY=;
+	s=default; t=1589316357;
+	bh=KDUdIfWVRfnXadbfPQxKIwjOmav7JTniiLGbcHFg8kE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s5cyet1ZvDvr3CmnIh7kQMbrY1A0IepbwD0IZQ/DR1w88r/AwCGuqbhzwqrU2dq1O
-	 ekoJ5lo4jEPl0DlPA2EeJ33mlgh09DG7cvbwXG+doBxbkF7fb2Z4NPqzz12kfPRWsG
-	 C9EdshJzRiZyl8WgMCBqaFNPq04jR8JD3Mc/NtEY=
+	b=nqw516oLAPqmGLjaR51IideNjws6ZthnYfQROSF5ljOlAhoRO3DOy8qBj6CO9LX44
+	 UlEMGXbiOUBJV2pO0/zJBzAa54bfDhG8p9f0ajQGKbDFP50zdfn5ow9mZYxhWtp/la
+	 abw0uVgVy6+Nn9FwSXaLh5Dv2f9FxMD1dh+HDEqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731235AbgELUpw (ORCPT
+        id S1731266AbgELUp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 16:45:52 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33714 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731195AbgELUpt (ORCPT
+        Tue, 12 May 2020 16:45:56 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37888 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731148AbgELUpu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 16:45:49 -0400
-Received: by mail-ot1-f66.google.com with SMTP id v17so3720943ote.0;
+        Tue, 12 May 2020 16:45:50 -0400
+Received: by mail-oi1-f194.google.com with SMTP id r66so19482390oie.5;
         Tue, 12 May 2020 13:45:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ROTQQRmdcUsStwRKkfy6Q00GnOxE+nfhmcwjzr4lDeg=;
-        b=PSfQn1GsFdfwL/0nn8vxHeBKvMQ2Sbs53Kqok4p4VuaafUo2CxSrYLCC2INpmcfR1t
-         lTMkZ/N99N52YFqDI/tVs5RA9CsTkAw9K0s8cF9pWIxutO4f+1+y2rOad/C2BfKgIE9h
-         Afkpjj7z3OJDxWNeEKAWuJ8gIKQ+6nbhJ8EYB9xB8AIXLMfc1ju3DDDAgw6oS9RpGRkf
-         MjlL6rBrtU7yffupoMNs232Mdg6wArVkAIZcB2wmvvt05C1NPbvaA8f6shdw+Mdo+pnE
-         LtdLjOxJ3dGdNJlyyx+h6c5g2cLnrEdvHM52uY+Md59YvKBS4tXCGyvqx8eyiQfDx66O
-         dCCg==
-X-Gm-Message-State: AGi0PuaOtEd62yIgJPmLYBx6t7wgshDDkoRY1gbGVVXPHgBJE5anw4Mk
-        w2w3t9yFqAwivQuqhBURKTj6V2k=
-X-Google-Smtp-Source: APiQypJ1PDF2eDVooFvjNgsHr+joxMhIx8+O1j7KXhZ9mhhvKW9kguaFARgq2V5ZkR7s7mNGKgdPkg==
-X-Received: by 2002:a05:6830:1241:: with SMTP id s1mr18607355otp.119.1589316348414;
-        Tue, 12 May 2020 13:45:48 -0700 (PDT)
+        bh=1CmdYdYec1rQhzzC/CQmIUigvR0RXVGe0AhkcyhVUQc=;
+        b=umzFtOtRdHL55DFwi7O4QRvOP14GQoTDcjcGfb3kwzw/uahccF8ndl3+7kVlGbzFJK
+         SQyrfGDkUbOS9hyh3XUulYmj/zR7TPljJPsd8S13T16pwS5vWDN4YmwCJ746oZVmj1nP
+         ZMBo+GiFJSgnwvDNosjA+EhSyq/I1licSKNFZjBtUl4tUPubeU9SyXpKK1IeKQ6sJ5BX
+         eNhhpv0WZr5j87vL1E60ePvUKAdvypu4oHeNNNCjqbqyiGdoMsxI/WGDyEf8Hz45ciIg
+         1C0oJtKlwoevog3oa0oLzU+mXngfHa7n4A8RUO7AXl97XolxSJkWup38eP9WAlUaMF+2
+         GWrQ==
+X-Gm-Message-State: AGi0PuZOBsDMBoia4C/CPmSGf5K7qPc8a7luXvUz4LASOpxQhkeSyNsq
+        O+JCXdB2MrDi9lUphF90/Sgaqns=
+X-Google-Smtp-Source: APiQypKaCowSSCmSiYsr3sbFUCH1scVUF6kLbsI/9cGr7DfFXVIHt7LPGzSirz02jmkJo/42xDgaBw==
+X-Received: by 2002:aca:aac2:: with SMTP id t185mr24324925oie.53.1589316347616;
+        Tue, 12 May 2020 13:45:47 -0700 (PDT)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id k8sm3943792ood.24.2020.05.12.13.45.47
+        by smtp.googlemail.com with ESMTPSA id k8sm3943792ood.24.2020.05.12.13.45.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 13:45:48 -0700 (PDT)
+        Tue, 12 May 2020 13:45:46 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     devicetree@vger.kernel.org
 Cc:     linux-clk@vger.kernel.org, linux-usb@vger.kernel.org,
@@ -57,9 +57,9 @@ Cc:     linux-clk@vger.kernel.org, linux-usb@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mark Brown <broonie@kernel.org>,
         Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH 4/5] dt-bindings: ufs: ti: Add missing 'additionalProperties: false'
-Date:   Tue, 12 May 2020 15:45:42 -0500
-Message-Id: <20200512204543.22090-4-robh@kernel.org>
+Subject: [PATCH 3/5] dt-bindings: ufs: ti: Fix address properties handling
+Date:   Tue, 12 May 2020 15:45:41 -0500
+Message-Id: <20200512204543.22090-3-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200512204543.22090-1-robh@kernel.org>
 References: <20200512204543.22090-1-robh@kernel.org>
@@ -70,41 +70,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ti,j721e-ufs schema is missing an 'additionalProperties: false'. Add
-that and and the missing assigned-clock properties.
+The ti,j721e-ufs schema and example have a couple of problems related to
+address properties. First, the default #size-cells and #address-cells
+are 1 for examples, so they need to be overriden with a bus node.
+Second, address translation for the child ufs node is broken because
+'ranges', '#address-cells', and '#size-cells' are missing from the
+schema.
 
 Cc: Vignesh Raghavendra <vigneshr@ti.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Please ack, dependency for patch 5.
+
+ .../devicetree/bindings/ufs/ti,j721e-ufs.yaml | 57 ++++++++++++-------
+ 1 file changed, 36 insertions(+), 21 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml b/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
-index b503b1a918a5..4d13e6bc1c50 100644
+index c8a2a92074df..b503b1a918a5 100644
 --- a/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
 +++ b/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
-@@ -25,6 +25,12 @@ properties:
+@@ -25,6 +25,14 @@ properties:
    power-domains:
      maxItems: 1
  
-+  assigned-clocks:
-+    maxItems: 1
++  "#address-cells":
++    const: 2
 +
-+  assigned-clock-parents:
-+    maxItems: 1
++  "#size-cells":
++    const: 2
 +
-   "#address-cells":
-     const: 2
- 
-@@ -47,6 +53,8 @@ patternProperties:
-       Documentation/devicetree/bindings/ufs/cdns,ufshc.txt for binding
-       documentation of child node
- 
-+additionalProperties: false
++  ranges: true
 +
- examples:
-   - |
+ required:
+   - compatible
+   - reg
+@@ -44,25 +52,32 @@ examples:
      #include <dt-bindings/interrupt-controller/irq.h>
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
+ 
+-    ufs_wrapper: ufs-wrapper@4e80000 {
+-       compatible = "ti,j721e-ufs";
+-       reg = <0x0 0x4e80000 0x0 0x100>;
+-       power-domains = <&k3_pds 277>;
+-       clocks = <&k3_clks 277 1>;
+-       assigned-clocks = <&k3_clks 277 1>;
+-       assigned-clock-parents = <&k3_clks 277 4>;
+-       #address-cells = <2>;
+-       #size-cells = <2>;
+-
+-       ufs@4e84000 {
+-          compatible = "cdns,ufshc-m31-16nm", "jedec,ufs-2.0";
+-          reg = <0x0 0x4e84000 0x0 0x10000>;
+-          interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+-          freq-table-hz = <19200000 19200000>;
+-          power-domains = <&k3_pds 277>;
+-          clocks = <&k3_clks 277 1>;
+-          assigned-clocks = <&k3_clks 277 1>;
+-          assigned-clock-parents = <&k3_clks 277 4>;
+-          clock-names = "core_clk";
+-       };
++    bus {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        ufs-wrapper@4e80000 {
++            compatible = "ti,j721e-ufs";
++            reg = <0x0 0x4e80000 0x0 0x100>;
++            power-domains = <&k3_pds 277>;
++            clocks = <&k3_clks 277 1>;
++            assigned-clocks = <&k3_clks 277 1>;
++            assigned-clock-parents = <&k3_clks 277 4>;
++
++            ranges = <0x0 0x0 0x0 0x4e80000 0x0 0x14000>;
++            #address-cells = <2>;
++            #size-cells = <2>;
++
++            ufs@4000 {
++                compatible = "cdns,ufshc-m31-16nm", "jedec,ufs-2.0";
++                reg = <0x0 0x4000 0x0 0x10000>;
++                interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
++                freq-table-hz = <19200000 19200000>;
++                power-domains = <&k3_pds 277>;
++                clocks = <&k3_clks 277 1>;
++                assigned-clocks = <&k3_clks 277 1>;
++                assigned-clock-parents = <&k3_clks 277 4>;
++                clock-names = "core_clk";
++            };
++        };
+     };
 -- 
 2.20.1
 
