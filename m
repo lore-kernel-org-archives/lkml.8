@@ -2,192 +2,110 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 579FCC2D0FA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D27C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3533220740
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:05:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589324715;
-	bh=5L6Gn59sH4XQ8DMvoTmBzGZf+vn/VCcugVaqyM3Bkzk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w5ew67bHPVQk4Z3qZzpl2yZVDzgvdIuSog1y3nEIgaDyw5xY/dHYXU46mS7jtcBKh
-	 CIUJ/9Ah67rtgzf3OMqq6efKbAYHwLZRl2XMdYMxBHAf8YShSzeCtbnB32CC08yeeB
-	 Y6Rdd6kS2fxZoYPM6rqhjukFGu1pvvxFR1Hk5FRw=
+	by mail.kernel.org (Postfix) with ESMTP id AA31D20747
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:06:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="MbiVsmNq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731629AbgELXFO (ORCPT
+        id S1731650AbgELXGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 19:05:14 -0400
-Received: from mail-oo1-f66.google.com ([209.85.161.66]:41309 "EHLO
-        mail-oo1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgELXFO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 19:05:14 -0400
-Received: by mail-oo1-f66.google.com with SMTP id t3so3076239oou.8;
-        Tue, 12 May 2020 16:05:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XSdR85TAgJOs38DEsZUyX0dfieZdKEmO5MKyADhHcpo=;
-        b=NcQjP7BHlZMbcdCdChoCutzNNtPG6tQ7ulx3OiXJhrNS8Q0/wFGINaNWmmXiJPRslI
-         IYyh/vy+7oBMx2G+jayaMTGsFf+AUZ7HAU5WHP7/s6Emyt8ZH4NOp0aty+xSBKaZvCqi
-         3mUR31bBUA+lFdjCxCEg9wyfkHZ0dx2QanryYEfkJtnFC60frRkwl3DcrA2purNE6jco
-         RjebZ7l22nkIyoq1fELOFYCfWSSStw9vk4FRZ1tqDATjwVjcqYod9vQU17ExuntF/mzR
-         NFns83E4y0KwkIWU8ogurmEKpjWGy3D8pfXIVC5wP+A/Kltq7ergycZU50uB8QH8wlrH
-         Pq4A==
-X-Gm-Message-State: AGi0PuZr/bRPANgnBWMTGYvAy/gWEpeM+ggo1xnLeC2tbuFdylrVeiKH
-        w6CpalTgnEvNsZ3jCcYEcA==
-X-Google-Smtp-Source: APiQypJzTOsA4MMcw+8ySuTf7bsiFc+0EPM0GrRH186HNMYZE+s5iB7eFAI4H9VokzQcmzwFYB4qXw==
-X-Received: by 2002:a4a:9413:: with SMTP id h19mr15437109ooi.52.1589324712398;
-        Tue, 12 May 2020 16:05:12 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f8sm1601703oto.47.2020.05.12.16.05.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 16:05:11 -0700 (PDT)
-Received: (nullmailer pid 9890 invoked by uid 1000);
-        Tue, 12 May 2020 23:05:09 -0000
-Date:   Tue, 12 May 2020 18:05:09 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Prakhar Srivastava <prsriva@linux.microsoft.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, catalin.marinas@arm.com,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, frowand.list@gmail.com, zohar@linux.ibm.com,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, vincenzo.frascino@arm.com,
-        masahiroy@kernel.org, james.morse@arm.com, bhsharma@redhat.com,
-        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
-        christophe.leroy@c-s.fr, gregkh@linuxfoundation.org,
-        nramas@linux.microsoft.com, tusharsu@linux.microsoft.com,
-        balajib@linux.microsoft.com
-Subject: Re: [RFC][PATCH 0/2] Add support for using reserved memory for ima
- buffer pass
-Message-ID: <20200512230509.GA2654@bogus>
-References: <20200504203829.6330-1-prsriva@linux.microsoft.com>
- <20200505095620.GA82424@C02TD0UTHF1T.local>
- <e8c7d74e-74bf-caa3-452d-23faa649e825@linux.microsoft.com>
+        Tue, 12 May 2020 19:06:00 -0400
+Received: from vps.xff.cz ([195.181.215.36]:42250 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727104AbgELXF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 19:05:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1589324757; bh=blZoiLTu+A/avnSXLStZACMQViZsw7dUh1Z6i4t2+kc=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=MbiVsmNqQbA3s6tCEZDKId9/06UVSeWvW3s2p5J+RiuGPnl2vmJ23ft11kWJu1pe3
+         9j9B+V77r87Y6tThPEuo6W7svzgEbvQaZcoaRMYtWwj9aHdsEfiTByqxM6d3r+D5xJ
+         fK5AiiQOLtJPtWhlb3tG0auFZF432GWb7dAZwNd4=
+Date:   Wed, 13 May 2020 01:05:57 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Luca Weiss <luca@z3ntu.xyz>,
+        Tomas Novotny <tomas@novotny.cz>, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: input: gpio-vibrator: Don't require
+ enable-gpios
+Message-ID: <20200512230557.zvdgwhbqygc2fufv@core.my.home>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Luca Weiss <luca@z3ntu.xyz>, Tomas Novotny <tomas@novotny.cz>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh@kernel.org>
+References: <20200512222205.1456300-1-megous@megous.com>
+ <20200512222205.1456300-2-megous@megous.com>
+ <20200512225212.GE89269@dtor-ws>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e8c7d74e-74bf-caa3-452d-23faa649e825@linux.microsoft.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200512225212.GE89269@dtor-ws>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 10:50:04PM -0700, Prakhar Srivastava wrote:
-> Hi Mark,
-
-Please don't top post.
-
-> This patch set currently only address the Pure DT implementation.
-> EFI and ACPI implementations will be posted in subsequent patchsets.
+On Tue, May 12, 2020 at 03:52:12PM -0700, Dmitry Torokhov wrote:
+> On Wed, May 13, 2020 at 12:22:02AM +0200, Ondrej Jirman wrote:
+> > It is possible to turn the motor on/off just by enabling/disabling
+> > the vcc-supply.
+> > 
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  Documentation/devicetree/bindings/input/gpio-vibrator.yaml | 1 -
+> >  1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
+> > index 2384465eaa19..c700b640bd53 100644
+> > --- a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
+> > +++ b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
+> > @@ -24,7 +24,6 @@ properties:
+> >  
+> >  required:
+> >    - compatible
+> > -  - enable-gpios
 > 
-> The logs are intended to be carried over the kexec and once read the
-> logs are no longer needed and in prior conversation with James(
-> https://lore.kernel.org/linux-arm-kernel/0053eb68-0905-4679-c97a-00c5cb6f1abb@arm.com/)
-> the apporach of using a chosen node doesn't
-> support the case.
-> 
-> The DT entries make the reservation permanent and thus doesnt need kernel
-> segments to be used for this, however using a chosen-node with
-> reserved memory only changes the node information but memory still is
-> reserved via reserved-memory section.
+> Hmm we need at least one of the 2 (gpio and supply). Should we encode it
+> in the binding?
 
-I think Mark's point was whether it needs to be permanent. We don't 
-hardcode the initrd address for example.
+Not sure how to encode either one or the other property being required, but
+not both at once.
 
-> On 5/5/20 2:59 AM, Mark Rutland wrote:
-> > Hi Prakhar,
-> > 
-> > On Mon, May 04, 2020 at 01:38:27PM -0700, Prakhar Srivastava wrote:
-> > > IMA during kexec(kexec file load) verifies the kernel signature and measures
+Maybe I can add a supply-vibrator compatible to the driver and binding and
+make requirements dependent on the compatible?
 
-What's IMA?
+> Also, in the dirver code, I guess we need to switch to have regulator
+> optional (so we are not given the dummy one) and bail if neither
+> regulator nor GPIO is found.
 
-> > > the signature of the kernel. The signature in the logs can be used to verfiy the
-> > > authenticity of the kernel. The logs don not get carried over kexec and thus
-> > > remote attesation cannot verify the signature of the running kernel.
-> > > 
-> > > Introduce an ABI to carry forward the ima logs over kexec.
-> > > Memory reserved via device tree reservation can be used to store and read
-> > > via the of_* functions.
-> > 
-> > This flow needs to work for:
-> > 
-> > 1) Pure DT
-> > 2) DT + EFI memory map
-> > 3) ACPI + EFI memory map
-> > 
-> > ... and if this is just for transiently passing the log, I don't think
-> > that a reserved memory region is the right thing to use, since they're
-> > supposed to be more permanent.
-> > 
-> > This sounds analogous to passing the initrd, and should probably use
-> > properties under the chosen node (which can be used for all three boot
-> > flows above).
-> > 
-> > For reference, how big is the IMA log likely to be? Does it need
-> > physically contiguous space?
+Though nothing bad will happen in the driver if binding will lack both
+of these. The driver will just not control any HW, so at least it's
+failsafe as is.
+
+regards,
+	o.
+
+> Thanks.
 > 
-> It purely depends on the policy used and the modules/files that are accessed
-> for my local testing over a kexec session the log in
-> about 30KB.
-> 
-> Current implementation expects enough contiguous memory to allocated to
-> carry forward the logs. If the log size exceeds the reserved memory the
-> call will fail.
-> 
-> Thanks,
-> Prakhar Srivastava
-> > 
-> > Thanks,
-> > Mark.
-> > 
-> > > 
-> > > Reserved memory stores the size(sizeof(size_t)) of the buffer in the starting
-> > > address, followed by the IMA log contents.
-> > > 
-> > > Tested on:
-> > >    arm64 with Uboot
-> > > 
-> > > Prakhar Srivastava (2):
-> > >    Add a layer of abstraction to use the memory reserved by device tree
-> > >      for ima buffer pass.
-> > >    Add support for ima buffer pass using reserved memory for arm64 kexec.
-> > >      Update the arch sepcific code path in kexec file load to store the
-> > >      ima buffer in the reserved memory. The same reserved memory is read
-> > >      on kexec or cold boot.
-> > > 
-> > >   arch/arm64/Kconfig                     |   1 +
-> > >   arch/arm64/include/asm/ima.h           |  22 ++++
-> > >   arch/arm64/include/asm/kexec.h         |   5 +
-> > >   arch/arm64/kernel/Makefile             |   1 +
-> > >   arch/arm64/kernel/ima_kexec.c          |  64 ++++++++++
-> > >   arch/arm64/kernel/machine_kexec_file.c |   1 +
-> > >   arch/powerpc/include/asm/ima.h         |   3 +-
-> > >   arch/powerpc/kexec/ima.c               |  14 ++-
-> > >   drivers/of/Kconfig                     |   6 +
-> > >   drivers/of/Makefile                    |   1 +
-> > >   drivers/of/of_ima.c                    | 165 +++++++++++++++++++++++++
-> > >   include/linux/of.h                     |  34 +++++
-> > >   security/integrity/ima/ima_kexec.c     |  15 ++-
-> > >   13 files changed, 325 insertions(+), 7 deletions(-)
-> > >   create mode 100644 arch/arm64/include/asm/ima.h
-> > >   create mode 100644 arch/arm64/kernel/ima_kexec.c
-> > >   create mode 100644 drivers/of/of_ima.c
-> > > 
-> > > -- 
-> > > 2.25.1
-> > > 
+> -- 
+> Dmitry
