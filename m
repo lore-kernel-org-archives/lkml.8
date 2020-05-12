@@ -2,127 +2,179 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E11C54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31036C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 620BA20736
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EAFA20722
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:12:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="m5xQdrY6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hP5ckQta"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730241AbgELOMY (ORCPT
+        id S1730253AbgELOM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:12:24 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:2080 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728283AbgELOMY (ORCPT
+        Tue, 12 May 2020 10:12:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35534 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728283AbgELOM0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:12:24 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04CE8Cki015056;
-        Tue, 12 May 2020 16:11:58 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=4pNmSi5ml3tKByzebGX13JwE22RuftEAKg4WQdiHZi8=;
- b=m5xQdrY6vIezXFH13dESAUkJiiQlF952to5ae7R1g2DVWORiFhg5oY57gZnYLACJI+3C
- bIBwxDe+6P2Yd/VIA3vQ+RxAnypwLEhhU+QrAUgYbRsjby4j6R7Ahq/L8OL0aymsHQCr
- JIh3OiIef6gXX+w4pGYi9jKw0f96qs1/jZF428ZjKFkkzHnCeU+/rNp0/CcNfvJqO8is
- jzi9XmPFqFsU9Mu0Z6eka4yBkeQAeB4PTS1beOcskuBIWd57pecwcSdkiJyvhmmnZti0
- oBZa3QP8Hb+rgKee0NUE3IEHQ0wH3NCR/SAIVWsLaaS4osUbnT+Cq4ZkV0y6K1jp+QuR bw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30whn9gw57-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 May 2020 16:11:58 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8B9E9100034;
-        Tue, 12 May 2020 16:11:57 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7CBBE2BC7A1;
-        Tue, 12 May 2020 16:11:57 +0200 (CEST)
-Received: from localhost (10.75.127.47) by SFHDAG6NODE1.st.com (10.75.127.16)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 12 May 2020 16:11:56
- +0200
-From:   Nicolas Toromanoff <nicolas.toromanoff@st.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-CC:     Nicolas Toromanoff <nicolas.toromanoff@st.com>,
-        <linux-crypto@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/5] crypto: stm32/crc: fix run-time self test issue.
-Date:   Tue, 12 May 2020 16:11:10 +0200
-Message-ID: <20200512141113.18972-3-nicolas.toromanoff@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200512141113.18972-1-nicolas.toromanoff@st.com>
-References: <20200512141113.18972-1-nicolas.toromanoff@st.com>
+        Tue, 12 May 2020 10:12:26 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDD71C061A0C;
+        Tue, 12 May 2020 07:12:25 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id l1so7592455qtp.6;
+        Tue, 12 May 2020 07:12:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gLlHheD6LOkmkommetBCdbZlMJmwyT7+bS4yMcoDtq4=;
+        b=hP5ckQtarO3Kj2nj5YGtyndG5YmjzNrFFoURaiK9DOHfFW+5RqSnBCa/ynEUUBC9uk
+         2d52d/YNEj/iT3NKyAXlNkF4ZNdbrbf0N7GyAUrA/1L1uqgZyulITpdOM9ELLEt/CUwh
+         T0EArrE+qeQB7w5LYO8P4CRnZ0w2AsEim15cBQiz5ZbCOCS9jtjBlgMSRg7zHLmbJ+IF
+         ZQpqoxirjxNMZqTbeT8STLeMg32z7XaOkyueKlwYHkxW8nnoNKhLx0WchVzt4qw5EW+F
+         +GNw6RhrQ3kEJjqv1Hb7UBG8gkVz8LYEDmmd7QGNckqr7jcxAo/7+GJJRE9mMrNvrdfj
+         6iiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gLlHheD6LOkmkommetBCdbZlMJmwyT7+bS4yMcoDtq4=;
+        b=kHe8b3Oa5NAgu2MOeMjrmjmHXnpyi/LZLX4Q000IlyCiAT/DbQXHEo4JAZTOCwJyds
+         vs/xHumrDSfe7bqwYDQdNhPFJAS4NIvbH7yI4VutQ7FrMaQHSshNTJvKOcQX64QicmJA
+         Dfox6P7bPEzXfVdZKKGh19vacIE1NNglIacWVnPS2MIcylcR+4X9RexgystZPpEjeelT
+         ShGAWSNyJXnPDvUxWAFj7+cB+nMbxyfzgOiq98sSSyScqvaZalFuak9F0wbnmegIRV/r
+         f+kBR7b70wjLIMJly4uUxVUuf6ODF9D9NSQlLTOHoXUq/RcMlE3oCocLLiPFMKZSABfk
+         dt2w==
+X-Gm-Message-State: AGi0PuZrjLM6Ym/NJJ3Fc2txdHw0UYqW7wz3yE7z2enabvWaD+BpzZij
+        WBzQ0bMBKBBPKhlDONlXb/Y=
+X-Google-Smtp-Source: APiQypI3k0xeziYG1jIzfgKOe3gnva/JyjdSsUpGZm6jRWl20uv/OD9lMPWeJjTm5z7gpHxr43CUKw==
+X-Received: by 2002:ac8:66c6:: with SMTP id m6mr22446881qtp.25.1589292744880;
+        Tue, 12 May 2020 07:12:24 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id y28sm6811400qtc.62.2020.05.12.07.12.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 07:12:24 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id F19C940AFD; Tue, 12 May 2020 11:12:21 -0300 (-03)
+Date:   Tue, 12 May 2020 11:12:21 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Anand K Mistry <amistry@google.com>,
+        linux-perf-users@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf record: Use an eventfd to wakeup when done
+Message-ID: <20200512141221.GL28888@kernel.org>
+References: <20200508145624.1.I4d7421c6bbb1f83ea58419082481082e19097841@changeid>
+ <20200512145930.1.I4d7421c6bbb1f83ea58419082481082e19097841@changeid>
+ <20200512121232.GB3150977@krava>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-12_03:2020-05-11,2020-05-12 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512121232.GB3150977@krava>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix wrong crc32 initialisation value:
-"alg: shash: stm32_crc32 test failed (wrong result) on test vector 0,
-cfg="init+update+final aligned buffer"
-cra_name="crc32c" expects an init value of 0XFFFFFFFF,
-cra_name="crc32" expects an init value of 0.
+Em Tue, May 12, 2020 at 02:12:32PM +0200, Jiri Olsa escreveu:
+> On Tue, May 12, 2020 at 02:59:36PM +1000, Anand K Mistry wrote:
+> 
+> SNIP
+> 
+> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> > index 1ab349abe90469..099ecaa66732a2 100644
+> > --- a/tools/perf/builtin-record.c
+> > +++ b/tools/perf/builtin-record.c
+> > @@ -53,6 +53,7 @@
+> >  #include <unistd.h>
+> >  #include <sched.h>
+> >  #include <signal.h>
+> > +#include <sys/eventfd.h>
+> >  #include <sys/mman.h>
+> >  #include <sys/wait.h>
+> >  #include <sys/types.h>
+> > @@ -518,15 +519,28 @@ static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
+> >  
+> >  static volatile int signr = -1;
+> >  static volatile int child_finished;
+> > +static int done_fd = -1;
+> >  
+> >  static void sig_handler(int sig)
+> >  {
+> > +	u64 tmp = 1;
+> >  	if (sig == SIGCHLD)
+> >  		child_finished = 1;
+> >  	else
+> >  		signr = sig;
+> >  
+> >  	done = 1;
+> > +
+> > +	/*
+> > +	 * It is possible for this signal handler to run after done is checked
+> > +	 * in the main loop, but before the perf counter fds are polled. If this
+> > +	 * happens, the poll() will continue to wait even though done is set,
+> > +	 * and will only break out if either another signal is received, or the
+> > +	 * counters are ready for read. To ensure the poll() doesn't sleep when
+> > +	 * done is set, use an eventfd (done_fd) to wake up the poll().
+> > +	 */
+> > +	if (write(done_fd, &tmp, sizeof(tmp)) < 0)
+> > +		pr_err("failed to signal wakeup fd\n");
+> >  }
+> >  
+> >  static void sigsegv_handler(int sig)
+> > @@ -1424,6 +1438,17 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+> >  	int fd;
+> >  	float ratio = 0;
+> >  
+> > +	done_fd = eventfd(0, EFD_NONBLOCK);
+> > +	if (done_fd < 0) {
+> > +		pr_err("Failed to create wakeup eventfd, error: %m\n");
+> > +		return -1;
+> > +	}
+> > +	err = evlist__add_pollfd(rec->evlist, done_fd);
+> > +	if (err < 0) {
+> > +		pr_err("Failed to add wakeup eventfd to poll list\n");
+> > +		return -1;
+> > +	}
+> 
+> sorry I did not notice before, but I think we also
+> need to close done_fd descriptor on the exit path
+> 
+> also please change subject to PATCHv3 for the next version
 
-Fixes: b51dbe90912a ("crypto: stm32 - Support for STM32 CRC32 crypto module")
+Yeah, and, and don't take this as a requirement for this patch to be
+processed, this can be made as a follow up patch by you or someone else
+(me, maybe :)), that maybe tools/perf/builtin-top.c and
+tools/perf/builtin-trace.c have the same issue?
 
-Signed-off-by: Nicolas Toromanoff <nicolas.toromanoff@st.com>
----
- drivers/crypto/stm32/stm32-crc32.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Could you please take a look there as well?
 
-diff --git a/drivers/crypto/stm32/stm32-crc32.c b/drivers/crypto/stm32/stm32-crc32.c
-index c6156bf6c603..1c3e411b7acb 100644
---- a/drivers/crypto/stm32/stm32-crc32.c
-+++ b/drivers/crypto/stm32/stm32-crc32.c
-@@ -28,10 +28,10 @@
+- Arnaldo
  
- /* Registers values */
- #define CRC_CR_RESET            BIT(0)
--#define CRC_INIT_DEFAULT        0xFFFFFFFF
- #define CRC_CR_REV_IN_WORD      (BIT(6) | BIT(5))
- #define CRC_CR_REV_IN_BYTE      BIT(5)
- #define CRC_CR_REV_OUT          BIT(7)
-+#define CRC32C_INIT_DEFAULT     0xFFFFFFFF
- 
- #define CRC_AUTOSUSPEND_DELAY	50
- 
-@@ -65,7 +65,7 @@ static int stm32_crc32_cra_init(struct crypto_tfm *tfm)
- {
- 	struct stm32_crc_ctx *mctx = crypto_tfm_ctx(tfm);
- 
--	mctx->key = CRC_INIT_DEFAULT;
-+	mctx->key = 0;
- 	mctx->poly = CRC32_POLY_LE;
- 	return 0;
- }
-@@ -74,7 +74,7 @@ static int stm32_crc32c_cra_init(struct crypto_tfm *tfm)
- {
- 	struct stm32_crc_ctx *mctx = crypto_tfm_ctx(tfm);
- 
--	mctx->key = CRC_INIT_DEFAULT;
-+	mctx->key = CRC32C_INIT_DEFAULT;
- 	mctx->poly = CRC32C_POLY_LE;
- 	return 0;
- }
+> thanks,
+> jirka
+> 
+> > +
+> >  	atexit(record__sig_exit);
+> >  	signal(SIGCHLD, sig_handler);
+> >  	signal(SIGINT, sig_handler);
+> > -- 
+> > 2.26.2.645.ge9eca65c58-goog
+> > 
+> 
+
 -- 
-2.17.1
 
+- Arnaldo
