@@ -2,118 +2,182 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 378EFC54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D2DC54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1613A20673
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:26:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AvtECquk"
+	by mail.kernel.org (Postfix) with ESMTP id 4232620673
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:28:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730333AbgELO0u (ORCPT
+        id S1730259AbgELO2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:26:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727100AbgELO0t (ORCPT
+        Tue, 12 May 2020 10:28:11 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40817 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725929AbgELO2J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:26:49 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2F00C061A0C;
-        Tue, 12 May 2020 07:26:49 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id x5so5022164ioh.6;
-        Tue, 12 May 2020 07:26:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=euS789G40ClREipHMw3+RHqcFIzlVY5CpOIPVEki6lg=;
-        b=AvtECquk72BWa108Y6qDur37GANVAriAzDMWrfSFul6biN+gfWHD88H3kfGPSmlKyz
-         wAh6VH0k60MeCfytXbn6CKZzw6b4C1M5IqXdI3XVwBASUwJIyiAHZWbY4IIVFpaOYZMj
-         dHG8/3mPkk1WxG2UEfJMBfJTBGpGit2MbNYx/bS6DFux7feQU+gfXoukWzcvdPUifjRj
-         QRqifKeeq+/mhySia+QoAfEEbqp1vub3cQBRxfv8sj3GE0exssLuezFYtppvu0FRuJSg
-         AlXZqgRDnrE81aNFuFy8HKnBfmW1aAehYtBUECoNCxBPd57Opv4S5LvArDxYNxkmdDQM
-         v8LA==
+        Tue, 12 May 2020 10:28:09 -0400
+Received: by mail-lf1-f65.google.com with SMTP id u4so10733789lfm.7;
+        Tue, 12 May 2020 07:28:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=euS789G40ClREipHMw3+RHqcFIzlVY5CpOIPVEki6lg=;
-        b=b1jh8FjBYps+VawzvOx1xRlV15LHVM3ve6YxvtbObqoWuML1eOVnsMFwF/M/vqoCQj
-         TvgBvOqIVTJDBJpoj09xMFdFAxml5nLKrDV0UZ+HQC+vs+T10rOoCVkHdNBYwUAYZzq0
-         N7NKOZx2M/YHZGsgQ9+41QCvH3gY4adtbpCcQa8RzZP9Md3hXkIAUKdDkxWr1+R2C/hS
-         kvZ/fXMY0EDMjj9/iRuwhNVk/vm/em2/9GGQ3Ts74Uq+8XuicHB01u+3WojkW6NqlLe3
-         CPzfGdpzyo2yHhVxDQqRX4ysKj9KAdYWvRy8yfhBTGBf8Olld8D1MVXkofBRUoexdJ1x
-         k0xQ==
-X-Gm-Message-State: AGi0PuYoTolhERXFK32ivonAITZd91iQWaSbt4LJvshjAFT50wVBl9mS
-        U0tCP69wTA1ybTefDI9yit3TVgbhmLufoAjVraElsMf2
-X-Google-Smtp-Source: APiQypJ3lgS/gmgW2u7t5rc+xlxnMQjn2ItUEI6tE2lUqlZ5Fw/5O8xP8mad063eGoi0RYvACqsoqzazfmoAupPV/mc=
-X-Received: by 2002:a02:628f:: with SMTP id d137mr20543429jac.4.1589293608845;
- Tue, 12 May 2020 07:26:48 -0700 (PDT)
+        h=x-gm-message-state:to:cc:from:autocrypt:subject:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=T/CsFWpprCm90Bcz7apDOuNYzasC1DpC3SgTK6EtJ+k=;
+        b=VeTZ56YCIXnMPFJdszuQ48Zzol+3xII8aULfdq13aSRRfOUzs+XmrEwN6sFnppZuuc
+         XCElYX+Jno7FnqsH1yX2ROXgq/5IVd041czaRCjQtJeF9ZUp8g9a+eQqAV2qbEf8g3S5
+         02r5UxhWFc4ldnUeGo2faM2zTB2qFzrWZbmgZA4VllMnU7Vh6oUVYqGVqFMO8lPXRk1I
+         v1Us/AH0oC9yqQZsRf+YTvtezfZb/Wsja/M8Zybh/++DA6eJ2uQsqIWVPKY08RkaqLjh
+         eoHlHUxfLbmt0TJQnIqJFHOS7Fc7kfSqYP9+XyUpQ8tdWNx70GYA48MSK2iiQiaZz6nD
+         sMLg==
+X-Gm-Message-State: AOAM531e+Qtyvk1fRj6HSlaVEVAPtmicRUzCgYzjAO6v+FQzHqy+ECMK
+        rgqEfsYkkw+ksmyo9ZPgz/FUTInnLzw=
+X-Google-Smtp-Source: ABdhPJzSxy5b9anj5nSLkLE9Xhvo7e1Ecwibf31Ckcp89ttd6Zpl4cCoqcHTchPa1SUNfvge79bXNw==
+X-Received: by 2002:a19:5f04:: with SMTP id t4mr14687764lfb.208.1589293685827;
+        Tue, 12 May 2020 07:28:05 -0700 (PDT)
+Received: from [192.168.1.8] ([213.87.130.150])
+        by smtp.gmail.com with ESMTPSA id c79sm14417582lfg.29.2020.05.12.07.28.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 May 2020 07:28:05 -0700 (PDT)
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Denis Efremov <efremov@linux.com>
+Autocrypt: addr=efremov@linux.com; keydata=
+ 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
+Subject: [GIT PULL] Floppy cleanups for next
+Message-ID: <8d8cb63b-e1ff-ddef-a6e9-8f7adb21be60@linux.com>
+Date:   Tue, 12 May 2020 17:28:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200508092247.132147-1-ubizjak@gmail.com> <158929264101.390.18239205970315804831.tip-bot2@tip-bot2>
-In-Reply-To: <158929264101.390.18239205970315804831.tip-bot2@tip-bot2>
-From:   Uros Bizjak <ubizjak@gmail.com>
-Date:   Tue, 12 May 2020 16:26:37 +0200
-Message-ID: <CAFULd4bZLkME4kn9bmbOBMtd+ZpNnsH-w8a6tPdtmpV57WSHtw@mail.gmail.com>
-Subject: Re: [tip: x86/cpu] x86/cpu: Use INVPCID mnemonic in invpcid.h
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     linux-tip-commits@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        "H. Peter Anvin (Intel)" <hpa@zytor.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        x86 <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 4:10 PM tip-bot2 for Uros Bizjak
-<tip-bot2@linutronix.de> wrote:
->
-> The following commit has been merged into the x86/cpu branch of tip:
->
-> Commit-ID:     7e32a9dac9926241d56851e1517c9391d39fb48e
-> Gitweb:        https://git.kernel.org/tip/7e32a9dac9926241d56851e1517c9391d39fb48e
-> Author:        Uros Bizjak <ubizjak@gmail.com>
-> AuthorDate:    Fri, 08 May 2020 11:22:47 +02:00
-> Committer:     Borislav Petkov <bp@suse.de>
-> CommitterDate: Tue, 12 May 2020 16:05:30 +02:00
->
-> x86/cpu: Use INVPCID mnemonic in invpcid.h
->
-> The current minimum required version of binutils is 2.23, which supports
-> the INVPCID instruction mnemonic. Replace the byte-wise specification of
-> INVPCID with the proper mnemonic.
->
->  [ bp: Add symbolic operand names for increased readability and flip
->    their order like the insn expects them for the AT&T syntax. ]
+Hi Jens,
 
-Actually, the order was correct for AT&T syntax in the original patch.
+The following changes since commit 2ef96a5bb12be62ef75b5828c0aab838ebb29cb8:
 
-The insn template for AT&T syntax goes:
+  Linux 5.7-rc5 (2020-05-10 15:16:58 -0700)
 
-insn arg2, arg1, arg0
+are available in the Git repository at:
 
-where rightmost arguments are output operands.
+  https://github.com/evdenis/linux-floppy tags/floppy-for-5.8
 
-The operands in asm template go
+Please pull
 
-asm ("insn template" : output0, output1 : input0, input1 : clobbers)
+----------------------------------------------------------------
+Floppy patches for 5.8
 
-so, in effect:
+Cleanups:
+  - symbolic register names for x86,sparc64,sparc32,powerpc,parisc,m68k
+  - split of local/global variables for drive,fdc
+  - UBSAN warning suppress in setup_rw_floppy()
 
-asm ("insn template" : arg0, arg1 : arg2, arg3: clobbers)
+Changes were compile tested on arm, sparc64, powerpc, m68k. Many patches
+introduce no binary changes by using defines instead of magic numbers.
+The patches were also tested with syzkaller and simple write/read/format
+tests on real hardware.
 
-As you can see, the operand order in insn tempate is reversed for AT&T
-syntax. I didn't notice the reversal of operands in your improvement.
+Signed-off-by: Denis Efremov <efremov@linux.com>
 
-Uros.
+----------------------------------------------------------------
+Denis Efremov (4):
+      floppy: use print_hex_dump() in setup_DMA()
+      floppy: add FD_AUTODETECT_SIZE define for struct floppy_drive_params
+      floppy: add defines for sizes of cmd & reply buffers of floppy_raw_cmd
+      floppy: suppress UBSAN warning in setup_rw_floppy()
 
+Willy Tarreau (27):
+      floppy: split the base port from the register in I/O accesses
+      floppy: add references to 82077's extra registers
+      floppy: use symbolic register names in the m68k port
+      floppy: use symbolic register names in the parisc port
+      floppy: use symbolic register names in the powerpc port
+      floppy: use symbolic register names in the sparc32 port
+      floppy: use symbolic register names in the sparc64 port
+      floppy: use symbolic register names in the x86 port
+      floppy: cleanup: make twaddle() not rely on current_{fdc,drive} anymore
+      floppy: cleanup: make reset_fdc_info() not rely on current_fdc anymore
+      floppy: cleanup: make show_floppy() not rely on current_fdc anymore
+      floppy: cleanup: make wait_til_ready() not rely on current_fdc anymore
+      floppy: cleanup: make output_byte() not rely on current_fdc anymore
+      floppy: cleanup: make result() not rely on current_fdc anymore
+      floppy: cleanup: make need_more_output() not rely on current_fdc anymore
+      floppy: cleanup: make perpendicular_mode() not rely on current_fdc anymore
+      floppy: cleanup: make fdc_configure() not rely on current_fdc anymore
+      floppy: cleanup: make fdc_specify() not rely on current_{fdc,drive} anymore
+      floppy: cleanup: make check_wp() not rely on current_{fdc,drive} anymore
+      floppy: cleanup: make next_valid_format() not rely on current_drive anymore
+      floppy: cleanup: make get_fdc_version() not rely on current_fdc anymore
+      floppy: cleanup: do not iterate on current_fdc in DMA grab/release functions
+      floppy: cleanup: add a few comments about expectations in certain functions
+      floppy: cleanup: do not iterate on current_fdc in do_floppy_init()
+      floppy: make sure to reset all FDCs upon resume()
+      floppy: cleanup: get rid of current_reqD in favor of current_drive
+      floppy: cleanup: make set_fdc() always set current_drive and current_fd
 
-Uros.
+ arch/alpha/include/asm/floppy.h             |   4 +-
+ arch/arm/include/asm/floppy.h               |   8 +-
+ arch/m68k/include/asm/floppy.h              |  27 ++++---
+ arch/mips/include/asm/mach-generic/floppy.h |   8 +-
+ arch/mips/include/asm/mach-jazz/floppy.h    |   8 +-
+ arch/parisc/include/asm/floppy.h            |  19 ++---
+ arch/powerpc/include/asm/floppy.h           |  19 ++---
+ arch/sparc/include/asm/floppy_32.h          |  50 ++++++------
+ arch/sparc/include/asm/floppy_64.h          |  59 +++++++-------
+ arch/x86/include/asm/floppy.h               |  19 ++---
+ drivers/block/floppy.c                      | 456 ++++++++++++++++++++++++++++++++++++++++++++++++++++++----------------------------------------------------
+ include/uapi/linux/fd.h                     |  26 +++++-
+ include/uapi/linux/fdreg.h                  |  16 +++-
+ 13 files changed, 384 insertions(+), 335 deletions(-)
