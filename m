@@ -2,158 +2,143 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7418BC2D0F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6877FC2D0F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2092492C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DDD220753
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:14:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qQiCjD3T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730988AbgELTML (ORCPT
+        id S1730944AbgELTOG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 15:12:11 -0400
-Received: from mga12.intel.com ([192.55.52.136]:27703 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbgELTMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 15:12:09 -0400
-IronPort-SDR: M/43pkxa0jYVDxFZspa90Xfr3Wo2TZoc28c01LqnTASzGcGi7ZzMh4iWQPQZucuZqG6yONb68v
- M1ihk32/1PVA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 12:12:08 -0700
-IronPort-SDR: Hj6ERzOQBz1/w/qIyG8ahutgiQb3fqztQsHu4kdAATgpC6eyikWwGDnvOj0OZqGUu/Zdgosggg
- MXhQZok7YIig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,384,1583222400"; 
-   d="scan'208";a="250997265"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 12 May 2020 12:12:05 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jYaK0-006Hz4-5i; Tue, 12 May 2020 22:12:08 +0300
-Date:   Tue, 12 May 2020 22:12:08 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] dmaengine: dw: Introduce max burst length hw
- config
-Message-ID: <20200512191208.GG185537@smile.fi.intel.com>
-References: <20200306131048.ADBE18030797@mail.baikalelectronics.ru>
- <20200508105304.14065-1-Sergey.Semin@baikalelectronics.ru>
- <20200508105304.14065-6-Sergey.Semin@baikalelectronics.ru>
- <20200508114153.GK185537@smile.fi.intel.com>
- <20200512140820.ssjv6pl7busqqi3t@mobilestation>
+        Tue, 12 May 2020 15:14:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54234 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbgELTOG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 15:14:06 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B86C3C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:14:04 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id hi11so10001805pjb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:14:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8VAWJvEx809/evnC9HkWYNOh4uNvamJHZhEDIvsQGJg=;
+        b=qQiCjD3T9CULb/q9bhJP94W6BH8SG7q3MvKH6FepDbpRQlAn3VpAzhZpuxHI7npENn
+         2uNO9Aklh7RPnI1S6JqXoiLU8h1UwmAOmEuyJqiU1ZsTu1LgO8nFTmnkXCkNOt0pbrHK
+         eCeFWIWof5FkY8F8VZFfgqKU0e9xw91Rf6ZoH6okwk23XzpNVjfd/1vCWKmbMBfJK4IG
+         vZlXAygq1NujsZqDYozn1rE4UuEUMZhJM7twUGx94vkub58ZG5qOK9kzYzTIVJRfCqI2
+         /Ue0CZZawLXe64gwbcAB2sw+besbVKwK++z2Yb+A9+KJQRVRw9Mo0gWss81p52LHYjyp
+         1pCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8VAWJvEx809/evnC9HkWYNOh4uNvamJHZhEDIvsQGJg=;
+        b=QaJwHVDxm8hqTZONQMKmgvJVPRPvHzmLvRNp8aEO9qwDJqgmMld2asm0SXMvwqhgbS
+         Ux6G7Q5mMKyl9bdt1uCSQA+G8wyz6Sso2rKyjr6xdSBajnckB27jokXQjr0k2rMt2hr/
+         zl8CuCj8IHHVisA/AFLVtl2IDt/+6Sp3mzw80koiZgZPyGTG1g+xp3dYt4y/QrjPWIrX
+         ADm59ZIr7pMh2sv3EiQXy+QdMY+exe4p886+eJ2u/lrCWgwgnj5K1lnBd8Zbz/uP1Csd
+         QQaFowBZRVCSBnQysaHnDqBrpZ4j9GPLmEIt5fW+WZt3evMJYqqrWIKJTZlrjzgKOMN3
+         7cfg==
+X-Gm-Message-State: AGi0PuYpSAddfu0/T2+UirNoXtjjDMLDqKeZtESbEX9A704Nht5w+zwK
+        1PFDZP5KfifTwS5BGxm0EAoc9TallAA=
+X-Google-Smtp-Source: APiQypL3gnOLeOpwMtmrfVojAqfgL6kN/sk2+t5bsXUUapRJEqdvSSznjQ8hkJjSRzkKg9PIXpuxMg==
+X-Received: by 2002:a17:902:7e4b:: with SMTP id a11mr22170702pln.168.1589310844081;
+        Tue, 12 May 2020 12:14:04 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id x12sm12219169pfo.62.2020.05.12.12.14.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 12:14:03 -0700 (PDT)
+Date:   Tue, 12 May 2020 12:12:30 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Cc:     linux-remoteproc@vger.kernel.org, ohad@wizery.com,
+        linux-kernel@vger.kernel.org, tsoni@codeaurora.org,
+        psodagud@codeaurora.org, sidgup@codeaurora.org
+Subject: Re: [PATCH] remoteproc: core: Prevent system suspend during
+ remoteproc recovery
+Message-ID: <20200512191230.GB16107@builder.lan>
+References: <1588183482-21146-1-git-send-email-rishabhb@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200512140820.ssjv6pl7busqqi3t@mobilestation>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <1588183482-21146-1-git-send-email-rishabhb@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 05:08:20PM +0300, Serge Semin wrote:
-> On Fri, May 08, 2020 at 02:41:53PM +0300, Andy Shevchenko wrote:
-> > On Fri, May 08, 2020 at 01:53:03PM +0300, Serge Semin wrote:
-> > > IP core of the DW DMA controller may be synthesized with different
-> > > max burst length of the transfers per each channel. According to Synopsis
-> > > having the fixed maximum burst transactions length may provide some
-> > > performance gain. At the same time setting up the source and destination
-> > > multi size exceeding the max burst length limitation may cause a serious
-> > > problems. In our case the system just hangs up. In order to fix this
-> > > lets introduce the max burst length platform config of the DW DMA
-> > > controller device and don't let the DMA channels configuration code
-> > > exceed the burst length hardware limitation. Depending on the IP core
-> > > configuration the maximum value can vary from channel to channel.
-> > > It can be detected either in runtime from the DWC parameter registers
-> > > or from the dedicated dts property.
-> > 
-> > I'm wondering what can be the scenario when your peripheral will ask something
-> > which is not supported by DMA controller?
+On Wed 29 Apr 11:04 PDT 2020, Rishabh Bhatnagar wrote:
+
+> The system might go into suspend during recovery of any remoteproc.
+> This will interrupt the recovery process in between increasing the
+> recovery time. Make the platform device as wakeup capable and
+> use pm_stay_wake/pm_relax APIs to avoid system from going into
+> suspend during recovery.
 > 
-> I may misunderstood your statement, because seeing your activity around my
-> patchsets including the SPI patchset and sometimes very helpful comments,
-> this question answer seems too obvious to see you asking it.
+> Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
+> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> ---
+
+Please don't forget to add a version to $subject and provide a Changelog
+here next time you're respinning something.
+
+I've picked this up now.
+
+Thanks,
+Bjorn
+
+>  drivers/remoteproc/qcom_q6v5_pas.c   | 2 ++
+>  drivers/remoteproc/remoteproc_core.c | 5 +++++
+>  2 files changed, 7 insertions(+)
 > 
-> No need to go far for an example. See the DW APB SSI driver. Its DMA module
-> specifies the burst length to be 16, while not all of ours channels supports it.
-> Yes, originally it has been developed for the Intel Midfield SPI, but since I
-> converted the driver into a generic code we can't use a fixed value. For instance
-> in our hardware only two DMA channels of total 16 are capable of bursting up to
-> 16 bytes (data items) at a time, the rest of them are limited with up to 4 bytes
-> burst length. While there are two SPI interfaces, each of which need to have two
-> DMA channels for communications. So I need four channels in total to allocate to
-> provide the DMA capability for all interfaces. In order to set the SPI controller
-> up with valid optimized parameters the max-burst-length is required. Otherwise we
-> can end up with buffers overrun/underrun.
-
-Right, and we come to the question which channel better to be used by SPI and
-the rest devices. Without specific filter function you can easily get into a
-case of inverted optimizations, when SPI got channels with burst = 4, while
-it's needed 16, and other hardware otherwise. Performance wise it's worse
-scenario which we may avoid in the first place, right?
-
-> > Peripheral needs to supply a lot of configuration parameters specific to the
-> > DMA controller in use (that's why we have struct dw_dma_slave).
-> > So, seems to me the feasible approach is supply correct data in the first place.
-> 
-> How to supply a valid data if clients don't know the DMA controller limitations
-> in general?
-
-This is a good question. DMA controllers are quite different and having unified
-capabilities structure for all is almost impossible task to fulfil. That's why
-custom filter function(s) can help here. Based on compatible string you can
-implement whatever customized quirks like two functions, for example, to try 16
-burst size first and fallback to 4 if none was previously found.
-
-> > If you have specific channels to acquire then you probably need to provide a
-> > custom xlate / filter functions. Because above seems a bit hackish workaround
-> > of dynamic channel allocation mechanism.
-> 
-> No, I don't have a specific channel to acquire and in general you may use any
-> returned from the DMA subsystem (though some platforms may need a dedicated
-> channels to use, in this case xlate / filter is required). In our SoC any DW DMAC
-> channel can be used for any DMA-capable peripherals like SPI, I2C, UART. But the
-> their DMA settings must properly and optimally configured. It can be only done
-> if you know the DMA controller parameters like max burst length, max block-size,
-> etc.
-> 
-> So no. The change proposed by this patch isn't workaround, but a useful feature,
-> moreover expected to be supported by the generic DMA subsystem.
-
-See above.
-
-> > But let's see what we can do better. Since maximum is defined on the slave side
-> > device, it probably needs to define minimum as well, otherwise it's possible
-> > that some hardware can't cope underrun bursts.
-> 
-> There is no need to define minimum if such limit doesn't exists except a
-> natural 1. Moreover it doesn't exist for all DMA controllers seeing noone has
-> added such capability into the generic DMA subsystem so far.
-
-There is a contract between provider and consumer about DMA resource. That's
-why both sides should participate in fulfilling it. Theoretically it may be a
-hardware that doesn't support minimum burst available in DMA by a reason. For
-such we would need minimum to be provided as well.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
+> index edf9d0e..e608578 100644
+> --- a/drivers/remoteproc/qcom_q6v5_pas.c
+> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
+> @@ -398,6 +398,8 @@ static int adsp_probe(struct platform_device *pdev)
+>  	adsp->has_aggre2_clk = desc->has_aggre2_clk;
+>  	platform_set_drvdata(pdev, adsp);
+>  
+> +	device_wakeup_enable(adsp->dev);
+> +
+>  	ret = adsp_alloc_memory_region(adsp);
+>  	if (ret)
+>  		goto free_rproc;
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index 097f33e..6a1cb98 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -1712,6 +1712,8 @@ static void rproc_crash_handler_work(struct work_struct *work)
+>  
+>  	if (!rproc->recovery_disabled)
+>  		rproc_trigger_recovery(rproc);
+> +
+> +	pm_relax(rproc->dev.parent);
+>  }
+>  
+>  /**
+> @@ -2208,6 +2210,9 @@ void rproc_report_crash(struct rproc *rproc, enum rproc_crash_type type)
+>  		return;
+>  	}
+>  
+> +	/* Prevent suspend while the remoteproc is being recovered */
+> +	pm_stay_awake(rproc->dev.parent);
+> +
+>  	dev_err(&rproc->dev, "crash detected in %s: type %s\n",
+>  		rproc->name, rproc_crash_to_string(type));
+>  
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
