@@ -6,34 +6,33 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD188C54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14739C54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEE4C2192A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE8A620752
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:45:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728830AbgELGp3 (ORCPT
+        id S1728898AbgELGpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 02:45:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34076 "EHLO mx2.suse.de"
+        Tue, 12 May 2020 02:45:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34092 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725814AbgELGp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 02:45:28 -0400
+        id S1725814AbgELGpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 02:45:38 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 2FBBBACC2;
-        Tue, 12 May 2020 06:45:30 +0000 (UTC)
-Date:   Tue, 12 May 2020 08:45:27 +0200
-Message-ID: <s5hpnb9wt14.wl-tiwai@suse.de>
+        by mx2.suse.de (Postfix) with ESMTP id 1C86CACC2;
+        Tue, 12 May 2020 06:45:40 +0000 (UTC)
+Date:   Tue, 12 May 2020 08:45:37 +0200
+Message-ID: <s5ho8qtwt0u.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
 To:     Jian-Hong Pan <jian-hong@endlessm.com>
 Cc:     Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com,
-        Daniel Drake <drake@endlessm.com>
-Subject: Re: [PATCH 2/3] ALSA: hda/realtek - Enable headset mic of ASUS UX550GE with ALC295
-In-Reply-To: <20200512061525.133985-2-jian-hong@endlessm.com>
+        linux-kernel@vger.kernel.org, linux@endlessm.com
+Subject: Re: [PATCH 3/3] ALSA: hda/realtek: Enable headset mic of ASUS UX581LV with ALC295
+In-Reply-To: <20200512061525.133985-3-jian-hong@endlessm.com>
 References: <20200512061525.133985-1-jian-hong@endlessm.com>
-        <20200512061525.133985-2-jian-hong@endlessm.com>
+        <20200512061525.133985-3-jian-hong@endlessm.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -44,14 +43,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 May 2020 08:15:26 +0200,
+On Tue, 12 May 2020 08:15:28 +0200,
 Jian-Hong Pan wrote:
 > 
-> The ASUS laptop UX550GE with ALC295 can't detect the headset microphone
-> until ALC295_FIXUP_ASUS_MIC_NO_PRESENCE quirk applied.
+> The ASUS UX581LV laptop's audio (1043:19e1) with ALC295 can't detect the
+> headset microphone until ALC295_FIXUP_ASUS_MIC_NO_PRESENCE quirk
+> applied.
 > 
 > Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-> Signed-off-by: Daniel Drake <drake@endlessm.com>
 
 Applied, thanks.
 
