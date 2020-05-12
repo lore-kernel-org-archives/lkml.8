@@ -2,148 +2,170 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C14C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66718C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDC5F20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BE3220659
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:11:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="UvQF7HB3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731283AbgELVK5 (ORCPT
+        id S1731303AbgELVLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 17:10:57 -0400
-Received: from mga06.intel.com ([134.134.136.31]:20082 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726324AbgELVK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 17:10:56 -0400
-IronPort-SDR: NHbNQOOfFI1+ZAAMXkKHcu+SKYa6zi+v8/xL97dpvg8QnA7uPcGhWROU5BNNiFIG35PjtGGJ82
- F6Ft2Wv2pbUw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 14:10:55 -0700
-IronPort-SDR: ryy41q/cCF/rB0wFlMvt1vQzwChTsIBW/914zRGtLtlHuciZwNOl2FivjyGGl28QDa8o5hWmuW
- 93zjV74AbCEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,385,1583222400"; 
-   d="scan'208";a="437241109"
-Received: from marshy.an.intel.com (HELO [10.122.105.159]) ([10.122.105.159])
-  by orsmga005.jf.intel.com with ESMTP; 12 May 2020 14:10:54 -0700
-Subject: Re: [PATCHv1] fpga: stratix10-soc: remove the pre-set reconfiguration
- condition
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dinguyen@kernel.org, Richard Gong <richard.gong@intel.com>
-References: <1589290051-30246-1-git-send-email-richard.gong@linux.intel.com>
- <20200512153514.GA125665@epycbox.lan>
-From:   Richard Gong <richard.gong@linux.intel.com>
-Message-ID: <5c23279d-17be-f33c-469c-461219027465@linux.intel.com>
-Date:   Tue, 12 May 2020 16:27:02 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 12 May 2020 17:11:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44228 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728275AbgELVLS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 17:11:18 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19CA5C061A0C;
+        Tue, 12 May 2020 14:11:18 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l11so11795956wru.0;
+        Tue, 12 May 2020 14:11:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HUo/x8U4+0mYzSmYS/9FaeLoX4GWLY2yc9psegkmkLk=;
+        b=UvQF7HB3rdUXi4f4A35IeSasJbDNhF+T3r4ovNcEYIzgzrTmkwgqlDcbxexvs4dk1t
+         jKLSUW2kj6LvcWoISqQxBCKqiiLGUBSC7aE66nCussXrdrU9Z8mO1/6XGk1D2P6R6pkG
+         s/l92Dc06Jqkn4t69RBMD71ZL+NZceikTD9cBB0gwq3P92DbBEOt2qXFOzYds77KqtU5
+         5LZMEOMdG6xXeLZYV3zXSI2Ur1I/eFNhdjN4l3PIkHC6RGhzI7CPgV4mu2xcOh6r29s1
+         OySJRT1q8swp6ez0Ofupv5R8jrqmtychKMWzi7B0eH8vcISvwAN+IiO2l0vXqU19Xpsk
+         5LAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HUo/x8U4+0mYzSmYS/9FaeLoX4GWLY2yc9psegkmkLk=;
+        b=rojTGSUMP9ElsE6TmfD9BSnUwTSYNCT+U0wLIasOgxaK9aBkBrPxETVZ9ZXbYaL8xT
+         cpDmHGarVBA4Rp0xJx5S7bqW44R+LRLSj+xBQzXxbCqqggUw9e/s6g/uYg8UIZdioVHM
+         Rzk87AYAptCnGzyO5gqWA395mkDMp/dnJvL8j7Cl6zum1ZNKZFeCCOvYFApjFBnzw3E3
+         MqaFu39kB6w5L5M+EAERGCezKi4+FRcFh57GW1nTQ+NXSqAMVG8viAc4Y21HT8aVDeGc
+         XhDEVOCknVTDh203wZCFzh3aSnwus6YM455DIoWcHA/tA0ws7irNWURecQLFj/iT76l5
+         MFQg==
+X-Gm-Message-State: AGi0PuZLgyeUr9DZvvxXGTjWjUQIpqf+aerrLoIch+Qt2QbUJSr7mIeo
+        uoIsaZmKQw3AsElzGJCKMhY=
+X-Google-Smtp-Source: APiQypICeedar9LlrtciOb0WCCyUvBbEPvqZ7/kBdZ7nmKmgKGrJtVXh3i4qBkJ6K+EYzRC+5Sb6sQ==
+X-Received: by 2002:a5d:5710:: with SMTP id a16mr17949293wrv.209.1589317876680;
+        Tue, 12 May 2020 14:11:16 -0700 (PDT)
+Received: from localhost.localdomain (p200300F137132E00428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:3713:2e00:428d:5cff:feb9:9db8])
+        by smtp.googlemail.com with ESMTPSA id r3sm9724228wmh.48.2020.05.12.14.11.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 14:11:16 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     robh+dt@kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
+Cc:     jianxin.pan@amlogic.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v3 0/8] dwmac-meson8b Ethernet RX delay configuration
+Date:   Tue, 12 May 2020 23:10:55 +0200
+Message-Id: <20200512211103.530674-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200512153514.GA125665@epycbox.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Moritz,
+The Ethernet TX performance has been historically bad on Meson8b and
+Meson8m2 SoCs because high packet loss was seen. I found out that this
+was related (yet again) to the RGMII TX delay configuration.
+In the process of discussing the big picture (and not just a single
+patch) [0] with Andrew I discovered that the IP block behind the
+dwmac-meson8b driver actually seems to support the configuration of the
+RGMII RX delay (at least on the Meson8b SoC generation).
 
-On 5/12/20 10:35 AM, Moritz Fischer wrote:
-> Hi Richard,
-> 
-> On Tue, May 12, 2020 at 08:27:31AM -0500, richard.gong@linux.intel.com wrote:
->> From: Richard Gong <richard.gong@intel.com>
->>
->> The reconfiguration mode is pre-set by driver as the full reconfiguration.
->> As a result, user have to change code and recompile the drivers if he or
->> she wants to perform a partial reconfiguration. Removing the pre-set
->> reconfiguration condition so that user can select full or partial
->> reconfiguration via overlay device tree without recompiling the drivers.
->>
->> Also add an error message if the configuration request is failure.
->>
->> Signed-off-by: Richard Gong <richard.gong@intel.com>
->> ---
->>   drivers/fpga/stratix10-soc.c | 5 +++--
->>   1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/fpga/stratix10-soc.c b/drivers/fpga/stratix10-soc.c
->> index 44b7c56..2da8a40 100644
->> --- a/drivers/fpga/stratix10-soc.c
->> +++ b/drivers/fpga/stratix10-soc.c
->> @@ -182,12 +182,12 @@ static int s10_ops_write_init(struct fpga_manager *mgr,
->>   	uint i;
->>   	int ret;
->>   
->> -	ctype.flags = 0;
->>   	if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
->>   		dev_dbg(dev, "Requesting partial reconfiguration.\n");
->> -		ctype.flags |= BIT(COMMAND_RECONFIG_FLAG_PARTIAL);
->> +		ctype.flags = 1;
-> Have you considered:
-> 
-> ctype.flags = BIT(COMMAND_RECONFIG_FLAG_PARTIAL);
-> 
-> instead (assuming 1, lines up with BIT(COMMAND_RECONFIG_FLAG_PARTIAL)?
-> 
-> If not: Can you define a constant?
+Since I sent the first RFC I got additional documentation from Jianxin
+(many thanks!). Also I have discovered some more interesting details:
+- Meson8b Odroid-C1 requires an RX delay (by either the PHY or the MAC)
+  Based on the vendor u-boot code (not upstream) I assume that it will
+  be the same for all Meson8b and Meson8m2 boards
+- Khadas VIM2 seems to have the RX delay built into the PCB trace
+  length. When I enable the RX delay on the PHY or MAC I can't get any
+  data through. I expect that we will have the same situation on all
+  GXBB, GXM, AXG, G12A, G12B and SM1 boards. Further clarification is
+  needed here though (since I can't visually see these lengthened
+  traces on the PCB). This will be done before sending patches for
+  these boards.
 
-How about change below?
 
-+#define RECONFIG_FLAG_FULL             0
-+#define RECONFIG_FLAG_PARTIAL          1
-+
-  /*
-   * struct s10_svc_buf
-   * buf:  virtual address of buf provided by service layer
-@@ -184,10 +187,10 @@ static int s10_ops_write_init(struct fpga_manager 
-*mgr,
+Dependencies for this series:
+There is a soft dependency for patch #2 on commit f22531438ff42c
+"dt-bindings: net: dwmac: increase 'maxItems' for 'clocks',
+'clock-names' properties" which is currently in Rob's -next tree.
+That commit is needed to make the dt-bindings schema validation
+pass for patch #2. That patch has been for ~4 weeks in Robs tree,
+so I assume that is not going to be dropped.
 
-         if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
-                 dev_dbg(dev, "Requesting partial reconfiguration.\n");
--               ctype.flags = 1;
-+               ctype.flags = RECONFIG_FLAG_PARTIAL;
-         } else {
-                 dev_dbg(dev, "Requesting full reconfiguration.\n");
--               ctype.flags = 0;
-+               ctype.flags = RECONFIG_FLAG_FULL;
-         }
 
-The protocol between kernel driver and the firmware:
-The reconfiguration flag for full or partial configuration. 0 is for 
-full (default mode) and 1 for partial reconfiguration.
+Changes since RFC v2 at [2]:
+- dropped $ref: /schemas/types.yaml#definitions/uint32 from the
+  "amlogic,rx-delay-ns" in patch #1 ("Don't need to define the
+  type when in standard units." says Rob - thanks, I learned
+  something new). Also use "default: 0" for for this property
+  instead of explaining it in the description text.
+- added a note to the cover-letter about a hidden dependency for
+  dt-binding schema validation in patch #2
+- Added Andrew's Reviewed-by to patches 1-7. Thank you again for
+  the quick and detailed reviews, I appreciate this!
+- error out if the (optional) timing-adjustment clock is missing
+  but we're asked to enable the RGMII RX delay. The MAC won't
+  work in this specific case and either the RX delay has to be
+  provided by the PHY or the timing-adjustment clock has to be
+  added.
+- dropped the dts patches (#9-11) which were only added to give
+  an overview how this is going to be used. those will be sent
+  separately
+- dropped the RFC prefix
 
-I will submit a new version.
+Changes since RFC v1 at [1]:
+- add support for the timing adjustment clock input (dt-bindings and
+  in the driver) thanks to the input from the unnamed Ethernet engineer
+  at Amlogic. This is the missing link between the fclk_div2 clock and
+  the Ethernet controller on Meson8b (no traffic would flow if that
+  clock was disabled)
+- add support fot the amlogic,rx-delay-ns property. The only supported
+  values so far are 0ns and 2ns. The registers seem to allow more
+  precise timing adjustments, but I could not make that work so far.
+- add more register documentation (for the new RX delay bits) and
+  unified the placement of existing register documentation. Again,
+  thanks to Jianxin and the unnamed Ethernet engineer at Amlogic
+- DO NOT MERGE: .dts patches to show the conversion of the Meson8b
+  and Meson8m2 boards to "rgmii-id". I didn't have time for all arm64
+  patches yet, but these will switch to phy-mode = "rgmii-txid" with
+  amlogic,rx-delay-ns = <0> (because the delay seems to be provided by
+  the PCB trace length).
 
-Regards,
-Richard
 
->>   	} else {
->>   		dev_dbg(dev, "Requesting full reconfiguration.\n");
->> +		ctype.flags = 0;
->>   	}
->>   
->>   	reinit_completion(&priv->status_return_completion);
->> @@ -210,6 +210,7 @@ static int s10_ops_write_init(struct fpga_manager *mgr,
->>   
->>   	ret = 0;
->>   	if (!test_and_clear_bit(SVC_STATUS_OK, &priv->status)) {
->> +		dev_err(dev, "RECONFIG_REQUEST failed\n");
->>   		ret = -ETIMEDOUT;
->>   		goto init_done;
->>   	}
->> -- 
->> 2.7.4
->>
-> 
-> Cheers,
-> Moritz
-> 
+[0] https://patchwork.kernel.org/patch/11309891/
+[1] https://patchwork.kernel.org/cover/11310719/
+[2] https://patchwork.kernel.org/cover/11518257/
+
+
+Martin Blumenstingl (8):
+  dt-bindings: net: meson-dwmac: Add the amlogic,rx-delay-ns property
+  dt-bindings: net: dwmac-meson: Document the "timing-adjustment" clock
+  net: stmmac: dwmac-meson8b: use FIELD_PREP instead of open-coding it
+  net: stmmac: dwmac-meson8b: Move the documentation for the TX delay
+  net: stmmac: dwmac-meson8b: Add the PRG_ETH0_ADJ_* bits
+  net: stmmac: dwmac-meson8b: Fetch the "timing-adjustment" clock
+  net: stmmac: dwmac-meson8b: Make the clock enabling code re-usable
+  net: stmmac: dwmac-meson8b: add support for the RX delay configuration
+
+ .../bindings/net/amlogic,meson-dwmac.yaml     |  23 ++-
+ .../ethernet/stmicro/stmmac/dwmac-meson8b.c   | 146 ++++++++++++++----
+ 2 files changed, 134 insertions(+), 35 deletions(-)
+
+-- 
+2.26.2
+
