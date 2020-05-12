@@ -2,117 +2,110 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E7DBC2D0F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD3BCA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F0F9206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:32:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="AuuR08w9"
+	by mail.kernel.org (Postfix) with ESMTP id 7CB0320714
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:32:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589301155;
+	bh=iai6OsTrstOImYGBblatIa+HRYGTeEYXR6O6Jhuge0Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=EqLj6tZPNrUH+er82SNdXnoqJv08KVmw99pRqVKd6cH9i+Y1+cyBdZ03vySgVm9uF
+	 Rg8ZkGwO24XEV0jejrmxmsQ3V/Mi9SlQoEril6Aye1gFPMWMUbxjPI5bpVkye3whum
+	 A/ZtSP/URRuO5BJSb6bFnDmI8je5J6BmStQiBBXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgELQc0 (ORCPT
+        id S1728764AbgELQce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 12:32:26 -0400
-Received: from www.zeus03.de ([194.117.254.33]:43330 "EHLO mail.zeus03.de"
+        Tue, 12 May 2020 12:32:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbgELQcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 12:32:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=8LVJQP0EnT94m/Mbpmbo2jidt/S/
-        RrHEDO/dAbZ+1cs=; b=AuuR08w9s26ROhN3pP7eNek15XbATKdZKhHzcKKjMD5Y
-        AGGbsHLt/2w/yVKEZwAvVmAnTSiWyOPA8qbTdG/K2BklqGmwH99h7JHcjAkHQuv3
-        7YYW6WAQ4oilsrcyj/AJwLtMSc5mf31InG9awbZRHZeUG71heBcdHkHgdQnYoSo=
-Received: (qmail 3011521 invoked from network); 12 May 2020 18:32:23 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 12 May 2020 18:32:23 +0200
-X-UD-Smtp-Session: l3s3148p1@LfIUAnalbMggAwDPXw2aAE67cgFBY+HL
-Date:   Tue, 12 May 2020 18:32:22 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-i2c@vger.kernel.org
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] x86/platform/intel-mid: convert to use
- i2c_new_client_device()
-Message-ID: <20200512163222.GL13516@ninjato>
-References: <20200326211015.13654-1-wsa+renesas@sang-engineering.com>
- <20200326211015.13654-2-wsa+renesas@sang-engineering.com>
+        id S1725904AbgELQce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 12:32:34 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12432206CC;
+        Tue, 12 May 2020 16:32:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589301153;
+        bh=iai6OsTrstOImYGBblatIa+HRYGTeEYXR6O6Jhuge0Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gyfUMILZKf/6nFVyJhQlgWnDBIITwatliCL6ozMK0oYYDh9/NAxgxc1CXknpwXadj
+         yyTgtV1zyYYhV6oo9ENRsJf+k/FGgpJvBVXQRyW1r8HEY4I+/AKreK2X+lh3ZWz0M1
+         LJzi7cV8FRpSdqnDdByESWwxf/OWll2UtOoH1i2U=
+Date:   Tue, 12 May 2020 09:32:31 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Cc:     sfr@canb.auug.org.au, Amol Grover <frextrite@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH net 2/2 RESEND] ipmr: Add lockdep expression to
+ ipmr_for_each_table macro
+Message-ID: <20200512093231.7ce29f30@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200512051705.GB9585@madhuparna-HP-Notebook>
+References: <20200509072243.3141-1-frextrite@gmail.com>
+        <20200509072243.3141-2-frextrite@gmail.com>
+        <20200509141938.028fa959@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <20200512051705.GB9585@madhuparna-HP-Notebook>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="c8JyeaiReRNoiMDS"
-Content-Disposition: inline
-In-Reply-To: <20200326211015.13654-2-wsa+renesas@sang-engineering.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 12 May 2020 10:47:05 +0530 Madhuparna Bhowmik wrote:
+> > >  #ifdef CONFIG_IP_MROUTE_MULTIPLE_TABLES
+> > > -#define ipmr_for_each_table(mrt, net) \
+> > > -	list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list, \
+> > > -				lockdep_rtnl_is_held())
+> > > +#define ipmr_for_each_table(mrt, net)					\
+> > > +	list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list,	\
+> > > +				lockdep_rtnl_is_held() ||		\
+> > > +				lockdep_is_held(&pernet_ops_rwsem))  
+> > 
+> > This is a strange condition, IMHO. How can we be fine with either
+> > lock.. This is supposed to be the writer side lock, one can't have 
+> > two writer side locks..
+> > 
+> > I think what is happening is this:
+> > 
+> > ipmr_net_init() -> ipmr_rules_init() -> ipmr_new_table()
+> > 
+> > ipmr_new_table() returns an existing table if there is one, but
+> > obviously none can exist at init.  So a better fix would be:
+> > 
+> > #define ipmr_for_each_table(mrt, net)					\
+> > 	list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list,	\
+> > 				lockdep_rtnl_is_held() ||		\
+> > 				list_empty(&net->ipv4.mr_tables))
+> >  
+> (adding Stephen)
+> 
+> Hi Jakub,
+> 
+> Thank you for your suggestion about this patch.
+> Here is a stack trace for ipmr.c:
+> 
+> [...]
 
---c8JyeaiReRNoiMDS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks!
 
-On Thu, Mar 26, 2020 at 10:10:15PM +0100, Wolfram Sang wrote:
-> Move away from the deprecated API and return the shiny new ERRPTR where
-> useful.
->=20
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
+> > Thoughts?  
+> 
+> Do you think a similar fix (the one you suggested) is also applicable
+> in the ip6mr case.
 
-Can we have this now so I can remove the old API in the next merge
-window? Andy already reviewed it. Thanks!
-
->  arch/x86/platform/intel-mid/sfi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/arch/x86/platform/intel-mid/sfi.c b/arch/x86/platform/intel-=
-mid/sfi.c
-> index b8f7f193f383..30bd5714a3d4 100644
-> --- a/arch/x86/platform/intel-mid/sfi.c
-> +++ b/arch/x86/platform/intel-mid/sfi.c
-> @@ -287,8 +287,8 @@ void intel_scu_devices_create(void)
-> =20
->  		adapter =3D i2c_get_adapter(i2c_bus[i]);
->  		if (adapter) {
-> -			client =3D i2c_new_device(adapter, i2c_devs[i]);
-> -			if (!client)
-> +			client =3D i2c_new_client_device(adapter, i2c_devs[i]);
-> +			if (IS_ERR(client))
->  				pr_err("can't create i2c device %s\n",
->  					i2c_devs[i]->type);
->  		} else
-> --=20
-> 2.20.1
->=20
-
---c8JyeaiReRNoiMDS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl66z5YACgkQFA3kzBSg
-Kbbj/g/9FuU+f6nINdnCcLn6Gl6KSTzeEqAp+Bwn2S7ZfUZXJbij8C3FyJg/ATaz
-SUU1LyRzZ8nG2TgT8g4//6PnAH/9UXLuepbrr2PDnSne2WiGVrR7SZRLunN4hiHF
-UzI5mh1kUV9/Zd0uLGtZmoIyx3HOjAq5MULX/mV7HCdFBhXQwcPGW6c8NEdwPW9c
-axT+ndOvFHzUv0wWN8KmFc6wwisz5XJ15QqZQkUK44zt+byG0vLQMgOA4NtXGlyx
-+MufwoKqb9BH+LgFZpYuANX866D7By86Ozpc5geGRKeKyUVjgm2hm7urNzT97Gze
-opbMM6R49WIqg+O6NVzYkvwdk/JlBjjxFPFDxD3VSH34EoCvVs07/S/YTBDIS+0G
-Q5ogbNiGUETYYx+B0lBcJTzEF6iNXz4b872eCtK5NYM28icqfUt5Q61+X3y1eYOF
-MJv5quOOfa21F7tk0l5UDPFke7eqbG5WgIKuHA31PANhqBRszLUgSmjJUxp6QdAJ
-P2oMG0z9h5lHW6dMDdNIPXhB9uamu1H7zUx6benKwRG6Hu7RJNNOPfQOB4Yitk29
-g9I1BYsKXehrrIeM9QDfE5WMJP6fUbDvN3Nkn/08U4Bpipydwoxg1W7hHiCuKGOj
-Kgj7d6JsIuvbb8qpv1ndJ7n4rTEJi2ZupAx0Oypv3qnWRqIceK8=
-=auP+
------END PGP SIGNATURE-----
-
---c8JyeaiReRNoiMDS--
+Yes, looking at the code it seems ip6mr has the exact same flow for
+netns init.
