@@ -2,143 +2,101 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1A7C2D0FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F97C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8CCB20769
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8573520747
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:51:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="WVkcmgJK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dL2pYMsP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731290AbgELUqE (ORCPT
+        id S1730711AbgELUvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 16:46:04 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:32968 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731230AbgELUqB (ORCPT
+        Tue, 12 May 2020 16:51:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41080 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726661AbgELUvN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 16:46:01 -0400
-Received: from [10.137.106.115] (unknown [131.107.174.243])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 8F07520B717B;
-        Tue, 12 May 2020 13:46:00 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8F07520B717B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1589316360;
-        bh=5CBxyt/dWjF6Q8OMToqpHYiSWTCEtvdB+pOe8gCrEfY=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=WVkcmgJKlWO5sd4Ym7b0twaJ+ocp8Snnig3oIZ4pkHn5pnUqY1BXmXCY3Bw+51Z+s
-         X90hUe60ZiR2AqWXSpEUbn/uS2FeXHExR8GoMGidsjLfC2sHzVzjim1o7dW4T+oGkA
-         YCQzgAz1MQbdE6JNrLOTlL8TZo6s1APo8nKYqtFc=
-Subject: Re: [RFC PATCH v3 00/12] Integrity Policy Enforcement LSM (IPE)
-From:   Deven Bowers <deven.desai@linux.microsoft.com>
-To:     =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
-        agk@redhat.com, axboe@kernel.dk, snitzer@redhat.com,
-        jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, jannh@google.com
-Cc:     tyhicks@linux.microsoft.com, pasha.tatashin@soleen.com,
-        sashal@kernel.org, jaskarankhurana@linux.microsoft.com,
-        nramas@linux.microsoft.com, mdsakib@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, corbet@lwn.net
-References: <20200415162550.2324-1-deven.desai@linux.microsoft.com>
- <b07ac7e1-7cf5-92c9-81d0-64174c3d5024@digikod.net>
- <0001755a-6b2a-b13b-960c-eb0b065c8e3c@linux.microsoft.com>
-Message-ID: <8ba7b15f-de91-40f7-fc95-115228345fce@linux.microsoft.com>
-Date:   Tue, 12 May 2020 13:46:00 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 12 May 2020 16:51:13 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AF3CC061A0C;
+        Tue, 12 May 2020 13:51:13 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id u22so5905137plq.12;
+        Tue, 12 May 2020 13:51:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=oJng9dQJuQxPUtpR8DFqp83AWfODJEvg6OPBy2AJ0nA=;
+        b=dL2pYMsPCc2MhtRZyYEyonwcNSw+sbEft1mYQa086fd50ke6L9zDiJCGyyc9/PEqr5
+         FNTFry6mlEl+8LtK8THWFzgyEfQyJbKEomPx+g6UkvZwySQWdhLJ4KjU0Aem1GaiTFKV
+         V8JaKkKvApXbsniXVSTYzNIWLleljHs1z/VhIgp4Yzs+xka5OvuqA4gzCjt9ACTuCO6O
+         frzjMUov1/+kzPO/BxCd3FdVGfEAt6AbATNf/z8+N9NC4/++jpHZj/Sl6lEXr5JpJBia
+         SGJwbHXKR2KkLUDp69w232U960qHKD4w3HOdVt3P9UTNfngIqkcpDv5TGSrmrGkwlP9M
+         /IIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=oJng9dQJuQxPUtpR8DFqp83AWfODJEvg6OPBy2AJ0nA=;
+        b=MFGGTbrpBBSM4AkGEShvc88i073W0whdjcZmlofTVoqJtqQDIyZurBcDDRaF21XPEg
+         hax+elh9pib1KeIvfTRRFYsdaSwMZd2DYW9Tz+ptHJj1HogwAIr6OQhMI4l8ADVb7lDe
+         kJCm+GNZK31cdUFxXikAYPRx/tR+a4WD1ibvxNB+0zjnkue4LZvlEjzrVlGhGVZU0YV4
+         CbXpo1OgEZQ+dQvzg8VAAe0sm0nt2iCRwwAdw+juCf4IEDDxA5BsEPer1rWT7TRyBzrx
+         mt4Mbhu5KoMrpqDoonaxa/YHVQ+ubeU1LdmrXC+2379HBEBSfkcCDBbi4sl8xrc5GUaH
+         cq3A==
+X-Gm-Message-State: AGi0PuZ7wYcky9PUhR5jUED9BCoTBoQil9YscqP6+ZX+5NAIhFzc2P57
+        Cva312UPaO+38NHmNMv+sT9ILVVLhmLfJfQobYI=
+X-Google-Smtp-Source: APiQypKTeq1lB68VGWX4c5tYalRqzHPQM+TCExiYM+jApVYuNBs5tNJAXHSLc/i9/YwYfcEJftUgDWtOlWxQ/EqLwvI=
+X-Received: by 2002:a17:90b:374f:: with SMTP id ne15mr30222698pjb.181.1589316672701;
+ Tue, 12 May 2020 13:51:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <0001755a-6b2a-b13b-960c-eb0b065c8e3c@linux.microsoft.com>
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200512204009.4751-1-bernhardu@mailbox.org> <2656984b-3eec-c6d0-f992-8f1f8973fe3e@redhat.com>
+In-Reply-To: <2656984b-3eec-c6d0-f992-8f1f8973fe3e@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 12 May 2020 23:51:01 +0300
+Message-ID: <CAHp75Vfk+MU+XsPf4+upqzd7HyxBHgQBZ=BukUPxzd+8Bm9bOQ@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for the Trekstor
+ Yourbook C11B
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     =?UTF-8?Q?Bernhard_=C3=9Cbelacker?= <bernhardu@mailbox.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Otmar Meier <otmarjun.meier@nexgo.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 12, 2020 at 11:44 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 5/12/20 10:40 PM, Bernhard =C3=9Cbelacker wrote:
+> > Add touchscreen info for the Trekstor Yourbook C11B. It seems to
+> > use the same touchscreen as the Primebook C11, so we only add a new DMI
+> > match.
+> >
+> > Cc: Otmar Meier <otmarjun.meier@nexgo.de>
+> > Reported-and-tested-by: Otmar Meier <otmarjun.meier@nexgo.de>
+> > Signed-off-by: Bernhard =C3=9Cbelacker <bernhardu@mailbox.org>
+>
+> Thank you, patch looks good to me:
+>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
+I don't see it neither in our patchwork nor in Linux Input...
 
-On 5/11/2020 11:03 AM, Deven Bowers wrote:
-> 
-> 
-> On 5/10/2020 2:28 AM, Mickaël Salaün wrote:
-> 
-> [...snip]
-> 
->>>
->>> Additionally, rules are evaluated top-to-bottom. As a result, any
->>> revocation rules, or denies should be placed early in the file to ensure
->>> that these rules are evaluated before a rule with "action=ALLOW" is hit.
->>>
->>> IPE policy is designed to be forward compatible and backwards 
->>> compatible,
->>> thus any failure to parse a rule will result in the line being ignored,
->>> and a warning being emitted. If backwards compatibility is not required,
->>> the kernel commandline parameter and sysctl, ipe.strict_parse can be
->>> enabled, which will cause these warnings to be fatal.
->>
->> Ignoring unknown command may lead to inconsistent beaviors. To achieve
->> forward compatibility, I think it would be better to never ignore
->> unknown rule but to give a way to userspace to known what is the current
->> kernel ABI. This could be done with a securityfs file listing the
->> current policy grammar.
->>
-> 
-> That's a fair point. From a manual perspective, I think this is fine.
-> A human-user can interpret a grammar successfully on their own when new
-> syntax is introduced.
-> 
->  From a producing API perspective, I'd have to think about it a bit 
-> more. Ideally, the grammar would be structured in such a way that the 
-> userland
-> interpreter of this grammar would not have to be updated once new syntax
-> is introduced, avoiding the need to update the userland binary. To do so
-> generically ("op=%s") is easy, but doesn't necessarily convey sufficient
-> information (what happens when a new "op" token is introduced?). I think
-> this may come down to regular expression representations of valid values
-> for these tokens, which worries me as regular expressions are incredibly
-> error-prone[1].
-> 
-> I'll see what I can come up with regarding this.
-
-I have not found a way that I like to expose some kind of grammar
-through securityfs that can be understood by usermode to parse the
-policy. Here's what I propose as a compromise:
-
-	1. I remove the unknown command behavior. This address your
-first point about inconsistent behaviors, and effectively removes the
-strict_parse sysctl (as it is always enabled).
-
-	2. I introduce a versioning system for the properties
-themselves. The valid set of properties and their versions
-can be found in securityfs, under say, ipe/config in a key=value
-format where `key` indicates the understood token, and `value`
-indicates their current version. For example:
-
-	$ cat $SECURITYFS/ipe/config
-	op=1
-	action=1
-	policy_name=1
-	policy_version=1
-	dmverity_signature=1
-	dmverity_roothash=1
-	boot_verified=1
-
-if new syntax is introduced, the version number is increased.
-
-	3. The format of those versions are documented as part of
-the admin-guide around IPE. If user-mode at that point wants to rip
-the documentation formats and correlate with the versioning, then
-it fulfills the same functionality as above, with out the complexity
-around exposing a parsing grammar and interpreting it on-the-fly.
-Many of these are unlikely to move past version 1, however.
-
-Thoughts?
-
+--=20
+With Best Regards,
+Andy Shevchenko
