@@ -2,198 +2,162 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 711F7C2D0FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB52C47077
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 526CB20740
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EC5F20740
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 23:58:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="NCtjCiXd"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="CP/0BK44"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731758AbgELX6T (ORCPT
+        id S1731784AbgELX64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 19:58:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgELX6T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 19:58:19 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B82D8C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 16:58:17 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id t8so6912957qvw.5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 16:58:17 -0700 (PDT)
+        Tue, 12 May 2020 19:58:56 -0400
+Received: from mail-dm6nam10on2082.outbound.protection.outlook.com ([40.107.93.82]:6034
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731656AbgELX6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 19:58:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LiHa+ldcB+nbTmoj4UvWHXgbTEIR3XtMkhr+F6aj9/y79gfqcE19bE0HR+F1AaOQpY05t0HgvLuRVg4O799F9xC1zEmEmH5Mjzt+/wp8L/cYpwHthYn/jvFomMfqCHjzwat5MYK0vAdRPft1FUf/ZM0ZMop6jrLM/7QPc+QcH5J783olbr3AzZpsPG06C/TS0bVvJj52g8sVJQ7dHVndOxptN2zeQklfIThH1F8rBJBnWeKQ1Y98Gum3oAl8kUwUsLop8cSgzCYIxvhwm3hZhuys8JZRwzSYlDLtaB/CciralVRd59cZzbESYgJklwLJbSrKrMmzAU/DWxOV7HSpKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Nwl55NNBF8qYLEcR5lKJQWd+47tHHxtme8LrHqnd374=;
+ b=mQ9wqPAC1hjDOW+EhL1rHQ9gSzBxvTrLaHvAII9orw4RyjJWzrZjhDhexOXDH3iryPHNC2PWAGjhFCA1h0QgJR8iIm1HXuISVW/dzuoheALacmCEqPbBcv8OhrTfD87NcDsMx7lToygvKCWjMxqnoCoOxLqXRg8Z9x8iIpQUUs8vTA/8IcYaAf9beLtF+UtDCocvo8/8azGBnUSyJKxgJNept2/dOmy9TlUlT+zq21RjkXVmk4IyIZIoBwqkk67Xi3RlVwThw0AhDq8BvgOTUZbhyICaUxwIaVZC2x9QAF5l+inj4/6StGmz1UrQ1KN8y7yJ4xyrmig80tJx3bYUqA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=yD3a12+euav5lEzQ2eD5g0W71Fdr+4HWLSF5wAq+Di4=;
-        b=NCtjCiXdpUxrD3bLzlXKjxlXGtB+pIewyDmhQ6NgTrKvEBiiAO3l064DUq0chV8UqU
-         3wB2OBgRQ9Iht75ymMDaei3StnLtfND5OXchaakbk/r7q/N8ILNzEior35O7K8va4vj+
-         BMOiB9k3rO9/RspupD8JjBww3kCaa3IQrVCaRw2F0BIkSgdnctCS9PhcekAiHzOzBLkr
-         nEry2gYpIjfwV5M6ajTLYZLme6Jsn+kCR4KMcN0MXVdjQ+LvwvTXQ0r55weM0847xzkz
-         Mheh2jC4iUU31tpYcrbMBSe8SsSJO3QT5fBSmT+HjN6JfSS/rHlRsDS7n8JNyjTZLX8L
-         ZRdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=yD3a12+euav5lEzQ2eD5g0W71Fdr+4HWLSF5wAq+Di4=;
-        b=TpFYT8HCbDtgC2uPSgARjSVcDjiw+QPRhYtj0Dzf8CLZ+4lZwSa9Q816kxs7tEgP6v
-         b8nY0kWALn3zf6wLXKOfXw8SaBNpLzkirfc2jeaITqEzKuwM6ZcyVzxg5aPRf3o9ZkXc
-         Qw5nDZuOE+aZh2gx4ifuzjTOlG2gKcnb3iOIo/KoorqGBjCeqJ+AEKIscahBFnyf6okH
-         yuiEYP9t/Ad4qs8hviogVhaKTZUA9L3Lwi1gsxH1Sn+7pdzoh9Z6zdsfLwfQG3TNmMbC
-         AUX9FPh0cYw48rPhdCAtyJvcizSotCLgHXi9PQjRmpIGkqjDIMbA2Vk9rsFQG+T3pqrC
-         dGDQ==
-X-Gm-Message-State: AGi0PuY6acj71nbxq0+vSs5djz4VCvW0hptMDhhVb16T+QPPS/GkOZxS
-        +6zXKirTDP5gXKqGeGpX+0g5mg==
-X-Google-Smtp-Source: APiQypLQc2IzguaIlxfjV2xEQaPP5JANj3ncXax4B/oEnympCQO03p058pVnDRHNNYvdeA4bh4hL0w==
-X-Received: by 2002:ad4:42b1:: with SMTP id e17mr23319979qvr.149.1589327896644;
-        Tue, 12 May 2020 16:58:16 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id j11sm11834028qkk.33.2020.05.12.16.58.15
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 May 2020 16:58:15 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH 12/19] mm: memcontrol: convert anon and file-thp to new
- mem_cgroup_charge() API
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20200512215813.GA487759@cmpxchg.org>
-Date:   Tue, 12 May 2020 19:58:14 -0400
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Joonsoo Kim <js1304@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Roman Gushchin <guro@fb.com>, Linux-MM <linux-mm@kvack.org>,
-        cgroups@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        kernel-team@fb.com, Johannes Weiner <hannes@cmpxchg.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <25270BAD-CB7E-4E92-96BA-740690744DBA@lca.pw>
-References: <20200508183105.225460-1-hannes@cmpxchg.org>
- <20200508183105.225460-13-hannes@cmpxchg.org>
- <45AA36A9-0C4D-49C2-BA3C-08753BBC30FB@lca.pw>
- <20200512215813.GA487759@cmpxchg.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Nwl55NNBF8qYLEcR5lKJQWd+47tHHxtme8LrHqnd374=;
+ b=CP/0BK44sZ38ryZKS4hfN0dK1jH+SmCJaSYqKk4Py/bdxibvqeZgBDj/v6W4WXJB1EcakJZrlnpAqdaX/WgOHrI9BCvczndCx3YINgP1lYTff4buoEjkr5k3xcWRKmE9kJDwFlPuNABz+IyoMuxxB9+RL4ge6AHYJWorefQVmN0=
+Authentication-Results: tencent.com; dkim=none (message not signed)
+ header.d=none;tencent.com; dmarc=none action=none header.from=amd.com;
+Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
+ by SN1PR12MB2575.namprd12.prod.outlook.com (2603:10b6:802:25::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.34; Tue, 12 May
+ 2020 23:58:51 +0000
+Received: from SN1PR12MB2560.namprd12.prod.outlook.com
+ ([fe80::c0f:2938:784f:ed8d]) by SN1PR12MB2560.namprd12.prod.outlook.com
+ ([fe80::c0f:2938:784f:ed8d%7]) with mapi id 15.20.2979.033; Tue, 12 May 2020
+ 23:58:51 +0000
+Subject: [PATCH v4 0/3] arch/x86: Enable MPK feature on AMD
+From:   Babu Moger <babu.moger@amd.com>
+To:     corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        hpa@zytor.com, pbonzini@redhat.com, sean.j.christopherson@intel.com
+Cc:     x86@kernel.org, vkuznets@redhat.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.org, mchehab+samsung@kernel.org,
+        babu.moger@amd.com, changbin.du@intel.com, namit@vmware.com,
+        bigeasy@linutronix.de, yang.shi@linux.alibaba.com,
+        asteinhauser@google.com, anshuman.khandual@arm.com,
+        jan.kiszka@siemens.com, akpm@linux-foundation.org,
+        steven.price@arm.com, rppt@linux.vnet.ibm.com, peterx@redhat.com,
+        dan.j.williams@intel.com, arjunroy@google.com, logang@deltatee.com,
+        thellstrom@vmware.com, aarcange@redhat.com, justin.he@arm.com,
+        robin.murphy@arm.com, ira.weiny@intel.com, keescook@chromium.org,
+        jgross@suse.com, andrew.cooper3@citrix.com,
+        pawan.kumar.gupta@linux.intel.com, fenghua.yu@intel.com,
+        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
+        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Date:   Tue, 12 May 2020 18:58:46 -0500
+Message-ID: <158932780954.44260.4292038705292213548.stgit@naples-babu.amd.com>
+User-Agent: StGit/unknown-version
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: DM5PR2201CA0015.namprd22.prod.outlook.com
+ (2603:10b6:4:14::25) To SN1PR12MB2560.namprd12.prod.outlook.com
+ (2603:10b6:802:26::19)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from naples-babu.amd.com (165.204.78.2) by DM5PR2201CA0015.namprd22.prod.outlook.com (2603:10b6:4:14::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20 via Frontend Transport; Tue, 12 May 2020 23:58:47 +0000
+X-Originating-IP: [165.204.78.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 497c9631-566d-4266-5c46-08d7f6d06b38
+X-MS-TrafficTypeDiagnostic: SN1PR12MB2575:|SN1PR12MB2575:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN1PR12MB257549A1FC54DFC8C454B60B95BE0@SN1PR12MB2575.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0401647B7F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: D3XWYv885s1Irm62EPoArkT6DCshXw1WCYQRluPmFuKXFwAwEzQWP8LevAfiaiTk+PjHB3+2CaVz/fSjZUFGfKmd4C5wiwcnU/mwRWppEsC6lH6fMW31L+KuIXBbQtkSUeUPHdLZDkCy0AINrlP0rTWloq3hIDKT3WsocX/ohXhGuaeoAc6xXVtvLyqGHdEleJkWepwB3GijHUjuttA7MM7L4RdaqDC0dYytwif+YBalFjplIUhiiNGVbdTsa12ECJnl7QtvVQIgQTUX1DQkVDqRj0Trd1fEde4Kz0n267B5SwZnZsF5UHqHjPxmWiD1JGD6TVPnakZGCfHqQLelKf2jnfNXDo9L7oQOG2aseWMx5GH4nIYdjF19wYGz9T9zD5/xmr0eOARMzbPrTLeASxQmjos50O5e7NWQyfU2o8B19BCbWDl/7WN5FEbuvvBzm2iwmdwwjYswZD+Bm68dj2wPWjgwvwz38q8CX3j/pFflV77TENlbOqInekpDL0ZEA+a/4eYDoyOFL4sgWb3wV38I0pp0Uvb2PT4CtTIelJQ43/aFZSE52Msgf3XrgrPBovY9Z0Gq0Q+MsZ+AiCdRXzU1Pup5SRkzWV3yTerPlJU=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(366004)(376002)(346002)(136003)(33430700001)(33440700001)(966005)(66946007)(66556008)(66476007)(4326008)(86362001)(103116003)(55016002)(44832011)(2906002)(956004)(5660300002)(7406005)(7416002)(186003)(8936002)(8676002)(316002)(26005)(478600001)(7696005)(52116002)(16526019);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: yGDRF5eAr4QO7JI1jgInWF7rZDqa48UD+EpEu6caULcLKxVsu4MYCuiz+a5mMZTOLPacZUTZsF2nvnfQKRZYOxtFKRMu08LojPIIEjjxyuxLJrID1JNMiG4JbSrqLmFTh2yM6F2KcBA6+nh6/7Q82BA1Y0ODNj07zddZ5hSLc0Q90j5x7hk0gtbnOo048/zzwaIdykR6o1vJVnS9CuFdEz8sxz/llfAfz7WZrcIcXNUDQCL6M0H+oP23YXf08oypApSn+cR2Y3KMgfswZLnvkz4zN/h54EBXSarwMdX1Wa+hVj3wSKh/vQ6v1oZ9R9K+jbilNTCiEK0820xsF3n5zBwBRSkPti1vzR10V5oc6kS67/d5e53Wi6SsLEBAw9Xz8bPZssmjxl/CabR2GjKjgnHvdylabeYja10Lv5RJ7fOgXjNYyRcfjMFzZ183qdIDT0Ke6uPTZUebT5ycuE7j50ih6hhKmJUWeFO0x7dLWZI=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 497c9631-566d-4266-5c46-08d7f6d06b38
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2020 23:58:51.2118
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: l+pTZPkVpKdJNH0OIyKfUh379r9oYlbsXFFbGZnnOlh1iIuezrwbXOE9LgskfPuR
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2575
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+AMD's next generation of EPYC processors support the MPK (Memory
+Protection Keys) feature.
+
+This series enables the feature on AMD and updates config parameters
+and documentation to reflect the MPK support on x86 platforms.
+
+AMD documentation for MPK feature is available at "AMD64 Architecture
+Programmer’s Manual Volume 2: System Programming, Pub. 24593 Rev. 3.34,
+Section 5.6.6 Memory Protection Keys (MPK) Bit".
+
+The documentation can be obtained at the link below:
+https://bugzilla.kernel.org/show_bug.cgi?id=206537
+
+---
+v4:
+  - Removed all the source changes related to config parameter.
+    Just kept the doc changes and add new config parameter
+    X86_MEMORY_PROTECTION_KEYS which shadows X86_INTEL_MEMORY_PROTECTION_KEYS.
+ - Minor change in feature detection in kvm/cpuid.c 
+
+v3:
+  https://lore.kernel.org/lkml/158923982830.20128.14580309786525588408.stgit@naples-babu.amd.com/#r
+  - Fixed the problem Jim Mattson pointed out which can cause pkru
+    resources to get corrupted during host and guest switches. 
+  - Moved the PKU feature detection code from VMX.c to common code.
+  
+v2:
+  https://lore.kernel.org/lkml/158897190718.22378.3974700869904223395.stgit@naples-babu.amd.com/
+  - Introduced intermediate config option X86_MEMORY_PROTECTION_KEYS to
+    avoid user propmpts. Kept X86_INTEL_MEMORY_PROTECTION_KEYS as is.
+    Eventually, we will be moving to X86_MEMORY_PROTECTION_KEYS after
+    couple of kernel revisions. 
+  - Moved pkru data structures to kvm_vcpu_arch. Moved save/restore pkru
+    to kvm_load_host_xsave_state/kvm_load_guest_xsave_state.
+
+v1:
+  https://lore.kernel.org/lkml/158880240546.11615.2219410169137148044.stgit@naples-babu.amd.com/
+
+Babu Moger (3):
+      arch/x86: Update config and kernel doc for MPK feature on AMD
+      KVM: x86: Move pkru save/restore to x86.c
+      KVM: x86: Move MPK feature detection to common code
 
 
-> On May 12, 2020, at 5:58 PM, Johannes Weiner <hannes@cmpxchg.org> =
-wrote:
->=20
-> On Tue, May 12, 2020 at 10:38:54AM -0400, Qian Cai wrote:
->>> On May 8, 2020, at 2:30 PM, Johannes Weiner <hannes@cmpxchg.org> =
-wrote:
->>>=20
->>> With the page->mapping requirement gone from memcg, we can charge =
-anon
->>> and file-thp pages in one single step, right after they're =
-allocated.
->>>=20
->>> This removes two out of three API calls - especially the tricky =
-commit
->>> step that needed to happen at just the right time between when the
->>> page is "set up" and when it's "published" - somewhat vague and =
-fluid
->>> concepts that varied by page type. All we need is a freshly =
-allocated
->>> page and a memcg context to charge.
->>>=20
->>> v2: prevent double charges on pre-allocated hugepages in khugepaged
->>>=20
->>> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
->>> Reviewed-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
->>> ---
->>> include/linux/mm.h      |  4 +---
->>> kernel/events/uprobes.c | 11 +++--------
->>> mm/filemap.c            |  2 +-
->>> mm/huge_memory.c        |  9 +++------
->>> mm/khugepaged.c         | 35 ++++++++++-------------------------
->>> mm/memory.c             | 36 ++++++++++--------------------------
->>> mm/migrate.c            |  5 +----
->>> mm/swapfile.c           |  6 +-----
->>> mm/userfaultfd.c        |  5 +----
->>> 9 files changed, 31 insertions(+), 82 deletions(-)
->> []
->>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
->>>=20
->>> @@ -1198,10 +1193,11 @@ static void collapse_huge_page(struct =
-mm_struct *mm,
->>> out_up_write:
->>> 	up_write(&mm->mmap_sem);
->>> out_nolock:
->>> +	if (*hpage)
->>> +		mem_cgroup_uncharge(*hpage);
->>> 	trace_mm_collapse_huge_page(mm, isolated, result);
->>> 	return;
->>> out:
->>> -	mem_cgroup_cancel_charge(new_page, memcg);
->>> 	goto out_up_write;
->>> }
->> []
->>=20
->> Some memory pressure will crash this new code. It looks like somewhat =
-racy.
->>=20
->> if (!page->mem_cgroup)
->>=20
->> where page =3D=3D NULL in mem_cgroup_uncharge().
->=20
-> Thanks for the report, sorry about the inconvenience.
->=20
-> Hm, the page is exclusive at this point, nobody else should be
-> touching it. After all, khugepaged might reuse the preallocated page
-> for another pmd if this one fails to collapse.
->=20
-> Looking at the code, I think it's page itself that's garbage, not
-> page->mem_cgroup changing. If you have CONFIG_NUMA and the allocation
-> fails, *hpage could contain an ERR_PTR instead of being NULL.
->=20
-> I think we need the following fixlet:
+ Documentation/core-api/protection-keys.rst |    3 ++-
+ arch/x86/Kconfig                           |   14 ++++++++++++--
+ arch/x86/include/asm/kvm_host.h            |    1 +
+ arch/x86/kvm/cpuid.c                       |    9 ++++++++-
+ arch/x86/kvm/vmx/vmx.c                     |   22 ----------------------
+ arch/x86/kvm/x86.c                         |   17 +++++++++++++++++
+ 6 files changed, 40 insertions(+), 26 deletions(-)
 
-Yes, I have NUMA here.
-
-Stephen, can you pick this up for first before Andrew has a chance to =
-push out the next mmotm hopefully contain this fix?
-
-https://lore.kernel.org/lkml/20200512215813.GA487759@cmpxchg.org/
-
->=20
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index f2e0a5e5cfbb..f6161e17da26 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -1193,7 +1193,7 @@ static void collapse_huge_page(struct mm_struct =
-*mm,
-> out_up_write:
-> 	up_write(&mm->mmap_sem);
-> out_nolock:
-> -	if (*hpage)
-> +	if (!IS_ERR_OR_NULL(*hpage))
-> 		mem_cgroup_uncharge(*hpage);
-> 	trace_mm_collapse_huge_page(mm, isolated, result);
-> 	return;
-> @@ -1928,7 +1928,7 @@ static void collapse_file(struct mm_struct *mm,
-> 	unlock_page(new_page);
-> out:
-> 	VM_BUG_ON(!list_empty(&pagelist));
-> -	if (*hpage)
-> +	if (!IS_ERR_OR_NULL(*hpage))
-> 		mem_cgroup_uncharge(*hpage);
-> 	/* TODO: tracepoints */
-> }
-
+--
+Signature
