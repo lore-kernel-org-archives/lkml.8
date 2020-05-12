@@ -2,43 +2,43 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83863C54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B852C54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DDD1206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C0D82075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589270551;
-	bh=pVizV8s8ToXA46EbYb4ZCvJRdiyFn9Hc7gKNyOAnDbM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=FuHf+8yxhyllAoZTSTBvWpi4r0j+gRE0tDbBmA17ZI29Inq6BmqXLzfpLEOkSvAnD
-	 KG4fQzQNDfimRsNy1utER/eFA0gDovV5cObCfPcSzH4KPRtZuJl0LvkaBw2WGZKdAV
-	 e2G09xPOKTeiAKk2rBm8q60o0I/dFmIO82UlQ0y8=
+	s=default; t=1589270567;
+	bh=PfXVwen4hTVjQMRYwec2sWG+kkHoy5njpKLA4uQB6ls=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2wUlzWSSannFXB9nLEr6fxC+LtEQORP9DPyBKsQM93pOVDNg23KdJF3aTfnwCu91X
+	 VXLLdlu2THt298RBnTqCopTMwLCnuEqg2OZcHJ/d3vWSomtDU3aQzt+nloVXjnO8Sx
+	 X3WuS4d0mbu0Tr8N/MjsGgSDc9QDsiBTvzsX2neE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729023AbgELICa (ORCPT
+        id S1729053AbgELICk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 04:02:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55202 "EHLO mail.kernel.org"
+        Tue, 12 May 2020 04:02:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725889AbgELIC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 04:02:28 -0400
+        id S1725813AbgELICj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 04:02:39 -0400
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05B1420733;
-        Tue, 12 May 2020 08:02:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09C00206D6;
+        Tue, 12 May 2020 08:02:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589270548;
-        bh=pVizV8s8ToXA46EbYb4ZCvJRdiyFn9Hc7gKNyOAnDbM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=JRLibpgPxs1CVo11Dxn3vN3PAJOghmaSTxDrulbnLeMtBDMW3DR2l1KAGOF6jNdyN
-         1j4nagVa7nN27G9NR5YwIR8bi4f/rSzf0+FEQkaM3BuKns76eYUh4g6CWYqQKy+HNl
-         yyKF0rr+nc36L0xWNBBx3tB67JmhKZqs1RsnhLFQ=
+        s=default; t=1589270559;
+        bh=PfXVwen4hTVjQMRYwec2sWG+kkHoy5njpKLA4uQB6ls=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nuIVK9esc4IuqzN8htWahwcQJ4Xp6qlLLIY5YamLBfAejBGGrJQtzzzfHaBpdJ7th
+         1HkWQXRoAZ4NwltX5braNoLfGP2QH34FzTCchywf6RDfsdPSX0qYUzQ2+ElLAQJjk3
+         NwfNtjNvKL7QPu1BXhAMowo0kNUxT3gMFK2Iefv8=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>
 Cc:     "Gustavo A . R . Silva" <gustavoars@kernel.org>,
@@ -53,10 +53,12 @@ Cc:     "Gustavo A . R . Silva" <gustavoars@kernel.org>,
         Ingo Molnar <mingo@elte.hu>,
         Peter Zijlstra <peterz@infradead.org>,
         Ziqian SUN <zsun@redhat.com>
-Subject: [PATCH -tip V6 0/6] kprobes: Fixes mutex, rcu-list warnings and cleanups
-Date:   Tue, 12 May 2020 17:02:22 +0900
-Message-Id: <158927054236.27680.18209720730136003586.stgit@devnote2>
+Subject: [PATCH -tip V6 1/6] kprobes: Suppress the suspicious RCU warning on kprobes
+Date:   Tue, 12 May 2020 17:02:33 +0900
+Message-Id: <158927055350.27680.10261450713467997503.stgit@devnote2>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <158927054236.27680.18209720730136003586.stgit@devnote2>
+References: <158927054236.27680.18209720730136003586.stgit@devnote2>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -66,44 +68,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ingo,
+Anders reported that the lockdep warns that suspicious
+RCU list usage in register_kprobe() (detected by
+CONFIG_PROVE_RCU_LIST.) This is because get_kprobe()
+access kprobe_table[] by hlist_for_each_entry_rcu()
+without rcu_read_lock.
 
-Here is the 6th version of the series for kprobes. The previous
-version is here.
+If we call get_kprobe() from the breakpoint handler context,
+it is run with preempt disabled, so this is not a problem.
+But in other cases, instead of rcu_read_lock(), we locks
+kprobe_mutex so that the kprobe_table[] is not updated.
+So, current code is safe, but still not good from the view
+point of RCU.
 
- https://lore.kernel.org/lkml/158583483116.26060.10517933482238348979.stgit@devnote2/
+Joel suggested that we can silent that warning by passing
+lockdep_is_held() to the last argument of
+hlist_for_each_entry_rcu().
 
-In this version, I picked 2 patches[1][2] which has been reviewed
-on LKML but not merged to tip tree yet.
+Add lockdep_is_held(&kprobe_mutex) at the end of the
+hlist_for_each_entry_rcu() to suppress the warning.
 
-[1] https://lore.kernel.org/lkml/20200408164641.3299633-1-jolsa@kernel.org/
-[2] https://lore.kernel.org/lkml/20200507185733.GA14931@embeddedor/
-
-You can also pull this series from kprobes/core branch from
-
- https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/
-
-Thank you,
-
+Reported-by: Anders Roxell <anders.roxell@linaro.org>
+Suggested-by: Joel Fernandes <joel@joelfernandes.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
+ kernel/kprobes.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Gustavo A. R. Silva (1):
-      kprobes: Replace zero-length array with flexible-array
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 2625c241ac00..bd484392d789 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -326,7 +326,8 @@ struct kprobe *get_kprobe(void *addr)
+ 	struct kprobe *p;
+ 
+ 	head = &kprobe_table[hash_ptr(addr, KPROBE_HASH_BITS)];
+-	hlist_for_each_entry_rcu(p, head, hlist) {
++	hlist_for_each_entry_rcu(p, head, hlist,
++				 lockdep_is_held(&kprobe_mutex)) {
+ 		if (p->addr == addr)
+ 			return p;
+ 	}
 
-Jiri Olsa (1):
-      kretprobe: Prevent triggering kretprobe from within kprobe_flush_task
-
-Masami Hiramatsu (4):
-      kprobes: Suppress the suspicious RCU warning on kprobes
-      kprobes: Use non RCU traversal APIs on kprobe_tables if possible
-      kprobes: Fix to protect kick_kprobe_optimizer() by kprobe_mutex
-      kprobes: Remove redundant arch_disarm_kprobe() call
-
-
- arch/x86/kernel/kprobes/core.c |   16 ++--------
- include/linux/kprobes.h        |    6 +++-
- kernel/kprobes.c               |   61 +++++++++++++++++++++++++++++++---------
- 3 files changed, 56 insertions(+), 27 deletions(-)
-
---
-Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
