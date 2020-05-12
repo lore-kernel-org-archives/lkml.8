@@ -2,127 +2,88 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1383C54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 249F1C54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B8512082E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E69DA206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:48:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lk0T19Rf"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="M/W12HfS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729588AbgELLrf (ORCPT
+        id S1729594AbgELLsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 07:47:35 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:45305 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726187AbgELLre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 07:47:34 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Lwyq36ZFz9sRY;
-        Tue, 12 May 2020 21:47:31 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589284051;
-        bh=Ih5FmVCFlhTL61oOSWHPmSDk2Zp5FnEExRA6NXjU/u0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=lk0T19RfkireTXlYhPw82uKOpCerEeeZP2LtqqfbW6PmDZ2PDDlgOkpe3kiT8nRj/
-         pYcsmOB1GXUWuD0z7qz+OBKK0ys5rRyV9jRZfeasxS9LV+v+MUQL9L6MHXRBiaEpjC
-         ksq/MhvbuEzfkosD/y0RVWBAyNrhVKRQSYn0Uf9nO4BddKE6Gb7Ip0O1tnAvKPDX+W
-         q0oq6ZpErjIozY574IAww567oaqS+HlngKdT38EBVX3UckWGJIrnIW2J2vB4sWML6Q
-         q+OTxNDAxokTkV8JhQ0DbGnAH5apqHbbcm/rHItsaYRscWUthtI7rRWeORGypCUaoe
-         ErFN3UY1VyUTg==
-Date:   Tue, 12 May 2020 21:47:29 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Minchan Kim <minchan@kernel.org>
-Subject: linux-next: manual merge of the akpm tree with the notificiations
- and fsinfo trees
-Message-ID: <20200512214729.2c8a255a@canb.auug.org.au>
+        Tue, 12 May 2020 07:48:45 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:40253 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726187AbgELLso (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 07:48:44 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04CBmA5T021217;
+        Tue, 12 May 2020 13:48:26 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=D3pNqSIt8oGGo+ly3QButpe43l6v+9Np/M1AzLOvJCI=;
+ b=M/W12HfS1hio1seh0PZLywV5bMNlbMxml6KwapJMqZmTDmQp06gXG9mC8T7ZaaV9Y5d9
+ 8bVSySBO1L0JN9KxGaxL1t9c8WluBbt5ypxEazZeAAbs54Mcift4KNJhYZlcz9XmAe98
+ +cW/ZOKWG1VrCwWSbrIWk7iZGNgnUa1iMc37hyEixJdW98xAqkt36aKrM5eSUtikCJkL
+ W4PwWmg8XxhQekfC7turFxWEd7xFTLkq6KFvcbw4EAbOh5LLQ8IlW7FzdtS1Ld5g0xJG
+ jzeilpvjEyIiO0ROM3kpytRP/B4fmWYyknxAZoXc1lvktahMbYzf4YaECuXT0b0/L1ge Zw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 30wj9wg9mh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 May 2020 13:48:26 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 409CE10002A;
+        Tue, 12 May 2020 13:48:23 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2D6802AC5B9;
+        Tue, 12 May 2020 13:48:23 +0200 (CEST)
+Received: from localhost (10.75.127.48) by SFHDAG6NODE2.st.com (10.75.127.17)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 12 May 2020 13:48:22
+ +0200
+From:   Christophe Kerello <christophe.kerello@st.com>
+To:     <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>
+CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Christophe Kerello <christophe.kerello@st.com>
+Subject: [PATCH v5 0/2] mtd: rawnand: stm32_fmc2: rebase cosmetic change on top of nand/next
+Date:   Tue, 12 May 2020 13:47:46 +0200
+Message-ID: <1589284068-4079-1-git-send-email-christophe.kerello@st.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/CzuV7zU0s1LhMXp=c8xq.DU";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG4NODE1.st.com (10.75.127.10) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-12_03:2020-05-11,2020-05-12 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/CzuV7zU0s1LhMXp=c8xq.DU
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This set of patches is a rebase of the patches that were not applied
+on nand/next.
 
-Hi all,
+Changes in v5:
+ - rebase on top of nand/next
 
-Today's linux-next merge of the akpm tree got conflicts in:
+Changes in v3:
+ - add Miquel reviewed-by tag
 
-  include/uapi/asm-generic/unistd.h
-  arch/xtensa/kernel/syscalls/syscall.tbl
-  arch/x86/entry/syscalls/syscall_64.tbl
-  arch/x86/entry/syscalls/syscall_32.tbl
-  arch/sparc/kernel/syscalls/syscall.tbl
-  arch/sh/kernel/syscalls/syscall.tbl
-  arch/s390/kernel/syscalls/syscall.tbl
-  arch/powerpc/kernel/syscalls/syscall.tbl
-  arch/parisc/kernel/syscalls/syscall.tbl
-  arch/mips/kernel/syscalls/syscall_n64.tbl
-  arch/mips/kernel/syscalls/syscall_n32.tbl
-  arch/microblaze/kernel/syscalls/syscall.tbl
-  arch/m68k/kernel/syscalls/syscall.tbl
-  arch/ia64/kernel/syscalls/syscall.tbl
-  arch/arm64/include/asm/unistd32.h
-  arch/arm64/include/asm/unistd.h
-  arch/arm/tools/syscall.tbl
-  arch/alpha/kernel/syscalls/syscall.tbl
+Christophe Kerello (2):
+  mtd: rawnand: stm32_fmc2: cosmetic change to use nfc instead of    
+    fmc2 where relevant
+  mtd: rawnand: stm32_fmc2: use FIELD_PREP/FIELD_GET macros
 
-between commits:
+ drivers/mtd/nand/raw/stm32_fmc2_nand.c | 987 ++++++++++++++++-----------------
+ 1 file changed, 488 insertions(+), 499 deletions(-)
 
-  42036137fa9b ("watch_queue: Implement mount topology and attribute change=
- notifications")
-  9321bb26ce55 ("watch_queue: Add superblock notifications")
-  51d01aee410b ("fsinfo: Add fsinfo() syscall to query filesystem informati=
-on")
+-- 
+1.9.1
 
-from the notifications and fsinfo trees and patch:
-
-  "mm/madvise: introduce process_madvise() syscall: an external memory hint=
-ing API"
-(and a few followup patches)
-
-from the akpm tree.
-
-I fixed it up (see the tree) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/CzuV7zU0s1LhMXp=c8xq.DU
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl66jNEACgkQAVBC80lX
-0GxG8wf/RjsXNWMBkgYFkJtCjCAksvzqFXyKz3LoVx+3ce8fUnVr4em5iZPdQ2Ju
-770w13dPxlY16W6WLEVxy95uWUdtZ3GEqUA+3rKU0q3hUrikmE30QV5SyHul5Zrd
-qygg/G1I92L44Ak1/JFMgHZSpAg/fWzq5ggVqgKZWensFprt92MWIfCzZiaesn6w
-UEFGwru7VhS6A9GT71QBL72HXlLIWOqDCu9Bq64HkAT6hz/Et8h+oTC6khS1PzgE
-MpI7qGbm15mynPbXIrG918VlCMaHTRLDPC8rupKd/q7F27uwL8hHJnhCkZ+Fw06k
-Ef2n56hyxg0rYMZFo0j36ajBmvUPew==
-=3PjF
------END PGP SIGNATURE-----
-
---Sig_/CzuV7zU0s1LhMXp=c8xq.DU--
