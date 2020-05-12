@@ -2,372 +2,253 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F24C54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 256CFC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9EAC206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:56:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Pmj8ihcp"
+	by mail.kernel.org (Postfix) with ESMTP id 06B13206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:56:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729655AbgELL4C (ORCPT
+        id S1729789AbgELL4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 07:56:02 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:20228 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728371AbgELL4B (ORCPT
+        Tue, 12 May 2020 07:56:11 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:53064 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728371AbgELL4K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 07:56:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1589284561; x=1620820561;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=4J9HEeq+F5VStvX2uoUr/z1cZqHOD4PoOUbLKG7t7qg=;
-  b=Pmj8ihcp7b+3G+2NviHjzhbKDvYfCviklo5hsh3+SzB8UPuJ6Tdq70lA
-   G200clUYH8xrcM9VLC6QFWG5fVxDrE3jYlX9+EwdKw7KuUTCV4SKW+C4r
-   mF99JfPUGWYyYycKalkRAH07/gP5ElbG2WrtQijGGMG4gPQwzzWiaiZGK
-   U=;
-IronPort-SDR: Hwj0quaMH3ZJ7G+DlUD01HreIdYtuBNgaJWJOWYIvxUPZtmyZ9AP4yysgFaHiffRWczOE1zAY6
- 6yXh2WBG/nVQ==
-X-IronPort-AV: E=Sophos;i="5.73,383,1583193600"; 
-   d="scan'208";a="34489852"
-Received: from sea32-co-svc-lb4-vlan2.sea.corp.amazon.com (HELO email-inbound-relay-2c-2225282c.us-west-2.amazon.com) ([10.47.23.34])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 12 May 2020 11:56:00 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-2225282c.us-west-2.amazon.com (Postfix) with ESMTPS id 7C35CA2524;
-        Tue, 12 May 2020 11:55:57 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 12 May 2020 11:55:57 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.100) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 12 May 2020 11:55:41 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
-        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC v8 3/8] mm/damon: Implement data access monitoring-based operation schemes
-Date:   Tue, 12 May 2020 13:53:38 +0200
-Message-ID: <20200512115343.27699-4-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200512115343.27699-1-sjpark@amazon.com>
-References: <20200512115343.27699-1-sjpark@amazon.com>
+        Tue, 12 May 2020 07:56:10 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jYTW3-0000Dd-ND; Tue, 12 May 2020 05:56:07 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jYTW2-0006WD-Ps; Tue, 12 May 2020 05:56:07 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Xiaoming Ni <nixiaoming@huawei.com>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Helge Deller <deller@gmx.de>,
+        Parisc List <linux-parisc@vger.kernel.org>, yzaikin@google.com,
+        linux-fsdevel@vger.kernel.org,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+References: <20200511111123.68ccbaa3@canb.auug.org.au>
+        <99095805-8cbe-d140-e2f1-0c5a3e84d7e7@huawei.com>
+        <20200512003305.GX11244@42.do-not-panic.com>
+Date:   Tue, 12 May 2020 06:52:35 -0500
+In-Reply-To: <20200512003305.GX11244@42.do-not-panic.com> (Luis Chamberlain's
+        message of "Tue, 12 May 2020 00:33:05 +0000")
+Message-ID: <87y2pxs73w.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.43.160.100]
-X-ClientProxiedBy: EX13D17UWB003.ant.amazon.com (10.43.161.42) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+X-XM-SPF: eid=1jYTW2-0006WD-Ps;;;mid=<87y2pxs73w.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18Mp2g/GCv9Wkg39vzKmSv+w+sqwRvuPww=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: linux-next: manual merge of the vfs tree with the parisc-hd tree
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+Luis Chamberlain <mcgrof@kernel.org> writes:
 
-In many cases, users might use DAMON for simple data access aware
-memory management optimizations such as applying an operation scheme to
-a memory region of a specific size having a specific access frequency
-for a specific time.  For example, "page out a memory region larger than
-100 MiB but having a low access frequency more than 10 minutes", or "Use
-THP for a memory region larger than 2 MiB having a high access frequency
-for more than 2 seconds".
+> On Mon, May 11, 2020 at 09:55:16AM +0800, Xiaoming Ni wrote:
+>> On 2020/5/11 9:11, Stephen Rothwell wrote:
+>> > Hi all,
+>> > 
+>> > Today's linux-next merge of the vfs tree got a conflict in:
+>> > 
+>> >    kernel/sysctl.c
+>> > 
+>> > between commit:
+>> > 
+>> >    b6522fa409cf ("parisc: add sysctl file interface panic_on_stackoverflow")
+>> > 
+>> > from the parisc-hd tree and commit:
+>> > 
+>> >    f461d2dcd511 ("sysctl: avoid forward declarations")
+>> > 
+>> > from the vfs tree.
+>> > 
+>> > I fixed it up (see below) and can carry the fix as necessary. This
+>> > is now fixed as far as linux-next is concerned, but any non trivial
+>> > conflicts should be mentioned to your upstream maintainer when your tree
+>> > is submitted for merging.  You may also want to consider cooperating
+>> > with the maintainer of the conflicting tree to minimise any particularly
+>> > complex conflicts.
+>> > 
+>> 
+>> 
+>> Kernel/sysctl.c contains more than 190 interface files, and there are a
+>> large number of config macro controls. When modifying the sysctl interface
+>> directly in kernel/sysctl.c , conflicts are very easy to occur.
+>> 
+>> At the same time, the register_sysctl_table() provided by the system can
+>> easily add the sysctl interface, and there is no conflict of kernel/sysctl.c
+>> .
+>> 
+>> Should we add instructions in the patch guide (coding-style.rst
+>> submitting-patches.rst):
+>> Preferentially use register_sysctl_table() to add a new sysctl interface,
+>> centralize feature codes, and avoid directly modifying kernel/sysctl.c ?
+>
+> Yes, however I don't think folks know how to do this well. So I think we
+> just have to do at least start ourselves, and then reflect some of this
+> in the docs.  The reason that this can be not easy is that we need to
+> ensure that at an init level we haven't busted dependencies on setting
+> this. We also just don't have docs on how to do this well.
+>
+>> In addition, is it necessary to transfer the architecture-related sysctl
+>> interface to arch/xxx/kernel/sysctl.c ?
 
-To minimize users from spending their time for implementation of such
-simple data access monitoring-based operation schemes, this commit makes
-DAMON to handle such schemes directly.  With this commit, users can
-simply specify their desired schemes to DAMON.
 
-Each of the schemes is composed with conditions for filtering of the
-target memory regions and desired memory management action for the
-target.  Specifically, the format is::
+>
+> Well here's an initial attempt to start with fs stuff in a very
+> conservative way. What do folks think?
 
-    <min/max size> <min/max access frequency> <min/max age> <action>
+I don't see how any of that deals with the current conflict in -next.
 
-The filtering conditions are size of memory region, number of accesses
-to the region monitored by DAMON, and the age of the region.  The age of
-region is incremented periodically but reset when its addresses or
-access frequency has significantly changed or the action of a scheme was
-applied.  For the action, current implementation supports only a few of
-madvise() hints, ``MADV_WILLNEED``, ``MADV_COLD``, ``MADV_PAGEOUT``,
-``MADV_HUGEPAGE``, and ``MADV_NOHUGEPAGE``.
+You are putting the fs sysctls in the wrong place.  The should live
+in fs/ not in fs/proc/.  Otherwise you are pretty much repeating
+the problem the problem of poorly located code in another location.
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- include/linux/damon.h |  24 +++++++
- mm/damon.c            | 149 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 173 insertions(+)
 
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index 7276b2a31c38..0f26d8aad33c 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -36,6 +36,27 @@ struct damon_task {
- 	struct list_head list;
- };
- 
-+/* Data Access Monitoring-based Operation Scheme */
-+enum damos_action {
-+	DAMOS_WILLNEED,
-+	DAMOS_COLD,
-+	DAMOS_PAGEOUT,
-+	DAMOS_HUGEPAGE,
-+	DAMOS_NOHUGEPAGE,
-+	DAMOS_ACTION_LEN,
-+};
-+
-+struct damos {
-+	unsigned int min_sz_region;
-+	unsigned int max_sz_region;
-+	unsigned int min_nr_accesses;
-+	unsigned int max_nr_accesses;
-+	unsigned int min_age_region;
-+	unsigned int max_age_region;
-+	enum damos_action action;
-+	struct list_head list;
-+};
-+
- /*
-  * For each 'sample_interval', DAMON checks whether each region is accessed or
-  * not.  It aggregates and keeps the access information (number of accesses to
-@@ -65,6 +86,7 @@ struct damon_ctx {
- 	struct mutex kdamond_lock;
- 
- 	struct list_head tasks_list;	/* 'damon_task' objects */
-+	struct list_head schemes_list;	/* 'damos' objects */
- 
- 	/* callbacks */
- 	void (*sample_cb)(struct damon_ctx *context);
-@@ -75,6 +97,8 @@ int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids);
- int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
- 		unsigned long aggr_int, unsigned long regions_update_int,
- 		unsigned long min_nr_reg, unsigned long max_nr_reg);
-+int damon_set_schemes(struct damon_ctx *ctx,
-+			struct damos **schemes, ssize_t nr_schemes);
- int damon_set_recording(struct damon_ctx *ctx,
- 				unsigned int rbuf_len, char *rfile_path);
- int damon_start(struct damon_ctx *ctx);
-diff --git a/mm/damon.c b/mm/damon.c
-index da266e8b2b30..13275c31a6c5 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -11,6 +11,7 @@
- 
- #define CREATE_TRACE_POINTS
- 
-+#include <asm-generic/mman-common.h>
- #include <linux/damon.h>
- #include <linux/debugfs.h>
- #include <linux/delay.h>
-@@ -52,6 +53,12 @@
- #define damon_for_each_task_safe(ctx, t, next) \
- 	list_for_each_entry_safe(t, next, &(ctx)->tasks_list, list)
- 
-+#define damon_for_each_scheme(ctx, r) \
-+	list_for_each_entry(r, &(ctx)->schemes_list, list)
-+
-+#define damon_for_each_scheme_safe(ctx, s, next) \
-+	list_for_each_entry_safe(s, next, &(ctx)->schemes_list, list)
-+
- #define MAX_RECORD_BUFFER_LEN	(4 * 1024 * 1024)
- #define MAX_RFILE_PATH_LEN	256
- 
-@@ -167,6 +174,27 @@ static void damon_destroy_task(struct damon_task *t)
- 	damon_free_task(t);
- }
- 
-+static void damon_add_scheme(struct damon_ctx *ctx, struct damos *s)
-+{
-+	list_add_tail(&s->list, &ctx->schemes_list);
-+}
-+
-+static void damon_del_scheme(struct damos *s)
-+{
-+	list_del(&s->list);
-+}
-+
-+static void damon_free_scheme(struct damos *s)
-+{
-+	kfree(s);
-+}
-+
-+static void damon_destroy_scheme(struct damos *s)
-+{
-+	damon_del_scheme(s);
-+	damon_free_scheme(s);
-+}
-+
- static unsigned int nr_damon_tasks(struct damon_ctx *ctx)
- {
- 	struct damon_task *t;
-@@ -702,6 +730,101 @@ static void kdamond_count_age(struct damon_ctx *c, unsigned int threshold)
- 	}
- }
- 
-+#ifndef CONFIG_ADVISE_SYSCALLS
-+static int damos_madvise(struct damon_task *task, struct damon_region *r,
-+			int behavior)
-+{
-+	return -EINVAL;
-+}
-+#else
-+static int damos_madvise(struct damon_task *task, struct damon_region *r,
-+			int behavior)
-+{
-+	struct task_struct *t;
-+	struct mm_struct *mm;
-+	int ret = -ENOMEM;
-+
-+	t = damon_get_task_struct(task);
-+	if (!t)
-+		goto out;
-+	mm = damon_get_mm(task);
-+	if (!mm)
-+		goto put_task_out;
-+
-+	ret = do_madvise(t, mm, PAGE_ALIGN(r->vm_start),
-+			PAGE_ALIGN(r->vm_end - r->vm_start), behavior);
-+	mmput(mm);
-+put_task_out:
-+	put_task_struct(t);
-+out:
-+	return ret;
-+}
-+#endif	/* CONFIG_ADVISE_SYSCALLS */
-+
-+static int damos_do_action(struct damon_task *task, struct damon_region *r,
-+			enum damos_action action)
-+{
-+	int madv_action;
-+
-+	switch (action) {
-+	case DAMOS_WILLNEED:
-+		madv_action = MADV_WILLNEED;
-+		break;
-+	case DAMOS_COLD:
-+		madv_action = MADV_COLD;
-+		break;
-+	case DAMOS_PAGEOUT:
-+		madv_action = MADV_PAGEOUT;
-+		break;
-+	case DAMOS_HUGEPAGE:
-+		madv_action = MADV_HUGEPAGE;
-+		break;
-+	case DAMOS_NOHUGEPAGE:
-+		madv_action = MADV_NOHUGEPAGE;
-+		break;
-+	default:
-+		pr_warn("Wrong action %d\n", action);
-+		return -EINVAL;
-+	}
-+
-+	return damos_madvise(task, r, madv_action);
-+}
-+
-+static void damon_do_apply_schemes(struct damon_ctx *c, struct damon_task *t,
-+				struct damon_region *r)
-+{
-+	struct damos *s;
-+	unsigned long sz;
-+
-+	damon_for_each_scheme(c, s) {
-+		sz = r->vm_end - r->vm_start;
-+		if ((s->min_sz_region && sz < s->min_sz_region) ||
-+				(s->max_sz_region && s->max_sz_region < sz))
-+			continue;
-+		if ((s->min_nr_accesses && r->nr_accesses < s->min_nr_accesses)
-+				|| (s->max_nr_accesses &&
-+					s->max_nr_accesses < r->nr_accesses))
-+			continue;
-+		if ((s->min_age_region && r->age < s->min_age_region) ||
-+				(s->max_age_region &&
-+				 s->max_age_region < r->age))
-+			continue;
-+		damos_do_action(t, r, s->action);
-+		r->age = 0;
-+	}
-+}
-+
-+static void kdamond_apply_schemes(struct damon_ctx *c)
-+{
-+	struct damon_task *t;
-+	struct damon_region *r;
-+
-+	damon_for_each_task(c, t) {
-+		damon_for_each_region(r, t)
-+			damon_do_apply_schemes(c, t, r);
-+	}
-+}
-+
- #define sz_damon_region(r) (r->vm_end - r->vm_start)
- 
- /*
-@@ -1057,6 +1180,7 @@ static int kdamond_fn(void *data)
- 			kdamond_count_age(ctx, max_nr_accesses / 10);
- 			if (ctx->aggregate_cb)
- 				ctx->aggregate_cb(ctx);
-+			kdamond_apply_schemes(ctx);
- 			kdamond_reset_aggregated(ctx);
- 			kdamond_split_regions(ctx);
- 		}
-@@ -1137,6 +1261,30 @@ int damon_stop(struct damon_ctx *ctx)
- 	return -EPERM;
- }
- 
-+/**
-+ * damon_set_schemes() - Set data access monitoring based operation schemes.
-+ * @ctx:	monitoring context
-+ * @schemes:	array of the schemes
-+ * @nr_schemes:	number of entries in @schemes
-+ *
-+ * This function should not be called while the kdamond of the context is
-+ * running.
-+ *
-+ * Return: 0 if success, or negative error code otherwise.
-+ */
-+int damon_set_schemes(struct damon_ctx *ctx, struct damos **schemes,
-+			ssize_t nr_schemes)
-+{
-+	struct damos *s, *next;
-+	ssize_t i;
-+
-+	damon_for_each_scheme_safe(ctx, s, next)
-+		damon_destroy_scheme(s);
-+	for (i = 0; i < nr_schemes; i++)
-+		damon_add_scheme(ctx, schemes[i]);
-+	return 0;
-+}
-+
- /**
-  * damon_set_pids() - Set monitoring target processes.
-  * @ctx:	monitoring context
-@@ -1571,6 +1719,7 @@ static int __init damon_init_user_ctx(void)
- 	mutex_init(&ctx->kdamond_lock);
- 
- 	INIT_LIST_HEAD(&ctx->tasks_list);
-+	INIT_LIST_HEAD(&ctx->schemes_list);
- 
- 	return 0;
- }
--- 
-2.17.1
-
+>  fs/proc/Makefile          |  1 +
+>  fs/proc/fs_sysctl_table.c | 97 +++++++++++++++++++++++++++++++++++++++
+>  kernel/sysctl.c           | 48 -------------------
+>  3 files changed, 98 insertions(+), 48 deletions(-)
+>  create mode 100644 fs/proc/fs_sysctl_table.c
+>
+> diff --git a/fs/proc/Makefile b/fs/proc/Makefile
+> index bd08616ed8ba..8bf419b2ac7d 100644
+> --- a/fs/proc/Makefile
+> +++ b/fs/proc/Makefile
+> @@ -28,6 +28,7 @@ proc-y	+= namespaces.o
+>  proc-y	+= self.o
+>  proc-y	+= thread_self.o
+>  proc-$(CONFIG_PROC_SYSCTL)	+= proc_sysctl.o
+> +proc-$(CONFIG_SYSCTL)		+= fs_sysctl_table.o
+>  proc-$(CONFIG_NET)		+= proc_net.o
+>  proc-$(CONFIG_PROC_KCORE)	+= kcore.o
+>  proc-$(CONFIG_PROC_VMCORE)	+= vmcore.o
+> diff --git a/fs/proc/fs_sysctl_table.c b/fs/proc/fs_sysctl_table.c
+> new file mode 100644
+> index 000000000000..f56a49989872
+> --- /dev/null
+> +++ b/fs/proc/fs_sysctl_table.c
+> @@ -0,0 +1,97 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * /proc/sys/fs sysctl table
+> + */
+> +#include <linux/init.h>
+> +#include <linux/sysctl.h>
+> +#include <linux/poll.h>
+> +#include <linux/proc_fs.h>
+> +#include <linux/printk.h>
+> +#include <linux/security.h>
+> +#include <linux/sched.h>
+> +#include <linux/cred.h>
+> +#include <linux/namei.h>
+> +#include <linux/mm.h>
+> +#include <linux/module.h>
+> +#include <linux/bpf-cgroup.h>
+> +#include <linux/mount.h>
+> +#include <linux/dnotify.h>
+> +#include <linux/pipe_fs_i.h>
+> +#include <linux/aio.h>
+> +#include <linux/inotify.h>
+> +#include <linux/kmemleak.h>
+> +#include <linux/binfmts.h>
+> +
+> +static unsigned long zero_ul;
+> +static unsigned long long_max = LONG_MAX;
+> +
+> +static struct ctl_table fs_table[] = {
+> +	{
+> +		.procname	= "inode-nr",
+> +		.data		= &inodes_stat,
+> +		.maxlen		= 2*sizeof(long),
+> +		.mode		= 0444,
+> +		.proc_handler	= proc_nr_inodes,
+> +	},
+> +	{
+> +		.procname	= "inode-state",
+> +		.data		= &inodes_stat,
+> +		.maxlen		= 7*sizeof(long),
+> +		.mode		= 0444,
+> +		.proc_handler	= proc_nr_inodes,
+> +	},
+> +	{
+> +		.procname	= "file-nr",
+> +		.data		= &files_stat,
+> +		.maxlen		= sizeof(files_stat),
+> +		.mode		= 0444,
+> +		.proc_handler	= proc_nr_files,
+> +	},
+> +	{
+> +		.procname	= "file-max",
+> +		.data		= &files_stat.max_files,
+> +		.maxlen		= sizeof(files_stat.max_files),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_doulongvec_minmax,
+> +		.extra1		= &zero_ul,
+> +		.extra2		= &long_max,
+> +	},
+> +	{
+> +		.procname	= "nr_open",
+> +		.data		= &sysctl_nr_open,
+> +		.maxlen		= sizeof(unsigned int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= &sysctl_nr_open_min,
+> +		.extra2		= &sysctl_nr_open_max,
+> +	},
+> +	{
+> +		.procname	= "dentry-state",
+> +		.data		= &dentry_stat,
+> +		.maxlen		= 6*sizeof(long),
+> +		.mode		= 0444,
+> +		.proc_handler	= proc_nr_dentry,
+> +	},
+> +	{ }
+> +};
+> +
+> +static struct ctl_table fs_base_table[] = {
+> +	{
+> +		.procname	= "fs",
+> +		.mode		= 0555,
+> +		.child		= fs_table,
+> +	},
+> +	{ }
+> +};
+  ^^^^^^^^^^^^^^^^^^^^^^^^ You don't need this at all.
+  
+> > +static int __init fs_procsys_init(void)
+> +{
+> +	struct ctl_table_header *hdr;
+> +
+> +	hdr = register_sysctl_table(fs_base_table);
+              ^^^^^^^^^^^^^^^^^^^^^ Please use register_sysctl instead.
+	AKA
+        hdr = register_sysctl("fs", fs_table);
+> +	kmemleak_not_leak(hdr);
+> +
+> +	return 0;
+> +}
+> +
+> +early_initcall(fs_procsys_init);
