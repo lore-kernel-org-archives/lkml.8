@@ -2,113 +2,146 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C790CC54E8F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F0CC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A54D620674
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D2420674
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:12:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="XRnT+4+T"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VsHJVIRg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729542AbgELMJ5 (ORCPT
+        id S1729599AbgELMMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 08:09:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44576 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbgELMJ4 (ORCPT
+        Tue, 12 May 2020 08:12:41 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:56147 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726891AbgELMMk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 08:09:56 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCC27C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 05:09:54 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id c64so13191811qkf.12
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 05:09:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0E+w23r0rm59Sttp+Cx0/u2Fxv6Zhza30yRDAxBOwIM=;
-        b=XRnT+4+TWQyHNmyGS+cSdisYi0zNeQpz5uND4j+3R32mzcUZGCtrhnUZduANVucjLs
-         fPeDcZnf0jJZdFR18+rXBGExeB/xOfjO6j5ubgczrNSIabiDm3PpWhxkNKaizLg4FP0J
-         sa50sZfadORNY04EFhJQrsRUYbYc9oVcbKS2sMEoCu11o9nPs7ZSUus3alQ+pAkKbMAV
-         aWmgipf3DUd2+yiqRDwFz9qMTz3IWl1iCgmhXs/gmp7BDs1Z+Hp9W9wAYy5ZacibQ3td
-         xqUancRvGLhZbF4o+FHI7mZTtBugkHa1LurSn3oFjsiEMnHhi/WOIzp2ySY0+TXNYike
-         G58w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0E+w23r0rm59Sttp+Cx0/u2Fxv6Zhza30yRDAxBOwIM=;
-        b=f4cZI10RCHXCXkulwnQv1A50vmamkFOy/uELM6ur1382+0uuVIUs1zSufkQEebv/MN
-         mEzUtbYCDZ7UbeRupxKSmVT2MaYKBLmLGo2kiH1SclKNjjPReBYbetSSZPLSLS4tOlrP
-         3SZM4xKbFL21tUCHgNSo93Jvx6NILr71BOX5wrXnqOkikJVG01RRT/Om8KdMYGbHc9SA
-         2fJUL3PkxyPsFXGgjfRMJwLLJN73N9wCaHfmxcxmTRJPw1acpuzpnVAQB2crFe0vWTx6
-         OGLUvXij7Nrn3jTdPJDKnXMkUpBNaSFEV8CNKFc59V9/xj9yEp5yIzK1jPMFnm5yqTNi
-         KpLw==
-X-Gm-Message-State: AGi0PubSy8rX3achGmno0ODmQCozB0r/5V+Rj434jGtF/P6r7wglPPBS
-        7rx+oa5orZ8/V56+OqQYVfaPAw==
-X-Google-Smtp-Source: APiQypKyJUyUDzstE5W+rLlCHv8FxVxdeZGVjAl1eRUGduGzlJpYQ83iKZf1ZsgDC1FOpB7AS1NLBw==
-X-Received: by 2002:a37:484c:: with SMTP id v73mr8524856qka.496.1589285394059;
-        Tue, 12 May 2020 05:09:54 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id y18sm12534463qty.41.2020.05.12.05.09.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 May 2020 05:09:53 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jYTjM-0003lT-T7; Tue, 12 May 2020 09:09:52 -0300
-Date:   Tue, 12 May 2020 09:09:52 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
-        linaro-mm-sig@lists.linaro.org, linux-rdma@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [RFC 02/17] dma-fence: basic lockdep annotations
-Message-ID: <20200512120952.GG26002@ziepe.ca>
-References: <20200512085944.222637-1-daniel.vetter@ffwll.ch>
- <20200512085944.222637-3-daniel.vetter@ffwll.ch>
+        Tue, 12 May 2020 08:12:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589285559;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=asu/+mb4aQxasBk4gTFYsedBOKgWTv0nv0/dQGL9xlg=;
+        b=VsHJVIRgBi1bx/wmjsfvCeu9nGZO2on2zhZBtLcpaIgeOY9dkjv34os/ptiA122AtNii2O
+        tjtt8YDb/cyYxsXF+uy5lftJKOG1W98JejGKxBoHci+qiZNhxrLBJ0mFT9l1jLdNBErVL8
+        gD9fN9iqUzhmmnfjW7UwSJ71P8JY24E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-69-DBqH8HW2M8uXf1iJrx3s8w-1; Tue, 12 May 2020 08:12:37 -0400
+X-MC-Unique: DBqH8HW2M8uXf1iJrx3s8w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A6048835B40;
+        Tue, 12 May 2020 12:12:35 +0000 (UTC)
+Received: from krava (unknown [10.40.194.31])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 7B18C610AF;
+        Tue, 12 May 2020 12:12:33 +0000 (UTC)
+Date:   Tue, 12 May 2020 14:12:32 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Anand K Mistry <amistry@google.com>
+Cc:     linux-perf-users@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf record: Use an eventfd to wakeup when done
+Message-ID: <20200512121232.GB3150977@krava>
+References: <20200508145624.1.I4d7421c6bbb1f83ea58419082481082e19097841@changeid>
+ <20200512145930.1.I4d7421c6bbb1f83ea58419082481082e19097841@changeid>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200512085944.222637-3-daniel.vetter@ffwll.ch>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200512145930.1.I4d7421c6bbb1f83ea58419082481082e19097841@changeid>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 10:59:29AM +0200, Daniel Vetter wrote:
-> diff --git a/drivers/dma-buf/dma-fence.c b/drivers/dma-buf/dma-fence.c
-> index 6802125349fb..d5c0fd2efc70 100644
-> +++ b/drivers/dma-buf/dma-fence.c
-> @@ -110,6 +110,52 @@ u64 dma_fence_context_alloc(unsigned num)
->  }
->  EXPORT_SYMBOL(dma_fence_context_alloc);
+On Tue, May 12, 2020 at 02:59:36PM +1000, Anand K Mistry wrote:
+
+SNIP
+
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 1ab349abe90469..099ecaa66732a2 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -53,6 +53,7 @@
+>  #include <unistd.h>
+>  #include <sched.h>
+>  #include <signal.h>
+> +#include <sys/eventfd.h>
+>  #include <sys/mman.h>
+>  #include <sys/wait.h>
+>  #include <sys/types.h>
+> @@ -518,15 +519,28 @@ static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
 >  
-> +#ifdef CONFIG_LOCKDEP
-> +struct lockdep_map	dma_fence_lockdep_map = {
-> +	.name = "dma_fence_map"
-> +};
+>  static volatile int signr = -1;
+>  static volatile int child_finished;
+> +static int done_fd = -1;
+>  
+>  static void sig_handler(int sig)
+>  {
+> +	u64 tmp = 1;
+>  	if (sig == SIGCHLD)
+>  		child_finished = 1;
+>  	else
+>  		signr = sig;
+>  
+>  	done = 1;
 > +
-> +bool dma_fence_begin_signalling(void)
-> +{
+> +	/*
+> +	 * It is possible for this signal handler to run after done is checked
+> +	 * in the main loop, but before the perf counter fds are polled. If this
+> +	 * happens, the poll() will continue to wait even though done is set,
+> +	 * and will only break out if either another signal is received, or the
+> +	 * counters are ready for read. To ensure the poll() doesn't sleep when
+> +	 * done is set, use an eventfd (done_fd) to wake up the poll().
+> +	 */
+> +	if (write(done_fd, &tmp, sizeof(tmp)) < 0)
+> +		pr_err("failed to signal wakeup fd\n");
+>  }
+>  
+>  static void sigsegv_handler(int sig)
+> @@ -1424,6 +1438,17 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+>  	int fd;
+>  	float ratio = 0;
+>  
+> +	done_fd = eventfd(0, EFD_NONBLOCK);
+> +	if (done_fd < 0) {
+> +		pr_err("Failed to create wakeup eventfd, error: %m\n");
+> +		return -1;
+> +	}
+> +	err = evlist__add_pollfd(rec->evlist, done_fd);
+> +	if (err < 0) {
+> +		pr_err("Failed to add wakeup eventfd to poll list\n");
+> +		return -1;
+> +	}
 
-Why is this global? I would have expected it to be connected to a
-single fence?
+sorry I did not notice before, but I think we also
+need to close done_fd descriptor on the exit path
 
-It would also be alot nicer if this was some general lockdep feature,
-not tied to dmabuf. This exact problem also strikes anyone using
-completions, for instance, and the same solution should be
-applicable??
+also please change subject to PATCHv3 for the next version
 
-Jason
+thanks,
+jirka
+
+> +
+>  	atexit(record__sig_exit);
+>  	signal(SIGCHLD, sig_handler);
+>  	signal(SIGINT, sig_handler);
+> -- 
+> 2.26.2.645.ge9eca65c58-goog
+> 
+
