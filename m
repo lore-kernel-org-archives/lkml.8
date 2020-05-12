@@ -2,128 +2,235 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5C0C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5305BC54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFD4C206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:35:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589297718;
-	bh=O+2/wW34ztW0Tzz6tppqjVMxHuVB5ZpUuSewnq32w/g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dRp2tkeQ6tYMiSirVHQ7p2NR4jYO7Su4Aya5GNF7V20CqtDJvXEA4Z5Cv5+qzpro6
-	 PIAPkQRiVnQYthEGQHimS+hepUEyifm15WFE09VvDUl76ZIeI63Nm7MQFQ7ynzqPV6
-	 Ua4782StXEx9MyRT5lldkkFraPaCbC6mivXovkmY=
+	by mail.kernel.org (Postfix) with ESMTP id 26758206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:35:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XI1juBPN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730768AbgELPfS (ORCPT
+        id S1730777AbgELPf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 11:35:18 -0400
-Received: from mail-pg1-f170.google.com ([209.85.215.170]:43064 "EHLO
-        mail-pg1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbgELPfR (ORCPT
+        Tue, 12 May 2020 11:35:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgELPfz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 11:35:17 -0400
-Received: by mail-pg1-f170.google.com with SMTP id l12so6305832pgr.10;
-        Tue, 12 May 2020 08:35:17 -0700 (PDT)
+        Tue, 12 May 2020 11:35:55 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6194FC061A0C;
+        Tue, 12 May 2020 08:35:54 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id f15so5527945plr.3;
+        Tue, 12 May 2020 08:35:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GaQi67xXTCCq9s+vL+93JtJPZ31nSIMxohklczm0o9M=;
+        b=XI1juBPN0E3L82vUKX5XNPFQZQr7QMv5+8XYbnrNDS2eIecv804IygrY9t45/nlgtb
+         vml1cxWQl2p94CAnk1brM2uvSsvYr8PTv2hcZ96N6echR0YwLV5Z7hqIMngNudntnpyv
+         fVQw81aiWfDHGsXeUNP/RRnegYfOOpIsntAy6Mg3C0Cg1IvE7JrcqgVzlgYRYnLRCjPk
+         Rq2O/RczDilU+uFDEWgdDqy5znHOy9Lj+hxnAi3u7dHtQipFo7jW/g2ZRLdKp0Bro/bo
+         6UpYcgmJQzGrDRuD0f6zQOOj7OR6yWTQekvGxkazEeo3d+cwju9EwYCY2rRN4Q8if+28
+         g+7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=IACEJSbgjfxq+BYzs3zD2rIKVKj69qiCzKfaSwCOxxY=;
-        b=X16CMivvHqmZTgSQfVc3AGk1IN6v9Vkw4EQeOBQxxarQYLYEZBF0eEH2j0KN55ABkE
-         +gHAFTpHgwib8cF17R/slUgpJKdiNfhezfIrpkUtwH3Ae4G9UeTa91j+oc5sUR2OSuWN
-         mOMpXYcoigTPgAZxI3bHpDAo4qO2nJPFmH0ux6SsdfDRjmJvtN1IToP1In1jFRfNDdL2
-         PXLvUBaE8FM/w1zsud793tfqhgVpmMmdhWVNrhexYX7qDTqHTpjz6zltP21UMb2XGgpA
-         T4sNM3s5v1gqnSgHxvTNHiga2L+v5dSIEs09wJ0euiVu5AU7eH8f57SraL/bh/shMM/i
-         d1pw==
-X-Gm-Message-State: AGi0PublHAheXejQDynzkILH9Zvxpcw2DRX/+/yaNH43E2mC4Fuwa2bC
-        mtQAuXzH2wXObYTydqngDRZP7peDHr0=
-X-Google-Smtp-Source: APiQypJpROjarbCMvMM4Ndd2r0ywRWUfOCUl8nJ2ZyQX2uy/YBcNA+qitkmlzvLBSTs6XzxZOJtl6A==
-X-Received: by 2002:aa7:9d02:: with SMTP id k2mr21122894pfp.269.1589297716947;
-        Tue, 12 May 2020 08:35:16 -0700 (PDT)
-Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
-        by smtp.gmail.com with ESMTPSA id j7sm13150420pjy.9.2020.05.12.08.35.15
+        bh=GaQi67xXTCCq9s+vL+93JtJPZ31nSIMxohklczm0o9M=;
+        b=SD19mcld3VzPt+s1WXA+mTaX+CtcBvz7sgkwji7z0n+m6zMXpvguq27pZ9D65Vx7hX
+         g2ReBmDhVL0s0IGsm7gvOo633rPS+7sRU1ODQyVKhfsu3eA3zxzN4DDkamcNqPBnhI7Q
+         wwfweK9eCNJVOguKqgRPgJrYsyNaBp0Zs+k2Lo8RaW9rrp/xf3lXDwr+DeEvy8Qa+Wc1
+         i7C0o/GQLLssqKJrXx89Ho7y1bn9rReb3zU2ddmNE4UoRIFF8eCkeQLzr+pMUjhOqSpJ
+         VDRXyImryfTTobAJLOLYEUfu3Ns+Bs1CF5yM7tst0Fayrf+mtGm/emuwRt/EXgnwhXY7
+         WCuQ==
+X-Gm-Message-State: AGi0PubBEwD7Hc38cEe3QVWMOwbJvF9JhXlQedjw2m/GwBvSOLhN+XZQ
+        mnX4Seqeq0hkyzVlT7VDRSM=
+X-Google-Smtp-Source: APiQypIXnEBqsiB6Uwa1EG1cqA5yzhGtKslQks31SGIR1YuV1oshqAoeWsz9n0BmxCXNf1RUJuYbXQ==
+X-Received: by 2002:a17:902:8e8c:: with SMTP id bg12mr20760694plb.279.1589297753599;
+        Tue, 12 May 2020 08:35:53 -0700 (PDT)
+Received: from mail.google.com ([149.248.10.52])
+        by smtp.gmail.com with ESMTPSA id v127sm2647887pfb.91.2020.05.12.08.35.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 08:35:15 -0700 (PDT)
-Date:   Tue, 12 May 2020 08:35:14 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     richard.gong@linux.intel.com
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dinguyen@kernel.org,
-        Richard Gong <richard.gong@intel.com>
-Subject: Re: [PATCHv1] fpga: stratix10-soc: remove the pre-set
- reconfiguration condition
-Message-ID: <20200512153514.GA125665@epycbox.lan>
-References: <1589290051-30246-1-git-send-email-richard.gong@linux.intel.com>
+        Tue, 12 May 2020 08:35:52 -0700 (PDT)
+Date:   Tue, 12 May 2020 23:35:43 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v5] streamline_config.pl: add LMC_KEEP to preserve some
+ kconfigs
+Message-ID: <20200512153543.63zguogif2l4mybv@mail.google.com>
+References: <20200510010603.3896-1-changbin.du@gmail.com>
+ <CAK7LNARH_1nQRExVSCcJ=Twuze5AosG3z2GcA7zwnF6Vi52GWA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589290051-30246-1-git-send-email-richard.gong@linux.intel.com>
+In-Reply-To: <CAK7LNARH_1nQRExVSCcJ=Twuze5AosG3z2GcA7zwnF6Vi52GWA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Richard,
-
-On Tue, May 12, 2020 at 08:27:31AM -0500, richard.gong@linux.intel.com wrote:
-> From: Richard Gong <richard.gong@intel.com>
+On Tue, May 12, 2020 at 03:52:04PM +0900, Masahiro Yamada wrote:
+> On Sun, May 10, 2020 at 10:06 AM Changbin Du <changbin.du@gmail.com> wrote:
+> >
+> > Sometimes it is useful to preserve batches of configs when making
+> > localmodconfig. For example, I usually don't want any usb and fs
+> > modules to be disabled. Now we can do it by:
+> >
+> >  $ make LMC_KEEP="drivers/usb:fs" localmodconfig
+> >
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> >
+> > ---
+> > v4: fix typo.
+> > v3: rename LOCALMODCONFIG_PRESERVE to shorter LMC_KEEP.
+> > v2: fix typo in documentation. (Randy Dunlap)
+> > ---
+> >  Documentation/admin-guide/README.rst |  8 +++++++-
+> >  scripts/kconfig/Makefile             |  1 +
+> >  scripts/kconfig/streamline_config.pl | 21 +++++++++++++++++++++
+> >  3 files changed, 29 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/admin-guide/README.rst b/Documentation/admin-guide/README.rst
+> > index cc6151fc0845..407aa206bb70 100644
+> > --- a/Documentation/admin-guide/README.rst
+> > +++ b/Documentation/admin-guide/README.rst
+> > @@ -209,10 +209,16 @@ Configuring the kernel
+> >                             store the lsmod of that machine into a file
+> >                             and pass it in as a LSMOD parameter.
+> >
+> > +                           Also, you can preserve modules in certain folders
+> > +                           or kconfig files by specifying their paths in
+> > +                           parameter LMC_KEEP.
+> > +
+> >                     target$ lsmod > /tmp/mylsmod
+> >                     target$ scp /tmp/mylsmod host:/tmp
+> >
+> > -                   host$ make LSMOD=/tmp/mylsmod localmodconfig
+> > +                   host$ make LSMOD=/tmp/mylsmod \
+> > +                           LMC_KEEP="drivers/usb:drivers/gpu:fs" \
+> > +                           localmodconfig
+> >
+> >                             The above also works when cross compiling.
+> >
+> > diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+> > index c9d0a4a8efb3..e0abbf5805f5 100644
+> > --- a/scripts/kconfig/Makefile
+> > +++ b/scripts/kconfig/Makefile
+> > @@ -123,6 +123,7 @@ help:
+> >         @echo  '  gconfig         - Update current config utilising a GTK+ based front-end'
+> >         @echo  '  oldconfig       - Update current config utilising a provided .config as base'
+> >         @echo  '  localmodconfig  - Update current config disabling modules not loaded'
+> > +       @echo  '                    except those preserved by LMC_KEEP environment variable'
+> >         @echo  '  localyesconfig  - Update current config converting local mods to core'
 > 
-> The reconfiguration mode is pre-set by driver as the full reconfiguration.
-> As a result, user have to change code and recompile the drivers if he or
-> she wants to perform a partial reconfiguration. Removing the pre-set
-> reconfiguration condition so that user can select full or partial
-> reconfiguration via overlay device tree without recompiling the drivers.
+> Just a nitpicking.
 > 
-> Also add an error message if the configuration request is failure.
+> I was just about to apply this patch,
+> then noticed this.
 > 
-> Signed-off-by: Richard Gong <richard.gong@intel.com>
-> ---
->  drivers/fpga/stratix10-soc.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> This works for localyesconfig as well as
+> localmodconfig.
 > 
-> diff --git a/drivers/fpga/stratix10-soc.c b/drivers/fpga/stratix10-soc.c
-> index 44b7c56..2da8a40 100644
-> --- a/drivers/fpga/stratix10-soc.c
-> +++ b/drivers/fpga/stratix10-soc.c
-> @@ -182,12 +182,12 @@ static int s10_ops_write_init(struct fpga_manager *mgr,
->  	uint i;
->  	int ret;
->  
-> -	ctype.flags = 0;
->  	if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
->  		dev_dbg(dev, "Requesting partial reconfiguration.\n");
-> -		ctype.flags |= BIT(COMMAND_RECONFIG_FLAG_PARTIAL);
-> +		ctype.flags = 1;
-Have you considered:
+> Do you want to add the note to localyesconfig too?
+> 
+> 
+> LMC_ is an acronym of LOCAL_MOD_CONFIG_.
+> Maybe it is OK because
+> we mostly use localmodconfig,
+> using localyesconfig is somewhat rare, I guess.
+> 
+> 
+> Just a reminder, if you want to send v6
+> or if you want me to pick this up as-is.
+>
+yes, I should also add note for localyesconfig. Please see update in v6. Thanks
+for your kind reminder.
 
-ctype.flags = BIT(COMMAND_RECONFIG_FLAG_PARTIAL);
-
-instead (assuming 1, lines up with BIT(COMMAND_RECONFIG_FLAG_PARTIAL)?
-
-If not: Can you define a constant?
->  	} else {
->  		dev_dbg(dev, "Requesting full reconfiguration.\n");
-> +		ctype.flags = 0;
->  	}
->  
->  	reinit_completion(&priv->status_return_completion);
-> @@ -210,6 +210,7 @@ static int s10_ops_write_init(struct fpga_manager *mgr,
->  
->  	ret = 0;
->  	if (!test_and_clear_bit(SVC_STATUS_OK, &priv->status)) {
-> +		dev_err(dev, "RECONFIG_REQUEST failed\n");
->  		ret = -ETIMEDOUT;
->  		goto init_done;
->  	}
+> Thanks.
+> 
+> 
+> 
+> 
+> 
+> 
+> >         @echo  '  defconfig       - New config with default from ARCH supplied defconfig'
+> >         @echo  '  savedefconfig   - Save current config as ./defconfig (minimal config)'
+> > diff --git a/scripts/kconfig/streamline_config.pl b/scripts/kconfig/streamline_config.pl
+> > index e2f8504f5a2d..19857d18d814 100755
+> > --- a/scripts/kconfig/streamline_config.pl
+> > +++ b/scripts/kconfig/streamline_config.pl
+> > @@ -143,6 +143,7 @@ my %depends;
+> >  my %selects;
+> >  my %prompts;
+> >  my %objects;
+> > +my %config2kfile;
+> >  my $var;
+> >  my $iflevel = 0;
+> >  my @ifdeps;
+> > @@ -201,6 +202,7 @@ sub read_kconfig {
+> >         if (/^\s*(menu)?config\s+(\S+)\s*$/) {
+> >             $state = "NEW";
+> >             $config = $2;
+> > +           $config2kfile{"CONFIG_$config"} = $kconfig;
+> >
+> >             # Add depends for 'if' nesting
+> >             for (my $i = 0; $i < $iflevel; $i++) {
+> > @@ -591,6 +593,20 @@ while ($repeat) {
+> >  }
+> >
+> >  my %setconfigs;
+> > +my @preserved_kconfigs = split(/:/,$ENV{LMC_KEEP});
+> > +
+> > +sub in_preserved_kconfigs {
+> > +    my $kconfig = $config2kfile{$_[0]};
+> > +    if (!defined($kconfig)) {
+> > +        return 0;
+> > +    }
+> > +    foreach my $excl (@preserved_kconfigs) {
+> > +        if($kconfig =~ /^$excl/) {
+> > +            return 1;
+> > +        }
+> > +    }
+> > +    return 0;
+> > +}
+> >
+> >  # Finally, read the .config file and turn off any module enabled that
+> >  # we could not find a reason to keep enabled.
+> > @@ -644,6 +660,11 @@ foreach my $line (@config_file) {
+> >      }
+> >
+> >      if (/^(CONFIG.*)=(m|y)/) {
+> > +        if (in_preserved_kconfigs($1)) {
+> > +            dprint "Preserve config $1";
+> > +            print;
+> > +            next;
+> > +        }
+> >         if (defined($configs{$1})) {
+> >             if ($localyesconfig) {
+> >                 $setconfigs{$1} = 'y';
+> > --
+> > 2.25.1
+> >
+> 
+> 
 > -- 
-> 2.7.4
-> 
+> Best Regards
+> Masahiro Yamada
 
+-- 
 Cheers,
-Moritz
+Changbin Du
