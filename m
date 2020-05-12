@@ -2,131 +2,108 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BC6CA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA16C2D0F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8CE7206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2FCF206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:55:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cJXtddWT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CWdQqBq1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730265AbgELRxN (ORCPT
+        id S1727954AbgELRz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 13:53:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41656 "EHLO
+        Tue, 12 May 2020 13:55:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726031AbgELRxM (ORCPT
+        with ESMTP id S1725938AbgELRzz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 13:53:12 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C6C7C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:53:12 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id 19so18991812oiy.8
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:53:12 -0700 (PDT)
+        Tue, 12 May 2020 13:55:55 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EA57C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:55:55 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id e25so14714343ljg.5
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:55:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=NkOoyxp+KOfXBJgSgsmTbcJqNZ2GGnNdvXTFmavoPqM=;
-        b=cJXtddWTuDJRf+CmWTK1TB/ivAn0sQMUeBhtE5kBCZ5crRtq55EMpkXbCwDrWFdnG2
-         hw/jaxgXukOHTPwvYFbv5bhgRwrMwTf9T7YxLz/pgY6ngXJcMWcQnRi6fpXVWarUAkf1
-         T9m1woadtB13mx35loE0yBtMOqsFfGNBmGCXcty1tKKbQ7qxfsAxTIn8H+P0kaqcXCkc
-         Gs7IvOII9jlcgWojPmJmO+89TkRnzHVX+248d3y1wPUNdY3LBWbECFM9TdA+YcUOzIXS
-         QJz7fEBPgG3qmasdKr6psI5Pmw9WTOiPeWGPQyGUiL8b0l8JJWv5jccf5FeWT5jsOpCT
-         lbhA==
+        bh=3bulAdEa0YtKfLDEvgJtXxjULACbMmllrhnt0TNqof4=;
+        b=CWdQqBq1nuGjhJoclSNUa09Dolztaz1qyxLzybRgOWH7y6Ivq+vHLMs+I0nOQr1YiA
+         uoujI+0guXsvOyLdafj1E2h+Zf6USlqbOJXX7UD0YJoir1Wy4RBNAnnV9Y3CI3Bgp2Uw
+         AsIEhnHzYauu2pddTvUCz0gmyPah5iLyZepsNGIILsejF5o3R6JY5cAfkis56zOAJpk6
+         9ri55ILWUPS510A6izprONAhGJKX0CLsIsNnkzX38ikEbtPpYognCa5YSKjWnHEOWBw7
+         UUBnCe5svoHBKfW+O14ceTksj/JOIll6zDZCTuaDoXxPCsT4fhof5njy4pdAASe0IY15
+         88Xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NkOoyxp+KOfXBJgSgsmTbcJqNZ2GGnNdvXTFmavoPqM=;
-        b=nG3QyHORxLcWusU3ou2YZ51i+R6jLMnshJ4Xkim2vuHOsndYl7edmxzji3OWinseST
-         O7c0/LQkBuOBPV+EPnUXPi0gawrSsHGhh8oTean+K4mV/sLGWgj0daNOMdZIKzN8fcvn
-         HCRCCyguECmaEP+jbu5CeFGqTDm6gdec6uQ/SvqzQ9frWocs9944Zs3BCcXynS7GrJwl
-         oKQzR3K+bfX1ulGir2BwllpiCF1FWUVwFN22uRlcS3oxwvtsxZPmTTZIUFKdJwbwE6E+
-         9a399w/IQnFhD5oPl4v5im8F9mvdrkIPMU1H21I3+iU3I4+uSzCRCaAjK+ztUOBo7T0E
-         J+xQ==
-X-Gm-Message-State: AGi0Pub2yi93mDhW41fWHdMlNNWZ4GtdM+ZFRrBXe3A4T1xeIy4VSN+C
-        xJ7yBolv1bpje4HkWf4Qp9e40dKtt0pNKz3PEo8wFA==
-X-Google-Smtp-Source: APiQypLkP5pPehJigDDlRNOn4+iVPva7JZfnu6dHE84/k8Lgg0hD4kcUuABKGJzkgwomRT/MBTH5un/l88p/4CBGWJA=
-X-Received: by 2002:a05:6808:b36:: with SMTP id t22mr24884545oij.121.1589305991490;
- Tue, 12 May 2020 10:53:11 -0700 (PDT)
+        bh=3bulAdEa0YtKfLDEvgJtXxjULACbMmllrhnt0TNqof4=;
+        b=OeybWJTF8Rg49rGW3xeqUWS0HxHgm0nvmv/dP6xOi3MmcI0cwhSM/EH3W1Q8cl2/Ra
+         ERrGYLVhxS4tCaSHuAJlvht8iRZ5Ej3l0HXDzhJU/3jGkpTBxo+V8mcDdZ6D7bfapyLE
+         oPxJYc0zBcaBPMZgAKp+IdElXfO2xReUKOYSQU0D14kKUxCkDwfOVabNTJBu+7h0zO0J
+         BnKb3mFCuv64cYTbku3gVCnuOmHNz/vHZC/zMnAWnoYyu0MgNq1NLhunmLnqrgxbuKBL
+         kfNRvnO278k/YH8cXQKClePD+JkLuGnw+2pYytlqDB3bOw7cg6ryrm26BVQR4D5fJjyL
+         MSGw==
+X-Gm-Message-State: AOAM530YcBwwCtzNKnE1GholjhHqA8v2CFcda68kB96+kvMWMsTaFmyQ
+        uyTGTL1rJJuGy5+5GE2txEmosh1ZfJpcVwrysVB0gA==
+X-Google-Smtp-Source: ABdhPJzZacOxTdIXmG/y1xsQxdbn3Gu8/UFKbgfmJOJX/ZNurJQYUVI8JZg3cgz/pPjpbuDDAZX5z8N5dh2UjcLF3g8=
+X-Received: by 2002:a2e:b6cf:: with SMTP id m15mr13942720ljo.168.1589306153711;
+ Tue, 12 May 2020 10:55:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200511204150.27858-1-will@kernel.org> <20200512081826.GE2978@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200512081826.GE2978@hirez.programming.kicks-ass.net>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 12 May 2020 19:53:00 +0200
-Message-ID: <CANpmjNNo3rhwqG=xEbpP9JiSd8-Faw8fkoUhYJjesHK5S5_KQQ@mail.gmail.com>
-Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Will Deacon <will@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>
+References: <20200419001858.105281-1-hector.bujanda@digi.com>
+ <CAMRc=MeHun_WEApEXP59ZszGa2n+wbU9qq3wU1VO9o590rO-Pw@mail.gmail.com>
+ <CACRpkdaeXFW5K=Npy2ubWsffc7aepEQ5kSJ2HrkrESjaTy_psQ@mail.gmail.com>
+ <CAMRc=MdwSpWkgLTHN+6cOdG7aBAWWYFBC4+tfSNtA2HgX6s_3A@mail.gmail.com>
+ <B0E9AFA73AF60B42B6D323E0C4FEB06F01AFAC5A@dor-sms-xch01.digi.com>
+ <20200430145844.GA28588@sol> <CAMRc=Md5-OgNySDG+XHKow0YSzcZHNtWWPwbmd159fpWL8YAJA@mail.gmail.com>
+In-Reply-To: <CAMRc=Md5-OgNySDG+XHKow0YSzcZHNtWWPwbmd159fpWL8YAJA@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 12 May 2020 19:55:42 +0200
+Message-ID: <CACRpkdbZPhkzuUvwDnBWTvweBukQRcWx0w=2seQsVBEP8Fv_BA@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: add GPIO_SET_DEBOUNCE_IOCTL
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        "Bujanda, Hector" <Hector.Bujanda@digi.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 May 2020 at 10:18, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Mon, May 11, 2020 at 09:41:32PM +0100, Will Deacon wrote:
-> > Hi folks,
-> >
-> > (trimmed CC list since v4 since this is largely just a rebase)
-> >
-> > This is version five of the READ_ONCE() codegen improvement series that
-> > I've previously posted here:
-> >
-> > RFC: https://lore.kernel.org/lkml/20200110165636.28035-1-will@kernel.org
-> > v2:  https://lore.kernel.org/lkml/20200123153341.19947-1-will@kernel.org
-> > v3:  https://lore.kernel.org/lkml/20200415165218.20251-1-will@kernel.org
-> > v4:  https://lore.kernel.org/lkml/20200421151537.19241-1-will@kernel.org
-> >
-> > The main change since v4 is that this is now based on top of the KCSAN
-> > changes queued in -tip (locking/kcsan) and therefore contains the patches
-> > necessary to avoid breaking sparc32 as well as some cleanups to
-> > consolidate {READ,WRITE}_ONCE() and data_race().
-> >
-> > Other changes include:
-> >
-> >   * Treat 'char' as distinct from 'signed char' and 'unsigned char' for
-> >     __builtin_types_compatible_p()
-> >
-> >   * Add a compile-time assertion that the argument to READ_ONCE_NOCHECK()
-> >     points at something the same size as 'unsigned long'
-> >
-> > I'm happy for all of this to go via -tip, or I can take it via arm64.
->
-> Looks good to me; Thanks!
->
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+On Mon, May 4, 2020 at 12:32 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-I just ran a bunch of KCSAN tests. While this series alone would have
-passed the tests, there appears to be a problem with
-__READ_ONCE/__WRITE_ONCE. I think they should already be using
-'data_race()', as otherwise we will get lots of false positives in
-future.
+> Ideally we'd have to introduce new versions of gpioevent_request,
+> gpioline_request, gpioline_info and gpioevent_data structs - this time
+> with enough additional padding and no alignment issues. Then we could
+> add the debounce properly.
 
-I noticed this when testing -tip/locking/kcsan, which breaks
-unfortunately, because I see a bunch of spurious data races with
-arch_atomic_{read,set} because "locking/atomics: Flip fallbacks and
-instrumentation" changed them to use __READ_ONCE()/__WRITE_ONCE().
-From what I see, the intent was to not double-instrument,
-unfortunately they are still double-instrumented because
-__READ_ONCE/__WRITE_ONCE doesn't hide the access from KCSAN (nor KASAN
-actually). I don't think we can use __no_sanitize_or_inline for the
-arch_ functions, because we really want them to be __always_inline
-(also to avoid calls to these functions in uaccess regions, which
-objtool would notice).
+Hm that sounds massive. Is it really that bad?
 
-I think the easiest way to resolve this is to wrap the accesses in
-__*_ONCE with data_race().
+> This would of course add a lot of cruft to the uAPI code. I'd start by
+> moving it out of drivers/gpio/gpiolib.c into a new file:
+> drivers/gpio/gpiolib-cdev.c. This way we'd have everything related to
+> the character device in one place. It would make it easier to: a) add
+> a config option for disabling it entirely and b) add a config option
+> to disable the v1 of the ioctl()s.
 
-Thanks,
--- Marco
+Its good to break out for code maintenance no matter what we do
+with it :)
+
+I would however not make it in any way totally optional, because the
+big win with the character device over the legacy sysfs is to always
+be available.
+
+> Linus: about the software-debounce you mentioned: do you think it
+> somehow plugs the hole we identified here?
+
+Hm, I don't quite understand what the hole is I guess...
+
+Linus
