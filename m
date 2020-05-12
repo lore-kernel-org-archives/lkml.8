@@ -2,182 +2,123 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DE4CA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5235C2D0F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E96620673
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 945A820673
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 18:47:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GTrAAg1h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730838AbgELSql (ORCPT
+        id S1726890AbgELSr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 14:46:41 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:36668 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbgELSqk (ORCPT
+        Tue, 12 May 2020 14:47:26 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:55178 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbgELSrZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 14:46:40 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jYZvH-0007rr-9u; Tue, 12 May 2020 12:46:35 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jYZv7-0007UG-JY; Tue, 12 May 2020 12:46:35 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
-        <87sgga6ze4.fsf@x220.int.ebiederm.org>
-        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
-        <87eerszyim.fsf_-_@x220.int.ebiederm.org>
-        <ee83587b-8a1c-3c4f-cc0f-7bc98afabae1@I-love.SAKURA.ne.jp>
-        <CAHk-=wgQ2ovXMW=5ZHCpowkE1PwPQSL7oV4YXzBxd6eqNRXxnQ@mail.gmail.com>
-        <87sgg6v8we.fsf@x220.int.ebiederm.org>
-        <202005111428.B094E3B76A@keescook>
-Date:   Tue, 12 May 2020 13:42:53 -0500
-In-Reply-To: <202005111428.B094E3B76A@keescook> (Kees Cook's message of "Mon,
-        11 May 2020 14:55:27 -0700")
-Message-ID: <874kslq9jm.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 12 May 2020 14:47:25 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04CIl0aH042905;
+        Tue, 12 May 2020 13:47:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589309220;
+        bh=gdpZbVGnmu82Ltylj7zMGAjghfqs8C0XbDqrJcvjIUw=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=GTrAAg1hJh7itOcW4SLu7lNpvXjddphXZysRjzEGFdlWjJXVRzwSncAD1hGESqoOq
+         Yqx1WqS6Om6TRq4h94nigWX4VYc7/sUadEfEmgQ1OEUYxPV/nkFZurLYx+A6PIN0DO
+         aB9Jjte/G2GkHBhyp1KqKrwyEGu8J6jJxMvMBxdg=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04CIl0WC011391
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 May 2020 13:47:00 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 12
+ May 2020 13:47:00 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 12 May 2020 13:47:00 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04CIkxg4112061;
+        Tue, 12 May 2020 13:46:59 -0500
+Date:   Wed, 13 May 2020 00:16:58 +0530
+From:   Pratyush Yadav <p.yadav@ti.com>
+To:     <Tudor.Ambarus@microchip.com>
+CC:     <linux-mtd@lists.infradead.org>, <vigneshr@ti.com>,
+        <boris.brezillon@collabora.com>, <alexandre.belloni@bootlin.com>,
+        <richard@nod.at>, <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <Nicolas.Ferre@microchip.com>, <Ludovic.Desroches@microchip.com>,
+        <broonie@kernel.org>, <miquel.raynal@bootlin.com>,
+        <linux-spi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v4 00/16] mtd: spi-nor: add xSPI Octal DTR support
+Message-ID: <20200512184656.ksudjyeqbwv6jze6@ti.com>
+References: <20200424184410.8578-1-p.yadav@ti.com>
+ <144878625.o7txgtY6sz@192.168.0.120>
+ <49abc8f3-5bb5-bc6d-b2ec-f14b115c58dc@ti.com>
+ <2352513.UHBGRE98Z5@192.168.0.120>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jYZv7-0007UG-JY;;;mid=<874kslq9jm.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19mzgJAcFNyQdQ94l+XWLB+0NtEuzgOx8c=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 3/5] exec: Remove recursion from search_binary_handler
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <2352513.UHBGRE98Z5@192.168.0.120>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
+On 12/05/20 11:29AM, Tudor.Ambarus@microchip.com wrote:
+> Hi, Vignesh,
+> 
+> > > The software reset procedure can't protect you from unexpected 
+> > > resets, but
+> > > the hardware with its optional reset pin can. Pratyush to confirm.
+> > > 
+> > > cut
+> > > 
+> > >>> Not recovering from unexpected resets is unacceptable. One should always
+> > >>> prefer option 1/ and condition the entering in 2-2-2, 4-4-4 and 8-8-8
+> > >>> with
+> > >>> the presence of the optional RESET pin.
+> > >> 
+> > >> Totally agree with you on that one, but we know what happens in
+> > >> practice...
+> > > 
+> > > What I proposed is to condition the entering in the state-full modes with
+> > > the presence of the optional RESET pin. We would introduce an optional
+> > > device tree property for the RESET pin. If hardware doesn't implement the
+> > > optional RESET# signal, then we will not enter in the state-full modes.
+> > 
+> > Are you asking for dedicated SW controllable reset line or just an
+> > indication from DT that OSPI reset line is connected to board level
+> > soft/hard reset lines?
+> 
+> I don't see a need for the reset line to be SW controllable, a simple 
+> indication from the device tree should be enough.
 
-> On Mon, May 11, 2020 at 09:33:21AM -0500, Eric W. Biederman wrote:
->> Linus Torvalds <torvalds@linux-foundation.org> writes:
->> 
->> > On Sat, May 9, 2020 at 9:30 PM Tetsuo Handa
->> > <penguin-kernel@i-love.sakura.ne.jp> wrote:
->> >>
->> >> Wouldn't this change cause
->> >>
->> >>         if (fd_binary > 0)
->> >>                 ksys_close(fd_binary);
->> >>         bprm->interp_flags = 0;
->> >>         bprm->interp_data = 0;
->> >>
->> >> not to be called when "Search for the interpreter" failed?
->> >
->> > Good catch. We seem to have some subtle magic wrt the fd_binary file
->> > descriptor, which depends on the recursive behavior.
->> 
->> Yes.  I Tetsuo I really appreciate you noticing this.  This is exactly
->> the kind of behavior I am trying to flush out and keep from being
->> hidden.
->> 
->> > I'm not seeing how to fix it cleanly with the "turn it into a loop".
->> > Basically, that binfmt_misc use-case isn't really a tail-call.
->> 
->> I have reservations about installing a new file descriptor before
->> we process the close on exec logic and the related security modules
->> closing file descriptors that your new credentials no longer give
->> you access to logic.
->
-> Hm, this does feel odd. In looking at this, it seems like this file
-> never gets close-on-exec set, and doesn't have its flags changed from
-> its original open:
->                 .open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
-> only the UMH path through exec doesn't explicitly open a file by name
-> from what I can see, so we'll only have these flags.
->
->> I haven't yet figured out how opening a file descriptor during exec
->> should fit into all of that.
->> 
->> What I do see is that interp_data is just a parameter that is smuggled
->> into the call of search binary handler.  And the next binary handler
->> needs to be binfmt_elf for it to make much sense, as only binfmt_elf
->> (and binfmt_elf_fdpic) deals with BINPRM_FLAGS_EXECFD.
->> 
->> So I think what needs to happen is to rename bprm->interp_data to
->> bprm->execfd, remove BINPRM_FLAGS_EXECFD and make closing that file
->> descriptor free_bprm's responsiblity.
->
-> Yeah, I would agree. As far as the close handling, I don't think there
-> is a difference here: it interp_data was closed on the binfmt_misc.c
-> error path, and in the new world it would be the exec error path -- both
-> would be under the original credentials.
->
->> I hope such a change will make it easier to see all of the pieces that
->> are intereacting during exec.
->
-> Right -- I'm not sure which piece should "consume" bprm->execfd though,
-> which I think is what you're asking next...
->
->> I am still asking: is the installation of that file descriptor useful if
->> it is not exported passed to userspace as an AT_EXECFD note?
->> 
->> I will dig in and see what I can come up with.
->
-> Should binfmt_misc do the install, or can the consuming binfmt do it?
-> i.e. when binfmt_elf sees bprm->execfd, does it perform the install
-> instead?
+We already have the property "broken-flash-reset". Should we re-use it 
+or should we have a opt-in property instead of an opt-out one?
+ 
+> > 
+> > Mandating SW controllable RESET line is bit of a stretch IMO... Board
+> > design may not allow wasting dedicated pin due to lack of GPIOs perhaps..
+> > 
+> > For eg.: TI EVM has OSPI reset line connected to board level reset out.
+> > This ensures any soft/warm/hard CPU reset will trigger OSPI Flash reset,
+> > but there is no SW control that allows OSPI flash alone to be reset.
+> > Isn't such a reset mechanism sufficient?
+> > 
+> 
+> I think it is, yes.
 
-I am still thinking about this one, but here is where I am at.  At a
-practical level passing the file descriptor of the script to interpreter
-seems like something we should encourage in the long term.  It removes
-races and it is cheaper because then the interpreter does not have to
-turn around and open the script itself.
-
-
-
-Strictly speaking binfmt_misc should not need to close the file
-descriptor in binfmt_misc because we have already unshared the files
-struct and reset_files_struct should handle restoring it.
-
-Calling fd_install in binfmt_misc still seems wrong, as that exposes
-the new file descriptor to user space with the old creds.
-
-It is possible although unlikely for userspace to find the file
-descriptor without consulting AT_EXECFD so just to be conservative I
-think we should install the file descriptor in begin_new_exec even if
-the next interpreter does not support AT_EXECFD.
-
-
-I am still working on how to handle recursive binfmts but I suspect it
-is just a matter of having an array of struct files in struct
-linux_binprm.
-
-
-Eric
-
-
-
-
-
-
-
-
+-- 
+Regards,
+Pratyush Yadav
+Texas Instruments India
