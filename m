@@ -2,119 +2,215 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B4FC2D0F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 266F7C47076
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0B3E20740
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1F2C20784
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 20:33:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hK5hE4xj"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="vFcP7z7i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731132AbgELUb6 (ORCPT
+        id S1730610AbgELUd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 16:31:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38118 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725950AbgELUb5 (ORCPT
+        Tue, 12 May 2020 16:33:58 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:50702 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbgELUd5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 16:31:57 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95ED4C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 13:31:57 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id r66so19448153oie.5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 13:31:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ERRPuFMN2HOwCuK5VWexEJe+QDtucWJfwhL9QOSpukg=;
-        b=hK5hE4xj/RHYqXwzZ9VElO19qhoruIzjPwlshRn15zYs4ggKzCnGNClUZ86H5dmQCb
-         UkMmg02SXTxyWybVmPHsTc0t9D/09zvFcepjrnXoJg9SNRiqto8FIpI1zcHBsys1iFHW
-         oo70nS4eEiUOF4Qssvf97lOVxnkJ1FxKmS5IPT5JLi6xFFqhjw/DSmzHraxQqLVaW+9C
-         sHG5ZreZpNYBLAbjZ092XYOnqvkg80M2YkzfV6fNVtAAJ7iNNWSyzqWn/QNj5qA4Ogt2
-         xfBr++NO6oMqgSkdyRoFeAWWUfG7qSAVKI2FpwgxO7DCHcnzYuOp+QoB98JLjUSO8FEL
-         8Vxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ERRPuFMN2HOwCuK5VWexEJe+QDtucWJfwhL9QOSpukg=;
-        b=U6GIiYUSRmlnctFgkDd5HwW1ydHdMW3TpCYbURFaPRqX4fepTpN0gGCKovl/UEsrhx
-         loJ2/ydzVwUrYuzP2WXpw9YYQv9idtyABHEpmki31BIStrQ0Z51oJGjXQJOi5XqDyEg5
-         fr4gpma6ISICjpKtiWKMcAwVQRzngjYDc5JPkBhiKH1IBr29k9kPEmlbW6L6PkLMxq00
-         K1kHJvab872L75/UCHcSSHkfzEES3on4wkolmBPmvvGQIacrQlGVbSp3abl9R9xKLoIs
-         14JkexLQX7xRI3BMSQVOcOg9FBg6FT3F3g+6e9nM7Vl/9J/pmLDA32l32mA9z1rW7CkR
-         htuw==
-X-Gm-Message-State: AGi0PuaBTKPZyfP6eBliam1upCWqXf5pdTLD9NYDOfQ3+YlkGAuaq0T8
-        27bLYP6f6RHHKi2ZFqsbbtzQVrvfGyWkgAiylUXVRY5w
-X-Google-Smtp-Source: APiQypJ3JmKqNIoGmCcd3DTsSdSWvHXTq6dKWAoTdQxvccLpcOsmS0K5CabG8u+AD/Y9Gx5P0Q5CcYbP/ueMdE/PQJ4=
-X-Received: by 2002:aca:c646:: with SMTP id w67mr25418180oif.70.1589315515788;
- Tue, 12 May 2020 13:31:55 -0700 (PDT)
+        Tue, 12 May 2020 16:33:57 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200512203355euoutp02706617157b883cf9c5002f2710f61d99~OYiZVzkDE2274122741euoutp02H
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 20:33:55 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200512203355euoutp02706617157b883cf9c5002f2710f61d99~OYiZVzkDE2274122741euoutp02H
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1589315635;
+        bh=wnAc6t9J+MLeu4DXX/UMTG7FIxfuzBk4sujw+pbXYuI=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=vFcP7z7iNFqcPY/EoZ5ceEWyjH1xwGyPTsFs44xdrk9/usQK/cCqb6wNTikhe/cz3
+         VRuU1QMd4IzJN8gNMfXAO/FSr7WAEwp3UEQA958LHOtJuBsPdJUyXn7cor0p/GkEeY
+         qrecZ9OJZgAZ759EqpgSB1rwj676W+1IKU9G/b1E=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200512203354eucas1p1ccad241d082e172806147e8051ca5cd5~OYiY_s_Nd1765817658eucas1p1P;
+        Tue, 12 May 2020 20:33:54 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 59.BC.60679.2380BBE5; Tue, 12
+        May 2020 21:33:54 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200512203354eucas1p1ec0713551239b5437374232a3558db8e~OYiYXwwvs1766317663eucas1p1P;
+        Tue, 12 May 2020 20:33:54 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200512203354eusmtrp29c5130625112f643794304998f69d654~OYiYXBRxv1599815998eusmtrp2e;
+        Tue, 12 May 2020 20:33:54 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-4a-5ebb08320b1c
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id C1.CA.07950.2380BBE5; Tue, 12
+        May 2020 21:33:54 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200512203353eusmtip24e27fc61e27b356e67372df3a9c99d61~OYiXny--L2981929819eusmtip2U;
+        Tue, 12 May 2020 20:33:53 +0000 (GMT)
+Subject: Re: [PATCH v4 38/38] videobuf2: use sgtable-based scatterlist
+ wrappers
+To:     "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     Pawel Osciak <pawel@osciak.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        David Airlie <airlied@linux.ie>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <f6242137-82a5-0e33-f1a2-9e73dc679aa9@samsung.com>
+Date:   Tue, 12 May 2020 22:33:54 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200511204150.27858-1-will@kernel.org> <20200512081826.GE2978@hirez.programming.kicks-ass.net>
- <CANpmjNNo3rhwqG=xEbpP9JiSd8-Faw8fkoUhYJjesHK5S5_KQQ@mail.gmail.com> <20200512190755.GL2957@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200512190755.GL2957@hirez.programming.kicks-ass.net>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 12 May 2020 22:31:44 +0200
-Message-ID: <CANpmjNNeSnrAgfkskE5Y0NNu3-DS6hk+SwjkBunrr8FRxwwT-Q@mail.gmail.com>
-Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Will Deacon <will@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <14063C7AD467DE4B82DEDB5C278E8663010E210FAC@FMSMSX108.amr.corp.intel.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SfyyUcRzu+773vveSs9fRfCax3cqWLUVt3k2MVdvbVqv80aaNOnmHdYfu
+        TaoxJpOOykjpRpRWuejH3XGclu6K82NJkemHJP4hxjiWH5HzUv57nufzfPY8n+1D4dJpwoOK
+        TzjHqRLkChnpKKptnu3YEUA1RO1qMQUw1zpaMeZF8TOC6Z4eJ5nKJ00Y8+FOn4gpbwxibN0D
+        GKMb7CGYLlMJyeQ9ryGYh7oFjOk0+jI3x2bFjHliiAh1ZqvuViG24uUwxuq0V0nWOPODYPtz
+        rRirf5DOfl0cxNnC3keIbficQbKDc8Mke92gReyUzottm54SH5WccNwbwyniz3OqnSGnHONs
+        83lYUrbnheq+ESwD9burkQMF9B54YnlLqJEjJaUfIzCPvhELxIbgxuRTkUCmEEzO3EZrK9nW
+        biQMHiH4dGUeE8g4glaDHre7XOljMJKlwe0DN7oZg/HK+pUUnK7CYWEhR2x3kbQ/qMfUpB1L
+        6BBo1WZidiyit8FMftZK3iY6Etor9EjwuEDrnaHlUhTlQB+HUutWu4zT3mAcK8EF7A5fhspW
+        GgF9j4Lq0pbV3vvhVV0lLmBXGLEaxAL2hKX6tYXLCAY6qsUCyUPQlVm8uh0E3zrmSHsyTm+H
+        Z6adghwGXbYiZJeBdobeMRehhDMU1N7GBVkCOdlSwe0DGuvTf7Hmzo94PpJp1l2mWXeOZt05
+        mv+55UikRe5cMq+M5fiABC7Fj5cr+eSEWL/TiUodWn7G9kWrrQ6ZFqItiKaQzEmyIc0UJSXk
+        5/mLSgsCCpe5SbLi66Okkhj5xUucKvGkKlnB8Ra0mRLJ3CW77w9HSulY+TnuDMclcaq1KUY5
+        eGSgjepRW2TBUE9RRFqToiLcwdu7SrNvafBgdPCFI301KRNMRHpgoVvw218DE8bG6iUy8efI
+        w67MTB8o2NSGDvncsp5Ujr82O2FlltCfWmNKcUiua07YaPiB1KQ5Zb8uderPluzD/LvK3zFG
+        17NcbmnScAthVrw/Thi8sgK/6zkvmYiPk/v74ipe/hdBiun/iAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpnleLIzCtJLcpLzFFi42I5/e/4PV0jjt1xBrtmcFv0njvJZLFxxnpW
+        iytf37NZrFx9lMni4sy7LBYL9ltbfLnykMli0+NrrBaXd81hs+jZsJXVYtmmP0wWF7ZrWUx5
+        +5Pd4uCHJ6wOfB5r5q1h9Fi85yWTx6ZVnWwe2789YPW4332cyWPzknqP2/8eM3tMvrGc0WP3
+        zQY2j8e/XrJ59G1ZxejxeZOcx6mvn9kDeKP0bIryS0tSFTLyi0tslaINLYz0DC0t9IxMLPUM
+        jc1jrYxMlfTtbFJSczLLUov07RL0Mr787mEqaJOpWHv3FVMD433xLkZODgkBE4m241cYuxi5
+        OIQEljJK3NyzmBkiISNxcloDK4QtLPHnWhcbRNFbRomvDZvBioQFAiVetcxiBkmICBxjktjR
+        9owJxGEWWMcs8b3xOTtEC1DmxfufjCAtbAKGEl1vQWZxcvAK2EmcXNXEBGKzCKhKfJvQAlYj
+        KhArsfpaKyNEjaDEyZlPWLoYOTg4BcIk5h5XAQkzC5hJzNv8kBnClpfY/nYOlC0ucevJfKYJ
+        jEKzkHTPQtIyC0nLLCQtCxhZVjGKpJYW56bnFhvpFSfmFpfmpesl5+duYgQmgm3Hfm7Zwdj1
+        LvgQowAHoxIPb0T9rjgh1sSy4srcQ4wSHMxKIrwtmTvjhHhTEiurUovy44tKc1KLDzGaAv02
+        kVlKNDkfmKTySuINTQ3NLSwNzY3Njc0slMR5OwQOxggJpCeWpGanphakFsH0MXFwSjUwNm3l
+        /NjmYWpvPWe3RtE5l5/PXaMSlHe8Phi5QIVHqIbh8jrPgDxGLr6C913Plnx3yQl9VauyYyHj
+        D+bN7+Zt4F0qO1H1z4pGNb22+tTbRpzzV06dp7Zg+96NE668PJztt8Vc6/qyzusMWU97LRbc
+        vf1BI87IPinqQOMTUfld7lxpaddntH+bocRSnJFoqMVcVJwIAH0Po9kaAwAA
+X-CMS-MailID: 20200512203354eucas1p1ec0713551239b5437374232a3558db8e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200512090130eucas1p2eb86c5d34be56bbc81032bc0b6927d1e
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200512090130eucas1p2eb86c5d34be56bbc81032bc0b6927d1e
+References: <20200512085710.14688-1-m.szyprowski@samsung.com>
+        <20200512090058.14910-1-m.szyprowski@samsung.com>
+        <CGME20200512090130eucas1p2eb86c5d34be56bbc81032bc0b6927d1e@eucas1p2.samsung.com>
+        <20200512090058.14910-38-m.szyprowski@samsung.com>
+        <14063C7AD467DE4B82DEDB5C278E8663010E210FAC@FMSMSX108.amr.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 May 2020 at 21:08, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Tue, May 12, 2020 at 07:53:00PM +0200, Marco Elver wrote:
-> > I just ran a bunch of KCSAN tests. While this series alone would have
-> > passed the tests, there appears to be a problem with
-> > __READ_ONCE/__WRITE_ONCE. I think they should already be using
-> > 'data_race()', as otherwise we will get lots of false positives in
-> > future.
-> >
-> > I noticed this when testing -tip/locking/kcsan, which breaks
-> > unfortunately, because I see a bunch of spurious data races with
-> > arch_atomic_{read,set} because "locking/atomics: Flip fallbacks and
-> > instrumentation" changed them to use __READ_ONCE()/__WRITE_ONCE().
-> > From what I see, the intent was to not double-instrument,
-> > unfortunately they are still double-instrumented because
-> > __READ_ONCE/__WRITE_ONCE doesn't hide the access from KCSAN (nor KASAN
-> > actually). I don't think we can use __no_sanitize_or_inline for the
-> > arch_ functions, because we really want them to be __always_inline
-> > (also to avoid calls to these functions in uaccess regions, which
-> > objtool would notice).
-> >
-> > I think the easiest way to resolve this is to wrap the accesses in
-> > __*_ONCE with data_race().
->
-> But we can't... because I need arch_atomic_*() and __READ_ONCE() to not
-> call out to _ANYTHING_.
->
-> Sadly, because the compilers are 'broken' that whole __no_sanitize thing
-> didn't work, but I'll be moving a whole bunch of code into .c files with
-> all the sanitizers killed dead. And we'll be validating it'll not be
-> calling out to anything.
->
-> data_race() will include active calls to kcsan_{dis,en}able_current(),
-> and this must not happen.
+Hi Michael,
 
-Only if instrumentation is enabled for the compilation unit. If you
-have KCSAN_SANITIZE_foo.c := n, no calls are emitted not even to
-kcsan_{dis,en}able_current(). Does that help?
+On 12.05.2020 19:52, Ruhl, Michael J wrote:
+>> -----Original Message-----
+>> From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
+>> Marek Szyprowski
+>> Sent: Tuesday, May 12, 2020 5:01 AM
+>> To: dri-devel@lists.freedesktop.org; iommu@lists.linux-foundation.org;
+>> linaro-mm-sig@lists.linaro.org; linux-kernel@vger.kernel.org
+>> Cc: Pawel Osciak <pawel@osciak.com>; Bartlomiej Zolnierkiewicz
+>> <b.zolnierkie@samsung.com>; David Airlie <airlied@linux.ie>; linux-
+>> media@vger.kernel.org; Hans Verkuil <hverkuil-cisco@xs4all.nl>; Mauro
+>> Carvalho Chehab <mchehab@kernel.org>; Robin Murphy
+>> <robin.murphy@arm.com>; Christoph Hellwig <hch@lst.de>; linux-arm-
+>> kernel@lists.infradead.org; Marek Szyprowski
+>> <m.szyprowski@samsung.com>
+>> Subject: [PATCH v4 38/38] videobuf2: use sgtable-based scatterlist wrappers
+>>
+>> Use recently introduced common wrappers operating directly on the struct
+>> sg_table objects and scatterlist page iterators to make the code a bit
+>> more compact, robust, easier to follow and copy/paste safe.
+>>
+>> No functional change, because the code already properly did all the
+>> scaterlist related calls.
+>>
+>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>> ---
+>> For more information, see '[PATCH v4 00/38] DRM: fix struct sg_table nents
+>> vs. orig_nents misuse' thread:
+>> https://lore.kernel.org/dri-devel/20200512085710.14688-1-
+>> m.szyprowski@samsung.com/T/
+>> ---
+>> .../media/common/videobuf2/videobuf2-dma-contig.c  | 41 ++++++++++----
+>> --------
+>> drivers/media/common/videobuf2/videobuf2-dma-sg.c  | 32 +++++++--------
+>> --
+>> drivers/media/common/videobuf2/videobuf2-vmalloc.c | 12 +++----
+>> 3 files changed, 34 insertions(+), 51 deletions(-)
+>>
+>> diff --git a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+>> b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+>> index d3a3ee5..bf31a9d 100644
+>> --- a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+>> +++ b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+>> @@ -48,16 +48,15 @@ struct vb2_dc_buf {
+>>
+>> static unsigned long vb2_dc_get_contiguous_size(struct sg_table *sgt)
+>> {
+>> -	struct scatterlist *s;
+>> 	dma_addr_t expected = sg_dma_address(sgt->sgl);
+>> -	unsigned int i;
+>> +	struct sg_dma_page_iter dma_iter;
+>> 	unsigned long size = 0;
+>>
+>> -	for_each_sg(sgt->sgl, s, sgt->nents, i) {
+>> -		if (sg_dma_address(s) != expected)
+>> +	for_each_sgtable_dma_page(sgt, &dma_iter, 0) {
+>> +		if (sg_page_iter_dma_address(&dma_iter) != expected)
+>> 			break;
+>> -		expected = sg_dma_address(s) + sg_dma_len(s);
+>> -		size += sg_dma_len(s);
+>> +		expected += PAGE_SIZE;
+>> +		size += PAGE_SIZE;
+> This code in drm_prime_t_contiguous_size and here.  I seem to remember seeing
+> the same pattern in other drivers.
+>
+> Would it worthwhile to make this a helper as well?
+I think I've identified such patterns in all DRM drivers and replaced 
+with a common helper. So far I have no idea where to put such helper to 
+make it available for media/videobuf2, so those a few lines are indeed 
+duplicated here.
+> Also, isn't the sg_dma_len() the actual length of the chunk we are looking at?
+>
+> If its I not PAGE_SIZE (ie. dma chunk is 4 * PAGE_SIZE?), does your loop/calculation still work?
 
-By default, right now __READ_ONCE() will still generate a call due to
-instrumentation (call to __tsan_readX).
+scaterlist page iterators (for_each_sg_page/for_each_sg_dma_page and 
+their sgtable variants) always operates on PAGE_SIZE units. They 
+correctly handle larger sg_dma_len().
 
-Thanks,
--- Marco
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
