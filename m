@@ -2,141 +2,194 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C83C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89650C54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACCDB206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 624E1206D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:55:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589295344;
+	bh=10Wbibz5MtplL9oNw/JJCifW7QqDUGxQxv2LMOfQXNA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zkKHblIjJiliLHhW3QpJlbC2nXBE+68CQqKJjRyAcvC0fLXuxGs93AmCGSYvsqjvE
+	 FDTQIyK3q/38N4zu9KAb3rSrEh35MNrKO+N5Bm3ECtSA9WZLsfIbAEtTNhFxQukhCb
+	 TvJ7FY4qvKDQ+agHTe5B+YMZQ7tSig8Ke9h059Z8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730515AbgELOzg (ORCPT
+        id S1730525AbgELOzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:55:36 -0400
-Received: from mga05.intel.com ([192.55.52.43]:29542 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730382AbgELOzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:55:11 -0400
-IronPort-SDR: KxMJMbIabyE6yDBT5BN3vL/bSjW7lWFaLF82e1KxesbqygEYIR5DYAw+Q54ohtRjq+F18n5MHp
- LKfpATp2UlLg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 07:55:08 -0700
-IronPort-SDR: ycXa9Zx+oa3bMYzeNsXVx6WidMeyg+KjvHrd4q3baB8WKcIF9fxtE728pgCvjYxrc1zo1dvV9c
- vJ2VSjIqwsTA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,384,1583222400"; 
-   d="scan'208";a="371587810"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by fmsmga001.fm.intel.com with ESMTP; 12 May 2020 07:55:08 -0700
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH v4 04/10] x86/fpu/xstate: Introduce XSAVES supervisor states
-Date:   Tue, 12 May 2020 07:54:38 -0700
-Message-Id: <20200512145444.15483-5-yu-cheng.yu@intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200512145444.15483-1-yu-cheng.yu@intel.com>
-References: <20200512145444.15483-1-yu-cheng.yu@intel.com>
+        Tue, 12 May 2020 10:55:43 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43487 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727958AbgELOzn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 10:55:43 -0400
+Received: by mail-oi1-f195.google.com with SMTP id i22so1854132oik.10;
+        Tue, 12 May 2020 07:55:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fQ/KirqKw6BO2UGDgRcS3zleuiv+6S0ku0zLBHrcdQE=;
+        b=B+WTLvJgFm4p2L6t1i5L9KUz3yO2X6IBwts1XOY58mRbFk7msGAjkoIQvARexAlxGL
+         Jc1Rj7u2iBTgNnQbyECP/XrbwkRQNR8O2inCxwh61RH7hSr2/hbXN+yt5NVWL+JoUZfO
+         tpc5qAIqs8KQUDLTVDQUbDWMihk24ZQRZMKk6uneRKtSQrYdeYP4Gooqztt7v1xTzubf
+         JniJbjMy4IgXjGYG4O27/3mb2dUl0UxVsSzOLkBoiLYg3DFjXedHFkJBn87u1hjTt3KV
+         4/SFA4WX19lumBg9U33/HdjTa3D0CEpHenoxoymPoMg4CGkYjS8kVDGOswOc6SPutEUr
+         +fFQ==
+X-Gm-Message-State: AGi0PuYWP4QQ8pCSePK+6NiCp/be2450kBUCq7epXh9psGGffRPYZ9Op
+        5H1s9mT8SklswgQyjdCsrQ==
+X-Google-Smtp-Source: APiQypKGFg5K792meOQtyk/OqmaGeRZs+OjkzVpOC5F4wC2KYFUclFMd7QTJb3TdXvy6aRGZ9Dv7iw==
+X-Received: by 2002:aca:5513:: with SMTP id j19mr22756944oib.31.1589295342052;
+        Tue, 12 May 2020 07:55:42 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id c84sm5382655oig.37.2020.05.12.07.55.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 07:55:40 -0700 (PDT)
+Received: (nullmailer pid 31636 invoked by uid 1000);
+        Tue, 12 May 2020 14:55:39 -0000
+Date:   Tue, 12 May 2020 09:55:39 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V4 2/5] dt-bindings: clock: Convert i.MX6SX clock to
+ json-schema
+Message-ID: <20200512145539.GA25671@bogus>
+References: <1588207921-20604-1-git-send-email-Anson.Huang@nxp.com>
+ <1588207921-20604-2-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588207921-20604-2-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable XSAVES supervisor states by setting MSR_IA32_XSS bits according to
-CPUID enumeration results.  Also revise comments at various places.
+On Thu, Apr 30, 2020 at 08:51:58AM +0800, Anson Huang wrote:
+> Convert the i.MX6SX clock binding to DT schema format using json-schema.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V3:
+> 	- update license to be with (GPL-2.0-only OR BSD-2-Clause);
+> 	- remove unnecessary minItem for interrupts;
+> 	- remove label in example.
+> ---
+>  .../devicetree/bindings/clock/imx6sx-clock.txt     | 13 -----
+>  .../devicetree/bindings/clock/imx6sx-clock.yaml    | 64 ++++++++++++++++++++++
+>  2 files changed, 64 insertions(+), 13 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/imx6sx-clock.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/imx6sx-clock.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/imx6sx-clock.txt b/Documentation/devicetree/bindings/clock/imx6sx-clock.txt
+> deleted file mode 100644
+> index 22362b9..0000000
+> --- a/Documentation/devicetree/bindings/clock/imx6sx-clock.txt
+> +++ /dev/null
+> @@ -1,13 +0,0 @@
+> -* Clock bindings for Freescale i.MX6 SoloX
+> -
+> -Required properties:
+> -- compatible: Should be "fsl,imx6sx-ccm"
+> -- reg: Address and length of the register set
+> -- #clock-cells: Should be <1>
+> -- clocks: list of clock specifiers, must contain an entry for each required
+> -  entry in clock-names
+> -- clock-names: should include entries "ckil", "osc", "ipp_di0" and "ipp_di1"
+> -
+> -The clock consumer should specify the desired clock by having the clock
+> -ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6sx-clock.h
+> -for the full list of i.MX6 SoloX clock IDs.
+> diff --git a/Documentation/devicetree/bindings/clock/imx6sx-clock.yaml b/Documentation/devicetree/bindings/clock/imx6sx-clock.yaml
+> new file mode 100644
+> index 0000000..2c7f625
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/imx6sx-clock.yaml
+> @@ -0,0 +1,64 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/imx6sx-clock.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Clock bindings for Freescale i.MX6 SoloX
+> +
+> +maintainers:
+> +  - Anson Huang <Anson.Huang@nxp.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: fsl,imx6sx-ccm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 2
 
-Co-developed-by: Fenghua Yu <fenghua.yu@intel.com>
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
----
-v2:
-- Remove printing of supervisor xstates from fpu__init_system_xstate().
+Need to define what each one is:
 
- arch/x86/kernel/fpu/xstate.c | 28 +++++++++++++++++++---------
- 1 file changed, 19 insertions(+), 9 deletions(-)
+interrupts:
+  items:
+    - description: ...
+    - description: ...
 
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index fa71af643025..a68213ed5be6 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -228,13 +228,14 @@ void fpu__init_cpu_xstate(void)
- 	 * states can be set here.
- 	 */
- 	xsetbv(XCR_XFEATURE_ENABLED_MASK, xfeatures_mask_user());
-+
-+	/*
-+	 * MSR_IA32_XSS sets supervisor states managed by XSAVES.
-+	 */
-+	if (boot_cpu_has(X86_FEATURE_XSAVES))
-+		wrmsrl(MSR_IA32_XSS, xfeatures_mask_supervisor());
- }
- 
--/*
-- * Note that in the future we will likely need a pair of
-- * functions here: one for user xstates and the other for
-- * system xstates.  For now, they are the same.
-- */
- static bool xfeature_enabled(enum xfeature xfeature)
- {
- 	return xfeatures_mask_all & BIT_ULL(xfeature);
-@@ -625,9 +626,6 @@ static void do_extra_xstate_size_checks(void)
-  * the size of the *user* states.  If we use it to size a buffer
-  * that we use 'XSAVES' on, we could potentially overflow the
-  * buffer because 'XSAVES' saves system states too.
-- *
-- * Note that we do not currently set any bits on IA32_XSS so
-- * 'XCR0 | IA32_XSS == XCR0' for now.
-  */
- static unsigned int __init get_xsaves_size(void)
- {
-@@ -750,7 +748,12 @@ void __init fpu__init_system_xstate(void)
- 	cpuid_count(XSTATE_CPUID, 0, &eax, &ebx, &ecx, &edx);
- 	xfeatures_mask_all = eax + ((u64)edx << 32);
- 
--	/* Place supervisor features in xfeatures_mask_all here */
-+	/*
-+	 * Find supervisor xstates supported by the processor.
-+	 */
-+	cpuid_count(XSTATE_CPUID, 1, &eax, &ebx, &ecx, &edx);
-+	xfeatures_mask_all |= ecx + ((u64)edx << 32);
-+
- 	if ((xfeatures_mask_user() & XFEATURE_MASK_FPSSE) != XFEATURE_MASK_FPSSE) {
- 		/*
- 		 * This indicates that something really unexpected happened
-@@ -810,6 +813,13 @@ void fpu__resume_cpu(void)
- 	 */
- 	if (boot_cpu_has(X86_FEATURE_XSAVE))
- 		xsetbv(XCR_XFEATURE_ENABLED_MASK, xfeatures_mask_user());
-+
-+	/*
-+	 * Restore IA32_XSS. The same CPUID bit enumerates support
-+	 * of XSAVES and MSR_IA32_XSS.
-+	 */
-+	if (boot_cpu_has(X86_FEATURE_XSAVES))
-+		wrmsrl(MSR_IA32_XSS, xfeatures_mask_supervisor());
- }
- 
- /*
--- 
-2.21.0
+And you should explain why this was added.
 
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: 32k osc
+> +      - description: 24m osc
+> +      - description: ipp_di0 clock input
+> +      - description: ipp_di1 clock input
+> +      - description: anaclk1 clock input
+> +      - description: anaclk2 clock input
+> +
+> +  clock-names:
+> +    items:
+> +      - const: ckil
+> +      - const: osc
+> +      - const: ipp_di0
+> +      - const: ipp_di1
+> +      - const: anaclk1
+> +      - const: anaclk2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - '#clock-cells'
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  # Clock Control Module node:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    clock-controller@20c4000 {
+> +        compatible = "fsl,imx6sx-ccm";
+> +        reg = <0x020c4000 0x4000>;
+> +        interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
+> +        #clock-cells = <1>;
+> +        clocks = <&ckil>, <&osc>, <&ipp_di0>, <&ipp_di1>, <&anaclk1>, <&anaclk2>;
+> +        clock-names = "ckil", "osc", "ipp_di0", "ipp_di1", "anaclk1", "anaclk2";
+> +    };
+> -- 
+> 2.7.4
+> 
