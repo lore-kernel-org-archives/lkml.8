@@ -2,98 +2,104 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 976EAC54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05505C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D3B9206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:53:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589295181;
-	bh=X/7LZNJp6medNXXYa1hSvn26jmA2fs1Mwcif42l7Fg4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LnogQRheoagNtLx3V6iydiVrHsZCsl2D4iaZaIuYB89kSXK6eOq1oSyIXamYkqzbR
-	 jZleEWWWiaVFrPgJh1zOnOCcYRWntfLh/OFYpSLIPigAQci1IU9FIUyKUn09HylTY5
-	 0pOuPmLy+3fJCg9rWfOARHF2HdA8NM1OXQj/NQkc=
+	by mail.kernel.org (Postfix) with ESMTP id D4AC9206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:53:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730248AbgELOxA (ORCPT
+        id S1730359AbgELOxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:53:00 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46636 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725929AbgELOw7 (ORCPT
+        Tue, 12 May 2020 10:53:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729461AbgELOxA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:52:59 -0400
-Received: by mail-ot1-f68.google.com with SMTP id z25so10672616otq.13;
-        Tue, 12 May 2020 07:52:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zvQTYh4b4eUlBTZLUxX1hHRbUDU2+a4tZbKUdGnF3aw=;
-        b=SRzmVqAsJaWsfn0lMAMVnb0PLU0RsHTZJy67X/1Au9Mex2B+bRm+KCZAPJeEyDrIbk
-         98HGSWAH12RkOagZUTcS684fWBN6C8G/Yp3x86ZBdPrlIcxj/D4doL7kbW7H1PQ9qVzN
-         LRkNYVQREy+2jFeGaBMtxhu0+3dnDeYNv96lsy63IFB7ubJ1AZO5GJ22XTpII9bP4SGE
-         12zAsIEV8DvyF8PK/C7PPNNjJ0Eqcv5gpwr0lxpFIU8bS1y6tH67HHr9uSCSNs+9CVB1
-         zSwVDO4cKcQWrxitJumej3cnhYSv2As6iZMNDSQdFrNfZtsZMRLvaeFIn9B5i3R0dCkt
-         AIhQ==
-X-Gm-Message-State: AGi0PuYC9YD2cKKokLBTICeHp9YfaZ8aYYanDZ32QxRDhcChenPNE9+i
-        +tjc7nmXNm/1uph8qs2kdA==
-X-Google-Smtp-Source: APiQypIeWKML2Q2yIs+q1ZFta2wuSTpS8VDHIRQT/NP72fQGGMWPfyUkA8nAi41dFXRwTXFKKHTXJw==
-X-Received: by 2002:a9d:7e99:: with SMTP id m25mr4092098otp.45.1589295178802;
-        Tue, 12 May 2020 07:52:58 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t20sm3475826ott.51.2020.05.12.07.52.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 07:52:58 -0700 (PDT)
-Received: (nullmailer pid 25183 invoked by uid 1000);
-        Tue, 12 May 2020 14:52:56 -0000
-Date:   Tue, 12 May 2020 09:52:56 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Marc Zyngier <maz@kernel.org>, devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-serial@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Jason Cooper <jason@lakedaemon.net>, dmaengine@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 17/18] dt-bindings: gpio: rcar: Add r8a7742 (RZ/G1H)
- support
-Message-ID: <20200512145256.GA25121@bogus>
-References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588197415-13747-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588197415-13747-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 12 May 2020 10:53:00 -0400
+Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26EB7C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 07:53:00 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:81a0:190c:7969:2334])
+        by baptiste.telenet-ops.be with bizsmtp
+        id dqsw220025045R201qswl3; Tue, 12 May 2020 16:52:58 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jYWH9-0001kH-U0; Tue, 12 May 2020 16:52:55 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jYWH9-0001Rl-RC; Tue, 12 May 2020 16:52:55 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2] arm64: cpufeature: Add "or" to mitigations for multiple errata
+Date:   Tue, 12 May 2020 16:52:55 +0200
+Message-Id: <20200512145255.5520-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020 22:56:54 +0100, Lad Prabhakar wrote:
-> Renesas RZ/G1H (R8A7742) SoC GPIO blocks are identical to the R-Car Gen2
-> family. Add support for its GPIO controllers.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Several actions are not mitigations for a single erratum, but for
+multiple errata.  However, printing a line like
 
-Acked-by: Rob Herring <robh@kernel.org>
+    CPU features: detected: ARM errata 1165522, 1530923
+
+may give the false impression that all three listed errata have been
+detected.  This can confuse the user, who may think his Cortex-A55 is
+suddenly affected by a Cortex-A76 erratum.
+
+Add "or" to all descriptions for mitigations for multiple errata, to
+make it clear that only one or more of the errata printed are
+applicable, and not necessarily all of them.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v2:
+  - Rebased on top of arm64 for-next/kconfig, which required updating the
+    example and the explanation.
+
+ arch/arm64/kernel/cpu_errata.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+index df56d2295d165a0d..c8cb98a4fa6d5bf5 100644
+--- a/arch/arm64/kernel/cpu_errata.c
++++ b/arch/arm64/kernel/cpu_errata.c
+@@ -774,7 +774,7 @@ static const struct midr_range erratum_speculative_at_vhe_list[] = {
+ const struct arm64_cpu_capabilities arm64_errata[] = {
+ #ifdef CONFIG_ARM64_WORKAROUND_CLEAN_CACHE
+ 	{
+-		.desc = "ARM errata 826319, 827319, 824069, 819472",
++		.desc = "ARM errata 826319, 827319, 824069, or 819472",
+ 		.capability = ARM64_WORKAROUND_CLEAN_CACHE,
+ 		ERRATA_MIDR_RANGE_LIST(workaround_clean_cache),
+ 		.cpu_enable = cpu_enable_cache_maint_trap,
+@@ -856,7 +856,7 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
+ #endif
+ #ifdef CONFIG_ARM64_WORKAROUND_REPEAT_TLBI
+ 	{
+-		.desc = "Qualcomm erratum 1009, ARM erratum 1286807",
++		.desc = "Qualcomm erratum 1009, or ARM erratum 1286807",
+ 		.capability = ARM64_WORKAROUND_REPEAT_TLBI,
+ 		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
+ 		.matches = cpucap_multi_entry_cap_matches,
+@@ -899,7 +899,7 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
+ #endif
+ #ifdef CONFIG_ARM64_WORKAROUND_SPECULATIVE_AT_VHE
+ 	{
+-		.desc = "ARM errata 1165522, 1530923",
++		.desc = "ARM errata 1165522 or 1530923",
+ 		.capability = ARM64_WORKAROUND_SPECULATIVE_AT_VHE,
+ 		ERRATA_MIDR_RANGE_LIST(erratum_speculative_at_vhe_list),
+ 	},
+-- 
+2.17.1
+
