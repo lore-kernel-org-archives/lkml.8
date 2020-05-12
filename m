@@ -2,118 +2,89 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E120C54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DEEAC54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD4220A8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:50:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="WGIsw95l"
+	by mail.kernel.org (Postfix) with ESMTP id 6176620882
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:50:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589266229;
+	bh=lTIhgkgLP0hHM7ScFLiBRwL3GQ7PRb7fhu4G5yrO89I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2TVpjZfyNtQFkeC/o/4BDLd8iiL+8Ua2ePjLCNHQxxcdDgqChLGiCkWdPRWJGgWRk
+	 FVZURjVCIJwnRaWTXOPzRHLbYrET+KbI78feGizJTzAKhTl6kEAuYgTcBLQPbybNI0
+	 pKJXNWQVp5UgYRAOqPTv6mH3OVK8pL+3ZDKBYOIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728928AbgELGuW (ORCPT
+        id S1728940AbgELGu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 02:50:22 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:5742 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725823AbgELGuW (ORCPT
+        Tue, 12 May 2020 02:50:29 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:44658 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728525AbgELGu2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 02:50:22 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04C6mDFD014173;
-        Tue, 12 May 2020 08:49:58 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=iEKjer/AUZHyZOt8W1uqSZTqu50DObD4a45HBZNn1gg=;
- b=WGIsw95lqD0h3WMhec/jt5cW8wF8MlhfrFKGP/m06rYBvMAlXVCoO0WSKxYFbboKoxmZ
- D0rtymgEp5jsRaZcCf1ON6ck6FQb1fhal73CUajnkQRUvvhEbqQJEMlPA/iVdUALLAw7
- JeQrggkQ81PpYnIfDJHkGbVBehC0DcdJbsTYtgcVFE4Yk9lBkIAom7oXKfJ2G8ZNQm0c
- U/mMkY9GHTTVaOMCp+UtVazLUAg0REwjobdpNhBPNmqiK7FUZbfonJZKZ6sdYPswEyMU
- ra6sXeG8e8tlvbALus+swRodDS9Fsvk2kjSTQxCRX5uB9AdGv1INMl0TJ4eCzMxWX8DZ BA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 30whn9ekuy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 May 2020 08:49:58 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D6295100034;
-        Tue, 12 May 2020 08:49:57 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B8BCD221A49;
-        Tue, 12 May 2020 08:49:57 +0200 (CEST)
-Received: from [10.211.13.100] (10.75.127.46) by SFHDAG6NODE2.st.com
- (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 12 May
- 2020 08:49:56 +0200
-Subject: Re: [PATCH v4 04/10] mtd: rawnand: stm32_fmc2: cleanup
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-CC:     <richard@nod.at>, <vigneshr@ti.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <gregkh@linuxfoundation.org>,
-        <boris.brezillon@collabora.com>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <devicetree@vger.kernel.org>, <marex@denx.de>
-References: <1588756279-17289-1-git-send-email-christophe.kerello@st.com>
- <1588756279-17289-5-git-send-email-christophe.kerello@st.com>
- <20200511223900.030fe5f4@xps13>
-From:   Christophe Kerello <christophe.kerello@st.com>
-Message-ID: <49c51a13-96a1-0241-f4d1-c5ff7d52921d@st.com>
-Date:   Tue, 12 May 2020 08:49:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 12 May 2020 02:50:28 -0400
+Received: by mail-ed1-f68.google.com with SMTP id r7so10169983edo.11;
+        Mon, 11 May 2020 23:50:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NGCmQRwn70jwSoE1rVBW7nYUdi0rleIM1+a6lKcmx6Y=;
+        b=BEdokAKhE09o17Ib6jqnZ1D20IGifvKr+19ie8b0UruQCQc+xIjqzQkyM4kcCT13eN
+         oI/jSf/zeHdoNJbci7Y300tG66KgzruR9ERSkOfY7d8G1an9HG6Fb2TFXZaq6Yz1lGSD
+         ZuwATDcs9xy8bi5JsK53SV7j6R6d8xACLzkl2GKUQ/7MnzO1030y4fjgl4jMs+Z7w32B
+         950h30X+VDrrpy+ErAhaA8Pg/n0mXLx9NychTPhxgwYZuEhSEqArw/eLxEP/HXAencrv
+         Hnc/0SJJ9unHS379ORlI2jvIdfPcYpkM0KF5D2pDc22K0+HJMxK2+cql4JcO9niF26o5
+         UAhw==
+X-Gm-Message-State: AGi0PuakzhgipJfP4AQ/0P62+mL+1AFF6hSqR2n3nnnR2xMkSFDp45p4
+        1ko83twTYsJMhPWv3/zgRns=
+X-Google-Smtp-Source: APiQypJRBoTPk3w4SSl5+ddox+FzeAD0bP+sdgUJjGYIvF+5BKJVf2SdadvJzdj8oe1Rhj3tuk/VMw==
+X-Received: by 2002:a50:eb0a:: with SMTP id y10mr16683538edp.312.1589266226225;
+        Mon, 11 May 2020 23:50:26 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.237])
+        by smtp.googlemail.com with ESMTPSA id m5sm1601440edq.71.2020.05.11.23.50.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 May 2020 23:50:25 -0700 (PDT)
+Date:   Tue, 12 May 2020 08:50:23 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Bernard Zhao <bernard@vivo.com>, Lukasz Luba <lukasz.luba@arm.com>
+Cc:     Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        opensource.kernel@vivo.com
+Subject: Re: [PATCH] memory/samsung: reduce unnecessary mutex lock area
+Message-ID: <20200512065023.GA10741@kozik-lap>
+References: <20200508131338.32956-1-bernard@vivo.com>
 MIME-Version: 1.0
-In-Reply-To: <20200511223900.030fe5f4@xps13>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-12_01:2020-05-11,2020-05-12 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200508131338.32956-1-bernard@vivo.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Miquel,
-
-On 5/11/20 10:39 PM, Miquel Raynal wrote:
+On Fri, May 08, 2020 at 06:13:38AM -0700, Bernard Zhao wrote:
+> Maybe dmc->df->lock is unnecessary to protect function
+> exynos5_dmc_perf_events_check(dmc). If we have to protect,
+> dmc->lock is more better and more effective.
+> Also, it seems not needed to protect "if (ret) & dev_warn"
+> branch.
 > 
-> Christophe Kerello <christophe.kerello@st.com> wrote on Wed, 6 May 2020
-> 11:11:13 +0200:
-> 
->> This patch renames functions and local variables.
->> This cleanup is done to get all functions starting by stm32_fmc2_nfc
->> in the FMC2 raw NAND driver when all functions will start by
->> stm32_fmc2_ebi in the FMC2 EBI driver.
->>
->> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
->> Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> 
-> Applied to nand/next as well but for an unknown reason I had to do it
-> by hand because the patch would not apply.
-> 
-> Thanks,
-> Miquèl
-> 
-This is strange, I can apply this patch on my tree without any conflicts.
-There is a compilation issue line 1301.
+> Signed-off-by: Bernard Zhao <bernard@vivo.com>
+> ---
+>  drivers/memory/samsung/exynos5422-dmc.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 
-@@ -1302,44 +1298,45 @@ static void stm32_fmc2_write_data(struct 
-nand_chip *chip, const void *buf,
+I checked the concurrent accesses and it looks correct.
 
-  	if (force_8bit && chip->options & NAND_BUSWIDTH_16)
-  		/* Reconfigure bus width to 16-bit */
--		stm32_fmc2_set_buswidth_16(fmc2, true);
-+		stm32_fmc2_nfc_set_buswidth_16(nfc, true);
-  }
+Lukasz, any review from your side?
 
-I will rebase on top of nand/next today to check that there is no issues 
-with the driver.
-
-Regards,
-Christophe Kerello.
+Best regards,
+Krzysztof
