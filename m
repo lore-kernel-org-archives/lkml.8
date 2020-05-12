@@ -2,74 +2,83 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A16C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6658FC2D0F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B133B20659
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589318157;
-	bh=XvZxm2hSXPiNKLKl7CGs7GarLHnfumwwmYvUniaBcoY=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=vy62f4PeYGaAvNPy1jRgSxnXa/I6nRk8OWt0vmn6YutMsEUvZqNk7ByarcG/1phUa
-	 Xf01hIR5qAqnptZNFTCjU5e16dGxOQeGP8PJexsuxHrruxblBzCN24E4OlmINJQ8NR
-	 DSooQF405WcA2QJEETudhN1t2mOOVdIBnwEyRLxk=
+	by mail.kernel.org (Postfix) with ESMTP id 43E0720784
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:26:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731467AbgELVP5 (ORCPT
+        id S1731310AbgELV0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 17:15:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58722 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731328AbgELVP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 17:15:56 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A8CE205C9;
-        Tue, 12 May 2020 21:15:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589318156;
-        bh=XvZxm2hSXPiNKLKl7CGs7GarLHnfumwwmYvUniaBcoY=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=WJSxCSCVAFBsMybFbf4JhjZeO2TdLfSeryIJ4twq+grn3AGotJk5W9yigORoZwQJh
-         LlKoKNPIb3TtWIGlZhXU07Hfx+BYtNo+IPpBM1/R6hu/dSZFDs5N+8TtO19uoDvXky
-         sljOq1NfUUyaoFdSGyJTziv/uJm3oEVmVZopkFyk=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 12 May 2020 17:26:55 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:55108 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728313AbgELV0y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 17:26:54 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 2AEE9803080B;
+        Tue, 12 May 2020 21:26:52 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 91xGUihf2XO6; Wed, 13 May 2020 00:26:51 +0300 (MSK)
+Date:   Wed, 13 May 2020 00:26:50 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/17] spi: dw: Cleanup generic DW DMA code namings
+Message-ID: <20200512212650.bmq5i3mrl5mydcvz@mobilestation>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508132943.9826-5-Sergey.Semin@baikalelectronics.ru>
+ <20200508194324.GA185537@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200506123236.7463-3-geert+renesas@glider.be>
-References: <20200506123236.7463-1-geert+renesas@glider.be> <20200506123236.7463-3-geert+renesas@glider.be>
-Subject: Re: [PATCH 2/2] memory: tegra: Drop <linux/clk-provider.h>
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Frank Rowand <frowand.list@gmail.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Joseph Lo <josephl@nvidia.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Date:   Tue, 12 May 2020 14:15:55 -0700
-Message-ID: <158931815547.215346.2885341861306432686@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200508194324.GA185537@smile.fi.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Geert Uytterhoeven (2020-05-06 05:32:36)
-> The Tegra EMC scaling support code is not a clock provider, but merely a
-> clock consumer, and thus does not need to include
-> <linux/clk-provider.h>.
->=20
-> Fixes: ec37a9a17afbfad5 ("memory: tegra: Add EMC scaling support code for=
- Tegra210")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
+On Fri, May 08, 2020 at 10:43:24PM +0300, Andy Shevchenko wrote:
+> On Fri, May 08, 2020 at 04:29:29PM +0300, Serge Semin wrote:
+> > Since from now the former Intel MID platform layer will be used
+> > as a generic DW SPI DMA module, lets alter the internal methods
+> > naming to be DMA-related instead of having the "mid_" prefix. In
+> > addition the DW PCI-DMA specific methods and structures should
+> > be named with pci-suffexes, since we'll implement the DW MMIO DMA
+> > specific functions and objects soon.
+> 
+> I think we rather leave Intel Medfield things alone.  And I think I did this already in spi/for-next in less invasive way.
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+The naming is horrible in that module. Since it's going to be a generic DMA
+driver the prefixes should be correspondingly fixed. Currently they are a bit
+random.
+
+-Sergey
+
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
