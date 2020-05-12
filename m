@@ -2,116 +2,125 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 912FAC54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78285C54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7164F20733
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D6BD206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:33:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NhzuZATN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sMw5Ou1D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728960AbgELHdG (ORCPT
+        id S1728982AbgELHdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 03:33:06 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:31885 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728416AbgELHdF (ORCPT
+        Tue, 12 May 2020 03:33:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727859AbgELHdf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 03:33:05 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589268785; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=PV0ffuseEJPvIxcDvTKmfLCk6MMv4KR9on4py3/Gz28=;
- b=NhzuZATNf1+jd6McW8VOhVVl+s8NeWKwMuxd92inxertaj5PB4BBGtZ4pIOR8ohJo5KLiO0v
- +LVQyFywLFE4ejqsWEDp2uvVXiZrntAmTcKiHvOMyoLBU5458RPc9wbWRNg0mzFS6kHyz5KS
- LXJG173Fg1uqUDflEZAHBDnDLxk=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5eba5118.7fecd11f1fb8-smtp-out-n03;
- Tue, 12 May 2020 07:32:40 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 349C9C44788; Tue, 12 May 2020 07:32:40 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DB041C433CB;
-        Tue, 12 May 2020 07:32:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DB041C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 12 May 2020 03:33:35 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 953E9C061A0C;
+        Tue, 12 May 2020 00:33:35 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id n5so7174195wmd.0;
+        Tue, 12 May 2020 00:33:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=jqkgqmkJOKoKq9LVMSsdUKqLeUylhGstfJdiNW1m0pU=;
+        b=sMw5Ou1DxQ0gDVShwnb+r0jVY9OgvPxlTdxCYMUjeHxnjkdnMZEHlB/ETLFPEyrQTV
+         f3UPUtvn02e8incuNsrA11dODEo8ERiZctXWIS9t+3PUT1b2uMacgCg3/Ld5pqCI6iSS
+         jHNB9PxINIhrl5lkZjVJuurycwFhX7NfNY5F1P7ObmQLDN6gOj+iBSUkifaxIlHcgIaV
+         R3TvhWGCzwiwQ8CDEHA0GKqkXovGyr1DhUAs93B7lppeobuG6EQ+WncjtZN1nOtfxt01
+         F1pfYC+jfYvXSiySnTpWSwVxAj0mPGkNxduwk6Jgf4NEyPx2ePn7ttz4TKL+dz5uhjQq
+         pAzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=jqkgqmkJOKoKq9LVMSsdUKqLeUylhGstfJdiNW1m0pU=;
+        b=hNDZAGuAPuUgEAy741Xw+F4AP0e8XZj33tyFEIFZL88aAlVtsnxmTMmkYLe3eFgVbf
+         741Rwy8Nb/2EPjCEuoI7TvQWlOZAPZjXI/yoK9gVz0hQzn5ym35IXpXkQOMGqc32Np3U
+         ea47R387xxvW2GWAnfTGTwmIHCeFSHL61IoDXIgFjxJOYk4ecISv2KfYOmX0jHMoLuvR
+         c0WwdQv6hgxxH+dcmdu5bIugxKg3RDsoT8ibwlhyyr4iRlOKAQzmqMROir+8B4WwqP9k
+         dkSf1IL88mGTbfIMjzDVZU8eYIdI8USXpXodO1aJfmLW8z4QeifrumH3bD9BdAbxd2c2
+         5Ggw==
+X-Gm-Message-State: AGi0PubwujMnRYfafDGeQqx/5lBAMWZ2nTcPK3oYw5J0KlaonS4Az6BN
+        b/q35YYXIMBxIp7StlQo63E=
+X-Google-Smtp-Source: APiQypLLSffxSVovV7tqZUrpdXOgAzbPqHBnVWM76vtOVvD70huOXD6rxYEtuZXYxJgRz4MPLxVK8w==
+X-Received: by 2002:a7b:c74d:: with SMTP id w13mr34531649wmk.36.1589268814233;
+        Tue, 12 May 2020 00:33:34 -0700 (PDT)
+Received: from skynet.lan (198.red-83-49-57.dynamicip.rima-tde.net. [83.49.57.198])
+        by smtp.gmail.com with ESMTPSA id d9sm5961197wmd.10.2020.05.12.00.33.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 00:33:33 -0700 (PDT)
+From:   =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+To:     computersforpeace@gmail.com, kdasu.kdev@gmail.com,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        sumit.semwal@linaro.org, linux-mtd@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Cc:     =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>
+Subject: [PATCH v2 1/5] mtd: rawnand: brcmnand: rename v4 registers
+Date:   Tue, 12 May 2020 09:33:25 +0200
+Message-Id: <20200512073329.742893-2-noltari@gmail.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200512073329.742893-1-noltari@gmail.com>
+References: <20200510151406.2527856-1-noltari@gmail.com>
+ <20200512073329.742893-1-noltari@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] carl9170: Replace zero-length array with flexible-array
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200507151921.GA5083@embeddedor>
-References: <20200507151921.GA5083@embeddedor>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Christian Lamparter <chunkeey@googlemail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200512073240.349C9C44788@smtp.codeaurora.org>
-Date:   Tue, 12 May 2020 07:32:40 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+These registers are also used on v3.3.
 
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ v2: fix commit title.
 
-Patch applied to ath-next branch of ath.git, thanks.
+ drivers/mtd/nand/raw/brcmnand/brcmnand.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-103dc3dab295 carl9170: Replace zero-length array with flexible-array
-
+diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+index e4e3ceeac38f..6a08dd07b058 100644
+--- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
++++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+@@ -338,8 +338,8 @@ enum brcmnand_reg {
+ 	BRCMNAND_FC_BASE,
+ };
+ 
+-/* BRCMNAND v4.0 */
+-static const u16 brcmnand_regs_v40[] = {
++/* BRCMNAND v3.3-v4.0 */
++static const u16 brcmnand_regs_v33[] = {
+ 	[BRCMNAND_CMD_START]		=  0x04,
+ 	[BRCMNAND_CMD_EXT_ADDRESS]	=  0x08,
+ 	[BRCMNAND_CMD_ADDRESS]		=  0x0c,
+@@ -591,8 +591,8 @@ static int brcmnand_revision_init(struct brcmnand_controller *ctrl)
+ 		ctrl->reg_offsets = brcmnand_regs_v60;
+ 	else if (ctrl->nand_version >= 0x0500)
+ 		ctrl->reg_offsets = brcmnand_regs_v50;
+-	else if (ctrl->nand_version >= 0x0400)
+-		ctrl->reg_offsets = brcmnand_regs_v40;
++	else if (ctrl->nand_version >= 0x0303)
++		ctrl->reg_offsets = brcmnand_regs_v33;
+ 
+ 	/* Chip-select stride */
+ 	if (ctrl->nand_version >= 0x0701)
 -- 
-https://patchwork.kernel.org/patch/11534317/
+2.26.2
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
