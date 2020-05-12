@@ -2,293 +2,78 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC333C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB47C54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A38AF20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:01:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589248890;
-	bh=rSe+I3B389aDXd1BJNpJ2TUH9gHPelozj9Un2tmxTlQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wxIoea+V8B152zPY6X3VYLMLHVWiJUvPGAaOpJRNkHEXSlu7Fw0fNqIfXHGpMGCFy
-	 0n59hiBEt83PYO1AcEabfXF4qyt2X6jCxET0I2wFZygRdbGr4a5CXtcOT7P0VN3rHs
-	 bXWpCjiefNHFf97D8pnzg6Uy5fdUI74CK6om+cqs=
+	by mail.kernel.org (Postfix) with ESMTP id D6C5B206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 02:03:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XI8GlVq7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728537AbgELCBa (ORCPT
+        id S1728549AbgELCDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 22:01:30 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45748 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727892AbgELCB3 (ORCPT
+        Mon, 11 May 2020 22:03:20 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:12799 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728073AbgELCDT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 22:01:29 -0400
-Received: by mail-oi1-f196.google.com with SMTP id k133so16736039oih.12;
-        Mon, 11 May 2020 19:01:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=czrIsdP31tdcxDtB1xe4T17Dg1vLDkIDYdtdygiUTRo=;
-        b=MNwXB6tjvtR2LoarcSdmXUtD8jQoeuwk5DvKSQ0idPhpti5RCW366AW+k8BgNsq9Cm
-         70BOa95/KJilI0O2lumqCEER5B/OE5ebWP0uW9y+5OZWPoByvjKIxacdzDjMjG4GmEo5
-         MZe3gDVms/2DKXffLNeRV4/BxAK2KtfdmA+BXafXvvhLbrLZbmpwbDVz+9LNDtGmUvo4
-         PYY0Uq9LFg6ikZn603R11bzh7FD8LDZnkU08PRvKIVOzVSoKhRs6QFO6vcv74i2tYfQN
-         o6zma0G+FgVKloTqFo/Y3sjykqkUIctCX9zNjTmhcJnA3+zs0QofVPphgLcHG9KiCcRT
-         uHtg==
-X-Gm-Message-State: AGi0PuZazfsqsgdNps31KiaGA9Kxt0oYZM0/FDKTSRMKVJ4xauJ0FCI0
-        pETsB2Z7Z9Te+r9TXH7dDw==
-X-Google-Smtp-Source: APiQypLgYcOz8qrWFrjJhzlHKPYHwX9/yN/oW9ISWgjWp+EMSVnfdHDAulPu0L/QF7egHog7BK6v9A==
-X-Received: by 2002:aca:4e10:: with SMTP id c16mr21922126oib.140.1589248887866;
-        Mon, 11 May 2020 19:01:27 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 60sm3120813oth.38.2020.05.11.19.01.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 19:01:27 -0700 (PDT)
-Received: (nullmailer pid 26411 invoked by uid 1000);
-        Tue, 12 May 2020 02:01:26 -0000
-Date:   Mon, 11 May 2020 21:01:26 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] dt-bindings: net: Convert UniPhier AVE4 controller
- to json-schema
-Message-ID: <20200512020126.GA22178@bogus>
-References: <1588055482-13012-1-git-send-email-hayashi.kunihiko@socionext.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588055482-13012-1-git-send-email-hayashi.kunihiko@socionext.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 11 May 2020 22:03:19 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589248999; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=x0TSpUhkeXeTC9dUNUB8kN5ovjs7zf0zTQz2/win20k=; b=XI8GlVq7n+4cD7Dm4qnr026WvI6NdUQ5ttk2CBPkdh0jctjO2Zt27n8bxC3dWkFIZyI6xovc
+ srtXXek7p+7YuZJfiMWed3arW+00jCak+tshhdkiww/jovui2gjvCKjNM1DB8EJP08XB/fWv
+ 1i2LmuS1dXJzh3C1XVpNfWAGrCE=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eba03e5.7fae597371b8-smtp-out-n05;
+ Tue, 12 May 2020 02:03:17 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 39B7EC43637; Tue, 12 May 2020 02:03:17 +0000 (UTC)
+Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: hemantk)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 18A21C433CB;
+        Tue, 12 May 2020 02:03:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 18A21C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
+From:   Hemant Kumar <hemantk@codeaurora.org>
+To:     manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jhugo@codeaurora.org, bbhatt@codeaurora.org,
+        Hemant Kumar <hemantk@codeaurora.org>
+Subject: [PATCH v1 0/5] MHI Misc Fixes
+Date:   Mon, 11 May 2020 19:03:04 -0700
+Message-Id: <1589248989-23824-1-git-send-email-hemantk@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 03:31:22PM +0900, Kunihiko Hayashi wrote:
-> Convert the UniPhier AVE4 controller binding to DT schema format.
-> This changes phy-handle property to required.
-> 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  .../bindings/net/socionext,uniphier-ave4.txt       |  64 ------------
->  .../bindings/net/socionext,uniphier-ave4.yaml      | 109 +++++++++++++++++++++
->  MAINTAINERS                                        |   2 +-
->  3 files changed, 110 insertions(+), 65 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
->  create mode 100644 Documentation/devicetree/bindings/net/socionext,uniphier-ave4.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
-> deleted file mode 100644
-> index 4e85fc4..0000000
-> --- a/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
-> +++ /dev/null
-> @@ -1,64 +0,0 @@
-> -* Socionext AVE ethernet controller
-> -
-> -This describes the devicetree bindings for AVE ethernet controller
-> -implemented on Socionext UniPhier SoCs.
-> -
-> -Required properties:
-> - - compatible: Should be
-> -	- "socionext,uniphier-pro4-ave4" : for Pro4 SoC
-> -	- "socionext,uniphier-pxs2-ave4" : for PXs2 SoC
-> -	- "socionext,uniphier-ld11-ave4" : for LD11 SoC
-> -	- "socionext,uniphier-ld20-ave4" : for LD20 SoC
-> -	- "socionext,uniphier-pxs3-ave4" : for PXs3 SoC
-> - - reg: Address where registers are mapped and size of region.
-> - - interrupts: Should contain the MAC interrupt.
-> - - phy-mode: See ethernet.txt in the same directory. Allow to choose
-> -	"rgmii", "rmii", "mii", or "internal" according to the PHY.
-> -	The acceptable mode is SoC-dependent.
-> - - phy-handle: Should point to the external phy device.
-> -	See ethernet.txt file in the same directory.
-> - - clocks: A phandle to the clock for the MAC.
-> -	For Pro4 SoC, that is "socionext,uniphier-pro4-ave4",
-> -	another MAC clock, GIO bus clock and PHY clock are also required.
-> - - clock-names: Should contain
-> -	- "ether", "ether-gb", "gio", "ether-phy" for Pro4 SoC
-> -	- "ether" for others
-> - - resets: A phandle to the reset control for the MAC. For Pro4 SoC,
-> -	GIO bus reset is also required.
-> - - reset-names: Should contain
-> -	- "ether", "gio" for Pro4 SoC
-> -	- "ether" for others
-> - - socionext,syscon-phy-mode: A phandle to syscon with one argument
-> -	that configures phy mode. The argument is the ID of MAC instance.
-> -
-> -The MAC address will be determined using the optional properties
-> -defined in ethernet.txt.
-> -
-> -Required subnode:
-> - - mdio: A container for child nodes representing phy nodes.
-> -         See phy.txt in the same directory.
-> -
-> -Example:
-> -
-> -	ether: ethernet@65000000 {
-> -		compatible = "socionext,uniphier-ld20-ave4";
-> -		reg = <0x65000000 0x8500>;
-> -		interrupts = <0 66 4>;
-> -		phy-mode = "rgmii";
-> -		phy-handle = <&ethphy>;
-> -		clock-names = "ether";
-> -		clocks = <&sys_clk 6>;
-> -		reset-names = "ether";
-> -		resets = <&sys_rst 6>;
-> -		socionext,syscon-phy-mode = <&soc_glue 0>;
-> -		local-mac-address = [00 00 00 00 00 00];
-> -
-> -		mdio {
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -
-> -			ethphy: ethphy@1 {
-> -				reg = <1>;
-> -			};
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.yaml b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.yaml
-> new file mode 100644
-> index 0000000..fd31e87
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/socionext,uniphier-ave4.yaml
-> @@ -0,0 +1,109 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/socionext,uniphier-ave4.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Socionext AVE ethernet controller
-> +
-> +maintainers:
-> +  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> +
-> +description: |
-> +  This describes the devicetree bindings for AVE ethernet controller
-> +  implemented on Socionext UniPhier SoCs.
-> +
-> +allOf:
-> +  - $ref: ethernet-controller.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - socionext,uniphier-pro4-ave4
-> +      - socionext,uniphier-pxs2-ave4
-> +      - socionext,uniphier-ld11-ave4
-> +      - socionext,uniphier-ld20-ave4
-> +      - socionext,uniphier-pxs3-ave4
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  phy-mode:
-> +    $ref: ethernet-controller.yaml#/properties/phy-mode
-> +
-> +  phy-handle:
-> +    $ref: ethernet-controller.yaml#/properties/phy-handle
+Patches are addressing MHI core driver bug fixes. Patches tested on
+arm64 and x86 platforms.
 
-No need for these $ref, the 1st reference did this. Just:
+Hemant Kumar (5):
+  bus: mhi: core: Remove the system error worker thread
+  bus: mhi: core: Handle disable transitions in state worker
+  bus: mhi: core: Skip handling BHI irq if MHI reg access is not allowed
+  bus: mhi: core: Do not process SYS_ERROR if RDDM is supported
+  bus: mhi: core: Handle write lock properly in mhi_pm_m0_transition
 
-phy-mode: true
+ drivers/bus/mhi/core/init.c     |  3 ++-
+ drivers/bus/mhi/core/internal.h |  4 +++-
+ drivers/bus/mhi/core/main.c     | 38 +++++++++++++++++++----------
+ drivers/bus/mhi/core/pm.c       | 53 ++++++++++++++++++++++++-----------------
+ include/linux/mhi.h             |  2 --
+ 5 files changed, 61 insertions(+), 39 deletions(-)
 
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 4
-> +
-> +  clock-names:
-> +    oneOf:
-> +      - items:          # for Pro4
-> +        - const: gio
-> +        - const: ether
-> +        - const: ether-gb
-> +        - const: ether-phy
-> +      - const: ether    # for others
-> +
-> +  resets:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  reset-names:
-> +    oneOf:
-> +      - items:          # for Pro4
-> +        - const: gio
-> +        - const: ether
-> +      - const: ether    # for others
-> +
-> +  socionext,syscon-phy-mode:
-> +    $ref: /schemas/types.yaml#definitions/phandle-array
-> +    description:
-> +      A phandle to syscon with one argument that configures phy mode.
-> +      The argument is the ID of MAC instance.
-> +
-> +  mdio:
-> +    $ref: mdio.yaml#
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - phy-mode
-> +  - phy-handle
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - reset-names
-> +  - mdio
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    ether: ethernet@65000000 {
-> +        compatible = "socionext,uniphier-ld20-ave4";
-> +                reg = <0x65000000 0x8500>;
-> +                interrupts = <0 66 4>;
-> +                phy-mode = "rgmii";
-> +                phy-handle = <&ethphy>;
-> +                clock-names = "ether";
-> +                clocks = <&sys_clk 6>;
-> +                reset-names = "ether";
-> +                resets = <&sys_rst 6>;
-> +                socionext,syscon-phy-mode = <&soc_glue 0>;
-> +
-> +                mdio {
-> +                        #address-cells = <1>;
-> +                        #size-cells = <0>;
-> +
-> +                        ethphy: ethernet-phy@1 {
-> +                                reg = <1>;
-> +                        };
-> +                };
-> +        };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a1558eb..0ee65e2 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15590,7 +15590,7 @@ SOCIONEXT (SNI) AVE NETWORK DRIVER
->  M:	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->  L:	netdev@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/devicetree/bindings/net/socionext,uniphier-ave4.txt
-> +F:	Documentation/devicetree/bindings/net/socionext,uniphier-ave4.yaml
->  F:	drivers/net/ethernet/socionext/sni_ave.c
->  
->  SOCIONEXT (SNI) NETSEC NETWORK DRIVER
-> -- 
-> 2.7.4
-> 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
