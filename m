@@ -2,62 +2,103 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 003A6CA90BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F29AEC2D0F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEC0D206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C74BD206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:37:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589297859;
+	bh=59cWjsJmqwrPrpWRr+PyhVPdugsPTOOknpFbnpzC0vE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=evWpKJK6E/dliNYWoh+Od3HrjAjLE+GPXSyChOLFM8trfnQB1JdpusvHE/ifuhbHE
+	 BZ2KZSWFU6YZiqrMUU9kHCiya9D9XnP4gTDSnKdUkkczHcQOSM7qbG5ZnfUJw8CS3a
+	 IqmlORBo5cJs/aVMz1krLQSwa5kIuiZe/0DFoOLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730836AbgELPhb (ORCPT
+        id S1730854AbgELPhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 11:37:31 -0400
-Received: from v6.sk ([167.172.42.174]:53270 "EHLO v6.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727847AbgELPh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 11:37:29 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id 0A134610A8;
-        Tue, 12 May 2020 15:36:57 +0000 (UTC)
-Date:   Tue, 12 May 2020 17:36:54 +0200
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH 07/11] ASoC: mmp-sspa: Prepare/unprepare the clocks
-Message-ID: <20200512153654.GB604838@furthur.local>
-References: <20200511210134.1224532-1-lkundrak@v3.sk>
- <20200511210134.1224532-8-lkundrak@v3.sk>
- <20200512124520.GH5110@sirena.org.uk>
+        Tue, 12 May 2020 11:37:39 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34017 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727847AbgELPhi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 11:37:38 -0400
+Received: by mail-oi1-f194.google.com with SMTP id c12so17589927oic.1;
+        Tue, 12 May 2020 08:37:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PCyVx6YxchGHNw6iJ+ojabd2z3U8e+KigXbn5+BW+HM=;
+        b=J03VJ5/SPvSQt6f1Fe4ytraUMBwkvGTlYPlMlAa5Ku37lufCQmN6H9RrgpCqvoV4wf
+         R8hK3NienpuGlXrKdRmn3Of/7EY7UaST8nLpdrMDc62u9fT4841pzHzFeVWro+OpG6VP
+         Sj1XDF0V3IFRoSrSsHGr/wUZe7lLfZVHkn4CfUuYKtl4yJoyCPUdsT59nktftw50o8zI
+         K6g1+f2rlsL70j4HUOAJt4uM230h66WTurd6LPbm69hBWtuapq3uH28NwrlD/feNZUHM
+         fO0KXmT6JD7YXl8OlbyY44TjOZQ3qv9A5n5BmIswye6NnCz8mdFbT9xM6K+miQc0Ntvv
+         o8bg==
+X-Gm-Message-State: AGi0PuaRsrfhYd/8KL/c4ezFtEXxS6/muTe+tGilr1MA4Aq+xGn6vDwG
+        vcnPRKpcoKaTn99Ng3kxUA==
+X-Google-Smtp-Source: APiQypKNT+mcx7T9+iUMFNsVArR3hQ4oj99NzmMx2VYonYzt1n3FPZS5ZEefObr7Lq8RTsR/f9TlMA==
+X-Received: by 2002:aca:7504:: with SMTP id q4mr23486434oic.31.1589297856746;
+        Tue, 12 May 2020 08:37:36 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id i81sm424098oif.26.2020.05.12.08.37.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 08:37:35 -0700 (PDT)
+Received: (nullmailer pid 24510 invoked by uid 1000);
+        Tue, 12 May 2020 15:37:34 -0000
+Date:   Tue, 12 May 2020 10:37:34 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Pavel Machek <pavel@ucw.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        linux-serial@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org, linux-omap@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Johan Hovold <johan@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/6] dt-bindings: serdev: ngsm: Add binding for
+ serdev-ngsm
+Message-ID: <20200512153734.GA24449@bogus>
+References: <20200430174615.41185-1-tony@atomide.com>
+ <20200430174615.41185-3-tony@atomide.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200512124520.GH5110@sirena.org.uk>
+In-Reply-To: <20200430174615.41185-3-tony@atomide.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 01:45:20PM +0100, Mark Brown wrote:
-> On Mon, May 11, 2020 at 11:01:30PM +0200, Lubomir Rintel wrote:
-> > The driver enables the clocks without preparing them and disables
-> > without unpreparing afterwards. Fix that.
+On Thu, 30 Apr 2020 10:46:11 -0700, Tony Lindgren wrote:
+> Add a binding document for a generic serdev-ngsm driver that can be
+> used to bring up TS 27.010 line discipline with Linux n_gsm support
+> on a serial port.
 > 
-> This fix should've been earlier in the series so it could be sent as a
-> fix.
+> As the Motorola Mapphone modems require some custom handling, they
+> are handled with a separate compatible.
+> 
+> Let's also add vendor string for ETSI as we're using a ETSI 3GPP
+> TS 27.010 standard.
+> 
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+>  .../bindings/serdev/serdev-ngsm.yaml          | 64 +++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
+>  2 files changed, 66 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml
+> 
 
-I'll order it earlier on v2.
-
-However, there's not much of a point in picking this patch alone,
-because the driver is certainly not used anywhere and very likely
-doesn't even work to any sensible extent without the rest of the
-series.
-
-Lubo
+Reviewed-by: Rob Herring <robh@kernel.org>
