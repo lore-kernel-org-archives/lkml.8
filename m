@@ -4,88 +4,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4304AC2D0FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8866C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:11:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15E2D206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 934D92064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589321449;
-	bh=D3s/6Min8YqluMCtRz9aWH3YI8Ffjk4z/3wq6tgXPeE=;
+	s=default; t=1589321484;
+	bh=jBqBef9XLnqslPGgRh5X3riqMVgudThQ4Oif/Z1EIFA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AtoYDM08QiES2mg10mLONr50S6t5G2AsMW169tpT6oztiXEKXVyeNCABL+T/31hot
-	 NjUjObHdyqs2fMJ1ZUlTjDCvY2o67Q1h7IX4nN0E0EU+0SjGQKd/MU18EbaytTTVlr
-	 QWldH7o6dEiyj7NY/8VAuR1FGcHkhINyaknKmuig=
+	b=qF/rm8oRd1O21tpt//wp99FE4vfSRwEv/dpm1iNpbXcHmi/7qFuQ5Ae2KE/3nbhOQ
+	 LNt2uAzf/CA5Zk3FNVNR6zI9oraHSy3LEkA0pemIzd2RqlPBnCe3GOJjnqXnjx4K5r
+	 s07iL3vyHZ5Qc+7CWuhlORH8ORJjITtfVC42Gixw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgELWKs (ORCPT
+        id S1729619AbgELWLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:10:48 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36121 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbgELWKs (ORCPT
+        Tue, 12 May 2020 18:11:23 -0400
+Received: from mail-oo1-f65.google.com ([209.85.161.65]:41175 "EHLO
+        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725950AbgELWLW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 18:10:48 -0400
-Received: by mail-oi1-f195.google.com with SMTP id x7so18772085oic.3;
-        Tue, 12 May 2020 15:10:47 -0700 (PDT)
+        Tue, 12 May 2020 18:11:22 -0400
+Received: by mail-oo1-f65.google.com with SMTP id t3so3050709oou.8;
+        Tue, 12 May 2020 15:11:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hLS7bp8T/22TjzypF5PGmB5dEY+3krp0hxJHV/JBg7g=;
-        b=asYoPteozYKAMBMUJJfd7+z2MHI5v5Xzidd4Nr3VbAXCWWLfA6pp34ia9J8fHJ3xPl
-         V79dua/bcLBJ3gMuzqidPmkyx/ykeqiUYoXr6Y8HOlb4ypuGoTcourx0u1jVF5NyitDx
-         xTETKzwOAzka2FTLPR+76SnAS2BhqEzlsipJzQgq3uzWsvBtSKApk6/23syNjJu3jzyg
-         HZC2iDNZNpeeCZPNbAaknAoRqmRU8V7Qb8gorFLHtO85P2xhOFHrBAYWwJlYtmis/tsh
-         sT3mokldhRy+EMeJ4t31oLDsAF4IruJRUXAVhyvDUt1tAgR8c92TqvgXRQCHeUA7yF5d
-         lQ+g==
-X-Gm-Message-State: AGi0PuY/GcneDx0wAGo287nvGJh/bRjP5o/u//263wrt3lRovoANiQkd
-        8yznj2iaGW5gRe2NYTQY/g==
-X-Google-Smtp-Source: APiQypKGf4qEmv6HKFeAwKeNvcyY2qEuJmES4jhc+TZ+TkY+0koHDMAcOv8WvrCsD+XIzcg0qyyu9w==
-X-Received: by 2002:aca:d9d7:: with SMTP id q206mr24081650oig.134.1589321447426;
-        Tue, 12 May 2020 15:10:47 -0700 (PDT)
+        bh=vb85lby5smdr9lABRmv+r/bmfnu8fDinRBVbOkh3wjw=;
+        b=jd0vC5nbi5YJJV1KRO2I5T8dUm4/IlTzNfAiF3mdCg356Yq1zayJe5ttuBwFE4bt2u
+         lkw+tAjIE0D7krRF5HfSZcvp6YUFK/8qL1tDZ/+7PsYgTBF1rOiCGtEVmgFZ3ajeIoFV
+         Fg+AJnd+4fJ0O6WEXmSb7JSpk/MuUS1afx8SkqJrzI1QK5ZeIMbVlsu05k5M5QCeTKbE
+         d3qSr7fP44y1i5AjwyqGVtXC17LWIKyBS1hWTBkhCf2Es0E8E18a7Y5unDwWJXCU9KOP
+         BG+ATr9+O4NJG97k1qWEEXDffMwZOndWhEJ9c67cqwqFAhzdRsJgckoJxStcF2QE64YO
+         moUw==
+X-Gm-Message-State: AGi0PuaEgPgEmQfSAS6eIvYu37acZO7pJxzjqL3zzBNcTNYiy97Rnu9+
+        bcx/qiHD5H4Zw8Sxl/7d21qM20M=
+X-Google-Smtp-Source: APiQypJDa6xxDF1mECnAsxooolHAenXcUzoYJryZ/jaOLAe4RkkE9Z5kOjIQF1ih/KxpCTGR6wXarg==
+X-Received: by 2002:a4a:3556:: with SMTP id w22mr13971182oog.20.1589321481994;
+        Tue, 12 May 2020 15:11:21 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id h9sm1222216oor.21.2020.05.12.15.10.46
+        by smtp.gmail.com with ESMTPSA id 65sm1055089otd.77.2020.05.12.15.11.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 15:10:46 -0700 (PDT)
-Received: (nullmailer pid 24273 invoked by uid 1000);
-        Tue, 12 May 2020 22:10:46 -0000
-Date:   Tue, 12 May 2020 17:10:46 -0500
+        Tue, 12 May 2020 15:11:21 -0700 (PDT)
+Received: (nullmailer pid 25223 invoked by uid 1000);
+        Tue, 12 May 2020 22:11:20 -0000
+Date:   Tue, 12 May 2020 17:11:20 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     mani@kernel.org
-Cc:     mcoquelin.stm32@gmail.com, robh+dt@kernel.org,
-        alexandre.torgue@st.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v2 1/6] dt-bindings: Add vendor prefix for Shiratech
- Solutions
-Message-ID: <20200512221046.GA24216@bogus>
+Cc:     linux-stm32@st-md-mailman.stormreply.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, mcoquelin.stm32@gmail.com,
+        linux-kernel@vger.kernel.org, alexandre.torgue@st.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 3/6] dt-bindings: arm: stm32: Document Stinger96
+ compatible
+Message-ID: <20200512221120.GA25157@bogus>
 References: <20200503154215.23654-1-mani@kernel.org>
- <20200503154215.23654-2-mani@kernel.org>
+ <20200503154215.23654-4-mani@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200503154215.23654-2-mani@kernel.org>
+In-Reply-To: <20200503154215.23654-4-mani@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  3 May 2020 21:12:10 +0530,  wrote:
+On Sun,  3 May 2020 21:12:12 +0530,  wrote:
 > From: Manivannan Sadhasivam <mani@kernel.org>
 > 
-> This commit adds devicetree vendor prefix for Shiratech solutions,
-> a SOM/embedded board manufacturing company.
-> 
-> https://www.shiratech-solutions.com/
+> Document devicetree compatible of Shiratech Stinger96 board.
 > 
 > Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+>  Documentation/devicetree/bindings/arm/stm32/stm32.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
