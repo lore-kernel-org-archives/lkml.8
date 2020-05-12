@@ -2,63 +2,51 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AAAC2D0F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66651C2D0F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2CE820714
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:29:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589300979;
-	bh=3d503rEnrQlmVr866ZPQoKe91PbqWA5B0K8eCi6d+h8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uGJgYPTVkVZxG7rRWBc95BRAmAKMV1N/GLZ3s4zRjTKPZEzdkeGi9aXfB51LvUemB
-	 yMX6o8ug2p7nCzpJU9QeOhOy7AZtL0RbyfyYnCaTTvi0FlYazLl6xrvVtdppdeBOgY
-	 0IvjnWh/hBjzahufNoxqovYbjD9mcrYZH7hL7AIQ=
+	by mail.kernel.org (Postfix) with ESMTP id 3F800206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:30:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="0zqyt507"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728848AbgELQ3j (ORCPT
+        id S1728060AbgELQaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 12:29:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60208 "EHLO mail.kernel.org"
+        Tue, 12 May 2020 12:30:04 -0400
+Received: from www.zeus03.de ([194.117.254.33]:42320 "EHLO mail.zeus03.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725554AbgELQ3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 12:29:38 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55A23206CC;
-        Tue, 12 May 2020 16:29:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589300977;
-        bh=3d503rEnrQlmVr866ZPQoKe91PbqWA5B0K8eCi6d+h8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TzkHsJD9TKt1uTGXxBVK8qQwaO2x5Vkdd6IgJpZaAHgSH8RakzYlSg9F+tf/r4aED
-         mzrR1Z4ivV7xC7YQYKyZdTKwZhXhaKLfVKfzLzPrVHKi0KEwuhQ/+ykrHyQO1Zqzwg
-         YgYyfKpjVIrFF0JI8dxRZWp7nrgnVkIinisfTq1k=
-Date:   Tue, 12 May 2020 17:29:35 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH 07/11] ASoC: mmp-sspa: Prepare/unprepare the clocks
-Message-ID: <20200512162935.GJ5110@sirena.org.uk>
-References: <20200511210134.1224532-1-lkundrak@v3.sk>
- <20200511210134.1224532-8-lkundrak@v3.sk>
- <20200512124520.GH5110@sirena.org.uk>
- <20200512153654.GB604838@furthur.local>
+        id S1727104AbgELQaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 12:30:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=ZEn71GyZmnBopDm0mdphrGZcrfFu
+        4JxViUbqVQHn+zg=; b=0zqyt507wiwSqlBNOG7Ks7A8T+X6tFdMttz+mbQ231eR
+        VaPNreFXkESgcHk4dXekFaNYyMTSirRHtjMF4u0T6dm6AcfqnbADXphrxaOMkgnG
+        mUZtdsMgYjbFWFlSxHoz/oRAMLVr4jwvbqhaIf8M7cT4nUsMBpCc7uJVHAYPxe0=
+Received: (qmail 3010584 invoked from network); 12 May 2020 18:30:01 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 12 May 2020 18:30:01 +0200
+X-UD-Smtp-Session: l3s3148p1@ByWm+XWlasggAwDPXw2aAE67cgFBY+HL
+Date:   Tue, 12 May 2020 18:30:01 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     linux-i2c@vger.kernel.org
+Cc:     Corey Minyard <minyard@acm.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] char: ipmi: convert to use i2c_new_client_device()
+Message-ID: <20200512163001.GK13516@ninjato>
+References: <20200326210958.13051-1-wsa+renesas@sang-engineering.com>
+ <20200326210958.13051-2-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="x0KprKst+ZOYEj2z"
+        protocol="application/pgp-signature"; boundary="vbzKE9fGfpHIBC6T"
 Content-Disposition: inline
-In-Reply-To: <20200512153654.GB604838@furthur.local>
-X-Cookie: The only perfect science is hind-sight.
+In-Reply-To: <20200326210958.13051-2-wsa+renesas@sang-engineering.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -66,39 +54,61 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---x0KprKst+ZOYEj2z
+--vbzKE9fGfpHIBC6T
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 12, 2020 at 05:36:54PM +0200, Lubomir Rintel wrote:
-> On Tue, May 12, 2020 at 01:45:20PM +0100, Mark Brown wrote:
+On Thu, Mar 26, 2020 at 10:09:58PM +0100, Wolfram Sang wrote:
+> Move away from the deprecated API.
+>=20
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-> > This fix should've been earlier in the series so it could be sent as a
-> > fix.
+Can we have this now so I can remove the old API in the next merge
+window?
 
-> I'll order it earlier on v2.
+> ---
+>  drivers/char/ipmi/ipmi_ssif.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/char/ipmi/ipmi_ssif.c b/drivers/char/ipmi/ipmi_ssif.c
+> index 8ac390c2b514..2791b799e33d 100644
+> --- a/drivers/char/ipmi/ipmi_ssif.c
+> +++ b/drivers/char/ipmi/ipmi_ssif.c
+> @@ -1945,8 +1945,8 @@ static int ssif_adapter_handler(struct device *adev=
+, void *opaque)
+>  	if (adev->type !=3D &i2c_adapter_type)
+>  		return 0;
+> =20
+> -	addr_info->added_client =3D i2c_new_device(to_i2c_adapter(adev),
+> -						 &addr_info->binfo);
+> +	addr_info->added_client =3D i2c_new_client_device(to_i2c_adapter(adev),
+> +							&addr_info->binfo);
+> =20
+>  	if (!addr_info->adapter_name)
+>  		return 1; /* Only try the first I2C adapter by default. */
+> --=20
+> 2.20.1
+>=20
 
-> However, there's not much of a point in picking this patch alone,
-> because the driver is certainly not used anywhere and very likely
-> doesn't even work to any sensible extent without the rest of the
-> series.
-
-Well, I've already applied everything except the DT patches for that
-reason - it's just worth pointing out for future reference.
-
---x0KprKst+ZOYEj2z
+--vbzKE9fGfpHIBC6T
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl66zu4ACgkQJNaLcl1U
-h9Aq3Af/XxOVbeB+Ka1Fx53Uc5Q7nUyY8DTdZHXv04vHSuKsFwz8dizJreQsaqkr
-Etk4+e/aCd0Uso/rFVLzRQWv6MerNvjv8pQtUOEqqc+2P4X9uIc1UTdnQZCP/bN6
-7DX8KQoP7gPLG8hFdyDC0OBdIaZLAm4FZkn82A3mqs/OVA4Qu07ikOYW3Ry64oTc
-/22zS3mA2jx4sLMpS/shHJviypaD8bw0AXK5FsThoYNRsRG23PP4omFqh5elL8uY
-x7qwVfrg9SvLZ0B7q3phDcgUwtVYEQPwSyPMqRtiLMRwDhP81D0g4dZajuU0CXMd
-xWC+u4Nm3Xw3VBO0IUq2Jo6Fp7yPNg==
-=lL11
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl66zwkACgkQFA3kzBSg
+KbatIw/+OpAxWxUj4YPEB3LAqKA+xbgSQfEbbrzasZv8QBjMW+phFfWh9Y/6USBE
+NeQFaWWmEfWp4JvIoBL7HxryaCblQBbJ5UxIHhhSMv1BQ+4m+98L3hD1Ji0mlpx/
+LZzoXVyFvGKFQEGAFNsJ3WpP8wU8h/zFInPOqFrv5/CLQZjp6te+9hTs79ytzump
+f/4ET0MemMhSTpj4oU2soHmh2pBuZ76Gxf7ZAlASDFp+ZvHhvfx9izFRuqf2Jg9x
+txTVPh82URkPdsCWp/ngF7qRUmBOaPciGFrelfHNSHRa+n8whZIvx3LjCNFkT+8K
+mStygJj091Z6eqe1MWYhQtfVonXOQ9WUjrE3hOwRO5s+Nw7xVkV/VkjgMyVLKAFU
+/2FDkB3PVTzxXvXppVIHRzltT85C+9JxTi6wsnKGWin+YpoPvUw1RN7Me3VAuJO1
+1hRDZBk6tdzHQCYSN+BTT7hX2EblOOwWR/ne0nXlvz7THXqxUKlBtPxhhObMuP10
+NAfdSxloR7cTtWQUt6q1Xp+I+ZYTjm1xWusiwVyxXcgTN9YfJpiryo3hWOwvjm10
+yO0TDmN1Y1mWqDU49AjeNuxbIMRgNdPsX4HPXTVzMCeTBqtLbNDutPBDe6Ixxv4T
+y0DfhOcxrZt1dYu8raQQzmtbpcwq8XMxffNyl4Y6cn609p4Xbhg=
+=Dv+v
 -----END PGP SIGNATURE-----
 
---x0KprKst+ZOYEj2z--
+--vbzKE9fGfpHIBC6T--
