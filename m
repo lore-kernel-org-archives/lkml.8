@@ -2,71 +2,71 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9B3C54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75ADAC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C4ED206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E2CD206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:26:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="s5XV7mjG"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="LYWONKXk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730106AbgELN0b (ORCPT
+        id S1730096AbgELN0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 09:26:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56624 "EHLO
+        Tue, 12 May 2020 09:26:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729918AbgELN02 (ORCPT
+        with ESMTP id S1730039AbgELN00 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 09:26:28 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17E46C05BD09
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 06:26:28 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id e16so15376540wra.7
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 06:26:28 -0700 (PDT)
+        Tue, 12 May 2020 09:26:26 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2C00C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 06:26:24 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id w7so15373340wre.13
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 06:26:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=itZ8nYpO9rVwAB+XOSiZ1Zaz+WlUMeN8KYJbRrgai8w=;
-        b=s5XV7mjGrnG0C7b3JFLWA/serjUzf8eM5Sv6bPOzzXrvy+bBn5NGBA9t3ERPFyJuv2
-         SJow9GGfQvqbEJVESTH5XaRi90qYMpkAc+33nM7/TD7ZR1hX6v4OJx27XmVk0E2Ua+0d
-         OqhN5SQaS1ajL2aQAdCfmyj6fWL1oVA/nBjIhPvI+Aj7x30jz7wxC2/JcETHuxaAcBB5
-         L8ywmE6m4FE94yCLZXU+LyWBxWS25UJ7Yj6YtCist9nBGE0fUFb/fO7lTzHvgMgJr8k6
-         5aV2w0izr+/SeOV1SgeR5tFhJsdUfk0n7g/S3Kdy+4sfHzBCmohoIfu8Us6qrTf3KT9/
-         8JiA==
+        bh=Y7Fjt5IgWK4L8ZaTfnqiN9Z1czwHhj1bMsFl3W8CxoM=;
+        b=LYWONKXkLYB8oqnPo0mSL3quCSffayNM7ZRqyhSMZGNO3RR7xd6W33u3XKbffAP84F
+         bmxfJocnhaAXUbCEnisuphi/rhJqyI+3RFf3R0zDST/RIEc7O2dRLeoA/nhW4AgPjF0b
+         fRqhH6w7XeDRNkPK/SeySJ86EnInMrQkfzuBVL9RKyPa5NWXW61VDDc60PwnMaFHcuCY
+         Z1HNtAXEyws4omu6YIonZyIBhWxscrWnU7S5NUeqInP6hp0oEwIwO7BoHJwZkPeZM23c
+         ft4PazpF0vPCAr4mmLc4T4AbUq6H4omRSUQZX1KG1wHqHQwox0dPdkq2B+JD07kb4713
+         bTOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=itZ8nYpO9rVwAB+XOSiZ1Zaz+WlUMeN8KYJbRrgai8w=;
-        b=SSpVgPrV+DUrmE2JTG69RhGeQyUa+cl5eDuFj9u0v1CMlPiH6XSJXjMDTVfp8im7eO
-         9VSYpMvdFaDR514tXAYuxob1tY3QP1xYEsHN9d2uEpWNVqe2YDIB3cBN/rgmuf0nDK5L
-         pKKJggWtaCalXjMhnVCYJPZ+U5Y/uKV5m5qFZCFya3G+ClZqVLaF7pgupJ63vlBWX6Uv
-         gWoL6kpS80H7y9sLkwgP6P05mxkvOeZ9uhC/aS83I/PNnv5wnbLdYmBTvKBJZN6EwR7W
-         zq2mNrQnL8qMsy1EtK8EuFc1GzlLRUEpO1lh5QW7sMTOvIdXTZllCOkk2JmdODQF51rp
-         06iw==
-X-Gm-Message-State: AOAM5311IJeQUpt+Jb3uH5REmtjStyPG/0VGpYRfBtOVRQRZtsy+6dGy
-        55rsnTiRPNTwIPkLYye9EKLKvg==
-X-Google-Smtp-Source: ABdhPJygO+LIUhXBZipYlpV1NjUWfdUnA48iHtMRa0nv+p1cN8d+bHqiZL+GB9Ig3+I8VNBJDIQMug==
-X-Received: by 2002:adf:de05:: with SMTP id b5mr1650574wrm.299.1589289986709;
-        Tue, 12 May 2020 06:26:26 -0700 (PDT)
+        bh=Y7Fjt5IgWK4L8ZaTfnqiN9Z1czwHhj1bMsFl3W8CxoM=;
+        b=fxnBcqiXaUcW9ixhgGZUdUC00JBV2Vkj7OddrcOW5ozV2EaGegbCm2CQwuPO9/XfkQ
+         OnShxwJ8kM2YiS+t+tC5RwOJsssiFeoPLCOmb9uvPZsTrr/AAMmNNM0Cpqfe4XHs6fHT
+         n7445xd6fdoWspRU0E7X02ByWCXNZhFr+aioeGIWFMU5qJrXUpOssE7fCog2iW5YkYdh
+         IkFcrq+GaBRCk+uyA7zj0jINryNT2iArxxWSYSNYttDSVJphCiHq/IKfciMnL6AJxCPl
+         qqcl06mRTNCWTs65C0X2vDJI6WWSVArPdPnSijVpE6sZmqBC3rY/4ohcQ3t4xSHPb2YT
+         9eYw==
+X-Gm-Message-State: AGi0PubU2Qii7sMO+oynuJA8u8NleNDVHaa7qnMzWv31IY+knrQilElc
+        51kcInSu+EVssMp+dsHAJVF8IQ==
+X-Google-Smtp-Source: APiQypKYFDg7ilAgTtvn5GrhpXky9/qr6Vck6lVct7tBjG3jzCg6ZL0Ikwa6qJeUUEz17lgO3oxEhw==
+X-Received: by 2002:adf:f00e:: with SMTP id j14mr18750036wro.252.1589289983524;
+        Tue, 12 May 2020 06:26:23 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e35:2ec0:82b0:4460:3fd3:382:4a71])
-        by smtp.gmail.com with ESMTPSA id g15sm14441844wro.71.2020.05.12.06.26.25
+        by smtp.gmail.com with ESMTPSA id g15sm14441844wro.71.2020.05.12.06.26.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 06:26:26 -0700 (PDT)
+        Tue, 12 May 2020 06:26:22 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com
+To:     srinivas.kandagatla@linaro.org
 Cc:     Neil Armstrong <narmstrong@baylibre.com>,
         linux-amlogic@lists.infradead.org, linux-pm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 6/6] arm64: dts: meson-khadas-vim3: add Khadas MCU nodes
-Date:   Tue, 12 May 2020 15:26:13 +0200
-Message-Id: <20200512132613.31507-7-narmstrong@baylibre.com>
+Subject: [PATCH v2 4/6] nvmem: add support for the Khadas MCU Programmable User Memory
+Date:   Tue, 12 May 2020 15:26:11 +0200
+Message-Id: <20200512132613.31507-5-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20200512132613.31507-1-narmstrong@baylibre.com>
 References: <20200512132613.31507-1-narmstrong@baylibre.com>
@@ -77,55 +77,190 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the Khadas MCU node with active FAN thermal nodes for all the
-Khadas VIM3 variants.
+The new Khadas VIM2, VIM3 and Edge boards embeds an on-board microcontroller
+offering a 56bytes User Programmable NVMEM array.
+
+This array needs a password to be writable, thus a password sysfs file
+has been added on the device node to unlock the NVMEM.
+
+The default 6bytes password id: "Khadas"
+
+This implements the user NVMEM devices as cell of the Khadas MCU MFD driver.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- .../boot/dts/amlogic/meson-khadas-vim3.dtsi   | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/nvmem/Kconfig               |   8 ++
+ drivers/nvmem/Makefile              |   2 +
+ drivers/nvmem/khadas-mcu-user-mem.c | 128 ++++++++++++++++++++++++++++
+ 3 files changed, 138 insertions(+)
+ create mode 100644 drivers/nvmem/khadas-mcu-user-mem.c
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-index 094ecf2222bb..3325e54ea690 100644
---- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-@@ -183,6 +183,23 @@
- 	hdmi-phandle = <&hdmi_tx>;
- };
+diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+index d7b7f6d688e7..92cd4f6aa931 100644
+--- a/drivers/nvmem/Kconfig
++++ b/drivers/nvmem/Kconfig
+@@ -67,6 +67,14 @@ config JZ4780_EFUSE
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called nvmem_jz4780_efuse.
  
-+&cpu_thermal {
-+	trips {
-+		cpu_active: cpu-active {
-+			temperature = <80000>; /* millicelsius */
-+			hysteresis = <2000>; /* millicelsius */
-+			type = "active";
-+		};
-+	};
++config NVMEM_KHADAS_MCU_USER_MEM
++	tristate "Khadas MCU User programmable memory support"
++	depends on MFD_KHADAS_MCU
++	depends on REGMAP
++	help
++	  This is a driver for the MCU User programmable memory
++	  available on the Khadas VIM and Edge boards.
 +
-+	cooling-maps {
-+		map {
-+			trip = <&cpu_active>;
-+			cooling-device = <&khadas_mcu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+		};
-+	};
+ config NVMEM_LPC18XX_EEPROM
+ 	tristate "NXP LPC18XX EEPROM Memory Support"
+ 	depends on ARCH_LPC18XX || COMPILE_TEST
+diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
+index a7c377218341..0516a309542d 100644
+--- a/drivers/nvmem/Makefile
++++ b/drivers/nvmem/Makefile
+@@ -17,6 +17,8 @@ obj-$(CONFIG_NVMEM_IMX_OCOTP_SCU)	+= nvmem-imx-ocotp-scu.o
+ nvmem-imx-ocotp-scu-y		:= imx-ocotp-scu.o
+ obj-$(CONFIG_JZ4780_EFUSE)		+= nvmem_jz4780_efuse.o
+ nvmem_jz4780_efuse-y		:= jz4780-efuse.o
++obj-$(CONFIG_NVMEM_KHADAS_MCU_USER_MEM)	+= nvmem-khadas-mcu-user-mem.o
++nvmem-khadas-mcu-user-mem-y	:= khadas-mcu-user-mem.o
+ obj-$(CONFIG_NVMEM_LPC18XX_EEPROM)	+= nvmem_lpc18xx_eeprom.o
+ nvmem_lpc18xx_eeprom-y	:= lpc18xx_eeprom.o
+ obj-$(CONFIG_NVMEM_LPC18XX_OTP)	+= nvmem_lpc18xx_otp.o
+diff --git a/drivers/nvmem/khadas-mcu-user-mem.c b/drivers/nvmem/khadas-mcu-user-mem.c
+new file mode 100644
+index 000000000000..a1d5ae9a030c
+--- /dev/null
++++ b/drivers/nvmem/khadas-mcu-user-mem.c
+@@ -0,0 +1,128 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Driver for Khadas MCU User programmable Memory
++ *
++ * Copyright (C) 2020 BayLibre SAS
++ * Author(s): Neil Armstrong <narmstrong@baylibre.com>
++ */
++
++#include <linux/clk.h>
++#include <linux/module.h>
++#include <linux/nvmem-provider.h>
++#include <linux/mfd/khadas-mcu.h>
++#include <linux/regmap.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++
++static int khadas_mcu_user_mem_read(void *context, unsigned int offset,
++			    void *val, size_t bytes)
++{
++	struct khadas_mcu *khadas_mcu = context;
++
++	return regmap_bulk_read(khadas_mcu->map,
++				KHADAS_MCU_USER_DATA_0_REG + offset,
++				val, bytes);
++}
++
++static int khadas_mcu_user_mem_write(void *context, unsigned int offset,
++			     void *val, size_t bytes)
++{
++	struct khadas_mcu *khadas_mcu = context;
++
++	return regmap_bulk_write(khadas_mcu->map,
++				KHADAS_MCU_USER_DATA_0_REG + offset,
++				val, bytes);
++}
++
++static ssize_t password_store(struct device *dev, struct device_attribute *attr,
++			     const char *buf, size_t count)
++{
++	struct khadas_mcu *khadas_mcu = dev_get_drvdata(dev);
++	int i, ret;
++
++	if (count < 6)
++		return -EINVAL;
++
++	ret = regmap_write(khadas_mcu->map, KHADAS_MCU_PASSWD_START_REG, 1);
++	if (ret)
++		return ret;
++
++	for (i = 0 ; i < 6 ; ++i) {
++		ret = regmap_write(khadas_mcu->map,
++				   KHADAS_MCU_CHECK_USER_PASSWD_REG,
++				   buf[i]);
++		if (ret)
++			goto out;
++	}
++
++	ret = regmap_write(khadas_mcu->map, KHADAS_MCU_PASSWD_START_REG, 0);
++	if (ret)
++		return ret;
++
++	return count;
++out:
++	regmap_write(khadas_mcu->map, KHADAS_MCU_PASSWD_START_REG, 0);
++
++	return ret;
++}
++
++static DEVICE_ATTR_WO(password);
++
++static struct attribute *khadas_mcu_user_mem_sysfs_attributes[] = {
++	&dev_attr_password.attr,
++	NULL,
 +};
 +
- &ext_mdio {
- 	external_phy: ethernet-phy@0 {
- 		/* Realtek RTL8211F (0x001cc916) */
-@@ -222,6 +239,12 @@
- 	pinctrl-0 = <&i2c_ao_sck_pins>, <&i2c_ao_sda_pins>;
- 	pinctrl-names = "default";
- 
-+	khadas_mcu: system-controller@18 {
-+		compatible = "khadas,mcu";
-+		reg = <0x18>;
-+		#cooling-cells = <2>;
-+	};
++static const struct attribute_group khadas_mcu_user_mem_sysfs_attr_group = {
++	.attrs = khadas_mcu_user_mem_sysfs_attributes,
++};
 +
- 	gpio_expander: gpio-controller@20 {
- 		compatible = "ti,tca6408";
- 		reg = <0x20>;
++static int khadas_mcu_user_mem_probe(struct platform_device *pdev)
++{
++	struct khadas_mcu *khadas_mcu = dev_get_drvdata(pdev->dev.parent);
++	struct device *dev = &pdev->dev;
++	struct nvmem_device *nvmem;
++	struct nvmem_config *econfig;
++
++	econfig = devm_kzalloc(dev, sizeof(*econfig), GFP_KERNEL);
++	if (!econfig)
++		return -ENOMEM;
++
++	econfig->dev = pdev->dev.parent;
++	econfig->name = dev_name(pdev->dev.parent);
++	econfig->stride = 1;
++	econfig->word_size = 1;
++	econfig->reg_read = khadas_mcu_user_mem_read;
++	econfig->reg_write = khadas_mcu_user_mem_write;
++	econfig->size = 56;
++	econfig->priv = khadas_mcu;
++
++	platform_set_drvdata(pdev, khadas_mcu);
++
++	nvmem = devm_nvmem_register(&pdev->dev, econfig);
++	if (IS_ERR(nvmem))
++		return PTR_ERR(nvmem);
++
++	return sysfs_create_group(&pdev->dev.kobj,
++				  &khadas_mcu_user_mem_sysfs_attr_group);
++}
++
++static const struct platform_device_id khadas_mcu_user_mem_id_table[] = {
++	{ .name = "khadas-mcu-user-mem", },
++	{},
++};
++MODULE_DEVICE_TABLE(platform, khadas_mcu_user_mem_id_table);
++
++static struct platform_driver khadas_mcu_user_mem_driver = {
++	.probe = khadas_mcu_user_mem_probe,
++	.driver = {
++		.name = "khadas-mcu-user-mem",
++	},
++	.id_table = khadas_mcu_user_mem_id_table,
++};
++
++module_platform_driver(khadas_mcu_user_mem_driver);
++
++MODULE_AUTHOR("Neil Armstrong <narmstrong@baylibre.com>");
++MODULE_DESCRIPTION("Khadas MCU User MEM driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.22.0
 
