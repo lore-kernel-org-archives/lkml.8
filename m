@@ -2,70 +2,124 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C901C54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C075CC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 117A320736
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:44:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BCEE205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:46:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="GnzuB0Ia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729618AbgELKoJ (ORCPT
+        id S1729444AbgELKqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 06:44:09 -0400
-Received: from shells.gnugeneration.com ([66.240.222.126]:49602 "EHLO
-        shells.gnugeneration.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729581AbgELKoI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 06:44:08 -0400
-Received: by shells.gnugeneration.com (Postfix, from userid 1000)
-        id 412A81A40053; Tue, 12 May 2020 03:44:08 -0700 (PDT)
-Date:   Tue, 12 May 2020 03:44:08 -0700
-From:   Vito Caputo <vcaputo@pengaru.com>
-To:     linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: Question regarding blocking set[ug]id on processes including via
- suid executables
-Message-ID: <20200512104408.jq3umt5hlqfbuhex@shells.gnugeneration.com>
-References: <20200512094524.662gnls64rwjhct2@shells.gnugeneration.com>
+        Tue, 12 May 2020 06:46:18 -0400
+Received: from mail-mw2nam10on2052.outbound.protection.outlook.com ([40.107.94.52]:6240
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726187AbgELKqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 06:46:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nmM3tnvcO3FesllDvt4JdHxbiIKR6RZgfc9AdnKiEk2h6NQ219g3y0HCNotWOT1KSqypvyMRHv/W1jmKcdBotYrBZW9kUEwARdA1TDgGrL6XaVeOH73yhjgK8V3jK4URtHpWVs37rY+QhrP/ia4QmszBq5dw+oJPlE8xo7yCjM5ZpBhLvdkC2Q44vI4WXFqT1wd4o9PCsJx0Sy5Mqfl3GvSzrvZ+eol4xbSO7luNoPN2RQl9TRPePvPkl4A6BrNVHw4/YW0oJL8WZnAJBbWvbUsDKVwOht53Oc7Bfqb5ZIFaPw4wuj19u/PeJxNFHiB3eG500dG2/RsW5rhcIPQqog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/INPiDwLm7Y7o+u+nwaJB2Eas52FPS76u7R1hv6MwSc=;
+ b=HXZSmUGvIWMCIxVE9gQ0EdvXAVLraFnnBtoWGyrGrbdtrUIJw8dXaUJcU8sMInDrB9mNX848lybZndqXFhbXQFNzbhqbnxtYEQGCvm+IMnQoVB536CaHqwLelqEusrIQKlKKoFF46FTbxOat0UC2hyWWfrJyO9+JgZUpEvC/RJ3CLsaCqdDammGmJt+k64wyjrAdV8ndqo8uc/ReUCIUKcIR0+s1HDij7gW9B0qK/uGNzuh2JB81fxwMkKFNTSh6S5B2M1qtdELVBU6Mt0M84rRHuVXehNkVuhsdiGxarMmPhpBVpCE9CN4xTnitdmRrdFWGSrR/YV1uKAcazbj8fg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/INPiDwLm7Y7o+u+nwaJB2Eas52FPS76u7R1hv6MwSc=;
+ b=GnzuB0Ia4wqqAg2qF1RSbawSiiPmeweN8URbZETpAzdfG7wygDUpshHi+P6+5Ft9SI6udBwrz2GfAmAVHMMxifpoJ/6DndzpLtUNf4NCiNi6B6DvzyqVjX8ZBvOMpy5kxUDmj7iKbwKAZCen27rrI3EXhTwNqHvp1Pv0RHJeDvc=
+Authentication-Results: lunn.ch; dkim=none (message not signed)
+ header.d=none;lunn.ch; dmarc=none action=none header.from=synaptics.com;
+Received: from BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
+ by BYAPR03MB3671.namprd03.prod.outlook.com (2603:10b6:a02:ab::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.33; Tue, 12 May
+ 2020 10:46:14 +0000
+Received: from BYAPR03MB3573.namprd03.prod.outlook.com
+ ([fe80::d8fb:de22:43b7:fcb7]) by BYAPR03MB3573.namprd03.prod.outlook.com
+ ([fe80::d8fb:de22:43b7:fcb7%7]) with mapi id 15.20.2979.033; Tue, 12 May 2020
+ 10:46:14 +0000
+Date:   Tue, 12 May 2020 18:46:01 +0800
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: phy: realtek: clear interrupt during init for rtl8211f
+Message-ID: <20200512184601.40b1758a@xhacker.debian>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TY2PR04CA0004.apcprd04.prod.outlook.com
+ (2603:1096:404:f6::16) To BYAPR03MB3573.namprd03.prod.outlook.com
+ (2603:10b6:a02:ae::15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512094524.662gnls64rwjhct2@shells.gnugeneration.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from xhacker.debian (124.74.246.114) by TY2PR04CA0004.apcprd04.prod.outlook.com (2603:1096:404:f6::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26 via Frontend Transport; Tue, 12 May 2020 10:46:12 +0000
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+X-Originating-IP: [124.74.246.114]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: afde11a5-79be-4b60-8234-08d7f661b146
+X-MS-TrafficTypeDiagnostic: BYAPR03MB3671:
+X-Microsoft-Antispam-PRVS: <BYAPR03MB3671B8F477D027E3055824BBEDBE0@BYAPR03MB3671.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1824;
+X-Forefront-PRVS: 0401647B7F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ILxHXgg2+LXI8su7+Vb3fRZhDVJN6bJbmqz33boEJADp7em9piFixK/TE9Xrc4lncCLVBhQFFoPqkMY2BWCNZmMhdYNoMGydCRt7mjkClsitP0hsRie0n0z3l6d6uUQkpNlwLcHuJRi9+PmqZDVYhe7xXdtg3pWFktYDgq+Yp4Fgxpxcit5VqUJcNDhoanwn4LsuAUJKhhoatQdDJApdMlUrijerLVPkAGVz7nr2BBgMQyKoyQS5wfLuuk44tLP76S65YFhPcJaEZzQtlYlS7fRUxSLTEhKKLNxy42jgmqwEKjznD3vNSGuTEp6O82MqsXhCYiAZlIBz67ZoizPVFdI7/erXYI43SjDxO+DKqfQIn3xhHoBbXX84oT90sHoqvtTvYxQRWrtpK/XSaFjbpVQPZxf5TGziVoE9MgULEP9bQwUBS2m+WhfGUUbvrdd1YaajMOd7UwWE2oACWpashIYI/mRuq0hji5cZBbtD7ju+9AIi83xkn91oytaPoH0FtetBlretkzauEK+jD3NvmQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(33430700001)(9686003)(956004)(6666004)(6506007)(26005)(498600001)(4326008)(186003)(16526019)(66476007)(110136005)(8676002)(7696005)(66556008)(52116002)(33440700001)(55016002)(66946007)(86362001)(8936002)(2906002)(1076003)(5660300002)(4744005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: iOYBRQIeITUv/oAxnoTsETHZ0qEefNfO7Z4Zk0HdkWbb1/3tbygHa3Ix9jrRWG+eenS31h1SDSCTvCuHkRIKa7iwuTmYSTWNALKL8C64D7lEeaMFktEfFoZjdUmVNIkfCNS9Za3z68fAJW4a1emOrIL4LJK7II+7oP8CF7/wcmjUjYQhPPrJm6Owe975kOuqcacyud/yLLCdOZ6ZNEFYmGkQcMbLNZ/yov7n9fzEFpiBcGu2KOTESpPVSFdrjS5Lz/rmK/N6QVSIIFhweUC4eNE9VEC8HdfD5QViHPE1farJHHP23NtYhssApHUs4MQVu0XWg5N//zxlyPRvvZ/vMzCSlb/BInP3xKgdcmAc+2XBgmp3z9dwkC9/f2gaXsjIu9hbb5cnHrl7GXYPPm3srst1f8wdmyndWwv1jLZWZvhMeOMAq3vxUvnQeMAym46WxVz9+jJt0KNFQjgVslgUDlVhyUiKIEocPVdTDR+9T4X8JtxdBxnu12cUe1zYcn/l
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: afde11a5-79be-4b60-8234-08d7f661b146
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2020 10:46:14.5571
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: by2KEl96S1e9FqGR81cPApUlzrPo21vcAjKwqrfSWFi1Qko/wK24635kvFa4pI+tT89c+F9lD/faJwWcgkN+6A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3671
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 02:45:24AM -0700, Vito Caputo wrote:
-> Hello folks,
-> 
-> I'm curious if someone knows a way to do this using existing linux
-> interfaces.
-> 
-> I'd like to create a login lacking the ability to switch uid/gid.
-> 
-> Even if the process has access to suid executables like /bin/su, and
-> the user has the root password, I'd like the descendant processes of
-> their login to be simply incapable of changing uid/gid, even when it's
-> in the form of running a program w/suid bit set on an existing and
-> accessible executable in the filesystem.  No matter what, it just
-> can't happen.
-> 
-> Do we have any such thing today?  I'd really like to be able to set
-> this on a specific user and all logins of that user are simply stuck
-> on that uid no matter what.
-> 
+The PHY Register Accessible Interrupt is enabled by default, so
+there's such an interrupt during init. In PHY POLL mode case, the
+INTB/PMEB pin is alway active, it is not good. Clear the interrupt by
+calling rtl8211f_ack_interrupt().
 
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+---
+ drivers/net/phy/realtek.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Basically what I'm looking for is a convention for login-time
-application of the PR_SET_NO_NEW_PRIVS prctl, do we have anything
-formalized in userspace for this?  We've got NoNewPrivileges in
-systemd but it's not really user-oriented AFAIK...
+diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
+index 2d99e9de6ee1..398607268a3c 100644
+--- a/drivers/net/phy/realtek.c
++++ b/drivers/net/phy/realtek.c
+@@ -179,6 +179,10 @@ static int rtl8211f_config_init(struct phy_device *phydev)
+ 	u16 val_txdly, val_rxdly;
+ 	int ret;
+ 
++	ret = rtl8211f_ack_interrupt(phydev);
++	if (ret < 0)
++		return ret;
++
+ 	switch (phydev->interface) {
+ 	case PHY_INTERFACE_MODE_RGMII:
+ 		val_txdly = 0;
+-- 
+2.26.2
 
-Maybe lkml isn't the right place to pose this question, any pointers
-appreciated though.
-
-Cheers,
-Vito Caputo
