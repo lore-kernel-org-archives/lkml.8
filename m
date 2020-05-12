@@ -6,69 +6,62 @@ X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6822CA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 868B2CA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92F7920714
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6386D20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:45:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589301894;
-	bh=1i3bwdP3qH8GL31OW8KAm4DxndksTpqoE8zFSopWcMc=;
+	s=default; t=1589301900;
+	bh=HIPh/7Pej6FxAyJY1UIQvN4prK7E723HFpfiw6vDSfk=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=s6Y6VC0aRtB/AXBZXgNZkAfIA+W5jQvoNDBtVPbc3HlLsOIJxSFPPe3Deesxxz1WZ
-	 6aUuwVToU25q2u6s94ITjkVBny7jG6b4GWczoUH39sqNsg+s4YnLXdB4/NLF5yp2vz
-	 QA7IKFoNPjVVSHLBFCECtam9hJjS6g1wH1WvmQQg=
+	b=ZvKe83jfayP2q1VGpRTMVDD/tk3+vwijiUgYvVXOcDW3HammgaHG4PJSsNlTeBDNB
+	 t2xEwKA3MDBbDsilTjJ16hIdtxbSOrrWDlPFG/5H8MvDYlK/U2ywO1ActTjuZrOHHD
+	 30Lu2q4Hv0RgmN2BFtYgPTjygbzjtzkZJzBWlRs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgELQox (ORCPT
+        id S1728250AbgELQo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 12:44:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41636 "EHLO mail.kernel.org"
+        Tue, 12 May 2020 12:44:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725554AbgELQox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 12:44:53 -0400
+        id S1725554AbgELQo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 12:44:59 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E1C7206B9;
-        Tue, 12 May 2020 16:44:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D50F20720;
+        Tue, 12 May 2020 16:44:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589301893;
-        bh=1i3bwdP3qH8GL31OW8KAm4DxndksTpqoE8zFSopWcMc=;
+        s=default; t=1589301899;
+        bh=HIPh/7Pej6FxAyJY1UIQvN4prK7E723HFpfiw6vDSfk=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=il9NS0u0KRJ7JB6nZSJZQVpBrhCjjB4iLPgS02kNrFl/vf8vgOyhhL/fM/aun67xj
-         XhRGlhf+Gfb60KSVuv1IJmbMrVQjE+NxI3rOgg7idnZoox3oYVPQQnERAXGvJaY71T
-         FDyKObrTzmBWtg4341NJwn1a4ING2TOeAZ3I2SFE=
-Date:   Tue, 12 May 2020 17:44:50 +0100
+        b=SdXK2HcDTUQNahZO54CHbOKW0fQNrt//a/8i+Nwgy52LLng9X2Gq9TmQ7UZltrKRT
+         xkvuAbUYYxEDu3a/45b5sustEBFxAGcpuCPWjvNAQLxWNDKNVfHJ0wVJS8uGxbtTjX
+         +XWOhYI0/02jNATWfj7kXndA0HqvJnY1UY0GCtyY=
+Date:   Tue, 12 May 2020 17:44:56 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Takashi Iwai <tiwai@suse.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20200511174647.GA17318@embeddedor>
-References: <20200511174647.GA17318@embeddedor>
-Subject: Re: [PATCH RESEND] ASoC: Intel: Skylake: Replace zero-length array with flexible-array
-Message-Id: <158930188455.55827.14390851374340231617.b4-ty@kernel.org>
+To:     lee.jones@linaro.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        linus.walleij@linaro.org, lgirdwood@gmail.com, perex@perex.cz,
+        tiwai@suse.com
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+In-Reply-To: <20200512100705.246349-1-christophe.jaillet@wanadoo.fr>
+References: <20200512100705.246349-1-christophe.jaillet@wanadoo.fr>
+Subject: Re: [PATCH] ASoC: ux500: mop500: Fix some refcounted resources issues
+Message-Id: <158930188456.55827.11720310632308061350.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 May 2020 12:46:47 -0500, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> [...]
+On Tue, 12 May 2020 12:07:05 +0200, Christophe JAILLET wrote:
+> There are 2 issues here:
+>    - if one of the 'of_parse_phandle' fails, calling 'mop500_of_node_put()'
+>      is a no-op because the 'mop500_dai_links' structure has not been
+>      initialized yet, so the referenced are not decremented
+>    - The reference stored in 'mop500_dai_links[i].codecs' is refcounted
+>      only once in the probe and must be decremented only once.
 
 Applied to
 
@@ -76,8 +69,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: Intel: Skylake: Replace zero-length array with flexible-array
-      commit: 936b9df7a5c00db92088b3c51316d5f551ee5b2c
+[1/1] ASoC: ux500: mop500: Fix some refcounted resources issues
+      commit: 4e8748fcaeec073e3ba794871ce86c545e4f961f
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
