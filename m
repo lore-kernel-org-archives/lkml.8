@@ -6,156 +6,110 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D3FC54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 255BFC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F79A20733
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E16620736
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:09:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729330AbgELKI2 (ORCPT
+        id S1729386AbgELKJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 06:08:28 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:57833 "EHLO
+        Tue, 12 May 2020 06:09:14 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:50527 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbgELKI2 (ORCPT
+        with ESMTP id S1726187AbgELKJN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 06:08:28 -0400
-Received: from mail-qt1-f182.google.com ([209.85.160.182]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MQvH5-1jmNob2Ovv-00Nxnk; Tue, 12 May 2020 12:08:26 +0200
-Received: by mail-qt1-f182.google.com with SMTP id x8so10423957qtr.2;
-        Tue, 12 May 2020 03:08:26 -0700 (PDT)
-X-Gm-Message-State: AGi0PuYLXxFWD7OUrkw4ykpWgBj6aAJ9i20ZkwQq2gyC5VYxMWUyJx3H
-        l9QQufKr0RUYQL9Vy2mB/vzeifsGg6imjQO4lgM=
-X-Google-Smtp-Source: APiQypKjOERNeitQHjjKMWsRs9h27HgkkLgZhMkUvCm4OwIp4GXGPw2HXQ8u76vnj9k/IbyUxRhOBF73Fgim/ubU5lU=
-X-Received: by 2002:aed:2441:: with SMTP id s1mr14299903qtc.304.1589278105207;
- Tue, 12 May 2020 03:08:25 -0700 (PDT)
+        Tue, 12 May 2020 06:09:13 -0400
+Received: from mail-qk1-f171.google.com ([209.85.222.171]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N2EHo-1j6RLc3bMU-013hDb; Tue, 12 May 2020 12:09:11 +0200
+Received: by mail-qk1-f171.google.com with SMTP id c64so12898336qkf.12;
+        Tue, 12 May 2020 03:09:10 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZtGYkCzvW9ze2IebpkH+6reCMNOgelB0BrJK+xQSby4JXg6h3r
+        IZNad6i5enzSHfnpgxTYPOT9tDAX4cxl1SaIEVk=
+X-Google-Smtp-Source: APiQypKTcYyt4ixMf5aDlkcKt9IM/Lo13Ipwd2SLsjuT2wZJl/fy1N14jRioNhjHMVCLeyhQ3hFMj+jJEn4RCCuW56E=
+X-Received: by 2002:a37:434b:: with SMTP id q72mr19292048qka.352.1589278149549;
+ Tue, 12 May 2020 03:09:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200512043149.10719-1-Andrea.Ho@advantech.com.tw>
-In-Reply-To: <20200512043149.10719-1-Andrea.Ho@advantech.com.tw>
+References: <20200512100230.17752-1-grygorii.strashko@ti.com>
+In-Reply-To: <20200512100230.17752-1-grygorii.strashko@ti.com>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 12 May 2020 12:08:08 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1gKHir-hVoX_mFzqcOF=9NfM1NqO96kC-=6ZHf6Lojdg@mail.gmail.com>
-Message-ID: <CAK8P3a1gKHir-hVoX_mFzqcOF=9NfM1NqO96kC-=6ZHf6Lojdg@mail.gmail.com>
-Subject: Re: [V3,1/1] Input/misc: add support for Advantech software defined button
-To:     Andrea.Ho@advantech.com.tw
-Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
+Date:   Tue, 12 May 2020 12:08:53 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1atn3x6zntqPWpGwuLtujysTRFp+fvD-rbkddFBaA0ZA@mail.gmail.com>
+Message-ID: <CAK8P3a1atn3x6zntqPWpGwuLtujysTRFp+fvD-rbkddFBaA0ZA@mail.gmail.com>
+Subject: Re: [PATCH net v4] net: ethernet: ti: Remove TI_CPTS_MOD workaround
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Networking <netdev@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Russell King <linux@armlinux.org.uk>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        voyandrea@gmail.com, amy.shih@advantech.com.tw,
-        oakley.ding@advantech.com.tw, HY.Lee@advantech.com.tw
+        linux-omap <linux-omap@vger.kernel.org>,
+        Clay McClure <clay@daemons.net>, Dan Murphy <dmurphy@ti.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:mrhH1tAikejL6HEEyi+mzZW4Uo2mSQp8p3Nq4KLJxocyMuRJgzP
- G6iPR4KiBbZbOcK1K7t6MhSax5cgznvmQGbjTXtRbqXyMSN/9i4AkItsUozqoT7mcdPRrdZ
- +4+Di+PyCzqRddxWFEMCym2DRVf48rwu/T0Na28IiDKoyuZkMa5ZE+Fom0c5KevX3WRkQ1E
- vcvPFC4WOC8oB9NxL00RA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ZxIOxHO1Ky0=:1wfF82iSY/s7mDpw9NWvjB
- WVlgCDdjZtO9/tX2XjpUOaT8ZCqkKJOhaJG6svzf7vTXB4AuQdZ+cmeOuMf+m2Pc9mf/1sqXZ
- PxuTn6rPLAZmxd9lCCb0q4vEJ5SMjAGR2WtL7jIu7Yk1hm2Yn9aKH8VPNExfT0ls00VA9O+Qr
- xZ+zj7HRhXGSxmpDVEZnZMOk8YR3lD672Hxf1nBce4HQbtw3E/EBE5dG1tpOk0zbcfFc8jk7p
- Wie5jIjO2GhdqeD2ScndcORYdexqOoDs2ZOaC5zEncmW4rZggz3lNupTB/Q36kqjdw4Tdbom2
- n6eZ3ieBS5u+ZnwjkuZPJ4hJqHJpOdV6eNJidnvYiNR7x7uLcdXVQ03YtocBzOREc2OADESth
- aOiCdRwUD9VkWG5+qV3BOuUd4xbA7IkN4EQKebAMnVPsg4CN6H81Glxkl5IxDqb2b/qqGWRQ/
- fJoGQg1KV3/L/RaGCCGyZewj6UJU56ilETb9CGUV8MyyaqaohVORXOjruZGdmBjRTxvq6eoew
- knb4rSs5CHvtEML9Xl6diWdVX8M9QBF/qL/hEuIFugtOhwPVIf0jpIDlkOcTjLwvUCpKk2/kn
- 42k90EmO+7lZv1XW7c4A+oQJWE2+vfkh8VTwpH6nff2dPYLoJ8XsMia/ET0GzMht/uSbsSU3a
- XfAcJ8rgGLQfRJSOsZ6JEUlaWyKAxu1GNW1UsdQjC3tdTaNvgUQ4NMOIEKQzTf91/WDFO+WkJ
- 6d0sVHC/XM7p43q21qaedduiZZEEuP4BRTNT4U0u8+lniKYqCEUCZQ0AfznJwDoSDuzBhM8J3
- z71imaP2KNW9KzmBMNii6vXas/zR2FGMdc1mT46P3ov4cJNGis=
+X-Provags-ID: V03:K1:gheQcQvXwyjMMR/JGpoKJf1MrgvzSyuZDvU+J5olOEhdbHFmEVe
+ CBrTLi4kJW6LdvUUl7+tFaVkENO9k6pMRpr8xETahrFAcZ38hLq/dvgilFn+NCD73wGC4LF
+ Fz+yVz0gycBUlgZDR0Vc/urLoMaGd9NpF0NdRsuvwi5+l38mk3y8nT0GSUD6p7sqWDbz2te
+ hAF5pzaiJY0hEXNhcudyA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nmHlNLNXEqQ=:uT7tBxew1Odw+95rcho8n3
+ jxmZIuuWTIFlqaQrTxLk3Vri1fwmYYhXjeeYoSGb4I0RzY2SKoU3/d1G5GVLsI+zu4gkBTrPP
+ dtN4zNLQieZlhRR6F95xCMo5RFfSk5rpKbmZ6k5zJPga89XsE+2nbzdXHj6VDXB+w6BadQZMv
+ mrJjW5PZaDXX1oZBh3qHJmHS08BgqU4iDHSunsskFu2p4njWv5N+1LeRr0hUOcwzQPEFtglSQ
+ ZLPS5oh0ZJknIMgB0fy5IPxFuWr0P5vwzu2/OKDUKs1yje71nPE1ofyr834oteXkFDoDmKVpv
+ kbdQikBDh+r+HOoHijsyzMdjyEtgoDnxawnqNetF+ePukdNRXpHMNS78bpOXgCQNYjckJCUvX
+ 5MgnZOmhGWhVJwxIO+AUSOkT/iOtcUmDxbj74UurKapAQHUIt4EYavLsfySpOWsBiXIjAYylG
+ 8sc0frlopCGT6m/jAtI8II0Z+Cd+Yj06yu1RGn6HZIh856loS+G4notd1F9xeeKqCOD/Lhbl4
+ A7ci58XBaGLsA7oA7uZmFb7Z9eBf3nA9/mUr7FxslOe1EhpW9Sy3xnEuDq7Q/NM25DrWSp+l2
+ Lt/9I1mQosC006IMGo9R6nLtSmNlPQvwgoSTyAXk3/d8Ubykbr6FYIovbViXLCoxmdbiNPyGz
+ jRSGNmlinZ0add5lPS9b89p5cDfNlhRrjABH8yppsSuHvAOa79HXa0RH2nJbpbE5ZNOxieCAd
+ SUJq9MAIwaW4GG3IBk+OC2g5xUGjL3MdWI5jUdm1AZJRp8N2FHxFhypR92O4ZIKxAxqvIYQy3
+ 1OllSvTRGSDhejtGc7o9m59LhrpwA4ch/pdE84Y76L8chkOHQk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 6:32 AM <Andrea.Ho@advantech.com.tw> wrote:
+On Tue, May 12, 2020 at 12:02 PM Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
 >
-> From: "Andrea.Ho" <Andrea.Ho@advantech.com.tw>
+> From: Clay McClure <clay@daemons.net>
 >
-> Advantech sw_button is a ACPI event trigger button.
+> My recent commit b6d49cab44b5 ("net: Make PTP-specific drivers depend on
+> PTP_1588_CLOCK") exposes a missing dependency in defconfigs that select
+> TI_CPTS without selecting PTP_1588_CLOCK, leading to linker errors of the
+> form:
 >
-> With this driver, we can report KEY_EVENT on the
-> Advantech Tabletop Network Appliances products and it has been
-> tested in FWA1112VC.
+> drivers/net/ethernet/ti/cpsw.o: in function `cpsw_ndo_stop':
+> cpsw.c:(.text+0x680): undefined reference to `cpts_unregister'
+>  ...
 >
-> Add the software define button support to report EV_REP key_event
-> (BTN_TRIGGER_HAPPY) by pressing button that cloud be get on user
-> interface and trigger the customized actions.
+> That's because TI_CPTS_MOD (which is the symbol gating the _compilation_ of
+> cpts.c) now depends on PTP_1588_CLOCK, and so is not enabled in these
+> configurations, but TI_CPTS (which is the symbol gating _calls_ to the cpts
+> functions) _is_ enabled. So we end up compiling calls to functions that
+> don't exist, resulting in the linker errors.
 >
-> Signed-off-by: Andrea.Ho <Andrea.Ho@advantech.com.tw>
+> This patch fixes build errors and restores previous behavior by:
+>  - ensure PTP_1588_CLOCK=y in TI specific configs and CPTS will be built
+>  - remove TI_CPTS_MOD and, instead, add dependencies from CPTS in
+>    TI_CPSW/TI_KEYSTONE_NETCP/TI_CPSW_SWITCHDEV as below:
+>
+>    config TI_CPSW_SWITCHDEV
+>    ...
+>     depends on TI_CPTS || !TI_CPTS
+>
+>    which will ensure proper dependencies PTP_1588_CLOCK -> TI_CPTS ->
+> TI_CPSW/TI_KEYSTONE_NETCP/TI_CPSW_SWITCHDEV and build type selection.
+>
+> Note. For NFS boot + CPTS all of above configs have to be built-in.
+>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Dan Murphy <dmurphy@ti.com>
+> Cc: Tony Lindgren <tony@atomide.com>
+> Fixes: b6d49cab44b5 ("net: Make PTP-specific drivers depend on PTP_1588_CLOCK")
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Clay McClure <clay@daemons.net>
+> [grygorii.strashko@ti.com: rewording, add deps cpsw/netcp from cpts, drop IS_REACHABLE]
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 
-I don't have any comments on how the driver works, just some things on
-coding style:
-
-> +ACPI_MODULE_NAME("swbutton");
-> +
-> +MODULE_AUTHOR("Andrea Ho");
-> +MODULE_DESCRIPTION("Advantech ACPI SW Button Driver");
-> +MODULE_LICENSE("GPL");
-
-These generally go at the bottom of the file.
-
-The license tag here does not match the one in the SPDX header, after
-you changed the other one to v2-only.
-
-> +static const struct acpi_device_id button_device_ids[] = {
-> +       {ACPI_BUTTON_HID_SWBTN, 0},
-> +       {"", 0},
-> +};
-> +MODULE_DEVICE_TABLE(acpi, button_device_ids);
-> +
-> +static int acpi_button_add(struct acpi_device *device);
-> +static int acpi_button_remove(struct acpi_device *device);
-> +static void acpi_button_notify(struct acpi_device *device, u32 event);
-
-Remove the forward declarations by defining the functions in the
-natural order, with the driver registration last.
-
-> +static struct acpi_driver acpi_button_driver = {
-> +       .name = ACPI_BUTTON_DEVICE_NAME_SOFTWARE,
-> +       .class = ACPI_BUTTON_CLASS,
-
-Better open-code these macros here, to make it easier to grep for
-
-> +static int __init acpi_button_init(void)
-> +{
-> +       return acpi_bus_register_driver(&acpi_button_driver);
-> +}
-> +
-> +static void __exit acpi_button_exit(void)
-> +{
-> +       acpi_bus_unregister_driver(&acpi_button_driver);
-> +}
-
-Just use
-
-module_acpi_driver(acpi_button_driver);
-
-> +static int acpi_button_add(struct acpi_device *device)
-> +{
-> +       struct acpi_button *button;
-> +       struct input_dev *input;
-> +       const char *hid = acpi_device_hid(device);
-> +       char *name, *class;
-> +       int error;
-> +
-> +       button = kzalloc(sizeof(struct acpi_button), GFP_KERNEL);
-> +       if (!button)
-> +               return -ENOMEM;
-> +
-> +       device->driver_data = button;
-> +
-> +       button->input = input_allocate_device();
-> +       input = button->input;
-> +       if (!input) {
-> +               error = -ENOMEM;
-> +               goto err_free_button;
-> +       }
-
-You can simplify the cleanup by using devm_kzalloc() and
-devm_input_allocate_device().
-
-      Arnd
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
