@@ -2,121 +2,228 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99372C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E33EBC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 779E9206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C80F520733
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:41:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729059AbgELHiS (ORCPT
+        id S1728878AbgELHlV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 03:38:18 -0400
-Received: from mga06.intel.com ([134.134.136.31]:23827 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725889AbgELHiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 03:38:18 -0400
-IronPort-SDR: TqOc2XelAW3dbdv7aWwd2ghMrUgah1Jk2gCjtqM54FxIoBL3lBIk4GZPZkJt03sDYecbdNjnie
- cCihzF/RXxzQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 00:38:17 -0700
-IronPort-SDR: 1rEXtJMuvdkrWmA6k28YWcp6P3hqkvVZK8/QsWRLXlw21KcJ+8Rao1SctLUdR+R3kKn/2USR56
- LbCri8J4ii1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,383,1583222400"; 
-   d="scan'208";a="340816099"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by orsmga001.jf.intel.com with ESMTP; 12 May 2020 00:38:16 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, Minchan Kim <minchan@kernel.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH] mm, swap: Use prandom_u32_max()
-References: <20200512064147.514493-1-ying.huang@intel.com>
-        <20200512065049.GN29153@dhcp22.suse.cz>
-        <875zd1pqu1.fsf@yhuang-dev.intel.com>
-        <20200512073236.GQ29153@dhcp22.suse.cz>
-Date:   Tue, 12 May 2020 15:38:15 +0800
-In-Reply-To: <20200512073236.GQ29153@dhcp22.suse.cz> (Michal Hocko's message
-        of "Tue, 12 May 2020 09:32:36 +0200")
-Message-ID: <87wo5hob6g.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 12 May 2020 03:41:21 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:59683 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725813AbgELHlU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 03:41:20 -0400
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 2440920000F;
+        Tue, 12 May 2020 07:41:13 +0000 (UTC)
+Date:   Tue, 12 May 2020 09:41:12 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= Rojas <noltari@gmail.com>
+Cc:     computersforpeace@gmail.com, kdasu.kdev@gmail.com, richard@nod.at,
+        vigneshr@ti.com, sumit.semwal@linaro.org,
+        linux-mtd@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH v3 2/2] mtd: rawnand: brcmnand: improve hamming oob
+ layout
+Message-ID: <20200512094112.0b9c3403@xps13>
+In-Reply-To: <461FD58F-ACD5-4158-BC0B-8C73C53D5C0D@gmail.com>
+References: <20200504185945.2776148-1-noltari@gmail.com>
+        <20200512060023.684871-1-noltari@gmail.com>
+        <20200512060023.684871-3-noltari@gmail.com>
+        <20200512090844.21bcaf22@xps13>
+        <5377BB9D-35EB-4531-8E03-A7483D3134E4@gmail.com>
+        <20200512091958.0d153319@xps13>
+        <461FD58F-ACD5-4158-BC0B-8C73C53D5C0D@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michal Hocko <mhocko@kernel.org> writes:
+Hi Álvaro,
 
-> On Tue 12-05-20 15:14:46, Huang, Ying wrote:
->> Michal Hocko <mhocko@kernel.org> writes:
->> 
->> > On Tue 12-05-20 14:41:46, Huang Ying wrote:
->> >> To improve the code readability and get random number with higher
->> >> quality.
->> >
->> > I understand the readability argument but why should prandom_u32_max
->> > (which I was not aware of) provide a higher quality randomness?
->> 
->> I am not expert on random number generator.  I have heard about that the
->> randomness of the low order bits of some random number generator isn't
->> good enough.  Anyway, by using the common implementation, the real
->> random number generator expert can fix the possible issue once for all
->> users.
->
-> Please drop the quality argument if you cannot really justify it. This
-> will likely just confuse future readers the same way it confused me
-> here. Because prandom_u32_max uses the same source of randomness the
-> only difference is the way how modulo vs. u64 overflow arithmetic is
-> used for distributing values. I am not aware the later would be
-> a way to achieve a higher quality randomness. If the interval
-> distribution is better with the later then it would be great to have it
-> documented.
+Álvaro Fernández Rojas <noltari@gmail.com> wrote on Tue, 12 May 2020
+09:26:23 +0200:
 
-OK. Fair enough.
+> Hi Miquèl,
+> 
+> > El 12 may 2020, a las 9:19, Miquel Raynal <miquel.raynal@bootlin.com> escribió:
+> > 
+> > Hi Álvaro,
+> > 
+> > Álvaro Fernández Rojas <noltari@gmail.com> wrote on Tue, 12 May 2020
+> > 09:12:10 +0200:
+> >   
+> >> Hi Miquel,
+> >> 
+> >> I also had a hard time understanding your email.
+> >> It was quite misleading.
+> >>   
+> >>> El 12 may 2020, a las 9:08, Miquel Raynal <miquel.raynal@bootlin.com> escribió:
+> >>> 
+> >>> Hi Álvaro,
+> >>> 
+> >>> Álvaro Fernández Rojas <noltari@gmail.com> wrote on Tue, 12 May 2020
+> >>> 08:00:23 +0200:
+> >>>   
+> >>>> The current code generates 8 oob sections:
+> >>>> S1	1-5
+> >>>> ECC	6-8
+> >>>> S2	9-15
+> >>>> S3	16-21
+> >>>> ECC	22-24
+> >>>> S4	25-31
+> >>>> S5	32-37
+> >>>> ECC	38-40
+> >>>> S6	41-47
+> >>>> S7	48-53
+> >>>> ECC	54-56
+> >>>> S8	57-63
+> >>>> 
+> >>>> Change it by merging continuous sections:
+> >>>> S1	1-5
+> >>>> ECC	6-8
+> >>>> S2	9-21
+> >>>> ECC	22-24
+> >>>> S3	25-37
+> >>>> ECC	38-40
+> >>>> S4	41-53
+> >>>> ECC	54-56
+> >>>> S5	57-63
+> >>>> 
+> >>>> Fixes: ef5eeea6e911 ("mtd: nand: brcm: switch to mtd_ooblayout_ops")    
+> >>> 
+> >>> Sorry for leading you the wrong way, actually this patch does not
+> >>> deserve a Fixes tag.    
+> >> 
+> >> Do I need to resend this again?
+> >> Looks like no matter what I do it’s always wrong...  
+> > 
+> > Please don't give up! It is normal to work back and forth with the
+> > community. I need the patch to be clear and bug-free so I ask you to
+> > make changes and ask questions, that's how it works. But all your
+> > patches are enhancing this driver so please keep posting!
+> >   
+> >>   
+> >>>   
+> >>>> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
+> >>>> ---
+> >>>> v3: invert patch order
+> >>>> v2: keep original comment and fix correctly skip byte 6 for small-page nand
+> >>>> 
+> >>>> drivers/mtd/nand/raw/brcmnand/brcmnand.c | 37 ++++++++++++------------
+> >>>> 1 file changed, 18 insertions(+), 19 deletions(-)
+> >>>> 
+> >>>> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> >>>> index 1c1070111ebc..0a1d76fde37b 100644
+> >>>> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> >>>> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
+> >>>> @@ -1100,33 +1100,32 @@ static int brcmnand_hamming_ooblayout_free(struct mtd_info *mtd, int section,
+> >>>> 	struct brcmnand_cfg *cfg = &host->hwcfg;
+> >>>> 	int sas = cfg->spare_area_size << cfg->sector_size_1k;
+> >>>> 	int sectors = cfg->page_size / (512 << cfg->sector_size_1k);
+> >>>> +	u32 next;
+> >>>> 
+> >>>> -	if (section >= sectors * 2)
+> >>>> +	if (section > sectors)
+> >>>> 		return -ERANGE;
+> >>>> 
+> >>>> -	oobregion->offset = (section / 2) * sas;
+> >>>> +	next = (section * sas);
+> >>>> +	if (section < sectors)
+> >>>> +		next += 6;
+> >>>> 
+> >>>> -	if (section & 1) {
+> >>>> -		oobregion->offset += 9;
+> >>>> -		oobregion->length = 7;
+> >>>> +	if (section) {
+> >>>> +		oobregion->offset = ((section - 1) * sas) + 9;
+> >>>> 	} else {
+> >>>> -		oobregion->length = 6;
+> >>>> -
+> >>>> -		/* First sector of each page may have BBI */
+> >>>> -		if (!section) {
+> >>>> -			/*
+> >>>> -			 * Small-page NAND use byte 6 for BBI while large-page
+> >>>> -			 * NAND use bytes 0 and 1.
+> >>>> -			 */
+> >>>> -			if (cfg->page_size > 512) {
+> >>>> -				oobregion->offset += 2;
+> >>>> -				oobregion->length -= 2;
+> >>>> -			} else {
+> >>>> -				oobregion->length--;
+> >>>> -			}
+> >>>> +		/*
+> >>>> +		 * Small-page NAND use byte 6 for BBI while large-page
+> >>>> +		 * NAND use bytes 0 and 1.
+> >>>> +		 */
+> >>>> +		if (cfg->page_size > 512) {
+> >>>> +			oobregion->offset = 2;
+> >>>> +		} else {
+> >>>> +			oobregion->offset = 0;
+> >>>> +			next--;    
+> >>> 
+> >>> This next-- seems very strange, can you explain?    
+> >> 
+> >> In this case next will be 6 (which is the first ECC byte).
+> >> However, for small page NANDs byte 5 is reserved for BBT, so we want next to be 5 only in this case.  
+> > 
+> > That's clear, please add a comment there then.  
+> 
+> Isn’t “Small-page NAND use byte 6 for BBI while large-page NAND use bytes 0 and 1.” enough?
+> Do we really need a specific comment before next--?
 
-Best Regards,
-Huang, Ying
+Given the time it took me to understand these lines, I'd say : "no" :)
 
->> >> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
->> >> Cc: Michal Hocko <mhocko@suse.com>
->> >> Cc: Minchan Kim <minchan@kernel.org>
->> >> Cc: Tim Chen <tim.c.chen@linux.intel.com>
->> >> Cc: Hugh Dickins <hughd@google.com>
->> >
->> > To the change itself
->> > Acked-by: Michal Hocko <mhocko@suse.com>
->> 
->> Thanks!
->> 
->> Best Regards,
->> Huang, Ying
->> 
->> >> ---
->> >>  mm/swapfile.c | 2 +-
->> >>  1 file changed, 1 insertion(+), 1 deletion(-)
->> >> 
->> >> diff --git a/mm/swapfile.c b/mm/swapfile.c
->> >> index a0a123e59ce6..2ec8b21201d6 100644
->> >> --- a/mm/swapfile.c
->> >> +++ b/mm/swapfile.c
->> >> @@ -3220,7 +3220,7 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
->> >>  		 * select a random position to start with to help wear leveling
->> >>  		 * SSD
->> >>  		 */
->> >> -		p->cluster_next = 1 + (prandom_u32() % p->highest_bit);
->> >> +		p->cluster_next = 1 + prandom_u32_max(p->highest_bit);
->> >>  		nr_cluster = DIV_ROUND_UP(maxpages, SWAPFILE_CLUSTER);
->> >>  
->> >>  		cluster_info = kvcalloc(nr_cluster, sizeof(*cluster_info),
->> >> -- 
->> >> 2.26.2
+Just give more information in your main comment, explaining than in one
+case the reserved bytes are at the beginning (enlarging the offset)
+while in the other case it is at the end, so reducing the section.
+
+> 
+> >   
+> >>   
+> >>>   
+> >>>> 		}
+> >>>> 	}
+> >>>> 
+> >>>> +	oobregion->length = next - oobregion->offset;
+> >>>> +
+> >>>> 	return 0;
+> >>>> }
+> >>>>   
+> >>> 
+> >>> 
+> >>> Thanks,
+> >>> Miquèl    
+> >> 
+> >> Regards,
+> >> Álvaro.  
+> > 
+> > 
+> > 
+> > Thanks,
+> > Miquèl  
+> 
+> Regards,
+> Álvaro.
+> 
+
+
+
+
+Thanks,
+Miquèl
