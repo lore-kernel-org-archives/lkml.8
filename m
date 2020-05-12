@@ -2,177 +2,280 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 705D7C2D0FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEAAC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CAC720747
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5ABD20740
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 21:40:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hJQkdNA/"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oih54FaI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731429AbgELVjN (ORCPT
+        id S1731444AbgELVkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 17:39:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729646AbgELVjN (ORCPT
+        Tue, 12 May 2020 17:40:01 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:43867 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726268AbgELVkA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 17:39:13 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66459C061A0C;
-        Tue, 12 May 2020 14:39:13 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id l12so6776412pgr.10;
-        Tue, 12 May 2020 14:39:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HyK43tfuo+QGZbEC4deEKxgiv6iV0m2ya0qSqKqAJ3Y=;
-        b=hJQkdNA/h0Z2/CW+og490xBYWsoGiKpS5zv7m8MFiH/E+mdbzj0lbFaAW7yL0NrwiW
-         /ddQpsJyevWtaL+eygrIUhcJlPoJbqvKLYSPGTBabBwmXSBAHAJv32uR/p4ChM7xAqvM
-         P9kv5n34T0loteo+trVSCQ4qLVEOL0mNw6xnza5ho5uwElhTJaWLx+eTIvbRAwP5OK5m
-         jNPTUs1qq5MONgWxbt/LgQYdUVTzvpJFiOjWwqlGbP+Ii8fQh6BX2ry6IYQ/cpiXDRqs
-         uMiTJItf1jYi9qCZ+FQchvKoBus11EQq2Y5veVdUmUpQ7hIsduErgS9AZOmKPs8z5Xep
-         0Y6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HyK43tfuo+QGZbEC4deEKxgiv6iV0m2ya0qSqKqAJ3Y=;
-        b=tnkWu3/OxM8H3hOIvt9oi2dasaQ43n6OiaaqrTdr2tla0UrmTJAjT9n3Mgw31KyUvc
-         q9HV3CLW+e1Y1JcuDQWvgb2MZbqUG0QAssqoh6oC+rckIselVWNfvMWiQvVt1GYEOIgX
-         1bCpgWmOKcyKTOXUYA4RAan9Ik09UhOpH42fY67MtQj/bdo+gYzKJTjmHNx0pX0u7n8C
-         hsUrGxs3AawWvUIexSBxxMDlr34a21T5yKC4EtdbLD2CzGNF8Jfk8mjUMtUqauPXXlPs
-         vsR/H1IriqhIMl5+LX5LdX47KdoqixQztnxlyiys2cGbJaQ7HPpccCSqTk17ROHs4JnG
-         OECA==
-X-Gm-Message-State: AGi0PuZgzeFjumbqo2HsAZyesyKDDpb6EzYfvlECDTLol0KGq/EZLYIj
-        O1+cC6egIorq/S0MI2+C54Tl0LcE
-X-Google-Smtp-Source: APiQypLyntx8EGBJacRvgm7IGFso4KBY35yEQ77fTYe06WCVyrwwQxLlkKXckFIKjmPl1mohB6Dqbg==
-X-Received: by 2002:a63:1054:: with SMTP id 20mr19155904pgq.79.1589319552771;
-        Tue, 12 May 2020 14:39:12 -0700 (PDT)
-Received: from [192.168.11.3] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
-        by smtp.gmail.com with ESMTPSA id gv24sm13584271pjb.6.2020.05.12.14.39.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 May 2020 14:39:12 -0700 (PDT)
-Subject: [PATCH RESEND 3/4] Documentation/litmus-tests: Merge atomic's README
- into top-level one
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-References: <20200323015735.236279-1-joel@joelfernandes.org>
- <7809dbfa-7a76-8663-799a-908c4ead8d30@gmail.com>
- <21e1ba24-22d0-8083-770c-53d320ba5420@gmail.com>
- <fd7e7c6f-fda1-7f2b-19f3-a09b73b10de8@gmail.com>
- <CAEXW_YSjo2hgvg-FN_MR7FVEcp-7gH17jb0-262k+ydSuuDjuQ@mail.gmail.com>
- <20200512163022.GI2869@paulmck-ThinkPad-P72>
- <09a8f418-0a46-87ea-dbdb-a43efc66476c@gmail.com>
-From:   Akira Yokosawa <akiyks@gmail.com>
-Message-ID: <6d162e69-5d2f-1fbf-1588-ab19c30e7311@gmail.com>
-Date:   Wed, 13 May 2020 06:39:03 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 12 May 2020 17:40:00 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589319599; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=KWYxXlfPuACHKSNLozo/Uo67tbe6BBbVVRt+NrUjq04=;
+ b=oih54FaIt2ohBCGeR+r/Q19PWgVxw3cUUHIK91JbWNYPnUlIn0RfhmVMqFaLuw/7P3E5/z5Q
+ e+u0bOygoG21x5sRrsaKV2CDghTBMpf/qMvRiz43RjzcC+2vypTOWfgSdfT3BvhtnNYBipXU
+ g99O8Lanh9o63+H/KJW7KQaRlWY=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebb17a7.7f82d417fb58-smtp-out-n05;
+ Tue, 12 May 2020 21:39:51 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 95FECC432C2; Tue, 12 May 2020 21:39:51 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: rananta)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6824CC433CB;
+        Tue, 12 May 2020 21:39:50 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <09a8f418-0a46-87ea-dbdb-a43efc66476c@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Tue, 12 May 2020 14:39:50 -0700
+From:   rananta@codeaurora.org
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Jiri Slaby <jslaby@suse.cz>, andrew@daynix.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tty: hvc: Fix data abort due to race in hvc_open
+In-Reply-To: <20200512082551.GA3526567@kroah.com>
+References: <20200428032601.22127-1-rananta@codeaurora.org>
+ <20200506094851.GA2787548@kroah.com>
+ <98bbe7afabf48d8e8fe839fdc9e836a5@codeaurora.org>
+ <20200510064819.GB3400311@kroah.com>
+ <77d889be4e0cb0e6e30f96199e2d843d@codeaurora.org>
+ <20200511073913.GA1347819@kroah.com>
+ <0f7791f5-0a53-59f6-7277-247a789f30c2@suse.cz>
+ <20200512082551.GA3526567@kroah.com>
+Message-ID: <417b1d320bda37410788430979dd708d@codeaurora.org>
+X-Sender: rananta@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From 96fa6680e3b990633ecbb6d11acf03a161b790bd Mon Sep 17 00:00:00 2001
-From: Akira Yokosawa <akiyks@gmail.com>
-Date: Sun, 10 May 2020 15:12:57 +0900
-Subject: [PATCH RESEND 3/4] Documentation/litmus-tests: Merge atomic's README into top-level one
+On 2020-05-12 01:25, Greg KH wrote:
+> On Tue, May 12, 2020 at 09:22:15AM +0200, Jiri Slaby wrote:
+>> On 11. 05. 20, 9:39, Greg KH wrote:
+>> > On Mon, May 11, 2020 at 12:23:58AM -0700, rananta@codeaurora.org wrote:
+>> >> On 2020-05-09 23:48, Greg KH wrote:
+>> >>> On Sat, May 09, 2020 at 06:30:56PM -0700, rananta@codeaurora.org wrote:
+>> >>>> On 2020-05-06 02:48, Greg KH wrote:
+>> >>>>> On Mon, Apr 27, 2020 at 08:26:01PM -0700, Raghavendra Rao Ananta wrote:
+>> >>>>>> Potentially, hvc_open() can be called in parallel when two tasks calls
+>> >>>>>> open() on /dev/hvcX. In such a scenario, if the
+>> >>>>>> hp->ops->notifier_add()
+>> >>>>>> callback in the function fails, where it sets the tty->driver_data to
+>> >>>>>> NULL, the parallel hvc_open() can see this NULL and cause a memory
+>> >>>>>> abort.
+>> >>>>>> Hence, serialize hvc_open and check if tty->private_data is NULL
+>> >>>>>> before
+>> >>>>>> proceeding ahead.
+>> >>>>>>
+>> >>>>>> The issue can be easily reproduced by launching two tasks
+>> >>>>>> simultaneously
+>> >>>>>> that does nothing but open() and close() on /dev/hvcX.
+>> >>>>>> For example:
+>> >>>>>> $ ./simple_open_close /dev/hvc0 & ./simple_open_close /dev/hvc0 &
+>> >>>>>>
+>> >>>>>> Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
+>> >>>>>> ---
+>> >>>>>>  drivers/tty/hvc/hvc_console.c | 16 ++++++++++++++--
+>> >>>>>>  1 file changed, 14 insertions(+), 2 deletions(-)
+>> >>>>>>
+>> >>>>>> diff --git a/drivers/tty/hvc/hvc_console.c
+>> >>>>>> b/drivers/tty/hvc/hvc_console.c
+>> >>>>>> index 436cc51c92c3..ebe26fe5ac09 100644
+>> >>>>>> --- a/drivers/tty/hvc/hvc_console.c
+>> >>>>>> +++ b/drivers/tty/hvc/hvc_console.c
+>> >>>>>> @@ -75,6 +75,8 @@ static LIST_HEAD(hvc_structs);
+>> >>>>>>   */
+>> >>>>>>  static DEFINE_MUTEX(hvc_structs_mutex);
+>> >>>>>>
+>> >>>>>> +/* Mutex to serialize hvc_open */
+>> >>>>>> +static DEFINE_MUTEX(hvc_open_mutex);
+>> >>>>>>  /*
+>> >>>>>>   * This value is used to assign a tty->index value to a hvc_struct
+>> >>>>>> based
+>> >>>>>>   * upon order of exposure via hvc_probe(), when we can not match it
+>> >>>>>> to
+>> >>>>>> @@ -346,16 +348,24 @@ static int hvc_install(struct tty_driver
+>> >>>>>> *driver, struct tty_struct *tty)
+>> >>>>>>   */
+>> >>>>>>  static int hvc_open(struct tty_struct *tty, struct file * filp)
+>> >>>>>>  {
+>> >>>>>> -	struct hvc_struct *hp = tty->driver_data;
+>> >>>>>> +	struct hvc_struct *hp;
+>> >>>>>>  	unsigned long flags;
+>> >>>>>>  	int rc = 0;
+>> >>>>>>
+>> >>>>>> +	mutex_lock(&hvc_open_mutex);
+>> >>>>>> +
+>> >>>>>> +	hp = tty->driver_data;
+>> >>>>>> +	if (!hp) {
+>> >>>>>> +		rc = -EIO;
+>> >>>>>> +		goto out;
+>> >>>>>> +	}
+>> >>>>>> +
+>> >>>>>>  	spin_lock_irqsave(&hp->port.lock, flags);
+>> >>>>>>  	/* Check and then increment for fast path open. */
+>> >>>>>>  	if (hp->port.count++ > 0) {
+>> >>>>>>  		spin_unlock_irqrestore(&hp->port.lock, flags);
+>> >>>>>>  		hvc_kick();
+>> >>>>>> -		return 0;
+>> >>>>>> +		goto out;
+>> >>>>>>  	} /* else count == 0 */
+>> >>>>>>  	spin_unlock_irqrestore(&hp->port.lock, flags);
+>> >>>>>
+>> >>>>> Wait, why isn't this driver just calling tty_port_open() instead of
+>> >>>>> trying to open-code all of this?
+>> >>>>>
+>> >>>>> Keeping a single mutext for open will not protect it from close, it will
+>> >>>>> just slow things down a bit.  There should already be a tty lock held by
+>> >>>>> the tty core for open() to keep it from racing things, right?
+>> >>>> The tty lock should have been held, but not likely across
+>> >>>> ->install() and
+>> >>>> ->open() callbacks, thus resulting in a race between hvc_install() and
+>> >>>> hvc_open(),
+>> >>>
+>> >>> How?  The tty lock is held in install, and should not conflict with
+>> >>> open(), otherwise, we would be seeing this happen in all tty drivers,
+>> >>> right?
+>> >>>
+>> >> Well, I was expecting the same, but IIRC, I see that the open() was being
+>> >> called in parallel for the same device node.
+>> >
+>> > So open and install are happening at the same time?  And the tty_lock()
+>> > does not protect the needed fields from being protected properly?  If
+>> > not, what fields are being touched without the lock?
+>> >
+>> >> Is it expected that the tty core would allow only one thread to
+>> >> access the dev-node, while blocking the other, or is it the client
+>> >> driver's responsibility to handle the exclusiveness?
+>> >
+>> > The tty core should handle this correctly, for things that can mess
+>> > stuff up (like install and open at the same time).  A driver should not
+>> > have to worry about that.
+>> >
+>> >>>> where hvc_install() sets a data and the hvc_open() clears it.
+>> >>>> hvc_open()
+>> >>>> doesn't
+>> >>>> check if the data was set to NULL and proceeds.
+>> >>>
+>> >>> What data is being set that hvc_open is checking?
+>> >> hvc_install sets tty->private_data to hp, while hvc_open sets it to NULL (in
+>> >> one of the paths).
+>> >
+>> > I see no use of private_data in drivers/tty/hvc/ so what exactly are you
+>> > referring to?
+>> 
+>> He likely means tty->driver_data. And there exactly lays the issue.
+>> 
+>> commit bdb498c20040616e94b05c31a0ceb3e134b7e829
+>> Author: Jiri Slaby <jslaby@suse.cz>
+>> Date:   Tue Aug 7 21:48:04 2012 +0200
+>> 
+>>     TTY: hvc_console, add tty install
+>> 
+>> added hvc_install but did not move 'tty->driver_data = NULL;' from
+>> hvc_open's fail path to hvc_cleanup.
+>> 
+>> IOW hvc_open now NULLs tty->driver_data even for another task which
+>> opened the tty earlier. The same holds for 
+>> "tty_port_tty_set(&hp->port,
+>> NULL);" there. And actually "tty_port_put(&hp->port);" is also 
+>> incorrect
+>> for the 2nd task opening the tty.
+>> 
+>> So, a mutex with tty->driver_data check in open is not definitely the
+>> way to go. This mess needs to be sorted out properly. Sure, a good 
+>> start
+>> would be a conversion to tty_port_open. Right after dropping "tty: 
+>> hvc:
+>> Fix data abort due to race in hvc_open" from tty/tty-next :).
+> 
+> I've now reverted this commit so we can start from a "clean" place.
+> 
+>> What I *don't* understand is why hp->ops->notifier_add fails, given 
+>> the
+>> open does not allow multiple opens anyway?
+> 
+> I don't understand that either.  Raghavendra, can you show a real trace
+> for this issue that shows this?
+> 
+Let me know if this helps:
 
-Where Documentation/litmus-tests/README lists RCU litmus tests,
-Documentation/litmus-tests/atomic/README lists atomic litmus tests.
-For symmetry, merge the latter into former, with some context
-adjustment in the introduction.
+[  265.332900] Unable to handle kernel NULL pointer dereference at 
+virtual address 00000000000000a8
+[  265.332920] Mem abort info:
+[  265.332934]   ESR = 0x96000006
+[  265.332950]   EC = 0x25: DABT (current EL), IL = 32 bits
+[  265.332963]   SET = 0, FnV = 0
+[  265.332975]   EA = 0, S1PTW = 0
+[  265.332985] Data abort info:
+[  265.332997]   ISV = 0, ISS = 0x00000006
+[  265.333008]   CM = 0, WnR = 0
+[  265.333025] user pgtable: 4k pages, 39-bit VAs, pgdp=00000001620f3000
+[  265.333038] [00000000000000a8] pgd=00000001620f2003, 
+pud=00000001620f2003, pmd=0000000000000000
+[  265.333071] Internal error: Oops: 96000006 [#1] PREEMPT SMP
+[  265.333424] CPU: 1 PID: 5653 Comm: stress-ng-dev Tainted: G S      W  
+O      5.4.12-g04866e0 #1
+[  265.333458] pstate: 80400085 (Nzcv daIf +PAN -UAO)
+[  265.333499] pc : _raw_spin_lock_irqsave+0x40/0x7c
+[  265.333517] lr : _raw_spin_lock_irqsave+0x38/0x7c
+[  265.333530] sp : ffffffc02436ba40
+[  265.333542] x29: ffffffc02436ba40 x28: 0000000000020800
+[  265.333562] x27: ffffffdfb4046490 x26: ffffff8101b83400
+[  265.333580] x25: ffffff80e163ad00 x24: ffffffdfb45c7798
+[  265.333598] x23: ffffff8101b83668 x22: ffffffdfb4974000
+[  265.333617] x21: 0000000000000001 x20: 00000000000000a8
+[  265.333634] x19: 0000000000000000 x18: ffffff80e0b0d460
+[  265.333652] x17: 0000000000000000 x16: 0000000001000000
+[  265.333670] x15: 0000000001000000 x14: 00000000f8000000
+[  265.333688] x13: 0000000000000000 x12: 0000000000000001
+[  265.333706] x11: 17f5f16765f64600 x10: 17f5f16765f64600
+[  265.333724] x9 : ffffffdfb3444244 x8 : 0000000000000000
+[  265.333741] x7 : 0000000000000000 x6 : 0000000000000000
+[  265.333759] x5 : 0000000000000000 x4 : 0000000000000002
+[  265.333776] x3 : ffffffc02436b9c0 x2 : ffffffdfb40456e0
+[  265.333794] x1 : ffffffc02436b9c0 x0 : ffffffdfb3444244
+[  265.333812] Call trace:
+[  265.333831]  _raw_spin_lock_irqsave+0x40/0x7c
+[  265.333859]  hvc_open$61deaf328f140fd7df47c115ec866fa5+0x28/0x174
+[  265.333882]  tty_open$86bd494905ebe22944bf63b711173de3+0x3d0/0x584
+[  265.333921]  chrdev_open$4083aaa799bca8e0e1e0c8dc1947aa96+0x1c4/0x248
+[  265.333940]  do_dentry_open+0x258/0x3b0
+[  265.333956]  vfs_open+0x2c/0x38
+[  265.333975]  path_openat+0x898/0xedc
+[  265.333991]  do_filp_open+0x78/0x124
+[  265.334006]  do_sys_open+0x13c/0x298
+[  265.334022]  __arm64_sys_openat+0x28/0x34
+[  265.334044]  el0_svc_common+0xb8/0x1b4
+[  265.334059]  el0_svc_handler+0x6c/0x88
+[  265.334079]  el0_svc+0x8/0xc
+[  265.334110] Code: 52800035 97b9fec7 aa1f03e8 f9800291 (885ffe81)
+[  265.334130] ---[ end trace ac90e3099a98e99f ]---
+[  265.334146] Kernel panic - not syncing: Fatal exception
+> thanks,
+> 
+> greg k-h
 
-Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
-Acked-by: Andrea Parri <parri.andrea@gmail.com>
-Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- Documentation/litmus-tests/README        | 19 +++++++++++++++++++
- Documentation/litmus-tests/atomic/README | 16 ----------------
- 2 files changed, 19 insertions(+), 16 deletions(-)
- delete mode 100644 Documentation/litmus-tests/atomic/README
-
-diff --git a/Documentation/litmus-tests/README b/Documentation/litmus-tests/README
-index c4307ea9f996..ac0b270b456c 100644
---- a/Documentation/litmus-tests/README
-+++ b/Documentation/litmus-tests/README
-@@ -2,6 +2,25 @@
- LITMUS TESTS
- ============
- 
-+Each subdirectory contains litmus tests that are typical to describe the
-+semantics of respective kernel APIs.
-+For more information about how to "run" a litmus test or how to generate
-+a kernel test module based on a litmus test, please see
-+tools/memory-model/README.
-+
-+
-+atomic (/atomic derectory)
-+--------------------------
-+
-+Atomic-RMW+mb__after_atomic-is-stronger-than-acquire.litmus
-+    Test that an atomic RMW followed by a smp_mb__after_atomic() is
-+    stronger than a normal acquire: both the read and write parts of
-+    the RMW are ordered before the subsequential memory accesses.
-+
-+Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
-+    Test that atomic_set() cannot break the atomicity of atomic RMWs.
-+
-+
- RCU (/rcu directory)
- --------------------
- 
-diff --git a/Documentation/litmus-tests/atomic/README b/Documentation/litmus-tests/atomic/README
-deleted file mode 100644
-index 714cf93816ea..000000000000
---- a/Documentation/litmus-tests/atomic/README
-+++ /dev/null
-@@ -1,16 +0,0 @@
--This directory contains litmus tests that are typical to describe the semantics
--of our atomic APIs. For more information about how to "run" a litmus test or
--how to generate a kernel test module based on a litmus test, please see
--tools/memory-model/README.
--
--============
--LITMUS TESTS
--============
--
--Atomic-RMW+mb__after_atomic-is-stronger-than-acquire
--	Test that an atomic RMW followed by a smp_mb__after_atomic() is
--	stronger than a normal acquire: both the read and write parts of
--	the RMW are ordered before the subsequential memory accesses.
--
--Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
--	Test that atomic_set() cannot break the atomicity of atomic RMWs.
--- 
-2.17.1
-
-
+Thank you.
+Raghavendra
