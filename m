@@ -2,145 +2,131 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1827DCA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A544CA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3CF7206B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 16:58:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jIfCDoTC"
+	by mail.kernel.org (Postfix) with ESMTP id 40EA5206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:00:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbgELQ6c (ORCPT
+        id S1728485AbgELRAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 12:58:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33182 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgELQ6b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 12:58:31 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62CA3C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 09:58:31 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id k6so14784035iob.3
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 09:58:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mi+7tCnacK5Jy7mKSoTkTKMPF4P1Yw/xhRvgr46sMlM=;
-        b=jIfCDoTCAH5GwV1mXMIJOCVzQltbxfLSL2kwDM+VFo2O6YeTQGFH2BU78YfEwjsvrb
-         4rxQt2D+glH318nmIpf+5vcd2zwN545v0cLgOLi6VS0b/3fdjse1e1eetBOUlNitFvMg
-         6/33/8kPY0dpWTHlZDuto+NTZ+fBEp6yUvMImxkedmb163IhZUQyiQU34uGx/nKMtLFb
-         siNc0lCKAih382PVnwaTZQ2vQs3wx2ZpMxm0dAwZ3mY5WOraEYSw5IeNRpBV4dsChUef
-         lhJIz+VzlU/sapXsBVC1xkcTCaWjXf7bvNqFkP9mCToh5p+GVUeJMlyOE8huIHTdGXIy
-         Gzhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mi+7tCnacK5Jy7mKSoTkTKMPF4P1Yw/xhRvgr46sMlM=;
-        b=JSsflIP7n0isyL064kwubn79bi/RFU8EonHQ1mOzSQ4Y8COuPl6dLJOaZ3oDisbO3F
-         HxIV5rlCo3ln9GAnZs/uJOsc4kg00Ek8ADv0Z0iUdeuBspgq7RsQacDAkQHy6SAWB0qD
-         kdpjgwlsE0rRNughdhEK9bU2QwiIn0l4DEvpe5S6LFruX4GK4bCM4UWyDCG9Tx06YFms
-         8hvb0PNOydf5m+ofgkvDjtNp6NqIfQHp0osD9KrWdyOH+T9VYBWKjeagF9jxULg+I/U7
-         skcqE7nmPjZtxr4OCbTRsWTNH0c2XG9WICFZk1mXjju6s8AKv1jEePV3hgbt4ix+TBW0
-         BBUw==
-X-Gm-Message-State: AGi0PuYXk4CBE65UPOrnMu//muzkjB2DlMuZq9CXj/9PwPqBSEZhS4FB
-        WEVi6jwnNJ68/1qZcH/8kSN9qnBXGthHlxci+I7PwA==
-X-Google-Smtp-Source: APiQypKx5qJnwBpmI84ld8f5gXdVE2PTGwixpadOnUEFMdACgzu6Lq+nVSrPX/5KZQX86XCMmGCR6S8ABb1ycIYUz6A=
-X-Received: by 2002:a02:a60f:: with SMTP id c15mr11263022jam.24.1589302710267;
- Tue, 12 May 2020 09:58:30 -0700 (PDT)
+        Tue, 12 May 2020 13:00:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:58704 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725851AbgELRAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 13:00:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 88794D6E;
+        Tue, 12 May 2020 10:00:23 -0700 (PDT)
+Received: from e119603-lin.cambridge.arm.com (unknown [10.57.61.168])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6FE453F305;
+        Tue, 12 May 2020 10:00:22 -0700 (PDT)
+Date:   Tue, 12 May 2020 18:00:20 +0100
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Jonathan.Cameron@Huawei.com, james.quinlan@broadcom.com,
+        lukasz.luba@arm.com, sudeep.holla@arm.com
+Subject: Re: [PATCH v7 1/9] firmware: arm_scmi: Add notification
+ protocol-registration
+Message-ID: <20200512170020.GC17648@e119603-lin.cambridge.arm.com>
+References: <20200504163855.54548-1-cristian.marussi@arm.com>
+ <20200504163855.54548-2-cristian.marussi@arm.com>
+ <20200506152550.GA21779@arm.com>
+ <20200511220403.GB17648@e119603-lin.cambridge.arm.com>
 MIME-Version: 1.0
-References: <158923982830.20128.14580309786525588408.stgit@naples-babu.amd.com>
- <158923999440.20128.4859351750654993810.stgit@naples-babu.amd.com>
- <CALMp9eTs4hYpDK+KzXEzaAptcfor+9f7cM9Yd9kvd5v27sdFRw@mail.gmail.com> <2fb5fd86-5202-f61b-fd55-b3554c5826da@amd.com>
-In-Reply-To: <2fb5fd86-5202-f61b-fd55-b3554c5826da@amd.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Tue, 12 May 2020 09:58:19 -0700
-Message-ID: <CALMp9eRT69LWGE8dZVuLv2mxgc_R3W1SnPswHkhS8K0ZUX_B-Q@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] KVM: x86: Move MPK feature detection to common code
-To:     Babu Moger <babu.moger@amd.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        mchehab+samsung@kernel.org, changbin.du@intel.com,
-        Nadav Amit <namit@vmware.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        yang.shi@linux.alibaba.com,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        anshuman.khandual@arm.com, Jan Kiszka <jan.kiszka@siemens.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        steven.price@arm.com, rppt@linux.vnet.ibm.com, peterx@redhat.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        Arjun Roy <arjunroy@google.com>, logang@deltatee.com,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, justin.he@arm.com,
-        robin.murphy@arm.com, ira.weiny@intel.com,
-        Kees Cook <keescook@chromium.org>,
-        Juergen Gross <jgross@suse.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        pawan.kumar.gupta@linux.intel.com,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
-        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511220403.GB17648@e119603-lin.cambridge.arm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 8:12 AM Babu Moger <babu.moger@amd.com> wrote:
->
->
->
-> On 5/11/20 6:51 PM, Jim Mattson wrote:
-> > On Mon, May 11, 2020 at 4:33 PM Babu Moger <babu.moger@amd.com> wrote:
-> >>
-> >> Both Intel and AMD support (MPK) Memory Protection Key feature.
-> >> Move the feature detection from VMX to the common code. It should
-> >> work for both the platforms now.
-> >>
-> >> Signed-off-by: Babu Moger <babu.moger@amd.com>
-> >> ---
-> >>  arch/x86/kvm/cpuid.c   |    4 +++-
-> >>  arch/x86/kvm/vmx/vmx.c |    4 ----
-> >>  2 files changed, 3 insertions(+), 5 deletions(-)
-> >>
-> >> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> >> index 901cd1fdecd9..3da7d6ea7574 100644
-> >> --- a/arch/x86/kvm/cpuid.c
-> >> +++ b/arch/x86/kvm/cpuid.c
-> >> @@ -278,6 +278,8 @@ void kvm_set_cpu_caps(void)
-> >>  #ifdef CONFIG_X86_64
-> >>         unsigned int f_gbpages = F(GBPAGES);
-> >>         unsigned int f_lm = F(LM);
-> >> +       /* PKU is not yet implemented for shadow paging. */
-> >> +       unsigned int f_pku = tdp_enabled ? F(PKU) : 0;
-> >
-> > I think we still want to require that OSPKE be set on the host before
-> > exposing PKU to the guest.
-> >
->
-> Ok I can add this check.
->
-> +       unsigned int f_pku = tdp_enabled && F(OSPKE)? F(PKU) : 0;
+On Mon, May 11, 2020 at 11:04:03PM +0100, Cristian Marussi wrote:
+> Hi Dave
+> 
+> thanks for the review first of all.
+> 
+[snip]
 
-That doesn't do what you think it does. F(OSPKE) is a non-zero
-constant, so that conjunct is always true.
+> > I'm not sure about scmi_notification_exit() (see below).
+[snip]
+> > > +/**
+> > > + * scmi_notification_exit()  - Shutdown and clean Notification core
+> > > + * @handle: The handle identifying the platform instance to shutdown
+> > > + */
+> > > +void scmi_notification_exit(struct scmi_handle *handle)
+> > > +{
+> > > +	struct scmi_notify_instance *ni = handle->notify_priv;
+> > > +
+> > > +	if (unlikely(!ni || !atomic_read(&ni->initialized)))
+> > > +		return;
+> > > +
+> > > +	atomic_set(&ni->enabled, 0);
+> > > +	/* Ensure atomic values are updated */
+> > > +	smp_mb__after_atomic();
+> > 
+> > If users can race with this, we're dead: the atomic by itself doesn't
+> > ensure that handle is not in use once we arrive here.  Should this
+> > be a refcount instead?
+> > 
+> > If users can't race with this, we probably don't protection here.
+> > 
+> > 
+> > I may be misunderstanding what this code is doing...
+> > 
+> 
+> First of all the enabled flag does not probably belong to this commit properly;
+> here is initialized but it is really fully used only in subsequent patches
+> (...so makes apparently little sense here... my bad...)
+> 
+> Anyway, in general SCMI protocols (beside notifications stuff) are initialized
+> as depicted above, BUT they are never deinitialized explicitly (there's no
+> equivalent scmi_protocol_deinit()) and also proto devices are never destroyed:
+> so there's no scmi_protocol_deregister_events() neither in this series, because
+> it would have been tricky to properly invoke it and would have not been consistent
+> with the original SCMI design.
+> 
+> On the other side since in protocol driver _remove() some general protos resources
+> are in fact freed anyway, for consistency I decided to free the devm notification
+> resources allocated with the above init() in scmi_notification_exit(): this should
+> happen only at system shutdown in fact when notification are no more of a concern.
+> 
+> So given there's no explicit deregister I had to ensure somehow that the wanna-be-freed
+> notif devm resources were safe to be released.
+> 
+> In this context the 'enabled' atomic flag is set to 0 @_exit to stop the dispatch of the
+> events (possibly still coming from the fw) from the ISR into the kfifo queues: once such
+> pkts flow is stopped I destroy_sync() (in a subsequent patch @_exit too) all the workqueues
+> fetching the events from the kfifos: this way I can be sure that all the notif resources
+> are no more used at all when I free all of them with devm_release() at the end.
+> 
+> All of this is an additional precaution against buggy fw not stopping sending events
+> even when asked to do so (by drivers when deregistering notif callbacks in their shutdown)
+> 
+> Give the above scenario on shutdown (which I never observed to tell the truth), and the fact
+> I'm freeing all devm res (including ni) at shutdown, it's now apparent ALSO that I cannot use
+> 'enabled' to keep stopped the flow in a safe way after its enclosing struct ni has been freed !
+> 
+> So I'll remove the 'enable' atomic_t too and rely equally on the bare !ni check to determine
+> if the notification are enabled and should be dispatched. So that in 
+> 
+
+...replying to my early self here (o_O)....I'd add that I've tested the above changes (removing
+initialized and enabled) triggering this _exit path by brutally unbinding the platform protocol
+driver and I can see the notifications flow stop and the queues emptied as expected without
+tragedy...the SCMI stack in general is not so happy though at that point, since it is not even
+supposed to be unloaded ever in fact...I wonder if this limit condition(unbind of a core SCMI
+driver which is not even modularizable in Kconfig) makes sense to be tested at all...
+(if not for testing this specific code path...)
+
+Cheers
+
+Cristian
+
