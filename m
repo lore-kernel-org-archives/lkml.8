@@ -2,142 +2,148 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51249CA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56F3CA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25B88206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5254206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 19:27:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QrgzGmWQ"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="o3maW5cs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731036AbgELTZ1 (ORCPT
+        id S1730729AbgELT1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 15:25:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgELTZ0 (ORCPT
+        Tue, 12 May 2020 15:27:24 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:35878 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725554AbgELT1Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 15:25:26 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A025C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:25:26 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id t40so9882964pjb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 12:25:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zuvKbkxXexDFgEr1pGnuiyt05zDdT11JeOxs67G6etM=;
-        b=QrgzGmWQtElD5mjDu3W8wIpwV1hy6zO5D4IGwwOsKgvGqbaM7TGjkewco9AYTSGXlv
-         dWsAVSyFtoNXZ/+C554O1raxb4PYKxPNEq4eBRLvewfg2sLpL6VawYdI7rYRn9aSZHkd
-         3QqRZuo0mp94NP4bIrrxWUWlYjP41OnHwnU2A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zuvKbkxXexDFgEr1pGnuiyt05zDdT11JeOxs67G6etM=;
-        b=gGuzvmHecHsD3f9mN4d7MKFktcEgtBQ9rCzywdsEY30UzyhBwV4ATvJqtjvXqqA7HI
-         Kw1tAxQTGELPqjfDMq+hLJw2aUkot7lDWvLl6U3UbwtjZvjR30BmbqRzBGtrSp2BhOdT
-         FekxKvluFDeQU7KqJaGYCCnJI226WUzkenRagD6L9AkGkfjVl3+5dUCABqLGtxgp4bsz
-         qW7+flztj6M0fSB9gvO7xDhpge+5x05bsuUdovDk50RPg2qMSpbfpZB4Upq9CcPLpk27
-         YM2Myp8NiiJfI7NTkHLTEv17KUe/gz1u7OOIEZY+Km6GcaKinHjLFMg+QYiSuA1V23M6
-         0Vcw==
-X-Gm-Message-State: AGi0PuYW6XHIZig/9exJ1Qcui2Up3smajChhjuxZvU+skH9LMH/UnZSr
-        aBqAz699+Z3R86lJCayBiTs6Bw==
-X-Google-Smtp-Source: APiQypLJuiWQRFv5kofh3l2xnXnOJoCBvEnuis0K48GEmJut0JZfFKUjUksikIwYvKq/qZ8mSMhu+g==
-X-Received: by 2002:a17:902:103:: with SMTP id 3mr21731839plb.325.1589311526054;
-        Tue, 12 May 2020 12:25:26 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 3sm12789369pfo.27.2020.05.12.12.25.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 12:25:25 -0700 (PDT)
-Date:   Tue, 12 May 2020 12:25:24 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Subject: Re: [PATCH 3/5] exec: Remove recursion from search_binary_handler
-Message-ID: <202005121218.ED0B728DA@keescook>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
- <87sgga6ze4.fsf@x220.int.ebiederm.org>
- <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
- <87eerszyim.fsf_-_@x220.int.ebiederm.org>
- <ee83587b-8a1c-3c4f-cc0f-7bc98afabae1@I-love.SAKURA.ne.jp>
- <CAHk-=wgQ2ovXMW=5ZHCpowkE1PwPQSL7oV4YXzBxd6eqNRXxnQ@mail.gmail.com>
- <87sgg6v8we.fsf@x220.int.ebiederm.org>
- <202005111428.B094E3B76A@keescook>
- <874kslq9jm.fsf@x220.int.ebiederm.org>
+        Tue, 12 May 2020 15:27:24 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04CJNHsN171902;
+        Tue, 12 May 2020 19:26:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=B1ilk38pVJNHZxtzKrEaQQmfeMCogI5wZ4W4cxoKqao=;
+ b=o3maW5csK70kotv7E5lIflQZ+u7EKprZxTRfg8ifZGlXpTy/igvyAEBbHyODj9DwVXim
+ G98q0xFRZhF6JXOHIonEygmtt1KR29UnDN2zVXO3uYNrdNAMRdecK7aNu4lp/1KDtmQY
+ XN64GfVpoGdAfL8Kye5L9kTUtAwYhcZK/FoCK4vSux55d/Cnk2D6zLhcyonWCkVItPOm
+ QksOKWkWkTFA+5LxejbhmpxxxZhR4u8sXKiQMtaXE8JHlIT3LH3KIAyWxm9I3XzxUVms
+ yh4Ge6vxCJR5x3YOXrLDFLT3ZjJP5i2dACy5JcMamyWQfRhirffy8z6w0IgD6plGWJH8 SA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 3100xwgb40-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 May 2020 19:26:50 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04CJIk6m130040;
+        Tue, 12 May 2020 19:26:50 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 3100ynesuj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 May 2020 19:26:50 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04CJQhbD018845;
+        Tue, 12 May 2020 19:26:43 GMT
+Received: from linux-1.home (/92.157.36.49)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 12 May 2020 12:26:42 -0700
+Subject: Re: [RFC v4][PATCH part-1 0/7] ASI - Part I (ASI Infrastructure and
+ PTI)
+To:     Dave Hansen <dave.hansen@intel.com>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     pbonzini@redhat.com, konrad.wilk@oracle.com,
+        jan.setjeeilers@oracle.com, liran.alon@oracle.com,
+        junaids@google.com, graf@amazon.de, rppt@linux.vnet.ibm.com,
+        kuzuno@gmail.com, mgross@linux.intel.com
+References: <20200504144939.11318-1-alexandre.chartre@oracle.com>
+ <a65d6cbf-41de-3001-6792-21a4233d8467@intel.com>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Message-ID: <bdfe70f7-2c61-092a-86d0-a7c71e6a3a8d@oracle.com>
+Date:   Tue, 12 May 2020 21:25:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874kslq9jm.fsf@x220.int.ebiederm.org>
+In-Reply-To: <a65d6cbf-41de-3001-6792-21a4233d8467@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9619 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ malwarescore=0 mlxscore=0 mlxlogscore=999 spamscore=0 suspectscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005120145
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9619 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 cotscore=-2147483648 bulkscore=0
+ phishscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
+ impostorscore=0 spamscore=0 malwarescore=0 priorityscore=1501 mlxscore=0
+ suspectscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005120145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 01:42:53PM -0500, Eric W. Biederman wrote:
-> Kees Cook <keescook@chromium.org> writes:
-> > Should binfmt_misc do the install, or can the consuming binfmt do it?
-> > i.e. when binfmt_elf sees bprm->execfd, does it perform the install
-> > instead?
+
+Hi Dave,
+
+On 5/12/20 7:45 PM, Dave Hansen wrote:
+> On 5/4/20 7:49 AM, Alexandre Chartre wrote:
+>> This version 4 of the kernel Address Space Isolation (ASI) RFC. I have
+>> broken it down into three distinct parts:
+>>
+>>   - Part I: ASI Infrastructure and PTI (this part)
+>>   - Part II: Decorated Page-Table
+>>   - Part III: ASI Test Driver and CLI
+>>
+>> Part I is similar to RFCv3 [3] with some small bug fixes. Parts II and III
+>> extend the initial patchset: part II introduces decorated page-table in
+>> order to provide convenient page-table management functions, and part III
+>> provides a driver and CLI for testing ASI (using parts I and II).
 > 
-> I am still thinking about this one, but here is where I am at.  At a
-> practical level passing the file descriptor of the script to interpreter
-> seems like something we should encourage in the long term.  It removes
-> races and it is cheaper because then the interpreter does not have to
-> turn around and open the script itself.
+> These look interesting.  I haven't found any holes in your methods,
+> although the interrupt depth tracking worries me a bit.  I tried and
+> failed to do a similar thing with PTI in the NMI path, but you might
+> have just bested me there. :)
 
-Yeah, this does sounds pretty good, though I have concerns about doing
-it for a process that isn't expecting it. I've seen a lot of bad code
-make assumptions about initial fd numbers. :(
+Thanks for taking a look. I am glad it seems okay, I have run several tests
+and was unable to have it fail (so far) while previous versions were easily
+breakable.
 
-> Strictly speaking binfmt_misc should not need to close the file
-> descriptor in binfmt_misc because we have already unshared the files
-> struct and reset_files_struct should handle restoring it.
+> It's very interesting that you've been able to implement PTI underneath
+> all of this, and the "test driver" is really entertaining!
 
-If I get what you mean, I agree. The error case is fine.
+Yeah, this a kind of PTI on steroid as part of the implementation was done
+based on the PTI implementation but making it more generic. The test driver
+has proven very useful for testing and debugging. I am currently using it
+(with some extensions) for helping me define the KVM ASI: I can connect the
+driver to a KVM ASI, dump the KVM ASI faults and dynamically add mappings;
+this is very handy.
 
-> Calling fd_install in binfmt_misc still seems wrong, as that exposes
-> the new file descriptor to user space with the old creds.
+> That said, this is working in some of the nastiest corners of the x86
+> code and this is going to take quite an investment to get reviewed.  I'm
+> not *quite* sure it's all worth it.
 
-I haven't dug into the details here -- is there a real risk here? The
-old creds are what opened the file originally for the exec. Are you
-thinking about executable-but-not-readable files?
+I am also concerned about making changes in all these nasty corners. I am a
+bit more confident now that it is working to implement PTI because PTI provides
+a good stress test for ASI. I am also waiting for (and reviewing) all x86/entry
+changes from tglx; this greatly cleans up the entry code and will hopefully help
+for the integration of ASI. I will rebase as soon as these all changes are
+integrated and check the benefit for ASI.
 
-> It is possible although unlikely for userspace to find the file
-> descriptor without consulting AT_EXECFD so just to be conservative I
-> think we should install the file descriptor in begin_new_exec even if
-> the next interpreter does not support AT_EXECFD.
+> So, this isn't being ignored, I'm just not quite sure what to do with
+> it, yet.
+> 
 
-I think universally installing the fd needs to be a distinct patch --
-it's going to have a lot of consequences, IMO. We can certainly deal
-with them, but I don't think it should be part of this clean-up series.
+I am working on defining ASI for KVM. Hopefully this will provide a good
+usage example, and make the changes more compelling.
 
-> I am still working on how to handle recursive binfmts but I suspect it
-> is just a matter of having an array of struct files in struct
-> linux_binprm.
+Thanks.
 
-If install is left if binfmt_misc, then the recursive problem goes away,
-yes?
-
--- 
-Kees Cook
+alex.
