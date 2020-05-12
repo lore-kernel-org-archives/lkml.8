@@ -1,93 +1,101 @@
 Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,PRICE_CATALOG,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A29ACC54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 04:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBEDC54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 04:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C0B42072B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 04:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 233D32072B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 04:08:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Pto2LKYK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725932AbgELEFl convert rfc822-to-8bit (ORCPT
+        id S1725970AbgELEIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 00:05:41 -0400
-Received: from mail.itasa.com.ar ([190.124.15.130]:55492 "EHLO envases.com"
+        Tue, 12 May 2020 00:08:46 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:42879 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbgELEFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 00:05:41 -0400
-X-Greylist: delayed 902 seconds by postgrey-1.27 at vger.kernel.org; Tue, 12 May 2020 00:05:40 EDT
-Received: from 21cn.com (192.254.72.18) by ITA-SV004.ita.local (192.168.0.31)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1531.3; Tue, 12
- May 2020 00:48:11 -0300
-Reply-To: <robturner-purchase@exporttogroup.co>
-From:   exporttogroup <nvega@itasa.com.ar>
-To:     <linux-kernel@vger.kernel.org>
-Subject: Quotation request  to linux-kernel@vger.kernel.org
-Date:   Mon, 11 May 2020 20:50:35 -0700
-Message-ID: <20200511205034.50956CAA7F395FF8@itasa.com.ar>
+        id S1725554AbgELEIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 00:08:46 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49LknQ5ZkKz9sRf;
+        Tue, 12 May 2020 14:08:42 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589256524;
+        bh=JZ51i3i4AIOfFcpdw05cKI7JblWRDIAPMwXLUOY5IOg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Pto2LKYK6YeLAlY/0AwN5HgyTTZm7lTiMgvzBYKPDM8ONir7nq490howafSQr5Arj
+         u2Z3brYRjmWabgT5FI+oB+p3/l9V2Fb3K/xkl3/VPvqKyY/jVnDNsF2dm8FwCV2S4Z
+         mlmfamOE9ERnSoamOGOU1/1rfeUC8FCgqd4C+m4JS4sfz+kuY3nMBEHqEpS7MDTFJR
+         1rlqhs8su1MzYojY07lQqhvtLiaL12VnPjYmngqRuFMgzgB1rpNJdDFL40/QWru42h
+         ZCv3Y14xnK86IpnvTXUsaeaAoeJH5UN9YS0fQ68DMOJnC3CkrA8GOFzBHmj3I84bn/
+         1tSTuJIiA9jKw==
+Date:   Tue, 12 May 2020 14:08:40 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christophe Kerello <christophe.kerello@st.com>
+Subject: linux-next: build failure after merge of the nand tree
+Message-ID: <20200512140840.0e102581@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-ClientProxiedBy: ITA-SV004.ita.local (192.168.0.31) To ITA-SV004.ita.local
- (192.168.0.31)
+Content-Type: multipart/signed; boundary="Sig_/Kk17_c2x/oBhBhM2KSzkr/t";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Sir/Madame
+--Sig_/Kk17_c2x/oBhBhM2KSzkr/t
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Good day.
-I am Rob Turner, Head of Procurement. Our marketing unit 
-requested your  products Models after coming across your Trade 
-fair catalog last year and Webpage on registered trade site,
- 
-we are interested to Purchase your products and its accessories 
-as requested by our customers here in UK Market and Europe, 
-Please send us your Updated product catalog.
+Hi all,
 
-Please if you know your company will be able to handle extra 
-purchase this year as we have good business experience.
- 
-Once we confirm your competitive Price List of your product and 
-company Terms, we will place Market order immediately with our 
-company certificate and experience in business.
+After merging the nand tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
 
-Send your reply to robturner-purchase@exporttogroup.co for us to 
-be able to treat with care and urgent.
+drivers/mtd/nand/raw/stm32_fmc2_nand.c: In function 'stm32_fmc2_nfc_write_d=
+ata':
+drivers/mtd/nand/raw/stm32_fmc2_nand.c:1294:34: error: 'fmc2' undeclared (f=
+irst use in this function)
+ 1294 |   stm32_fmc2_nfc_set_buswidth_16(fmc2, true);
+      |                                  ^~~~
+drivers/mtd/nand/raw/stm32_fmc2_nand.c:1294:34: note: each undeclared ident=
+ifier is reported only once for each function it appears in
 
-Regards
-  Rob Turner
- Head of Procurement Operations
- robturner-purchase@exporttogroup.co
+Caused by commit
 
- www.exporttogroup.co
+  6c1c863ca431 ("mtd: rawnand: stm32_fmc2: cleanup")
 
-REGISTERED OFFICE 171 VICTORIA STREET, LONDON SW1E 5NN
-COMPANY REGISTRATION NUMBER 233462 VAT NO. GB232457280
+I have used the nand tree from next-20200511 for today.
 
+--=20
+Cheers,
+Stephen Rothwell
 
-This e-mail may contain confidential and/or privileged 
-information.If you are not the intended recipient (or have 
-received this e-mail in error) please notify the sender 
-immediately and destroy this e-mail. Any unauthorised copying, 
-disclosure or distribution of the material in this e-mail is 
-strictly forbidden
-Este e-mail pode conter informações confidenciais e / ou 
-privilegiadas. Se você não for o destinatário pretendido (ou 
-tiver recebido este e-mail por engano), notifique o remetente 
-imediatamente e destrua este e-mail. Qualquer cópia, divulgação 
-ou distribuição não autorizada do material neste e-mail é 
-estritamente proibida.
- Before printing think about your responsibility for the  
-ENVIRONMENT
+--Sig_/Kk17_c2x/oBhBhM2KSzkr/t
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl66IUgACgkQAVBC80lX
+0Gyxhwf+OT25PnqT/kCynU9+imdzK0hJadZEiDkD48ogaSrHJpndYqkAFE9kGK/q
+kInIi/yWWsGAh+TcNjA0EMVyISLrnFDhiyUpt14IBmvVk/2iipLAhHSHqLabyKww
+Dbi1Dnz2e3lkzY1X5veHmD3e+F3dcLXv88zs8tzdo9xK1udVTgUsAgxKWYw2+cws
+s4C7ZrRodD+nwDn2JO7hSH/ztTt63bFY/AElUvAIoNEEYNMM9o5cJ/2gezbJUDMC
+u1zCJG8X4yl/JOiF81Q0sDOs1G+bVPg6QaFE9UiFqoMzHLFaPBI+y/43mRePx8Gp
+fP9sIjxv91JnUz0X7QvinxCKdeA0Zw==
+=sTn0
+-----END PGP SIGNATURE-----
 
-
-
+--Sig_/Kk17_c2x/oBhBhM2KSzkr/t--
