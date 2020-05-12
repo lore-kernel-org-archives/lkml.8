@@ -2,124 +2,125 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2395CC54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A52E1C54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A0AB206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81E2C20673
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:53:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DQ705lHO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729473AbgELKwU (ORCPT
+        id S1729511AbgELKxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 06:52:20 -0400
-Received: from foss.arm.com ([217.140.110.172]:52242 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726193AbgELKwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 06:52:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EEE3B30E;
-        Tue, 12 May 2020 03:52:18 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BA6A43F71E;
-        Tue, 12 May 2020 03:52:17 -0700 (PDT)
-Date:   Tue, 12 May 2020 11:52:11 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Alan Mikhak <alan.mikhak@sifive.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        amurray@thegoodpenguin.co.uk, bhelgaas@google.com, kishon@ti.com,
-        paul.walmsley@sifive.com
-Subject: Re: [PATCH] PCI: dwc: Program outbound ATU upper limit register
-Message-ID: <20200512105211.GA11726@e121166-lin.cambridge.arm.com>
-References: <1585785493-23210-1-git-send-email-alan.mikhak@sifive.com>
+        Tue, 12 May 2020 06:53:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60976 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727859AbgELKxi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 06:53:38 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 731AAC061A0C;
+        Tue, 12 May 2020 03:53:38 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Lvmb3mLsz9sSg;
+        Tue, 12 May 2020 20:53:35 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589280816;
+        bh=bIy8uBq3y/Wu/2YykH70JeSclHrTB2b071QiJhS3muA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=DQ705lHOxNB/nDGtDO2EX28brQg1tiHZtV5kXSukX8zVzBd1qI6U5XTIXy2P/tMts
+         Z6T0PmAdBYon5pwDiaajARbZ7UswEHVPSkelBWheMZ7Yi+ZC5K13Jb82jIOfCB8xt4
+         ttL/UuqKSpenBtfU0J8kK3ng2GZEreL7hloneTGPII/jlAI+BbXkm8r8V+aNN1Q9Yn
+         C/7+xA/6r2JngyNs1t5wIM9OI4DFnD9NtMroqrFeRfJ2mFRLg5VcL9JEPAlwM6j39S
+         D+/hZ7as36GNv4Z4fli11szow7JbnnHxjmYf+Aq2+I79d6ScZgqPgHI8HHDzx/0xuw
+         f13Cq7Z9He06w==
+Date:   Tue, 12 May 2020 20:53:33 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: linux-next: manual merge of the akpm-current tree with the userns
+ tree
+Message-ID: <20200512205333.21bcd7f4@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585785493-23210-1-git-send-email-alan.mikhak@sifive.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; boundary="Sig_//JwsautAs_8SD41GUF6=ikD";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 04:58:13PM -0700, Alan Mikhak wrote:
-> From: Alan Mikhak <alan.mikhak@sifive.com>
-> 
-> Function dw_pcie_prog_outbound_atu_unroll() does not program the upper
-> 32-bit ATU limit register. Since ATU programming functions limit the
-> size of the translated region to 4GB by using a u32 size parameter,
-> these issues may combine into undefined behavior for resource sizes
-> with non-zero upper 32-bits.
-> 
-> For example, a 128GB address space starting at physical CPU address of
-> 0x2000000000 with size of 0x2000000000 needs the following values
-> programmed into the lower and upper 32-bit limit registers:
->  0x3fffffff in the upper 32-bit limit register
->  0xffffffff in the lower 32-bit limit register
-> 
-> Currently, only the lower 32-bit limit register is programmed with a
-> value of 0xffffffff but the upper 32-bit limit register is not being
-> programmed. As a result, the upper 32-bit limit register remains at its
-> default value after reset of 0x0.
-> 
-> These issues may combine to produce undefined behavior since the ATU
-> limit address may be lower than the ATU base address. Programming the
-> upper ATU limit address register prevents such undefined behavior despite
-> the region size getting truncated due to the 32-bit size limit.
-> 
-> Signed-off-by: Alan Mikhak <alan.mikhak@sifive.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 7 +++++--
->  drivers/pci/controller/dwc/pcie-designware.h | 3 ++-
->  2 files changed, 7 insertions(+), 3 deletions(-)
+--Sig_//JwsautAs_8SD41GUF6=ikD
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied to pci/dwc, thanks.
+Hi all,
 
-Lorenzo
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 681548c88282..c92496e36fd5 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -244,13 +244,16 @@ static void dw_pcie_prog_outbound_atu_unroll(struct dw_pcie *pci, int index,
->  					     u64 pci_addr, u32 size)
->  {
->  	u32 retries, val;
-> +	u64 limit_addr = cpu_addr + size - 1;
->  
->  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_LOWER_BASE,
->  				 lower_32_bits(cpu_addr));
->  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_BASE,
->  				 upper_32_bits(cpu_addr));
-> -	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_LIMIT,
-> -				 lower_32_bits(cpu_addr + size - 1));
-> +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_LOWER_LIMIT,
-> +				 lower_32_bits(limit_addr));
-> +	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_LIMIT,
-> +				 upper_32_bits(limit_addr));
->  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_LOWER_TARGET,
->  				 lower_32_bits(pci_addr));
->  	dw_pcie_writel_ob_unroll(pci, index, PCIE_ATU_UNR_UPPER_TARGET,
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index a22ea5982817..5ce1aef706c5 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -112,9 +112,10 @@
->  #define PCIE_ATU_UNR_REGION_CTRL2	0x04
->  #define PCIE_ATU_UNR_LOWER_BASE		0x08
->  #define PCIE_ATU_UNR_UPPER_BASE		0x0C
-> -#define PCIE_ATU_UNR_LIMIT		0x10
-> +#define PCIE_ATU_UNR_LOWER_LIMIT	0x10
->  #define PCIE_ATU_UNR_LOWER_TARGET	0x14
->  #define PCIE_ATU_UNR_UPPER_TARGET	0x18
-> +#define PCIE_ATU_UNR_UPPER_LIMIT	0x20
->  
->  /*
->   * The default address offset between dbi_base and atu_base. Root controller
-> -- 
-> 2.7.4
-> 
+  include/linux/binfmts.h
+
+between commit:
+
+  96ecee29b0b5 ("exec: Merge install_exec_creds into setup_new_exec")
+
+from the userns tree and commit:
+
+  4bdbcefd2bd8 ("exec: simplify the copy_strings_kernel calling convention")
+
+from the akpm-current tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc include/linux/binfmts.h
+index 1b48e2154766,3d3afe094c97..000000000000
+--- a/include/linux/binfmts.h
++++ b/include/linux/binfmts.h
+@@@ -143,8 -144,8 +143,7 @@@ extern int setup_arg_pages(struct linux
+  extern int transfer_args_to_stack(struct linux_binprm *bprm,
+  				  unsigned long *sp_location);
+  extern int bprm_change_interp(const char *interp, struct linux_binprm *bp=
+rm);
+- extern int copy_strings_kernel(int argc, const char *const *argv,
+- 			       struct linux_binprm *bprm);
++ int copy_string_kernel(const char *arg, struct linux_binprm *bprm);
+ -extern void install_exec_creds(struct linux_binprm *bprm);
+  extern void set_binfmt(struct linux_binfmt *new);
+  extern ssize_t read_code(struct file *, unsigned long, loff_t, size_t);
+ =20
+
+--Sig_//JwsautAs_8SD41GUF6=ikD
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl66gC0ACgkQAVBC80lX
+0GwFTwf/fgxys6r7HXBshJ770Jj2sSDI7ik7yBFmGg85LkbdNd8nQO4F81sk8E+t
+GryYhFNeThKgf1/Sc6GN6c2JFIJdDQCtYcpeckcAGdXaDsLiB2oTjDv0V6/QWrbf
+bxE2svJ0tQig8c495zmBvvDidPVGh4ieg6vGYTT4hLdMDPMtgC+KA2HS3+xjI+ke
+u0OS8KjDonJWuosgqhoUdnP1pqst5eZsMlO2GwGR923pBHDv33ay2uh3JfK52v2B
+B9BKIUEHaoqXg9u+icygOVUL3GB+uHao/0Vzej15DxvbNZSVq6TFhiB+9u8JXnQv
+VQaUfiV69JTpqJQQJdV9aiuQHjSi4w==
+=/NAz
+-----END PGP SIGNATURE-----
+
+--Sig_//JwsautAs_8SD41GUF6=ikD--
