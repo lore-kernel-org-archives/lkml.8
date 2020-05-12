@@ -2,89 +2,136 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B0BC54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E92CC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73AFE2072B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6464B206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:49:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gr42BgPt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729226AbgELIrY (ORCPT
+        id S1729045AbgELItL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 04:47:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:49504 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbgELIrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 04:47:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B14F21FB;
-        Tue, 12 May 2020 01:47:23 -0700 (PDT)
-Received: from [10.37.12.83] (unknown [10.37.12.83])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A066F3F305;
-        Tue, 12 May 2020 01:47:21 -0700 (PDT)
-Subject: Re: [PATCH] memory/samsung: reduce unnecessary mutex lock area
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Bernard Zhao <bernard@vivo.com>
-Cc:     Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        opensource.kernel@vivo.com
-References: <20200508131338.32956-1-bernard@vivo.com>
- <20200512065023.GA10741@kozik-lap>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <e762ce12-eff0-d3a5-f083-2b592921de59@arm.com>
-Date:   Tue, 12 May 2020 09:47:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200512065023.GA10741@kozik-lap>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 12 May 2020 04:49:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41024 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725776AbgELItL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 04:49:11 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F4DBC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 01:49:10 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x15so5469527pfa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 01:49:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=t97yRHpmHo8412WgRauzgIXQjp1lspYvNliDKxac5o8=;
+        b=gr42BgPt6fH1p27tOaC1DScaH67NkLMkrYxnzMUkrwYYxLwiu82+rNiSSDGp3LwtAf
+         hbp0nI1k6l7eH5+YKzgzpxDEcKZlxPutlQxWNVN4Qucn/LIppB45rD9wuVYlDvTGoQJu
+         ndVN221ndSVWUvbDeG4Y79IeH2z6kM4dvFBw4QYVKWN6y+3AezfVpySHgx92JlXnhWlL
+         KszvYITck8HhhV+vrhuht1XSRcDsG+6irVnuQmdqhXe8UaUrmgPdHVBmnasfWeX8Y6gN
+         CuU8qoiZ7Kh3OwrURwe7lYJGIdVtdoTwCV5PANs0mlje4XGdNQ1JamoBm8AZ25pp/7Pa
+         pNig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=t97yRHpmHo8412WgRauzgIXQjp1lspYvNliDKxac5o8=;
+        b=oJDzCJ2su4SY5wyp76zuKkKnW/NZXmNRf7+MPTvfWoxvxrKMqFZOiOSAXMP5VQP8A3
+         PHOTZR3O8p3LVMG1/9ZR2b6VDUj9d44qME3FNVPJC04q0qQrcDHU3nnBPwsBosrLUYHO
+         qFaqilibJosuuM0HXzH8O59x9pgYaGfIXwBDuj3mXDbpcuKU3KDGOzfYHVpDMeb409aZ
+         yGl5QLbZi86WKxX26zejlKnZJePl0dXVrP4aWBIR9sTVS+17CIvJ+PP/z2PlQloK8tI+
+         0O0mWEwuxti47sZhLdShgPR9S1HmVRErsznoxuCSWLIkTDX/y99+nxV395DUAb453Obb
+         0g/Q==
+X-Gm-Message-State: AGi0PuazaxSfAGCPUD+IwaA2GSWqkliHGeqL677pdsF8gPogpEDx7+Lb
+        tgb5zwbSBZFsbagyqVP6x3GPqw==
+X-Google-Smtp-Source: APiQypKCDzca+eCTQuciTT43aXbflnxzTa53g95PcTkGD9z0CskYBxnkXGY5zeFv+78SchqWqu8zcw==
+X-Received: by 2002:a62:e80e:: with SMTP id c14mr19361183pfi.83.1589273349558;
+        Tue, 12 May 2020 01:49:09 -0700 (PDT)
+Received: from localhost.localdomain ([117.196.230.85])
+        by smtp.gmail.com with ESMTPSA id 188sm11320866pfg.218.2020.05.12.01.49.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 May 2020 01:49:08 -0700 (PDT)
+From:   Sumit Garg <sumit.garg@linaro.org>
+To:     daniel.thompson@linaro.org, jason.wessel@windriver.com,
+        dianders@chromium.org
+Cc:     kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        Sumit Garg <sumit.garg@linaro.org>
+Subject: [PATCH] kgdb: Fix broken handling of printk() in NMI context
+Date:   Tue, 12 May 2020 14:18:34 +0530
+Message-Id: <1589273314-12060-1-git-send-email-sumit.garg@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+Since commit 42a0bb3f7138 ("printk/nmi: generic solution for safe printk
+in NMI"), kgdb entry in NMI context defaults to use safe NMI printk()
+which involves CPU specific buffers and deferred printk() until exit from
+NMI context.
 
-I am sorry, I was a bit busy recently.
+But kgdb being a stop-the-world debugger, we don't want to defer printk()
+especially backtrace on corresponding CPUs. So instead switch to normal
+printk() mode in kgdb_cpu_enter() if entry is in NMI context.
 
-On 5/12/20 7:50 AM, Krzysztof Kozlowski wrote:
-> On Fri, May 08, 2020 at 06:13:38AM -0700, Bernard Zhao wrote:
->> Maybe dmc->df->lock is unnecessary to protect function
->> exynos5_dmc_perf_events_check(dmc). If we have to protect,
->> dmc->lock is more better and more effective.
->> Also, it seems not needed to protect "if (ret) & dev_warn"
->> branch.
->>
->> Signed-off-by: Bernard Zhao <bernard@vivo.com>
->> ---
->>   drivers/memory/samsung/exynos5422-dmc.c | 6 ++----
->>   1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> I checked the concurrent accesses and it looks correct.
-> 
-> Lukasz, any review from your side?
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+---
 
-The lock from devfreq lock protects from a scenario when
-concurrent access from devfreq framework uses internal dmc fields 'load' 
-and 'total' (which are set to 'busy_time', 'total_time').
-The .get_dev_status can be called at any time (even due to thermal
-devfreq cooling action) and reads above fields.
-That's why the calculation of the new values inside dmc is protected.
+Similar change was posted earlier specific to arm64 here [1]. But after
+discussions it emerged out that this broken handling of printk() in NMI
+context should be a common problem that is relevant to other archs as well.
+So fix this handling in kgdb_cpu_enter() as there can be multiple entry
+points to kgdb in NMI context.
 
-This patch should not be taken IMO. Maybe we can release lock before the
-if statement, just to speed-up.
+[1] https://lkml.org/lkml/2020/4/24/328
 
-Regards,
-Lukasz
+ kernel/debug/debug_core.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
+diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+index 2b7c9b6..ab2933f 100644
+--- a/kernel/debug/debug_core.c
++++ b/kernel/debug/debug_core.c
+@@ -567,6 +567,15 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
+ 	kgdb_info[ks->cpu].enter_kgdb++;
+ 	kgdb_info[ks->cpu].exception_state |= exception_state;
+ 
++	/*
++	 * kgdb entry in NMI context defaults to use safe NMI printk() which
++	 * involves CPU specific buffers and deferred printk() until exit from
++	 * NMI context. But kgdb being a stop-the-world debugger, we don't want
++	 * to defer printk(). So instead switch to normal printk() mode here.
++	 */
++	if (in_nmi())
++		printk_nmi_exit();
++
+ 	if (exception_state == DCPU_WANT_MASTER)
+ 		atomic_inc(&masters_in_kgdb);
+ 	else
+@@ -635,6 +644,8 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
+ 			atomic_dec(&slaves_in_kgdb);
+ 			dbg_touch_watchdogs();
+ 			local_irq_restore(flags);
++			if (in_nmi())
++				printk_nmi_enter();
+ 			return 0;
+ 		}
+ 		cpu_relax();
+@@ -772,6 +783,8 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
+ 	raw_spin_unlock(&dbg_master_lock);
+ 	dbg_touch_watchdogs();
+ 	local_irq_restore(flags);
++	if (in_nmi())
++		printk_nmi_enter();
+ 
+ 	return kgdb_info[cpu].ret_state;
+ }
+-- 
+2.7.4
 
-> 
-> Best regards,
-> Krzysztof
-> 
