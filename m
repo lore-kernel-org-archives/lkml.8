@@ -2,134 +2,116 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0CCFC54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 912FAC54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D07DC206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:32:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589268762;
-	bh=cRquIjFAbxbjjoOK5t/QWyXeCHOgCICCWAxA3sA3yM0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dDTKVLpmCp99wphahYVjMUW4ks17MkBvo29K0v1kO/NtPbHtJdFaMwtumqFi+vmkt
-	 cCETN439KIIG3P8A55pyocmYbnqXnRr4Nne9MjXfhjdLKmwiXaQsPe3vLM4DYaOGCw
-	 LMjRvZh7TQ9E3sXrvXmf+5GCvKo2W6tac0k/5KsU=
+	by mail.kernel.org (Postfix) with ESMTP id 7164F20733
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:33:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NhzuZATN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgELHcl (ORCPT
+        id S1728960AbgELHdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 03:32:41 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45887 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725823AbgELHcl (ORCPT
+        Tue, 12 May 2020 03:33:06 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:31885 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728416AbgELHdF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 03:32:41 -0400
-Received: by mail-wr1-f66.google.com with SMTP id v12so13988648wrp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 00:32:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rjR0xAaaRoHPNCmqXbAIef0LNkXJSTuZB54tpgVRD5I=;
-        b=Isq5NxLkAHEMxxMlF/7pkzCC0Cr/my3Sq7cZk2QF8LQBl6tsFY1eXWS+c1b9mmd7J+
-         bOihxLh1KDVMNydbcGc/sEUR9GwLEUZK713BYBUsw4SobbfBXxox+8UUljwTLhfA6fta
-         7Bn7TVA4et+StpZFQF7lbJypcZs2p3lDrdIMu971GbjzTZv3J5+DeAg2ElXgdqEcwHYs
-         GfBAZkFfXcs4+lt8mEjJFd5C30fvli0pIMQdde3lOzxirtROOPOwALexUQaS18S4ICsb
-         GI/W4KrgMidf+7xheAtDz9+h0b92qMmMsQ+OJGMtha5TFmhrUvZvh+ERJcvvJ2Ob415l
-         Blsw==
-X-Gm-Message-State: AGi0Pub3gX2afYrHs4SfSuYXH0n1IAZXeRyvJAgS/HalXL+rRNgvwO66
-        KiK6ArnUCEGwwhPLlbs5YrQ=
-X-Google-Smtp-Source: APiQypLQZqtnJSFzH38WJbvuO0r2ggsc2I3KPEMHsxbCyIRP9qoAd4tmtHbEOkaztWDe6d+0TdgOvg==
-X-Received: by 2002:adf:a74b:: with SMTP id e11mr21891062wrd.99.1589268758442;
-        Tue, 12 May 2020 00:32:38 -0700 (PDT)
-Received: from localhost (ip-37-188-140-86.eurotel.cz. [37.188.140.86])
-        by smtp.gmail.com with ESMTPSA id m3sm5751648wrn.96.2020.05.12.00.32.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 00:32:37 -0700 (PDT)
-Date:   Tue, 12 May 2020 09:32:36 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Minchan Kim <minchan@kernel.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH] mm, swap: Use prandom_u32_max()
-Message-ID: <20200512073236.GQ29153@dhcp22.suse.cz>
-References: <20200512064147.514493-1-ying.huang@intel.com>
- <20200512065049.GN29153@dhcp22.suse.cz>
- <875zd1pqu1.fsf@yhuang-dev.intel.com>
+        Tue, 12 May 2020 03:33:05 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589268785; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=PV0ffuseEJPvIxcDvTKmfLCk6MMv4KR9on4py3/Gz28=;
+ b=NhzuZATNf1+jd6McW8VOhVVl+s8NeWKwMuxd92inxertaj5PB4BBGtZ4pIOR8ohJo5KLiO0v
+ +LVQyFywLFE4ejqsWEDp2uvVXiZrntAmTcKiHvOMyoLBU5458RPc9wbWRNg0mzFS6kHyz5KS
+ LXJG173Fg1uqUDflEZAHBDnDLxk=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eba5118.7fecd11f1fb8-smtp-out-n03;
+ Tue, 12 May 2020 07:32:40 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 349C9C44788; Tue, 12 May 2020 07:32:40 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DB041C433CB;
+        Tue, 12 May 2020 07:32:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DB041C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <875zd1pqu1.fsf@yhuang-dev.intel.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] carl9170: Replace zero-length array with flexible-array
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200507151921.GA5083@embeddedor>
+References: <20200507151921.GA5083@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Christian Lamparter <chunkeey@googlemail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200512073240.349C9C44788@smtp.codeaurora.org>
+Date:   Tue, 12 May 2020 07:32:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 12-05-20 15:14:46, Huang, Ying wrote:
-> Michal Hocko <mhocko@kernel.org> writes:
-> 
-> > On Tue 12-05-20 14:41:46, Huang Ying wrote:
-> >> To improve the code readability and get random number with higher
-> >> quality.
-> >
-> > I understand the readability argument but why should prandom_u32_max
-> > (which I was not aware of) provide a higher quality randomness?
-> 
-> I am not expert on random number generator.  I have heard about that the
-> randomness of the low order bits of some random number generator isn't
-> good enough.  Anyway, by using the common implementation, the real
-> random number generator expert can fix the possible issue once for all
-> users.
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
 
-Please drop the quality argument if you cannot really justify it. This
-will likely just confuse future readers the same way it confused me
-here. Because prandom_u32_max uses the same source of randomness the
-only difference is the way how modulo vs. u64 overflow arithmetic is
-used for distributing values. I am not aware the later would be
-a way to achieve a higher quality randomness. If the interval
-distribution is better with the later then it would be great to have it
-documented.
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> sizeof(flexible-array-member) triggers a warning because flexible array
+> members have incomplete type[1]. There are some instances of code in
+> which the sizeof operator is being incorrectly/erroneously applied to
+> zero-length arrays and the result is zero. Such instances may be hiding
+> some bugs. So, this work (flexible-array member conversions) will also
+> help to get completely rid of those sorts of issues.
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-> >> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-> >> Cc: Michal Hocko <mhocko@suse.com>
-> >> Cc: Minchan Kim <minchan@kernel.org>
-> >> Cc: Tim Chen <tim.c.chen@linux.intel.com>
-> >> Cc: Hugh Dickins <hughd@google.com>
-> >
-> > To the change itself
-> > Acked-by: Michal Hocko <mhocko@suse.com>
-> 
-> Thanks!
-> 
-> Best Regards,
-> Huang, Ying
-> 
-> >> ---
-> >>  mm/swapfile.c | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >> 
-> >> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> >> index a0a123e59ce6..2ec8b21201d6 100644
-> >> --- a/mm/swapfile.c
-> >> +++ b/mm/swapfile.c
-> >> @@ -3220,7 +3220,7 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
-> >>  		 * select a random position to start with to help wear leveling
-> >>  		 * SSD
-> >>  		 */
-> >> -		p->cluster_next = 1 + (prandom_u32() % p->highest_bit);
-> >> +		p->cluster_next = 1 + prandom_u32_max(p->highest_bit);
-> >>  		nr_cluster = DIV_ROUND_UP(maxpages, SWAPFILE_CLUSTER);
-> >>  
-> >>  		cluster_info = kvcalloc(nr_cluster, sizeof(*cluster_info),
-> >> -- 
-> >> 2.26.2
+Patch applied to ath-next branch of ath.git, thanks.
+
+103dc3dab295 carl9170: Replace zero-length array with flexible-array
 
 -- 
-Michal Hocko
-SUSE Labs
+https://patchwork.kernel.org/patch/11534317/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
