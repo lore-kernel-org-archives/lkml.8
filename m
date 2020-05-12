@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F01C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A7AC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B65E20740
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD81820747
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:22:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="KkWWh4AL"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="ZSclaWce"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731642AbgELWWQ (ORCPT
+        id S1731635AbgELWWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:22:16 -0400
-Received: from vps.xff.cz ([195.181.215.36]:41484 "EHLO vps.xff.cz"
+        Tue, 12 May 2020 18:22:15 -0400
+Received: from vps.xff.cz ([195.181.215.36]:41446 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731049AbgELWWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728314AbgELWWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 May 2020 18:22:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1589322130; bh=b9l6jhTz95HtziyiK/WtyUDqMPHpI5aFV0oYbIcE+vw=;
+        t=1589322129; bh=2kuqCfvBiBgSUuWgI49jTz7T7hYvoNkypGtcPc22suM=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=KkWWh4ALhc+PRFHfEh099xQOptYQQ6xhyYOjUHyfazCqou4xI1fXgKsdo4YRZc1F8
-         u4/Z8EE33aneGs6oF52UHG4xIzT9TKZ+zkK+eTsbJJTdfe2XhlTFiJYjGRjMQq9pLi
-         acGqW5S+xeMVKlMqSb2rzMY07t4WLGspQbX5FGLk=
+        b=ZSclaWceGXKK8TlazmlVyjxbImVQl2CTSVLPfxDhZubC8op+g/z54lqTVRl1P09F4
+         uM2G1V54TCT6q3NccRezPMtaEHcgOZz1Wr44lX2RsUU3eC1KaVrPftGaFUnlFHBif4
+         DE/DEM5xwqDkELhUm0Az/4xdozKgpM9tkh8rH1p4=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
@@ -38,10 +38,10 @@ To:     linux-sunxi@googlegroups.com,
 Cc:     Ondrej Jirman <megous@megous.com>, Luca Weiss <luca@z3ntu.xyz>,
         Tomas Novotny <tomas@novotny.cz>, linux-input@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 3/4] ARM: dts: sun8i-a83t-tbs-a711: Add support for the vibrator motor
-Date:   Wed, 13 May 2020 00:22:04 +0200
-Message-Id: <20200512222205.1456300-4-megous@megous.com>
+        linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 1/4] dt-bindings: input: gpio-vibrator: Don't require enable-gpios
+Date:   Wed, 13 May 2020 00:22:02 +0200
+Message-Id: <20200512222205.1456300-2-megous@megous.com>
 In-Reply-To: <20200512222205.1456300-1-megous@megous.com>
 References: <20200512222205.1456300-1-megous@megous.com>
 MIME-Version: 1.0
@@ -51,37 +51,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The board has a vibrator mottor. Hook it to the input subsystem.
-
-According to the PMIC specification, LDO needs to be enabled (value 0b11)
-to achieve the specified max driving current of 150mA. We can't drive
-the motor with just GPIO mode.
-
-In GPIO mode the chip is probably just using the regular CMOS logic
-output circuitry (typically limited to around 20-35mA, but not specified
-in this datasheet).
+It is possible to turn the motor on/off just by enabling/disabling
+the vcc-supply.
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+ Documentation/devicetree/bindings/input/gpio-vibrator.yaml | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-index bfc9bb277a49..a278a1e33930 100644
---- a/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-tbs-a711.dts
-@@ -99,6 +99,11 @@ panel_input: endpoint {
- 		};
- 	};
+diff --git a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
+index 2384465eaa19..c700b640bd53 100644
+--- a/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
++++ b/Documentation/devicetree/bindings/input/gpio-vibrator.yaml
+@@ -24,7 +24,6 @@ properties:
  
-+	vibrator {
-+		compatible = "gpio-vibrator";
-+		vcc-supply = <&reg_ldo_io1>;
-+	};
-+
- 	reg_gps: reg-gps {
- 		compatible = "regulator-fixed";
- 		regulator-name = "gps";
+ required:
+   - compatible
+-  - enable-gpios
+ 
+ additionalProperties: false
+ 
 -- 
 2.26.2
 
