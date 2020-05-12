@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8B1C54E8F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70617C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F24B206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C7ED20746
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:37:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730503AbgELOhk (ORCPT
+        id S1730384AbgELOhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:37:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39424 "EHLO
+        Tue, 12 May 2020 10:37:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730401AbgELOhM (ORCPT
+        with ESMTP id S1730258AbgELOhE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:37:12 -0400
+        Tue, 12 May 2020 10:37:04 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB735C061A0E;
-        Tue, 12 May 2020 07:37:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED014C061A0C;
+        Tue, 12 May 2020 07:37:03 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jYW1m-0005rh-Ag; Tue, 12 May 2020 16:37:02 +0200
+        id 1jYW1j-0005qi-OX; Tue, 12 May 2020 16:36:59 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0F1411C06DA;
-        Tue, 12 May 2020 16:37:00 +0200 (CEST)
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 414251C04E3;
+        Tue, 12 May 2020 16:36:59 +0200 (CEST)
 Date:   Tue, 12 May 2020 14:36:59 -0000
 From:   "tip-bot2 for Will Deacon" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/kcsan] sparc32: mm: Change pgtable_t type to pte_t *
- instead of struct page *
+Subject: [tip: locking/kcsan] compiler/gcc: Raise minimum GCC version for
+ kernel builds to 4.8
 Cc:     Will Deacon <will@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>, x86 <x86@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200511204150.27858-4-will@kernel.org>
-References: <20200511204150.27858-4-will@kernel.org>
+In-Reply-To: <20200511204150.27858-6-will@kernel.org>
+References: <20200511204150.27858-6-will@kernel.org>
 MIME-Version: 1.0
-Message-ID: <158929421995.390.11008436405637547074.tip-bot2@tip-bot2>
+Message-ID: <158929421918.390.4879623959521174170.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,142 +64,168 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/kcsan branch of tip:
 
-Commit-ID:     c95be5b549d6af16e1f9b9307f745ef78a01d11c
-Gitweb:        https://git.kernel.org/tip/c95be5b549d6af16e1f9b9307f745ef78a01d11c
+Commit-ID:     62e13ab29e79d93a65fab5874e9c25ed4b3cec61
+Gitweb:        https://git.kernel.org/tip/62e13ab29e79d93a65fab5874e9c25ed4b3cec61
 Author:        Will Deacon <will@kernel.org>
-AuthorDate:    Mon, 11 May 2020 21:41:35 +01:00
+AuthorDate:    Mon, 11 May 2020 21:41:37 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 12 May 2020 11:04:09 +02:00
+CommitterDate: Tue, 12 May 2020 11:04:10 +02:00
 
-sparc32: mm: Change pgtable_t type to pte_t * instead of struct page *
+compiler/gcc: Raise minimum GCC version for kernel builds to 4.8
 
-Change the 'pgtable_t' type for sparc32 so that it represents the uncached
-virtual address of the PTE table, rather than the underlying 'struct page'.
+It is very rare to see versions of GCC prior to 4.8 being used to build
+the mainline kernel. These old compilers are also known to have codegen
+issues which can lead to silent miscompilation:
 
-This allows to free page table allocations smaller than a page.
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58145
+
+Raise the minimum GCC version to 4.8 for building the kernel and remove
+some tautological Kconfig dependencies as a consequence.
 
 Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Masahiro Yamada <masahiroy@kernel.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Link: https://lkml.kernel.org/r/20200511204150.27858-4-will@kernel.org
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lkml.kernel.org/r/20200511204150.27858-6-will@kernel.org
 
 ---
- arch/sparc/include/asm/page_32.h    |  2 +-
- arch/sparc/include/asm/pgalloc_32.h |  6 +++---
- arch/sparc/include/asm/pgtable_32.h | 11 +++++++++++-
- arch/sparc/mm/srmmu.c               | 29 ++++++++--------------------
- 4 files changed, 24 insertions(+), 24 deletions(-)
+ Documentation/process/changes.rst |  2 +-
+ arch/arm/crypto/Kconfig           | 12 ++++++------
+ crypto/Kconfig                    |  1 -
+ include/linux/compiler-gcc.h      |  5 ++---
+ init/Kconfig                      |  1 -
+ scripts/gcc-plugins/Kconfig       |  2 +-
+ 6 files changed, 10 insertions(+), 13 deletions(-)
 
-diff --git a/arch/sparc/include/asm/page_32.h b/arch/sparc/include/asm/page_32.h
-index da01c8c..fff8861 100644
---- a/arch/sparc/include/asm/page_32.h
-+++ b/arch/sparc/include/asm/page_32.h
-@@ -106,7 +106,7 @@ typedef unsigned long iopgprot_t;
+diff --git a/Documentation/process/changes.rst b/Documentation/process/changes.rst
+index 91c5ff8..5cfb54c 100644
+--- a/Documentation/process/changes.rst
++++ b/Documentation/process/changes.rst
+@@ -29,7 +29,7 @@ you probably needn't concern yourself with pcmciautils.
+ ====================== ===============  ========================================
+         Program        Minimal version       Command to check the version
+ ====================== ===============  ========================================
+-GNU C                  4.6              gcc --version
++GNU C                  4.8              gcc --version
+ GNU make               3.81             make --version
+ binutils               2.23             ld -v
+ flex                   2.5.35           flex --version
+diff --git a/arch/arm/crypto/Kconfig b/arch/arm/crypto/Kconfig
+index 2674de6..c9bf2df 100644
+--- a/arch/arm/crypto/Kconfig
++++ b/arch/arm/crypto/Kconfig
+@@ -30,7 +30,7 @@ config CRYPTO_SHA1_ARM_NEON
  
+ config CRYPTO_SHA1_ARM_CE
+ 	tristate "SHA1 digest algorithm (ARM v8 Crypto Extensions)"
+-	depends on KERNEL_MODE_NEON && (CC_IS_CLANG || GCC_VERSION >= 40800)
++	depends on KERNEL_MODE_NEON
+ 	select CRYPTO_SHA1_ARM
+ 	select CRYPTO_HASH
+ 	help
+@@ -39,7 +39,7 @@ config CRYPTO_SHA1_ARM_CE
+ 
+ config CRYPTO_SHA2_ARM_CE
+ 	tristate "SHA-224/256 digest algorithm (ARM v8 Crypto Extensions)"
+-	depends on KERNEL_MODE_NEON && (CC_IS_CLANG || GCC_VERSION >= 40800)
++	depends on KERNEL_MODE_NEON
+ 	select CRYPTO_SHA256_ARM
+ 	select CRYPTO_HASH
+ 	help
+@@ -96,7 +96,7 @@ config CRYPTO_AES_ARM_BS
+ 
+ config CRYPTO_AES_ARM_CE
+ 	tristate "Accelerated AES using ARMv8 Crypto Extensions"
+-	depends on KERNEL_MODE_NEON && (CC_IS_CLANG || GCC_VERSION >= 40800)
++	depends on KERNEL_MODE_NEON
+ 	select CRYPTO_SKCIPHER
+ 	select CRYPTO_LIB_AES
+ 	select CRYPTO_SIMD
+@@ -106,7 +106,7 @@ config CRYPTO_AES_ARM_CE
+ 
+ config CRYPTO_GHASH_ARM_CE
+ 	tristate "PMULL-accelerated GHASH using NEON/ARMv8 Crypto Extensions"
+-	depends on KERNEL_MODE_NEON && (CC_IS_CLANG || GCC_VERSION >= 40800)
++	depends on KERNEL_MODE_NEON
+ 	select CRYPTO_HASH
+ 	select CRYPTO_CRYPTD
+ 	select CRYPTO_GF128MUL
+@@ -118,13 +118,13 @@ config CRYPTO_GHASH_ARM_CE
+ 
+ config CRYPTO_CRCT10DIF_ARM_CE
+ 	tristate "CRCT10DIF digest algorithm using PMULL instructions"
+-	depends on KERNEL_MODE_NEON && (CC_IS_CLANG || GCC_VERSION >= 40800)
++	depends on KERNEL_MODE_NEON
+ 	depends on CRC_T10DIF
+ 	select CRYPTO_HASH
+ 
+ config CRYPTO_CRC32_ARM_CE
+ 	tristate "CRC32(C) digest algorithm using CRC and/or PMULL instructions"
+-	depends on KERNEL_MODE_NEON && (CC_IS_CLANG || GCC_VERSION >= 40800)
++	depends on KERNEL_MODE_NEON
+ 	depends on CRC32
+ 	select CRYPTO_HASH
+ 
+diff --git a/crypto/Kconfig b/crypto/Kconfig
+index c24a474..34a8c5b 100644
+--- a/crypto/Kconfig
++++ b/crypto/Kconfig
+@@ -316,7 +316,6 @@ config CRYPTO_AEGIS128
+ config CRYPTO_AEGIS128_SIMD
+ 	bool "Support SIMD acceleration for AEGIS-128"
+ 	depends on CRYPTO_AEGIS128 && ((ARM || ARM64) && KERNEL_MODE_NEON)
+-	depends on !ARM || CC_IS_CLANG || GCC_VERSION >= 40800
+ 	default y
+ 
+ config CRYPTO_AEGIS128_AESNI_SSE2
+diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
+index cf294fa..7dd4e03 100644
+--- a/include/linux/compiler-gcc.h
++++ b/include/linux/compiler-gcc.h
+@@ -10,7 +10,8 @@
+ 		     + __GNUC_MINOR__ * 100	\
+ 		     + __GNUC_PATCHLEVEL__)
+ 
+-#if GCC_VERSION < 40600
++/* https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58145 */
++#if GCC_VERSION < 40800
+ # error Sorry, your compiler is too old - please upgrade it.
  #endif
  
--typedef struct page *pgtable_t;
-+typedef pte_t *pgtable_t;
+@@ -126,9 +127,7 @@
+ #if defined(CONFIG_ARCH_USE_BUILTIN_BSWAP) && !defined(__CHECKER__)
+ #define __HAVE_BUILTIN_BSWAP32__
+ #define __HAVE_BUILTIN_BSWAP64__
+-#if GCC_VERSION >= 40800
+ #define __HAVE_BUILTIN_BSWAP16__
+-#endif
+ #endif /* CONFIG_ARCH_USE_BUILTIN_BSWAP && !__CHECKER__ */
  
- #define TASK_UNMAPPED_BASE	0x50000000
- 
-diff --git a/arch/sparc/include/asm/pgalloc_32.h b/arch/sparc/include/asm/pgalloc_32.h
-index 99c0324..b772384 100644
---- a/arch/sparc/include/asm/pgalloc_32.h
-+++ b/arch/sparc/include/asm/pgalloc_32.h
-@@ -50,11 +50,11 @@ static inline void free_pmd_fast(pmd_t * pmd)
- #define pmd_free(mm, pmd)		free_pmd_fast(pmd)
- #define __pmd_free_tlb(tlb, pmd, addr)	pmd_free((tlb)->mm, pmd)
- 
--void pmd_populate(struct mm_struct *mm, pmd_t *pmdp, struct page *ptep);
--#define pmd_pgtable(pmd) pmd_page(pmd)
-+#define pmd_populate(mm, pmd, pte)	pmd_set(pmd, pte)
-+#define pmd_pgtable(pmd)		(pgtable_t)__pmd_page(pmd)
- 
- void pmd_set(pmd_t *pmdp, pte_t *ptep);
--#define pmd_populate_kernel(MM, PMD, PTE) pmd_set(PMD, PTE)
-+#define pmd_populate_kernel		pmd_populate
- 
- pgtable_t pte_alloc_one(struct mm_struct *mm);
- 
-diff --git a/arch/sparc/include/asm/pgtable_32.h b/arch/sparc/include/asm/pgtable_32.h
-index 3367e2b..c5625b2 100644
---- a/arch/sparc/include/asm/pgtable_32.h
-+++ b/arch/sparc/include/asm/pgtable_32.h
-@@ -135,6 +135,17 @@ static inline struct page *pmd_page(pmd_t pmd)
- 	return pfn_to_page((pmd_val(pmd) & SRMMU_PTD_PMASK) >> (PAGE_SHIFT-4));
- }
- 
-+static inline unsigned long __pmd_page(pmd_t pmd)
-+{
-+	unsigned long v;
-+
-+	if (srmmu_device_memory(pmd_val(pmd)))
-+		BUG();
-+
-+	v = pmd_val(pmd) & SRMMU_PTD_PMASK;
-+	return (unsigned long)__nocache_va(v << 4);
-+}
-+
- static inline unsigned long pud_page_vaddr(pud_t pud)
- {
- 	if (srmmu_device_memory(pud_val(pud))) {
-diff --git a/arch/sparc/mm/srmmu.c b/arch/sparc/mm/srmmu.c
-index 50da4bc..c861c0f 100644
---- a/arch/sparc/mm/srmmu.c
-+++ b/arch/sparc/mm/srmmu.c
-@@ -140,12 +140,6 @@ void pmd_set(pmd_t *pmdp, pte_t *ptep)
- 	set_pte((pte_t *)&pmd_val(*pmdp), __pte(SRMMU_ET_PTD | ptp));
- }
- 
--void pmd_populate(struct mm_struct *mm, pmd_t *pmdp, struct page *ptep)
--{
--	unsigned long ptp = page_to_pfn(ptep) << (PAGE_SHIFT-4); /* watch for overflow */
--	set_pte((pte_t *)&pmd_val(*pmdp), __pte(SRMMU_ET_PTD | ptp));
--}
--
- /* Find an entry in the third-level page table.. */
- pte_t *pte_offset_kernel(pmd_t *dir, unsigned long address)
- {
-@@ -364,31 +358,26 @@ pgd_t *get_pgd_fast(void)
-  */
- pgtable_t pte_alloc_one(struct mm_struct *mm)
- {
--	unsigned long pte;
-+	pte_t *ptep;
- 	struct page *page;
- 
--	if ((pte = (unsigned long)pte_alloc_one_kernel(mm)) == 0)
-+	if ((ptep = pte_alloc_one_kernel(mm)) == 0)
- 		return NULL;
--	page = pfn_to_page(__nocache_pa(pte) >> PAGE_SHIFT);
-+	page = pfn_to_page(__nocache_pa((unsigned long)ptep) >> PAGE_SHIFT);
- 	if (!pgtable_pte_page_ctor(page)) {
- 		__free_page(page);
- 		return NULL;
- 	}
--	return page;
-+	return ptep;
- }
- 
--void pte_free(struct mm_struct *mm, pgtable_t pte)
-+void pte_free(struct mm_struct *mm, pgtable_t ptep)
- {
--	unsigned long p;
--
--	pgtable_pte_page_dtor(pte);
--	p = (unsigned long)page_address(pte);	/* Cached address (for test) */
--	if (p == 0)
--		BUG();
--	p = page_to_pfn(pte) << PAGE_SHIFT;	/* Physical address */
-+	struct page *page;
- 
--	/* free non cached virtual address*/
--	srmmu_free_nocache(__nocache_va(p), SRMMU_PTE_TABLE_SIZE);
-+	page = pfn_to_page(__nocache_pa((unsigned long)ptep) >> PAGE_SHIFT);
-+	pgtable_pte_page_dtor(page);
-+	srmmu_free_nocache(ptep, SRMMU_PTE_TABLE_SIZE);
- }
- 
- /* context handling - a dynamically sized pool is used */
+ #if GCC_VERSION >= 70000
+diff --git a/init/Kconfig b/init/Kconfig
+index 9e22ee8..035d38a 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1285,7 +1285,6 @@ config LD_DEAD_CODE_DATA_ELIMINATION
+ 	bool "Dead code and data elimination (EXPERIMENTAL)"
+ 	depends on HAVE_LD_DEAD_CODE_DATA_ELIMINATION
+ 	depends on EXPERT
+-	depends on !(FUNCTION_TRACER && CC_IS_GCC && GCC_VERSION < 40800)
+ 	depends on $(cc-option,-ffunction-sections -fdata-sections)
+ 	depends on $(ld-option,--gc-sections)
+ 	help
+diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
+index 013ba3a..ce0b99f 100644
+--- a/scripts/gcc-plugins/Kconfig
++++ b/scripts/gcc-plugins/Kconfig
+@@ -8,7 +8,7 @@ config HAVE_GCC_PLUGINS
+ menuconfig GCC_PLUGINS
+ 	bool "GCC plugins"
+ 	depends on HAVE_GCC_PLUGINS
+-	depends on CC_IS_GCC && GCC_VERSION >= 40800
++	depends on CC_IS_GCC
+ 	depends on $(success,$(srctree)/scripts/gcc-plugin.sh $(CC))
+ 	default y
+ 	help
