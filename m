@@ -2,104 +2,154 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,LONG_TERM_PRICE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16243C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C04B4C54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5EC6206B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FD61206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:30:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589297451;
+	bh=RtDSeBieq8eW80YMu3q9EWuFZBKApc+eT4Drp4f7k4U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wVMFVtnG7LDEfLkMjVlXznIRKaM5NwqVGW/9RRmf2LSCEHyGkxNMhnd8BO5l9vK7p
+	 2S9PkGbmmY4yp/V2oWGLXtWheFzJLC3Mo7yxuUqSf+4EdQM6RDKRVXncDiIreGRA+r
+	 /n5pcJL70EVi1tfCUEEInsHZeF1HwBtRFLx69Ieg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730471AbgELPaY (ORCPT
+        id S1730609AbgELPav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 11:30:24 -0400
-Received: from mga01.intel.com ([192.55.52.88]:27052 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbgELPaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 11:30:23 -0400
-IronPort-SDR: 3b5vhqxJ0WuCgOoGVJD8tXx/IJNWxyYF/vL4KUDI/tyEar6YN7gCHM9wMW6hMBDD4TB7gIacLL
- bDSdSPSOxxRg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 08:30:23 -0700
-IronPort-SDR: ZK3Se/fAkNFyJF7QxFxocRhwMaC21XL7PjjHBRWOuKhXYlwUSsgU9zriRl+JD5WOMbFHC3V6Jr
- FnvElm6Y+HgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,384,1583222400"; 
-   d="scan'208";a="409336630"
-Received: from bmtannen-mobl.amr.corp.intel.com (HELO [10.255.228.231]) ([10.255.228.231])
-  by orsmga004.jf.intel.com with ESMTP; 12 May 2020 08:30:21 -0700
-Subject: Re: [PATCH 3/3] soundwire: bus_type: add sdw_master_device support
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
-        broonie@kernel.org, srinivas.kandagatla@linaro.org,
-        jank@cadence.com, mengdong.lin@intel.com,
-        slawomir.blauciak@intel.com, sanyog.r.kale@intel.com,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        rander.wang@linux.intel.com, bard.liao@intel.com
-References: <20200429185145.12891-1-yung-chuan.liao@linux.intel.com>
- <20200429185145.12891-4-yung-chuan.liao@linux.intel.com>
- <20200511063227.GS1375924@vkoul-mobl>
- <e214d308-1b92-a7a5-3c76-da05dca99cc5@linux.intel.com>
- <20200512033035.GV1375924@vkoul-mobl>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <84f09843-3245-5fa4-530f-c915b28e9bc5@linux.intel.com>
-Date:   Tue, 12 May 2020 09:36:25 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 12 May 2020 11:30:51 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43928 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727100AbgELPau (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 11:30:50 -0400
+Received: by mail-oi1-f195.google.com with SMTP id i22so1965341oik.10;
+        Tue, 12 May 2020 08:30:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RtDSeBieq8eW80YMu3q9EWuFZBKApc+eT4Drp4f7k4U=;
+        b=ZMRb4C8Uckd6SUzUgD0bFn9t3kIwURe8GcuNPcmjd0Nw2nJo+U8Vi2IYH2VDdB6Mn6
+         ZA/ukl5WYtb/DpSI2bbtALpsIodVdXaA0mX6e7+OKpIx0LTHtpap+VmK8gKqB97UapvA
+         WHdr4bvTIIAqvopWVCCKp1e4eZicdF5RTxIwQzv+q59vFtrsxeXrdkzYuygKtUU8vtG4
+         WpXgsLJJyHFEdF7RFjzzYSsO19bIYdJIiItS1NXONH62+Y6OSU+vo+LdNyJlnPYn/8QX
+         SC3Vx3RaSK/Z/8oq0UfcYDNCmnRf4qnloxGuLZce7rF2CjVMo1MZhX9XXD2gMeV+Zb0o
+         nsBA==
+X-Gm-Message-State: AGi0PuYD/b0fapC6IIZzeO7aG0aTkqx8XD0k7tqzm8p19QP3TLvLGMH1
+        FtPzXUsgr/z3hIIfegv/D3q7oZZqWy4VYT3jvbQ=
+X-Google-Smtp-Source: APiQypIO6qxrtteBpZQzQrJWP+YRfp+4SOjzkNa/wPWLVmHZfpzd+2rPITLy9aTdE+gZdql9F0Ofxia4rXPiLI8okAk=
+X-Received: by 2002:aca:4254:: with SMTP id p81mr1720404oia.68.1589297448303;
+ Tue, 12 May 2020 08:30:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200512033035.GV1375924@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200508111612.GA252673@google.com> <20200508113141.GB5298@hirez.programming.kicks-ass.net>
+ <20200508130507.GA10541@google.com> <CAJZ5v0iaa_VCtN608QKTYZ-A6QG_7bwxihxSgoEGv1LcSK-ksA@mail.gmail.com>
+ <20200511090049.GA229633@google.com> <CAJZ5v0jKMgFsR0dXDt4si5hT9QF2evaoMS-13y-Qde8UpcaARg@mail.gmail.com>
+ <20200512092102.GA16151@google.com> <CAJZ5v0hm3Tv2yZKLzM9a+kJuB1V5_eFOEKT-uM318dzeKV3_Qw@mail.gmail.com>
+ <20200512135813.GA101124@google.com> <CAJZ5v0hN708uvurZ-3oo90qUJFw3=Eg0OmtTaOKXQgNPXhCkFg@mail.gmail.com>
+ <20200512151120.GB101124@google.com>
+In-Reply-To: <20200512151120.GB101124@google.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 12 May 2020 17:30:36 +0200
+Message-ID: <CAJZ5v0inoge=nWQtv-rU_ReQUMZA5w-PZXuSpHHj1UHn-S7aSA@mail.gmail.com>
+Subject: Re: [PATCH 00/14] Modularize schedutil
+To:     Quentin Perret <qperret@google.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Benjamin Segall <bsegall@google.com>,
+        Mel Gorman <mgorman@suse.de>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Todd Kjos <tkjos@google.com>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 12, 2020 at 5:11 PM Quentin Perret <qperret@google.com> wrote:
+>
+> On Tuesday 12 May 2020 at 16:08:56 (+0200), Rafael J. Wysocki wrote:
+> > If some piece of kernel code is modular, it still needs to be build.
+> > The difference is when and how it gets loaded, so can you possibly
+> > elaborate here?
+>
+> Sure thing, sorry if that wasn't clear.
 
+No worries.
 
-On 5/11/20 10:30 PM, Vinod Koul wrote:
-> On 11-05-20, 14:00, Pierre-Louis Bossart wrote:
->>>> +	md = &bus->md;
->>>> +	md->dev.bus = &sdw_bus_type;
->>>> +	md->dev.type = &sdw_master_type;
->>>> +	md->dev.parent = parent;
->>>> +	md->dev.of_node = parent->of_node;
->>>> +	md->dev.fwnode = fwnode;
->>>> +	md->dev.dma_mask = parent->dma_mask;
->>>> +
->>>> +	dev_set_name(&md->dev, "sdw-master-%d", bus->link_id);
->>>
->>> This give nice sdw-master-0. In DT this comes from reg property. I dont
->>> seem to recall if the ACPI/Disco spec treats link_id as unique across
->>> the system, can you check that please, if not we would need to update
->>> this.
->> Table 3 in the Disco for Soundwire 1.0 spec: "all LinkID values are relative
->> to the immediate parent Device."
->>
->> There isn't any known implementation with more than one controller.
-> 
-> But then it can come in "future" right. So lets try to make it future
-> proof by not using the link_id (we can expose that as a sysfs if people
-> want to know). So a global unique id needs to allocated (hint: idr or
-> equivalent) and used as master_id
+> The end goal with GKI is the following: Google will release a single
+> binary kernel image (signed, etc etc) that all devices using a given
+> Android version will be required to use. That image is however going to
+> be only for the core of the kernel (no drivers or anything of the sort).
+> Vendors and OEMs, on their end, will be responsible to build and ship
+> GKI-compatible modules for their respective devices. So, Android devices
+> will eventually ship with a Google-issued GKI, plus a bunch of
+> vendor-provided modules loaded during boot.
 
-Can you clarify if you are asking for a global ID for Intel/ACPI 
-platforms, or for DT as well? I can't figure out from the 
-soundwire-controller.yaml definitions if there is already a notion of 
-unique ID.
+If that is the case, then I absolutely think that schedutil should be
+part of the GKI.
 
-properties:
-   $nodename:
-     pattern: "^soundwire(@.*)?$"
+Moreover, that would have been my opinion even if it had been modular
+in the first place.
 
-    soundwire@c2d0000 {
-         #address-cells = <2>;
-         #size-cells = <0>;
-         reg = <0x0c2d0000 0x2000>;
+> This is a significant shift from the current model where vendors
+> completely own the kernel, and are largely free to use the kernel config
+> they want. Today, those who don't use schedutil are free to turn the
+> config off, for example.
+
+So why is this regarded as a good thing?
+
+> But GKI changes that. The 'core' GKI config is effectively imposed to
+> the entire ecosystem. As of now, because it is 'bool' we have no choice
+> but to compile schedutil in the core GKI as some (most) partners use it.
+> But as you can imagine, that is not the preferred option of those who
+> _don't_ use schedutil.
+
+OTOH, it may as well be an incentive for them to switch over and
+report problems with it that they see.
+
+I absolutely would like to make schedutil the clearly preferred option
+and IMO avoiding to use it, especially for non-technical reasons,
+should be clearly less attractive.
+
+> Modularizing avoids any potential friction since
+> the vendors who want to use it will be able load the module, and the
+> others will simply not. That really is the reason for that series.
+
+If the long-term target is for everyone to use schedutil, then I don't
+quite see why making it easy to not include it in one's system is
+going to help.
+
+> Then there is an important question: why should upstream care about all
+> that stuff? That's obviously debatable, but my biased opinion is that
+> GKI is a good thing(TM). It's our opportunity to put some order in the
+> android ecosystem and to reduce the delta with mainline. That'll
+> definitely take time, and there will be Android-specific churn in GKI in
+> the beginning, but we'd like to keep that as small as possible, and to
+> converge to 0 looking forwards.
+
+That's a good goal, but I'm not sure if the least resistance path to
+it is the right one. :-)
+
+Cheers!
