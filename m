@@ -2,258 +2,114 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D11BFC2D0FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFF7C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABADC20731
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:36:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PHCigFzd"
+	by mail.kernel.org (Postfix) with ESMTP id 5CAC920753
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:36:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589323002;
+	bh=F8thMHFpOoTc+X+oX0gWc13vqkuqc5TqpRly24TLFBw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NC5apNrupqQK5wTvUMvDJi+DxFyqQl9BXPQ4177k8roI7SPb3662uNVCa4mJjhU/Z
+	 5891wkulWupQd6MteDZSLiecmVVEZzHtpAwPL05+ZV2YJBSsLaZQ8wBv8z2Uc9JHRr
+	 spjwmoxFVsdBbGB4m+1KqdQCawrsjnLKzEu3Al38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731392AbgELWgg (ORCPT
+        id S1731396AbgELWgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:36:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbgELWgf (ORCPT
+        Tue, 12 May 2020 18:36:41 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:33447 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731446AbgELWgj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 18:36:35 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 563FDC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:36:35 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id i5so5372593uaq.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:36:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VPTKMB09cHORert/2ezDwhBpCl19xy+i4noiHdfj35Q=;
-        b=PHCigFzdCazuwMNmC8luK1D8z8UE5Do3lGIB9CWaZPwhkuw2HfqQKZHDj62DMEXKj5
-         FjeaV9wjlnqnkcwznaFBfwkHSjI5JgLvXXYzlyeR9diJU8yk5FR+dliVWxZPpXCPVniz
-         s0i522HKomwrUdyGTWnIVgclCFvxFEUaqDXd39Rs0qPaFNYu13sREl465CyRAgZAW4rc
-         CaggSHeMeHZMeU/V/nn0t1lIoTiER+l2X4gOmcp20rQMolg/X75EnEFUmsRO0OxRG+2i
-         2WdZczRjP+GXp1GOmZz5DtWPkBoYSwsTZVqtgx1NLVpea/s2lJvBgDm8rNbLNctcEc3B
-         Vg0g==
+        Tue, 12 May 2020 18:36:39 -0400
+Received: by mail-oi1-f193.google.com with SMTP id o24so19747670oic.0;
+        Tue, 12 May 2020 15:36:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VPTKMB09cHORert/2ezDwhBpCl19xy+i4noiHdfj35Q=;
-        b=OZ7zw+xup/UUmPbApqkVRpHQFg73icKYWguxLfAF0ZqOVn6KKmpvSVbCX2fEQ6wpEp
-         iGXo13bfDsjkBoVvz9twvvEVcLQoT2qZkueJXr9mdpkegVVO9sIDNTy2i9tJvB/MIdV2
-         14mJxCY7tiCvM99P2S6Pz6o76jp+UMFAOp9CEo/5VfycsGgPgE7e29BLIJ/a/yWGlgNu
-         rlIyD3UJTpRtcM6EZgCi77coForhVQ7WDonRhaXXJzH4B/qamJ7WePRf99BuBhYzQAuV
-         iO1qspTNkNjdjBmeRVI7kncbYgMZZ51NOtzxhoEZMF82mxUC5iw/VaQxKupZER2aTqwU
-         NSRw==
-X-Gm-Message-State: AGi0PuYl5ZCBh4F5P2sM7mjudl6GGuPTG1g9GmBrd09KxUoNWdCObqzF
-        RCi4jd8mhb6EEFotgEhJQni0ere5YyWHcE/MoBdeqA==
-X-Google-Smtp-Source: APiQypL4H9VMuvTjs5TnhWmb6R5MoHG6wHj4r0ylzdzOSTekmyuXP5kf5xlhSkXXLFCy6dDxupf+XdqQQ6aTEgiudR4=
-X-Received: by 2002:ab0:7392:: with SMTP id l18mr18621820uap.90.1589322993334;
- Tue, 12 May 2020 15:36:33 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DMxDIXDzLCKt7/FZAgJOYUjlucyVAROiKIdkVoNPTcE=;
+        b=H/R0E+irhlDRdwJ860RBSH0wuZv8pxyn4hUv8y2kZyeABLjl1HLzwBrlNgIrTqlpTO
+         OVUhroObgqK0eBSCr5UgDcRSQ0p5ifNETwxRiYGLCCQs5EpNUZumeJCPZTMGhJQMC7Ui
+         Y3WBAdNrG1zvYdToXehQ3/+f+8Q67gYrvsCIDZvpwPHDvTFLBCigM+MLY0xFWRdPX9QG
+         NHOybB8WflB4tNY7HSYAexFHIaU3lN+lHjIadWm7Un4fzavtJavW/VApin6ODZiUMvLF
+         Ei5cwRNDCABcL6wPMApAEx2gJDe7r4D3Us2E+tx3wtI9M2IO4/W28uMpNIzdbkIvcfuZ
+         qGtA==
+X-Gm-Message-State: AGi0PuYyUpZN/bGSw09bDrtOggzqQ1WOVUQlw4xfUrP8nchsfYUvP06z
+        olcF6jdtzioBP+tHwSnWaQ==
+X-Google-Smtp-Source: APiQypJwnhyxtltXnPyrLYLZJfq4iQV22Gfpsa8yAlB/wGQ6opTOCR9z7OkySss3KITYFyLX2D2A0w==
+X-Received: by 2002:aca:c546:: with SMTP id v67mr23978628oif.84.1589322997255;
+        Tue, 12 May 2020 15:36:37 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h189sm853803oif.10.2020.05.12.15.36.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 15:36:36 -0700 (PDT)
+Received: (nullmailer pid 29796 invoked by uid 1000);
+        Tue, 12 May 2020 22:36:35 -0000
+Date:   Tue, 12 May 2020 17:36:35 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Ravi Kumar Bokka <rbokka@codeaurora.org>
+Cc:     rnayak@codeaurora.org, Rob Herring <robh+dt@kernel.org>,
+        saiprakash.ranjan@codeaurora.org, sparate@codeaurora.org,
+        mturney@codeaurora.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        mkurumel@codeaurora.org, linux-kernel@vger.kernel.org,
+        dhavalp@codeaurora.org, c_rbokka@codeaurora.org,
+        devicetree@vger.kernel.org
+Subject: Re: [RFC v1 1/3] dt-bindings: nvmem: Add devicetree bindings for
+ qfprom-efuse
+Message-ID: <20200512223635.GA29448@bogus>
+References: <1589307480-27508-1-git-send-email-rbokka@codeaurora.org>
+ <1589307480-27508-2-git-send-email-rbokka@codeaurora.org>
 MIME-Version: 1.0
-References: <20200508182425.69249-1-jcargill@google.com> <20200508201355.GS27052@linux.intel.com>
-In-Reply-To: <20200508201355.GS27052@linux.intel.com>
-From:   Peter Feiner <pfeiner@google.com>
-Date:   Tue, 12 May 2020 15:36:21 -0700
-Message-ID: <CAM3pwhEw+KYq9AD+z8wPGyG10Bex7xLKaPM=yVV-H+W_eHTW4w@mail.gmail.com>
-Subject: Re: [PATCH] kvm: x86 mmu: avoid mmu_page_hash lookup for
- direct_map-only VM
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jon Cargille <jcargill@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589307480-27508-2-git-send-email-rbokka@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 1:14 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Fri, May 08, 2020 at 11:24:25AM -0700, Jon Cargille wrote:
-> > From: Peter Feiner <pfeiner@google.com>
-> >
-> > Optimization for avoiding lookups in mmu_page_hash. When there's a
-> > single direct root, a shadow page has at most one parent SPTE
-> > (non-root SPs have exactly one; the root has none). Thus, if an SPTE
-> > is non-present, it can be linked to a newly allocated SP without
-> > first checking if the SP already exists.
->
-> Some mechanical comments below.  I'll think through the actual logic next
-> week, my brain needs to be primed anytime the MMU is involved :-)
->
-> > This optimization has proven significant in batch large SP shattering
-> > where the hash lookup accounted for 95% of the overhead.
-> >
-> > Signed-off-by: Peter Feiner <pfeiner@google.com>
-> > Signed-off-by: Jon Cargille <jcargill@google.com>
-> > Reviewed-by: Jim Mattson <jmattson@google.com>
-> >
-> > ---
-> >  arch/x86/include/asm/kvm_host.h | 13 ++++++++
-> >  arch/x86/kvm/mmu/mmu.c          | 55 +++++++++++++++++++--------------
-> >  2 files changed, 45 insertions(+), 23 deletions(-)
-> >
-> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> > index a239a297be33..9b70d764b626 100644
-> > --- a/arch/x86/include/asm/kvm_host.h
-> > +++ b/arch/x86/include/asm/kvm_host.h
-> > @@ -913,6 +913,19 @@ struct kvm_arch {
-> >       struct kvm_page_track_notifier_node mmu_sp_tracker;
-> >       struct kvm_page_track_notifier_head track_notifier_head;
-> >
-> > +     /*
-> > +      * Optimization for avoiding lookups in mmu_page_hash. When there's a
-> > +      * single direct root, a shadow page has at most one parent SPTE
-> > +      * (non-root SPs have exactly one; the root has none). Thus, if an SPTE
-> > +      * is non-present, it can be linked to a newly allocated SP without
-> > +      * first checking if the SP already exists.
-> > +      *
-> > +      * False initially because there are no indirect roots.
-> > +      *
-> > +      * Guarded by mmu_lock.
-> > +      */
-> > +     bool shadow_page_may_have_multiple_parents;
->
-> Why make this a one-way bool?  Wouldn't it be better to let this transition
-> back to '0' once all nested guests go away?
+On Tue, 12 May 2020 23:47:58 +0530, Ravi Kumar Bokka wrote:
+> This patch adds dt-bindings document for qfprom-efuse controller.
+> 
+> Signed-off-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
+> ---
+>  .../devicetree/bindings/nvmem/qfprom-efuse.yaml    | 40 ++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/qfprom-efuse.yaml
+> 
 
-I made it one way because I didn't know how the shadow MMU worked in
-2015 :-) I was concerned about not quite getting the transition back
-to '0' at the right point. I.e., what's the necessary set of
-conditions where we never have to look for a parent SP? Is it just
-when there are no indirect roots? Or could we be building some
-internal part of the tree despite there not being roots? TBH, now that
-it's been 12 months since I last thought _hard_ about the KVM MMU,
-it'd take some time for me to review these questions.
 
->
-> And maybe a shorter name that reflects what it tracks instead of how its
-> used, e.g. has_indirect_mmu or indirect_mmu_count.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Good idea.
+Documentation/devicetree/bindings/nvmem/qfprom-efuse.yaml:  while scanning a block scalar
+  in "<unicode string>", line 30, column 5
+found a tab character where an indentation space is expected
+  in "<unicode string>", line 34, column 1
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/nvmem/qfprom-efuse.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/nvmem/qfprom-efuse.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/nvmem/qfprom-efuse.yaml: ignoring, error parsing file
+warning: no schema found in file: ./Documentation/devicetree/bindings/nvmem/qfprom-efuse.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/nvmem/qfprom-efuse.yaml: ignoring, error parsing file
+warning: no schema found in file: ./Documentation/devicetree/bindings/nvmem/qfprom-efuse.yaml
+Makefile:1300: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
->
-> > +
-> >       struct list_head assigned_dev_head;
-> >       struct iommu_domain *iommu_domain;
-> >       bool iommu_noncoherent;
-> > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> > index e618472c572b..d94552b0ed77 100644
-> > --- a/arch/x86/kvm/mmu/mmu.c
-> > +++ b/arch/x86/kvm/mmu/mmu.c
-> > @@ -2499,35 +2499,40 @@ static struct kvm_mmu_page *kvm_mmu_get_page(struct kvm_vcpu *vcpu,
-> >               quadrant &= (1 << ((PT32_PT_BITS - PT64_PT_BITS) * level)) - 1;
-> >               role.quadrant = quadrant;
-> >       }
-> > -     for_each_valid_sp(vcpu->kvm, sp, gfn) {
-> > -             if (sp->gfn != gfn) {
-> > -                     collisions++;
-> > -                     continue;
-> > -             }
-> >
-> > -             if (!need_sync && sp->unsync)
-> > -                     need_sync = true;
-> > +     if (vcpu->kvm->arch.shadow_page_may_have_multiple_parents ||
-> > +         level == vcpu->arch.mmu->root_level) {
->
-> Might be worth a goto to preserve the for-loop.
+See https://patchwork.ozlabs.org/patch/1288685
 
-Or factor out the guts of the loop into a function.
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
 
->
-> > +             for_each_valid_sp(vcpu->kvm, sp, gfn) {
-> > +                     if (sp->gfn != gfn) {
-> > +                             collisions++;
-> > +                             continue;
-> > +                     }
-> >
-> > -             if (sp->role.word != role.word)
-> > -                     continue;
-> > +                     if (!need_sync && sp->unsync)
-> > +                             need_sync = true;
-> >
-> > -             if (sp->unsync) {
-> > -                     /* The page is good, but __kvm_sync_page might still end
-> > -                      * up zapping it.  If so, break in order to rebuild it.
-> > -                      */
-> > -                     if (!__kvm_sync_page(vcpu, sp, &invalid_list))
-> > -                             break;
-> > +                     if (sp->role.word != role.word)
-> > +                             continue;
-> >
-> > -                     WARN_ON(!list_empty(&invalid_list));
-> > -                     kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
-> > -             }
-> > +                     if (sp->unsync) {
-> > +                             /* The page is good, but __kvm_sync_page might
-> > +                              * still end up zapping it.  If so, break in
-> > +                              * order to rebuild it.
-> > +                              */
-> > +                             if (!__kvm_sync_page(vcpu, sp, &invalid_list))
-> > +                                     break;
-> >
-> > -             if (sp->unsync_children)
-> > -                     kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
-> > +                             WARN_ON(!list_empty(&invalid_list));
-> > +                             kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
-> > +                     }
-> >
-> > -             __clear_sp_write_flooding_count(sp);
-> > -             trace_kvm_mmu_get_page(sp, false);
-> > -             goto out;
-> > +                     if (sp->unsync_children)
-> > +                             kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
-> > +
-> > +                     __clear_sp_write_flooding_count(sp);
-> > +                     trace_kvm_mmu_get_page(sp, false);
-> > +                     goto out;
-> > +             }
-> >       }
-> >
-> >       ++vcpu->kvm->stat.mmu_cache_miss;
-> > @@ -3735,6 +3740,10 @@ static int mmu_alloc_shadow_roots(struct kvm_vcpu *vcpu)
-> >       gfn_t root_gfn, root_pgd;
-> >       int i;
-> >
-> > +     spin_lock(&vcpu->kvm->mmu_lock);
-> > +     vcpu->kvm->arch.shadow_page_may_have_multiple_parents = true;
-> > +     spin_unlock(&vcpu->kvm->mmu_lock);
->
-> Taking the lock every time is unnecessary, even if this is changed to a
-> refcount type variable, e.g.
->
->         if (!has_indirect_mmu) {
->                 lock_and_set
->         }
->
-> or
->
->         if (atomic_inc_return(&indirect_mmu_count) == 1)
->                 lock_and_unlock;
->
->
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
 
-Indeed. Good suggestion.
+Please check and re-submit.
 
-> > +
-> >       root_pgd = vcpu->arch.mmu->get_guest_pgd(vcpu);
-> >       root_gfn = root_pgd >> PAGE_SHIFT;
-> >
-> > --
-> > 2.26.2.303.gf8c07b1a785-goog
-> >
