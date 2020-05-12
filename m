@@ -2,129 +2,171 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=FAKE_REPLY_C,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26995C54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 814BDC54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC64520746
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:28:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LIZtb/C3"
+	by mail.kernel.org (Postfix) with ESMTP id 65C4F20746
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:29:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728788AbgELG2F (ORCPT
+        id S1728814AbgELG3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 02:28:05 -0400
-Received: from mail-eopbgr60071.outbound.protection.outlook.com ([40.107.6.71]:18307
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725536AbgELG2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 02:28:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DNgYxPPWgqzvWAYzZHpMEKKRsrEk5O+vTbeGzOEKxdjl0iuTQudEFI96FKrgFAAJbv1ls6kTmlL9SykiHbe8wf6D6hWUomT0awtZlQY6b8KgLF7UujlVycWCDE33JnYR75RjptV7nUCWdyiHSuD9FoXREwMgnyXEv0zCcBZEfhUEIBtv5aVhr4Lc6iCCvoAE0ifA8uskKxMGZGtOTAHFAiYqzeAjQd7kIyFmWPpnQeH8Ec3ktqZ2KuQgRPB+ebjfhR1CbWlFD45aADeNZRteUZULO193oEer7ujKPvFdOl79rEhoCMEmuH5YdHMSL+LGAlxHyRCNEY38+ZTah+SOUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6f+s/cqybZ0PppcguEKBnlbF4KKYDYUaGZ/bagHuV/I=;
- b=VPM+veI8G+mtRZhFuoUARoWCrA6NcS0SwAgJOZ4v6BhQhvYKcNHRQHU1Lj4xTzNz3GenYXtqBAQotdpmQr38RwinQvtlAiDRkfo3hpoCtQXcgHQe5YFWR6HUvQX0CJAt65Jbxf+9sDFKK0omDcSpkxsHKpPMa672xfxCJZtBawEhBh9jqBA6PNYMzSSk40hdc0B7eWXiXCx0cjePM3knzVTXQJREgm+5GRx/SfpZvsvFQVvV+bM1YO02ckqR/DyPFSUnVUj1WpRM79KkiO06MR7L+GP2cECdfYkLrABRJ/BkDOxBGn1Ykv36QA9MWOU7BxDTejSGr8k6QLiOG0KDzQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6f+s/cqybZ0PppcguEKBnlbF4KKYDYUaGZ/bagHuV/I=;
- b=LIZtb/C3xD8P8LjBHPrXT6gIKbOLQQ7yY4DlHCHS/Ge9WfdiLuyt/y2vMYLiNX4H/TCRQPDIqbr1BZU0tXjI36yg6zjEJd6lBoqSu0AKlxuXdaK1HekLBDrs8sfvp/uJadbeU8wzzRZJZ/5b5fNZWKdTFn9BvzIQjs+yYN/RFHM=
-Received: from DB8PR04MB5785.eurprd04.prod.outlook.com (2603:10a6:10:b0::22)
- by DB8PR04MB6748.eurprd04.prod.outlook.com (2603:10a6:10:10e::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27; Tue, 12 May
- 2020 06:27:59 +0000
-Received: from DB8PR04MB5785.eurprd04.prod.outlook.com
- ([fe80::c898:9dfc:ce78:a315]) by DB8PR04MB5785.eurprd04.prod.outlook.com
- ([fe80::c898:9dfc:ce78:a315%7]) with mapi id 15.20.2979.033; Tue, 12 May 2020
- 06:27:59 +0000
-From:   Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     Po Liu <po.liu@nxp.com>, Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Leo Li <leoyang.li@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "vivien.didelot@gmail.com" <vivien.didelot@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "jiri@resnulli.us" <jiri@resnulli.us>,
-        "idosch@idosch.org" <idosch@idosch.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "horatiu.vultur@microchip.com" <horatiu.vultur@microchip.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>,
-        "joergen.andreasen@microchip.com" <joergen.andreasen@microchip.com>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
-        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
-        "nikolay@cumulusnetworks.com" <nikolay@cumulusnetworks.com>,
-        "roopa@cumulusnetworks.com" <roopa@cumulusnetworks.com>,
-        "linux-devel@linux.nxdi.nxp.com" <linux-devel@linux.nxdi.nxp.com>
-Subject: RE: [EXT] Re: [PATCH v1 net-next 3/3] net: dsa: felix: add support
- Credit Based Shaper(CBS) for hardware offload
-Thread-Topic: [EXT] Re: [PATCH v1 net-next 3/3] net: dsa: felix: add support
- Credit Based Shaper(CBS) for hardware offload
-Thread-Index: AQHWJ1fQ0aW9GYkaGku6h57iU7QcdqijeduAgACDLCA=
-Date:   Tue, 12 May 2020 06:27:59 +0000
-Message-ID: <DB8PR04MB57850A61F400B3624CBE1A8FF0BE0@DB8PR04MB5785.eurprd04.prod.outlook.com>
-References: <20200511054332.37690-1-xiaoliang.yang_1@nxp.com>
-        <20200511054332.37690-4-xiaoliang.yang_1@nxp.com>
- <20200511153403.7b402433@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200511153403.7b402433@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 603cc6c9-152a-44e9-faa7-08d7f63d9d81
-x-ms-traffictypediagnostic: DB8PR04MB6748:|DB8PR04MB6748:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB6748CB96191E97EB5D36058DF0BE0@DB8PR04MB6748.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2512;
-x-forefront-prvs: 0401647B7F
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: t8CeT1Rc09zodKCVm8W9eLdlRfpmTlWYjCfabxYUwsuQ8q9VrUtdugWcXJwvSSH2GrzR134FintVeG7XJ4OPPIzYNNuBHNzNXuohxEAbBzWSUBceGJyQMy3Ig3m7wU4df/nq8rbcgDTdWLzd0C621gCNl5pPC0vZgAC6Hrnq21XvSGjJyz0R3dT9CDkrOlUwdb0E2cPuPV2ZteDWyo7B7Fb+fsVpygNvoQyqCaL/UVqCuGpbOCkuDc2aSOgq7zjRGIkztJ4tcemwUmvx/nzDJyR1d0RN/1SbkEJ+AWt/0v4cbH7C5JIIMxgyjxqx2fhyTF7kIxM++KIrP/37H24ZHrEbuaciTEPLgrphfxPPlSZnSCNr/s3rKhYgDk8TLyCgWGP3Q4KiWy+u0r74E/IxLO1MRAl6tIMbMwOSFRvyQmhVQQngqGVwYCdYYI7bgKws+5LFOvhMaWBU0G0m0p6AqkP2uRp1TM29lq1Wen40HE1RNE2MwntwCG2hx4UmvVs99ONgoi+ptsp6tmhcQei30w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB5785.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(346002)(136003)(376002)(39860400002)(33430700001)(6506007)(26005)(33440700001)(33656002)(64756008)(66476007)(7696005)(76116006)(52536014)(66556008)(4326008)(66946007)(66446008)(478600001)(5660300002)(8936002)(6916009)(9686003)(186003)(7416002)(55016002)(54906003)(2906002)(86362001)(71200400001)(558084003)(316002)(8676002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: EZbe8dK7W5l19twyll1gcubvXwJSjJn9Mg15aO0ShiNrXdaqS05uESo5F/w6ClsohLRCOcus6pxVnh7fKYipFNu+1zWoH2aGinME2G5tEamKc5g9zxqnJxBPgtd1gWiNUQofnDQ9eig0iOsiWqxbjk8/dtbMsvacZaWtjvpA52TK+ZwGDb3rHoUR0jt+pkO2uPz2yDpcBUFTjLuzSFdBniEma3wIDiYZEJW3/17CHbIHGdzm/fyjx6kgAQRpgxXcsm4kzBlvdG5YlwFJ+A17TyezGP1gGcyCCleWBb3XB/u45ZNxrbamLo2N7FEtc4GiKD9kJiAKLvWxy3EpFWg70X2/7ZqxpJrk+Dmiu+BxwIUHuGnoptztt5fePJdnS1dQ/mVudBpW5RIP2CmHEtOqM9CJ7nqx4Ax5gP+U6VK1xUZ3ao5D4zpvPyxXMi4+LvVLTy1gd9fe4oU06bZy5fTD1ZeX12hYPkefUB/HEMwr7eE=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 12 May 2020 02:29:09 -0400
+Received: from mga11.intel.com ([192.55.52.93]:17012 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725536AbgELG3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 02:29:09 -0400
+IronPort-SDR: Fx5LTXu93RNPTLwZaqRKglOYx70HqVNTXzAHSsGlSpCGAln726/PXVEkyt0Tg6GbDl2uMVAJsz
+ I0sR89HouAWQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 23:29:05 -0700
+IronPort-SDR: /Y5kg64+S31ucd4p+4SmiR92N4ZG/BgCIhfNT4xaQeFfxwlNgLfZwi5/LlB/d7o47z4SuN7JJN
+ W5kkDOGBmCXg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,382,1583222400"; 
+   d="scan'208";a="463653475"
+Received: from xsang-optiplex-9020.sh.intel.com (HELO xsang-OptiPlex-9020) ([10.239.159.140])
+  by fmsmga006.fm.intel.com with ESMTP; 11 May 2020 23:29:02 -0700
+Date:   Tue, 12 May 2020 14:39:03 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Yongbo Zhang <giraffesnn123@gmail.com>, broonie@kernel.org,
+        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Chen Li <licheng0822@thundersoft.com>
+Cc:     kbuild-all@lists.01.org, alsa-devel@alsa-project.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yongbo Zhang <giraffesnn123@gmail.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Subject: Re: [PATCH] ASoC: rsnd: add interrupt support for SSI BUSIF buffer
+Message-ID: <20200512063903.GB20612@xsang-OptiPlex-9020>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 603cc6c9-152a-44e9-faa7-08d7f63d9d81
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 May 2020 06:27:59.1364
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: U2V66Qkw0KTlqX8lq4q9x+ARtyZVBhAhidxYEaiUbdKFmFlsk0yUzSjdF+dhv6v7FFdQG8sQLheCPxH6ENTHCLzi5IHKNpL2Hz853inV0Mc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6748
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508074753.10362-1-giraffesnn123@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jakub,
+Hi Yongbo,
 
-On Mon, 11 May 2020 22:34:32 Jakub Kicinski <kuba@kernel.org> wrote:
-> > +int vsc9959_qos_port_cbs_set(struct dsa_switch *ds, int port,
-> > +                          struct tc_cbs_qopt_offload *cbs_qopt)
->
-> static
+Thank you for the patch! Perhaps something to improve:
 
-I will update this in v2, thanks.
+[auto build test WARNING on asoc/for-next]
+[also build test WARNING on v5.7-rc4 next-20200508]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-Regards,
-Xiaoliang Yang
+url:    https://github.com/0day-ci/linux/commits/Yongbo-Zhang/ASoC-rsnd-add-interrupt-support-for-SSI-BUSIF-buffer/20200509-035713
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+:::::: branch date: 6 hours ago
+:::::: commit date: 6 hours ago
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+cppcheck warnings: (new ones prefixed by >>)
+
+>> sound/soc/sh/rcar/ssi.c:531:1: warning: Unmatched '{'. Configuration: ''. [syntaxError]
+   {
+   ^
+>> sound/soc/sh/rcar/ssi.c:531:1: warning: Unmatched '{'. Configuration: 'DEBUG'. [syntaxError]
+   {
+   ^
+
+# https://github.com/0day-ci/linux/commit/391d452251464b78f72ba3a1fd9b6091b3d4a942
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout 391d452251464b78f72ba3a1fd9b6091b3d4a942
+vim +531 sound/soc/sh/rcar/ssi.c
+
+ae5c322303fff5 Kuninori Morimoto 2013-07-21  527  
+ae5c322303fff5 Kuninori Morimoto 2013-07-21  528  static int rsnd_ssi_quit(struct rsnd_mod *mod,
+2c0fac19de2cd7 Kuninori Morimoto 2015-06-15  529  			 struct rsnd_dai_stream *io,
+690602fcd85385 Kuninori Morimoto 2015-01-15  530  			 struct rsnd_priv *priv)
+ae5c322303fff5 Kuninori Morimoto 2013-07-21 @531  {
+ae5c322303fff5 Kuninori Morimoto 2013-07-21  532  	struct rsnd_ssi *ssi = rsnd_mod_to_ssi(mod);
+ae5c322303fff5 Kuninori Morimoto 2013-07-21  533  	struct device *dev = rsnd_priv_to_dev(priv);
+391d452251464b Yongbo Zhang      2020-05-08  534  	int is_tdm, is_tdm_split;
+391d452251464b Yongbo Zhang      2020-05-08  535  	int id = rsnd_mod_id(mod);
+391d452251464b Yongbo Zhang      2020-05-08  536  	int i;
+391d452251464b Yongbo Zhang      2020-05-08  537  	u32 sys_int_enable = 0;
+391d452251464b Yongbo Zhang      2020-05-08  538  
+391d452251464b Yongbo Zhang      2020-05-08  539  	is_tdm		= rsnd_runtime_is_tdm(io);
+391d452251464b Yongbo Zhang      2020-05-08  540  	is_tdm_split	= rsnd_runtime_is_tdm_split(io);
+ae5c322303fff5 Kuninori Morimoto 2013-07-21  541  
+fd9adcfdc1434f Kuninori Morimoto 2016-02-18  542  	if (!rsnd_ssi_is_run_mods(mod, io))
+fd9adcfdc1434f Kuninori Morimoto 2016-02-18  543  		return 0;
+fd9adcfdc1434f Kuninori Morimoto 2016-02-18  544  
+e5d9cfc6f5fe56 Andrzej Hajda     2015-12-24  545  	if (!ssi->usrcnt) {
+c0ea089dbad47a Kuninori Morimoto 2018-10-30  546  		dev_err(dev, "%s usrcnt error\n", rsnd_mod_name(mod));
+e5d9cfc6f5fe56 Andrzej Hajda     2015-12-24  547  		return -EIO;
+e5d9cfc6f5fe56 Andrzej Hajda     2015-12-24  548  	}
+e7d850dd10f4e6 Kuninori Morimoto 2015-10-26  549  
+26d34b11af6a34 Kuninori Morimoto 2016-02-18  550  	rsnd_ssi_master_clk_stop(mod, io);
+e7d850dd10f4e6 Kuninori Morimoto 2015-10-26  551  
+e7d850dd10f4e6 Kuninori Morimoto 2015-10-26  552  	rsnd_mod_power_off(mod);
+e7d850dd10f4e6 Kuninori Morimoto 2015-10-26  553  
+e7d850dd10f4e6 Kuninori Morimoto 2015-10-26  554  	ssi->usrcnt--;
+e7d850dd10f4e6 Kuninori Morimoto 2015-10-26  555  
+203cdf51f28820 Kuninori Morimoto 2018-06-12  556  	if (!ssi->usrcnt) {
+203cdf51f28820 Kuninori Morimoto 2018-06-12  557  		ssi->cr_own	= 0;
+203cdf51f28820 Kuninori Morimoto 2018-06-12  558  		ssi->cr_mode	= 0;
+203cdf51f28820 Kuninori Morimoto 2018-06-12  559  		ssi->wsr	= 0;
+203cdf51f28820 Kuninori Morimoto 2018-06-12  560  	}
+203cdf51f28820 Kuninori Morimoto 2018-06-12  561  
+391d452251464b Yongbo Zhang      2020-05-08  562  	/* disable busif buffer over/under run interrupt. */
+391d452251464b Yongbo Zhang      2020-05-08  563  	if (is_tdm || is_tdm_split) {
+391d452251464b Yongbo Zhang      2020-05-08  564  		switch (id) {
+391d452251464b Yongbo Zhang      2020-05-08  565  		case 0:
+391d452251464b Yongbo Zhang      2020-05-08  566  		case 1:
+391d452251464b Yongbo Zhang      2020-05-08  567  		case 2:
+391d452251464b Yongbo Zhang      2020-05-08  568  		case 3:
+391d452251464b Yongbo Zhang      2020-05-08  569  		case 4:
+391d452251464b Yongbo Zhang      2020-05-08  570  			for (i = 0; i < 4; i++) {
+391d452251464b Yongbo Zhang      2020-05-08  571  				sys_int_enable = rsnd_mod_read(mod,
+391d452251464b Yongbo Zhang      2020-05-08  572  						SSI_SYS_INT_ENABLE(i * 2));
+391d452251464b Yongbo Zhang      2020-05-08  573  				sys_int_enable &= ~(0xf << (id * 4));
+391d452251464b Yongbo Zhang      2020-05-08  574  				rsnd_mod_write(mod,
+391d452251464b Yongbo Zhang      2020-05-08  575  					       SSI_SYS_INT_ENABLE(i * 2),
+391d452251464b Yongbo Zhang      2020-05-08  576  					       sys_int_enable);
+391d452251464b Yongbo Zhang      2020-05-08  577  			}
+391d452251464b Yongbo Zhang      2020-05-08  578  
+391d452251464b Yongbo Zhang      2020-05-08  579  			break;
+391d452251464b Yongbo Zhang      2020-05-08  580  		case 9:
+391d452251464b Yongbo Zhang      2020-05-08  581  			for (i = 0; i < 4; i++) {
+391d452251464b Yongbo Zhang      2020-05-08  582  				sys_int_enable = rsnd_mod_read(mod,
+391d452251464b Yongbo Zhang      2020-05-08  583  					SSI_SYS_INT_ENABLE((i * 2) + 1));
+391d452251464b Yongbo Zhang      2020-05-08  584  				sys_int_enable &= ~(0xf << 4);
+391d452251464b Yongbo Zhang      2020-05-08  585  				rsnd_mod_write(mod,
+391d452251464b Yongbo Zhang      2020-05-08  586  					       SSI_SYS_INT_ENABLE((i * 2) + 1),
+391d452251464b Yongbo Zhang      2020-05-08  587  					       sys_int_enable);
+391d452251464b Yongbo Zhang      2020-05-08  588  			}
+391d452251464b Yongbo Zhang      2020-05-08  589  
+391d452251464b Yongbo Zhang      2020-05-08  590  			break;
+391d452251464b Yongbo Zhang      2020-05-08  591  		}
+391d452251464b Yongbo Zhang      2020-05-08  592  
+ae5c322303fff5 Kuninori Morimoto 2013-07-21  593  	return 0;
+ae5c322303fff5 Kuninori Morimoto 2013-07-21  594  }
+ae5c322303fff5 Kuninori Morimoto 2013-07-21  595  
+
+:::::: The code at line 531 was first introduced by commit
+:::::: ae5c322303fff50b93d60e34c6563f1264a5941b ASoC: add Renesas R-Car SSI feature
+
+:::::: TO: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+:::::: CC: Mark Brown <broonie@linaro.org>
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
