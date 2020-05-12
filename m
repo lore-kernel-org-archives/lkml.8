@@ -2,422 +2,131 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F47CA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BC6CA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83FEB206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8CE7206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:53:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cJXtddWT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730083AbgELRwm convert rfc822-to-8bit (ORCPT
+        id S1730265AbgELRxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 13:52:42 -0400
-Received: from mga03.intel.com ([134.134.136.65]:22514 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726031AbgELRwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 13:52:42 -0400
-IronPort-SDR: jlZKFBnmwdbEE7zv7+fm/udiG7n1mPO1aiJBrA8zUpTbKRj+LlQeDaQWp8M+eqOgznq/LnJZcx
- r2H+uFhmXrPw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 10:52:40 -0700
-IronPort-SDR: ZL/7MhQfCbgOFA+eAZA11RQiRbCYYyQOo2xUToXFTjAB6Dkyx/1RtNCsU3sz9r8EizRDByU+ja
- eQqYQB5Qv/pw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,384,1583222400"; 
-   d="scan'208";a="286736341"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by fmsmga004.fm.intel.com with ESMTP; 12 May 2020 10:52:40 -0700
-Received: from fmsmsx112.amr.corp.intel.com (10.18.116.6) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 12 May 2020 10:52:40 -0700
-Received: from fmsmsx108.amr.corp.intel.com ([169.254.9.60]) by
- FMSMSX112.amr.corp.intel.com ([169.254.5.239]) with mapi id 14.03.0439.000;
- Tue, 12 May 2020 10:52:40 -0700
-From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Pawel Osciak <pawel@osciak.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH v4 38/38] videobuf2: use sgtable-based scatterlist
- wrappers
-Thread-Topic: [PATCH v4 38/38] videobuf2: use sgtable-based scatterlist
- wrappers
-Thread-Index: AQHWKDwP0fqa3BxGckm0EsGy+4sAaqikud8Q
-Date:   Tue, 12 May 2020 17:52:39 +0000
-Message-ID: <14063C7AD467DE4B82DEDB5C278E8663010E210FAC@FMSMSX108.amr.corp.intel.com>
-References: <20200512085710.14688-1-m.szyprowski@samsung.com>
- <20200512090058.14910-1-m.szyprowski@samsung.com>
- <CGME20200512090130eucas1p2eb86c5d34be56bbc81032bc0b6927d1e@eucas1p2.samsung.com>
- <20200512090058.14910-38-m.szyprowski@samsung.com>
-In-Reply-To: <20200512090058.14910-38-m.szyprowski@samsung.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.1.200.106]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 12 May 2020 13:53:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726031AbgELRxM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 13:53:12 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C6C7C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:53:12 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id 19so18991812oiy.8
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:53:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NkOoyxp+KOfXBJgSgsmTbcJqNZ2GGnNdvXTFmavoPqM=;
+        b=cJXtddWTuDJRf+CmWTK1TB/ivAn0sQMUeBhtE5kBCZ5crRtq55EMpkXbCwDrWFdnG2
+         hw/jaxgXukOHTPwvYFbv5bhgRwrMwTf9T7YxLz/pgY6ngXJcMWcQnRi6fpXVWarUAkf1
+         T9m1woadtB13mx35loE0yBtMOqsFfGNBmGCXcty1tKKbQ7qxfsAxTIn8H+P0kaqcXCkc
+         Gs7IvOII9jlcgWojPmJmO+89TkRnzHVX+248d3y1wPUNdY3LBWbECFM9TdA+YcUOzIXS
+         QJz7fEBPgG3qmasdKr6psI5Pmw9WTOiPeWGPQyGUiL8b0l8JJWv5jccf5FeWT5jsOpCT
+         lbhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NkOoyxp+KOfXBJgSgsmTbcJqNZ2GGnNdvXTFmavoPqM=;
+        b=nG3QyHORxLcWusU3ou2YZ51i+R6jLMnshJ4Xkim2vuHOsndYl7edmxzji3OWinseST
+         O7c0/LQkBuOBPV+EPnUXPi0gawrSsHGhh8oTean+K4mV/sLGWgj0daNOMdZIKzN8fcvn
+         HCRCCyguECmaEP+jbu5CeFGqTDm6gdec6uQ/SvqzQ9frWocs9944Zs3BCcXynS7GrJwl
+         oKQzR3K+bfX1ulGir2BwllpiCF1FWUVwFN22uRlcS3oxwvtsxZPmTTZIUFKdJwbwE6E+
+         9a399w/IQnFhD5oPl4v5im8F9mvdrkIPMU1H21I3+iU3I4+uSzCRCaAjK+ztUOBo7T0E
+         J+xQ==
+X-Gm-Message-State: AGi0Pub2yi93mDhW41fWHdMlNNWZ4GtdM+ZFRrBXe3A4T1xeIy4VSN+C
+        xJ7yBolv1bpje4HkWf4Qp9e40dKtt0pNKz3PEo8wFA==
+X-Google-Smtp-Source: APiQypLkP5pPehJigDDlRNOn4+iVPva7JZfnu6dHE84/k8Lgg0hD4kcUuABKGJzkgwomRT/MBTH5un/l88p/4CBGWJA=
+X-Received: by 2002:a05:6808:b36:: with SMTP id t22mr24884545oij.121.1589305991490;
+ Tue, 12 May 2020 10:53:11 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200511204150.27858-1-will@kernel.org> <20200512081826.GE2978@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200512081826.GE2978@hirez.programming.kicks-ass.net>
+From:   Marco Elver <elver@google.com>
+Date:   Tue, 12 May 2020 19:53:00 +0200
+Message-ID: <CANpmjNNo3rhwqG=xEbpP9JiSd8-Faw8fkoUhYJjesHK5S5_KQQ@mail.gmail.com>
+Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Will Deacon <will@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
->-----Original Message-----
->From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
->Marek Szyprowski
->Sent: Tuesday, May 12, 2020 5:01 AM
->To: dri-devel@lists.freedesktop.org; iommu@lists.linux-foundation.org;
->linaro-mm-sig@lists.linaro.org; linux-kernel@vger.kernel.org
->Cc: Pawel Osciak <pawel@osciak.com>; Bartlomiej Zolnierkiewicz
-><b.zolnierkie@samsung.com>; David Airlie <airlied@linux.ie>; linux-
->media@vger.kernel.org; Hans Verkuil <hverkuil-cisco@xs4all.nl>; Mauro
->Carvalho Chehab <mchehab@kernel.org>; Robin Murphy
-><robin.murphy@arm.com>; Christoph Hellwig <hch@lst.de>; linux-arm-
->kernel@lists.infradead.org; Marek Szyprowski
-><m.szyprowski@samsung.com>
->Subject: [PATCH v4 38/38] videobuf2: use sgtable-based scatterlist wrappers
+On Tue, 12 May 2020 at 10:18, Peter Zijlstra <peterz@infradead.org> wrote:
 >
->Use recently introduced common wrappers operating directly on the struct
->sg_table objects and scatterlist page iterators to make the code a bit
->more compact, robust, easier to follow and copy/paste safe.
+> On Mon, May 11, 2020 at 09:41:32PM +0100, Will Deacon wrote:
+> > Hi folks,
+> >
+> > (trimmed CC list since v4 since this is largely just a rebase)
+> >
+> > This is version five of the READ_ONCE() codegen improvement series that
+> > I've previously posted here:
+> >
+> > RFC: https://lore.kernel.org/lkml/20200110165636.28035-1-will@kernel.org
+> > v2:  https://lore.kernel.org/lkml/20200123153341.19947-1-will@kernel.org
+> > v3:  https://lore.kernel.org/lkml/20200415165218.20251-1-will@kernel.org
+> > v4:  https://lore.kernel.org/lkml/20200421151537.19241-1-will@kernel.org
+> >
+> > The main change since v4 is that this is now based on top of the KCSAN
+> > changes queued in -tip (locking/kcsan) and therefore contains the patches
+> > necessary to avoid breaking sparc32 as well as some cleanups to
+> > consolidate {READ,WRITE}_ONCE() and data_race().
+> >
+> > Other changes include:
+> >
+> >   * Treat 'char' as distinct from 'signed char' and 'unsigned char' for
+> >     __builtin_types_compatible_p()
+> >
+> >   * Add a compile-time assertion that the argument to READ_ONCE_NOCHECK()
+> >     points at something the same size as 'unsigned long'
+> >
+> > I'm happy for all of this to go via -tip, or I can take it via arm64.
 >
->No functional change, because the code already properly did all the
->scaterlist related calls.
+> Looks good to me; Thanks!
 >
->Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->---
->For more information, see '[PATCH v4 00/38] DRM: fix struct sg_table nents
->vs. orig_nents misuse' thread:
->https://lore.kernel.org/dri-devel/20200512085710.14688-1-
->m.szyprowski@samsung.com/T/
->---
-> .../media/common/videobuf2/videobuf2-dma-contig.c  | 41 ++++++++++----
->--------
-> drivers/media/common/videobuf2/videobuf2-dma-sg.c  | 32 +++++++--------
->--
-> drivers/media/common/videobuf2/videobuf2-vmalloc.c | 12 +++----
-> 3 files changed, 34 insertions(+), 51 deletions(-)
->
->diff --git a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
->b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
->index d3a3ee5..bf31a9d 100644
->--- a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
->+++ b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
->@@ -48,16 +48,15 @@ struct vb2_dc_buf {
->
-> static unsigned long vb2_dc_get_contiguous_size(struct sg_table *sgt)
-> {
->-	struct scatterlist *s;
-> 	dma_addr_t expected = sg_dma_address(sgt->sgl);
->-	unsigned int i;
->+	struct sg_dma_page_iter dma_iter;
-> 	unsigned long size = 0;
->
->-	for_each_sg(sgt->sgl, s, sgt->nents, i) {
->-		if (sg_dma_address(s) != expected)
->+	for_each_sgtable_dma_page(sgt, &dma_iter, 0) {
->+		if (sg_page_iter_dma_address(&dma_iter) != expected)
-> 			break;
->-		expected = sg_dma_address(s) + sg_dma_len(s);
->-		size += sg_dma_len(s);
->+		expected += PAGE_SIZE;
->+		size += PAGE_SIZE;
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-This code in drm_prime_t_contiguous_size and here.  I seem to remember seeing
-the same pattern in other drivers.
+I just ran a bunch of KCSAN tests. While this series alone would have
+passed the tests, there appears to be a problem with
+__READ_ONCE/__WRITE_ONCE. I think they should already be using
+'data_race()', as otherwise we will get lots of false positives in
+future.
 
-Would it worthwhile to make this a helper as well?
+I noticed this when testing -tip/locking/kcsan, which breaks
+unfortunately, because I see a bunch of spurious data races with
+arch_atomic_{read,set} because "locking/atomics: Flip fallbacks and
+instrumentation" changed them to use __READ_ONCE()/__WRITE_ONCE().
+From what I see, the intent was to not double-instrument,
+unfortunately they are still double-instrumented because
+__READ_ONCE/__WRITE_ONCE doesn't hide the access from KCSAN (nor KASAN
+actually). I don't think we can use __no_sanitize_or_inline for the
+arch_ functions, because we really want them to be __always_inline
+(also to avoid calls to these functions in uaccess regions, which
+objtool would notice).
 
-Also, isn't the sg_dma_len() the actual length of the chunk we are looking at?
-
-If its I not PAGE_SIZE (ie. dma chunk is 4 * PAGE_SIZE?), does your loop/calculation still work?
+I think the easiest way to resolve this is to wrap the accesses in
+__*_ONCE with data_race().
 
 Thanks,
-
-Mike
-
-> 	}
-> 	return size;
-> }
->@@ -99,8 +98,7 @@ static void vb2_dc_prepare(void *buf_priv)
-> 	if (!sgt || buf->db_attach)
-> 		return;
->
->-	dma_sync_sg_for_device(buf->dev, sgt->sgl, sgt->orig_nents,
->-			       buf->dma_dir);
->+	dma_sync_sgtable_for_device(buf->dev, sgt, buf->dma_dir);
-> }
->
-> static void vb2_dc_finish(void *buf_priv)
->@@ -112,7 +110,7 @@ static void vb2_dc_finish(void *buf_priv)
-> 	if (!sgt || buf->db_attach)
-> 		return;
->
->-	dma_sync_sg_for_cpu(buf->dev, sgt->sgl, sgt->orig_nents, buf-
->>dma_dir);
->+	dma_sync_sgtable_for_cpu(buf->dev, sgt, buf->dma_dir);
-> }
->
-> /*********************************************/
->@@ -273,8 +271,8 @@ static void vb2_dc_dmabuf_ops_detach(struct
->dma_buf *dbuf,
-> 		 * memory locations do not require any explicit cache
-> 		 * maintenance prior or after being used by the device.
-> 		 */
->-		dma_unmap_sg_attrs(db_attach->dev, sgt->sgl, sgt-
->>orig_nents,
->-				   attach->dma_dir,
->DMA_ATTR_SKIP_CPU_SYNC);
->+		dma_unmap_sgtable(db_attach->dev, sgt, attach->dma_dir,
->+				  DMA_ATTR_SKIP_CPU_SYNC);
-> 	sg_free_table(sgt);
-> 	kfree(attach);
-> 	db_attach->priv = NULL;
->@@ -299,8 +297,8 @@ static struct sg_table *vb2_dc_dmabuf_ops_map(
->
-> 	/* release any previous cache */
-> 	if (attach->dma_dir != DMA_NONE) {
->-		dma_unmap_sg_attrs(db_attach->dev, sgt->sgl, sgt-
->>orig_nents,
->-				   attach->dma_dir,
->DMA_ATTR_SKIP_CPU_SYNC);
->+		dma_unmap_sgtable(db_attach->dev, sgt, attach->dma_dir,
->+				  DMA_ATTR_SKIP_CPU_SYNC);
-> 		attach->dma_dir = DMA_NONE;
-> 	}
->
->@@ -308,9 +306,8 @@ static struct sg_table *vb2_dc_dmabuf_ops_map(
-> 	 * mapping to the client with new direction, no cache sync
-> 	 * required see comment in vb2_dc_dmabuf_ops_detach()
-> 	 */
->-	sgt->nents = dma_map_sg_attrs(db_attach->dev, sgt->sgl, sgt-
->>orig_nents,
->-				      dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
->-	if (!sgt->nents) {
->+	if (dma_map_sgtable(db_attach->dev, sgt, dma_dir,
->+			    DMA_ATTR_SKIP_CPU_SYNC)) {
-> 		pr_err("failed to map scatterlist\n");
-> 		mutex_unlock(lock);
-> 		return ERR_PTR(-EIO);
->@@ -423,8 +420,8 @@ static void vb2_dc_put_userptr(void *buf_priv)
-> 		 * No need to sync to CPU, it's already synced to the CPU
-> 		 * since the finish() memop will have been called before this.
-> 		 */
->-		dma_unmap_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
->-				   buf->dma_dir,
->DMA_ATTR_SKIP_CPU_SYNC);
->+		dma_unmap_sgtable(buf->dev, sgt, buf->dma_dir,
->+				  DMA_ATTR_SKIP_CPU_SYNC);
-> 		pages = frame_vector_pages(buf->vec);
-> 		/* sgt should exist only if vector contains pages... */
-> 		BUG_ON(IS_ERR(pages));
->@@ -521,9 +518,8 @@ static void *vb2_dc_get_userptr(struct device *dev,
->unsigned long vaddr,
-> 	 * No need to sync to the device, this will happen later when the
-> 	 * prepare() memop is called.
-> 	 */
->-	sgt->nents = dma_map_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
->-				      buf->dma_dir,
->DMA_ATTR_SKIP_CPU_SYNC);
->-	if (sgt->nents <= 0) {
->+	if (dma_map_sgtable(buf->dev, sgt, buf->dma_dir,
->+			    DMA_ATTR_SKIP_CPU_SYNC)) {
-> 		pr_err("failed to map scatterlist\n");
-> 		ret = -EIO;
-> 		goto fail_sgt_init;
->@@ -545,8 +541,7 @@ static void *vb2_dc_get_userptr(struct device *dev,
->unsigned long vaddr,
-> 	return buf;
->
-> fail_map_sg:
->-	dma_unmap_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
->-			   buf->dma_dir, DMA_ATTR_SKIP_CPU_SYNC);
->+	dma_unmap_sgtable(buf->dev, sgt, buf->dma_dir,
->DMA_ATTR_SKIP_CPU_SYNC);
->
-> fail_sgt_init:
-> 	sg_free_table(sgt);
->diff --git a/drivers/media/common/videobuf2/videobuf2-dma-sg.c
->b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
->index 92072a0..6ddf953 100644
->--- a/drivers/media/common/videobuf2/videobuf2-dma-sg.c
->+++ b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
->@@ -142,9 +142,8 @@ static void *vb2_dma_sg_alloc(struct device *dev,
->unsigned long dma_attrs,
-> 	 * No need to sync to the device, this will happen later when the
-> 	 * prepare() memop is called.
-> 	 */
->-	sgt->nents = dma_map_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
->-				      buf->dma_dir,
->DMA_ATTR_SKIP_CPU_SYNC);
->-	if (!sgt->nents)
->+	if (dma_map_sgtable(buf->dev, sgt, buf->dma_dir,
->+			    DMA_ATTR_SKIP_CPU_SYNC)) {
-> 		goto fail_map;
->
-> 	buf->handler.refcount = &buf->refcount;
->@@ -180,8 +179,8 @@ static void vb2_dma_sg_put(void *buf_priv)
-> 	if (refcount_dec_and_test(&buf->refcount)) {
-> 		dprintk(1, "%s: Freeing buffer of %d pages\n", __func__,
-> 			buf->num_pages);
->-		dma_unmap_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
->-				   buf->dma_dir,
->DMA_ATTR_SKIP_CPU_SYNC);
->+		dma_unmap_sgtable(buf->dev, sgt, buf->dma_dir,
->+				  DMA_ATTR_SKIP_CPU_SYNC);
-> 		if (buf->vaddr)
-> 			vm_unmap_ram(buf->vaddr, buf->num_pages);
-> 		sg_free_table(buf->dma_sgt);
->@@ -202,8 +201,7 @@ static void vb2_dma_sg_prepare(void *buf_priv)
-> 	if (buf->db_attach)
-> 		return;
->
->-	dma_sync_sg_for_device(buf->dev, sgt->sgl, sgt->orig_nents,
->-			       buf->dma_dir);
->+	dma_sync_sgtable_for_device(buf->dev, sgt, buf->dma_dir);
-> }
->
-> static void vb2_dma_sg_finish(void *buf_priv)
->@@ -215,7 +213,7 @@ static void vb2_dma_sg_finish(void *buf_priv)
-> 	if (buf->db_attach)
-> 		return;
->
->-	dma_sync_sg_for_cpu(buf->dev, sgt->sgl, sgt->orig_nents, buf-
->>dma_dir);
->+	dma_sync_sgtable_for_cpu(buf->dev, sgt, buf->dma_dir);
-> }
->
-> static void *vb2_dma_sg_get_userptr(struct device *dev, unsigned long
->vaddr,
->@@ -258,9 +256,8 @@ static void *vb2_dma_sg_get_userptr(struct device
->*dev, unsigned long vaddr,
-> 	 * No need to sync to the device, this will happen later when the
-> 	 * prepare() memop is called.
-> 	 */
->-	sgt->nents = dma_map_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents,
->-				      buf->dma_dir,
->DMA_ATTR_SKIP_CPU_SYNC);
->-	if (!sgt->nents)
->+	if (dma_map_sgtable(buf->dev, sgt, buf->dma_dir,
->+			    DMA_ATTR_SKIP_CPU_SYNC)) {
-> 		goto userptr_fail_map;
->
-> 	return buf;
->@@ -286,8 +283,7 @@ static void vb2_dma_sg_put_userptr(void *buf_priv)
->
-> 	dprintk(1, "%s: Releasing userspace buffer of %d pages\n",
-> 	       __func__, buf->num_pages);
->-	dma_unmap_sg_attrs(buf->dev, sgt->sgl, sgt->orig_nents, buf-
->>dma_dir,
->-			   DMA_ATTR_SKIP_CPU_SYNC);
->+	dma_unmap_sgtable(buf->dev, sgt, buf->dma_dir,
->DMA_ATTR_SKIP_CPU_SYNC);
-> 	if (buf->vaddr)
-> 		vm_unmap_ram(buf->vaddr, buf->num_pages);
-> 	sg_free_table(buf->dma_sgt);
->@@ -410,8 +406,7 @@ static void vb2_dma_sg_dmabuf_ops_detach(struct
->dma_buf *dbuf,
->
-> 	/* release the scatterlist cache */
-> 	if (attach->dma_dir != DMA_NONE)
->-		dma_unmap_sg(db_attach->dev, sgt->sgl, sgt->orig_nents,
->-			attach->dma_dir);
->+		dma_unmap_sgtable(db_attach->dev, sgt, attach->dma_dir);
-> 	sg_free_table(sgt);
-> 	kfree(attach);
-> 	db_attach->priv = NULL;
->@@ -436,15 +431,12 @@ static struct sg_table
->*vb2_dma_sg_dmabuf_ops_map(
->
-> 	/* release any previous cache */
-> 	if (attach->dma_dir != DMA_NONE) {
->-		dma_unmap_sg(db_attach->dev, sgt->sgl, sgt->orig_nents,
->-			attach->dma_dir);
->+		dma_unmap_sgtable(db_attach->dev, sgt, attach->dma_dir);
-> 		attach->dma_dir = DMA_NONE;
-> 	}
->
-> 	/* mapping to the client with new direction */
->-	sgt->nents = dma_map_sg(db_attach->dev, sgt->sgl, sgt->orig_nents,
->-				dma_dir);
->-	if (!sgt->nents) {
->+	if (dma_map_sgtable(db_attach->dev, sgt, dma_dir, 0)) {
-> 		pr_err("failed to map scatterlist\n");
-> 		mutex_unlock(lock);
-> 		return ERR_PTR(-EIO);
->diff --git a/drivers/media/common/videobuf2/videobuf2-vmalloc.c
->b/drivers/media/common/videobuf2/videobuf2-vmalloc.c
->index c66fda4..bf5ac63 100644
->--- a/drivers/media/common/videobuf2/videobuf2-vmalloc.c
->+++ b/drivers/media/common/videobuf2/videobuf2-vmalloc.c
->@@ -229,7 +229,7 @@ static int vb2_vmalloc_dmabuf_ops_attach(struct
->dma_buf *dbuf,
-> 		kfree(attach);
-> 		return ret;
-> 	}
->-	for_each_sg(sgt->sgl, sg, sgt->nents, i) {
->+	for_each_sgtable_sg(sgt, sg, i) {
-> 		struct page *page = vmalloc_to_page(vaddr);
->
-> 		if (!page) {
->@@ -259,8 +259,7 @@ static void vb2_vmalloc_dmabuf_ops_detach(struct
->dma_buf *dbuf,
->
-> 	/* release the scatterlist cache */
-> 	if (attach->dma_dir != DMA_NONE)
->-		dma_unmap_sg(db_attach->dev, sgt->sgl, sgt->orig_nents,
->-			attach->dma_dir);
->+		dma_unmap_sgtable(db_attach->dev, sgt, attach->dma_dir,
->0);
-> 	sg_free_table(sgt);
-> 	kfree(attach);
-> 	db_attach->priv = NULL;
->@@ -285,15 +284,12 @@ static struct sg_table
->*vb2_vmalloc_dmabuf_ops_map(
->
-> 	/* release any previous cache */
-> 	if (attach->dma_dir != DMA_NONE) {
->-		dma_unmap_sg(db_attach->dev, sgt->sgl, sgt->orig_nents,
->-			attach->dma_dir);
->+		dma_unmap_sgtable(db_attach->dev, sgt, attach->dma_dir,
->0);
-> 		attach->dma_dir = DMA_NONE;
-> 	}
->
-> 	/* mapping to the client with new direction */
->-	sgt->nents = dma_map_sg(db_attach->dev, sgt->sgl, sgt->orig_nents,
->-				dma_dir);
->-	if (!sgt->nents) {
->+	if (dma_map_sgtable(db_attach->dev, sgt, dma_dir, 0)) {
-> 		pr_err("failed to map scatterlist\n");
-> 		mutex_unlock(lock);
-> 		return ERR_PTR(-EIO);
->--
->1.9.1
->
->_______________________________________________
->dri-devel mailing list
->dri-devel@lists.freedesktop.org
->https://lists.freedesktop.org/mailman/listinfo/dri-devel
+-- Marco
