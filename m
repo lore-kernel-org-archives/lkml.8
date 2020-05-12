@@ -2,38 +2,38 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65597C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C70E4C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 440A823129
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A39952494B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:23:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731537AbgELWXE (ORCPT
+        id S1731507AbgELWXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:23:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55458 "EHLO
+        Tue, 12 May 2020 18:23:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727971AbgELWXE (ORCPT
+        by vger.kernel.org with ESMTP id S1731281AbgELWXF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 18:23:04 -0400
+        Tue, 12 May 2020 18:23:05 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10824C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:23:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B379AC061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:23:05 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jYdI2-0004b1-Vi; Wed, 13 May 2020 00:22:20 +0200
+        id 1jYdIA-0004ef-Df; Wed, 13 May 2020 00:22:27 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 4120A1001FC;
-        Wed, 13 May 2020 00:22:18 +0200 (CEST)
-Message-Id: <20200512210059.056244513@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id C4E071006A1;
+        Wed, 13 May 2020 00:22:25 +0200 (CEST)
+Message-Id: <20200512213809.997307469@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 12 May 2020 23:00:59 +0200
+Date:   Tue, 12 May 2020 23:01:05 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -58,7 +58,10 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
         Zhao Yakui <yakui.zhao@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V5 00/38] x86/entry: Entry/exception code rework - the leftovers
+Subject: [patch V5 06/38] x86/entry: Provide helpers for execute on irqstack
+References: <20200512210059.056244513@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-transfer-encoding: 8-bit
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
@@ -68,147 +71,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Folks!
+Device interrupt handlers and system vector handlers are executed on the
+interrupt stack. The stack switch happens in the low level assembly entry
+code. This conflicts with the efforts to consolidate the exit code in C to
+ensure correctness vs. RCU and tracing.
 
-This is V5 of the rework series. V4 can be found here:
+As there is no way to move #DB away from IST due to the MOV SS issue, the
+requirements vs. #DB and NMI for switching to the interrupt stack do not
+exist anymore. The only requirement is that interrupts are disabled.
 
-  https://lore.kernel.org/r/20200505135341.730586321@linutronix.de
+That allows to move the stack switching to C code which simplifies the
+entry/exit handling further because it allows to switch stacks after
+handling the entry and on exit before handling RCU, return to usermode and
+kernel preemption in the same way as for regular exceptions.
 
-Some of the non-x86 specific parts from part 1- 4 have been applied to the
-relevant tip branches and I merged them all together to base the rest on.
+The initial attempt of having the stack switching in inline ASM caused too
+much headache vs. objtool and the unwinder. After analysing the use cases
+it was agreed on that having the stack switch in ASM for the price of an
+indirect call is acceptable as the main users are indirect call heavy
+anyway and the few system vectors which are empty shells (scheduler IPI and
+KVM posted interrupt vectors) can run from the regular stack.
 
-I have applied most of the patches from part 1-4 on top after fixing up the
-small review comments all over the place. The result can be found here:
+Provide helper functions to check whether the interrupt stack is already
+active and whether stack switching is required.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git entry-base-v5
+64 bit only for now. 32 bit has a variant of that already. Once this is
+cleaned up the two implementations might be consolidated as a cleanup on
+top.
 
-I dropped:
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20200507161020.783541450@infradead.org
+---
+V5: Moved the actual switch to ASM code
+---
+ arch/x86/entry/entry_64.S        |   39 ++++++++++++++++++++++++++++++++++++++
+ arch/x86/include/asm/irq_stack.h |   40 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 79 insertions(+)
 
-  [patch V4 part 1 33/36] x86,tracing: Robustify ftrace_nmi_enter()
-  [patch V4 part 2 10/18] x86/entry/64: Check IF in __preempt_enable_notrace()
-  [patch V4 part 2 11/18] x86/entry/64: Mark ___preempt_schedule_notrace()
-
-from V4 because Peter's attempt to sanitize ftrace_nmi_enter/exit() and the
-underlying callchains turned out to be incomplete and cause the whole
-__preempt_schedule_notrace() hackery which is caused by a gazillion of
-preempt_disable_notrace() / preempt_enable_notrace() invocations in the
-full call chain. I found a better way to do that and that's in part 5 now.
-
-The remaining patches are mostly from part 5 of version 4 dealing with the
-#PF, device interrupts and the system vectors.
-
-The main differences to V4 part 5 are:
-
-  - Provide nmi_enter/exit_notrace() which do not contain the
-    ftrace_nmi_enter/exit() calls, use them in x86 and make the ftrace
-    invocation explicit at a safe place.
-
-  - A fix for the reworked SVM code
-
-  - An optimization of asm_native_load_gs_index() which I found while
-    staring at stuff in more detail
-
-  - The removal of the x86 specific irq_regs implementation which was
-    aside of two underscores in the variable name exactly the same thing
-    as the generic variant.
-
-  - Overhaul of the IRQ stack switching mechanics to avoid the objtool and
-    unwinder nastiness of doing it in C inline ASM. As discussed here:
-
-    https://lore.kernel.org/r/20200507161020.783541450@infradead.org
-
-    We agreed on having the actual stack switch still in ASM and utilize it
-    for device interrupts, soft interrupts and system vectors.
-
-    This comes for the price of an indirect call, but the device interrupt
-    handling has an indirect call and soft interrupts and most system
-    vectors are indirect call laden already.
-
-    There is a lightweight variant for the system vectors which do
-    basically nothing, i.e. reschedule IPI and the KVM posted interrupt
-    vectors. That variant runs on the interrupted stack and avoids the
-    full entry/exit handling overhead by utilizing the conditional RCU
-    variant of idtentry_enter/exit().
-
-  - Addressing a few review comments.
-
-The series is also available from git:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git entry-v5-the-rest
-
-Running the new objtool checks results in two warning types:
-
-  - The MCE code has an issue in the non-instrumentable section which is
-    still under investigation and discussion
-
-  - When paravirt is enabled then there are a few complaints about
-    invoking indirect calls (PVOPS) which leave the noinstr sections
-    but they are halfways straight forward to fix.
-
-Thanks,
-
-	tglx
-
-8<--------------
-
- arch/x86/include/asm/acrn.h                |   11 
- arch/x86/include/asm/entry_arch.h          |   56 --
- arch/x86/include/asm/irq_regs.h            |   32 -
- b/arch/x86/entry/calling.h                 |   25 -
- b/arch/x86/entry/common.c                  |  216 +++++++++-
- b/arch/x86/entry/entry_32.S                |  260 +-----------
- b/arch/x86/entry/entry_64.S                |  581 +++--------------------------
- b/arch/x86/entry/thunk_64.S                |    9 
- b/arch/x86/hyperv/hv_init.c                |    9 
- b/arch/x86/include/asm/apic.h              |   33 -
- b/arch/x86/include/asm/hw_irq.h            |   22 -
- b/arch/x86/include/asm/idtentry.h          |  262 ++++++++++++-
- b/arch/x86/include/asm/irq.h               |    6 
- b/arch/x86/include/asm/irq_stack.h         |   40 +
- b/arch/x86/include/asm/irq_work.h          |    1 
- b/arch/x86/include/asm/irqflags.h          |   10 
- b/arch/x86/include/asm/mshyperv.h          |   13 
- b/arch/x86/include/asm/trace/common.h      |    4 
- b/arch/x86/include/asm/trace/irq_vectors.h |   17 
- b/arch/x86/include/asm/traps.h             |   21 -
- b/arch/x86/include/asm/uv/uv_bau.h         |    8 
- b/arch/x86/kernel/apic/apic.c              |   39 -
- b/arch/x86/kernel/apic/msi.c               |    3 
- b/arch/x86/kernel/apic/vector.c            |    5 
- b/arch/x86/kernel/cpu/acrn.c               |    9 
- b/arch/x86/kernel/cpu/mce/amd.c            |    5 
- b/arch/x86/kernel/cpu/mce/core.c           |    4 
- b/arch/x86/kernel/cpu/mce/therm_throt.c    |    5 
- b/arch/x86/kernel/cpu/mce/threshold.c      |    5 
- b/arch/x86/kernel/cpu/mshyperv.c           |   22 -
- b/arch/x86/kernel/head_64.S                |    7 
- b/arch/x86/kernel/idt.c                    |   42 +-
- b/arch/x86/kernel/irq.c                    |   58 --
- b/arch/x86/kernel/irq_64.c                 |   17 
- b/arch/x86/kernel/irq_work.c               |    6 
- b/arch/x86/kernel/kvm.c                    |   14 
- b/arch/x86/kernel/nmi.c                    |    9 
- b/arch/x86/kernel/smp.c                    |   37 -
- b/arch/x86/kernel/tracepoint.c             |   17 
- b/arch/x86/kernel/traps.c                  |   10 
- b/arch/x86/kvm/svm/svm.c                   |    2 
- b/arch/x86/mm/fault.c                      |   69 ++-
- b/arch/x86/platform/uv/tlb_uv.c            |    2 
- b/arch/x86/xen/enlighten_hvm.c             |   12 
- b/arch/x86/xen/enlighten_pv.c              |    2 
- b/arch/x86/xen/setup.c                     |    4 
- b/arch/x86/xen/smp_pv.c                    |    3 
- b/arch/x86/xen/xen-asm_32.S                |   12 
- b/arch/x86/xen/xen-asm_64.S                |    4 
- b/arch/x86/xen/xen-ops.h                   |    1 
- b/drivers/xen/events/events_base.c         |    6 
- b/drivers/xen/preempt.c                    |    2 
- b/include/linux/hardirq.h                  |   51 ++
- b/include/linux/rcutiny.h                  |    1 
- b/include/linux/rcutree.h                  |    1 
- b/include/xen/events.h                     |    7 
- b/include/xen/xen-ops.h                    |    7 
- b/kernel/rcu/tree.c                        |    5 
- b/kernel/softirq.c                         |   35 +
- 59 files changed, 906 insertions(+), 1270 deletions(-)
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -1106,6 +1106,45 @@ SYM_CODE_START_LOCAL_NOALIGN(.Lbad_gs)
+ SYM_CODE_END(.Lbad_gs)
+ 	.previous
+ 
++/*
++ * rdi: New stack pointer points to the top word of the stack
++ * rsi: Function pointer
++ * rdx: Function argument (can be NULL if none)
++ */
++SYM_FUNC_START(asm_call_on_stack)
++	/*
++	 * Save the frame pointer unconditionally. This allows the ORC
++	 * unwinder to handle the stack switch.
++	 */
++	pushq		%rbp
++	mov		%rsp, %rbp
++
++	/*
++	 * The unwinder relies on the word at the top of the new stack
++	 * page linking back to the previous RSP.
++	 */
++	mov		%rsp, (%rdi)
++	mov		%rdi, %rsp
++	/* Move the argument to the right place */
++	mov		%rdx, %rdi
++
++1:
++	.pushsection .discard.instr_begin
++	.long 1b - .
++	.popsection
++
++	CALL_NOSPEC	rsi
++
++2:
++	.pushsection .discard.instr_end
++	.long 2b - .
++	.popsection
++
++	/* Restore the previous stack pointer from RBP. */
++	leaveq
++	ret
++SYM_FUNC_END(asm_call_on_stack)
++
+ /* Call softirq on interrupt stack. Interrupts are off. */
+ .pushsection .text, "ax"
+ SYM_FUNC_START(do_softirq_own_stack)
+--- /dev/null
++++ b/arch/x86/include/asm/irq_stack.h
+@@ -0,0 +1,40 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_X86_IRQ_STACK_H
++#define _ASM_X86_IRQ_STACK_H
++
++#include <linux/ptrace.h>
++
++#include <asm/processor.h>
++
++#ifdef CONFIG_X86_64
++static __always_inline bool irqstack_active(void)
++{
++	return __this_cpu_read(irq_count) != -1;
++}
++
++void asm_call_on_stack(void *sp, void *func, void *arg);
++
++static __always_inline void run_on_irqstack(void *func, void *arg)
++{
++	void *tos = __this_cpu_read(hardirq_stack_ptr);
++
++	lockdep_assert_irqs_disabled();
++
++	__this_cpu_add(irq_count, 1);
++	asm_call_on_stack(tos - 8, func, arg);
++	__this_cpu_sub(irq_count, 1);
++}
++
++#else /* CONFIG_X86_64 */
++static inline bool irqstack_active(void) { return false; }
++static inline void run_on_irqstack(void *func, void *arg) { }
++#endif /* !CONFIG_X86_64 */
++
++static __always_inline bool irq_needs_irq_stack(struct pt_regs *regs)
++{
++	if (IS_ENABLED(CONFIG_X86_32))
++		return false;
++	return !user_mode(regs) && !irqstack_active();
++}
++
++#endif
 
