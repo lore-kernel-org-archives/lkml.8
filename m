@@ -2,96 +2,376 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E87C7C54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 01:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF706C47255
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 01:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C51982070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 01:57:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589248669;
-	bh=9RjqDugduMgr7NYLwF0AMjZ6RzCn/H4SknxFqBfqYb8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ORFBlBzfIZZaE0NtMiJ2cS2Yn0/LWxrqQZzuu6T/DkfI69ig4Cd/4iRKrE659hGaW
-	 XOfgfYMy5zXsFfYn5KZJTythytkr2s3jSFGLSUwD/1HFfIPk8/0OSAV2bb26VnYoae
-	 hwIoHhmYIlutACLGWNPm1MHHfVzW0qGFagC+f/JI=
+	by mail.kernel.org (Postfix) with ESMTP id AE0A720722
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 01:58:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728492AbgELB5t (ORCPT
+        id S1728522AbgELB6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 21:57:49 -0400
-Received: from mail-oo1-f65.google.com ([209.85.161.65]:41772 "EHLO
-        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbgELB5s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 21:57:48 -0400
-Received: by mail-oo1-f65.google.com with SMTP id t3so2383359oou.8;
-        Mon, 11 May 2020 18:57:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=00kOp9ExmdOEb2m+UR6ZmOPdOYVhMumUnUk3jnpY3fM=;
-        b=G4hGY+FMaPOfGU8jevafQyTksi81Vf0D+3JvmW2WGc3fkoQACQUEdSv1v7gnQGqFar
-         3zDMXamIefPv83QIiKxIcbxSwIVJPyNIOxLjFDZ7zp25uvHe/R2iXXWRIGmS24fn0Sv9
-         cFDL4aET/SRAZLccO5pODsrRgUHXWGcfZXNXRhkGSQIi9Sfu63Pvdhlk6pjG0mw85+bi
-         W8mVj89KID5byzf6T3mF+zA5LCbChu0Qp1EXztm1OQrC2h+LmUmWMopdraAwASLr4Qq+
-         qNMSgIwz5ZulMdYmiNd/EFw/mmbCyLNmDXQ4Ut06GnjEJS8MtZGQrl3OYkGIytZMlajq
-         erPg==
-X-Gm-Message-State: AGi0Pua+HG+bWAy4RbIUlIM39H/+3+XZ85esU1Q690PwWYT9rFPYcfxp
-        e34zRtQHbypyodsARIVRYw==
-X-Google-Smtp-Source: APiQypLVvE1qKMDCU4a7JudoWuDD5bs0jk6oxiKcKgyBAPrg3Y8unux/pWp/iq+9KH+E5bd84bhtVQ==
-X-Received: by 2002:a4a:615d:: with SMTP id u29mr16314383ooe.15.1589248667406;
-        Mon, 11 May 2020 18:57:47 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id g6sm366903otj.6.2020.05.11.18.57.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 18:57:46 -0700 (PDT)
-Received: (nullmailer pid 20999 invoked by uid 1000);
-        Tue, 12 May 2020 01:57:45 -0000
-Date:   Mon, 11 May 2020 20:57:45 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        linux-renesas-soc@vger.kernel.org,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: timer: renesas: ostm: Convert to json-schema
-Message-ID: <20200512015745.GA20909@bogus>
-References: <20200427193224.29548-1-geert+renesas@glider.be>
+        Mon, 11 May 2020 21:58:04 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4334 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726874AbgELB6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 21:58:03 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CEB91697297748217D42;
+        Tue, 12 May 2020 09:58:01 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 12 May
+ 2020 09:58:01 +0800
+Subject: Re: [PATCH V4] f2fs: Avoid double lock for cp_rwsem during checkpoint
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     Sayali Lokhande <sayalil@codeaurora.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <stummala@codeaurora.org>, <linux-kernel@vger.kernel.org>
+References: <1588244309-1468-1-git-send-email-sayalil@codeaurora.org>
+ <20200508161052.GA49579@google.com>
+ <0902037e-998d-812e-53e7-90ea7b9957eb@huawei.com>
+ <20200509190342.GA11239@google.com>
+ <fbb5ef1e-214d-f34a-e1a0-32534c765e56@huawei.com>
+ <20200511221100.GA171700@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <34a9cdcd-0e3d-8d2a-6b19-6fced3a3aa68@huawei.com>
+Date:   Tue, 12 May 2020 09:57:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200427193224.29548-1-geert+renesas@glider.be>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200511221100.GA171700@google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 27 Apr 2020 21:32:24 +0200, Geert Uytterhoeven wrote:
-> Convert the Renesas OS Timer (OSTM) Device Tree binding documentation to
-> json-schema.
+On 2020/5/12 6:11, Jaegeuk Kim wrote:
+> On 05/11, Chao Yu wrote:
+>> On 2020/5/10 3:03, Jaegeuk Kim wrote:
+>>> On 05/09, Chao Yu wrote:
+>>>> On 2020/5/9 0:10, Jaegeuk Kim wrote:
+>>>>> Hi Sayali,
+>>>>>
+>>>>> In order to address the perf regression, how about this?
+>>>>>
+>>>>> >From 48418af635884803ffb35972df7958a2e6649322 Mon Sep 17 00:00:00 2001
+>>>>> From: Jaegeuk Kim <jaegeuk@kernel.org>
+>>>>> Date: Fri, 8 May 2020 09:08:37 -0700
+>>>>> Subject: [PATCH] f2fs: avoid double lock for cp_rwsem during checkpoint
+>>>>>
+>>>>> There could be a scenario where f2fs_sync_node_pages gets
+>>>>> called during checkpoint, which in turn tries to flush
+>>>>> inline data and calls iput(). This results in deadlock as
+>>>>> iput() tries to hold cp_rwsem, which is already held at the
+>>>>> beginning by checkpoint->block_operations().
+>>>>>
+>>>>> Call stack :
+>>>>>
+>>>>> Thread A		Thread B
+>>>>> f2fs_write_checkpoint()
+>>>>> - block_operations(sbi)
+>>>>>  - f2fs_lock_all(sbi);
+>>>>>   - down_write(&sbi->cp_rwsem);
+>>>>>
+>>>>>                         - open()
+>>>>>                          - igrab()
+>>>>>                         - write() write inline data
+>>>>>                         - unlink()
+>>>>> - f2fs_sync_node_pages()
+>>>>>  - if (is_inline_node(page))
+>>>>>   - flush_inline_data()
+>>>>>    - ilookup()
+>>>>>      page = f2fs_pagecache_get_page()
+>>>>>      if (!page)
+>>>>>       goto iput_out;
+>>>>>      iput_out:
+>>>>> 			-close()
+>>>>> 			-iput()
+>>>>>        iput(inode);
+>>>>>        - f2fs_evict_inode()
+>>>>>         - f2fs_truncate_blocks()
+>>>>>          - f2fs_lock_op()
+>>>>>            - down_read(&sbi->cp_rwsem);
+>>>>>
+>>>>> Fixes: 2049d4fcb057 ("f2fs: avoid multiple node page writes due to inline_data")
+>>>>> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
+>>>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+>>>>> ---
+>>>>>  fs/f2fs/node.c | 4 ++--
+>>>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+>>>>> index 1db8cabf727ef..626d7daca09de 100644
+>>>>> --- a/fs/f2fs/node.c
+>>>>> +++ b/fs/f2fs/node.c
+>>>>> @@ -1870,8 +1870,8 @@ int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
+>>>>>  				goto continue_unlock;
+>>>>>  			}
+>>>>>  
+>>>>> -			/* flush inline_data */
+>>>>> -			if (is_inline_node(page)) {
+>>>>> +			/* flush inline_data, if it's not sync path. */
+>>>>> +			if (do_balance && is_inline_node(page)) {
+>>>>
+>>>> IIRC, this flow was designed to avoid running out of free space issue
+>>>> during checkpoint:
+>>>>
+>>>> 2049d4fcb057 ("f2fs: avoid multiple node page writes due to inline_data")
+>>>>
+>>>> The sceanrio is:
+>>>> 1. create fully node blocks
+>>>> 2. flush node blocks
+>>>> 3. write inline_data for all the node blocks again
+>>>> 4. flush node blocks redundantly
+>>>>
+>>>> I guess this may cause failing one case of fstest.
+>>>
+>>> Yeah, actually I was hitting 204 failure, and thus, revised like this.
+>>> Now, I don't see any regression in fstest.
+>>>
+>>> >From 8f1882acfb0a5fc43e5a2bbd576a8f3c681a7d2c Mon Sep 17 00:00:00 2001
+>>> From: Sayali Lokhande <sayalil@codeaurora.org>
+>>> Date: Thu, 30 Apr 2020 16:28:29 +0530
+>>> Subject: [PATCH] f2fs: Avoid double lock for cp_rwsem during checkpoint
+>>>
+>>> There could be a scenario where f2fs_sync_node_pages gets
+>>> called during checkpoint, which in turn tries to flush
+>>> inline data and calls iput(). This results in deadlock as
+>>> iput() tries to hold cp_rwsem, which is already held at the
+>>> beginning by checkpoint->block_operations().
+>>>
+>>> Call stack :
+>>>
+>>> Thread A		Thread B
+>>> f2fs_write_checkpoint()
+>>> - block_operations(sbi)
+>>>  - f2fs_lock_all(sbi);
+>>>   - down_write(&sbi->cp_rwsem);
+>>>
+>>>                         - open()
+>>>                          - igrab()
+>>>                         - write() write inline data
+>>>                         - unlink()
+>>> - f2fs_sync_node_pages()
+>>>  - if (is_inline_node(page))
+>>>   - flush_inline_data()
+>>>    - ilookup()
+>>>      page = f2fs_pagecache_get_page()
+>>>      if (!page)
+>>>       goto iput_out;
+>>>      iput_out:
+>>> 			-close()
+>>> 			-iput()
+>>>        iput(inode);
+>>>        - f2fs_evict_inode()
+>>>         - f2fs_truncate_blocks()
+>>>          - f2fs_lock_op()
+>>>            - down_read(&sbi->cp_rwsem);
+>>>
+>>> Fixes: 2049d4fcb057 ("f2fs: avoid multiple node page writes due to inline_data")
+>>> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
+>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+>>> ---
+>>>  fs/f2fs/checkpoint.c |  9 ++++++++-
+>>>  fs/f2fs/f2fs.h       |  4 ++--
+>>>  fs/f2fs/node.c       | 10 +++++-----
+>>>  3 files changed, 15 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+>>> index d49f7a01d8a26..928aea4ff663d 100644
+>>> --- a/fs/f2fs/checkpoint.c
+>>> +++ b/fs/f2fs/checkpoint.c
+>>> @@ -1168,6 +1168,12 @@ static int block_operations(struct f2fs_sb_info *sbi)
+>>>  	};
+>>>  	int err = 0, cnt = 0;
+>>>  
+>>> +	/*
+>>> +	 * Let's flush node pages first to flush inline_data.
+>>> +	 * We'll actually guarantee everything below under f2fs_lock_all.
+>>> +	 */
+>>> +	f2fs_sync_node_pages(sbi, &wbc, false, false, FS_CP_NODE_IO);
+>>
+>> It is possible that user write a large number of inline data in between
+>> f2fs_sync_node_pages() and f2fs_lock_all(), it will cause the no-space issue in
+>> race condition.
+>>
+>> Also, if there is huge number of F2FS_DIRTY_IMETA, after this change, we will
+>> flush inode page twice which is unneeded.
+>>
+>> f2fs_sync_node_pages() --- flush dirty inode page
+>> f2fs_lock_all()
+>> ...
+>> f2fs_sync_inode_meta() --- update dirty inode page
+>> f2fs_sync_node_pages() --- flush dirty inode page again.
+>>
 > 
-> Document missing properties.
+> Another version:
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>From 6b430b72af57c65c20dea7b87f7ba7e9df36be98 Mon Sep 17 00:00:00 2001
+> From: Sayali Lokhande <sayalil@codeaurora.org>
+> Date: Thu, 30 Apr 2020 16:28:29 +0530
+> Subject: [PATCH] f2fs: Avoid double lock for cp_rwsem during checkpoint
+> 
+> There could be a scenario where f2fs_sync_node_pages gets
+> called during checkpoint, which in turn tries to flush
+> inline data and calls iput(). This results in deadlock as
+> iput() tries to hold cp_rwsem, which is already held at the
+> beginning by checkpoint->block_operations().
+> 
+> Call stack :
+> 
+> Thread A		Thread B
+> f2fs_write_checkpoint()
+> - block_operations(sbi)
+>  - f2fs_lock_all(sbi);
+>   - down_write(&sbi->cp_rwsem);
+> 
+>                         - open()
+>                          - igrab()
+>                         - write() write inline data
+>                         - unlink()
+> - f2fs_sync_node_pages()
+>  - if (is_inline_node(page))
+>   - flush_inline_data()
+>    - ilookup()
+>      page = f2fs_pagecache_get_page()
+>      if (!page)
+>       goto iput_out;
+>      iput_out:
+> 			-close()
+> 			-iput()
+>        iput(inode);
+>        - f2fs_evict_inode()
+>         - f2fs_truncate_blocks()
+>          - f2fs_lock_op()
+>            - down_read(&sbi->cp_rwsem);
+> 
+> Fixes: 2049d4fcb057 ("f2fs: avoid multiple node page writes due to inline_data")
+> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 > ---
-> For a clean dtbs_check, this depends on "[PATCH] ARM: dts: r7s9210: Remove
-> bogus clock-names from OSTM nodes"
-> (https://lore.kernel.org/r/20200427192932.28967-1-geert+renesas@glider.be)
-> which I intend to queue as a fix for v5.7.
+>  fs/f2fs/checkpoint.c |  5 +++++
+>  fs/f2fs/f2fs.h       |  1 +
+>  fs/f2fs/node.c       | 51 ++++++++++++++++++++++++++++++++++++++++++--
+>  3 files changed, 55 insertions(+), 2 deletions(-)
 > 
->  .../bindings/timer/renesas,ostm.txt           | 31 ----------
->  .../bindings/timer/renesas,ostm.yaml          | 59 +++++++++++++++++++
->  2 files changed, 59 insertions(+), 31 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/timer/renesas,ostm.txt
->  create mode 100644 Documentation/devicetree/bindings/timer/renesas,ostm.yaml
-> 
+> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+> index d49f7a01d8a26..79e605f38f4fa 100644
+> --- a/fs/f2fs/checkpoint.c
+> +++ b/fs/f2fs/checkpoint.c
+> @@ -1168,6 +1168,11 @@ static int block_operations(struct f2fs_sb_info *sbi)
+>  	};
+>  	int err = 0, cnt = 0;
+>  
+> +	/*
+> +	 * Let's flush inline_data in dirty node pages.
+> +	 */
+> +	f2fs_flush_inline_data(sbi);
 
-Applied, thanks!
+Still there is a gap, user can write a large number of inline data here...
+
+Would that be enough? I doubt we can suffer this issue in below pathes
+as well:
+
+- block_operations
+ - f2fs_sync_dirty_inodes
+  - iput
+ - f2fs_sync_inode_meta
+  - iput
+
+Thanks,
+
+> +
+>  retry_flush_quotas:
+>  	f2fs_lock_all(sbi);
+>  	if (__need_flush_quota(sbi)) {
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 2a8ea81c52a15..7f3d259e7e376 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -3282,6 +3282,7 @@ void f2fs_ra_node_page(struct f2fs_sb_info *sbi, nid_t nid);
+>  struct page *f2fs_get_node_page(struct f2fs_sb_info *sbi, pgoff_t nid);
+>  struct page *f2fs_get_node_page_ra(struct page *parent, int start);
+>  int f2fs_move_node_page(struct page *node_page, int gc_type);
+> +int f2fs_flush_inline_data(struct f2fs_sb_info *sbi);
+>  int f2fs_fsync_node_pages(struct f2fs_sb_info *sbi, struct inode *inode,
+>  			struct writeback_control *wbc, bool atomic,
+>  			unsigned int *seq_id);
+> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+> index 1db8cabf727ef..e632de10aedab 100644
+> --- a/fs/f2fs/node.c
+> +++ b/fs/f2fs/node.c
+> @@ -1807,6 +1807,53 @@ static bool flush_dirty_inode(struct page *page)
+>  	return true;
+>  }
+>  
+> +int f2fs_flush_inline_data(struct f2fs_sb_info *sbi)
+> +{
+> +	pgoff_t index = 0;
+> +	struct pagevec pvec;
+> +	int nr_pages;
+> +	int ret = 0;
+> +
+> +	pagevec_init(&pvec);
+> +
+> +	while ((nr_pages = pagevec_lookup_tag(&pvec,
+> +			NODE_MAPPING(sbi), &index, PAGECACHE_TAG_DIRTY))) {
+> +		int i;
+> +
+> +		for (i = 0; i < nr_pages; i++) {
+> +			struct page *page = pvec.pages[i];
+> +
+> +			if (!IS_DNODE(page))
+> +				continue;
+> +
+> +			lock_page(page);
+> +
+> +			if (unlikely(page->mapping != NODE_MAPPING(sbi))) {
+> +continue_unlock:
+> +				unlock_page(page);
+> +				continue;
+> +			}
+> +
+> +			if (!PageDirty(page)) {
+> +				/* someone wrote it for us */
+> +				goto continue_unlock;
+> +			}
+> +
+> +			/* flush inline_data, if it's async context. */
+> +			if (is_inline_node(page)) {
+> +				clear_inline_node(page);
+> +				unlock_page(page);
+> +				flush_inline_data(sbi, ino_of_node(page));
+> +				continue;
+> +			}
+> +			unlock_page(page);
+> +		}
+> +		pagevec_release(&pvec);
+> +		cond_resched();
+> +	}
+> +	return ret;
+> +}
+> +
+>  int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
+>  				struct writeback_control *wbc,
+>  				bool do_balance, enum iostat_type io_type)
+> @@ -1870,8 +1917,8 @@ int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
+>  				goto continue_unlock;
+>  			}
+>  
+> -			/* flush inline_data */
+> -			if (is_inline_node(page)) {
+> +			/* flush inline_data, if it's async context. */
+> +			if (do_balance && is_inline_node(page)) {
+>  				clear_inline_node(page);
+>  				unlock_page(page);
+>  				flush_inline_data(sbi, ino_of_node(page));
+> 
