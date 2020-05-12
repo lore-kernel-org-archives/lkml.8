@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD193C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DB1C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A547223126
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1158523126
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 22:25:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732065AbgELWZU (ORCPT
+        id S1732073AbgELWZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 18:25:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55562 "EHLO
+        Tue, 12 May 2020 18:25:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731751AbgELWX2 (ORCPT
+        by vger.kernel.org with ESMTP id S1731740AbgELWX0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 18:23:28 -0400
+        Tue, 12 May 2020 18:23:26 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D261EC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:23:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0EFEC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 15:23:26 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jYdIT-0004sv-2b; Wed, 13 May 2020 00:22:46 +0200
+        id 1jYdIb-00050h-Ou; Wed, 13 May 2020 00:22:54 +0200
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 90B901006FB;
-        Wed, 13 May 2020 00:22:44 +0200 (CEST)
-Message-Id: <20200512213811.531290454@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 458FB1006A1;
+        Wed, 13 May 2020 00:22:53 +0200 (CEST)
+Message-Id: <20200512213812.255792544@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Tue, 12 May 2020 23:01:20 +0200
+Date:   Tue, 12 May 2020 23:01:27 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
@@ -58,7 +58,7 @@ Cc:     x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
         Jason Chen CJ <jason.cj.chen@intel.com>,
         Zhao Yakui <yakui.zhao@intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch V5 21/38] x86/entry: Add IRQENTRY_IRQ macro
+Subject: [patch V5 28/38] x86/entry: Convert KVM vectors to IDTENTRY_SYSVEC
 References: <20200512210059.056244513@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -71,125 +71,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide a seperate IDTENTRY macro for device interrupts. Similar to
-IDTENTRY_ERRORCODE with the addition of invoking irq_enter/exit_rcu() and
-providing the errorcode as a 'u8' argument to the C function, which
-truncates the sign extended vector number.
+From: Thomas Gleixner <tglx@linutronix.de>
+
+Convert KVM specific system vectors to IDTENTRY_SYSVEC*:
+
+The two empty stub handlers which only increment the stats counter do no
+need to run on the interrupt stack. Use IDTENTRY_SYSVEC_DIRECT for them.
+
+The wakeup handler does more work and runs on the interrupt stack.
+
+None of these handlers need to save and restore the irq_regs pointer.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- arch/x86/entry/entry_32.S       |   14 +++++++++++
- arch/x86/entry/entry_64.S       |   14 +++++++++++
- arch/x86/include/asm/idtentry.h |   47 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 75 insertions(+)
 
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -751,6 +751,20 @@ SYM_CODE_START(\asmsym)
- SYM_CODE_END(\asmsym)
- .endm
- 
-+.macro idtentry_irq vector cfunc
-+	.p2align CONFIG_X86_L1_CACHE_SHIFT
-+SYM_CODE_START_LOCAL(asm_\cfunc)
-+	ASM_CLAC
-+	SAVE_ALL switch_stacks=1
-+	ENCODE_FRAME_POINTER
-+	movl	%esp, %eax
-+	movl	PT_ORIG_EAX(%esp), %edx		/* get the vector from stack */
-+	movl	$-1, PT_ORIG_EAX(%esp)		/* no syscall to restart */
-+	call	\cfunc
-+	jmp	handle_exception_return
-+SYM_CODE_END(asm_\cfunc)
-+.endm
-+
- /*
-  * Include the defines which emit the idt entries which are shared
-  * shared between 32 and 64 bit.
+---
+ arch/x86/entry/entry_64.S         |    7 -------
+ arch/x86/include/asm/entry_arch.h |    7 -------
+ arch/x86/include/asm/hw_irq.h     |    4 ----
+ arch/x86/include/asm/idtentry.h   |    6 ++++++
+ arch/x86/include/asm/irq.h        |    3 ---
+ arch/x86/kernel/idt.c             |    6 +++---
+ arch/x86/kernel/irq.c             |   24 ++++++------------------
+ 7 files changed, 15 insertions(+), 42 deletions(-)
+
 --- a/arch/x86/entry/entry_64.S
 +++ b/arch/x86/entry/entry_64.S
-@@ -528,6 +528,20 @@ SYM_CODE_END(\asmsym)
+@@ -956,13 +956,6 @@ apicinterrupt3 \num \sym \do_sym
+ POP_SECTION_IRQENTRY
  .endm
  
- /*
-+ * Interrupt entry/exit.
-+ *
-+ + The interrupt stubs push (vector) onto the stack, which is the error_code
-+ * position of idtentry exceptions, and jump to one of the two idtentry points
-+ * (common/spurious).
-+ *
-+ * common_interrupt is a hotpath, align it to a cache line
-+ */
-+.macro idtentry_irq vector cfunc
-+	.p2align CONFIG_X86_L1_CACHE_SHIFT
-+	idtentry \vector asm_\cfunc \cfunc has_error_code=1
-+.endm
-+
-+/*
-  * MCE and DB exceptions
-  */
- #define CPU_TSS_IST(x) PER_CPU_VAR(cpu_tss_rw) + (TSS_ist + (x) * 8)
+-
+-#ifdef CONFIG_HAVE_KVM
+-apicinterrupt3 POSTED_INTR_VECTOR		kvm_posted_intr_ipi		smp_kvm_posted_intr_ipi
+-apicinterrupt3 POSTED_INTR_WAKEUP_VECTOR	kvm_posted_intr_wakeup_ipi	smp_kvm_posted_intr_wakeup_ipi
+-apicinterrupt3 POSTED_INTR_NESTED_VECTOR	kvm_posted_intr_nested_ipi	smp_kvm_posted_intr_nested_ipi
+-#endif
+-
+ #ifdef CONFIG_SMP
+ apicinterrupt RESCHEDULE_VECTOR			reschedule_interrupt		smp_reschedule_interrupt
+ #endif
+--- a/arch/x86/include/asm/entry_arch.h
++++ b/arch/x86/include/asm/entry_arch.h
+@@ -13,10 +13,3 @@
+ #ifdef CONFIG_SMP
+ BUILD_INTERRUPT(reschedule_interrupt,RESCHEDULE_VECTOR)
+ #endif
+-
+-#ifdef CONFIG_HAVE_KVM
+-BUILD_INTERRUPT(kvm_posted_intr_ipi, POSTED_INTR_VECTOR)
+-BUILD_INTERRUPT(kvm_posted_intr_wakeup_ipi, POSTED_INTR_WAKEUP_VECTOR)
+-BUILD_INTERRUPT(kvm_posted_intr_nested_ipi, POSTED_INTR_NESTED_VECTOR)
+-#endif
+-
+--- a/arch/x86/include/asm/hw_irq.h
++++ b/arch/x86/include/asm/hw_irq.h
+@@ -29,10 +29,6 @@
+ #include <asm/sections.h>
+ 
+ /* Interrupt handlers registered during init_IRQ */
+-extern asmlinkage void kvm_posted_intr_ipi(void);
+-extern asmlinkage void kvm_posted_intr_wakeup_ipi(void);
+-extern asmlinkage void kvm_posted_intr_nested_ipi(void);
+-
+ extern asmlinkage void reschedule_interrupt(void);
+ 
+ #ifdef	CONFIG_X86_LOCAL_APIC
 --- a/arch/x86/include/asm/idtentry.h
 +++ b/arch/x86/include/asm/idtentry.h
-@@ -163,6 +163,49 @@ static __always_inline void __##func(str
- #define DEFINE_IDTENTRY_RAW_ERRORCODE(func)				\
- __visible noinstr void func(struct pt_regs *regs, unsigned long error_code)
+@@ -604,6 +604,12 @@ DECLARE_IDTENTRY_SYSVEC(IRQ_WORK_VECTOR,
+ # endif
+ #endif
  
-+/**
-+ * DECLARE_IDTENTRY_IRQ - Declare functions for device interrupt IDT entry
-+ *			  points (common/spurious)
-+ * @vector:	Vector number (ignored for C)
-+ * @func:	Function name of the entry point
-+ *
-+ * Maps to DECLARE_IDTENTRY_ERRORCODE()
-+ */
-+#define DECLARE_IDTENTRY_IRQ(vector, func)				\
-+	DECLARE_IDTENTRY_ERRORCODE(vector, func)
++#ifdef CONFIG_HAVE_KVM
++DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_VECTOR,		sysvec_kvm_posted_intr_ipi);
++DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_WAKEUP_VECTOR,	sysvec_kvm_posted_intr_wakeup_ipi);
++DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_NESTED_VECTOR,	sysvec_kvm_posted_intr_nested_ipi);
++#endif
 +
-+/**
-+ * DEFINE_IDTENTRY_IRQ - Emit code for device interrupt IDT entry points
-+ * @func:	Function name of the entry point
-+ *
-+ * The vector number is pushed by the low level entry stub and handed
-+ * to the function as error_code argument which needs to be truncated
-+ * to an u8 because the push is sign extending.
-+ *
-+ * On 64bit dtentry_enter/exit() are invoked in the ASM entry code before
-+ * and after switching to the interrupt stack. On 32bit this happens in C.
-+ *
-+ * irq_enter/exit_rcu() are invoked before the function body and the
-+ * KVM L1D flush request is set.
-+ */
-+#define DEFINE_IDTENTRY_IRQ(func)					\
-+static __always_inline void __##func(struct pt_regs *regs, u8 vector);	\
-+									\
-+__visible noinstr void func(struct pt_regs *regs,			\
-+			    unsigned long error_code)			\
-+{									\
-+	idtentry_enter(regs);						\
-+	instrumentation_begin();					\
-+	irq_enter_rcu();						\
-+	kvm_set_cpu_l1tf_flush_l1d();					\
-+	__##func (regs, (u8)error_code);				\
-+	irq_exit_rcu();							\
-+	lockdep_hardirq_exit();						\
-+	instrumentation_end();						\
-+	idtentry_exit(regs);						\
-+}									\
-+									\
-+static __always_inline void __##func(struct pt_regs *regs, u8 vector)
+ #undef X86_TRAP_OTHER
  
- #ifdef CONFIG_X86_64
- /**
-@@ -295,6 +338,10 @@ static __always_inline void __##func(str
- #define DECLARE_IDTENTRY_RAW_ERRORCODE(vector, func)			\
- 	DECLARE_IDTENTRY_ERRORCODE(vector, func)
+ #endif
+--- a/arch/x86/include/asm/irq.h
++++ b/arch/x86/include/asm/irq.h
+@@ -26,9 +26,6 @@ extern void fixup_irqs(void);
  
-+/* Entries for common/spurious (device) interrupts */
-+#define DECLARE_IDTENTRY_IRQ(vector, func)				\
-+	idtentry_irq vector func
-+
- #ifdef CONFIG_X86_64
- # define DECLARE_IDTENTRY_MCE(vector, func)				\
- 	idtentry_mce_db vector asm_##func func
+ #ifdef CONFIG_HAVE_KVM
+ extern void kvm_set_posted_intr_wakeup_handler(void (*handler)(void));
+-extern __visible void smp_kvm_posted_intr_ipi(struct pt_regs *regs);
+-extern __visible void smp_kvm_posted_intr_wakeup_ipi(struct pt_regs *regs);
+-extern __visible void smp_kvm_posted_intr_nested_ipi(struct pt_regs *regs);
+ #endif
+ 
+ extern void (*x86_platform_ipi_callback)(void);
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -132,9 +132,9 @@ static const __initconst struct idt_data
+ 	INTG(LOCAL_TIMER_VECTOR,		asm_sysvec_apic_timer_interrupt),
+ 	INTG(X86_PLATFORM_IPI_VECTOR,		asm_sysvec_x86_platform_ipi),
+ # ifdef CONFIG_HAVE_KVM
+-	INTG(POSTED_INTR_VECTOR,		kvm_posted_intr_ipi),
+-	INTG(POSTED_INTR_WAKEUP_VECTOR,		kvm_posted_intr_wakeup_ipi),
+-	INTG(POSTED_INTR_NESTED_VECTOR,		kvm_posted_intr_nested_ipi),
++	INTG(POSTED_INTR_VECTOR,		asm_sysvec_kvm_posted_intr_ipi),
++	INTG(POSTED_INTR_WAKEUP_VECTOR,		asm_sysvec_kvm_posted_intr_wakeup_ipi),
++	INTG(POSTED_INTR_NESTED_VECTOR,		asm_sysvec_kvm_posted_intr_nested_ipi),
+ # endif
+ # ifdef CONFIG_IRQ_WORK
+ 	INTG(IRQ_WORK_VECTOR,			asm_sysvec_irq_work),
+--- a/arch/x86/kernel/irq.c
++++ b/arch/x86/kernel/irq.c
+@@ -290,41 +290,29 @@ EXPORT_SYMBOL_GPL(kvm_set_posted_intr_wa
+ /*
+  * Handler for POSTED_INTERRUPT_VECTOR.
+  */
+-__visible void smp_kvm_posted_intr_ipi(struct pt_regs *regs)
++DEFINE_IDTENTRY_SYSVEC_SIMPLE(sysvec_kvm_posted_intr_ipi)
+ {
+-	struct pt_regs *old_regs = set_irq_regs(regs);
+-
+-	entering_ack_irq();
++	ack_APIC_irq();
+ 	inc_irq_stat(kvm_posted_intr_ipis);
+-	exiting_irq();
+-	set_irq_regs(old_regs);
+ }
+ 
+ /*
+  * Handler for POSTED_INTERRUPT_WAKEUP_VECTOR.
+  */
+-__visible void smp_kvm_posted_intr_wakeup_ipi(struct pt_regs *regs)
++DEFINE_IDTENTRY_SYSVEC(sysvec_kvm_posted_intr_wakeup_ipi)
+ {
+-	struct pt_regs *old_regs = set_irq_regs(regs);
+-
+-	entering_ack_irq();
++	ack_APIC_irq();
+ 	inc_irq_stat(kvm_posted_intr_wakeup_ipis);
+ 	kvm_posted_intr_wakeup_handler();
+-	exiting_irq();
+-	set_irq_regs(old_regs);
+ }
+ 
+ /*
+  * Handler for POSTED_INTERRUPT_NESTED_VECTOR.
+  */
+-__visible void smp_kvm_posted_intr_nested_ipi(struct pt_regs *regs)
++DEFINE_IDTENTRY_SYSVEC_SIMPLE(sysvec_kvm_posted_intr_nested_ipi)
+ {
+-	struct pt_regs *old_regs = set_irq_regs(regs);
+-
+-	entering_ack_irq();
++	ack_APIC_irq();
+ 	inc_irq_stat(kvm_posted_intr_nested_ipis);
+-	exiting_irq();
+-	set_irq_regs(old_regs);
+ }
+ #endif
+ 
 
