@@ -2,152 +2,100 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B28C54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9EAC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5268F2078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:39:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="YI54zt1A"
+	by mail.kernel.org (Postfix) with ESMTP id 98EAC20733
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:40:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589276453;
+	bh=p0H+1A9ZtxK8/3CANSemNUB3JdiDXVfouvOzKgQzVM8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bL/N+m3OMYVnRDsMvtDJ9PDG6ga66HOq+71ldqLczy06I3cA1D+w9Zm+v1hy325DD
+	 D9U+YCLNft1ILxPgD+onLOG9EbzUlGhTiO+OH3iNBvNN1UkZpiSuNxIh6HaVjtDi2n
+	 q4/1buxCw/VUE4+6tsHytGx5H9rSxJm5wn07CBb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729371AbgELJja (ORCPT
+        id S1729282AbgELJkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 05:39:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49408 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729344AbgELJj1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 05:39:27 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2579BC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:39:26 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id e16so14505265wra.7
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:39:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=exntrZVDrpNC4LfoF62zE8ED3Dungiic5pvW3+dqcrE=;
-        b=YI54zt1AshCXbR/9J2FQ3jVLetO9S//XLD3qA1usyzaunxBpK5g6XQVzQvE3dRcAoj
-         Nzbsch3Yzon5rMLclMlvOZbTrlyn2AENSVtwzVsKA5aigV+aSt2PagG0vq75UflInWjO
-         VyA2LMJ9bSn5/eEQxYGfcEh7EFRFcUh8rRyJlCp5tR4UdNOUwx25toWUgyeyxs19TXEh
-         cQnXabZm+r2RMlGcIjEL0fK5m9xTDItuCLJy3u6qwJuWqPsj2gjUIJ/zBrhq9qp+D3kC
-         DPpHNHurfHQDE2szd/rsSYRpn2u+SRxeXhVqrkzcPRN/eDk1IC6aOhLkisA6foT2SxOR
-         88ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=exntrZVDrpNC4LfoF62zE8ED3Dungiic5pvW3+dqcrE=;
-        b=iF080sL5/cgI2+SLT581khTPKFTT+3VyrCvu5xFX9ZfQowRM2H7UcQvQN1YfeK6htf
-         nInYtxZ2fXoOxsqolvvxZWlyxrYaEncl249TSpMMUt0ose72QPo/fYj1QA8MOHIUXVxQ
-         X/r4iCWFCV4goaUgTKpCq7vUm589I1OC8Neex+s1FaRzebe79OY5ww2g1howx4BgvSCG
-         kq/ZkJM6pZ/qdglGChHpcBeB1IA//kQLhzxkvXDSSfDQLsMz8dZqqjIv9G68cXbwu3f/
-         ZU1mLjkB/rA09rPdNJrHMkQfofsDpm2CKo81Wiu1E9yJb/9OJUN60OvSeE5Lq3Q2XPmf
-         4NyQ==
-X-Gm-Message-State: AGi0PualeifbXbHUh/eLffZ43gnHpAVJTH3h3o/xIrZ/kEtiPOdMYc2l
-        XFZvaFaw+jEKJ0AN4Qk6xzmqQdHmtBHk/g==
-X-Google-Smtp-Source: APiQypICdYm6q0coCTYrsv14gsmy5w38/NkkWNMU1pnmoJaS64rsgzMhP/NsIK7fGIEASWdkxrRSyQ==
-X-Received: by 2002:a5d:42c9:: with SMTP id t9mr24850040wrr.246.1589276364767;
-        Tue, 12 May 2020 02:39:24 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e35:2ec0:82b0:4460:3fd3:382:4a71])
-        by smtp.gmail.com with ESMTPSA id 81sm14037092wme.16.2020.05.12.02.39.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 02:39:24 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 2/2] arm64: dts: meson-sm1: add cpu thermal nodes
-Date:   Tue, 12 May 2020 11:39:16 +0200
-Message-Id: <20200512093916.19676-3-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200512093916.19676-1-narmstrong@baylibre.com>
-References: <20200512093916.19676-1-narmstrong@baylibre.com>
+        Tue, 12 May 2020 05:40:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58940 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725889AbgELJkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 05:40:52 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82F2F206A3;
+        Tue, 12 May 2020 09:40:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589276452;
+        bh=p0H+1A9ZtxK8/3CANSemNUB3JdiDXVfouvOzKgQzVM8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EmQaEgm7TTpSUNS3aPcHTk4HrhcAl4HH5Zz4oYgZujO3r1uTQ8jmPdubQCsJkmuGU
+         lDqndTVtS3aejmhVBwfoQfy1nVoAwgP0wkO/5s1ritqdJ0Xqo+hexhrzhsSkRTh/3+
+         qNBYVMld6gTLO3vcvEuaSugnnb7rP1+Pe1XtJcKI=
+Date:   Tue, 12 May 2020 10:40:49 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Yongbo Zhang <giraffesnn123@gmail.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Chen Li <licheng0822@thundersoft.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Subject: Re: [PATCH v2] SoC: rsnd: add interrupt support for SSI BUSIF buffer
+Message-ID: <20200512094049.GA5110@sirena.org.uk>
+References: <20200511160731.GA3618@sirena.org.uk>
+ <20200512093003.28332-1-giraffesnn123@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
+Content-Disposition: inline
+In-Reply-To: <20200512093003.28332-1-giraffesnn123@gmail.com>
+X-Cookie: The only perfect science is hind-sight.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add thermal nodes for the Amlogic SM1 SoCs based on the G12A and G12B
-thermal nodes.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-sm1.dtsi | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+--LZvS9be/3tNcYl/X
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
-index d4ec735fb1a5..71317f5aada1 100644
---- a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
-@@ -56,6 +56,7 @@
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
- 			next-level-cache = <&l2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu1: cpu@1 {
-@@ -64,6 +65,7 @@
- 			reg = <0x0 0x1>;
- 			enable-method = "psci";
- 			next-level-cache = <&l2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu2: cpu@2 {
-@@ -72,6 +74,7 @@
- 			reg = <0x0 0x2>;
- 			enable-method = "psci";
- 			next-level-cache = <&l2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu3: cpu@3 {
-@@ -80,6 +83,7 @@
- 			reg = <0x0 0x3>;
- 			enable-method = "psci";
- 			next-level-cache = <&l2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		l2: l2-cache0 {
-@@ -466,6 +470,26 @@
- 	compatible = "amlogic,sm1-clkc";
- };
- 
-+&cpu_thermal {
-+	cooling-maps {
-+		map0 {
-+			trip = <&cpu_passive>;
-+			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+		};
-+
-+		map1 {
-+			trip = <&cpu_hot>;
-+			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+		};
-+	};
-+};
-+
- &ethmac {
- 	power-domains = <&pwrc PWRC_SM1_ETH_ID>;
- };
--- 
-2.22.0
+On Tue, May 12, 2020 at 05:30:03PM +0800, Yongbo Zhang wrote:
 
+> Acked-by: Mark Brown <broonie@kernel.org>
+
+I didn't send an Acked-by...
+
+> Changes since v1:
+> - Fix build errors for sound/soc/sh/rcar/ssi.c
+>=20
+> Changes since v0 (thanks for the feedback Morimoto):
+> - Replace the value of a register variable
+> ---
+
+As covered in submitting-patches.rst the inter-version changelog should
+come after the --- so they get automatically dropped by the tools when
+the patches are applied.
+
+--LZvS9be/3tNcYl/X
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl66byAACgkQJNaLcl1U
+h9BJbgf+LkSOsLJXqaPOOA4t0WY7+ZFUXwq3yyiBXkB0RwzQJW6ncVLUwgCPce5E
+Dpr80WMMGZNFbJ8OywdMDqNucSc0Ivqan0lUrueq95EBHouOA0f4Ll4ehbovwg6J
+rfaY8bR+jJPGKX0XD8G8gnxvwDb5JxcjawIxJZfHFZIMzgTRmY5l/8OUIL3oAJBS
+ov+YTx5WKj6ngCzHx8cs0Sj/xn09uX+a41Qy/w5D4bTSJA0UwypN0nmH+hCseB8e
+GoT8N/Pl0l5t/WPyuAem5cy+GdH3t6CPZVHjvIHoTrSePrnE5Bwy2P9K1Rje2mKK
+VnLYgSxlm4HclknEmSHNbkXe//PE5w==
+=fVhb
+-----END PGP SIGNATURE-----
+
+--LZvS9be/3tNcYl/X--
