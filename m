@@ -2,181 +2,312 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD12C54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 05:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7E5C54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 05:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD2820733
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 05:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C4820736
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 05:25:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UqL+G4sv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725946AbgELFYU (ORCPT
+        id S1728783AbgELFZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 01:24:20 -0400
-Received: from mga09.intel.com ([134.134.136.24]:15645 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728711AbgELFYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 01:24:20 -0400
-IronPort-SDR: /6r60VZiiwfo+5OB4qwnWspmb9eGHqqF4hgXOw+kxeAYjJhWx319djXYhQhZFoOUxCdSBFNPId
- 1uYG7UE/Oj0Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2020 22:24:20 -0700
-IronPort-SDR: F98HwDyVSjbx/SQx2p30vPgDw5cQVggbCKfGIL9T1jiYnTudc9Oudat3zuzev+481IFZHkYIbZ
- 0FqRBiGE8mKg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,382,1583222400"; 
-   d="scan'208";a="463638615"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 11 May 2020 22:24:18 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jYNOs-00048g-54; Tue, 12 May 2020 13:24:18 +0800
-Date:   Tue, 12 May 2020 13:23:51 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:core/rcu] BUILD SUCCESS
- 68f0f2690e183306b52671a9ad09fb31808b0500
-Message-ID: <5eba32e7.g39sp9mjHGscM3cf%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Tue, 12 May 2020 01:25:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37760 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726289AbgELFZq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 01:25:46 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBB42C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 22:25:45 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id f15so4889090plr.3
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 22:25:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qY4tIWDJLygZQYEHexbugEUDcuN3ImOXtPyRSj2Tmbo=;
+        b=UqL+G4svk3bMMRb1G1HJ83F+j3EPH3Vh6vnvyxepjH08v+uIeRrDEaRwEi6iY3uK/O
+         eQZdIBa2yFiAzh7ndKZerzIKrMybuDYA3tR1BgJ94Ko6EtNJVHmJfK2ZaV0sWOjPhFOT
+         7l41urSld5o73mzAeptvdKcPymsEKPm/NfZkgH59wZXQkCBzZm2yAR4eh2BCZjgKytIZ
+         jMpHkSbiWADXMwdqdVf/YZxp9doSfSplRjuLDCT9HGmGiOsRVsFDlcxP8zHd0tUQaKUV
+         47TP9BrLyQRkFjoNj387MAXQUVYlYw0CLi/ob8h5bd9e3HgCEsQwSHA3JQ/kSaZH07R8
+         SJnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qY4tIWDJLygZQYEHexbugEUDcuN3ImOXtPyRSj2Tmbo=;
+        b=A+KRHk0kchiKCyUQEppIadBOREYtFjN7i9pIEWyFOH6OR/w6n5RNZZ5fhVvZypI1Pw
+         HxUyfHBOGZRcDv58UfBYFdaTxZZz9b+oHvhI95WcN2NVM9ZquG2e2ncXbD7OXsCTCWRq
+         3qrLJjCwdw5vbrNgQf59gpPeWMaYEZvRFp2u4KHGN7FL4/NFW/1utM+G28fC3v+zN06x
+         CZxuUlX/tqhpfHgoMDYaJJBlklC76zi8VkwDSNUg2nJw+weRK79LmwPGcf4WETA4ebw3
+         1LOF4sOP1uHWhXNwMQCFiYAwjZhDGedrk1j4Wmfx7f8rMClK2x7708de8iuc0On09snw
+         /Wng==
+X-Gm-Message-State: AOAM531ZZdE95honOfC8SCDQ2tq2Ztjlj3sZcD7Z/xbq4DcGfLBekWOL
+        MPAMVGBrsEr0JuwvVTgopb0ytw==
+X-Google-Smtp-Source: ABdhPJxLiAh4YWUEEFs84ClWwP2pdJ/iMPgKckY4JWQXIdGqJrQGjpc5bov6yWSLe1sONjTFXGjpLg==
+X-Received: by 2002:a17:902:9f97:: with SMTP id g23mr1640890plq.30.1589261145272;
+        Mon, 11 May 2020 22:25:45 -0700 (PDT)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id z13sm11733513pjz.42.2020.05.11.22.25.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 22:25:44 -0700 (PDT)
+Date:   Mon, 11 May 2020 22:25:41 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sumit Semwal <sumit.semwal@linaro.org>
+Cc:     agross@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
+        robh+dt@kernel.org, nishakumari@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, kgunda@codeaurora.org,
+        rnayak@codeaurora.org
+Subject: Re: [v2 4/4] regulator: qcom: labibb: Add SC interrupt handling
+Message-ID: <20200512052541.GF1302550@yoga>
+References: <20200508204200.13481-1-sumit.semwal@linaro.org>
+ <20200508204200.13481-5-sumit.semwal@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200508204200.13481-5-sumit.semwal@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  core/rcu
-branch HEAD: 68f0f2690e183306b52671a9ad09fb31808b0500  Merge branch 'for-mingo' of git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu into core/rcu
+On Fri 08 May 13:42 PDT 2020, Sumit Semwal wrote:
 
-elapsed time: 499m
+> From: Nisha Kumari <nishakumari@codeaurora.org>
+> 
+> Add Short circuit interrupt handling and recovery for the lab and
+> ibb regulators on qcom platforms.
+> 
+> The client panel drivers need to register for REGULATOR_EVENT_OVER_CURRENT
+> notification which will be triggered on short circuit. They should
+> try to enable the regulator once, and if it doesn't get enabled,
+> handle shutting down the panel accordingly.
+> 
+> Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
+> Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+> 
+> --
+> v2: sumits: reworked handling to user regmap_read_poll_timeout, and handle it
+>     per-regulator instead of clearing both lab and ibb errors on either irq
+>     triggering. Also added REGULATOR_EVENT_OVER_CURRENT handling and
+>     notification to clients.
+> ---
+>  drivers/regulator/qcom-labibb-regulator.c | 103 +++++++++++++++++++++-
+>  1 file changed, 100 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/regulator/qcom-labibb-regulator.c b/drivers/regulator/qcom-labibb-regulator.c
+> index a9dc7c060375..3539631c9f96 100644
+> --- a/drivers/regulator/qcom-labibb-regulator.c
+> +++ b/drivers/regulator/qcom-labibb-regulator.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  // Copyright (c) 2019, The Linux Foundation. All rights reserved.
+>  
+> +#include <linux/interrupt.h>
+>  #include <linux/module.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/of.h>
+> @@ -18,11 +19,15 @@
+>  #define REG_LABIBB_ENABLE_CTL		0x46
+>  #define LABIBB_STATUS1_VREG_OK_BIT	BIT(7)
+>  #define LABIBB_CONTROL_ENABLE		BIT(7)
+> +#define LABIBB_STATUS1_SC_DETECT_BIT	BIT(6)
+>  
+>  #define LAB_ENABLE_CTL_MASK		BIT(7)
+>  #define IBB_ENABLE_CTL_MASK		(BIT(7) | BIT(6))
+>  
+>  #define POWER_DELAY			8000
+> +#define POLLING_SCP_DONE_INTERVAL_US	5000
+> +#define POLLING_SCP_TIMEOUT		16000
+> +
+>  
+>  struct labibb_regulator {
+>  	struct regulator_desc		desc;
+> @@ -30,6 +35,8 @@ struct labibb_regulator {
+>  	struct regmap			*regmap;
+>  	struct regulator_dev		*rdev;
+>  	u16				base;
+> +	int				sc_irq;
+> +	int				vreg_enabled;
+>  	u8				type;
+>  };
+>  
+> @@ -112,9 +119,10 @@ static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
+>  		return ret;
+>  	}
+>  
+> -	if (ret)
+> +	if (ret) {
+> +		reg->vreg_enabled = 1;
+>  		return 0;
+> -
+> +	}
+>  
+>  	dev_err(reg->dev, "Can't enable %s\n", reg->desc.name);
+>  	return -EINVAL;
+> @@ -140,8 +148,10 @@ static int qcom_labibb_regulator_disable(struct regulator_dev *rdev)
+>  		return ret;
+>  	}
+>  
+> -	if (!ret)
+> +	if (!ret) {
+> +		reg->vreg_enabled = 0;
+>  		return 0;
+> +	}
+>  
+>  	dev_err(reg->dev, "Can't disable %s\n", reg->desc.name);
+>  	return -EINVAL;
+> @@ -153,6 +163,70 @@ static struct regulator_ops qcom_labibb_ops = {
+>  	.is_enabled		= qcom_labibb_regulator_is_enabled,
+>  };
+>  
+> +
+> +static irqreturn_t labibb_sc_err_handler(int irq, void *_reg)
+> +{
+> +	int ret, count;
+> +	u16 reg;
+> +	u8 sc_err_mask;
+> +	unsigned int val;
+> +	struct labibb_regulator *labibb_reg = (struct labibb_regulator *)_reg;
 
-configs tested: 114
-configs skipped: 2
+No need to explicitly typecast a void *.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> +	bool in_sc_err, reg_en, scp_done = false;
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-m68k                             allyesconfig
-sparc                            allyesconfig
-powerpc                      tqm8xx_defconfig
-riscv                          rv32_defconfig
-sh                        edosk7705_defconfig
-sh                          lboxre2_defconfig
-sh                           se7722_defconfig
-xtensa                    xip_kc705_defconfig
-arm                              alldefconfig
-i386                              allnoconfig
-i386                                defconfig
-i386                              debian-10.3
-i386                             allyesconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a006-20200511
-i386                 randconfig-a005-20200511
-i386                 randconfig-a003-20200511
-i386                 randconfig-a001-20200511
-i386                 randconfig-a004-20200511
-i386                 randconfig-a002-20200511
-x86_64               randconfig-a006-20200512
-x86_64               randconfig-a004-20200512
-x86_64               randconfig-a002-20200512
-i386                 randconfig-a012-20200511
-i386                 randconfig-a016-20200511
-i386                 randconfig-a014-20200511
-i386                 randconfig-a011-20200511
-i386                 randconfig-a013-20200511
-i386                 randconfig-a015-20200511
-i386                 randconfig-a012-20200512
-i386                 randconfig-a016-20200512
-i386                 randconfig-a014-20200512
-i386                 randconfig-a011-20200512
-i386                 randconfig-a013-20200512
-i386                 randconfig-a015-20200512
-x86_64               randconfig-a005-20200511
-x86_64               randconfig-a003-20200511
-x86_64               randconfig-a006-20200511
-x86_64               randconfig-a004-20200511
-x86_64               randconfig-a001-20200511
-x86_64               randconfig-a002-20200511
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-x86_64                              defconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+reg_en is unused.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> +
+> +	if (irq == labibb_reg->sc_irq)
+
+When is this false?
+
+> +		reg = labibb_reg->base + REG_LABIBB_STATUS1;
+> +	else
+> +		return IRQ_HANDLED;
+> +
+> +	sc_err_mask = LABIBB_STATUS1_SC_DETECT_BIT;
+> +
+> +	ret = regmap_bulk_read(labibb_reg->regmap, reg, &val, 1);
+
+Just inline reg->base + REG_LABIBB_STATUS1 in this call.
+
+> +	if (ret < 0) {
+> +		dev_err(labibb_reg->dev, "Read failed, ret=%d\n", ret);
+> +		return IRQ_HANDLED;
+> +	}
+> +	dev_dbg(labibb_reg->dev, "%s SC error triggered! STATUS1 = %d\n",
+> +		labibb_reg->desc.name, val);
+> +
+> +	in_sc_err = !!(val & sc_err_mask);
+> +
+> +	/*
+> +	 * The SC(short circuit) fault would trigger PBS(Portable Batch
+> +	 * System) to disable regulators for protection. This would
+> +	 * cause the SC_DETECT status being cleared so that it's not
+> +	 * able to get the SC fault status.
+> +	 * Check if the regulator is enabled in the driver but
+> +	 * disabled in hardware, this means a SC fault had happened
+> +	 * and SCP handling is completed by PBS.
+> +	 */
+> +	if (!in_sc_err) {
+
+	if (!(val & LABIBB_STATUS1_SC_DETECT_BIT)) {
+
+> +
+> +		reg = labibb_reg->base + REG_LABIBB_ENABLE_CTL;
+> +
+> +		ret = regmap_read_poll_timeout(labibb_reg->regmap,
+> +					reg, val,
+> +					!(val & LABIBB_CONTROL_ENABLE),
+> +					POLLING_SCP_DONE_INTERVAL_US,
+> +					POLLING_SCP_TIMEOUT);
+> +
+> +		if (!ret && labibb_reg->vreg_enabled) {
+
+Wouldn't be fine to assume that if you get a short circuit IRQ the
+regulator is enabled?
+
+If you are worried about racing with a disable this won't work anyways,
+and you better enable_irq()/disable_irq() in regulator enable/disable,
+respectively.
+
+> +			dev_dbg(labibb_reg->dev,
+> +				"%s has been disabled by SCP\n",
+> +				labibb_reg->desc.name);
+> +			scp_done = true;
+> +		}
+
+If you flip the poll check around you will get here by not being in an
+short-circuit condition and you conclude that the regulator is still on;
+in which case you can just return here.
+
+That way you can drop in_sc_err and scp_done and flatten below
+conditional section.
+
+> +	}
+> +
+> +	if (in_sc_err || scp_done) {
+> +		regulator_lock(labibb_reg->rdev);
+> +		regulator_notifier_call_chain(labibb_reg->rdev,
+> +						REGULATOR_EVENT_OVER_CURRENT,
+> +						NULL);
+> +		regulator_unlock(labibb_reg->rdev);
+> +	}
+> +	return IRQ_HANDLED;
+> +}
+> +
+>  static int register_labibb_regulator(struct qcom_labibb *labibb,
+>  				const struct labibb_regulator_data *reg_data,
+>  				struct device_node *of_node)
+> @@ -181,6 +255,29 @@ static int register_labibb_regulator(struct qcom_labibb *labibb,
+>  	reg->desc.type = REGULATOR_VOLTAGE;
+>  	reg->desc.ops = &qcom_labibb_ops;
+>  
+> +	reg->sc_irq = -EINVAL;
+> +	ret = of_irq_get_byname(of_node, reg_data->irq_name);
+> +	if (ret < 0)
+> +		dev_dbg(labibb->dev,
+
+Isn't this an error?
+
+> +			"Unable to get %s, ret = %d\n",
+> +			reg_data->irq_name, ret);
+> +	else
+> +		reg->sc_irq = ret;
+> +
+> +	if (reg->sc_irq > 0) {
+> +		ret = devm_request_threaded_irq(labibb->dev,
+> +						reg->sc_irq,
+> +						NULL, labibb_sc_err_handler,
+> +						IRQF_ONESHOT |
+> +						IRQF_TRIGGER_RISING,
+
+Omit IRQF_TRIGGER_RISING and let that come from DT.
+
+> +						reg_data->irq_name, labibb);
+> +		if (ret) {
+> +			dev_err(labibb->dev, "Failed to register '%s' irq ret=%d\n",
+> +				reg_data->irq_name, ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+
+Regards,
+Bjorn
+
+>  	cfg.dev = labibb->dev;
+>  	cfg.driver_data = reg;
+>  	cfg.regmap = labibb->regmap;
+> -- 
+> 2.26.2
+> 
