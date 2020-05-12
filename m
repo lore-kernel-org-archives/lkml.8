@@ -2,93 +2,84 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33860C54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 03:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF90DC54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 03:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE4A22070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 03:30:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589254244;
-	bh=QNWc4mCSUQkWmfV/BNuwNh/r3Nw7d08P4k2wYg5jrDo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AEybvslQW/VLcYo/BuDKfnKy/woiHRtWeE+c/JVfE9q0t9qyYTGTjc9/Im44M2z2A
-	 y14+waCE0yP98iJOv9CNlGfpPUu+M3QqfsL+w/Qwbi9hgnCrK03Pk2oiqzLlCROtxh
-	 PdiZe6ZG4iDR7X/CHMF8TGxAdy/7APz99YIYGnBc=
+	by mail.kernel.org (Postfix) with ESMTP id B585A206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 03:30:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728775AbgELDan (ORCPT
+        id S1728844AbgELDaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 23:30:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51836 "EHLO mail.kernel.org"
+        Mon, 11 May 2020 23:30:46 -0400
+Received: from mxhk.zte.com.cn ([63.217.80.70]:61864 "EHLO mxhk.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728115AbgELDam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 23:30:42 -0400
-Received: from localhost (unknown [171.76.78.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88FDD206B9;
-        Tue, 12 May 2020 03:30:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589254241;
-        bh=QNWc4mCSUQkWmfV/BNuwNh/r3Nw7d08P4k2wYg5jrDo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DXljxuItkt/Ukfz/eJPpHgaVnfEHwiP5bCPwjke9teJ8Hob+gJ3hupnjt2b1996UX
-         leH+KWNPvkvy0IFqe3koseuEWo8D7y9XlJOL6lqXlOo4JOJjM4PRBL2WpFxKPzEt+V
-         WYcVWKB2KW0zGtvRBbH5De9dgkRJKGfSYUO9N2Ts=
-Date:   Tue, 12 May 2020 09:00:35 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
-        alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
-        broonie@kernel.org, srinivas.kandagatla@linaro.org,
-        jank@cadence.com, mengdong.lin@intel.com,
-        slawomir.blauciak@intel.com, sanyog.r.kale@intel.com,
-        rander.wang@linux.intel.com, bard.liao@intel.com
-Subject: Re: [PATCH 3/3] soundwire: bus_type: add sdw_master_device support
-Message-ID: <20200512033035.GV1375924@vkoul-mobl>
-References: <20200429185145.12891-1-yung-chuan.liao@linux.intel.com>
- <20200429185145.12891-4-yung-chuan.liao@linux.intel.com>
- <20200511063227.GS1375924@vkoul-mobl>
- <e214d308-1b92-a7a5-3c76-da05dca99cc5@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e214d308-1b92-a7a5-3c76-da05dca99cc5@linux.intel.com>
+        id S1728753AbgELDao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 23:30:44 -0400
+Received: from mse-fl2.zte.com.cn (unknown [10.30.14.239])
+        by Forcepoint Email with ESMTPS id 81AE933B73D18C427C12;
+        Tue, 12 May 2020 11:30:14 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
+        by mse-fl2.zte.com.cn with ESMTP id 04C3Pnvg019360;
+        Tue, 12 May 2020 11:25:49 +0800 (GMT-8)
+        (envelope-from tan.hu@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2020051211260006-3533846 ;
+          Tue, 12 May 2020 11:26:00 +0800 
+From:   Tan Hu <tan.hu@zte.com.cn>
+To:     akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, jack@suse.cz, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, wang.liang82@zte.com.cn,
+        Tan Hu <tan.hu@zte.com.cn>
+Subject: [PATCH v3] lib/flex_proportions.c: cleanup __fprop_inc_percpu_max
+Date:   Tue, 12 May 2020 11:27:34 +0800
+Message-Id: <1589254054-48833-1-git-send-email-tan.hu@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2020-05-12 11:26:00,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2020-05-12 11:25:51,
+        Serialize complete at 2020-05-12 11:25:51
+X-MAIL: mse-fl2.zte.com.cn 04C3Pnvg019360
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11-05-20, 14:00, Pierre-Louis Bossart wrote:
-> > > +	md = &bus->md;
-> > > +	md->dev.bus = &sdw_bus_type;
-> > > +	md->dev.type = &sdw_master_type;
-> > > +	md->dev.parent = parent;
-> > > +	md->dev.of_node = parent->of_node;
-> > > +	md->dev.fwnode = fwnode;
-> > > +	md->dev.dma_mask = parent->dma_mask;
-> > > +
-> > > +	dev_set_name(&md->dev, "sdw-master-%d", bus->link_id);
-> > 
-> > This give nice sdw-master-0. In DT this comes from reg property. I dont
-> > seem to recall if the ACPI/Disco spec treats link_id as unique across
-> > the system, can you check that please, if not we would need to update
-> > this.
-> Table 3 in the Disco for Soundwire 1.0 spec: "all LinkID values are relative
-> to the immediate parent Device."
-> 
-> There isn't any known implementation with more than one controller.
+If the given type has fraction smaller than max_frac/FPROP_FRAC_BASE,
+the code could be modified to call __fprop_inc_percpu() directly and
+easier to understand. After this patch, fprop_reflect_period_percpu()
+will be called twice, and quicky return on pl->period == p->period
+test, so it would not result to significant downside of performance.
 
-But then it can come in "future" right. So lets try to make it future
-proof by not using the link_id (we can expose that as a sysfs if people
-want to know). So a global unique id needs to allocated (hint: idr or
-equivalent) and used as master_id
+Thanks for Jan's guidance.
 
-Thanks
+Signed-off-by: Tan Hu <tan.hu@zte.com.cn>
+Reviewed-by: Jan Kara <jack@suse.cz>
+---
+ lib/flex_proportions.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/lib/flex_proportions.c b/lib/flex_proportions.c
+index 7852bfff5..451543937 100644
+--- a/lib/flex_proportions.c
++++ b/lib/flex_proportions.c
+@@ -266,8 +266,7 @@ void __fprop_inc_percpu_max(struct fprop_global *p,
+ 		if (numerator >
+ 		    (((u64)denominator) * max_frac) >> FPROP_FRAC_SHIFT)
+ 			return;
+-	} else
+-		fprop_reflect_period_percpu(p, pl);
+-	percpu_counter_add_batch(&pl->events, 1, PROP_BATCH);
+-	percpu_counter_add(&p->events, 1);
++	}
++
++	__fprop_inc_percpu(p, pl);
+ }
 -- 
-~Vinod
+2.19.1
+
