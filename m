@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7176AC55185
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9C3C81828
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50915207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77A982082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:00:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="QOpkeUs0"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="PnuV7xfl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729445AbgELJAN (ORCPT
+        id S1729526AbgELJAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 05:00:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42768 "EHLO
+        Tue, 12 May 2020 05:00:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729385AbgELJAG (ORCPT
+        by vger.kernel.org with ESMTP id S1729443AbgELJAN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 05:00:06 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 878D9C05BD09
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:00:06 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id i15so14310440wrx.10
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:00:06 -0700 (PDT)
+        Tue, 12 May 2020 05:00:13 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E15E0C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:00:10 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id j5so14362505wrq.2
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:00:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QpRcEBLBFti7+uwIPhFpaG5e28opFzcZsYVebGatC0I=;
-        b=QOpkeUs0h0wN4sti4X0g6ThD3SrxXZsFWkczPFMfaK9K848FuZY/LBbwUozpO63nQf
-         eTJs+eMU1PYoj07tdTFH4MaPU0yMQAi0jxHqRvYdOuXMTkIN/Mt01aR+HFippq1ZJM2r
-         G6xGmiSojmbfOZiM1YCpKK0rOM2Epr1zxLZfQ=
+        bh=U6eMxQ6gGsP+PGOv8CvoIWRRS5TJUyI8UxMjiqc47Mo=;
+        b=PnuV7xflEjOlvfaUhZ+KpylEZ6B+nAuxnCL/fVvuzcQE1nkl8ut88s1ez31P+4ljF4
+         iSgH127tca2DU8l3HJWyuwwLmSRVfbD3QBzO1HejgP3sc52tGIzmsdHjyMsMiHc5wDaC
+         KKhsrvU1VK5jPM+f5/epbuW0a2Bm2UKTZqW0g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QpRcEBLBFti7+uwIPhFpaG5e28opFzcZsYVebGatC0I=;
-        b=JJCu2JBMTizcs/x0/LeFRQvIl8oKEP/FCVlEqHNUEFIJoDEyx2DmiWPZt1V2kqPXPY
-         K+jMnRSncYdl1JJOG1zaTWYmNMqWncVMiZRh/cUvEVV2QDD4AcrUQnYtpulZqav8Pqkg
-         cQMHV/00UDs9A0IvLWZR/4StM6W4LDPtzUze0eW75IXJh314tgaHj28/H2lBaBFTBtr3
-         Gmyv4XUOIwGup594KFhE5KxG0npJeOFQKZfRJX5WgTtEqkY/s2ttCm8oIEJFZC6wqD2m
-         5sU2ij2obIkZiXS0N6ZU6bNWmDHFJrNuhIJfi8ZXuy3LEGDmTO+tABkBzXbKy5yBRVPg
-         A75Q==
-X-Gm-Message-State: AGi0PuYYjZtUMjqZRUxmC5HrpJIg89Aw+tOQoEs1TZHaEbsWTU8747so
-        +WjHRB+3zZSf2UtZuuRrtX+HiA==
-X-Google-Smtp-Source: APiQypKd1E6Oeu9FhxQgfCRXfBgs5PqqzFNBcX4uC9QIYdSJsh2y79L6Is6aCs3MeuVyGs7xUaybiQ==
-X-Received: by 2002:adf:8302:: with SMTP id 2mr24564990wrd.114.1589274005258;
-        Tue, 12 May 2020 02:00:05 -0700 (PDT)
+        bh=U6eMxQ6gGsP+PGOv8CvoIWRRS5TJUyI8UxMjiqc47Mo=;
+        b=IVlzdEW6FARHtn1/2BZdFUsp51eaB6FdHPmFanqa6Z59IGPilFgn8bZ/7Zqs90J038
+         CiTnxk4q844s5tpvY58QXk4PdAqJJjO7PGm4U5gRNz/Dc8/BDLyGHUHIA7Cnf6+VBlWy
+         gmiFG9DX0g4IZHWwNF+UUPW2munNQZS1xYsnkPQiaAba6uI5EiFNs1D7jjQAZ34sFIZZ
+         vhhXGDUIykCcGQ2owJHBAVqmllppFTBPvUWyza6J9KJ44/xAonqAnw0/XxvLgjFWOtJ3
+         TS2RqDOnM4bv4ekivnStcanaDI2vZ/TRZHNRc8yAS8p8ouj1nqvdg5fdZJyOOndAie7f
+         0uBQ==
+X-Gm-Message-State: AGi0PualE59QcE3URkt/yb0p29TAIjLn2O4RD8yaglA/UCC1/kSLNfcj
+        7ZYFTS9OSPw7wIuowxY0HOvXzg==
+X-Google-Smtp-Source: APiQypLQNaARhwh4BlYnWAU5WfsoUDeU0pdENYNXKn3KrAt4Qe7dKmRwhwnGgQvcs+0sUHauBpwL7w==
+X-Received: by 2002:adf:e751:: with SMTP id c17mr25218165wrn.351.1589274009683;
+        Tue, 12 May 2020 02:00:09 -0700 (PDT)
 Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id y10sm18845457wrd.95.2020.05.12.02.00.04
+        by smtp.gmail.com with ESMTPSA id y10sm18845457wrd.95.2020.05.12.02.00.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 02:00:04 -0700 (PDT)
+        Tue, 12 May 2020 02:00:09 -0700 (PDT)
 From:   Daniel Vetter <daniel.vetter@ffwll.ch>
 To:     DRI Development <dri-devel@lists.freedesktop.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
@@ -67,9 +67,9 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         Daniel Vetter <daniel.vetter@intel.com>
-Subject: [RFC 08/17] drm/scheduler: use dma-fence annotations in main thread
-Date:   Tue, 12 May 2020 10:59:35 +0200
-Message-Id: <20200512085944.222637-9-daniel.vetter@ffwll.ch>
+Subject: [RFC 12/17] drm/amdgpu/dc: Stop dma_resv_lock inversion in commit_tail
+Date:   Tue, 12 May 2020 10:59:39 +0200
+Message-Id: <20200512085944.222637-13-daniel.vetter@ffwll.ch>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200512085944.222637-1-daniel.vetter@ffwll.ch>
 References: <20200512085944.222637-1-daniel.vetter@ffwll.ch>
@@ -81,13 +81,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the scheduler rt thread gets stuck on a mutex that we're holding
-while waiting for gpu workloads to complete, we have a problem.
+Trying to grab dma_resv_lock while in commit_tail before we've done
+all the code that leads to the eventual signalling of the vblank event
+(which can be a dma_fence) is deadlock-y. Don't do that.
 
-Add dma-fence annotations so that lockdep can check this for us.
-
-I've tried to quite carefully review this, and I think it's at the
-right spot. But obviosly no expert on drm scheduler.
+Here the solution is easy because just grabbing locks to read
+something races anyway. We don't need to bother, READ_ONCE is
+equivalent. And avoids the locking issue.
 
 Cc: linux-media@vger.kernel.org
 Cc: linaro-mm-sig@lists.linaro.org
@@ -99,36 +99,38 @@ Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
 Cc: Christian König <christian.koenig@amd.com>
 Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
 ---
- drivers/gpu/drm/scheduler/sched_main.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
-index 2f319102ae9f..06a736e506ad 100644
---- a/drivers/gpu/drm/scheduler/sched_main.c
-+++ b/drivers/gpu/drm/scheduler/sched_main.c
-@@ -763,9 +763,12 @@ static int drm_sched_main(void *param)
- 	struct sched_param sparam = {.sched_priority = 1};
- 	struct drm_gpu_scheduler *sched = (struct drm_gpu_scheduler *)param;
- 	int r;
-+	bool fence_cookie;
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 9bfaa4cad483..28e1af9f823c 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -6699,7 +6699,11 @@ static void amdgpu_dm_commit_planes(struct drm_atomic_state *state,
+ 		 * explicitly on fences instead
+ 		 * and in general should be called for
+ 		 * blocking commit to as per framework helpers
++		 *
++		 * Yes, this deadlocks, since you're calling dma_resv_lock in a
++		 * path that leads to a dma_fence_signal(). Don't do that.
+ 		 */
++#if 0
+ 		r = amdgpu_bo_reserve(abo, true);
+ 		if (unlikely(r != 0))
+ 			DRM_ERROR("failed to reserve buffer before flip\n");
+@@ -6709,6 +6713,12 @@ static void amdgpu_dm_commit_planes(struct drm_atomic_state *state,
+ 		tmz_surface = amdgpu_bo_encrypted(abo);
  
- 	sched_setscheduler(current, SCHED_FIFO, &sparam);
+ 		amdgpu_bo_unreserve(abo);
++#endif
++		/*
++		 * this races anyway, so READ_ONCE isn't any better or worse
++		 * than the stuff above. Except the stuff above can deadlock.
++		 */
++		tiling_flags = READ_ONCE(abo->tiling_flags);
  
-+	fence_cookie = dma_fence_begin_signalling();
-+
- 	while (!kthread_should_stop()) {
- 		struct drm_sched_entity *entity = NULL;
- 		struct drm_sched_fence *s_fence;
-@@ -823,6 +826,9 @@ static int drm_sched_main(void *param)
- 
- 		wake_up(&sched->job_scheduled);
- 	}
-+
-+	dma_fence_end_signalling(fence_cookie);
-+
- 	return 0;
- }
- 
+ 		fill_dc_plane_info_and_addr(
+ 			dm->adev, new_plane_state, tiling_flags,
 -- 
 2.26.2
 
