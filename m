@@ -2,135 +2,102 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FE1C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78872C54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD4DE206DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:32:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="muylQ8X1"
+	by mail.kernel.org (Postfix) with ESMTP id 4E1EF206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:33:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589290416;
+	bh=JMbnZNV5GWBEG81bTe/hzlYpxatVV1xl1pAlF1csQRA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S8lrqTxA0oQwwY5qb+Krx/vjPffuBW8yYvus14xFp5UtceSwY9akqtNjpUgFJrSgy
+	 EbeYnjrNHNeMXhEOP7KsP0yCm5Mu7lkGDJRtrju5gccj0x/+U1ZWXGSEpfkVIIDLvb
+	 ldfZK9/qbAt80LRYYzOZP6tP37mYHsK5DxtLeIb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730025AbgELNc3 (ORCPT
+        id S1730015AbgELNdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 09:32:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57548 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728085AbgELNc3 (ORCPT
+        Tue, 12 May 2020 09:33:36 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:46550 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727783AbgELNdf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 09:32:29 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E01CDC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 06:32:27 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id di6so6252022qvb.10
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 06:32:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=69F/dO93fLWYVW8s/bQK6cRsZlBg6dqg0tqZZwynyLA=;
-        b=muylQ8X139wB63+0Qh/pwLoK53v4mik8qjCVpPJpyJf53eQEMMR6PurmKE9dyxIR7I
-         /+bPOaWFQfeS3ZeV5wI3Pl4rZhRUpbAMxkDDvDLN5Zym8ipIF4s0IBCQ+e6xm9WQO5bJ
-         Pg1JJK9BSDavqN4sCQXC48cOLXXi+DEiOZBlwZpqN2KAoSYfn9VmE1wgF2qORfkrZyCQ
-         7yLK4VkvUTzZiUdV5CLTJpmjAQwml+TXBJQiffzJM6vhKFKuH90KSBr3P2uORBpRPHtf
-         wVu3U1mATW4jaNac8rITBT3+FwMEtzc71HyMbhu+k9Ha8AaaED47FuGwJdLBmTnJSprD
-         G0MA==
+        Tue, 12 May 2020 09:33:35 -0400
+Received: by mail-oi1-f196.google.com with SMTP id c124so17978195oib.13;
+        Tue, 12 May 2020 06:33:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=69F/dO93fLWYVW8s/bQK6cRsZlBg6dqg0tqZZwynyLA=;
-        b=oJhuKy+M+t9pRLeuqQBgYC8mTxBD27LMrTulHTVApK9gQKvlUXwKjp+3LLaGO6PqL/
-         yZ0MWZZoV70AnMxPPhy43GVa2SmunsYRYKMt/sZzaVjiCLL6XtU8Nh2ujTexaNwB2puM
-         4yx6qIt0IRAvNU1CJiafaOUBzivXm/ck/RVg9Kc+uVu546yJqdV05JU30/yU0HBlYQb8
-         kpUaEs5HnPpVUx/9d/aNFKIQq88KMzblkkW24GhkUtWb+14P1geQ3g6RxLgk2edpGava
-         q60QzpWJXeDwMvv8yf8sT5R2qnuNtsZcR0Ilrc/twzmazfYFenKT7LJ477Ywx2amLpi7
-         7few==
-X-Gm-Message-State: AGi0PubBHk3x44gh61vWLv9LbBrEZp/sQkTDgmwtnrWvJHn8idfkJdN5
-        iTxR/X0OcCWrLab9t9zswqK9qhgtH20=
-X-Google-Smtp-Source: APiQypI/YHlqjPtAKhGhaErqCvwMKBqpTkZORBd9/ThbR1XGiYR9CooTLIxYpWFi+wmHXeA0I9b/9Q==
-X-Received: by 2002:a05:6214:146b:: with SMTP id c11mr20236348qvy.191.1589290347065;
-        Tue, 12 May 2020 06:32:27 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id a21sm9266794qtw.24.2020.05.12.06.32.25
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XFGIuD/Xpph/hs6mOp9w9FUA6ja/tEq9l8yoFeXouFw=;
+        b=r9B6R8S6kgQwCodDMIwZ6wYjNrhVUktFMLj2tD26erdxGFuyf+fAQwV5zOEwQr3Xq0
+         rfsqy55qAjB+8F05QsgBhNPzhW0aiouGfTQaUxiC1AuV21pSM82TezPGn1zQ8kJWT2eq
+         wXFn1Sh7fttbgAUkHhIlHlGLmOjG/BpqE6DSSq1bi8QhO/0HQnwUPcLGv+QuN3LrC5Rn
+         +z9LXzajhNszqqYfmjF/BLBKDhnZ5HEJYtCZgBh+SRlVzXg1xFKFDprMQ2H6Iq8cy5Xb
+         PvnaepgfOEhxM1Iqrv/MaYIfPIaJ3jiyR1rcBtGLR5dyZRoDdIG3cP++Eqqr3EoeiXYT
+         LkPA==
+X-Gm-Message-State: AGi0PubytIQw4HV3IwbXeX+7ID0zTzHF64InYt7KVcCpshdqIaBbiAlk
+        rI0sNYWHVBT7XAv/FdeUsQ==
+X-Google-Smtp-Source: APiQypKbHwhW843vidRVikJDKSgfpX/YNavionaQgpuXcxU4nOF/+zAbaPV8eIuwpBpb9BxWfvo/gQ==
+X-Received: by 2002:aca:50c6:: with SMTP id e189mr1692952oib.34.1589290413774;
+        Tue, 12 May 2020 06:33:33 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id g10sm3630958oou.31.2020.05.12.06.33.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 06:32:26 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A64E840AFD; Tue, 12 May 2020 10:32:23 -0300 (-03)
-Date:   Tue, 12 May 2020 10:32:23 -0300
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>
-Subject: Re: [PATCH perf/urgent] perf tools: Fix is_bpf_image function logic
-Message-ID: <20200512133223.GI28888@kernel.org>
-References: <20200512122310.3154754-1-jolsa@kernel.org>
+        Tue, 12 May 2020 06:33:32 -0700 (PDT)
+Received: (nullmailer pid 27973 invoked by uid 1000);
+        Tue, 12 May 2020 13:33:30 -0000
+Date:   Tue, 12 May 2020 08:33:30 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, patches@opensource.cirrus.com
+Subject: Re: [PATCH v2 3/5] pinctrl: lochnagar: Move binding over to dtschema
+Message-ID: <20200512133330.GA23637@bogus>
+References: <20200504154757.17519-1-ckeepax@opensource.cirrus.com>
+ <20200504154757.17519-3-ckeepax@opensource.cirrus.com>
+ <CACRpkdYSzdUgZgA6jtdP3K9bWTF=-whkQCr=bKkr_Z0VXywdkA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200512122310.3154754-1-jolsa@kernel.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <CACRpkdYSzdUgZgA6jtdP3K9bWTF=-whkQCr=bKkr_Z0VXywdkA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, May 12, 2020 at 02:23:10PM +0200, Jiri Olsa escreveu:
-> Adrian reported that is_bpf_image is not working the way it was
-> intended - passing on trampolines and dispatcher names. Instead
-> it returned true for all the bpf names.
+On Tue, May 12, 2020 at 03:06:59PM +0200, Linus Walleij wrote:
+> On Mon, May 4, 2020 at 5:48 PM Charles Keepax
+> <ckeepax@opensource.cirrus.com> wrote:
 > 
-> The reason even this logic worked properly is that all bpf objects,
-> even trampolines and dispatcher, were assigned DSO_BINARY_TYPE__BPF_IMAGE
-> binary_type.
+> > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> > ---
+> >
+> > Changes since v1:
+> >  - Moved sub-node into MFD file leaving just the properties in here
+> >  - Removed contains on the compatible
+> >  - Added a required -pins suffix for pinmux/ctrl nodes
+> >  - Added some extra blank lines for readability
 > 
-> The later for bpf_prog objects, the binary_type was fixed in bpf load event
-> processing, which is executed after the ksymbol code.
+> Backed out v1 since I see there is some discussion on these still (sorry for
+> missing this).
 > 
-> Fixing the is_bpf_image logic, so it properly recognizes trampoline
-> and dispatcher objects.
+> I'll hold this off until there is consensus.
 
-This is not applying on top of torvalds/master, not tip/perf/urgent, and
-you forgot to add the Fixes: line, lemme try to find this...
+The whole series needs to go in together.
 
-- Arnaldo
- 
-> Reported-by: Adrian Hunter <adrian.hunter@intel.com>
-> Signed-off-by: Jiri Olsa <jolsa@redhat.com>
-> ---
->  tools/perf/util/machine.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index 8ed2135893bb..d5384807372b 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -738,8 +738,8 @@ int machine__process_switch_event(struct machine *machine __maybe_unused,
->  
->  static int is_bpf_image(const char *name)
->  {
-> -	return strncmp(name, "bpf_trampoline_", sizeof("bpf_trampoline_") - 1) ||
-> -	       strncmp(name, "bpf_dispatcher_", sizeof("bpf_dispatcher_") - 1);
-> +	return strncmp(name, "bpf_trampoline_", sizeof("bpf_trampoline_") - 1) == 0 ||
-> +	       strncmp(name, "bpf_dispatcher_", sizeof("bpf_dispatcher_") - 1) == 0;
->  }
->  
->  static int machine__process_ksymbol_register(struct machine *machine,
-> -- 
-> 2.25.4
-> 
-
--- 
-
-- Arnaldo
+Rob
