@@ -2,94 +2,109 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961CBC54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC87C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 766A6206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6147B206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:04:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cHo71XNf"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="tjtqKokO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729952AbgELNEF (ORCPT
+        id S1729984AbgELNEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 09:04:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53112 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725923AbgELNEE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 09:04:04 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D9F0C061A0C;
-        Tue, 12 May 2020 06:04:04 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id l25so7774518vso.6;
-        Tue, 12 May 2020 06:04:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WYYWk5B2Zk3TwldAUzCtTJK0glo/7kNcHTQydLAHm5E=;
-        b=cHo71XNftzYCde+bfpfj3O5Me55d/CAF5uoY/3V6E4gXpR2DbAJUqHnB3U2PoAuPXf
-         +jvSQcMEWbRTS89iqGm064nmezHp+7/wF5uH3tyUkSc4R5pkcDKPIYbrYDbNaQxOjKxj
-         2Xl32Yq45X+snmh1X8CFrneUQu61MsPP5TfmRhdCdlbhcPQ6ZfjEqVDuVwX73I5HcoJz
-         arzItnlRTzilZiKhUB/QYi0gSGwCbjQ7vMkte8LXU113pdTcZ4UA3fS2Kz4LKUad4boU
-         CqMIy+MiXQhYJI3/cVd4ve/e8vid87Xl86l0Xg8M0kLqwsXVK53thEdrIyKWZi/8X3ZU
-         AvrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WYYWk5B2Zk3TwldAUzCtTJK0glo/7kNcHTQydLAHm5E=;
-        b=HMzdlE+SlXmcDRrRBr3AFghw4T/mt39zzVcn3G0+P4boMVpiQWNs7b1xkg7fC58oxq
-         PRhUCe26YNQwNEIMdlKGpVtZ+nctqIkp8ghPTh72x0lRPY+tP6TNXFBZEvLV/F5nyjiS
-         TlxuVZrNRxO5qAMbfx564O8/iLNjmxtSo8wUhyx0yG6R0I1pwUbR5wyn2fIZn+Plls+i
-         PPLYvvtEeSygFgYa9PT8mcySsNFUc9tp0Pq1GLAPbV1Ww8LaQHYf5lQeHuTVCjCFW+JP
-         vj54v6wcIT6RsomyJeRTZQvAybAzfr8XjEW6Jbgm/J/BC6drZ/BsI6Nm9enDfiQ0KHCV
-         KvDg==
-X-Gm-Message-State: AGi0PuaIV8t9dWT34k1mRajBpqGkg4p+zgh1O4CLhhwCF2LsjH7LTHsj
-        D8Zr6uKFFbq1vY22CWOXREcwj/HnzRouSEDKZ8Q=
-X-Google-Smtp-Source: APiQypJ4NEstWoq9lkMhuVta2nDgCif74eH1N9G3xJwYqz8c5+2f0vuiPACHvfsMZLwR/GXfTW7+fce+ImJb3qkLZhE=
-X-Received: by 2002:a67:c482:: with SMTP id d2mr16214320vsk.37.1589288643312;
- Tue, 12 May 2020 06:04:03 -0700 (PDT)
+        Tue, 12 May 2020 09:04:24 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:55666 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725923AbgELNEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 09:04:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=jK4zL75kEjZz1WHIcEzDIz6MmRgpd2lB37qu5hoigyE=; b=tjtqKokOyIfsk0LplqjjgiF8GQ
+        XQJaeOnbZX3W0brBh+PAsB2gClQIUJOLSsgbUFCTMBNPDEqPK+ATDHT8xvJEfbaNtKyxGz4PdIErE
+        tmjm/JXTaID0uuSczX0FzK0Agi3iyaGawjwixtGjZrowAt17HUotA9IR+R/Jk0tsE+0c=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jYUa2-001zBu-6i; Tue, 12 May 2020 15:04:18 +0200
+Date:   Tue, 12 May 2020 15:04:18 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Michal Kubecek <mkubecek@suse.cz>, Marek Vasut <marex@denx.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        mkl@pengutronix.de, kernel@pengutronix.de,
+        David Jander <david@protonic.nl>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Christian Herber <christian.herber@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: signal quality and cable diagnostic
+Message-ID: <20200512130418.GF409897@lunn.ch>
+References: <20200511141310.GA2543@pengutronix.de>
+ <20200511145926.GC8503@lion.mk-sys.cz>
+ <20200512064858.GA16536@pengutronix.de>
 MIME-Version: 1.0
-References: <20200428141459.87624-1-weiyongjun1@huawei.com> <CACRpkdZ++vYw8LAiNUv6AXQ0QTh+W9vSL0_w2AR-GNNd=GH7FA@mail.gmail.com>
-In-Reply-To: <CACRpkdZ++vYw8LAiNUv6AXQ0QTh+W9vSL0_w2AR-GNNd=GH7FA@mail.gmail.com>
-From:   Emil Velikov <emil.l.velikov@gmail.com>
-Date:   Tue, 12 May 2020 14:01:24 +0100
-Message-ID: <CACvgo51t+LdpRuFw-uXgbstpHMRrgMt3s62mFsyO37OHjuWJNw@mail.gmail.com>
-Subject: Re: [PATCH -next] drm/mcde: dsi: Fix return value check in dev_err()
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        David Airlie <airlied@linux.ie>,
-        kernel-janitors@vger.kernel.org,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512064858.GA16536@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+> > As for getting / setting the threshold, perhaps ETHTOOL_MSG_LINKINFO_GET
+> > and ETHTOOL_MSG_LINKINFO_SET. Unless you expect more configurable
+> > parameters like this in which case we may want to consider adding new
+> > request type (e.g. link params or link management).
+> 
+> Currently in my short term todo are:
+> - SQI
 
-On Tue, 12 May 2020 at 12:49, Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Tue, Apr 28, 2020 at 4:13 PM Wei Yongjun <weiyongjun1@huawei.com> wrote:
->
-> > In case of error, the function of_drm_find_bridge() returns NULL pointer
-> > not ERR_PTR(). The IS_ERR() test in the return value check should be
-> > replaced with NULL test.
-> >
-> > Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
->
-> Patch applied! Thanks Wei, sorry for the long delay.
->
-It would be nice if of_drm_find_bridge and of_drm_find_panel were
-consistent - either return NULL or an ERR_PTR.
-Otherwise the next person using them is likely to get it wrong.
 
--Emil
+> - PHY undervoltage
+> - PHY overtemerature
+
+Do you only have alarms? Or are current values available for voltage
+and temperature?
+
+Both of these would fit hwmon. It even has the option to set the alarm
+thresholds. The advantage of hwmon is that they are then just more
+sensors. You could even include the temperature sensor into a thermal
+zone to influence cooling. There are a couple of PHYs which already do
+hwmon, so there is code you can copy.
+
+> So far, I have no idea for PHY health diagnostic.
+> 
+> If we consider at least the  mandatory properties listed in the opensig, then
+> we would get following list:
+> 
+> - DCQ (dynamic channel group)
+>   - SQI (Signal Quality Index)
+> - HDD (Harness defect detection group)
+>   - OS (Open/Short detection) ----------------- implemented, cable test
+>     request.
+> - LQ (Link Quality)
+>   - LTT (Link-training time. The time of the last link training)
+>   - LFL (Link Failures and Losses. Number of link losses since the last
+>     power cycle)
+>   - COM (communication ready) ----------------- implemented?
+> - POL (Polarity detection & correction)
+>   - DET (Polarity detect)
+
+Voltage and temperature are about the package. These are about the
+link. So they better fit ETHTOOL_MSG_LINKINFO_SET or similar.
+
+It sounds like LFL are statistic counters? PHYs can have their own
+counters, which ethtool -S will return.
+
+Does POLL somehow map to MDI MDIX? I guess not, since this is a T1.
+
+     Andrew
