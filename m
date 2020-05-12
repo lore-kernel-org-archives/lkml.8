@@ -2,121 +2,144 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E59DEC54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3F1C54E8D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBAC8206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8477206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:00:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aY69rB+X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730462AbgELO6N (ORCPT
+        id S1729756AbgELPAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:58:13 -0400
-Received: from mga05.intel.com ([192.55.52.43]:29779 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727912AbgELO6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:58:13 -0400
-IronPort-SDR: Y41I0xLE8wmnmHL3BtnM24PMCzt0s8mePGGrN29wLy5lQsTnY+n5RewmWQq7GDwQttyFv7vISK
- +yLURmfvugPg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 07:58:12 -0700
-IronPort-SDR: HEQpGG6V3WEjupYQZXv0To3iANPRzMPV3ldqpz6cyh8MtoTvjF/PVbVrXbgNXSIZc2cUEr3WBC
- yBTLTKfUsAUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,384,1583222400"; 
-   d="scan'208";a="262145585"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.157]) ([10.237.72.157])
-  by orsmga003.jf.intel.com with ESMTP; 12 May 2020 07:58:10 -0700
-Subject: Re: perf seg fault
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, LKML <linux-kernel@vger.kernel.org>
-References: <0cad7834-07b4-ec2f-13b5-d6a10b21ce48@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <0517775a-3e0f-f900-4687-069d115077bd@intel.com>
-Date:   Tue, 12 May 2020 17:58:29 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <0cad7834-07b4-ec2f-13b5-d6a10b21ce48@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 12 May 2020 11:00:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726300AbgELPAj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 11:00:39 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C101FC061A0C;
+        Tue, 12 May 2020 08:00:39 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id u10so5490796pls.8;
+        Tue, 12 May 2020 08:00:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=zY6l7Pzo8dnedvQSXEa9BV0T0TX5SB1UpYlmpbsnlxo=;
+        b=aY69rB+XNQ8wwcsY3HAr+e0Ju0AYGDRXK+SLIrRK8A5Rv7FhKikttrwEJcoinFah+N
+         rvnUwzOTQ4b+4b6c+dWj1ux7ov2pTAER7MQQvNQAemGhgp3+up9tg8Q0ZgZWUheEizMA
+         WzEWlGY9yeGrO9e5G8uiQ5mZVceUhOk2iIxjWcVXs5Nj9b4TEnAYNT9SMZIsNfFmgbG5
+         RO3Zp/30tTdNgII4qgOl/vxmHojp+s6VyMZxopunLZ2yWstKzryLUe9BLP/m5ca29OT2
+         RmASSTOY06SBS8jG6Rczr8cvR4x8Mo902ymSkHDpCSXBDTQZQoGR6331UgTowMahkru3
+         Y4vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zY6l7Pzo8dnedvQSXEa9BV0T0TX5SB1UpYlmpbsnlxo=;
+        b=Wf94hKGgY21fiZJrkTs0sQ76xO2HSw0hPkBow9cstEjQNu3TLzFOV0MufmvAPga2bp
+         t41CpH36F3+nGGN4oaRAeHi7u+6NcLMPySE4AFFjipKybZYFxKiqQIzN8MEfZTsGLyRZ
+         /0RwKXG5TgodXeT3+Zpqmmn2JPz2H2RSuzyKa2+3g4tQk68tjnlz4wzqinpSPja984jX
+         /vdnWOYrLbC/x4/0t7QCDmutluGgUAlOdW3Oxo4/ycUqhZR0vM1yr9qt48kBp8xg91qe
+         QZhfGUJSmLsmXEsUHKCek6+uEs2vPTFvYUvSkmGbxNCkaQRD79nB75Uww94HzNR6w8mq
+         rqQQ==
+X-Gm-Message-State: AGi0PubRJNRPSpdv+y2tLzFOQ5AxUWRAZ1tVGPXtQgP6l2rIjuwCwc2B
+        2eKrryz+RBN8ogt7trbCtyFEkWQK4mM=
+X-Google-Smtp-Source: APiQypKmZjVS6pLHVWaDrSJr/frJYuIFiE/4qsGhLrwa25HuB2pW3W/srEun1TtAHe/cEWB3VZjSUQ==
+X-Received: by 2002:a17:902:c3c3:: with SMTP id j3mr20040157plj.284.1589295638750;
+        Tue, 12 May 2020 08:00:38 -0700 (PDT)
+Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id c2sm8359779pgj.93.2020.05.12.08.00.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 08:00:38 -0700 (PDT)
+From:   Al Cooper <alcooperx@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Al Cooper <alcooperx@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v10 0/5] Add XHCI, EHCI and OHCI support for Broadcom STB SoS's
+Date:   Tue, 12 May 2020 11:00:14 -0400
+Message-Id: <20200512150019.25903-1-alcooperx@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Forgot to cc mailing list
+v10 - Fix incorrect error return in ehci-brcmstb.c pointed out by
+      Alan Stern.
 
-On 12/05/20 5:50 pm, Adrian Hunter wrote:
-> Hi
-> 
-> I am getting a seg fault from your perf/core branch, as follows:
-> 
-> # perf record uname
-> Linux
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.005 MB perf.data (7 samples) ]
-> perf: Segmentation fault
-> Obtained 6 stack frames.
-> [0x4e75b4]
-> [0x5d1ad0]
-> [0x5c9860]
-> [0x4a6e5c]
-> [0x5cb39b]
-> [0x76c89f]
-> Segmentation fault
-> 
-> It goes away with --no-bpf-event:
-> 
-> # perf record --no-bpf-event uname
-> Linux
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.005 MB perf.data (7 samples) ]
-> #
-> 
-> kernel is from the same branch
-> 
-> # uname -a
-> Linux buildroot 5.7.0-rc2-00028-g0fdddf5a583a #165 SMP Tue May 12 16:27:53
-> EEST 2020 x86_64 GNU/Linux
-> 
-> # perf version --build-options
-> perf version 5.6.g0fdddf5a583a
->                  dwarf: [ OFF ]  # HAVE_DWARF_SUPPORT
->     dwarf_getlocations: [ OFF ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
->                  glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
->                   gtk2: [ OFF ]  # HAVE_GTK2_SUPPORT
->          syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
->                 libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
->                 libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
->                libnuma: [ OFF ]  # HAVE_LIBNUMA_SUPPORT
-> numa_num_possible_cpus: [ OFF ]  # HAVE_LIBNUMA_SUPPORT
->                libperl: [ OFF ]  # HAVE_LIBPERL_SUPPORT
->              libpython: [ OFF ]  # HAVE_LIBPYTHON_SUPPORT
->               libslang: [ on  ]  # HAVE_SLANG_SUPPORT
->              libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
->              libunwind: [ OFF ]  # HAVE_LIBUNWIND_SUPPORT
->     libdw-dwarf-unwind: [ OFF ]  # HAVE_DWARF_SUPPORT
->                   zlib: [ OFF ]  # HAVE_ZLIB_SUPPORT
->                   lzma: [ OFF ]  # HAVE_LZMA_SUPPORT
->              get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
->                    bpf: [ OFF ]  # HAVE_LIBBPF_SUPPORT
->                    aio: [ on  ]  # HAVE_AIO_SUPPORT
->                   zstd: [ OFF ]  # HAVE_ZSTD_SUPPORT
-> 
-> 
-> Any thoughts?
-> 
-> Regards
-> Adrian
-> 
-> 
+v9 - Fix minor typos in patch description for ehci driver.
+   - In ehci-brcm.c, use ehci_err() instead of dev_err().
+   - In ehci-brcm.c, handle zero returned from platform_get_irq()
+     by returning -EINVAL for 0 or actual return value for < 0.
+
+v8 - The previous v7 had the wrong version of ehci-brcm.c. This time
+     really, really add the changes Greg requested.
+
+v7 - Cleanup ehci-brcm.c as requested by Greg Kroah-Hartman.
+   - Split out Makefile re-order change into a separate commit.
+
+v6 - Remove "contains:" from compatible section of
+     brcm,bcm7445-ehci.yaml as requested by Rob Herring.
+
+v5 - Use devm_platform_get_and_ioremap_resource() in ehci-brcm.c
+     as requested by Andy Shevchenko.
+   - Add pm_runtime_set_active() to ehci_resume() in ehci-brcm.c
+     as requested by Alan Stern.
+
+v4 - A few more fixes to the brcm,bcm7445-ehci.yaml dt-bindings
+     document requested by Rob Herring.
+   - Fixed ordering issue in MAINTAINERS as requested by
+     Andy Shevchenko.
+
+v3 - Addressed all of Andy Shevchenko's review comments for
+     ehci-brcm.c.
+   - Fixed the brcm,bcm7445-ehci.yaml dt-bindings document,
+     dt_binding_check now passes.
+   - Added the XHCI functionality to xhci-plat.c instead of creating
+     new brcmstb files, as suggested by Mathias Nyman.
+
+v2 - Addressed Andy Shevchenko's review comments.
+   - Fixed dt_binding_check error pointed out by Rob Herring.
+   - Removed pr_info message in ehci_brcm_init as suggested by
+     Greg Kroah-Hartman.
+
+This adds support for the XHCI, EHCI and OHCI host controllers found
+in Broadcom STB SoC's. These drivers depend on getting access to the
+new Broadcom STB USB PHY driver through a device-tree phandle and
+will fail if the driver is not available.
+
+Al Cooper (5):
+  usb: xhci: Change the XHCI link order in the Makefile
+  dt-bindings: Add Broadcom STB USB support
+  usb: xhci: xhci-plat: Add support for Broadcom STB SoC's
+  usb: ehci: Add new EHCI driver for Broadcom STB SoC's
+  usb: host: Add ability to build new Broadcom STB USB drivers
+
+ .../bindings/usb/brcm,bcm7445-ehci.yaml       |  59 ++++
+ .../devicetree/bindings/usb/usb-xhci.txt      |   1 +
+ MAINTAINERS                                   |   8 +
+ drivers/usb/host/Kconfig                      |  20 ++
+ drivers/usb/host/Makefile                     |  17 +-
+ drivers/usb/host/ehci-brcm.c                  | 280 ++++++++++++++++++
+ drivers/usb/host/xhci-plat.c                  |  10 +
+ 7 files changed, 389 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/brcm,bcm7445-ehci.yaml
+ create mode 100644 drivers/usb/host/ehci-brcm.c
+
+-- 
+2.17.1
 
