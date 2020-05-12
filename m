@@ -2,73 +2,163 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE85C54E4B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 436CAC54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 407E220674
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EC472082E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:24:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i6SU59fO"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BlSv9wO9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbgELIX1 (ORCPT
+        id S1729146AbgELIYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 04:23:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37028 "EHLO
+        Tue, 12 May 2020 04:24:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726187AbgELIX1 (ORCPT
+        by vger.kernel.org with ESMTP id S1726008AbgELIYS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 04:23:27 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D172C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 01:23:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=FeXpGIxuOOt5NISH1tSfIL+s7TUHX+8me1nLN/9ADvk=; b=i6SU59fOcGddhGDUD+VClLsFLL
-        BwegR24zHzIlToIMxvSLrH+k3fQ4bqty2PopniUZNPhxUv6Fwtbz9GYab7Wj5uz/MeN/uzi692V+E
-        bVvG/KZU6ErSqNEQfVpbCKmb5G9MX/OvHELkg+/s0KkUxMvoHL8QBgHQ8zPDaH7avq168QqN5ppTh
-        A8/nbI3V/RXMfb6Y45F0JMNK8GVm2Ep9EuvAX/6bqG6Wa8wfzvSeM0YVtYEmMcmJaoQfwhfuv/5hO
-        dElD35pQk92ZGSCSU1VJfCcTxJg0n23blhNaxeFhRCCTHRJssV41+Ql4mxxwc/lmPt5tDIGKQzhDk
-        rHaY4LXw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jYQBv-0003H6-I3; Tue, 12 May 2020 08:23:07 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 642F63011E6;
-        Tue, 12 May 2020 10:23:06 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4FDD82096103E; Tue, 12 May 2020 10:23:06 +0200 (CEST)
-Date:   Tue, 12 May 2020 10:23:06 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, elver@google.com, tglx@linutronix.de,
-        paulmck@kernel.org, mingo@kernel.org
-Subject: Re: [PATCH v5 17/18] READ_ONCE: Use data_race() to avoid KCSAN
- instrumentation
-Message-ID: <20200512082306.GF2978@hirez.programming.kicks-ass.net>
-References: <20200511204150.27858-1-will@kernel.org>
- <20200511204150.27858-18-will@kernel.org>
+        Tue, 12 May 2020 04:24:18 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6097C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 01:24:16 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id h4so20728005wmb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 01:24:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ggr14XlgBh8EMUJAaXyLbn8TYhao1h67+MKW9QffqQA=;
+        b=BlSv9wO9EpU2bfDYWrkc6U/izllw0YDwVAaM8XXtWTZAGT3qHljt7t90do6W5z8yIM
+         7VNI4LfZWTiT9/N75dwSyGxJlwPjT4gykfTOEZyzilQXkF5vO+1ieeIivX5oykGVT6pD
+         fcfvWOj1Vm5aSP2uMZrsEYCLakxc5GPx0QyYqAG4jL24rgxnb+2s3cBeA9fGSpuT/I3N
+         y0lM2Pinz3TPoDSEznx0RNgbAU5A3B2TN2WgYYdifHPn24RRDdMuqfinuuJlMrTm8rt5
+         W2tZ6N0Aazs/f+Yyk+D2k4BU6Lrth+1f0OyFKzI4EEQGUFZRu7s7AItrLEEfRwe161BU
+         iIXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Ggr14XlgBh8EMUJAaXyLbn8TYhao1h67+MKW9QffqQA=;
+        b=V9i2Yequ9VttK6XLftdREGuX2dzm+BYO415biSShh5KfeHOXx4buYit5Zm2J4FDv/b
+         yGNkh9onD6fXHrjdEkXASQ3ZMY167amUiqkbheaSjB0OCySs+dRJ0cE622bfWrbth5q1
+         ft/yIp1CcIoCnYPv214BchGXblJ80kBp2Zi7tBS0++vdthwiSx3/duPtmcD8R6TXjtK2
+         KL8qMuqE2dpjhavR62Q7wBSiPdc+bDK8oRdDRei+Z6XHfJuA1UJdya9zOrwlS6hXtppt
+         Ly56Sy421DZu0WRWdilTQeuOoFaO1xymBF/iycyUuM7qkC43AVGa6gcZorBuKItycpzQ
+         SKFA==
+X-Gm-Message-State: AGi0PuZBbsYMQ2NaNeHS9xATff7/DTrRm3lQfBLyDHUDXGK1cH5wtGx+
+        MkpjswgMsRDa5w/wU2fQu689ZCPeZWQObg==
+X-Google-Smtp-Source: APiQypJ0DLBuWu1HvqfbYEN3n8HZFeHzl+W4A9F19tgwxnNvxKs0OG0tNRp7DYla2i/EalNuykPoWA==
+X-Received: by 2002:a1c:5988:: with SMTP id n130mr25724011wmb.187.1589271855004;
+        Tue, 12 May 2020 01:24:15 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:4460:3fd3:382:4a71? ([2a01:e35:2ec0:82b0:4460:3fd3:382:4a71])
+        by smtp.gmail.com with ESMTPSA id x1sm12699020wrt.86.2020.05.12.01.24.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 May 2020 01:24:14 -0700 (PDT)
+Subject: Re: [PATCH] ARM: oxnas: make ox820_boot_secondary static
+To:     Ma Feng <mafeng.ma@huawei.com>, linux@armlinux.org.uk
+Cc:     linux-arm-kernel@lists.infradead.org, linux-oxnas@groups.io,
+        linux-kernel@vger.kernel.org
+References: <1589247973-29728-1-git-send-email-mafeng.ma@huawei.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <799e6df7-7698-f2a7-e8eb-fd491c1cad8f@baylibre.com>
+Date:   Tue, 12 May 2020 10:24:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511204150.27858-18-will@kernel.org>
+In-Reply-To: <1589247973-29728-1-git-send-email-mafeng.ma@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 09:41:49PM +0100, Will Deacon wrote:
+On 12/05/2020 03:46, Ma Feng wrote:
+> Fix sparse warning:
+> 
+> arch/arm/mach-oxnas/platsmp.c:30:12: warning: symbol 'ox820_boot_secondary' was
+> not declared. Should it be static?
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Ma Feng <mafeng.ma@huawei.com>
+> ---
+>  arch/arm/mach-oxnas/platsmp.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/mach-oxnas/platsmp.c b/arch/arm/mach-oxnas/platsmp.c
+> index ab35275..f0a50b9 100644
+> --- a/arch/arm/mach-oxnas/platsmp.c
+> +++ b/arch/arm/mach-oxnas/platsmp.c
+> @@ -27,7 +27,8 @@ static void __iomem *gic_cpu_ctrl;
+>  #define GIC_CPU_CTRL			0x00
+>  #define GIC_CPU_CTRL_ENABLE		1
+> 
+> -int __init ox820_boot_secondary(unsigned int cpu, struct task_struct *idle)
+> +static int __init ox820_boot_secondary(unsigned int cpu,
+> +		struct task_struct *idle)
+>  {
+>  	/*
+>  	 * Write the address of secondary startup into the
+> --
+> 2.7.4
+> 
 
-> +	data_race(({ __WRITE_ONCE(*__xp, val); 0; }));			\
-
-That had me blink for a little, I see how we got there, but urgh.
-
-Anyway, it's all in *much* better shape now than it was, so no real
-copmlaints.
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
