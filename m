@@ -2,138 +2,56 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3218C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1ABC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 962FC206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73F0A206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:36:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbgELJfi (ORCPT
+        id S1729174AbgELJgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 05:35:38 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4778 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725889AbgELJfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 05:35:37 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5A47A4F51B544F654850;
-        Tue, 12 May 2020 17:35:33 +0800 (CST)
-Received: from [127.0.0.1] (10.166.213.7) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Tue, 12 May 2020
- 17:35:24 +0800
-Subject: Re: [PATCH] scsi: hisi_sas: display correct proc_name in sysfs
-To:     John Garry <john.garry@huawei.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Xiang Chen <chenxiang66@hisilicon.com>
-References: <20200512063318.13825-1-yanaijie@huawei.com>
- <66c3318d-e8fa-9ff4-c7f4-ebe23925b807@huawei.com>
-From:   Jason Yan <yanaijie@huawei.com>
-Message-ID: <dacd7cbe-3d84-2b35-e63a-af6179aa5221@huawei.com>
-Date:   Tue, 12 May 2020 17:35:23 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Tue, 12 May 2020 05:36:42 -0400
+Received: from lgeamrelo12.lge.com ([156.147.23.52]:37614 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725889AbgELJgm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 05:36:42 -0400
+X-Greylist: delayed 1801 seconds by postgrey-1.27 at vger.kernel.org; Tue, 12 May 2020 05:36:42 EDT
+Received: from unknown (HELO lgeamrelo01.lge.com) (156.147.1.125)
+        by 156.147.23.52 with ESMTP; 12 May 2020 18:06:39 +0900
+X-Original-SENDERIP: 156.147.1.125
+X-Original-MAILFROM: changjoon.lee@lge.com
+Received: from unknown (HELO MacBookPro.local.net) (10.157.161.30)
+        by 156.147.1.125 with ESMTP; 12 May 2020 18:06:39 +0900
+X-Original-SENDERIP: 10.157.161.30
+X-Original-MAILFROM: changjoon.lee@lge.com
+From:   changjoon.lee@lge.com
+To:     tiwai@suse.de
+Cc:     alsa-devel@alsa-project.org, linux@endlessm.com,
+        linux-kernel@vger.kernel.org, ChangJoon Lee <changjoon.lee@lge.com>
+Subject: [PATCH 0/1] Documentation update
+Date:   Tue, 12 May 2020 18:05:46 +0900
+Message-Id: <20200512090547.76991-1-changjoon.lee@lge.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <66c3318d-e8fa-9ff4-c7f4-ebe23925b807@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.166.213.7]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: ChangJoon Lee <changjoon.lee@lge.com>
 
+ChangJoon Lee (1):
+  Updated negative return values for documentation update.
 
-在 2020/5/12 16:23, John Garry 写道:
-> On 12/05/2020 07:33, Jason Yan wrote:
->> The 'proc_name' entry in sysfs for hisi_sas is 'null' now becuase it is
->> not initialized in scsi_host_template. It looks like:
->>
->> [root@localhost ~]# cat /sys/class/scsi_host/host2/proc_name
->> (null)
->>
-> 
-> hmmm.. it would be good to tell us what this buys us, apart from the 
-> proc_name file.
-> 
+ src/pcm/pcm.c | 57 ++++++++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 54 insertions(+), 3 deletions(-)
 
-When there is more than one storage cards(or controllers) in the system, 
-I'm tring to find out which host is belong to which card. And then I 
-found this in scsi_host in sysfs but the output is '(null)' which is odd.
-
-> I mean, if we had the sht show_info method implemented, then it could be 
-> useful (which is even marked as obsolete now).
-> 
-
-I found this is interesting while in the sysfs filesystem we have a 
-procfs stuff in it. I was planned to rename this entry to 'name' and use 
-the struct member 'name' directly in struct scsi_host_template. But this 
-may break userspace applications.
-
-> Thanks,
-> John
-> 
->> While the other driver's entry looks like:
->>
->> linux-vnMQMU:~ # cat /sys/class/scsi_host/host0/proc_name
->> megaraid_sas
->>
->> Cc: John Garry <john.garry@huawei.com>
->> Cc: Xiang Chen <chenxiang66@hisilicon.com>
->> Signed-off-by: Jason Yan <yanaijie@huawei.com>
->> ---
->>   drivers/scsi/hisi_sas/hisi_sas_v1_hw.c | 1 +
->>   drivers/scsi/hisi_sas/hisi_sas_v2_hw.c | 1 +
->>   drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 1 +
->>   3 files changed, 3 insertions(+)
->>
->> diff --git a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c 
->> b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
->> index fa25766502a2..c205bff20943 100644
->> --- a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
->> +++ b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
->> @@ -1757,6 +1757,7 @@ static struct device_attribute 
->> *host_attrs_v1_hw[] = {
->>   static struct scsi_host_template sht_v1_hw = {
->>       .name            = DRV_NAME,
->> +    .proc_name        = DRV_NAME,
->>       .module            = THIS_MODULE,
->>       .queuecommand        = sas_queuecommand,
->>       .target_alloc        = sas_target_alloc,
->> diff --git a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c 
->> b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
->> index e05faf315dcd..c725cffe141e 100644
->> --- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
->> +++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
->> @@ -3533,6 +3533,7 @@ static struct device_attribute 
->> *host_attrs_v2_hw[] = {
->>   static struct scsi_host_template sht_v2_hw = {
->>       .name            = DRV_NAME,
->> +    .proc_name        = DRV_NAME,
->>       .module            = THIS_MODULE,
->>       .queuecommand        = sas_queuecommand,
->>       .target_alloc        = sas_target_alloc,
->> diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c 
->> b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
->> index 374885aa8d77..59b1421607dd 100644
->> --- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
->> +++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
->> @@ -3071,6 +3071,7 @@ static int debugfs_set_bist_v3_hw(struct 
->> hisi_hba *hisi_hba, bool enable)
->>   static struct scsi_host_template sht_v3_hw = {
->>       .name            = DRV_NAME,
->> +    .proc_name        = DRV_NAME,
->>       .module            = THIS_MODULE,
->>       .queuecommand        = sas_queuecommand,
->>       .target_alloc        = sas_target_alloc,
->>
-> 
-> 
-> .
+-- 
+2.26.2
 
