@@ -2,68 +2,91 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C24C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC6DC54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 236A720714
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0226C20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 08:45:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589273138;
+	bh=HHIUAU+1SaQZGuj/kMFvsg276gIp0yMSTOdsnW2u5/g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iUpMwoAqyT8mrS3ICAL4cNRH0FJ+jaFdTK2JS4h8yvwLUQmGPz6MKR+4p9nFU8U6s
+	 iW1nfD/iuyJEqSdvD5YiIaKJ8dwk0SRm1oNbLi5W60BRQu6O8LL2uyHXD1EavlhsrX
+	 ft9E/A4Y0KTsMIPvyYFWsMOIUCnUHhRqKvZf2e50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729211AbgELIor (ORCPT
+        id S1729228AbgELIph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 04:44:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37496 "EHLO mx2.suse.de"
+        Tue, 12 May 2020 04:45:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbgELIoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 04:44:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id A6006ABC7;
-        Tue, 12 May 2020 08:44:46 +0000 (UTC)
-Date:   Tue, 12 May 2020 10:44:42 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     WeiXiong Liao <liaoweixiong@allwinnertech.com>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Rob Herring <robh@kernel.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v7 07/18] printk: Introduce kmsg_dump_reason_str()
-Message-ID: <20200512084441.GD17734@linux-b0ei>
-References: <20200510202436.63222-1-keescook@chromium.org>
- <20200510202436.63222-8-keescook@chromium.org>
+        id S1725776AbgELIpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 04:45:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2BEE206CC;
+        Tue, 12 May 2020 08:45:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589273136;
+        bh=HHIUAU+1SaQZGuj/kMFvsg276gIp0yMSTOdsnW2u5/g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Kp1CjhZx2evs7dpoOGovhGH3+KzVfWpMQIKjROna1SzcunxkhfKN/q4EJuNt652bf
+         qSQLSbIuWYOvrCEmfblr82+/hJoHBqePBcNEZcbn71U75ERldDAvaHEMDvQpaIye0N
+         LtbBSKL3m1z71mcv8hXp93UXZmC5Y1JxRj7gVjHM=
+Date:   Tue, 12 May 2020 10:45:34 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Charan Teja Kalla <charante@codeaurora.org>
+Cc:     dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org, vinmenon@codeaurora.org,
+        sumit.semwal@linaro.org, ghackmann@google.com, fengc@google.com,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH] dma-buf: fix use-after-free in dmabuffs_dname
+Message-ID: <20200512084534.GA3557007@kroah.com>
+References: <1588060442-28638-1-git-send-email-charante@codeaurora.org>
+ <20200505100806.GA4177627@kroah.com>
+ <8424b2ac-3ea6-6e5b-b99c-951a569f493d@codeaurora.org>
+ <20200506090002.GA2619587@kroah.com>
+ <3bc8dd81-f298-aea0-f218-2e2ef12ca603@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200510202436.63222-8-keescook@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <3bc8dd81-f298-aea0-f218-2e2ef12ca603@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 2020-05-10 13:24:25, Kees Cook wrote:
-> The pstore subsystem already had a private version of this function.
-> With the coming addition of the pstore/zone driver, this needs to be
-> shared. As it really should live with printk, move it there instead.
+On Tue, May 12, 2020 at 10:43:18AM +0530, Charan Teja Kalla wrote:
+> > Ok, but watch out, now you have 2 different reference counts for the
+> > same structure.  Keeping them coordinated is almost always an impossible
+> > task so you need to only rely on one.  If you can't use the file api,
+> > just drop all of the reference counting logic in there and only use the
+> > kref one.
 > 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> I feel that changing the refcount logic now to dma-buf objects involve
+> changes in
+> 
+> the core dma-buf framework. NO? Instead, how about passing the user passed
+> name directly
+> 
+> in the ->d_fsdata inplace of dmabuf object? Because we just need user passed
+> name in the
+> 
+> dmabuffs_dname(). With this we can avoid the need for extra refcount on
+> dmabuf.
 
-I looked only at this printk part and it looks good to me ;-)
+Odd formatting :(
 
-Acked-by: Petr Mladek <pmladek@suse.com>
+> Posted patch-V2: https://lkml.org/lkml/2020/5/8/158
 
-Best Regards,
-Petr
+Please just post links to lore.kernel.org, we have no control over
+lkml.org at all.
+
+I'll go review that patch now...
+
+greg k-h
