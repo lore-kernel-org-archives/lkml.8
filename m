@@ -2,96 +2,147 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 648B5C54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB94C54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45FFE20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DBA820714
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 09:20:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RTRXN6Up"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729274AbgELJU1 (ORCPT
+        id S1729293AbgELJU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 05:20:27 -0400
-Received: from m177129.mail.qiye.163.com ([123.58.177.129]:48816 "EHLO
-        m177129.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727859AbgELJU1 (ORCPT
+        Tue, 12 May 2020 05:20:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46544 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729125AbgELJU4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 05:20:27 -0400
-Received: from vivo.com (wm-2.qy.internal [127.0.0.1])
-        by m177129.mail.qiye.163.com (Hmail) with ESMTP id 641F05C3638;
-        Tue, 12 May 2020 17:19:50 +0800 (CST)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <AP*ABgAXCELISG6y0r8HaKrn.3.1589275190376.Hmail.bernard@vivo.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Lukasz Luba <lukasz.luba@arm.com>, Kukjin Kim <kgene@kernel.org>,
-        linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        opensource.kernel@vivo.com
-Subject: =?UTF-8?B?UmU6UmU6IFtQQVRDSF0gbWVtb3J5L3NhbXN1bmc6IHJlZHVjZSB1bm5lY2Vzc2FyeSBtdXRleCBsb2NrIGFyZWE=?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 157.0.31.122
-In-Reply-To: <CAJKOXPekrkyDf2TMCnX7Nvbdaj-JQwuyqrsurFM4moALqVx8Sw@mail.gmail.com>
+        Tue, 12 May 2020 05:20:56 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A336BC05BD0A
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:20:55 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id u15so12797945ljd.3
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 02:20:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hNH+m8omjPnk476jGLpu8Vt8kPOpg3agkUbWl32XtLw=;
+        b=RTRXN6UpK2F7NEYSZFbq/6CmZAZUEetFV4/nF5JiSYvyNI5g4nTSNhLFkFoHjZwByP
+         Zlg/5cua8es2+gXO0jg7lEsyOvayqu+1Hiy9tJXNKfbH9AVH8hYCjEcmgZTtRBulz2Nv
+         j6Mr9nFwWAwPdaQvT4mLPIwg+38zt89Y0MZnSr1WSC3bzYdVCOHwU9KexFMQP8ObqJiA
+         nBLhku7TpS+EYOBoPcY4ND81ZhxYJsgVdGS/XnsbZtHryPTOr7O9aoNvFmt04d5nNqBj
+         9UF8fA1bnUgTKmVgdIIWE7HfRRJy9I5vVOQGLLjoyfo8I+eVeGK3r5ReIXgumar2WDhx
+         uWLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hNH+m8omjPnk476jGLpu8Vt8kPOpg3agkUbWl32XtLw=;
+        b=aNugMwJQ8BoOkgBqpkY25AGJnGw1EjunFIKlFMsP7Y27lcjP/vhIZyO530OiwkYAS2
+         WPussnxB54EGp3IAI54ix2aT5pGW+Fly93ZQaZQf5hhdqzBqUR6jz1S/b/D3A3bg2Kct
+         QqBgAFgg1GiSqACNQEWZ+5opzHn/aj5qT+04U0YnWLexWjNn+LfEhGFddFB3oiunJVTZ
+         gWRffCnMWpkgYZWWWFJUaonEKmBn7HkACraX87WIeLSo/3zPvtmLi7B3RUCiAN39chvF
+         hFe48CAcUbJRTcmIjQsKxTZ6RMVbAsgLwv3CQdJ0UUim3M01GWJ0QNTQeDl243kPCz3b
+         yqpw==
+X-Gm-Message-State: AOAM533Sfq1+b7p/CU0+6b8KnLxKFI6aNmwQ2elzwg4y9cR62Iv99O7M
+        d5V/TXMwAxagqmN8jJK9/83yfx0if0Cc8l0eGXZBbg==
+X-Google-Smtp-Source: ABdhPJxY70vedCXTAc/sVhR66GczTIpt7w0KW9ze1vEeSXLFO3Eq/mp5nh3QrQuPhD0UQIwMuEug7EhXdEzryApWOnc=
+X-Received: by 2002:a05:651c:1b9:: with SMTP id c25mr9138973ljn.285.1589275253855;
+ Tue, 12 May 2020 02:20:53 -0700 (PDT)
 MIME-Version: 1.0
-Received: from bernard@vivo.com( [157.0.31.122) ] by ajax-webmail ( [127.0.0.1] ) ; Tue, 12 May 2020 17:19:50 +0800 (GMT+08:00)
-From:   Bernard <bernard@vivo.com>
-Date:   Tue, 12 May 2020 17:19:50 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZSFVKQ0hLS0tLQ0xMSENLT1lXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMTElJSk9LTkNCN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6K1E6ORw6Izg#NzIoPE0CSwlDMxowCRVVSFVKTkNCSUxOSkJLT0NDVTMWGhIXVRkeCRUaCR87
-        DRINFFUYFBZFWVdZEgtZQVlKTkxVS1VISlVKSUlZV1kIAVlBTkhISjcG
-X-HM-Tid: 0a72082ee4906447kurs641f05c3638
+References: <1588758017-30426-1-git-send-email-sumit.garg@linaro.org>
+In-Reply-To: <1588758017-30426-1-git-send-email-sumit.garg@linaro.org>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Tue, 12 May 2020 14:50:42 +0530
+Message-ID: <CAFA6WYNgBQDBY+670fG38Yrg8tMg6U74TW12WON=9dVvsT0t6w@mail.gmail.com>
+Subject: Re: [PATCH v4 0/4] Introduce TEE based Trusted Keys support
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        James Bottomley <jejb@linux.ibm.com>
+Cc:     dhowells@redhat.com, Jens Wiklander <jens.wiklander@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Janne Karhunen <janne.karhunen@gmail.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Markus Wamser <Markus.Wamser@mixed-mode.de>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        op-tee@lists.trustedfirmware.org,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CkZyb206IEtyenlzenRvZiBLb3psb3dza2kgPGtyemtAa2VybmVsLm9yZz4KRGF0ZTogMjAyMC0w
-NS0xMiAxNzowNToyOApUbzogIEx1a2FzeiBMdWJhIDxsdWthc3oubHViYUBhcm0uY29tPgpDYzog
-IEJlcm5hcmQgWmhhbyA8YmVybmFyZEB2aXZvLmNvbT4sS3VramluIEtpbSA8a2dlbmVAa2VybmVs
-Lm9yZz4sbGludXgtcG1Admdlci5rZXJuZWwub3JnLCJsaW51eC1zYW1zdW5nLXNvY0B2Z2VyLmtl
-cm5lbC5vcmciIDxsaW51eC1zYW1zdW5nLXNvY0B2Z2VyLmtlcm5lbC5vcmc+LGxpbnV4LWFybS1r
-ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZywibGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZyIg
-PGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+LG9wZW5zb3VyY2Uua2VybmVsQHZpdm8uY29t
-ClN1YmplY3Q6IFJlOiBbUEFUQ0hdIG1lbW9yeS9zYW1zdW5nOiByZWR1Y2UgdW5uZWNlc3Nhcnkg
-bXV0ZXggbG9jayBhcmVhPk9uIFR1ZSwgMTIgTWF5IDIwMjAgYXQgMTA6NDcsIEx1a2FzeiBMdWJh
-IDxsdWthc3oubHViYUBhcm0uY29tPiB3cm90ZToKPj4KPj4gSGkgS3J6eXN6dG9mLAo+Pgo+PiBJ
-IGFtIHNvcnJ5LCBJIHdhcyBhIGJpdCBidXN5IHJlY2VudGx5Lgo+Pgo+PiBPbiA1LzEyLzIwIDc6
-NTAgQU0sIEtyenlzenRvZiBLb3psb3dza2kgd3JvdGU6Cj4+ID4gT24gRnJpLCBNYXkgMDgsIDIw
-MjAgYXQgMDY6MTM6MzhBTSAtMDcwMCwgQmVybmFyZCBaaGFvIHdyb3RlOgo+PiA+PiBNYXliZSBk
-bWMtPmRmLT5sb2NrIGlzIHVubmVjZXNzYXJ5IHRvIHByb3RlY3QgZnVuY3Rpb24KPj4gPj4gZXh5
-bm9zNV9kbWNfcGVyZl9ldmVudHNfY2hlY2soZG1jKS4gSWYgd2UgaGF2ZSB0byBwcm90ZWN0LAo+
-PiA+PiBkbWMtPmxvY2sgaXMgbW9yZSBiZXR0ZXIgYW5kIG1vcmUgZWZmZWN0aXZlLgo+PiA+PiBB
-bHNvLCBpdCBzZWVtcyBub3QgbmVlZGVkIHRvIHByb3RlY3QgImlmIChyZXQpICYgZGV2X3dhcm4i
-Cj4+ID4+IGJyYW5jaC4KPj4gPj4KPj4gPj4gU2lnbmVkLW9mZi1ieTogQmVybmFyZCBaaGFvIDxi
-ZXJuYXJkQHZpdm8uY29tPgo+PiA+PiAtLS0KPj4gPj4gICBkcml2ZXJzL21lbW9yeS9zYW1zdW5n
-L2V4eW5vczU0MjItZG1jLmMgfCA2ICsrLS0tLQo+PiA+PiAgIDEgZmlsZSBjaGFuZ2VkLCAyIGlu
-c2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCj4+ID4KPj4gPiBJIGNoZWNrZWQgdGhlIGNvbmN1
-cnJlbnQgYWNjZXNzZXMgYW5kIGl0IGxvb2tzIGNvcnJlY3QuCj4+ID4KPj4gPiBMdWthc3osIGFu
-eSByZXZpZXcgZnJvbSB5b3VyIHNpZGU/Cj4+Cj4+IFRoZSBsb2NrIGZyb20gZGV2ZnJlcSBsb2Nr
-IHByb3RlY3RzIGZyb20gYSBzY2VuYXJpbyB3aGVuCj4+IGNvbmN1cnJlbnQgYWNjZXNzIGZyb20g
-ZGV2ZnJlcSBmcmFtZXdvcmsgdXNlcyBpbnRlcm5hbCBkbWMgZmllbGRzICdsb2FkJwo+PiBhbmQg
-J3RvdGFsJyAod2hpY2ggYXJlIHNldCB0byAnYnVzeV90aW1lJywgJ3RvdGFsX3RpbWUnKS4KPj4g
-VGhlIC5nZXRfZGV2X3N0YXR1cyBjYW4gYmUgY2FsbGVkIGF0IGFueSB0aW1lIChldmVuIGR1ZSB0
-byB0aGVybWFsCj4+IGRldmZyZXEgY29vbGluZyBhY3Rpb24pIGFuZCByZWFkcyBhYm92ZSBmaWVs
-ZHMuCj4+IFRoYXQncyB3aHkgdGhlIGNhbGN1bGF0aW9uIG9mIHRoZSBuZXcgdmFsdWVzIGluc2lk
-ZSBkbWMgaXMgcHJvdGVjdGVkLgo+Cj5JIGxvb2tlZCBhdCB0aGlzIHBhdGggKGdldF9kZXZfc3Rh
-dHVzKSBhbmQgY3VycmVudGx5IGluIGRldmZyZXEgaXQKPndpbGwgYmUgb25seSBjYWxsZWQgZnJv
-bSB1cGRhdGVfZGV2ZnJlcSgpIC0+IGdldF90YXJnZXRfZnJlcSgpLi4uIGF0Cj5sZWFzdCB3aGVu
-IGxvb2tpbmcgYXQgZGV2ZnJlcSBjb3JlIGFuZCBnb3Zlcm5vcnMuIE9uIHRoZSBvdGhlciBoYW5k
-Cj55b3UgYXJlIHJpZ2h0IHRoYXQgdGhpcyBpcyBwdWJsaWMgZnVuY3Rpb24gYW5kIHRoaXMgY2Fs
-bCBzY2VuYXJpbwo+bWlnaHQgY2hhbmdlLiBJdCBjb3VsZCBiZSBjYWxsZWQgZGlyZWN0bHkgZnJv
-bSBvdGhlciBwYXRocyBzb29uZXIgb3IKPmxhdGVyLgo+Cj4+IFRoaXMgcGF0Y2ggc2hvdWxkIG5v
-dCBiZSB0YWtlbiBJTU8uIE1heWJlIHdlIGNhbiByZWxlYXNlIGxvY2sgYmVmb3JlIHRoZQo+PiBp
-ZiBzdGF0ZW1lbnQsIGp1c3QgdG8gc3BlZWQtdXAuCj4KPlllcC4KPgo+QmVybmFyZCwgeW91IGNh
-biBzZW5kIGp1c3QgdGhpcyBwYXJ0IG9mIHRoZSBwYXRjaC4KPgoKU3VyZSwgSSB3aWxsIHJlc3Vi
-bWl0IGEgcGF0Y2ggaW4gdjIuCgpCZXN0IHJlZ2FyZHMsCkJlcm5hcmQKCj5CZXN0IHJlZ2FyZHMs
-Cj5Lcnp5c3p0b2YKDQoNCg==
+On Wed, 6 May 2020 at 15:10, Sumit Garg <sumit.garg@linaro.org> wrote:
+>
+> Add support for TEE based trusted keys where TEE provides the functionality
+> to seal and unseal trusted keys using hardware unique key. Also, this is
+> an alternative in case platform doesn't possess a TPM device.
+>
+> This patch-set has been tested with OP-TEE based early TA which can be
+> found here [1].
+>
+> [1] https://github.com/OP-TEE/optee_os/pull/3838
+
+Fyi, this PR has been merged in OP-TEE OS as commit [1]. Looking
+forward to any further comments/feedback on this patch-set.
+
+[1] https://github.com/OP-TEE/optee_os/commit/f86ab8e7e0de869dfa25ca05a37ee070d7e5b86b
+
+-Sumit
+
+>
+> Changes in v4:
+> 1. Pushed independent TEE features separately:
+>   - Part of recent TEE PR: https://lkml.org/lkml/2020/5/4/1062
+> 2. Updated trusted-encrypted doc with TEE as a new trust source.
+> 3. Rebased onto latest tpmdd/master.
+>
+> Changes in v3:
+> 1. Update patch #2 to support registration of multiple kernel pages.
+> 2. Incoporate dependency patch #4 in this patch-set:
+>    https://patchwork.kernel.org/patch/11091435/
+>
+> Changes in v2:
+> 1. Add reviewed-by tags for patch #1 and #2.
+> 2. Incorporate comments from Jens for patch #3.
+> 3. Switch to use generic trusted keys framework.
+>
+> Sumit Garg (4):
+>   KEYS: trusted: Add generic trusted keys framework
+>   KEYS: trusted: Introduce TEE based Trusted Keys
+>   doc: trusted-encrypted: updates with TEE as a new trust source
+>   MAINTAINERS: Add entry for TEE based Trusted Keys
+>
+>  Documentation/security/keys/trusted-encrypted.rst | 203 ++++++++++---
+>  MAINTAINERS                                       |   8 +
+>  include/keys/trusted-type.h                       |  48 ++++
+>  include/keys/trusted_tee.h                        |  66 +++++
+>  include/keys/trusted_tpm.h                        |  15 -
+>  security/keys/Kconfig                             |   3 +
+>  security/keys/trusted-keys/Makefile               |   2 +
+>  security/keys/trusted-keys/trusted_common.c       | 336 ++++++++++++++++++++++
+>  security/keys/trusted-keys/trusted_tee.c          | 282 ++++++++++++++++++
+>  security/keys/trusted-keys/trusted_tpm1.c         | 335 ++++-----------------
+>  10 files changed, 974 insertions(+), 324 deletions(-)
+>  create mode 100644 include/keys/trusted_tee.h
+>  create mode 100644 security/keys/trusted-keys/trusted_common.c
+>  create mode 100644 security/keys/trusted-keys/trusted_tee.c
+>
+> --
+> 2.7.4
+>
