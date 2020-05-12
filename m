@@ -2,81 +2,92 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1BDC54E8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF65C54E8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D9CB2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71EEA206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 07:47:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="rG40wsRK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="ZbYyrnF3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729008AbgELHpg (ORCPT
+        id S1728973AbgELHrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 03:45:36 -0400
-Received: from vultr.net.flygoat.com ([149.28.68.211]:33396 "EHLO
-        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725823AbgELHpg (ORCPT
+        Tue, 12 May 2020 03:47:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgELHrN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 03:45:36 -0400
-Received: from flygoat-x1e (unknown [IPv6:2409:891e:6960:188a:d689:51ea:9df3:fb0d])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 1B86220EF2;
-        Tue, 12 May 2020 07:45:28 +0000 (UTC)
+        Tue, 12 May 2020 03:47:13 -0400
+Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E144C061A0C;
+        Tue, 12 May 2020 00:47:13 -0700 (PDT)
+Received: from localhost.localdomain (unknown [142.147.94.151])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 4E06F20F0D;
+        Tue, 12 May 2020 07:47:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1589269536; bh=gLTp49mpZiT1mKN/xk1CeZnPzNwoQHdm6EUF8eGHTgM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=rG40wsRKJ6uQTQ64Ys7UF25V9HsQSUtEkolqpkkodA0hksCCNXDd6+CMEkDxM2mWt
-         JcnEQgE8RR0iBu+UZig2p4t4R6KAN3oZkck/FQwI+yvJUSjjQR3qKSJkd1vtAtqvW6
-         TtLbxnuo7qfN+yRteAFbsND/vT3Qz5It6srkI2ojM9+rznRz92kwOQtM9OSJewU0T7
-         5JB+IYwEwHYS2sRKiI1ptPNBtWJgX4rnrnxi+7eKsX8TsEZZmH0Oz7xgY2mgs03k/z
-         Q4FUw0T9G+/iWgewqq/8SKdTXED+rQBvdyNJX8TxUosSLjDdZ+JNWsf3LF8EtUtkMh
-         TUOZkArcudZHQ==
-Date:   Tue, 12 May 2020 15:45:21 +0800
+        t=1589269631; bh=eJnR5u9wxpZzi1TozIj3O/mYN+6KO3jlz58PZP+YVW4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZbYyrnF3hSjwCtirbdGDp0J4DGKLQ7ysSKyPS362UyOEuwQxvwDSoZ84jzBWqT9Gl
+         IDn2YIflZhAldAnNG0RD5p2UOB9XndcAmc5aqLMb4WUP+KDD/vHUZgP09A/53ddyWN
+         gOpdmztyzkrLQtrRlMEvGqbUOmbWiNZC0Ovj8nawL1pK3dVCnx22ubhwRzGnT7s6ch
+         J2zewRI6vCOCd58Vx44bsXIA9D0xZAPxPzzUhaZ+Ctg87aqVPwt4fsl/iDejmOegSS
+         ZBe8RzTnXt5UpYUQpb3JQpfFSlKWhwC3KFscIJgostZeoxOQp2RYJavXngADIX1m2K
+         pjahXVDheWarA==
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     maz@kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
+To:     linux-pci@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: Re: [PATCH v3 1/6] irqchip: Add Loongson HyperTransport Vector
- support
-Message-ID: <20200512154521.7d3c47b6@flygoat-x1e>
-In-Reply-To: <20200501092139.2988670-1-jiaxun.yang@flygoat.com>
-References: <20200422142428.1249684-1-jiaxun.yang@flygoat.com>
-        <20200501092139.2988670-1-jiaxun.yang@flygoat.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Burton <paulburton@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: [PATCH v9 1/5] PCI: Don't disable decoding when mmio_always_on is set
+Date:   Tue, 12 May 2020 15:43:55 +0800
+Message-Id: <20200512074413.3557835-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
+References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  1 May 2020 17:21:32 +0800
-Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+Don't disable MEM/IO decoding when a device have both non_compliant_bars
+and mmio_always_on.
 
-> This controller appears on Loongson-3 chips for receiving interrupt
-> vectors from PCH's PIC and PCH's PCIe MSI interrupts.
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
-> v2:
-> 	- Style cleanup
-> 	- Set ack callback and set correct edge_irq handler
-> 
-> v3:
-> 	- Correct bitops in ACK callback
+That would allow us quirk devices with junk in BARs but can't disable
+their decoding.
 
-Any update about v3?
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Acked-by: Bjorn Helgaas <helgaas@kernel.org>
+---
+ drivers/pci/probe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks.
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 77b8a145c39b..d9c2c3301a8a 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1822,7 +1822,7 @@ int pci_setup_device(struct pci_dev *dev)
+ 	/* Device class may be changed after fixup */
+ 	class = dev->class >> 8;
+ 
+-	if (dev->non_compliant_bars) {
++	if (dev->non_compliant_bars && !dev->mmio_always_on) {
+ 		pci_read_config_word(dev, PCI_COMMAND, &cmd);
+ 		if (cmd & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) {
+ 			pci_info(dev, "device has non-compliant BARs; disabling IO/MEM decoding\n");
+-- 
+2.26.2
 
-[...]
---
-Jiaxun Yang
