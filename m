@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0176C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 282D3C47255
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 777362078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 074812070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:25:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o+Til2CM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uMw1Usw/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbgELAYx (ORCPT
+        id S1728317AbgELAYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 20:24:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47746 "EHLO
+        Mon, 11 May 2020 20:24:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728364AbgELAYr (ORCPT
+        by vger.kernel.org with ESMTP id S1725855AbgELAYp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 20:24:47 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 598B5C061A0C;
-        Mon, 11 May 2020 17:24:47 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id f23so4657390pgj.4;
-        Mon, 11 May 2020 17:24:47 -0700 (PDT)
+        Mon, 11 May 2020 20:24:45 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF447C061A0C;
+        Mon, 11 May 2020 17:24:43 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 18so5510695pfv.8;
+        Mon, 11 May 2020 17:24:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=J9kUQB+k3+XGjn0wMeufDmZ4vC8oUJ+gakCH9JxrVOk=;
-        b=o+Til2CM6RkUeHHEqfcr5aAF5HLW2tagWHn4QnOlGliB34dPqwjXyxtRJvdNUyvpuF
-         VkhMUSIChLuSbgXT67jvrzurZwS7uWcHHKCwJ8G0VfkVS1tOUgj9RF72WERM0cfY/nJR
-         h136YoF2Dn4TeWT6IlJHR6+EeJoA1b47/LL8ikF+6rGJfmznGlCh+6A2kfVP/N990xxI
-         t+Jr7tol0Jk710udRRYJoPJe0x8bCBSl5vjKNKVxQl/o5Ro5nGgYTDoJ+q07nCqtrbk0
-         XBhdAxHKCHzo3DhKzWzNHTXTIpJl0Np2s/uC05IW4sbyEHZ7SjlVPvR+AVinmStS/GL9
-         8+gw==
+        bh=eVclBX6+5fCKIGgk1HaUSZXFlkJh8mEaraU9hXmaBPk=;
+        b=uMw1Usw/k6sAinab71ozPjX5Pkkzix7+DzgcywQffEWoFaxJu7w8W+aPbZSk7cNXTo
+         QiaCoSMme9CIxttN+zXHbqpvEFWvzy41SElxz8/iORwpUU+meTepKE0+vGRg/qRlpI6f
+         DCX2Wxj/2ljHlaeTwiY2UeF8t535ZMIM9pCf6NL9DsGS43FcSJ4vPzAfyjLXkEfcKQZk
+         Xj2nCEdBre26B0aQ2d3WsvtQIBleKHa+I+PStXuE5L4IjeHKV5IhvXFrQ0yWO1Ht7LKp
+         AB7nHKG/26/ACEleM8mpEqkr+VRwjbjNMEsMDxrcYokeMrN3c8eNoGRIBPrB8UieQPKd
+         0S4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=J9kUQB+k3+XGjn0wMeufDmZ4vC8oUJ+gakCH9JxrVOk=;
-        b=aJhf0irhSNBSchjWIQ/SJtZrZZR8pLat2I9J8pa4T3/4F5V8DWIO/8cKfLE6I4rfa5
-         mMDYkVyXb+b41xYQjjxSjoH3yUb2amy1qPMqJsp2lV81NYgOYJ2DA0jXaV6A4NCELk8/
-         XggGUslHg+wNDDVcv0ed7O5yLsVi+orelKUOJIQ9Kr2tWJW0FpYKbgmr5uYmG1r36jVe
-         0HYLbo1+aHqbGDTl6b5izpi97V5oYHX2km+eHDCf9IzzTXNuRrmH2xBMQwO4+1Uuixnq
-         7lTed7L/JPJ/PG3ivCORGe30O5TgbN9QJL5Xf6TaGOCIxgllaUuX1M6XU0AeSA1KQAZP
-         DmEA==
-X-Gm-Message-State: AGi0PuaHPaS3KCJZu0HugQ5YT+ey8IUBzwIwCjR1W+Jrpp3qzM8UkoY8
-        AKpV835IzxvzfRw5x9xEnkg=
-X-Google-Smtp-Source: APiQypLYCtEhleqQxhCPmoB/c7KjyU4fPXcwT2ryIV457yB3xk1gEJF217VqJNcZRLXdredWSQOQ2A==
-X-Received: by 2002:a63:a101:: with SMTP id b1mr17151238pgf.292.1589243086886;
-        Mon, 11 May 2020 17:24:46 -0700 (PDT)
+        bh=eVclBX6+5fCKIGgk1HaUSZXFlkJh8mEaraU9hXmaBPk=;
+        b=M/OkAMA75QEx9rYZ1+G+4oPpzXHdFOx//gJ3l6TaFJcFt2QVeZfT8FxhOWdjFgIKTt
+         6RMA9dhL18k6LynS5gXQb1jhfwKB9OPqYqyxoi2St2tg+mijNRKuSe1T0ubIY1ZM/5RV
+         O2n66N2mglS2Mw8Ug0k/8/1eolZE13PQ0yJQuBTzvUPUGH43Eh9vhfqdDrHxpi5HZhPq
+         lxuRQ9rU4GPEL82gnYuQkd6QLj9z/mIjWaL5V2ennFSA0GijFISQxRsl8ELHzAVjRZSX
+         kQYmVL98/iQKuVVvtj5yK2WMWv6zV0YGvgRZ52aDKOAQqJGxPLcJ8AtydqqvMneeUf3t
+         2LOQ==
+X-Gm-Message-State: AGi0PuaX21oa7NsKYptPDeHy9jSmeN6NRvOfMEEFtir3urKUfm877/IH
+        XU1fqfa10iOF8YKhP9kFzlc=
+X-Google-Smtp-Source: APiQypJE9LAcoziIOBmBgsA/rXH0ftU8YSEfyLcHvzr9+2jiIYG+AJxI6nA9RjMWXAliUBoVsSxFmA==
+X-Received: by 2002:a62:3303:: with SMTP id z3mr17354140pfz.88.1589243083347;
+        Mon, 11 May 2020 17:24:43 -0700 (PDT)
 Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 23sm9062112pgm.18.2020.05.11.17.24.45
+        by smtp.gmail.com with ESMTPSA id 23sm9062112pgm.18.2020.05.11.17.24.42
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 May 2020 17:24:46 -0700 (PDT)
+        Mon, 11 May 2020 17:24:42 -0700 (PDT)
 From:   Doug Berger <opendmb@gmail.com>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -67,9 +67,9 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Russell King <linux@armlinux.org.uk>,
         bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
-Subject: [PATCH net-next 4/4] net: bcmgenet: add support for ethtool flow control
-Date:   Mon, 11 May 2020 17:24:10 -0700
-Message-Id: <1589243050-18217-5-git-send-email-opendmb@gmail.com>
+Subject: [PATCH net-next 1/4] net: ethernet: validate pause autoneg setting
+Date:   Mon, 11 May 2020 17:24:07 -0700
+Message-Id: <1589243050-18217-2-git-send-email-opendmb@gmail.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1589243050-18217-1-git-send-email-opendmb@gmail.com>
 References: <1589243050-18217-1-git-send-email-opendmb@gmail.com>
@@ -78,182 +78,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit extends the supported ethtool operations to allow MAC
-level flow control to be configured for the bcmgenet driver. It
-provides an example of how the new phy_set_pause function and the
-phy_validate_pause function can be used to configure the desired
-PHY advertising as well as how the phy_get_pause function can be
-used for resolving negotiated pause modes which may be overridden
-by the MAC.
+A comment in uapi/linux/ethtool.h states "Drivers should reject a
+non-zero setting of @autoneg when autoneogotiation is disabled (or
+not supported) for the link".
 
-The ethtool utility can be used to change the configuration to enable
-auto-negotiated symmetric and asymmetric modes as well as manually
-enabling support for RX and TX Pause frames individually.
+That check should be added to phy_validate_pause() to consolidate
+the code where possible.
 
+Fixes: 22b7d29926b5 ("net: ethernet: Add helper to determine if pause configuration is supported")
 Signed-off-by: Doug Berger <opendmb@gmail.com>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 54 ++++++++++++++++++++++++++
- drivers/net/ethernet/broadcom/genet/bcmgenet.h |  4 ++
- drivers/net/ethernet/broadcom/genet/bcmmii.c   | 38 ++++++++++++++----
- 3 files changed, 89 insertions(+), 7 deletions(-)
+ drivers/net/phy/phy_device.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index ff31da0ed846..c0e22da7ac53 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -1017,6 +1017,53 @@ static int bcmgenet_set_coalesce(struct net_device *dev,
- 	return 0;
- }
- 
-+static void bcmgenet_get_pauseparam(struct net_device *dev,
-+				    struct ethtool_pauseparam *epause)
-+{
-+	struct bcmgenet_priv *priv;
-+	u32 umac_cmd;
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index c3a107cf578e..5a9618ba232e 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -2624,6 +2624,9 @@ EXPORT_SYMBOL(phy_set_asym_pause);
+ bool phy_validate_pause(struct phy_device *phydev,
+ 			struct ethtool_pauseparam *pp)
+ {
++	if (pp->autoneg && !phydev->autoneg)
++		return false;
 +
-+	priv = netdev_priv(dev);
-+
-+	epause->autoneg = priv->autoneg_pause;
-+
-+	if (priv->old_link > 0) {
-+		/* report active state when link is up */
-+		umac_cmd = bcmgenet_umac_readl(priv, UMAC_CMD);
-+		epause->tx_pause = !(umac_cmd & CMD_TX_PAUSE_IGNORE);
-+		epause->rx_pause = !(umac_cmd & CMD_RX_PAUSE_IGNORE);
-+	} else {
-+		/* otherwise report stored settings */
-+		epause->tx_pause = priv->tx_pause;
-+		epause->rx_pause = priv->rx_pause;
-+	}
-+}
-+
-+static int bcmgenet_set_pauseparam(struct net_device *dev,
-+				   struct ethtool_pauseparam *epause)
-+{
-+	struct bcmgenet_priv *priv = netdev_priv(dev);
-+
-+	if (!dev->phydev)
-+		return -ENODEV;
-+
-+	if (!phy_validate_pause(dev->phydev, epause))
-+		return -EINVAL;
-+
-+	priv->autoneg_pause = !!epause->autoneg;
-+	priv->tx_pause = !!epause->tx_pause;
-+	priv->rx_pause = !!epause->rx_pause;
-+
-+	/* Restart the PHY */
-+	if (netif_running(dev))
-+		priv->old_link = -1;
-+
-+	phy_set_pause(dev->phydev, priv->rx_pause, priv->tx_pause,
-+		      priv->autoneg_pause);
-+
-+	return 0;
-+}
-+
- /* standard ethtool support functions. */
- enum bcmgenet_stat_type {
- 	BCMGENET_STAT_NETDEV = -1,
-@@ -1670,6 +1717,8 @@ static const struct ethtool_ops bcmgenet_ethtool_ops = {
- 	.get_ts_info		= ethtool_op_get_ts_info,
- 	.get_rxnfc		= bcmgenet_get_rxnfc,
- 	.set_rxnfc		= bcmgenet_set_rxnfc,
-+	.get_pauseparam		= bcmgenet_get_pauseparam,
-+	.set_pauseparam		= bcmgenet_set_pauseparam,
- };
- 
- /* Power down the unimac, based on mode. */
-@@ -4018,6 +4067,11 @@ static int bcmgenet_probe(struct platform_device *pdev)
- 
- 	spin_lock_init(&priv->lock);
- 
-+	/* Set default pause parameters */
-+	priv->autoneg_pause = 1;
-+	priv->tx_pause = 1;
-+	priv->rx_pause = 1;
-+
- 	SET_NETDEV_DEV(dev, &pdev->dev);
- 	dev_set_drvdata(&pdev->dev, dev);
- 	dev->watchdog_timeo = 2 * HZ;
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.h b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-index a12cb59298f4..e44830b3aa4a 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.h
-@@ -683,6 +683,10 @@ struct bcmgenet_priv {
- 	/* HW descriptors/checksum variables */
- 	bool crc_fwd_en;
- 
-+	unsigned autoneg_pause:1;
-+	unsigned tx_pause:1;
-+	unsigned rx_pause:1;
-+
- 	u32 dma_max_burst_length;
- 
- 	u32 msg_enable;
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-index 511d553a4d11..788da1ecea0c 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-@@ -25,6 +25,21 @@
- 
- #include "bcmgenet.h"
- 
-+static u32 _flow_control_autoneg(struct phy_device *phydev)
-+{
-+	bool tx_pause, rx_pause;
-+	u32 cmd_bits = 0;
-+
-+	phy_get_pause(phydev, &tx_pause, &rx_pause);
-+
-+	if (!tx_pause)
-+		cmd_bits |= CMD_TX_PAUSE_IGNORE;
-+	if (!rx_pause)
-+		cmd_bits |= CMD_RX_PAUSE_IGNORE;
-+
-+	return cmd_bits;
-+}
-+
- /* setup netdev link state when PHY link status change and
-  * update UMAC and RGMII block when link up
-  */
-@@ -71,12 +86,20 @@ void bcmgenet_mii_setup(struct net_device *dev)
- 		cmd_bits <<= CMD_SPEED_SHIFT;
- 
- 		/* duplex */
--		if (phydev->duplex != DUPLEX_FULL)
--			cmd_bits |= CMD_HD_EN;
--
--		/* pause capability */
--		if (!phydev->pause)
--			cmd_bits |= CMD_RX_PAUSE_IGNORE | CMD_TX_PAUSE_IGNORE;
-+		if (phydev->duplex != DUPLEX_FULL) {
-+			cmd_bits |= CMD_HD_EN |
-+				CMD_RX_PAUSE_IGNORE | CMD_TX_PAUSE_IGNORE;
-+		} else {
-+			/* pause capability defaults to Symmetric */
-+			if (phydev->autoneg && priv->autoneg_pause)
-+				cmd_bits |= _flow_control_autoneg(phydev);
-+
-+			/* Manual override */
-+			if (!priv->rx_pause)
-+				cmd_bits |= CMD_RX_PAUSE_IGNORE;
-+			if (!priv->tx_pause)
-+				cmd_bits |= CMD_TX_PAUSE_IGNORE;
-+		}
- 
- 		/*
- 		 * Program UMAC and RGMII block based on established
-@@ -350,7 +373,8 @@ int bcmgenet_mii_probe(struct net_device *dev)
- 		return ret;
- 	}
- 
--	linkmode_copy(phydev->advertising, phydev->supported);
-+	phy_support_asym_pause(phydev);
-+	phy_advertise_supported(phydev);
- 
- 	/* The internal PHY has its link interrupts routed to the
- 	 * Ethernet MAC ISRs. On GENETv5 there is a hardware issue
+ 	if (!linkmode_test_bit(ETHTOOL_LINK_MODE_Pause_BIT,
+ 			       phydev->supported) && pp->rx_pause)
+ 		return false;
 -- 
 2.7.4
 
