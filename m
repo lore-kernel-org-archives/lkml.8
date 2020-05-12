@@ -7,96 +7,92 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7504CC54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 976EAC54E8E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 421EA2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D3B9206B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 14:53:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589295141;
-	bh=0/vW+kBeSkulwcs/bDG1v4VZfipm6BOkGnOi2pgk9lQ=;
+	s=default; t=1589295181;
+	bh=X/7LZNJp6medNXXYa1hSvn26jmA2fs1Mwcif42l7Fg4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pc/0NqzkpdvbydXc/RPeMC1QUrNzAzmZfvnTRie51t6cZLcPUaSRQ63Et/LLMfUxq
-	 TCkKD4X8KidCTbDRmv5VL+2s+2D+OKuRpMqrWeemufjS2fe7d4v9ieRqQnE+cLl5ri
-	 rEUwZFxvXwubWh7TBwglC6c+aboQUlkq/5f4BSGU=
+	b=LnogQRheoagNtLx3V6iydiVrHsZCsl2D4iaZaIuYB89kSXK6eOq1oSyIXamYkqzbR
+	 jZleEWWWiaVFrPgJh1zOnOCcYRWntfLh/OFYpSLIPigAQci1IU9FIUyKUn09HylTY5
+	 0pOuPmLy+3fJCg9rWfOARHF2HdA8NM1OXQj/NQkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgELOwT (ORCPT
+        id S1730248AbgELOxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 10:52:19 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42136 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725929AbgELOwT (ORCPT
+        Tue, 12 May 2020 10:53:00 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46636 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725929AbgELOw7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 10:52:19 -0400
-Received: by mail-ot1-f66.google.com with SMTP id m18so10664710otq.9;
-        Tue, 12 May 2020 07:52:17 -0700 (PDT)
+        Tue, 12 May 2020 10:52:59 -0400
+Received: by mail-ot1-f68.google.com with SMTP id z25so10672616otq.13;
+        Tue, 12 May 2020 07:52:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UBsjlnQ0ZdWz2mP4d91uXqSW8it9Smi8pG4uRvDSloc=;
-        b=q8FIuop8HZQAE914fu7cgV1JMn9XAvYIsbPdvklxN7ORhCxuLUdFLZCOlCP/JlyjOR
-         O0LkyT6o8tx6k2wd9TKhKbzG4c8ndXz9jdCbCSG5q0zTcxEBsAKSTM+e2EFK7o4cHrk4
-         AFV00oB23Rh1MyG4tZs19Q6whsoMUf23k3gybwURkKiC59tbw5QrfXKbNxewJ6AApGO8
-         u7p054ycE5NIGo+8R22bfdD9ffZXlkQELamNUTN8/51IhinSGYU1gCsyBa5tJ/fwO5RK
-         5VvS/lK1KU9X4ZlQXrMGPhasiGMX1oKfNeA08RMupBUfBrOemkcSJUfa/gc/c4T2Tf5X
-         soxg==
-X-Gm-Message-State: AGi0PuZ6p8eFrn5E3+PVh1PUBTDt4Rk4yWYFZY35fH0dp+99btoU7nH+
-        AoHIeiw59VeL3syY8OWQzg==
-X-Google-Smtp-Source: APiQypLTRmbKCY35KSmUwgbrpxbLHM9/yYBgpyb75KwJF2Nli05EW5xWU4borvo9cGPm5XEicRrxkw==
-X-Received: by 2002:a9d:2215:: with SMTP id o21mr6818101ota.203.1589295137121;
-        Tue, 12 May 2020 07:52:17 -0700 (PDT)
+        bh=zvQTYh4b4eUlBTZLUxX1hHRbUDU2+a4tZbKUdGnF3aw=;
+        b=SRzmVqAsJaWsfn0lMAMVnb0PLU0RsHTZJy67X/1Au9Mex2B+bRm+KCZAPJeEyDrIbk
+         98HGSWAH12RkOagZUTcS684fWBN6C8G/Yp3x86ZBdPrlIcxj/D4doL7kbW7H1PQ9qVzN
+         LRkNYVQREy+2jFeGaBMtxhu0+3dnDeYNv96lsy63IFB7ubJ1AZO5GJ22XTpII9bP4SGE
+         12zAsIEV8DvyF8PK/C7PPNNjJ0Eqcv5gpwr0lxpFIU8bS1y6tH67HHr9uSCSNs+9CVB1
+         zSwVDO4cKcQWrxitJumej3cnhYSv2As6iZMNDSQdFrNfZtsZMRLvaeFIn9B5i3R0dCkt
+         AIhQ==
+X-Gm-Message-State: AGi0PuYC9YD2cKKokLBTICeHp9YfaZ8aYYanDZ32QxRDhcChenPNE9+i
+        +tjc7nmXNm/1uph8qs2kdA==
+X-Google-Smtp-Source: APiQypIeWKML2Q2yIs+q1ZFta2wuSTpS8VDHIRQT/NP72fQGGMWPfyUkA8nAi41dFXRwTXFKKHTXJw==
+X-Received: by 2002:a9d:7e99:: with SMTP id m25mr4092098otp.45.1589295178802;
+        Tue, 12 May 2020 07:52:58 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id b6sm3525019otq.18.2020.05.12.07.52.15
+        by smtp.gmail.com with ESMTPSA id t20sm3475826ott.51.2020.05.12.07.52.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 07:52:16 -0700 (PDT)
-Received: (nullmailer pid 23508 invoked by uid 1000);
-        Tue, 12 May 2020 14:52:15 -0000
-Date:   Tue, 12 May 2020 09:52:15 -0500
+        Tue, 12 May 2020 07:52:58 -0700 (PDT)
+Received: (nullmailer pid 25183 invoked by uid 1000);
+        Tue, 12 May 2020 14:52:56 -0000
+Date:   Tue, 12 May 2020 09:52:56 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Keerthy <j-keerthy@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Graeme Smecher <gsmecher@threespeedlogic.com>,
-        linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        devicetree@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Adam Ford <aford173@gmail.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Brian Hutchinson <b.hutchman@gmail.com>,
-        linux-clk@vger.kernel.org, linux-omap@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 02/15] dt-bindings: timer: add ti, dmtimer compatible for
- for system timers
-Message-ID: <20200512145215.GA23423@bogus>
-References: <20200429215402.18125-1-tony@atomide.com>
- <20200429215402.18125-3-tony@atomide.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Lad Prabhakar <prabhakar.csengg@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Marc Zyngier <maz@kernel.org>, devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-serial@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Jason Cooper <jason@lakedaemon.net>, dmaengine@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 17/18] dt-bindings: gpio: rcar: Add r8a7742 (RZ/G1H)
+ support
+Message-ID: <20200512145256.GA25121@bogus>
+References: <1588197415-13747-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588197415-13747-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200429215402.18125-3-tony@atomide.com>
+In-Reply-To: <1588197415-13747-18-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 29 Apr 2020 14:53:49 -0700, Tony Lindgren wrote:
-> The TI dual-mode timer can be used for both clocksource and clockevent
-> system timers. We need a way to specify which dual-mode timers are
-> reserved for system timers as there are multiple instances available
-> that may require a board specific configuration.
+On Wed, 29 Apr 2020 22:56:54 +0100, Lad Prabhakar wrote:
+> Renesas RZ/G1H (R8A7742) SoC GPIO blocks are identical to the R-Car Gen2
+> family. Add support for its GPIO controllers.
 > 
-> Let's add a generic compatible "ti,dmtimer" that TIMER_OF_DECLARE can
-> use as suggested by Daniel Lezcano <daniel.lezcano@linaro.org>.
-> 
-> Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 > ---
->  Documentation/devicetree/bindings/timer/ti,timer.txt | 1 +
+>  Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt | 1 +
 >  1 file changed, 1 insertion(+)
 > 
 
