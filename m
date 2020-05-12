@@ -2,131 +2,104 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC21EC54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F656C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D0AD2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E21152075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 10:18:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Fqvh8jYP"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pjjGmhj8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729334AbgELKSS (ORCPT
+        id S1729388AbgELKSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 06:18:18 -0400
-Received: from ozlabs.org ([203.11.71.1]:59819 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726891AbgELKSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 06:18:18 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Tue, 12 May 2020 06:18:32 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:51672 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726891AbgELKSa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 06:18:30 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589278710; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=XpSWmPr/qK4eBW8Zmfv7U30yMO2iaRYmM9x7v044+fU=; b=pjjGmhj8Krl8PXbUBwDRbZl/mOWgnd0pnI95aPNJ2nwAv4s8Jmp47EeXE8Yokyhbn9bRc3jp
+ nUn4V52Mox3mrn+EvFLbpLQ/Q++GlesQ0k3iOiQC1BT578BEhmehxs58Sd8iPhFkq7A2XBFN
+ kWuwCN7xY5rXbnz+mYYtlE9aNro=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5eba77e6.7f619c578308-smtp-out-n04;
+ Tue, 12 May 2020 10:18:14 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2F909C433F2; Tue, 12 May 2020 10:18:14 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Ltzr0hsNz9sSg;
-        Tue, 12 May 2020 20:18:15 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589278696;
-        bh=ix19I6h1qe83/nMpXpSgQ/SwrlaGpJzfs1+vdoDLdDY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Fqvh8jYPQbGgMrW1fDt6cXrgNNpFN6fXg6tJXJlsuAfK7J+f2mUTVQGqMwTrtxJ7v
-         SYaa42I6K7jtxVytEqJI2pJj+XLAYg0y0OcYJO68jPafBnSUV2QLl9ZEE0EYqJC7CR
-         N1ITMrY1MkzONEjcOxI5uJ49pAA6p7KpXDFTVvN2D0doD9JXBIZtPw4N3YWm7aZIzL
-         TQmXCkmnsUPGKz4B54UVnCAUQFREz7f+ruMTMydlLqmYX2PtPgt3tgzHzQJ6U+041F
-         aUO25BkpzkR6w/ulkIHm350hi0H6W8j+LiQJsJZ3mW7sQmjLQG715qipUW9jBNlibN
-         moSsmck+qEUbQ==
-Date:   Tue, 12 May 2020 20:18:11 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failure after merge of the pidfd tree
-Message-ID: <20200512201811.12480da0@canb.auug.org.au>
+        (Authenticated sender: pkondeti)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5A176C433CB;
+        Tue, 12 May 2020 10:18:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5A176C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
+Date:   Tue, 12 May 2020 15:48:05 +0530
+From:   Pavan Kondeti <pkondeti@codeaurora.org>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org, pauld@redhat.com,
+        ouwen210@hotmail.com
+Subject: Re: [PATCH] sched/fair: enqueue_task_fair optimization
+Message-ID: <20200512101805.GB31725@codeaurora.org>
+References: <20200511192301.1009-1-vincent.guittot@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/kvU3d8jCt7mdCfQJ7mgN.rv";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200511192301.1009-1-vincent.guittot@linaro.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/kvU3d8jCt7mdCfQJ7mgN.rv
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, May 11, 2020 at 09:23:01PM +0200, Vincent Guittot wrote:
+> enqueue_task_fair() jumps to enqueue_throttle when cfs_rq_of(se) is
+> throttled, which means that se can't be NULL and we can skip the test.
+> 
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> ---
+>  kernel/sched/fair.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 4b73518aa25c..910bbbe50365 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -5512,7 +5512,6 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+>                         list_add_leaf_cfs_rq(cfs_rq);
+>  	}
+>  
+> -enqueue_throttle:
+>  	if (!se) {
+>  		add_nr_running(rq, 1);
+>  		/*
+> @@ -5534,6 +5533,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+>  
+>  	}
+>  
+> +enqueue_throttle:
+>  	if (cfs_bandwidth_used()) {
+>  		/*
+>  		 * When bandwidth control is enabled; the cfs_rq_throttled()
 
-Hi all,
+Right, se can't be NULL when we break upon throttling. Looks good to me.
 
-After merging the pidfd tree, today's linux-next build (x86_64
-allnoconfig) failed like this:
+Thanks,
+Pavan
 
-fs/nsfs.c:232:6: error: redefinition of 'proc_ns_file'
-  232 | bool proc_ns_file(const struct file *file)
-      |      ^~~~~~~~~~~~
-In file included from fs/nsfs.c:6:
-include/linux/proc_fs.h:194:20: note: previous definition of 'proc_ns_file'=
- was here
-  194 | static inline bool proc_ns_file(const struct file *file)
-      |                    ^~~~~~~~~~~~
-
-Caused by commit
-
-  1e76b8ad203a ("nsproxy: attach to namespaces via pidfds")
-
-I have applied the following hack for today:
-
-=46rom 07065344c6fb39c440b0de5f75842066bc97a675 Mon Sep 17 00:00:00 2001
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Tue, 12 May 2020 20:08:51 +1000
-Subject: [PATCH] nsproxy: protect proc_ns_file() when CONFIG_PROC_FS is not=
- set
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- fs/nsfs.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/nsfs.c b/fs/nsfs.c
-index 800c1d0eb0d0..9215ad7597d6 100644
---- a/fs/nsfs.c
-+++ b/fs/nsfs.c
-@@ -229,10 +229,12 @@ int ns_get_name(char *buf, size_t size, struct task_s=
-truct *task,
- 	return res;
- }
-=20
-+#ifdef CONFIG_PROC_FS
- bool proc_ns_file(const struct file *file)
- {
- 	return file->f_op =3D=3D &ns_file_operations;
- }
-+#endif
-=20
- struct file *proc_ns_fget(int fd)
- {
---=20
-2.26.2
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/kvU3d8jCt7mdCfQJ7mgN.rv
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl66d+MACgkQAVBC80lX
-0Gzp1wf/R0aGCQvo2aR4sWsYOu0Iy3zpldtgYIIOi1PiB9UHF01Z+h28BFZw9/yh
-Kd0UIDKglqPQYMi/JALwPr5RbixCe8kai6vL5dRcvxKOaFLAE+r/hLvOixNkvlFf
-jn/Q1ww1BATg5io7I9iTpICLJI/X8pFkB/QnB0cC9tqi/dKGwPGwxwNPCiDW4el5
-VRXKI8YToha16G/3Q6bOKy5gdPFdtGLZtYPj/BJ4zmcCA0rvZYCX2/6CJkyMZhqt
-38rPjA6ixjOCsRbwgqwNjLY9OpmMLtgnzN20hz+vcKhgO3e9uxcJjImz9q9/nQov
-bD6WtZzszUjGJTCXtNEzVBmjH61k6g==
-=cu3k
------END PGP SIGNATURE-----
-
---Sig_/kvU3d8jCt7mdCfQJ7mgN.rv--
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
