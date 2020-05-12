@@ -2,130 +2,298 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E61CA90AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDC0CA90AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6589206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BAD9206B9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 17:45:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GO/9fqV/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730497AbgELRpT (ORCPT
+        id S1730566AbgELRp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 13:45:19 -0400
-Received: from mga02.intel.com ([134.134.136.20]:41257 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726055AbgELRpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 13:45:19 -0400
-IronPort-SDR: qA1Jv8jYcvGEp1hBeXqTjNlv+OvYh4ckPNZesE0+KcEesXP6HidUjPqQPKa8XPigVFl9DbFN/T
- oWE9Df7K3AqA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 10:45:18 -0700
-IronPort-SDR: 5fGKP4ScgH0ZaydzkzTq4x+7gr0ScXwyhfPcgOXDyqoSp+SkFW6iF63D6PH4XD8zH4YR7v61RZ
- 8FJxoBc0aK6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,384,1583222400"; 
-   d="scan'208";a="265583727"
-Received: from vmrsic-mobl.amr.corp.intel.com (HELO [10.255.229.212]) ([10.255.229.212])
-  by orsmga006.jf.intel.com with ESMTP; 12 May 2020 10:45:18 -0700
-Subject: Re: [RFC v4][PATCH part-1 0/7] ASI - Part I (ASI Infrastructure and
- PTI)
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>,
-        rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, x86@kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     pbonzini@redhat.com, konrad.wilk@oracle.com,
-        jan.setjeeilers@oracle.com, liran.alon@oracle.com,
-        junaids@google.com, graf@amazon.de, rppt@linux.vnet.ibm.com,
-        kuzuno@gmail.com, mgross@linux.intel.com
-References: <20200504144939.11318-1-alexandre.chartre@oracle.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <a65d6cbf-41de-3001-6792-21a4233d8467@intel.com>
-Date:   Tue, 12 May 2020 10:45:17 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 12 May 2020 13:45:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbgELRp2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 13:45:28 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D023C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:45:28 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id 79so5786170iou.2
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 10:45:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0X26TA8cwVFFjycH5LEhoOrNEf8K7lUwh3RROd1srbY=;
+        b=GO/9fqV/7AdNi6C3uilGdoN+UAnG4BaysPzFZN1eQkn3KtnIfJIzmLfOnHCmhwGtnN
+         KxBue154ZrewQUodWb1AGTGvDRcHwJ95QTt+p4vDZuhjFauMz+zP61dMgzUA9Dg9V4nw
+         Qno6lQUtQJi9iinLR7+GqATU8m/KTDYwH78xWwCavGQ+vF5s75fKq7TJSI13V56hv9xM
+         To1QcHIKqSAqN/8KcK0hKTKKlX4xVlyPN2Iho9SVapbjSa73T5spFRfISSYNZoLrTVmv
+         niGuHPl32KlV3ndhP+tNlqdIQ8dRRcqi90944S8JIrAx7l4IuNFpptJe1+EMW3ASfF2R
+         NGBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0X26TA8cwVFFjycH5LEhoOrNEf8K7lUwh3RROd1srbY=;
+        b=o8MiMILze41F4S5hk+SHHyRLifHCd2ePJhb3rnJpL3+OtZxl57/PQnrzjstXododlT
+         s5kpYG2rWaQspU42wzX95GACmoOVToI4S2WVRBZ58L8iJrMb/Pnl5ok+PdaP9+ltIcQQ
+         t5jIUTWieNi3pwRxwlHCqE4c4SbsBX3KEwcNkTQNvGi5CkM/ti3qidopY5vT26UFsTWD
+         LF/q6gMTHoDUvUkOYZs9eiTdyO+NHzJAhnBeoUIHqW+EGrIr3ciR7fH9FxFmAMyNlQ1S
+         X9Se3SU+Fn4NsgijewmqA4rPkIK0CmwGuKZS/lmSTKXg3Tyk3Tf8fynQZJkMKkW+TvaB
+         WFAA==
+X-Gm-Message-State: AGi0PuZbe4/dOpzZ5pWzi35qeiApDUetp60v78kcvMO15WwZKkFKh2Xm
+        S56Ku139NAKaFd8/MKXgBcEuj1TP45DzAW4JQ8Xqhw==
+X-Google-Smtp-Source: APiQypIm2OO2aTHgMdtx8bRw93J4LYxtMuPIXmw8A3uJsS7gmc9aIKqS8cbX9JDui9ubVi9kWlbG7P31eyiI5Cr0kcc=
+X-Received: by 2002:a05:6602:158b:: with SMTP id e11mr21789847iow.148.1589305527225;
+ Tue, 12 May 2020 10:45:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200504144939.11318-1-alexandre.chartre@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
+ <cf5852e9-c3c1-3d31-46f0-0370719947ab@arm.com> <CAJ9a7VgF3-Hdc7KSw9gVBeXSDHNguhqVhp60oK2XhCtr3DhDqg@mail.gmail.com>
+ <84918e7d-c933-3fa1-a61e-0615d4b3cf2c@arm.com> <668ea1283a6dd6b34e701972f6f71034@codeaurora.org>
+ <5b0f5d77c4eec22d8048bb0ffa078345@codeaurora.org> <759d47de-2101-39cf-2f1c-cfefebebd548@arm.com>
+ <7d343e96cf0701d91152fd14c2fdec42@codeaurora.org> <CAJ9a7VgEiX19ukjwakNHBHDeZJ05f5Z7pAYG9iEnpXCuuDfBqg@mail.gmail.com>
+ <a4bba03d41a2b0145b3c6c19d48698eb@codeaurora.org> <CAJ9a7Vj4eyv1n=RxuqfV=pdBN3SDG+ShYS5J4s40KJtqOnR7vw@mail.gmail.com>
+ <ae0fe2050be01cc1403c7d53a0da8cb8@codeaurora.org> <b8c1cc35846d425a1677c73fddf5874d@codeaurora.org>
+ <eee1b9a90266eed9a9c75401f0679777@codeaurora.org> <CAJ9a7Vjd0XG+rAvHptAAjGtE6xRhYsPaOSC_Bf9B-w-FZFu_Qw@mail.gmail.com>
+ <47f6d51bfad0a0bf1553e101e6a2c8c9@codeaurora.org> <37b3749e-2363-0877-c318-9c334a5d1881@arm.com>
+ <d47271ee6a2a6f0f30da7e140b6f196c@codeaurora.org> <CAJ9a7Vg95tcgMXgQKLAZc=TpV6FnPZ7wdF=Kwbuy7d2kRCjYQw@mail.gmail.com>
+In-Reply-To: <CAJ9a7Vg95tcgMXgQKLAZc=TpV6FnPZ7wdF=Kwbuy7d2kRCjYQw@mail.gmail.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Tue, 12 May 2020 11:45:15 -0600
+Message-ID: <CANLsYkzHoiTuBM-pmPHcnkvvwBmQW4PPc69Jrt75SjF1dQPFUg@mail.gmail.com>
+Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple connections
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Russell King <linux@armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/4/20 7:49 AM, Alexandre Chartre wrote:
-> This version 4 of the kernel Address Space Isolation (ASI) RFC. I have
-> broken it down into three distinct parts:
-> 
->  - Part I: ASI Infrastructure and PTI (this part)
->  - Part II: Decorated Page-Table
->  - Part III: ASI Test Driver and CLI
-> 
-> Part I is similar to RFCv3 [3] with some small bug fixes. Parts II and III
-> extend the initial patchset: part II introduces decorated page-table in
-> order to provide convenient page-table management functions, and part III
-> provides a driver and CLI for testing ASI (using parts I and II).
+On Tue, 12 May 2020 at 05:49, Mike Leach <mike.leach@linaro.org> wrote:
+>
+> HI,
+>
+> On Mon, 11 May 2020 at 15:41, Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
+> >
+> > Hi Suzuki,
+> >
+> > On 2020-05-11 20:00, Suzuki K Poulose wrote:
+> > > On 05/11/2020 03:16 PM, Sai Prakash Ranjan wrote:
+> > >> Hi Mike,
+> > >>
+> > >> On 2020-05-11 16:44, Mike Leach wrote:
+> > >> [...]
+> > >>
+> I have reviewed the replicator driver, and compared to all the other CS d=
+rivers.
+> This driver appears to be the only one that sets hardware values in
+> probe() and expects them to remain in place on enable, and uses that
+> state for programming decisions later, despite telling the PM
+> infrastructure that it is clear to suspend the device.
+>
+> Now we have a system where the replicator hardware is behaving
+> differently under the driver, but is it behaving unreasonably?
+> > >>>>
+> > >>>> I checked with the debug team and there is a limitation with
+> > >>>> the replicator(swao_replicator) in the AOSS group where it
+> > >>>> loses the idfilter register context when the clock is disabled.
+> > >>>> This is not just in SC7180 SoC but also reported on some latest
+> > >>>> upcoming QCOM SoCs as well and will need to be taken care in
+> > >>>> order to enable coresight on these chipsets.
+> > >>>>
+> > >>>> Here's what's happening -  After the replicator is initialized,
+> > >>>> the clock is disabled in amba_pm_runtime_suspend() as a part of
+> > >>>> pm runtime workqueue with the assumption that there will be no
+> > >>>> loss of context after the replicator is initialized. But it doesn'=
+t
+> > >>>> hold good with the replicators with these unfortunate limitation
+> > >>>> and the idfilter register context is lost.
+> > >>>>
+> > >>>> [    5.889406] amba_pm_runtime_suspend devname=3D6b06000.replicato=
+r
+> > >>>> ret=3D0
+> > >>>> [    5.914516] Workqueue: pm pm_runtime_work
+> > >>>> [    5.918648] Call trace:
+> > >>>> [    5.921185]  dump_backtrace+0x0/0x1d0
+> > >>>> [    5.924958]  show_stack+0x2c/0x38
+> > >>>> [    5.928382]  dump_stack+0xc0/0x104
+> > >>>> [    5.931896]  amba_pm_runtime_suspend+0xd8/0xe0
+> > >>>> [    5.936469]  __rpm_callback+0xe0/0x140
+> > >>>> [    5.940332]  rpm_callback+0x38/0x98
+> > >>>> [    5.943926]  rpm_suspend+0xec/0x618
+> > >>>> [    5.947522]  rpm_idle+0x5c/0x3f8
+> > >>>> [    5.950851]  pm_runtime_work+0xa8/0xc0
+> > >>>> [    5.954718]  process_one_work+0x1f8/0x4c0
+> > >>>> [    5.958848]  worker_thread+0x50/0x468
+> > >>>> [    5.962623]  kthread+0x12c/0x158
+> > >>>> [    5.965957]  ret_from_fork+0x10/0x1c
+> > >>>>
+> > >>>> This is a platform/SoC specific replicator issue, so we can either
+> > >>>> introduce some DT property for replicators to identify which
+> > >>>> replicator
+> > >>>> has this limitation, check in replicator_enable() and reset the
+> > >>>> registers
+> > >>>> or have something like below diff to check the idfilter registers =
+in
+> > >>>> replicator_enable() and then reset with clear comment specifying
+> > >>>> it=E2=80=99s
+> > >>>> the
+> > >>>> hardware limitation on some QCOM SoCs. Please let me know your
+> > >>>> thoughts
+> > >>>> on
+> > >>>> this?
+> > >>>>
+> > >>
+> > >> Sorry for hurrying up and sending the patch -
+> > >> https://lore.kernel.org/patchwork/patch/1239923/.
+> > >> I will send v2 based on further feedbacks here or there.
+> > >>
+> > >>>
+> > >>> 1) does this replicator part have a unique ID that differs from the
+> > >>> standard ARM designed replicators?
+> > >>> If so perhaps link the modification into this. (even if the part no
+> > >>> in
+> > >>> PIDR0/1 is the same the UCI should be different for a different
+> > >>> implementation)
+> > >>>
+> I have reviewed the replicator driver, and compared to all the other CS d=
+rivers.
+> This driver appears to be the only one that sets hardware values in
+> probe() and expects them to remain in place on enable, and uses that
+> state for programming decisions later, despite telling the PM
+> infrastructure that it is clear to suspend the device.
+>
+> Now we have a system where the replicator hardware is behaving
+> differently under the driver, but is it behaving unreasonably?
+> > >>
+> > >> pid=3D0x2bb909 for both replicators. So part number is same.
+> > >> UCI will be different for different implementation(QCOM maybe
+> > >> different from ARM),
+> > >> but will it be different for different replicators under the same
+> > >> impl(i.e., on QCOM).
+> > >
+> > > May be use PIDR4.DES_2 to match the Implementor and apply the work
+> > > around for all QCOM replicators ?
+> > >
+> > > To me that sounds the best option.
+> > >
+> >
+>
+> I agree, if it can be established that the register values that make
+> up UCI (pid0-4, devarch, devtype, PID:CLASS=3D=3D0x9), can correctly
+> identify the parts then a flag can be set in the probe() function and
+> acted on during the enable() function.
+>
+> > Ok we can do this as well, but just for my understanding, why do we nee=
+d
+> > to reset replicators
+> > in replicator_probe() and not in replicator_enable()? Are we accessing
+> > anything before
+> > we enable replicators?
+> >
+>
+> This was a design decision made by the original driver writer. A
+> normal AMBA device should not lose context due to clock removal (see
+> drivers/amba/bus.c), so resetting in probe means this operation is
+> done only once, rather than add overhead in the enable() function,and
+> later decisions can be made according to the state of the registers
+> set.
+>
+> As you have pointed out, for this replicator implementation  the
+> context is unfortunately not retained when clocks are removed - so an
+> alternative method is required.
+>
+> perhaps something like:-
+>
+> probe()
+> ...
+> if (match_id_non_persistent_state_regs(ID))
+>     drvdata->check_filter_val_on_enable;
+> ....
+>
+> and a re-write of enable:-
+>
+> enable()
+> ...
+> CS_UNLOCK()
+> id0val =3D read(IDFILTER0);
+> id1val =3D read(IDFILTER1);
+>
+> /* some replicator designs lose context when AMBA clocks are removed -
+> check for this */
+> if (drvdata->check_filter_val_on_enable && (id0val =3D=3D id1val =3D=3D 0=
+x0))
+>    id0val =3D id1val =3D 0xff;
+>
+> if(id0xal =3D=3D id1val =3D=3D 0xff)
+>    rc =3D  claim_device()
+>
+> if (!rc)
+>    switch (outport)
+>       case 0: id0val  =3D 0x0; break
+>       case 1: id1va; =3D 0x0; break;
+>      default: rc =3D -EINVAL;
+>
+> if (!rc)
+>    write(id0val);
+>    write(id1val);
+> CS_LOCK()
+> return rc;
+> ....
+>
+> Given that the access to the enable() function is predicated on a
+> reference count per active port, there is also a case for dropping the
+> check_filter_val_on_enable flag completely - once one port is active,
+> then the device will remain enabled until both ports are inactive.
+> This still allows for future development of selective filtering per
+> port.
+>
+> One other point here - there is a case as I mentioned above for moving
+> to a stored value model for the driver - as this is the only coresight
+> driver that appears to set state in the probe() function rather than
+> write all on enable.
 
-These look interesting.  I haven't found any holes in your methods,
-although the interrupt depth tracking worries me a bit.  I tried and
-failed to do a similar thing with PTI in the NMI path, but you might
-have just bested me there. :)
+I favour that option.  Looking at the funnel driver we may have the
+same issue with the port configuration, but we can have a look at that
+if/when it becomes an issue.
 
-It's very interesting that you've been able to implement PTI underneath
-all of this, and the "test driver" is really entertaining!
+> This however would necessitate a more comprehensive re-write.
 
-That said, this is working in some of the nastiest corners of the x86
-code and this is going to take quite an investment to get reviewed.  I'm
-not *quite* sure it's all worth it.
+Maybe a little more effort but overall a better approach.
 
-So, this isn't being ignored, I'm just not quite sure what to do with
-it, yet.
+Thanks,
+Mathieu
+
+>
+> Regards
+>
+> Mike
+>
+>
+> > Thanks,
+> > Sai
+> > --
+> > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+> > member
+> > of Code Aurora Forum, hosted by The Linux Foundation
+> --
+> Mike Leach
+> Principal Engineer, ARM Ltd.
+> Manchester Design Centre. UK
