@@ -2,385 +2,159 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9111EC54E8F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 924D8C54E8F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68C3E207DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CB5D20752
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:48:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="ATbwFTBS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TpxuWsEB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728920AbgELGq7 (ORCPT
+        id S1728683AbgELGsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 02:46:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50300 "EHLO
+        Tue, 12 May 2020 02:48:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728786AbgELGq6 (ORCPT
+        by vger.kernel.org with ESMTP id S1725889AbgELGsB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 02:46:58 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 433C4C061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:46:57 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id a21so12270346ljj.11
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:46:57 -0700 (PDT)
+        Tue, 12 May 2020 02:48:01 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1AF4C061A0E
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:47:59 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id 9so174699pgr.3
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:47:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PeTZxP3dnM+h84TinjF6yyznuz49WCl2s79pVqj9q+0=;
-        b=ATbwFTBSuTvplUyJOlciI7Lp1ImnKy2Z1dcR75tuR61TLZi/Y+DMPIn2I7YADoi13z
-         i5cWXmjznF3j2ihvlbapAJyGJUz5zuEwMRbU212gx1f1T+CHWh6CTP+E1PIHHPiw0hmB
-         n3Kl9kwm4JImiY6eC6B2xBmj5+ubeF2Pnq7cum06+dHiPgqhM1drBZJ7L3dCCBcHduFt
-         NNKk1qcVWkD1djsa878pDg0CCOfqbJrmHE7MPdaWK6f7SaTy9pGL09F4NYvR1c9KElga
-         laqWxmtcaFId7m5CbUzIfxq4nnbuV44xs5BTaEYEMh63twJEUzKEElaF+N+301C2lSuh
-         kKwA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xStF/LvgirIKlsQkZu5T5XjT/8+nmfTv4uL0HxiDbUg=;
+        b=TpxuWsEBxYJVZ6z1OiykUfvfvt2F8hshe2JE8BF2NMN7ZSwR5WDiMle2Ym6wnIo0Av
+         0Fehon1Ff6cS4G0Yj5jr9dVcdHFs5P7mYru9FjjMhoOBbfqm3kaH3EyeYvx6/kGtuytg
+         l+AuAMI8TMb+vb2rVHYGFvL7QOiSCJ31pWWgJReKy5BAO6euEZzLxl9Zx++Pt5gjEuM0
+         l/ehikOu2Ic8YTX1yo+ljGQlr8BycPqnPgYCYvPx7ybj8WZKqth265hwPaDdt55+4Z1L
+         QJpFumikb7y+mGGsAefzLEH0KSqX7UONONBQJGj3DH7VsWo2qlp6OXBa3GIr+ZmaP0r4
+         7+mQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PeTZxP3dnM+h84TinjF6yyznuz49WCl2s79pVqj9q+0=;
-        b=mP9JyjYWfgGOkCO2f8V7EJ5D3p+PI56zIftf71JB8Om8AIl3eNWHgqyHO3WeUAaVzE
-         5DLnlPRwbiGsJzPTa4D3piI0M5FCvYdxLFfPsb58ZM0ZXyPg9JrY+QjMM17BLbFJw6Q/
-         7inWa1QIVu4yioahMUoTl+jKElM7oTu2idEbbl95bvXCic0p4WjG38VFwEnromuvnTD2
-         yY/1gTr//Sc/AQPKLWnqmNdS+3PwlqcXbnd/GDw+1yqyk8o+iOxmz5Sz4u41V3VF26l3
-         lGS7aSLw57+GxWA7iCDgROY5xZI6zv+Gb0qhV3fYVKKQzzfwh74qqdytoALIGYgcNiUo
-         Hm0A==
-X-Gm-Message-State: AOAM532h/mNRK0d37gJs1IMPdkFNl9V/c3S4wOQNOACefQxWbnEdhFqa
-        IjRHQGvQm1ulk7uSC7XnXBG/TqTFJlpmPBMgY4Rrxw==
-X-Google-Smtp-Source: ABdhPJyZtuY9qCsHGIEz3JTPAzAjn0vfQh8ys7kF9BrqFVxmJMzK14yWT2xR6+ZOWqx/tt/hhhUEeM5HlaFKR9ToatY=
-X-Received: by 2002:a2e:8e98:: with SMTP id z24mr13052701ljk.134.1589266015481;
- Mon, 11 May 2020 23:46:55 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xStF/LvgirIKlsQkZu5T5XjT/8+nmfTv4uL0HxiDbUg=;
+        b=lBs8RGgTg/rumBa9oSeEEKOy3UNlTMSLOSotFHn5PRWaisrs2KM/XT4zUrK1N6cCxb
+         UwVLSVjizcRloteYPTck91DMp9nb5N9lrztBxp5cJRGvH8Q9IuiZJG1gccu2dGCwIezW
+         1azetnF9kNgpUWjpO99NK1GRJmY9YCfht5oRN4DnHQQMALlbjnq4KLWXvge/F9HShPss
+         Og1UohDfRGE3d07vMZvLhCkw6+sHFRyupG6dBE3iCdJJ6wXVO8HkOnVuKA6DIY3Xq1Ek
+         T522ngw0U/8pLgHbdlnPmsKulRA2fS66dNK1gGq9lzcXymRBKIvNS2J2RIc6ZVjoqRx/
+         eg7g==
+X-Gm-Message-State: AOAM530DIqvq1h7PWl9hD373ruBVacqyIv4+ILSFX5qlyfr/iSLzUTWx
+        rtEEiN3OlJBFJ1G/F+zbcGQS
+X-Google-Smtp-Source: ABdhPJyvA/QCz/3nwd9RhJfuGISeb+4IzqsUvXUDJavBywVLWxQ2L4Ke5f0zGkqBy8CZZVKkxxmqew==
+X-Received: by 2002:a63:5812:: with SMTP id m18mr3060403pgb.407.1589266079225;
+        Mon, 11 May 2020 23:47:59 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6007:2f23:5151:5dd:ea86:4678])
+        by smtp.gmail.com with ESMTPSA id a136sm11269599pfa.99.2020.05.11.23.47.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 May 2020 23:47:58 -0700 (PDT)
+Date:   Tue, 12 May 2020 12:17:52 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Hemant Kumar <hemantk@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jhugo@codeaurora.org, bbhatt@codeaurora.org
+Subject: Re: [PATCH v1 2/5] bus: mhi: core: Handle disable transitions in
+ state worker
+Message-ID: <20200512064752.GD4928@Mani-XPS-13-9360>
+References: <1589248989-23824-1-git-send-email-hemantk@codeaurora.org>
+ <1589248989-23824-3-git-send-email-hemantk@codeaurora.org>
 MIME-Version: 1.0
-References: <20200429140341.13294-1-maco@android.com> <20200429140341.13294-11-maco@android.com>
-In-Reply-To: <20200429140341.13294-11-maco@android.com>
-From:   Martijn Coenen <maco@android.com>
-Date:   Tue, 12 May 2020 08:46:44 +0200
-Message-ID: <CAB0TPYHwor85-fWKu+OMT-1ys2L7OSqVoReJRzNOMAE0xK+yzg@mail.gmail.com>
-Subject: Re: [PATCH v4 10/10] loop: Add LOOP_CONFIGURE ioctl
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Narayan Kamath <narayan@google.com>,
-        Zimuzo Ezeozue <zezeozue@google.com>, kernel-team@android.com,
-        Martijn Coenen <maco@google.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589248989-23824-3-git-send-email-hemantk@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens,
+On Mon, May 11, 2020 at 07:03:06PM -0700, Hemant Kumar wrote:
+> Mission mode transition is handled by state worker thread but
+> power off is not. There is a possibility while mission mode
+> transition is in progress which calls MHI client driver probe,
+> power off is issued by MHI controller. This results into client
+> driver probe and remove running in parallel and causes use after
+> free situation. By queuing disable transition work when mission
+> mode is in progress prevents the race condition.
+> 
+> Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
+> Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
 
-What do you think of this series?
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
 Thanks,
-Martijn
+Mani
 
-On Wed, Apr 29, 2020 at 4:03 PM Martijn Coenen <maco@android.com> wrote:
->
-> This allows userspace to completely setup a loop device with a single
-> ioctl, removing the in-between state where the device can be partially
-> configured - eg the loop device has a backing file associated with it,
-> but is reading from the wrong offset.
->
-> Besides removing the intermediate state, another big benefit of this
-> ioctl is that LOOP_SET_STATUS can be slow; the main reason for this
-> slowness is that LOOP_SET_STATUS(64) calls blk_mq_freeze_queue() to
-> freeze the associated queue; this requires waiting for RCU
-> synchronization, which I've measured can take about 15-20ms on this
-> device on average.
->
-> In addition to doing what LOOP_SET_STATUS can do, LOOP_CONFIGURE can
-> also be used to:
-> - Set the correct block size immediately by setting
->   loop_config.block_size (avoids LOOP_SET_BLOCK_SIZE)
-> - Explicitly request direct I/O mode by setting LO_FLAGS_DIRECT_IO
->   in loop_config.info.lo_flags (avoids LOOP_SET_DIRECT_IO)
-> - Explicitly request read-only mode by setting LO_FLAGS_READ_ONLY
->   in loop_config.info.lo_flags
->
-> Here's setting up ~70 regular loop devices with an offset on an x86
-> Android device, using LOOP_SET_FD and LOOP_SET_STATUS:
->
-> vsoc_x86:/system/apex # time for i in `seq 30 100`;
-> do losetup -r -o 4096 /dev/block/loop$i com.android.adbd.apex; done
->     0m03.40s real     0m00.02s user     0m00.03s system
->
-> Here's configuring ~70 devices in the same way, but using a modified
-> losetup that uses the new LOOP_CONFIGURE ioctl:
->
-> vsoc_x86:/system/apex # time for i in `seq 30 100`;
-> do losetup -r -o 4096 /dev/block/loop$i com.android.adbd.apex; done
->     0m01.94s real     0m00.01s user     0m00.01s system
->
-> Signed-off-by: Martijn Coenen <maco@android.com>
 > ---
->  drivers/block/loop.c      | 107 +++++++++++++++++++++++++++-----------
->  include/uapi/linux/loop.h |  21 ++++++++
->  2 files changed, 99 insertions(+), 29 deletions(-)
->
-> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> index cfbdd99fdb1a..a353ce55fd18 100644
-> --- a/drivers/block/loop.c
-> +++ b/drivers/block/loop.c
-> @@ -241,6 +241,19 @@ loop_validate_size(loff_t size)
->         return 0;
->  }
->
-> +/**
-> + * loop_validate_block_size() - validates the passed in block size
-> + * @bsize: size to validate
-> + */
-> +static int
-> +loop_validate_block_size(unsigned short bsize)
-> +{
-> +       if (bsize < 512 || bsize > PAGE_SIZE || !is_power_of_2(bsize))
-> +               return -EINVAL;
-> +
-> +       return 0;
-> +}
-> +
->  /**
->   * loop_set_size() - sets device size and notifies userspace
->   * @lo: struct loop_device to set the size for
-> @@ -1063,23 +1076,24 @@ loop_set_status_from_info(struct loop_device *lo,
->         return 0;
->  }
->
-> -static int loop_set_fd(struct loop_device *lo, fmode_t mode,
-> -                      struct block_device *bdev, unsigned int arg)
-> +static int loop_configure(struct loop_device *lo, fmode_t mode,
-> +                         struct block_device *bdev,
-> +                         const struct loop_config *config)
->  {
->         struct file     *file;
->         struct inode    *inode;
->         struct address_space *mapping;
->         struct block_device *claimed_bdev = NULL;
-> -       int             lo_flags = 0;
->         int             error;
->         loff_t          size;
->         bool            partscan;
-> +       unsigned short  bsize;
->
->         /* This is safe, since we have a reference from open(). */
->         __module_get(THIS_MODULE);
->
->         error = -EBADF;
-> -       file = fget(arg);
-> +       file = fget(config->fd);
->         if (!file)
->                 goto out;
->
-> @@ -1088,7 +1102,7 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
->          * here to avoid changing device under exclusive owner.
->          */
->         if (!(mode & FMODE_EXCL)) {
-> -               claimed_bdev = bd_start_claiming(bdev, loop_set_fd);
-> +               claimed_bdev = bd_start_claiming(bdev, loop_configure);
->                 if (IS_ERR(claimed_bdev)) {
->                         error = PTR_ERR(claimed_bdev);
->                         goto out_putf;
-> @@ -1110,44 +1124,58 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
->         mapping = file->f_mapping;
->         inode = mapping->host;
->
-> -       if (!(file->f_mode & FMODE_WRITE) || !(mode & FMODE_WRITE) ||
-> -           !file->f_op->write_iter)
-> -               lo_flags |= LO_FLAGS_READ_ONLY;
-> -
->         size = get_loop_size(lo, file);
->         error = loop_validate_size(size);
->         if (error)
->                 goto out_unlock;
-> +
-> +       if ((config->info.lo_flags & ~LOOP_CONFIGURE_SETTABLE_FLAGS) != 0) {
-> +               error = -EINVAL;
-> +               goto out_unlock;
-> +       }
-> +
-> +       if (config->block_size) {
-> +               error = loop_validate_block_size(config->block_size);
-> +               if (error)
-> +                       goto out_unlock;
-> +       }
-> +
-> +       error = loop_set_status_from_info(lo, &config->info);
-> +       if (error)
-> +               goto out_unlock;
-> +
-> +       if (!(file->f_mode & FMODE_WRITE) || !(mode & FMODE_WRITE) ||
-> +           !file->f_op->write_iter)
-> +               lo->lo_flags |= LO_FLAGS_READ_ONLY;
-> +
->         error = loop_prepare_queue(lo);
->         if (error)
->                 goto out_unlock;
->
->         error = 0;
->
-> -       set_device_ro(bdev, (lo_flags & LO_FLAGS_READ_ONLY) != 0);
-> +       set_device_ro(bdev, (lo->lo_flags & LO_FLAGS_READ_ONLY) != 0);
->
-> -       lo->use_dio = false;
-> +       lo->use_dio = lo->lo_flags & LO_FLAGS_DIRECT_IO;
->         lo->lo_device = bdev;
-> -       lo->lo_flags = lo_flags;
->         lo->lo_backing_file = file;
-> -       lo->transfer = NULL;
-> -       lo->ioctl = NULL;
-> -       lo->lo_sizelimit = 0;
->         lo->old_gfp_mask = mapping_gfp_mask(mapping);
->         mapping_set_gfp_mask(mapping, lo->old_gfp_mask & ~(__GFP_IO|__GFP_FS));
->
-> -       if (!(lo_flags & LO_FLAGS_READ_ONLY) && file->f_op->fsync)
-> +       if (!(lo->lo_flags & LO_FLAGS_READ_ONLY) && file->f_op->fsync)
->                 blk_queue_write_cache(lo->lo_queue, true, false);
->
-> -       if (io_is_direct(lo->lo_backing_file) && inode->i_sb->s_bdev) {
-> +       if (config->block_size)
-> +               bsize = config->block_size;
-> +       else if (io_is_direct(lo->lo_backing_file) && inode->i_sb->s_bdev)
->                 /* In case of direct I/O, match underlying block size */
-> -               unsigned short bsize = bdev_logical_block_size(
-> -                       inode->i_sb->s_bdev);
-> +               bsize = bdev_logical_block_size(inode->i_sb->s_bdev);
-> +       else
-> +               bsize = 512;
->
-> -               blk_queue_logical_block_size(lo->lo_queue, bsize);
-> -               blk_queue_physical_block_size(lo->lo_queue, bsize);
-> -               blk_queue_io_min(lo->lo_queue, bsize);
-> -       }
-> +       blk_queue_logical_block_size(lo->lo_queue, bsize);
-> +       blk_queue_physical_block_size(lo->lo_queue, bsize);
-> +       blk_queue_io_min(lo->lo_queue, bsize);
->
->         loop_update_rotational(lo);
->         loop_update_dio(lo);
-> @@ -1170,14 +1198,14 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
->         if (partscan)
->                 loop_reread_partitions(lo, bdev);
->         if (claimed_bdev)
-> -               bd_abort_claiming(bdev, claimed_bdev, loop_set_fd);
-> +               bd_abort_claiming(bdev, claimed_bdev, loop_configure);
->         return 0;
->
->  out_unlock:
->         mutex_unlock(&loop_ctl_mutex);
->  out_bdev:
->         if (claimed_bdev)
-> -               bd_abort_claiming(bdev, claimed_bdev, loop_set_fd);
-> +               bd_abort_claiming(bdev, claimed_bdev, loop_configure);
->  out_putf:
->         fput(file);
->  out:
-> @@ -1607,8 +1635,9 @@ static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
->         if (lo->lo_state != Lo_bound)
->                 return -ENXIO;
->
-> -       if (arg < 512 || arg > PAGE_SIZE || !is_power_of_2(arg))
-> -               return -EINVAL;
-> +       err = loop_validate_block_size(arg);
-> +       if (err)
-> +               return err;
->
->         if (lo->lo_queue->limits.logical_block_size == arg)
->                 return 0;
-> @@ -1670,8 +1699,27 @@ static int lo_ioctl(struct block_device *bdev, fmode_t mode,
->         int err;
->
->         switch (cmd) {
-> -       case LOOP_SET_FD:
-> -               return loop_set_fd(lo, mode, bdev, arg);
-> +       case LOOP_SET_FD: {
-> +               /*
-> +                * Legacy case - pass in a zeroed out struct loop_config with
-> +                * only the file descriptor set , which corresponds with the
-> +                * default parameters we'd have used otherwise.
-> +                */
-> +               struct loop_config config;
-> +
-> +               memset(&config, 0, sizeof(config));
-> +               config.fd = arg;
-> +
-> +               return loop_configure(lo, mode, bdev, &config);
-> +       }
-> +       case LOOP_CONFIGURE: {
-> +               struct loop_config config;
-> +
-> +               if (copy_from_user(&config, argp, sizeof(config)))
-> +                       return -EFAULT;
-> +
-> +               return loop_configure(lo, mode, bdev, &config);
-> +       }
->         case LOOP_CHANGE_FD:
->                 return loop_change_fd(lo, bdev, arg);
->         case LOOP_CLR_FD:
-> @@ -1843,6 +1891,7 @@ static int lo_compat_ioctl(struct block_device *bdev, fmode_t mode,
->         case LOOP_CLR_FD:
->         case LOOP_GET_STATUS64:
->         case LOOP_SET_STATUS64:
-> +       case LOOP_CONFIGURE:
->                 arg = (unsigned long) compat_ptr(arg);
->                 /* fall through */
->         case LOOP_SET_FD:
-> diff --git a/include/uapi/linux/loop.h b/include/uapi/linux/loop.h
-> index 6b32fee80ce0..24a1c45bd1ae 100644
-> --- a/include/uapi/linux/loop.h
-> +++ b/include/uapi/linux/loop.h
-> @@ -31,6 +31,10 @@ enum {
->  /* LO_FLAGS that can be cleared using LOOP_SET_STATUS(64) */
->  #define LOOP_SET_STATUS_CLEARABLE_FLAGS (LO_FLAGS_AUTOCLEAR)
->
-> +/* LO_FLAGS that can be set using LOOP_CONFIGURE */
-> +#define LOOP_CONFIGURE_SETTABLE_FLAGS (LO_FLAGS_READ_ONLY | LO_FLAGS_AUTOCLEAR \
-> +                                      | LO_FLAGS_PARTSCAN | LO_FLAGS_DIRECT_IO)
-> +
->  #include <asm/posix_types.h>   /* for __kernel_old_dev_t */
->  #include <linux/types.h>       /* for __u64 */
->
-> @@ -66,6 +70,22 @@ struct loop_info64 {
->         __u64              lo_init[2];
+>  drivers/bus/mhi/core/init.c     |  1 +
+>  drivers/bus/mhi/core/internal.h |  1 +
+>  drivers/bus/mhi/core/pm.c       | 11 ++++++++++-
+>  3 files changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
+> index 3a853c5..12207cc 100644
+> --- a/drivers/bus/mhi/core/init.c
+> +++ b/drivers/bus/mhi/core/init.c
+> @@ -35,6 +35,7 @@
+>  	[DEV_ST_TRANSITION_SBL] = "SBL",
+>  	[DEV_ST_TRANSITION_MISSION_MODE] = "MISSION_MODE",
+>  	[DEV_ST_TRANSITION_SYS_ERR] = "SYS_ERR",
+> +	[DEV_ST_TRANSITION_DISABLE] = "DISABLE",
 >  };
->
-> +/**
-> + * struct loop_config - Complete configuration for a loop device.
-> + * @fd: fd of the file to be used as a backing file for the loop device.
-> + * @block_size: block size to use; ignored if 0.
-> + * @info: struct loop_info64 to configure the loop device with.
-> + *
-> + * This structure is used with the LOOP_CONFIGURE ioctl, and can be used to
-> + * atomically setup and configure all loop device parameters at once.
-> + */
-> +struct loop_config {
-> +       __u32                   fd;
-> +       __u32                   block_size;
-> +       struct loop_info64      info;
-> +       __u64                   __reserved[8];
-> +};
+>  
+>  const char * const mhi_state_str[MHI_STATE_MAX] = {
+> diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
+> index f01283b..b1f640b 100644
+> --- a/drivers/bus/mhi/core/internal.h
+> +++ b/drivers/bus/mhi/core/internal.h
+> @@ -387,6 +387,7 @@ enum dev_st_transition {
+>  	DEV_ST_TRANSITION_SBL,
+>  	DEV_ST_TRANSITION_MISSION_MODE,
+>  	DEV_ST_TRANSITION_SYS_ERR,
+> +	DEV_ST_TRANSITION_DISABLE,
+>  	DEV_ST_TRANSITION_MAX,
+>  };
+>  
+> diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
+> index d9964d4..345f197 100644
+> --- a/drivers/bus/mhi/core/pm.c
+> +++ b/drivers/bus/mhi/core/pm.c
+> @@ -657,6 +657,10 @@ void mhi_pm_st_worker(struct work_struct *work)
+>  			mhi_pm_disable_transition
+>  				(mhi_cntrl, MHI_PM_SYS_ERR_PROCESS);
+>  			break;
+> +		case DEV_ST_TRANSITION_DISABLE:
+> +			mhi_pm_disable_transition
+> +				(mhi_cntrl, MHI_PM_SHUTDOWN_PROCESS);
+> +			break;
+>  		default:
+>  			break;
+>  		}
+> @@ -1011,7 +1015,12 @@ void mhi_power_down(struct mhi_controller *mhi_cntrl, bool graceful)
+>  				to_mhi_pm_state_str(MHI_PM_LD_ERR_FATAL_DETECT),
+>  				to_mhi_pm_state_str(mhi_cntrl->pm_state));
+>  	}
+> -	mhi_pm_disable_transition(mhi_cntrl, MHI_PM_SHUTDOWN_PROCESS);
 > +
->  /*
->   * Loop filter types
->   */
-> @@ -96,6 +116,7 @@ struct loop_info64 {
->  #define LOOP_SET_CAPACITY      0x4C07
->  #define LOOP_SET_DIRECT_IO     0x4C08
->  #define LOOP_SET_BLOCK_SIZE    0x4C09
-> +#define LOOP_CONFIGURE         0x4C0A
->
->  /* /dev/loop-control interface */
->  #define LOOP_CTL_ADD           0x4C80
-> --
-> 2.26.2.303.gf8c07b1a785-goog
->
+> +	mhi_queue_state_transition(mhi_cntrl, DEV_ST_TRANSITION_DISABLE);
+> +
+> +	/* Wait for shutdown to complete */
+> +	flush_work(&mhi_cntrl->st_worker);
+> +
+>  	mhi_deinit_free_irq(mhi_cntrl);
+>  
+>  	if (!mhi_cntrl->pre_init) {
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
