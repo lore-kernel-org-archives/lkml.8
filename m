@@ -2,183 +2,64 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0584BC47255
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA16DC47255
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBF9E206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD120206F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 00:09:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgELAIU (ORCPT
+        id S1728284AbgELAJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 May 2020 20:08:20 -0400
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:42550 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgELAIT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 May 2020 20:08:19 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 3995529BDB;
-        Mon, 11 May 2020 20:08:16 -0400 (EDT)
-Date:   Tue, 12 May 2020 10:08:23 +1000 (AEST)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     Christophe Jaillet <christophe.jaillet@wanadoo.fr>,
-        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: Re: net/sonic: Fix some resource leaks in error handling paths
-In-Reply-To: <9994a7de-0399-fb34-237a-a3c71b3cf568@web.de>
-Message-ID: <alpine.LNX.2.22.394.2005120905410.8@nippy.intranet>
-References: <b7651b26-ac1e-6281-efb2-7eff0018b158@web.de> <alpine.LNX.2.22.394.2005100922240.11@nippy.intranet> <9d279f21-6172-5318-4e29-061277e82157@web.de> <alpine.LNX.2.22.394.2005101738510.11@nippy.intranet> <bc70e24c-dd31-75b7-6ece-2ad31982641e@web.de>
- <alpine.LNX.2.22.394.2005110845060.8@nippy.intranet> <9994a7de-0399-fb34-237a-a3c71b3cf568@web.de>
+        Mon, 11 May 2020 20:09:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34678 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725836AbgELAJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 May 2020 20:09:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D88CFAE68;
+        Tue, 12 May 2020 00:09:22 +0000 (UTC)
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     akpm@linux-foundation.org
+Cc:     peterz@infradead.org, oleg@redhat.com, paulmck@kernel.org,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org, dave@stgolabs.net
+Subject: [PATCH -next v2 0/2] kernel/sys: reduce tasklist_lock usage get/set priorities
+Date:   Mon, 11 May 2020 17:03:51 -0700
+Message-Id: <20200512000353.23653-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="-1463811774-1457172623-1589239130=:8"
-Content-ID: <alpine.LNX.2.22.394.2005120920320.8@nippy.intranet>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi,
 
----1463811774-1457172623-1589239130=:8
-Content-Type: text/plain; CHARSET=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <alpine.LNX.2.22.394.2005120920321.8@nippy.intranet>
+The following are two patches that deal with removing the tasklist_lock entirely in
+getpriority(2), and reducing the scope of it in setpriority(2). This also aligns
+somewhat to what we already do with io priorities - although there both set and get
+rely entirely on rcu.
 
+Details in the changelog but this passes ltp tests. Please consider for v5.8.
 
-On Mon, 11 May 2020, Markus Elfring wrote:
+Changes from v1:
+ - split get and set into two patches.
+ - improved changelog.
 
-> > If you can't determine when the bug was introduced,
->=20
-> I might be able to determine also this information.
->=20
+Thanks!
 
-This is tantamount to an admission of duplicity.
+Davidlohr Bueso (2):
+  kernel/sys: only rely on rcu for getpriority(2)
+  kernel/sys: do not grab tasklist_lock for sys_setpriority(PRIO_PROCESS)
 
->=20
-> > how can you criticise a patch for the lack of a Fixes tag?
->=20
-> I dared to point two details out for the discussed patch.
->=20
+ kernel/sys.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-You deliberately chose those two details. You appear to be oblivious to=20
-your own motives.
+-- 
+2.26.1
 
->=20
-> >> To which commit would you like to refer to for the proposed=20
-> >> adjustment of the function =E2=80=9Cmac_sonic_platform_probe=E2=80=9D?
-> >
-> > That was my question to you. We seem to be talking past each other.
->=20
-> We come along different views for this patch review. Who is going to add=
-=20
-> a possible reference for this issue?
->=20
-
-Other opinions are not relevant: I was trying to communicate with you.
-
->=20
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
-e/Documentation/process/coding-style.rst?id=3De99332e7b4cda6e60f5b5916cf994=
-3a79dbef902#n460
->=20
-> >
-> > My preference is unimportant here.
->=20
-> It is also relevant here because you added the tag =E2=80=9CReviewed-by=
-=E2=80=9D.=20
-> https://lore.kernel.org/patchwork/comment/1433193/=20
-> https://lkml.org/lkml/2020/5/8/1827
->=20
-
-You have quoted my words out-of-context and twisted their meaning to suit=
-=20
-your purposes.
-
->=20
-> > I presume that you mean to assert that Christophe's patch breaches the=
-=20
-> > style guide.
->=20
-> I propose to take such a possibility into account.
->=20
-
-This "possibility" was among the reasons why the patch was posted to a=20
-mailing list by its author. That possibility is a given. If you claim this=
-=20
-possibility as your motivation, you are being foolish or dishonest.
-
->=20
-> > However, 'sonic_probe1' is the name of a function.
->=20
-> The discussed source file does not contain such an identifier.=20
-> https://elixir.bootlin.com/linux/v5.7-rc5/source/drivers/net/ethernet/nat=
-semi/macsonic.c#L486=20
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/d=
-rivers/net/ethernet/natsemi/macsonic.c?id=3D2ef96a5bb12be62ef75b5828c0aab83=
-8ebb29cb8#n486
->=20
-
-That's what I told you in my previous email. You're welcome.
-
->=20
-> > This is not some sequence of GW-BASIC labels referred to in the style=
-=20
-> > guide.
->=20
-> I recommend to read the current section =E2=80=9C7) Centralized exiting o=
-f=20
-> functions=E2=80=9D once more.
->=20
-
-Again, you are proposing a bike shed of a different color.
-
->=20
-> >> Can programming preferences evolve into the direction of =E2=80=9Csay =
-what=20
-> >> the goto does=E2=80=9D?
-> >
-> > I could agree that macsonic.c has no function resembling "probe1", and=
-=20
-> > that portion of the patch could be improved.
->=20
-> I find this feedback interesting.
->=20
->=20
-> > Was that the opinion you were trying to express by way of rhetorical=20
-> > questions? I can't tell.
->=20
-> Some known factors triggered my suggestion to consider the use of the=20
-> label =E2=80=9Cfree_dma=E2=80=9D.
->=20
-
-If you cannot express or convey your "known factors" then they aren't=20
-useful.
-
->=20
-> > Is it possible for a reviewer to effectively criticise C by use of=20
-> > English, when his C ability surpasses his English ability?
->=20
-> We come along possibly usual communication challenges.
->=20
-
-That looks like a machine translation. I can't make sense of it, sorry.
-
-> Regards,
-> Markus
->=20
-
-Markus, if you were to write a patch to improve upon coding-style.rst, who=
-=20
-should review it?
-
-If you are unable to write or review such a patch, how can you hope to=20
-adjudicate compliance?
----1463811774-1457172623-1589239130=:8--
