@@ -2,139 +2,96 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4B0C54E8D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FADDC54E4B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA12020769
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25C9520736
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 06:14:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="GJU6+oDm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iLaaBZYQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgELGMX (ORCPT
+        id S1728027AbgELGOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 02:12:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44950 "EHLO
+        Tue, 12 May 2020 02:14:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725933AbgELGMX (ORCPT
+        by vger.kernel.org with ESMTP id S1725536AbgELGOi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 02:12:23 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D1AFC061A0E
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:12:23 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id t3so9611210otp.3
-        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:12:23 -0700 (PDT)
+        Tue, 12 May 2020 02:14:38 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93055C061A0C
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:14:37 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id u15so993129plm.2
+        for <linux-kernel@vger.kernel.org>; Mon, 11 May 2020 23:14:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rDVhfwcqSVyx9q5/p16CBADSN5ABq1zW6fY3UNoJRwE=;
-        b=GJU6+oDml8xnoT95xGt/51ibXnSnWHbS6L44A1d4aAxTIhM+TRN0GsMjxc6tOiQxij
-         W1HgnyhjOqVZ4EeXD2+Ya67BUUhQZNpILTKhwGGkEyj+lgqcYywNl95I6T/MARS6UR7u
-         VIlXBE4FZi1iC3oSuefMY08HMZx+TFAs4C+u0=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=QJ6p4r/QfkD17FHpL2YTGpm8IpLSMzMuC3KtCg0s5mo=;
+        b=iLaaBZYQY7d0MN6c6SgxYeWnAlazltu/qpMaKh/fOE8AAwiZkp6iY26pPpDShNBIvg
+         znku9Ab32XQ70jzBILlnBgUsT8/sXigtsXDTtyCcN5eb7LHgbZG4Cf1TNPL1s86w3m9B
+         LqI8PYObYeMlYPCPoIgpaElSZn4eJqKRx7BexEDkfJ3e6L9PmAdf2zCjGJV3Rs8pLiSV
+         uJWD7Icjx/oqFLhMIZ+beeq3GN9UKaVa4lu45+7XpVHomBg2AyhrvIE+Mvori9tB8wTi
+         XxZ+aBB7T5L3fbTPtfQWPpGTIq/gKvpX4jPGncFGjBviWoiH+OlBosehvLvYNGAEUVYT
+         Bsiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rDVhfwcqSVyx9q5/p16CBADSN5ABq1zW6fY3UNoJRwE=;
-        b=CUUgoyBW7sPKKLIHrr+4ibiT5/cPIGqr7VODYzQgWN8cIdoNvaCjEpTTT2X0YYb73r
-         gcHYKKUlcp2lzWejwn4afoulzd/MxPcaWOaqutMuAcWfPGckO2IMzLsHTESId/WrICiC
-         gJKb94KD72z6MRMFqaK/4Hzzklhi6iiNNiP9yHmv3apNdev8Vul8APMaWfJ63LOx27G0
-         aeGwxhtAVJe8OpO044hlCMBs5h1Ev0rb5qmDGH6J40OqVe9QOse7baX5w+JGTt6f3vSO
-         QO/4fgo1xhHhWkh3YAayF19GUAbt1B7jXyFRlpGjqUFcPovagusZzZJVHi4yvX85WlfN
-         KVqQ==
-X-Gm-Message-State: AGi0PuY5imtD0t1TQz6mYd9XKSi0TZFOqeUeshSy1sTpjBPGtgjip+0z
-        6XeTE+Frzql6KSlN2scAzISi0tXb6iXF7SARmMPf4aoQ
-X-Google-Smtp-Source: APiQypJhNRGRhinzAhGDFhJNon3eFMcfMUO5uhBHXbuwUw5/kLPwp8toKCD2lNCnnnIIniHhPlp9X7sj/2mlYxXCY6k=
-X-Received: by 2002:a05:6830:1d0:: with SMTP id r16mr14792604ota.303.1589263942718;
- Mon, 11 May 2020 23:12:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200511091142.208787-1-daniel.vetter@ffwll.ch>
- <20200511091142.208787-3-daniel.vetter@ffwll.ch> <CAFCwf10m14ModSuRbQAsWf5CSJvTeP7YRzcokD=o+m2Pa0TqKg@mail.gmail.com>
- <CAPM=9tyukFdDiM6-Mxd+ouXCt9Z4t6LRZwxq7DGoX9drrHnMdQ@mail.gmail.com>
-In-Reply-To: <CAPM=9tyukFdDiM6-Mxd+ouXCt9Z4t6LRZwxq7DGoX9drrHnMdQ@mail.gmail.com>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Tue, 12 May 2020 08:12:11 +0200
-Message-ID: <CAKMK7uF=SzeEBtZ9xH+jPzeML4V0QQuwBnPVw+OL+MUgTaaLzQ@mail.gmail.com>
-Subject: Re: [Intel-gfx] [PATCH 3/3] misc/habalabs: don't set default fence_ops->wait
-To:     Dave Airlie <airlied@gmail.com>
-Cc:     Oded Gabbay <oded.gabbay@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>, Olof Johansson <olof@lixom.net>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QJ6p4r/QfkD17FHpL2YTGpm8IpLSMzMuC3KtCg0s5mo=;
+        b=N01HgHIn6/QV/xEwgIKbjfToT4XfxMV7acar899KUCAP4dtQ6ZsUMP54FLv9fAekoU
+         5/Q1af3WlqRKkb/4OGtthS8n0R+f21gMWoKBig80eLdQ3Xi56SUSRE3e1KfHYiJ6/jLm
+         iPXc9a8ibqG6eC+fqyCQFihbbisupWUwloHjpPl02a/AKFv9l9C6O6S/mWBhIEySBpZ0
+         RKSY3ZA0vMFrbYB11nMiPLi7Sux7hZ+FEWpBcHBhD8bKMPlqGjp3R12PFjQ7sIJVOx4W
+         DiCcSkD7rhGr682AjnGTbF7/l8J8y2TD1Wm0fXkA6Q/9872OyC0msqCa2PlnX6YxCqhU
+         Kt6Q==
+X-Gm-Message-State: AGi0PuZMq/DaPgupNIT9IG6pW0v5hTQ5Dy0ySrwV26liQE5ZjhKmxYZW
+        WKrlQb7DMVH4WZh2d26vhNs=
+X-Google-Smtp-Source: APiQypJgZfNQF7KJCaDpZKd/vf3dSExBDe/nV2TndoJ24BuinyBSyxE1AL2vQDY5hWBUkKiwgCi70w==
+X-Received: by 2002:a17:902:7204:: with SMTP id ba4mr11840352plb.161.1589264077071;
+        Mon, 11 May 2020 23:14:37 -0700 (PDT)
+Received: from localhost.localdomain ([49.205.221.80])
+        by smtp.gmail.com with ESMTPSA id 6sm10884990pfj.123.2020.05.11.23.14.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 23:14:36 -0700 (PDT)
+From:   Allen Pais <allen.lkml@gmail.com>
+To:     clemens@ladisch.de
+Cc:     linux-kernel@vger.kernel.org, Allen Pais <allen.lkml@gmail.com>
+Subject: [PATCH] hpet: Fix a small information leak
+Date:   Tue, 12 May 2020 11:44:24 +0530
+Message-Id: <20200512061424.28381-1-allen.lkml@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 4:14 AM Dave Airlie <airlied@gmail.com> wrote:
->
-> On Mon, 11 May 2020 at 19:37, Oded Gabbay <oded.gabbay@gmail.com> wrote:
-> >
-> > On Mon, May 11, 2020 at 12:11 PM Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
-> > >
-> > > It's the default.
-> > Thanks for catching that.
-> >
-> > >
-> > > Also so much for "we're not going to tell the graphics people how to
-> > > review their code", dma_fence is a pretty core piece of gpu driver
-> > > infrastructure. And it's very much uapi relevant, including piles of
-> > > corresponding userspace protocols and libraries for how to pass these
-> > > around.
-> > >
-> > > Would be great if habanalabs would not use this (from a quick look
-> > > it's not needed at all), since open source the userspace and playing
-> > > by the usual rules isn't on the table. If that's not possible (because
-> > > it's actually using the uapi part of dma_fence to interact with gpu
-> > > drivers) then we have exactly what everyone promised we'd want to
-> > > avoid.
-> >
-> > We don't use the uapi parts, we currently only using the fencing and
-> > signaling ability of this module inside our kernel code. But maybe I
-> > didn't understand what you request. You want us *not* to use this
-> > well-written piece of kernel code because it is only used by graphics
-> > drivers ?
-> > I'm sorry but I don't get this argument, if this is indeed what you meant.
->
-> We would rather drivers using a feature that has requirements on
-> correct userspace implementations of the feature have a userspace that
-> is open source and auditable.
->
-> Fencing is tricky, cross-device fencing is really tricky, and having
-> the ability for a closed userspace component to mess up other people's
-> drivers, think i915 shared with closed habana userspace and shared
-> fences, decreases ability to debug things.
->
-> Ideally we wouldn't offer users known untested/broken scenarios, so
-> yes we'd prefer that drivers that intend to expose a userspace fencing
-> api around dma-fence would adhere to the rules of the gpu drivers.
->
-> I'm not say you have to drop using dma-fence, but if you move towards
-> cross-device stuff I believe other drivers would be correct in
-> refusing to interact with fences from here.
+ hpet_info has a hole in it cause of which
+we might end up leaking a few bytes.
 
-The flip side is if you only used dma-fence.c "because it's there",
-and not because it comes with an uapi attached and a cross-driver
-kernel internal contract for how to interact with gpu drivers, then
-there's really not much point in using it. It's a custom-rolled
-wait_queue/event thing, that's all. Without the gpu uapi and gpu
-cross-driver contract it would be much cleaner to just use wait_queue
-directly, and that's a construct all kernel developers understand, not
-just gpu folks. From a quick look at least habanalabs doesn't use any
-of these uapi/cross-driver/gpu bits.
--Daniel
+ Zero them with memset().
+Fixes: 54066a57c584 ("hpet: kill BKL, add compat_ioctl")
+Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+---
+ drivers/char/hpet.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
+index ed3b7dab678d..d9592eb24635 100644
+--- a/drivers/char/hpet.c
++++ b/drivers/char/hpet.c
+@@ -667,6 +667,7 @@ hpet_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 	struct hpet_info info;
+ 	int err;
+ 
++	memset(&info, 0, sizeof(info));
+ 	mutex_lock(&hpet_mutex);
+ 	err = hpet_ioctl_common(file->private_data, cmd, arg, &info);
+ 	mutex_unlock(&hpet_mutex);
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+2.17.1
+
