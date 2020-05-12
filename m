@@ -2,221 +2,121 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF22BC54E4A
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F99C54E8F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99120206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AB6D206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 11:11:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729498AbgELLLE (ORCPT
+        id S1729536AbgELLLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 07:11:04 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:58865 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbgELLLD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 07:11:03 -0400
-X-Originating-IP: 90.65.91.255
-Received: from localhost (lfbn-lyo-1-1912-bdcst.w90-65.abo.wanadoo.fr [90.65.91.255])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id CF861C0008;
-        Tue, 12 May 2020 11:10:59 +0000 (UTC)
-Date:   Tue, 12 May 2020 13:10:59 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Guillaume Tucker <guillaume.tucker@collabora.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: stable/linux-4.4.y bisection: baseline.login on
- at91-sama5d4_xplained
-Message-ID: <20200512111059.GA34497@piout.net>
-References: <5eb8399a.1c69fb81.c5a60.8316@mx.google.com>
- <2db7e52e-86ae-7c87-1782-8c0cafcbadd8@collabora.com>
+        Tue, 12 May 2020 07:11:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:52600 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726891AbgELLLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 07:11:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9E0930E;
+        Tue, 12 May 2020 04:11:18 -0700 (PDT)
+Received: from [10.37.12.83] (unknown [10.37.12.83])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB2703F71E;
+        Tue, 12 May 2020 04:11:08 -0700 (PDT)
+Subject: Re: [PATCH v7 03/15] PM / EM: update callback structure and add
+ device pointer
+To:     Quentin Perret <qperret@google.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com, Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        kernel@pengutronix.de, khilman@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, patrick.bellasi@matbug.net,
+        orjan.eide@arm.com, rdunlap@infradead.org, mka@chromium.org
+References: <20200511111912.3001-1-lukasz.luba@arm.com>
+ <20200511111912.3001-4-lukasz.luba@arm.com>
+ <20200511115722.GA13741@google.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <a2c20b82-58e3-a2ef-2d8d-edbaf05277ec@arm.com>
+Date:   Tue, 12 May 2020 12:11:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2db7e52e-86ae-7c87-1782-8c0cafcbadd8@collabora.com>
+In-Reply-To: <20200511115722.GA13741@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Quentin,
 
-On 12/05/2020 06:54:29+0100, Guillaume Tucker wrote:
-> Please see the bisection report below about a boot failure.
+On 5/11/20 12:57 PM, Quentin Perret wrote:
+> On Monday 11 May 2020 at 12:19:00 (+0100), Lukasz Luba wrote:
+>> diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cpufreq.c
+>> index 61623e2ff149..11ee24e06d12 100644
+>> --- a/drivers/cpufreq/scmi-cpufreq.c
+>> +++ b/drivers/cpufreq/scmi-cpufreq.c
+>> @@ -103,17 +103,12 @@ scmi_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask)
+>>   }
+>>   
+>>   static int __maybe_unused
+>> -scmi_get_cpu_power(unsigned long *power, unsigned long *KHz, int cpu)
+>> +scmi_get_cpu_power(unsigned long *power, unsigned long *KHz,
+>> +		   struct device *cpu_dev)
+>>   {
+>> -	struct device *cpu_dev = get_cpu_device(cpu);
+>>   	unsigned long Hz;
+>>   	int ret, domain;
+>>   
+>> -	if (!cpu_dev) {
+>> -		pr_err("failed to get cpu%d device\n", cpu);
+>> -		return -ENODEV;
+>> -	}
+>> -
+>>   	domain = handle->perf_ops->device_domain_id(cpu_dev);
+>>   	if (domain < 0)
+>>   		return domain;
+>> @@ -200,7 +195,7 @@ static int scmi_cpufreq_init(struct cpufreq_policy *policy)
+>>   
+>>   	policy->fast_switch_possible = true;
+>>   
+>> -	em_register_perf_domain(policy->cpus, nr_opp, &em_cb);
 > 
-> Reports aren't automatically sent to the public while we're
-> trialing new bisection features on kernelci.org but this one
-> looks valid.
-> 
-> It appears to be due to the fact that the network interface is
-> failing to get brought up:
-> 
-> [  114.385000] Waiting up to 10 more seconds for network.
-> [  124.355000] Sending DHCP requests ...#
-> ..#
-> .#
->  timed out!
-> [  212.355000] IP-Config: Reopening network devices...
-> [  212.365000] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
-> #
-> 
-> 
-> I guess the board would boot fine without network if it didn't
-> have ip=dhcp in the command line, so it's not strictly a kernel
-> boot failure but still an ethernet issue.
-> 
+> So this one has no users after this patch right? I suppose you could
+> squash patch 05 in this one. But no big deal.
 
-I think the resolution of this issue is
-99f81afc139c6edd14d77a91ee91685a414a1c66. If this is taken, then I think
-f5aba91d7f186cba84af966a741a0346de603cd4 should also be backported.
+Yes, it was tricky to me to decide the splits suggested by Daniel and
+this is the example. I had to introduce the em_dev_register_perf_domain
+and make clients of it before I remove the old em_register_perf_domain
+completely. I agree it could also go with the patch 5, but it does not
+harm to be here.
 
+> 
+> Acked-by: Quentin Perret <qperret@google.com>
 
-> There wasn't any failure reported by kernelci on linux-4.9.y so
-> maybe this patch was applied by mistake on linux-4.4.y but I
-> haven't investigated enough to prove this.
-> 
-> Thanks,
-> Guillaume
-> 
-> 
-> On 10/05/2020 18:27, kernelci.org bot wrote:
-> > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> > * This automated bisection report was sent to you on the basis  *
-> > * that you may be involved with the breaking commit it has      *
-> > * found.  No manual investigation has been done to verify it,   *
-> > * and the root cause of the problem may be somewhere else.      *
-> > *                                                               *
-> > * If you do send a fix, please include this trailer:            *
-> > *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-> > *                                                               *
-> > * Hope this helps!                                              *
-> > * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> > 
-> > stable/linux-4.4.y bisection: baseline.login on at91-sama5d4_xplained
-> > 
-> > Summary:
-> >   Start:      e157447efd85b Linux 4.4.223
-> >   Plain log:  https://storage.kernelci.org/stable/linux-4.4.y/v4.4.223/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-at91-sama5d4_xplained.txt
-> >   HTML log:   https://storage.kernelci.org/stable/linux-4.4.y/v4.4.223/arm/multi_v7_defconfig/gcc-8/lab-baylibre/baseline-at91-sama5d4_xplained.html
-> >   Result:     0d1951fa23ba0 net: phy: Avoid polling PHY with PHY_IGNORE_INTERRUPTS
-> > 
-> > Checks:
-> >   revert:     PASS
-> >   verify:     PASS
-> > 
-> > Parameters:
-> >   Tree:       stable
-> >   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
-> >   Branch:     linux-4.4.y
-> >   Target:     at91-sama5d4_xplained
-> >   CPU arch:   arm
-> >   Lab:        lab-baylibre
-> >   Compiler:   gcc-8
-> >   Config:     multi_v7_defconfig
-> >   Test case:  baseline.login
-> > 
-> > Breaking commit found:
-> > 
-> > -------------------------------------------------------------------------------
-> > commit 0d1951fa23ba0d35a4c5498ff28d1c5206d6fcdd
-> > Author: Florian Fainelli <f.fainelli@gmail.com>
-> > Date:   Mon Jan 18 19:33:06 2016 -0800
-> > 
-> >     net: phy: Avoid polling PHY with PHY_IGNORE_INTERRUPTS
-> >     
-> >     commit d5c3d84657db57bd23ecd58b97f1c99dd42a7b80 upstream.
-> >     
-> >     Commit 2c7b49212a86 ("phy: fix the use of PHY_IGNORE_INTERRUPT") changed
-> >     a hunk in phy_state_machine() in the PHY_RUNNING case which was not
-> >     needed. The change essentially makes the PHY library treat PHY devices
-> >     with PHY_IGNORE_INTERRUPT to keep polling for the PHY device, even
-> >     though the intent is not to do it.
-> >     
-> >     Fix this by reverting that specific hunk, which makes the PHY state
-> >     machine wait for state changes, and stay in the PHY_RUNNING state for as
-> >     long as needed.
-> >     
-> >     Fixes: 2c7b49212a86 ("phy: fix the use of PHY_IGNORE_INTERRUPT")
-> >     Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> >     Signed-off-by: David S. Miller <davem@davemloft.net>
-> >     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > 
-> > diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-> > index 7d2cf015c5e76..b242bec834f4b 100644
-> > --- a/drivers/net/phy/phy.c
-> > +++ b/drivers/net/phy/phy.c
-> > @@ -912,10 +912,10 @@ void phy_state_machine(struct work_struct *work)
-> >  		phydev->adjust_link(phydev->attached_dev);
-> >  		break;
-> >  	case PHY_RUNNING:
-> > -		/* Only register a CHANGE if we are polling or ignoring
-> > -		 * interrupts and link changed since latest checking.
-> > +		/* Only register a CHANGE if we are polling and link changed
-> > +		 * since latest checking.
-> >  		 */
-> > -		if (!phy_interrupt_is_valid(phydev)) {
-> > +		if (phydev->irq == PHY_POLL) {
-> >  			old_link = phydev->link;
-> >  			err = phy_read_status(phydev);
-> >  			if (err)
-> > @@ -1015,8 +1015,13 @@ void phy_state_machine(struct work_struct *work)
-> >  	dev_dbg(&phydev->dev, "PHY state change %s -> %s\n",
-> >  		phy_state_to_str(old_state), phy_state_to_str(phydev->state));
-> >  
-> > -	queue_delayed_work(system_power_efficient_wq, &phydev->state_queue,
-> > -			   PHY_STATE_TIME * HZ);
-> > +	/* Only re-schedule a PHY state machine change if we are polling the
-> > +	 * PHY, if PHY_IGNORE_INTERRUPT is set, then we will be moving
-> > +	 * between states from phy_mac_interrupt()
-> > +	 */
-> > +	if (phydev->irq == PHY_POLL)
-> > +		queue_delayed_work(system_power_efficient_wq, &phydev->state_queue,
-> > +				   PHY_STATE_TIME * HZ);
-> >  }
-> >  
-> >  void phy_mac_interrupt(struct phy_device *phydev, int new_link)
-> > -------------------------------------------------------------------------------
-> > 
-> > 
-> > Git bisection log:
-> > 
-> > -------------------------------------------------------------------------------
-> > git bisect start
-> > # good: [b63f449e18b130fdc372b9717e72c19b83fc4876] Linux 4.4.222
-> > git bisect good b63f449e18b130fdc372b9717e72c19b83fc4876
-> > # bad: [e157447efd85bb2e6f8deaabbb62663bccd9bad2] Linux 4.4.223
-> > git bisect bad e157447efd85bb2e6f8deaabbb62663bccd9bad2
-> > # bad: [5733a9f4a3df384097c92c532aed34bc698a9acd] net: dsa: slave: fix of-node leak and phy priority
-> > git bisect bad 5733a9f4a3df384097c92c532aed34bc698a9acd
-> > # good: [1ce6993b857318a4b8c674b1bbaaf79aced34136] net/mlx5e: Fix blue flame quota logic
-> > git bisect good 1ce6993b857318a4b8c674b1bbaaf79aced34136
-> > # good: [c32532162f8ea4beed50a20cf4f9b205c75fe1b1] serial: samsung: Fix possible out of bounds access on non-DT platform
-> > git bisect good c32532162f8ea4beed50a20cf4f9b205c75fe1b1
-> > # good: [25e8aad6f491da6ae330148da09585371a3790f2] Revert "ACPI / LPSS: allow to use specific PM domain during ->probe()"
-> > git bisect good 25e8aad6f491da6ae330148da09585371a3790f2
-> > # good: [2f3e56e4b6020812350190f1cada230d790ce0e8] powerpc/tm: Fix stack pointer corruption in __tm_recheckpoint()
-> > git bisect good 2f3e56e4b6020812350190f1cada230d790ce0e8
-> > # bad: [0d1951fa23ba0d35a4c5498ff28d1c5206d6fcdd] net: phy: Avoid polling PHY with PHY_IGNORE_INTERRUPTS
-> > git bisect bad 0d1951fa23ba0d35a4c5498ff28d1c5206d6fcdd
-> > # good: [4ebef63e925e37f5de2f9da8fc86a545e4e0b945] sctp: fix the transports round robin issue when init is retransmitted
-> > git bisect good 4ebef63e925e37f5de2f9da8fc86a545e4e0b945
-> > # good: [c175435fdf50c81ca2b6576f090cba31c3489209] NFC: nci: memory leak in nci_core_conn_create()
-> > git bisect good c175435fdf50c81ca2b6576f090cba31c3489209
-> > # first bad commit: [0d1951fa23ba0d35a4c5498ff28d1c5206d6fcdd] net: phy: Avoid polling PHY with PHY_IGNORE_INTERRUPTS
-> > -------------------------------------------------------------------------------
-> > 
-> 
+Thank you for this ACKs and the earlier.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Regards,
+Lukasz
+
+> 
+>> +	em_dev_register_perf_domain(cpu_dev, nr_opp, &em_cb, policy->cpus);
+>>   
+>>   	return 0;
