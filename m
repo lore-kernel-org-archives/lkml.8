@@ -2,318 +2,115 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5FDC54E8E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53764C54E4A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4FA5206F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CA3820736
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 13:12:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FhM+ptI9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nrx+Fp7a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729964AbgELNMn (ORCPT
+        id S1729998AbgELNMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 09:12:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54456 "EHLO
+        Tue, 12 May 2020 09:12:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726891AbgELNMm (ORCPT
+        by vger.kernel.org with ESMTP id S1726891AbgELNMr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 09:12:42 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E077BC061A0C;
-        Tue, 12 May 2020 06:12:41 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id e16so15310920wra.7;
-        Tue, 12 May 2020 06:12:41 -0700 (PDT)
+        Tue, 12 May 2020 09:12:47 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78087C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 06:12:47 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id d21so5881623ljg.9
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 06:12:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=n8R0PXaj09SRVqJxNcAkARH2tK6K8GHw9WafIr6MCS8=;
-        b=FhM+ptI9bWlufbsUeI6H1nEw7CHPOxHWDRnf0oXhkBIJ8uLOac6CvVXLrQ/Uc+Mqv4
-         4ToNA9DqIOvRNVrm7ImvtAeI394ctH8Hfw1nTDf+2ZwHe8X4VbV2OxJhU1HBx0r+8Pwq
-         GpbIlxY/KwdEfwYFNjhf3dFZDJqDLHtZP/xrauLq+n/V86zXJuJ5YINRAL06+YXYEEXs
-         sIwE87SueU3okh7Dlly9q/tctLkr9oEBL5vfyxKa6D9fbd4xNsKg0XuraDN/OSYvMgZz
-         eEfahy1C3J9CveGXL53/c5Tgf+8J/uEZ8X6YW6HxYP9akHm++7cc/y0h8ffB5buCG7Sh
-         Nfqg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding:user-agent;
+        bh=x4QoL4i05TKgWMM+1LyVNxxvylPGStkJzsuQ89LMgxY=;
+        b=nrx+Fp7aDIIrY8QwnIUjLXbVoFDDUNd1LNLjAe+DfecmbGEsTwFruBhXNCZnlXABfA
+         aJmA8E7KF2xlVlaoBKDXfwaPYyis+K+tuKVTB3DWNrdwihxqR0FHN9Jlkg+n2F2f3PCY
+         Ng5LMqqw/sRBn0AjHq9DV3MfAk+ysNWzu9HxkDNVeJBVHls6fls/Yi9ugmQ1ZV4KgQc0
+         aedgSyBB1dyisuVNIiH3nA3Ofi76vzDRrBb7mHoBypTPflCdg3bfaQVXOcgU4qrwxct7
+         nG4N6qfK7ZaZAjqOZs0xp1FzMemIjvA/K/++8wEuwa/7M7/OJF/f8aYFzUg3s1hLqq0M
+         R3rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=n8R0PXaj09SRVqJxNcAkARH2tK6K8GHw9WafIr6MCS8=;
-        b=UmNZ13gJLulH5K7WfwZJ4eQe5zl2JKZdlz5TXry6uDKs+GcSOfRHqoTt29DgWJGLeK
-         CCVUGApPnEPfxGx9uRBCTor5i12XQbuec0H0jBXHc3qZ6hUIz6SLQcoBorl8y3y9c9cG
-         3Z/BxI8MAG1zcVgef9vFcgb8Z0o+KABT4FIkPEiPbRwP6JjfFLNawR7fLrIN5ePuaEBl
-         mucEJkfQee/B8gl29I7/TMolWzD6qWIvVAFwo1JDPQC7AVmZKackyzfZPMH42McqpoX8
-         KUMaGjOaaHE6cAqOLdjZU6pU2qtn24o/m+9fDxSpkVKQcQ5bJA+vk8lJIIKFELxIYY8s
-         EhCQ==
-X-Gm-Message-State: AGi0PubnQBn5PsgY5kxi25VChrSDedcPw08AgOAWZhy1h59ceTdpsl8+
-        s+nMUkxzcsiSthxAEZgas0SSThQAn9PN64qryZBWng==
-X-Google-Smtp-Source: APiQypJtJT4H8zKNWYId3IG+YTYWZKADjVdPXVWjNagF61AxTu6YYi4INJbzvPZPQs4qdpxxGMb53aIUvePcdzC3x4o=
-X-Received: by 2002:a5d:4389:: with SMTP id i9mr25762939wrq.374.1589289160580;
- Tue, 12 May 2020 06:12:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding:user-agent;
+        bh=x4QoL4i05TKgWMM+1LyVNxxvylPGStkJzsuQ89LMgxY=;
+        b=nJ2DR6Vp8RyVyejAUfEoPagz2DG5rXOn0sVOEsyPjON12Saxh5JkReH7n6yDXZOXF+
+         MUaWQutWduxd2Ih2Kaf1W+u5IUFVdHgmlprumJlft+awvJsMhGl9Vx9/IQWdmGZqRqmw
+         faU9IX2POP82l3XJkuf4x5zDKoES8XMu6KXzLbBQLBfOQZdmhqq2qRWAlhH8V6qhbzOI
+         gpmcGlZtxrLk6vDrPh0n3KVttxPwcqkjlGxCf2I/b7fRfMAhyXN2jR/chaQXO84LJSvS
+         I84Nub4KXBj1KMZWc5ucS++cTYiAYM/Yq0hAi7wYrMgxwf7jvh04IJMnqxG3P/JMzc64
+         pPFw==
+X-Gm-Message-State: AOAM532hkxzT/eT/YlNrrsdspewLgkS5mrHPEv+aH5Ir5XZmYPHlS2Kj
+        wYP2kSB5/4eF2aqAJ/sZ0dA0Hw==
+X-Google-Smtp-Source: ABdhPJy0YMoO9u2zm/VACcBRZczdnhx/61vufXkw/2C8CQY/GdstDCr98wXZtYvH5Sihw6HrCM8Yjw==
+X-Received: by 2002:a2e:9048:: with SMTP id n8mr14151768ljg.122.1589289165890;
+        Tue, 12 May 2020 06:12:45 -0700 (PDT)
+Received: from jade (81-236-179-152-no272.tbcn.telia.com. [81.236.179.152])
+        by smtp.gmail.com with ESMTPSA id j22sm12745293ljh.107.2020.05.12.06.12.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 06:12:45 -0700 (PDT)
+Date:   Tue, 12 May 2020 15:12:43 +0200
+From:   Jens Wiklander <jens.wiklander@linaro.org>
+List-Id: <soc.lore.kernel.org>
+To:     arm@kernel.org, soc@kernel.org
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        tee-dev@lists.linaro.org,
+        Vesa =?utf-8?B?SsOkw6Rza2Vsw6RpbmVu?= 
+        <vesa.jaaskelainen@vaisala.com>
+Subject: [GIT PULL] tee subsystem client uuid for v5.8
+Message-ID: <20200512131243.GA10028@jade>
 MIME-Version: 1.0
-References: <20200512085944.222637-1-daniel.vetter@ffwll.ch>
- <20200512085944.222637-17-daniel.vetter@ffwll.ch> <CADnq5_NJTwkUszd-F2d4D+kD4c_+FKD8tuhVJ7VWHGxAyd8fCg@mail.gmail.com>
- <20200512125841.GH206103@phenom.ffwll.local>
-In-Reply-To: <20200512125841.GH206103@phenom.ffwll.local>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Tue, 12 May 2020 09:12:29 -0400
-Message-ID: <CADnq5_P3SQkH5D+a5bFBTu5eE2ws3O2wsNqnsP9rcvTQJP-nbA@mail.gmail.com>
-Subject: Re: [RFC 16/17] drm/amdgpu: gpu recovery does full modesets
-To:     Alex Deucher <alexdeucher@gmail.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rdma@vger.kernel.org,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        linux-media <linux-media@vger.kernel.org>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 8:58 AM Daniel Vetter <daniel@ffwll.ch> wrote:
->
-> On Tue, May 12, 2020 at 08:54:45AM -0400, Alex Deucher wrote:
-> > On Tue, May 12, 2020 at 5:00 AM Daniel Vetter <daniel.vetter@ffwll.ch> =
-wrote:
-> > >
-> > > ...
-> > >
-> > > I think it's time to stop this little exercise.
-> > >
-> > > The lockdep splat, for the record:
-> > >
-> > > [  132.583381] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > [  132.584091] WARNING: possible circular locking dependency detected
-> > > [  132.584775] 5.7.0-rc3+ #346 Tainted: G        W
-> > > [  132.585461] ------------------------------------------------------
-> > > [  132.586184] kworker/2:3/865 is trying to acquire lock:
-> > > [  132.586857] ffffc90000677c70 (crtc_ww_class_acquire){+.+.}-{0:0}, =
-at: drm_atomic_helper_suspend+0x38/0x120 [drm_kms_helper]
-> > > [  132.587569]
-> > >                but task is already holding lock:
-> > > [  132.589044] ffffffff82318c80 (dma_fence_map){++++}-{0:0}, at: drm_=
-sched_job_timedout+0x25/0xf0 [gpu_sched]
-> > > [  132.589803]
-> > >                which lock already depends on the new lock.
-> > >
-> > > [  132.592009]
-> > >                the existing dependency chain (in reverse order) is:
-> > > [  132.593507]
-> > >                -> #2 (dma_fence_map){++++}-{0:0}:
-> > > [  132.595019]        dma_fence_begin_signalling+0x50/0x60
-> > > [  132.595767]        drm_atomic_helper_commit+0xa1/0x180 [drm_kms_he=
-lper]
-> > > [  132.596567]        drm_client_modeset_commit_atomic+0x1ea/0x250 [d=
-rm]
-> > > [  132.597420]        drm_client_modeset_commit_locked+0x55/0x190 [dr=
-m]
-> > > [  132.598178]        drm_client_modeset_commit+0x24/0x40 [drm]
-> > > [  132.598948]        drm_fb_helper_restore_fbdev_mode_unlocked+0x4b/=
-0xa0 [drm_kms_helper]
-> > > [  132.599738]        drm_fb_helper_set_par+0x30/0x40 [drm_kms_helper=
-]
-> > > [  132.600539]        fbcon_init+0x2e8/0x660
-> > > [  132.601344]        visual_init+0xce/0x130
-> > > [  132.602156]        do_bind_con_driver+0x1bc/0x2b0
-> > > [  132.602970]        do_take_over_console+0x115/0x180
-> > > [  132.603763]        do_fbcon_takeover+0x58/0xb0
-> > > [  132.604564]        register_framebuffer+0x1ee/0x300
-> > > [  132.605369]        __drm_fb_helper_initial_config_and_unlock+0x36e=
-/0x520 [drm_kms_helper]
-> > > [  132.606187]        amdgpu_fbdev_init+0xb3/0xf0 [amdgpu]
-> > > [  132.607032]        amdgpu_device_init.cold+0xe90/0x1677 [amdgpu]
-> > > [  132.607862]        amdgpu_driver_load_kms+0x5a/0x200 [amdgpu]
-> > > [  132.608697]        amdgpu_pci_probe+0xf7/0x180 [amdgpu]
-> > > [  132.609511]        local_pci_probe+0x42/0x80
-> > > [  132.610324]        pci_device_probe+0x104/0x1a0
-> > > [  132.611130]        really_probe+0x147/0x3c0
-> > > [  132.611939]        driver_probe_device+0xb6/0x100
-> > > [  132.612766]        device_driver_attach+0x53/0x60
-> > > [  132.613593]        __driver_attach+0x8c/0x150
-> > > [  132.614419]        bus_for_each_dev+0x7b/0xc0
-> > > [  132.615249]        bus_add_driver+0x14c/0x1f0
-> > > [  132.616071]        driver_register+0x6c/0xc0
-> > > [  132.616902]        do_one_initcall+0x5d/0x2f0
-> > > [  132.617731]        do_init_module+0x5c/0x230
-> > > [  132.618560]        load_module+0x2981/0x2bc0
-> > > [  132.619391]        __do_sys_finit_module+0xaa/0x110
-> > > [  132.620228]        do_syscall_64+0x5a/0x250
-> > > [  132.621064]        entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> > > [  132.621903]
-> > >                -> #1 (crtc_ww_class_mutex){+.+.}-{3:3}:
-> > > [  132.623587]        __ww_mutex_lock.constprop.0+0xcc/0x10c0
-> > > [  132.624448]        ww_mutex_lock+0x43/0xb0
-> > > [  132.625315]        drm_modeset_lock+0x44/0x120 [drm]
-> > > [  132.626184]        drmm_mode_config_init+0x2db/0x8b0 [drm]
-> > > [  132.627098]        amdgpu_device_init.cold+0xbd1/0x1677 [amdgpu]
-> > > [  132.628007]        amdgpu_driver_load_kms+0x5a/0x200 [amdgpu]
-> > > [  132.628920]        amdgpu_pci_probe+0xf7/0x180 [amdgpu]
-> > > [  132.629804]        local_pci_probe+0x42/0x80
-> > > [  132.630690]        pci_device_probe+0x104/0x1a0
-> > > [  132.631583]        really_probe+0x147/0x3c0
-> > > [  132.632479]        driver_probe_device+0xb6/0x100
-> > > [  132.633379]        device_driver_attach+0x53/0x60
-> > > [  132.634275]        __driver_attach+0x8c/0x150
-> > > [  132.635170]        bus_for_each_dev+0x7b/0xc0
-> > > [  132.636069]        bus_add_driver+0x14c/0x1f0
-> > > [  132.636974]        driver_register+0x6c/0xc0
-> > > [  132.637870]        do_one_initcall+0x5d/0x2f0
-> > > [  132.638765]        do_init_module+0x5c/0x230
-> > > [  132.639654]        load_module+0x2981/0x2bc0
-> > > [  132.640522]        __do_sys_finit_module+0xaa/0x110
-> > > [  132.641372]        do_syscall_64+0x5a/0x250
-> > > [  132.642203]        entry_SYSCALL_64_after_hwframe+0x49/0xb3
-> > > [  132.643022]
-> > >                -> #0 (crtc_ww_class_acquire){+.+.}-{0:0}:
-> > > [  132.644643]        __lock_acquire+0x1241/0x23f0
-> > > [  132.645469]        lock_acquire+0xad/0x370
-> > > [  132.646274]        drm_modeset_acquire_init+0xd2/0x100 [drm]
-> > > [  132.647071]        drm_atomic_helper_suspend+0x38/0x120 [drm_kms_h=
-elper]
-> > > [  132.647902]        dm_suspend+0x1c/0x60 [amdgpu]
-> > > [  132.648698]        amdgpu_device_ip_suspend_phase1+0x83/0xe0 [amdg=
-pu]
-> > > [  132.649498]        amdgpu_device_ip_suspend+0x1c/0x60 [amdgpu]
-> > > [  132.650300]        amdgpu_device_gpu_recover.cold+0x4e6/0xe64 [amd=
-gpu]
-> > > [  132.651084]        amdgpu_job_timedout+0xfb/0x150 [amdgpu]
-> > > [  132.651825]        drm_sched_job_timedout+0x8a/0xf0 [gpu_sched]
-> > > [  132.652594]        process_one_work+0x23c/0x580
-> > > [  132.653402]        worker_thread+0x50/0x3b0
-> > > [  132.654139]        kthread+0x12e/0x150
-> > > [  132.654868]        ret_from_fork+0x27/0x50
-> > > [  132.655598]
-> > >                other info that might help us debug this:
-> > >
-> > > [  132.657739] Chain exists of:
-> > >                  crtc_ww_class_acquire --> crtc_ww_class_mutex --> dm=
-a_fence_map
-> > >
-> > > [  132.659877]  Possible unsafe locking scenario:
-> > >
-> > > [  132.661416]        CPU0                    CPU1
-> > > [  132.662126]        ----                    ----
-> > > [  132.662847]   lock(dma_fence_map);
-> > > [  132.663574]                                lock(crtc_ww_class_mute=
-x);
-> > > [  132.664319]                                lock(dma_fence_map);
-> > > [  132.665063]   lock(crtc_ww_class_acquire);
-> > > [  132.665799]
-> > >                 *** DEADLOCK ***
-> > >
-> > > [  132.667965] 4 locks held by kworker/2:3/865:
-> > > [  132.668701]  #0: ffff8887fb81c938 ((wq_completion)events){+.+.}-{0=
-:0}, at: process_one_work+0x1bc/0x580
-> > > [  132.669462]  #1: ffffc90000677e58 ((work_completion)(&(&sched->wor=
-k_tdr)->work)){+.+.}-{0:0}, at: process_one_work+0x1bc/0x580
-> > > [  132.670242]  #2: ffffffff82318c80 (dma_fence_map){++++}-{0:0}, at:=
- drm_sched_job_timedout+0x25/0xf0 [gpu_sched]
-> > > [  132.671039]  #3: ffff8887b84a1748 (&adev->lock_reset){+.+.}-{3:3},=
- at: amdgpu_device_gpu_recover.cold+0x59e/0xe64 [amdgpu]
-> > > [  132.671902]
-> > >                stack backtrace:
-> > > [  132.673515] CPU: 2 PID: 865 Comm: kworker/2:3 Tainted: G        W =
-        5.7.0-rc3+ #346
-> > > [  132.674347] Hardware name: System manufacturer System Product Name=
-/PRIME X370-PRO, BIOS 4011 04/19/2018
-> > > [  132.675194] Workqueue: events drm_sched_job_timedout [gpu_sched]
-> > > [  132.676046] Call Trace:
-> > > [  132.676897]  dump_stack+0x8f/0xd0
-> > > [  132.677748]  check_noncircular+0x162/0x180
-> > > [  132.678604]  ? stack_trace_save+0x4b/0x70
-> > > [  132.679459]  __lock_acquire+0x1241/0x23f0
-> > > [  132.680311]  lock_acquire+0xad/0x370
-> > > [  132.681163]  ? drm_atomic_helper_suspend+0x38/0x120 [drm_kms_helpe=
-r]
-> > > [  132.682021]  ? cpumask_next+0x16/0x20
-> > > [  132.682880]  ? module_assert_mutex_or_preempt+0x14/0x40
-> > > [  132.683737]  ? __module_address+0x28/0xf0
-> > > [  132.684601]  drm_modeset_acquire_init+0xd2/0x100 [drm]
-> > > [  132.685466]  ? drm_atomic_helper_suspend+0x38/0x120 [drm_kms_helpe=
-r]
-> > > [  132.686335]  drm_atomic_helper_suspend+0x38/0x120 [drm_kms_helper]
-> > > [  132.687255]  dm_suspend+0x1c/0x60 [amdgpu]
-> > > [  132.688152]  amdgpu_device_ip_suspend_phase1+0x83/0xe0 [amdgpu]
-> > > [  132.689057]  ? amdgpu_fence_process+0x4c/0x150 [amdgpu]
-> > > [  132.689963]  amdgpu_device_ip_suspend+0x1c/0x60 [amdgpu]
-> > > [  132.690893]  amdgpu_device_gpu_recover.cold+0x4e6/0xe64 [amdgpu]
-> > > [  132.691818]  amdgpu_job_timedout+0xfb/0x150 [amdgpu]
-> > > [  132.692707]  drm_sched_job_timedout+0x8a/0xf0 [gpu_sched]
-> > > [  132.693597]  process_one_work+0x23c/0x580
-> > > [  132.694487]  worker_thread+0x50/0x3b0
-> > > [  132.695373]  ? process_one_work+0x580/0x580
-> > > [  132.696264]  kthread+0x12e/0x150
-> > > [  132.697154]  ? kthread_create_worker_on_cpu+0x70/0x70
-> > > [  132.698057]  ret_from_fork+0x27/0x50
-> > >
-> > > Cc: linux-media@vger.kernel.org
-> > > Cc: linaro-mm-sig@lists.linaro.org
-> > > Cc: linux-rdma@vger.kernel.org
-> > > Cc: amd-gfx@lists.freedesktop.org
-> > > Cc: intel-gfx@lists.freedesktop.org
-> > > Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> > > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > > Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
-> > > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> > > ---
-> > >  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 8 ++++++++
-> > >  1 file changed, 8 insertions(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu=
-/drm/amd/amdgpu/amdgpu_device.c
-> > > index 3584e29323c0..b3b84a0d3baf 100644
-> > > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> > > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> > > @@ -2415,6 +2415,14 @@ static int amdgpu_device_ip_suspend_phase1(str=
-uct amdgpu_device *adev)
-> > >                 /* displays are handled separately */
-> > >                 if (adev->ip_blocks[i].version->type =3D=3D AMD_IP_BL=
-OCK_TYPE_DCE) {
-> > >                         /* XXX handle errors */
-> > > +
-> > > +                       /*
-> > > +                        * This is dm_suspend, which calls modeset lo=
-cks, and
-> > > +                        * that a pretty good inversion against dma_f=
-ence_signal
-> > > +                        * which gpu recovery is supposed to guarante=
-e.
-> > > +                        *
-> > > +                        * Dont ask me how to fix this.
-> > > +                        */
-> >
-> > We actually have a fix for this.  Will be out shortly.
->
-> Spoilers? Solid way is to sidesteck the entire thing by avoiding to reset
-> the display block entirely. Fixing the locking while still resetting the
-> display is going to be really hard otoh ...
+Hello arm-soc maintainers,
 
-There's no way to avoid that.  On dGPUs at least a full asic reset is
-a full asic reset.  Mostly just skips the modeset and does the minimum
-amount necessary to get the display block into a good state for reset.
+Please pull these patches enabling Global Platform client UUID generation
+for the OP-TEE driver.
 
-Alex
+Thanks,
+Jens
 
-> -Daniel
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
+The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
+
+  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
+
+are available in the Git repository at:
+
+  git://git.linaro.org/people/jens.wiklander/linux-tee.git tags/tee-login-for-5.8
+
+for you to fetch changes up to c5b4312bea5d5e5e3d4f0af640e2ef8a1c1bb167:
+
+  tee: optee: Add support for session login client UUID generation (2020-05-11 14:11:33 +0200)
+
+----------------------------------------------------------------
+Adds utility function in TEE subsystem for client UUID generation. This
+function is also used in the optee driver.
+
+----------------------------------------------------------------
+Vesa Jääskeläinen (2):
+      tee: add support for session's client UUID generation
+      tee: optee: Add support for session login client UUID generation
+
+ drivers/tee/Kconfig      |   1 +
+ drivers/tee/optee/call.c |   6 +-
+ drivers/tee/tee_core.c   | 152 +++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/tee_drv.h  |  16 +++++
+ 4 files changed, 174 insertions(+), 1 deletion(-)
