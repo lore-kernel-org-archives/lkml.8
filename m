@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB2FC54E8F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11768C54E91
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75991206D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:54:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3538206D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 12:54:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R9bsk+7B"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bp9y1iYj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729939AbgELMyD (ORCPT
+        id S1729971AbgELMyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 08:54:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51512 "EHLO
+        Tue, 12 May 2020 08:54:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729900AbgELMx7 (ORCPT
+        by vger.kernel.org with ESMTP id S1729900AbgELMyE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 08:53:59 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84A3DC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 05:53:59 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id e26so21613540wmk.5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 05:53:59 -0700 (PDT)
+        Tue, 12 May 2020 08:54:04 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F399C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 05:54:04 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id h4so21623883wmb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 05:54:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+rGKvfoFiAjDdQtTJ+6Vf7qeLWqTDG31CN5bbQtUQo8=;
-        b=R9bsk+7Bfx6aoIZswCKHfN5y9yBMNHag58e4lfCBuVfHphfHNW9fb8fAa+v4hEOqHR
-         jWKg8MG1csnW15D6ckwBgpCyyZtwk3rRq+T0DP6hrMm6FZmqP58jylNfhns/Pa4qDnfk
-         OfFJHqXMukabQLkOuzbxfNYlfTQVCuWoOy0wTOhXRER6dIwsS6RETC6W1+Ua+jUnwZOU
-         r/pOp2X0EgJaGApqO5iWRwEExGO5LXycsC8+b5gjb4bE4pGSfA5hPJAq+0M0YnxJ4WlH
-         fero2AQKwoUddyP2V4V45egrl2kvvj19KEER8L0B5nmqccdJuPqgzW46McVZgvAVuhuQ
-         ByJQ==
+        bh=b24wWlVcAI5WtF67gfQ7lrjlIMYnj1RJeDLHmrXEYY0=;
+        b=Bp9y1iYjiq7ye/soNQOoI0zgGM05UpR/YwVIWWyyEltiDcIOoAGDYxVDyrDRrvoh0O
+         daBFFibX2WNQ2n4W5P7mhIcxYCnoHunw/ZHAgIJfRZeNwwKd/+4yY6j2RSUCcAO2oKcG
+         SlfmAbhoI/WUOA16HyPwEuIj1qRrpMFdx/6fH+Dv5VKckYOsA70pKQD7sY6ocNbpEILX
+         xIEK/cd4VbYgamr0IAvzmZgRzZEWeNyStR5Lyqvf7wpEZ/3sclOwgm73VYOhveGK1FZm
+         Ocaj1mJlJ2z1Vu6Fid4ZF3lE7fTtiybksa2rITo9zqBwvMuPmmswX2vTdUeFj+9Na6YF
+         ms/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+rGKvfoFiAjDdQtTJ+6Vf7qeLWqTDG31CN5bbQtUQo8=;
-        b=Y81Miv7iLKQlSZ527FJG/BGZymgD+NdCXHRyitQjOZqZLyAx++Wj85m/++6SnMCGVk
-         vDeJnxvzZ9LxFBABOszw6I8Z0FJ1ByZwRkfLD3U5AkowDc5BqxJLtql8aAyPlOqaqpLN
-         1FfIRgLj5LvAimqYd07WDhQ06o6ZjcoWEzNed+6Q2UsU4vTA2KlNqze9qBE1uo69Lu5D
-         9F0nAKLEr6XxGOB+OKFJ69ltv+ai9uH8jmHW191bgJxSycMMXv7JG+mVHK/cEKOxYNoq
-         CgkbMWIAVJtXEdcgIJFDJMFdAPmgkxJ2wuiZ8ffpp6H3Pu8Ky0FnQ5VTvR32iTEaJ3x1
-         UGgg==
-X-Gm-Message-State: AGi0PuaPGu7yEvtZTM/mmJphO+3sSpnHCPtCwyYq0Kluf9XB5IRhnXF9
-        ihtfUL2PtFplLZ9DPyX/yARHyQ==
-X-Google-Smtp-Source: APiQypLVCbH0uBXG8DFqpYqzRwWsWiqSkdNCTz/vDUVtGWJZXox+WKeuIqWoT6/6hqCEQhI68x/oSQ==
-X-Received: by 2002:a1c:c242:: with SMTP id s63mr27560918wmf.180.1589288038141;
-        Tue, 12 May 2020 05:53:58 -0700 (PDT)
+        bh=b24wWlVcAI5WtF67gfQ7lrjlIMYnj1RJeDLHmrXEYY0=;
+        b=o42Sa86OsQKo14i+5X4htAllCDo+txiNjVjzPBd7p9vn+i2inyeCrdZSTPYBIHxacW
+         UAbitQMLEVthkfHQSrQGPdRT8g5Hhfjw+7HoCudHrwLDBb+FapTDWj7r4iBKk7mMWOwO
+         s+/OkhzX3YjnE/7AhbVJHCq5+ZyZ42Wg7NxwfZ+9EMlp9Lr+1kTj/5YSkRp4Wj+4Dvaq
+         1P1dyzHddxoUnKX2dtVOYHVUqZV+5cDOyXHL+pU6yr4A1C3W+QnhLRg+PjXxQ72D3DW8
+         oXn2rWSZWv/3SCs4+oJiu9rkaea9Y6PNAw3+GszL7JXgdKdcOeS1BZnEYdGYjDV6V2kr
+         OkSw==
+X-Gm-Message-State: AGi0PuYCvFofQGr96I+v/B6qoGB5qhaKMso4yo1WSZbWXEpevpnpN0RM
+        CWc6+9c9ZmnoKYS0Emeh12SEZg==
+X-Google-Smtp-Source: APiQypImfYB5nyqvxvA2M9l1iE6rJd3+iWflg0lmI06ciJYbhnp3vcBubfm+gyg9hkqNQsFSQpHNSQ==
+X-Received: by 2002:a1c:3884:: with SMTP id f126mr39071056wma.91.1589288042966;
+        Tue, 12 May 2020 05:54:02 -0700 (PDT)
 Received: from localhost.localdomain (212-39-89-66.ip.btc-net.bg. [212.39.89.66])
-        by smtp.googlemail.com with ESMTPSA id n13sm2433938wrs.2.2020.05.12.05.53.56
+        by smtp.googlemail.com with ESMTPSA id n13sm2433938wrs.2.2020.05.12.05.54.00
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 May 2020 05:53:57 -0700 (PDT)
+        Tue, 12 May 2020 05:54:02 -0700 (PDT)
 From:   Georgi Djakov <georgi.djakov@linaro.org>
 To:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, rjw@rjwysocki.net,
         saravanak@google.com, sibis@codeaurora.org, mka@chromium.org
@@ -67,9 +67,9 @@ Cc:     robh+dt@kernel.org, rnayak@codeaurora.org,
         jcrouse@codeaurora.org, evgreen@chromium.org,
         linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, georgi.djakov@linaro.org
-Subject: [PATCH v8 03/10] interconnect: Add of_icc_get_by_index() helper function
-Date:   Tue, 12 May 2020 15:53:20 +0300
-Message-Id: <20200512125327.1868-4-georgi.djakov@linaro.org>
+Subject: [PATCH v8 05/10] OPP: Add sanity checks in _read_opp_key()
+Date:   Tue, 12 May 2020 15:53:22 +0300
+Message-Id: <20200512125327.1868-6-georgi.djakov@linaro.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200512125327.1868-1-georgi.djakov@linaro.org>
 References: <20200512125327.1868-1-georgi.djakov@linaro.org>
@@ -80,157 +80,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the same as the traditional of_icc_get() function, but the
-difference is that it takes index as an argument, instead of name.
+When we read the OPP keys, it would be nice to do some sanity checks
+of the values we get from DT and see if they match with the information
+that is populated in the OPP table. Let's pass a pointer of the table,
+so that we can do some validation.
 
 Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 ---
 v8:
-* Dropped unneeded initializations.
 * Picked reviewed-by tags.
 
- drivers/interconnect/core.c  | 72 +++++++++++++++++++++++++++---------
- include/linux/interconnect.h |  6 +++
- 2 files changed, 60 insertions(+), 18 deletions(-)
+ drivers/opp/of.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-index 2c6515e3ecf1..aba5d38ea9d1 100644
---- a/drivers/interconnect/core.c
-+++ b/drivers/interconnect/core.c
-@@ -351,9 +351,9 @@ static struct icc_node *of_icc_get_from_provider(struct of_phandle_args *spec)
+diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+index d139ad8c8f4f..3a64f2aa0f86 100644
+--- a/drivers/opp/of.c
++++ b/drivers/opp/of.c
+@@ -573,8 +573,8 @@ void dev_pm_opp_of_remove_table(struct device *dev)
  }
+ EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
  
- /**
-- * of_icc_get() - get a path handle from a DT node based on name
-+ * of_icc_get_by_index() - get a path handle from a DT node based on index
-  * @dev: device pointer for the consumer device
-- * @name: interconnect path name
-+ * @idx: interconnect path index
-  *
-  * This function will search for a path between two endpoints and return an
-  * icc_path handle on success. Use icc_put() to release constraints when they
-@@ -365,13 +365,12 @@ static struct icc_node *of_icc_get_from_provider(struct of_phandle_args *spec)
-  * Return: icc_path pointer on success or ERR_PTR() on error. NULL is returned
-  * when the API is disabled or the "interconnects" DT property is missing.
-  */
--struct icc_path *of_icc_get(struct device *dev, const char *name)
-+struct icc_path *of_icc_get_by_index(struct device *dev, int idx)
+-static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np,
+-			 bool *rate_not_available)
++static int _read_opp_key(struct dev_pm_opp *new_opp, struct opp_table *table,
++			 struct device_node *np, bool *rate_not_available)
  {
--	struct icc_path *path = ERR_PTR(-EPROBE_DEFER);
-+	struct icc_path *path;
- 	struct icc_node *src_node, *dst_node;
--	struct device_node *np = NULL;
-+	struct device_node *np;
- 	struct of_phandle_args src_args, dst_args;
--	int idx = 0;
- 	int ret;
- 
- 	if (!dev || !dev->of_node)
-@@ -391,12 +390,6 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
- 	 * lets support only global ids and extend this in the future if needed
- 	 * without breaking DT compatibility.
- 	 */
--	if (name) {
--		idx = of_property_match_string(np, "interconnect-names", name);
--		if (idx < 0)
--			return ERR_PTR(idx);
--	}
--
- 	ret = of_parse_phandle_with_args(np, "interconnects",
- 					 "#interconnect-cells", idx * 2,
- 					 &src_args);
-@@ -439,12 +432,8 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
- 		return path;
- 	}
- 
--	if (name)
--		path->name = kstrdup_const(name, GFP_KERNEL);
--	else
--		path->name = kasprintf(GFP_KERNEL, "%s-%s",
--				       src_node->name, dst_node->name);
--
-+	path->name = kasprintf(GFP_KERNEL, "%s-%s",
-+			       src_node->name, dst_node->name);
- 	if (!path->name) {
- 		kfree(path);
+ 	struct property *peak, *avg;
+ 	u32 *peak_bw, *avg_bw;
+@@ -602,6 +602,12 @@ static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np,
+ 		 * opp-avg-kBps = <path1_value path2_value>;
+ 		 */
+ 		count = peak->length / sizeof(u32);
++		if (table->path_count != count) {
++			pr_err("%s: Mismatch between opp-peak-kBps and paths (%d %d)\n",
++			       __func__, count, table->path_count);
++			return -EINVAL;
++		}
++
+ 		peak_bw = kmalloc_array(count, sizeof(*peak_bw), GFP_KERNEL);
+ 		if (!peak_bw)
+ 			return -ENOMEM;
+@@ -624,6 +630,13 @@ static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np,
+ 	avg = of_find_property(np, "opp-avg-kBps", NULL);
+ 	if (peak && avg) {
+ 		count = avg->length / sizeof(u32);
++		if (table->path_count != count) {
++			pr_err("%s: Mismatch between opp-avg-kBps and paths (%d %d)\n",
++			       __func__, count, table->path_count);
++			ret = -EINVAL;
++			goto free_peak_bw;
++		}
++
+ 		avg_bw = kmalloc_array(count, sizeof(*avg_bw), GFP_KERNEL);
+ 		if (!avg_bw) {
+ 			ret = -ENOMEM;
+@@ -697,7 +710,7 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
+ 	if (!new_opp)
  		return ERR_PTR(-ENOMEM);
-@@ -452,6 +441,53 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
  
- 	return path;
- }
-+EXPORT_SYMBOL_GPL(of_icc_get_by_index);
-+
-+/**
-+ * of_icc_get() - get a path handle from a DT node based on name
-+ * @dev: device pointer for the consumer device
-+ * @name: interconnect path name
-+ *
-+ * This function will search for a path between two endpoints and return an
-+ * icc_path handle on success. Use icc_put() to release constraints when they
-+ * are not needed anymore.
-+ * If the interconnect API is disabled, NULL is returned and the consumer
-+ * drivers will still build. Drivers are free to handle this specifically,
-+ * but they don't have to.
-+ *
-+ * Return: icc_path pointer on success or ERR_PTR() on error. NULL is returned
-+ * when the API is disabled or the "interconnects" DT property is missing.
-+ */
-+struct icc_path *of_icc_get(struct device *dev, const char *name)
-+{
-+	struct device_node *np;
-+	int idx = 0;
-+
-+	if (!dev || !dev->of_node)
-+		return ERR_PTR(-ENODEV);
-+
-+	np = dev->of_node;
-+
-+	/*
-+	 * When the consumer DT node do not have "interconnects" property
-+	 * return a NULL path to skip setting constraints.
-+	 */
-+	if (!of_find_property(np, "interconnects", NULL))
-+		return NULL;
-+
-+	/*
-+	 * We use a combination of phandle and specifier for endpoint. For now
-+	 * lets support only global ids and extend this in the future if needed
-+	 * without breaking DT compatibility.
-+	 */
-+	if (name) {
-+		idx = of_property_match_string(np, "interconnect-names", name);
-+		if (idx < 0)
-+			return ERR_PTR(idx);
-+	}
-+
-+	return of_icc_get_by_index(dev, idx);
-+}
- EXPORT_SYMBOL_GPL(of_icc_get);
- 
- /**
-diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
-index d70a914cba11..34e97231a6ab 100644
---- a/include/linux/interconnect.h
-+++ b/include/linux/interconnect.h
-@@ -28,6 +28,7 @@ struct device;
- struct icc_path *icc_get(struct device *dev, const int src_id,
- 			 const int dst_id);
- struct icc_path *of_icc_get(struct device *dev, const char *name);
-+struct icc_path *of_icc_get_by_index(struct device *dev, int idx);
- void icc_put(struct icc_path *path);
- int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
- void icc_set_tag(struct icc_path *path, u32 tag);
-@@ -46,6 +47,11 @@ static inline struct icc_path *of_icc_get(struct device *dev,
- 	return NULL;
- }
- 
-+static inline struct icc_path *of_icc_get_by_index(struct device *dev, int idx)
-+{
-+	return NULL;
-+}
-+
- static inline void icc_put(struct icc_path *path)
- {
- }
+-	ret = _read_opp_key(new_opp, np, &rate_not_available);
++	ret = _read_opp_key(new_opp, opp_table, np, &rate_not_available);
+ 	/* The key is optional for devices like power domains. */
+ 	if (ret < 0 && !opp_table->is_genpd) {
+ 		dev_err(dev, "%s: opp key field not found\n", __func__);
