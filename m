@@ -2,179 +2,158 @@ Return-Path: <SRS0=0vny=62=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F162C54E81
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A8FCA90BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2AE206D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:37:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589297838;
-	bh=1O6ZykHvXDJEczjrH9LJuh8X1yHOP7Q/30u8pa72BCY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=UHSfx0pdxATIDVGD6DdEC1WXRyF54IW56Uqh2CiwMbu88Joobs7EBT935+PET62jU
-	 cAqRQgm3U+K1akDta1eqRx9ag47diMSmbwl+8qHiMV2sF00YuQ+AQHLidm32StfFpk
-	 j9noQIa8d33oaWDj/ATZ3LZfVOMVyKPZqboos/Wg=
+	by mail.kernel.org (Postfix) with ESMTP id 7E93320736
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 May 2020 15:37:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OtmcAawd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730784AbgELPhR (ORCPT
+        id S1730817AbgELPh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 11:37:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37424 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727847AbgELPhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 11:37:17 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D895206CC;
-        Tue, 12 May 2020 15:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589297836;
-        bh=1O6ZykHvXDJEczjrH9LJuh8X1yHOP7Q/30u8pa72BCY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fqwakY8meehODH74gpckFTa+Mh+b6xO0w7sFxmlOy9XVG4nwxGnTy6d/fTPn2KKM2
-         FpnaUhXQ4zcFpBOJudkbcySubJ2+F+jCEnuxGUDYz6Hh3Axo6CPTcFQ7NCAH24bj08
-         0hH/vzANpANCy0xlayV1dZeLa4UcnByWyMsY1C90=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jYWy2-00Bh0h-Rd; Tue, 12 May 2020 16:37:14 +0100
+        Tue, 12 May 2020 11:37:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48858 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730785AbgELPh3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 11:37:29 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4FECC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 08:37:28 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id u6so14152946ljl.6
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 08:37:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=U3mfWUpC6bH/0PPzXG5Sq3RBRbSppz1EWcuNQTMG4no=;
+        b=OtmcAawdVwZKG0M4kx0M+jrAJrJ1G8XEe6FS6/gIpKW8YlvvcI+MbEI73prV/Re8NB
+         kfVrqKnsXX/z8j2S9JCcSMF+x9IrlFuT/dRhsCYoWSO9brOKkkel3EoQT9HVHNkOAFZR
+         u3SK7kTeFtpAVEIs+r01cEzhEPtSvAoIMgaPmloMPyD3Sr3wevwmfBffVsZkDrv0tiew
+         Ej6+/AVE05h8zDM0MwzyKbGmq6f9TF8ftwLcPe3t24NEOU0sxN5kl8ufSEKoc3N4xNzD
+         S9oXqMeVmjGsNSGA3d2JW1HsaLgJyKm6mEFB19vsJrI2yzuz6Ih6kU4pvoADlSdXFnaV
+         +paQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=U3mfWUpC6bH/0PPzXG5Sq3RBRbSppz1EWcuNQTMG4no=;
+        b=XqpUQB7CvVG08yZXUAxXM+ptEI3WWnwngldXuV075Qkt7TzLmdhMwgZKvd6pX4AhVa
+         ++W1A0R/bRC589huFACm5oU559UlYDHHHafkLQCt07wEycK/y8rg9LIhzuivkVC40Xdv
+         RcoVDFN/rnFTMnkX1JD17CniXoFg8KAcy42SNwNrAus3/Fh/c5BA31/RkUsLsIvfukoM
+         pFSBtfGN2nHaZnlnzaBCHu6IUN+9Fsf7zkLp5Fq2kuJTWf7e30aRLocPxczGgNFNLDID
+         g9OqHQyTp21Bf589dE/pdpVddc2Q7YbuVr/9Id3tXiwnrVhKdcpafnvbWaj5rG3axBRT
+         r/9A==
+X-Gm-Message-State: AOAM533n2A3y5ORDITjmdt3XSUUnaBdQ7fpWcBxbe7hQhc88Y/t/cX+v
+        mGCVrT0R97woe4OOAIRhH5wV0Lj/xYzoU8ZxpjiUoA==
+X-Google-Smtp-Source: ABdhPJzSzvPBzHJJyhmdNxeCDNn0RGhxwM4L9OsASaWkxZEseTcQrITCOOAq3lvC6NY1FGK3OODa4SHdRTxY9uynbbg=
+X-Received: by 2002:a2e:9455:: with SMTP id o21mr14273685ljh.245.1589297847090;
+ Tue, 12 May 2020 08:37:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 12 May 2020 16:37:14 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v4 2/2] irq/irq_sim: simplify the API
-In-Reply-To: <20200430143019.1704-3-brgl@bgdev.pl>
-References: <20200430143019.1704-1-brgl@bgdev.pl>
- <20200430143019.1704-3-brgl@bgdev.pl>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <6568919d6cc3ee8f602a58354e3aff44@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: brgl@bgdev.pl, linus.walleij@linaro.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, tglx@linutronix.de, jason@lakedaemon.net, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, bgolaszewski@baylibre.com, Jonathan.Cameron@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20200511224430.HDJjRC68z%akpm@linux-foundation.org>
+ <3b612c3e-ce52-ba92-eb02-0fa7fd38819f@infradead.org> <20200512121750.GA397968@cmpxchg.org>
+In-Reply-To: <20200512121750.GA397968@cmpxchg.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 12 May 2020 21:07:15 +0530
+Message-ID: <CA+G9fYvZ1SFX1b7+3_X9L+snPxV_zGHykuDD96Me+gM++BYTBg@mail.gmail.com>
+Subject: Re: mmotm 2020-05-11-15-43 uploaded (mm/memcontrol.c, huge pages)
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Brown <broonie@kernel.org>, linux-fsdevel@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        mhocko@suse.cz, mm-commits@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bartosz,
+> The THP page size macros are CONFIG_TRANSPARENT_HUGEPAGE only.
+>
+> We already ifdef most THP-related code in memcg, but not these
+> particular stats. Memcg used to track the pages as they came in, and
+> PageTransHuge() + hpage_nr_pages() work when THP is not compiled in.
+>
+> Switching to native vmstat counters, memcg doesn't see the pages, it
+> only gets a count of THPs. To translate that to bytes, it has to know
+> how big the THPs are - and that's only available for CONFIG_THP.
+>
+> Add the necessary ifdefs. /proc/meminfo, smaps etc. also don't show
+> the THP counters when the feature is compiled out. The event counts
+> (THP_FAULT_ALLOC, THP_COLLAPSE_ALLOC) were already conditional also.
+>
+> Style touchup: HPAGE_PMD_NR * PAGE_SIZE is silly. Use HPAGE_PMD_SIZE.
 
-On 2020-04-30 15:30, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> The interrupt simulator API exposes a lot of custom data structures and
-> functions and doesn't reuse the interfaces already exposed by the irq
-> subsystem. This patch tries to address it.
-> 
-> We hide all the simulator-related data structures from users and 
-> instead
-> rely on the well-known irq domain. When creating the interrupt 
-> simulator
-> the user receives a pointer to a newly created irq_domain and can use 
-> it
-> to create mappings for simulated interrupts.
-> 
-> It is also possible to pass a handle to fwnode when creating the 
-> simulator
-> domain and retrieve it using irq_find_matching_fwnode().
-> 
-> The irq_sim_fire() function now only takes the virtual interrupt number
-> as argument - there's no need anymore to pass it any data structure 
-> linked
-> to the simulator.
-> 
-> We modify the two modules that use the simulator at the same time as
-> adding these changes in order to reduce the intermediate bloat that 
-> would
-> result when trying to migrate the drivers in separate patches.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> #for IIO
+Build tested and build pass on x86_64.
+
+>
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+
+Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+
 > ---
->  drivers/gpio/gpio-mockup.c          |  47 ++++--
->  drivers/iio/dummy/iio_dummy_evgen.c |  32 ++--
->  include/linux/irq_sim.h             |  34 ++---
->  kernel/irq/Kconfig                  |   1 +
->  kernel/irq/irq_sim.c                | 225 +++++++++++++++++-----------
->  5 files changed, 202 insertions(+), 137 deletions(-)
+>
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 738d071ba1ef..47c685088a2c 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -1401,9 +1401,11 @@ static char *memory_stat_format(struct mem_cgroup *memcg)
+>                        (u64)memcg_page_state(memcg, NR_WRITEBACK) *
+>                        PAGE_SIZE);
+>
+> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>         seq_buf_printf(&s, "anon_thp %llu\n",
+>                        (u64)memcg_page_state(memcg, NR_ANON_THPS) *
+> -                      HPAGE_PMD_NR * PAGE_SIZE);
+> +                      HPAGE_PMD_SIZE);
+> +#endif
+>
+>         for (i = 0; i < NR_LRU_LISTS; i++)
+>                 seq_buf_printf(&s, "%s %llu\n", lru_list_name(i),
+> @@ -3752,7 +3754,9 @@ static int memcg_numa_stat_show(struct seq_file *m, void *v)
+>  static const unsigned int memcg1_stats[] = {
+>         NR_FILE_PAGES,
+>         NR_ANON_MAPPED,
+> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>         NR_ANON_THPS,
+> +#endif
+>         NR_SHMEM,
+>         NR_FILE_MAPPED,
+>         NR_FILE_DIRTY,
+> @@ -3763,7 +3767,9 @@ static const unsigned int memcg1_stats[] = {
+>  static const char *const memcg1_stat_names[] = {
+>         "cache",
+>         "rss",
+> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>         "rss_huge",
+> +#endif
+>         "shmem",
+>         "mapped_file",
+>         "dirty",
+> @@ -3794,8 +3800,10 @@ static int memcg_stat_show(struct seq_file *m, void *v)
+>                 if (memcg1_stats[i] == MEMCG_SWAP && !do_memsw_account())
+>                         continue;
+>                 nr = memcg_page_state_local(memcg, memcg1_stats[i]);
+> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>                 if (memcg1_stats[i] == NR_ANON_THPS)
+>                         nr *= HPAGE_PMD_NR;
+> +#endif
+>                 seq_printf(m, "%s %lu\n", memcg1_stat_names[i], nr * PAGE_SIZE);
+>         }
+>
 
-[...]
 
->  /**
->   * irq_sim_fire - Enqueue an interrupt.
->   *
-> - * @sim:        The interrupt simulator object.
-> - * @offset:     Offset of the simulated interrupt which should be 
-> fired.
-> + * @virq:       Virtual interrupt number to fire. It must be 
-> associated with
-> + *              an existing interrupt simulator.
->   */
-> -void irq_sim_fire(struct irq_sim *sim, unsigned int offset)
-> +void irq_sim_fire(int virq)
->  {
-> -	if (sim->irqs[offset].enabled) {
-> -		set_bit(offset, sim->work_ctx.pending);
-> -		irq_work_queue(&sim->work_ctx.work);
-> +	struct irq_sim_irq_ctx *irq_ctx;
-> +	struct irq_data *irqd;
-> +
-> +	irqd = irq_get_irq_data(virq);
-> +	if (!irqd) {
-> +		pr_warn_ratelimited("%s: invalid irq number\n", __func__);
-> +		return;
->  	}
-> -}
-> -EXPORT_SYMBOL_GPL(irq_sim_fire);
-> 
-> -/**
-> - * irq_sim_irqnum - Get the allocated number of a dummy interrupt.
-> - *
-> - * @sim:        The interrupt simulator object.
-> - * @offset:     Offset of the simulated interrupt for which to 
-> retrieve
-> - *              the number.
-> - */
-> -int irq_sim_irqnum(struct irq_sim *sim, unsigned int offset)
-> -{
-> -	return sim->irqs[offset].irqnum;
-> +	irq_ctx = irq_data_get_irq_chip_data(irqd);
-> +
-> +	if (irq_ctx->enabled) {
-> +		set_bit(irqd_to_hwirq(irqd), irq_ctx->work_ctx->pending);
-> +		irq_work_queue(&irq_ctx->work_ctx->work);
-> +	}
->  }
-> -EXPORT_SYMBOL_GPL(irq_sim_irqnum);
-> +EXPORT_SYMBOL_GPL(irq_sim_fire);
-
-Rather than using an ad-hoc API to queue an interrupt, why don't you
-actually implement the interface that already exists for this at
-the irqchip level (irq_set_irqchip_state, which allows the pending
-state to be set)?
-
-Thanks,
-
-         M.
 -- 
-Jazz is not dead. It just smells funny...
+Linaro LKFT
+https://lkft.linaro.org
