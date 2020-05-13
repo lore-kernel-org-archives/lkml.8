@@ -2,55 +2,118 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF69CCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC229CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6EFE206B7
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A858E20740
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:44:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="N77Fqus1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732116AbgEMMn6 (ORCPT
+        id S1732113AbgEMMoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 08:43:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48148 "EHLO
+        Wed, 13 May 2020 08:44:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732573AbgEMMnq (ORCPT
+        with ESMTP id S1731873AbgEMMoC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 08:43:46 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE243C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 05:43:44 -0700 (PDT)
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 49MZ9B5R9Kz9sSf; Wed, 13 May 2020 22:43:42 +1000 (AEST)
-From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-To:     Aurelien Jarno <aurelien@aurel32.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-In-Reply-To: <7316a9e2c0c2517923eb4b0411c4a08d15e675a4.1589017281.git.christophe.leroy@csgroup.eu>
-References: <7316a9e2c0c2517923eb4b0411c4a08d15e675a4.1589017281.git.christophe.leroy@csgroup.eu>
-Subject: Re: [PATCH fixes] powerpc/vdso32: Fallback on getres syscall when clock is unknown
-Message-Id: <158937375618.3526905.2066468534333015968.b4-ty@ellerman.id.au>
-Date:   Wed, 13 May 2020 22:43:42 +1000 (AEST)
+        Wed, 13 May 2020 08:44:02 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 078EFC05BD09
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 05:44:01 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id o14so16553637ljp.4
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 05:44:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5d0pcOaIE1HJrh/I4QffOguHc0kKvV2w4f0cXubp9W8=;
+        b=N77Fqus1DRNogWlGHp1XKGSqzOq3nxy+D4pGLZIK+g3innXI7KH6ylMFEUfVWEIKlv
+         dYUITJ0L3eiM8JkVWfBaUgCr+3NAfzFak7rDp8xt9SQy9++SBGB+iSh7MZPR/DbeiWm2
+         pw3UvO1ewZZcmm19B+g84a4dNxwVzZKPFzJkPBwbl9QgNKsbq2x9GcFVXTxCUmWCxkha
+         kCGvvU8s/3cuLu4UUquV74JcT3IbAul4K/9yfEDkmMkldmDhFxkT4MFhFQNN22eYRU/b
+         VLIZz1AzE5aC0Cvq7q/jqZ2C9E4Wt59PEn/ghfWUQEMAW9qac+EkuTCnIQld5tQTNkm2
+         VCmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5d0pcOaIE1HJrh/I4QffOguHc0kKvV2w4f0cXubp9W8=;
+        b=XXazg/W16MQj1fxxcO5PJeQ7SALLdXfOA07KlpXFw1YbPYeRx9bqJuoVrqA23CPe5q
+         iB1DA9Ln67ZK5MX8ZDpfzPAFMfYWypaZZCTRBWSWUyt38sKO/PKhjAJ8hr2uj8kAMO+j
+         iMmQFkSGvMXq3KNd++DKfYkBF58Y7t3mSqyMmusak6HE46aHLQxDzMMmk002iUsghSQU
+         4XgbhP1NyeEbz1QPfsT8Sf+fgHRjCA93yD1+my9/VqCc9ss1/gJzmv05p8sC8QUiFWy9
+         EqikhWf8HbGwT2USnI294vwR+bz4WE0pSiOCKRJ9gPK5dKbeXnFLtTQyCIhEhi/Grdlw
+         +Ahw==
+X-Gm-Message-State: AOAM530Xai5oAEqVJh3HpPyWmmIv1FnZnnEdl5pueYIoFISdpV9q2vxp
+        /xS8J3L/xjszY1Dcq2hcXxdWvL+Yuxg=
+X-Google-Smtp-Source: ABdhPJwF2QF4EVFN/KfTwSvMhLIVx+dfj1avGadYmJTLx267Uz6kRex1oWHe2K7HEIhEGhEtAnoDwA==
+X-Received: by 2002:a2e:b0e3:: with SMTP id h3mr17204006ljl.69.1589373840291;
+        Wed, 13 May 2020 05:44:00 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:8bd:2220:dc4:6005:75a4:5a6? ([2a00:1fa0:8bd:2220:dc4:6005:75a4:5a6])
+        by smtp.gmail.com with ESMTPSA id c20sm15182100ljk.59.2020.05.13.05.43.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 May 2020 05:43:59 -0700 (PDT)
+Subject: Re: [PATCH] ata: sata_rcar: Fix DMA boundary mask
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jens Axboe <axboe@kernel.dk>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     linux-ide@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200513110426.22472-1-geert+renesas@glider.be>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <231a408f-a696-baab-6eda-0d959689f476@cogentembedded.com>
+Date:   Wed, 13 May 2020 15:43:51 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200513110426.22472-1-geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 9 May 2020 09:42:14 +0000 (UTC), Christophe Leroy wrote:
-> There are other clocks than the standard ones, for instance
-> per process clocks. Therefore, being above the last standard clock
-> doesn't mean it is a bad clock. So, fallback to syscall instead
-> of returning -EINVAL inconditionaly.
+Hello!
 
-Applied to powerpc/fixes.
+On 13.05.2020 14:04, Geert Uytterhoeven wrote:
 
-[1/1] powerpc/vdso32: Fallback on getres syscall when clock is unknown
-      https://git.kernel.org/powerpc/c/e963b7a28b2bf2416304e1a15df967fcf662aff5
+> Before commit 9495b7e92f716ab2 ("driver core: platform: Initialize
+> dma_parms for platform devices"), the R-Car SATA device didn't have DMA
+> parameters.  Hence the DMA boundary mask supplied by its driver was
+> silently ignored, as __scsi_init_queue() doesn't check the return value
+> of dma_set_seg_boundary(), and the default value of 0xffffffff was used.
+> 
+> Now the device has gained DMA parameters, the driver-supplied value is
+> used, and the following warning is printed on Salvator-XS:
+> 
+>      DMA-API: sata_rcar ee300000.sata: mapping sg segment across boundary [start=0x00000000ffffe000] [end=0x00000000ffffefff] [boundary=0x000000001ffffffe]
+>      WARNING: CPU: 5 PID: 38 at kernel/dma/debug.c:1233 debug_dma_map_sg+0x298/0x300
+> 
+> (the range of start/end values depend on whether IOMMU support is
+>   enabled or not)
+> 
+> The issue here is that SATA_RCAR_DMA_BOUNDARY doesn't have bit 0 set, so
+> any typical end value, which is odd, will trigger the check.
+> 
+> Fix this by increasing the DMA boundary value by 1.
+> 
+> Fixes: 8bfbeed58665dbbf ("sata_rcar: correct 'sata_rcar_sht'")
+> Fixes: 9495b7e92f716ab2 ("driver core: platform: Initialize dma_parms for platform devices")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-cheers
+Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+    Sorry, my mistake that went undetected for many years. :-)
+
+MBR, Sergei
