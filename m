@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB4BCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72EC9C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8320020575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4426B20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364018;
-	bh=V7yartNXoApQGkop1Tq1UjPgWbD/FysvyXx/iTBbwxU=;
+	s=default; t=1589364022;
+	bh=dHuJGjr6XK/FSo+1wCO++KttMGGK+sidM+ctbYH9GKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2YGGuDHnsqNRfbXH1LWGK2Og6+1IhcO3ry6BjOxIcRowqPFYFDUeA/ihpCb/ulllV
-	 l5wfEqalCbIgBPhw8XMrtyzSKW/MKyki4XjAsOQGwEDkKHq+9bqseyjsFRW/9nkbQQ
-	 cy36IaR0rNimMFi+UF34zKZGydK3BbyPiN53/CEc=
+	b=N2c6FZhctcGLhe0mE2QYCPEDN3icQiWMlQlEw45TYRT586j3dFqBGH/XJ605kcmG5
+	 i/nqAKlfHWzaXQt1ul8VckkdaA9pTMg+lbqB4nxQusaPMa2zfQAuIuth4/k9UtwoWg
+	 a8E7WjlggxLrdTny3qLv7xFT7fxxbh1DTwZEMzzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387756AbgEMJwM (ORCPT
+        id S2388270AbgEMKAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:52:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53224 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 06:00:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733000AbgEMJwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:52:01 -0400
+        id S2387754AbgEMJwL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:52:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 921A120575;
-        Wed, 13 May 2020 09:52:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB6CA20575;
+        Wed, 13 May 2020 09:52:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363521;
-        bh=V7yartNXoApQGkop1Tq1UjPgWbD/FysvyXx/iTBbwxU=;
+        s=default; t=1589363531;
+        bh=dHuJGjr6XK/FSo+1wCO++KttMGGK+sidM+ctbYH9GKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hrb/Cf2CLFQJ86dQFbkmtagdGyd/EKGdLBEHocmeJty6ZP1MZl5z1BF8g4whDQoM5
-         di+nZHBuz6RCKmhmmM2Call2Z60btMj1NSaWisSkefWA0AVBjrv8AYs9dxxE6uw8uS
-         aFvbqOUDoIR0lQcAYvgiGsol0ryGR688CrCUUAm0=
+        b=zL7ZuXN38cuT978NATvXog5/+M0HVGI6ntNB66AMjtg1A4u4yQdenHkmNmEJgt8rO
+         1wrBvG5tO3J9igyU0i7Cd1QL3pOMpM3gmo0pVR/WTW4r0e34Xq56jSyEFK9hEq1p9P
+         GqDqm0yb2EtTXb7mhLPNJs7kzLq9iwdX48RQ3aNw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Stefan Priebe - Profihost AG <s.priebe@profihost.ag>,
         Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        David Ahern <dsahern@kernel.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 018/118] ipv6: Use global sernum for dst validation with nexthop objects
-Date:   Wed, 13 May 2020 11:43:57 +0200
-Message-Id: <20200513094419.336724064@linuxfoundation.org>
+Subject: [PATCH 5.6 021/118] net: bridge: vlan: Add a schedule point during VLAN processing
+Date:   Wed, 13 May 2020 11:44:00 +0200
+Message-Id: <20200513094419.579670715@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -61,175 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@kernel.org>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 8f34e53b60b337e559f1ea19e2780ff95ab2fa65 ]
+[ Upstream commit 7979457b1d3a069cd857f5bd69e070e30223dd0c ]
 
-Nik reported a bug with pcpu dst cache when nexthop objects are
-used illustrated by the following:
-    $ ip netns add foo
-    $ ip -netns foo li set lo up
-    $ ip -netns foo addr add 2001:db8:11::1/128 dev lo
-    $ ip netns exec foo sysctl net.ipv6.conf.all.forwarding=1
-    $ ip li add veth1 type veth peer name veth2
-    $ ip li set veth1 up
-    $ ip addr add 2001:db8:10::1/64 dev veth1
-    $ ip li set dev veth2 netns foo
-    $ ip -netns foo li set veth2 up
-    $ ip -netns foo addr add 2001:db8:10::2/64 dev veth2
-    $ ip -6 nexthop add id 100 via 2001:db8:10::2 dev veth1
-    $ ip -6 route add 2001:db8:11::1/128 nhid 100
+User space can request to delete a range of VLANs from a bridge slave in
+one netlink request. For each deleted VLAN the FDB needs to be traversed
+in order to flush all the affected entries.
 
-    Create a pcpu entry on cpu 0:
-    $ taskset -a -c 0 ip -6 route get 2001:db8:11::1
+If a large range of VLANs is deleted and the number of FDB entries is
+large or the FDB lock is contented, it is possible for the kernel to
+loop through the deleted VLANs for a long time. In case preemption is
+disabled, this can result in a soft lockup.
 
-    Re-add the route entry:
-    $ ip -6 ro del 2001:db8:11::1
-    $ ip -6 route add 2001:db8:11::1/128 nhid 100
+Fix this by adding a schedule point after each VLAN is deleted to yield
+the CPU, if needed. This is safe because the VLANs are traversed in
+process context.
 
-    Route get on cpu 0 returns the stale pcpu:
-    $ taskset -a -c 0 ip -6 route get 2001:db8:11::1
-    RTNETLINK answers: Network is unreachable
-
-    While cpu 1 works:
-    $ taskset -a -c 1 ip -6 route get 2001:db8:11::1
-    2001:db8:11::1 from :: via 2001:db8:10::2 dev veth1 src 2001:db8:10::1 metric 1024 pref medium
-
-Conversion of FIB entries to work with external nexthop objects
-missed an important difference between IPv4 and IPv6 - how dst
-entries are invalidated when the FIB changes. IPv4 has a per-network
-namespace generation id (rt_genid) that is bumped on changes to the FIB.
-Checking if a dst_entry is still valid means comparing rt_genid in the
-rtable to the current value of rt_genid for the namespace.
-
-IPv6 also has a per network namespace counter, fib6_sernum, but the
-count is saved per fib6_node. With the per-node counter only dst_entries
-based on fib entries under the node are invalidated when changes are
-made to the routes - limiting the scope of invalidations. IPv6 uses a
-reference in the rt6_info, 'from', to track the corresponding fib entry
-used to create the dst_entry. When validating a dst_entry, the 'from'
-is used to backtrack to the fib6_node and check the sernum of it to the
-cookie passed to the dst_check operation.
-
-With the inline format (nexthop definition inline with the fib6_info),
-dst_entries cached in the fib6_nh have a 1:1 correlation between fib
-entries, nexthop data and dst_entries. With external nexthops, IPv6
-looks more like IPv4 which means multiple fib entries across disparate
-fib6_nodes can all reference the same fib6_nh. That means validation
-of dst_entries based on external nexthops needs to use the IPv4 format
-- the per-network namespace counter.
-
-Add sernum to rt6_info and set it when creating a pcpu dst entry. Update
-rt6_get_cookie to return sernum if it is set and update dst_check for
-IPv6 to look for sernum set and based the check on it if so. Finally,
-rt6_get_pcpu_route needs to validate the cached entry before returning
-a pcpu entry (similar to the rt_cache_valid calls in __mkroute_input and
-__mkroute_output for IPv4).
-
-This problem only affects routes using the new, external nexthops.
-
-Thanks to the kbuild test robot for catching the IS_ENABLED needed
-around rt_genid_ipv6 before I sent this out.
-
-Fixes: 5b98324ebe29 ("ipv6: Allow routes to use nexthop objects")
-Reported-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Signed-off-by: David Ahern <dsahern@kernel.org>
-Reviewed-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Tested-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Fixes: bdced7ef7838 ("bridge: support for multiple vlans and vlan ranges in setlink and dellink requests")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Stefan Priebe - Profihost AG <s.priebe@profihost.ag>
+Tested-by: Stefan Priebe - Profihost AG <s.priebe@profihost.ag>
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/ip6_fib.h       |    4 ++++
- include/net/net_namespace.h |    7 +++++++
- net/ipv6/route.c            |   25 +++++++++++++++++++++++++
- 3 files changed, 36 insertions(+)
+ net/bridge/br_netlink.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/include/net/ip6_fib.h
-+++ b/include/net/ip6_fib.h
-@@ -204,6 +204,7 @@ struct fib6_info {
- struct rt6_info {
- 	struct dst_entry		dst;
- 	struct fib6_info __rcu		*from;
-+	int				sernum;
- 
- 	struct rt6key			rt6i_dst;
- 	struct rt6key			rt6i_src;
-@@ -292,6 +293,9 @@ static inline u32 rt6_get_cookie(const s
- 	struct fib6_info *from;
- 	u32 cookie = 0;
- 
-+	if (rt->sernum)
-+		return rt->sernum;
-+
- 	rcu_read_lock();
- 
- 	from = rcu_dereference(rt->from);
---- a/include/net/net_namespace.h
-+++ b/include/net/net_namespace.h
-@@ -432,6 +432,13 @@ static inline int rt_genid_ipv4(const st
- 	return atomic_read(&net->ipv4.rt_genid);
- }
- 
-+#if IS_ENABLED(CONFIG_IPV6)
-+static inline int rt_genid_ipv6(const struct net *net)
-+{
-+	return atomic_read(&net->ipv6.fib6_sernum);
-+}
-+#endif
-+
- static inline void rt_genid_bump_ipv4(struct net *net)
- {
- 	atomic_inc(&net->ipv4.rt_genid);
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -1388,9 +1388,18 @@ static struct rt6_info *ip6_rt_pcpu_allo
- 	}
- 	ip6_rt_copy_init(pcpu_rt, res);
- 	pcpu_rt->rt6i_flags |= RTF_PCPU;
-+
-+	if (f6i->nh)
-+		pcpu_rt->sernum = rt_genid_ipv6(dev_net(dev));
-+
- 	return pcpu_rt;
- }
- 
-+static bool rt6_is_valid(const struct rt6_info *rt6)
-+{
-+	return rt6->sernum == rt_genid_ipv6(dev_net(rt6->dst.dev));
-+}
-+
- /* It should be called with rcu_read_lock() acquired */
- static struct rt6_info *rt6_get_pcpu_route(const struct fib6_result *res)
- {
-@@ -1398,6 +1407,19 @@ static struct rt6_info *rt6_get_pcpu_rou
- 
- 	pcpu_rt = this_cpu_read(*res->nh->rt6i_pcpu);
- 
-+	if (pcpu_rt && pcpu_rt->sernum && !rt6_is_valid(pcpu_rt)) {
-+		struct rt6_info *prev, **p;
-+
-+		p = this_cpu_ptr(res->nh->rt6i_pcpu);
-+		prev = xchg(p, NULL);
-+		if (prev) {
-+			dst_dev_put(&prev->dst);
-+			dst_release(&prev->dst);
-+		}
-+
-+		pcpu_rt = NULL;
-+	}
-+
- 	return pcpu_rt;
- }
- 
-@@ -2596,6 +2618,9 @@ static struct dst_entry *ip6_dst_check(s
- 
- 	rt = container_of(dst, struct rt6_info, dst);
- 
-+	if (rt->sernum)
-+		return rt6_is_valid(rt) ? dst : NULL;
-+
- 	rcu_read_lock();
- 
- 	/* All IPV6 dsts are created with ->obsolete set to the value
+--- a/net/bridge/br_netlink.c
++++ b/net/bridge/br_netlink.c
+@@ -612,6 +612,7 @@ int br_process_vlan_info(struct net_brid
+ 					       v - 1, rtm_cmd);
+ 				v_change_start = 0;
+ 			}
++			cond_resched();
+ 		}
+ 		/* v_change_start is set only if the last/whole range changed */
+ 		if (v_change_start)
 
 
