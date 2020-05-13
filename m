@@ -2,146 +2,97 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A864AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9FAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19B5C205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ACFE205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:13:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UXoZaFZd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lHuOQ7kU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389813AbgEMRLo (ORCPT
+        id S2389865AbgEMRNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 13:11:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33596 "EHLO
+        Wed, 13 May 2020 13:13:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727120AbgEMRLo (ORCPT
+        with ESMTP id S2389431AbgEMRNX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 13:11:44 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C276C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 10:11:44 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id x7so21166524oic.3
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 10:11:44 -0700 (PDT)
+        Wed, 13 May 2020 13:13:23 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E81FC061A0C;
+        Wed, 13 May 2020 10:13:23 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id k7so6394121pjs.5;
+        Wed, 13 May 2020 10:13:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Zx5r0dg+9gENiu3i1Xh7rfCawplygnstBg3FPTyi3Sk=;
-        b=UXoZaFZdX2TT3nLrLhYDdmaNN8vjLgCHo8JHLOwrjkbc1GTCrMo6A7rbcUaPPONgln
-         x0dvuAzxvxY8D6FNJEfHjF+D3ciBT/0FhqsA0y4NVBeNHhVM2P86Zwg99VkSivLzUZ7/
-         vnUSMx6M473Qfr/eNFk0M6qVMqfwWfhIMK7kmIjKeI/MJyrcIPsJbU3NZM4ngZM6OnYF
-         vg5Iw7vcbIPwM1xcv7A7lgANqAwzStIdQ2iV0B2yIqJp2y0NqvdZDnbuWZ1izLGHpmyY
-         evWFxaW/g20nnV3j+vgPw9rsgu5J1kEBHAQ+3cGV2D5lqElCZ6fE+WII2flwgkzpL46R
-         UNbw==
+        bh=CESDIXK5iziXykt0Y/ez2vWrIKygUcVw6M6S2Ji/JxM=;
+        b=lHuOQ7kUnqQ2J0pAG3sD5Jmpiv/ZRrptG88vVBX3a6kKvOnEj9jay5x80zP7d27cU0
+         hsnrdGm01EqSgogJIz7up6/iww5HRrxBkHIrnvZVX980yyqqQVn5hsIq3aNQdOkMkWZq
+         sshgStyWmPTxxWtzMEIG5deLjiaPpOuoZcaE6NZFHEJS9D/zEvmjLaB6z/kL6pz1AbCi
+         w7s06b1aApuoQjttFuvOQQVG6undKKO+yPHP2N8lHCAgxRX0hmmLOYSQrRCq8Zs0yu1D
+         L2O9cp3DoSh0+CO5hrgxoXAc6Y8DKaAN93O88wgIQc2QyQ7DQty+5Xd3+nxK9AoYj2YC
+         kxTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Zx5r0dg+9gENiu3i1Xh7rfCawplygnstBg3FPTyi3Sk=;
-        b=brQvxEtTkQYZ4LtJiTw6s3r9YiQMxdJiwouk6zgGMUyQPpHTg8k80t9MstPUYeOuxb
-         igSoe1TTjZY/DFoBBIdCW/nKU4rPZklrQelbC95/xl9wTMeut5QwItmCriWNl/abwacw
-         cdkLhufCWd60aS8iV0SelD2dQpiYKxsVrb2JgwU4UQuMVfj5JCPD9NyUN2Rhy7XQqyx4
-         z6vro/kULnSzJzEdzi2vuUFHv0OwSUGZ3OdP7u+JgcAcsB6sjQQmX4HIyOUWsBefeYRK
-         QYVGlEmCdPlABdPRA1IETF4Rkoq5TZ4kQw7jVStytWyq3XrAEbh3h+/qjMNErxv2406w
-         pZJA==
-X-Gm-Message-State: AGi0PubErcARcDLHkbA+AQj+aetFPVVmiezzRdFeK4/WshDl/hmopaah
-        00fO9KttwdPy4nURbLom41Xh1YuLoHlbUz95gqEAxw==
-X-Google-Smtp-Source: APiQypIsEUlbBa2C4gshx4JKVoP5BcPSZgJHh8a2H2MHWh44738uBJEq5ushyYE1n3ceM2YTugst3ULETLaGkws09Rg=
-X-Received: by 2002:aca:48d7:: with SMTP id v206mr12374568oia.97.1589389903668;
- Wed, 13 May 2020 10:11:43 -0700 (PDT)
+        bh=CESDIXK5iziXykt0Y/ez2vWrIKygUcVw6M6S2Ji/JxM=;
+        b=VE5kdUUFQv3Dp+a9XYbyIeSSEjdYCAvxC1ZAcTe9SAIXRcI4n5tEax7jLzuV4INc3s
+         6X877dgG/p0olmP4KU/xAVowjRybtY+vRKDHXy15EnSR3OTNFg8uRnGpGZMrQSslWkX6
+         0gQ27pbSv7TDrayGq5FhN/joLvmXUv4uqg9jZtycfPipBtjjytHAWr0EqIAF9/AHcQtb
+         C/XsGiTeqNxfoRx7K7XQgCqUCNTcyFsJvxNCQFYUzKFRrqV27INACOJvWmkfuATJL4Mi
+         GIEp7AH/90HbA7TP5KLo1drRg+TzdYFXXoqlr6F6Ix/CGmWP55PVqkSR3RbGV2KS/jgC
+         tcHw==
+X-Gm-Message-State: AGi0PuZO/pmbJ8gL3/fTlNd2IfpsCB4LqZVDltZ3cIUius0/XH069rW5
+        wQfZM5K4CEg7t/7NYoy0W1bp2SsDagDlhYtjWG00CcK9J40=
+X-Google-Smtp-Source: APiQypJb2ISh0rO+fH9GikkKZila88U9u2hScbncsFLhBKJ17A2wWU2g4j/yfe5q/bd2kIKf2YRxCXnmezeOzQ619E0=
+X-Received: by 2002:a17:90b:3717:: with SMTP id mg23mr36843294pjb.129.1589390002549;
+ Wed, 13 May 2020 10:13:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190923130531.GA27774@asgard.redhat.com> <87y2pxvsbr.fsf@osv.gnss.ru>
- <20200512223103.GC1016@asgard.redhat.com> <CALAqxLUGr=+UjYhQSN34fUMCqj1Ya85tbFKu685cN+XTWYfgXg@mail.gmail.com>
- <8736845ha6.fsf@osv.gnss.ru>
-In-Reply-To: <8736845ha6.fsf@osv.gnss.ru>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 13 May 2020 10:11:32 -0700
-Message-ID: <CALAqxLWkQmiFOCY=YhQLCJHwGHCO9kfZzysCEDLzJFTvgapUwA@mail.gmail.com>
-Subject: Re: [PATCH v2] uapi, posix-timers: provide clockid-related macros and
- functions to UAPI
-To:     Sergey Organov <sorganov@gmail.com>
-Cc:     Eugene Syromiatnikov <esyr@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        lkml <linux-kernel@vger.kernel.org>
+References: <1589388975-15499-1-git-send-email-alencar.fmce@imbel.gov.br>
+In-Reply-To: <1589388975-15499-1-git-send-email-alencar.fmce@imbel.gov.br>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 13 May 2020 20:13:16 +0300
+Message-ID: <CAHp75VeycGutrfTCrVP-9V61ag-KbNHfykQXHWU-8hwEFOerMQ@mail.gmail.com>
+Subject: Re: [PATCH v2] video: fbdev: ssd1307fb: Added support to Column offset
+To:     Rodrigo Rolim Mendes de Alencar <455.rodrigo.alencar@gmail.com>
+Cc:     linux-fbdev@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Rodrigo Rolim Mendes de Alencar <alencar.fmce@imbel.gov.br>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 2:13 AM Sergey Organov <sorganov@gmail.com> wrote:
+On Wed, May 13, 2020 at 7:56 PM Rodrigo Rolim Mendes de Alencar
+<455.rodrigo.alencar@gmail.com> wrote:
 >
-> John Stultz <john.stultz@linaro.org> writes:
->
-> > On Tue, May 12, 2020 at 3:31 PM Eugene Syromiatnikov <esyr@redhat.com> wrote:
-> >> On Tue, May 12, 2020 at 10:58:16PM +0300, Sergey Organov wrote:
-> >> > Eugene Syromiatnikov <esyr@redhat.com> writes:
-> >> >
-> >> > > As of now, there is no interface exposed for converting pid/fd into
-> >> > > clockid and vice versa; linuxptp, for example, has been carrying these
-> >> > > definitions in missing.h header for quite some time[1].
-> >> > >
-> >> > > [1] https://sourceforge.net/p/linuxptp/code/ci/af380e86/tree/missing.h
-> >> > >
-> >> > > Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
-> >> > > ---
-> >> > > Changes since v1[1]:
-> >> > >  * Actually tried to build with the patch and fixed the build error
-> >> > >    reported by kbuild test robot[2].
-> >> > >
-> >> > > [1] https://lkml.org/lkml/2019/9/20/698
-> >> > > [2] https://lkml.org/lkml/2019/9/22/13
-> >> > > ---
-> >> > >  include/linux/posix-timers.h | 47 +------------------------------------------
-> >> > >  include/uapi/linux/time.h    | 48 ++++++++++++++++++++++++++++++++++++++++++++
-> >> > >  2 files changed, 49 insertions(+), 46 deletions(-)
-> >> >
-> >> > Was this patch applied, rejected, lost?
-> >> >
-> >> > I can't find it in the current master.
-> >>
-> >> IIRC, it was ignored.
-> >
-> > Overlooked. :)  Not intentionally ignored.
-> >
-> > I don't have any major objection with adding helpers, though I feel
-> > like you're exporting a lot more to the uapi then applications likely
-> > need.
-> >
-> > Would it be better to add just the bits from the missing.h header you
-> > pointed to:
-> > #define CLOCKFD 3
-> > #define FD_TO_CLOCKID(fd) ((~(clockid_t) (fd) << 3) | CLOCKFD)
-> > #define CLOCKID_TO_FD(clk) ((unsigned int) ~((clk) >> 3))
-> >
-> >  to the uapi header?
->
-> Please, no:
->
-> 1. These macros were copied almost verbatim from the kernel code long
-> ago, and since then kernel has changed them to inline functions, so
-> getting back to these obsolete macros is pointless.
->
-> 2. If we do need to export macroses, then kernel inline functions are
-> better to be re-implemented in terms of these macros, not to have 2
-> different points of implementation.
->
-> Overall, I'd vote for the current approach of the patch, provided
-> exporting inline functions to user-space is allowed.
+> This patch provides support for displays like VGM128064B0W10,
+> which requires a column offset of 2, i.e., its segments starts
+> in SEG2 and ends in SEG129.
 
-Sure, I just want to make sure we're only exporting the minimal
-necessary amount of details to userland. The current patch is
-exporting a bit more than that.
+Also, include Rob as well into Cc.
 
-thanks
--john
+...
+
+> +       if (device_property_read_u32(node, "solomon,col-offset", &par->col_offset))
+> +               par->col_offset = 0;
+> +
+>         if (device_property_read_u32(dev, "solomon,com-offset", &par->com_offset))
+>                 par->com_offset = 0;
+
+Have you ever compile it?
+
+-- 
+With Best Regards,
+Andy Shevchenko
