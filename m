@@ -2,73 +2,97 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAF4C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC2EC2D0FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE23E206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:14:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589354056;
-	bh=DLr2UF6e0IHfcW2xoKKLz/KEhDxSLoxOz8Ehzzq0pOc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PEmHESHsbeYYz1t9WBoeuCQUzc3OwXZmSSoSkGroh/mlE/Qkz1Vbvp7lOKRv7b216
-	 V+eMaDQhMNyIf4PpolndXUVnj7lxSsrzd6cExEB9FU5hORB2z4Md5BWfgTnU6wtvs6
-	 LA3aSf6hPVEL9h9umJ9m768tRI2i+x5oLO+Fdgdo=
+	by mail.kernel.org (Postfix) with ESMTP id E55302078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:16:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731775AbgEMHOQ (ORCPT
+        id S1729924AbgEMHQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 03:14:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44758 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 03:16:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60540 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726020AbgEMHOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 03:14:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D99B9206D6;
-        Wed, 13 May 2020 07:14:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589354055;
-        bh=DLr2UF6e0IHfcW2xoKKLz/KEhDxSLoxOz8Ehzzq0pOc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HgtWzUv5Pg1zRmc16W7qpkqqRqludZO1T7kog9p3eecl7JMcb5IxeW5U9A2y3pi07
-         l9WRB5Dpp95/qBln3UUKhkMmykr7W2pl5z1cpYtBIxmIlUbleEBZMkPa8aXmEOi43d
-         7O4k8NtL6nwaZ0pHpd5u4Cf5pXxpfhKeZ+BwelpA=
-Date:   Wed, 13 May 2020 09:14:13 +0200
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     "Idgar, Or" <Or.Idgar@dell.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "Ravich, Leonid" <Leonid.Ravich@dell.com>
-Subject: Re: CMA enhancement - non-default areas in x86
-Message-ID: <20200513071413.GB766804@kroah.com>
-References: <CH2PR19MB3767236EDC9BE964FC3AB91BFEBF0@CH2PR19MB3767.namprd19.prod.outlook.com>
- <20200513064755.GA763968@kroah.com>
- <CH2PR19MB376794E120B9B02856DC87C3FEBF0@CH2PR19MB3767.namprd19.prod.outlook.com>
+        id S1728490AbgEMHQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 03:16:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B8867B1DD;
+        Wed, 13 May 2020 07:16:42 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Jan Kara <jack@suse.cz>
+Date:   Wed, 13 May 2020 17:16:32 +1000
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 1/2 V3] MM: replace PF_LESS_THROTTLE with PF_LOCAL_THROTTLE
+In-Reply-To: <20200422124600.GH8775@quack2.suse.cz>
+References: <87tv2b7q72.fsf@notabene.neil.brown.name> <87v9miydai.fsf@notabene.neil.brown.name> <87ftdgw58w.fsf@notabene.neil.brown.name> <87wo6gs26e.fsf@notabene.neil.brown.name> <87tv1ks24t.fsf@notabene.neil.brown.name> <20200416151906.GQ23739@quack2.suse.cz> <87zhb5r30c.fsf@notabene.neil.brown.name> <20200422124600.GH8775@quack2.suse.cz>
+Message-ID: <871rnob8z3.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CH2PR19MB376794E120B9B02856DC87C3FEBF0@CH2PR19MB3767.namprd19.prod.outlook.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 07:00:12AM +0000, Idgar, Or wrote:
-> > For what type of device?
-> NTB (Non-Transparent Bridge).
+--=-=-=
+Content-Type: text/plain
 
 
-Very odd quoting style...
+I thought about this some more and come up with another "simple"
+approach that didn't require me understanding too much code, but does -
+I think - address your concerns.
 
-Anyway, what exactly is a non-transparent bridge, and why doesn't your
-bios/uefi implementation properly reserve the memory for it so that the
-OS does not use it?
+I've changed the heuristic to avoid any throttling on PF_LOCAL_THROTTLE
+task if:
+ - the global dirty count is below the global free-run threshold.  The
+   code did this already.
+ - (or) the per-wb dirty count is below the per-wb free-run threshold.
+   This is the change.
 
-thanks,
+This means that:
+ - in a steady stated, all bdis will be throttled based on their (steady
+   state) throughput, which is equally appropriate for PF_LOCAL_THROTTLE
+   tasks.
+ - a PF_LOCAL_THROTTLE task will never be *completely* blocked by dirty
+   pages queued for other devices.  This means no deadlock, and that is
+   the primary purpose of PF_LOCAL_THROTTLE.
+ - when writes through the PF_LOCAL_THROTTLE task start up from idle -
+   when there is no current throughput estimate - the PF_LOCAL_THROTTLE
+   can be expected to get a fair share of the available memory, just as
+   much as any other writer.  This was the possible problem with
+   treating PF_LOCAL_THROTTLE just like BDI_CAP_STRICTLIMIT.
 
-greg k-h
+So I think this is a good solution.  Thoughts?
+Patches follow - I've address the comment formatting issue.
+
+Thanks,
+NeilBrown
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl67ntAACgkQOeye3VZi
+gbkPqRAAtxj9x2Nnc8sDId77c2gR7zMDpFPEY6g07dqJpWw0yBr6dWPypKbUpsso
+4kqJpJDxKpM/zo6ysnkDPJJmNmgIS5n6s3vQCsumP7+TF3PpnMtAqG2GnvxVOLkN
+VPIb4HCghdI0mGS9xeR1OBPHsK8I0HvHg0CGWAo5rCCICRmDAQXCYL5QdGqfLuxj
+B/55yI4jzKfH6OaArJrrKWvWVdI825oGSn/bdffz/GighPP1QdLbNz4iWS5ab43O
+0tR4m9JjGQIB7RjxnNXp0knc3+2hVqKY6dallTpOpn4fE0n7TeSFu7lvI6wRL7F/
+OKLBlY9ca7jeIOcrCwBan5GFOh9Ou0IFvX41ehrFEFUc6dTb4836b8T9HunKP95d
+dwL3v1gpFI06IZwb+K0YGrf9MWDSZQeZ/tPyHM2VDFb2Jl3hx+3aVxhhY9bgPtjZ
+Mf3cbYBiGWU+xoZwPYKKw4ghNgJDTOZd0ohTTfM0c9TuGp7+NZUtU/3/9J9/Cw91
+P4ZNnN4AyW20Jh2ucfACOesx3LorjbvXIwRPaJJ8hLHQVUZ66RJoIs3QJ+5lpbQc
+pO6kQ8uTynnSHa5Gt39CnQVjAz2AoXsrU/sKFRQ/HAZd8hyzDXrgnn+EAdy6KwO1
+EF92Wa5AIVLDF4qfCuYsLDH4gAUrtRxFqoER4NWMxIJtX8nrChU=
+=vbJX
+-----END PGP SIGNATURE-----
+--=-=-=--
