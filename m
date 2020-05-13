@@ -2,170 +2,182 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9C0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD25C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C470420671
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:34:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="A7a37Mkz"
+	by mail.kernel.org (Postfix) with ESMTP id 88ECF20690
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:34:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389228AbgEMPeF (ORCPT
+        id S1732415AbgEMPeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:34:05 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:20176 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728678AbgEMPeF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:34:05 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589384044; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=/B1KwIugMNvRVoGioXQNdOUSYWGH6kyfWoajYo0fLLM=;
- b=A7a37MkzPkoyiaEfve7GS45txI0t0E/1sS4G3/2BZsD+RFoYqOrGhwfyj3iAG5EaBLUuW+x3
- ZgULFxJNvVOTgmSAHRXWutFZzfIqJ4QG9SpndnmbWhNmM3i+xF320NLjpFIYF2aQ5A4rZCoh
- Cko7jNuwg2UVd0EDcO/AlFbG4AM=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ebc1356.7efd1e400d18-smtp-out-n02;
- Wed, 13 May 2020 15:33:42 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id F2D9FC43637; Wed, 13 May 2020 15:33:41 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4A27DC433D2;
-        Wed, 13 May 2020 15:33:41 +0000 (UTC)
+        Wed, 13 May 2020 11:34:09 -0400
+Received: from mga06.intel.com ([134.134.136.31]:38735 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728678AbgEMPeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 11:34:07 -0400
+IronPort-SDR: qun4NCiBK7eySdGFVFU83FEH9k+uXrw8JzGCpwbKP0zQw50iqD+EPzeBNnUItaq2dcf2NH8Ibh
+ 5zCuwOSQX6KA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 08:34:07 -0700
+IronPort-SDR: vy2lgmYe9rC6VKwtymuZYskMIG1nHjtOprrt8bbbkB+37IzrVJhAjSdT4L/bg8ZbBCzNykt+4f
+ Eb3d8mkGjR7w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,388,1583222400"; 
+   d="scan'208";a="463977187"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 13 May 2020 08:34:02 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1jYtOX-006Rw5-7D; Wed, 13 May 2020 18:34:05 +0300
+Date:   Wed, 13 May 2020 18:34:05 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
+        brendanhiggins@google.com, tglx@linutronix.de,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        masonccyang@mxic.com.tw, robh+dt@kernel.org,
+        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
+Subject: Re: [PATCH v6 2/2] mtd: rawnand: Add NAND controller support on
+ Intel LGM SoC
+Message-ID: <20200513153405.GS185537@smile.fi.intel.com>
+References: <20200513104615.7905-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200513104615.7905-3-vadivel.muruganx.ramuthevar@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 13 May 2020 21:03:41 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mike Leach <mike.leach@linaro.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple
- connections
-In-Reply-To: <CAJ9a7VjAoUmMG9pLEzE_rMSpOjwVOi-ZCinF87n9H0JgfMDsiQ@mail.gmail.com>
-References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
- <cf5852e9-c3c1-3d31-46f0-0370719947ab@arm.com>
- <CAJ9a7VgF3-Hdc7KSw9gVBeXSDHNguhqVhp60oK2XhCtr3DhDqg@mail.gmail.com>
- <84918e7d-c933-3fa1-a61e-0615d4b3cf2c@arm.com>
- <668ea1283a6dd6b34e701972f6f71034@codeaurora.org>
- <5b0f5d77c4eec22d8048bb0ffa078345@codeaurora.org>
- <759d47de-2101-39cf-2f1c-cfefebebd548@arm.com>
- <7d343e96cf0701d91152fd14c2fdec42@codeaurora.org>
- <CAJ9a7VgEiX19ukjwakNHBHDeZJ05f5Z7pAYG9iEnpXCuuDfBqg@mail.gmail.com>
- <a4bba03d41a2b0145b3c6c19d48698eb@codeaurora.org>
- <CAJ9a7Vj4eyv1n=RxuqfV=pdBN3SDG+ShYS5J4s40KJtqOnR7vw@mail.gmail.com>
- <ae0fe2050be01cc1403c7d53a0da8cb8@codeaurora.org>
- <b8c1cc35846d425a1677c73fddf5874d@codeaurora.org>
- <eee1b9a90266eed9a9c75401f0679777@codeaurora.org>
- <CAJ9a7Vjd0XG+rAvHptAAjGtE6xRhYsPaOSC_Bf9B-w-FZFu_Qw@mail.gmail.com>
- <47f6d51bfad0a0bf1553e101e6a2c8c9@codeaurora.org>
- <37b3749e-2363-0877-c318-9c334a5d1881@arm.com>
- <d47271ee6a2a6f0f30da7e140b6f196c@codeaurora.org>
- <CAJ9a7Vg95tcgMXgQKLAZc=TpV6FnPZ7wdF=Kwbuy7d2kRCjYQw@mail.gmail.com>
- <364049a30dc9d242ec611bf27a16a6c9@codeaurora.org>
- <CAJ9a7VjAoUmMG9pLEzE_rMSpOjwVOi-ZCinF87n9H0JgfMDsiQ@mail.gmail.com>
-Message-ID: <5a76926a6532d3f91cca169d474ba98e@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513104615.7905-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
-
-On 2020-05-13 03:22, Mike Leach wrote:
-
-[...]
-
+On Wed, May 13, 2020 at 06:46:15PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 > 
-> Looking at the AMBA driver there is a comment there that AMBA does not
-> lose state when clocks are removed. This is consistent with the AMBA
-> protocol spec which states that AMBA slaves can only be accessed /
-> read / write on various strobe signals,  or state reset on PRESET
-> signal, all timed by the rising edge of the bus clock. state changes
-> are not permitted on clock events alone. Given this static nature of
-> AMBA slaves then removing the clock should not have any effect.
+> This patch adds the new IP of Nand Flash Controller(NFC) support
+> on Intel's Lightning Mountain(LGM) SoC.
 > 
-> The AMBA driver only /drivers/amba/bus.c  gives permission to
-> remove/restore the clocks from the devices (pm_suspend pm_resume
-> callbacks) - this reduces the power consumption of these devices if
-> the clock is not running, but state must be retained.
+> DMA is used for burst data transfer operation, also DMA HW supports
+> aligned 32bit memory address and aligned data access by default.
+> DMA burst of 8 supported. Data register used to support the read/write
+> operation from/to device.
 > 
+> NAND controller driver implements ->exec_op() to replace legacy hooks,
+> these specific call-back method to execute NAND operations.
 
-Thanks for the clarification.
+...
 
->> >> >>
->> >> >> pid=0x2bb909 for both replicators. So part number is same.
->> >> >> UCI will be different for different implementation(QCOM maybe
->> >> >> different from ARM),
->> >> >> but will it be different for different replicators under the same
->> >> >> impl(i.e., on QCOM).
->> >> >
->> >> > May be use PIDR4.DES_2 to match the Implementor and apply the work
->> >> > around for all QCOM replicators ?
->> >> >
->> >> > To me that sounds the best option.
->> >> >
->> >>
->> >
->> > I agree, if it can be established that the register values that make
->> > up UCI (pid0-4, devarch, devtype, PID:CLASS==0x9), can correctly
->> > identify the parts then a flag can be set in the probe() function and
->> > acted on during the enable() function.
->> >
->> 
->> So here I have a doubt as to why we need to use UCI because PID =
->> 0x2bb909
->> and CID = 0xb105900d are same for both replicators, so UCI won't
->> identify the
->> different replicators(in same implementation i.e., on QCOM) here.
->> Am I missing something?
->> 
->> Thats why I think Suzuki suggested to use PIDR4_DES2 and check for 
->> QCOM
->> impl
->> and add a workaround for all replicators, something like below: (will
->> need cleaning)
->> 
->> #define PIDR4_DES2      0xFD0
->> 
->> if (FIELD_GET(GENMASK(3, 0), readl_relaxed(drvdata->base + 
->> PIDR4_DES2))
->> == 0x4)
->>         id0val = id1val = 0xff;
->> 
-> 
-> Please look at the CoreSight components specification 3.0 (ARM IHI
-> 0029E) Section B2.1.2 which describes the Unique Component Identifier
-> (UCI).
-> As mentioned above this consists of a combination of bits from
-> multiple registers, including PIDR4.
-> 
+> +static int ebu_nand_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct ebu_nand_controller *ebu_host;
+> +	struct nand_chip *nand;
+> +	struct mtd_info *mtd;
+> +	struct resource *res;
+> +	char *resname;
+> +	int ret, i;
+> +	u32 reg;
+> +
+> +	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
+> +	if (!ebu_host)
+> +		return -ENOMEM;
+> +
+> +	ebu_host->dev = dev;
+> +	nand_controller_init(&ebu_host->controller);
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
+> +	ebu_host->ebu = devm_ioremap_resource(&pdev->dev, res);
 
-Ok got it now, thanks for clearing the doubt. I will go ahead with
-this method to identify QCOM impl and post a patch.
+devm_platform_ioremap_resource_byname
 
-Thanks,
-Sai
+> +	if (IS_ERR(ebu_host->ebu))
+> +		return PTR_ERR(ebu_host->ebu);
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
+> +	ebu_host->hsnand = devm_ioremap_resource(&pdev->dev, res);
+
+devm_platform_ioremap_resource_byname
+
+> +	if (IS_ERR(ebu_host->hsnand))
+> +		return PTR_ERR(ebu_host->hsnand);
+> +
+> +	ret = device_property_read_u32(dev, "nand,cs", &reg);
+> +	if (ret) {
+> +		dev_err(dev, "failed to get chip select: %d\n", ret);
+> +		return ret;
+> +	}
+> +	ebu_host->cs_num = reg;
+> +
+> +	for (i = 0; i < MAX_CS; i++) {
+> +		resname = devm_kasprintf(dev, GFP_KERNEL, "nand_cs%d", i);
+> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +						   resname);
+
+if res is NULL?
+
+> +		ebu_host->cs[i].chipaddr = devm_ioremap_resource(dev, res);
+> +		ebu_host->cs[i].nand_pa = res->start;
+> +			if (IS_ERR(ebu_host->cs[i].chipaddr))
+> +				return PTR_ERR(ebu_host->cs[i].chipaddr);
+
+Something happened with ordering / indentation along these lines...
+
+> +	}
+> +
+
+> +	for (i = 0; i < MAX_CS; i++) {
+> +		resname = devm_kasprintf(dev, GFP_KERNEL, "addr_sel%d", i);
+> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +						   resname);
+
+if res is NULL?
+
+> +		ebu_host->cs[i].addr_sel = res->start;
+> +		writel(ebu_host->cs[i].addr_sel | EBU_ADDR_MASK(5) |
+> +		       EBU_ADDR_SEL_REGEN, ebu_host->ebu + EBU_ADDR_SEL(i));
+> +	}
+
+> +	return ret;
+> +}
+
+...
+
+> +static int ebu_nand_remove(struct platform_device *pdev)
+> +{
+> +	struct ebu_nand_controller *ebu_host = platform_get_drvdata(pdev);
+> +
+
+> +	if (ebu_host) {
+
+How it can be NULL here?
+
+> +		mtd_device_unregister(nand_to_mtd(&ebu_host->chip));
+> +		nand_cleanup(&ebu_host->chip);
+> +		ebu_nand_disable(&ebu_host->chip);
+> +
+> +		if (ebu_host->dma_rx || ebu_host->dma_tx)
+> +			ebu_dma_cleanup(ebu_host);
+> +
+> +		clk_disable_unprepare(ebu_host->clk);
+> +	}
+> +
+> +	return 0;
+> +}
+
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+With Best Regards,
+Andy Shevchenko
+
+
