@@ -2,183 +2,132 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BE8CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77AB6C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B50E20740
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:48:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LWVGtdUt"
+	by mail.kernel.org (Postfix) with ESMTP id 44FEB20769
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:48:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589363302;
+	bh=zbwmqmbafc7t7/TiP/H/lC/ZbOKv4wTPOv7v8lKIcRI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pqTZBO1cU3yEiUsprfaXLz3O76WB1uqo0lAxOU2GQxqgsyZKMf8ka/f6aT667UhPn
+	 +WL3RuoIhQDYTCeuHo9cie3J+num/hbfwMbMLBU+iPrpJLbzLm151DQElVKXHOJXFb
+	 FC5HBRlm6qs8DcbWutbc4EfJWY6ICpHsAYJw7yuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733037AbgEMJsS (ORCPT
+        id S1732564AbgEMJsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:48:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733027AbgEMJsO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:48:14 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A36E5C061A0C;
-        Wed, 13 May 2020 02:48:14 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id mq3so10872597pjb.1;
-        Wed, 13 May 2020 02:48:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bjsu2SAJTtr2kJH3ue6aN6Ti78fmHhbAVyvMhimqSsQ=;
-        b=LWVGtdUt6YPbFWykGS5kdFT+p0sVsgqjSJe4RbMQBERznbDkMTrHlo77rtHp35J6uD
-         mgf4IfTuol9BBCv6jCKmgDYzexxLwY611GiaX8yeLHviv7RkPvLc+WUhUolsGzPZrJ0z
-         4NxoLPO6kqnM0p+h2fwfyl/pCGVEuw2sWekgQTJwk8wJP92OwvVfaSlRcWufagqMEzhX
-         fFewiwgTYH+qIeug1diJ9uXyWNw5cxwTwk4bkgQFc5zEr9O7xDnFeUJsx4f19e+/WsBO
-         SvaqYjrAv/t/CmbeujlpKF7GXfJYxGt9tQO8zIFNzuMf7VjSZZZnOmjHrK4yQJB5CnbW
-         GlGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bjsu2SAJTtr2kJH3ue6aN6Ti78fmHhbAVyvMhimqSsQ=;
-        b=TPJYaDpp56h/8jqYELr0c85GXbpPfMRtn9KLQuyFTuQN/0PG4wEh6/ZqHbqd6mWpEf
-         ES5QfT+jhCwh1vFBbzcH02UC170lBpS9NZF4MEfyk7QH6cfv4NLdDtuCWl1oe52HSxZD
-         bx+1zYpqbFzZVTSi2KRrI0DP64B3TuxYag3dDGTnGLl+uRxtjmn14Rh0xiNYTmqk2m1Q
-         JzijgsyzxYyJvMfS9pqWkNLVQcCZr5rt69P40cXFeop+hSfmInm3buRMjM1G46LoFj4O
-         dkC684SKAxYPBkfIoZMWIA2+LfUET/KyXKvuXN8s1TmZUxcmm8qNpr3dAeh08IZnTBxA
-         FbKA==
-X-Gm-Message-State: AGi0PubjjW6CO/dFAWTbwbHfgBooqaMn6Mc44RERTkbRuLsNPIrFiwH9
-        +armH2q/dbWO+lKgWkTaxoSmGXZMKNz4GaoVdkc=
-X-Google-Smtp-Source: APiQypK+UYacLdCsTsRxHMMOZPFez8xItFlhrNgGL222RcsdOJVS0GeWd82dTmjrD7vpBSnJU10Webmi2EBRKf2/jqQ=
-X-Received: by 2002:a17:90b:94a:: with SMTP id dw10mr34235868pjb.228.1589363294097;
- Wed, 13 May 2020 02:48:14 -0700 (PDT)
+        Wed, 13 May 2020 05:48:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46672 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732551AbgEMJsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:48:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC8A920769;
+        Wed, 13 May 2020 09:48:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589363298;
+        bh=zbwmqmbafc7t7/TiP/H/lC/ZbOKv4wTPOv7v8lKIcRI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WVHLSKKvWHLzdFGg7EbpTyHBojN0eQGODqKng2bL2+aFJTC1ebd2BhNVjtRnGu5TK
+         Ka8qkf6iq39i4nl2TXmpb1WfWrJxJIjuCXXrE/gF/Si0YcIsRgCVD2+AWuPwUGYpSP
+         WPHQFI4B5Pq39UHF8gqq9vHTLv14dqDmgiEqzNOc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Scott Dial <scott@scottdial.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 18/90] net: macsec: preserve ingress frame ordering
+Date:   Wed, 13 May 2020 11:44:14 +0200
+Message-Id: <20200513094410.708885324@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
+References: <20200513094408.810028856@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <1589361736-816-1-git-send-email-jprakash@codeaurora.org> <1589361736-816-4-git-send-email-jprakash@codeaurora.org>
-In-Reply-To: <1589361736-816-4-git-send-email-jprakash@codeaurora.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 13 May 2020 12:48:07 +0300
-Message-ID: <CAHp75VedM+=+m8WF=zPpUcizgCGareYuBzUfjKwesozVSY_gKg@mail.gmail.com>
-Subject: Re: [PATCH V4 3/5] iio: adc: Add support for PMIC7 ADC
-To:     Jishnu Prakash <jprakash@codeaurora.org>
-Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        smohanad@codeaurora.org, kgunda@codeaurora.org,
-        aghayal@codeaurora.org, Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-arm-msm@vger.kernel.org,
-        linux-iio <linux-iio@vger.kernel.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 12:23 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
->
-> The ADC architecture on PMIC7 is changed as compared to PMIC5. The
-> major change from PMIC5 is that all SW communication to ADC goes through
-> PMK8350, which communicates with other PMICs through PBS when the ADC
-> on PMK8350 works in master mode. The SID register is used to identify the
-> PMICs with which the PBS needs to communicate. Add support for the same.
+From: Scott Dial <scott@scottdial.com>
 
-> +#define ADC7_CONV_TIMEOUT                      msecs_to_jiffies(10)
+[ Upstream commit ab046a5d4be4c90a3952a0eae75617b49c0cb01b ]
 
-...
+MACsec decryption always occurs in a softirq context. Since
+the FPU may not be usable in the softirq context, the call to
+decrypt may be scheduled on the cryptd work queue. The cryptd
+work queue does not provide ordering guarantees. Therefore,
+preserving order requires masking out ASYNC implementations
+of gcm(aes).
 
-> +       ret = adc5_read(adc, ADC5_USR_DIG_PARAM, buf, sizeof(buf));
-> +       if (ret < 0)
+For instance, an Intel CPU with AES-NI makes available the
+generic-gcm-aesni driver from the aesni_intel module to
+implement gcm(aes). However, this implementation requires
+the FPU, so it is not always available to use from a softirq
+context, and will fallback to the cryptd work queue, which
+does not preserve frame ordering. With this change, such a
+system would select gcm_base(ctr(aes-aesni),ghash-generic).
+While the aes-aesni implementation prefers to use the FPU, it
+will fallback to the aes-asm implementation if unavailable.
 
-Is ' < 0' part necessary?
-Ditto for same cases in other places in the code.
+By using a synchronous version of gcm(aes), the decryption
+will complete before returning from crypto_aead_decrypt().
+Therefore, the macsec_decrypt_done() callback will be called
+before returning from macsec_decrypt(). Thus, the order of
+calls to macsec_post_decrypt() for the frames is preserved.
 
-> +               return ret;
+While it's presumable that the pure AES-NI version of gcm(aes)
+is more performant, the hybrid solution is capable of gigabit
+speeds on modest hardware. Regardless, preserving the order
+of frames is paramount for many network protocols (e.g.,
+triggering TCP retries). Within the MACsec driver itself, the
+replay protection is tripped by the out-of-order frames, and
+can cause frames to be dropped.
 
-...
+This bug has been present in this code since it was added in
+v4.6, however it may not have been noticed since not all CPUs
+have FPU offload available. Additionally, the bug manifests
+as occasional out-of-order packets that are easily
+misattributed to other network phenomena.
 
-> +       switch (mask) {
-> +       case IIO_CHAN_INFO_PROCESSED:
-> +               ret = adc7_do_conversion(adc, prop, chan,
-> +                                       &adc_code_volt, &adc_code_cur);
-> +               if (ret)
-> +                       return ret;
-> +
-> +               ret = qcom_adc5_hw_scale(prop->scale_fn_type,
-> +                       &adc5_prescale_ratios[prop->prescale],
-> +                       adc->data,
-> +                       adc_code_volt, val);
-> +
-> +               if (ret)
-> +                       return ret;
-> +
-> +               return IIO_VAL_INT;
-> +       default:
-> +               return -EINVAL;
-> +       }
+When this code was added in v4.6, the crypto/gcm.c code did
+not restrict selection of the ghash function based on the
+ASYNC flag. For instance, x86 CPUs with PCLMULQDQ would
+select the ghash-clmulni driver instead of ghash-generic,
+which submits to the cryptd work queue if the FPU is busy.
+However, this bug was was corrected in v4.8 by commit
+b30bdfa86431afbafe15284a3ad5ac19b49b88e3, and was backported
+all the way back to the v3.14 stable branch, so this patch
+should be applicable back to the v4.6 stable branch.
 
-> +
-> +       return 0;
+Signed-off-by: Scott Dial <scott@scottdial.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/macsec.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Dead code?
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -1309,7 +1309,8 @@ static struct crypto_aead *macsec_alloc_
+ 	struct crypto_aead *tfm;
+ 	int ret;
+ 
+-	tfm = crypto_alloc_aead("gcm(aes)", 0, 0);
++	/* Pick a sync gcm(aes) cipher to ensure order is preserved. */
++	tfm = crypto_alloc_aead("gcm(aes)", 0, CRYPTO_ALG_ASYNC);
+ 
+ 	if (IS_ERR(tfm))
+ 		return tfm;
 
-...
 
-> +static int qcom_vadc7_scale_hw_calib_die_temp(
-> +                               const struct vadc_prescale_ratio *prescale,
-> +                               const struct adc5_data *data,
-> +                               u16 adc_code, int *result_mdec)
-> +{
-> +
-> +       int voltage, vtemp0, temp, i = ARRAY_SIZE(adcmap7_die_temp) - 1;
-
-How assignment to i is useful?
-
-> +       voltage = qcom_vadc_scale_code_voltage_factor(adc_code,
-> +                               prescale, data, 1);
-> +
-> +       if (adcmap7_die_temp[0].x > voltage) {
-> +               *result_mdec = DIE_TEMP_ADC7_SCALE_1;
-> +               return 0;
-
-> +       } else if (adcmap7_die_temp[i].x <= voltage) {
-
-Redundant 'else'.
-
-> +               *result_mdec = DIE_TEMP_ADC7_MAX;
-> +               return 0;
-> +       }
-> +
-> +       for (i = 0; i < ARRAY_SIZE(adcmap7_die_temp); i++)
-> +               if (adcmap7_die_temp[i].x > voltage)
-> +                       break;
-> +
-> +       vtemp0 = adcmap7_die_temp[i - 1].x;
-> +       voltage = voltage - vtemp0;
-> +       temp = div64_s64(voltage * DIE_TEMP_ADC7_SCALE_FACTOR,
-> +               adcmap7_die_temp[i - 1].y);
-> +       temp += DIE_TEMP_ADC7_SCALE_1 + (DIE_TEMP_ADC7_SCALE_2 * (i - 1));
-> +       *result_mdec = temp;
-> +
-> +       return 0;
-> +}
-
-...
-
-> +#define RATIO_MAX_ADC7         0x4000
-
-Hmm... Why the last is in hex? Is it related to amount of bits in the
-hardware? Then probably better to use BIT().
-
--- 
-With Best Regards,
-Andy Shevchenko
