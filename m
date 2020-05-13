@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 482BACA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 302EDCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D00220769
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1076020769
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363475;
-	bh=IflCjPG2xi5TTNJDFZpm013QD6WriFjIurebSx5OlPg=;
+	s=default; t=1589363479;
+	bh=tuV8TrIntQx/Va+AYnfJhtfpfekpiuaiuOMv9B7aI6w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EWO2qmD8M6yorblzfoU0gy7P3Ym68lp1qDnU2BmrW+yKZeBOo7Ea2A/UJGqoO/ToG
-	 x1x7H/ecvamw0F9VhqCAeDK3FJO/wE1HvoOZQ/TZ03xILcDyCi5n1ZS4fxzxqkB3MB
-	 aPfqmw3+j/ZVDhUggzT8WmUYMV5Sqj79HvLUhKDg=
+	b=R3doMxF4Idbq70iBvRe1/H58a/1R3AS/VqqIeNbeGkQEIZ2YGr/AAtgU4dbDCj9vw
+	 R3r+nolN6+zktOa9cWmOExbWb3y+gpfsWU10hX03WKv+Q93AW+iW6znyQxFWzjYe+1
+	 BLlcUeWUJps4hLTDtlAXOSg8oXAYZGH0WMA+9B1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbgEMJvO (ORCPT
+        id S2387636AbgEMJvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:51:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51688 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:51:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387611AbgEMJvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:51:10 -0400
+        id S2387620AbgEMJvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:51:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75AFE23127;
-        Wed, 13 May 2020 09:51:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFB8B20575;
+        Wed, 13 May 2020 09:51:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363469;
-        bh=IflCjPG2xi5TTNJDFZpm013QD6WriFjIurebSx5OlPg=;
+        s=default; t=1589363472;
+        bh=tuV8TrIntQx/Va+AYnfJhtfpfekpiuaiuOMv9B7aI6w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PGR8w8gGCv/nICGbPiGmFw3O4FqYKrPBx/rCnd8g9s3T47U1U1n2u8NDxuqNM/4ye
-         ebuIpi+Yp8PouCMMyOE2LOQxSDNYJ67Dg9Q78YWpYwn8bKFLZWJl4HXrJcJ0a8bl9/
-         KblESoDdDoJUyl7xf8lkW5IKp2IW4i5RDfV0Lb88=
+        b=wCYi+W1V5GBb9Hy7Of3foc74YDaFv15Q2P7TtvU61dNjL+TzWjBuJLIXTn1zNtxjL
+         Jb5eqbb4YSQ7comGMgcfSXV7tUT2bwQL56JUTuh3FleB0n3n3SpZ1j5SIi2awJ75v1
+         h9wLnEzR3OtgOm1oI5yKK5CnY/ZMIzuj0YIxcFPM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.4 38/90] net/mlx5: Fix command entry leak in Internal Error State
-Date:   Wed, 13 May 2020 11:44:34 +0200
-Message-Id: <20200513094412.612953424@linuxfoundation.org>
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.4 81/90] netfilter: nat: never update the UDP checksum when its 0
+Date:   Wed, 13 May 2020 11:45:17 +0200
+Message-Id: <20200513094417.648417436@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -60,36 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Moshe Shemesh <moshe@mellanox.com>
+From: Guillaume Nault <gnault@redhat.com>
 
-[ Upstream commit cece6f432cca9f18900463ed01b97a152a03600a ]
+commit ea64d8d6c675c0bb712689b13810301de9d8f77a upstream.
 
-Processing commands by cmd_work_handler() while already in Internal
-Error State will result in entry leak, since the handler process force
-completion without doorbell. Forced completion doesn't release the entry
-and event completion will never arrive, so entry should be released.
+If the UDP header of a local VXLAN endpoint is NAT-ed, and the VXLAN
+device has disabled UDP checksums and enabled Tx checksum offloading,
+then the skb passed to udp_manip_pkt() has hdr->check == 0 (outer
+checksum disabled) and skb->ip_summed == CHECKSUM_PARTIAL (inner packet
+checksum offloaded).
 
-Fixes: 73dd3a4839c1 ("net/mlx5: Avoid using pending command interface slots")
-Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
-Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Because of the ->ip_summed value, udp_manip_pkt() tries to update the
+outer checksum with the new address and port, leading to an invalid
+checksum sent on the wire, as the original null checksum obviously
+didn't take the old address and port into account.
+
+So, we can't take ->ip_summed into account in udp_manip_pkt(), as it
+might not refer to the checksum we're acting on. Instead, we can base
+the decision to update the UDP checksum entirely on the value of
+hdr->check, because it's null if and only if checksum is disabled:
+
+  * A fully computed checksum can't be 0, since a 0 checksum is
+    represented by the CSUM_MANGLED_0 value instead.
+
+  * A partial checksum can't be 0, since the pseudo-header always adds
+    at least one non-zero value (the UDP protocol type 0x11) and adding
+    more values to the sum can't make it wrap to 0 as the carry is then
+    added to the wrapped number.
+
+  * A disabled checksum uses the special value 0.
+
+The problem seems to be there from day one, although it was probably
+not visible before UDP tunnels were implemented.
+
+Fixes: 5b1158e909ec ("[NETFILTER]: Add NAT support for nf_conntrack")
+Signed-off-by: Guillaume Nault <gnault@redhat.com>
+Reviewed-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlx5/core/cmd.c |    4 ++++
- 1 file changed, 4 insertions(+)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-@@ -922,6 +922,10 @@ static void cmd_work_handler(struct work
- 		MLX5_SET(mbox_out, ent->out, syndrome, drv_synd);
+---
+ net/netfilter/nf_nat_proto.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+--- a/net/netfilter/nf_nat_proto.c
++++ b/net/netfilter/nf_nat_proto.c
+@@ -68,15 +68,13 @@ static bool udp_manip_pkt(struct sk_buff
+ 			  enum nf_nat_manip_type maniptype)
+ {
+ 	struct udphdr *hdr;
+-	bool do_csum;
  
- 		mlx5_cmd_comp_handler(dev, 1UL << ent->idx, true);
-+		/* no doorbell, no need to keep the entry */
-+		free_ent(cmd, ent->idx);
-+		if (ent->callback)
-+			free_cmd(ent);
- 		return;
- 	}
+ 	if (skb_ensure_writable(skb, hdroff + sizeof(*hdr)))
+ 		return false;
+ 
+ 	hdr = (struct udphdr *)(skb->data + hdroff);
+-	do_csum = hdr->check || skb->ip_summed == CHECKSUM_PARTIAL;
++	__udp_manip_pkt(skb, iphdroff, hdr, tuple, maniptype, !!hdr->check);
+ 
+-	__udp_manip_pkt(skb, iphdroff, hdr, tuple, maniptype, do_csum);
+ 	return true;
+ }
  
 
 
