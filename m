@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B085C47076
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C08CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 149E020675
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A393620675
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:32:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732497AbgEMJbx (ORCPT
+        id S1732540AbgEMJcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:31:53 -0400
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:57562 "EHLO
+        Wed, 13 May 2020 05:32:08 -0400
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:57574 "EHLO
         alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726492AbgEMJbv (ORCPT
+        by vger.kernel.org with ESMTP id S1730494AbgEMJbs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:31:51 -0400
+        Wed, 13 May 2020 05:31:48 -0400
 Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
   by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 13 May 2020 15:01:36 +0530
 Received: from gokulsri-linux.qualcomm.com ([10.201.2.207])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 13 May 2020 15:01:07 +0530
+  by ironmsg01-blr.qualcomm.com with ESMTP; 13 May 2020 15:01:09 +0530
 Received: by gokulsri-linux.qualcomm.com (Postfix, from userid 432570)
-        id 5BDDF21769; Wed, 13 May 2020 15:01:06 +0530 (IST)
+        id 2EC152177A; Wed, 13 May 2020 15:01:06 +0530 (IST)
 From:   Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
 To:     gokulsri@codeaurora.org, sboyd@kernel.org, agross@kernel.org,
         bjorn.andersson@linaro.org, david.brown@linaro.org,
@@ -36,9 +36,9 @@ To:     gokulsri@codeaurora.org, sboyd@kernel.org, agross@kernel.org,
         mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com,
         robh+dt@kernel.org, sricharan@codeaurora.org,
         nprakash@codeaurora.org
-Subject: [PATCH V5 02/10] remoteproc: qcom: Add secure PIL support
-Date:   Wed, 13 May 2020 15:00:57 +0530
-Message-Id: <1589362265-22702-3-git-send-email-gokulsri@codeaurora.org>
+Subject: [PATCH V5 08/10] dt-bindings: firmware: qcom: Add compatible for IPQ8074 SoC
+Date:   Wed, 13 May 2020 15:01:03 +0530
+Message-Id: <1589362265-22702-9-git-send-email-gokulsri@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1589362265-22702-1-git-send-email-gokulsri@codeaurora.org>
 References: <1589362265-22702-1-git-send-email-gokulsri@codeaurora.org>
@@ -47,140 +47,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IPQ8074 uses secure PIL. Hence, adding the support for the same.
+Add compatible for IPQ8074 support.
+This does not need clocks for scm calls.
 
 Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
 Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-Signed-off-by: Nikhil Prakash V <nprakash@codeaurora.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/remoteproc/qcom_q6v5_wcss.c | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ Documentation/devicetree/bindings/firmware/qcom,scm.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
-index 0700d68..44ab9bb 100644
---- a/drivers/remoteproc/qcom_q6v5_wcss.c
-+++ b/drivers/remoteproc/qcom_q6v5_wcss.c
-@@ -19,6 +19,7 @@
- #include <linux/regulator/consumer.h>
- #include <linux/reset.h>
- #include <linux/soc/qcom/mdt_loader.h>
-+#include <linux/qcom_scm.h>
- #include "qcom_common.h"
- #include "qcom_q6v5.h"
- 
-@@ -86,6 +87,9 @@
- #define TCSR_WCSS_CLK_ENABLE	0x14
- 
- #define MAX_HALT_REG		3
-+
-+#define WCNSS_PAS_ID		6
-+
- enum {
- 	WCSS_IPQ8074,
- 	WCSS_QCS404,
-@@ -137,6 +141,7 @@ struct q6v5_wcss {
- 	int crash_reason_smem;
- 	u32 version;
- 	bool requires_force_stop;
-+	bool need_mem_protection;
- };
- 
- struct wcss_data {
-@@ -152,6 +157,7 @@ struct wcss_data {
- 	int ssctl_id;
- 	const struct rproc_ops *ops;
- 	bool requires_force_stop;
-+	bool need_mem_protection;
- };
- 
- static int q6v5_wcss_reset(struct q6v5_wcss *wcss)
-@@ -251,6 +257,15 @@ static int q6v5_wcss_start(struct rproc *rproc)
- 
- 	qcom_q6v5_prepare(&wcss->q6v5);
- 
-+	if (wcss->need_mem_protection) {
-+		ret = qcom_scm_pas_auth_and_reset(WCNSS_PAS_ID);
-+		if (ret) {
-+			dev_err(wcss->dev, "wcss_reset failed\n");
-+			return ret;
-+		}
-+		goto wait_for_reset;
-+	}
-+
- 	/* Release Q6 and WCSS reset */
- 	ret = reset_control_deassert(wcss->wcss_reset);
- 	if (ret) {
-@@ -285,6 +300,7 @@ static int q6v5_wcss_start(struct rproc *rproc)
- 	if (ret)
- 		goto wcss_q6_reset;
- 
-+wait_for_reset:
- 	ret = qcom_q6v5_wait_for_start(&wcss->q6v5, 5 * HZ);
- 	if (ret == -ETIMEDOUT)
- 		dev_err(wcss->dev, "start timed out\n");
-@@ -717,6 +733,15 @@ static int q6v5_wcss_stop(struct rproc *rproc)
- 	struct q6v5_wcss *wcss = rproc->priv;
- 	int ret;
- 
-+	if (wcss->need_mem_protection) {
-+		ret = qcom_scm_pas_shutdown(WCNSS_PAS_ID);
-+		if (ret) {
-+			dev_err(wcss->dev, "not able to shutdown\n");
-+			return ret;
-+		}
-+		goto pas_done;
-+	}
-+
- 	/* WCSS powerdown */
- 	if (wcss->requires_force_stop) {
- 		ret = qcom_q6v5_request_stop(&wcss->q6v5);
-@@ -741,6 +766,7 @@ static int q6v5_wcss_stop(struct rproc *rproc)
- 			return ret;
- 	}
- 
-+pas_done:
- 	clk_disable_unprepare(wcss->prng_clk);
- 	qcom_q6v5_unprepare(&wcss->q6v5);
- 
-@@ -763,6 +789,12 @@ static int q6v5_wcss_load(struct rproc *rproc, const struct firmware *fw)
- {
- 	struct q6v5_wcss *wcss = rproc->priv;
- 
-+	if (wcss->need_mem_protection)
-+		return qcom_mdt_load(wcss->dev, fw, rproc->firmware,
-+				     WCNSS_PAS_ID, wcss->mem_region,
-+				     wcss->mem_phys, wcss->mem_size,
-+				     &wcss->mem_reloc);
-+
- 	return qcom_mdt_load_no_init(wcss->dev, fw, rproc->firmware,
- 				     0, wcss->mem_region, wcss->mem_phys,
- 				     wcss->mem_size, &wcss->mem_reloc);
-@@ -1025,6 +1057,9 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
- 	if (!desc)
- 		return -EINVAL;
- 
-+	if (desc->need_mem_protection && !qcom_scm_is_available())
-+		return -EPROBE_DEFER;
-+
- 	rproc = rproc_alloc(&pdev->dev, pdev->name, desc->ops,
- 			    desc->firmware_name, sizeof(*wcss));
- 	if (!rproc) {
-@@ -1038,6 +1073,7 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
- 
- 	wcss->version = desc->version;
- 	wcss->requires_force_stop = desc->requires_force_stop;
-+	wcss->need_mem_protection = desc->need_mem_protection;
- 
- 	ret = q6v5_wcss_init_mmio(wcss, pdev);
- 	if (ret)
-@@ -1106,6 +1142,7 @@ static const struct wcss_data wcss_ipq8074_res_init = {
- 	.wcss_q6_reset_required = true,
- 	.ops = &q6v5_wcss_ipq8074_ops,
- 	.requires_force_stop = true,
-+	.need_mem_protection = true,
- };
- 
- static const struct wcss_data wcss_qcs404_res_init = {
+diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+index 354b448..7fdd4a1 100644
+--- a/Documentation/devicetree/bindings/firmware/qcom,scm.txt
++++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+@@ -11,6 +11,7 @@ Required properties:
+  * "qcom,scm-apq8084"
+  * "qcom,scm-ipq4019"
+  * "qcom,scm-ipq806x"
++ * "qcom,scm-ipq8074"
+  * "qcom,scm-msm8660"
+  * "qcom,scm-msm8916"
+  * "qcom,scm-msm8960"
 -- 
 2.7.4
 
