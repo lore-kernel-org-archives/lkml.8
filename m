@@ -2,121 +2,139 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9543C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB262205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D286205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:42:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wy3VWtqo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ieTRI6Fu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730521AbgEMPjv (ORCPT
+        id S1730718AbgEMPmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:39:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47458 "EHLO
+        Wed, 13 May 2020 11:42:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728678AbgEMPjv (ORCPT
+        with ESMTP id S1728678AbgEMPmA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:39:51 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA8FCC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 08:39:50 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id s1so1134303qkf.9
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 08:39:50 -0700 (PDT)
+        Wed, 13 May 2020 11:42:00 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 918EFC061A0C;
+        Wed, 13 May 2020 08:42:00 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id s69so2985294pjb.4;
+        Wed, 13 May 2020 08:42:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DNYx3kfVXhYG38/RgP2TZnldis+8ELqa7KUKPjStpDc=;
-        b=Wy3VWtqoX3BvnNmBm2x1fM8mFtt819ps8ys9e3vS9HzCGe21jsTF0OAFwKVSXXWTwO
-         lP2ta7fxs31wAaTdClfM+KhlqKtAo4Y6Q7dfFmqf4xiIMS5Fo6Wxsy6h+HvDWMQVwb85
-         x1iYymRrPo2Q38/iIiOsLtylroo1XFd/h8osqMIQJ8SwJh/k2e6L5hPTQBIq+vNrnII4
-         yuGZk0KFcH6NCdmL1fG5cJW2+HuqSdQqgc8hWfR3/Cfl+YUCmtVshcOnqn9W+KcR8q52
-         LWiraLx061TeZxMW3pUI059FUq9IFie8+NS2VREy0/u4umWRTO414N6AZYuuHhzl8PXy
-         pvsA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=iq35YePewEa8ED7IqVR9gS2BMFUT0ig3s9tj0BUPUcQ=;
+        b=ieTRI6FuCux0OifkzpdQlTunNsAYWgMyOtjsNW/ZhRul32jkkIelPY6QeVVV6f7wwD
+         PQ6bcELtieGYN6L/tzcyjbYI+7OlicLN3ReTAk/U2BZWyf1MZ5poue7qbIzKVnV0Ty81
+         QnCT/ArcAzhDp6VqryWWR0whHh2frFqu20mNIh/bslyfPwzcbQ9zShCwLpwbYoLu9hcT
+         jZahI2n5YHrHJmzhPEHL7GBVTAL+EiPlTmVZWPObG4116b4tsESFR9+ZyaB8P0NGU7A3
+         qmct3zccyZHRJL64N2SIZqXL1gASDDUefCvITRKVUs3a/MmV9smpgHghKdxMvq+2PSIi
+         FIgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DNYx3kfVXhYG38/RgP2TZnldis+8ELqa7KUKPjStpDc=;
-        b=aEPIwSOZZEeZ5rLTeezlsXD7j3k6QlvaZoGCIQt+XWRUUwLPqYWtkf0hlWnWIYbWnD
-         iX+CH4Ta4xGcHFMGs0LqfCEgw59Bm6KmPkIEp8cSUCdiFROM07xMZ5z/bAlyEqWo9+Op
-         jaFM13c40rkdv5t+yih8bqA9Uyby8byw+5WZkrvGBrss8j3oKAFCIFB/BS0yfigC8Q1U
-         EeW8mck6ss4sKchDZrwnHkkGzal5rsB2EeABQ5LwiH8Gz1sPsqAW1woX8D5YEO9Q7Hjs
-         f8ILeJW1tudC2Aoa/swyo7558rWiqoiAtiSzFEEm7xc9YBVbbtHeJWafLfzUufEdi+bX
-         NCFw==
-X-Gm-Message-State: AOAM530f8Qj/5G0AA1qvYSTq18K4cpSiPluvNPt1NrHycDQxPomSR6d3
-        UB+Nr4/F5rndkgMi31RWdmA=
-X-Google-Smtp-Source: ABdhPJzFixWyvI4pabGlhzFTZNoCuvN77J3j2qoGZzoyGiUS5vzuR+595LLS8AW7kxyaiRr9k4iTSQ==
-X-Received: by 2002:a05:620a:1432:: with SMTP id k18mr247566qkj.71.1589384390157;
-        Wed, 13 May 2020 08:39:50 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id d207sm128357qkc.49.2020.05.13.08.39.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 08:39:49 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id BC53340AFD; Wed, 13 May 2020 12:39:47 -0300 (-03)
-Date:   Wed, 13 May 2020 12:39:47 -0300
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Paul Clarke <pc@us.ibm.com>, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2 1/2] perf expr: Test parsing of floating point numbers
-Message-ID: <20200513153947.GI5583@kernel.org>
-References: <20200513062752.3681-1-irogers@google.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iq35YePewEa8ED7IqVR9gS2BMFUT0ig3s9tj0BUPUcQ=;
+        b=X/ttQBUp/pG2jtcbkRMmq8QDUGFrPBpS4EqcZG9z0m3gk/WQxb1BEVImHoQbe2mV6D
+         1euh7rqtSveKP6TdOUNGy0u9eFa/IZkmYI0wgqypgifb/5XRu/+B1CRqwtT8L7sAFrF7
+         mli+qMgd1IYtCqxVKKNDZ7TZAGMze8rPsZvm7E4WadEnJwi5FWITWquJF3ZGNJw7JAd1
+         WdKUheYCHQjTgZPD2n/Fq7loycWyVTfcNdsVYEvaeg9bh2IDsP+AC7YJWwICG3RPVVBR
+         sm4bDpSlIpeP7x+lxrXwf9pqJlJTkAKGC88bCQbOTlKxlK92/pFaT4motvDjNHBPDpqR
+         68SQ==
+X-Gm-Message-State: AGi0Pub4aTHuoWN3FWfsauITBcGS2eUUdzBw0JmZhxayMBM8AllDDBg+
+        vpmbVELaon0TbQbr3/9MBEhRXPxk
+X-Google-Smtp-Source: APiQypJtjGAgUxWc18UTekCQxQaol0kuHHTgFFi06kdvAAY6aK6sIZrDAaGezDMWnEKe+7c4s5DsJg==
+X-Received: by 2002:a17:902:47:: with SMTP id 65mr23609024pla.54.1589384519662;
+        Wed, 13 May 2020 08:41:59 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id k24sm14949802pfk.134.2020.05.13.08.41.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 May 2020 08:41:59 -0700 (PDT)
+Subject: Re: [PATCH 3/3] net: cleanly handle kernel vs user buffers for
+ ->msg_control
+To:     Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200511115913.1420836-1-hch@lst.de>
+ <20200511115913.1420836-4-hch@lst.de>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <c88897b9-7afb-a6f6-08f1-5aaa36631a25@gmail.com>
+Date:   Wed, 13 May 2020 08:41:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513062752.3681-1-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200511115913.1420836-4-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, May 12, 2020 at 11:27:51PM -0700, Ian Rogers escreveu:
-> Add test for fix in:
-> commit 5741da3dee4c ("perf expr: Parse numbers as doubles")
+
+
+On 5/11/20 4:59 AM, Christoph Hellwig wrote:
+> The msg_control field in struct msghdr can either contain a user
+> pointer when used with the recvmsg system call, or a kernel pointer
+> when used with sendmsg.  To complicate things further kernel_recvmsg
+> can stuff a kernel pointer in and then use set_fs to make the uaccess
+> helpers accept it.
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Replace it with a union of a kernel pointer msg_control field, and
+> a user pointer msg_control_user one, and allow kernel_recvmsg operate
+> on a proper kernel pointer using a bitfield to override the normal
+> choice of a user pointer for recvmsg.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  tools/perf/tests/expr.c | 1 +
->  1 file changed, 1 insertion(+)
+>  include/linux/socket.h | 12 ++++++++++-
+>  net/compat.c           |  5 +++--
+>  net/core/scm.c         | 49 ++++++++++++++++++++++++------------------
+>  net/ipv4/ip_sockglue.c |  3 ++-
+>  net/socket.c           | 22 ++++++-------------
+>  5 files changed, 50 insertions(+), 41 deletions(-)
 > 
-> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-> index f9e8e5628836..3f742612776a 100644
-> --- a/tools/perf/tests/expr.c
-> +++ b/tools/perf/tests/expr.c
-> @@ -39,6 +39,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
->  	ret |= test(&ctx, "min(1,2) + 1", 2);
->  	ret |= test(&ctx, "max(1,2) + 1", 3);
->  	ret |= test(&ctx, "1+1 if 3*4 else 0", 2);
-> +	ret |= test(&ctx, "1.1 + 2.1", 3.2);
->  
->  	if (ret)
->  		return ret;
-> -- 
-> 2.26.2.645.ge9eca65c58-goog
+> diff --git a/include/linux/socket.h b/include/linux/socket.h
+> index 4cc64d611cf49..04d2bc97f497d 100644
+> --- a/include/linux/socket.h
+> +++ b/include/linux/socket.h
+> @@ -50,7 +50,17 @@ struct msghdr {
+>  	void		*msg_name;	/* ptr to socket address structure */
+>  	int		msg_namelen;	/* size of socket address structure */
+>  	struct iov_iter	msg_iter;	/* data */
+> -	void		*msg_control;	/* ancillary data */
+> +
+> +	/*
+> +	 * Ancillary data. msg_control_user is the user buffer used for the
+> +	 * recv* side when msg_control_is_user is set, msg_control is the kernel
+> +	 * buffer used for all other cases.
+> +	 */
+> +	union {
+> +		void		*msg_control;
+> +		void __user	*msg_control_user;
+> +	};
+> +	bool		msg_control_is_user : 1;
 
-Applied.
+Adding a field in this structure seems dangerous.
 
-- Arnaldo
+Some users of 'struct msghdr '  define their own struct on the stack,
+and are unaware of this new mandatory field.
+
+This bit contains garbage, crashes are likely to happen ?
+
+Look at IPV6_2292PKTOPTIONS for example.
+
+
