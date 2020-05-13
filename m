@@ -2,89 +2,263 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D233AC2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C335AC2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B95F0206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:15:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AE3E206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:15:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MBj6EQHG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732086AbgEMMPv (ORCPT
+        id S1732640AbgEMMP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 08:15:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43746 "EHLO
+        Wed, 13 May 2020 08:15:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbgEMMPu (ORCPT
+        with ESMTP id S1732340AbgEMMP6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 08:15:50 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F597C061A0C;
-        Wed, 13 May 2020 05:15:50 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jYqIX-00020P-0Z; Wed, 13 May 2020 14:15:41 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 67ED9100605; Wed, 13 May 2020 14:15:40 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, maz@kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] irqchip: Add Loongson PCH MSI controller
-In-Reply-To: <874ksk3uda.fsf@nanos.tec.linutronix.de>
-References: <20200422142428.1249684-1-jiaxun.yang@flygoat.com> <20200428063247.2223499-1-jiaxun.yang@flygoat.com> <20200428063247.2223499-5-jiaxun.yang@flygoat.com> <874ksk3uda.fsf@nanos.tec.linutronix.de>
-Date:   Wed, 13 May 2020 14:15:40 +0200
-Message-ID: <871rno3uab.fsf@nanos.tec.linutronix.de>
+        Wed, 13 May 2020 08:15:58 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C452C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 05:15:58 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id z16so5958191uae.11
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 05:15:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=09R37UyziPgwn1Nn28wDcEoLu5IKO4m4ALNMAgJM4kI=;
+        b=MBj6EQHGwmC6elIl1U1sbpt1fWckfg85iHR6ZdIifhf6e12FTw9exoct51b1gKWGvy
+         pa/flvp339RQZFJpAuAWpvE1V6scAVMezDKv34SricUB6UXEpNScxrA3A5UA+v4Nobl9
+         9KPou1t4i2WQVRkH+Etbtq246m5vkI0uVO+iN/CaTqi4bUc6cl8EVNeFpIzrlCVc4VJe
+         OHGAnFOhe0WSTJ0TlXbcqJPJJA0pSyoHUb98pxSI4ADcUViI9wrAT47Y5KdWD/Y63HTg
+         HtBqTIDdL8EGwFpU/8E9BESM+zYj82+86mKQPAoqHZB6XvrQJxJ09RN2UUrFAbzdIbBm
+         4Ebg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=09R37UyziPgwn1Nn28wDcEoLu5IKO4m4ALNMAgJM4kI=;
+        b=CjHceVxiZbNErM03Ls/kEGYqpyJqwOlHIBYR6JHWQ9gDu/FxVrYuiDNJ281SmJhsJ3
+         OL5PM07jJmaGkGcedjYI/sh4lcCsrFJ6ki46IwYqSQd6ptPN070s158Mg0Yc2DVsCk19
+         7rN8xFZbtJksxQveQ+ozrxDav+jyebucAUDJOLRLKnIETof5i5CSBhC6c9hAwW8S+IKl
+         C/ZGZXVd1SrUekHdVQGcKOCioFGPUGyQ9jl3m094KdqtMLO+tGvg8m/Qtk+GvjCtn1lg
+         bm7hGYmLeaKRZt4/Yjjo9vsnelPfj23xcm1HAD94hLVp1+WiGpCsFU5V09AJJYxu3O6O
+         31kg==
+X-Gm-Message-State: AGi0PuYf3+mV4SKEQA6gy/ccoNAHwh2ALVvfWtk/Fr2v06iNwbvDKqF7
+        xNVMnwKCGhZJ9hceGpfnNoMJQKdpywVbzauAWNYHrDkGgzI=
+X-Google-Smtp-Source: APiQypI6K6WkbV2b5JG0GNaUTBKncfOz5kVnvft3b29ggsHnVFU9hKVoaYdJppHK25X49jpwum4gQEdswg9o5OXokwQ=
+X-Received: by 2002:ab0:6588:: with SMTP id v8mr20880328uam.100.1589372157298;
+ Wed, 13 May 2020 05:15:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200513174706.3eeddb2b@xhacker.debian>
+In-Reply-To: <20200513174706.3eeddb2b@xhacker.debian>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 13 May 2020 14:15:21 +0200
+Message-ID: <CAPDyKFpE_uqiNQ22Fq9hDfb5pzMBdgmwgUbasEsEdXFkEOmq6A@mail.gmail.com>
+Subject: Re: [PATCH] Revert "mmc: sdhci-xenon: add runtime pm support and
+ reimplement standby"
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thomas Gleixner <tglx@linutronix.de> writes:
-> Jiaxun Yang <jiaxun.yang@flygoat.com> writes:
->> +
->> +struct pch_msi_data {
->> +	spinlock_t		msi_map_lock;
->> +	phys_addr_t		doorbell;
->> +	u32			irq_first;	/* The vector number that MSIs starts */
->> +	u32			num_irqs;	/* The number of vectors for MSIs */
->> +	unsigned long		*msi_map;
->> +};
->> +
->> +static void pch_msi_mask_msi_irq(struct irq_data *d)
->> +{
->> +	pci_msi_mask_irq(d);
->> +	irq_chip_mask_parent(d);
->> +}
->> +
->> +static void pch_msi_unmask_msi_irq(struct irq_data *d)
->> +{
->> +	pci_msi_unmask_irq(d);
->> +	irq_chip_unmask_parent(d);
+On Wed, 13 May 2020 at 11:47, Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
 >
-> The ordering of mask and unmask is assymetric. That does not make sense.
+> This reverts commit a027b2c5fed78851e69fab395b02d127a7759fc7.
 >
->> +static struct msi_domain_info pch_msi_domain_info = {
->> +	.flags		= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
->> +			  MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
->> +	.chip	= &pch_msi_irq_chip,
+> The HW supports auto clock gating, so it's useless to do runtime pm
+> in software.
+
+Runtime PM isn't soley about clock gating. Moreover it manages the
+"pltfm_host->clk", which means even if the controller supports auto
+clock gating, gating/ungating the externally provided clock still
+makes sense.
+
+Kind regards
+Uffe
+
 >
-> Please maintain tabular layout.
-
-Ooops. Wanted to reply to V3, but the comments are valid for V3 as well.
-
-Thanks,
-
-        tglx
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> ---
+>  drivers/mmc/host/sdhci-xenon.c | 87 +++++++---------------------------
+>  drivers/mmc/host/sdhci-xenon.h |  1 -
+>  2 files changed, 16 insertions(+), 72 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-xenon.c b/drivers/mmc/host/sdhci-xenon.c
+> index 4703cd540c7f..85414e13e7ea 100644
+> --- a/drivers/mmc/host/sdhci-xenon.c
+> +++ b/drivers/mmc/host/sdhci-xenon.c
+> @@ -15,8 +15,6 @@
+>  #include <linux/ktime.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> -#include <linux/pm.h>
+> -#include <linux/pm_runtime.h>
+>
+>  #include "sdhci-pltfm.h"
+>  #include "sdhci-xenon.h"
+> @@ -539,24 +537,13 @@ static int xenon_probe(struct platform_device *pdev)
+>         if (err)
+>                 goto err_clk_axi;
+>
+> -       pm_runtime_get_noresume(&pdev->dev);
+> -       pm_runtime_set_active(&pdev->dev);
+> -       pm_runtime_set_autosuspend_delay(&pdev->dev, 50);
+> -       pm_runtime_use_autosuspend(&pdev->dev);
+> -       pm_runtime_enable(&pdev->dev);
+> -       pm_suspend_ignore_children(&pdev->dev, 1);
+> -
+>         err = sdhci_add_host(host);
+>         if (err)
+>                 goto remove_sdhc;
+>
+> -       pm_runtime_put_autosuspend(&pdev->dev);
+> -
+>         return 0;
+>
+>  remove_sdhc:
+> -       pm_runtime_disable(&pdev->dev);
+> -       pm_runtime_put_noidle(&pdev->dev);
+>         xenon_sdhc_unprepare(host);
+>  err_clk_axi:
+>         clk_disable_unprepare(priv->axi_clk);
+> @@ -573,10 +560,6 @@ static int xenon_remove(struct platform_device *pdev)
+>         struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>         struct xenon_priv *priv = sdhci_pltfm_priv(pltfm_host);
+>
+> -       pm_runtime_get_sync(&pdev->dev);
+> -       pm_runtime_disable(&pdev->dev);
+> -       pm_runtime_put_noidle(&pdev->dev);
+> -
+>         sdhci_remove_host(host, 0);
+>
+>         xenon_sdhc_unprepare(host);
+> @@ -593,78 +576,40 @@ static int xenon_suspend(struct device *dev)
+>  {
+>         struct sdhci_host *host = dev_get_drvdata(dev);
+>         struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> -       struct xenon_priv *priv = sdhci_pltfm_priv(pltfm_host);
+>         int ret;
+>
+> -       ret = pm_runtime_force_suspend(dev);
+> +       ret = sdhci_suspend_host(host);
+> +       if (ret)
+> +               return ret;
+>
+> -       priv->restore_needed = true;
+> +       clk_disable_unprepare(pltfm_host->clk);
+>         return ret;
+>  }
+> -#endif
+>
+> -#ifdef CONFIG_PM
+> -static int xenon_runtime_suspend(struct device *dev)
+> +static int xenon_resume(struct device *dev)
+>  {
+>         struct sdhci_host *host = dev_get_drvdata(dev);
+>         struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> -       struct xenon_priv *priv = sdhci_pltfm_priv(pltfm_host);
+>         int ret;
+>
+> -       ret = sdhci_runtime_suspend_host(host);
+> +       ret = clk_prepare_enable(pltfm_host->clk);
+>         if (ret)
+>                 return ret;
+>
+> -       if (host->tuning_mode != SDHCI_TUNING_MODE_3)
+> -               mmc_retune_needed(host->mmc);
+> -
+> -       clk_disable_unprepare(pltfm_host->clk);
+>         /*
+> -        * Need to update the priv->clock here, or when runtime resume
+> -        * back, phy don't aware the clock change and won't adjust phy
+> -        * which will cause cmd err
+> +        * If SoCs power off the entire Xenon, registers setting will
+> +        * be lost.
+> +        * Re-configure Xenon specific register to enable current SDHC
+>          */
+> -       priv->clock = 0;
+> -       return 0;
+> -}
+> -
+> -static int xenon_runtime_resume(struct device *dev)
+> -{
+> -       struct sdhci_host *host = dev_get_drvdata(dev);
+> -       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> -       struct xenon_priv *priv = sdhci_pltfm_priv(pltfm_host);
+> -       int ret;
+> -
+> -       ret = clk_prepare_enable(pltfm_host->clk);
+> -       if (ret) {
+> -               dev_err(dev, "can't enable mainck\n");
+> +       ret = xenon_sdhc_prepare(host);
+> +       if (ret)
+>                 return ret;
+> -       }
+> -
+> -       if (priv->restore_needed) {
+> -               ret = xenon_sdhc_prepare(host);
+> -               if (ret)
+> -                       goto out;
+> -               priv->restore_needed = false;
+> -       }
+>
+> -       ret = sdhci_runtime_resume_host(host, 0);
+> -       if (ret)
+> -               goto out;
+> -       return 0;
+> -out:
+> -       clk_disable_unprepare(pltfm_host->clk);
+> -       return ret;
+> +       return sdhci_resume_host(host);
+>  }
+> -#endif /* CONFIG_PM */
+> -
+> -static const struct dev_pm_ops sdhci_xenon_dev_pm_ops = {
+> -       SET_SYSTEM_SLEEP_PM_OPS(xenon_suspend,
+> -                               pm_runtime_force_resume)
+> -       SET_RUNTIME_PM_OPS(xenon_runtime_suspend,
+> -                          xenon_runtime_resume,
+> -                          NULL)
+> -};
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(xenon_pmops, xenon_suspend, xenon_resume);
+>
+>  static const struct of_device_id sdhci_xenon_dt_ids[] = {
+>         { .compatible = "marvell,armada-ap806-sdhci",},
+> @@ -678,7 +623,7 @@ static struct platform_driver sdhci_xenon_driver = {
+>         .driver = {
+>                 .name   = "xenon-sdhci",
+>                 .of_match_table = sdhci_xenon_dt_ids,
+> -               .pm = &sdhci_xenon_dev_pm_ops,
+> +               .pm = &xenon_pmops,
+>         },
+>         .probe  = xenon_probe,
+>         .remove = xenon_remove,
+> diff --git a/drivers/mmc/host/sdhci-xenon.h b/drivers/mmc/host/sdhci-xenon.h
+> index 593b82d7b68a..2b9b96e51261 100644
+> --- a/drivers/mmc/host/sdhci-xenon.h
+> +++ b/drivers/mmc/host/sdhci-xenon.h
+> @@ -89,7 +89,6 @@ struct xenon_priv {
+>          */
+>         void            *phy_params;
+>         struct xenon_emmc_phy_regs *emmc_phy_regs;
+> -       bool restore_needed;
+>  };
+>
+>  int xenon_phy_adj(struct sdhci_host *host, struct mmc_ios *ios);
+> --
+> 2.26.2
+>
