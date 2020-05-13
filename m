@@ -2,118 +2,96 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC229CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A71ECA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A858E20740
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:44:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="N77Fqus1"
+	by mail.kernel.org (Postfix) with ESMTP id 1BA60206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:44:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589373890;
+	bh=uAIR238kltra+SBbeNiqUTosaKpQQwrCI0UhLqBMhnY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zEMMPBVBmeUHz3369xGhNSRsNzuUoojOH0Qh2he4f4FQI+Ar+U3S34pVmSH4voJkq
+	 WISE4juZcMsQfSrIkQTdYkxbvYR/lzO2WF4EwkZFupVVyxU75gO7XfBDsapfUNFZud
+	 Hgx39ByXW85TTMFkrurh2Q7EOmRTjbQ0Ay8LwBgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732113AbgEMMoD (ORCPT
+        id S1732953AbgEMMot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 08:44:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48198 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731873AbgEMMoC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 08:44:02 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 078EFC05BD09
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 05:44:01 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id o14so16553637ljp.4
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 05:44:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5d0pcOaIE1HJrh/I4QffOguHc0kKvV2w4f0cXubp9W8=;
-        b=N77Fqus1DRNogWlGHp1XKGSqzOq3nxy+D4pGLZIK+g3innXI7KH6ylMFEUfVWEIKlv
-         dYUITJ0L3eiM8JkVWfBaUgCr+3NAfzFak7rDp8xt9SQy9++SBGB+iSh7MZPR/DbeiWm2
-         pw3UvO1ewZZcmm19B+g84a4dNxwVzZKPFzJkPBwbl9QgNKsbq2x9GcFVXTxCUmWCxkha
-         kCGvvU8s/3cuLu4UUquV74JcT3IbAul4K/9yfEDkmMkldmDhFxkT4MFhFQNN22eYRU/b
-         VLIZz1AzE5aC0Cvq7q/jqZ2C9E4Wt59PEn/ghfWUQEMAW9qac+EkuTCnIQld5tQTNkm2
-         VCmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5d0pcOaIE1HJrh/I4QffOguHc0kKvV2w4f0cXubp9W8=;
-        b=XXazg/W16MQj1fxxcO5PJeQ7SALLdXfOA07KlpXFw1YbPYeRx9bqJuoVrqA23CPe5q
-         iB1DA9Ln67ZK5MX8ZDpfzPAFMfYWypaZZCTRBWSWUyt38sKO/PKhjAJ8hr2uj8kAMO+j
-         iMmQFkSGvMXq3KNd++DKfYkBF58Y7t3mSqyMmusak6HE46aHLQxDzMMmk002iUsghSQU
-         4XgbhP1NyeEbz1QPfsT8Sf+fgHRjCA93yD1+my9/VqCc9ss1/gJzmv05p8sC8QUiFWy9
-         EqikhWf8HbGwT2USnI294vwR+bz4WE0pSiOCKRJ9gPK5dKbeXnFLtTQyCIhEhi/Grdlw
-         +Ahw==
-X-Gm-Message-State: AOAM530Xai5oAEqVJh3HpPyWmmIv1FnZnnEdl5pueYIoFISdpV9q2vxp
-        /xS8J3L/xjszY1Dcq2hcXxdWvL+Yuxg=
-X-Google-Smtp-Source: ABdhPJwF2QF4EVFN/KfTwSvMhLIVx+dfj1avGadYmJTLx267Uz6kRex1oWHe2K7HEIhEGhEtAnoDwA==
-X-Received: by 2002:a2e:b0e3:: with SMTP id h3mr17204006ljl.69.1589373840291;
-        Wed, 13 May 2020 05:44:00 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:8bd:2220:dc4:6005:75a4:5a6? ([2a00:1fa0:8bd:2220:dc4:6005:75a4:5a6])
-        by smtp.gmail.com with ESMTPSA id c20sm15182100ljk.59.2020.05.13.05.43.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 May 2020 05:43:59 -0700 (PDT)
-Subject: Re: [PATCH] ata: sata_rcar: Fix DMA boundary mask
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jens Axboe <axboe@kernel.dk>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     linux-ide@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200513110426.22472-1-geert+renesas@glider.be>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <231a408f-a696-baab-6eda-0d959689f476@cogentembedded.com>
-Date:   Wed, 13 May 2020 15:43:51 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 13 May 2020 08:44:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46388 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731920AbgEMMos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 08:44:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B004A20659;
+        Wed, 13 May 2020 12:44:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589373887;
+        bh=uAIR238kltra+SBbeNiqUTosaKpQQwrCI0UhLqBMhnY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZS6FBz46UEP++I50dUNoB0NMigkqgm0GsqkbCmMBH+OLPseBPy4v+vkKyXXh9pT8Y
+         q+kwjMN/3H9lm8+xXLI58GOjhp74Vs6tgjLWAGiLxGmuuqoMK6IQtCqcb3WgogOSNt
+         NuzBaMt+peaSTLT0lA1hFACP0VX8EZS+5muWFAr4=
+Date:   Wed, 13 May 2020 14:44:45 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     syzbot <syzbot+353be47c9ce21b68b7ed@syzkaller.appspotmail.com>,
+        bp@alien8.de, dave.hansen@linux.intel.com,
+        dmitry.torokhov@gmail.com, ebiederm@xmission.com, hpa@zytor.com,
+        jeremy.linton@arm.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
+        peterz@infradead.org, stern@rowland.harvard.edu,
+        syzkaller-bugs@googlegroups.com, x86@kernel.org
+Subject: Re: WARNING in memtype_reserve
+Message-ID: <20200513124445.GA1082735@kroah.com>
+References: <000000000000f0d8d205a531f1a3@google.com>
+ <20200509074507.GC1831917@kroah.com>
+ <87wo5l4ecm.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200513110426.22472-1-geert+renesas@glider.be>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87wo5l4ecm.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Sat, May 09, 2020 at 12:00:57PM +0200, Thomas Gleixner wrote:
+> Greg KH <gregkh@linuxfoundation.org> writes:
+> > On Sat, May 09, 2020 at 12:20:14AM -0700, syzbot wrote:
+> >> memtype_reserve failed: [mem 0xffffffffff000-0x00008fff], req write-back
+> >> WARNING: CPU: 1 PID: 7025 at arch/x86/mm/pat/memtype.c:589 memtype_reserve+0x69f/0x820 arch/x86/mm/pat/memtype.c:589
+> >
+> > So should memtype_reserve() not do a WARN if given invalid parameters as
+> > it can be triggered by userspace requests?
+> >
+> > A normal "invalid request" debug line is probably all that is needed,
+> > right?
+> 
+> I disagree. The callsite espcially if user space triggerable should not
+> attempt to ask for a reservation where start > end:
+> 
+>   >> memtype_reserve failed: [mem 0xffffffffff000-0x00008fff], req write-back
+> 
+> The real question is which part of the call chain is responsible for
+> this. That needs to be fixed.
 
-On 13.05.2020 14:04, Geert Uytterhoeven wrote:
+This is caused by 2bef9aed6f0e ("usb: usbfs: correct kernel->user page
+attribute mismatch") which changed a call to remap_pfn_range() to
+dma_mmap_coherent().  Looks like the error checking in remap_pfn_range()
+handled the invalid options better than dma_mma_coherent() when odd
+values are passed in.
 
-> Before commit 9495b7e92f716ab2 ("driver core: platform: Initialize
-> dma_parms for platform devices"), the R-Car SATA device didn't have DMA
-> parameters.  Hence the DMA boundary mask supplied by its driver was
-> silently ignored, as __scsi_init_queue() doesn't check the return value
-> of dma_set_seg_boundary(), and the default value of 0xffffffff was used.
-> 
-> Now the device has gained DMA parameters, the driver-supplied value is
-> used, and the following warning is printed on Salvator-XS:
-> 
->      DMA-API: sata_rcar ee300000.sata: mapping sg segment across boundary [start=0x00000000ffffe000] [end=0x00000000ffffefff] [boundary=0x000000001ffffffe]
->      WARNING: CPU: 5 PID: 38 at kernel/dma/debug.c:1233 debug_dma_map_sg+0x298/0x300
-> 
-> (the range of start/end values depend on whether IOMMU support is
->   enabled or not)
-> 
-> The issue here is that SATA_RCAR_DMA_BOUNDARY doesn't have bit 0 set, so
-> any typical end value, which is odd, will trigger the check.
-> 
-> Fix this by increasing the DMA boundary value by 1.
-> 
-> Fixes: 8bfbeed58665dbbf ("sata_rcar: correct 'sata_rcar_sht'")
-> Fixes: 9495b7e92f716ab2 ("driver core: platform: Initialize dma_parms for platform devices")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+We can add the check to dma_mmap_coherent(), again, but really, this
+type of check should probably only be needed in one place to ensure we
+always get it correct, right?
 
-Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+thanks,
 
-    Sorry, my mistake that went undetected for many years. :-)
-
-MBR, Sergei
+greg k-h
