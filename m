@@ -2,124 +2,139 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 409DAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2889DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ED6020671
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4811120671
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:31:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YWIog7V+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d8S4XYxD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389160AbgEMPbb (ORCPT
+        id S2389188AbgEMPbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:31:31 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:28046 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388974AbgEMPb1 (ORCPT
+        Wed, 13 May 2020 11:31:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54155 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388928AbgEMPbn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:31:27 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589383886; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=G4oACTu5Rt+yPeW1zopQEBIpMAR4ZGvXZE0H6V4O+bU=; b=YWIog7V+4GggoXEizU39wHnyEA9rVScz20Nj8Ao0AUux+i+IxajvvY0RIxrqIf2BtUopmzI/
- 5a/6EK0Z+STMtfmSm+KmlyupLKR6/JNXsGlw+KmI52FUDGIBdA6y4RO2SBplg10QcVrU8ld7
- sjFXFgn3tJnbn7A70lpQa4zjsRQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ebc12cd.7fef615607d8-smtp-out-n04;
- Wed, 13 May 2020 15:31:25 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 27545C433BA; Wed, 13 May 2020 15:31:24 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 13 May 2020 11:31:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589383902;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=XN2h70ioAIDmm/MzchtHJK6S8S+xQzl7MM8tq9EOXu4=;
+        b=d8S4XYxDUy0K8z2qdWbXJjgL3mXFY6EwfLYtinNopHbRFKrHsQo2Bfx12BqtgVVrJPUAHX
+        LVToPq0v+oYIvOa9vD8T6wemxIz97zJJOGfnYT7zBWB6Dd0dRyxtW4IoLy28tjitNooou1
+        jfTlDsbMiEBBSHN/q6u8xi71ofHpnpA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-62-KPOEBu4kOl65mdU3BD8bBQ-1; Wed, 13 May 2020 11:31:38 -0400
+X-MC-Unique: KPOEBu4kOl65mdU3BD8bBQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 827A9C433D2;
-        Wed, 13 May 2020 15:31:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 827A9C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     linux-wireless <linux-wireless@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: gcc-10: kernel stack is corrupted and fails to boot
-References: <20200509120707.188595-1-arnd@arndb.de>
-        <20200509120707.188595-2-arnd@arndb.de>
-        <87v9l24qz6.fsf@kamboji.qca.qualcomm.com>
-        <87r1vq4qev.fsf@kamboji.qca.qualcomm.com>
-        <87d078tjl0.fsf_-_@kamboji.qca.qualcomm.com>
-        <CAK8P3a1dxJAHCZ19=sPUkDi5wLWeJ6KKtD09Wmjqkz27TQN6Xw@mail.gmail.com>
-        <87zhacrokl.fsf@kamboji.qca.qualcomm.com>
-        <CAK8P3a1mMcpVE5kLv-krjL_ZjqfRXDK4e3fChzuom_QFRtTJqw@mail.gmail.com>
-Date:   Wed, 13 May 2020 18:31:19 +0300
-In-Reply-To: <CAK8P3a1mMcpVE5kLv-krjL_ZjqfRXDK4e3fChzuom_QFRtTJqw@mail.gmail.com>
-        (Arnd Bergmann's message of "Wed, 13 May 2020 15:45:47 +0200")
-Message-ID: <87v9kzsvg8.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BECB3107ACF2;
+        Wed, 13 May 2020 15:31:36 +0000 (UTC)
+Received: from krava (unknown [10.40.195.109])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 9DAFF6F453;
+        Wed, 13 May 2020 15:31:34 +0000 (UTC)
+Date:   Wed, 13 May 2020 17:31:33 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v4 3/4] perf stat: Copy counts from prev_raw_counts to
+ evsel->counts
+Message-ID: <20200513153133.GN3158213@krava>
+References: <20200508075817.10588-1-yao.jin@linux.intel.com>
+ <20200508075817.10588-4-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508075817.10588-4-yao.jin@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd Bergmann <arnd@arndb.de> writes:
+On Fri, May 08, 2020 at 03:58:16PM +0800, Jin Yao wrote:
+> It would be useful to support the overall statistics for perf-stat
+> interval mode. For example, report the summary at the end of
+> "perf-stat -I" output.
+> 
+> But since perf-stat can support many aggregation modes, such as
+> --per-thread, --per-socket, -M and etc, we need a solution which
+> doesn't bring much complexity.
+> 
+> The idea is to use 'evsel->prev_raw_counts' which is updated in
+> each interval and it's saved with the latest counts. Before reporting
+> the summary, we copy the counts from evsel->prev_raw_counts to
+> evsel->counts, and next we just follow non-interval processing.
+> 
+> In evsel__compute_deltas, this patch saves counts to the member
+> [cpu0,thread0] of perf_counts for AGGR_GLOBAL.
+> 
+> That's because after copying evsel->prev_raw_counts to evsel->counts,
+> perf_counts(evsel->counts, cpu, thread) are all 0 for AGGR_GLOBAL.
+> Once we go to process_counter_maps again, all members of perf_counts
+> are 0.
+> 
+> So this patch uses a trick that saves the previous aggr value to
+> the member [cpu0,thread0] of perf_counts, then aggr calculation
+> in process_counter_values can work correctly.
+> 
+>  v4:
+>  ---
+>  Change the commit message.
+>  No functional change.
+> 
+> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+> ---
+>  tools/perf/util/evsel.c |  1 +
+>  tools/perf/util/stat.c  | 24 ++++++++++++++++++++++++
+>  tools/perf/util/stat.h  |  1 +
+>  3 files changed, 26 insertions(+)
+> 
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 28683b0eb738..6fae1ec28886 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1283,6 +1283,7 @@ void evsel__compute_deltas(struct evsel *evsel, int cpu, int thread,
+>  	if (cpu == -1) {
+>  		tmp = evsel->prev_raw_counts->aggr;
+>  		evsel->prev_raw_counts->aggr = *count;
+> +		*perf_counts(evsel->prev_raw_counts, 0, 0) = *count;
 
-> On Wed, May 13, 2020 at 2:57 PM Kalle Valo <kvalo@codeaurora.org> wrote:
->>
->> Arnd Bergmann <arnd@arndb.de> writes:
->>
->> > On Wed, May 13, 2020 at 8:50 AM Kalle Valo <kvalo@codeaurora.org> wrote:
->> >>
->> >> Kalle Valo <kvalo@codeaurora.org> writes:
->> >
->> > At least if it fails reproducibly, it's probably not too hard to drill
->> > down further. Some ideas:
->> >
->> > * I'd first try to reproduce it in qemu. Since you don't even need
->> >   any user space or modules, I would simply try
->> >   $ qemu-system-x86_64 -nographic -monitor none -append
->> > "console=ttyS0" -serial stdio -smp 4 -kernel arch/x86/boot/bzImage
->> >   I tried it here with an x86 defconfig linux-next kernel but did not
->> >   run into the problem you described.
->>
->> Thanks, I'll try that but I expect it will take few days before I can do
->> it.
->>
->> > If you share your .config, I can try reproducing with that as well.
->> > Once there is a reproducer in qemu, it should be trivial to step
->> > through it using gdb.
->>
->> I have attached the .config I used with GCC 10.1. If you are able to
->> test it please do let me know how it went.
->
-> Yes, I see the same problem now, but have not investigated
-> any further.
+ok, I think I understand that now.. it's only for AGGR_GLOBAL mode,
+because the perf_stat_process_counter will create aggr values from
+per cpu values
 
-Great, so it's not a problem due to my setup.
+but why do we need to do that all the time? can't we just set it up
+before you zero prev_raw_counts in next patch?
 
->> > * There are still two prerelease compiler versions on kernel.org,
->> >   from February and from April. You can try each one to see
->> >   if this was a recent regression. It's also possible that there is
->> >   a problem with my specific builds of gcc-10.1, and that the
->> >   compiler is actually fine for others.The gcc-10 packages in
->> >   Fedora/Debian/Ubuntu are probably better tested.
->>
->> I'm still using Ubuntu 16.04 so not sure how easy it is to find a
->> package for that, but maybe this is a good reason to finally my upgrade
->> my laptop :)
->
-> I checked with the gcc-10 package from Ubuntu 20.04, same
-> result as with my version, at least that indicates it's not my fault ;-)
 
-That's good to know as well. And now I can delay my laptop upgrade even
-more ;)
+        if (interval) {
+                stat_config.interval = 0;
+                stat_config.summary = true;
+                perf_evlist__copy_prev_raw_counts(evsel_list);
 
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+	-> for AGGR_GLOBAL set the counts[0,0] to prev_raw_counts->aggr
+
+                perf_evlist__reset_prev_raw_counts(evsel_list);
+                runtime_stat_reset(&stat_config);
+                perf_stat__reset_shadow_per_stat(&rt_stat);
+        }
+
+
+thanks,
+jirka
+
