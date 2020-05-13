@@ -2,90 +2,241 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C037C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D19C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD40920769
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:40:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589330400;
-	bh=ZZONM3MfRLLy5PBXoTvEVButOoff7+dF22ALFXdLt2M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wlupvte3BKVKYR+yNXX+RP+20yGmUnZRZwwyzvXzkP+u4w5YgNWTH/u7IBFGJpo98
-	 MchvjC0HrpBdPL1myQGYss1DU681rdXNgGy+ix6O8e4e51fPEJR9Ul/OaIkf7rpcQt
-	 qNIE/V/kV64wVo6SUpzu/eEOoLIpmME9HRbWLHwE=
+	by mail.kernel.org (Postfix) with ESMTP id 8A41C20769
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:40:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731956AbgEMAj7 (ORCPT
+        id S1731969AbgEMAkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 20:39:59 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38514 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731946AbgEMAjz (ORCPT
+        Tue, 12 May 2020 20:40:05 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:62913 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731883AbgEMAjv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 20:39:55 -0400
-Received: by mail-pl1-f195.google.com with SMTP id m7so6132474plt.5;
-        Tue, 12 May 2020 17:39:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uFKqSypxRhLNaszQ9FU/hBZK81MFbv8LrHsXvYdnkac=;
-        b=ZVrDbV9qgKnN9gGLjhFInOMSdohdaRKyVB77Y4evG8EWZu0shRcJgpdEp7QfqutPXR
-         8ZBfZawSLOABG+DfMUayCADnV+CoSQLc2XB8Tmvb01oMeQOj1hpvC1LhCJSdzV3cHXgT
-         gdAQHC5auyQNhfCWSUyzhT0G3Msq+T9Yjqnt9fwXLww3PzZKV5BS8vzsELMT0CxQnBU0
-         zf8gMOXRZdnrNn8B3ejlPOjLSfNKRxs4KWyJzqfJgsJVL5iYMW9hlBarAWr9suDi282x
-         KXvBWPnLHnWwcBPaa+Z6qi6d5WsPp35CXwBgdwvUdAlnCfqB4KvcpOE8DXwvvGvTycDr
-         wz3g==
-X-Gm-Message-State: AGi0Puba5MOjRpgUlYmyVH26OvXVnLZbmLlO4Pqpl82Rur0LqKvPbhwL
-        m4yIcdvN/jJ7v96K1FXO9DQ=
-X-Google-Smtp-Source: APiQypJr5rRSiDKwiSO/nto67eapmrLp4s/LDV8LT/NHSh6XPftTcm8GM6AQNahRp6cm0AhcCcYHqA==
-X-Received: by 2002:a17:90a:ac05:: with SMTP id o5mr29078872pjq.184.1589330394632;
-        Tue, 12 May 2020 17:39:54 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id h31sm14142647pjb.33.2020.05.12.17.39.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 17:39:53 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 0F22C4063E; Wed, 13 May 2020 00:39:53 +0000 (UTC)
-Date:   Wed, 13 May 2020 00:39:53 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Rafael Aquini <aquini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        keescook@chromium.org, akpm@linux-foundation.org,
-        yzaikin@google.com, tytso@mit.edu
-Subject: Re: [PATCH v2] kernel: sysctl: ignore out-of-range taint bits
- introduced via kernel.tainted
-Message-ID: <20200513003953.GK11244@42.do-not-panic.com>
-References: <20200512223946.888020-1-aquini@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512223946.888020-1-aquini@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 12 May 2020 20:39:51 -0400
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 12 May 2020 17:39:48 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg05-sd.qualcomm.com with ESMTP; 12 May 2020 17:39:48 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id 08CE04D95; Tue, 12 May 2020 17:39:48 -0700 (PDT)
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Guru Das Srinagesh <gurus@codeaurora.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Subject: [RESEND PATCH v14 11/11] pwm: core: Convert period and duty cycle to u64
+Date:   Tue, 12 May 2020 17:39:45 -0700
+Message-Id: <6e5d54bd655b044c41062805bedb043de4ea06ef.1589330178.git.gurus@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <cover.1589330178.git.gurus@codeaurora.org>
+References: <cover.1589330178.git.gurus@codeaurora.org>
+In-Reply-To: <cover.1589330178.git.gurus@codeaurora.org>
+References: <cover.1589330178.git.gurus@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 06:39:46PM -0400, Rafael Aquini wrote:
-> Users with SYS_ADMIN capability can add arbitrary taint flags
-> to the running kernel by writing to /proc/sys/kernel/tainted
-> or issuing the command 'sysctl -w kernel.tainted=...'.
-> These interface, however, are open for any integer value
-> and this might an invalid set of flags being committed to
-> the tainted_mask bitset.
-> 
-> This patch introduces a simple way for proc_taint() to ignore
-> any eventual invalid bit coming from the user input before
-> committing those bits to the kernel tainted_mask.
-> 
-> Signed-off-by: Rafael Aquini <aquini@redhat.com>
+Because period and duty cycle are defined as ints with units of
+nanoseconds, the maximum time duration that can be set is limited to
+~2.147 seconds. Change their definitions to u64 in the structs of the
+PWM framework so that higher durations may be set.
 
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+Also use the right format specifiers in debug prints in both core.c as
+well as pwm-stm32-lp.c.
 
-  Luis
+Reported-by: kbuild test robot <lkp@intel.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+---
+ drivers/pwm/core.c         | 14 +++++++-------
+ drivers/pwm/pwm-stm32-lp.c |  2 +-
+ drivers/pwm/sysfs.c        |  8 ++++----
+ include/linux/pwm.h        | 12 ++++++------
+ 4 files changed, 18 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index bca0496..a2ff6dd 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -510,12 +510,12 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
+ 	    last->period > s2.period &&
+ 	    last->period <= state->period)
+ 		dev_warn(chip->dev,
+-			 ".apply didn't pick the best available period (requested: %u, applied: %u, possible: %u)\n",
++			 ".apply didn't pick the best available period (requested: %llu, applied: %llu, possible: %llu)\n",
+ 			 state->period, s2.period, last->period);
+ 
+ 	if (state->enabled && state->period < s2.period)
+ 		dev_warn(chip->dev,
+-			 ".apply is supposed to round down period (requested: %u, applied: %u)\n",
++			 ".apply is supposed to round down period (requested: %llu, applied: %llu)\n",
+ 			 state->period, s2.period);
+ 
+ 	if (state->enabled &&
+@@ -524,14 +524,14 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
+ 	    last->duty_cycle > s2.duty_cycle &&
+ 	    last->duty_cycle <= state->duty_cycle)
+ 		dev_warn(chip->dev,
+-			 ".apply didn't pick the best available duty cycle (requested: %u/%u, applied: %u/%u, possible: %u/%u)\n",
++			 ".apply didn't pick the best available duty cycle (requested: %llu/%llu, applied: %llu/%llu, possible: %llu/%llu)\n",
+ 			 state->duty_cycle, state->period,
+ 			 s2.duty_cycle, s2.period,
+ 			 last->duty_cycle, last->period);
+ 
+ 	if (state->enabled && state->duty_cycle < s2.duty_cycle)
+ 		dev_warn(chip->dev,
+-			 ".apply is supposed to round down duty_cycle (requested: %u/%u, applied: %u/%u)\n",
++			 ".apply is supposed to round down duty_cycle (requested: %llu/%llu, applied: %llu/%llu)\n",
+ 			 state->duty_cycle, state->period,
+ 			 s2.duty_cycle, s2.period);
+ 
+@@ -558,7 +558,7 @@ static void pwm_apply_state_debug(struct pwm_device *pwm,
+ 	    (s1.enabled && s1.period != last->period) ||
+ 	    (s1.enabled && s1.duty_cycle != last->duty_cycle)) {
+ 		dev_err(chip->dev,
+-			".apply is not idempotent (ena=%d pol=%d %u/%u) -> (ena=%d pol=%d %u/%u)\n",
++			".apply is not idempotent (ena=%d pol=%d %llu/%llu) -> (ena=%d pol=%d %llu/%llu)\n",
+ 			s1.enabled, s1.polarity, s1.duty_cycle, s1.period,
+ 			last->enabled, last->polarity, last->duty_cycle,
+ 			last->period);
+@@ -1284,8 +1284,8 @@ static void pwm_dbg_show(struct pwm_chip *chip, struct seq_file *s)
+ 		if (state.enabled)
+ 			seq_puts(s, " enabled");
+ 
+-		seq_printf(s, " period: %u ns", state.period);
+-		seq_printf(s, " duty: %u ns", state.duty_cycle);
++		seq_printf(s, " period: %llu ns", state.period);
++		seq_printf(s, " duty: %llu ns", state.duty_cycle);
+ 		seq_printf(s, " polarity: %s",
+ 			   state.polarity ? "inverse" : "normal");
+ 
+diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
+index 67fca62..134c146 100644
+--- a/drivers/pwm/pwm-stm32-lp.c
++++ b/drivers/pwm/pwm-stm32-lp.c
+@@ -61,7 +61,7 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	do_div(div, NSEC_PER_SEC);
+ 	if (!div) {
+ 		/* Clock is too slow to achieve requested period. */
+-		dev_dbg(priv->chip.dev, "Can't reach %u ns\n",	state->period);
++		dev_dbg(priv->chip.dev, "Can't reach %llu ns\n", state->period);
+ 		return -EINVAL;
+ 	}
+ 
+diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
+index 2389b86..449dbc0 100644
+--- a/drivers/pwm/sysfs.c
++++ b/drivers/pwm/sysfs.c
+@@ -42,7 +42,7 @@ static ssize_t period_show(struct device *child,
+ 
+ 	pwm_get_state(pwm, &state);
+ 
+-	return sprintf(buf, "%u\n", state.period);
++	return sprintf(buf, "%llu\n", state.period);
+ }
+ 
+ static ssize_t period_store(struct device *child,
+@@ -52,10 +52,10 @@ static ssize_t period_store(struct device *child,
+ 	struct pwm_export *export = child_to_pwm_export(child);
+ 	struct pwm_device *pwm = export->pwm;
+ 	struct pwm_state state;
+-	unsigned int val;
++	u64 val;
+ 	int ret;
+ 
+-	ret = kstrtouint(buf, 0, &val);
++	ret = kstrtou64(buf, 0, &val);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -77,7 +77,7 @@ static ssize_t duty_cycle_show(struct device *child,
+ 
+ 	pwm_get_state(pwm, &state);
+ 
+-	return sprintf(buf, "%u\n", state.duty_cycle);
++	return sprintf(buf, "%llu\n", state.duty_cycle);
+ }
+ 
+ static ssize_t duty_cycle_store(struct device *child,
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index 2635b2a..a13ff38 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -39,7 +39,7 @@ enum pwm_polarity {
+  * current PWM hardware state.
+  */
+ struct pwm_args {
+-	unsigned int period;
++	u64 period;
+ 	enum pwm_polarity polarity;
+ };
+ 
+@@ -56,8 +56,8 @@ enum {
+  * @enabled: PWM enabled status
+  */
+ struct pwm_state {
+-	unsigned int period;
+-	unsigned int duty_cycle;
++	u64 period;
++	u64 duty_cycle;
+ 	enum pwm_polarity polarity;
+ 	bool enabled;
+ };
+@@ -107,13 +107,13 @@ static inline bool pwm_is_enabled(const struct pwm_device *pwm)
+ 	return state.enabled;
+ }
+ 
+-static inline void pwm_set_period(struct pwm_device *pwm, unsigned int period)
++static inline void pwm_set_period(struct pwm_device *pwm, u64 period)
+ {
+ 	if (pwm)
+ 		pwm->state.period = period;
+ }
+ 
+-static inline unsigned int pwm_get_period(const struct pwm_device *pwm)
++static inline u64 pwm_get_period(const struct pwm_device *pwm)
+ {
+ 	struct pwm_state state;
+ 
+@@ -128,7 +128,7 @@ static inline void pwm_set_duty_cycle(struct pwm_device *pwm, unsigned int duty)
+ 		pwm->state.duty_cycle = duty;
+ }
+ 
+-static inline unsigned int pwm_get_duty_cycle(const struct pwm_device *pwm)
++static inline u64 pwm_get_duty_cycle(const struct pwm_device *pwm)
+ {
+ 	struct pwm_state state;
+ 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
