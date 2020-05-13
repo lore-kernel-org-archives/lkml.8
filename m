@@ -2,198 +2,112 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01012C433EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD65C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4C1A204EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:00:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=batbytes-com.20150623.gappssmtp.com header.i=@batbytes-com.20150623.gappssmtp.com header.b="LQW8kDGi"
+	by mail.kernel.org (Postfix) with ESMTP id 9C0A5215A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:53:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589381630;
+	bh=Y+15Wb1ADlkDykUOMk8PX66JnRMcrjLokRUoR5c4j8c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QXgDnca8CEwneis0vLJPPovfr2Qr7ttMqCb7DueJ7HyPeZSBI0V27hMh76csSfl0p
+	 og1gW6kT4wix99KA0FsPV3mnvGlZml8Xixc/t1U9xxsbAEM78w1uAdZnzRqfwI51vD
+	 ssgVVDWgip7CSplroWeLoPUmXPCMYlWIn8ZNLmS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389257AbgEMPAq (ORCPT
+        id S2389066AbgEMOxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:00:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389244AbgEMPAl (ORCPT
+        Wed, 13 May 2020 10:53:49 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43789 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388806AbgEMOxt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:00:41 -0400
-Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25701C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 08:00:41 -0700 (PDT)
-Received: by mail-il1-x12b.google.com with SMTP id b71so9378709ilg.8
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 08:00:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=batbytes-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=+rPg11J9VlvVDeV8znfbO+l0Zmgl15XOXAgw8ZhUwkI=;
-        b=LQW8kDGiT9n4vRSn4+zIJqiC+H9EC4J5xm++TGKc4H95qo+Bwx5zxGUUlg/0Yw1ZLa
-         qaFof47jhHBozx1Ekv6eJ2M4l8S/rGIEuiX22F65CF13dqXSfnSiK5JbLipu5IlG5JPh
-         SkTNr4IGQDc8p0QrsPgLIUUw9drXJDaXtwdwjSFV2cCWqIdyRyXLK8DXEcZ+r1eImUaY
-         rkUDzKHQ88TXrpK+U0t/t5EstVRHh6JJgnJI9MJ5ZZobKAny09T+TVCaU5XBcQHqylnV
-         0jyrMlcUVfIviPLPmLC9oIc5JfuxSrzif7/xbPSIgweiZdVGrKJAc4mes/oiF7qQsPRF
-         Uhww==
+        Wed, 13 May 2020 10:53:49 -0400
+Received: by mail-lf1-f65.google.com with SMTP id 188so13859487lfa.10;
+        Wed, 13 May 2020 07:53:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=+rPg11J9VlvVDeV8znfbO+l0Zmgl15XOXAgw8ZhUwkI=;
-        b=V9egPToF0H59yNiYq3hi7B1LXONxbpotJa1WOkUa191kCTurHlV+VRbaUu6EFSj3cb
-         74MOQDLg5rhGU8J0kaCyvuVPGVA6svcceDVFQp3vP+9HhevIZnCWRl9tb9SicG2zQurU
-         2DpIX2bMT2hS98MeWG36NfY9a9Hr/euxUgd9nQftmPCVo0JO8AjWTZnxflLuupAueCbN
-         JxBygaCSLzIgYJHFAo6/gn7n4gdrnMUaBiTn2ufh9A+3as5SGXdnvfMu+K5jlKotn0cL
-         11qaHpq0JeInwvZBrP4pzdkf09dq77TdoNCP7Dzm+A+m83+SITVBvU6a6/AxomTr09LH
-         8dFw==
-X-Gm-Message-State: AGi0Puba3Ly/Eow3FJFryS6P5X1wY8cSco99/VogzVBF3DOz54zPbhqM
-        ANq0HzfzjjS4MIb4NwWfcRyjKaTk0QxQ0Jz9OtZR5SJ7okM=
-X-Google-Smtp-Source: APiQypLBR/G4xZV9sFHLT56RfUzH/+GXiuKifvTb4r+7q/Sdj1l0SvIoEeSNXGtIoeRf0XtqGCJdWSrOvYD/talPO2g=
-X-Received: by 2002:a05:6e02:f81:: with SMTP id v1mr16264384ilo.246.1589382040025;
- Wed, 13 May 2020 08:00:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dMfZtgSmJt2YeZH8HP+NYczXoMyMD+NpZTNn0Kwfj9M=;
+        b=duXayi+ajaLOcWtdBQ9lT98L/HZAt9I0dwTmcCqNT8FBrGkXSeg22kfzI+kmAsWx1Q
+         0x9lM9MdWfZWHT3HIjxlg7ZaP0IWAvuEGgzwxDrkQwAkhZDcAdAIYnRELOZJy8Xsp71F
+         lVA1+D6fRC5LDPJsIz3p9IpZl61Q06tnOQ8JJAWG3n4g6SGyfcN6hjxLYKdDbkTycx8u
+         ozCQmsJyJNb3MPNbHYdL4ScCnrgd7Oa3D20dA38csyX9eNJJojyjCkfwb0JmAS1ZM1DY
+         hG+E/SN+pJVQ8R7SR7I0xS3CWpF8bMdpPtxZwjUT0CXezQQGU4wu4bzzja775z19bUhf
+         z2/g==
+X-Gm-Message-State: AOAM531xR0qyVQVX9aJSjtHFQSiNJ/bnFfmsczUjVKaTQW/6IW6WPz1e
+        H2TooDuIJ+GAxqsiZB7UR/Q=
+X-Google-Smtp-Source: ABdhPJzLV4IdUL3+WTqLFvq/5fTkyBAl7VAlYYB9kNzGqjzzImQNNj5w/VBFFsEZf6kOUF2pIK16xA==
+X-Received: by 2002:ac2:5290:: with SMTP id q16mr18122420lfm.108.1589381626330;
+        Wed, 13 May 2020 07:53:46 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id k24sm1673815ljg.92.2020.05.13.07.53.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 07:53:45 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1jYslX-0001q6-H5; Wed, 13 May 2020 16:53:47 +0200
+Date:   Wed, 13 May 2020 16:53:47 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Wei Yongjun <weiyongjun1@huawei.com>
+Cc:     Johan Hovold <johan@kernel.org>, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH -next] gnss: sirf: fix error return code in sirf_probe()
+Message-ID: <20200513145347.GX25962@localhost>
+References: <20200507094252.13914-1-weiyongjun1@huawei.com>
 MIME-Version: 1.0
-From:   Patrick Donnelly <batrick@batbytes.com>
-Date:   Wed, 13 May 2020 08:00:28 -0700
-Message-ID: <CACh33FpkBrHpTNfZN6EiyaVPVb6bvJqHO8dJkiHzWPOF0+pKAQ@mail.gmail.com>
-Subject: file system permissions regression affecting root
-To:     open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507094252.13914-1-weiyongjun1@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In newer kernels (at least 5.6), it appears root is not able to write
-to files owned by other users in a sticky directory:
+On Thu, May 07, 2020 at 09:42:52AM +0000, Wei Yongjun wrote:
+> Fix to return a negative error code from the error handling
+> case instead of 0, as done elsewhere in this function.
+> 
+> Fixes: d2efbbd18b1e ("gnss: add driver for sirfstar-based receivers")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+> ---
+>  drivers/gnss/sirf.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gnss/sirf.c b/drivers/gnss/sirf.c
+> index effed3a8d398..2ecb1d3e8eeb 100644
+> --- a/drivers/gnss/sirf.c
+> +++ b/drivers/gnss/sirf.c
+> @@ -439,14 +439,18 @@ static int sirf_probe(struct serdev_device *serdev)
+>  
+>  	data->on_off = devm_gpiod_get_optional(dev, "sirf,onoff",
+>  			GPIOD_OUT_LOW);
+> -	if (IS_ERR(data->on_off))
+> +	if (IS_ERR(data->on_off)) {
+> +		ret = PTR_ERR(data->on_off);
+>  		goto err_put_device;
+> +	}
+>  
+>  	if (data->on_off) {
+>  		data->wakeup = devm_gpiod_get_optional(dev, "sirf,wakeup",
+>  				GPIOD_IN);
+> -		if (IS_ERR(data->wakeup))
+> +		if (IS_ERR(data->wakeup)) {
+> +			ret = PTR_ERR(data->wakeup);
+>  			goto err_put_device;
+> +		}
+>  
+>  		ret = regulator_enable(data->vcc);
+>  		if (ret)
 
-$ uname -r
-5.6.11-arch1-1
-$ stat -f /tmp
-  File: "/tmp"
-    ID: 0        Namelen: 255     Type: tmpfs
-Block size: 4096       Fundamental block size: 4096
-Blocks: Total: 2005160    Free: 2005092    Available: 2005092
-Inodes: Total: 2005160    Free: 2005112
-$ stat /tmp
-  File: /tmp
-  Size: 440             Blocks: 0          IO Block: 4096   directory
-Device: 2fh/47d Inode: 21533       Links: 20
-Access: (1777/drwxrwxrwt)  Uid: (    0/    root)   Gid: (    0/    root)
-Access: 2020-05-11 11:50:52.780667565 -0700
-Modify: 2020-05-13 07:40:19.617941285 -0700
-Change: 2020-05-13 07:40:19.617941285 -0700
- Birth: -
-$ touch /tmp/foo
-$ stat /tmp/foo
-  File: /tmp/foo
-  Size: 0               Blocks: 0          IO Block: 4096   regular empty file
-Device: 2fh/47d Inode: 3441684     Links: 1
-Access: (0640/-rw-r-----)  Uid: ( 1000/pdonnell)   Gid: (  985/   users)
-Access: 2020-05-13 07:40:29.218026785 -0700
-Modify: 2020-05-13 07:40:29.218026785 -0700
-Change: 2020-05-13 07:40:29.218026785 -0700
- Birth: -
-$ sudo /bin/sh -c 'echo 1 > /tmp/foo'
-/bin/sh: /tmp/foo: Permission denied
-$ sudo strace -f -- /bin/sh -c 'echo 1 > /tmp/foo' |& grep foo
-execve("/bin/sh", ["/bin/sh", "-c", "echo 1 > /tmp/foo"],
-0x7fff92dec300 /* 15 vars */) = 0
-openat(AT_FDCWD, "/tmp/foo", O_WRONLY|O_CREAT|O_TRUNC, 0666) = -1
-EACCES (Permission denied)
-write(2, "/bin/sh: /tmp/foo: Permission de"..., 37/bin/sh: /tmp/foo:
-Permission denied
+Good catch! Now applied with a stable tag as this would lead to a
+use-after-free on driver unbind.
 
-
-Compare to Linux 4.18:
-
-$ uname -r
-4.18.0-147.3.1.el8_1.x86_64
-$ stat /dev/shm
-  File: /dev/shm
-  Size: 100             Blocks: 0          IO Block: 4096   directory
-Device: 16h/22d Inode: 15466       Links: 2
-Access: (1777/drwxrwxrwt)  Uid: (    0/    root)   Gid: (    0/    root)
-Context: system_u:object_r:tmpfs_t:s0
-Access: 2020-05-12 17:37:07.029131257 +0000
-Modify: 2020-05-13 14:35:44.161036943 +0000
-Change: 2020-05-13 14:35:44.161036943 +0000
- Birth: -
-$ stat -f /dev/shm
-  File: "/dev/shm"
-    ID: 0        Namelen: 255     Type: tmpfs
-Block size: 4096       Fundamental block size: 4096
-Blocks: Total: 9243647    Free: 9243604    Available: 9243604
-Inodes: Total: 9243647    Free: 9243643
-$ touch /dev/shm/foo
-$ stat /dev/shm/foo
-  File: /dev/shm/foo
-  Size: 0               Blocks: 0          IO Block: 4096   regular empty file
-Device: 16h/22d Inode: 5616861     Links: 1
-Access: (0640/-rw-r-----)  Uid: ( 1156/pdonnell)   Gid: ( 1156/pdonnell)
-Context: unconfined_u:object_r:user_tmp_t:s0
-Access: 2020-05-13 14:44:55.121908033 +0000
-Modify: 2020-05-13 14:44:55.121908033 +0000
-Change: 2020-05-13 14:44:55.121908033 +0000
- Birth: -
-$ sudo -- /bin/sh -c 'echo 1 > /dev/shm/foo'
-$
-
-This seems to be related to the directory being owned by root; it does
-not happen when the directory is owned by the user:
-
-$ uname -r
-5.6.11-arch1-1
-$ sudo chown pdonnell:users gtmp
-$ stat gtmp
-  File: gtmp
-  Size: 4096            Blocks: 8          IO Block: 4096   directory
-Device: fe04h/65028d    Inode: 2819062     Links: 2
-Access: (1777/drwxrwxrwt)  Uid: ( 1000/pdonnell)   Gid: (  985/   users)
-Access: 2020-05-13 07:47:06.344892575 -0700
-Modify: 2020-05-13 07:50:24.709987998 -0700
-Change: 2020-05-13 07:52:52.137963637 -0700
- Birth: 2020-05-13 07:34:09.937974845 -0700
-$ stat -f gtmp
-  File: "gtmp"
-    ID: f24a3528a175df48 Namelen: 255     Type: ext2/ext3
-Block size: 4096       Fundamental block size: 4096
-Blocks: Total: 36495867   Free: 8991668    Available: 7120360
-Inodes: Total: 9338880    Free: 8147228
-$ touch gtmp/foo
-$ stat gtmp/foo
-  File: gtmp/foo
-  Size: 0               Blocks: 0          IO Block: 4096   regular empty file
-Device: fe04h/65028d    Inode: 2754033     Links: 1
-Access: (0640/-rw-r-----)  Uid: ( 1000/pdonnell)   Gid: (  985/   users)
-Access: 2020-05-13 07:53:10.218124141 -0700
-Modify: 2020-05-13 07:53:10.218124141 -0700
-Change: 2020-05-13 07:53:10.218124141 -0700
- Birth: 2020-05-13 07:53:10.218124141 -0700
-$ sudo strace -f -- /bin/sh -c 'echo 1 > gtmp/foo' |& grep foo
-execve("/bin/sh", ["/bin/sh", "-c", "echo 1 > gtmp/foo"],
-0x7ffe03362430 /* 15 vars */) = 0
-openat(AT_FDCWD, "gtmp/foo", O_WRONLY|O_CREAT|O_TRUNC, 0666) = 3
-$ rm gtmp/foo
-$ sudo chown root:root gtmp
-$ touch gtmp/foo
-# stat gtmp/foo
-  File: gtmp/foo
-  Size: 0               Blocks: 0          IO Block: 4096   regular empty file
-Device: fe04h/65028d    Inode: 2754033     Links: 1
-Access: (0640/-rw-r-----)  Uid: ( 1000/pdonnell)   Gid: (  985/   users)
-Access: 2020-05-13 07:55:18.892599600 -0700
-Modify: 2020-05-13 07:55:18.892599600 -0700
-Change: 2020-05-13 07:55:18.892599600 -0700
- Birth: 2020-05-13 07:55:18.892599600 -0700
-$ sudo strace -f -- /bin/sh -c 'echo 1 > gtmp/foo' |& grep foo
-execve("/bin/sh", ["/bin/sh", "-c", "echo 1 > gtmp/foo"],
-0x7fff588732f0 /* 15 vars */) = 0
-openat(AT_FDCWD, "gtmp/foo", O_WRONLY|O_CREAT|O_TRUNC, 0666) = -1
-EACCES (Permission denied)
-write(2, "/bin/sh: gtmp/foo: Permission de"..., 37/bin/sh: gtmp/foo:
-Permission denied
-
-
--- 
-Patrick Donnelly
+Johan
