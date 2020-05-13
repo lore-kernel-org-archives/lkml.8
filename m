@@ -2,110 +2,99 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2F4CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D3BC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F61420675
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:48:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R75BSXoo"
+	by mail.kernel.org (Postfix) with ESMTP id 8B92820675
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:49:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589366984;
+	bh=WI4N0XLn822C5JW3eFGW3auiTCinCLuSa1FZ40QLjLk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iLTMq/rNR4e3zQH4UVV6R2P+pqZlqitdIhSDWMwcLaggk78GOR33U5FHHLU3QWohm
+	 E4XP/UShBDn2HU35N5DJnQFY87qUHNYymN/cR7e2e898D3/9mpmhRotNnGFzzI4U1l
+	 0uSHhdmofTHoPkxwRHBks6uepS9NMd8O4qtKyz6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732661AbgEMKs4 (ORCPT
+        id S1732741AbgEMKtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:48:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58444 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726907AbgEMKs4 (ORCPT
+        Wed, 13 May 2020 06:49:43 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54571 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726907AbgEMKtn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 06:48:56 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61079C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 03:48:54 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id w19so13175341wmc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 03:48:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DkTu8Boy9+QFrN/nz9Dlp+esnFEQSCB9OlQtV2ZrE7g=;
-        b=R75BSXoo/V9oojjqwA3xBMD3P4vlpXd3u9G2gA7d4K574Evnf5YbrWWh+MGgJzlRmY
-         v1SYw72qo/2orD01DCCs6OJmX8zpu4Uj6M9TykGeeBcBBUXlh2oBFAV6WlVzt2ddERvJ
-         0oE88kPY+xs/eeYEO50EPToSNjn+iue4TmSdkGMZbnorC6LpOR0aKfaLHLFbI9zn7kuP
-         jFTLhAF4AdrzPshcFYHolAqw0VaLGa/ZZ9ozjDPA9+YBafjJWAKOH1XyjRMzS4HtINQY
-         PSM5KlyRMM1H6oC2eewNV3faKxvpmbWqilenWE9pZ0cWG/Vzk8PzbEvUCt7ukN3wzUub
-         tu1Q==
+        Wed, 13 May 2020 06:49:43 -0400
+Received: by mail-wm1-f66.google.com with SMTP id h4so26052280wmb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 03:49:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=DkTu8Boy9+QFrN/nz9Dlp+esnFEQSCB9OlQtV2ZrE7g=;
-        b=P4lSrntNiQKT3f0BjNoWqf/wPsBQ5IgBGFfkDM1bml0sw+ou6wu80hq2/xYj1EC9+n
-         WCbwJ7Zt2OjyMxY4VnoQpJYeV/9/o6Xwp8hf6rSlSzfTPnnrLX/stXj/z5+woKwD2n0W
-         nAB68oUCjqXrQf5XipgWOJXFDsNwpx+bDRFOCednVNMqyrP5Ofrt+44j2m/eJnseJWof
-         3AtUYULUGPB946InbXlmfK1G8f8CJ2kQ0uXRzH1y2mp29W9WrJLCVwdyyukhy8HIpjn1
-         qmnRwanlNDc706RhzuoLRKn4pMjTKEsafsYyO+c8O5Y73WrLoJX67+KM1LBt48Gd7zBR
-         0CVQ==
-X-Gm-Message-State: AGi0PubzRv1U4aImimoXBJZ8j19aOBUaE9j+swlnz3FImGFs7uYandzt
-        xi0ZHfpcTRv6gmNp25X4fMhirw==
-X-Google-Smtp-Source: APiQypI/miEqKd1bRU5KlIz6q+mV3Wo21I4z4di7LSyrHxy1dzFnHEBiY8isceJjKhRMQ+TuIif8YA==
-X-Received: by 2002:a1c:790e:: with SMTP id l14mr41466821wme.174.1589366932710;
-        Wed, 13 May 2020 03:48:52 -0700 (PDT)
-Received: from dbrazdil-macbookpro.roam.corp.google.com ([2a01:4b00:8523:2d03:e021:170a:2079:28ea])
-        by smtp.gmail.com with ESMTPSA id p4sm15896164wrq.31.2020.05.13.03.48.51
+        bh=qGtWvRJM1m2RpMoVIbMi3Ej47pxKSMk0dInoX5vx7QE=;
+        b=SVnUYwr2FUKVQ8W9CZjbSCHco7uUa3YGl4coIlLBf5D1XyGRExtcLJRAIt7qYt6mCp
+         E4Jb9GI1Qb8tIF3qD6NX+EgskyBJcLwikGyM82FzcXLv6TAbNI15i18Q6GXq2FuU94FS
+         RFsvnQvYbtTEYVxOB4Lf5gWbBI4YfGNP0s/TFpsubHekp8TGwoxDGPR2vUd377zbIkXW
+         4A/45zd0qqkRvbOqLY8HPocKbOedabp1Th/3gCK1LByFfLgEbHVYb5SmWxOjJUHl6rQ4
+         kZ4GMUWtiN5Vum/qqIoe7w0UCeH0sKGV0N+N2azSdWpnFl2IZgAPxO8ILx/J8wBAv/kk
+         ObsQ==
+X-Gm-Message-State: AOAM5320vDJfdOWXlV9coPRoAq0g+WmmYatKTCtLhOxCmFcct3f/RimV
+        01aYSiDBYUVJQ7azVlWaByk=
+X-Google-Smtp-Source: ABdhPJyRv8MpJFuutWZlFO+pO+Lfn4/k9QPleIKjdfBRr7snRl3DOAzb9PAKwn9kVVTiPTwh++gEwg==
+X-Received: by 2002:a1c:7d43:: with SMTP id y64mr4137833wmc.46.1589366981114;
+        Wed, 13 May 2020 03:49:41 -0700 (PDT)
+Received: from localhost (ip-37-188-249-36.eurotel.cz. [37.188.249.36])
+        by smtp.gmail.com with ESMTPSA id r14sm11330332wmb.2.2020.05.13.03.49.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 03:48:51 -0700 (PDT)
-From:   David Brazdil <dbrazdil@google.com>
-X-Google-Original-From: David Brazdil <dbrazdil@dbrazdil-macbookpro.roam.corp.google.com>
-Date:   Wed, 13 May 2020 11:48:50 +0100
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Quentin Perret <qperret@google.com>,
-        David Brazdil <dbrazdil@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/15] arm64: kvm: Formalize host-hyp hypcall ABI
-Message-ID: <20200513104850.6rer4ued2uq6lpxs@dbrazdil-macbookpro.roam.corp.google.com>
-References: <20200430144831.59194-1-dbrazdil@google.com>
- <20200430144831.59194-3-dbrazdil@google.com>
- <87d07fj3g9.wl-maz@kernel.org>
- <20200507133320.GA16899@google.com>
- <871rns14dl.wl-maz@kernel.org>
+        Wed, 13 May 2020 03:49:40 -0700 (PDT)
+Date:   Wed, 13 May 2020 12:49:38 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH] printk: Add loglevel for "do not print to consoles".
+Message-ID: <20200513104938.GW29153@dhcp22.suse.cz>
+References: <4dae86af-1d9a-f5a8-cff6-aa91ec038a79@i-love.sakura.ne.jp>
+ <20200428121828.GP28637@dhcp22.suse.cz>
+ <b4d74234-8009-9ffd-011f-bd5d1a4b85f6@i-love.sakura.ne.jp>
+ <20200428154532.GU28637@dhcp22.suse.cz>
+ <b1d507b1-dae7-f526-c74a-d465ddecea6a@i-love.sakura.ne.jp>
+ <20200429142106.GG28637@dhcp22.suse.cz>
+ <a59271f1-b3fc-26d1-f0a2-5ec351d0095e@i-love.sakura.ne.jp>
+ <20200513062652.GM413@jagdpanzerIV.localdomain>
+ <a75d6560-ad99-5b02-3648-247c27c3a398@i-love.sakura.ne.jp>
+ <20200513100413.GH17734@linux-b0ei>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <871rns14dl.wl-maz@kernel.org>
+In-Reply-To: <20200513100413.GH17734@linux-b0ei>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > In fact David already has a nice patch that transforms the whole thing
-> > in a jump table, which is much nicer. I'll let him share the details
-> > :)
-> 
-> Ah! Looking forward to reviewing it then!
+On Wed 13-05-20 12:04:13, Petr Mladek wrote:
+> What is so special about  OOM dump task so that it would deserve such
+> complications?
 
-It's not actually that different. It still has the same header file, just uses
-the macros to generate a jump table rather than an array of function pointers.
-The main advantage being that we can avoid .hyp.text dependency on
-physvirt_offset. Feel free to have a look, branch 'topic/el2-obj-wip' at:
-	https://android-kvm.googlesource.com/linux
+Nothing really. Except for the potential amount of the output. But as
+you've said there are two ways around that. Disable this output if you
+do not need it or make it a lower loglevel. A completely different
+method of tagging messages just to distinguish different backends of the
+printk ring buffers sounds like a bad idea to me because it a) adds a
+policy to the kernel and b) it makes it incredibly hard to judge when to
+use such a feature. I simply cannot tell whether somebody considers
+dump_tasks an important information to be printed on consoles.
 
-Perhaps this is not worth the trouble. We do hope to get to a point where the
-ABI between .text and .hyp.text is formalized, but in my mind that ABI is
-unlikely to be using this same hypcall path.
-
-On the other hand, I've played with preserving the function-pointer interface
-in the last couple of days and later in this series we do end up having to
-declare all of the hcall entry points (which now have two ELF symbols), so we
-end up with a similar table regardless, just with no IDs assigned.
-
--David
+If there is any need to control which messages should be routed to which
+backend then the proper solution would be to filter messages per log
+level per backend. But I have no idea how feasible this is for the
+existing infrastructure - or maybe it already exists...
+-- 
+Michal Hocko
+SUSE Labs
