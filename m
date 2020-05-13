@@ -7,74 +7,73 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F23CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F62C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5ED920659
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 797922065C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589398603;
-	bh=D+MMl1eEjVQMrzdkAuYYyV6dZOU0ShG86I8tDOXGHvg=;
+	s=default; t=1589398656;
+	bh=VWs4NpfAEV+Wf9gSeX0e5o0koUyBavjyGOUsk1rJZSE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Quyxb2IjXCrtFDAwkgbH80wySohKLpaoPY5bMXtSntB8WQt8ONI1TerRmF2QXmntO
-	 om1LP8sS2ieJ/AKZnhPv1YVL9u9AN3ljeWjudiXz6Vos6g1SMLe2NeCTCzwFtV5hnu
-	 +5nANTZzRubgX1oOluLTyaF4390o8/vO9kBshkkA=
+	b=FMbaVkP0yFsYhEwoequMIAHAC3hqS4E8wv55qUFo7dzZbsbcw8vMDdRnKtvH16WbV
+	 uo2iBm5/5/3mMHFVeDUnmwRhTxtwyDcw0BdxhavBnB3hYmHP9/FOf6LEcmRrVktgBx
+	 u3XZ6cOaUZTriDHA8+Qt5R5h4dev8jp6jWRTPSW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390720AbgEMTgl (ORCPT
+        id S2390737AbgEMThf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 15:36:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56330 "EHLO
+        Wed, 13 May 2020 15:37:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390708AbgEMTgk (ORCPT
+        by vger.kernel.org with ESMTP id S2390708AbgEMThe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 15:36:40 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 149AEC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 12:36:40 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id d22so504767lfm.11
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 12:36:39 -0700 (PDT)
+        Wed, 13 May 2020 15:37:34 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2514CC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 12:37:33 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id a4so495411lfh.12
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 12:37:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jxiMveoP0RhCR8vjDCp/HmQWj731R3On/oP1uZF2PQE=;
-        b=eyGhYtEXi8PPzZXswj9fBVzAZ7MKdPyfDFJANIY5Qa8lnG4B6PQlkLIvCnEsRuAYDd
-         cijbLp3K6GqvurO+mnvtFYs9Cit1WsfsH6w5mAvZOtdvpGdoJxKX+co3FEMrxzMFBuxb
-         6U4kH5ee2J4uHKUOq+K6Hnjpw8SSIL615vIlE=
+        bh=5FRYECFHiQr3Nfb1uzqLNFih4Bcng0OOjZJ5V5m4DAs=;
+        b=ZjLEDdjhfQ+ZsfStprzo3boptGtjEB8xMJMPV9hfgVHHrrYSleH8mLbHC8Rk2rWQqc
+         NnCj3BIzoVOHPTIgSoBKM0vWlfW3SuT0UoYyIfcumKGQE/4wsqoLb39sPYuJ5/AuOelG
+         tGQKJ8l9ywdlX+FMm4CTzGEq2pztEwBhTbMlg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jxiMveoP0RhCR8vjDCp/HmQWj731R3On/oP1uZF2PQE=;
-        b=LIpvtid85Vytx/OQswN5oOep1Rvm6IxnTYzHlbLHH2odRwalmATmvdvghGJcL2xdzJ
-         X8Lx6Y8uePrtu3xPDZuu3sw1ZniTFHK/9d+UwFpKQVAsNuvgvWu/Qdz6zZYA/qyFbVVv
-         ZSXQ12+An2bKxLb9c4E9CywOqQcfcjTS2G/Xk+BefctrP+88nTQoSdQMZAxkym4cMity
-         MqAuhhC8iDDpoBhJirnhIzKWHLXMSz2HH0cQp0HYfs9ct/73arbStSdztpMeWu19gVH3
-         hVgSO7Boc+dlWxkDpib7XizhMUjJPhyqQoCvOhlR/H7xDJa9SF2if4nA/w+74lwiQbth
-         556Q==
-X-Gm-Message-State: AOAM533xC54AVzwewDxNVNsdSJdU/xAUkSOAamuZZNSPyCGQKUJE8+CM
-        5BO/3zhLMg6TAyCN/IpcJg4WWDgmB/Q=
-X-Google-Smtp-Source: ABdhPJwciVzJzIjdOVNf4UZ1FKYYdFpuK1YuLnjrtiro+ZjTQQNfkLFmzZwJcvm1HKJ/06IpLtcnkA==
-X-Received: by 2002:a19:ae10:: with SMTP id f16mr651865lfc.74.1589398596513;
-        Wed, 13 May 2020 12:36:36 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id g10sm296472lfc.95.2020.05.13.12.36.34
+        bh=5FRYECFHiQr3Nfb1uzqLNFih4Bcng0OOjZJ5V5m4DAs=;
+        b=pLQaigKa9QPMADdkPBDYbMu2xdaTmcwxYO3mZtRhGdb/Mf5cJtL+8V2bfIfrzlqBWO
+         sxMiuHnIB8u93CZUlhLpOqXqAnq7zg3GD2Eyrt0Qx6sl++QEiQZBXPrvuQT4buTGnhkp
+         qb4F/679i1tPpyMRF3uPMkgNyKxkytJqhJA6EvgZ1e9HUFNE7yfwmQ/E+OUmf9xAwObB
+         cVpwY4wsJhQgo5BQ7Y5rZVM/VbaTjRQkC8EvIbla28vM+UMyBhaKhhs9f48VLR6Yt0an
+         QyMZ4J/xlvDKIgmr48VgnoyXRKc841ldJpnW7h/KCQoFD9bZWUdHihgPYfkaQeeTWkaz
+         1Tsw==
+X-Gm-Message-State: AOAM530r3+q+Tf2BTI4JUaHRhrf9sdM7bT4BHYeOt/9hXFwvr5MtZpRl
+        z99mk4os5te62Ri7JDQn3VL9WG1oA4k=
+X-Google-Smtp-Source: ABdhPJzZR1bjDikyYlmpQ7rGoeQ4rp4GJAtNGlV7tNr9gKMqQZvYgWvfM/WUfwportk/ITDi99wxxg==
+X-Received: by 2002:a19:d:: with SMTP id 13mr681662lfa.167.1589398650335;
+        Wed, 13 May 2020 12:37:30 -0700 (PDT)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id q7sm231433ljp.20.2020.05.13.12.37.28
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 May 2020 12:36:35 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id l19so864569lje.10
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 12:36:34 -0700 (PDT)
-X-Received: by 2002:a2e:9641:: with SMTP id z1mr394092ljh.201.1589398594575;
- Wed, 13 May 2020 12:36:34 -0700 (PDT)
+        Wed, 13 May 2020 12:37:29 -0700 (PDT)
+Received: by mail-lf1-f51.google.com with SMTP id s9so560913lfp.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 12:37:28 -0700 (PDT)
+X-Received: by 2002:ac2:4da1:: with SMTP id h1mr686949lfe.152.1589398648496;
+ Wed, 13 May 2020 12:37:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200513160038.2482415-1-hch@lst.de> <20200513160038.2482415-15-hch@lst.de>
-In-Reply-To: <20200513160038.2482415-15-hch@lst.de>
+References: <20200513160038.2482415-1-hch@lst.de>
+In-Reply-To: <20200513160038.2482415-1-hch@lst.de>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 13 May 2020 12:36:18 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgzXqgYQQt2NCdZTtxLmV1FV1nbZ_gKw0O_mRkXZj57zg@mail.gmail.com>
-Message-ID: <CAHk-=wgzXqgYQQt2NCdZTtxLmV1FV1nbZ_gKw0O_mRkXZj57zg@mail.gmail.com>
-Subject: Re: [PATCH 14/18] maccess: allow architectures to provide kernel
- probing directly
+Date:   Wed, 13 May 2020 12:37:12 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wghd2efrE_DoJaC7nTkpCC1gPGp+xbNY7KWOE-7sa4h0Q@mail.gmail.com>
+Message-ID: <CAHk-=wghd2efrE_DoJaC7nTkpCC1gPGp+xbNY7KWOE-7sa4h0Q@mail.gmail.com>
+Subject: Re: clean up and streamline probe_kernel_* and friends v2
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     "the arch/x86 maintainers" <x86@kernel.org>,
         Alexei Starovoitov <ast@kernel.org>,
@@ -92,50 +91,15 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 9:01 AM Christoph Hellwig <hch@lst.de> wrote:
+On Wed, May 13, 2020 at 9:00 AM Christoph Hellwig <hch@lst.de> wrote:
 >
-> +               arch_kernel_read(dst, src, type, err_label);            \
+> this series start cleaning up the safe kernel and user memory probing
+> helpers in mm/maccess.c, and then allows architectures to implement
+> the kernel probing without overriding the address space limit and
+> temporarily allowing access to user memory.  It then switches x86
+> over to this new mechanism by reusing the unsafe_* uaccess logic.
 
-I'm wondering if
+Ok, I think I found a bug, and I had one more suggestion, but other
+than the two emails I sent this all looks like an improvement to me.
 
- (a) we shouldn't expose this as an interface in general
-
- (b) it wouldn't be named differently..
-
-The reason for (a) is that several users of the
-"copy_from_kernel_nofault()" interfaces just seem to want a single
-access from kernel mode.
-
-The reason for (b) is that if we do expose this as a normal interface,
-it shouldn't be called "arch_kernel_read", and it should have the same
-semantics as "get_user_unsafe()".
-
-IOW, maybe we should simply do exactly that: have a
-"get_kernel_nofault()" thing that looks exactly like
-unsafe_get_user().
-
-On x86, it would basically be identical to unsafe_get_user().
-
-And on architectures that only have the copy function, you'd just have
-a fallback something like this:
-
-  #define get_kernel_nofault(dst, src, err_label) do {  \
-        typeof (*src) __gkn_result;                     \
-        if (probe_kernel_read(&__gkn_result, src) < 0)  \
-                goto err_label;                         \
-        (dst) = __gkn_result;                           \
-  } while (0)
-
-and now the people who want to read a single kernel word can just do
-
-        get_kernel_nofault(n, untrusted_pointer, error);
-
-and they're done.
-
-And some day - when we get reliably "asm goto" wiith outputs - that
-"get_kernel_fault()" will literally be a single instruction asm with
-the proper exception handler marker, the way "put_user_unsafe()"
-already works (and the way "put_kernel_nofault()" would already work
-if it does the above).
-
-             Linus
+                 Linus
