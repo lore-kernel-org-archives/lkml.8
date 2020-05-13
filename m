@@ -2,143 +2,114 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E8AC433E5
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA825C433E7
 	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C564F20853
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C56ED221EE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:55:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dbVXtppE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389038AbgEMOrK (ORCPT
+        id S2389070AbgEMOz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 10:47:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40868 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389013AbgEMOrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 10:47:10 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 2EC9DB0BA;
-        Wed, 13 May 2020 14:47:11 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id D98B41E12AE; Wed, 13 May 2020 16:47:06 +0200 (CEST)
-Date:   Wed, 13 May 2020 16:47:06 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     ira.weiny@intel.com
-Cc:     linux-ext4@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 8/9] fs/ext4: Introduce DAX inode flag
-Message-ID: <20200513144706.GH27709@quack2.suse.cz>
-References: <20200513054324.2138483-1-ira.weiny@intel.com>
- <20200513054324.2138483-9-ira.weiny@intel.com>
+        Wed, 13 May 2020 10:55:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388167AbgEMOz5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 10:55:57 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9FFCC061A0C;
+        Wed, 13 May 2020 07:55:57 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t7so6925379plr.0;
+        Wed, 13 May 2020 07:55:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q0we0+GBX6q0qsW/YELPh66cYe9GwOpY4tlrJBAC4pY=;
+        b=dbVXtppEdGfbCzGErxALcHVIJjRBUe5SR4gI+aW8gGwrpxSLPy95nUwKeOViTlMJJa
+         GetvmXVu6j1ZaiqMj4ZA0CI6ROcZ4mDH55B/Cfk2OA0nNVt4eZRRr7NsHAb4JkNqLgsK
+         s51l3826ndpc6C7+MmyNtQ1Wh/8J8THb3G2oKksmFcptHgxpvbGiU8IyCfxSJWnKVpCz
+         fv7pJ8FmzZMP268zQaGv/ASAnz/7NGa7D/v801KXMvnvuS+B35jW3K91J1C7mNBQpWKw
+         6ShgfD4zx07M3n4f8Vthv8RuzRgKPSlm6+HfkQ/IfNJSjLB/xMotG+w5eSX0JME536PM
+         GdZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q0we0+GBX6q0qsW/YELPh66cYe9GwOpY4tlrJBAC4pY=;
+        b=XvH4OvOcpX2NlsPRePUefcMn4jDXEpDXhXLJWKADIxgqy7Git5h6GqyoOZdkbyqxNn
+         51s5DCZFwMLoKAyrbob7r78juY7Xsr2ybhrbWWNzgwZTHDlez6HSCShaEJBn9YvMsAi5
+         drMLd3wMSuefS+LGTC4h7Fqsw/ViVjmK0El6bJVmvVtkjW9dhyoTRMi2E/+dyQ9BMiCZ
+         6nnQR9GEiqefrlCG7W740EjJonqjIaqpADKZ3zb9JrOGYFmi90fEmmwlvPbsF8aBfzlw
+         +wOCOoAAH+Lmwrf/356oNalZk/FccIWxuWCOvUtwilcNJWm/XresxNPf4PyB9HN16/nc
+         bnrQ==
+X-Gm-Message-State: AGi0PuZquY3O0/hGnXI/mDHc8xR5Efbmg4IdEpeyYlDKfoJPyAptWd+8
+        nmIM7wKaqf3HIskZDMR3lFXuxn0mKdUJkHNq8dxx0SS4QPo=
+X-Google-Smtp-Source: APiQypJStWKnwCbOzDaephSclhi7lT0hpHLD+NSnoaKCFmfLEuG9RPUzE+cPZl9AlTEKQ08Sn8uR/rwkx0DqCXY6/+w=
+X-Received: by 2002:a17:902:7003:: with SMTP id y3mr25899813plk.18.1589381757070;
+ Wed, 13 May 2020 07:55:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513054324.2138483-9-ira.weiny@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200513140031.25633-1-lars.povlsen@microchip.com> <20200513140031.25633-2-lars.povlsen@microchip.com>
+In-Reply-To: <20200513140031.25633-2-lars.povlsen@microchip.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 13 May 2020 17:55:50 +0300
+Message-ID: <CAHp75VcA-oDboufsDNx1ZR4+HBwYt7LdLOpbfs7-bM9ByucKJA@mail.gmail.com>
+Subject: Re: [PATCH 01/10] spi: dw: Add support for polled operation via no
+ IRQ specified in DT
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 12-05-20 22:43:23, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> Add a flag to preserve FS_XFLAG_DAX in the ext4 inode.
-> 
-> Set the flag to be user visible and changeable.  Set the flag to be
-> inherited.  Allow applications to change the flag at any time.
-> 
-> Finally, on regular files, flag the inode to not be cached to facilitate
-> changing S_DAX on the next creation of the inode.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> 
-> ---
-> Change from RFC:
-> 	use new d_mark_dontcache()
-> 	Allow caching if ALWAYS/NEVER is set
-> 	Rebased to latest Linus master
-> 	Change flag to unused 0x01000000
-> 	update ext4_should_enable_dax()
-> ---
->  fs/ext4/ext4.h  | 13 +++++++++----
->  fs/ext4/inode.c |  4 +++-
->  fs/ext4/ioctl.c | 25 ++++++++++++++++++++++++-
->  3 files changed, 36 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> index 01d1de838896..715f8f2029b2 100644
-> --- a/fs/ext4/ext4.h
-> +++ b/fs/ext4/ext4.h
-> @@ -415,13 +415,16 @@ struct flex_groups {
->  #define EXT4_VERITY_FL			0x00100000 /* Verity protected inode */
->  #define EXT4_EA_INODE_FL	        0x00200000 /* Inode used for large EA */
->  /* 0x00400000 was formerly EXT4_EOFBLOCKS_FL */
-> +
-> +#define EXT4_DAX_FL			0x01000000 /* Inode is DAX */
-> +
->  #define EXT4_INLINE_DATA_FL		0x10000000 /* Inode has inline data. */
->  #define EXT4_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
->  #define EXT4_CASEFOLD_FL		0x40000000 /* Casefolded file */
->  #define EXT4_RESERVED_FL		0x80000000 /* reserved for ext4 lib */
->  
-> -#define EXT4_FL_USER_VISIBLE		0x705BDFFF /* User visible flags */
-> -#define EXT4_FL_USER_MODIFIABLE		0x604BC0FF /* User modifiable flags */
-> +#define EXT4_FL_USER_VISIBLE		0x715BDFFF /* User visible flags */
-> +#define EXT4_FL_USER_MODIFIABLE		0x614BC0FF /* User modifiable flags */
+On Wed, May 13, 2020 at 5:03 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+>
+> With this change a SPI controller can be added without having a IRQ
+> associated, and causing all transfers to be polled. For SPI controllers
+> without DMA, this can significantly improve performance by less
+> interrupt handling overhead.
 
-Hum, I think this was already mentioned but there are also definitions in
-include/uapi/linux/fs.h which should be kept in sync... Also if DAX flag
-gets modified through FS_IOC_SETFLAGS, we should call ext4_doncache() as
-well, shouldn't we?
+...
 
-> @@ -802,6 +807,21 @@ static int ext4_ioctl_get_es_cache(struct file *filp, unsigned long arg)
->  	return error;
->  }
->  
-> +static void ext4_dax_dontcache(struct inode *inode, unsigned int flags)
-> +{
-> +	struct ext4_inode_info *ei = EXT4_I(inode);
-> +
-> +	if (S_ISDIR(inode->i_mode))
-> +		return;
-> +
-> +	if (test_opt2(inode->i_sb, DAX_NEVER) ||
-> +	    test_opt(inode->i_sb, DAX_ALWAYS))
-> +		return;
-> +
-> +	if (((ei->i_flags ^ flags) & EXT4_DAX_FL) == EXT4_DAX_FL)
-> +		d_mark_dontcache(inode);
-> +}
-> +
->  long ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->  {
->  	struct inode *inode = file_inode(filp);
-> @@ -1267,6 +1287,9 @@ long ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
->  			return err;
->  
->  		inode_lock(inode);
-> +
-> +		ext4_dax_dontcache(inode, flags);
-> +
+> +#define VALID_IRQ(i) (i >= 0)
 
-I don't think we should set dontcache flag when setting of DAX flag fails -
-it could event be a security issue). So I think you'll have to check
-whether DAX flag is being changed, call vfs_ioc_fssetxattr_check(), and
-only if it succeeded and DAX flags was changing call ext4_dax_dontcache().
+drivers/rtc/rtc-cmos.c:95:#define is_valid_irq(n)               ((n) > 0)
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Candidate to be in include/linux/irq.h ?
+
+...
+
+> +       if (VALID_IRQ(dws->irq))
+> +               free_irq(dws->irq, master);
+
+Isn't free_irq() aware of invalid ones (not found IRQ in the tree or
+any other backend container won't do anything)?
+
+
+>  err_free_master:
+>         spi_controller_put(master);
+>         return ret;
+> --
+> 2.26.2
+
+
+
+--
+With Best Regards,
+Andy Shevchenko
