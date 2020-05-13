@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9185CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAFBBC2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E9E5205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3507205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363653;
-	bh=YXLFxgx/cR+xQ8Urciq83J/EM61NJniqRVSKvI+Ss68=;
+	s=default; t=1589363656;
+	bh=wVQB35DVJkUTTN5UUzYKgILYjZl1UWPiepEnvyRw1Ps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RYF8uCurioRaEUOsseL4WaWylJKtpyNPNH9+3cOtkVNRXCvdWn+Ra4Kf2mSgJ7R7+
-	 wmuYz3T7NS6PqZ5460ObXO3oVPruVQdb7xj9Wlta/Ts6BZ6H+ha0YQOq032wGgnpmM
-	 c1EX9u+wT+3XVbw+KXjm60wgyKxWC5DEY5ZCkB5w=
+	b=w7VaU/vjOYC39i8GzodUO3HIr/62MmNkzHWPiCQdqZntvVQluha0wT8nMDvx3m6Nr
+	 2j4Hwp1vcoavUpuMqKUce/iMYCQbQPDjTUk+fKb97Tlu6vex5XJD8ZCRsrnnW6YPpI
+	 D4xTETVBqACt63l3/iBRkbGHAgDQnDa6EJi8SY48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388067AbgEMJyM (ORCPT
+        id S2387591AbgEMJyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:54:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56372 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:54:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732826AbgEMJyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:54:07 -0400
+        id S2388053AbgEMJyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:54:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F781205ED;
-        Wed, 13 May 2020 09:54:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B42B20575;
+        Wed, 13 May 2020 09:54:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363646;
-        bh=YXLFxgx/cR+xQ8Urciq83J/EM61NJniqRVSKvI+Ss68=;
+        s=default; t=1589363648;
+        bh=wVQB35DVJkUTTN5UUzYKgILYjZl1UWPiepEnvyRw1Ps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A5zxQ4emUI9wsU31i6tLwh1NCiMxeQFqOL6AHW2eM3p/hxlJmBMZPDSKEFRDEzlTD
-         G0dt0Panf8K4uvCwTuylkVDnOjNL5XNt757Gu0BV+sRlcFkODaNy+yHbJrIO3rlbJM
-         AHaYf6pvwzS3HWzkhGbkgyQFlRl//RB7//iq2DgE=
+        b=n3j71y3tMs0N/iL0fhkmJLShe1oD06ghvDNSvo91HiAx0LBHXwPZ4h5ijgV6l6UvJ
+         O17n4wHRTDlRA3dnyH946T/UvjB27ks4kyfJY+8h3p46V40N3DUyl6HSQZ6RWP3wtV
+         aaDBH2EJ28lMj5QWn+ALPZYJZHsxSBQ85RfP217Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
         Xin Tan <tanxin.ctf@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 031/118] net/tls: Fix sk_psock refcnt leak in bpf_exec_tx_verdict()
-Date:   Wed, 13 May 2020 11:44:10 +0200
-Message-Id: <20200513094420.270139384@linuxfoundation.org>
+Subject: [PATCH 5.6 032/118] net/tls: Fix sk_psock refcnt leak when in tls_data_ready()
+Date:   Wed, 13 May 2020 11:44:11 +0200
+Message-Id: <20200513094420.336676639@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -62,40 +62,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 095f5614bfe16e5b3e191b34ea41b10d6fdd4ced ]
+[ Upstream commit 62b4011fa7bef9fa00a6aeec26e69685dc1cc21e ]
 
-bpf_exec_tx_verdict() invokes sk_psock_get(), which returns a reference
-of the specified sk_psock object to "psock" with increased refcnt.
+tls_data_ready() invokes sk_psock_get(), which returns a reference of
+the specified sk_psock object to "psock" with increased refcnt.
 
-When bpf_exec_tx_verdict() returns, local variable "psock" becomes
-invalid, so the refcount should be decreased to keep refcount balanced.
+When tls_data_ready() returns, local variable "psock" becomes invalid,
+so the refcount should be decreased to keep refcount balanced.
 
 The reference counting issue happens in one exception handling path of
-bpf_exec_tx_verdict(). When "policy" equals to NULL but "psock" is not
+tls_data_ready(). When "psock->ingress_msg" is empty but "psock" is not
 NULL, the function forgets to decrease the refcnt increased by
 sk_psock_get(), causing a refcnt leak.
 
-Fix this issue by calling sk_psock_put() on this error path before
-bpf_exec_tx_verdict() returns.
+Fix this issue by calling sk_psock_put() on all paths when "psock" is
+not NULL.
 
 Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tls/tls_sw.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/tls/tls_sw.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 --- a/net/tls/tls_sw.c
 +++ b/net/tls/tls_sw.c
-@@ -800,6 +800,8 @@ static int bpf_exec_tx_verdict(struct sk
- 			*copied -= sk_msg_free(sk, msg);
- 			tls_free_open_rec(sk);
- 		}
-+		if (psock)
-+			sk_psock_put(sk, psock);
- 		return err;
+@@ -2083,8 +2083,9 @@ static void tls_data_ready(struct sock *
+ 	strp_data_ready(&ctx->strp);
+ 
+ 	psock = sk_psock_get(sk);
+-	if (psock && !list_empty(&psock->ingress_msg)) {
+-		ctx->saved_data_ready(sk);
++	if (psock) {
++		if (!list_empty(&psock->ingress_msg))
++			ctx->saved_data_ready(sk);
+ 		sk_psock_put(sk, psock);
  	}
- more_data:
+ }
 
 
