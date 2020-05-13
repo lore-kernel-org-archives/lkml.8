@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3C4C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CD3CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7CDF206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA602206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364188;
-	bh=7h3ilf4yRUxzBh/TqzooOJcpzlutNJdFmVpnoQVo1lo=;
+	s=default; t=1589364191;
+	bh=Fj3VzgxU/YecRjG8k70EozfZJX8Zs6fcFj/gnZ5pIpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nn8nrZawpBgWS1ErFwr+P2zsiEBMTWE5DR3L4UWOf56Zjg27D0NwuZeFQuX6jBGHq
-	 c6CYa3Pk62FSHGf1xqx9AYkcXDzY3R8N5NnUpSqjxoPKPVpnfu7ysrQicBYYYxp5pL
-	 Ujj0A67fO5Ihlaht+ZmzSCYBX2EvPlejykMIcoLk=
+	b=WFoMidPD1DiYjAro6qN3SCdfn2u0yQ+HHobPseg5zNb/aiEjcb331TQKKVBGZkNiU
+	 N86OH6wgdSAJJrsU17Qhfo6q1MdALrSJrBSmvdSc0xa4WS8gBjf0/80OP+81uBGDcT
+	 tqnLJgjyiSO4GD2DtCxKTxmpe5H3++RcEyR2dwDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733230AbgEMJtX (ORCPT
+        id S1732595AbgEMJtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:49:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48222 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:49:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732596AbgEMJtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:49:18 -0400
+        id S1733205AbgEMJtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:49:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9253520769;
-        Wed, 13 May 2020 09:49:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E1AB20740;
+        Wed, 13 May 2020 09:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363358;
-        bh=7h3ilf4yRUxzBh/TqzooOJcpzlutNJdFmVpnoQVo1lo=;
+        s=default; t=1589363355;
+        bh=Fj3VzgxU/YecRjG8k70EozfZJX8Zs6fcFj/gnZ5pIpw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DuS5vARycaSlMWkYXUmbjxG/Jz7GgwXAw+uteXzV4CCKJH6ygQhOE/kqxkZlGWtQV
-         wUGS3uAo9nVO2H0V8vUUsX1mUVZo9sNQ45FrXx4uPk/TIvR3w6SlyT70ZeXlJwFfJc
-         /V4RoC3ldWKedq3kNNaRycJroeJBiXrHN5fJV/1w=
+        b=X4xG7sMEG1NqNXY9i+7dfyAo5BsBF0mlasvLKlFD3ujlRoI3G9gSPuRbzA091lVHF
+         uuAoW9YyruKYZWsl1qIrdtKuU2meagVLFXyqsSyqTeaaBc4UoJ0AlRTupf1sonwko4
+         XjZYJeJdbHK58hQDwHSAB9XMEdwCYYeDNcdCYfNk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 06/90] drm/amdgpu: move kfd suspend after ip_suspend_phase1
-Date:   Wed, 13 May 2020 11:44:02 +0200
-Message-Id: <20200513094409.731798624@linuxfoundation.org>
+Subject: [PATCH 5.4 05/90] net: macb: Fix runtime PM refcounting
+Date:   Wed, 13 May 2020 11:44:01 +0200
+Message-Id: <20200513094409.652936438@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -60,43 +63,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Quan <evan.quan@amd.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit c457a273e118bb96e1db8d1825f313e6cafe4258 ]
+[ Upstream commit 0ce205d4660c312cdeb4a81066616dcc6f3799c4 ]
 
-This sequence change should be safe as what did in ip_suspend_phase1
-is to suspend DCE only. And this is a prerequisite for coming
-redundant cg/pg ungate dropping.
+The commit e6a41c23df0d, while trying to fix an issue,
 
-Fixes: 487eca11a321ef ("drm/amdgpu: fix gfx hang during suspend with video playback (v2)")
-Signed-off-by: Evan Quan <evan.quan@amd.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+    ("net: macb: ensure interface is not suspended on at91rm9200")
+
+introduced a refcounting regression, because in error case refcounter
+must be balanced. Fix it by calling pm_runtime_put_noidle() in error case.
+
+While here, fix the same mistake in other couple of places.
+
+Fixes: e6a41c23df0d ("net: macb: ensure interface is not suspended on at91rm9200")
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Claudiu Beznea <claudiu.beznea@microchip.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/cadence/macb_main.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index 630e8342d1625..ca2a0770aad2e 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -3073,12 +3073,12 @@ int amdgpu_device_suspend(struct drm_device *dev, bool suspend, bool fbcon)
- 	amdgpu_device_set_pg_state(adev, AMD_PG_STATE_UNGATE);
- 	amdgpu_device_set_cg_state(adev, AMD_CG_STATE_UNGATE);
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 234c13ebbc41b..dd2a605c5c2ed 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -334,8 +334,10 @@ static int macb_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
+ 	int status;
  
--	amdgpu_amdkfd_suspend(adev);
--
- 	amdgpu_ras_suspend(adev);
+ 	status = pm_runtime_get_sync(&bp->pdev->dev);
+-	if (status < 0)
++	if (status < 0) {
++		pm_runtime_put_noidle(&bp->pdev->dev);
+ 		goto mdio_pm_exit;
++	}
  
- 	r = amdgpu_device_ip_suspend_phase1(adev);
+ 	status = macb_mdio_wait_for_idle(bp);
+ 	if (status < 0)
+@@ -367,8 +369,10 @@ static int macb_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
+ 	int status;
  
-+	amdgpu_amdkfd_suspend(adev);
-+
- 	/* evict vram memory */
- 	amdgpu_bo_evict_vram(adev);
+ 	status = pm_runtime_get_sync(&bp->pdev->dev);
+-	if (status < 0)
++	if (status < 0) {
++		pm_runtime_put_noidle(&bp->pdev->dev);
+ 		goto mdio_pm_exit;
++	}
  
+ 	status = macb_mdio_wait_for_idle(bp);
+ 	if (status < 0)
+@@ -3691,8 +3695,10 @@ static int at91ether_open(struct net_device *dev)
+ 	int ret;
+ 
+ 	ret = pm_runtime_get_sync(&lp->pdev->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_noidle(&lp->pdev->dev);
+ 		return ret;
++	}
+ 
+ 	/* Clear internal statistics */
+ 	ctl = macb_readl(lp, NCR);
 -- 
 2.20.1
 
