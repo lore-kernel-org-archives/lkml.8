@@ -2,178 +2,232 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B265CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6059FCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCBA620690
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6ECE20671
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:32:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lJ2nSg+2"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VKrLxF3K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387946AbgEMNcO (ORCPT
+        id S2387954AbgEMNc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:32:14 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:57834 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733281AbgEMNcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:32:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=HyO1+4PL1ry4EHRvApM2dkFGIw/Z4bh+/HXu49Gei1w=; b=lJ2nSg+2amnjt4bLbGibfEWJG1
-        UGeYTelQhtqRIMYYa8byavoe0uLrrqmfQ+b4N90hQ7fQk4TWwKO7DArZP78dxfnNveugSdqgI0PQM
-        gkPovlywJ/Qv0Gom9Sxn7enQJWVfxgruXaOwnJVbDgCQrv7cv008a2XCPd3kVL3DDR8g=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jYrUX-002AEv-Qj; Wed, 13 May 2020 15:32:09 +0200
-Date:   Wed, 13 May 2020 15:32:09 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH v1] net: phy: at803x: add cable test support
-Message-ID: <20200513133209.GC499265@lunn.ch>
-References: <20200513120648.14415-1-o.rempel@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513120648.14415-1-o.rempel@pengutronix.de>
+        Wed, 13 May 2020 09:32:59 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:37898 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733281AbgEMNc7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 09:32:59 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200513133257euoutp02715e93ed127aa0ce7a42729d0fc3322c~OmcIoUOfL3223232232euoutp02a
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 13:32:57 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200513133257euoutp02715e93ed127aa0ce7a42729d0fc3322c~OmcIoUOfL3223232232euoutp02a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1589376777;
+        bh=SMTxZNZpTSAf+VjaRdwIa7Y+Y92ELOA8MjwAFVO+Mus=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VKrLxF3KEiWmVZ1axlhSlzty0rd2nUqXsHuI7B7LU28r5TvCvsp+0bgDe4vtq9QOY
+         WiKZcd124gvPVjK5otBDPFZ8OFs4Ng94v6RMIBwxoj8zDX9Eu+NKd2eBdrnLRwwAaZ
+         2zo3AcPWxR1hl6t0/nrmIY5WXFjlcZ6Vzn2OE+7A=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200513133257eucas1p1ab88f1465f6ce76a0c7f470a63001ea2~OmcIUwDTB0876608766eucas1p1h;
+        Wed, 13 May 2020 13:32:57 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id FD.B5.61286.907FBBE5; Wed, 13
+        May 2020 14:32:57 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200513133256eucas1p273110d0c8f67e52fc7385acef776efaa~OmcH5dMRP0359403594eucas1p2L;
+        Wed, 13 May 2020 13:32:56 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200513133256eusmtrp11bf699394ab06f7b9d70d588c796f3dc~OmcH4xvA20994509945eusmtrp1W;
+        Wed, 13 May 2020 13:32:56 +0000 (GMT)
+X-AuditID: cbfec7f2-ef1ff7000001ef66-28-5ebbf709f135
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id B7.0A.08375.807FBBE5; Wed, 13
+        May 2020 14:32:56 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200513133256eusmtip10a029b12870de4156e2e5b8913fad120~OmcHTRPCk2465024650eusmtip1_;
+        Wed, 13 May 2020 13:32:56 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH v5 01/38] dma-mapping: add generic helpers for mapping
+ sgtable objects
+Date:   Wed, 13 May 2020 15:32:08 +0200
+Message-Id: <20200513133245.6408-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200513132114.6046-1-m.szyprowski@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0VSa0hTYRju29nZzqbT45R80UyYJGSpSf04MLPCfpz+RAVZCpkrD2ptajte
+        +6Moai0NL5XDUsS8OzUvaUzFHNkUaZSaTPOaFZbZwltYoG0erX/P7X2f7/v4CExajbsRMbEJ
+        jDpWoZQJxPyO1xsmX9GvrvAjwzPOVJ5pkEe1aJtxaqujAKNG1ywCqq6hn0eV98qp1dE5HtU6
+        P4ZTI/onAqrx1ZSQ6vv5CT9pR+vKdIjuWS/n053rszg9c8/Io9sq0+gPm/MYXWSuQXTXeLqA
+        vt9ej+iV1v3nxGHiwEhGGZPEqP2DIsTRedn1KL7JO+VBZjWejno8NUhEAHkMzMZapEFiQkrW
+        IuhbsAhthpRcRTC4xeOMFQTlOj3anfg+t8znjBoEj+pKd4h1ouJ9Js+WEpABoFnSCGzYhcxC
+        MJBnb8MYqeVB/2KiDTuTl6HMMLq9lU8egIovOsyGJWQgGAe0ONfmCQ3PXm7rIvI4LD/fwG1l
+        QDYJ4anFaC0jrOQ0zLyhuLwzfDO2Czm8D4aKcvlcPhPBnKlRyJFcBCMZ2p37yGHS9FtgW4SR
+        B6FZ78/Jp8BUqMe5/Q5gXnLizu8AhR3FGCdL4E62lEt7Q4mx6V9t39thjMM0tC+27bxiPoJ2
+        8yDKR54l/8vKEapHrkwiq4pi2IBYJtmPVajYxNgov+txqlZk/T1Dm8blF2ht+JoBkQSS2Uuo
+        ia5wKa5IYlNVBgQEJnORnG22SpJIReptRh13VZ2oZFgDcif4MlfJ0YqvV6RklCKBuckw8Yx6
+        1+URIrd0hO9Jsp8oyDhx2P9jWkujV+g7cw3sveDhkdDL5FQ5uKvOB1eG6lLsSkM0d32TJmYV
+        cWeSu8URh5zAyzF1hk3rnizOueW5EPRHqZ2XpGT/yCzqlVvknXaPLzo+ZNDspc35YGHVWOf0
+        Z33bjfGpwKy4kNaSaQsVUqca8MnNlYcVyfhstCLAB1Ozir/3t71COQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupikeLIzCtJLcpLzFFi42I5/e/4XV2O77vjDCb9MbLoPXeSyWLjjPWs
+        Fv+3TWS2uPL1PZvFytVHmSwW7Le2+HLlIZPFpsfXWC0u75rDZrH2yF12i4MfnrA6cHusmbeG
+        0WPvtwUsHtu/PWD1uN99nMlj85J6j9v/HjN7TL6xnNFj980GNo++LasYPT5vkgvgitKzKcov
+        LUlVyMgvLrFVija0MNIztLTQMzKx1DM0No+1MjJV0rezSUnNySxLLdK3S9DL6G1bxViwTq1i
+        SvMy1gbGvfJdjJwcEgImEm8efmLpYuTiEBJYyijxasFTVoiEjMTJaQ1QtrDEn2tdbBBFnxgl
+        3h14DpZgEzCU6HoLkRAR6GSUmNb9kR3EYRaYxySx6OEhdpAqYYEwiZ0ftoHZLAKqEouerWEG
+        sXkFbCSOn5gBtUJeYvWGA2BxTgFbiU9bf4LFhYBq1rbOYZvAyLeAkWEVo0hqaXFuem6xoV5x
+        Ym5xaV66XnJ+7iZGYDxsO/Zz8w7GSxuDDzEKcDAq8fBa3NodJ8SaWFZcmXuIUYKDWUmE1289
+        UIg3JbGyKrUoP76oNCe1+BCjKdBRE5mlRJPzgbGaVxJvaGpobmFpaG5sbmxmoSTO2yFwMEZI
+        ID2xJDU7NbUgtQimj4mDU6qBMaSi692hcinJ34t2HWxjfe1+2VN/o1/Uu6n6q+MfJNzYYd+y
+        f00hzz4Z6V1fjF4fPrAveW7xvIJpB6LWr0/nf+uv6ye37IqIcPXl83lKdwIYk5RO7boQpFHR
+        sXx1oEHYzjvRWp+dGJ8EuNV/jedZ3idy947AAeGUS0fPXd6cFXHQk3/htv97piuxFGckGmox
+        FxUnAgDvD09CnQIAAA==
+X-CMS-MailID: 20200513133256eucas1p273110d0c8f67e52fc7385acef776efaa
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200513133256eucas1p273110d0c8f67e52fc7385acef776efaa
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200513133256eucas1p273110d0c8f67e52fc7385acef776efaa
+References: <20200513132114.6046-1-m.szyprowski@samsung.com>
+        <CGME20200513133256eucas1p273110d0c8f67e52fc7385acef776efaa@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 02:06:48PM +0200, Oleksij Rempel wrote:
-> The cable test seems to be support by all of currently support Atherso
-> PHYs, so add support for all of them. This patch was tested only on
-> AR9331 PHY with following results:
-> - No cable is detected as short
-> - A 15m long cable connected only on one side is detected as 9m open.
+struct sg_table is a common structure used for describing a memory
+buffer. It consists of a scatterlist with memory pages and DMA addresses
+(sgl entry), as well as the number of scatterlist entries: CPU pages
+(orig_nents entry) and DMA mapped pages (nents entry).
 
-That sounds wrong. What about a shorted 15m cable? Is it also 9m?  Do
-you have any other long cables you can test with? Is it always 1/2 the
-cable length?
+It turned out that it was a common mistake to misuse nents and orig_nents
+entries, calling DMA-mapping functions with a wrong number of entries or
+ignoring the number of mapped entries returned by the dma_map_sg
+function.
 
-> - A cable test with active link partner will provide no usable results.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->  drivers/net/phy/at803x.c | 141 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 141 insertions(+)
-> 
-> diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
-> index f4fec5f644e91..03ec500defb34 100644
-> --- a/drivers/net/phy/at803x.c
-> +++ b/drivers/net/phy/at803x.c
-> @@ -7,11 +7,13 @@
->   * Author: Matus Ujhelyi <ujhelyi.m@gmail.com>
->   */
->  
-> +#include <linux/bitfield.h>
->  #include <linux/phy.h>
->  #include <linux/module.h>
->  #include <linux/string.h>
->  #include <linux/netdevice.h>
->  #include <linux/etherdevice.h>
-> +#include <linux/ethtool_netlink.h>
->  #include <linux/of_gpio.h>
->  #include <linux/bitfield.h>
->  #include <linux/gpio/consumer.h>
-> @@ -48,6 +50,20 @@
->  #define AT803X_SMART_SPEED_BYPASS_TIMER		BIT(1)
->  #define AT803X_LED_CONTROL			0x18
->  
-> +/* Cable Tester Contol Register */
-> +#define AT803X_CABLE_DIAG_CTRL			0x16
-> +#define AT803X_CABLE_DIAG_MDI_PAIR		GENMASK(9, 8)
-> +#define AT803X_CABLE_DIAG_EN			BIT(0)
-> +
-> +/* Cable Tester Status Register */
-> +#define AT803X_CABLE_DIAG_STATUS		0x1c
-> +#define AT803X_CABLE_DIAG_RESULT		GENMASK(9, 8)
-> +#define AT803X_CABLE_DIAG_RESULT_OK		0
-> +#define AT803X_CABLE_DIAG_RESULT_SHORT		1
-> +#define AT803X_CABLE_DIAG_RESULT_OPEN		2
-> +#define AT803X_CABLE_DIAG_RESULT_FAIL		3
-> +#define AT803X_CABLE_DIAG_DTIME			GENMASK(7, 0)
-> +
->  #define AT803X_DEVICE_ADDR			0x03
->  #define AT803X_LOC_MAC_ADDR_0_15_OFFSET		0x804C
->  #define AT803X_LOC_MAC_ADDR_16_31_OFFSET	0x804B
-> @@ -122,6 +138,7 @@ MODULE_AUTHOR("Matus Ujhelyi");
->  MODULE_LICENSE("GPL");
->  
->  struct at803x_priv {
-> +	struct phy_device *phydev;
->  	int flags;
->  #define AT803X_KEEP_PLL_ENABLED	BIT(0)	/* don't turn off internal PLL */
->  	u16 clk_25m_reg;
-> @@ -129,6 +146,9 @@ struct at803x_priv {
->  	struct regulator_dev *vddio_rdev;
->  	struct regulator_dev *vddh_rdev;
->  	struct regulator *vddio;
-> +	struct work_struct cable_test_work;
-> +	bool cable_test_finished;
-> +	int cable_test_ret;
->  };
->  
->  struct at803x_context {
-> @@ -168,6 +188,113 @@ static int at803x_debug_reg_mask(struct phy_device *phydev, u16 reg,
->  	return phy_write(phydev, AT803X_DEBUG_DATA, val);
->  }
-  
-> +static void at803x_cable_test_work(struct work_struct *work)
-> +{
-> +	struct at803x_priv *priv = container_of(work, struct at803x_priv,
-> +						cable_test_work);
-> +	struct phy_device *phydev = priv->phydev;
-> +	int i, ret = 0, pairs = 4;
-> +
-> +	if (phydev->phy_id == ATH9331_PHY_ID)
-> +		pairs = 2;
-> +
-> +	for (i = 0; i < pairs; i++) {
-> +		ret = at803x_cable_test_pair(phydev, i);
-> +		if (ret)
-> +			break;
-> +	}
-> +
-> +	priv->cable_test_ret = ret;
-> +	priv->cable_test_finished = true;
-> +
-> +	phy_queue_state_machine(phydev, 0);
-> +}
-> +
-> +static int at803x_cable_test_start(struct phy_device *phydev)
-> +{
-> +	struct at803x_priv *priv = phydev->priv;
-> +
-> +	if (!priv->cable_test_finished) {
-> +		phydev_err(phydev, "cable test is already running\n");
-> +		return -EIO;
-> +	}
-> +
-> +	priv->cable_test_finished = false;
-> +	schedule_work(&priv->cable_test_work);
+To avoid such issues, let's introduce a common wrappers operating directly
+on the struct sg_table objects, which take care of the proper use of
+the nents and orig_nents entries.
 
-You don't need the work queue. You cannot spend a long time in
-at803x_cable_test_start(), but you can in
-at803x_cable_test_get_status(). So start the first the measurement of
-the first pair in at803x_cable_test_start(), and do the rest in
-of the work in at803x_cable_test_get_status().
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com> 
+---
+For more information, see '[PATCH v5 00/38] DRM: fix struct sg_table nents
+vs. orig_nents misuse' thread:
+https://lore.kernel.org/linux-iommu/20200513132114.6046-1-m.szyprowski@samsung.com/T/
+---
+ include/linux/dma-mapping.h | 78 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
 
-If we see there is a common pattern of wanting
-at803x_cable_test_get_status() to run immediately, not one second
-later, we can change to core to support that.
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index b43116a..b50fe36 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -609,6 +609,84 @@ static inline void dma_sync_single_range_for_device(struct device *dev,
+ 	return dma_sync_single_for_device(dev, addr + offset, size, dir);
+ }
+ 
++/**
++ * dma_map_sgtable - Map the given buffer for DMA
++ * @dev:	The device for which to perform the DMA operation
++ * @sgt:	The sg_table object describing the buffer
++ * @dir:	DMA direction
++ * @attrs:	Optional DMA attributes for the map operation
++ *
++ * Maps a buffer described by a scatterlist stored in the given sg_table
++ * object for the @dir DMA operation by the @dev device. After success
++ * the ownership for the buffer is transferred to the DMA domain. One has
++ * to call dma_sync_sgtable_for_cpu() or dma_unmap_sgtable() to move the
++ * ownership of the buffer back to the CPU domain before touching the
++ * buffer by the CPU.
++ * Returns 0 on success or -EINVAL on error during mapping the buffer.
++ */
++static inline int dma_map_sgtable(struct device *dev, struct sg_table *sgt,
++		enum dma_data_direction dir, unsigned long attrs)
++{
++	int n = dma_map_sg_attrs(dev, sgt->sgl, sgt->orig_nents, dir, attrs);
++
++	if (n <= 0)
++		return -EINVAL;
++	sgt->nents = n;
++	return 0;
++}
++
++/**
++ * dma_unmap_sgtable - Unmap the given buffer for DMA
++ * @dev:	The device for which to perform the DMA operation
++ * @sgt:	The sg_table object describing the buffer
++ * @dir:	DMA direction
++ * @attrs:	Optional DMA attributes for the unmap operation
++ *
++ * Unmaps a buffer described by a scatterlist stored in the given sg_table
++ * object for the @dir DMA operation by the @dev device. After this function
++ * the ownership of the buffer is transferred back to the CPU domain.
++ */
++static inline void dma_unmap_sgtable(struct device *dev, struct sg_table *sgt,
++		enum dma_data_direction dir, unsigned long attrs)
++{
++	dma_unmap_sg_attrs(dev, sgt->sgl, sgt->orig_nents, dir, attrs);
++}
++
++/**
++ * dma_sync_sgtable_for_cpu - Synchronize the given buffer for CPU access
++ * @dev:	The device for which to perform the DMA operation
++ * @sgt:	The sg_table object describing the buffer
++ * @dir:	DMA direction
++ *
++ * Performs the needed cache synchronization and moves the ownership of the
++ * buffer back to the CPU domain, so it is safe to perform any access to it
++ * by the CPU. Before doing any further DMA operations, one has to transfer
++ * the ownership of the buffer back to the DMA domain by calling the
++ * dma_sync_sgtable_for_device().
++ */
++static inline void dma_sync_sgtable_for_cpu(struct device *dev,
++		struct sg_table *sgt, enum dma_data_direction dir)
++{
++	dma_sync_sg_for_cpu(dev, sgt->sgl, sgt->orig_nents, dir);
++}
++
++/**
++ * dma_sync_sgtable_for_device - Synchronize the given buffer for DMA
++ * @dev:	The device for which to perform the DMA operation
++ * @sgt:	The sg_table object describing the buffer
++ * @dir:	DMA direction
++ *
++ * Performs the needed cache synchronization and moves the ownership of the
++ * buffer back to the DMA domain, so it is safe to perform the DMA operation.
++ * Once finished, one has to call dma_sync_sgtable_for_cpu() or
++ * dma_unmap_sgtable().
++ */
++static inline void dma_sync_sgtable_for_device(struct device *dev,
++		struct sg_table *sgt, enum dma_data_direction dir)
++{
++	dma_sync_sg_for_device(dev, sgt->sgl, sgt->orig_nents, dir);
++}
++
+ #define dma_map_single(d, a, s, r) dma_map_single_attrs(d, a, s, r, 0)
+ #define dma_unmap_single(d, a, s, r) dma_unmap_single_attrs(d, a, s, r, 0)
+ #define dma_map_sg(d, s, n, r) dma_map_sg_attrs(d, s, n, r, 0)
+-- 
+1.9.1
 
-       Andrew
