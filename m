@@ -2,95 +2,97 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24381C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0B0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B19B205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:03:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UYN5JKU1"
+	by mail.kernel.org (Postfix) with ESMTP id 8B8E42065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:04:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389818AbgEMRDw (ORCPT
+        id S2389835AbgEMREN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 13:03:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60608 "EHLO
+        Wed, 13 May 2020 13:04:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728068AbgEMRDw (ORCPT
+        with ESMTP id S1728068AbgEMREN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 13:03:52 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 048B3C061A0C;
-        Wed, 13 May 2020 10:03:52 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 145so5455pfw.13;
-        Wed, 13 May 2020 10:03:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CoCyU01dYX3XZKtLwSO7VKp8hkT2GZrLHqIw/RONq2s=;
-        b=UYN5JKU10jkr8LeAR45s5xt2dLkhk8yHAbPtJgb7D0KjYSZ+kIGUCYwwiYFpkslO3u
-         bgtZKjRrOocONT3Vsqlc5jLgJhfIaYPRFQN17egjKQNFrrESxEOOtf3ZciMWfhK1xt+x
-         ZFk7CqZBSEQa7ET4Kn4Q1lXqK0XCOb+8abrXw/mAROco/R3lvmfUoxgVnOYY94joN03V
-         Tp9+VfMlA3U9aXOjFRu88nf3sKfdqiPKz389dxqPJuoZAAWInH+WykrweQeBqvA5/8nm
-         tZr7DqPdI/DcY8uwO0k3HVKQMUr4oF00Cp0T5+o2Xbv6xCA/65IbQNA2FLrDylnzHVFa
-         KcXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CoCyU01dYX3XZKtLwSO7VKp8hkT2GZrLHqIw/RONq2s=;
-        b=qiZf8sYl6GINlQm+lUpRqjBpLI6Pfn5EwV6XYOmcSp6visoTAmYEQ8LTR/2DXEPCcM
-         URtGrRcocIYAxdMLlDMIwePyZ76V/ritsb/J9mcf5nFoGBvm1aSeYnflr5yKrIQrlx/Q
-         dgLtXWjHQUm37P+jCz/pLy2T40+plzWdQHMwYSpEuTIXVeZ7YPvGRBBjclm7g9Jnux0+
-         TRDyBnX6OfmqEt3snndNWYwzd0zu669K+KnZx1YN8KtzMj0C5xnxiXL2sP5lEU0Xmkmh
-         S9H48gUiynzMy/EpsVIfIEbWu5aD5+krYobj6VuOdBRZmmA1FmoW+5e599zoU+s+9KYM
-         WAZA==
-X-Gm-Message-State: AOAM532PAIsx4kBx7Zs+O1cw7AT5SLZ1g9Js3LgmcActl/FY9FCBfm6+
-        HVqQDcFCiMR9M8t26iA5D0U=
-X-Google-Smtp-Source: ABdhPJyhI1ji7fkYUMbD78jAV/R2fVb0kYArtgrL1GLtbJ5DhkPm3mrozdcdK+h69qKMKLZB50qQ+w==
-X-Received: by 2002:a63:d909:: with SMTP id r9mr242333pgg.245.1589389431556;
-        Wed, 13 May 2020 10:03:51 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id gz19sm15909824pjb.7.2020.05.13.10.03.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 13 May 2020 10:03:51 -0700 (PDT)
-Date:   Wed, 13 May 2020 10:03:50 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.4 00/90] 5.4.41-rc1 review
-Message-ID: <20200513170350.GB224971@roeck-us.net>
-References: <20200513094408.810028856@linuxfoundation.org>
+        Wed, 13 May 2020 13:04:13 -0400
+Received: from gofer.mess.org (gofer.mess.org [IPv6:2a02:8011:d000:212::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08432C061A0C;
+        Wed, 13 May 2020 10:04:13 -0700 (PDT)
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id 3464B11A001; Wed, 13 May 2020 18:04:11 +0100 (BST)
+Date:   Wed, 13 May 2020 18:04:11 +0100
+From:   Sean Young <sean@mess.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH 2/3] input: serio: allow more than one byte to be sent at
+ once
+Message-ID: <20200513170411.GD9559@gofer.mess.org>
+References: <20200507135337.2343-1-sean@mess.org>
+ <20200507135337.2343-2-sean@mess.org>
+ <20200507202546.GM89269@dtor-ws>
+ <20200507205918.GA13370@gofer.mess.org>
+ <20200511065118.GA1293993@kroah.com>
+ <20200512090724.GA31990@gofer.mess.org>
+ <20200512173727.GC89269@dtor-ws>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200512173727.GC89269@dtor-ws>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 11:43:56AM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.41 release.
-> There are 90 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Tue, May 12, 2020 at 10:37:27AM -0700, Dmitry Torokhov wrote:
+> On Tue, May 12, 2020 at 10:07:24AM +0100, Sean Young wrote:
+> > Now it would be nice to have a discussion about this rather than being
+> > dismissed with:
+> > 
+> > > > > Ummm, serial protocol data size is at most 9 bits so I have no earthly
+> > > > > idea how they expect to get 16.
+> > 
+> > Which is just a tad insulting.
 > 
-> Responses should be made by Fri, 15 May 2020 09:41:20 +0000.
-> Anything received after that time might be too late.
-> 
+> That was not meant to be insulting, however serial protocol defines that
+> the data size is at most 9 bits, so expecting that one can transmit
+> anything more than that _atomically_ is wrong. If your device/firmware
+> requires 16 bits to be transferred as indivisible units, then serial
+> port abstraction is wrong one to be used.
 
-Build results:
-	total: 157 pass: 157 fail: 0
-Qemu test results:
-	total: 430 pass: 430 fail: 0
+Honestly thank you for explaining that. I had no idea this was an abstract
+point about the demarcations of serial port-ness.
 
-Guenter
+There is no physical rs-232 cabling involved at all in this case.
+
+> Now serio is layer "above" serial ports (but does not have to have
+> an underlying serial port) that provides byte-oriented communication
+> that is expected to mostly flow into host. Its does not expect heavy
+> data flows coming from the host and into the device (if you look at all
+> the touchscreens, psmouse, etc, they all send initialization sequences
+> to the device, and then all the data flows into the host). Therefore
+> there is little benefit in optimizing serio writes.
+
+True, I didn't think this would make much of an measurable improvement,
+but still, some.
+
+> You are using performance clams as a clutch for the requirement of
+> sending u16s, but as I mentioned it is wrong if you use serial ports
+> abstraction layer. Greg mentioned ir-usb. You can maybe enhance it, or
+> create a similar driver that connects USB to rc-core and ensures that
+> you can communicate with the device with exact format it needs.
+
+Yes, I'll go down this route.
+
+Thank you for the discussion, it was very helpful.
+
+
+Sean
