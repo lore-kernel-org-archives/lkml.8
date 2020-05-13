@@ -2,96 +2,88 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A91C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7653C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80AA3205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C78B1205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:18:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730981AbgEMWQU (ORCPT
+        id S1731072AbgEMWS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 18:16:20 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:53186 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730276AbgEMWQT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 18:16:19 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id A221C2A285C
-Subject: Re: next/master bisection: baseline.login on jetson-tk1
-To:     Joerg Roedel <jroedel@suse.de>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        iommu@lists.linux-foundation.org, Joerg Roedel <joro@8bytes.org>,
-        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org
-References: <5eb9fab4.1c69fb81.a1f1c.0e95@mx.google.com>
- <a868fa70-9039-f72a-39c6-5464a9d06db2@collabora.com>
- <20200512151600.GD8135@suse.de>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-Message-ID: <c9745450-a6d0-1944-a9af-ef9ce18fed12@collabora.com>
-Date:   Wed, 13 May 2020 23:16:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 13 May 2020 18:18:28 -0400
+Received: from mga03.intel.com ([134.134.136.65]:9664 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730064AbgEMWS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 18:18:27 -0400
+IronPort-SDR: CWgkqGhp1RKHa+TVaVwKjZnst4UvE60D9dKFDWqxpTOh0WHyqo04ajRxhhsZzNAw+M+13Hyu/j
+ hRrIFdlGD4Fw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 15:18:27 -0700
+IronPort-SDR: iVxvhh4s5lHVai+3URZhj2lSdk9TOFyUp6at13bDpJoEKtrMJwy9rUVBWHPVBLpQ2RYdmkOgpc
+ 1Xq6wEGIQFIg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,389,1583222400"; 
+   d="scan'208";a="287186253"
+Received: from rthurerx-mobl.ger.corp.intel.com ([10.249.36.107])
+  by fmsmga004.fm.intel.com with ESMTP; 13 May 2020 15:18:19 -0700
+Message-ID: <4bd7d47ef5478023dc27323fb2d6a7b2d7879787.camel@linux.intel.com>
+Subject: Re: [PATCH v29 00/20] Intel SGX foundations
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Nathaniel McCallum <npmccallum@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        Patrick Uiterwijk <puiterwijk@redhat.com>
+Date:   Thu, 14 May 2020 01:18:18 +0300
+In-Reply-To: <0d485f780ac9809229290762931cd591e6f8156a.camel@linux.intel.com>
+References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
+         <CAOASepPFe_ucuwe7JW_-+VBQ4=+sHqyGXOdA9kUbcYA_9=v0sA@mail.gmail.com>
+         <0d485f780ac9809229290762931cd591e6f8156a.camel@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-In-Reply-To: <20200512151600.GD8135@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/05/2020 16:16, Joerg Roedel wrote:
-> Hi Guillaume,
+On Thu, 2020-05-14 at 01:14 +0300, Jarkko Sakkinen wrote:
+> On Wed, 2020-05-06 at 17:42 -0400, Nathaniel McCallum wrote:
+> > Tested on Enarx. This requires a patch[0] for v29 support.
+> > 
+> > Tested-by: Nathaniel McCallum <npmccallum@redhat.com>
 > 
-> thanks for the report!
+> Thank you. Update in my tree.
 > 
-> On Tue, May 12, 2020 at 07:05:13AM +0100, Guillaume Tucker wrote:
->>> Summary:
->>>   Start:      4b20e7462caa6 Add linux-next specific files for 20200511
->>>   Plain log:  https://storage.kernelci.org/next/master/next-20200511/arm/tegra_defconfig/gcc-8/lab-collabora/baseline-tegra124-jetson-tk1.txt
->>>   HTML log:   https://storage.kernelci.org/next/master/next-20200511/arm/tegra_defconfig/gcc-8/lab-collabora/baseline-tegra124-jetson-tk1.html
->>>   Result:     3eeeb45c6d044 iommu: Remove add_device()/remove_device() code-paths
+> Sean, I'll fixed that whitespace issue too in my tree.
 > 
-> Okay, so it faults at
-> 
-> 	PC is at __iommu_probe_device+0x20/0x1b8
-> 
-> Can you translate that for me into a code-line, please? That would help
-> finding the issue.
+> General question: maybe it would be easiest that I issue a pull request
+> once everyone feels that the series is ready to be pulled and stop sending
+> new versions of the series?
 
-Sure, sorry for the delay.  I've built my own image as vmlinux is
-not stored by kernelci and reproduced the problem:
+My honest feelings about the series ATM are:
 
-  https://lava.collabora.co.uk/scheduler/job/2403076#L544
+1. It is not perfect like no code never is and there are always issues.
+2. Some things are very well matured, even more so than in a lot of mainline
+   code I've seen. I'm particularly happy how the locking code has been
+   converged.
+3. Not worried to maintain the code in its current state. It is manageable.
 
-which this time gave me:
+/Jarkko
 
-<4>[    2.540558] PC is at iommu_probe_device+0x1c/0x15c
-<4>[    2.545606] LR is at of_iommu_configure+0x15c/0x1c4
-<4>[    2.550736] pc : [<c092e0e4>]    lr : [<c0932c0c>]    psr: a0000013
-
-which in turn brings us to:
-
-(gdb) l *0xc092e0e4
-0xc092e0e4 is in iommu_probe_device (drivers/iommu/iommu.c:232).
-227		int ret;
-228	
-229		if (!dev_iommu_get(dev))
-230			return -ENOMEM;
-231	
-232		if (!try_module_get(ops->owner)) {
-233			ret = -EINVAL;
-234			goto err_out;
-235		}
-236	
-
-
-Hope this helps.
-
-Guillaume
