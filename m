@@ -2,74 +2,90 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E61CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92600C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 965AE2065C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D23520671
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:00:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390591AbgEMS6A (ORCPT
+        id S2390298AbgEMTAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 14:58:00 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51866 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732218AbgEMS4d (ORCPT
+        Wed, 13 May 2020 15:00:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50536 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732218AbgEMTAM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 14:56:33 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id D22F82A0188
-Received: by jupiter.universe (Postfix, from userid 1000)
-        id 6697A4800FF; Wed, 13 May 2020 20:56:29 +0200 (CEST)
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCHv1 01/19] kobject: increase allowed number of uevent variables
-Date:   Wed, 13 May 2020 20:55:57 +0200
-Message-Id: <20200513185615.508236-2-sebastian.reichel@collabora.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513185615.508236-1-sebastian.reichel@collabora.com>
-References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 13 May 2020 15:00:12 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD62AC061A0C;
+        Wed, 13 May 2020 12:00:12 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9D4F412739E04;
+        Wed, 13 May 2020 12:00:11 -0700 (PDT)
+Date:   Wed, 13 May 2020 12:00:10 -0700 (PDT)
+Message-Id: <20200513.120010.124458176293400943.davem@davemloft.net>
+To:     madhuparnabhowmik10@gmail.com
+Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sfr@canb.auug.org.au, frextrite@gmail.com, joel@joelfernandes.org,
+        paulmck@kernel.org, cai@lca.pw
+Subject: Re: [PATCH] Fix suspicious RCU usage warning
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200513061610.22313-1-madhuparnabhowmik10@gmail.com>
+References: <20200513061610.22313-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 13 May 2020 12:00:12 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SBS battery driver exposes 32 power supply properties now,
-which will result in uevent failure on (un)plugging the
-battery. Other drivers (e.g. bq27xxx) are also coming close
-to this limit, so increase it.
+From: madhuparnabhowmik10@gmail.com
+Date: Wed, 13 May 2020 11:46:10 +0530
 
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
----
- include/linux/kobject.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> 
+> This patch fixes the following warning:
+> 
+> =============================
+> WARNING: suspicious RCU usage
+> 5.7.0-rc4-next-20200507-syzkaller #0 Not tainted
+> -----------------------------
+> net/ipv6/ip6mr.c:124 RCU-list traversed in non-reader section!!
+> 
+> ipmr_new_table() returns an existing table, but there is no table at
+> init. Therefore the condition: either holding rtnl or the list is empty
+> is used.
+> 
+> Suggested-by: Jakub Kicinski <kuba@kernel.org>
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> 
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-diff --git a/include/linux/kobject.h b/include/linux/kobject.h
-index e2ca0a292e21..75e822569e39 100644
---- a/include/linux/kobject.h
-+++ b/include/linux/kobject.h
-@@ -29,7 +29,7 @@
- #include <linux/uidgid.h>
- 
- #define UEVENT_HELPER_PATH_LEN		256
--#define UEVENT_NUM_ENVP			32	/* number of env pointers */
-+#define UEVENT_NUM_ENVP			64	/* number of env pointers */
- #define UEVENT_BUFFER_SIZE		2048	/* buffer for the variables */
- 
- #ifdef CONFIG_UEVENT_HELPER
--- 
-2.26.2
+Please only provide one signoff line.
 
+Please provide a proper Fixes: tag for this bug fix.
+
+And finally, please make your Subject line more appropriate.  It must
+first state the target tree inside of the "[PATCH]" area, the two choices
+are "[PATCH net]" and "[PATCH net-next]" and it depends upon which tree
+this patch is targetting.
+
+Then your Subject line should also be more descriptive about exactly the
+subsystem and area the change is being made to, for this change for
+example you could use something like:
+
+	ipv6: Fix suspicious RCU usage warning in ip6mr.
+
+Also, obviously, there are also syzkaller tags you can add to the
+commit message as well.
