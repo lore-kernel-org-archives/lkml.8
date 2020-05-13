@@ -2,85 +2,72 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D03C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37811C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 744F32054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EA9820659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:41:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbgEMVlJ (ORCPT
+        id S1729642AbgEMVlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 17:41:09 -0400
-Received: from mga14.intel.com ([192.55.52.115]:26954 "EHLO mga14.intel.com"
+        Wed, 13 May 2020 17:41:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35854 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729196AbgEMVlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 17:41:09 -0400
-IronPort-SDR: C5qoFjMAOBoJlznbhAyz9uCQly+/8s2aTYXkcFHstfEWUCzUpxRMrOp/awP4JYc2HmCR0Xx/g1
- KTRMm6XNSX8g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 14:41:08 -0700
-IronPort-SDR: QDfsqhQI1vfkk52vEz67aeItZEtMsGebv+9WKFWpon6YL437ddc2q7JwZVC//VgPX6bh6DXwe5
- DwWUGDG7bR0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,389,1583222400"; 
-   d="scan'208";a="251892299"
-Received: from rthurerx-mobl.ger.corp.intel.com (HELO localhost) ([10.249.36.107])
-  by fmsmga007.fm.intel.com with ESMTP; 13 May 2020 14:41:01 -0700
-Date:   Thu, 14 May 2020 00:40:59 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com
-Subject: Re: [PATCH v29 14/20] x86/sgx: ptrace() support for the SGX driver
-Message-ID: <20200513214059.GC31974@linux.intel.com>
-References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
- <20200421215316.56503-15-jarkko.sakkinen@linux.intel.com>
- <20200506215048.GJ3329@linux.intel.com>
+        id S1729196AbgEMVlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 17:41:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B469DAD03;
+        Wed, 13 May 2020 21:41:36 +0000 (UTC)
+Date:   Wed, 13 May 2020 23:41:28 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: gcc-10: kernel stack is corrupted and fails to boot
+Message-ID: <20200513214128.GB6733@zn.tnic>
+References: <20200509120707.188595-1-arnd@arndb.de>
+ <20200509120707.188595-2-arnd@arndb.de>
+ <87v9l24qz6.fsf@kamboji.qca.qualcomm.com>
+ <87r1vq4qev.fsf@kamboji.qca.qualcomm.com>
+ <87d078tjl0.fsf_-_@kamboji.qca.qualcomm.com>
+ <20200513154847.GA158356@rani.riverdale.lan>
+ <CAK8P3a3KpM91+jv6+7KSKFRpwLqf38Lz1wbGhkFFyfDb9oahgA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200506215048.GJ3329@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK8P3a3KpM91+jv6+7KSKFRpwLqf38Lz1wbGhkFFyfDb9oahgA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 02:50:48PM -0700, Sean Christopherson wrote:
-> On Wed, Apr 22, 2020 at 12:53:10AM +0300, Jarkko Sakkinen wrote:
-> > Add VMA callbacks for ptrace() that can be used with debug enclaves.
-> > With debug enclaves data can be read and write the memory word at a time
-> > by using ENCLS(EDBGRD) and ENCLS(EDBGWR) leaf instructions.
-> > 
-> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > ---
-> >  arch/x86/kernel/cpu/sgx/encl.c | 88 ++++++++++++++++++++++++++++++++++
-> >  1 file changed, 88 insertions(+)
-> > 
-> > diff --git a/arch/x86/kernel/cpu/sgx/encl.c b/arch/x86/kernel/cpu/sgx/encl.c
-> > index fe7dbca40bb4..0c5ea2968868 100644
-> > --- a/arch/x86/kernel/cpu/sgx/encl.c
-> > +++ b/arch/x86/kernel/cpu/sgx/encl.c
-> > @@ -326,6 +326,7 @@ int sgx_encl_may_map(struct sgx_encl *encl, unsigned long start,
-> >  	return 0;
-> >  }
-> >  
-> > +
-> 
-> Unnecessary whitespace change.
+On Wed, May 13, 2020 at 11:28:09PM +0200, Arnd Bergmann wrote:
+> I see the patch in linux-next but not in mainline. I suppose we want
+> it in v5.7 and backported to stable kernels so they can boot when
+> built with gcc-10?
 
-Would not update series just for this. If something else, will fix this
-one.
+It is queued for 5.8. For a good reason, if you read the whole thread
+Arvind pointed you to.
 
-/Jarkko
+Lemme guess: gcc10 got released in the meantime (hohumm, website says
+so) and so we probably should expedite this and send it to Linus now...?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
