@@ -2,93 +2,58 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EACC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2488C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44A4220693
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:35:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589409313;
-	bh=mrbPmsNhBtoUUBd48De5ocAkqUWjAVb9HrbYpjWkuQs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=v/yK7rO8vACip4DYUcX0VGHPGGXJGq0+zLCAOcwuhuFizYaGQoh+095u6b8UJgrv3
-	 CMTupmGITevv+jgmlYz5IGSy8ArGNvCKQq3FhnG665FFBQU2kpcgihCBnpWFIv+Ow/
-	 BvjLONEFmo4gqiooOZ9RgBEcn5Lkud2B1LD2zEJI=
+	by mail.kernel.org (Postfix) with ESMTP id D2E12204EF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:36:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728659AbgEMWfL (ORCPT
+        id S1729233AbgEMWgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 18:35:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55942 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726061AbgEMWfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 18:35:11 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94BB620575;
-        Wed, 13 May 2020 22:35:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589409310;
-        bh=mrbPmsNhBtoUUBd48De5ocAkqUWjAVb9HrbYpjWkuQs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=bXxoE/ZNaO3xLoNSqvNYdspXoGxfFkbOImgKMZXdbhSXUnENKB9Re9cP2PvYr0OKc
-         iUPZ7fMGpRqcBo1eHmtHpVJ+HC2CLKIJzyC+eOhFW04NqoUP0+pwQem/38+fcA8ho4
-         wcMOdozFNcz85a1IPi2/BS+texWlCMPhWOeWI5bs=
-Date:   Wed, 13 May 2020 17:35:08 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        bhelgaas@google.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com,
-        Alan Mikhak <alan.mikhak@sifive.com>
-Subject: Re: [PATCH] PCI: dwc: Warn only for non-prefetchable memory resource
- size >4GB
-Message-ID: <20200513223508.GA352288@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513190855.23318-1-vidyas@nvidia.com>
+        Wed, 13 May 2020 18:36:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56328 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726034AbgEMWgW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 18:36:22 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BE81C061A0C;
+        Wed, 13 May 2020 15:36:22 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id AE7D51227DF82;
+        Wed, 13 May 2020 15:36:21 -0700 (PDT)
+Date:   Wed, 13 May 2020 15:36:20 -0700 (PDT)
+Message-Id: <20200513.153620.318526782161817591.davem@davemloft.net>
+To:     chenzhou10@huawei.com
+Cc:     sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next 0/2] sparc: use snprintf() in show() methods
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200509091849.116954-1-chenzhou10@huawei.com>
+References: <20200509091849.116954-1-chenzhou10@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 13 May 2020 15:36:21 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Alan; please cc authors of relevant commits,
-updated Andrew's email address]
+From: Chen Zhou <chenzhou10@huawei.com>
+Date: Sat, 9 May 2020 17:18:47 +0800
 
-On Thu, May 14, 2020 at 12:38:55AM +0530, Vidya Sagar wrote:
-> commit 9e73fa02aa009 ("PCI: dwc: Warn if MEM resource size exceeds max for
-> 32-bits") enables warning for MEM resources of size >4GB but prefetchable
->  memory resources also come under this category where sizes can go beyond
-> 4GB. Avoid logging a warning for prefetchable memory resources.
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-host.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 42fbfe2a1b8f..a29396529ea4 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -366,7 +366,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  			pp->mem = win->res;
->  			pp->mem->name = "MEM";
->  			mem_size = resource_size(pp->mem);
-> -			if (upper_32_bits(mem_size))
-> +			if (upper_32_bits(mem_size) &&
-> +			    !(win->res->flags & IORESOURCE_PREFETCH))
->  				dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
->  			pp->mem_size = mem_size;
->  			pp->mem_bus_addr = pp->mem->start - win->offset;
-> -- 
-> 2.17.1
-> 
+> snprintf() returns the number of bytes that would be written,
+> which may be greater than the the actual length to be written.
+> 	    
+> show() methods should return the number of bytes printed into the
+> buffer. This is the return value of scnprintf().
+
+Series applied with Subject lines corrected.
