@@ -2,115 +2,101 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5E4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A888C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7922054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE72E2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:14:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZgrGjyC9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jfWQvgy9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390568AbgEMTMc (ORCPT
+        id S2390507AbgEMTOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 15:12:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52502 "EHLO
+        Wed, 13 May 2020 15:14:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390542AbgEMTMa (ORCPT
+        by vger.kernel.org with ESMTP id S2387469AbgEMTOH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 15:12:30 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B671C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 12:12:30 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id a21so779170ljj.11
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 12:12:30 -0700 (PDT)
+        Wed, 13 May 2020 15:14:07 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E374C061A0C;
+        Wed, 13 May 2020 12:14:06 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id r22so156331pga.12;
+        Wed, 13 May 2020 12:14:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZqGhLv9Ix95hU31HAKodRrHLXavDA2Vhvx/L+g+IKJw=;
-        b=ZgrGjyC9MC0rE/AcMPzxwfmtWZjAAixNQsqagKWbpWzOEOdsqAV23D54rf8e6gkMOR
-         FghAS0UdaTNHqTOfEX3g5nRMoO0CpqhkvfBkOFsGBd/k3B5zHXVbuctBilsZUL6n4ho4
-         ccTFWeEwFcZ02qwf/K0/8Fib/x6WXeohp9BH0=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=c4MBhFXOZtr5piYHjKdaYmafG5GWt17HP85GQ80yZ6A=;
+        b=jfWQvgy9ENnwG5CcetrHoZhWpOg0qxn9CCtOg7/r5BIUuHmE9sjz1OGtTvOBNhVT82
+         f61YDuBaA+0tSxjOGTT5lQWaGu6Gqmvn41AKPHBTUVi3Pr93LuVOy254Uk0cLfetbZ9W
+         t6bQFlh/BSDg2G9rRW1qdDV3/0HI+hQO9vLyfoWfZhYPoeXNpuEz2SxqwmH83rr32gjL
+         UjeESdgKhtOuhMtyDhkq0GKsGo0wMBNBA0CpW8wrVqatmhwWCYOSwkFBEyyC7037WiEv
+         8Bd3PT1XiH+UhWaKzq1FfhGnocGZHQC49TIGtYAKZZn3qQR5cQvlDg4p+JSL+thHAc6t
+         cW7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZqGhLv9Ix95hU31HAKodRrHLXavDA2Vhvx/L+g+IKJw=;
-        b=iIlTApNAP4K5JA6Wnqbr7nhgHBkUDZLJJ1ciGpwctsMOKnjjNbLSCaeWrMOth93/7B
-         BVfd+nCH5NidJ511u4aaGy+2mENQGsx8GT/B/p8yTZLHyy0HrJ2YGeYX87fSbYDSsI25
-         1kZaUMuVAqAWwhqoTxujQBzG9s2XSK3FArSV01dImQ4OxqEL/V40w9gC6pL8AK1C79Y/
-         CdIJrdxyX2fkSfkfQbEUS63KOfNpdJsC6/YDwa9iXlkrHJBcGViAWgqq6bkaRqYxk0BY
-         YcWkU0vMRdD4HEV97UvnHmWrXiaCu+yCkyXScyKC6ysORQE19+e1X6+dm/1by5ClEjfP
-         9hZg==
-X-Gm-Message-State: AOAM533oiAsW63SEYOv6/XyT4GkV/5tddNy0ZVmw+5EexWfAhmoEBYM/
-        vHoGWfMdn8KSwSBWYww5MjNKp0AFvSg=
-X-Google-Smtp-Source: ABdhPJzeudMMlwbwcF9PuozHSAunQ8v6iAsBeK+AsxX1yXAx9DCsOEa6ZVlx1KpyPYDBXH3OSxR80Q==
-X-Received: by 2002:a05:651c:28c:: with SMTP id b12mr333392ljo.167.1589397148502;
-        Wed, 13 May 2020 12:12:28 -0700 (PDT)
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
-        by smtp.gmail.com with ESMTPSA id 16sm198189ljr.55.2020.05.13.12.12.26
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 May 2020 12:12:26 -0700 (PDT)
-Received: by mail-lf1-f44.google.com with SMTP id z22so509272lfd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 12:12:26 -0700 (PDT)
-X-Received: by 2002:a19:3804:: with SMTP id f4mr617212lfa.121.1589397145722;
- Wed, 13 May 2020 12:12:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190906185931.19288-1-navid.emamdoost@gmail.com>
- <CA+ASDXMnp-GTkrT7B5O+dtopJUmGBay=Tn=-nf1LW1MtaVOr+w@mail.gmail.com> <CAEkB2EQf-Q+q9QSwwj=Q208yAJj5hhSDrDiHqyU3WeSod2Bo+Q@mail.gmail.com>
-In-Reply-To: <CAEkB2EQf-Q+q9QSwwj=Q208yAJj5hhSDrDiHqyU3WeSod2Bo+Q@mail.gmail.com>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Wed, 13 May 2020 12:12:14 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXOrsZq6jpu3R_1KQFr2yxd6yhjkxkNb7n6K3GBickoN5A@mail.gmail.com>
-Message-ID: <CA+ASDXOrsZq6jpu3R_1KQFr2yxd6yhjkxkNb7n6K3GBickoN5A@mail.gmail.com>
-Subject: Re: [PATCH] ath9k: release allocated buffer if timed out
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=c4MBhFXOZtr5piYHjKdaYmafG5GWt17HP85GQ80yZ6A=;
+        b=j2Q3WtowwajRMGjenxzF/lSMUmKcLe9U5f2ZfF6sFTLaya3Y3zIIagnn3wGAGriNYx
+         6SOsD4qVhZdQdkAw3EjtlJaCqOjiyLgMQbo2ZtMtCMd5CqcXIRAh3NqW1uwAp09mEwj6
+         bxPjBgVNz/fZNa2VHFLhHbpcnRyE/eoUV2fv2yhhw2SjeqeikohSJwBM7lIgsBPPchAJ
+         mTKN6GPsPgOkj/VbNaxapn9OLAf8tYe/sT71KlJpkDbLyBDXsPaUo/qgx0m1kz3+/cYt
+         tbjXfgonKEyLZUmqbC68I7Gc01tR/1q9jxGh7CLaJnzdiWG3zg60IBhhXp0j+5dCmc5P
+         nVdQ==
+X-Gm-Message-State: AOAM532VIl5oylgd5VU8lIV7BDji+3rEzhjN66nm+JdN8gXn/urgfQ1s
+        CD6jwDWbkkPzz1p499LOPmX9O3D0
+X-Google-Smtp-Source: ABdhPJxNEH6+i12BxVCz0Pgw2eTsEWUsYCIJFOLPQE4CLdonkT30/A05utKJZBsJG12RKdExCn+XqQ==
+X-Received: by 2002:a63:c306:: with SMTP id c6mr729118pgd.311.1589397245758;
+        Wed, 13 May 2020 12:14:05 -0700 (PDT)
+Received: from jordon-HP-15-Notebook-PC.domain.name ([122.167.196.79])
+        by smtp.gmail.com with ESMTPSA id b16sm277986pfp.89.2020.05.13.12.14.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 May 2020 12:14:04 -0700 (PDT)
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+To:     hao.wu@intel.com, mdf@kernel.org
+Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Souptick Joarder <jrdr.linux@gmail.com>
+Subject: [PATCH] fpga: dfl: afu: Corrected error handling levels
+Date:   Thu, 14 May 2020 00:52:05 +0530
+Message-Id: <1589397725-29697-1-git-send-email-jrdr.linux@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 8:25 PM Navid Emamdoost
-<navid.emamdoost@gmail.com> wrote:
-> I found this via static analysis and as a result, did had the inputs
-> to test it with (like the way fuzzing works).
+Corrected error handling goto sequnece. Level put_pages should
+be called when pinned pages >= 0 && pinned != npages. Level
+free_pages should be called when pinned pages < 0.
 
-Fuzzing is dynamic analysis, so I'm not sure how that fits.
+Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+---
+ drivers/fpga/dfl-afu-dma-region.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> It may be beneficial if you could point me to any testing
-> infrastructure that you use or are aware of for future cases.
+diff --git a/drivers/fpga/dfl-afu-dma-region.c b/drivers/fpga/dfl-afu-dma-region.c
+index 62f9244..5942343 100644
+--- a/drivers/fpga/dfl-afu-dma-region.c
++++ b/drivers/fpga/dfl-afu-dma-region.c
+@@ -61,10 +61,10 @@ static int afu_dma_pin_pages(struct dfl_feature_platform_data *pdata,
+ 				     region->pages);
+ 	if (pinned < 0) {
+ 		ret = pinned;
+-		goto put_pages;
++		goto free_pages;
+ 	} else if (pinned != npages) {
+ 		ret = -EFAULT;
+-		goto free_pages;
++		goto put_pages;
+ 	}
+ 
+ 	dev_dbg(dev, "%d pages pinned\n", pinned);
+-- 
+1.9.1
 
-syzbot (a real fuzzer -- I believe it uses fake USB devices [1])
-caught the error, apparently:
-https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers-next.git/commit/?id=ced21a4c726bdc60b1680c050a284b08803bc64c
-so you might look at using that too.
-
-Traditionally, "testing your patches" means having hardware that runs
-the driver in question when patching said driver. That likely won't
-scale for researchers, but then, perhaps it just means you need to be
-more clear on how you caught the issue and how you did (or didn't)
-test it, so it's easier to reconcile your claims with the testing done
-by real users.
-
-If you only did static analysis, then we can be more confident in
-reverting. The fuzz-tested revert is an even nicer bonus.
-
-Brian
-
-[1] https://github.com/google/syzkaller/blob/master/docs/syzbot.md#usb-bugs
-https://github.com/google/syzkaller/blob/master/docs/linux/external_fuzzing_usb.md
