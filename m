@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9588C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BB2CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB972205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6478205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:17:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387651AbgEMNRa (ORCPT
+        id S2387668AbgEMNRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:17:30 -0400
-Received: from out28-145.mail.aliyun.com ([115.124.28.145]:38649 "EHLO
-        out28-145.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387574AbgEMNR1 (ORCPT
+        Wed, 13 May 2020 09:17:34 -0400
+Received: from out28-217.mail.aliyun.com ([115.124.28.217]:55864 "EHLO
+        out28-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387574AbgEMNRc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:17:27 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.286166|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.00517094-0.000337524-0.994492;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03311;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.HY0oTOn_1589375829;
+        Wed, 13 May 2020 09:17:32 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07505756|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0215514-0.000641727-0.977807;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16370;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.HY0oTOn_1589375829;
 Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HY0oTOn_1589375829)
           by smtp.aliyun-inc.com(10.147.41.120);
-          Wed, 13 May 2020 21:17:21 +0800
+          Wed, 13 May 2020 21:17:24 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     linux-clk@vger.kernel.org
@@ -33,9 +33,9 @@ Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         paul@crapouillou.net, dongsheng.qiu@ingenic.com,
         yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
         zhenwenjin@gmail.com
-Subject: [PATCH v8 3/6] dt-bindings: clock: Add X1830 bindings.
-Date:   Wed, 13 May 2020 21:16:41 +0800
-Message-Id: <1589375804-78423-5-git-send-email-zhouyanjie@wanyeetech.com>
+Subject: [PATCH v8 6/6] clk: X1000: Add FIXDIV for SSI clock of X1000.
+Date:   Wed, 13 May 2020 21:16:44 +0800
+Message-Id: <1589375804-78423-8-git-send-email-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1589375804-78423-1-git-send-email-zhouyanjie@wanyeetech.com>
 References: <1589375804-78423-1-git-send-email-zhouyanjie@wanyeetech.com>
@@ -47,120 +47,170 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the clock bindings for the X1830 Soc from Ingenic.
+1.The SSI clock of X1000 not like JZ4770 and JZ4780, they are not
+  directly derived from the output of SSIPLL, but from the clock
+  obtained by dividing the frequency by 2. "X1000_CLK_SSIPLL_DIV2"
+  is added for this purpose, and ensure that it initialized before
+  "X1000_CLK_SSIMUX" when initializing the clocks.
+2.Clocks of LCD, OTG, EMC, EFUSE, OST, and gates of CPU, PCLK
+  are also added.
+3.Use "CLK_OF_DECLARE_DRIVER" like the other CGU drivers.
 
 Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 
 Notes:
-    v1->v2:
-    Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
-    to "周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>" because
-    the old mailbox is in an unstable state.
+    v5:
+    New patch.
     
-    v2->v3:
-    Adjust order from [3/5] in v2 to [4/5] in v3.
-    
-    v3->v4:
-    Adjust order from [4/5] in v3 to [3/4] in v4.
-    
-    v4->v5:
-    Rebase on top of kernel 5.6-rc1.
-    
-    v5->v6:
-    Add missing part of X1830's CGU.
+    V5->v6:
+    Add missing part of X1000's CGU.
     
     v6->v7:
-    No change.
+    Update commit message.
     
     v7->v8:
-    Rebase on top of linux-next.
+    No change.
 
- .../devicetree/bindings/clock/ingenic,cgu.yaml     |  2 +
- include/dt-bindings/clock/x1830-cgu.h              | 53 ++++++++++++++++++++++
- 2 files changed, 55 insertions(+)
- create mode 100644 include/dt-bindings/clock/x1830-cgu.h
+ drivers/clk/ingenic/x1000-cgu.c | 56 ++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 50 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/ingenic,cgu.yaml b/Documentation/devicetree/bindings/clock/ingenic,cgu.yaml
-index 0281cd1..a952d58 100644
---- a/Documentation/devicetree/bindings/clock/ingenic,cgu.yaml
-+++ b/Documentation/devicetree/bindings/clock/ingenic,cgu.yaml
-@@ -25,6 +25,7 @@ select:
-           - ingenic,jz4770-cgu
-           - ingenic,jz4780-cgu
-           - ingenic,x1000-cgu
-+          - ingenic,x1830-cgu
-   required:
-     - compatible
+diff --git a/drivers/clk/ingenic/x1000-cgu.c b/drivers/clk/ingenic/x1000-cgu.c
+index c33934d..39ebd9d 100644
+--- a/drivers/clk/ingenic/x1000-cgu.c
++++ b/drivers/clk/ingenic/x1000-cgu.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+  * X1000 SoC CGU driver
+- * Copyright (c) 2019 Zhou Yanjie <zhouyanjie@zoho.com>
++ * Copyright (c) 2019 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+  */
  
-@@ -51,6 +52,7 @@ properties:
-         - ingenic,jz4770-cgu
-         - ingenic,jz4780-cgu
-         - ingenic,x1000-cgu
-+        - ingenic,x1830-cgu
-       - const: simple-mfd
-     minItems: 1
+ #include <linux/clk-provider.h>
+@@ -20,6 +20,7 @@
+ #define CGU_REG_CLKGR		0x20
+ #define CGU_REG_OPCR		0x24
+ #define CGU_REG_DDRCDR		0x2c
++#define CGU_REG_USBCDR		0x50
+ #define CGU_REG_MACCDR		0x54
+ #define CGU_REG_I2SCDR		0x60
+ #define CGU_REG_LPCDR		0x64
+@@ -116,9 +117,10 @@ static const struct ingenic_cgu_clk_info x1000_cgu_clocks[] = {
+ 	},
  
-diff --git a/include/dt-bindings/clock/x1830-cgu.h b/include/dt-bindings/clock/x1830-cgu.h
-new file mode 100644
-index 00000000..f605a7b
---- /dev/null
-+++ b/include/dt-bindings/clock/x1830-cgu.h
-@@ -0,0 +1,53 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * This header provides clock numbers for the ingenic,x1830-cgu DT binding.
-+ *
-+ * They are roughly ordered as:
-+ *   - external clocks
-+ *   - PLLs
-+ *   - muxes/dividers in the order they appear in the x1830 programmers manual
-+ *   - gates in order of their bit in the CLKGR* registers
-+ */
+ 	[X1000_CLK_CPU] = {
+-		"cpu", CGU_CLK_DIV,
++		"cpu", CGU_CLK_DIV | CGU_CLK_GATE,
+ 		.parents = { X1000_CLK_CPUMUX, -1, -1, -1 },
+ 		.div = { CGU_REG_CPCCR, 0, 1, 4, 22, -1, -1 },
++		.gate = { CGU_REG_CLKGR, 30 },
+ 	},
+ 
+ 	[X1000_CLK_L2CACHE] = {
+@@ -147,9 +149,10 @@ static const struct ingenic_cgu_clk_info x1000_cgu_clocks[] = {
+ 	},
+ 
+ 	[X1000_CLK_PCLK] = {
+-		"pclk", CGU_CLK_DIV,
++		"pclk", CGU_CLK_DIV | CGU_CLK_GATE,
+ 		.parents = { X1000_CLK_AHB2PMUX, -1, -1, -1 },
+ 		.div = { CGU_REG_CPCCR, 16, 1, 4, 20, -1, -1 },
++		.gate = { CGU_REG_CLKGR, 28 },
+ 	},
+ 
+ 	[X1000_CLK_DDR] = {
+@@ -162,12 +165,20 @@ static const struct ingenic_cgu_clk_info x1000_cgu_clocks[] = {
+ 
+ 	[X1000_CLK_MAC] = {
+ 		"mac", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
+-		.parents = { X1000_CLK_SCLKA, X1000_CLK_MPLL},
++		.parents = { X1000_CLK_SCLKA, X1000_CLK_MPLL },
+ 		.mux = { CGU_REG_MACCDR, 31, 1 },
+ 		.div = { CGU_REG_MACCDR, 0, 1, 8, 29, 28, 27 },
+ 		.gate = { CGU_REG_CLKGR, 25 },
+ 	},
+ 
++	[X1000_CLK_LCD] = {
++		"lcd", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
++		.parents = { X1000_CLK_SCLKA, X1000_CLK_MPLL },
++		.mux = { CGU_REG_LPCDR, 31, 1 },
++		.div = { CGU_REG_LPCDR, 0, 1, 8, 28, 27, 26 },
++		.gate = { CGU_REG_CLKGR, 23 },
++	},
 +
-+#ifndef __DT_BINDINGS_CLOCK_X1830_CGU_H__
-+#define __DT_BINDINGS_CLOCK_X1830_CGU_H__
+ 	[X1000_CLK_MSCMUX] = {
+ 		"msc_mux", CGU_CLK_MUX,
+ 		.parents = { X1000_CLK_SCLKA, X1000_CLK_MPLL},
+@@ -188,6 +199,15 @@ static const struct ingenic_cgu_clk_info x1000_cgu_clocks[] = {
+ 		.gate = { CGU_REG_CLKGR, 5 },
+ 	},
+ 
++	[X1000_CLK_OTG] = {
++		"otg", CGU_CLK_DIV | CGU_CLK_GATE | CGU_CLK_MUX,
++		.parents = { X1000_CLK_EXCLK, -1,
++					 X1000_CLK_APLL, X1000_CLK_MPLL },
++		.mux = { CGU_REG_USBCDR, 30, 2 },
++		.div = { CGU_REG_USBCDR, 0, 1, 8, 29, 28, 27 },
++		.gate = { CGU_REG_CLKGR, 3 },
++	},
 +
-+#define X1830_CLK_EXCLK			0
-+#define X1830_CLK_RTCLK			1
-+#define X1830_CLK_APLL			2
-+#define X1830_CLK_MPLL			3
-+#define X1830_CLK_EPLL			4
-+#define X1830_CLK_VPLL			5
-+#define X1830_CLK_SCLKA			6
-+#define X1830_CLK_CPUMUX		7
-+#define X1830_CLK_CPU			8
-+#define X1830_CLK_L2CACHE		9
-+#define X1830_CLK_AHB0			10
-+#define X1830_CLK_AHB2PMUX		11
-+#define X1830_CLK_AHB2			12
-+#define X1830_CLK_PCLK			13
-+#define X1830_CLK_DDR			14
-+#define X1830_CLK_MAC			15
-+#define X1830_CLK_LCD			16
-+#define X1830_CLK_MSCMUX		17
-+#define X1830_CLK_MSC0			18
-+#define X1830_CLK_MSC1			19
-+#define X1830_CLK_SSIPLL		20
-+#define X1830_CLK_SSIPLL_DIV2	21
-+#define X1830_CLK_SSIMUX		22
-+#define X1830_CLK_EMC			23
-+#define X1830_CLK_EFUSE			24
-+#define X1830_CLK_OTG			25
-+#define X1830_CLK_SSI0			26
-+#define X1830_CLK_SMB0			27
-+#define X1830_CLK_SMB1			28
-+#define X1830_CLK_SMB2			29
-+#define X1830_CLK_UART0			30
-+#define X1830_CLK_UART1			31
-+#define X1830_CLK_SSI1			32
-+#define X1830_CLK_SFC			33
-+#define X1830_CLK_PDMA			34
-+#define X1830_CLK_DTRNG			35
-+#define X1830_CLK_OST			36
+ 	[X1000_CLK_SSIPLL] = {
+ 		"ssi_pll", CGU_CLK_MUX | CGU_CLK_DIV,
+ 		.parents = { X1000_CLK_SCLKA, X1000_CLK_MPLL, -1, -1 },
+@@ -195,14 +215,32 @@ static const struct ingenic_cgu_clk_info x1000_cgu_clocks[] = {
+ 		.div = { CGU_REG_SSICDR, 0, 1, 8, 29, 28, 27 },
+ 	},
+ 
++	[X1000_CLK_SSIPLL_DIV2] = {
++		"ssi_pll_div2", CGU_CLK_FIXDIV,
++		.parents = { X1000_CLK_SSIPLL },
++		.fixdiv = { 2 },
++	},
 +
-+#endif /* __DT_BINDINGS_CLOCK_X1830_CGU_H__ */
+ 	[X1000_CLK_SSIMUX] = {
+ 		"ssi_mux", CGU_CLK_MUX,
+-		.parents = { X1000_CLK_EXCLK, X1000_CLK_SSIPLL, -1, -1 },
++		.parents = { X1000_CLK_EXCLK, X1000_CLK_SSIPLL_DIV2, -1, -1 },
+ 		.mux = { CGU_REG_SSICDR, 30, 1 },
+ 	},
+ 
+ 	/* Gate-only clocks */
+ 
++	[X1000_CLK_EMC] = {
++		"emc", CGU_CLK_GATE,
++		.parents = { X1000_CLK_AHB2, -1, -1, -1 },
++		.gate = { CGU_REG_CLKGR, 0 },
++	},
++
++	[X1000_CLK_EFUSE] = {
++		"efuse", CGU_CLK_GATE,
++		.parents = { X1000_CLK_AHB2, -1, -1, -1 },
++		.gate = { CGU_REG_CLKGR, 1 },
++	},
++
+ 	[X1000_CLK_SFC] = {
+ 		"sfc", CGU_CLK_GATE,
+ 		.parents = { X1000_CLK_SSIPLL, -1, -1, -1 },
+@@ -251,6 +289,12 @@ static const struct ingenic_cgu_clk_info x1000_cgu_clocks[] = {
+ 		.gate = { CGU_REG_CLKGR, 19 },
+ 	},
+ 
++	[X1000_CLK_OST] = {
++		"ost", CGU_CLK_GATE,
++		.parents = { X1000_CLK_EXCLK, -1, -1, -1 },
++		.gate = { CGU_REG_CLKGR, 20 },
++	},
++
+ 	[X1000_CLK_PDMA] = {
+ 		"pdma", CGU_CLK_GATE,
+ 		.parents = { X1000_CLK_EXCLK, -1, -1, -1 },
+@@ -277,4 +321,4 @@ static void __init x1000_cgu_init(struct device_node *np)
+ 
+ 	ingenic_cgu_register_syscore_ops(cgu);
+ }
+-CLK_OF_DECLARE(x1000_cgu, "ingenic,x1000-cgu", x1000_cgu_init);
++CLK_OF_DECLARE_DRIVER(x1000_cgu, "ingenic,x1000-cgu", x1000_cgu_init);
 -- 
 2.7.4
 
