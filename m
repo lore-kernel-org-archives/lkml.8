@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F21CC2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8F4CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D956223127
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11E8520643
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363606;
-	bh=gmah9KEAeFrzt5Pb5eobdMbcMTm/fjmivIHVkNUhpXE=;
+	s=default; t=1589363614;
+	bh=5m7kQVIn3ABU5S27QHa+70ddN/AuJ4o58qU92xoL8FU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=icBHP8rpl0BB1v5L7s2ltQJQ1oEh3vXdNEETjQJQVCz6UZqyqpltFV8pj6OFQzKwB
-	 NC4+yCF/jv7cSJlSwO/uT0/9aXGhtG+yY9PBxd6Uy4RkztoM8S9qSnSSRThYaNPHh7
-	 GX7MZBTk31MH2byKyHWdsKBEMCnb7Yr/B1kdbYoo=
+	b=fNolxFwwM6LDqKM3RL7c3hlCJOqdFOB0azoOzvx+uHVSBHjf2WMeFGVeUSESUzNbL
+	 PE3/fqeddzMUJRFN2ulclIK0XIqE5CIAC/5AKZgQJTCfs4JF7c7t8WSBrVHd65dVxm
+	 ezhkbgiSaKs4ChpHNizmeTeSdkdGRH50gAkhiUNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387458AbgEMJxZ (ORCPT
+        id S2387967AbgEMJxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:53:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55286 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:53:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387431AbgEMJxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:53:20 -0400
+        id S2387949AbgEMJx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:53:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28BB120753;
-        Wed, 13 May 2020 09:53:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85EB820753;
+        Wed, 13 May 2020 09:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363599;
-        bh=gmah9KEAeFrzt5Pb5eobdMbcMTm/fjmivIHVkNUhpXE=;
+        s=default; t=1589363607;
+        bh=5m7kQVIn3ABU5S27QHa+70ddN/AuJ4o58qU92xoL8FU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nDobpIQeTrF103ZEdOdvG38YYvtkajWjrFcWRfBXwS0s3lj4tg67+IhJ9hqQgYuZO
-         Oh9kb8dmCB6FDzGzLfeBund+QCipXrevZDsWaCg1ehNk1gzxjBZgTJj5FCciyh0fld
-         WbJgAcWSNtFTjkRVUFYLbKbSQ+a4f7AVLIrySZ7E=
+        b=ZMa6B3FQIOsnxFD7TPXmsKC7y0eSAk0DamP7g9dhPxGLdwGnw7VHgWpPtSBYx5B2P
+         Kv9Qh3I91asDtAp/FvgxNmDzrKFfbnfDuxbMmCyvbtlYXLPjGp6mxehFGdQOXt8J+Z
+         aZ9qQGfy/8ZWdJajbbQVr4xbBANpp+mX/kcZ4Xqo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roi Dayan <roid@mellanox.com>,
-        Vlad Buslov <vladbu@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.6 049/118] net/mlx5e: Fix q counters on uplink representors
-Date:   Wed, 13 May 2020 11:44:28 +0200
-Message-Id: <20200513094421.478529411@linuxfoundation.org>
+        stable@vger.kernel.org, Sultan Alsawaf <sultan@kerneltoast.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 052/118] wireguard: queueing: cleanup ptr_ring in error path of packet_queue_init
+Date:   Wed, 13 May 2020 11:44:31 +0200
+Message-Id: <20200513094421.677186726@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -60,45 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roi Dayan <roid@mellanox.com>
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
 
-[ Upstream commit 67b38de646894c9a94fe4d6d17719e70cc6028eb ]
+[ Upstream commit 130c58606171326c81841a49cc913cd354113dd9 ]
 
-Need to allocate the q counters before init_rx which needs them
-when creating the rq.
+Prior, if the alloc_percpu of packet_percpu_multicore_worker_alloc
+failed, the previously allocated ptr_ring wouldn't be freed. This commit
+adds the missing call to ptr_ring_cleanup in the error case.
 
-Fixes: 8520fa57a4e9 ("net/mlx5e: Create q counters on uplink representors")
-Signed-off-by: Roi Dayan <roid@mellanox.com>
-Reviewed-by: Vlad Buslov <vladbu@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Reported-by: Sultan Alsawaf <sultan@kerneltoast.com>
+Fixes: e7096c131e51 ("net: WireGuard secure network tunnel")
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_rep.c |    9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ drivers/net/wireguard/queueing.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-@@ -1692,19 +1692,14 @@ static void mlx5e_cleanup_rep_rx(struct
- 
- static int mlx5e_init_ul_rep_rx(struct mlx5e_priv *priv)
- {
--	int err = mlx5e_init_rep_rx(priv);
--
--	if (err)
--		return err;
--
- 	mlx5e_create_q_counters(priv);
--	return 0;
-+	return mlx5e_init_rep_rx(priv);
- }
- 
- static void mlx5e_cleanup_ul_rep_rx(struct mlx5e_priv *priv)
- {
--	mlx5e_destroy_q_counters(priv);
- 	mlx5e_cleanup_rep_rx(priv);
-+	mlx5e_destroy_q_counters(priv);
- }
- 
- static int mlx5e_init_uplink_rep_tx(struct mlx5e_rep_priv *rpriv)
+--- a/drivers/net/wireguard/queueing.c
++++ b/drivers/net/wireguard/queueing.c
+@@ -35,8 +35,10 @@ int wg_packet_queue_init(struct crypt_qu
+ 		if (multicore) {
+ 			queue->worker = wg_packet_percpu_multicore_worker_alloc(
+ 				function, queue);
+-			if (!queue->worker)
++			if (!queue->worker) {
++				ptr_ring_cleanup(&queue->ring, NULL);
+ 				return -ENOMEM;
++			}
+ 		} else {
+ 			INIT_WORK(&queue->work, function);
+ 		}
 
 
