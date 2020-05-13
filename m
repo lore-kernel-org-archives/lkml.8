@@ -2,117 +2,165 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E37E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FBDC2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:17:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63E012053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:18:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eW4SV1k1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389566AbgEMQRL (ORCPT
+        id S2389570AbgEMQSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 12:17:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53334 "EHLO
+        Wed, 13 May 2020 12:18:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730731AbgEMQRK (ORCPT
+        with ESMTP id S2387522AbgEMQSj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 12:17:10 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 847E0C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 09:17:10 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jYu42-000053-0g; Wed, 13 May 2020 18:16:58 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 832EC100605; Wed, 13 May 2020 18:16:56 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Balbir Singh <sblbir@amazon.com>, linux-kernel@vger.kernel.org
-Cc:     jpoimboe@redhat.com, tony.luck@intel.com, keescook@chromium.org,
-        benh@kernel.crashing.org, x86@kernel.org, dave.hansen@intel.com,
-        thomas.lendacky@amd.com, Balbir Singh <sblbir@amazon.com>
-Subject: Re: [PATCH v6 5/6] Optionally flush L1D on context switch
-In-Reply-To: <20200510014803.12190-6-sblbir@amazon.com>
-References: <20200510014803.12190-1-sblbir@amazon.com> <20200510014803.12190-6-sblbir@amazon.com>
-Date:   Wed, 13 May 2020 18:16:56 +0200
-Message-ID: <875zcz3j47.fsf@nanos.tec.linutronix.de>
+        Wed, 13 May 2020 12:18:39 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F3A1C061A0C;
+        Wed, 13 May 2020 09:18:39 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id j21so7989471pgb.7;
+        Wed, 13 May 2020 09:18:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=M8fG8T9ptCSCK6IcvKJyhlz7IkTokymFqJGL0gqbWiY=;
+        b=eW4SV1k1WFNQT/QfgFcSM9x7XW1V8NefUaP7owlayu8J0xFjA6XfYi02g+KUQ/1Ag/
+         Wc+c2ywASYFEipxREOKKqKwQlsFigiGgL+F1WPbpbFOomTZzxx54pBc0Z0ra/mI7b/Yf
+         v7OPehggPv0vCRg0m/2WrT3smOEUtQbLWS26ECMH4L2SrllHgf2lzLc37cNCV2jV7d05
+         7yOaK24ZyaXDQ+Xa6xNGFZYQ/v1R6IkZF+7CFuDx/dzLERwgSPl6e6m329VGymO2l1Sg
+         QF1c2osf6ei725DUlFg9aSGU17Ama5xWC0cGIvbNIZptmllUkibNqnQRTEVh8yBC3p5T
+         wUow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=M8fG8T9ptCSCK6IcvKJyhlz7IkTokymFqJGL0gqbWiY=;
+        b=mp26crsh99NktBtv9PR5c8hT0S4ODyiXCqN9IXD06+RN1ty/RMZY/rGgwx7KpX5cHL
+         fUHUX06syAuMPPnUezBpov7w8AT0+dD3+nAtmI52SbdTrsSbfRNo7YJAunehxmJQGnul
+         O8SZPSqFRgvUfrabXKguXT+uAUxwnhIzocg7Cvyug2LnBmu6pr50ePdT6Xrgg1tX32tV
+         ex0xJCj+xJfI8mhxT6FFYqkB5YYNvvQPHxKKY1EDJDseJFjT6YKD9Mhv6TV0a398nn3+
+         7gafKyTZawlLxl9vzwJnPthpukjPxFflLsNgWpcxB8TF3sQw3u/3DTDxYWwL54Oy1FcH
+         Ok/g==
+X-Gm-Message-State: AOAM533HaChN7pxTgtaGf4OqhN4x1pnXPntHmlyl/94B+lqefxDU8fle
+        FM54NvGn8GSSIM77KxrY18bwSjRA
+X-Google-Smtp-Source: ABdhPJzi9VvKa0/w5+1BuHtl2XrkQ6+7t8LtH32KXQAPY7Sg77A5eb6WnreaERWludW2pfWXwKtlsw==
+X-Received: by 2002:a62:32c1:: with SMTP id y184mr87112pfy.306.1589386718638;
+        Wed, 13 May 2020 09:18:38 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id kr1sm12486408pjb.26.2020.05.13.09.18.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 May 2020 09:18:37 -0700 (PDT)
+Subject: Re: [PATCH 3/3] net: cleanly handle kernel vs user buffers for
+ ->msg_control
+To:     Christoph Hellwig <hch@lst.de>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200511115913.1420836-1-hch@lst.de>
+ <20200511115913.1420836-4-hch@lst.de>
+ <c88897b9-7afb-a6f6-08f1-5aaa36631a25@gmail.com>
+ <20200513160938.GA22381@lst.de>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <b9728e02-e317-2aa6-9ed4-723ee3abfb78@gmail.com>
+Date:   Wed, 13 May 2020 09:18:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20200513160938.GA22381@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Balbir Singh <sblbir@amazon.com> writes:
 
-This part:
 
-> --- a/include/uapi/linux/prctl.h
-> +++ b/include/uapi/linux/prctl.h
-> @@ -238,4 +238,8 @@ struct prctl_mm_map {
->  #define PR_SET_IO_FLUSHER		57
->  #define PR_GET_IO_FLUSHER		58
->  
-> +/* Flush L1D on context switch (mm) */
-> +#define PR_SET_L1D_FLUSH		59
-> +#define PR_GET_L1D_FLUSH		60
+On 5/13/20 9:09 AM, Christoph Hellwig wrote:
+> On Wed, May 13, 2020 at 08:41:57AM -0700, Eric Dumazet wrote:
+>>> +	 * recv* side when msg_control_is_user is set, msg_control is the kernel
+>>> +	 * buffer used for all other cases.
+>>> +	 */
+>>> +	union {
+>>> +		void		*msg_control;
+>>> +		void __user	*msg_control_user;
+>>> +	};
+>>> +	bool		msg_control_is_user : 1;
+>>
+>> Adding a field in this structure seems dangerous.
+>>
+>> Some users of 'struct msghdr '  define their own struct on the stack,
+>> and are unaware of this new mandatory field.
+>>
+>> This bit contains garbage, crashes are likely to happen ?
+>>
+>> Look at IPV6_2292PKTOPTIONS for example.
+> 
+> I though of that, an that is why the field is structured as-is.  The idea
+> is that the field only matters if:
+> 
+>  (1) we are in the recvmsg and friends path, and
+>  (2) msg_control is non-zero
+> 
+> I went through the places that initialize msg_control to find any spot
+> that would need an annotation.  The IPV6_2292PKTOPTIONS sockopt doesn't
+> need one as it is using the msghdr in sendmsg-like context.
+> 
+> That being said while I did the audit I'd appreciate another look from
+> people that know the networking code better than me of course.
+> 
 
-...
+Please try the following syzbot repro, since it crashes after your patch.
 
-> @@ -2514,6 +2524,16 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
->  
->  		error = (current->flags & PR_IO_FLUSHER) == PR_IO_FLUSHER;
->  		break;
-> +	case PR_SET_L1D_FLUSH:
-> +		if (arg3 || arg4 || arg5)
-> +			return -EINVAL;
-> +		error = arch_prctl_l1d_flush_set(me, arg2);
-> +		break;
-> +	case PR_GET_L1D_FLUSH:
-> +		if (arg2 || arg3 || arg4 || arg5)
-> +			return -EINVAL;
-> +		error = arch_prctl_l1d_flush_get(me);
-> +		break;
->  	default:
->  		error = -EINVAL;
->  		break;
+// autogenerated by syzkaller (https://github.com/google/syzkaller)
 
-wants to be split into a separate patch, really. Then we get a proper
-subject lines with proper subsystem prefixes. This part also lacks a
-description in Documentation/userspace-api/ and function prototypes for
-the arch_prctl* functions.
+#define _GNU_SOURCE
 
-But looking at this deeper (yes I should have noticed earlier):
+#include <endian.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/syscall.h>
+#include <sys/types.h>
+#include <unistd.h>
 
-    Why do we need yet another PRCTL?
+uint64_t r[1] = {0xffffffffffffffff};
 
-We already have PR_SET_SPECULATION_CTRL/PR_GET_SPECULATION_CTRL. That
-L1D flush thingy fits into this category, right?
+int main(void)
+{
+  syscall(__NR_mmap, 0x1ffff000ul, 0x1000ul, 0ul, 0x32ul, -1, 0ul);
+  syscall(__NR_mmap, 0x20000000ul, 0x1000000ul, 7ul, 0x32ul, -1, 0ul);
+  syscall(__NR_mmap, 0x21000000ul, 0x1000ul, 0ul, 0x32ul, -1, 0ul);
+  intptr_t res = 0;
 
-This makes even more sense if you think about the second use case for
-L1D flush, i.e. the flush when a untrusted task comes in. If we ever
-want to support that case then this will be imposed by seccomp and then
-we'd need yet another interface there.
+  // socket(AF_INET6, SOCK_STREAM, IPPROTO_IP) = 3
+  res = syscall(__NR_socket, 0xaul, 1ul, 0);
+  if (res != -1)
+    r[0] = res;
 
-And for this reason we should also name that current opt-in thingy:
-L1D_FLUSH_OUT in the prctl and also for the TIF bits.
+  *(uint32_t*)0x20000080 = 7;
+  // setsockopt(3, SOL_IPV6, IPV6_2292HOPLIMIT, [7], 4) = 0
+  syscall(__NR_setsockopt, r[0], 0x29, 8, 0x20000080ul, 4ul);
 
-Hmm? Kees?
+  *(uint32_t*)0x20000040 = 0x18ff8;
+  // getsockopt(3, SOL_IPV6, IPV6_2292PKTOPTIONS, "\24\0\0\0\0\0\0\0)\0\0\0\10\0\0\0\1\0\0\0\0\0\0\0", [102392->24]) = 0
+  syscall(__NR_getsockopt, r[0], 0x29, 6, 0x20004040ul, 0x20000040ul);
 
-I've applied the first 4 patches to:
+  return 0;
+}
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git x86/mm
 
-so the polishing I did gets preserved and you don't have to resend the
-whole pile.
-
-Thanks,
-
-        tglx
