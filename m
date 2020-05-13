@@ -2,215 +2,91 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26663C2D0F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9502DC2D0F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 035D22312B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:18:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589339909;
-	bh=EJu00za9Y8foyPF0jYx4kQjwm2/XdLEgkShKAJnOvY8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=a4bjON+nEY8KGU0gdMt4gA6jxsSoMW3qhA6d8BETOcivc7C3u2Gsi/iC458uMkTf4
-	 RYJpWS9/mr1IXIoco0n+d54JQPB7qix39RFoQ+VbdaCqjELSbHm3kfMYKuoxwe/eTj
-	 FHwCzG8/jACZzQVgpKijDEyhJq0ijfJOHUOPJCmQ=
+	by mail.kernel.org (Postfix) with ESMTP id 699C324927
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:18:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CCm16ZBT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgEMDS2 (ORCPT
+        id S1728602AbgEMDSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 23:18:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725898AbgEMDS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 23:18:27 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B8DB207BC;
-        Wed, 13 May 2020 03:18:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589339906;
-        bh=EJu00za9Y8foyPF0jYx4kQjwm2/XdLEgkShKAJnOvY8=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=wLMrYeTyJrHPawMV+y5+PiVQe0epHsyyMMgGODyapoji6dB8GiSLHcnh4imGo4eUF
-         FH/ntu7wLLjDq0t5jICW+TOom5D7sr3CrR9AwzzZBlllta+fEHJRhLtXao05X67twv
-         lfGUNNySoNtTXeuLRj6Pz5WELgZJnS/133scvvMw=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 165F73523471; Tue, 12 May 2020 20:18:26 -0700 (PDT)
-Date:   Tue, 12 May 2020 20:18:26 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, joel@joelfernandes.org, viro@zeniv.linux.org.uk
-Subject: Re: [PATCH RFC tip/core/rcu] Add shrinker to shift to
- fast/inefficient GP mode
-Message-ID: <20200513031826.GN2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200506175535.d4986a4d497071a410b69765@linux-foundation.org>
- <20200507170006.GA155220@cmpxchg.org>
- <20200507170903.GR2869@paulmck-ThinkPad-P72>
- <20200507183102.GB155220@cmpxchg.org>
- <20200507190905.GX2869@paulmck-ThinkPad-P72>
- <6d93affb-6505-1bf3-58a0-c67c34a18a9e@yandex-team.ru>
- <20200508144638.GF2869@paulmck-ThinkPad-P72>
- <8671cc58-11e0-b9f0-74b1-264fea58b23c@yandex-team.ru>
- <20200509160900.GM2869@paulmck-ThinkPad-P72>
- <20200513013238.GM2005@dread.disaster.area>
+        Tue, 12 May 2020 23:18:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725898AbgEMDSe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 23:18:34 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58677C061A0C;
+        Tue, 12 May 2020 20:18:33 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id b8so7128423pgi.11;
+        Tue, 12 May 2020 20:18:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Cm/gLrcNvamQ/ORBmoqkA6rGd8BbqmVca6uk7B4BbCY=;
+        b=CCm16ZBTqRwqYeQfcCF3EXPmKegJwnu5MDeXF0bs/Ry70ZxkRwUCxGhJXY4N/hs0vJ
+         4z2hkKif+oTUugaiYU1Xbr4LhBLbdYLfQe0WUOINr0yFc+8fUylKR3TDKWB0181JhTwN
+         DBj/I+Np414BoSX38Mf1Tuh7CubrkWN1BFfvK3b9YpjGNLqKKGcOQrypGqJi8ieymf8U
+         vk9f3bCktg4h6CpamVJv6X+0zgJ8lLztcVGCps/pfRt0v8ayM/0LW25PW7X2bOmmEMHu
+         isyduvAXvdOscTkIcQ7+b1dgkhGgL8uE6sKXvMQhmGdTJHapI/ntnivdKSdYYbMjqVIu
+         M86w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Cm/gLrcNvamQ/ORBmoqkA6rGd8BbqmVca6uk7B4BbCY=;
+        b=QttRvLHgyzQmsgMK+Ms81vOY5oGozHq7310d57uojjHdp11QP2SxdK12T4Ya51Uds7
+         LgDm2u3T1RN7wOChEuJ0aVdUMhsEME9YdUWWWtExYEl8Nx2DPAzpTHe0eGtMFdkt4t/d
+         skHBTrUCNMzSakoUgKoBJF3CNyIcIMc3fIEmAXrdiRVCb4A/VX+/umGbl0/HR4sMV3YY
+         uCDEfSGJR3MT2emNS6HXNeo9qPgt4MrgfSa5CCbmiAV7qK7DzcVJedfoUvQ1b396H1YY
+         aUDYrvG6Jbt36B4RfC/7l32IpiIonLi7aTpL55whYf1LDajKYeUaIHXdI+/0mixPFvqW
+         15pg==
+X-Gm-Message-State: AGi0PuYNhr95/RdzDwjxkgyQUvEj1F0sKAlCaTNCcr/pKvP6VBaeSOWx
+        nFOhp7RQdR+Mj/Gs99QKoj8=
+X-Google-Smtp-Source: APiQypJ8rBf4hAMhnxkEj0F+y6GDhhYHMRpKIHQNOAOgI35XxWa6jkpORCLj4nE3KIbMGvzP7t8+Nw==
+X-Received: by 2002:a62:3381:: with SMTP id z123mr24705858pfz.274.1589339912779;
+        Tue, 12 May 2020 20:18:32 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id z60sm14459408pjj.14.2020.05.12.20.18.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 20:18:32 -0700 (PDT)
+Date:   Tue, 12 May 2020 20:18:30 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     robh+dt@kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, sboyd@kernel.org
+Subject: Re: [PATCH v2 RESEND 2/2] Input: remove msm-vibrator driver
+Message-ID: <20200513031830.GH89269@dtor-ws>
+References: <20200513013140.69935-1-masneyb@onstation.org>
+ <20200513013140.69935-3-masneyb@onstation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513013238.GM2005@dread.disaster.area>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200513013140.69935-3-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 11:32:38AM +1000, Dave Chinner wrote:
-> On Sat, May 09, 2020 at 09:09:00AM -0700, Paul E. McKenney wrote:
-> > On Sat, May 09, 2020 at 11:54:40AM +0300, Konstantin Khlebnikov wrote:
-> > > On 08/05/2020 17.46, Paul E. McKenney wrote:
-> > > > Easy for me to provide "start fast and inefficient mode" and "stop fast
-> > > > and inefficient mode" APIs for MM to call!
-> > > > 
-> > > > How about rcu_mempressure_start() and rcu_mempressure_end()?  I would
-> > > > expect them not to nest (as in if you need them to nest, please let
-> > > > me know).  I would not expect these to be invoked all that often (as in
-> > > > if you do need them to be fast and scalable, please let me know). >
-> > > > RCU would then be in fast/inefficient mode if either MM told it to be
-> > > > or if RCU had detected callback overload on at least one CPU.
-> > > > 
-> > > > Seem reasonable?
-> > > 
-> > > Not exactly nested calls, but kswapd threads are per numa node.
-> > > So, at some level nodes under pressure must be counted.
-> > 
-> > Easy enough, especially given that RCU already "counts" CPUs having
-> > excessive numbers of callbacks.  But assuming that the transitions to/from
-> > OOM are rare, I would start by just counting them with a global counter.
-> > If the counter is non-zero, RCU is in fast and inefficient mode.
-> > 
-> > > Also forcing rcu calls only for cpus in one numa node might be useful.
-> > 
-> > Interesting.  RCU currently evaluates a given CPU by comparing the
-> > number of callbacks against a fixed cutoff that can be set at boot using
-> > rcutree.qhimark, which defaults to 10,000.  When this cutoff is exceeded,
-> > RCU becomes more aggressive about invoking callbacks on that CPU, for
-> > example, by sacrificing some degree of real-time response.  I believe
-> > that this heuristic would also serve the OOM use case well.
+On Tue, May 12, 2020 at 09:31:40PM -0400, Brian Masney wrote:
+> The address referenced by this driver is within the Qualcomm Clock
+> namespace so let's drop the msm-vibrator bindings so that a more generic
+> solution can be used instead.  No one is currently using driver so this
+> won't affect any users.
 > 
-> So one of the things that I'm not sure people have connected here is
-> that memory reclaim done by shrinkers is one of the things that
-> drives huge numbers of call_rcu() callbacks to free memory via rcu.
-> If we are reclaiming dentries and inodes, then we can be pushing
-> thousands to hundreds of thousands of objects into kfree_rcu()
-> and/or direct call_rcu() calls to free these objects in a single
-> reclaim pass. 
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
 
-Good point!
+Applied, thank you.
 
-> Hence the trigger for RCU going into "excessive callback" mode
-> might, in fact, be kswapd running a pass over the shrinkers. i.e.
-> memory reclaim itself can be responsible for pushing RCU into this "OOM
-> pressure" situation.
-> 
-> So perhaps we've missed a trick here by not having the memory
-> reclaim routines trigger RCU callbacks at the end of a priority
-> scan. The shrinkers have queued the objects for freeing, but they
-> haven't actually been freed yet and so things like slab pages
-> haven't actually been returned to the free pool even though the
-> shrinkers have said "freed this many objects"...
-> 
-> i.e. perhaps the right solution here is a "rcu_run_callbacks()"
-> function that memory reclaim calls before backing off and/or winding
-> up reclaim priority.
-
-It would not be hard to make something that put RCU into fast/inefficient
-mode for a couple of grace periods.  I will also look into the possibility
-of speeding up callback invocation.
-
-It might also make sense to put RCU grace periods into fast mode while
-running the shrinkers that are freeing dentries and inodes.  However,
-kbuild test robot reports ugly regressions when putting RCU into
-fast/inefficient mode to quickly and too often.  As in 78.5% degradation
-on one of the benchmarks.
-
-> > > I wonder if direct-reclaim should at some stage simply wait for RCU QS.
-> > > I.e. call rcu_barrier() or similar somewhere before invoking OOM.
-> > 
-> > The rcu_oom_count() function in the patch starting this thread returns the
-> > total number of outstanding callbacks queued on all CPUs.  So one approach
-> > would be to invoke this function, and if the return value was truly
-> > huge (taking size of memory and who knows that all else into account),
-> > do the rcu_barrier() to wait for RCU to clear its current backlog.
-> 
-> The shrinker scan control structure has a node mask in it to
-> indicate what node (and hence CPUs) it should be reclaiming from.
-> This information comes from the main reclaim scan routine, so it
-> would be trivial to feed straight into the RCU code to have it
-> act on just the CPUs/node that we are reclaiming memory from...
-
-For the callbacks, RCU can operate on CPUs, in theory anyway.  The
-grace period itself, however, is inherently global.
-
-> > On the NUMA point, it would be dead easy for me to supply a function
-> > that returned the number of callbacks on a given CPU, which would allow
-> > you to similarly evaluate a NUMA node, a cgroup, or whatever.
-> 
-> I'd think it runs the other way around - we optimisitically call the
-> RCU layer to do cleanup, and the RCU layer decides if there's enough
-> queued callbacks on the cpus/node to run callbacks immediately. It
-> would even be provided with the scan priority to indicate the level
-> of desperation memory reclaim is under....
-
-Easy for RCU to count the number of callbacks.  That said, it has no
-idea which callbacks are which.  Perhaps kfree_rcu() could gather that
-information from the slab allocator, though.
-
-> > > All GFP_NOFAIL users should allow direct-reclaim, thus this loop
-> > > in page_alloc shouldn't block RCU and doesn't need special care.
-> > 
-> > I must defer to you guys on this.  The main caution is the duration of
-> > direct reclaim.  After all, if it is too long, the kfree_rcu() instance
-> > would have been better of just invoking synchronize_rcu().
-> 
-> Individual callers of kfree_rcu() have no idea of the load on RCU,
-> nor how long direct reclaim is taking. Calling synchronize_rcu()
-> incorrectly has pretty major downsides to it, so nobody should be
-> trying to expedite kfree_rcu() unless there is a good reason to do
-> so (e.g. at unmount to ensure everything allocated by a filesystem
-> has actually been freed). Hence I'd much prefer the decision to
-> expedite callbacks is made by the RCU subsystem based on it's known
-> callback load and some indication of how close memory reclaim is to
-> declaring OOM...
-
-Sorry, I was unclear.  There is a new single-argument kfree_rcu() under
-way that does not require an rcu_head in the structure being freed.
-However, in this case, kfree_rcu() might either allocate the memory
-that is needed to track the memory to be freed on the one hand or just
-invoke synchronize_rcu() on the other.  So this decision would be taken
-inside kfree_rcu(), and not be visible to either core RCU or the caller
-of kfree_rcu().
-
-This decision is made based on whether or not the allocator provides
-kfree_rcu() the memory needed.  The tradeoff is what GFP flags are
-supplied.  So the question kfree_rcu() has to answer is "Would it be
-better to give myself to reclaim as an additional task, or would it
-instead be better to just invoke synchronize_rcu() and then immediately
-free()?"
-
-I am probably still unclear, but hopefully at least one step in the
-right direction.
-
-							Thanx, Paul
+-- 
+Dmitry
