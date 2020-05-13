@@ -2,148 +2,130 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0438C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6522C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8342B206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 965A920769
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:47:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KvbUf9n7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732111AbgEMHqi (ORCPT
+        id S1732142AbgEMHrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 03:46:38 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31398 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726220AbgEMHqi (ORCPT
+        Wed, 13 May 2020 03:47:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729092AbgEMHrM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 03:46:38 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04D7VvTK109329;
-        Wed, 13 May 2020 03:46:20 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3101kxh48u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 03:46:20 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04D7Y1Q4128184;
-        Wed, 13 May 2020 03:46:20 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3101kxh48c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 03:46:20 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04D7jDdU024666;
-        Wed, 13 May 2020 07:46:18 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma03fra.de.ibm.com with ESMTP id 3100ub0ekd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 07:46:18 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04D7kGQl590302
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 May 2020 07:46:16 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EC412AE04D;
-        Wed, 13 May 2020 07:46:15 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 82408AE051;
-        Wed, 13 May 2020 07:46:13 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Wed, 13 May 2020 07:46:13 +0000 (GMT)
-Date:   Wed, 13 May 2020 13:16:12 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Christopher Lameter <cl@linux.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH v4 3/3] mm/page_alloc: Keep memoryless cpuless node 0
- offline
-Message-ID: <20200513074612.GA22908@linux.vnet.ibm.com>
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20200512132937.19295-1-srikar@linux.vnet.ibm.com>
- <20200512132937.19295-4-srikar@linux.vnet.ibm.com>
- <alpine.DEB.2.22.394.2005121627340.98180@www.lameter.com>
+        Wed, 13 May 2020 03:47:12 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB23CC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 00:47:10 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id u35so4429681pgk.6
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 00:47:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Knn0jf0/vclS0Ugurfak7uxD0jycVtPvhoKug+BNtc8=;
+        b=KvbUf9n7O1VSTSebKcFo14zCjmdMbhsq8ZWvqNyxzkE8949GHFqBUZayBMdjhqgFlB
+         xn1CV9cIdzasYxiGE0WmehiVhnd6ovEQwElhi00QZk2giKfc1FY5je+pPT4PlO8hMxqu
+         tnZjtU94cdMBgnqy4W4xP44dLPh+t7uUbutn8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Knn0jf0/vclS0Ugurfak7uxD0jycVtPvhoKug+BNtc8=;
+        b=jFZm154n9yQ3TVHfrc5hlXrTF90dyTioGwYA4H7y2W9MjLKeTVqfMo8U9nbXiLbTko
+         zqo2Kqv6WLylfEeeeRoHF4xwseF/OBrjwNQbvzeLIVlJLG8HC9Z0jTPsp4sbyZpPuRqX
+         zhNlaQY3ariizkgbboqt7G/y1qNNOvhJe+yFgmGalAz9HHEKUibxisELdiOqMHKaT3Hf
+         EXt9mKE0rT66oBWXqiPj67qdTYfhtJzl5zSeiPnied5O/yTldBNveezSSdgJ3wXxNJdg
+         L7gmoOVZo0JmO/0981VPVL7jSl+73Am6Vk/bZ5HFVIjNNBn9xVmb7iTMbQ/pEWoF2wfj
+         rb0A==
+X-Gm-Message-State: AGi0PuaJFaGeMj0wKWPotqKMaoO4boeN2aQMx/ZqRnZwZGCCe/LFjrkQ
+        s5WU+jEZXWZSVw7mSULUum/Ucg==
+X-Google-Smtp-Source: APiQypIOFJRoYFPckLNU7gCMIEAOvHkJqV8/zbo2htRrA5RmROIhxl9oM/nTS9P72UyT7EVbGgOvlg==
+X-Received: by 2002:a62:144b:: with SMTP id 72mr25566659pfu.246.1589356030444;
+        Wed, 13 May 2020 00:47:10 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m63sm14307808pfb.101.2020.05.13.00.47.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 00:47:09 -0700 (PDT)
+Date:   Wed, 13 May 2020 00:47:08 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        James Morris <jmorris@namei.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 0/6] allow ramoops to collect all kmesg_dump events
+Message-ID: <202005130045.EF013D12E@keescook>
+References: <20200506211523.15077-1-keescook@chromium.org>
+ <20200512131655.GE17734@linux-b0ei>
+ <CA+CK2bBMUxxuTBicQ7ihKpN3jK94mMjcNCXhnAXUaODce09Wmw@mail.gmail.com>
+ <20200512155207.GF17734@linux-b0ei>
+ <202005121111.6BECC45@keescook>
+ <20200513073448.GG7340@linux-b0ei>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.22.394.2005121627340.98180@www.lameter.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-13_02:2020-05-11,2020-05-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- priorityscore=1501 adultscore=0 clxscore=1015 malwarescore=0 spamscore=0
- cotscore=-2147483648 phishscore=0 mlxlogscore=999 suspectscore=0
- impostorscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005130065
+In-Reply-To: <20200513073448.GG7340@linux-b0ei>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Christopher Lameter <cl@linux.com> [2020-05-12 16:31:26]:
-
-> On Tue, 12 May 2020, Srikar Dronamraju wrote:
+On Wed, May 13, 2020 at 09:34:49AM +0200, Petr Mladek wrote:
+> On Tue 2020-05-12 11:45:54, Kees Cook wrote:
+> > Here are the problems I see being solved by this:
+> > 
+> > - lifting kmsg dump reason filtering out of the individual pstore
+> >   backends and making it part of the "infrastructure", so that
+> >   there is a central place to set expectations. Right now there
+> >   is a mix of explicit and implicit kmsg dump handling:
+> > 
+> >   - arch/powerpc/kernel/nvram_64.c has a hard-coded list
 > 
-> > +#ifdef CONFIG_NUMA
-> > +	[N_ONLINE] = NODE_MASK_NONE,
+> It handles restart, halt, poweroff the same way.  I wonder if anyone
+> would want to distinguish them.
 > 
-> Again. Same issue as before. If you do this then you do a global change
-> for all architectures. You need to put something in the early boot
-> sequence (in a non architecture specific way) that sets the first node
-> online by default.
+> >   - drivers/firmware/efi/efi-pstore.c doesn't expect anything but
+> >     OOPS and PANIC.
+> >   - drivers/mtd/mtdoops.c tries to filter using its own dump_oops
+> >     and doesn't expect anything but OOPS and PANIC.
+> >   - fs/pstore/ram.c: has a hard-coded list and uses its own
+> >     dump_oops.
+> >   - drivers/mtd/mtdpstore.c (under development[3]) expected only
+> >     OOPS and PANIC and had its own dump_oops.
 > 
-
-I did respond to that earlier.
-
-> You have fixed the issue in your earlier patches for the powerpc
-> archicture. What about the other architectures?
+> The others handle only panic or oops.
 > 
-> Or did I miss something?
+> What about splitting the reason into two variables? One for severity
+> and other for shutdown behavior. I mean:
 > 
+>   + reason: panic, oops, emergency, shutdown    (ordered by severity)
+>   + handling: restart, halt, poweroff
+> 
+> Or we might just replace KMSG_DUMP_RESTART, KMSG_DUMP_HALT,
+> KMSG_DUMP_POWEROFF with a single KMSG_DUMP_SHUTDOWN.
+> 
+> Then the max reason variable would make sense.
 
-Here are my assumptions, please do correct me if any of them are wrong.
-1. My other patches for Powerpc, don't change when the nodes are being
-onlined. They only change how the cpu_to_node numbering of the offline cpus.
-In this respect Powerpc due to its PAPR compliance may be slightly unique
-from other archs where the cpu binding of the node is not known till CPUs
-are onlined.
-
-2. Currently the nodes are onlined (in all arch specific code) as soon as
-they are detected. This is unconditional onlining as in there are no checks
-to see the node number is 0. i.e I don't see any special checks that
-restrict or allow node 0 from being onlined / offlined. Its considered no
-special than any other online node.
-
-3. If we were to expect node 0 to be always online, then why do we have
-first_online_node. We could always hard code it to 0.
-
-4. I tried enabling CONFIG_MEMORYLESS_NODE on x86, but that's seems to be
-not possible. And it looks to me that something like that is only possible
-on powerpc and IA64.
-
-5. Without my patch on a regular numa system, node 0 would be onlined by
-default during structure initialization. When the nodes get detected, node 0
-and other nodes would again be onlined. The only drawback being if node 0
-wasn't suppose to be online, it will still end up being marked online.
-With the proposed patch, when the nodes get detected, any nodes detected
-would be onlined.
-
-I think the node onlining is already pretty early in boot. I don't know of
-any other mechanism to move the onlining further up and in a non
-architecture specific way. However if you have ideas, please do let me know.
+That would work for me, yeah. Pavel, is that enough granularity for you?
 
 -- 
-Thanks and Regards
-Srikar Dronamraju
+Kees Cook
