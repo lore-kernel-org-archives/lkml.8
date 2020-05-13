@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 410AAC2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6ADC2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EBDA206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:06:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E195120575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:06:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364366;
-	bh=f4a7jQYUGO+gefhtNwOgyxXu8SfY9ICLOZ0ZEWYfr1Q=;
+	s=default; t=1589364371;
+	bh=n8ibRyccY5zE8PGYkmSz/Wdr+0AV8UG6ty9nZ2zTvco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gt0nZfKKM/lwjOimJTZxixK8S56ZT4Ju1hzRCEa80/x8gqXUJ6LV1jqS4y45VdfAv
-	 l3183Z3hZKC79ew4vy+DyzJyNPD4vyLtQx6OreN29ZK3ZF+DwjMSh8JAHBj6o5/8P5
-	 xufGvq+qQcQ4ZLkrLTt56zqGKPvnaehzhUa9Tmfw=
+	b=tRLJy7VXxyuahwUTFqV1eZ0ZH4B8Szon1q+NhB1ELLp6cPrKyvJBdAZrOX0RNTWpu
+	 mhijd+QrCW1DDdOBGYyCTZ4rYaf5j4sSxjS6z9DQLSc3/z1tCYGd8op3jMr9DZtnQh
+	 DAWIhYCnUetqDBezM8b7gYVmHqR7RtVOcBpg0+so=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388382AbgEMKGF (ORCPT
+        id S2388453AbgEMKGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:06:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41022 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 06:06:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387444AbgEMKGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 06:06:04 -0400
+        id S1732979AbgEMKGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 06:06:10 -0400
 Received: from localhost.localdomain (unknown [106.200.233.149])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E968C206B8;
-        Wed, 13 May 2020 10:05:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBC9520575;
+        Wed, 13 May 2020 10:06:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589364364;
-        bh=f4a7jQYUGO+gefhtNwOgyxXu8SfY9ICLOZ0ZEWYfr1Q=;
+        s=default; t=1589364369;
+        bh=n8ibRyccY5zE8PGYkmSz/Wdr+0AV8UG6ty9nZ2zTvco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B3R1wJ7GK/L3htlT9FId9pUaXL7vqHSMvbj3xYa212Rc5lvpxqzSEgX0J8tzVX+qx
-         y3EWZyr1iH3CcHGPbPlTOKIgxuJ+JhA1K7KHcw0H9ef7m0tDY8/PxA3eXnB00VkFla
-         iF5y4dxlR7eumQ9SUZhvVnGbXx9b99GSPwmhWw74=
+        b=Hd9/GFqMHfctSqzB+U00ibTjR3mPqoDRRY2l3pf1Vov3p5vNZ2jqxzuTO4qBxBVlr
+         /5DQefdb6CybxLrCvozrjws3m2Kvea0jjsoN/vzM/fjh5P5/eAbOh/ElZ+HIaHF47V
+         YIVAup3OvpdvfOBi8SxlOPxlSeeO2A+VpcEtFOZE=
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
         Rob Clark <robdclark@gmail.com>
@@ -52,9 +52,9 @@ Cc:     linux-arm-msm@vger.kernel.org,
         Jernej Skrabec <jernej.skrabec@siol.net>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH 1/3] dt-bindings: vendor-prefixes: Add Lontium vendor prefix
-Date:   Wed, 13 May 2020 15:35:31 +0530
-Message-Id: <20200513100533.42996-2-vkoul@kernel.org>
+Subject: [PATCH 2/3] dt-bindings: display: bridge: Add documentation for LT9611
+Date:   Wed, 13 May 2020 15:35:32 +0530
+Message-Id: <20200513100533.42996-3-vkoul@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <20200513100533.42996-1-vkoul@kernel.org>
 References: <20200513100533.42996-1-vkoul@kernel.org>
@@ -65,26 +65,199 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add prefix for Lontium Semiconductor Corporation
+Lontium LT9611 is a DSI to HDMI bridge which supports 2 DSI ports
+and I2S port as input and one HDMI port as output
 
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ .../display/bridge/lontium,lt9611.yaml        | 178 ++++++++++++++++++
+ 1 file changed, 178 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index d3891386d671..7294852bc47b 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -579,6 +579,8 @@ patternProperties:
-     description: Logic Technologies Limited
-   "^longcheer,.*":
-     description: Longcheer Technology (Shanghai) Co., Ltd.
-+  "^lontium,.*":
-+    description: Lontium Semiconductor Corporation
-   "^loongson,.*":
-     description: Loongson Technology Corporation Limited
-   "^lsi,.*":
+diff --git a/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml b/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
+new file mode 100644
+index 000000000000..77ee8cc35cd8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
+@@ -0,0 +1,178 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/bridge/lontium,lt9611.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Lontium LT9611 2 Port MIPI to HDMI Bridge
++
++maintainers:
++  - Vinod Koul <vkoul@kernel.org>
++
++description: |
++  The LT9611 is a bridge device which converts DSI to HDMI
++
++properties:
++  compatible:
++    enum:
++      - lontium,lt9611
++
++  reg:
++    maxItems: 1
++    description: base I2C address of the device.
++
++  "#sound-dai-cells":
++    const: 1
++
++  interrupts:
++    maxItems: 1
++    description: interrupt line for the chip
++
++  reset-gpios:
++    maxItems: 1
++    description: GPIO connected to active high RESET pin.
++
++  vdd-supply:
++    description: Regulator for 1.8V MIPI phy power.
++
++  vcc-supply:
++    description: Regulator for 3.3V IO power.
++
++  ports:
++    type: object
++
++    properties:
++      "#address-cells":
++        const: 1
++
++      "#size-cells":
++        const: 0
++
++      port@0:
++        type: object
++        additionalProperties: false
++
++        description: |
++          HDMI port for HDMI output
++
++        properties:
++          reg:
++            const: 0
++
++        patternProperties:
++          endpoint:
++            type: object
++            additionalProperties: false
++
++            properties:
++              remote-endpoint: true
++
++        required:
++          - reg
++
++      port@1:
++        type: object
++        additionalProperties: false
++
++        description: |
++          MIPI port-1 for MIPI input
++
++        properties:
++          reg:
++            const: 1
++
++        patternProperties:
++          endpoint:
++            type: object
++            additionalProperties: false
++
++            properties:
++              remote-endpoint: true
++
++        required:
++          - reg
++
++      port@2:
++        type: object
++        additionalProperties: false
++
++        description: |
++          MIPI port-2 for MIPI input
++
++        properties:
++          reg:
++            const: 2
++
++        patternProperties:
++          endpoint:
++            type: object
++            additionalProperties: false
++
++            properties:
++              remote-endpoint: true
++
++        required:
++          - reg
++
++    required:
++      - "#address-cells"
++      - "#size-cells"
++      - port@0
++      - port@1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - vdd-supply
++  - vcc-supply
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c10 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      lt9611_codec: hdmi-bridge@3b {
++        compatible = "lontium,lt9611";
++        reg = <0x3b>;
++
++        reset-gpios = <&tlmm 128 GPIO_ACTIVE_HIGH>;
++        interrupts-extended = <&tlmm 84 IRQ_TYPE_EDGE_FALLING>;
++
++        vdd-supply = <&lt9611_1v8>;
++        vcc-supply = <&lt9611_3v3>;
++
++        ports {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          port@0 {
++            reg = <0>;
++            lt9611_out: endpoint {
++              remote-endpoint = <&hdmi_con>;
++            };
++          };
++
++          port@1 {
++            reg = <1>;
++            lt9611_a: endpoint {
++              remote-endpoint = <&dsi0_out>;
++            };
++          };
++
++          port@2 {
++            reg = <2>;
++            lt9611_b: endpoint {
++              remote-endpoint = <&dsi1_out>;
++            };
++          };
++        };
++      };
++    };
 -- 
 2.25.4
 
