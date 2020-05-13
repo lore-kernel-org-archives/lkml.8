@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7263CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E105C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97C442492E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F03A24927
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363261;
-	bh=fhNrhicOFpTPi5d4hyZ4np9bnClrHaWnKQSRWxqvbFc=;
+	s=default; t=1589363264;
+	bh=4m7XJmhmlHWuzWttM8S0PrW824Xv1kZgHZj4jUu04Nw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cAApHdzPtq7OVKgr5yru0oXZ5pcBDvVvfpbAAbGrJaj++aW6WWkt1XSHh7I+JBqXL
-	 8w26OY70Ht8sH0r59F3U5Eqt7BOhGC/KT7NmU3sYFvWwqCw705l/zvR/C3HS/c6suw
-	 LvQFUMICzygpPi3Uqw0MMY5sd/UQZKBL/UMiCKjQ=
+	b=e43g1fjSJTA/+lVgzt/IG9mFZO4m/+Mm5DTsed8+k3eLtEHx5ShZkuFSFZivKWUvg
+	 +aL9Rc9saQoFr4rJ94yE6+UDS839q/JE6BBUfK347FCToivogDU2sNTfOCTMBCY2pv
+	 QU7g/OeMwTGhvih1nJv7Bvr8fQgoNZMvry+w2ZgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732902AbgEMJrk (ORCPT
+        id S1732912AbgEMJrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:47:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45346 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:47:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732856AbgEMJrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:47:25 -0400
+        id S1732860AbgEMJr2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:47:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C6FD20769;
-        Wed, 13 May 2020 09:47:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D504F20753;
+        Wed, 13 May 2020 09:47:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363244;
-        bh=fhNrhicOFpTPi5d4hyZ4np9bnClrHaWnKQSRWxqvbFc=;
+        s=default; t=1589363247;
+        bh=4m7XJmhmlHWuzWttM8S0PrW824Xv1kZgHZj4jUu04Nw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OoO+qGREg+K0OyExCbCntt/fqFY0axSmv/ifa4hzfseq0D2cZCKpjPC1GFbMRche2
-         oBMFD0N+8KMK+PqdsfGZi+y2RPLhzRWzphW1KEf5A26/D5YTKRQRyB5JUM2jnK6Az7
-         m6t2BDP7h08hQK9LwoHCwAFQFYDu7YLg4JPpmBII=
+        b=02g8wM931AJExaWhRBx2NfEHWLm9nUijZZLUAqjRKw81EXJW2IztjYNjWeaMwg/99
+         7tp00ktcAxdr8aH+Z8clKjEkwSZQrD8rDVhu6wMW8DFR3LiDTjAvXo+O3+zFHixM7K
+         Ys7FTld58oY7ucnMdD0f7lu7TB4Am1x2Y8N3uh0s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         Florian Westphal <fw@strlen.de>,
         Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.19 44/48] netfilter: nat: never update the UDP checksum when its 0
-Date:   Wed, 13 May 2020 11:45:10 +0200
-Message-Id: <20200513094403.869182531@linuxfoundation.org>
+Subject: [PATCH 4.19 45/48] netfilter: nf_osf: avoid passing pointer to local var
+Date:   Wed, 13 May 2020 11:45:11 +0200
+Message-Id: <20200513094404.213164359@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
 References: <20200513094351.100352960@linuxfoundation.org>
@@ -60,68 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guillaume Nault <gnault@redhat.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit ea64d8d6c675c0bb712689b13810301de9d8f77a upstream.
+commit c165d57b552aaca607fa5daf3fb524a6efe3c5a3 upstream.
 
-If the UDP header of a local VXLAN endpoint is NAT-ed, and the VXLAN
-device has disabled UDP checksums and enabled Tx checksum offloading,
-then the skb passed to udp_manip_pkt() has hdr->check == 0 (outer
-checksum disabled) and skb->ip_summed == CHECKSUM_PARTIAL (inner packet
-checksum offloaded).
+gcc-10 points out that a code path exists where a pointer to a stack
+variable may be passed back to the caller:
 
-Because of the ->ip_summed value, udp_manip_pkt() tries to update the
-outer checksum with the new address and port, leading to an invalid
-checksum sent on the wire, as the original null checksum obviously
-didn't take the old address and port into account.
+net/netfilter/nfnetlink_osf.c: In function 'nf_osf_hdr_ctx_init':
+cc1: warning: function may return address of local variable [-Wreturn-local-addr]
+net/netfilter/nfnetlink_osf.c:171:16: note: declared here
+  171 |  struct tcphdr _tcph;
+      |                ^~~~~
 
-So, we can't take ->ip_summed into account in udp_manip_pkt(), as it
-might not refer to the checksum we're acting on. Instead, we can base
-the decision to update the UDP checksum entirely on the value of
-hdr->check, because it's null if and only if checksum is disabled:
+I am not sure whether this can happen in practice, but moving the
+variable declaration into the callers avoids the problem.
 
-  * A fully computed checksum can't be 0, since a 0 checksum is
-    represented by the CSUM_MANGLED_0 value instead.
-
-  * A partial checksum can't be 0, since the pseudo-header always adds
-    at least one non-zero value (the UDP protocol type 0x11) and adding
-    more values to the sum can't make it wrap to 0 as the carry is then
-    added to the wrapped number.
-
-  * A disabled checksum uses the special value 0.
-
-The problem seems to be there from day one, although it was probably
-not visible before UDP tunnels were implemented.
-
-Fixes: 5b1158e909ec ("[NETFILTER]: Add NAT support for nf_conntrack")
-Signed-off-by: Guillaume Nault <gnault@redhat.com>
+Fixes: 31a9c29210e2 ("netfilter: nf_osf: add struct nf_osf_hdr_ctx")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Reviewed-by: Florian Westphal <fw@strlen.de>
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nf_nat_proto_udp.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ net/netfilter/nfnetlink_osf.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/net/netfilter/nf_nat_proto_udp.c
-+++ b/net/netfilter/nf_nat_proto_udp.c
-@@ -66,15 +66,14 @@ static bool udp_manip_pkt(struct sk_buff
- 			  enum nf_nat_manip_type maniptype)
+--- a/net/netfilter/nfnetlink_osf.c
++++ b/net/netfilter/nfnetlink_osf.c
+@@ -170,12 +170,12 @@ static bool nf_osf_match_one(const struc
+ static const struct tcphdr *nf_osf_hdr_ctx_init(struct nf_osf_hdr_ctx *ctx,
+ 						const struct sk_buff *skb,
+ 						const struct iphdr *ip,
+-						unsigned char *opts)
++						unsigned char *opts,
++						struct tcphdr *_tcph)
  {
- 	struct udphdr *hdr;
--	bool do_csum;
+ 	const struct tcphdr *tcp;
+-	struct tcphdr _tcph;
  
- 	if (!skb_make_writable(skb, hdroff + sizeof(*hdr)))
+-	tcp = skb_header_pointer(skb, ip_hdrlen(skb), sizeof(struct tcphdr), &_tcph);
++	tcp = skb_header_pointer(skb, ip_hdrlen(skb), sizeof(struct tcphdr), _tcph);
+ 	if (!tcp)
+ 		return NULL;
+ 
+@@ -210,10 +210,11 @@ nf_osf_match(const struct sk_buff *skb,
+ 	int fmatch = FMATCH_WRONG;
+ 	struct nf_osf_hdr_ctx ctx;
+ 	const struct tcphdr *tcp;
++	struct tcphdr _tcph;
+ 
+ 	memset(&ctx, 0, sizeof(ctx));
+ 
+-	tcp = nf_osf_hdr_ctx_init(&ctx, skb, ip, opts);
++	tcp = nf_osf_hdr_ctx_init(&ctx, skb, ip, opts, &_tcph);
+ 	if (!tcp)
  		return false;
  
- 	hdr = (struct udphdr *)(skb->data + hdroff);
--	do_csum = hdr->check || skb->ip_summed == CHECKSUM_PARTIAL;
-+	__udp_manip_pkt(skb, l3proto, iphdroff, hdr, tuple, maniptype,
-+			!!hdr->check);
+@@ -270,10 +271,11 @@ const char *nf_osf_find(const struct sk_
+ 	struct nf_osf_hdr_ctx ctx;
+ 	const struct tcphdr *tcp;
+ 	const char *genre = NULL;
++	struct tcphdr _tcph;
  
--	__udp_manip_pkt(skb, l3proto, iphdroff, hdr, tuple, maniptype, do_csum);
- 	return true;
- }
+ 	memset(&ctx, 0, sizeof(ctx));
+ 
+-	tcp = nf_osf_hdr_ctx_init(&ctx, skb, ip, opts);
++	tcp = nf_osf_hdr_ctx_init(&ctx, skb, ip, opts, &_tcph);
+ 	if (!tcp)
+ 		return NULL;
  
 
 
