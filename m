@@ -2,153 +2,103 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06744C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDDFCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D74BF20769
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:20:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="mf7qLmSG"
+	by mail.kernel.org (Postfix) with ESMTP id E733120753
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:21:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732180AbgEMIUZ (ORCPT
+        id S1732112AbgEMIV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 04:20:25 -0400
-Received: from mail-eopbgr20053.outbound.protection.outlook.com ([40.107.2.53]:10353
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732121AbgEMIUY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 04:20:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=B6Bz1p41IIUUhyaPbrgqEdl7Md9bqD/rgrR1RPB09OM6oyWugvcT/wRVWJH+RJZIq3ZicyNtMalpcYQI5V/CMB0HNGt+lGokOIP1J60A7lHbTpflS90hyy9LCPj/BkgQPoj8g07l2iyZz+8ypChEupcMiMg0CEEZFjai+lUOwG2rJCReMVfZJschQQ4gBDz+lxL5mnRCJ5CTzP4rZxijPDOnsK2dF1nxOWz6srU9WJxYGIKAWJn8m8sCAspukjSzME0wCQicItudXGJ21z0e0zxRb/Ledr2NnMj2lYClBerkWYo4SLVDCVeTwoAsYvMGST9FuQmVPTgN5WPKpw9qdQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XWEdXAhnXXeFk6WL4AWaBjGKdYGhKXzG8vgymH3/6l8=;
- b=W7DMBcF/kVJA3/NiCurVXxNTODLAj75lOdSPYEZBEdADIO89/UTd8iEer9rgOq8cv533EDmmxGohzI84nrtzwAkzihMIhQsgDjJFJz+hchqCgcZlKN0KpZVVnfPINzkjeqnmM3bCJ1or312h6qsSCyRvFzo6pRACZ4tJlP3GlXvFt6KiFlqQi//vpxQtFnq+a1KB6sLTRIxk0rp8rcPi8BNbwwgRHZrH028ZImSQXC4vntIuWhwW0tY4PJM325oqUfsaAIQpNRMZuy54oFdk6fLlPA7aWBSrEdHyHFql3M6oepcdYox6g5wj+9IHMZQnzshhoQ3zrj909xhCphDrMA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XWEdXAhnXXeFk6WL4AWaBjGKdYGhKXzG8vgymH3/6l8=;
- b=mf7qLmSG0UmxNz+RHdFT37ITOKECXkXU7sDRAz6OkCLkiKigYmBc0MJklcNO75UhbblyuFE6/Yms3Npe4oyPnOoSjNerpNRLGrvSkRgxxuUhIDywCmr0F+IOiBa04RvLVYr1L9rvYfY1xXgyngrnuQu3NLacCKtgV7D6o/iVGyc=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VE1PR04MB6495.eurprd04.prod.outlook.com (2603:10a6:803:11d::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.33; Wed, 13 May
- 2020 08:20:18 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::d5f0:c948:6ab0:c2aa]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::d5f0:c948:6ab0:c2aa%4]) with mapi id 15.20.3000.016; Wed, 13 May 2020
- 08:20:18 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-CC:     "vkoul@kernel.org" <vkoul@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH v7 RESEND 00/13] add ecspi ERR009165 for i.mx6/7 soc
- family
-Thread-Topic: [PATCH v7 RESEND 00/13] add ecspi ERR009165 for i.mx6/7 soc
- family
-Thread-Index: AQHWJ3cQF4VQAfbPY0eHwEq+VJV4M6ilnvSAgAANpiA=
-Date:   Wed, 13 May 2020 08:20:18 +0000
-Message-ID: <VE1PR04MB663826721B0720C313C3E12A89BF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <1589218356-17475-1-git-send-email-yibin.gong@nxp.com>
- <20200513072012.GB15934@pengutronix.de>
-In-Reply-To: <20200513072012.GB15934@pengutronix.de>
-Accept-Language: en-US
+        Wed, 13 May 2020 04:21:57 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:36679 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726092AbgEMIV4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 04:21:56 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-38-2tm9l_oWOAq3FsGnStpWBw-1; Wed, 13 May 2020 09:21:53 +0100
+X-MC-Unique: 2tm9l_oWOAq3FsGnStpWBw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 13 May 2020 09:21:52 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 13 May 2020 09:21:52 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'psmith@gnu.org'" <psmith@gnu.org>,
+        'Linus Torvalds' <torvalds@linux-foundation.org>
+CC:     'Arnd Bergmann' <arnd@arndb.de>,
+        'Masahiro Yamada' <yamada.masahiro@socionext.com>,
+        'Linux Kernel Mailing List' <linux-kernel@vger.kernel.org>
+Subject: RE: I disabled more compiler warnings..
+Thread-Topic: I disabled more compiler warnings..
+Thread-Index: AQHWJwHjj7O/Wk29GEyLgXD8YJ1BI6iigEwggACtZraAADOL0IAAtVzQgABf64CAABO1kIAAEzuAgAEQxaA=
+Date:   Wed, 13 May 2020 08:21:52 +0000
+Message-ID: <4a540a5d341c468bae131934b413e4ce@AcuMS.aculab.com>
+References: <CAHk-=wjah-fkfzMdmCNN8v7uriJsGeYjHh18wkXDZa2sxuAXzA@mail.gmail.com>
+         <8320f29ca61146fc985083621685ac95@AcuMS.aculab.com>
+         <CAHk-=whLY8dXE6qMuPNE+Tjc6uXy+W2jACyWLxtRUH6GU2=PAA@mail.gmail.com>
+         <0ff4860b4202a6ef3bb3b29912d083d471e1cc1d.camel@gnu.org>
+         <90909f30775744b89d1a0c40265779d9@AcuMS.aculab.com>
+         <5564c992dfeb40adbc3e6f6a29e43d2e@AcuMS.aculab.com>
+         <73dace5aca21bee09ce12aa8dcfd50daa2cd6051.camel@gnu.org>
+         <464ab7c2d9e144718e4a3135a41f3056@AcuMS.aculab.com>
+ <d743bd7bec25c939d7419a3512239b43b990af5a.camel@gnu.org>
+In-Reply-To: <d743bd7bec25c939d7419a3512239b43b990af5a.camel@gnu.org>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: pengutronix.de; dkim=none (message not signed)
- header.d=none;pengutronix.de; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c6a6175a-c429-43d8-8970-08d7f7167905
-x-ms-traffictypediagnostic: VE1PR04MB6495:|VE1PR04MB6495:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6495028891FE13A5A93459B489BF0@VE1PR04MB6495.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2089;
-x-forefront-prvs: 0402872DA1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2Az6f7afz3WGTTd3KHlalP4pRyNiYet1VQlF7dMrMG8VOaXtup2no51OH5q7ezcE7S5H9U1+1xL96s+vS3/hSFXIZFbBLS8yU4cpTyEkTAeHiZZFNPJufFD5awLAtztVomOyTn/7I2iaeLRmeks+MHn10Zwigrh2so4H+Y9SDrVuVGOUpvBEbkirrruZ9yTtiH9j0I5hL+/vBPKi5lcNn0yqkI9J8vOVEjYM1eIWoQaE3mlCeyM5qFykcUXhUaGE2rEwtXIIWqm2b2l8RL6FUQ2IOxneB+ZvTu8EvDHJtu9Y0FmvpTP5yYZQOD1jCe0gSJvta1xIOS+FriAhz2KNzY9vRbuH4M7qnwl06EFTaChpU2rac47eImUdnTKxaV8wOp2RSGgC5Qvp5EMfQ5HnufIcmjbvEZ4d8ACJdpXY8dRxC3E6NrCnyTvsAtuh84Yj0tZdatyyGReJg6onKtc4HSFiP9WzYIhBr8V+rTzCALl4nuvoK3NLLSmT/mVjIcBDExOprIxBQIgN7ggKOHim/WL3JHyvQrrmUb+QZgqT20j0S/ezchVahLPR0EmJXajcFEoKZMvXxVYQqQ2r0QGRKZZfYc1hffI9etXv2tHHtEU=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(136003)(366004)(376002)(396003)(33430700001)(86362001)(7416002)(71200400001)(52536014)(316002)(66476007)(66946007)(478600001)(966005)(54906003)(45080400002)(76116006)(33656002)(5660300002)(66556008)(6916009)(66446008)(7696005)(4326008)(33440700001)(9686003)(8676002)(55016002)(6506007)(2906002)(186003)(83080400001)(26005)(8936002)(64756008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 8YXxr7GNc171Guheu4KtR5OT0vICQafNvA5L/0OLA9vIgFXFVGzX17kYc8Xfz2vggPVDf0Ih3M4xMgIiuF7vT/VQjIeXMp3DoIQHgB77Znm/XwHorxZuDJoMAdAnb6EL3lWAitrsceE8E9ySSAzspgr8bTgj1Z8xyh4HRAiRB8REo5bV1Wy/q/oesK3XEm0d/IEyByY/mHZV65LU6U8mkyVsFQHEUe3OQfHuZIbD2KtmWdLXdE5Um/NMsCXYYLrFKd/t+rDGHHmqLg8T/g87fvUMdi0RmLa4RxYtaV3AO9QBQ0vW7o3lKkGi1/d/ojEpvb2Rcfq34jyWdBz4jI0v4vApQ3IkKc7f5cuXgYTs8gn7p/Cb/Oakm2353Q1oENi6pkTiavaeSa9COdiMscEOFDEDcXuwKYcXztu/slYQn69oAfJRK6RkdWqpGaz+F0D92022YKz3CnraCtZLybpUuGE/+ZNw6jafxTzlK5DyzO8=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6a6175a-c429-43d8-8970-08d7f7167905
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2020 08:20:18.6012
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: M2wChgXBhAkbq7yo+BNwhok4GlUr1+Z0YXS0+dkM/o/LRsJD5JZjLoHKxy2pN5aKcbyDHAKEEz6GV/6/hChixw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6495
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/05/13 Sascha Hauer <s.hauer@pengutronix.de> wrote:
-> On Tue, May 12, 2020 at 01:32:23AM +0800, Robin Gong wrote:
-> > There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
-> > transfer to be send twice in DMA mode. Please get more information from=
-:
-> > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fwww=
-.
-> >
-> nxp.com%2Fdocs%2Fen%2Ferrata%2FIMX6DQCE.pdf&amp;data=3D02%7C01%7C
-> yibin.g
-> >
-> ong%40nxp.com%7C4276d42955334886056508d7f70e18af%7C686ea1d3bc2b4
-> c6fa92
-> >
-> cd99c5c301635%7C0%7C1%7C637249512224944620&amp;sdata=3Dvh0e3BER01
-> 02648t9HRe14h%2BaE9m%2BAlJ5Smd6v%2B9AhM%3D&amp;reserved=3D0. The
-> workaround is adding new sdma ram script which works in XCH  mode as PIO
-> inside sdma instead of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0.
-> The issue should be exist on all legacy i.mx6/7 soc family before i.mx6ul=
-.
-> > NXP fix this design issue from i.mx6ul, so newer chips including
-> > i.mx6ul/ 6ull/6sll do not need this workaroud anymore. All other
-> > i.mx6/7/8 chips still need this workaroud. This patch set add new
-> 'fsl,imx6ul-ecspi'
-> > for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need
-> > errata or not.
-> > The first two reverted patches should be the same issue, though, it
-> > seems 'fixed' by changing to other shp script. Hope Sean or Sascha
-> > could have the chance to test this patch set if could fix their issues.
-> > Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
-> > on i.mx8mm because the event id is zero.
->=20
-> It's not nice to break SPI support when the new firmware is not present a=
-nd I
-> think we can do better. Wouldn't it be possible to fall back to PIO in th=
-is case?
-I'm afraid that's not easy since spi driver don't know which firmware used.=
- Could I add some comments in commit log?=20
+RnJvbTogUGF1bCBTbWl0aA0KPiBTZW50OiAxMiBNYXkgMjAyMCAxNzo1NQ0KPiBPbiBUdWUsIDIw
+MjAtMDUtMTIgYXQgMTU6MDQgKzAwMDAsIERhdmlkIExhaWdodCB3cm90ZToNCj4gPiBJIHRoaW5r
+IHRoZXJlIHdlcmUgc29tZSBzdWItbWFrZXMgdGhhdCB3ZXJlIHN0YXJ0ZWQgd2l0aCBtYWtlDQo+
+ID4gaW5zdGVhZCBvZiAkKE1BS0UpIHNvIGVuZGVkIHVwIGNyZWF0aW5nIGEgbmV3IGpvYiBwaXBl
+Lg0KPiANCj4gT2gsIHllcywgdGhhdCB3aWxsIGRvIGl0Lg0KPiANCj4gPiBEb2Vzbid0IGl0IGRv
+IGJsb2NraW5nIHJlYWRzIHdpdGggU0lHQ0hMRCBlbmFibGVkPw0KPiANCj4gTm8sIGJlY2F1c2Ug
+aXQncyByYWN5IChieSBpdHNlbGYpLg0KPiANCj4gPiAob3IgaG9wZWZ1bGx5IHBwb2xsKCkgdG8g
+YXZvaWQgdGhlIHJhY2UpDQo+IA0KPiBHTlUgbWFrZSB1c2VzIHBzZWxlY3QoKSwgb24gc3lzdGVt
+cyB0aGF0IHN1cHBvcnQgaXQuICBPbiBzeXN0ZW1zIHRoYXQNCj4gZG9uJ3Qgc3VwcG9ydCBwc2Vs
+ZWN0KCkgaXQgdXNlcyBhIHRyaWNrIEkgZGVzY3JpYmVkIGluIGFub3RoZXIgZW1haWw6DQo+IHdl
+IGR1cCgpIHRoZSBGRCwgcmVhZCgpIG9uIHRoZSBkdXAsIHRoZW4gaW4gdGhlIFNJR0NITEQgaGFu
+ZGxlciB3ZQ0KPiBjbG9zZSgpIHRoZSBkdXAuDQoNCkRvZXMgdGhhdCBldmVuIHdvcmsgLSBzZWVt
+cyBsaWtlIGl0IHJlcXVpcmVzIGNsb3NlKCkgdG8gYWJvcnQgcG9sbCgpLg0KQmV0dGVyIGlzIHRv
+IGp1c3QgaGF2ZSB0aGUgU0lHQ0hMRCBoYW5kbGVyIHdyaXRlIGEgYnl0ZSBpbnRvIGEgcGlwZS4N
+Cg0KPiA+IEFub3RoZXIgb3B0aW9uIGlzIGZvciB0aGUgJ3BhcmVudCcgbWFrZSB0byByZXR1cm4g
+KG9yIG5vdCBhY3F1aXJlKQ0KPiA+IGEgam9iIHRva2VuIGZvciAkKE1BS0UpIGNvbW1hbmRzLg0K
+PiANCj4gSXQganVzdCBmZWVscyBjbGVhbmVyIHRvIG1lIHRvIGhhdmUgdGhlIHBhcmVudCBzaW1w
+bHkgYWx3YXlzIHRha2UgdGhlDQo+IHRva2VuLCBhbmQgbGVhdmUgaXQgdXAgdG8gdGhlIGNoaWxk
+IHRvIHB1dCBpdCBiYWNrIGlmIGFwcHJvcHJpYXRlLA0KPiByYXRoZXIgdGhhbiB0aGUgcGFyZW50
+IHB1dHRpbmcgaXQgYmFjay4NCj4gDQo+IEhhdmluZyB0aGUgcGFyZW50IG5vdCBhY3F1aXJlIGEg
+dG9rZW4gYXQgYWxsIHdvbid0IHdvcms7IHdpdGhvdXQNCj4gbGltaXRpbmcgc3ViLW1ha2VzIGl0
+IG1lYW5zIHlvdSBtaWdodCBoYXZlIDEwMCdzIG9mIHRoZW0gcnVubmluZyBhdCB0aGUNCj4gc2Ft
+ZSB0aW1lLCBldmVuIHdpdGggLWoyIG9yIHdoYXRldmVyLg0KDQpIbW1tLi4uIA0KVGhhdCBtZWFu
+cyB0aGUgc3ViLW1ha2UgbXVzdCBhbHdheXMgaG9sZCBvbmUgdG9rZW4uDQpPdGhlcndpc2UgdGhl
+IHBhcmVudC1tYWtlIGNvdWxkIHVzZSBpdCB0byBjcmVhdGUgYSBuZXcgc3ViLW1ha2UuDQoNCkFj
+dHVhbGx5IHRoZSB0b2tlbiBwaXBlIGNhbiBiZSBvcGVuZWQgTk9OX0JMT0NLIGJlY2F1c2UgcG9s
+bCgpDQpjYW4vd2lsbCBiZSB1c2VkIHRvIHdhaXQgZm9yIGEgdG9rZW4uDQoNClNvIHlvdSBhbHdh
+eXMgdHJ5IHRvIHJlYWQgYSB0b2tlbiAtIGV2ZW4gd2hlbiB5b3UgaGF2ZSBvbmUgJ2luIHlvdXIg
+aGFuZCcNCihlaXRoZXIgZW50cnkgb3IgYmVjYXVzZSBhIGpvYiBqdXN0IGZpbmlzaGVkKS4NCklm
+IGl0IGlzbid0IHRoZSAnYWJvcnQnIG9uZSwgcHV0IGl0IGJhY2suDQpBIGJpdCBvZiBmYWZmaW5n
+IG9uIHRoZSB0b2tlbiBwaXBlIGlzbid0IGdvaW5nIHRvIGFmZmVjdCB0aGUgcGVyZm9ybWFuY2UN
+CndoZW4gaXQgaXMgYWJvdXQgdG8gZG8gZm9yaytleGVjLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0
+ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBL
+ZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
