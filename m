@@ -2,128 +2,102 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D68BCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E196FCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D322206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8074206CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:31:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="feaPsl6P"
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bjrvZ3+h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732739AbgEMKat (ORCPT
+        id S1732909AbgEMKbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:30:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55642 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729731AbgEMKas (ORCPT
+        Wed, 13 May 2020 06:31:48 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:50511 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727794AbgEMKbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 06:30:48 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F261C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 03:30:48 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id n5so12975560wmd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 03:30:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Bag3tcwUumhERwus8sd0P+tasr8YFyR1BtawoF6Jv0M=;
-        b=feaPsl6PXU124jWtX3dAxdhE+71zs/uCFoegBNTyi5X4xrHvVm195995//fXp+PqCv
-         bZjFrRwdqqAltQjGj+LEGmdB2M4LFIzNJiyL03Jlt8sIMAUlpNoCrt89NruDMkFjSfZD
-         L2ZrhZ5A025g+OZzAClsEJCSgan0edGqEFBtkyb5dwVCwVXw2xbFrsUHhmbT3Cysxmlo
-         j9qXbYdZyW+nxcOP0b8yHQl+bSw65rKtZUp8Rv7Zt5qxoYqpnKDfAmAfHTIe7SyQGKmy
-         gySn77IU+kPf54X9nFVVLRVpCZrGXIN73Igvj0l6ULfFpCSQUhqDQE9EbgBMF5FyLbdS
-         VE/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Bag3tcwUumhERwus8sd0P+tasr8YFyR1BtawoF6Jv0M=;
-        b=hPMe0T+Hvzsj7EgNuD9NB07SeL5Uov6bL2NTuGl+yjklhFfSAXR51grueNgol5Gk7o
-         Oz4lgX+tv7+Wk5MH5eV07wQpx6xIW5cSzcZoplLpCrorjmvHsvjXM+TxPJulrrg9d27F
-         pSy2YCe0CW6JreIjy15RfkT+4zf/gCepqoqgNATil4B8Zcx104hw86B8bngwtRH1yTFM
-         IMBrtzrsDOcNCW2M5RnbgKcvm1LierrfNaGQ7F7zuRW0UCLOVIQ8ZhRe/qpSVCebCFHn
-         ViY33dnXSsSZvWXLmGGQQLXODkjQhhhbhmzjCmLRDfSyO8RgPsUHsFQd4OCz8XNc7GWa
-         u7zQ==
-X-Gm-Message-State: AOAM530Mw/j0v0OxgY97IKQqq+rypW7nCPwapXwI2u9z+V328bT4flXC
-        AS2s6j2f9mRfkw2iJy3Jr/OkUQ==
-X-Google-Smtp-Source: ABdhPJwieEag500N253ZjLYIuWDnNCr/RP0yjgHBqAOAFRcDDDnTfLgV5ev2GxXV9li2Vw8U//ZBMQ==
-X-Received: by 2002:a1c:7407:: with SMTP id p7mr5473936wmc.114.1589365846539;
-        Wed, 13 May 2020 03:30:46 -0700 (PDT)
-Received: from dbrazdil-macbookpro.roam.corp.google.com ([2a01:4b00:8523:2d03:e021:170a:2079:28ea])
-        by smtp.gmail.com with ESMTPSA id 60sm3774269wrp.92.2020.05.13.03.30.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 03:30:43 -0700 (PDT)
-From:   David Brazdil <dbrazdil@google.com>
-X-Google-Original-From: David Brazdil <dbrazdil@dbrazdil-macbookpro.roam.corp.google.com>
-Date:   Wed, 13 May 2020 11:30:41 +0100
-To:     Quentin Perret <qperret@google.com>
-Cc:     Marc Zyngier <maz@kernel.org>, David Brazdil <dbrazdil@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/15] arm64: kvm: Unify users of HVC instruction
-Message-ID: <20200513103041.ktaov2jws72itmag@dbrazdil-macbookpro.roam.corp.google.com>
-References: <20200430144831.59194-1-dbrazdil@google.com>
- <20200430144831.59194-2-dbrazdil@google.com>
- <878si3j13w.wl-maz@kernel.org>
- <20200507143633.GA169263@google.com>
+        Wed, 13 May 2020 06:31:47 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 448A65C00BC;
+        Wed, 13 May 2020 06:31:46 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Wed, 13 May 2020 06:31:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=j0g83N
+        IEHiipiQgYyDDRZc71uODT2YrU4dc1Zjf2a/8=; b=bjrvZ3+hSsatu1j9KkuhVD
+        yXwKpC3TUhj4dmS2DTTGYl7oQHnfTVGJLaxwVak8ZXO2UpItAFmlTrCHuXrMO48l
+        7Bxs/SHAFu+YruV+HJl2/8erODBnGYM6AcE8N+zEEfQs72cwifl042+dTCEFICHA
+        KpEKEfLVNyb6CLGunW5s7H8fvhcmzjifkGbzdd82jRePgUC+t4iLeRQlkHXwsdwa
+        uG6PUmBqi6Dq8yxe0Y9q7Ig+sLAZvHv1etenM7AZ3bNYTpW4s7RSgU4VCei5RX28
+        Sb4H9Idm6UdKaQRDLTzVyK2z4zoOkKrMjp2pgqrM0QlvGYaAMnep6sjRl/JSh+pw
+        ==
+X-ME-Sender: <xms:kcy7XkiqyH6e1h_3b7NEZDe3bNB6_dbNquzLYjzQoEmB11R1jyPRmA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrleeggddvlecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepkfguohcuufgt
+    hhhimhhmvghluceoihguohhstghhsehiughoshgthhdrohhrgheqnecuggftrfgrthhtvg
+    hrnheptdffkeekfeduffevgeeujeffjefhtefgueeugfevtdeiheduueeukefhudehleet
+    necukfhppeejledrudejiedrvdegrddutdejnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepihguohhstghhsehiughoshgthhdrohhrgh
+X-ME-Proxy: <xmx:kcy7XtBMw_bpZEB6ljIQdoLke-sx_p-AfiAVidUveOp1qXIHNSrbGQ>
+    <xmx:kcy7XsHsSq_GxxkSkJeuiK55Qb9iiny_S6rm-Wo8iWvkdrbutrGFcg>
+    <xmx:kcy7XlSga9gJF4e7rP4pqzz5HmJXrAun-1Zf-D-ps4nO34yq3R96bg>
+    <xmx:ksy7XvaA5mBcNWRytLaND3aAMU1qKhbD9_DI8RHD2nKQh1Zl5oNDgw>
+Received: from localhost (bzq-79-176-24-107.red.bezeqint.net [79.176.24.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5DD433066314;
+        Wed, 13 May 2020 06:31:45 -0400 (EDT)
+Date:   Wed, 13 May 2020 13:31:43 +0300
+From:   Ido Schimmel <idosch@idosch.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] net/scm: cleanup scm_detach_fds
+Message-ID: <20200513103143.GA599365@splinter>
+References: <20200511115913.1420836-1-hch@lst.de>
+ <20200511115913.1420836-3-hch@lst.de>
+ <20200513092918.GA596863@splinter>
+ <20200513094908.GA31756@lst.de>
+ <20200513095811.GA598161@splinter>
+ <20200513101037.GA1143@lst.de>
+ <20200513101751.GA1454@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200507143633.GA169263@google.com>
+In-Reply-To: <20200513101751.GA1454@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 03:36:33PM +0100, Quentin Perret wrote:
-> On Thursday 07 May 2020 at 15:01:07 (+0100), Marc Zyngier wrote:
-> > >  /*
-> > > - * u64 __kvm_call_hyp(void *hypfn, ...);
-> > > + * u64 __kvm_call_hyp(unsigned long arg, ...);
-> > >   *
-> > >   * This is not really a variadic function in the classic C-way and care must
-> > >   * be taken when calling this to ensure parameters are passed in registers
-> > >   * only, since the stack will change between the caller and the callee.
-> > > - *
-> > > - * Call the function with the first argument containing a pointer to the
-> > > - * function you wish to call in Hyp mode, and subsequent arguments will be
-> > > - * passed as x0, x1, and x2 (a maximum of 3 arguments in addition to the
-> > > - * function pointer can be passed).  The function being called must be mapped
-> > > - * in Hyp mode (see init_hyp_mode in arch/arm/kvm/arm.c).  Return values are
-> > > - * passed in x0.
-> > > - *
-> > > - * A function pointer with a value less than 0xfff has a special meaning,
-> > > - * and is used to implement hyp stubs in the same way as in
-> > > - * arch/arm64/kernel/hyp_stub.S.
-> > 
-> > I don't think any of this becomes obsolete with this patch (apart from
-> > the reference to 32bit), and only changes with patch #2. Or am I
-> > misunderstanding something?
+On Wed, May 13, 2020 at 12:17:51PM +0200, Christoph Hellwig wrote:
+> On Wed, May 13, 2020 at 12:10:37PM +0200, Christoph Hellwig wrote:
+> > Ok.  I'll see what went wrong for real and will hopefully have a
+> > different patch for you in a bit.
 > 
-> Nope, I think you're right. To be fair, this patch has changed quite
-> a bit since the first version (which did change that comment a little
-> later IIRC), but David has done all the hard work on top so I'll let
-> him answer that one.
-They have a different meaning in the three different contexts:
-	1) hyp-stub HVC: hcall ID + 3 args
-	2) hyp-init HVC: 4 args (no hcall ID)
-	3) host HVC: function  pointer + 3 args
-The patch was meant to have all three use the same HVC routine, eventually
-converging on host HVCs also using 'hcall ID + 3 args' in patch 02, but it is
-a bit forced at this point. I can drop this patch from the series and we can
-clean this up later if it still makes sense.
+> Can you try this patch instead of the previous one?
+
+Works. Thanks a lot!
 
 > 
-> And David, feel free to take the authorship for this patch -- I barely
-> recognize it (for the better), so it's more than fair if you get the
-> credit :)
+> diff --git a/net/core/scm.c b/net/core/scm.c
+> index a75cd637a71ff..875df1c2989db 100644
+> --- a/net/core/scm.c
+> +++ b/net/core/scm.c
+> @@ -307,7 +307,7 @@ static int __scm_install_fd(struct file *file, int __user *ufd, int o_flags)
+>  		sock_update_classid(&sock->sk->sk_cgrp_data);
+>  	}
+>  	fd_install(new_fd, get_file(file));
+> -	return error;
+> +	return 0;
+>  }
+>  
+>  static int scm_max_fds(struct msghdr *msg)
