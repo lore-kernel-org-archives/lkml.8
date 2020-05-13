@@ -2,91 +2,112 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5ECC2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2299DC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF0E2064E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A71A320659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:04:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388904AbgEMOD3 convert rfc822-to-8bit (ORCPT
+        id S2388836AbgEMOEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 10:03:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:47444 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388783AbgEMOD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 10:03:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 25E5D31B;
-        Wed, 13 May 2020 07:03:27 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E06D3F71E;
-        Wed, 13 May 2020 07:03:24 -0700 (PDT)
-References: <20200513134338.19688-1-John.Mathew@unikie.com> <20200513134338.19688-4-John.Mathew@unikie.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     john mathew <john.mathew@unikie.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        corbet@lwn.net, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, bristot@redhat.com, tsbogend@alpha.franken.de,
-        lukas.bulwahn@gmail.com, x86@kernel.org,
-        linux-mips@vger.kernel.org, tglx@linutronix.de,
-        mostafa.chamanara@gmail.com, willy@infradead.org,
-        Mostafa Chamanara <mostafa.chamanara@basemark.com>,
-        Oleg Tsymbal <oleg.tsymbal@unikie.com>
-Subject: Re: [RFC PATCH v4 2/3] docs: scheduler: Add scheduler overview documentation
-In-reply-to: <20200513134338.19688-4-John.Mathew@unikie.com>
-Date:   Wed, 13 May 2020 15:03:17 +0100
-Message-ID: <jhjy2pwq6e2.mognet@arm.com>
+        Wed, 13 May 2020 10:04:04 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:55136 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388325AbgEMOED (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 10:04:03 -0400
+Received: from fsav302.sakura.ne.jp (fsav302.sakura.ne.jp [153.120.85.133])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 04DE3MOo098927;
+        Wed, 13 May 2020 23:03:22 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav302.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav302.sakura.ne.jp);
+ Wed, 13 May 2020 23:03:22 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav302.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 04DE3LDg098920
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Wed, 13 May 2020 23:03:21 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] printk: Add loglevel for "do not print to consoles".
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <dima@arista.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+References: <20200427062117.GC486@jagdpanzerIV.localdomain>
+ <4dae86af-1d9a-f5a8-cff6-aa91ec038a79@i-love.sakura.ne.jp>
+ <20200428121828.GP28637@dhcp22.suse.cz>
+ <b4d74234-8009-9ffd-011f-bd5d1a4b85f6@i-love.sakura.ne.jp>
+ <20200428154532.GU28637@dhcp22.suse.cz>
+ <b1d507b1-dae7-f526-c74a-d465ddecea6a@i-love.sakura.ne.jp>
+ <20200429142106.GG28637@dhcp22.suse.cz>
+ <a59271f1-b3fc-26d1-f0a2-5ec351d0095e@i-love.sakura.ne.jp>
+ <20200513062652.GM413@jagdpanzerIV.localdomain>
+ <a75d6560-ad99-5b02-3648-247c27c3a398@i-love.sakura.ne.jp>
+ <20200513100413.GH17734@linux-b0ei>
+ <20564555-7b84-f716-5dcd-978f76ad459a@i-love.sakura.ne.jp>
+ <20200513094642.56bf50f7@gandalf.local.home>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <355d1700-4d33-4604-4187-27fd994bf473@i-love.sakura.ne.jp>
+Date:   Wed, 13 May 2020 23:03:19 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200513094642.56bf50f7@gandalf.local.home>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020/05/13 22:46, Steven Rostedt wrote:
+> On Wed, 13 May 2020 20:03:53 +0900
+> Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> wrote:
+> 
+>> I think that basically only oops (e.g. WARN()/BUG()/panic()) messages worth
+>> printing to consoles and the rest messages do not worth printing to consoles.
+>> Existing KERN_$LOGLEVEL is too rough-grained.
+> 
+> And this statement is exactly why I believe you are wrong.
+> 
+> Because *I* think messages to the console is more important than messages
+> to the logs. Several of my servers are only monitored by the console. I
+> seldom look at the logs on those machines.
 
-On 13/05/20 14:43, john mathew wrote:
-> +=========================
-> +Capacity-Aware Scheduling
-> +=========================
-> +
+As a technical staff at a support center, I can never monitor the consoles of
+customer's servers. I can examine only syslog messages saved as /var/log/messages .
 
-Thanks for taking a jab at this. At a glance it looks okay, with one
-comment below.
+> 
+> This is a policy decision, and must be made by user space. Your use case is
+> not applicable to everyone else's use case. And should not be set in stone
+> by the kernel.
 
-FWIW I still intend to write a more pamphlet-sized thing, I'll toss
-something out in the coming weeks - depending on where this goes, I might
-base it on this.
+My proposal does not set in stone by the kernel.
+My proposal is gives users a chance to control whether to print to consoles.
 
-> +Scheduling load balancing on Asymmetric Multiprocessor systems was improved
-> +through the introduction of Capacity-Aware Scheduling. It identifies the
-> +most efficient CPU to assign a task based on its capacity. This capacity
-> +may be asymmetric due to heterogeneous computing architecture such
-> +as ARM big.LITTLE. Scheduler gets information about asymmetric capacities
-> +when the scheduler domain hierarchy is built using build_sched_domains().
-> +CPU capacities are provided to the scheduler topology code through the
-> +architecture specific implementation of the arch_scale_cpu_capacity().
-> +The SD_ASYM_CPUCAPACITY flag is set by the scheduler topology for a domain
-> +in the hierarchy where all CPU capacities are visible for any cpu's point
-> +of view on asymmetric CPU capacity systems. The scheduler can then take
-> +capacity asymmetry into account when load balancing.
-> +
-> +Initial CPU capacities are derived from the Device Tree and CPU frequency.
-> +For RISC-V & ARM64 it is done in drivers/base/arch_topology.c. A cpu-map
-> +device tree is parsed to obtain the cpu topology and the initial CPU capacity
-> +is set using the CPUFreq subsystem. A callback is registered to the CPUFreq
-> +subsystem to rebuild sched_domains when CPU frequency changes.
-> +
+On 2020/05/13 22:55, Steven Rostedt wrote:
+> On Wed, 13 May 2020 20:03:53 +0900
+> Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> wrote:
+> 
+>> I think that basically only oops (e.g. WARN()/BUG()/panic()) messages worth
+>> printing to consoles and the rest messages do not worth printing to consoles.
+>> Existing KERN_$LOGLEVEL is too rough-grained.
+> 
+> Why don't you look into having a "noconsole" command line option that will
+> not print anything to the consoles but oops messages.
 
-We don't rebuild domains on frequency changes (that would be ludicrous!),
-rather we do that on policy changes. It's mostly because we need to wait
-for cpufreq to be loaded before having a complete view over the capacities
-of the CPUs (which is a mix of µarch and frequencies), i.e. we need to
-rebuild the SD's again once cpufreq comes up.
+I can't force customers to use "noconsole" command line option. That's a
+too rough-grained boolean.
+
+> 
+> Sounds more like what you would like, and something that perhaps would be
+> acceptable by the larger community.
