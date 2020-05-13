@@ -2,250 +2,138 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DFBCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4280C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0B8320659
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:35:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A30EE206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:36:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="zFqMJydT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732382AbgEMMfA (ORCPT
+        id S1732759AbgEMMgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 08:35:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46750 "EHLO
+        Wed, 13 May 2020 08:36:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728726AbgEMMe7 (ORCPT
+        with ESMTP id S1731497AbgEMMgG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 08:34:59 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13080C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 05:34:59 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jYqb2-000383-OV; Wed, 13 May 2020 14:34:48 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jYqb1-0000wt-HO; Wed, 13 May 2020 14:34:47 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
-        devicetree@vger.kernel.org
-Subject: [PATCH net-next v1] net: phy: tja11xx: add cable-test support
-Date:   Wed, 13 May 2020 14:34:40 +0200
-Message-Id: <20200513123440.19580-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.26.2
+        Wed, 13 May 2020 08:36:06 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90C43C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 05:36:06 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id b6so15975887qkh.11
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 05:36:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=XPrK4VVoXQ0vmjjlKF3mWEEfj4+VgK3r8tZECPQos5E=;
+        b=zFqMJydTAPVLxNLXFDGmaVOy8rh6YFK1hKv2Qx0WWlU5242a2O1SoY314bSQ3vHLYG
+         fnm+ll+8xNx0LDpF6ao7AIhPzgBKjsrAzDSVrxXrFWjn0wXikhgApqIaBZ6RRowBmUQr
+         TUHGa7lNx1EMlc4ISPqhND0a1EIPh/7bboJjlqyL+qejWBjIlcT2We1UYz8lcIF8MLfW
+         qfVBuPWRVXCRGYQqNlL/jtMkttkRSBjwdJyyusuu69L1QxXCCbZoUKdMgs67WIohRC9o
+         wilWL6mdq85EgIOi/9ZWphJ3CgLHhOjTSLJM16IGS3GGtyZSM0LJFF+1GAyQb0+JP1J3
+         cqkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XPrK4VVoXQ0vmjjlKF3mWEEfj4+VgK3r8tZECPQos5E=;
+        b=O69/ZjMtAIYKI9x73vswa+Mekw7KlTZkE9P8jr10GfH5Fh0AKDjKOCoBz1dhwE26Aj
+         Pla9k1zIpN+lEAVpjKhNp6ppdqH8aQrUdKDlO7JSx0LY5KfncQF7m64zBJIYKmWRAT9P
+         jtutcWJ8tze6fa15lXqQsG4iY8SmA/7qE6m2iUQ7EyMJxTCNpZ7a68s0s5pnL9h6tnuW
+         LqQpAzIQSd1GMc3YzN7BIAqNoA/wBftgT9KiWdwJjO3jt7yveicpA7kf4iSTr7wFdLjp
+         w8uGDUuFMNFMst6+JAvNb2Uuq8EiaWKeolFBi03jJaaGfQrGpni8YU1wwPLWDvsHE9DF
+         nz+A==
+X-Gm-Message-State: AGi0PubX/NRDTFIwmJkTfeIE4mVGx6vDFpDuDtF1JTmjflFdH64Rcooq
+        9D6xiIxoH2oNHBX49rneo5NPOw==
+X-Google-Smtp-Source: APiQypKyjeVvaBEXNHX6gs8IWZmhdLxlbCAn4XHSVARLevo9HOXc4orsg8JkQKHilUhQQLczQ8MybQ==
+X-Received: by 2002:a05:620a:1509:: with SMTP id i9mr23815994qkk.445.1589373365539;
+        Wed, 13 May 2020 05:36:05 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:2627])
+        by smtp.gmail.com with ESMTPSA id v44sm12093056qtk.79.2020.05.13.05.36.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 05:36:04 -0700 (PDT)
+Date:   Wed, 13 May 2020 08:35:45 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Balbir Singh <bsingharora@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Joonsoo Kim <js1304@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 00/19 V2] mm: memcontrol: charge swapin pages on
+ instantiation
+Message-ID: <20200513123545.GB488426@cmpxchg.org>
+References: <20200508183105.225460-1-hannes@cmpxchg.org>
+ <20200513113032.GA93568@dev-dsk-sblbir-1c-a524888b.ap-northeast-1.amazon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513113032.GA93568@dev-dsk-sblbir-1c-a524888b.ap-northeast-1.amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add initial cable testing support.
-This PHY needs only 100usec for this test and it is recommended to run it
-before the link is up. For now, provide at least ethtool support, so it
-can be tested by more developers.
+Hello Balbir!
 
-This patch was tested with TJA1102 PHY with following results:
-- No cable, is detected as open
-- 1m cable, with no connected other end and detected as open
-- a 40m cable (out of spec, max lenght should be 15m) is detected as OK.
+On Wed, May 13, 2020 at 11:30:32AM +0000, Balbir Singh wrote:
+> On Fri, May 08, 2020 at 02:30:47PM -0400, Johannes Weiner wrote:
+> > To eliminate the page->mapping dependency, memcg needs to ditch its
+> > private page type counters (MEMCG_CACHE, MEMCG_RSS, NR_SHMEM) in favor
+> > of the generic vmstat counters and accounting sites, such as
+> > NR_FILE_PAGES, NR_ANON_MAPPED etc.
+> 
+> Could you elaborate on what this means and the implications of this on
+> user space programs?
 
-Current patch do not provide polarity test support. This test would
-indicate not proper wire connection, where "+" wire of main phy is
-connected to the "-" wire of the link partner.
+This has no bearing on userspace. It's just simplifying how
+memory.stat is implemented. The output is the same.
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- drivers/net/phy/nxp-tja11xx.c | 106 +++++++++++++++++++++++++++++++++-
- 1 file changed, 105 insertions(+), 1 deletion(-)
+For the full story:
 
-diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
-index ca5f9d4dc57ed..8b743d25002b9 100644
---- a/drivers/net/phy/nxp-tja11xx.c
-+++ b/drivers/net/phy/nxp-tja11xx.c
-@@ -5,6 +5,7 @@
-  */
- #include <linux/delay.h>
- #include <linux/ethtool.h>
-+#include <linux/ethtool_netlink.h>
- #include <linux/kernel.h>
- #include <linux/mdio.h>
- #include <linux/mii.h>
-@@ -26,6 +27,7 @@
- #define MII_ECTRL_POWER_MODE_NO_CHANGE	(0x0 << 11)
- #define MII_ECTRL_POWER_MODE_NORMAL	(0x3 << 11)
- #define MII_ECTRL_POWER_MODE_STANDBY	(0xc << 11)
-+#define MII_ECTRL_CABLE_TEST		BIT(5)
- #define MII_ECTRL_CONFIG_EN		BIT(2)
- #define MII_ECTRL_WAKE_REQUEST		BIT(0)
- 
-@@ -55,6 +57,11 @@
- #define MII_GENSTAT			24
- #define MII_GENSTAT_PLL_LOCKED		BIT(14)
- 
-+#define MII_EXTSTAT			25
-+#define MII_EXTSTAT_SHORT_DETECT	BIT(8)
-+#define MII_EXTSTAT_OPEN_DETECT		BIT(7)
-+#define MII_EXTSTAT_POLARITY_DETECT	BIT(6)
-+
- #define MII_COMMCFG			27
- #define MII_COMMCFG_AUTO_OP		BIT(15)
- 
-@@ -111,6 +118,11 @@ static int tja11xx_enable_link_control(struct phy_device *phydev)
- 	return phy_set_bits(phydev, MII_ECTRL, MII_ECTRL_LINK_CONTROL);
- }
- 
-+static int tja11xx_disable_link_control(struct phy_device *phydev)
-+{
-+	return phy_clear_bits(phydev, MII_ECTRL, MII_ECTRL_LINK_CONTROL);
-+}
-+
- static int tja11xx_wakeup(struct phy_device *phydev)
- {
- 	int ret;
-@@ -536,6 +548,93 @@ static int tja11xx_config_intr(struct phy_device *phydev)
- 	return phy_write(phydev, MII_INTEN, value);
- }
- 
-+static int tja11xx_cable_test_start(struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	ret = phy_clear_bits(phydev, MII_COMMCFG, MII_COMMCFG_AUTO_OP);
-+	if (ret)
-+		return ret;
-+
-+	ret = tja11xx_wakeup(phydev);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = tja11xx_disable_link_control(phydev);
-+	if (ret < 0)
-+		return ret;
-+
-+	return phy_set_bits(phydev, MII_ECTRL, MII_ECTRL_CABLE_TEST);
-+}
-+
-+/*
-+ * | BI_DA+           | BI_DA-                 | Result
-+ * | open             | open                   | open
-+ * | + short to -     | - short to +           | short
-+ * | short to Vdd     | open                   | open
-+ * | open             | shot to Vdd            | open
-+ * | short to Vdd     | short to Vdd           | short
-+ * | shot to GND      | open                   | open
-+ * | open             | shot to GND            | open
-+ * | short to GND     | shot to GND            | short
-+ * | connected to active link partner (master) | shot and open
-+ */
-+static int tja11xx_cable_test_report_trans(u32 result)
-+{
-+	u32 mask = MII_EXTSTAT_SHORT_DETECT | MII_EXTSTAT_OPEN_DETECT;
-+
-+	if ((result & mask) == mask) {
-+		/* connected to active link partner (master) */
-+		return ETHTOOL_A_CABLE_RESULT_CODE_UNSPEC;
-+	} else if ((result & mask) == 0) {
-+		return ETHTOOL_A_CABLE_RESULT_CODE_OK;
-+	} else if (result & MII_EXTSTAT_SHORT_DETECT) {
-+		return ETHTOOL_A_CABLE_RESULT_CODE_SAME_SHORT;
-+	} else if (result & MII_EXTSTAT_OPEN_DETECT) {
-+		return ETHTOOL_A_CABLE_RESULT_CODE_OPEN;
-+	} else {
-+		return ETHTOOL_A_CABLE_RESULT_CODE_UNSPEC;
-+	}
-+}
-+
-+static int tja11xx_cable_test_report(struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	ret = phy_read(phydev, MII_EXTSTAT);
-+	if (ret < 0)
-+		return ret;
-+
-+	ethnl_cable_test_result(phydev, ETHTOOL_A_CABLE_PAIR_A,
-+				tja11xx_cable_test_report_trans(ret));
-+
-+	return 0;
-+}
-+
-+static int tja11xx_cable_test_get_status(struct phy_device *phydev,
-+					 bool *finished)
-+{
-+	int ret;
-+
-+	*finished = false;
-+
-+	ret = phy_read(phydev, MII_ECTRL);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (!(ret & MII_ECTRL_CABLE_TEST)) {
-+		*finished = true;
-+
-+		ret = phy_set_bits(phydev, MII_COMMCFG, MII_COMMCFG_AUTO_OP);
-+		if (ret)
-+			return ret;
-+
-+		return tja11xx_cable_test_report(phydev);
-+	}
-+
-+	return 0;
-+}
-+
- static struct phy_driver tja11xx_driver[] = {
- 	{
- 		PHY_ID_MATCH_MODEL(PHY_ID_TJA1100),
-@@ -572,6 +671,7 @@ static struct phy_driver tja11xx_driver[] = {
- 	}, {
- 		.name		= "NXP TJA1102 Port 0",
- 		.features       = PHY_BASIC_T1_FEATURES,
-+		.flags          = PHY_POLL_CABLE_TEST,
- 		.probe		= tja1102_p0_probe,
- 		.soft_reset	= tja11xx_soft_reset,
- 		.config_aneg	= tja11xx_config_aneg,
-@@ -587,10 +687,12 @@ static struct phy_driver tja11xx_driver[] = {
- 		.get_stats	= tja11xx_get_stats,
- 		.ack_interrupt	= tja11xx_ack_interrupt,
- 		.config_intr	= tja11xx_config_intr,
--
-+		.cable_test_start = tja11xx_cable_test_start,
-+		.cable_test_get_status = tja11xx_cable_test_get_status,
- 	}, {
- 		.name		= "NXP TJA1102 Port 1",
- 		.features       = PHY_BASIC_T1_FEATURES,
-+		.flags          = PHY_POLL_CABLE_TEST,
- 		/* currently no probe for Port 1 is need */
- 		.soft_reset	= tja11xx_soft_reset,
- 		.config_aneg	= tja11xx_config_aneg,
-@@ -606,6 +708,8 @@ static struct phy_driver tja11xx_driver[] = {
- 		.get_stats	= tja11xx_get_stats,
- 		.ack_interrupt	= tja11xx_ack_interrupt,
- 		.config_intr	= tja11xx_config_intr,
-+		.cable_test_start = tja11xx_cable_test_start,
-+		.cable_test_get_status = tja11xx_cable_test_get_status,
- 	}
- };
- 
--- 
-2.26.2
+In the past, memcg has done its own accounting to produce a breakdown
+of consumers in memory.stat. When a page was charged, we relied on
+knowing whether it's a file, anon or shmem page, and had our own
+MEMCG_RSS, MEMCG_CACHE, MEMCG_SHMEM counters.
 
+As the general VM code already does this type of classification to
+produce /proc/vmstat, this meant unnecessary duplication: more places
+to bump counters, more places that have to make sure the page state is
+stable in all the right ways, more dependencies on when it's safe to
+call the charge and the uncharge callbacks.
+
+A while ago we added per-cgroup arrays of the vmstat counters and a
+cgroup-aware accounting callback (mod_lruvec_state) that can be a
+drop-in replacement for the generic VM code (mod_node_state and
+friends). We already had some counters converted over to that.
+
+These patches just do more of that conversion from private memcg
+accounting to having callbacks into generic VM accounting sites.
+
+Instead of testing PageAnon() and accounting MEMCG_CACHE/MEMCG_RSS in
+the charge code, we switch __add_to_page_cache_locked() and
+page_add_new_anon_rmap() to the cgroup-aware mod_lruvec_page_state()
+to bump our per-cgroup NR_FILE_PAGES and NR_ANON_MAPPED counters along
+with the node and global counters.
+
+As a result, the memcg gets a breakdown for memory.stat without having
+to have private knowledge of what a page cache page is - how to test
+it, when it's safe to test it, whether there can be huge pages in the
+page cache, etc. pp. Memcg can focus on counting bytes, and the VM
+code that is specialized in dealing with the page cache (or anon
+pages, or shmem pages) can fill in those kinds of details for us.
+
+Less dependencies, less duplication, simpler API rules.
+
+The memory.stat output is the same, it's just much simpler code.
