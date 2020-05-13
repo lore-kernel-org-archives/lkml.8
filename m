@@ -2,147 +2,113 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB7ECA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FDBCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD57320575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364038;
-	bh=I2jwnxVXM12FKVcYuCcTAMuuoCTdocvVrL5yu3rWjI4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d0HG/8hN9DzJOVkhN6xfGsEfNwxcv4Zdbug5SUBCnPtq9JuLXPzyin+LKRo/h9txK
-	 eIGLiP36KDNlbCZ8eLLdIv+tvg0Zf5Lw9f9kiI6JamibO1IVcONBHlvc7FON71ZkLR
-	 l7uj8N0HH1XLcUTEwQE9Z8UUpt1FmyDWB9ek54Cw=
+	by mail.kernel.org (Postfix) with ESMTP id D23FD20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p7i6gqiU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388590AbgEMKAi (ORCPT
+        id S2388026AbgEMKAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:00:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387682AbgEMJvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:51:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37D4520769;
-        Wed, 13 May 2020 09:51:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363508;
-        bh=I2jwnxVXM12FKVcYuCcTAMuuoCTdocvVrL5yu3rWjI4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0XA7pMBAV46Tvdq+trzNetGPAaTY55J4XWC87iJSMQpSLbu9veSDBFfp0KCPM51fT
-         QDPxl0g/w4UQ5oIeEQF+GM8WUWxUdKU9K/B1s878LyxOBerO5OywWRXB/IDedWxmYv
-         ViuxEvH7rWIIDxca40meDZLqmsEzjpONTM/+EGUU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 013/118] cxgb4: fix EOTID leak when disabling TC-MQPRIO offload
-Date:   Wed, 13 May 2020 11:43:52 +0200
-Message-Id: <20200513094418.847414141@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
-References: <20200513094417.618129545@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 13 May 2020 06:00:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49534 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387696AbgEMJvo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:51:44 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 833F4C061A0C;
+        Wed, 13 May 2020 02:51:44 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x2so7775815pfx.7;
+        Wed, 13 May 2020 02:51:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hjiKJ7FJyTyiMTQabLbMdyXHxAd5Y5rApctKC8YRsHE=;
+        b=p7i6gqiUSXTtK8sEqLVDaHCAQ4YPJvlMltihgkLN7PhyQ+GkAQ13GNyAEymKYACWAF
+         Z8VAhvK8B1LJYKmMS2KF1M/TV8DHztjkQco/ZFyFDXNzKiaIx4RZz7xBWFDR16ITIdCx
+         jHEg/QgmnkBftkMGLGoPfM0qxMz1CpHKozcnhaKuOi2jeiARYIRZPQByw9cY8tbS/AAk
+         hC1GDea4nZlaXy0tn6iJbsACuFTdha5CqiXFVYBskwh9+LslZOdOnNMFMqY7kJ7Opqbs
+         yTRB1F1Q/nICpbSz/IUXIDs8pDHgXq//6RETRj7c91UGb18dnxDJt9uZo1YSTMW8mSq8
+         4WWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hjiKJ7FJyTyiMTQabLbMdyXHxAd5Y5rApctKC8YRsHE=;
+        b=LYQZCWjglxnBoqWh97RtefJXqLeJE4Nx6JnWUgs/mmwkBOSRvz7QMmo5T1mkK38pVo
+         kiU0S8Pmxxi4ebGYCCUttfEhnXBKiUC3KUl6CuKCr0wB2a6lX8hbfhLnnPDSwgf6exS/
+         sm5GUe9faNTQJP8gOphIg+LqpXYewSqEZAj0T0LZ6VCA6NcBfSTOSTLu8HwO5Z5MSP6K
+         JiYFkBlEL0tJR6YIQGbX+wwhIq5YoNwBoZV0vLLiRavuwoc4iA7Itk7OHROULeCe3tZt
+         +vXmSE/QFIymMPCYit3rrU3MZj/s0ilq9RUEUl8o8jGOUdIcqRHQPf3XceeRyWtB86Ee
+         Viuw==
+X-Gm-Message-State: AGi0PubInIQmkABs6348LPCQKrUzly6g1CCNxkd9iMR0Ma3wvDSuixSm
+        Sj+rfdJq7Wo67LSDmWS749eX9AxF4OY7QsIq3O4=
+X-Google-Smtp-Source: APiQypIgIamK3+3CJqNCYmJC4K3blTlFkyzYGSrlGUS2dxYhc98NURSl+FWvlL20we5SAXLj5NrJHWb6PfApdwXRfzI=
+X-Received: by 2002:a62:7f11:: with SMTP id a17mr24262558pfd.36.1589363503255;
+ Wed, 13 May 2020 02:51:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1589361736-816-1-git-send-email-jprakash@codeaurora.org> <1589361736-816-6-git-send-email-jprakash@codeaurora.org>
+In-Reply-To: <1589361736-816-6-git-send-email-jprakash@codeaurora.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 13 May 2020 12:51:36 +0300
+Message-ID: <CAHp75Vf-bFfrZ7uCOnXuzT+p+itkcmkE61=ezZzN8yDFQHABdw@mail.gmail.com>
+Subject: Re: [PATCH V4 5/5] iio: adc: Clean up ADC code common to PMIC5 and PMIC7
+To:     Jishnu Prakash <jprakash@codeaurora.org>
+Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        smohanad@codeaurora.org, kgunda@codeaurora.org,
+        aghayal@codeaurora.org, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-arm-msm@vger.kernel.org,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+On Wed, May 13, 2020 at 12:24 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
+>
+> This commit includes the following changes:
+> Add a common function used for read_raw callback for
+> both PMIC5 and PMIC7 ADCs.
+> Add exit function for ADC.
+> Add info_property under adc_data to more efficiently
+> distinguish PMIC5 and PMIC7 ADCs.
 
-[ Upstream commit 69422a7e5d578aab277091f4ebb7c1b387f3e355 ]
+Something happened to the editor settings. We have lines up to 72
+(recommended) characters.
 
-Under heavy load, the EOTID termination FLOWC request fails to get
-enqueued to the end of the Tx ring due to lack of credits. This
-results in EOTID leak.
+...
 
-When disabling TC-MQPRIO offload, the link is already brought down
-to cleanup EOTIDs. So, flush any pending enqueued skbs that can't be
-sent outside the wire, to make room for FLOWC request. Also, move the
-FLOWC descriptor consumption logic closer to when the FLOWC request is
-actually posted to hardware.
+> @@ -512,6 +518,7 @@ static int adc5_read_raw(struct iio_dev *indio_dev,
+>                         &adc5_prescale_ratios[prop->prescale],
+>                         adc->data,
+>                         adc_code_volt, val);
+> +
+>                 if (ret)
+>                         return ret;
+>
 
-Fixes: 0e395b3cb1fb ("cxgb4: add FLOWC based QoS offload")
-Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/chelsio/cxgb4/sge.c |   39 ++++++++++++++++++++++++++++---
- 1 file changed, 36 insertions(+), 3 deletions(-)
+Unrelated.
 
---- a/drivers/net/ethernet/chelsio/cxgb4/sge.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/sge.c
-@@ -2202,6 +2202,9 @@ static void ethofld_hard_xmit(struct net
- 	if (unlikely(skip_eotx_wr)) {
- 		start = (u64 *)wr;
- 		eosw_txq->state = next_state;
-+		eosw_txq->cred -= wrlen16;
-+		eosw_txq->ncompl++;
-+		eosw_txq->last_compl = 0;
- 		goto write_wr_headers;
- 	}
- 
-@@ -2360,6 +2363,34 @@ netdev_tx_t t4_start_xmit(struct sk_buff
- 	return cxgb4_eth_xmit(skb, dev);
- }
- 
-+static void eosw_txq_flush_pending_skbs(struct sge_eosw_txq *eosw_txq)
-+{
-+	int pktcount = eosw_txq->pidx - eosw_txq->last_pidx;
-+	int pidx = eosw_txq->pidx;
-+	struct sk_buff *skb;
-+
-+	if (!pktcount)
-+		return;
-+
-+	if (pktcount < 0)
-+		pktcount += eosw_txq->ndesc;
-+
-+	while (pktcount--) {
-+		pidx--;
-+		if (pidx < 0)
-+			pidx += eosw_txq->ndesc;
-+
-+		skb = eosw_txq->desc[pidx].skb;
-+		if (skb) {
-+			dev_consume_skb_any(skb);
-+			eosw_txq->desc[pidx].skb = NULL;
-+			eosw_txq->inuse--;
-+		}
-+	}
-+
-+	eosw_txq->pidx = eosw_txq->last_pidx + 1;
-+}
-+
- /**
-  * cxgb4_ethofld_send_flowc - Send ETHOFLD flowc request to bind eotid to tc.
-  * @dev - netdevice
-@@ -2435,9 +2466,11 @@ int cxgb4_ethofld_send_flowc(struct net_
- 					    FW_FLOWC_MNEM_EOSTATE_CLOSING :
- 					    FW_FLOWC_MNEM_EOSTATE_ESTABLISHED);
- 
--	eosw_txq->cred -= len16;
--	eosw_txq->ncompl++;
--	eosw_txq->last_compl = 0;
-+	/* Free up any pending skbs to ensure there's room for
-+	 * termination FLOWC.
-+	 */
-+	if (tc == FW_SCHED_CLS_NONE)
-+		eosw_txq_flush_pending_skbs(eosw_txq);
- 
- 	ret = eosw_txq_enqueue(eosw_txq, skb);
- 	if (ret) {
-
-
+-- 
+With Best Regards,
+Andy Shevchenko
