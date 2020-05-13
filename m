@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74399C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F196C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44F7A205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F724205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:59:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363941;
-	bh=BdMqFTzEZHhelZ/QBJ0FxUzahoGtw5CGMIcdgLvZZp8=;
+	s=default; t=1589363945;
+	bh=KaBdmx0FEom7Oa5L1jSWEFIFXl5TMxoTKMFAD99rzvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nnZFiMtcFqvw+/z7W9Ea58whN4t8moBEuW/gQheMkMMx6uriKvho1FyKHnGLMKBGX
-	 cdUzpRYYjCAQ1VIHDYiTt7LhnYtOf8rB+tdNQ8O/H5Zqe1qIK3FIraS8rDwk0wwPWM
-	 33DAj3mop8Q5XBKN3+qqX8EcKJJBujuGTSdGOFYA=
+	b=CqGD5m6XJid3Nq/Ze0Xo/6tXoi0hWxp/sk1zs398GpvqkoNYQ5uf+VdQScNf6+yGX
+	 UAKRExfiWQf/U7cEDydlQ0qVfQJeGCnf/bOnueQMtSZr9K3cRXZzfwTgI2Y4JvW4kk
+	 2jJ4SXgPyB9kBwYsmwg/X+sCmKg+qw3iqFReRxkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388059AbgEMJyK (ORCPT
+        id S2388556AbgEMJ7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:54:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56302 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:59:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388044AbgEMJyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:54:04 -0400
+        id S1732656AbgEMJx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:53:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C6B020769;
-        Wed, 13 May 2020 09:54:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BDC4205ED;
+        Wed, 13 May 2020 09:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363643;
-        bh=BdMqFTzEZHhelZ/QBJ0FxUzahoGtw5CGMIcdgLvZZp8=;
+        s=default; t=1589363636;
+        bh=KaBdmx0FEom7Oa5L1jSWEFIFXl5TMxoTKMFAD99rzvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i1xvDIUSUjQNj/PBVV/5GN6hNJZy1dE9ur0jqxoAfW2D9y1WLAWRxfYK8QMZYL5Oa
-         aPD1hm3kw6y++V8j9FMrooGSeP/Ya3IxTe777WpB7WVBTXkERxYvw+6MChP7tQv7mB
-         mlI1ZMIOfHrm8x1DhW0lDS6pMmQ4KJF7QAeR/osk=
+        b=S4uXfb8rtRGVf1ZmkOTDpLe6IeIhlUre3bAoI7AShBmhhsZmnjmp3Sij7vslGzvTT
+         GQS8P7mgu3WrHz83el+415NSzhe6JMZXcv4wjrcMfreaUySZF2f5LQ6CE6yBwO5LoK
+         cG/EyUGTf4X2Laei6gJ34ssYIWjWQnsu9O3VFQO8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anthony Felice <tony.felice@timesys.com>,
-        Akshay Bhat <akshay.bhat@timesys.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 030/118] net: tc35815: Fix phydev supported/advertising mask
-Date:   Wed, 13 May 2020 11:44:09 +0200
-Message-Id: <20200513094420.203399386@linuxfoundation.org>
+        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-usb@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        Bryan ODonoghue <bryan.odonoghue@linaro.org>,
+        Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 5.6 063/118] usb: chipidea: msm: Ensure proper controller reset using role switch API
+Date:   Wed, 13 May 2020 11:44:42 +0200
+Message-Id: <20200513094423.468102573@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -62,40 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anthony Felice <tony.felice@timesys.com>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
-[ Upstream commit 4b5b71f770e2edefbfe74203777264bfe6a9927c ]
+commit 91edf63d5022bd0464788ffb4acc3d5febbaf81d upstream.
 
-Commit 3c1bcc8614db ("net: ethernet: Convert phydev advertize and
-supported from u32 to link mode") updated ethernet drivers to use a
-linkmode bitmap. It mistakenly dropped a bitwise negation in the
-tc35815 ethernet driver on a bitmask to set the supported/advertising
-flags.
+Currently we check to make sure there is no error state on the extcon
+handle for VBUS when writing to the HS_PHY_GENCONFIG_2 register. When using
+the USB role-switch API we still need to write to this register absent an
+extcon handle.
 
-Found by Anthony via code inspection, not tested as I do not have the
-required hardware.
+This patch makes the appropriate update to ensure the write happens if
+role-switching is true.
 
-Fixes: 3c1bcc8614db ("net: ethernet: Convert phydev advertize and supported from u32 to link mode")
-Signed-off-by: Anthony Felice <tony.felice@timesys.com>
-Reviewed-by: Akshay Bhat <akshay.bhat@timesys.com>
-Reviewed-by: Heiner Kallweit <hkallweit1@gmail.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 05559f10ed79 ("usb: chipidea: add role switch class support")
+Cc: stable <stable@vger.kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-usb@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Link: https://lore.kernel.org/r/20200507004918.25975-2-peter.chen@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/toshiba/tc35815.c |    2 +-
+ drivers/usb/chipidea/ci_hdrc_msm.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/toshiba/tc35815.c
-+++ b/drivers/net/ethernet/toshiba/tc35815.c
-@@ -643,7 +643,7 @@ static int tc_mii_probe(struct net_devic
- 		linkmode_set_bit(ETHTOOL_LINK_MODE_10baseT_Half_BIT, mask);
- 		linkmode_set_bit(ETHTOOL_LINK_MODE_100baseT_Half_BIT, mask);
- 	}
--	linkmode_and(phydev->supported, phydev->supported, mask);
-+	linkmode_andnot(phydev->supported, phydev->supported, mask);
- 	linkmode_copy(phydev->advertising, phydev->supported);
+--- a/drivers/usb/chipidea/ci_hdrc_msm.c
++++ b/drivers/usb/chipidea/ci_hdrc_msm.c
+@@ -114,7 +114,7 @@ static int ci_hdrc_msm_notify_event(stru
+ 			hw_write_id_reg(ci, HS_PHY_GENCONFIG_2,
+ 					HS_PHY_ULPI_TX_PKT_EN_CLR_FIX, 0);
  
- 	lp->link = 0;
+-		if (!IS_ERR(ci->platdata->vbus_extcon.edev)) {
++		if (!IS_ERR(ci->platdata->vbus_extcon.edev) || ci->role_switch) {
+ 			hw_write_id_reg(ci, HS_PHY_GENCONFIG_2,
+ 					HS_PHY_SESS_VLD_CTRL_EN,
+ 					HS_PHY_SESS_VLD_CTRL_EN);
 
 
