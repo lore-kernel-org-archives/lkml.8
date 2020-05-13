@@ -2,140 +2,181 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A1BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2548C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48E12205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:14:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WO4j4Tz6"
+	by mail.kernel.org (Postfix) with ESMTP id AADF82065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:38:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731083AbgEMPOv (ORCPT
+        id S2389021AbgEMOiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:14:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43602 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729242AbgEMPOu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:14:50 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97DB3C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 08:14:50 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id b1so116793qtt.1
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 08:14:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=SECExaF68jqsgwvUFVEH9etxfDpHjfhtHYaCcot2wVk=;
-        b=WO4j4Tz6G9DKujlJMO41xMTBanh0Ki5ICFQzNhOvQPbqQixEid+Xyd4E/7YmQoCTMn
-         PYcq9+VR55SGw9E1bL9Xu61n9Jpes+XG3qu9uZPo11GJRudAoACDlqgIzRRRo8N039FP
-         JjhJ524I8jfZveYilb/aREvP+KxeylZWFij5lQIWLDVY/aR1vctOMBW5KfhJvDQYjWvg
-         rx9aJH4dqL24QVYCt7uKrGjs2cIHv8faYb/mpYO14n6kLACmT9wStdsp+b/21RTyC9Yu
-         QwxHPur75ojTqVON5BcCzL5yCJ8DepyNaonRsNL7obJ9TcvRhkRZ6ehvNFfhY7o3kIsq
-         q+kA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=SECExaF68jqsgwvUFVEH9etxfDpHjfhtHYaCcot2wVk=;
-        b=VMEAxSOIWZo17cn8/qKzfzfDF4OBcY7oK5ZEvl4qIb/r53sY0DhZGjUq7n6NA9bL8b
-         g70QdLA6s33qbF5HdVugR1F9dvrvlaAdVj0FW9Cw7zyM6N77LhPQJhU7digwZWv41Cl8
-         /Rm0Lqu5VVQ/mWfnISEP916qgx57yuk5V+w4wuH9RiSA3P/R3gg+TsP5MOybll10a4Zv
-         kSG0IngHTeKVqLafgq6pcGF4Mo5hAplsju6FByE04T4CDNxLPXJTmaqsiLeXk6HbTgJ0
-         x64u5tP2btkSzh+27PCxxwjIbNvpmIQ49QWQCJ052sIPPCNCgbm1Qvi3LugKL8x3gv5H
-         BmnQ==
-X-Gm-Message-State: AOAM530u2dlNo6PFWgxd56695IkA+nfJ3GtOoidz0uhs1kSFYJf2oCtJ
-        yqKyslsWmXFK4VkKle7qUu8=
-X-Google-Smtp-Source: ABdhPJz5j1QkBCEXgF20vGxJ9SGN2ED3hSkK4Ju8DCGNhZT9gc+4PqAABFHnL52Cw7yGBIJ4010wjA==
-X-Received: by 2002:aed:34c2:: with SMTP id x60mr13530226qtd.156.1589382889664;
-        Wed, 13 May 2020 08:14:49 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id a24sm11780294qto.10.2020.05.13.08.14.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 08:14:49 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 25D4A40AFD; Wed, 13 May 2020 12:14:46 -0300 (-03)
-Date:   Wed, 13 May 2020 12:14:46 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Joe Mario <jmario@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH 4/4] perf expr: Report line number with error
-Message-ID: <20200513151446.GC7216@kernel.org>
-References: <20200511205307.3107775-1-jolsa@kernel.org>
- <20200511205307.3107775-5-jolsa@kernel.org>
- <CAP-5=fVa+=4cQzw47qSGFQZfqw7Bvx85ZBTJwkHReuJbi4ZGiA@mail.gmail.com>
- <20200513113424.GJ3158213@krava>
- <20200513140825.GG5583@kernel.org>
- <20200513144610.GM3158213@krava>
+        Wed, 13 May 2020 10:38:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56598 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728345AbgEMOiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 10:38:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 0F268ADF8;
+        Wed, 13 May 2020 14:38:01 +0000 (UTC)
+Date:   Wed, 13 May 2020 16:37:55 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Alper Nebi Yasak <alpernebiyasak@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        linux-serial@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Biggers <ebiggers@google.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Grzegorz Halat <ghalat@redhat.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [RFC PATCH v2 0/3] Prefer working VT console over SPCR and
+ device-tree chosen stdout-path
+Message-ID: <20200513143755.GM17734@linux-b0ei>
+References: <20200430161438.17640-1-alpernebiyasak@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513144610.GM3158213@krava>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200430161438.17640-1-alpernebiyasak@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, May 13, 2020 at 04:46:10PM +0200, Jiri Olsa escreveu:
-> On Wed, May 13, 2020 at 11:08:25AM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Wed, May 13, 2020 at 01:34:24PM +0200, Jiri Olsa escreveu:
-> > > On Wed, May 13, 2020 at 12:09:30AM -0700, Ian Rogers wrote:
-> > > > On Mon, May 11, 2020 at 1:54 PM Jiri Olsa <jolsa@kernel.org> wrote:
-> > > > >
-> > > > > Display line number on when parsing custom metrics file, like:
-> > > > >
-> > > > >   $ cat metrics
-> > > > >   // IPC
-> > > > >   mine1 = inst_retired.any / cpu_clk_unhalted.thread;
-> > > > >
-> > > > >   krava
-> > > > >   $ sudo perf stat --metrics-file ./metrics -M mine1 -a -I 1000 --metric-only
-> > > > >   failed to parse metrics file: ./metrics:4
-> > > > >
-> > > > > Please note that because the grammar is flexible on new lines,
-> > > > > the syntax could be broken on the next 'not fitting' item and
-> > > > > not the first wrong word, like:
-> > > > >
-> > > > >   $ cat metrics
-> > > > >   // IPC
-> > > > >   krava
-> > > > >   mine1 = inst_retired.any / cpu_clk_unhalted.thread;
-> > > > >   $ sudo perf stat --metrics-file ./metrics -M mine1 -a -I 1000 --metric-only
-> > > > >   failed to parse metrics file: ./metrics:3
-> > > > 
-> > > > A line number is better than nothing :-) It'd be nice to be told about
-> > > > broken events and more information about what's broken in the line. A
-> > > > common failure is @ vs / encoding and also no-use or misuse of \\.
-> > > > Perhaps expand the test coverage.
-> > > 
-> > > yep, error reporting needs more changes.. but the line is crucial ;-)
-> > 
-> > So I had started processing this patchkit, I assume you will send a v2
-> > and I should drop what I had processed, is that ok?
+On Thu 2020-04-30 19:14:34, Alper Nebi Yasak wrote:
+> I recently experienced some trouble with setting up an encrypted-root
+> system, my Chromebook Plus (rk3399-gru-kevin, ARM64) would appear to
+> hang where it should have asked for an encryption passphrase; and I
+> eventually figured out that the kernel preferred the serial port
+> (inaccessible to me) over the built-in working display/keyboard and was
+> probably asking there.
 > 
-> yes, I will resubmit on top of the other expr changes
-> we have now pending
+> Running plymouth in the initramfs solves that specific problem, but
+> both the documentation and tty-related kconfig descriptions imply that
+> /dev/console should be tty0 if graphics are working, CONFIG_VT_CONSOLE
+> is enabled and no explicit console argument is given in the kernel
+> commandline.
+> 
+> However, I'm seeing different behaviour on systems with SPCR (as in QEMU
+> aarch64 virtual machines) and/or a device-tree chosen stdout-path node
+> (as in most arm/arm64 devices). On these machines, depending on the
+> console argument, the contents of the /proc/consoles file are:
 
-Ok, I removed those from my local branch, and pushed what I have, which
-includes a few more fixes from Ian and others, continuing to process
-other remaining patches now.
+I dug many times into the history of the console registration code.
+The following table mostly confirms my expectations.
 
-- Arnaldo
+
+>                     |     "console=tty0"    |    (no console arg)   |
+>   ------------------+-----------------------+-----------------------+
+>   QEMU VM           | tty0     -WU (EC p  ) | ttyAMA0  -W- (EC   a) |
+>   (w/ SPCR)         | ttyAMA0  -W- (E    a) |
+>   |
+
+The SPCR handling is inconsistent over architectures, see
+https://lkml.kernel.org/r/20180830123849.26163-1-prarit@redhat.com
+
+IMHO, arm developers decided that consoles defined by SPCR are always
+enabled when existing.
+
+In 1st column: tty0 is the preferred console because it is defined
+on the commandline.
+
+In 2nd column: tty0 is not enabled at all because another console was
+defined by SPCR. Note that ttySX and ttyX consoles are registered only
+as a fallback when there is no other console defined.
+
+The following code is responsible for the fallback, see register_console()
+
+	/*
+	 *	See if we want to use this console driver. If we
+	 *	didn't select a console we take the first one
+	 *	that registers here.
+	 */
+	if (!has_preferred) {
+		if (newcon->index < 0)
+			newcon->index = 0;
+		if (newcon->setup == NULL ||
+		    newcon->setup(newcon, NULL) == 0) {
+			newcon->flags |= CON_ENABLED;
+			if (newcon->device) {
+				newcon->flags |= CON_CONSDEV;
+				has_preferred = true;
+			}
+		}
+	}
+
+
+>   ------------------+-----------------------+-----------------------+
+>   Chromebook Plus   | tty0     -WU (EC p  ) | ttyS2    -W- (EC p a) |
+>   (w/ stdout-path)  |                       | tty0     -WU (E     ) |
+
+Hmm, of_console_check() explicitly ignores the console defined by
+stdout-path when there is a console on the commandline. This explains
+1st column.
+
+I am not sure about 2nd column. My guess is that ttyX consoles are
+tried first. tty0 is registered as a fallback because there is no
+other console at the moment. ttyS2 is tried later and it is
+registered because it is in stdout-patch and there is no console
+in the command line. It is somehow consistent with  CONFIG_VT_CONSOLE
+description.
+
+Sadly, it is different logic than with SPCR :-(
+
+
+>   ------------------+-----------------------+-----------------------+
+>   Chromebook Plus   | tty0     -WU (EC p  ) | tty0     -WU (EC p  ) |
+>   (w/o either)      |                       |                       |
+>   ------------------+-----------------------+-----------------------+
+
+This variant is easy and everyone would probably expect this.
+
+
+Regarding the description of CONFIG_VT_CONSOLE option. I am afraid
+that it was created and true only before SPCR and device tree support
+was introduced.
+
+
+Now, it is really sad that SPCR and device tree have different
+behavior even across architectures. But I am afraid that we could
+not change it without breaking many setups.
+
+The only common rules are:
+
+   + The last console on the command line should always be the
+     preferred one when defined.
+
+   + Consoles defined by the device (SPCR, device tree) are used
+     when there is no commandline.
+
+   + ttyX or ttySX are used as a fallback when nothing else is defined.
+
+
+My suggestion is:
+
+   + Fix SPCR setting or device tree of your device when the defaults
+     are not as expected.
+
+   + Use command line to force your value when the defaults are not
+     as expected and you could not change them.
+
+
+I am afraid that we could not fix your problem on the kernel side. It
+would broke other setups that depend on the existing behavior.
+
+Best Regards,
+Petr
