@@ -2,181 +2,140 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3878BC2D0FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3885CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14EE9206E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B91AE206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:16:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589364985;
+	bh=FpdVCxMEMKolZZCRG1dZtvfPJhpK6MP9uGNdCxGdVUU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=EySw7ghWtJas7JgNDxOoJ9xplqIkSBdEIuZB6u0PaCZK6jzhfMqC5eDQdJVz3B5uj
+	 tj+YazD000QLRZ7gK/N1K15JTlalB5nWZMntUtROFkqDozo5w/XutZwWh/ucQtW/sa
+	 KLbFafl6zc1ZWLqUf0VnvBfa8gIwTG2racOOe1sM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732913AbgEMKNz (ORCPT
+        id S1732948AbgEMKQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:13:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732620AbgEMKNy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 06:13:54 -0400
-Received: from smtp-bc09.mail.infomaniak.ch (smtp-bc09.mail.infomaniak.ch [IPv6:2001:1600:3:17::bc09])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E291C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 03:13:54 -0700 (PDT)
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
-        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49MVrD08xhzlhGkd;
-        Wed, 13 May 2020 12:13:48 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 49MVr10GnBzlhBZN;
-        Wed, 13 May 2020 12:13:36 +0200 (CEST)
-Subject: Re: [PATCH v5 1/6] fs: Add support for an O_MAYEXEC flag on
- openat2(2)
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20200505153156.925111-1-mic@digikod.net>
- <20200505153156.925111-2-mic@digikod.net> <202005121258.4213DC8A2@keescook>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <39141f3e-0a4a-6a0f-a86e-7c769fe06ffd@digikod.net>
-Date:   Wed, 13 May 2020 12:13:36 +0200
-User-Agent: 
-MIME-Version: 1.0
-In-Reply-To: <202005121258.4213DC8A2@keescook>
-Content-Type: text/plain; charset=iso-8859-15
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+        Wed, 13 May 2020 06:16:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46242 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729917AbgEMKQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 06:16:24 -0400
+Received: from localhost.localdomain (unknown [42.120.72.94])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CFD5205ED;
+        Wed, 13 May 2020 10:16:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589364984;
+        bh=FpdVCxMEMKolZZCRG1dZtvfPJhpK6MP9uGNdCxGdVUU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=DnTHBxIw0k04yhihnlng3KE0ps5tzNuTPxZDv2rCv6APguci8zYpS7ezn6rjmPZO0
+         N6xrEObhBjR9SoshIAsBjxeHFGj+bv1vkU4jLiCbLDH1lwMCsm99IL98k1ZSCKL+/b
+         eAdO//LxvjkIwDgi+nnsSM0DslL/OLI7tKSgLv7w=
+From:   guoren@kernel.org
+To:     linux-csky@vger.kernel.org
+Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, guoren@kernel.org,
+        Mao Han <han_mao@linux.alibaba.com>,
+        Guo Ren <guoren@linux.alibaba.com>
+Subject: [PATCH 1/4] csky: Fixup perf callchain unwind
+Date:   Wed, 13 May 2020 18:16:14 +0800
+Message-Id: <20200513101617.11588-1-guoren@kernel.org>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Mao Han <han_mao@linux.alibaba.com>
 
-On 12/05/2020 23:05, Kees Cook wrote:
-> On Tue, May 05, 2020 at 05:31:51PM +0200, Mickaël Salaün wrote:
->> When the O_MAYEXEC flag is passed, openat2(2) may be subject to
->> additional restrictions depending on a security policy managed by the
->> kernel through a sysctl or implemented by an LSM thanks to the
->> inode_permission hook.  This new flag is ignored by open(2) and
->> openat(2).
->>
->> The underlying idea is to be able to restrict scripts interpretation
->> according to a policy defined by the system administrator.  For this to
->> be possible, script interpreters must use the O_MAYEXEC flag
->> appropriately.  To be fully effective, these interpreters also need to
->> handle the other ways to execute code: command line parameters (e.g.,
->> option -e for Perl), module loading (e.g., option -m for Python), stdin,
->> file sourcing, environment variables, configuration files, etc.
->> According to the threat model, it may be acceptable to allow some script
->> interpreters (e.g. Bash) to interpret commands from stdin, may it be a
->> TTY or a pipe, because it may not be enough to (directly) perform
->> syscalls.  Further documentation can be found in a following patch.
-> 
-> You touch on this lightly in the cover letter, but it seems there are
-> plans for Python to restrict stdin parsing? Are there patches pending
-> anywhere for other interpreters? (e.g. does CLIP OS have such patches?)
+ [ 5221.974084] Unable to handle kernel paging request at virtual address 0xfffff000, pc: 0x8002c18e
+ [ 5221.985929] Oops: 00000000
+ [ 5221.989488]
+ [ 5221.989488] CURRENT PROCESS:
+ [ 5221.989488]
+ [ 5221.992877] COMM=callchain_test PID=11962
+ [ 5221.995213] TEXT=00008000-000087e0 DATA=00009f1c-0000a018 BSS=0000a018-0000b000
+ [ 5221.999037] USER-STACK=7fc18e20  KERNEL-STACK=be204680
+ [ 5221.999037]
+ [ 5222.003292] PC: 0x8002c18e (perf_callchain_kernel+0x3e/0xd4)
+ [ 5222.007957] LR: 0x8002c198 (perf_callchain_kernel+0x48/0xd4)
+ [ 5222.074873] Call Trace:
+ [ 5222.074873] [<800a248e>] get_perf_callchain+0x20a/0x29c
+ [ 5222.074873] [<8009d964>] perf_callchain+0x64/0x80
+ [ 5222.074873] [<8009dc1c>] perf_prepare_sample+0x29c/0x4b8
+ [ 5222.074873] [<8009de6e>] perf_event_output_forward+0x36/0x98
+ [ 5222.074873] [<800497e0>] search_exception_tables+0x20/0x44
+ [ 5222.074873] [<8002cbb6>] do_page_fault+0x92/0x378
+ [ 5222.074873] [<80098608>] __perf_event_overflow+0x54/0xdc
+ [ 5222.074873] [<80098778>] perf_swevent_hrtimer+0xe8/0x164
+ [ 5222.074873] [<8002ddd0>] update_mmu_cache+0x0/0xd8
+ [ 5222.074873] [<8002c014>] user_backtrace+0x58/0xc4
+ [ 5222.074873] [<8002c0b4>] perf_callchain_user+0x34/0xd0
+ [ 5222.074873] [<800a2442>] get_perf_callchain+0x1be/0x29c
+ [ 5222.074873] [<8009d964>] perf_callchain+0x64/0x80
+ [ 5222.074873] [<8009d834>] perf_output_sample+0x78c/0x858
+ [ 5222.074873] [<8009dc1c>] perf_prepare_sample+0x29c/0x4b8
+ [ 5222.074873] [<8009de94>] perf_event_output_forward+0x5c/0x98
+ [ 5222.097846]
+ [ 5222.097846] [<800a0300>] perf_event_exit_task+0x58/0x43c
+ [ 5222.097846] [<8006c874>] hrtimer_interrupt+0x104/0x2ec
+ [ 5222.097846] [<800a0300>] perf_event_exit_task+0x58/0x43c
+ [ 5222.097846] [<80437bb6>] dw_apb_clockevent_irq+0x2a/0x4c
+ [ 5222.097846] [<8006c770>] hrtimer_interrupt+0x0/0x2ec
+ [ 5222.097846] [<8005f2e4>] __handle_irq_event_percpu+0xac/0x19c
+ [ 5222.097846] [<80437bb6>] dw_apb_clockevent_irq+0x2a/0x4c
+ [ 5222.097846] [<8005f408>] handle_irq_event_percpu+0x34/0x88
+ [ 5222.097846] [<8005f480>] handle_irq_event+0x24/0x64
+ [ 5222.097846] [<8006218c>] handle_level_irq+0x68/0xdc
+ [ 5222.097846] [<8005ec76>] __handle_domain_irq+0x56/0xa8
+ [ 5222.097846] [<80450e90>] ck_irq_handler+0xac/0xe4
+ [ 5222.097846] [<80029012>] csky_do_IRQ+0x12/0x24
+ [ 5222.097846] [<8002a3a0>] csky_irq+0x70/0x80
+ [ 5222.097846] [<800ca612>] alloc_set_pte+0xd2/0x238
+ [ 5222.097846] [<8002ddd0>] update_mmu_cache+0x0/0xd8
+ [ 5222.097846] [<800a0340>] perf_event_exit_task+0x98/0x43c
 
-There is some example from CLIP OS 4 here :
-https://github.com/clipos-archive/clipos4_portage-overlay/search?q=O_MAYEXEC
-If you take a look at the whole pointed patches there is more than the
-O_MAYEXEC changes (which matches this search) e.g., to prevent Python
-interactive execution. There is patches for Bash, Wine, Java (Icedtea),
-Busybox's ash, Perl and Python. There is also some related patches which
-do not directly rely on O_MAYEXEC but which restrict the use of browser
-plugins and extensions, which may be seen as scripts too:
-https://github.com/clipos-archive/clipos4_portage-overlay/tree/master/www-client
+The original fp check doesn't base on the real kernal stack region.
+Invalid fp address may cause kernel panic.
 
-> 
-> There's always a push-back against adding features that have external
-> dependencies, and then those external dependencies can't happen without
-> the kernel first adding a feature. :) I like getting these catch-22s
-> broken, and I think the kernel is the right place to start, especially
-> since the threat model (and implementation) is already proven out in
-> CLIP OS, and now with IMA. So, while the interpreter side of this is
-> still under development, this gives them the tool they need to get it
-> done on the kernel side. So showing those pieces (as you've done) is
-> great, and I think finding a little bit more detail here would be even
-> better.
+Signed-off-by: Mao Han <han_mao@linux.alibaba.com>
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+---
+ arch/csky/kernel/perf_callchain.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-OK, I can add my previous comment in the next cover letter.
+diff --git a/arch/csky/kernel/perf_callchain.c b/arch/csky/kernel/perf_callchain.c
+index e68ff375c8f8..ab55e98ee8f6 100644
+--- a/arch/csky/kernel/perf_callchain.c
++++ b/arch/csky/kernel/perf_callchain.c
+@@ -12,12 +12,17 @@ struct stackframe {
+ 
+ static int unwind_frame_kernel(struct stackframe *frame)
+ {
+-	if (kstack_end((void *)frame->fp))
++	unsigned long low = (unsigned long)task_stack_page(current);
++	unsigned long high = low + THREAD_SIZE;
++
++	if (unlikely(frame->fp < low || frame->fp > high))
+ 		return -EPERM;
+-	if (frame->fp & 0x3 || frame->fp < TASK_SIZE)
++
++	if (kstack_end((void *)frame->fp) || frame->fp & 0x3)
+ 		return -EPERM;
+ 
+ 	*frame = *(struct stackframe *)frame->fp;
++
+ 	if (__kernel_text_address(frame->lr)) {
+ 		int graph = 0;
+ 
+-- 
+2.17.0
 
-> 
->> A simple security policy implementation, configured through a dedicated
->> sysctl, is available in a following patch.
->>
->> This is an updated subset of the patch initially written by Vincent
->> Strubel for CLIP OS 4:
->> https://github.com/clipos-archive/src_platform_clip-patches/blob/f5cb330d6b684752e403b4e41b39f7004d88e561/1901_open_mayexec.patch
->> This patch has been used for more than 11 years with customized script
->> interpreters.  Some examples (with the original name O_MAYEXEC) can be
->> found here:
->> https://github.com/clipos-archive/clipos4_portage-overlay/search?q=O_MAYEXEC
->>
->> Signed-off-by: Mickaël Salaün <mic@digikod.net>
->> Signed-off-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
->> Signed-off-by: Vincent Strubel <vincent.strubel@ssi.gouv.fr>
-> 
-> nit: this needs to be reordered. It's expected that the final SoB
-> matches the sender.
-
-OK, I just sorted the list alphabetically.
-
-> If you're trying to show co-authorship, please
-> see:
-> 
-> https://www.kernel.org/doc/html/latest/process/submitting-patches.html#when-to-use-acked-by-cc-and-co-developed-by
-> 
-> Based on what I've inferred about author ordering, I think you want:
-> 
-> Co-developed-by: Vincent Strubel <vincent.strubel@ssi.gouv.fr>
-> Signed-off-by: Vincent Strubel <vincent.strubel@ssi.gouv.fr>
-> Co-developed-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
-> Signed-off-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
-> Co-developed-by: Mickaël Salaün <mic@digikod.net>
-> Signed-off-by: Mickaël Salaün <mic@digikod.net>
-
-OK, according to the doc I'll remove myself as Co-developped-by because
-I'm already in the From, though.
-
-> 
->> Reviewed-by: Deven Bowers <deven.desai@linux.microsoft.com>
->> Cc: Aleksa Sarai <cyphar@cyphar.com>
->> Cc: Al Viro <viro@zeniv.linux.org.uk>
->> Cc: Kees Cook <keescook@chromium.org>
-> 
-> Everything else appears good to me, but Al and Aleksa know VFS internals
-> way better. :)
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> 
-
-Thanks!
