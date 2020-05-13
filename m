@@ -2,130 +2,159 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0748C2D0F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C562C2D0F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C08A206E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:28:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F/7vx6X4"
+	by mail.kernel.org (Postfix) with ESMTP id 5BC5A207BC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:33:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbgEMD2v (ORCPT
+        id S1727922AbgEMDd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 23:28:51 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54072 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728488AbgEMD2v (ORCPT
+        Tue, 12 May 2020 23:33:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725929AbgEMDd6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 23:28:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589340530;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NRE4OFt0pi4qgIPXxiCcH4eekt5X7YxGUJZCZ70unDk=;
-        b=F/7vx6X4NbxbD1qDnuwOhKHkLWpaJS1Wm50XBu8nyyIPs3Mlj3kmWtZAY8fyWKhir0un2f
-        dprbl1Z0gUDqvnjWTsz/sGX/QlWd7wZNfOmgnTYQG3PoWqGUgkrBtV4XZ89bo0oDbNBaUi
-        FzwXpSrFbCgarjTOisYLfs0AMuVUJ2U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-208-71V8pT9QO0-rrJCT8ULhcg-1; Tue, 12 May 2020 23:28:48 -0400
-X-MC-Unique: 71V8pT9QO0-rrJCT8ULhcg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 003F71841932;
-        Wed, 13 May 2020 03:28:47 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-65.pek2.redhat.com [10.72.12.65])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1C7685D9DD;
-        Wed, 13 May 2020 03:28:40 +0000 (UTC)
-Subject: Re: s390x: kdump kernel can not boot if I load kernel and initrd
- images via the kexec_file_load syscall.
-To:     Philipp Rudo <prudo@linux.ibm.com>
-Cc:     Dave Young <dyoung@redhat.com>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Baoquan He <bhe@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <4d7ff4bb-f09e-7aec-964f-f5cc2412e5b7@redhat.com>
- <20200511111558.2d3e3db3@laptop2-ibm.local>
- <20200511170146.28eaafed@laptop2-ibm.local>
- <19903f1e-b3ae-730e-8a02-ed30fb47e9ba@redhat.com>
- <559a3c8f-9da9-a64d-aa78-434365c4b271@redhat.com>
- <79241fab-3299-1ba3-1c2b-a29eb4e0af7c@redhat.com>
- <20200512193956.15ae3f23@laptop2-ibm.local>
-From:   lijiang <lijiang@redhat.com>
-Message-ID: <426212ae-7687-87df-2275-f26ffd16fc8e@redhat.com>
-Date:   Wed, 13 May 2020 11:28:36 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 12 May 2020 23:33:58 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2BECC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 20:33:57 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jYi9V-007ApT-Mq; Wed, 13 May 2020 03:33:49 +0000
+Date:   Wed, 13 May 2020 04:33:49 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Alexander Potapenko <glider@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, sunhaoyl@outlook.com
+Subject: Re: [PATCH] fs/binfmt_elf.c: allocate initialized memory in
+ fill_thread_core_info()
+Message-ID: <20200513033349.GR23230@ZenIV.linux.org.uk>
+References: <20200419100848.63472-1-glider@google.com>
+ <20200420153352.6682533e794f591dae7aafbc@linux-foundation.org>
+ <202004201540.01C8F82B@keescook>
+ <20200421034249.GB23230@ZenIV.linux.org.uk>
+ <CAG_fn=VZZ7yUxtOGzuTLkr7wmfXWtKK9BHHYawj=rt9XWnCYvg@mail.gmail.com>
+ <20200512010901.GQ23230@ZenIV.linux.org.uk>
+ <20200512034400.GA1537486@ZenIV.linux.org.uk>
+ <CAG_fn=Xopqwu8qpdH2xDHmGSy1utp7uyPn7s6btm0hdaV7JVRg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200512193956.15ae3f23@laptop2-ibm.local>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG_fn=Xopqwu8qpdH2xDHmGSy1utp7uyPn7s6btm0hdaV7JVRg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2020年05月13日 01:39, Philipp Rudo 写道:
-> Hi Lianbo,
+On Tue, May 12, 2020 at 10:20:21AM +0200, Alexander Potapenko wrote:
+> On Tue, May 12, 2020 at 5:44 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> >
+> > On Tue, May 12, 2020 at 02:09:01AM +0100, Al Viro wrote:
+> > > On Tue, Apr 21, 2020 at 10:14:25AM +0200, Alexander Potapenko wrote:
+> > > > > Not lately and I would also like to hear the details; which regset it is?
+> > > > > Should be reasonably easy to find - just memset() the damn thing to something
+> > > > > recognizable, do whatever triggers that KMSAN report and look at that
+> > > > > resulting coredump.
+> > > >
+> > > > The bug is easily triggerable by the following program:
+> > > >
+> > > > ================================================
+> > > > int main() {
+> > > >   volatile char *c = 0;
+> > > >   (void)*c;
+> > > >   return 0;
+> > > > }
+> > > > ================================================
+> > > >
+> > > > in my QEMU after I do `ulimit -c 10000`.
+> > >
+> > > .config, please - I hadn't been able to reproduce that on mine.
+> > > Coredump obviously does happen, but not a trace of the poison
+> > > is there - with your memset(data, 0xae, size) added, that is.
+> >
+> > Actually, more interesting question would be your /proc/cpuinfo...
 > 
-> stupid me obviously never tested the kdump+initrd combination...
-> 
-> The patch below fixed the problem for me. Could please give it a try, too.
-> 
+> See both attached.
+> I was also able to reproduce the bug on my desktop using the attached
+> dump.sh script.
 
-Thank you for the patch, Philipp. Kdump kernel can boot on s390x machine with this patch.
+xsaves is the critical part here.  FWIW, the breakage first appeared in
 
-> Thanks
-> Philipp
-> 
-> ---
-> 
-> From 3f77088c9139582261d2e3ee6476324fc1ded401 Mon Sep 17 00:00:00 2001
-> From: Philipp Rudo <prudo@linux.ibm.com>
-> Date: Tue, 12 May 2020 19:25:14 +0200
-> Subject: [PATCH] s390/kexec_file: fix initrd location for kdump kernel
-> 
-> initrd_start must not point at the location the initrd is loaded into
-> the crashkernel memory but at the location it will be after the
-> crashkernel memory is swapped with the memory at 0.
-> 
-> Fixes: ee337f5469fd ("s390/kexec_file: Add crash support to image loader")
-> Reported-by: Lianbo Jiang <lijiang@redhat.com>
-> Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
-> ---
->  arch/s390/kernel/machine_kexec_file.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
-> index 8415ae7d2a23..f9e4baa64b67 100644
-> --- a/arch/s390/kernel/machine_kexec_file.c
-> +++ b/arch/s390/kernel/machine_kexec_file.c
-> @@ -151,7 +151,7 @@ static int kexec_file_add_initrd(struct kimage *image,
->  		buf.mem += crashk_res.start;
->  	buf.memsz = buf.bufsz;
->  
-> -	data->parm->initrd_start = buf.mem;
-> +	data->parm->initrd_start = data->memsz;
+commit 91c3dba7dbc199191272f4a9863f86ea3bfd679f
+Author: Yu-cheng Yu <yu-cheng.yu@intel.com>
+Date:   Fri Jun 17 13:07:17 2016 -0700
 
-Good findings.
+    x86/fpu/xstate: Fix PTRACE frames for XSAVES
+    
+    XSAVES uses compacted format and is a kernel instruction. The kernel
+    should use standard-format, non-supervisor state data for PTRACE.
 
->  	data->parm->initrd_size = buf.memsz;
->  	data->memsz += buf.memsz;
->  
-> 
+The b0rken part is
++       for (i = 0; i < XFEATURE_MAX; i++) {
++               /*
++                * Copy only in-use xstates:
++                */
++               if ((header.xfeatures >> i) & 1) {
++                       void *src = __raw_xsave_addr(xsave, 1 << i);
++
++                       offset = xstate_offsets[i];
++                       size = xstate_sizes[i];
++
++                       ret = xstate_copyout(offset, size, kbuf, ubuf, src, 0, count);
++
++                       if (ret)
++                               return ret;
++
++                       if (offset + size >= count)
++                               break;
++               }
++
++       }
 
-Tested-by: Lianbo Jiang <lijiang@redhat.com>
+The skipped parts are left uninitialized.  I'm not sure what's the best
+way to deal with that.  Sure, we can zero the buffer passed to ->get().
+However, most of the instances (and I'd looked through quite a few)
+do _not_ leave uninitialized chunks.  So I would rather have
+xstateregs_get() zero the gaps explicitly.  I'll try to put together
+a sane fix when I get some sleep.
 
-Thanks.
-Lianbo
+FWIW, what I'm going to do is
+	* make all callers of copy_regset_to_user() pass 0 as pos
+(there are very few exceptions - one on arm64, three on sparc32
+and five on sparc64; I hadn't dealt with arm64 one yet, but all
+cases on sparc are handled)
+	* switch copy_regset_to_user() to doing all copyout at
+once - allocate a buffer, pass it to ->get(), then copy_to_user()
+the entire thing, same as coredump does
+	* introduce
+struct membuf {
+	void *p;
+	size_t left;
+};
+static inline int membuf_zero(struct membuf *s, size_t size)
+static inline void membuf_align(struct membuf *s, int n)
+static inline int membuf_write(struct membuf *s, const void *v, size_t size)
+and membuf_store(s, v) (basically, write the value of v to the damn thing,
+with sizeof(v) for size).
+	* introduce
+typedef int user_regset_get2_fn(struct task_struct *target,
+				const struct user_regset *regset,
+				struct membuf to);
+and
+	user_regset_get2_fn             *get2;
+in user_regset, replacing ->get().  Instances would be using the
+membuf_...() primitives for actual copying.
+	* convert the instances.  I've done that for several architectures,
+and it's _much_ cleaner than the current mess with ->get().
+	* get rid of user_regset_copyout() et.al. once there's no
+callers left.
 
+This bug clearly needs to be fixed in a way that would be easy
+to backport, so it has go in front of that queue.  I'll try to
+come up with a clean fix and post it (hopefully tomorrow)...
