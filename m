@@ -2,173 +2,128 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8409C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C93C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9932205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EB0320659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:12:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589407930;
+	bh=GV/563MM7mfJ5kgZQMtPYK3qifQTKvZPMYMdtCfkpg4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=Y920iJC2hC8gD2XZCT0SqQnXyP18QO+srwhf67+hFhhkfIt8StGZj0kAXfaXZUr83
+	 TMDqXQF4N7X/QUVh+e2bAXRriXOhAP86RlgKxzT/WkAN/xRnK5sr81GIXLLdwKhh49
+	 ymF1ddhTUsTpYJaqcIB19c75mpyIFS9VzZ6eUbLc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730723AbgEMWLv (ORCPT
+        id S1730789AbgEMWMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 18:11:51 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:60360 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730130AbgEMWLu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 18:11:50 -0400
-Received: from pps.filterd (m0148663.ppops.net [127.0.0.1])
-        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DLx935007225;
-        Wed, 13 May 2020 22:11:26 GMT
-Received: from g4t3427.houston.hpe.com (g4t3427.houston.hpe.com [15.241.140.73])
-        by mx0a-002e3701.pphosted.com with ESMTP id 3100yw20df-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 22:11:26 +0000
-Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
-        by g4t3427.houston.hpe.com (Postfix) with ESMTP id 9CDB066;
-        Wed, 13 May 2020 22:11:25 +0000 (UTC)
-Received: from raspberrypi (unknown [16.214.83.120])
-        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id F1E6D45;
-        Wed, 13 May 2020 22:11:23 +0000 (UTC)
-Date:   Wed, 13 May 2020 17:11:23 -0500
-From:   Steve Wahl <steve.wahl@hpe.com>
-To:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Mike Travis <mike.travis@hpe.com>,
-        Steve Wahl <steve.wahl@hpe.com>, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] x86/api/uv: Remove code for unused distributed GRU mode
-Message-ID: <20200513221123.GJ3240@raspberrypi>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-13_09:2020-05-13,2020-05-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 mlxscore=0 suspectscore=1 spamscore=0 impostorscore=0
- bulkscore=0 adultscore=0 mlxlogscore=999 malwarescore=0 clxscore=1011
- cotscore=-2147483648 priorityscore=1501 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005130188
+        Wed, 13 May 2020 18:12:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41886 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730064AbgEMWMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 18:12:08 -0400
+Received: from localhost.localdomain (pool-96-246-152-186.nycmny.fios.verizon.net [96.246.152.186])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8BC2205ED;
+        Wed, 13 May 2020 22:12:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589407927;
+        bh=GV/563MM7mfJ5kgZQMtPYK3qifQTKvZPMYMdtCfkpg4=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=QnPxg2o6WRGBCwquEmJwsTp9lab8RyunbaH6LJWNZVMAa+vsaO6yi1Gh/WhPrcSaB
+         hPLr7mpacQrrP+TT/6Fz0YhgShEVqUV9yZY1x46w+KlFOdGienxqLp8Trk96SbD4Ep
+         u6J8Ozjqn/PIgG9D3/Bf5UaKrfeaywoNQfJJhUEo=
+Message-ID: <1589407924.5098.208.camel@kernel.org>
+Subject: Re: [PATCH v5 1/7] fs: introduce kernel_pread_file* support
+From:   Mimi Zohar <zohar@kernel.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Scott Branden <scott.branden@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>
+Date:   Wed, 13 May 2020 18:12:04 -0400
+In-Reply-To: <20200513212847.GT11244@42.do-not-panic.com>
+References: <20200508002739.19360-1-scott.branden@broadcom.com>
+         <20200508002739.19360-2-scott.branden@broadcom.com>
+         <1589395153.5098.158.camel@kernel.org>
+         <0e6b5f65-8c61-b02e-7d35-b4ae52aebcf3@broadcom.com>
+         <1589396593.5098.166.camel@kernel.org>
+         <e1b92047-7003-0615-3d58-1388ec27c78a@broadcom.com>
+         <1589398747.5098.178.camel@kernel.org>
+         <a228ae0f-d551-e0e8-446e-5ae63462c520@broadcom.com>
+         <1589404814.5098.185.camel@kernel.org>
+         <20200513212847.GT11244@42.do-not-panic.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Distributed GRU mode appeared in only one generation of UV hardware,
-and no version of the BIOS has shipped with this feature enabled, and
-we have no plans to ever change that.  The gru.s3.mode check has
-always been and will continue to be false.  So remove this dead code.
+On Wed, 2020-05-13 at 21:28 +0000, Luis Chamberlain wrote:
+> On Wed, May 13, 2020 at 05:20:14PM -0400, Mimi Zohar wrote:
+> > On Wed, 2020-05-13 at 12:41 -0700, Scott Branden wrote:
+> > > 
+> > > On 2020-05-13 12:39 p.m., Mimi Zohar wrote:
+> > > > On Wed, 2020-05-13 at 12:18 -0700, Scott Branden wrote:
+> > > >> On 2020-05-13 12:03 p.m., Mimi Zohar wrote:
+> > > >>> On Wed, 2020-05-13 at 11:53 -0700, Scott Branden wrote:
+> > > >> Even if the kernel successfully verified the firmware file signature it
+> > > >> would just be wasting its time.  The kernel in these use cases is not always
+> > > >> trusted.  The device needs to authenticate the firmware image itself.
+> > > > There are also environments where the kernel is trusted and limits the
+> > > > firmware being provided to the device to one which they signed.
+> > > >
+> > > >>> The device firmware is being downloaded piecemeal from somewhere and
+> > > >>> won't be measured?
+> > > >> It doesn't need to be measured for current driver needs.
+> > > > Sure the device doesn't need the kernel measuring the firmware, but
+> > > > hardened environments do measure firmware.
+> > > >
+> > > >> If someone has such need the infrastructure could be added to the kernel
+> > > >> at a later date.  Existing functionality is not broken in any way by
+> > > >> this patch series.
+> > > > Wow!  You're saying that your patch set takes precedence over the
+> > > > existing expectations and can break them.
+> > > Huh? I said existing functionality is NOT broken by this patch series.
+> > 
+> > Assuming a system is configured to measure and appraise firmware
+> > (rules below), with this change the firmware file will not be properly
+> > measured and will fail signature verification.
+> > 
+> > Sample IMA policy rules:
+> > measure func=FIRMWARE_CHECK
+> > appraise func=FIRMWARE_CHECK appraise_type=imasig
+> 
+> Would a pre and post lsm hook for pread do it?
 
-Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
-Acked-by: Dimitri Sivanich <sivanich@hpe.com>
----
- arch/x86/kernel/apic/x2apic_uv_x.c | 59 +-------------------------------------
- 1 file changed, 1 insertion(+), 58 deletions(-)
+IMA currently measures and verifies the firmware file signature on the
+post hook.  The file is read once into a buffer.  With this change,
+IMA would need to be on the pre hook, to read the entire file,
+calculating the file hash and verifying the file signature.  Basically
+the firmware would be read once for IMA and again for the device.
 
-diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
-index ad53b2abc859..76971c8ea2d6 100644
---- a/arch/x86/kernel/apic/x2apic_uv_x.c
-+++ b/arch/x86/kernel/apic/x2apic_uv_x.c
-@@ -30,8 +30,6 @@ static enum uv_system_type	uv_system_type;
- static int			uv_hubbed_system;
- static int			uv_hubless_system;
- static u64			gru_start_paddr, gru_end_paddr;
--static u64			gru_dist_base, gru_first_node_paddr = -1LL, gru_last_node_paddr;
--static u64			gru_dist_lmask, gru_dist_umask;
- static union uvh_apicid		uvh_apicid;
- 
- /* Unpack OEM/TABLE ID's to be NULL terminated strings */
-@@ -85,20 +83,7 @@ static unsigned long __init uv_early_read_mmr(unsigned long addr)
- 
- static inline bool is_GRU_range(u64 start, u64 end)
- {
--	if (gru_dist_base) {
--		u64 su = start & gru_dist_umask; /* Upper (incl pnode) bits */
--		u64 sl = start & gru_dist_lmask; /* Base offset bits */
--		u64 eu = end & gru_dist_umask;
--		u64 el = end & gru_dist_lmask;
--
--		/* Must reside completely within a single GRU range: */
--		return (sl == gru_dist_base && el == gru_dist_base &&
--			su >= gru_first_node_paddr &&
--			su <= gru_last_node_paddr &&
--			eu == su);
--	} else {
--		return start >= gru_start_paddr && end <= gru_end_paddr;
--	}
-+	return start >= gru_start_paddr && end <= gru_end_paddr;
- }
- 
- static bool uv_is_untracked_pat_range(u64 start, u64 end)
-@@ -797,42 +782,6 @@ static __init void map_high(char *id, unsigned long base, int pshift, int bshift
- 		init_extra_mapping_wb(paddr, bytes);
- }
- 
--static __init void map_gru_distributed(unsigned long c)
--{
--	union uvh_rh_gam_gru_overlay_config_mmr_u gru;
--	u64 paddr;
--	unsigned long bytes;
--	int nid;
--
--	gru.v = c;
--
--	/* Only base bits 42:28 relevant in dist mode */
--	gru_dist_base = gru.v & 0x000007fff0000000UL;
--	if (!gru_dist_base) {
--		pr_info("UV: Map GRU_DIST base address NULL\n");
--		return;
--	}
--
--	bytes = 1UL << UVH_RH_GAM_GRU_OVERLAY_CONFIG_MMR_BASE_SHFT;
--	gru_dist_lmask = ((1UL << uv_hub_info->m_val) - 1) & ~(bytes - 1);
--	gru_dist_umask = ~((1UL << uv_hub_info->m_val) - 1);
--	gru_dist_base &= gru_dist_lmask; /* Clear bits above M */
--
--	for_each_online_node(nid) {
--		paddr = ((u64)uv_node_to_pnode(nid) << uv_hub_info->m_val) |
--				gru_dist_base;
--		init_extra_mapping_wb(paddr, bytes);
--		gru_first_node_paddr = min(paddr, gru_first_node_paddr);
--		gru_last_node_paddr = max(paddr, gru_last_node_paddr);
--	}
--
--	/* Save upper (63:M) bits of address only for is_GRU_range */
--	gru_first_node_paddr &= gru_dist_umask;
--	gru_last_node_paddr &= gru_dist_umask;
--
--	pr_debug("UV: Map GRU_DIST base 0x%016llx  0x%016llx - 0x%016llx\n", gru_dist_base, gru_first_node_paddr, gru_last_node_paddr);
--}
--
- static __init void map_gru_high(int max_pnode)
- {
- 	union uvh_rh_gam_gru_overlay_config_mmr_u gru;
-@@ -846,12 +795,6 @@ static __init void map_gru_high(int max_pnode)
- 		return;
- 	}
- 
--	/* Only UV3 has distributed GRU mode */
--	if (is_uv3_hub() && gru.s3.mode) {
--		map_gru_distributed(gru.v);
--		return;
--	}
--
- 	base = (gru.v & mask) >> shift;
- 	map_high("GRU", base, shift, shift, max_pnode, map_wb);
- 	gru_start_paddr = ((u64)base << shift);
--- 
-2.12.3
-
-From: Steve Wahl <steve.wahl@hpe.com>
-To: 
-Cc: 
-Bcc: 
-Subject: 
-Reply-To: 
-
+Mimi
