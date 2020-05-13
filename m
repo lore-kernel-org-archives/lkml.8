@@ -2,249 +2,123 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BC1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9088C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A75E520659
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:21:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589383282;
-	bh=ppbpJ/tiGc6AAsfEyrLUH1GG5EABg4BNhApQAkuqWOw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D1Uqae/cx+zlLHJ4yFd3JXqdtyL7K+2y6UwJ3za8RkGTzTCkvlHq1pRwSv8bBl8hk
-	 xDEj5ah0EPdX/Vp4mclMckRj8OwV18w3+ZG/YyN3/pzKCRAm/kVJ4Agri/PyQ/LDzO
-	 Y9Uzhbjzzmt/urqLxdGzobhtOr1vJUfTmPsjbbdY=
+	by mail.kernel.org (Postfix) with ESMTP id 046B02065C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:21:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GSuHkBHq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389221AbgEMPVV (ORCPT
+        id S2389259AbgEMPVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:21:21 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45436 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389208AbgEMPVS (ORCPT
+        Wed, 13 May 2020 11:21:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44598 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389208AbgEMPVW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:21:18 -0400
-Received: by mail-pg1-f195.google.com with SMTP id r22so6331688pga.12;
-        Wed, 13 May 2020 08:21:17 -0700 (PDT)
+        Wed, 13 May 2020 11:21:22 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F22E3C061A0C;
+        Wed, 13 May 2020 08:21:21 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id u5so5313991pgn.5;
+        Wed, 13 May 2020 08:21:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=3yRyofDBUmX/6AiJcNBUrwOztf43oL+1vzquNOT5/mo=;
+        b=GSuHkBHq8QgfFxtm2FP3EqTycxL336tHfmghS0MWuRb/rZPxShnQNx9Oee5rFOVyg0
+         l/ptw/VloyZIy9MuyPiCRnZnw1HYrJbiRV+1lCEvK8qa6/CdoQif+hOiv2RJY1gxa6Hr
+         bw5XWNivpCWVwAihiUpFMmqS0hMvl0cunD/O3OrhNu+5u7XUaY0wv//2cl3LHI8Mw/Cw
+         tucG5Ob2OZE5ochimEJwebGMfaUMc4jniQliCKYtomCi+cdQdbXVrTgqvilkhCAWPVUC
+         3ZinFt7WcjDy1uT68siR3VE84bwM2c8qlXx12DK0RIkBO/oPY2IHgNvhk9p5UelMWfHM
+         en4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=sVPbNXCCooK7xs5q4tPUuYOkgiYvbFLYSsM11573Kow=;
-        b=YhDWrrl2YmwuH6C/D6LSsdpjxidKPlizPVkQWMRXllgx3ceBr1IntjbXMl+ifzoTgR
-         aizwY8YDCsWmkTD7K8C9/kivgxMwnQux5aKY8JenJKS03v0FG0HFkhDNudYu02LpQys6
-         uUV0FwO1GEZJ/DbCJuA07svfqThOgwRcC8gXcG+NYmc/xyg/s6SN6gT6XT46DYB3s8fC
-         0nLIBE3rEF22KDUq1G3ixdZE3pAyptD/8DEAxcA+gZLe45GbFLz6HYV5kTsGRuUXag0x
-         u3Wvd01dxdkBUFxg4tJC4c6/89w8bSSwdhOt6ywUp2aYYnLc9KFPwrpA7CM/mP5z+kl/
-         TH7Q==
-X-Gm-Message-State: AGi0PuZLuVf1EFRDhDUZWmNPZCkJcBFjgNqn5zVWX/2dUBFxFxQM8ZjR
-        IniRsMUxCEKVz47lxsO0Uv/VccKXZBxNuQ==
-X-Google-Smtp-Source: APiQypKJxNQFZPpCeObFfzlvgoO/y5iJXbbt0fp6k+Bh0324QO2zLbObQGGHUWDJ+UruNtob9Uv7wQ==
-X-Received: by 2002:aa7:80cf:: with SMTP id a15mr28046474pfn.124.1589383276926;
-        Wed, 13 May 2020 08:21:16 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id n23sm15605462pjq.18.2020.05.13.08.21.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 08:21:13 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 7045741D95; Wed, 13 May 2020 15:21:12 +0000 (UTC)
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
-        rafael@kernel.org, ebiederm@xmission.com, jeyu@kernel.org,
-        jmorris@namei.org, keescook@chromium.org, paul@paul-moore.com,
-        stephen.smalley.work@gmail.com, eparis@parisplace.org,
-        nayna@linux.ibm.com, zohar@linux.ibm.com
-Cc:     scott.branden@broadcom.com, dan.carpenter@oracle.com,
-        skhan@linuxfoundation.org, geert@linux-m68k.org,
-        tglx@linutronix.de, bauerman@linux.ibm.com, dhowells@redhat.com,
-        linux-integrity@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 3/3] fs: move kernel_read*() calls to its own symbol namespace
-Date:   Wed, 13 May 2020 15:21:08 +0000
-Message-Id: <20200513152108.25669-4-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20200513152108.25669-1-mcgrof@kernel.org>
-References: <20200513152108.25669-1-mcgrof@kernel.org>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=3yRyofDBUmX/6AiJcNBUrwOztf43oL+1vzquNOT5/mo=;
+        b=GQW/8/U7NxSempPNmSgMKWiI+iXCL2TPwLRk6ErPGskj4pAAdND2otdD1PZCinCZyI
+         +OLYgxextDwwTNoE/5cLHznILQPZrL2jp4GtRyAnlaGm02BsqgtCk+2+fSBjJlkFRl4I
+         mWhxkhUgaAMrY2L2nXIQnihEh2LWAq0ldGWAU5myR1JPI8kqkJSHvwkImDXEmqMikffc
+         Ui0poGWA3gy00CY9CxKSePTFA3+jCVhQy0uDFGmBshH+jNB1MiCBYOAy9dFZDJuQhgkJ
+         oREy43pA6jddxRmwwvsZGsV88aIr1r8Fs8U4ZidG0GCEFFG3pld/FkxSC86OATG0iBDv
+         S4pA==
+X-Gm-Message-State: AGi0PuYfMd0iax/GOsfVOsd+jabjsG3mKM7TVXq51z+pyT12dGmOFTC1
+        cGWqfKWUlXwKPXXGsOlc4eA=
+X-Google-Smtp-Source: APiQypLCGbbc3jPoqU2PX5STXtYWYF43p0LqJ06UayKzWFa+d92ts/mOM23v1/nJALaPOTFIbYxNZw==
+X-Received: by 2002:aa7:8042:: with SMTP id y2mr26714744pfm.94.1589383281502;
+        Wed, 13 May 2020 08:21:21 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l137sm15425893pfd.107.2020.05.13.08.21.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 13 May 2020 08:21:21 -0700 (PDT)
+Date:   Wed, 13 May 2020 08:21:20 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Amy.Shih@advantech.com.tw
+Cc:     she90122@gmail.com, Jean Delvare <jdelvare@suse.com>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        oakley.ding@advantech.com.tw, jia.sui@advantech.com.cn,
+        yuechao.zhao@advantech.com.cn, Hy.Lee@advantech.com.tw
+Subject: Re: [v1,1/1] hwmon: (nct7904) Fix the incorrect rang of temperature
+ limitation registers.
+Message-ID: <20200513152120.GA125233@roeck-us.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
- drivers/base/firmware_loader/main.c | 1 +
- fs/exec.c                           | 6 +++---
- kernel/kexec_file.c                 | 2 ++
- kernel/module.c                     | 1 +
- security/integrity/digsig.c         | 3 +++
- security/integrity/ima/ima_fs.c     | 3 +++
- security/integrity/ima/ima_main.c   | 2 ++
- security/loadpin/loadpin.c          | 2 ++
- security/security.c                 | 2 ++
- security/selinux/hooks.c            | 2 ++
- 10 files changed, 21 insertions(+), 3 deletions(-)
+On Tue, May 12, 2020 at 09:38:06AM +0000, Amy.Shih@advantech.com.tw wrote:
+> From: Amy Shih <amy.shih@advantech.com.tw>
+> 
+> The format of temperature limitation registers are 8-bit 2's complement
+> and the range is -128~127.
+> Converts the reading value to signed char to fix the incorrect range
+> of temperature limitation registers.
+> 
+> Signed-off-by: Amy Shih <amy.shih@advantech.com.tw>
 
-diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
-index 5296aaca35cf..a5ed796a9166 100644
---- a/drivers/base/firmware_loader/main.c
-+++ b/drivers/base/firmware_loader/main.c
-@@ -44,6 +44,7 @@
- MODULE_AUTHOR("Manuel Estrada Sainz");
- MODULE_DESCRIPTION("Multi purpose firmware loading support");
- MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS(CORE_FS_READ);
- 
- struct firmware_cache {
- 	/* firmware_buf instance will be added into the below list */
-diff --git a/fs/exec.c b/fs/exec.c
-index 30bd800ab1d6..bbe2a35ea2e0 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1008,7 +1008,7 @@ int kernel_read_file_from_path(const char *path, void **buf, loff_t *size,
- 	fput(file);
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(kernel_read_file_from_path);
-+EXPORT_SYMBOL_NS_GPL(kernel_read_file_from_path, CORE_FS_READ);
- 
- int kernel_read_file_from_path_initns(const char *path, void **buf,
- 				      loff_t *size, loff_t max_size,
-@@ -1034,7 +1034,7 @@ int kernel_read_file_from_path_initns(const char *path, void **buf,
- 	fput(file);
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(kernel_read_file_from_path_initns);
-+EXPORT_SYMBOL_NS_GPL(kernel_read_file_from_path_initns, CORE_FS_READ);
- 
- int kernel_read_file_from_fd(int fd, void **buf, loff_t *size, loff_t max_size,
- 			     enum kernel_read_file_id id)
-@@ -1050,7 +1050,7 @@ int kernel_read_file_from_fd(int fd, void **buf, loff_t *size, loff_t max_size,
- 	fdput(f);
- 	return ret;
- }
--EXPORT_SYMBOL_GPL(kernel_read_file_from_fd);
-+EXPORT_SYMBOL_NS_GPL(kernel_read_file_from_fd, CORE_FS_READ);
- 
- ssize_t read_code(struct file *file, unsigned long addr, loff_t pos, size_t len)
- {
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index bb05fd52de85..d96b7c05b0a5 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -28,6 +28,8 @@
- #include <linux/vmalloc.h>
- #include "kexec_internal.h"
- 
-+MODULE_IMPORT_NS(CORE_FS_READ);
-+
- static int kexec_calculate_store_digests(struct kimage *image);
- 
- /*
-diff --git a/kernel/module.c b/kernel/module.c
-index 8973a463712e..f14868980080 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -60,6 +60,7 @@
- #include "module-internal.h"
- 
- MODULE_IMPORT_NS(SECURITY_READ);
-+MODULE_IMPORT_NS(CORE_FS_READ);
- 
- #define CREATE_TRACE_POINTS
- #include <trace/events/module.h>
-diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
-index e9cbadade74b..d68ef41a3987 100644
---- a/security/integrity/digsig.c
-+++ b/security/integrity/digsig.c
-@@ -13,11 +13,14 @@
- #include <linux/key-type.h>
- #include <linux/digsig.h>
- #include <linux/vmalloc.h>
-+#include <linux/module.h>
- #include <crypto/public_key.h>
- #include <keys/system_keyring.h>
- 
- #include "integrity.h"
- 
-+MODULE_IMPORT_NS(CORE_FS_READ);
-+
- static struct key *keyring[INTEGRITY_KEYRING_MAX];
- 
- static const char * const keyring_name[INTEGRITY_KEYRING_MAX] = {
-diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
-index e3fcad871861..41fd03281ae1 100644
---- a/security/integrity/ima/ima_fs.c
-+++ b/security/integrity/ima/ima_fs.c
-@@ -20,6 +20,9 @@
- #include <linux/rcupdate.h>
- #include <linux/parser.h>
- #include <linux/vmalloc.h>
-+#include <linux/module.h>
-+
-+MODULE_IMPORT_NS(CORE_FS_READ);
- 
- #include "ima.h"
- 
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index f96f151294e6..ffa7a14deef1 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -28,6 +28,8 @@
- 
- #include "ima.h"
- 
-+MODULE_IMPORT_NS(CORE_FS_READ);
-+
- #ifdef CONFIG_IMA_APPRAISE
- int ima_appraise = IMA_APPRAISE_ENFORCE;
- #else
-diff --git a/security/loadpin/loadpin.c b/security/loadpin/loadpin.c
-index ee5cb944f4ad..ca2022ad5f88 100644
---- a/security/loadpin/loadpin.c
-+++ b/security/loadpin/loadpin.c
-@@ -17,6 +17,8 @@
- #include <linux/sched.h>	/* current */
- #include <linux/string_helpers.h>
- 
-+MODULE_IMPORT_NS(CORE_FS_READ);
-+
- static void report_load(const char *origin, struct file *file, char *operation)
- {
- 	char *cmdline, *pathname;
-diff --git a/security/security.c b/security/security.c
-index bdbd1fc5105a..c865f1de4b03 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -29,6 +29,8 @@
- #include <linux/msg.h>
- #include <net/flow.h>
- 
-+MODULE_IMPORT_NS(CORE_FS_READ);
-+
- #define MAX_LSM_EVM_XATTR	2
- 
- /* How many LSMs were built into the kernel? */
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 9979b45e0a34..6dc4abfbfb78 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -103,6 +103,8 @@
- #include "audit.h"
- #include "avc_ss.h"
- 
-+MODULE_IMPORT_NS(CORE_FS_READ);
-+
- struct selinux_state selinux_state;
- 
- /* SECMARK reference count */
--- 
-2.26.2
+Applied.
 
+Thanks,
+Guenter
+
+> ---
+>  drivers/hwmon/nct7904.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
+> index 6fb06f7..04f2a8e 100644
+> --- a/drivers/hwmon/nct7904.c
+> +++ b/drivers/hwmon/nct7904.c
+> @@ -390,6 +390,7 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
+>  	struct nct7904_data *data = dev_get_drvdata(dev);
+>  	int ret, temp;
+>  	unsigned int reg1, reg2, reg3;
+> +	s8 temps;
+>  
+>  	switch (attr) {
+>  	case hwmon_temp_input:
+> @@ -495,7 +496,8 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
+>  
+>  	if (ret < 0)
+>  		return ret;
+> -	*val = ret * 1000;
+> +	temps = ret;
+> +	*val = temps * 1000;
+>  	return 0;
+>  }
+>  
+> -- 
+> 1.8.3.1
+> 
