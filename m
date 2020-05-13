@@ -2,130 +2,133 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D4CCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B10C2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ACD220675
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:45:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UC/3PHBo"
+	by mail.kernel.org (Postfix) with ESMTP id DEA3220675
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:47:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732591AbgEMKpu (ORCPT
+        id S1730707AbgEMKrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:45:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57970 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726907AbgEMKpt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 06:45:49 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7A41C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 03:45:48 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id m24so16438447wml.2
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 03:45:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=SmNmuU5Aep/IGe3eSTrjS6oLXRSTGYhw6IFWVs9Iuqc=;
-        b=UC/3PHBoun3v1rx7wxmHxa5RFjjGfNLNpaCn6pfowgebDNYC32O8cp+YJHnvOEQaLk
-         Nz+CjUwKVJxOPjAc+Am8F0hqrPMDiwM2aoGX5r90B7BN76cDKPh6nr/YlAAyxleAFf96
-         NlJANIMYq5DpzZ6aRKewyuez8+MQkdZd9DSO/gtHi1WlvxunYaH+dufi8aFhaGuP+ph9
-         zIeuSIUI2UQyBg6TbiMKe6swjsAYzSJuHyWPZUsJLZuCjKUsD55B1251N8tC3tLD40aj
-         agDxckNYt6eUv6ydoTJ+56CrQqMMdERHKWIgm0l69OYmgLIINQMDX3EQTlKycym24/V8
-         XC8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=SmNmuU5Aep/IGe3eSTrjS6oLXRSTGYhw6IFWVs9Iuqc=;
-        b=is9f/warFIW4VnvyfiXrK36hglFMAs+pWnq7wlchjUFfwdz0xgwdJ+tgvijRDKhQ+1
-         ZMviBTgUsR/lxEDIrFGmqyePbmVxLg+KE/3nNLz+dQ0NRRB1Pfm5zfZnqglt6V6enKvM
-         6aBxhIF29e3PepPrzJQmKAsoRb6sqqpCSi1OSo2tkIa5KoPAY4MaW1+HvPLi04LPbSAK
-         wxSIBe6dnJTal6KWajyPkWzDH5Iv0ltPH+HzDQeyyWqLtw4j18OXGDYdvmcJu+9sy19D
-         unxVpYs7ElOw8+uNRjPkSUFbFi99aS8quS15ESSbgf7ZXXeFRHz9qluvOUsgon3q3uSu
-         LUiQ==
-X-Gm-Message-State: AGi0PuY+xZ7jYNFwf3GelqJy3RyA2xG9Aws02Gl+fKiozYCWwpNbZlwZ
-        8/i9enXnVwrwSahHqJAg4dlHmw==
-X-Google-Smtp-Source: APiQypJmft0/u1tO86sQKhZsj1C97uNs/XnCzX9fNiwnwt1E0uNsNm62LaV0mFWoR6TcsuBFsKHelA==
-X-Received: by 2002:a1c:3c42:: with SMTP id j63mr39555553wma.118.1589366747407;
-        Wed, 13 May 2020 03:45:47 -0700 (PDT)
-Received: from myrica ([2001:171b:226e:c200:c43b:ef78:d083:b355])
-        by smtp.gmail.com with ESMTPSA id g135sm17966353wme.22.2020.05.13.03.45.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 03:45:46 -0700 (PDT)
-Date:   Wed, 13 May 2020 12:45:37 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Bharat Bhushan <bbhushan2@marvell.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>
-Subject: Re: [EXT] Re: [PATCH v5] iommu/virtio: Use page size bitmap
- supported by endpoint
-Message-ID: <20200513104537.GB214296@myrica>
-References: <20200505093004.1935-1-bbhushan2@marvell.com>
- <20200505200659-mutt-send-email-mst@kernel.org>
- <MWHPR1801MB1966A23A0298654CA6965FB9E3BF0@MWHPR1801MB1966.namprd18.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MWHPR1801MB1966A23A0298654CA6965FB9E3BF0@MWHPR1801MB1966.namprd18.prod.outlook.com>
+        Wed, 13 May 2020 06:47:41 -0400
+Received: from mga17.intel.com ([192.55.52.151]:30453 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727794AbgEMKrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 06:47:40 -0400
+IronPort-SDR: 4ilvgN/9v41Rag5W3P9UXlIvr4P+a3Mg9n0KXs/QPP4UKnlwivZqjRsd0DqHSHkbrgIRFZGgzb
+ jT9JK0AcejGA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 03:47:40 -0700
+IronPort-SDR: Q/eECZPfg9zXdqs4/nZi3M1KyVJ1VMJAFCL25RV4DxtvTpXZF2pmSjFdRjQe/I4F6kbopf2jy8
+ UxVL9Li/fptQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,387,1583222400"; 
+   d="scan'208";a="371867253"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by fmsmga001.fm.intel.com with ESMTP; 13 May 2020 03:47:36 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        devicetree@vger.kernel.org
+Cc:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        arnd@arndb.de, brendanhiggins@google.com, tglx@linutronix.de,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        masonccyang@mxic.com.tw, robh+dt@kernel.org,
+        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
+        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v6 0/2] mtd: rawnand: Add NAND controller support on Intel LGM SoC
+Date:   Wed, 13 May 2020 18:46:13 +0800
+Message-Id: <20200513104615.7905-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 09:15:22AM +0000, Bharat Bhushan wrote:
-> Hi Jean,
-> 
-> > -----Original Message-----
-> > From: Michael S. Tsirkin <mst@redhat.com>
-> > Sent: Wednesday, May 6, 2020 5:53 AM
-> > To: Bharat Bhushan <bbhushan2@marvell.com>
-> > Cc: jean-philippe@linaro.org; joro@8bytes.org; jasowang@redhat.com;
-> > virtualization@lists.linux-foundation.org; iommu@lists.linux-foundation.org;
-> > linux-kernel@vger.kernel.org; eric.auger.pro@gmail.com; eric.auger@redhat.com
-> > Subject: [EXT] Re: [PATCH v5] iommu/virtio: Use page size bitmap supported by
-> > endpoint
-[...]
-> > > +struct virtio_iommu_probe_pgsize_mask {
-> > > +	struct virtio_iommu_probe_property	head;
-> > > +	__u8					reserved[4];
-> > > +	__le64					pgsize_bitmap;
-> > > +};
-> > > +
-> > 
-> > This is UAPI. Document the format of pgsize_bitmap please.
-> 
-> I do not see uapi documentation in "Documentation" folder of other data struct in this file, am I missing something?
+This patch adds the new IP of Nand Flash Controller(NFC) support
+on Intel's Lightning Mountain(LGM) SoC.
 
-I'm not the one requesting this change, but I'm guessing you should add a
-comment in this header, above pgsize_bitmap (which should actually be
-called page_size_mask to follow the spec). I guess I'd add:
+DMA is used for burst data transfer operation, also DMA HW supports
+aligned 32bit memory address and aligned data access by default.
+DMA burst of 8 supported. Data register used to support the read/write
+operation from/to device.
 
-/* Same format as virtio_iommu_config::page_size_mask */
+NAND controller also supports in-built HW ECC engine.
 
-for this field, and then maybe change the comment of virtio_iommu_config,
-currently "/* Supported page sizes */", to something more precise such as:
+NAND controller driver implements ->exec_op() to replace legacy hooks,
+these specific call-back method to execute NAND operations.
 
-/*
- * Bitmap of supported page sizes. The least significant bit indicates the
- * smallest granularity and the other bits are hints indicating optimal
- * block sizes.
- */
+Thank you very much Boris for the reviews, suggestions and valuable inputs.
+---
+v6:
+  - update EBU_ADDR_SELx register base value build it from DT
+  - Add tabs in in Kconfig
+  - Rob's review comments addressed in YAML file
+  - add addr_sel0 and addr_sel1 reg-names in YAML example
+v5:
+  - replace by 'HSNAND_CLE_OFFS | HSNAND_CS_OFFS' to NAND_WRITE_CMD and NAND_WRITE_ADDR
+  - remove the unused macros
+  - update EBU_ADDR_MASK(x) macro
+  - update the EBU_ADDR_SELx register values to be written
+  - add the example in YAML file
+v4:
+  - add ebu_nand_cs structure for multiple-CS support
+  - mask/offset encoding for 0x51 value
+  - update macro HSNAND_CTL_ENABLE_ECC
+  - drop the op argument and un-used macros.
+  - updated the datatype and macros
+  - add function disable nand module
+  - remove ebu_host->dma_rx = NULL;
+  - rename MMIO address range variables to ebu and hsnand
+  - implement ->setup_data_interface()
+  - update label err_cleanup_nand and err_cleanup_dma
+  - add return value check in the nand_remove function
+  - add/remove tabs and spaces as per coding standard
+  - encoded CS ids by reg property
+v3:
+  - Add depends on MACRO in Kconfig
+  - file name update in Makefile
+  - file name update to intel-nand-controller
+  - modification of MACRO divided like EBU, HSNAND and NAND
+  - add NAND_ALE_OFFS, NAND_CLE_OFFS and NAND_CS_OFFS
+  - rename lgm_ to ebu_ and _va suffix is removed in the whole file
+  - rename structure and varaibles as per review comments.
+  - remove lgm_read_byte(), lgm_dev_ready() and cmd_ctrl() un-used function
+  - update in exec_op() as per review comments
+  - rename function lgm_dma_exit() by lgm_dma_cleanup()
+  - hardcoded magic value  for base and offset replaced by MACRO defined
+  - mtd_device_unregister() + nand_cleanup() instead of nand_release()
+v2:
+  - implement the ->exec_op() to replaces the legacy hook-up.
+  - update the commit message
+  - YAML compatible string update to intel, lgm-nand-controller
+  - add MIPS maintainers and xway_nand driver author in CC
 
-But I don't know how much should be spelled out here, since those details
-are available in the spec.
+v1:
+ - initial version
 
-Thanks,
-Jean
+
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: mtd: Add Nand Flash Controller support for Intel LGM SoC
+  mtd: rawnand: Add NAND controller support on Intel LGM SoC
+
+ .../devicetree/bindings/mtd/intel,lgm-nand.yaml    |  83 +++
+ drivers/mtd/nand/raw/Kconfig                       |   8 +
+ drivers/mtd/nand/raw/Makefile                      |   1 +
+ drivers/mtd/nand/raw/intel-nand-controller.c       | 747 +++++++++++++++++++++
+ 4 files changed, 839 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+ create mode 100644 drivers/mtd/nand/raw/intel-nand-controller.c
+
+-- 
+2.11.0
+
