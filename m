@@ -6,130 +6,107 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81174CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F01CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 214DA206CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7D4206CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:53:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="SHeK9zOK";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="T8JBWsL0"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WuI4fRF4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731443AbgEMLww (ORCPT
+        id S1731689AbgEMLxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 07:52:52 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:55725 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725982AbgEMLwv (ORCPT
+        Wed, 13 May 2020 07:53:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731493AbgEMLxB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 07:52:51 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 74C8558015B;
-        Wed, 13 May 2020 07:52:50 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 13 May 2020 07:52:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=/AYFFr1MNgJJ+o7d5S4rnrDYJJs
-        eH51ikD+z7qPz61c=; b=SHeK9zOKaDJna8C4jP121kXKjyPnjNecvnjP0iCrvFS
-        RnSYyReZHdXtF8jenjymlGXj4GyPYjrw+KWj7zbnFfsGgYlK8fg/wNzfyg0bT9Nh
-        /OqCDyjNTwtvIaw2NL9d0btuGNQBUEfa7QT258b12Kw2sPpiH7j+54WPdn8er/Wj
-        91cQDVDfwcvllyCGNUlhn31HnXvulBN+sFujWaluhTGUcg/SPpPryAL4m1bt1zTx
-        PFiPFxyN9elXjGyoVWMcU5KqOkPyE0EKpCofhgbAzkYUmozWI9Ehy31b9J8IsebU
-        Dux8ywFx4gcY3kCtUZfFca9w1AkVhrbiWNQyHFk5mPw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=/AYFFr
-        1MNgJJ+o7d5S4rnrDYJJseH51ikD+z7qPz61c=; b=T8JBWsL0UMCMphAJdRwyFl
-        vifRo/GpMAtWgxUq8TqrCb2vIg9jxCJVwYcWld46z5DyZqkGjhNSZnE+ucVNyfUr
-        tnbPYabxNwQSPCdOrcPJ4xB91ZEMJsKpDyCboG3l7Rw2WdyHUNNZhcGQGWJwAsLX
-        GlU6H0jfie+ghTwD41+mSEKUgTnz/bqJm86cjdReeKtNa1/7sM56KKDhClrR3/Xf
-        mEoTI1YS2oqgcF/rY09JOKZyQlrERN6zBnr17qyxaq+HCNnZ8jJkAQZWWDTTFPKp
-        23JGyse7Ib9tcS1Ehaet5qe1iW3aCHomawEs3ZLWmXl81qaUPezQOJySlxTMLkzw
-        ==
-X-ME-Sender: <xms:kd-7XuKT8PhhjcEUQBW66PYqBBllwrS1yfICrXVjIUjIZdLb2gdTrA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrleeggdeghecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
-    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:kd-7XmIfmrslGfp-DubBsUSZezcfnw3zsDnedT5xMKphy8xG1oPOqA>
-    <xmx:kd-7XuvAiTqYBKlxC6Sjl-8FKOU36HGUS-LxJAFEoDMvVoVSigtlVw>
-    <xmx:kd-7XjaygZc2oMf_vt3tRkH1l2cHFqlQUnf8ljeLTBEjnD84e7pFTw>
-    <xmx:kt-7Xh5GMsGnbqshAHOKdgr1gCP-d05hn76ukarVVctrAY8ubSeriA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 671253280065;
-        Wed, 13 May 2020 07:52:49 -0400 (EDT)
-Date:   Wed, 13 May 2020 13:52:46 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
-Subject: Re: [PATCH v2 22/91] reset: Move reset-simple header out of
- drivers/reset
-Message-ID: <20200513115246.rcago5fue5bb4xzt@gilmour.lan>
-References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
- <6f7651682a6dab539bd89c80704c8303bbae68bd.1587742492.git-series.maxime@cerno.tech>
- <b1af9917885ee3da60de1385edd2d8094ecb3b7d.camel@pengutronix.de>
+        Wed, 13 May 2020 07:53:01 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32EAFC061A0C;
+        Wed, 13 May 2020 04:53:01 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49MY2W4jQlz9sRK;
+        Wed, 13 May 2020 21:52:51 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589370776;
+        bh=l+pd+mpalwVpPCiH+93FYHS/ISb+yEppBpyKCFyPq2s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=WuI4fRF4JT2OuppMIkjyvoT/dpbfs+pMgfN/DBejenZuKFPxvOkg5582Pe7ekqpTe
+         WGeOM9iKgEoq1PiLYcvpwmQ78lUXPn4iZ7TmfebFAidmTiH8SFzqdD5ZUgZZLOntKs
+         V76qW0NsuW1VNRZudddZ2LykQYsp9sA8B4QnEvBnobUMVSFr0J5bEfutwrvWI/0SSy
+         I/WCJTex/fDHm6K/6aS7uEPMspPLFRfe0OeI17+i+msnOiva+pNLaNSpAp79sQOAHC
+         AfIuTEIEE3Qk57+3CrXoLB1jgGXaidoYqb4g+eIrZmg3Ez0nq+j+7tBH5Sj02XBKFV
+         7tFJUA90iY9ig==
+Date:   Wed, 13 May 2020 21:52:50 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     madhuparnabhowmik10@gmail.com
+Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, frextrite@gmail.com,
+        joel@joelfernandes.org, paulmck@kernel.org, cai@lca.pw
+Subject: Re: [PATCH] Fix suspicious RCU usage warning
+Message-ID: <20200513215250.43486e02@canb.auug.org.au>
+In-Reply-To: <20200513061610.22313-1-madhuparnabhowmik10@gmail.com>
+References: <20200513061610.22313-1-madhuparnabhowmik10@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7unmcshnw527jht7"
-Content-Disposition: inline
-In-Reply-To: <b1af9917885ee3da60de1385edd2d8094ecb3b7d.camel@pengutronix.de>
+Content-Type: multipart/signed; boundary="Sig_/+ZZmrAi6vQ8lHEwg9rTck/B";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---7unmcshnw527jht7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--Sig_/+ZZmrAi6vQ8lHEwg9rTck/B
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-Hi Philipp,
+Hi all,
 
-On Wed, May 06, 2020 at 11:26:34AM +0200, Philipp Zabel wrote:
-> On Fri, 2020-04-24 at 17:34 +0200, Maxime Ripard wrote:
-> > The reset-simple code can be useful for drivers outside of drivers/reset
-> > that have a few reset controls as part of their features. Let's move it=
- to
-> > include/linux/reset.
-> >=20
-> > Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+On Wed, 13 May 2020 11:46:10 +0530 madhuparnabhowmik10@gmail.com wrote:
+>
+> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 >=20
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> This patch fixes the following warning:
 >=20
-> Do you need the reset patches applied together with this series, or can
-> I pick them up individually?
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+> WARNING: suspicious RCU usage
+> 5.7.0-rc4-next-20200507-syzkaller #0 Not tainted
+> -----------------------------
+> net/ipv6/ip6mr.c:124 RCU-list traversed in non-reader section!!
+>=20
+> ipmr_new_table() returns an existing table, but there is no table at
+> init. Therefore the condition: either holding rtnl or the list is empty
+> is used.
+>=20
+> Suggested-by: Jakub Kicinski <kuba@kernel.org>
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-You can definitely pick them up individually. I'll resend them separately w=
-ith
-your changes addressed.
+Thanks.  Added to my fixes tree from tomorrow (until it turns up
+elsewhere).
 
-Thanks!
-Maxime
+--=20
+Cheers,
+Stephen Rothwell
 
---7unmcshnw527jht7
-Content-Type: application/pgp-signature; name="signature.asc"
+--Sig_/+ZZmrAi6vQ8lHEwg9rTck/B
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXrvfjgAKCRDj7w1vZxhR
-xR7yAP4lmUkJZpZ/LFiqX3QxnC3WMocoqEk7ZY3k2EIVbiwysAEAzhQyCVvDHYkA
-ySN2FN++xDb5ZhKP4ThE7Y4BFL4/Xww=
-=lSEg
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl6735IACgkQAVBC80lX
+0GxXzwf9GtcbY3iOGDoZjrQ1h3WOwWBgxDlxjXrp4sQMQjmZ09AgypNRBCLS2pQ3
+/aoFl7wz8hbgQ1RX/PvLddq4c1dIFnkj+WJFauEdqoJJHM6GXRngBjS0nENVVyL0
+yJc+bTqAfrG5C+UaxIOHbndNA88svGtDSOqN2zAPEPm/Wz0YwPY/kVyo3gNa3lrN
+7NbrjmjZHkuYEXcZ5FYlvasghIppBlm7LMDRzc9Uq4pev/i7nBA0ZfrmNP4m+Bwm
+AdK9nLcoHvE9VJhaBiF2IJcMdf0G7/EQ8puwJg/F4k0cxuXq70ITDYa5JJUlNZh1
++Q3h/+6awqJ7DkMrYKmAis+o0fHEqg==
+=0Y4j
 -----END PGP SIGNATURE-----
 
---7unmcshnw527jht7--
+--Sig_/+ZZmrAi6vQ8lHEwg9rTck/B--
