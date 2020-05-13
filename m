@@ -2,75 +2,112 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 015B7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9338C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57F9C2065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0440720690
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:55:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589388913;
-	bh=jK0POYIL9Mor0rbRIC46pg4AavvAIViEOzMWk8fyDCs=;
+	s=default; t=1589388945;
+	bh=gsslFp9rqxz7ytfQkPA8wdKTwKbLEePk9J96wly+SWk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pC3Enfe9/lF0saTdKzgpZwH0fH1e8cv8MnHD0ztPNP95tHUVnFGg1FXN735GkqSal
-	 OR3DRzdCwYFcNjPQYoUA1oaDMBnsbczi1WCl1pEU5TAfDOD+Prm8SNqlG5IoGzqtRV
-	 U2EZPN6Bvj77BFfRm9/e6NEcxJdpibAtC1GLywO8=
+	b=0RMGWCo2QiihTPMh9q/TNGFo4Z5lTNL/2NLKhgVC+Jyvlz5/sqhD4KbiMMdYojzgb
+	 lYxKv2i7j5KdwUUMRBDpj1+HrxE5Xg91c+jOeq0NxHJYQw7uYxdqYqN2RtSK0lqGW+
+	 8+VrRzKLUph0jcZ0q/PFl+Csnm9Q+NCfvqfE0hPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389652AbgEMQzK (ORCPT
+        id S2389735AbgEMQzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 12:55:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56630 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 12:55:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727120AbgEMQzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 12:55:09 -0400
-Received: from embeddedor (unknown [189.207.59.248])
+        id S1727120AbgEMQzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 12:55:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8A8E2065D;
-        Wed, 13 May 2020 16:55:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C22DB20671;
+        Wed, 13 May 2020 16:55:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589388910;
-        bh=jK0POYIL9Mor0rbRIC46pg4AavvAIViEOzMWk8fyDCs=;
+        s=default; t=1589388943;
+        bh=gsslFp9rqxz7ytfQkPA8wdKTwKbLEePk9J96wly+SWk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gp+daNLgO3qQoIy2aYgOOLbLjNrwPmRNghNcwLpa8+yHA6GND5OcOQA0Xdm+uCHSH
-         Z39la1TKwm8nG00KBWedYFiv92zhb2pFa84BG9q2XeQ0HQNcb7iFF7EigmAGH/4oSM
-         rF4ARwqwohxHMSlQR9RJJ9WGjum15mEKDEWuKjYs=
-Date:   Wed, 13 May 2020 11:59:45 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Bluetooth: Replace zero-length array with flexible-array
-Message-ID: <20200513165945.GO4897@embeddedor>
-References: <20200507185050.GA13953@embeddedor>
- <1027665B-71AC-4BC1-A3DF-64B1A9475B31@holtmann.org>
+        b=u23wU6O/t5VjgR1swjr7WLWTBzPMow6KnFETB1dL7r+xziGuStYskJssLLALqnwfu
+         jwtPb9MNzzUs8jgS+/sOuVleshkeqqCHHVxPtsS5l3jriIiTHEFc/Un9gq4I/uJgZp
+         1TThkwzIt6ngumq8AbPDynG85032Y0LAMcA9cd0Y=
+Date:   Wed, 13 May 2020 18:55:40 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Hillf Danton <hdanton@sina.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     syzbot <syzbot+353be47c9ce21b68b7ed@syzkaller.appspotmail.com>,
+        bp@alien8.de, dave.hansen@linux.intel.com,
+        dmitry.torokhov@gmail.com, ebiederm@xmission.com, hpa@zytor.com,
+        jeremy.linton@arm.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
+        peterz@infradead.org, stern@rowland.harvard.edu,
+        syzkaller-bugs@googlegroups.com, x86@kernel.org
+Subject: Re: WARNING in memtype_reserve
+Message-ID: <20200513165540.GA1366700@kroah.com>
+References: <000000000000f0d8d205a531f1a3@google.com>
+ <20200509074507.GC1831917@kroah.com>
+ <87wo5l4ecm.fsf@nanos.tec.linutronix.de>
+ <20200513124445.GA1082735@kroah.com>
+ <87zhab249p.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1027665B-71AC-4BC1-A3DF-64B1A9475B31@holtmann.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <87zhab249p.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marcel,
-
-On Wed, May 13, 2020 at 09:30:03AM +0200, Marcel Holtmann wrote:
-> > ---
-> > include/net/bluetooth/l2cap.h |    6 +++---
-> > include/net/bluetooth/mgmt.h  |   40 ++++++++++++++++++++--------------------
-> > 2 files changed, 23 insertions(+), 23 deletions(-)
+On Wed, May 13, 2020 at 06:22:58PM +0200, Thomas Gleixner wrote:
+> Greg KH <gregkh@linuxfoundation.org> writes:
+> > On Sat, May 09, 2020 at 12:00:57PM +0200, Thomas Gleixner wrote:
+> >> Greg KH <gregkh@linuxfoundation.org> writes:
+> >> > On Sat, May 09, 2020 at 12:20:14AM -0700, syzbot wrote:
+> >> >> memtype_reserve failed: [mem 0xffffffffff000-0x00008fff], req write-back
+> >> >> WARNING: CPU: 1 PID: 7025 at arch/x86/mm/pat/memtype.c:589 memtype_reserve+0x69f/0x820 arch/x86/mm/pat/memtype.c:589
+> >> >
+> >> > So should memtype_reserve() not do a WARN if given invalid parameters as
+> >> > it can be triggered by userspace requests?
+> >> >
+> >> > A normal "invalid request" debug line is probably all that is needed,
+> >> > right?
+> >> 
+> >> I disagree. The callsite espcially if user space triggerable should not
+> >> attempt to ask for a reservation where start > end:
+> >> 
+> >>   >> memtype_reserve failed: [mem 0xffffffffff000-0x00008fff], req write-back
+> >> 
+> >> The real question is which part of the call chain is responsible for
+> >> this. That needs to be fixed.
+> >
+> > This is caused by 2bef9aed6f0e ("usb: usbfs: correct kernel->user page
+> > attribute mismatch") which changed a call to remap_pfn_range() to
+> > dma_mmap_coherent().  Looks like the error checking in remap_pfn_range()
+> > handled the invalid options better than dma_mma_coherent() when odd
+> > values are passed in.
+> >
+> > We can add the check to dma_mmap_coherent(), again, but really, this
+> > type of check should probably only be needed in one place to ensure we
+> > always get it correct, right?
 > 
-> the mgmt.h portion we already have in bluetooth-next tree. Can you send a version that just addresses l2cap.h. Thanks.
-> 
-> 
+> That might be correct for this particular call chain, but this check
+> really is the last defense before stuff goes down the drain. None of the
+> last line functions should ever be reached with crappy arguments.
 
-Sure thing. I'll send a patch for that, shortly.
+Looking at the other callers of dma_mmap_coherent(), it looks like this
+needs to be done in that function, as other drivers are passing in "raw"
+data as well.  So Hillf's patch is probably the best one.
 
-Thanks
---
-Gustavo
+Hillf, can you resend it in a format we can apply it in and have syzbot
+test?
+
+thanks,
+
+greg k-h
