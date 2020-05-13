@@ -2,155 +2,86 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D72C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C86C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59B742065C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:48:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="JGD7HQd4"
+	by mail.kernel.org (Postfix) with ESMTP id 1E1CF2065C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:48:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731735AbgEMWsS (ORCPT
+        id S1731839AbgEMWsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 18:48:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58198 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731649AbgEMWsO (ORCPT
+        Wed, 13 May 2020 18:48:35 -0400
+Received: from smtprelay0137.hostedemail.com ([216.40.44.137]:53570 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731649AbgEMWsd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 18:48:14 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E4DDC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 15:48:14 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id g11so407356plp.1
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 15:48:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=H+AfxUaMnhwNQoaeoLBhnhy670cA4ggBoeJoS1eRurw=;
-        b=JGD7HQd4cFtwAgY6blAgbXdG6kcGmAAG1VWu80Jyf2foqmg/CPidgYdJYYyspMDrP4
-         /EVgNm2nMhqtWEvVGt5m0mjK4HAef18Jhth28pHYJDCID+v52/KeMHGrvvt4kUngLxIi
-         v69i+/VoYcfURFZw1kflWQB7jS9mJAyZnR3NM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=H+AfxUaMnhwNQoaeoLBhnhy670cA4ggBoeJoS1eRurw=;
-        b=YaPB0BF4D+NJ3AScTKgmu0GutqpwpsaMRrpaam97/Pr79MhNHmMYS/E52smzhkCb4Y
-         5uf3IQaNnZIf3zLazcpAwm61mt9Muy605BMwTGwYqz7QIs86yrckUcmHUA6rjri3pnxB
-         jGziV7NSd1VLUE9WGlW4ojhhcaEW4FAra66eynYTQT3qta03QUWZLkorMaR6NXKafZOU
-         hC9UrGrb7jMeQaz+82ZxM1dpLvZTPz1GmFzvJi0G7fF5ci7FeKRa+JkXnKPGWNpjBie5
-         reGeu2l/902zCgZdjzDOV8ZQPM3JB32gVv4k7WkNuhxmv4Wf64XLm++Mjax567bNlDda
-         XOcA==
-X-Gm-Message-State: AOAM530VYgzSilSwwcFAi4lixVgPAriRUPHh32JL/MAwsQuVbDN6Ha5t
-        nEoO3pABKSdu6PJ3j0vJih7x+A==
-X-Google-Smtp-Source: ABdhPJybl/6AytHcx4YvEW8rJAb5cTYd9TKvgTzZxRiFPIg0ucMe2oMrD9kjvJc/qEKo/373gAT/Yg==
-X-Received: by 2002:a17:902:465:: with SMTP id 92mr1264035ple.227.1589410093370;
-        Wed, 13 May 2020 15:48:13 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id f64sm16806846pjd.5.2020.05.13.15.48.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 May 2020 15:48:12 -0700 (PDT)
-Subject: Re: [PATCH v5 1/7] fs: introduce kernel_pread_file* support
-To:     Mimi Zohar <zohar@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>
-References: <20200508002739.19360-1-scott.branden@broadcom.com>
- <20200508002739.19360-2-scott.branden@broadcom.com>
- <1589395153.5098.158.camel@kernel.org>
- <0e6b5f65-8c61-b02e-7d35-b4ae52aebcf3@broadcom.com>
- <1589396593.5098.166.camel@kernel.org>
- <e1b92047-7003-0615-3d58-1388ec27c78a@broadcom.com>
- <1589398747.5098.178.camel@kernel.org>
- <a228ae0f-d551-e0e8-446e-5ae63462c520@broadcom.com>
- <1589404814.5098.185.camel@kernel.org>
- <20200513212847.GT11244@42.do-not-panic.com>
- <1589407924.5098.208.camel@kernel.org>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <f8de785c-60df-3fec-c2c6-b1dd2c77db17@broadcom.com>
-Date:   Wed, 13 May 2020 15:48:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 13 May 2020 18:48:33 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id C68353AA1;
+        Wed, 13 May 2020 22:48:31 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: jail30_fefc17eb803f
+X-Filterd-Recvd-Size: 2415
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 13 May 2020 22:48:29 +0000 (UTC)
+Message-ID: <dc6a17197c3406d877efd98de351e57d7bbe06a5.camel@perches.com>
+Subject: Re: [PATCH v2 bpf-next 0/7] bpf, printk: add BTF-based type printing
+From:   Joe Perches <joe@perches.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Alan Maguire <alan.maguire@oracle.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, bpf@vger.kernel.org,
+        linux@rasmusvillemoes.dk, arnaldo.melo@gmail.com, yhs@fb.com,
+        kafai@fb.com, songliubraving@fb.com, andriin@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Date:   Wed, 13 May 2020 15:48:17 -0700
+In-Reply-To: <20200513222424.4nfxgkequhdzn3u3@ast-mbp.dhcp.thefacebook.com>
+References: <1589263005-7887-1-git-send-email-alan.maguire@oracle.com>
+         <20200513222424.4nfxgkequhdzn3u3@ast-mbp.dhcp.thefacebook.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-In-Reply-To: <1589407924.5098.208.camel@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 2020-05-13 at 15:24 -0700, Alexei Starovoitov wrote:
+> On Tue, May 12, 2020 at 06:56:38AM +0100, Alan Maguire wrote:
+> > The printk family of functions support printing specific pointer types
+> > using %p format specifiers (MAC addresses, IP addresses, etc).  For
+> > full details see Documentation/core-api/printk-formats.rst.
+> > 
+> > This patchset proposes introducing a "print typed pointer" format
+> > specifier "%pT"; the argument associated with the specifier is of
+> > form "struct btf_ptr *" which consists of a .ptr value and a .type
+> > value specifying a stringified type (e.g. "struct sk_buff") or
+> > an .id value specifying a BPF Type Format (BTF) id identifying
+> > the appropriate type it points to.
+> > 
+> >   pr_info("%pT", BTF_PTR_TYPE(skb, "struct sk_buff"));
+> > 
+> > ...gives us:
+> > 
+> > (struct sk_buff){
+> >  .transport_header = (__u16)65535,
+> >  .mac_header = (__u16)65535,
+> >  .end = (sk_buff_data_t)192,
+> >  .head = (unsigned char *)000000007524fd8b,
+> >  .data = (unsigned char *)000000007524fd8b,
+> 
+> could you add "0x" prefix here to make it even more C like
+> and unambiguous ?
 
+linux pointers are not emitted with an 0x prefix
 
-On 2020-05-13 3:12 p.m., Mimi Zohar wrote:
-> On Wed, 2020-05-13 at 21:28 +0000, Luis Chamberlain wrote:
->> On Wed, May 13, 2020 at 05:20:14PM -0400, Mimi Zohar wrote:
->>> On Wed, 2020-05-13 at 12:41 -0700, Scott Branden wrote:
->>>> On 2020-05-13 12:39 p.m., Mimi Zohar wrote:
->>>>> On Wed, 2020-05-13 at 12:18 -0700, Scott Branden wrote:
->>>>>> On 2020-05-13 12:03 p.m., Mimi Zohar wrote:
->>>>>>> On Wed, 2020-05-13 at 11:53 -0700, Scott Branden wrote:
->>>>>> Even if the kernel successfully verified the firmware file signature it
->>>>>> would just be wasting its time.  The kernel in these use cases is not always
->>>>>> trusted.  The device needs to authenticate the firmware image itself.
->>>>> There are also environments where the kernel is trusted and limits the
->>>>> firmware being provided to the device to one which they signed.
->>>>>
->>>>>>> The device firmware is being downloaded piecemeal from somewhere and
->>>>>>> won't be measured?
->>>>>> It doesn't need to be measured for current driver needs.
->>>>> Sure the device doesn't need the kernel measuring the firmware, but
->>>>> hardened environments do measure firmware.
->>>>>
->>>>>> If someone has such need the infrastructure could be added to the kernel
->>>>>> at a later date.  Existing functionality is not broken in any way by
->>>>>> this patch series.
->>>>> Wow!  You're saying that your patch set takes precedence over the
->>>>> existing expectations and can break them.
->>>> Huh? I said existing functionality is NOT broken by this patch series.
->>> Assuming a system is configured to measure and appraise firmware
->>> (rules below), with this change the firmware file will not be properly
->>> measured and will fail signature verification.
-So no existing functionality has been broken.
->>>
->>> Sample IMA policy rules:
->>> measure func=FIRMWARE_CHECK
->>> appraise func=FIRMWARE_CHECK appraise_type=imasig
->> Would a pre and post lsm hook for pread do it?
-> IMA currently measures and verifies the firmware file signature on the
-> post hook.  The file is read once into a buffer.  With this change,
-> IMA would need to be on the pre hook, to read the entire file,
-> calculating the file hash and verifying the file signature.  Basically
-> the firmware would be read once for IMA and again for the device.
-The entire file may not fit into available memory to measure and 
-verify.  Hence the reason for a partial read.
+(ie: pointers do not use SPECIAL in lib/vsprintf.c)
 
-Is there some way we could add a flag when calling the 
-request_firmware_into_buf to indicate it is ok that the data requested 
-does not need to be measured?
-> Mimi
 
