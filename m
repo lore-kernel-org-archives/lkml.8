@@ -2,51 +2,51 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D276CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61287CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30D3720740
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3206723128
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363637;
-	bh=6bqyuSi7qqW5PiXT3G0qoFdiCIsMTRNnGfoFN53ZoS4=;
+	s=default; t=1589363640;
+	bh=Ez+HzjOW/kVjeb7BJUsCWE4kuKqi8dg53pjN7LeiX/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tpVm6NMOi7G8FS2boWrl7TZUyUYbIynGJmPKnYHkhkDh234it3XSdQ5ffdu8afFpZ
-	 MCz58051Zhz/YJVDNzL6bbsD6FYRJvbSsh+uO2nUKSVtxwQJf74WeCTl3ZC43COBn1
-	 VqqmY+C4yO7e/3pCsxpx4Y3EAoVNJrDlbhHW18NI=
+	b=dnXD9IOo3ouTbdNX0x8oJTsGHnTj+QoUFmvuEwqGIqb9pDA3R1uxWf74kfo4GU+Rx
+	 8GTbCSweuAQ+yrMzjq/0imZ3K3NsErZuqv+yAJHptynEA2iXFbynbPhaiB4O8v4jf/
+	 4UBVeO/iGpHZAN0U0hBd/jINlhTONaejzEL+vqmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388031AbgEMJxz (ORCPT
+        id S2388035AbgEMJx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:53:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56002 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:53:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388017AbgEMJxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:53:52 -0400
+        id S2388024AbgEMJxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:53:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27E08205ED;
-        Wed, 13 May 2020 09:53:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9907C20769;
+        Wed, 13 May 2020 09:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363631;
-        bh=6bqyuSi7qqW5PiXT3G0qoFdiCIsMTRNnGfoFN53ZoS4=;
+        s=default; t=1589363634;
+        bh=Ez+HzjOW/kVjeb7BJUsCWE4kuKqi8dg53pjN7LeiX/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eqw34YZyF3N7XFl4BrHasG5n+xKji6x+q0ZOqQbVbo6JNXill8ucQerVxKEUuZX6+
-         mF7Z0SMtMlE/QuJ9RQYKevwpHr1Tb6xTy8CKDvBZh8WyWdWpfWuxnPFuCQ3+tBFPqR
-         njvQbcjsQT1kMUpZnZWkfppV3hKCtG7iwrvYzSVo=
+        b=jHG/pFMhmWSk+byxMsUJn8vIWnAWBGcUHYVbo9yeWRNdO8D9ygOKfgJDQkiqHoD1c
+         MKpzOAJKzjbyMCbbnlkE116MjLX9aYarFtCTx4erKOtzp7rlEJqiNmgBVbIDvpZPPZ
+         HVBkWeOMmEwT58kXezFTmCBXOmm2HQKG3Ky3ObfY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 5.6 061/118] HID: wacom: Report 2nd-gen Intuos Pro S center button status over BT
-Date:   Wed, 13 May 2020 11:44:40 +0200
-Message-Id: <20200513094422.338397479@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        =?UTF-8?q?Julian=20Gro=C3=9F?= <julian.g@posteo.de>
+Subject: [PATCH 5.6 062/118] USB: uas: add quirk for LaCie 2Big Quadra
+Date:   Wed, 13 May 2020 11:44:41 +0200
+Message-Id: <20200513094422.818213105@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -59,54 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gerecke <killertofu@gmail.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit dcce8ef8f70a8e38e6c47c1bae8b312376c04420 upstream.
+commit 9f04db234af691007bb785342a06abab5fb34474 upstream.
 
-The state of the center button was not reported to userspace for the
-2nd-gen Intuos Pro S when used over Bluetooth due to the pad handling
-code not being updated to support its reduced number of buttons. This
-patch uses the actual number of buttons present on the tablet to
-assemble a button state bitmap.
+This device needs US_FL_NO_REPORT_OPCODES to avoid going
+through prolonged error handling on enumeration.
 
-Link: https://github.com/linuxwacom/xf86-input-wacom/issues/112
-Fixes: cd47de45b855 ("HID: wacom: Add 2nd gen Intuos Pro Small support")
-Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
-Cc: stable@vger.kernel.org # v5.3+
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-by: Julian Groß <julian.g@posteo.de>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200429155218.7308-1-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/wacom_wac.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/usb/storage/unusual_uas.h |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/hid/wacom_wac.c
-+++ b/drivers/hid/wacom_wac.c
-@@ -1427,11 +1427,13 @@ static void wacom_intuos_pro2_bt_pad(str
- {
- 	struct input_dev *pad_input = wacom->pad_input;
- 	unsigned char *data = wacom->data;
-+	int nbuttons = wacom->features.numbered_buttons;
+--- a/drivers/usb/storage/unusual_uas.h
++++ b/drivers/usb/storage/unusual_uas.h
+@@ -28,6 +28,13 @@
+  * and don't forget to CC: the USB development list <linux-usb@vger.kernel.org>
+  */
  
--	int buttons = data[282] | ((data[281] & 0x40) << 2);
-+	int expresskeys = data[282];
-+	int center = (data[281] & 0x40) >> 6;
- 	int ring = data[285] & 0x7F;
- 	bool ringstatus = data[285] & 0x80;
--	bool prox = buttons || ringstatus;
-+	bool prox = expresskeys || center || ringstatus;
- 
- 	/* Fix touchring data: userspace expects 0 at left and increasing clockwise */
- 	ring = 71 - ring;
-@@ -1439,7 +1441,8 @@ static void wacom_intuos_pro2_bt_pad(str
- 	if (ring > 71)
- 		ring -= 72;
- 
--	wacom_report_numbered_buttons(pad_input, 9, buttons);
-+	wacom_report_numbered_buttons(pad_input, nbuttons,
-+                                      expresskeys | (center << (nbuttons - 1)));
- 
- 	input_report_abs(pad_input, ABS_WHEEL, ringstatus ? ring : 0);
- 
++/* Reported-by: Julian Groß <julian.g@posteo.de> */
++UNUSUAL_DEV(0x059f, 0x105f, 0x0000, 0x9999,
++		"LaCie",
++		"2Big Quadra USB3",
++		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
++		US_FL_NO_REPORT_OPCODES),
++
+ /*
+  * Apricorn USB3 dongle sometimes returns "USBSUSBSUSBS" in response to SCSI
+  * commands in UAS mode.  Observed with the 1.28 firmware; are there others?
 
 
