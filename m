@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C94C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB30ACA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 151AE206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8393A20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363489;
-	bh=90R9d456XOzRYbcfVgnZtYoyVzTMA4FXJCi9jzO42zE=;
+	s=default; t=1589363493;
+	bh=2vyF+S/PDQhriF+Z8BMNLoo5/iIbcU3qwbW9jy4iwZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cd9h/y2/Z7Y2cAjUtux0zW8y1bPrp9Ku0y2fGAP3CqL3O3WI36u+XVzV6qzTVqWm7
-	 uzo5MOrZo+Sh88C4fa64tcoINTjkpB7oUptzTT9PtSoBk6zTkCvpfsqGW46YTTEBJv
-	 uousnqNk7r6Hsx4exVpxLCUzZiuVmtYZdBWe8McU=
+	b=IBMXt8FgJ9Csx6G9f7ATkNH1Zy4KQCdHNnDNie7ihfrJq+Hn7oR0qWlRqjzjhitZs
+	 wJ05dwsySJIX2FX2exw5J2YepTDF2/kraTk2XjyUu89QnZvSuSMtI/e+9v441ZHC/U
+	 EqP9WzBg6Vg6crCAzFKIubSBJ+sNe4Rj+AqEayFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387658AbgEMJv2 (ORCPT
+        id S2387667AbgEMJvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:51:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52096 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:51:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732717AbgEMJvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:51:22 -0400
+        id S2387642AbgEMJvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:51:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D91D206D6;
-        Wed, 13 May 2020 09:51:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0250E23126;
+        Wed, 13 May 2020 09:51:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363482;
-        bh=90R9d456XOzRYbcfVgnZtYoyVzTMA4FXJCi9jzO42zE=;
+        s=default; t=1589363484;
+        bh=2vyF+S/PDQhriF+Z8BMNLoo5/iIbcU3qwbW9jy4iwZw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c66uPGtOnA2bm3TrgevUyX7TJUoWOwqpG0Mj7aRgu4frzM60B6Jq5tVRnIxhvcxu9
-         fk4IXl+6Hr4bDx9qze01wiK0fsxk/Rs55juAwsyXH7xIVNEK5p0wyeIVWyVXiknoIe
-         dpEHSaWF9meFtmjGu9XLxF/Hdg++Upd0AQ6FqhQU=
+        b=tnmtfAIlamVfwyj+WnBMN9reD/T6qNI+SqV3jDg0pxgVlmy7CMuTYErJFRnnGC/5T
+         +fTquyiW5bkVrS0ng6pqLRILGIilGqUSSUZD+juEZo9kVoIb0h2NBjZY90YhM25N49
+         Lg/J/N4V7uNU2v2qBLxzK+3To7fSN+5QiAywD9VM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julia Lawall <Julia.Lawall@inria.fr>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 5.4 84/90] iommu/virtio: Reverse arguments to list_add
-Date:   Wed, 13 May 2020 11:45:20 +0200
-Message-Id: <20200513094417.937658233@linuxfoundation.org>
+        stable@vger.kernel.org, Ivan Delalande <colona@arista.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 85/90] scripts/decodecode: fix trapping instruction formatting
+Date:   Wed, 13 May 2020 11:45:21 +0200
+Message-Id: <20200513094418.029584809@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -60,38 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julia Lawall <Julia.Lawall@inria.fr>
+From: Ivan Delalande <colona@arista.com>
 
-commit fb3637a113349f53830f7d6ca45891b7192cd28f upstream.
+commit e08df079b23e2e982df15aa340bfbaf50f297504 upstream.
 
-Elsewhere in the file, there is a list_for_each_entry with
-&vdev->resv_regions as the second argument, suggesting that
-&vdev->resv_regions is the list head.  So exchange the
-arguments on the list_add call to put the list head in the
-second argument.
+If the trapping instruction contains a ':', for a memory access through
+segment registers for example, the sed substitution will insert the '*'
+marker in the middle of the instruction instead of the line address:
 
-Fixes: 2a5a31487445 ("iommu/virtio: Add probe request")
-Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
+	2b:   65 48 0f c7 0f          cmpxchg16b %gs:*(%rdi)          <-- trapping instruction
+
+I started to think I had forgotten some quirk of the assembly syntax
+before noticing that it was actually coming from the script.  Fix it to
+add the address marker at the right place for these instructions:
+
+	28:   49 8b 06                mov    (%r14),%rax
+	2b:*  65 48 0f c7 0f          cmpxchg16b %gs:(%rdi)           <-- trapping instruction
+	30:   0f 94 c0                sete   %al
+
+Fixes: 18ff44b189e2 ("scripts/decodecode: make faulting insn ptr more robust")
+Signed-off-by: Ivan Delalande <colona@arista.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Borislav Petkov <bp@suse.de>
+Link: http://lkml.kernel.org/r/20200419223653.GA31248@visor
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Link: https://lore.kernel.org/r/1588704467-13431-1-git-send-email-Julia.Lawall@inria.fr
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-
 ---
- drivers/iommu/virtio-iommu.c |    2 +-
+ scripts/decodecode |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/iommu/virtio-iommu.c
-+++ b/drivers/iommu/virtio-iommu.c
-@@ -454,7 +454,7 @@ static int viommu_add_resv_mem(struct vi
- 	if (!region)
- 		return -ENOMEM;
+--- a/scripts/decodecode
++++ b/scripts/decodecode
+@@ -126,7 +126,7 @@ faultlinenum=$(( $(wc -l $T.oo  | cut -d
+ faultline=`cat $T.dis | head -1 | cut -d":" -f2-`
+ faultline=`echo "$faultline" | sed -e 's/\[/\\\[/g; s/\]/\\\]/g'`
  
--	list_add(&vdev->resv_regions, &region->list);
-+	list_add(&region->list, &vdev->resv_regions);
- 	return 0;
- }
- 
+-cat $T.oo | sed -e "${faultlinenum}s/^\(.*:\)\(.*\)/\1\*\2\t\t<-- trapping instruction/"
++cat $T.oo | sed -e "${faultlinenum}s/^\([^:]*:\)\(.*\)/\1\*\2\t\t<-- trapping instruction/"
+ echo
+ cat $T.aa
+ cleanup
 
 
