@@ -2,55 +2,52 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E23F9C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C58A1CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B925C206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A663B206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364225;
-	bh=cFAc/IDSVmen1vlXx4gXPx148PrTuQYtAWHIc1Ke8Nc=;
+	s=default; t=1589364228;
+	bh=KU4EZxfFw3BnyZQ9fUN0IP4fieRje8nMyeSfD9J6E6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o+n396JQk5cJP1qw4I0/MSCAXnQAh1LZkAYbTd1qrI0aqntUjK7ayyYf7lZB4xi5l
-	 xRWp5WMrx5QbHS5RlWKCHzZK97T+CRISWoAvOPApQwgE739/CHGBAIUiSEtB9xe3Dm
-	 jXPyRcpdzDGYRqjZG86FXjvkw61sM72eNRt9Sllc=
+	b=yvtIYcnvxqtsGfCpIWHf+t9wYXnavOXsi1S8/wvJi85PuoMK4J9HDUB02geqZ1H8v
+	 PSvD87UnLa1FI+AE2bKgEsuNxaIqKzWV78OBkQWLcQ3X426BXH864ub5sFJBAHP9tP
+	 Kk/GQ9v7BYzXmFfw4bqhgNijaC1v/j9Egxk2uVrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733054AbgEMJsX (ORCPT
+        id S2388656AbgEMKDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:48:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46574 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 06:03:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733032AbgEMJsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:48:17 -0400
+        id S1733055AbgEMJsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:48:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F70020753;
-        Wed, 13 May 2020 09:48:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C77D420769;
+        Wed, 13 May 2020 09:48:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363296;
-        bh=cFAc/IDSVmen1vlXx4gXPx148PrTuQYtAWHIc1Ke8Nc=;
+        s=default; t=1589363303;
+        bh=KU4EZxfFw3BnyZQ9fUN0IP4fieRje8nMyeSfD9J6E6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OJ0d6gSDjMk83z5X9zRh6vQ6P+dVzo1P0IL9DVm8gOU4yUYNbZdHM0hQFpcRrQ6kD
-         XWnqR3afxR/a/McZ1tmwy2qari/ctHzdkair0UmaceJVXE/lXb4YpY4ArbPY/YoIfc
-         EbWboVsHb/5dhs+hDc4sH1EdQb0IC2Yz14wEhsj8=
+        b=nFQyf9Ah7lqTxK0D7eFheEQkCQCpot8iKDZFneFYEqw/9LCMSJ000NY0JN3WwXE9g
+         ec22VP+rAFQK0aOJwvJuZmdBfkh7/seK51XoDlJvg7bZi9SKoJlNvjG1NSHcxhSxRU
+         l3lKouCfRSOR3tzncM2xQcKmb9B5CP4YYYtz6Cwg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Yash Shah <yash.shah@sifive.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Dejin Zheng <zhengdejin5@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 17/90] net: macb: fix an issue about leak related system resources
-Date:   Wed, 13 May 2020 11:44:13 +0200
-Message-Id: <20200513094410.642137919@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Keith Busch <kbusch@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 02/90] nvme: refactor nvme_identify_ns_descs error handling
+Date:   Wed, 13 May 2020 11:43:58 +0200
+Message-Id: <20200513094409.193924197@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -63,48 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dejin Zheng <zhengdejin5@gmail.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit b959c77dac09348955f344104c6a921ebe104753 ]
+[ Upstream commit fb314eb0cbb2e11540d1ae1a7b28346397f621ef ]
 
-A call of the function macb_init() can fail in the function
-fu540_c000_init. The related system resources were not released
-then. use devm_platform_ioremap_resource() to replace ioremap()
-to fix it.
+Move the handling of an error into the function from the caller, and
+only do it for an actual error on the admin command itself, not the
+command parsing, as that should be enough to deal with devices claiming
+a bogus version compliance.
 
-Fixes: c218ad559020ff9 ("macb: Add support for SiFive FU540-C000")
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Yash Shah <yash.shah@sifive.com>
-Suggested-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cadence/macb_main.c |   12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ drivers/nvme/host/core.c | 28 +++++++++++++---------------
+ 1 file changed, 13 insertions(+), 15 deletions(-)
 
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -4054,15 +4054,9 @@ static int fu540_c000_clk_init(struct pl
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 31b7dcd791c20..66147df86d883 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1071,8 +1071,17 @@ static int nvme_identify_ns_descs(struct nvme_ctrl *ctrl, unsigned nsid,
  
- static int fu540_c000_init(struct platform_device *pdev)
+ 	status = nvme_submit_sync_cmd(ctrl->admin_q, &c, data,
+ 				      NVME_IDENTIFY_DATA_SIZE);
+-	if (status)
++	if (status) {
++		dev_warn(ctrl->device,
++			"Identify Descriptors failed (%d)\n", status);
++		 /*
++		  * Don't treat an error as fatal, as we potentially already
++		  * have a NGUID or EUI-64.
++		  */
++		if (status > 0)
++			status = 0;
+ 		goto free_data;
++	}
+ 
+ 	for (pos = 0; pos < NVME_IDENTIFY_DATA_SIZE; pos += len) {
+ 		struct nvme_ns_id_desc *cur = data + pos;
+@@ -1730,26 +1739,15 @@ static void nvme_config_write_zeroes(struct gendisk *disk, struct nvme_ns *ns)
+ static int nvme_report_ns_ids(struct nvme_ctrl *ctrl, unsigned int nsid,
+ 		struct nvme_id_ns *id, struct nvme_ns_ids *ids)
  {
--	struct resource *res;
+-	int ret = 0;
 -
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--	if (!res)
--		return -ENODEV;
--
--	mgmt->reg = ioremap(res->start, resource_size(res));
--	if (!mgmt->reg)
--		return -ENOMEM;
-+	mgmt->reg = devm_platform_ioremap_resource(pdev, 1);
-+	if (IS_ERR(mgmt->reg))
-+		return PTR_ERR(mgmt->reg);
+ 	memset(ids, 0, sizeof(*ids));
  
- 	return macb_init(pdev);
+ 	if (ctrl->vs >= NVME_VS(1, 1, 0))
+ 		memcpy(ids->eui64, id->eui64, sizeof(id->eui64));
+ 	if (ctrl->vs >= NVME_VS(1, 2, 0))
+ 		memcpy(ids->nguid, id->nguid, sizeof(id->nguid));
+-	if (ctrl->vs >= NVME_VS(1, 3, 0)) {
+-		 /* Don't treat error as fatal we potentially
+-		  * already have a NGUID or EUI-64
+-		  */
+-		ret = nvme_identify_ns_descs(ctrl, nsid, ids);
+-		if (ret)
+-			dev_warn(ctrl->device,
+-				 "Identify Descriptors failed (%d)\n", ret);
+-		if (ret > 0)
+-			ret = 0;
+-	}
+-	return ret;
++	if (ctrl->vs >= NVME_VS(1, 3, 0))
++		return nvme_identify_ns_descs(ctrl, nsid, ids);
++	return 0;
  }
+ 
+ static bool nvme_ns_ids_valid(struct nvme_ns_ids *ids)
+-- 
+2.20.1
+
 
 
