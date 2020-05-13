@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 517C2CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 166CBCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDB0320659
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E1092064E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:00:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ssTtXH4W"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Dkxxsx7y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388787AbgEMOAt (ORCPT
+        id S2388797AbgEMOAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 10:00:49 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:62324 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388776AbgEMOAr (ORCPT
+        Wed, 13 May 2020 10:00:52 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:48473 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388780AbgEMOAt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 10:00:47 -0400
+        Wed, 13 May 2020 10:00:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589378446; x=1620914446;
+  t=1589378449; x=1620914449;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=u/thRVYUM0XeOw/EsW4JAmGaBkslBy0kyoRiLscrOEs=;
-  b=ssTtXH4WHpCYDY1OZjtLyIMl+OWa7ktcyCSoFTGwNIkRl6FANV+NVnc3
-   rbWsBez/PaFRaKIMavO2Gk19a/AciCNbGIYuXrvtyIeYDZCFoVnURe5ng
-   Qe8EeSM/kHOtcjhS/urYlTPmQXnf9ORDd/FsNsoolUHiDlnopUGtEusXe
-   Ml/n+QvlHHGFS0n+dPlbYX3BrFBiykwIRcliezZzkYhfNi9/HA1tYL4bo
-   0kNt5l5renDa2/tX4wdwM5AH7LDXSHx5+ADyi4NABCAEfX6p3nu830gJ7
-   rMOBYsh404Mr+bUv3wWTlyKvCD89EbgDu2wlvD4slJUL4zkBQdAJmejZk
-   A==;
-IronPort-SDR: b4JIm4J9WSFX+Pq41qrUtq7qPwNcRI2DslfTJ6HN1XIhRrDlwjYQ6h+E0lYyGenGKe/280HFc5
- j+SD2DVQxlA7pxQFaQrgXpQCQoWC79Jh5osGxD5FTDf5V9+DZRRnwIsYqUpN9Xok3liQl4t4Ki
- Oqtp3Pxf+gbP1xfPuSkvMt3GWYoRuUlBKbBuQe75sbVn3IyGftyHam1KT83nZcPFBGx9w2p+Ee
- cpoqQs2+OiIgB+EQWj5JBRSl4sIHy7aDN7Bdb/RZzhdgo40+gArMhm+fFVdk2jtJg34EzfYhgc
- gSs=
+  bh=vowUNbP3S5lXJc8g2i7fvP/xMewlWoQteI1QXHomxRg=;
+  b=Dkxxsx7ys9jt8N2poRllmk0CF+Rao+H/M16WPyqXeXfxow7qV0WhR9GF
+   QD/+xdK9z8AcRJpV/6hN8/NhyrWvPsvVUoDsL+aPKJXF9zvGzjx99Y65b
+   LFHm9FKEeg5ZPwezdjl2j6CDyvoJfvPEeWbor4/p/7q/aJRpqzjIU9iqm
+   bkI3oS52dgPnEg3YkS+Qt+B0CCT1DFEa5dwDEn/CR75FWdw7XNR5LL9c0
+   zIJZ1wsij6s07CMEkPuT9UwikP40WYqldPFV6JMlw7A2OLFNR9UlHJOmS
+   CQQMwPYtpPbJyv47wb8gCvM18j9+pYq6rqdmOX9nLyqQGRLO2X1//w0Q3
+   g==;
+IronPort-SDR: 4D+Er6POtXMlAwo49Pt9+FrHQxpT0FtL6XCAFrdjh8D85kr8b+ihfNzJkVyJV57ueigB/6nmES
+ HZkzzmLvPZFbhOnNn5afasAvzj7rCLYCOzzftWzS3RXF1BTi5Ilg0QwQSm8tPZ2BZQEragPEjs
+ lNomrfglmmjicbZ0fKgO8e8NiYrWAn2EHZw00uB81vfMrsGlogID8sGmmvO3oqyQK5nAQYNRcv
+ 6JnDeHwLAJduSg9hyvpSL+NntsrEMOarv8k6x0mbAfZBjtBve0O4aPFcINEIQptD03XfwmVBvC
+ 9T4=
 X-IronPort-AV: E=Sophos;i="5.73,388,1583218800"; 
-   d="scan'208";a="75774856"
+   d="scan'208";a="79447467"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 May 2020 07:00:46 -0700
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 May 2020 07:00:48 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 13 May 2020 07:00:48 -0700
+ 15.1.1713.5; Wed, 13 May 2020 07:00:50 -0700
 Received: from soft-dev15.microsemi.net (10.10.115.15) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 13 May 2020 07:00:43 -0700
+ 15.1.1713.5 via Frontend Transport; Wed, 13 May 2020 07:00:46 -0700
 From:   Lars Povlsen <lars.povlsen@microchip.com>
 List-Id: <soc.lore.kernel.org>
 To:     Mark Brown <broonie@kernel.org>, SoC Team <soc@kernel.org>
@@ -61,9 +61,9 @@ CC:     Lars Povlsen <lars.povlsen@microchip.com>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 02/10] spi: dw: Add support for RX sample delay register
-Date:   Wed, 13 May 2020 16:00:23 +0200
-Message-ID: <20200513140031.25633-3-lars.povlsen@microchip.com>
+Subject: [PATCH 03/10] spi: dw: Add support for client driver memory operations
+Date:   Wed, 13 May 2020 16:00:24 +0200
+Message-ID: <20200513140031.25633-4-lars.povlsen@microchip.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513140031.25633-1-lars.povlsen@microchip.com>
 References: <20200513140031.25633-1-lars.povlsen@microchip.com>
@@ -75,64 +75,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This add support for the RX_SAMPLE_DLY register. If enabled in the
-Designware IP, it allows tuning of the rx data signal by means of an
-internal rx sample fifo.
-
-The register is located at offset 0xf0, and if the option is not
-enabled in the IP, changing the register will have no effect.
+This minor change allow dw-spi drivers to register
+spi_controller_mem_ops memory operations if the platform supports it.
 
 Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 ---
- drivers/spi/spi-dw.c | 7 +++++++
+ drivers/spi/spi-dw.c | 3 +++
  drivers/spi/spi-dw.h | 2 ++
- 2 files changed, 9 insertions(+)
+ 2 files changed, 5 insertions(+)
 
 diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
-index e572eb34a3c1a..32997f28fa5bb 100644
+index 32997f28fa5bb..d0c611c42421e 100644
 --- a/drivers/spi/spi-dw.c
 +++ b/drivers/spi/spi-dw.c
-@@ -81,6 +81,9 @@ static ssize_t dw_spi_show_regs(struct file *file, char __user *user_buf,
- 			"DMATDLR: \t0x%08x\n", dw_readl(dws, DW_SPI_DMATDLR));
- 	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
- 			"DMARDLR: \t0x%08x\n", dw_readl(dws, DW_SPI_DMARDLR));
-+	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
-+			 "RX_SAMPLE_DLY: \t0x%08x\n",
-+			 dw_readl(dws, DW_SPI_RX_SAMPLE_DLY));
- 	len += scnprintf(buf + len, SPI_REGS_BUFSIZE - len,
- 			"=================================\n");
+@@ -527,6 +527,9 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
+ 	/* Basic HW init */
+ 	spi_hw_init(dev, dws);
 
-@@ -315,6 +318,10 @@ static int dw_spi_transfer_one(struct spi_controller *master,
- 		spi_set_clk(dws, chip->clk_div);
- 	}
-
-+	/* Apply RX sample delay, iff requested (nonzero) */
-+	if (dws->rx_sample_dly)
-+		dw_writel(dws, DW_SPI_RX_SAMPLE_DLY, dws->rx_sample_dly);
++	/* Memory ops? */
++	master->mem_ops = dws->mem_ops;
 +
- 	dws->n_bytes = DIV_ROUND_UP(transfer->bits_per_word, BITS_PER_BYTE);
- 	dws->dma_width = DIV_ROUND_UP(transfer->bits_per_word, BITS_PER_BYTE);
-
+ 	if (dws->dma_ops && dws->dma_ops->dma_init) {
+ 		ret = dws->dma_ops->dma_init(dws);
+ 		if (ret) {
 diff --git a/drivers/spi/spi-dw.h b/drivers/spi/spi-dw.h
-index 1bf5713e047d3..ed6e47b3f50da 100644
+index ed6e47b3f50da..8ecccbde10a20 100644
 --- a/drivers/spi/spi-dw.h
 +++ b/drivers/spi/spi-dw.h
-@@ -31,6 +31,7 @@
- #define DW_SPI_IDR			0x58
- #define DW_SPI_VERSION			0x5c
- #define DW_SPI_DR			0x60
-+#define DW_SPI_RX_SAMPLE_DLY		0xf0
- #define DW_SPI_CS_OVERRIDE		0xf4
+@@ -3,6 +3,7 @@
+ #define DW_SPI_HEADER_H
 
- /* Bit fields in CTRLR0 */
-@@ -111,6 +112,7 @@ struct dw_spi {
+ #include <linux/io.h>
++#include <linux/spi/spi-mem.h>
+ #include <linux/scatterlist.h>
 
- 	int			cs_override;
- 	u32			reg_io_width;	/* DR I/O width in bytes */
-+	u8			rx_sample_dly;	/* RX fifo tuning (option) */
+ /* Register offsets */
+@@ -116,6 +117,7 @@ struct dw_spi {
  	u16			bus_num;
  	u16			num_cs;		/* supported slave numbers */
  	void (*set_cs)(struct spi_device *spi, bool enable);
++	const struct spi_controller_mem_ops *mem_ops;
+
+ 	/* Current message transfer state info */
+ 	size_t			len;
 --
 2.26.2
