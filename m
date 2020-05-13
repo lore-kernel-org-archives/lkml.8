@@ -2,182 +2,154 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D87F3C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E38EBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08F8C204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FD21204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:45:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="TIT8H80m"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VaSEuWDY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731638AbgEMPpO (ORCPT
+        id S1731835AbgEMPpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:45:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48288 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbgEMPpN (ORCPT
+        Wed, 13 May 2020 11:45:36 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:37157 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728490AbgEMPpf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:45:13 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D936C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 08:45:12 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id 19so21808371oiy.8
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 08:45:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Mei1LatTmGdj+EOMqNvHhmuC380OhE62eU0mPCj4HIU=;
-        b=TIT8H80mk+o//K+Djr3m9ymdXjqeJJh7T1O0QGR3OB+cw9gH6v6k/2XsLqv7s+oaGI
-         UWDF28wRCnpwGYavm+XRQfy+8o2ez7RJBPSI+LHD5tVHIt5p1Sr7uwpr2rlisGEov6IA
-         64dCFZ8mHEj3yDnfE1IkxFdtbSA94SYqY5inY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Mei1LatTmGdj+EOMqNvHhmuC380OhE62eU0mPCj4HIU=;
-        b=g4IG+BXIEwni6FoVSKScfw8JnnPwc30Ma+/4nikMLbl3sPeHJBTketCcHEEZgyZYN5
-         s3h5XeOMChuRdOtCzkaqnhcWG7sGJrsPws2aiXXWGpfeBokZgR8N/J5GFtzwFc6+g8qq
-         DBnnHHmvEiU2aPxTdPtm/+E/8O24bhDpUS8MHZF4gMfGD5LUIoFO+C/6p6tjHJ8p8xlv
-         ygsNewA/F84R/vzxLOTMzq+6bxcfIobdupAL5jzkND24Xzmntd0nHPiSO3QkGRyK/J7F
-         9j8rIYUBgJ/4COkUFjgDBSud9sQtLsTCu7TZyzWtoTyDovzYKswtKeNzj4RHH/vSjOnH
-         VZ9g==
-X-Gm-Message-State: AGi0Puazn8fMZh+PWf7e2m8k5dfxZJG4Kz4ldThHhbRmjJy3laH42ey0
-        Pb/ivCLObuzxwelRYzCOPUt4yu+Zsk6Zzv9CSDRb9w==
-X-Google-Smtp-Source: APiQypI5v/GPcuUPKMBM3NTNqytmPwdux2KcE1khhFrjveIV/zK1dS2UemFwYRgCFispMAUfUJhE2vXjRmumZEBkQZg=
-X-Received: by 2002:aca:3b41:: with SMTP id i62mr9169611oia.101.1589384711122;
- Wed, 13 May 2020 08:45:11 -0700 (PDT)
+        Wed, 13 May 2020 11:45:35 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589384734; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=5BGt2SG+SlPBIoe9j8b16CCwBiaChEc3LMrTSY3Ot9A=;
+ b=VaSEuWDYY+KZ1mDj1jm8n9P4y0dW6VGJKKOtWazAXmnj3wK8O/zHmCXEtpB+v0hfTCnpvjcR
+ fIU8+hmfK1lsen/Docowdzj8iw0BQ2WzS0uy4/IrEqYQtl14s0n8PtAuG59bJhJoXfmI68CO
+ t1yKRGPnoVwcWsSivbeUWR46AtU=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebc161d.7f1e29c93880-smtp-out-n04;
+ Wed, 13 May 2020 15:45:33 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BACACC43637; Wed, 13 May 2020 15:45:33 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F05F6C433D2;
+        Wed, 13 May 2020 15:45:32 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200311112004.47138-1-stevensd@chromium.org> <20200311112004.47138-2-stevensd@chromium.org>
-In-Reply-To: <20200311112004.47138-2-stevensd@chromium.org>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Wed, 13 May 2020 17:45:00 +0200
-Message-ID: <CAKMK7uHFgiHLe9oiFBr-VR-6rU9-hLTpBTEVNh0ezyj54u70jw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] dma-buf: add support for virtio exported objects
-To:     David Stevens <stevensd@chromium.org>,
-        Tomasz Figa <tfiga@chromium.org>
-Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 13 May 2020 21:15:32 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Mike Leach <mike.leach@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:VIRTIO CORE, NET..." 
-        <virtualization@lists.linux-foundation.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>, virtio-dev@lists.oasis-open.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple
+ connections
+In-Reply-To: <158933457051.215346.13515171569230202840@swboyd.mtv.corp.google.com>
+References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org>
+ <b8c1cc35846d425a1677c73fddf5874d@codeaurora.org>
+ <eee1b9a90266eed9a9c75401f0679777@codeaurora.org>
+ <CAJ9a7Vjd0XG+rAvHptAAjGtE6xRhYsPaOSC_Bf9B-w-FZFu_Qw@mail.gmail.com>
+ <47f6d51bfad0a0bf1553e101e6a2c8c9@codeaurora.org>
+ <37b3749e-2363-0877-c318-9c334a5d1881@arm.com>
+ <d47271ee6a2a6f0f30da7e140b6f196c@codeaurora.org>
+ <CAJ9a7Vg95tcgMXgQKLAZc=TpV6FnPZ7wdF=Kwbuy7d2kRCjYQw@mail.gmail.com>
+ <364049a30dc9d242ec611bf27a16a6c9@codeaurora.org>
+ <CAJ9a7VjAoUmMG9pLEzE_rMSpOjwVOi-ZCinF87n9H0JgfMDsiQ@mail.gmail.com>
+ <158933457051.215346.13515171569230202840@swboyd.mtv.corp.google.com>
+Message-ID: <861f8ab0174d036cb1e49e34e4f81a92@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 12:20 PM David Stevens <stevensd@chromium.org> wrote:
->
-> This change adds a new dma-buf operation that allows dma-bufs to be used
-> by virtio drivers to share exported objects. The new operation allows
-> the importing driver to query the exporting driver for the UUID which
-> identifies the underlying exported object.
->
-> Signed-off-by: David Stevens <stevensd@chromium.org>
+On 2020-05-13 07:19, Stephen Boyd wrote:
+> Quoting Mike Leach (2020-05-12 14:52:33)
+>> HI Sai,
+>> 
+>> On Tue, 12 May 2020 at 18:46, Sai Prakash Ranjan
+>> <saiprakash.ranjan@codeaurora.org> wrote:
+>> >
+>> > Hi Mike,
+>> >
+>> > On 2020-05-12 17:19, Mike Leach wrote:
+>> > [...]
+>> >
+>> > >> >>
+>> > >> >> Sorry for hurrying up and sending the patch -
+>> > >> >> https://lore.kernel.org/patchwork/patch/1239923/.
+>> > >> >> I will send v2 based on further feedbacks here or there.
+>> > >> >>
+>> > >> >>>
+>> > >> >>> 1) does this replicator part have a unique ID that differs from the
+>> > >> >>> standard ARM designed replicators?
+>> > >> >>> If so perhaps link the modification into this. (even if the part no
+>> > >> >>> in
+>> > >> >>> PIDR0/1 is the same the UCI should be different for a different
+>> > >> >>> implementation)
+>> > >> >>>
+>> > > I have reviewed the replicator driver, and compared to all the other CS
+>> > > drivers.
+>> > > This driver appears to be the only one that sets hardware values in
+>> > > probe() and expects them to remain in place on enable, and uses that
+>> > > state for programming decisions later, despite telling the PM
+>> > > infrastructure that it is clear to suspend the device.
+>> > >
+>> > > Now we have a system where the replicator hardware is behaving
+>> > > differently under the driver, but is it behaving unreasonably?
+>> >
+>> > Thanks for taking your time to review this. For new replicator behaving
+>> > unreasonably, I think the assumption that the context is not lost on
+>> > disabling clock is flawed since its implementation defined. Is such
+>> > assumption documented in any TRM?
+>> >
+>> 
+>> Looking at the AMBA driver there is a comment there that AMBA does not
+>> lose state when clocks are removed. This is consistent with the AMBA
+>> protocol spec which states that AMBA slaves can only be accessed /
+>> read / write on various strobe signals,  or state reset on PRESET
+>> signal, all timed by the rising edge of the bus clock. state changes
+>> are not permitted on clock events alone. Given this static nature of
+>> AMBA slaves then removing the clock should not have any effect.
+> 
+> I believe the "clock" that is being used here is actually a software
+> message to the power manager hardware that the debug subsystem isn't
+> being used anymore. When nothing is requesting that it be enabled the
+> power manager turns off the power to the debug subsystem and then the
+> register context is lost. It shouldn't be a clock in the clk subsystem.
+> It should be a power domain and be attached to the amba devices in the
+> usual ways. Then the normal runtime PM semantics would follow. If amba
+> devices require a clk then we'll have to provide a dummy one that
+> doesn't do anything on this platform.
+> 
 
-Adding Tomasz Figa, I've discussed this with him at elce last year I
-think. Just to make sure.
+Note that there are 2 dynamic replicators and the behaviour is different 
+only on
+one of the replicators(swao_replicator) which is in AOSS domain. I don't 
+see
+how runtime PM would help us differentiate between them and handle PM 
+differently
+for different replicators.
 
-Bunch of things:
-- obviously we need the users of this in a few drivers, can't really
-review anything stand-alone
-- adding very specific ops to the generic interface is rather awkward,
-eventually everyone wants that and we end up in a mess. I think the
-best solution here would be if we create a struct virtio_dma_buf which
-subclasses dma-buf, add a (hopefully safe) runtime upcasting
-functions, and then a virtio_dma_buf_get_uuid() function. Just storing
-the uuid should be doable (assuming this doesn't change during the
-lifetime of the buffer), so no need for a callback.
-- for the runtime upcasting the usual approach is to check the ->ops
-pointer. Which means that would need to be the same for all virtio
-dma_bufs, which might get a bit awkward. But I'd really prefer we not
-add allocator specific stuff like this to dma-buf.
--Daniel
-
-> ---
->  drivers/dma-buf/dma-buf.c | 12 ++++++++++++
->  include/linux/dma-buf.h   | 18 ++++++++++++++++++
->  2 files changed, 30 insertions(+)
->
-> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-> index d4097856c86b..fa5210ba6aaa 100644
-> --- a/drivers/dma-buf/dma-buf.c
-> +++ b/drivers/dma-buf/dma-buf.c
-> @@ -1158,6 +1158,18 @@ void dma_buf_vunmap(struct dma_buf *dmabuf, void *vaddr)
->  }
->  EXPORT_SYMBOL_GPL(dma_buf_vunmap);
->
-> +int dma_buf_get_uuid(struct dma_buf *dmabuf, uuid_t *uuid)
-> +{
-> +       if (WARN_ON(!dmabuf) || !uuid)
-> +               return -EINVAL;
-> +
-> +       if (!dmabuf->ops->get_uuid)
-> +               return -ENODEV;
-> +
-> +       return dmabuf->ops->get_uuid(dmabuf, uuid);
-> +}
-> +EXPORT_SYMBOL_GPL(dma_buf_get_uuid);
-> +
->  #ifdef CONFIG_DEBUG_FS
->  static int dma_buf_debug_show(struct seq_file *s, void *unused)
->  {
-> diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
-> index abf5459a5b9d..00758523597d 100644
-> --- a/include/linux/dma-buf.h
-> +++ b/include/linux/dma-buf.h
-> @@ -251,6 +251,21 @@ struct dma_buf_ops {
->
->         void *(*vmap)(struct dma_buf *);
->         void (*vunmap)(struct dma_buf *, void *vaddr);
-> +
-> +       /**
-> +        * @get_uuid
-> +        *
-> +        * This is called by dma_buf_get_uuid to get the UUID which identifies
-> +        * the buffer to virtio devices.
-> +        *
-> +        * This callback is optional.
-> +        *
-> +        * Returns:
-> +        *
-> +        * 0 on success or a negative error code on failure. On success uuid
-> +        * will be populated with the buffer's UUID.
-> +        */
-> +       int (*get_uuid)(struct dma_buf *dmabuf, uuid_t *uuid);
->  };
->
->  /**
-> @@ -444,4 +459,7 @@ int dma_buf_mmap(struct dma_buf *, struct vm_area_struct *,
->                  unsigned long);
->  void *dma_buf_vmap(struct dma_buf *);
->  void dma_buf_vunmap(struct dma_buf *, void *vaddr);
-> +
-> +int dma_buf_get_uuid(struct dma_buf *dmabuf, uuid_t *uuid);
-> +
->  #endif /* __DMA_BUF_H__ */
-> --
-> 2.25.1.481.gfbce0eb801-goog
->
-
+Thanks,
+Sai
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
