@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCADC2D0F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:30:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0EDAC2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8BA206A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:30:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFAE420708
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:30:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gziW83p6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M1aTEqnL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732354AbgEMGa2 (ORCPT
+        id S1731627AbgEMG2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 02:30:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46164 "EHLO
+        Wed, 13 May 2020 02:28:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731775AbgEMG2w (ORCPT
+        with ESMTP id S1730530AbgEMG2s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 02:28:52 -0400
+        Wed, 13 May 2020 02:28:48 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 269F1C061A0E;
-        Tue, 12 May 2020 23:28:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD5B5C061A0C;
+        Tue, 12 May 2020 23:28:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=cW3MEV/WwtWzunuIIhkoKW20oXwwRZpBvDGURWiq844=; b=gziW83p6duUvL0soJDNgiPSF/p
-        sH/59QqWomThwnJAnXN25bczjjRb1S4Mk8DmzM7AdlM7kTbRuzqQ0/kIJZ+1eL9I2z/ttXwWA9hyR
-        9il5dbOUfnGubcd0AQQHxZw8R3SAtRdl+e8mVPejSieXkS7Rn5wwdgrVi1FX0qNLDfO5tV2OeCLwC
-        FwuIpblQiZp8mAcpvKaFH2pXasHe4j/G6RO8yajiFwk1QC6p6kRaSePezb8JUyQjR3PIqwYiMAjzD
-        8p8RzWV3T5Z3UM7wVy4UHteCYYZdCa+SZeqLHnDobknz5kN4/0UYaOMIqfrxc+a1lnMM7Yy2JQaYs
-        KeJOr5Ww==;
+        bh=QPaZX7/JCyffHLJxjEndkv/C6xjGa9Qbi7ISD/LSjiI=; b=M1aTEqnLg+/0FdGjhMaSxA2QAn
+        BzSLG3FGX9wu0E9G82I9dp9e2HF2IExFSiqfn+jELwWvn5lTrKoD9Kp9mTr5cPh86xLuCHb8rSiSE
+        u/+WX7OLSLSrBna3Mpe6P1m42koY+/Wcv4z5ZiDm7klOC8lL/v5XWsSEvoSl/Hib5+9qEiNycv4Mr
+        YpSVVVobPi8rzUXDR7ofAR5M8KfQ4om2aOCy3YbJRx2/prRsp7IYdG7iWDZuuAjJunP6YiEc9G+F/
+        XMRo1ynjOQLgEtMKcmEXLPoHGW206DQDdyaiP5yV16BCCVXO2vBzI/5JRh+NmLAGHCAnG57X4besG
+        8D9WvyCA==;
 Received: from [2001:4bb8:180:9d3f:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jYksO-00057L-NZ; Wed, 13 May 2020 06:28:21 +0000
+        id 1jYkro-0004YK-Ju; Wed, 13 May 2020 06:27:45 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
@@ -57,9 +57,9 @@ Cc:     Eric Dumazet <edumazet@google.com>,
         ocfs2-devel@oss.oracle.com, netdev@vger.kernel.org,
         linux-sctp@vger.kernel.org, ceph-devel@vger.kernel.org,
         rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org
-Subject: [PATCH 29/33] rxrpc_sock_set_min_security_level
-Date:   Wed, 13 May 2020 08:26:44 +0200
-Message-Id: <20200513062649.2100053-30-hch@lst.de>
+Subject: [PATCH 18/33] ipv4: add ip_sock_set_tos
+Date:   Wed, 13 May 2020 08:26:33 +0200
+Message-Id: <20200513062649.2100053-19-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513062649.2100053-1-hch@lst.de>
 References: <20200513062649.2100053-1-hch@lst.de>
@@ -71,75 +71,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper to directly set the RXRPC_MIN_SECURITY_LEVEL sockopt from
-kernel space without going through a fake uaccess.
+Add a helper to directly set the IP_TOS sockopt from kernel space without
+going through a fake uaccess.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/afs/rxrpc.c         |  6 ++----
- include/net/af_rxrpc.h |  2 ++
- net/rxrpc/af_rxrpc.c   | 13 +++++++++++++
- 3 files changed, 17 insertions(+), 4 deletions(-)
+ drivers/nvme/host/tcp.c   | 14 +++-----------
+ drivers/nvme/target/tcp.c | 10 ++--------
+ include/net/ip.h          |  2 ++
+ net/ipv4/ip_sockglue.c    | 30 +++++++++++++++++++++---------
+ 4 files changed, 28 insertions(+), 28 deletions(-)
 
-diff --git a/fs/afs/rxrpc.c b/fs/afs/rxrpc.c
-index 1ecc67da6c1a4..7dfcbd58da85c 100644
---- a/fs/afs/rxrpc.c
-+++ b/fs/afs/rxrpc.c
-@@ -37,7 +37,6 @@ int afs_open_socket(struct afs_net *net)
+diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+index 8417eeb83fcd2..6c069e982989e 100644
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -1313,7 +1313,7 @@ static int nvme_tcp_alloc_queue(struct nvme_ctrl *nctrl,
  {
- 	struct sockaddr_rxrpc srx;
- 	struct socket *socket;
--	unsigned int min_level;
- 	int ret;
+ 	struct nvme_tcp_ctrl *ctrl = to_tcp_ctrl(nctrl);
+ 	struct nvme_tcp_queue *queue = &ctrl->queues[qid];
+-	int ret, opt, rcv_pdu_size;
++	int ret, rcv_pdu_size;
  
- 	_enter("");
-@@ -57,9 +56,8 @@ int afs_open_socket(struct afs_net *net)
- 	srx.transport.sin6.sin6_family	= AF_INET6;
- 	srx.transport.sin6.sin6_port	= htons(AFS_CM_PORT);
+ 	queue->ctrl = ctrl;
+ 	INIT_LIST_HEAD(&queue->send_list);
+@@ -1352,16 +1352,8 @@ static int nvme_tcp_alloc_queue(struct nvme_ctrl *nctrl,
+ 		sock_set_priority(queue->sock->sk, so_priority);
  
--	min_level = RXRPC_SECURITY_ENCRYPT;
--	ret = kernel_setsockopt(socket, SOL_RXRPC, RXRPC_MIN_SECURITY_LEVEL,
--				(void *)&min_level, sizeof(min_level));
-+	ret = rxrpc_sock_set_min_security_level(socket->sk,
-+			RXRPC_SECURITY_ENCRYPT);
- 	if (ret < 0)
- 		goto error_2;
+ 	/* Set socket type of service */
+-	if (nctrl->opts->tos >= 0) {
+-		opt = nctrl->opts->tos;
+-		ret = kernel_setsockopt(queue->sock, SOL_IP, IP_TOS,
+-				(char *)&opt, sizeof(opt));
+-		if (ret) {
+-			dev_err(nctrl->device,
+-				"failed to set IP_TOS sock opt %d\n", ret);
+-			goto err_sock;
+-		}
+-	}
++	if (nctrl->opts->tos >= 0)
++		ip_sock_set_tos(queue->sock->sk, nctrl->opts->tos);
  
-diff --git a/include/net/af_rxrpc.h b/include/net/af_rxrpc.h
-index 04e97bab6f28b..8d7b469453bda 100644
---- a/include/net/af_rxrpc.h
-+++ b/include/net/af_rxrpc.h
-@@ -72,4 +72,6 @@ bool rxrpc_kernel_call_is_complete(struct rxrpc_call *);
- void rxrpc_kernel_set_max_life(struct socket *, struct rxrpc_call *,
- 			       unsigned long);
+ 	queue->sock->sk->sk_allocation = GFP_ATOMIC;
+ 	nvme_tcp_set_queue_io_cpu(queue);
+diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
+index b2bfa791c5cb2..4296fe3c745bf 100644
+--- a/drivers/nvme/target/tcp.c
++++ b/drivers/nvme/target/tcp.c
+@@ -1452,14 +1452,8 @@ static int nvmet_tcp_set_queue_sock(struct nvmet_tcp_queue *queue)
+ 		sock_set_priority(sock->sk, so_priority);
  
-+int rxrpc_sock_set_min_security_level(struct sock *sk, unsigned int val);
-+
- #endif /* _NET_RXRPC_H */
-diff --git a/net/rxrpc/af_rxrpc.c b/net/rxrpc/af_rxrpc.c
-index 15ee92d795815..394189b81849f 100644
---- a/net/rxrpc/af_rxrpc.c
-+++ b/net/rxrpc/af_rxrpc.c
-@@ -571,6 +571,19 @@ static int rxrpc_sendmsg(struct socket *sock, struct msghdr *m, size_t len)
- 	return ret;
+ 	/* Set socket type of service */
+-	if (inet->rcv_tos > 0) {
+-		int tos = inet->rcv_tos;
+-
+-		ret = kernel_setsockopt(sock, SOL_IP, IP_TOS,
+-				(char *)&tos, sizeof(tos));
+-		if (ret)
+-			return ret;
+-	}
++	if (inet->rcv_tos > 0)
++		ip_sock_set_tos(sock->sk, inet->rcv_tos);
+ 
+ 	write_lock_bh(&sock->sk->sk_callback_lock);
+ 	sock->sk->sk_user_data = queue;
+diff --git a/include/net/ip.h b/include/net/ip.h
+index 5b317c9f4470a..2fc52e26fa88b 100644
+--- a/include/net/ip.h
++++ b/include/net/ip.h
+@@ -765,4 +765,6 @@ static inline bool inetdev_valid_mtu(unsigned int mtu)
+ 	return likely(mtu >= IPV4_MIN_MTU);
  }
  
-+int rxrpc_sock_set_min_security_level(struct sock *sk, unsigned int val)
-+{
-+	if (sk->sk_state != RXRPC_UNBOUND)
-+		return -EISCONN;
-+	if (val > RXRPC_SECURITY_MAX)
-+		return -EINVAL;
-+	lock_sock(sk);
-+	rxrpc_sk(sk)->min_sec_level = val;
-+	release_sock(sk);
-+	return 0;
-+}
-+EXPORT_SYMBOL(rxrpc_sock_set_min_security_level);
++void ip_sock_set_tos(struct sock *sk, int val);
 +
+ #endif	/* _IP_H */
+diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
+index 8206047d70b6b..1733ac78c21aa 100644
+--- a/net/ipv4/ip_sockglue.c
++++ b/net/ipv4/ip_sockglue.c
+@@ -560,6 +560,26 @@ int ip_recv_error(struct sock *sk, struct msghdr *msg, int len, int *addr_len)
+ 	return err;
+ }
+ 
++static void __ip_sock_set_tos(struct sock *sk, int val)
++{
++	if (sk->sk_type == SOCK_STREAM) {
++		val &= ~INET_ECN_MASK;
++		val |= inet_sk(sk)->tos & INET_ECN_MASK;
++	}
++	if (inet_sk(sk)->tos != val) {
++		inet_sk(sk)->tos = val;
++		sk->sk_priority = rt_tos2priority(val);
++		sk_dst_reset(sk);
++	}
++}
++
++void ip_sock_set_tos(struct sock *sk, int val)
++{
++	lock_sock(sk);
++	__ip_sock_set_tos(sk, val);
++	release_sock(sk);
++}
++EXPORT_SYMBOL(ip_sock_set_tos);
+ 
  /*
-  * set RxRPC socket options
-  */
+  *	Socket option code for IP. This is the end of the line after any
+@@ -743,15 +763,7 @@ static int do_ip_setsockopt(struct sock *sk, int level,
+ 			inet->cmsg_flags &= ~IP_CMSG_RECVFRAGSIZE;
+ 		break;
+ 	case IP_TOS:	/* This sets both TOS and Precedence */
+-		if (sk->sk_type == SOCK_STREAM) {
+-			val &= ~INET_ECN_MASK;
+-			val |= inet->tos & INET_ECN_MASK;
+-		}
+-		if (inet->tos != val) {
+-			inet->tos = val;
+-			sk->sk_priority = rt_tos2priority(val);
+-			sk_dst_reset(sk);
+-		}
++		__ip_sock_set_tos(sk, val);
+ 		break;
+ 	case IP_TTL:
+ 		if (optlen < 1)
 -- 
 2.26.2
 
