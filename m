@@ -2,99 +2,136 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE903C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07AA9C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 617EC20671
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:03:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JugjIFo8"
+	by mail.kernel.org (Postfix) with ESMTP id B2E8F206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:03:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589396601;
+	bh=JI6Bcx1e5I0b//i3CRdT98HUPH8i1BeSBewHUjyc5Gc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=T3WJy0Wt1DMeNReGK11MFULy8yrMO14yUeYHJTAzA6uGud2a6WY3mn/cUltGQeetM
+	 4znVeqscP5tjbTZTINAz0wylmbTiI553Ls1grS6SLLe5zHz6QZ6/hEGqFjdIVGLgWQ
+	 jcmARypsgCdJ6ulX9fnpEV0YGjbmFFqsFm0YZKrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390414AbgEMTDG (ORCPT
+        id S2390441AbgEMTDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 15:03:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50998 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390021AbgEMTDF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 15:03:05 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36EFDC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 12:03:05 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id b6so827872ljj.1
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 12:03:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Chzp3tbyXEmpa9DZODCBT8j/RcyA+WHDHn8SKIYvqlo=;
-        b=JugjIFo8e41xcj1mBh50Kv4JJdwWswQdosSkw2SGo25NkR8diJgzxmSmAimUoPFy0g
-         UqtufzWVyYpztDyGgk4HCi22Aw09xlnezrYm4PHhCJi+H8Ei8/tmkqX+byilYh/qSlsZ
-         kQ2oFBqHEcL+58tiDWHOiXYpFBIpD7JYaeHj8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Chzp3tbyXEmpa9DZODCBT8j/RcyA+WHDHn8SKIYvqlo=;
-        b=P7gfDAqBgwFaW1EiX1FVMQawX7+FOzjjs3IMtdXcxw17cV/3baYE7P7A2rOzy1NqyH
-         usnSGUxsZAErk48Xk5lL4pnQPyH3RR4+e4BnmRApBKcxM+xL6gxkMkzLHnoCxXraAcAS
-         IwrkwmmMYdpDfydl1wWcZxoH7XqcGlM5dnt20Z1rraXyG6dJdv6nCBQRHPGiVzkzMIEH
-         mwV1UlthmXDKUVcxtkl1xpMGPrussdKH1bzgZ0sUGzmkW+yDx1viYsByvLPiL5Al9lZb
-         1wrcYTMkG5Mo3xEJAIwRrU0ZSvSvOdtJXW9F1kJ8pCqP7rN+LYsyH11ZKpDTX4Chv6+O
-         dlgw==
-X-Gm-Message-State: AOAM531mHTScR1f8QoELtQ6CSQ6USINhI0l4QWTRPxPdmc5wxHWtsatQ
-        79oiOlNA7wmOg+UZmFUkxnrFJxv+5DY=
-X-Google-Smtp-Source: ABdhPJwSn7Z+wOXHS1X/l2EkN8eKWZyb41AW45qTfOsh7+x63uI2QFzd45On74DQrMgw+imY5cS4bg==
-X-Received: by 2002:a2e:9984:: with SMTP id w4mr320713lji.286.1589396583222;
-        Wed, 13 May 2020 12:03:03 -0700 (PDT)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id g3sm221578ljk.27.2020.05.13.12.03.00
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 May 2020 12:03:00 -0700 (PDT)
-Received: by mail-lf1-f53.google.com with SMTP id u4so445004lfm.7
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 12:03:00 -0700 (PDT)
-X-Received: by 2002:a19:ccce:: with SMTP id c197mr619201lfg.59.1589396579890;
- Wed, 13 May 2020 12:02:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190906185931.19288-1-navid.emamdoost@gmail.com>
- <CA+ASDXMnp-GTkrT7B5O+dtopJUmGBay=Tn=-nf1LW1MtaVOr+w@mail.gmail.com> <878shwtiw3.fsf@kamboji.qca.qualcomm.com>
-In-Reply-To: <878shwtiw3.fsf@kamboji.qca.qualcomm.com>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Wed, 13 May 2020 12:02:48 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXOgechejxzN4-xPcuTW-Ra7z9Z6EeiQ4wMrEowZc-p+uA@mail.gmail.com>
-Message-ID: <CA+ASDXOgechejxzN4-xPcuTW-Ra7z9Z6EeiQ4wMrEowZc-p+uA@mail.gmail.com>
-Subject: Re: [PATCH] ath9k: release allocated buffer if timed out
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
+        Wed, 13 May 2020 15:03:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37136 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390021AbgEMTDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 15:03:17 -0400
+Received: from localhost.localdomain (pool-96-246-152-186.nycmny.fios.verizon.net [96.246.152.186])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E31F20671;
+        Wed, 13 May 2020 19:03:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589396597;
+        bh=JI6Bcx1e5I0b//i3CRdT98HUPH8i1BeSBewHUjyc5Gc=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=z59eA5eRAiyCiuxUQzprR/t+ePsfTbHqMebUvWR9hw+6ql5W3gWarFW8b+usW31Wk
+         9ViZb7sqp8IyDK/8aHlqMQSKcDNHrtP5NGhtQU1iYj/UDBdR+PyEtkVFhZcEqYiJ5D
+         d1pMsiBjZ5JNPWirsmOYIKSiy+7o2LmuHO9bVfCs=
+Message-ID: <1589396593.5098.166.camel@kernel.org>
+Subject: Re: [PATCH v5 1/7] fs: introduce kernel_pread_file* support
+From:   Mimi Zohar <zohar@kernel.org>
+To:     Scott Branden <scott.branden@broadcom.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>
+Date:   Wed, 13 May 2020 15:03:13 -0400
+In-Reply-To: <0e6b5f65-8c61-b02e-7d35-b4ae52aebcf3@broadcom.com>
+References: <20200508002739.19360-1-scott.branden@broadcom.com>
+         <20200508002739.19360-2-scott.branden@broadcom.com>
+         <1589395153.5098.158.camel@kernel.org>
+         <0e6b5f65-8c61-b02e-7d35-b4ae52aebcf3@broadcom.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 12:05 AM Kalle Valo <kvalo@codeaurora.org> wrote:
-> Actually it's already reverted in -next, nobody just realised that it's
-> a regression from commit 728c1e2a05e4:
->
-> ced21a4c726b ath9k: Fix use-after-free Read in htc_connect_service
+On Wed, 2020-05-13 at 11:53 -0700, Scott Branden wrote:
+> Hi Mimi,
+> 
+> On 2020-05-13 11:39 a.m., Mimi Zohar wrote:
+> > [Cc'ing linux-security-module, linux-integrity]
+> >
+> > On Thu, 2020-05-07 at 17:27 -0700, Scott Branden wrote:
+> >> Add kernel_pread_file* support to kernel to allow for partial read
+> >> of files with an offset into the file.  Existing kernel_read_file
+> >> functions call new kernel_pread_file functions with offset=0 and
+> >> flags=KERNEL_PREAD_FLAG_WHOLE.
+> >>
+> >> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+> >> ---
+> > <snip>
+> >
+> >> @@ -941,14 +955,16 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
+> The checkpatch shows this as kernel_read_file when it is actually the 
+> new function kernel_pread_file.
+> Please see the call to kernel_pread_file from kernel_read_file in the 
+> complete patch rather this snippet.
+> >>   
+> >>   		if (bytes == 0)
+> >>   			break;
+> >> +
+> >> +		buf_pos += bytes;
+> >>   	}
+> >>   
+> >> -	if (pos != i_size) {
+> >> +	if (pos != read_end) {
+> >>   		ret = -EIO;
+> >>   		goto out_free;
+> >>   	}
+> >>   
+> >> -	ret = security_kernel_post_read_file(file, *buf, i_size, id);
+> >> +	ret = security_kernel_post_read_file(file, *buf, alloc_size, id);
+> >>   	if (!ret)
+> >>   		*size = pos;
+> > Prior to the patch set that introduced this security hook, firmware
+> > would be read twice, once for measuring/appraising the firmware and
+> > again reading the file contents into memory.  Partial reads will break
+> > both IMA's measuring the file and appraising the file signatures.
+> The partial file read support is needed for request_firmware_into_buf 
+> from drivers.  The EXPORT_SYMBOL_GPL is being removed so that
+> there can be no abuse of the partial file read support.  Such file 
+> integrity checks are not needed for this use case.  The partial file 
+> (firmware image) is actually downloaded in portions and verified on the 
+> device it is loaded to.
 
-Nice.
+It's all fine that the device will verify the firmware, but shouldn't
+the kernel be able to also verify the firmware file signature it is
+providing to the device, before providing it?
 
-> v5.8-rc1 should be the first release having the fix.
+The device firmware is being downloaded piecemeal from somewhere and
+won't be measured?
 
-So I guess we have to wait until 5.8-rc1 (when this lands in mainline)
-to send this manually to stable@vger.kernel.org?
-
-Brian
+Mimi
