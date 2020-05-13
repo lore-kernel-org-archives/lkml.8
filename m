@@ -2,99 +2,107 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DFAC433FC
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 014B1C433FB
 	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD14221FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79ABE208C7
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:50:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589381792;
-	bh=8SmbnrZ5qW6mVaqqlcGDrJ3tZhpY+ZYEC2ysujal7jE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fUB942IXfPXojEgrCN40MnLzzn5mSuO0DXF+HO1PWHgKQfqY6v5W4jYYCfNoDeJ12
-	 4Bdm+Vr+0f+5M83sKQxj94xi5s33NUkd+vumWB30ZMuhib49bQygLeqNvH6GwMcRBi
-	 PIbHkYgP7T7XZ/Ra0aQbCgLLZ2a7olVV2ktld+qg=
+	s=default; t=1589381402;
+	bh=fHTxqcT9lx1QvY1tSG3CxrWaaNmXLsDA936SmfjMZYI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sHUfU7zzxnIuU26aeggh6BMY69cs2Rci/5H96B35Zh2K0yfkfVb8WJ5B/10XGXTGL
+	 vUs0/r8eg0fU4A1M+dQQofM2W4M92R5WcK/tCNrudJtwM6P6nIT0p8fOuYJIbUFzN4
+	 T63KFZ610EKNekYrwZvdDBppcDUPBQZvFlbHBVZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389104AbgEMO4a (ORCPT
+        id S2389051AbgEMOuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 10:56:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49498 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728568AbgEMO42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 10:56:28 -0400
-Received: from localhost (unknown [106.200.233.149])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B1EE221E6;
-        Wed, 13 May 2020 14:56:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589381788;
-        bh=8SmbnrZ5qW6mVaqqlcGDrJ3tZhpY+ZYEC2ysujal7jE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l4mRGFNZDs1RO7j/ngnkH16aePO1WvI/3rJkpo0/bOqGBn+zq90/znJcuC3NGZKTu
-         qNSI7KkiyyzXV4E6Yg1UrgZMXzyeIrvdG/iStQWx+x7Wz+aQnWosrPzMIp73qeck4f
-         eRdMLpxjBQ3RWdNMW0mCsJ6Abq7tMpCUQi1rnv5U=
-Date:   Wed, 13 May 2020 20:26:24 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: at_xdmac: Replace zero-length array with
- flexible-array
-Message-ID: <20200513145624.GM14092@vkoul-mobl>
-References: <20200507190046.GA15298@embeddedor>
+        Wed, 13 May 2020 10:50:01 -0400
+Received: from mail-ot1-f52.google.com ([209.85.210.52]:35778 "EHLO
+        mail-ot1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728345AbgEMOuA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 10:50:00 -0400
+Received: by mail-ot1-f52.google.com with SMTP id k110so13605973otc.2;
+        Wed, 13 May 2020 07:49:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SAbLyrX15xBugrHqLh1DzP9lO+IcFmGTTH9e2AAiAfE=;
+        b=jYcXQOoF0Cu8lVuybGoomKrhrgs0ZOHM/5Myyw9zJJ6hitYZq0aVOl20BIlr0+i3s2
+         3yxMrjUo2CT8eHBgKuJmCkEpSGAXCYx4YDX+2haWOxOeKJjMRsKU37XWrS2zf6zl8v83
+         HC3QzHZemdenyoXz92xeMkMu1h+djoetJmvSlciV0kLg9/yPZA8WmYIk/UNwzL4HCk3v
+         OGdY8VIeRmETlkF+ZqnHcvsnQt6cK9ps9lp1/0yh0KiclAXCWC2P1+nArNRf0YqErn9U
+         AFiFyydpctPfP6Motq7O0fMRYhMru8wXXfGHOuA0k8xNazcciYS1qaoC2S0CeiJiToHv
+         XXeA==
+X-Gm-Message-State: AGi0PuZzGgMIF2KMJvOoY1fMKWkiIY6RbamobSNRZXUNCUzMfOIqeLFM
+        pWEumSpxRLleR+cRS+UK9Oy9/wGI/Ftwup8gPOw=
+X-Google-Smtp-Source: APiQypIg69c+IYHdIw/Uc0QagYnFp6R8j/4nzfZYarcmyaJHslCGTtx87TUZUMxDQftmuuwo+jaB7ub6AVOc9N1QV4A=
+X-Received: by 2002:a9d:6356:: with SMTP id y22mr7737375otk.167.1589381398522;
+ Wed, 13 May 2020 07:49:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200507190046.GA15298@embeddedor>
+References: <20200511141055.43029-1-psampat@linux.ibm.com> <20200511141055.43029-2-psampat@linux.ibm.com>
+ <20200512173722.GM2978@hirez.programming.kicks-ass.net> <09b8bf40-e371-e1eb-d77e-6c676f22dd29@linux.ibm.com>
+In-Reply-To: <09b8bf40-e371-e1eb-d77e-6c676f22dd29@linux.ibm.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 13 May 2020 16:49:47 +0200
+Message-ID: <CAJZ5v0jOGRQv1EUEhkba30OKuS8aupdoGConKJH9C=R6DxptFA@mail.gmail.com>
+Subject: Re: [RFC 1/1] Weighted approach to gather and use history in TEO governor
+To:     Pratik Sampat <psampat@linux.ibm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Doug Smythies <dsmythies@telus.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
+        pratik.sampat@in.ibm.com, pratik.r.sampat@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07-05-20, 14:00, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+On Wed, May 13, 2020 at 7:31 AM Pratik Sampat <psampat@linux.ibm.com> wrote:
+>
+> Thanks for your comment.
+>
+>
+> On 12/05/20 11:07 pm, Peter Zijlstra wrote:
+> > Just a quick note..
+> >
+> > On Mon, May 11, 2020 at 07:40:55PM +0530, Pratik Rajesh Sampat wrote:
+> >
+> >> +    /*
+> >> +     * Rearrange the weight distribution of the state, increase the weight
+> >> +     * by the LEARNING RATE % for the idle state that was supposed to be
+> >> +     * chosen and reduce by the same amount for rest of the states
+> >> +     *
+> >> +     * If the weights are greater than (100 - LEARNING_RATE) % or lesser
+> >> +     * than LEARNING_RATE %, do not increase or decrease the confidence
+> >> +     * respectively
+> >> +     */
+> >> +    for (i = 0; i < drv->state_count; i++) {
+> >> +            unsigned int delta;
+> >> +
+> >> +            if (idx == -1)
+> >> +                    break;
+> >> +            if (i ==  idx) {
+> >> +                    delta = (LEARNING_RATE * cpu_data->state_mat[last_idx][i]) / 100;
+> > 100 is a crap number to divide by as a computer. We bio-puddings happend
+> > to have 10 digits, so 100 makes sense to us, but it does not to our
+> > binary friends.
+> >
+> >
+> Absolutely! I just wrote the code exactly the way I did the Math on paper,
+> definitely need to figure out an optimal way of doing things.
 
-Applied, thanks
-
--- 
-~Vinod
+There is no particular reason to use percent in computations at all.
+You may as well use 1/1024 parts instead (and then use shifts instead
+of divisions).
