@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA4AC2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74399C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F6C4205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44F7A205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:59:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363938;
-	bh=WXEx72ox0x9obtGOs2Ak4Pv6rMzqC8WDkMx6ygPsUXk=;
+	s=default; t=1589363941;
+	bh=BdMqFTzEZHhelZ/QBJ0FxUzahoGtw5CGMIcdgLvZZp8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GTVYUlcSkQzJ0T75zpeVG0ldYNhdAdsWY+kiEtZ8xFVjNWPVM7JjUt1JHpaqvd0JO
-	 jGNj7gPcGffIpfyJAtSO62g7oskvsJa/S4yqJ+0iTXQ7Or4LznqCUYUE8JztlBePSW
-	 gXfZsYKr+S6gwdOqONcsbWereeL//Z/zOGuW/J60=
+	b=nnZFiMtcFqvw+/z7W9Ea58whN4t8moBEuW/gQheMkMMx6uriKvho1FyKHnGLMKBGX
+	 cdUzpRYYjCAQ1VIHDYiTt7LhnYtOf8rB+tdNQ8O/H5Zqe1qIK3FIraS8rDwk0wwPWM
+	 33DAj3mop8Q5XBKN3+qqX8EcKJJBujuGTSdGOFYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388543AbgEMJ6y (ORCPT
+        id S2388059AbgEMJyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:58:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56682 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:54:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387419AbgEMJyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:54:19 -0400
+        id S2388044AbgEMJyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:54:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 143FA20769;
-        Wed, 13 May 2020 09:54:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C6B020769;
+        Wed, 13 May 2020 09:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363658;
-        bh=WXEx72ox0x9obtGOs2Ak4Pv6rMzqC8WDkMx6ygPsUXk=;
+        s=default; t=1589363643;
+        bh=BdMqFTzEZHhelZ/QBJ0FxUzahoGtw5CGMIcdgLvZZp8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bvqN2BQ9H7AWRPo1v+ptrkwH8Vxa/hT6hr20ZqZqi7BAKWG8wwAe3lNY0yhPgeFUQ
-         3Kz+1JrqlBd9kg+dnO9C8GqjrddeoLkbx6TfJv0OL93vQ05dCAghpJKFML5+ME6Mp5
-         dS5PZoLqwhrar+6bM0duwUk7GUuux1jeZRAsrDvU=
+        b=i1xvDIUSUjQNj/PBVV/5GN6hNJZy1dE9ur0jqxoAfW2D9y1WLAWRxfYK8QMZYL5Oa
+         aPD1hm3kw6y++V8j9FMrooGSeP/Ya3IxTe777WpB7WVBTXkERxYvw+6MChP7tQv7mB
+         mlI1ZMIOfHrm8x1DhW0lDS6pMmQ4KJF7QAeR/osk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 5.6 074/118] KVM: arm64: Fix 32bit PC wrap-around
-Date:   Wed, 13 May 2020 11:44:53 +0200
-Message-Id: <20200513094424.154844614@linuxfoundation.org>
+        stable@vger.kernel.org, Anthony Felice <tony.felice@timesys.com>,
+        Akshay Bhat <akshay.bhat@timesys.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 030/118] net: tc35815: Fix phydev supported/advertising mask
+Date:   Wed, 13 May 2020 11:44:09 +0200
+Message-Id: <20200513094420.203399386@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -59,72 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Anthony Felice <tony.felice@timesys.com>
 
-commit 0225fd5e0a6a32af7af0aefac45c8ebf19dc5183 upstream.
+[ Upstream commit 4b5b71f770e2edefbfe74203777264bfe6a9927c ]
 
-In the unlikely event that a 32bit vcpu traps into the hypervisor
-on an instruction that is located right at the end of the 32bit
-range, the emulation of that instruction is going to increment
-PC past the 32bit range. This isn't great, as userspace can then
-observe this value and get a bit confused.
+Commit 3c1bcc8614db ("net: ethernet: Convert phydev advertize and
+supported from u32 to link mode") updated ethernet drivers to use a
+linkmode bitmap. It mistakenly dropped a bitwise negation in the
+tc35815 ethernet driver on a bitmask to set the supported/advertising
+flags.
 
-Conversly, userspace can do things like (in the context of a 64bit
-guest that is capable of 32bit EL0) setting PSTATE to AArch64-EL0,
-set PC to a 64bit value, change PSTATE to AArch32-USR, and observe
-that PC hasn't been truncated. More confusion.
+Found by Anthony via code inspection, not tested as I do not have the
+required hardware.
 
-Fix both by:
-- truncating PC increments for 32bit guests
-- sanitizing all 32bit regs every time a core reg is changed by
-  userspace, and that PSTATE indicates a 32bit mode.
-
-Cc: stable@vger.kernel.org
-Acked-by: Will Deacon <will@kernel.org>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Fixes: 3c1bcc8614db ("net: ethernet: Convert phydev advertize and supported from u32 to link mode")
+Signed-off-by: Anthony Felice <tony.felice@timesys.com>
+Reviewed-by: Akshay Bhat <akshay.bhat@timesys.com>
+Reviewed-by: Heiner Kallweit <hkallweit1@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/arm64/kvm/guest.c     |    7 +++++++
- virt/kvm/arm/hyp/aarch32.c |    8 ++++++--
- 2 files changed, 13 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/toshiba/tc35815.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/kvm/guest.c
-+++ b/arch/arm64/kvm/guest.c
-@@ -201,6 +201,13 @@ static int set_core_reg(struct kvm_vcpu
+--- a/drivers/net/ethernet/toshiba/tc35815.c
++++ b/drivers/net/ethernet/toshiba/tc35815.c
+@@ -643,7 +643,7 @@ static int tc_mii_probe(struct net_devic
+ 		linkmode_set_bit(ETHTOOL_LINK_MODE_10baseT_Half_BIT, mask);
+ 		linkmode_set_bit(ETHTOOL_LINK_MODE_100baseT_Half_BIT, mask);
  	}
+-	linkmode_and(phydev->supported, phydev->supported, mask);
++	linkmode_andnot(phydev->supported, phydev->supported, mask);
+ 	linkmode_copy(phydev->advertising, phydev->supported);
  
- 	memcpy((u32 *)regs + off, valp, KVM_REG_SIZE(reg->id));
-+
-+	if (*vcpu_cpsr(vcpu) & PSR_MODE32_BIT) {
-+		int i;
-+
-+		for (i = 0; i < 16; i++)
-+			*vcpu_reg32(vcpu, i) = (u32)*vcpu_reg32(vcpu, i);
-+	}
- out:
- 	return err;
- }
---- a/virt/kvm/arm/hyp/aarch32.c
-+++ b/virt/kvm/arm/hyp/aarch32.c
-@@ -125,12 +125,16 @@ static void __hyp_text kvm_adjust_itstat
-  */
- void __hyp_text kvm_skip_instr32(struct kvm_vcpu *vcpu, bool is_wide_instr)
- {
-+	u32 pc = *vcpu_pc(vcpu);
- 	bool is_thumb;
- 
- 	is_thumb = !!(*vcpu_cpsr(vcpu) & PSR_AA32_T_BIT);
- 	if (is_thumb && !is_wide_instr)
--		*vcpu_pc(vcpu) += 2;
-+		pc += 2;
- 	else
--		*vcpu_pc(vcpu) += 4;
-+		pc += 4;
-+
-+	*vcpu_pc(vcpu) = pc;
-+
- 	kvm_adjust_itstate(vcpu);
- }
+ 	lp->link = 0;
 
 
