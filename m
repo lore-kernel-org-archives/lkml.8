@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F7DC2D0F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EA0C2D0F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36E6520714
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C4B920718
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:20:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V2JdvWnL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GCL+RLNG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728821AbgEMDT5 (ORCPT
+        id S1728853AbgEMDUO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 23:19:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45136 "EHLO
+        Tue, 12 May 2020 23:20:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725898AbgEMDT4 (ORCPT
+        by vger.kernel.org with ESMTP id S1725898AbgEMDUO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 23:19:56 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB790C061A0C;
-        Tue, 12 May 2020 20:19:56 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id w65so7366898pfc.12;
-        Tue, 12 May 2020 20:19:56 -0700 (PDT)
+        Tue, 12 May 2020 23:20:14 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26067C061A0C;
+        Tue, 12 May 2020 20:20:14 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k19so6264319pll.9;
+        Tue, 12 May 2020 20:20:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:references:from:message-id:date:user-agent:mime-version
          :in-reply-to:content-language:content-transfer-encoding;
-        bh=Hsf3W8qDVfHj/YPXqI8QBcRpq1vh1I4Cw/366Ae27cs=;
-        b=V2JdvWnL2rpZtglNA+NuCQ09DV2bWmPqP1iD4Qlg3tvwIBMweMUf3JSrIyswaqg/fX
-         JH4GiJJdtIk00665T+oTY/0gTIWcUHK/GScC79x7PzOh1xA2+f82fQoenZl1AyIPdbby
-         t49x3hv3qV11lyEyTkaiFPAJLOkPYZmahVd4KOB1jLvt9qKT/my5GYDWdy6Ij0lOxb8u
-         PfifLJ3AyQIrHML0hKdPzfJFEz8fjjTP+UJ0K4ZYFslWc7mVcymOQfif65/WMVqlSzNq
-         Xc/ViyoT/E8ZDT4sZ70PdOgWtLAqRwkV0HscStj7DfeeIFJwYcQCQ32fg75PAo8MMcjd
-         LLIw==
+        bh=XD38n6V2qgxBXjjSdcj6JhmtoFkm4TOzDKrNrbaIs58=;
+        b=GCL+RLNGTfuzoG5Yzug/3bMHJ6vKT724tq3dBa5FfW7CopyevpsfdnHx+5sOgs8MqM
+         8LUxoZnoJmX6tAA6FqskPW9f4Y96qZfgXwufvUEOcquHDo3qgEBXKBd9Ml2ehw0F5S/h
+         +Ksz0ZWtMOTkHAl74wn1J0fgDTPn/MDGWDEwWwKTI+sFzkGxg0SOUpnr++Jl3VKkhyIN
+         ShMbvhaiymMxF4kRztcLrLkioA0GJ4mj+NxXlKq3p7kcw+63Id4VDJhQwobcw0+I2oUM
+         ZQnIB/qNNhS++NT09sKaoR/y7kMrZbxO28526lYidPseVuoY9uXK8VGJKU3snpIhX64Y
+         1GCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Hsf3W8qDVfHj/YPXqI8QBcRpq1vh1I4Cw/366Ae27cs=;
-        b=ZYApCKGOFnH6HFgj9Hxutlx/sy0b0hNPf3Ppls9SNe41dLsZ19qEZtfowS/7IQnneD
-         fWEGxF3Qpmbiy5K/lZEqk064gWESZDaf6aJW1Zj/MfNx3yCT4G9/muqn281dZtp96/b3
-         DNWnpFRRrVIuJhAIlGaoLrV56rs0D2pcpdKkABM7PgR1He4QC6K+KW0DGeoHjZZ1Mr3c
-         qVlrQIoVGkMFaUAGhZSuseZsyDRk/cB2r5WDuOF1kh23ce3RZNQwhvOlsxL/ddWj74wH
-         z8A/jChdNi5NhqY9oKWoRLWGKrE4H2C2gUUX2ozfC13Yw1RL426h/OpA48kuvuontUfR
-         0Rgg==
-X-Gm-Message-State: AGi0PuYIuHW9bZNgQa3DyqB82liseNu438gmG7R7wJe2Jb5VPJK+ertW
-        xCGlp2DlXHW0amzsqg4mt60=
-X-Google-Smtp-Source: APiQypLDiJn5GolQEYVt24cvuyFIDhMqg1r4pOp1Uf/gdbxJdgFP3doN5IWUJINSO3BwzDdpO8uKQw==
-X-Received: by 2002:a63:ea4f:: with SMTP id l15mr21896544pgk.58.1589339996339;
-        Tue, 12 May 2020 20:19:56 -0700 (PDT)
+        bh=XD38n6V2qgxBXjjSdcj6JhmtoFkm4TOzDKrNrbaIs58=;
+        b=SulV17PjaG0rRo6eE04IK9uy5WCQY6hsxBJuN+wAq0PMPdtuTI3C0HxiG9T9quzIRi
+         seATxXsVKvJOOUaYb0rqOKezsLrcoSZGd6WC6Z5q3Bb9L+Gjr3wujB4L65VOmszenK4Q
+         DSQMewPTcbGfMXNRiGaNMFY/RE/OROELKpUgvtlpevuzkPR5YUb51VDQ5/RE7UyuxD2l
+         8yPC15kEbJtQHeOG2iAnyBWRSoOCsUGU/s0xdjwYMJj1yWgjBb3O9ZTn+3JJuDK73ufq
+         Xq7Gqa08+A2O8isOF0MFp1cvaAN0k+Zsl/Ma3SrEUHZYBEU5nO/Rqs3t3FzS1dYINfrV
+         8rdg==
+X-Gm-Message-State: AOAM531rxFOtxdAU4WzbZeosRjJNjQsEKKWBUnMND0jMLi7kOpWqfYbn
+        3+0PglGbfTXQ59z7KyrSgTo=
+X-Google-Smtp-Source: ABdhPJxWJquSm8ASVk33Y1E9Tt7eLgRGCFaCdLv9wK04M5FlZPcxFjH1w7Xx8sX2SX2BKqMVTdMMPA==
+X-Received: by 2002:a17:902:ab96:: with SMTP id f22mr6160334plr.221.1589340013659;
+        Tue, 12 May 2020 20:20:13 -0700 (PDT)
 Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id k3sm2536437pjb.39.2020.05.12.20.19.52
+        by smtp.gmail.com with ESMTPSA id a2sm11679287pgh.57.2020.05.12.20.20.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 May 2020 20:19:55 -0700 (PDT)
-Subject: Re: [PATCH v2 net-next 1/3] net: dsa: felix: qos classified based on
- pcp
+        Tue, 12 May 2020 20:20:12 -0700 (PDT)
+Subject: Re: [PATCH v2 net-next 2/3] net: dsa: felix: Configure Time-Aware
+ Scheduler via taprio offload
 To:     Xiaoliang Yang <xiaoliang.yang_1@nxp.com>, po.liu@nxp.com,
         claudiu.manoil@nxp.com, alexandru.marginean@nxp.com,
         vladimir.oltean@nxp.com, leoyang.li@nxp.com, mingkai.hu@nxp.com,
@@ -74,14 +74,14 @@ To:     Xiaoliang Yang <xiaoliang.yang_1@nxp.com>, po.liu@nxp.com,
         nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com,
         linux-devel@linux.nxdi.nxp.com
 References: <20200513022510.18457-1-xiaoliang.yang_1@nxp.com>
- <20200513022510.18457-2-xiaoliang.yang_1@nxp.com>
+ <20200513022510.18457-3-xiaoliang.yang_1@nxp.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <94652605-329c-0f82-5fe0-b700cc40e575@gmail.com>
-Date:   Tue, 12 May 2020 20:19:52 -0700
+Message-ID: <c0408d43-d8a3-31ab-82ea-e5940a97be47@gmail.com>
+Date:   Tue, 12 May 2020 20:20:10 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Firefox/68.0 Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200513022510.18457-2-xiaoliang.yang_1@nxp.com>
+In-Reply-To: <20200513022510.18457-3-xiaoliang.yang_1@nxp.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -93,11 +93,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 5/12/2020 7:25 PM, Xiaoliang Yang wrote:
-> Set the default QoS Classification based on PCP and DEI of vlan tag,
-> after that, frames can be Classified to different Qos based on PCP tag.
-> If there is no vlan tag or vlan ignored, use port default Qos.
+> Ocelot VSC9959 switch supports time-based egress shaping in hardware
+> according to IEEE 802.1Qbv. This patch add support for TAS configuration
+> on egress port of VSC9959 switch.
+> 
+> Felix driver is an instance of Ocelot family, with a DSA front-end. The
+> patch uses tc taprio hardware offload to setup TAS set function on felix
+> driver.
 > 
 > Signed-off-by: Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
+> Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
