@@ -2,184 +2,120 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0ABC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE47C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3170C20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:03:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A32C20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:03:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589411016;
-	bh=JiwzGxwWx0NS2EXPzf/2f+eKgUV2OMKFWgrmHm0qu7Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=udWCKKm/Tbh/FvCMO9cVq2+rWRaejobCzzXRpFmAdjGFQE/H4SvikMaGLAnhKO0pl
-	 Ftn/b+4J11+90t6eRisaul74h3/2qpXPlFnqORBuWrZ4MYjptjEbh1Dw6XmvnDafjw
-	 /KPFiq9cfi4/6Kp6He96CeFzSDjhLzierIinkVP0=
+	s=default; t=1589411023;
+	bh=vewls980HRuxR06tg5H4BH+YA45h9SryXksyHmYSP8A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=a03kI2OChVaJynhtu1BqO+meV6ksRwSES4gSOTjRz/FzeC7iKqsErZBeAYR3zGC0q
+	 Tt6zaWOq9Z+PkkHdpYN1dRgALhvey2MPLbdfSAHlqEi08RzpR0numzgFkRwGfQ9YMJ
+	 MT2oprF19SBYh29zhmWLiwpz/NxakpEt0IVqzdKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732235AbgEMXDf (ORCPT
+        id S1732271AbgEMXDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 19:03:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39166 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731815AbgEMXDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 19:03:34 -0400
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68FA020675;
-        Wed, 13 May 2020 23:03:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589411013;
-        bh=JiwzGxwWx0NS2EXPzf/2f+eKgUV2OMKFWgrmHm0qu7Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pfBmySLrlBzf6/zjgOQhFegBu6eehkX+0kWEeQvRtOIhqFr49C8qBjJJ9+muojnjn
-         Eq/KnmMeYaP31Symr8RsvMxXPTEArPnnd2/Vx3ljZBxsTmpzCS1fqHzwEFHv8+852R
-         q1w9FgWfeY2/0ZaP6wOP/AD4NcTG2ZStFHsgO+wY=
-Date:   Thu, 14 May 2020 01:03:31 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Josh Triplett <josh@joshtriplett.org>
-Subject: Re: [PATCH 04/10] rcu: Implement rcu_segcblist_is_offloaded() config
- dependent
-Message-ID: <20200513230330.GB18303@lenoir>
-References: <20200513164714.22557-1-frederic@kernel.org>
- <20200513164714.22557-5-frederic@kernel.org>
- <20200513182029.GT2869@paulmck-ThinkPad-P72>
+        Wed, 13 May 2020 19:03:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732236AbgEMXDk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 19:03:40 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D56BC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 16:03:40 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id 188so925141lfa.10
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 16:03:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wdZg4gkYTds/C4KUVy9erLK1Ch+WqNN+RvFMTseVuAg=;
+        b=C1TcjV6OtJpa2YRiWAUnGcZZ/u09cBy851Mx94wSMSQa9VrdsWV1jVHW4P1sNrL8Bh
+         F6WpmJ1tQWre2J0ca6Wb2LX04yqV6LxMJpd1Tpa6EPb8PrEYBkkbwpuLaAdO/BjmCZ2G
+         9egVYPaqRVmuIV8Yift2HwrZ/fz1dHM99i9n0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wdZg4gkYTds/C4KUVy9erLK1Ch+WqNN+RvFMTseVuAg=;
+        b=XOYGxrsRsQPdXXeRh+psp9ZT6VcmwnnECj3npfeWZYunS3wonUROAXsEU3B8W7CnLH
+         bL4xsQYjhYXGtjrByhzzCiKiAW3zvS6rjx+L+73EzXNYas8+jMvoAvnOCmEYAr2xgeit
+         4O3Z9vsGkBqAB9nt8j2cHPWI8/G7Rns0Z/bH5T00cbDFxcQWyegmx0z5TQ2J4TCEexrI
+         qVnML6cbBBy8l/0/ZUdlveYwg5CYNF5s0bOeoVFJWGk8JlwAZsEhraYe8a/oyxz4y4Z0
+         uhbDfj/9apY/0jjh0Wf0BrgO2lQvKGEP7BJTHSnGuB5pmLi+tV6bgAfiw3MtDTivqCCy
+         ggiA==
+X-Gm-Message-State: AOAM533bqbT1+W5D+EM5PFsflfLUusk2N89OVkT0RUclh0lBcZO+u8Wr
+        Y/iOseDsAabafCTYSyZYpO29zThowH4=
+X-Google-Smtp-Source: ABdhPJxTtRL5ITTgQ0cJMjxghWCdBpdsl78DTeOSBeBASiVLHvuHSf45z9Rj1Z2y/HonFo/f5JVTuQ==
+X-Received: by 2002:ac2:48b2:: with SMTP id u18mr1104694lfg.122.1589411018016;
+        Wed, 13 May 2020 16:03:38 -0700 (PDT)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id d16sm431144ljj.84.2020.05.13.16.03.36
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 May 2020 16:03:36 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id v5so906561lfp.13
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 16:03:36 -0700 (PDT)
+X-Received: by 2002:ac2:58c8:: with SMTP id u8mr1177915lfo.142.1589411015919;
+ Wed, 13 May 2020 16:03:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513182029.GT2869@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200513160038.2482415-1-hch@lst.de> <20200513160038.2482415-12-hch@lst.de>
+ <CAHk-=wj=u+nttmd1huNES2U=9nePtmk7WgR8cMLCYS8wc=rhdA@mail.gmail.com>
+ <20200513192804.GA30751@lst.de> <0c1a7066-b269-9695-b94a-bb5f4f20ebd8@iogearbox.net>
+In-Reply-To: <0c1a7066-b269-9695-b94a-bb5f4f20ebd8@iogearbox.net>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 13 May 2020 16:03:20 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiivWJ70PotzCK-j7K4Y612NJBA2d+iN6Rz-bfMxCpwjQ@mail.gmail.com>
+Message-ID: <CAHk-=wiivWJ70PotzCK-j7K4Y612NJBA2d+iN6Rz-bfMxCpwjQ@mail.gmail.com>
+Subject: Re: [PATCH 11/18] maccess: remove strncpy_from_unsafe
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-parisc@vger.kernel.org,
+        linux-um <linux-um@lists.infradead.org>,
+        Netdev <netdev@vger.kernel.org>, bpf@vger.kernel.org,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 11:20:29AM -0700, Paul E. McKenney wrote:
-> On Wed, May 13, 2020 at 06:47:08PM +0200, Frederic Weisbecker wrote:
-> > This simplify the usage of this API and avoid checking the kernel
-> > config from the callers.
-> > 
-> > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> > Cc: Paul E. McKenney <paulmck@kernel.org>
-> > Cc: Josh Triplett <josh@joshtriplett.org>
-> > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> > Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-> > Cc: Joel Fernandes <joel@joelfernandes.org>
-> > ---
-> >  include/linux/rcu_segcblist.h |  2 ++
-> >  kernel/rcu/rcu_segcblist.c    |  2 ++
-> >  kernel/rcu/rcu_segcblist.h    |  6 ++++++
-> >  kernel/rcu/tree.c             | 21 +++++++--------------
-> >  4 files changed, 17 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/include/linux/rcu_segcblist.h b/include/linux/rcu_segcblist.h
-> > index b36afe7b22c9..0ced0a0ecbcf 100644
-> > --- a/include/linux/rcu_segcblist.h
-> > +++ b/include/linux/rcu_segcblist.h
-> > @@ -73,7 +73,9 @@ struct rcu_segcblist {
-> >  	long len;
-> >  #endif
-> >  	u8 enabled;
-> > +#ifdef CONFIG_RCU_NOCB_CPU
-> >  	u8 offloaded;
-> > +#endif
-> 
-> Given that this is only one byte and that removing it won't actually
-> save any memory on most architectures, why not just leave it and
-> adjust as shown below?
+On Wed, May 13, 2020 at 3:36 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
+>
+> It's used for both.
 
-Right, the point was to make it private to that config and trigger
-a build error otherwise. But if we have an off case that's fine.
+Daniel, BPF real;ly needs to make up its mind about that.
 
-> 
-> >  };
-> >  
-> >  #define RCU_SEGCBLIST_INITIALIZER(n) \
-> > diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
-> > index 9a0f66133b4b..d8ea2bef5574 100644
-> > --- a/kernel/rcu/rcu_segcblist.c
-> > +++ b/kernel/rcu/rcu_segcblist.c
-> > @@ -166,6 +166,7 @@ void rcu_segcblist_disable(struct rcu_segcblist *rsclp)
-> >  	rsclp->enabled = 0;
-> >  }
-> >  
-> > +#ifdef CONFIG_RCU_NOCB_CPU
-> >  /*
-> >   * Mark the specified rcu_segcblist structure as offloaded.  This
-> >   * structure must be empty.
-> > @@ -174,6 +175,7 @@ void rcu_segcblist_offload(struct rcu_segcblist *rsclp)
-> >  {
-> >  	rsclp->offloaded = 1;
-> >  }
-> > +#endif
-> 
-> Leave this unconditional, as it is nowhere near a fastpath.
+You *cannot* use ti for both.
 
-The point was to not raise false hopes to those who want to
-offload when it's not supported.
+Yes, it happens to work on x86 and some other architectures.
 
-Let's perhaps have at least a WARN_ON_ONCE(1) if it is called
-when !CONFIG_RCU_NOCB_CPU ?
+But on other architectures, the exact same pointer value can be a
+kernel pointer or a user pointer.
 
-> 
-> >  /*
-> >   * Does the specified rcu_segcblist structure contain callbacks that
-> > diff --git a/kernel/rcu/rcu_segcblist.h b/kernel/rcu/rcu_segcblist.h
-> > index 5c293afc07b8..4c1503a82492 100644
-> > --- a/kernel/rcu/rcu_segcblist.h
-> > +++ b/kernel/rcu/rcu_segcblist.h
-> > @@ -62,7 +62,11 @@ static inline bool rcu_segcblist_is_enabled(struct rcu_segcblist *rsclp)
-> >  /* Is the specified rcu_segcblist offloaded?  */
-> >  static inline bool rcu_segcblist_is_offloaded(struct rcu_segcblist *rsclp)
-> >  {
-> > +#ifdef CONFIG_RCU_NOCB_CPU
-> >  	return rsclp->offloaded;
-> > +#else
-> > +	return false;
-> > +#endif
-> >  }
-> 
-> Then this can just be:
-> 
-> 	return IS_ENABLED(CONFIG_RCU_NOCB_CPU) && rsclp->offloaded;
+> Given this is enabled on pretty much all program types, my
+> assumption would be that usage is still more often on kernel memory than user one.
 
-Ok.
+You need to pick one.
 
-> > @@ -1401,8 +1401,7 @@ static bool __note_gp_changes(struct rcu_node *rnp, struct rcu_data *rdp)
-> >  {
-> >  	bool ret = false;
-> >  	bool need_qs;
-> > -	const bool offloaded = IS_ENABLED(CONFIG_RCU_NOCB_CPU) &&
-> > -			       rcu_segcblist_is_offloaded(&rdp->cblist);
-> > +	const bool offloaded = rcu_segcblist_is_offloaded(&rdp->cblist);
-> 
-> The adjustment to rcu_segcblist_is_offloaded() allows this (welcome!)
-> simplification to remain.
+If you know it is a user pointer, use strncpy_from_user() (possibly
+with disable_pagefault() aka strncpy_from_user_nofault()).
 
-Ok thanks!
+And if you know it is a kernel pointer, use strncpy_from_unsafe() (aka
+strncpy_from_kernel_nofault()).
 
-> > @@ -3243,8 +3237,7 @@ static int rcu_pending(int user)
-> >  
-> >  	/* Has RCU gone idle with this CPU needing another grace period? */
-> >  	if (!gp_in_progress && rcu_segcblist_is_enabled(&rdp->cblist) &&
-> > -	    (!IS_ENABLED(CONFIG_RCU_NOCB_CPU) ||
-> > -	     !rcu_segcblist_is_offloaded(&rdp->cblist)) &&
-> > +	    !rcu_segcblist_is_offloaded(&rdp->cblist) &&
-> 
-> Ditto.
-> 
-> As in "Why didn't I do it that way to start with???"  ;-)
+You really can't pick the "randomly one or the other guess what I mean " option.
 
-You say that to someone who's too lazy to script short commands typed
-100 times a day ;-)
+                  Linus
