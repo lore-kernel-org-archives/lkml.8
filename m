@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC7DCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 499D9C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AD1D20753
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C73E2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363741;
-	bh=lzC80R2tk7ApyrTkRZ63q8mqBzSTeWMMDyNZcdjk2vQ=;
+	s=default; t=1589363746;
+	bh=b0Dt2ils4KFk41Bev6B/9rkZLl6V5s0FFZr0nRWIiFo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ElC0Zxki6OEJ4MgA1EIk7rNr8yvsx6SN2ET/B3bkK4pyWq74CkxK5V7mf6fwioyPy
-	 l3W9Z4TipwZAOTWoXJJgeiYlfrBIgsrBudv2LSo72poHCy8G3RWiGd5xrTbrBARarU
-	 J+eGT+C6BOwRyd9LlOKC36+s9bAhV/O8n3enPgRg=
+	b=JjlUlJnaeikXBUTMFxJnvjhyF/BzMDIT9RtwjtNeovPUWhhLYSlDSnQ7BoJZLagEw
+	 P4xr8cIfsrbjiL3syhvaHB0zktMxQEXX+EhaKabtBbu/NmYUb7WkUZQVoze3vhP4pP
+	 oJCQVPVqx1nzWiPETVh3m23+mXUyIT7vBLudenG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388295AbgEMJzk (ORCPT
+        id S2388304AbgEMJzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:55:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58862 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:55:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388289AbgEMJzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:55:37 -0400
+        id S2387618AbgEMJzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:55:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBF9420575;
-        Wed, 13 May 2020 09:55:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4990205ED;
+        Wed, 13 May 2020 09:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363736;
-        bh=lzC80R2tk7ApyrTkRZ63q8mqBzSTeWMMDyNZcdjk2vQ=;
+        s=default; t=1589363739;
+        bh=b0Dt2ils4KFk41Bev6B/9rkZLl6V5s0FFZr0nRWIiFo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vuLKsVfMfyXVtLZlzTJK/V7nBRsQC1faguSFRH7LUDmNi+rzuUQzQUsaI9LKYi6cL
-         EKQWHJ2d9bDEWNszN9tcpB2/Qec8EuJeHT654Whx4lWZlZ1HLEJqPvbfojvrryQV92
-         BXxt3rhXi1BAoOIY/rfyMkmd8mULUY8uCvvlyzS8=
+        b=GvYtjdFvW62eneXzdyit8i+DauSEe3dIueCQiR5U4PICWYTWM+bKULEeOyPFAVZ3y
+         mAjNIXRohEacYIJ0IU9AqM3c56Y3Gi5mwuSdUiO1g7l7KxhE/XrrTmRUw+16Hw8ViN
+         NuDTMtPlFhBxobFgJcwpC4eFOVRWB1bMbSAVl9oA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.6 068/118] tracing: Add a vmalloc_sync_mappings() for safe measure
-Date:   Wed, 13 May 2020 11:44:47 +0200
-Message-Id: <20200513094423.803385902@linuxfoundation.org>
+        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
+        Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>
+Subject: [PATCH 5.6 104/118] x86/unwind/orc: Fix premature unwind stoppage due to IRET frames
+Date:   Wed, 13 May 2020 11:45:23 +0200
+Message-Id: <20200513094426.370964643@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -61,62 +65,215 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-commit 11f5efc3ab66284f7aaacc926e9351d658e2577b upstream.
+commit 81b67439d147677d844d492fcbd03712ea438f42 upstream.
 
-x86_64 lazily maps in the vmalloc pages, and the way this works with per_cpu
-areas can be complex, to say the least. Mappings may happen at boot up, and
-if nothing synchronizes the page tables, those page mappings may not be
-synced till they are used. This causes issues for anything that might touch
-one of those mappings in the path of the page fault handler. When one of
-those unmapped mappings is touched in the page fault handler, it will cause
-another page fault, which in turn will cause a page fault, and leave us in
-a loop of page faults.
+The following execution path is possible:
 
-Commit 763802b53a42 ("x86/mm: split vmalloc_sync_all()") split
-vmalloc_sync_all() into vmalloc_sync_unmappings() and
-vmalloc_sync_mappings(), as on system exit, it did not need to do a full
-sync on x86_64 (although it still needed to be done on x86_32). By chance,
-the vmalloc_sync_all() would synchronize the page mappings done at boot up
-and prevent the per cpu area from being a problem for tracing in the page
-fault handler. But when that synchronization in the exit of a task became a
-nop, it caused the problem to appear.
+  fsnotify()
+    [ realign the stack and store previous SP in R10 ]
+    <IRQ>
+      [ only IRET regs saved ]
+      common_interrupt()
+        interrupt_entry()
+	  <NMI>
+	    [ full pt_regs saved ]
+	    ...
+	    [ unwind stack ]
 
-Link: https://lore.kernel.org/r/20200429054857.66e8e333@oasis.local.home
+When the unwinder goes through the NMI and the IRQ on the stack, and
+then sees fsnotify(), it doesn't have access to the value of R10,
+because it only has the five IRET registers.  So the unwind stops
+prematurely.
 
-Cc: stable@vger.kernel.org
-Fixes: 737223fbca3b1 ("tracing: Consolidate buffer allocation code")
-Reported-by: "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
-Suggested-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+However, because the interrupt_entry() code is careful not to clobber
+R10 before saving the full regs, the unwinder should be able to read R10
+from the previously saved full pt_regs associated with the NMI.
+
+Handle this case properly.  When encountering an IRET regs frame
+immediately after a full pt_regs frame, use the pt_regs as a backup
+which can be used to get the C register values.
+
+Also, note that a call frame resets the 'prev_regs' value, because a
+function is free to clobber the registers.  For this fix to work, the
+IRET and full regs frames must be adjacent, with no FUNC frames in
+between.  So replace the FUNC hint in interrupt_entry() with an
+IRET_REGS hint.
+
+Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Dave Jones <dsj@fb.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Link: https://lore.kernel.org/r/97a408167cc09f1cfa0de31a7b70dd88868d743f.1587808742.git.jpoimboe@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/x86/entry/entry_64.S     |    4 +--
+ arch/x86/include/asm/unwind.h |    2 -
+ arch/x86/kernel/unwind_orc.c  |   51 ++++++++++++++++++++++++++++++++----------
+ 3 files changed, 43 insertions(+), 14 deletions(-)
 
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8452,6 +8452,19 @@ static int allocate_trace_buffers(struct
- 	 */
- 	allocate_snapshot = false;
- #endif
-+
-+	/*
-+	 * Because of some magic with the way alloc_percpu() works on
-+	 * x86_64, we need to synchronize the pgd of all the tables,
-+	 * otherwise the trace events that happen in x86_64 page fault
-+	 * handlers can't cope with accessing the chance that a
-+	 * alloc_percpu()'d memory might be touched in the page fault trace
-+	 * event. Oh, and we need to audit all other alloc_percpu() and vmalloc()
-+	 * calls in tracing, because something might get triggered within a
-+	 * page fault trace event!
-+	 */
-+	vmalloc_sync_mappings();
-+
- 	return 0;
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -511,7 +511,7 @@ SYM_CODE_END(spurious_entries_start)
+  * +----------------------------------------------------+
+  */
+ SYM_CODE_START(interrupt_entry)
+-	UNWIND_HINT_FUNC
++	UNWIND_HINT_IRET_REGS offset=16
+ 	ASM_CLAC
+ 	cld
+ 
+@@ -543,9 +543,9 @@ SYM_CODE_START(interrupt_entry)
+ 	pushq	5*8(%rdi)		/* regs->eflags */
+ 	pushq	4*8(%rdi)		/* regs->cs */
+ 	pushq	3*8(%rdi)		/* regs->ip */
++	UNWIND_HINT_IRET_REGS
+ 	pushq	2*8(%rdi)		/* regs->orig_ax */
+ 	pushq	8(%rdi)			/* return address */
+-	UNWIND_HINT_FUNC
+ 
+ 	movq	(%rdi), %rdi
+ 	jmp	2f
+--- a/arch/x86/include/asm/unwind.h
++++ b/arch/x86/include/asm/unwind.h
+@@ -19,7 +19,7 @@ struct unwind_state {
+ #if defined(CONFIG_UNWINDER_ORC)
+ 	bool signal, full_regs;
+ 	unsigned long sp, bp, ip;
+-	struct pt_regs *regs;
++	struct pt_regs *regs, *prev_regs;
+ #elif defined(CONFIG_UNWINDER_FRAME_POINTER)
+ 	bool got_irq;
+ 	unsigned long *bp, *orig_sp, ip;
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -378,9 +378,38 @@ static bool deref_stack_iret_regs(struct
+ 	return true;
  }
  
++/*
++ * If state->regs is non-NULL, and points to a full pt_regs, just get the reg
++ * value from state->regs.
++ *
++ * Otherwise, if state->regs just points to IRET regs, and the previous frame
++ * had full regs, it's safe to get the value from the previous regs.  This can
++ * happen when early/late IRQ entry code gets interrupted by an NMI.
++ */
++static bool get_reg(struct unwind_state *state, unsigned int reg_off,
++		    unsigned long *val)
++{
++	unsigned int reg = reg_off/8;
++
++	if (!state->regs)
++		return false;
++
++	if (state->full_regs) {
++		*val = ((unsigned long *)state->regs)[reg];
++		return true;
++	}
++
++	if (state->prev_regs) {
++		*val = ((unsigned long *)state->prev_regs)[reg];
++		return true;
++	}
++
++	return false;
++}
++
+ bool unwind_next_frame(struct unwind_state *state)
+ {
+-	unsigned long ip_p, sp, orig_ip = state->ip, prev_sp = state->sp;
++	unsigned long ip_p, sp, tmp, orig_ip = state->ip, prev_sp = state->sp;
+ 	enum stack_type prev_type = state->stack_info.type;
+ 	struct orc_entry *orc;
+ 	bool indirect = false;
+@@ -442,39 +471,35 @@ bool unwind_next_frame(struct unwind_sta
+ 		break;
+ 
+ 	case ORC_REG_R10:
+-		if (!state->regs || !state->full_regs) {
++		if (!get_reg(state, offsetof(struct pt_regs, r10), &sp)) {
+ 			orc_warn("missing regs for base reg R10 at ip %pB\n",
+ 				 (void *)state->ip);
+ 			goto err;
+ 		}
+-		sp = state->regs->r10;
+ 		break;
+ 
+ 	case ORC_REG_R13:
+-		if (!state->regs || !state->full_regs) {
++		if (!get_reg(state, offsetof(struct pt_regs, r13), &sp)) {
+ 			orc_warn("missing regs for base reg R13 at ip %pB\n",
+ 				 (void *)state->ip);
+ 			goto err;
+ 		}
+-		sp = state->regs->r13;
+ 		break;
+ 
+ 	case ORC_REG_DI:
+-		if (!state->regs || !state->full_regs) {
++		if (!get_reg(state, offsetof(struct pt_regs, di), &sp)) {
+ 			orc_warn("missing regs for base reg DI at ip %pB\n",
+ 				 (void *)state->ip);
+ 			goto err;
+ 		}
+-		sp = state->regs->di;
+ 		break;
+ 
+ 	case ORC_REG_DX:
+-		if (!state->regs || !state->full_regs) {
++		if (!get_reg(state, offsetof(struct pt_regs, dx), &sp)) {
+ 			orc_warn("missing regs for base reg DX at ip %pB\n",
+ 				 (void *)state->ip);
+ 			goto err;
+ 		}
+-		sp = state->regs->dx;
+ 		break;
+ 
+ 	default:
+@@ -501,6 +526,7 @@ bool unwind_next_frame(struct unwind_sta
+ 
+ 		state->sp = sp;
+ 		state->regs = NULL;
++		state->prev_regs = NULL;
+ 		state->signal = false;
+ 		break;
+ 
+@@ -512,6 +538,7 @@ bool unwind_next_frame(struct unwind_sta
+ 		}
+ 
+ 		state->regs = (struct pt_regs *)sp;
++		state->prev_regs = NULL;
+ 		state->full_regs = true;
+ 		state->signal = true;
+ 		break;
+@@ -523,6 +550,8 @@ bool unwind_next_frame(struct unwind_sta
+ 			goto err;
+ 		}
+ 
++		if (state->full_regs)
++			state->prev_regs = state->regs;
+ 		state->regs = (void *)sp - IRET_FRAME_OFFSET;
+ 		state->full_regs = false;
+ 		state->signal = true;
+@@ -537,8 +566,8 @@ bool unwind_next_frame(struct unwind_sta
+ 	/* Find BP: */
+ 	switch (orc->bp_reg) {
+ 	case ORC_REG_UNDEFINED:
+-		if (state->regs && state->full_regs)
+-			state->bp = state->regs->bp;
++		if (get_reg(state, offsetof(struct pt_regs, bp), &tmp))
++			state->bp = tmp;
+ 		break;
+ 
+ 	case ORC_REG_PREV_SP:
 
 
