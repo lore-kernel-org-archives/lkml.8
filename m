@@ -2,56 +2,53 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 103DACA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 166B9C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1A2B205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2D0720753
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363798;
-	bh=srG9i/xIR2nz4+pXygtkAgDXU6JyRfly2ErsQkCjXA4=;
+	s=default; t=1589363801;
+	bh=Jze8i4rj65vnF9d3Kd8ooqtpOb+CdZklIrrCf6FWc/k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TUTFhmviyz0NQxVkxP4zzTAbtNHaz7e/JYdY5DdkViaZwb8PVNQcwrj/3YRrBkHbS
-	 zXk6Xi/0ulSJ3tXrdpsGeMifBtmpHhvCUwKQ9t5272ejl1y+FMousvYeb9M3jaUD/s
-	 g9VZ75H9Y9avDyhkIVX7vb55vmLYmyKtZ0mMcS+U=
+	b=kEWsXotJ7XyGyy2OQzyeWK96ApyP+UHWFJou5UUnFX7M1IaQ7aqGMcppFza1ZgwYU
+	 4yRO/V2ESY2VK/FKrk3oQwVzTAwHW6zST5zez2AIBiQQbm+bHMkxNGRYlHBTuFDTuC
+	 GJiKpUcW2jgPEAWtcsot+NDyfvxtHEdwY74RYIY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388447AbgEMJ4h (ORCPT
+        id S2388440AbgEMJ4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:56:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59990 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:56:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388411AbgEMJ4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:56:21 -0400
+        id S2387919AbgEMJ40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:56:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFD61206D6;
-        Wed, 13 May 2020 09:56:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDC35206D6;
+        Wed, 13 May 2020 09:56:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363780;
-        bh=srG9i/xIR2nz4+pXygtkAgDXU6JyRfly2ErsQkCjXA4=;
+        s=default; t=1589363785;
+        bh=Jze8i4rj65vnF9d3Kd8ooqtpOb+CdZklIrrCf6FWc/k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oppq4PLd8x+WWGakg0Hgne0hHXtbcrfMZgP9v0ykw0TEHhmQKISbrHdqh7VJZk1et
-         43xGacMimUkY/HVs6z0VA3wfnoLYikEh8UbKMExMpV8BLS5zC6nKhg3DIw6mVI4FRR
-         xJ8Drc0fLQWPL4i6Lb16XdMfI3REy+V5L3fnzB8Q=
+        b=AsWYbkl2L6iVk07dNf2EoCw0JbpnIE3kvaGp9mQb0h9YBn1Vthb+dQ14DNcjsuLqu
+         XiCC3yyoYURzvb82TYcRlr8iUedqXKQs7n5Ny1Me7u9nPojMEyynbt/Fz3ebEl+ofk
+         WRuvCJ1Z4A7q3hJYAVdjA+B67D+TE7CupusMVMM0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.6 113/118] mm, memcg: fix error return value of mem_cgroup_css_alloc()
-Date:   Wed, 13 May 2020 11:45:32 +0200
-Message-Id: <20200513094427.878405561@linuxfoundation.org>
+        stable@vger.kernel.org, Yufen Yu <yuyufen@huawei.com>,
+        Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 115/118] bdi: add a ->dev_name field to struct backing_dev_info
+Date:   Wed, 13 May 2020 11:45:34 +0200
+Message-Id: <20200513094427.983612846@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -64,99 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yafang Shao <laoar.shao@gmail.com>
+From: Christoph Hellwig <hch@lst.de>
 
-commit 11d6761218d19ca06ae5387f4e3692c4fa9e7493 upstream.
+[ Upstream commit 6bd87eec23cbc9ed222bed0f5b5b02bf300e9a8d ]
 
-When I run my memcg testcase which creates lots of memcgs, I found
-there're unexpected out of memory logs while there're still enough
-available free memory.  The error log is
+Cache a copy of the name for the life time of the backing_dev_info
+structure so that we can reference it even after unregistering.
 
-  mkdir: cannot create directory 'foo.65533': Cannot allocate memory
-
-The reason is when we try to create more than MEM_CGROUP_ID_MAX memcgs,
-an -ENOMEM errno will be set by mem_cgroup_css_alloc(), but the right
-errno should be -ENOSPC "No space left on device", which is an
-appropriate errno for userspace's failed mkdir.
-
-As the errno really misled me, we should make it right.  After this
-patch, the error log will be
-
-  mkdir: cannot create directory 'foo.65533': No space left on device
-
-[akpm@linux-foundation.org: s/EBUSY/ENOSPC/, per Michal]
-[akpm@linux-foundation.org: s/EBUSY/ENOSPC/, per Michal]
-Fixes: 73f576c04b94 ("mm: memcontrol: fix cgroup creation failure after many small jobs")
-Suggested-by: Matthew Wilcox <willy@infradead.org>
-Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Michal Hocko <mhocko@kernel.org>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Link: http://lkml.kernel.org/r/20200407063621.GA18914@dhcp22.suse.cz
-Link: http://lkml.kernel.org/r/1586192163-20099-1-git-send-email-laoar.shao@gmail.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 68f23b89067f ("memcg: fix a crash in wb_workfn when a device disappears")
+Reported-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memcontrol.c |   15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ include/linux/backing-dev-defs.h | 1 +
+ mm/backing-dev.c                 | 5 +++--
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -4977,19 +4977,22 @@ static struct mem_cgroup *mem_cgroup_all
- 	unsigned int size;
- 	int node;
- 	int __maybe_unused i;
-+	long error = -ENOMEM;
+diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
+index 4fc87dee005ab..2849bdbb3acbe 100644
+--- a/include/linux/backing-dev-defs.h
++++ b/include/linux/backing-dev-defs.h
+@@ -220,6 +220,7 @@ struct backing_dev_info {
+ 	wait_queue_head_t wb_waitq;
  
- 	size = sizeof(struct mem_cgroup);
- 	size += nr_node_ids * sizeof(struct mem_cgroup_per_node *);
+ 	struct device *dev;
++	char dev_name[64];
+ 	struct device *owner;
  
- 	memcg = kzalloc(size, GFP_KERNEL);
- 	if (!memcg)
--		return NULL;
-+		return ERR_PTR(error);
+ 	struct timer_list laptop_mode_wb_timer;
+diff --git a/mm/backing-dev.c b/mm/backing-dev.c
+index 680e5028d0fc5..3f2480e4c5af3 100644
+--- a/mm/backing-dev.c
++++ b/mm/backing-dev.c
+@@ -938,7 +938,8 @@ int bdi_register_va(struct backing_dev_info *bdi, const char *fmt, va_list args)
+ 	if (bdi->dev)	/* The driver needs to use separate queues per device */
+ 		return 0;
  
- 	memcg->id.id = idr_alloc(&mem_cgroup_idr, NULL,
- 				 1, MEM_CGROUP_ID_MAX,
- 				 GFP_KERNEL);
--	if (memcg->id.id < 0)
-+	if (memcg->id.id < 0) {
-+		error = memcg->id.id;
- 		goto fail;
-+	}
+-	dev = device_create_vargs(bdi_class, NULL, MKDEV(0, 0), bdi, fmt, args);
++	vsnprintf(bdi->dev_name, sizeof(bdi->dev_name), fmt, args);
++	dev = device_create(bdi_class, NULL, MKDEV(0, 0), bdi, bdi->dev_name);
+ 	if (IS_ERR(dev))
+ 		return PTR_ERR(dev);
  
- 	memcg->vmstats_local = alloc_percpu(struct memcg_vmstats_percpu);
- 	if (!memcg->vmstats_local)
-@@ -5033,7 +5036,7 @@ static struct mem_cgroup *mem_cgroup_all
- fail:
- 	mem_cgroup_id_remove(memcg);
- 	__mem_cgroup_free(memcg);
--	return NULL;
-+	return ERR_PTR(error);
+@@ -1047,7 +1048,7 @@ const char *bdi_dev_name(struct backing_dev_info *bdi)
+ {
+ 	if (!bdi || !bdi->dev)
+ 		return bdi_unknown_name;
+-	return dev_name(bdi->dev);
++	return bdi->dev_name;
  }
+ EXPORT_SYMBOL_GPL(bdi_dev_name);
  
- static struct cgroup_subsys_state * __ref
-@@ -5044,8 +5047,8 @@ mem_cgroup_css_alloc(struct cgroup_subsy
- 	long error = -ENOMEM;
- 
- 	memcg = mem_cgroup_alloc();
--	if (!memcg)
--		return ERR_PTR(error);
-+	if (IS_ERR(memcg))
-+		return ERR_CAST(memcg);
- 
- 	memcg->high = PAGE_COUNTER_MAX;
- 	memcg->soft_limit = PAGE_COUNTER_MAX;
-@@ -5095,7 +5098,7 @@ mem_cgroup_css_alloc(struct cgroup_subsy
- fail:
- 	mem_cgroup_id_remove(memcg);
- 	mem_cgroup_free(memcg);
--	return ERR_PTR(-ENOMEM);
-+	return ERR_PTR(error);
- }
- 
- static int mem_cgroup_css_online(struct cgroup_subsys_state *css)
+-- 
+2.20.1
+
 
 
