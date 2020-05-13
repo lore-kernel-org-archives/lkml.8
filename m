@@ -2,134 +2,95 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA225C2D0F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A0E0C2D0F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92F8820714
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:23:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vmW/z2lw"
+	by mail.kernel.org (Postfix) with ESMTP id 5E628206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:29:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728534AbgEMCXn (ORCPT
+        id S1728228AbgEMC3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 22:23:43 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:42528 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbgEMCXn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 22:23:43 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04D2NWkT017956;
-        Tue, 12 May 2020 21:23:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589336612;
-        bh=Y2b2td/dgG3mv8QkpPXvhABe6AB0Z2lXZW74es4K0x0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=vmW/z2lw4crt15DU/pQvKyYaDDLKZeaWhHQ2eBCiDHZc2FcTKKlLgUwiStiCGxWDN
-         6lqZCVbVwEN28toEbukrmHLYg/fRUmnidBssA3LzUtSIWF7RzGqLaI+OjS5FXeFg/x
-         JB8VAkMoEUQcOfo5dOL9T8e50+6kxmmchQQNgP14=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04D2NWFC006884
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 May 2020 21:23:32 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 12
- May 2020 21:23:31 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 12 May 2020 21:23:31 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04D2NSaU111706;
-        Tue, 12 May 2020 21:23:29 -0500
-Subject: Re: [PATCH -next] phy: ti: j721e-wiz: Fix some error return code in
- wiz_probe()
-To:     Roger Quadros <rogerq@ti.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Jyri Sarha <jsarha@ti.com>, Sekhar Nori <nsekhar@ti.com>
-CC:     <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        Hulk Robot <hulkci@huawei.com>
-References: <20200507054109.110849-1-weiyongjun1@huawei.com>
- <f5cd603f-0f0b-23a4-310a-3a40f8f4f69a@ti.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <fc4b4490-c3d1-aad0-59ee-76585b562ed3@ti.com>
-Date:   Wed, 13 May 2020 07:53:28 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <f5cd603f-0f0b-23a4-310a-3a40f8f4f69a@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 12 May 2020 22:29:01 -0400
+Received: from smtp23.cstnet.cn ([159.226.251.23]:38394 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727082AbgEMC3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 22:29:00 -0400
+Received: from localhost.localdomain (unknown [159.226.5.100])
+        by APP-03 (Coremail) with SMTP id rQCowABHmEpZW7teqs9zAQ--.28316S3;
+        Wed, 13 May 2020 10:28:42 +0800 (CST)
+From:   Xu Wang <vulab@iscas.ac.cn>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, amhyung@kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] kernel: events: use offset_in_page macro
+Date:   Wed, 13 May 2020 02:28:39 +0000
+Message-Id: <1589336919-1706-1-git-send-email-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: rQCowABHmEpZW7teqs9zAQ--.28316S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Wr1ftr4rKryxuFy3uF4DArb_yoW8JrW3pF
+        45Ja45tw4fK3WUK347Jrykuw15Jw1kGrW8ta42k3yF9rn7Ww15A3WxWr42qFWFqrZ2gr4U
+        ta1UWFyqva1kZ3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUyvb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+        C2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
+        Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJV
+        W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l
+        4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+        AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+        cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
+        8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
+        wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8fwIDUUUUU==
+X-Originating-IP: [159.226.5.100]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAMPA1z4i9-2vgAAs7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Use offset_in_page macro instead of (addr & ~PAGE_MASK).
 
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+---
+ kernel/events/uprobes.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-On 5/7/2020 12:11 PM, Roger Quadros wrote:
-> 
-> 
-> On 07/05/2020 08:41, Wei Yongjun wrote:
->> Fix to return negative error code from some error handling
->> cases instead of 0, as done elsewhere in this function.
->>
->> Fixes: 091876cc355d ("phy: ti: j721e-wiz: Add support for WIZ module present
->> in TI J721E SoC")
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-> 
-> Acked-by: Roger Quadros <rogerq@ti.com>
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index ece7e13..1552ef1 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -250,14 +250,14 @@ bool __weak is_trap_insn(uprobe_opcode_t *insn)
+ static void copy_from_page(struct page *page, unsigned long vaddr, void *dst, int len)
+ {
+ 	void *kaddr = kmap_atomic(page);
+-	memcpy(dst, kaddr + (vaddr & ~PAGE_MASK), len);
++	memcpy(dst, kaddr + offset_in_page(vaddr), len);
+ 	kunmap_atomic(kaddr);
+ }
+ 
+ static void copy_to_page(struct page *page, unsigned long vaddr, const void *src, int len)
+ {
+ 	void *kaddr = kmap_atomic(page);
+-	memcpy(kaddr + (vaddr & ~PAGE_MASK), src, len);
++	memcpy(kaddr + offset_in_page(vaddr), src, len);
+ 	kunmap_atomic(kaddr);
+ }
+ 
+@@ -393,7 +393,7 @@ __update_ref_ctr(struct mm_struct *mm, unsigned long vaddr, short d)
+ 	}
+ 
+ 	kaddr = kmap_atomic(page);
+-	ptr = kaddr + (vaddr & ~PAGE_MASK);
++	ptr = kaddr + offset_in_page(vaddr);
+ 
+ 	if (unlikely(*ptr + d < 0)) {
+ 		pr_warn("ref_ctr going negative. vaddr: 0x%lx, "
+-- 
+2.7.4
 
-merged, thanks!
-
--Kishon
-> 
->> ---
->>   drivers/phy/ti/phy-j721e-wiz.c | 6 +++++-
->>   1 file changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/phy/ti/phy-j721e-wiz.c b/drivers/phy/ti/phy-j721e-wiz.c
->> index 1d12d1b1b63a..30ea5b207285 100644
->> --- a/drivers/phy/ti/phy-j721e-wiz.c
->> +++ b/drivers/phy/ti/phy-j721e-wiz.c
->> @@ -841,8 +841,10 @@ static int wiz_probe(struct platform_device *pdev)
->>       }
->>         base = devm_ioremap(dev, res.start, resource_size(&res));
->> -    if (!base)
->> +    if (!base) {
->> +        ret = -ENOMEM;
->>           goto err_addr_to_resource;
->> +    }
->>         regmap = devm_regmap_init_mmio(dev, base, &wiz_regmap_config);
->>       if (IS_ERR(regmap)) {
->> @@ -859,6 +861,7 @@ static int wiz_probe(struct platform_device *pdev)
->>         if (num_lanes > WIZ_MAX_LANES) {
->>           dev_err(dev, "Cannot support %d lanes\n", num_lanes);
->> +        ret = -ENODEV;
->>           goto err_addr_to_resource;
->>       }
->>   @@ -948,6 +951,7 @@ static int wiz_probe(struct platform_device *pdev)
->>       serdes_pdev = of_platform_device_create(child_node, NULL, dev);
->>       if (!serdes_pdev) {
->>           dev_WARN(dev, "Unable to create SERDES platform device\n");
->> +        ret = -ENOMEM;
->>           goto err_pdev_create;
->>       }
->>       wiz->serdes_pdev = serdes_pdev;
->>
->>
->>
-> 
-> cheers,
-> -roger
