@@ -2,428 +2,98 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB25DC2D0FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A428C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9F10206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 825F7206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:20:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730453AbgEMHSl (ORCPT
+        id S1730870AbgEMHU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 03:18:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33386 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730170AbgEMHSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 03:18:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 58343AC90;
-        Wed, 13 May 2020 07:18:39 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Jan Kara <jack@suse.cz>
-Date:   Wed, 13 May 2020 17:18:29 +1000
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 2/2 V4] MM: Discard NR_UNSTABLE_NFS, use NR_WRITEBACK instead.
-In-Reply-To: <871rnob8z3.fsf@notabene.neil.brown.name>
-References: <87tv2b7q72.fsf@notabene.neil.brown.name> <87v9miydai.fsf@notabene.neil.brown.name> <87ftdgw58w.fsf@notabene.neil.brown.name> <87wo6gs26e.fsf@notabene.neil.brown.name> <87tv1ks24t.fsf@notabene.neil.brown.name> <20200416151906.GQ23739@quack2.suse.cz> <87zhb5r30c.fsf@notabene.neil.brown.name> <20200422124600.GH8775@quack2.suse.cz> <871rnob8z3.fsf@notabene.neil.brown.name>
-Message-ID: <87tv0k9ube.fsf@notabene.neil.brown.name>
+        Wed, 13 May 2020 03:20:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54230 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729726AbgEMHU1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 03:20:27 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78880C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 00:20:26 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jYlgb-0000qH-Qw; Wed, 13 May 2020 09:20:13 +0200
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jYlgb-0008CI-1k; Wed, 13 May 2020 09:20:13 +0200
+Date:   Wed, 13 May 2020 09:20:13 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     vkoul@kernel.org, shawnguo@kernel.org,
+        u.kleine-koenig@pengutronix.de, robh+dt@kernel.org,
+        festevam@gmail.com, dan.j.williams@intel.com, mark.rutland@arm.com,
+        catalin.marinas@arm.com, will.deacon@arm.com,
+        l.stach@pengutronix.de, martin.fuzzey@flowbird.group,
+        kernel@pengutronix.de, linux-spi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v7 RESEND 00/13] add ecspi ERR009165 for i.mx6/7 soc
+ family
+Message-ID: <20200513072012.GB15934@pengutronix.de>
+References: <1589218356-17475-1-git-send-email-yibin.gong@nxp.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589218356-17475-1-git-send-email-yibin.gong@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:15:45 up 83 days, 14:46, 109 users,  load average: 0.44, 0.27,
+ 0.28
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Tue, May 12, 2020 at 01:32:23AM +0800, Robin Gong wrote:
+> There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
+> transfer to be send twice in DMA mode. Please get more information from:
+> https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf. The workaround is adding
+> new sdma ram script which works in XCH  mode as PIO inside sdma instead
+> of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should be
+> exist on all legacy i.mx6/7 soc family before i.mx6ul.
+> NXP fix this design issue from i.mx6ul, so newer chips including i.mx6ul/
+> 6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8 chips
+> still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
+> for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need errata
+> or not.
+> The first two reverted patches should be the same issue, though, it
+> seems 'fixed' by changing to other shp script. Hope Sean or Sascha could
+> have the chance to test this patch set if could fix their issues.
+> Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
+> on i.mx8mm because the event id is zero.
 
+It's not nice to break SPI support when the new firmware is not present
+and I think we can do better. Wouldn't it be possible to fall back to PIO
+in this case?
 
-After an NFS page has been written it is considered "unstable" until a
-COMMIT request succeeds.  If the COMMIT fails, the page will be
-re-written.
+Sascha
 
-These "unstable" pages are currently accounted as "reclaimable", either
-in WB_RECLAIMABLE, or in NR_UNSTABLE_NFS which is included in a
-'reclaimable' count.  This might have made sense when sending the COMMIT
-required a separate action by the VFS/MM (e.g.  releasepage() used to
-send a COMMIT).  However now that all writes generated by ->writepages()
-will automatically be followed by a COMMIT (since commit 919e3bd9a875
-("NFS: Ensure we commit after writeback is complete")) it makes more
-sense to treat them as writeback pages.
-
-So this patch removes NR_UNSTABLE_NFS and accounts unstable pages in
-NR_WRITEBACK and WB_WRITEBACK.
-
-A particular effect of this change is that when
-wb_check_background_flush() calls wb_over_bg_threshold(), the latter
-will report 'true' a lot less often as the 'unstable' pages are no
-longer considered 'dirty' (as there is nothing that writeback can do
-about them anyway).
-
-Currently wb_check_background_flush() will trigger writeback to NFS even
-when there are relatively few dirty pages (if there are lots of unstable
-pages), this can result in small writes going to the server (10s of
-Kilobytes rather than a Megabyte) which hurts throughput.
-With this patch, there are fewer writes which are each larger on average.
-
-Where the NR_UNSTABLE_NFS count was included in statistics
-virtual-files, the entry is retained, but the value is hard-coded as
-zero.  static trace points and warning printks which mentioned this
-counter no longer report it.
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Acked-by: Michal Hocko <mhocko@suse.com> # for MM parts
-Signed-off-by: NeilBrown <neilb@suse.de>
-=2D--
- Documentation/filesystems/proc.rst |  4 ++--
- drivers/base/node.c                |  2 +-
- fs/fs-writeback.c                  |  1 -
- fs/nfs/internal.h                  | 10 +++++++---
- fs/nfs/write.c                     |  4 ++--
- fs/proc/meminfo.c                  |  3 +--
- include/linux/mmzone.h             |  1 -
- include/trace/events/writeback.h   |  5 +----
- mm/memcontrol.c                    |  1 -
- mm/page-writeback.c                | 17 ++++-------------
- mm/page_alloc.c                    |  5 +----
- mm/vmstat.c                        | 11 +++++++++--
- 12 files changed, 28 insertions(+), 36 deletions(-)
-
-diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesystems=
-/proc.rst
-index 38b606991065..092b7b44d158 100644
-=2D-- a/Documentation/filesystems/proc.rst
-+++ b/Documentation/filesystems/proc.rst
-@@ -1042,8 +1042,8 @@ PageTables
-               amount of memory dedicated to the lowest level of page
-               tables.
- NFS_Unstable
-=2D              NFS pages sent to the server, but not yet committed to sta=
-ble
-=2D	      storage
-+              Always zero. Previous counted pages which had been written to
-+              the server, but has not been committed to stable storage.
- Bounce
-               Memory used for block device "bounce buffers"
- WritebackTmp
-diff --git a/drivers/base/node.c b/drivers/base/node.c
-index 10d7e818e118..15f5ed6a8830 100644
-=2D-- a/drivers/base/node.c
-+++ b/drivers/base/node.c
-@@ -439,7 +439,7 @@ static ssize_t node_read_meminfo(struct device *dev,
- 		       nid, K(i.sharedram),
- 		       nid, sum_zone_node_page_state(nid, NR_KERNEL_STACK_KB),
- 		       nid, K(sum_zone_node_page_state(nid, NR_PAGETABLE)),
-=2D		       nid, K(node_page_state(pgdat, NR_UNSTABLE_NFS)),
-+		       nid, 0,
- 		       nid, K(sum_zone_node_page_state(nid, NR_BOUNCE)),
- 		       nid, K(node_page_state(pgdat, NR_WRITEBACK_TEMP)),
- 		       nid, K(sreclaimable +
-diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-index 76ac9c7d32ec..c5bdf46e3b4b 100644
-=2D-- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -1070,7 +1070,6 @@ static void bdi_split_work_to_wbs(struct backing_dev_=
-info *bdi,
- static unsigned long get_nr_dirty_pages(void)
- {
- 	return global_node_page_state(NR_FILE_DIRTY) +
-=2D		global_node_page_state(NR_UNSTABLE_NFS) +
- 		get_nr_dirty_inodes();
- }
-=20
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index 1f32a9fbfdaf..6673a77884d9 100644
-=2D-- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -668,7 +668,8 @@ void nfs_super_set_maxbytes(struct super_block *sb, __u=
-64 maxfilesize)
- }
-=20
- /*
-=2D * Record the page as unstable and mark its inode as dirty.
-+ * Record the page as unstable (an extra writeback period) and mark its
-+ * inode as dirty.
-  */
- static inline
- void nfs_mark_page_unstable(struct page *page, struct nfs_commit_info *cin=
-fo)
-@@ -676,8 +677,11 @@ void nfs_mark_page_unstable(struct page *page, struct =
-nfs_commit_info *cinfo)
- 	if (!cinfo->dreq) {
- 		struct inode *inode =3D page_file_mapping(page)->host;
-=20
-=2D		inc_node_page_state(page, NR_UNSTABLE_NFS);
-=2D		inc_wb_stat(&inode_to_bdi(inode)->wb, WB_RECLAIMABLE);
-+		/* This page is really still in write-back - just that the
-+		 * writeback is happening on the server now.
-+		 */
-+		inc_node_page_state(page, NR_WRITEBACK);
-+		inc_wb_stat(&inode_to_bdi(inode)->wb, WB_WRITEBACK);
- 		__mark_inode_dirty(inode, I_DIRTY_DATASYNC);
- 	}
- }
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index df4b87c30ac9..d9ea824accb7 100644
-=2D-- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -946,9 +946,9 @@ nfs_mark_request_commit(struct nfs_page *req, struct pn=
-fs_layout_segment *lseg,
- static void
- nfs_clear_page_commit(struct page *page)
- {
-=2D	dec_node_page_state(page, NR_UNSTABLE_NFS);
-+	dec_node_page_state(page, NR_WRITEBACK);
- 	dec_wb_stat(&inode_to_bdi(page_file_mapping(page)->host)->wb,
-=2D		    WB_RECLAIMABLE);
-+		    WB_WRITEBACK);
- }
-=20
- /* Called holding the request lock on @req */
-diff --git a/fs/proc/meminfo.c b/fs/proc/meminfo.c
-index 8c1f1bb1a5ce..9bd94b5a9658 100644
-=2D-- a/fs/proc/meminfo.c
-+++ b/fs/proc/meminfo.c
-@@ -106,8 +106,7 @@ static int meminfo_proc_show(struct seq_file *m, void *=
-v)
- 	show_val_kb(m, "PageTables:     ",
- 		    global_zone_page_state(NR_PAGETABLE));
-=20
-=2D	show_val_kb(m, "NFS_Unstable:   ",
-=2D		    global_node_page_state(NR_UNSTABLE_NFS));
-+	show_val_kb(m, "NFS_Unstable:   ", 0);
- 	show_val_kb(m, "Bounce:         ",
- 		    global_zone_page_state(NR_BOUNCE));
- 	show_val_kb(m, "WritebackTmp:   ",
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 1b9de7d220fb..a89f47515eb1 100644
-=2D-- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -193,7 +193,6 @@ enum node_stat_item {
- 	NR_FILE_THPS,
- 	NR_FILE_PMDMAPPED,
- 	NR_ANON_THPS,
-=2D	NR_UNSTABLE_NFS,	/* NFS unstable pages */
- 	NR_VMSCAN_WRITE,
- 	NR_VMSCAN_IMMEDIATE,	/* Prioritise for reclaim when writeback ends */
- 	NR_DIRTIED,		/* page dirtyings since bootup */
-diff --git a/include/trace/events/writeback.h b/include/trace/events/writeb=
-ack.h
-index 85a33bea76f1..10f5d1fa7347 100644
-=2D-- a/include/trace/events/writeback.h
-+++ b/include/trace/events/writeback.h
-@@ -541,7 +541,6 @@ TRACE_EVENT(global_dirty_state,
- 	TP_STRUCT__entry(
- 		__field(unsigned long,	nr_dirty)
- 		__field(unsigned long,	nr_writeback)
-=2D		__field(unsigned long,	nr_unstable)
- 		__field(unsigned long,	background_thresh)
- 		__field(unsigned long,	dirty_thresh)
- 		__field(unsigned long,	dirty_limit)
-@@ -552,7 +551,6 @@ TRACE_EVENT(global_dirty_state,
- 	TP_fast_assign(
- 		__entry->nr_dirty	=3D global_node_page_state(NR_FILE_DIRTY);
- 		__entry->nr_writeback	=3D global_node_page_state(NR_WRITEBACK);
-=2D		__entry->nr_unstable	=3D global_node_page_state(NR_UNSTABLE_NFS);
- 		__entry->nr_dirtied	=3D global_node_page_state(NR_DIRTIED);
- 		__entry->nr_written	=3D global_node_page_state(NR_WRITTEN);
- 		__entry->background_thresh =3D background_thresh;
-@@ -560,12 +558,11 @@ TRACE_EVENT(global_dirty_state,
- 		__entry->dirty_limit	=3D global_wb_domain.dirty_limit;
- 	),
-=20
-=2D	TP_printk("dirty=3D%lu writeback=3D%lu unstable=3D%lu "
-+	TP_printk("dirty=3D%lu writeback=3D%lu "
- 		  "bg_thresh=3D%lu thresh=3D%lu limit=3D%lu "
- 		  "dirtied=3D%lu written=3D%lu",
- 		  __entry->nr_dirty,
- 		  __entry->nr_writeback,
-=2D		  __entry->nr_unstable,
- 		  __entry->background_thresh,
- 		  __entry->dirty_thresh,
- 		  __entry->dirty_limit,
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index a3b97f103966..1db4b285c407 100644
-=2D-- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -4330,7 +4330,6 @@ void mem_cgroup_wb_stats(struct bdi_writeback *wb, un=
-signed long *pfilepages,
-=20
- 	*pdirty =3D memcg_exact_page_state(memcg, NR_FILE_DIRTY);
-=20
-=2D	/* this should eventually include NR_UNSTABLE_NFS */
- 	*pwriteback =3D memcg_exact_page_state(memcg, NR_WRITEBACK);
- 	*pfilepages =3D memcg_exact_page_state(memcg, NR_INACTIVE_FILE) +
- 			memcg_exact_page_state(memcg, NR_ACTIVE_FILE);
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index f02a71797781..d11b097c8002 100644
-=2D-- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -504,7 +504,6 @@ bool node_dirty_ok(struct pglist_data *pgdat)
- 	unsigned long nr_pages =3D 0;
-=20
- 	nr_pages +=3D node_page_state(pgdat, NR_FILE_DIRTY);
-=2D	nr_pages +=3D node_page_state(pgdat, NR_UNSTABLE_NFS);
- 	nr_pages +=3D node_page_state(pgdat, NR_WRITEBACK);
-=20
- 	return nr_pages <=3D limit;
-@@ -758,7 +757,7 @@ static void mdtc_calc_avail(struct dirty_throttle_contr=
-ol *mdtc,
-  * bounded by the bdi->min_ratio and/or bdi->max_ratio parameters, if set.
-  *
-  * Return: @wb's dirty limit in pages. The term "dirty" in the context of
-=2D * dirty balancing includes all PG_dirty, PG_writeback and NFS unstable =
-pages.
-+ * dirty balancing includes all PG_dirty and PG_writeback pages.
-  */
- static unsigned long __wb_calc_thresh(struct dirty_throttle_control *dtc)
- {
-@@ -1566,7 +1565,7 @@ static void balance_dirty_pages(struct bdi_writeback =
-*wb,
- 	struct dirty_throttle_control * const mdtc =3D mdtc_valid(&mdtc_stor) ?
- 						     &mdtc_stor : NULL;
- 	struct dirty_throttle_control *sdtc;
-=2D	unsigned long nr_reclaimable;	/* =3D file_dirty + unstable_nfs */
-+	unsigned long nr_reclaimable;	/* =3D file_dirty */
- 	long period;
- 	long pause;
- 	long max_pause;
-@@ -1586,14 +1585,7 @@ static void balance_dirty_pages(struct bdi_writeback=
- *wb,
- 		unsigned long m_thresh =3D 0;
- 		unsigned long m_bg_thresh =3D 0;
-=20
-=2D		/*
-=2D		 * Unstable writes are a feature of certain networked
-=2D		 * filesystems (i.e. NFS) in which data may have been
-=2D		 * written to the server's write cache, but has not yet
-=2D		 * been flushed to permanent storage.
-=2D		 */
-=2D		nr_reclaimable =3D global_node_page_state(NR_FILE_DIRTY) +
-=2D					global_node_page_state(NR_UNSTABLE_NFS);
-+		nr_reclaimable =3D global_node_page_state(NR_FILE_DIRTY);
- 		gdtc->avail =3D global_dirtyable_memory();
- 		gdtc->dirty =3D nr_reclaimable + global_node_page_state(NR_WRITEBACK);
-=20
-@@ -1963,8 +1955,7 @@ bool wb_over_bg_thresh(struct bdi_writeback *wb)
- 	 * as we're trying to decide whether to put more under writeback.
- 	 */
- 	gdtc->avail =3D global_dirtyable_memory();
-=2D	gdtc->dirty =3D global_node_page_state(NR_FILE_DIRTY) +
-=2D		      global_node_page_state(NR_UNSTABLE_NFS);
-+	gdtc->dirty =3D global_node_page_state(NR_FILE_DIRTY);
- 	domain_dirty_limits(gdtc);
-=20
- 	if (gdtc->dirty > gdtc->bg_thresh)
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 13cc653122b7..cc406ee17ad9 100644
-=2D-- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5319,7 +5319,7 @@ void show_free_areas(unsigned int filter, nodemask_t =
-*nodemask)
-=20
- 	printk("active_anon:%lu inactive_anon:%lu isolated_anon:%lu\n"
- 		" active_file:%lu inactive_file:%lu isolated_file:%lu\n"
-=2D		" unevictable:%lu dirty:%lu writeback:%lu unstable:%lu\n"
-+		" unevictable:%lu dirty:%lu writeback:%lu\n"
- 		" slab_reclaimable:%lu slab_unreclaimable:%lu\n"
- 		" mapped:%lu shmem:%lu pagetables:%lu bounce:%lu\n"
- 		" free:%lu free_pcp:%lu free_cma:%lu\n",
-@@ -5332,7 +5332,6 @@ void show_free_areas(unsigned int filter, nodemask_t =
-*nodemask)
- 		global_node_page_state(NR_UNEVICTABLE),
- 		global_node_page_state(NR_FILE_DIRTY),
- 		global_node_page_state(NR_WRITEBACK),
-=2D		global_node_page_state(NR_UNSTABLE_NFS),
- 		global_node_page_state(NR_SLAB_RECLAIMABLE),
- 		global_node_page_state(NR_SLAB_UNRECLAIMABLE),
- 		global_node_page_state(NR_FILE_MAPPED),
-@@ -5365,7 +5364,6 @@ void show_free_areas(unsigned int filter, nodemask_t =
-*nodemask)
- 			" anon_thp: %lukB"
- #endif
- 			" writeback_tmp:%lukB"
-=2D			" unstable:%lukB"
- 			" all_unreclaimable? %s"
- 			"\n",
- 			pgdat->node_id,
-@@ -5387,7 +5385,6 @@ void show_free_areas(unsigned int filter, nodemask_t =
-*nodemask)
- 			K(node_page_state(pgdat, NR_ANON_THPS) * HPAGE_PMD_NR),
- #endif
- 			K(node_page_state(pgdat, NR_WRITEBACK_TEMP)),
-=2D			K(node_page_state(pgdat, NR_UNSTABLE_NFS)),
- 			pgdat->kswapd_failures >=3D MAX_RECLAIM_RETRIES ?
- 				"yes" : "no");
- 	}
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index 96d21a792b57..6c719f184843 100644
-=2D-- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1108,7 +1108,7 @@ int fragmentation_index(struct zone *zone, unsigned i=
-nt order)
- 					TEXT_FOR_HIGHMEM(xx) xx "_movable",
-=20
- const char * const vmstat_text[] =3D {
-=2D	/* enum zone_stat_item countes */
-+	/* enum zone_stat_item counters */
- 	"nr_free_pages",
- 	"nr_zone_inactive_anon",
- 	"nr_zone_active_anon",
-@@ -1162,7 +1162,6 @@ const char * const vmstat_text[] =3D {
- 	"nr_file_hugepages",
- 	"nr_file_pmdmapped",
- 	"nr_anon_transparent_hugepages",
-=2D	"nr_unstable",
- 	"nr_vmscan_write",
- 	"nr_vmscan_immediate_reclaim",
- 	"nr_dirtied",
-@@ -1723,6 +1722,14 @@ static int vmstat_show(struct seq_file *m, void *arg)
- 	seq_puts(m, vmstat_text[off]);
- 	seq_put_decimal_ull(m, " ", *l);
- 	seq_putc(m, '\n');
-+
-+	if (off =3D=3D NR_VMSTAT_ITEMS - 1) {
-+		/* We've come to the end - add any deprecated counters
-+		 * to avoid breaking userspace which might depend on
-+		 * them being present.
-+		 */
-+		seq_puts(m, "nr_unstable 0\n");
-+	}
- 	return 0;
- }
-=20
-=2D-=20
-2.26.2
-
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl67n0UACgkQOeye3VZi
-gbmiVBAAxCZJOYwd0I+6UXTDqd3UQfeZi27qHkAQZiQcLC57GZKNNfSd4M2tBRVO
-Wd/TdrGWLtRWLtgn2tdQt7n2u0B3IaopKo2NZA7+xDsYEzoH0Aezmwrzt6eHHSZB
-Y3yJ/Xcvf+t9hxs91grzvClEvYq7c2dKriXcjy43FxX9l9HIxeQAdQOUB96KTSfs
-b5afa69SAqm0Crpzy1xCsfZdT7Sk1ADly6WPRHojJyj1q0KFdnSNSHCNKhQVDU3D
-kYztpNvwB76aLghbe6iVWyrMbGC7oMSAnAta0hIKEt2en0J5oDWism01Wkf0huEh
-Tqp4qi5Fkm4B+aAcBjUgR6QEElRdw75OWrRIWoiWFnO1jwKyf9VZDdwxd1bgERvF
-V9aRLs4HZxOqULD9iPRgSMpCbtbPtbxeQ1Z67i82f/zhhNLFrqo8F/0dFWarg0LF
-0fz9noe9F5rc8pwH9d6JPHFKam61sd8Q0xAF+fo0xB72j7LWEoI6vH630M5L3jYN
-x5lMqLarMsgrUrSUUFr42ZVRZ8DNSZkc4ZkII1wkc1rzIr+NiRze9Puro8YoIIHU
-Z3GXP7ffsSua6ZDnzhwgO3LaUmhTM9uzCAanSIRoDBwBUL12Oi7OV5rfPNYcSDcO
-fANpBjr7kl1VRUWSOyoYFt5GqIwgxNXsSUUL6+732N19CXdsCls=
-=p1Rw
------END PGP SIGNATURE-----
---=-=-=--
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
