@@ -1,154 +1,113 @@
-Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AD8C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C93C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 976C92065C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8D3F20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589414337;
-	bh=k7d/LyV6/crKMI22byjJd9hAviD5VxpO78pU5eT8y2k=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=zMal9zBhMvQ5ANR+B9iC4M7eojwOJV/4YI5EL9P09ZJzHlkYKiOkz0EXt4y2Xc953
-	 guhqaSWYjE1mmES/niqHB9yKILJ9pU7vBF2Znwyw0U5kY/LbLp51dZNQUN/7fy97Ss
-	 CXuEH5S6W42pRXMNVZBjtlJWAUm3Vkynlyo4hZJQ=
+	s=default; t=1589414404;
+	bh=4WYyMaGWG9a9nFYDIlkg8Bpp7B8l0nT3fSfWhGSXUN0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=A6UG4/g9e3Juv0LGePzSJjUsyXRJ+hnOQ5DAmvI2xpGsHqXQIepKw5NxlrubIxAVo
+	 c6imBOqrLI4Q/422A2tEMoFpPW9j3VO0nfyV3xFePNTu6WPK07RPUW3XFO7A4tGkvJ
+	 ZUjDNo0cF7oXWC/rLo9yMChzl3UF1PUjJd0Bbd1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732851AbgEMX64 (ORCPT
+        id S1732881AbgENAAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 19:58:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45520 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732456AbgEMX6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 19:58:55 -0400
-Received: from localhost.localdomain (pool-96-246-152-186.nycmny.fios.verizon.net [96.246.152.186])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F9C120659;
-        Wed, 13 May 2020 23:58:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589414335;
-        bh=k7d/LyV6/crKMI22byjJd9hAviD5VxpO78pU5eT8y2k=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=oBxa/gfQQuQhzphTY+MmzddBFdYANvOzL69/j0LUCqoCdJAyjI7Ha50dh8igvPyiU
-         ft3RTEd0N5e3O+aByRtxnNHWRgwxNyYXX9LJdlvhieNbhXmnEWJuKW5lOFbJUrRjQr
-         SaRqovklhMbxBuEcXuh4wLwaV5ZRZRT7PagwZWQc=
-Message-ID: <1589414332.5098.246.camel@kernel.org>
-Subject: Re: [PATCH v5 1/7] fs: introduce kernel_pread_file* support
-From:   Mimi Zohar <zohar@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Scott Branden <scott.branden@broadcom.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
+        Wed, 13 May 2020 20:00:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41100 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732861AbgENAAB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 20:00:01 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36D5AC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 17:00:01 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id c21so1048178lfb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 17:00:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fasYih196bvKUHb0YCxHna3fp2u2qNy7HWnYHVsQ+sQ=;
+        b=fD3hyHvKHx/67q1VTFKCR74zDcE6394aAhGXhl0a0C48TMMb4AnhPQvs7IdErH6CX2
+         um+ec95QL1F0EfXLmER3SmoJ0T+gygc4SnxysABRELnzBjVWudgYOLaUmLBf8bjna0/G
+         B5XXX5vTTIkGXj8ZYK86YltWbiai+htzLW22s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fasYih196bvKUHb0YCxHna3fp2u2qNy7HWnYHVsQ+sQ=;
+        b=ELoPvN5GAW/MDWu5WAUMxBmHPeDIfM488+Zedp3Ohsk3SO35uVH9PrnmnRXP0MKidK
+         MNxSKIVNsIquddo0PNV0pGMhuKeMMYC8FVYPy63nGHh71Uu/Phoz1xk4zuhS1s2KCBTI
+         xYBawDz5XhuRzg8up/erbPWCDDp32PCRRyVXkLb+pG2wSxx8Knvy2t18RqAdHJ5KXQVe
+         WiRiCjuiOQ/dmH+Qz2Xs7qVpnGRHGRsa7Zra6uxBTF8KXLTfv5sC+j+g8o/PYBbsYBay
+         PoXVqNrOHc0Nz8EMc+chraosDPVNn3TtPYi1F5lqgvElVaXf3Gb6sBmq9PFDxuGGc89u
+         hmiA==
+X-Gm-Message-State: AOAM533mauqHCP/3Ns936FA+rQQ6L2F4q94CF827Se8ZnXDhbw1nSQ3x
+        scUHB64txblBafBhz5BtSJB8StTlSVA=
+X-Google-Smtp-Source: ABdhPJzRR0QZoJLKFPK9f4tKXBKScX7lcQDCgbug4GCKcqyoVmvzNxTdVqSNPI+laQoRaVj1Rq1kOQ==
+X-Received: by 2002:ac2:4a8d:: with SMTP id l13mr1249662lfp.213.1589414398518;
+        Wed, 13 May 2020 16:59:58 -0700 (PDT)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
+        by smtp.gmail.com with ESMTPSA id 66sm85914lfk.54.2020.05.13.16.59.56
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 May 2020 16:59:57 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id u6so1516485ljl.6
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 16:59:56 -0700 (PDT)
+X-Received: by 2002:a05:651c:319:: with SMTP id a25mr857486ljp.209.1589414396039;
+ Wed, 13 May 2020 16:59:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200513160038.2482415-1-hch@lst.de> <20200513160038.2482415-12-hch@lst.de>
+ <CAHk-=wj=u+nttmd1huNES2U=9nePtmk7WgR8cMLCYS8wc=rhdA@mail.gmail.com>
+ <20200513192804.GA30751@lst.de> <0c1a7066-b269-9695-b94a-bb5f4f20ebd8@iogearbox.net>
+ <20200514082054.f817721ce196f134e6820644@kernel.org>
+In-Reply-To: <20200514082054.f817721ce196f134e6820644@kernel.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 13 May 2020 16:59:40 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjBKGLyf1d53GwfUTZiK_XPdujwh+u2XSpD2HWRV01Afw@mail.gmail.com>
+Message-ID: <CAHk-=wjBKGLyf1d53GwfUTZiK_XPdujwh+u2XSpD2HWRV01Afw@mail.gmail.com>
+Subject: Re: [PATCH 11/18] maccess: remove strncpy_from_unsafe
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Christoph Hellwig <hch@lst.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>
-Date:   Wed, 13 May 2020 19:58:52 -0400
-In-Reply-To: <202005131630.8B1ECE0@keescook>
-References: <0e6b5f65-8c61-b02e-7d35-b4ae52aebcf3@broadcom.com>
-         <1589396593.5098.166.camel@kernel.org>
-         <e1b92047-7003-0615-3d58-1388ec27c78a@broadcom.com>
-         <1589398747.5098.178.camel@kernel.org>
-         <a228ae0f-d551-e0e8-446e-5ae63462c520@broadcom.com>
-         <1589404814.5098.185.camel@kernel.org>
-         <20200513212847.GT11244@42.do-not-panic.com>
-         <1589407924.5098.208.camel@kernel.org>
-         <f8de785c-60df-3fec-c2c6-b1dd2c77db17@broadcom.com>
-         <1589410843.5098.220.camel@kernel.org> <202005131630.8B1ECE0@keescook>
+        linux-parisc@vger.kernel.org,
+        linux-um <linux-um@lists.infradead.org>,
+        Netdev <netdev@vger.kernel.org>, bpf@vger.kernel.org,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-05-13 at 16:34 -0700, Kees Cook wrote:
-> On Wed, May 13, 2020 at 07:00:43PM -0400, Mimi Zohar wrote:
-> > On Wed, 2020-05-13 at 15:48 -0700, Scott Branden wrote:
-> > > 
-> > > On 2020-05-13 3:12 p.m., Mimi Zohar wrote:
-> > > > On Wed, 2020-05-13 at 21:28 +0000, Luis Chamberlain wrote:
-> > > >> On Wed, May 13, 2020 at 05:20:14PM -0400, Mimi Zohar wrote:
-> > > >>> On Wed, 2020-05-13 at 12:41 -0700, Scott Branden wrote:
-> > > >>>> On 2020-05-13 12:39 p.m., Mimi Zohar wrote:
-> > > >>>>> On Wed, 2020-05-13 at 12:18 -0700, Scott Branden wrote:
-> > > >>>>>> On 2020-05-13 12:03 p.m., Mimi Zohar wrote:
-> > > >>>>>>> On Wed, 2020-05-13 at 11:53 -0700, Scott Branden wrote:
-> > > >>>>>> Even if the kernel successfully verified the firmware file signature it
-> > > >>>>>> would just be wasting its time.  The kernel in these use cases is not always
-> > > >>>>>> trusted.  The device needs to authenticate the firmware image itself.
-> > > >>>>> There are also environments where the kernel is trusted and limits the
-> > > >>>>> firmware being provided to the device to one which they signed.
-> > > >>>>>
-> > > >>>>>>> The device firmware is being downloaded piecemeal from somewhere and
-> > > >>>>>>> won't be measured?
-> > > >>>>>> It doesn't need to be measured for current driver needs.
-> > > >>>>> Sure the device doesn't need the kernel measuring the firmware, but
-> > > >>>>> hardened environments do measure firmware.
-> > > >>>>>
-> > > >>>>>> If someone has such need the infrastructure could be added to the kernel
-> > > >>>>>> at a later date.  Existing functionality is not broken in any way by
-> > > >>>>>> this patch series.
-> > > >>>>> Wow!  You're saying that your patch set takes precedence over the
-> > > >>>>> existing expectations and can break them.
-> > > >>>> Huh? I said existing functionality is NOT broken by this patch series.
-> > > >>> Assuming a system is configured to measure and appraise firmware
-> > > >>> (rules below), with this change the firmware file will not be properly
-> > > >>> measured and will fail signature verification.
-> > > So no existing functionality has been broken.
-> > > >>>
-> > > >>> Sample IMA policy rules:
-> > > >>> measure func=FIRMWARE_CHECK
-> > > >>> appraise func=FIRMWARE_CHECK appraise_type=imasig
-> > > >> Would a pre and post lsm hook for pread do it?
-> > > > IMA currently measures and verifies the firmware file signature on the
-> > > > post hook.  The file is read once into a buffer.  With this change,
-> > > > IMA would need to be on the pre hook, to read the entire file,
-> > > > calculating the file hash and verifying the file signature.  Basically
-> > > > the firmware would be read once for IMA and again for the device.
-> > > The entire file may not fit into available memory to measure and 
-> > > verify.  Hence the reason for a partial read.
-> > 
-> > Previously, IMA pre-read the file in page size chunks in order to
-> > calculate the file hash.  To avoid reading the file twice, the file is
-> > now read into a buffer.
-> 
-> Can the VFS be locked in some way and then using the partial reads would
-> trigger the "read twice" mode? I.e. something like:
-> 
-> open
-> first partial read:
-> 	lock file contents (?)
-> 	perform full page-at-a-time-read-and-measure
-> 	rewind, read partial
-> other partial reads
-> final partial read
-> 	unlock
+On Wed, May 13, 2020 at 4:21 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+>
+>
+> For trace_kprobe.c current order (kernel -> user fallback) is preferred
+> because it has another function dedicated for user memory.
 
-The security_kernel_read_file(), the pre-hook, would need to be moved
-after getting the file size, but yes that's exactly what would be done
-in the pre-hook, when the current offset is 0 and the file size and
-buffer size aren't the same.
+Well, then it should just use the "strict" kernel-only one for the
+non-user memory.
 
-Mimi
+But yes, if there are legacy interfaces, then we might want to say
+"these continue to work for the legacy case on platforms where we can
+tell which kind of pointer it is from the bit pattern".
+
+But we should likely at least disallow it entirely on platforms where
+we really can't - or pick one hardcoded choice. On sparc, you really
+_have_ to specify one or the other.
+
+                  Linus
