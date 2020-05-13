@@ -2,87 +2,94 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E86CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FF8C2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1979120753
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:11:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589368304;
-	bh=kB4BWkMLJvEVQMf12Y4rt6Z8k9k+beZBrh8w5LEeOC0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i6OCSlYiur2vClNx6N6BnmL3t09RHVWeIcgCXEXVzlQzuhi+9b19r+jnbepV9l0eq
-	 lRhdX7iCA1f0C9R3yUEIKRZeQnhrNEApFyMFWwKSmYutONCZeiAxUHdOlms9PrGeLg
-	 EM5iL+2A8KGBlGLf9dcZ8u0rrJQRGn946V64pq2A=
+	by mail.kernel.org (Postfix) with ESMTP id 1598220753
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:13:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730002AbgEMLLn (ORCPT
+        id S1730233AbgEMLNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 07:11:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45438 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726645AbgEMLLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 07:11:42 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E84FC20740;
-        Wed, 13 May 2020 11:11:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589368302;
-        bh=kB4BWkMLJvEVQMf12Y4rt6Z8k9k+beZBrh8w5LEeOC0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ggdEz4sDEWOID0Yd2ORMuaDmi+wBlTPXxdrWv1CfvfWn9EoFyHlUFA6XCYWaOw4al
-         sfZ9l/kfuNgnJhAzEre6uD3f074n2DLVKJ7RtEPL9itu5zQI9GxV8QVIj+BVumI2Nz
-         +Wi8CVrAl1eVAqy7dePYH8qzLn9xO6Fq39ZjbEXc=
-Date:   Wed, 13 May 2020 13:11:40 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Jens Axboe <axboe@kernel.dk>, Ulf Hansson <ulf.hansson@linaro.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        linux-ide@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ata: sata_rcar: Fix DMA boundary mask
-Message-ID: <20200513111140.GA874221@kroah.com>
-References: <20200513110426.22472-1-geert+renesas@glider.be>
+        Wed, 13 May 2020 07:13:30 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47620 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbgEMLNa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 07:13:30 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gtucker)
+        with ESMTPSA id BFAF72711FF
+To:     kernelci@groups.io, kernel-build-reports@lists.linaro.org,
+        automated-testing@lists.yoctoproject.org,
+        linux-next@vger.kernel.org, stable@vger.kernel.org,
+        Ard Biesheuvel <ardb@kernel.org>, agross@kernel.org,
+        qcomlt-patches@lists.linaro.org,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>, ulf.hansson@linaro.org,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>, linux-pm@vger.kernel.org,
+        vireshk@kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        kernel@collabora.com, kernelci@baylibre.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Subject: kernelci.org transitioning to functional testing
+Message-ID: <66aae710-1ee9-fb67-1a1b-997eeb70dc04@collabora.com>
+Date:   Wed, 13 May 2020 12:13:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513110426.22472-1-geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 01:04:26PM +0200, Geert Uytterhoeven wrote:
-> Before commit 9495b7e92f716ab2 ("driver core: platform: Initialize
-> dma_parms for platform devices"), the R-Car SATA device didn't have DMA
-> parameters.  Hence the DMA boundary mask supplied by its driver was
-> silently ignored, as __scsi_init_queue() doesn't check the return value
-> of dma_set_seg_boundary(), and the default value of 0xffffffff was used.
-> 
-> Now the device has gained DMA parameters, the driver-supplied value is
-> used, and the following warning is printed on Salvator-XS:
-> 
->     DMA-API: sata_rcar ee300000.sata: mapping sg segment across boundary [start=0x00000000ffffe000] [end=0x00000000ffffefff] [boundary=0x000000001ffffffe]
->     WARNING: CPU: 5 PID: 38 at kernel/dma/debug.c:1233 debug_dma_map_sg+0x298/0x300
-> 
-> (the range of start/end values depend on whether IOMMU support is
->  enabled or not)
-> 
-> The issue here is that SATA_RCAR_DMA_BOUNDARY doesn't have bit 0 set, so
-> any typical end value, which is odd, will trigger the check.
-> 
-> Fix this by increasing the DMA boundary value by 1.
-> 
-> Fixes: 8bfbeed58665dbbf ("sata_rcar: correct 'sata_rcar_sht'")
-> Fixes: 9495b7e92f716ab2 ("driver core: platform: Initialize dma_parms for platform devices")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+As kernelci.org is expanding its functional testing
+capabilities, the concept of boot testing is now being
+deprecated.
 
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Next Monday 18th May, the web dashboard on https://kernelci.org
+will be updated to primarily show functional test results
+rather than boot results.  The Boots tab will still be
+available until 5th June to ease the transition.
+
+The new equivalent to boot testing is the *baseline* test suite
+which also runs sanity checks using dmesg and bootrr[1].
+
+Boot email reports will eventually be replaced with baseline
+reports.  For those of you already familiar with the test email
+reports, they will be simplified to only show regressions with
+links to the dashboard for all the details.
+
+Some functional tests are already being run by kernelci.org,
+results have only been shared by email so far but they will
+become visible on the web dashboard next week.  In particular:
+v4l2-compliance, i-g-t for DRM/KMS and Panfrost,
+suspend/resume...
+
+And of course, a lot of functional test suites are in the
+process of being added: kselftest, KUnit, LTP, xfstests,
+extended i-g-t coverage and many more.
+
+The detailed schedule is available on a GitHub issue[2].
+
+Please let us know if you have any questions, comments or
+concerns either in this thread, on kernelci@groups.io or IRC
+#kernelci on Freenode.
+
+Stay tuned!
+
+Thanks,
+Guillaume
+
+
+[1] bootrr: https://github.com/kernelci/bootrr
+[2] schedule: https://github.com/kernelci/kernelci-backend/issues/238
+
