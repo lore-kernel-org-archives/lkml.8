@@ -2,133 +2,79 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B37AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A181C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B63A7205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:22:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 698FF20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:23:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589412198;
+	bh=d2JPD8lU9EQ+vVPEiYvaQkjazwn7BLO7dyk3AcEjM6o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N64SkViuHzf1qEKow1hJCpVNYujZVL7qm7Qce/OJxcgAZ2spo5aIy2n5Q5UImrIi6
+	 USKV+um+VOhaj1sEdJbjofQCIhB7miDpj2meoA1LwDv6oAHaF4uranhsDMm9vrtk7T
+	 v8OERvCrUfY59oJzQ3SOs4W98pNOzzRb/Z7UQn6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732617AbgEMXWG (ORCPT
+        id S1732554AbgEMXXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 19:22:06 -0400
-Received: from smtprelay0213.hostedemail.com ([216.40.44.213]:57482 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732374AbgEMXWG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 19:22:06 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 2289E4417;
-        Wed, 13 May 2020 23:22:05 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: hill76_11e14f6e0db02
-X-Filterd-Recvd-Size: 4046
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf10.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 13 May 2020 23:22:02 +0000 (UTC)
-Message-ID: <397fb29abb20d11003a18919ee0c44918fc1a165.camel@perches.com>
-Subject: Re: [PATCH v2 bpf-next 4/7] printk: add type-printing %pT format
- specifier which uses BTF
-From:   Joe Perches <joe@perches.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Alan Maguire <alan.maguire@oracle.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        bpf <bpf@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Yonghong Song <yhs@fb.com>, Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>
-Date:   Wed, 13 May 2020 16:22:01 -0700
-In-Reply-To: <CAADnVQK8osy9W8-u-K=ucqe5q-+Uik41fBw6d-SfG-m6rgVwDQ@mail.gmail.com>
-References: <1589263005-7887-1-git-send-email-alan.maguire@oracle.com>
-         <1589263005-7887-5-git-send-email-alan.maguire@oracle.com>
-         <1b63a6b193073674b6e0f9f95c62ce2af1b977cc.camel@perches.com>
-         <CAADnVQK8osy9W8-u-K=ucqe5q-+Uik41fBw6d-SfG-m6rgVwDQ@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Wed, 13 May 2020 19:23:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42590 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732442AbgEMXXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 19:23:16 -0400
+Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 051E6205ED;
+        Wed, 13 May 2020 23:23:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589412196;
+        bh=d2JPD8lU9EQ+vVPEiYvaQkjazwn7BLO7dyk3AcEjM6o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mivTHPVQdKC7TPrC9Iw2YTB+5ifb4rAlDvVizZrsC5WTR6yPe7hWbDUbxSNxlSJpK
+         jQRdft/SufVEsgANnb4MeYQp1BdgR35aYxgqc9gTgXveP03w4fQkJhfVdQw5M5QtKq
+         tMtNHyOg8m34SeBKceoNHUVweekyCsxhPDbmCEiU=
+Date:   Thu, 14 May 2020 01:23:13 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Josh Triplett <josh@joshtriplett.org>
+Subject: Re: [PATCH 10/10] rcu: Nocb (de)activate through sysfs
+Message-ID: <20200513232312.GD18303@lenoir>
+References: <20200513164714.22557-1-frederic@kernel.org>
+ <20200513164714.22557-11-frederic@kernel.org>
+ <20200513184229.GX2869@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513184229.GX2869@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-05-13 at 16:07 -0700, Alexei Starovoitov wrote:
-> On Wed, May 13, 2020 at 4:05 PM Joe Perches <joe@perches.com> wrote:
-> > On Tue, 2020-05-12 at 06:56 +0100, Alan Maguire wrote:
-> > > printk supports multiple pointer object type specifiers (printing
-> > > netdev features etc).  Extend this support using BTF to cover
-> > > arbitrary types.  "%pT" specifies the typed format, and the pointer
-> > > argument is a "struct btf_ptr *" where struct btf_ptr is as follows:
-> > > 
-> > > struct btf_ptr {
-> > >       void *ptr;
-> > >       const char *type;
-> > >       u32 id;
-> > > };
-> > > 
-> > > Either the "type" string ("struct sk_buff") or the BTF "id" can be
-> > > used to identify the type to use in displaying the associated "ptr"
-> > > value.  A convenience function to create and point at the struct
-> > > is provided:
-> > > 
-> > >       printk(KERN_INFO "%pT", BTF_PTR_TYPE(skb, struct sk_buff));
-> > > 
-> > > When invoked, BTF information is used to traverse the sk_buff *
-> > > and display it.  Support is present for structs, unions, enums,
-> > > typedefs and core types (though in the latter case there's not
-> > > much value in using this feature of course).
-> > > 
-> > > Default output is indented, but compact output can be specified
-> > > via the 'c' option.  Type names/member values can be suppressed
-> > > using the 'N' option.  Zero values are not displayed by default
-> > > but can be using the '0' option.  Pointer values are obfuscated
-> > > unless the 'x' option is specified.  As an example:
-> > > 
-> > >   struct sk_buff *skb = alloc_skb(64, GFP_KERNEL);
-> > >   pr_info("%pT", BTF_PTR_TYPE(skb, struct sk_buff));
-> > > 
-> > > ...gives us:
-> > > 
-> > > (struct sk_buff){
-> > >  .transport_header = (__u16)65535,
-> > >        .mac_header = (__u16)65535,
-> > >  .end = (sk_buff_data_t)192,
-> > >  .head = (unsigned char *)000000006b71155a,
-> > >  .data = (unsigned char *)000000006b71155a,
-> > >  .truesize = (unsigned int)768,
-> > >  .users = (refcount_t){
-> > >   .refs = (atomic_t){
-> > >    .counter = (int)1,
+On Wed, May 13, 2020 at 11:42:29AM -0700, Paul E. McKenney wrote:
+> On Wed, May 13, 2020 at 06:47:14PM +0200, Frederic Weisbecker wrote:
+> > Not for merge.
 > > 
-> > Given
+> > Make nocb toggable for a given CPU using:
+> > 	/sys/devices/system/cpu/cpu*/hotplug/nocb
 > > 
-> >   #define BTF_INT_ENCODING(VAL)   (((VAL) & 0x0f000000) >> 24)
-> > 
-> > Maybe
-> > 
-> >   #define BTF_INT_SIGNED  (1 << 0)
-> >   #define BTF_INT_CHAR    (1 << 1)
-> >   #define BTF_INT_BOOL    (1 << 2)
-> > 
-> > could be extended to include
-> > 
-> >   #define BTF_INT_HEX     (1 << 3)
-> > 
-> > So hex values can be appropriately pretty-printed.
+> > This is only intended for those who want to test this patchset. The real
+> > interfaces will be cpuset/isolation and rcutorture.
 > 
-> Nack to that.
+> Makes sense!
+> 
+> Speaking of rcutorture, what level of testing has this series undergone?
 
-why?
-
-
+None yet, that first set was to shape up the design. But next
+iteration should see rcutorture coverage.
