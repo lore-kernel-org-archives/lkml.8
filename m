@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 533EBCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADCBCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CD2020740
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4B2C20769
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363220;
-	bh=7+ERR58qtP0Taf+nilPY80hBVVqMfzujDkJgWpGVnnk=;
+	s=default; t=1589363224;
+	bh=JqvLFulQJvacUXzq45/Z6hDpklPx4qQiKdxm51xAiRM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HJYsVspfW0INg1CozMyQjtaLHdE098RTF8U2xpEbZdkkul37HrQAdtV3Tye0tiJyY
-	 j4kltY49o/Oba+031O8KDAn8QwNLa1PIrJPhTFOLoiaBJUANghyXcvC86llgbkjcIQ
-	 JI1FKGeuARApxhkEFbiuBKgqiCNAghASAIkB+t/0=
+	b=RrTsMb0tKMOx+9ZX/j/6F3270b+W90BR43D4vX9z5QOdEAf8oHkNpcfp/1FFhhuJq
+	 rMyDID6BbXkzHLsijD6EPx+HM/xJaHU+ovLWFPa3VDftfJyASWZn4bhnTWA1to2sZ6
+	 sA6TNUx8wqreOdZiGpmbncpXtKqStNDsllrX6ul4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732761AbgEMJq7 (ORCPT
+        id S1732772AbgEMJrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:46:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44476 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:47:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732730AbgEMJq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:46:56 -0400
+        id S1732756AbgEMJq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:46:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3215420740;
-        Wed, 13 May 2020 09:46:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4B4E206F5;
+        Wed, 13 May 2020 09:46:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363215;
-        bh=7+ERR58qtP0Taf+nilPY80hBVVqMfzujDkJgWpGVnnk=;
+        s=default; t=1589363218;
+        bh=JqvLFulQJvacUXzq45/Z6hDpklPx4qQiKdxm51xAiRM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DsITpYvqnbVYe6fpqAvx3VeXkyMJuLMtrfz8CDTNDSgeZQlc1sbxmrgCbdP3BKqXU
-         NTC5hbuMSnWl93FKYgxmHNNx0GmjYLUI4y1dgfoPP9tDaJkfCX4o8SDDYXRzGGGhAD
-         7xcgbLALrzG9yLi+ifPBZzo5Syebp1En7Z04Rwjs=
+        b=Nu0+EsBjOXl+Ijm5ezujfm8NwHdqyN6/bp5RMqwPD0vFJDhnugBuAM7OyAbfIOOo8
+         D9pcH/QeFVYHMQONfgZcpZqyBwj/5Kj9DX7eSGCG9wy7zIWcRLTG/KH6Se7cHiBNDU
+         AHolpYOJA8EwH6Dtx6G0porHq5EEYRdCyPM7ndZs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, George Spelvin <lkml@sdf.org>,
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
         Sven Eckelmann <sven@narfation.org>,
         Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.19 33/48] batman-adv: fix batadv_nc_random_weight_tq
-Date:   Wed, 13 May 2020 11:44:59 +0200
-Message-Id: <20200513094400.031666955@linuxfoundation.org>
+Subject: [PATCH 4.19 34/48] batman-adv: Fix refcnt leak in batadv_show_throughput_override
+Date:   Wed, 13 May 2020 11:45:00 +0200
+Message-Id: <20200513094400.382531314@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
 References: <20200513094351.100352960@linuxfoundation.org>
@@ -60,66 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: George Spelvin <lkml@sdf.org>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-commit fd0c42c4dea54335967c5a86f15fc064235a2797 upstream.
+commit f872de8185acf1b48b954ba5bd8f9bc0a0d14016 upstream.
 
-and change to pseudorandom numbers, as this is a traffic dithering
-operation that doesn't need crypto-grade.
+batadv_show_throughput_override() invokes batadv_hardif_get_by_netdev(),
+which gets a batadv_hard_iface object from net_dev with increased refcnt
+and its reference is assigned to a local pointer 'hard_iface'.
 
-The previous code operated in 4 steps:
+When batadv_show_throughput_override() returns, "hard_iface" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
 
-1. Generate a random byte 0 <= rand_tq <= 255
-2. Multiply it by BATADV_TQ_MAX_VALUE - tq
-3. Divide by 255 (= BATADV_TQ_MAX_VALUE)
-4. Return BATADV_TQ_MAX_VALUE - rand_tq
+The issue happens in the normal path of
+batadv_show_throughput_override(), which forgets to decrease the refcnt
+increased by batadv_hardif_get_by_netdev() before the function returns,
+causing a refcnt leak.
 
-This would apperar to scale (BATADV_TQ_MAX_VALUE - tq) by a random
-value between 0/255 and 255/255.
+Fix this issue by calling batadv_hardif_put() before the
+batadv_show_throughput_override() returns in the normal path.
 
-But!  The intermediate value between steps 3 and 4 is stored in a u8
-variable.  So it's truncated, and most of the time, is less than 255, after
-which the division produces 0.  Specifically, if tq is odd, the product is
-always even, and can never be 255.  If tq is even, there's exactly one
-random byte value that will produce a product byte of 255.
-
-Thus, the return value is 255 (511/512 of the time) or 254 (1/512
-of the time).
-
-If we assume that the truncation is a bug, and the code is meant to scale
-the input, a simpler way of looking at it is that it's returning a random
-value between tq and BATADV_TQ_MAX_VALUE, inclusive.
-
-Well, we have an optimized function for doing just that.
-
-Fixes: 3c12de9a5c75 ("batman-adv: network coding - code and transmit packets if possible")
-Signed-off-by: George Spelvin <lkml@sdf.org>
+Fixes: 0b5ecc6811bd ("batman-adv: add throughput override attribute to hard_ifaces")
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 Signed-off-by: Sven Eckelmann <sven@narfation.org>
 Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/batman-adv/network-coding.c |    9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ net/batman-adv/sysfs.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/batman-adv/network-coding.c
-+++ b/net/batman-adv/network-coding.c
-@@ -1021,15 +1021,8 @@ static struct batadv_nc_path *batadv_nc_
-  */
- static u8 batadv_nc_random_weight_tq(u8 tq)
- {
--	u8 rand_val, rand_tq;
--
--	get_random_bytes(&rand_val, sizeof(rand_val));
--
- 	/* randomize the estimated packet loss (max TQ - estimated TQ) */
--	rand_tq = rand_val * (BATADV_TQ_MAX_VALUE - tq);
--
--	/* normalize the randomized packet loss */
--	rand_tq /= BATADV_TQ_MAX_VALUE;
-+	u8 rand_tq = prandom_u32_max(BATADV_TQ_MAX_VALUE + 1 - tq);
+--- a/net/batman-adv/sysfs.c
++++ b/net/batman-adv/sysfs.c
+@@ -1126,6 +1126,7 @@ static ssize_t batadv_show_throughput_ov
  
- 	/* convert to (randomized) estimated tq again */
- 	return BATADV_TQ_MAX_VALUE - rand_tq;
+ 	tp_override = atomic_read(&hard_iface->bat_v.throughput_override);
+ 
++	batadv_hardif_put(hard_iface);
+ 	return sprintf(buff, "%u.%u MBit\n", tp_override / 10,
+ 		       tp_override % 10);
+ }
 
 
