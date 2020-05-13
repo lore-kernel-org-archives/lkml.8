@@ -2,58 +2,58 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89558CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFFFEC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 609C9206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4B54206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363505;
-	bh=lbc0ZkuPyvr62w63DEgAjqvxm+QSLWvjl3b/t0QNdjk=;
+	s=default; t=1589363508;
+	bh=iFVVwAqZMv4HlYQB0z0yB9f1G91U1CY+wl1KJSWMZog=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ej5wT2G777oxz1SjVmZzomqm0UCu6vereUhluBJAz+hbbIroh/+2l8sWToc5jZnDp
-	 Xu7YmZHF6VFj7YelCt4DMPl0E+Qc2A/v/SxHaHvXdvREZpoFIgRd6uicdIYBFWB3YZ
-	 Z2Vnh1oVLfIx/JFiyVDHAZyZGpjfXqSnp41V4MkI=
+	b=ZTOrhwZkYEwoDC2UT5RnTqacYltN+vBg4NL1fU62tjb7qGb2gITjGuK4tVJdKaFgg
+	 FFiydnWEcWnkpQEv2jVHiDQiZEYauaLghe/mtrOs/4Kp0plEnPuP77wZG8h3yoKgbe
+	 tvLqRmwyYsaSc93PXXnebPyw6R4Fy8zSDIv1I4KA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387694AbgEMJvn (ORCPT
+        id S1733076AbgEMJvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:51:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52644 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:51:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387682AbgEMJvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:51:39 -0400
+        id S2387682AbgEMJvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:51:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8927B206D6;
-        Wed, 13 May 2020 09:51:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FD3920740;
+        Wed, 13 May 2020 09:51:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363499;
-        bh=lbc0ZkuPyvr62w63DEgAjqvxm+QSLWvjl3b/t0QNdjk=;
+        s=default; t=1589363503;
+        bh=iFVVwAqZMv4HlYQB0z0yB9f1G91U1CY+wl1KJSWMZog=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PqmB9nB8Aa5us0IZXAXVjSvB4lls5JKhUjh5qPqIFsa+TXw5qm3M+sYCCNTUCi91w
-         gVnF6qgzg1xR6t8pDMlwHhZMaAI1YLYsFXNTMXY6TdKalHjNED7rpqsakxLrnrnexD
-         r9FilP+jnZ0dLvUvrmH8DtOFTQCuL8e7ST0XNgTE=
+        b=YCza4XslP8mBHJzXN2x3lB8w1Za5xKzj098lXNY1KQGA2PoHSLVpr6r4qLMI0Lwi+
+         NheZBBSImeEK3EQurE8yXXXO0ampvTe1CsmhYygaoMhfYzITGejuo9oL7hvFz68fg0
+         Zv38lzpDGdd7/EidbNwgggy4i7GFNCmXnJWTOrbE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <yehezkelshb@gmail.com>
-Subject: [PATCH 5.6 001/118] thunderbolt: Check return value of tb_sw_read() in usb4_switch_op()
-Date:   Wed, 13 May 2020 11:43:40 +0200
-Message-Id: <20200513094417.748040775@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Zanussi <zanussi@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 011/118] tracing/kprobes: Fix a double initialization typo
+Date:   Wed, 13 May 2020 11:43:50 +0200
+Message-Id: <20200513094418.661114296@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,35 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit c3bf9930921b33edb31909006607e478751a6f5e upstream.
+[ Upstream commit dcbd21c9fca5e954fd4e3d91884907eb6d47187e ]
 
-The function misses checking return value of tb_sw_read() before it
-accesses the value that was read. Fix this by checking the return value
-first.
+Fix a typo that resulted in an unnecessary double
+initialization to addr.
 
-Fixes: b04079837b20 ("thunderbolt: Add initial support for USB4")
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Yehezkel Bernat <yehezkelshb@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: http://lkml.kernel.org/r/158779374968.6082.2337484008464939919.stgit@devnote2
 
+Cc: Tom Zanussi <zanussi@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: c7411a1a126f ("tracing/kprobe: Check whether the non-suffixed symbol is notrace")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thunderbolt/usb4.c |    3 +++
- 1 file changed, 3 insertions(+)
+ kernel/trace/trace_kprobe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/thunderbolt/usb4.c
-+++ b/drivers/thunderbolt/usb4.c
-@@ -182,6 +182,9 @@ static int usb4_switch_op(struct tb_swit
- 		return ret;
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index d0568af4a0ef6..0d9300c3b0846 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -453,7 +453,7 @@ static bool __within_notrace_func(unsigned long addr)
  
- 	ret = tb_sw_read(sw, &val, TB_CFG_SWITCH, ROUTER_CS_26, 1);
-+	if (ret)
-+		return ret;
-+
- 	if (val & ROUTER_CS_26_ONS)
- 		return -EOPNOTSUPP;
+ static bool within_notrace_func(struct trace_kprobe *tk)
+ {
+-	unsigned long addr = addr = trace_kprobe_address(tk);
++	unsigned long addr = trace_kprobe_address(tk);
+ 	char symname[KSYM_NAME_LEN], *p;
  
+ 	if (!__within_notrace_func(addr))
+-- 
+2.20.1
+
 
 
