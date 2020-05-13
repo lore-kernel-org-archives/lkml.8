@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4221C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4389BC2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D82720575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 130AB23127
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:52:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363552;
-	bh=m4OrOZL8crQYHnrOPkXWRFuyywZvyIlriP+ZcXtbBbU=;
+	s=default; t=1589363556;
+	bh=YolsKuG7VLjfBorjfwxATK010IzrZyYTau88vE0mZXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WyRcgBawbQJDK12RPeI1PCQSqXitfLo10XfgDlcDISeUNWLpTVxCscyIp6sVVlnJs
-	 Nwi2yDXiwfBhhfv1ZLggA3lb2la52Oy7ONkRLi7IDEQOZlfv1C8UTRar9CaBu5NGPB
-	 HL9PL077N6EQaisAWTlqSJBXm0SEFJTOfohIezx0=
+	b=tyMglw9Z2UbOdMvZUXw1TjKEOURLdyjUkD9nyaDMY2Z8M7AcAY9AG9TTQdI1egrGa
+	 U/JWcaAWtA5Hob2+UDNjmsOtwRNig4BhNy1HykWYtNYwa2gI3FytxvsgvNdtb1GyjJ
+	 DWSHd8g5VN1WMJUHZP/sIFSxveukiZ8z+Pna/cDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387807AbgEMJwb (ORCPT
+        id S2387813AbgEMJwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:52:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53794 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:52:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387790AbgEMJw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:52:26 -0400
+        id S2387805AbgEMJwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:52:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DB6A23126;
-        Wed, 13 May 2020 09:52:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29C1620575;
+        Wed, 13 May 2020 09:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363545;
-        bh=m4OrOZL8crQYHnrOPkXWRFuyywZvyIlriP+ZcXtbBbU=;
+        s=default; t=1589363550;
+        bh=YolsKuG7VLjfBorjfwxATK010IzrZyYTau88vE0mZXc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VqjwboEPIvr72EubkovfI87tXe1gNKbl/RNO+ZTAQq/XOeajIVqfAz6g3QbQreM5D
-         SDYs51cXgEji3Uxirv1/WmFLenR1eM00M3pnrDDzKvRPYWMA/7AgzI99FGPOgUxBci
-         pGx0CU+ZjhkCMtoFHkgl5ozMzCp3Mj9XBMZmmdmo=
+        b=Dt6PamYzkBv9whvUP033+hKbVDcVWNdAUe2zvJVx4+8cyDcxpp66oypc+YVhUSWHG
+         eL/cqJ05iLCpRgimEG7UdJIE7S0Tgl1sMjYM7qIE+bNu5ec9mNuhqahb/tGfstJePN
+         yYJRbJjuAtOTi0kY01Ny/OIqVb09XJN2iA1B2dSA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 006/118] tty: xilinx_uartps: Fix missing id assignment to the console
-Date:   Wed, 13 May 2020 11:43:45 +0200
-Message-Id: <20200513094418.189283975@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Whitney <enwlinux@gmail.com>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 008/118] ext4: disable dioread_nolock whenever delayed allocation is disabled
+Date:   Wed, 13 May 2020 11:43:47 +0200
+Message-Id: <20200513094418.386785975@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -61,42 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+From: Eric Whitney <enwlinux@gmail.com>
 
-[ Upstream commit 2ae11c46d5fdc46cb396e35911c713d271056d35 ]
+[ Upstream commit c8980e1980ccdc2229aa2218d532ddc62e0aabe5 ]
 
-When serial console has been assigned to ttyPS1 (which is serial1 alias)
-console index is not updated property and pointing to index -1 (statically
-initialized) which ends up in situation where nothing has been printed on
-the port.
+The patch "ext4: make dioread_nolock the default" (244adf6426ee) causes
+generic/422 to fail when run in kvm-xfstests' ext3conv test case.  This
+applies both the dioread_nolock and nodelalloc mount options, a
+combination not previously tested by kvm-xfstests.  The failure occurs
+because the dioread_nolock code path splits a previously fallocated
+multiblock extent into a series of single block extents when overwriting
+a portion of that extent.  That causes allocation of an extent tree leaf
+node and a reshuffling of extents.  Once writeback is completed, the
+individual extents are recombined into a single extent, the extent is
+moved again, and the leaf node is deleted.  The difference in block
+utilization before and after writeback due to the leaf node triggers the
+failure.
 
-The commit 18cc7ac8a28e ("Revert "serial: uartps: Register own uart console
-and driver structures"") didn't contain this line which was removed by
-accident.
+The original reason for this behavior was to avoid ENOSPC when handling
+I/O completions during writeback in the dioread_nolock code paths when
+delayed allocation is disabled.  It may no longer be necessary, because
+code was added in the past to reserve extra space to solve this problem
+when delayed allocation is enabled, and this code may also apply when
+delayed allocation is disabled.  Until this can be verified, don't use
+the dioread_nolock code paths if delayed allocation is disabled.
 
-Fixes: 18cc7ac8a28e ("Revert "serial: uartps: Register own uart console and driver structures"")
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Link: https://lore.kernel.org/r/ed3111533ef5bd342ee5ec504812240b870f0853.1588602446.git.michal.simek@xilinx.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Eric Whitney <enwlinux@gmail.com>
+Link: https://lore.kernel.org/r/20200319150028.24592-1-enwlinux@gmail.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/xilinx_uartps.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/ext4/ext4_jbd2.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
-index 7a9b360b04386..1d8b6993a4357 100644
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -1471,6 +1471,7 @@ static int cdns_uart_probe(struct platform_device *pdev)
- 		cdns_uart_uart_driver.nr = CDNS_UART_NR_PORTS;
- #ifdef CONFIG_SERIAL_XILINX_PS_UART_CONSOLE
- 		cdns_uart_uart_driver.cons = &cdns_uart_console;
-+		cdns_uart_console.index = id;
- #endif
+diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
+index 7ea4f6fa173b4..4b9002f0e84c0 100644
+--- a/fs/ext4/ext4_jbd2.h
++++ b/fs/ext4/ext4_jbd2.h
+@@ -512,6 +512,9 @@ static inline int ext4_should_dioread_nolock(struct inode *inode)
+ 		return 0;
+ 	if (ext4_should_journal_data(inode))
+ 		return 0;
++	/* temporary fix to prevent generic/422 test failures */
++	if (!test_opt(inode->i_sb, DELALLOC))
++		return 0;
+ 	return 1;
+ }
  
- 		rc = uart_register_driver(&cdns_uart_uart_driver);
 -- 
 2.20.1
 
