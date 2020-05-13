@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCD5C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BB2CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A82F820575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B99F5206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:01:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364096;
-	bh=7a6pFoexQEMB+IgLe7+WUtY2E9md0k0R1KZQMDM8yOQ=;
+	s=default; t=1589364103;
+	bh=PxxD+AtPUxU1hPfNd8GJ8/uakU5BMMPdimIcf+3tcyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qeuflcJw0G8vsXD8OQUlRIsGiC4OW3WxyPP8q8qKKez3+3+us+oUz2WnVzhho9+Kq
-	 Wgs3HSwqiRNwSs7OudX9z+OVZAtRYKjIFJA6naP/O4VBQFyAPAuNZn8eGNt80cv1qU
-	 mSXarL+1d3Pa/V0D2CHZkSWZL83zpXNkEejImdgk=
+	b=WhzXA6drUoaIhIMWc5pWeoVA6DizDrBUa8tACRroobXvU6PQOWpzYs4l7rjpD+CVQ
+	 ErO8XUKnYSLW2Q/tBwmQwNRLsfsYEQJbsZz15t8GFRVyjhKUrIZrDqsuKKbMXLcc3w
+	 2nLa23w8ibBZzYYvPeNTUWxSndHdk9EVVXD0umX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388615AbgEMKBf (ORCPT
+        id S2388620AbgEMKBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:01:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51102 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 06:01:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387540AbgEMJux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:50:53 -0400
+        id S2387555AbgEMJus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:50:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D74E20753;
-        Wed, 13 May 2020 09:50:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73E24206D6;
+        Wed, 13 May 2020 09:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363452;
-        bh=7a6pFoexQEMB+IgLe7+WUtY2E9md0k0R1KZQMDM8yOQ=;
+        s=default; t=1589363447;
+        bh=PxxD+AtPUxU1hPfNd8GJ8/uakU5BMMPdimIcf+3tcyI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1eumQdbYUGqeboByzrpP7mtKOJ1fkS5YGz5olguI/JYOghYUZcNg+mmxfVci7mqtb
-         8P07V9ECSYBG3BvdcBuLEwPpVwMRwQI+hYpEhYB2CZpLJoErvL8fv9hr/XPrTXHO6J
-         WtUw/1+GUmZkVHSoKWDDIoGJF3/6Np0ibXS/MEfE=
+        b=ZjmQQnpi6dNiuEymJVhpGBZc+dFPsJMq16yuglN0cRICSkVrXinMH2u6gozdAKGBS
+         KpZGVjmhIf7SlcU2xDVMWrcTx7T0Ce6y3cw5d00RTHWE5w8IICxtmHP8sNiXGkhse3
+         sJ0y1pQpSivWATydvOpzpJwOLOn26l9FLTPDU9nQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -50,9 +50,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Vince Weaver <vincent.weaver@maine.edu>
-Subject: [PATCH 5.4 78/90] x86/unwind/orc: Fix premature unwind stoppage due to IRET frames
-Date:   Wed, 13 May 2020 11:45:14 +0200
-Message-Id: <20200513094417.384525135@linuxfoundation.org>
+Subject: [PATCH 5.4 77/90] x86/unwind/orc: Fix error path for bad ORC entry type
+Date:   Wed, 13 May 2020 11:45:13 +0200
+Message-Id: <20200513094417.295125775@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -67,39 +67,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-commit 81b67439d147677d844d492fcbd03712ea438f42 upstream.
+commit a0f81bf26888048100bf017fadf438a5bdffa8d8 upstream.
 
-The following execution path is possible:
-
-  fsnotify()
-    [ realign the stack and store previous SP in R10 ]
-    <IRQ>
-      [ only IRET regs saved ]
-      common_interrupt()
-        interrupt_entry()
-	  <NMI>
-	    [ full pt_regs saved ]
-	    ...
-	    [ unwind stack ]
-
-When the unwinder goes through the NMI and the IRQ on the stack, and
-then sees fsnotify(), it doesn't have access to the value of R10,
-because it only has the five IRET registers.  So the unwind stops
-prematurely.
-
-However, because the interrupt_entry() code is careful not to clobber
-R10 before saving the full regs, the unwinder should be able to read R10
-from the previously saved full pt_regs associated with the NMI.
-
-Handle this case properly.  When encountering an IRET regs frame
-immediately after a full pt_regs frame, use the pt_regs as a backup
-which can be used to get the C register values.
-
-Also, note that a call frame resets the 'prev_regs' value, because a
-function is free to clobber the registers.  For this fix to work, the
-IRET and full regs frames must be adjacent, with no FUNC frames in
-between.  So replace the FUNC hint in interrupt_entry() with an
-IRET_REGS hint.
+If the ORC entry type is unknown, nothing else can be done other than
+reporting an error.  Exit the function instead of breaking out of the
+switch statement.
 
 Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
 Reviewed-by: Miroslav Benes <mbenes@suse.cz>
@@ -111,169 +83,23 @@ Cc: Jann Horn <jannh@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lore.kernel.org/r/97a408167cc09f1cfa0de31a7b70dd88868d743f.1587808742.git.jpoimboe@redhat.com
+Link: https://lore.kernel.org/r/a7fa668ca6eabbe81ab18b2424f15adbbfdc810a.1587808742.git.jpoimboe@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/entry/entry_64.S     |    4 +--
- arch/x86/include/asm/unwind.h |    2 -
- arch/x86/kernel/unwind_orc.c  |   51 ++++++++++++++++++++++++++++++++----------
- 3 files changed, 43 insertions(+), 14 deletions(-)
+ arch/x86/kernel/unwind_orc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -512,7 +512,7 @@ END(spurious_entries_start)
-  * +----------------------------------------------------+
-  */
- ENTRY(interrupt_entry)
--	UNWIND_HINT_FUNC
-+	UNWIND_HINT_IRET_REGS offset=16
- 	ASM_CLAC
- 	cld
- 
-@@ -544,9 +544,9 @@ ENTRY(interrupt_entry)
- 	pushq	5*8(%rdi)		/* regs->eflags */
- 	pushq	4*8(%rdi)		/* regs->cs */
- 	pushq	3*8(%rdi)		/* regs->ip */
-+	UNWIND_HINT_IRET_REGS
- 	pushq	2*8(%rdi)		/* regs->orig_ax */
- 	pushq	8(%rdi)			/* return address */
--	UNWIND_HINT_FUNC
- 
- 	movq	(%rdi), %rdi
- 	jmp	2f
---- a/arch/x86/include/asm/unwind.h
-+++ b/arch/x86/include/asm/unwind.h
-@@ -19,7 +19,7 @@ struct unwind_state {
- #if defined(CONFIG_UNWINDER_ORC)
- 	bool signal, full_regs;
- 	unsigned long sp, bp, ip;
--	struct pt_regs *regs;
-+	struct pt_regs *regs, *prev_regs;
- #elif defined(CONFIG_UNWINDER_FRAME_POINTER)
- 	bool got_irq;
- 	unsigned long *bp, *orig_sp, ip;
 --- a/arch/x86/kernel/unwind_orc.c
 +++ b/arch/x86/kernel/unwind_orc.c
-@@ -375,9 +375,38 @@ static bool deref_stack_iret_regs(struct
- 	return true;
- }
- 
-+/*
-+ * If state->regs is non-NULL, and points to a full pt_regs, just get the reg
-+ * value from state->regs.
-+ *
-+ * Otherwise, if state->regs just points to IRET regs, and the previous frame
-+ * had full regs, it's safe to get the value from the previous regs.  This can
-+ * happen when early/late IRQ entry code gets interrupted by an NMI.
-+ */
-+static bool get_reg(struct unwind_state *state, unsigned int reg_off,
-+		    unsigned long *val)
-+{
-+	unsigned int reg = reg_off/8;
-+
-+	if (!state->regs)
-+		return false;
-+
-+	if (state->full_regs) {
-+		*val = ((unsigned long *)state->regs)[reg];
-+		return true;
-+	}
-+
-+	if (state->prev_regs) {
-+		*val = ((unsigned long *)state->prev_regs)[reg];
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
- bool unwind_next_frame(struct unwind_state *state)
- {
--	unsigned long ip_p, sp, orig_ip = state->ip, prev_sp = state->sp;
-+	unsigned long ip_p, sp, tmp, orig_ip = state->ip, prev_sp = state->sp;
- 	enum stack_type prev_type = state->stack_info.type;
- 	struct orc_entry *orc;
- 	bool indirect = false;
-@@ -439,39 +468,35 @@ bool unwind_next_frame(struct unwind_sta
- 		break;
- 
- 	case ORC_REG_R10:
--		if (!state->regs || !state->full_regs) {
-+		if (!get_reg(state, offsetof(struct pt_regs, r10), &sp)) {
- 			orc_warn("missing regs for base reg R10 at ip %pB\n",
- 				 (void *)state->ip);
- 			goto err;
- 		}
--		sp = state->regs->r10;
- 		break;
- 
- 	case ORC_REG_R13:
--		if (!state->regs || !state->full_regs) {
-+		if (!get_reg(state, offsetof(struct pt_regs, r13), &sp)) {
- 			orc_warn("missing regs for base reg R13 at ip %pB\n",
- 				 (void *)state->ip);
- 			goto err;
- 		}
--		sp = state->regs->r13;
- 		break;
- 
- 	case ORC_REG_DI:
--		if (!state->regs || !state->full_regs) {
-+		if (!get_reg(state, offsetof(struct pt_regs, di), &sp)) {
- 			orc_warn("missing regs for base reg DI at ip %pB\n",
- 				 (void *)state->ip);
- 			goto err;
- 		}
--		sp = state->regs->di;
- 		break;
- 
- 	case ORC_REG_DX:
--		if (!state->regs || !state->full_regs) {
-+		if (!get_reg(state, offsetof(struct pt_regs, dx), &sp)) {
- 			orc_warn("missing regs for base reg DX at ip %pB\n",
- 				 (void *)state->ip);
- 			goto err;
- 		}
--		sp = state->regs->dx;
- 		break;
- 
+@@ -528,7 +528,7 @@ bool unwind_next_frame(struct unwind_sta
  	default:
-@@ -498,6 +523,7 @@ bool unwind_next_frame(struct unwind_sta
+ 		orc_warn("unknown .orc_unwind entry type %d for ip %pB\n",
+ 			 orc->type, (void *)orig_ip);
+-		break;
++		goto err;
+ 	}
  
- 		state->sp = sp;
- 		state->regs = NULL;
-+		state->prev_regs = NULL;
- 		state->signal = false;
- 		break;
- 
-@@ -509,6 +535,7 @@ bool unwind_next_frame(struct unwind_sta
- 		}
- 
- 		state->regs = (struct pt_regs *)sp;
-+		state->prev_regs = NULL;
- 		state->full_regs = true;
- 		state->signal = true;
- 		break;
-@@ -520,6 +547,8 @@ bool unwind_next_frame(struct unwind_sta
- 			goto err;
- 		}
- 
-+		if (state->full_regs)
-+			state->prev_regs = state->regs;
- 		state->regs = (void *)sp - IRET_FRAME_OFFSET;
- 		state->full_regs = false;
- 		state->signal = true;
-@@ -534,8 +563,8 @@ bool unwind_next_frame(struct unwind_sta
  	/* Find BP: */
- 	switch (orc->bp_reg) {
- 	case ORC_REG_UNDEFINED:
--		if (state->regs && state->full_regs)
--			state->bp = state->regs->bp;
-+		if (get_reg(state, offsetof(struct pt_regs, bp), &tmp))
-+			state->bp = tmp;
- 		break;
- 
- 	case ORC_REG_PREV_SP:
 
 
