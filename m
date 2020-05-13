@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 510F5C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 581AECA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3115920740
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39679206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:46:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363159;
-	bh=A3Y2v+4SlLEutyfNVUrIBwwpsZ4l2T67ReBBophFU2k=;
+	s=default; t=1589363162;
+	bh=pUIO6TEaK9n0rE5E5dO/hj2zx7EL6SpRabCZcLs9Ka8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vc9JirldUP/aBlt2lFL24UHK4f30zJrKKtSOoQzBTK34Een9KZJc0d6QeEAfp/RTr
-	 maSK6CBCCKB4yqBUepcBAiLdTBLKqtTsRRHCcvpz9EpXI13DlTr31KFw0kXidU9m5w
-	 p9zY0lgUJTmQE8zsTVXh7ONY0xmsB9bBHVhU7Zm4=
+	b=lIpyJT2+sTHGrXiGrB/yadgT6kGifGmlhvH5LGihNzOTBbHtKbH6cfp2LhYon1CH5
+	 EpL4oqYeBvm+fxrAgFowFCpFnaQ9INRE9AVSvYhRShEkLKgdijhp9OHeVRM9B/NziC
+	 Tymt3GQszUlq82XHkcZhMH81KZ1Gx05g3nGrmtUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732532AbgEMJp6 (ORCPT
+        id S1732544AbgEMJqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:45:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43120 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:46:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730661AbgEMJp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:45:58 -0400
+        id S1730661AbgEMJp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:45:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21553206F5;
-        Wed, 13 May 2020 09:45:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 909E4206F5;
+        Wed, 13 May 2020 09:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363156;
-        bh=A3Y2v+4SlLEutyfNVUrIBwwpsZ4l2T67ReBBophFU2k=;
+        s=default; t=1589363159;
+        bh=pUIO6TEaK9n0rE5E5dO/hj2zx7EL6SpRabCZcLs9Ka8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H9zexssXsyIC06zYQsyJOwX2wKYOjNL3PQqH2eLy0GKBoHK3JOkh/968+KmCyr+rI
-         siyOROlye29Xcsz9iqNO8wuYEN5FR3gNHsVejBPXcuU5I+OaK3+zdy5YxGUNw6KXnl
-         vZ95JItCTvqYX1zkfXo+W6EWLHUiCoSPCS9+/pks=
+        b=ScC8bFUwz3Csx6LjTaiHvogbm2hIToL0WW77QMzEaL3ixCr7j8jvHnuh1LRKWQg0B
+         F6nRcrxqISXzm5UyVUTmhIGmdhJl8w6TFZII+cC6R5dRxLou8sHlKrYBWaIeh1Bpuh
+         x9sXdh+bvVIKh1KXSFPOQTunnfLPuSxfZ6t9KWWM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matt Jolly <Kangie@footclan.ninja>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 01/48] USB: serial: qcserial: Add DW5816e support
-Date:   Wed, 13 May 2020 11:44:27 +0200
-Message-Id: <20200513094351.711902977@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 10/48] sch_choke: avoid potential panic in choke_reset()
+Date:   Wed, 13 May 2020 11:44:36 +0200
+Message-Id: <20200513094354.391305028@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
 References: <20200513094351.100352960@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,30 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Jolly <Kangie@footclan.ninja>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 78d6de3cfbd342918d31cf68d0d2eda401338aef upstream.
+[ Upstream commit 8738c85c72b3108c9b9a369a39868ba5f8e10ae0 ]
 
-Add support for Dell Wireless 5816e to drivers/usb/serial/qcserial.c
+If choke_init() could not allocate q->tab, we would crash later
+in choke_reset().
 
-Signed-off-by: Matt Jolly <Kangie@footclan.ninja>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+BUG: KASAN: null-ptr-deref in memset include/linux/string.h:366 [inline]
+BUG: KASAN: null-ptr-deref in choke_reset+0x208/0x340 net/sched/sch_choke.c:326
+Write of size 8 at addr 0000000000000000 by task syz-executor822/7022
+
+CPU: 1 PID: 7022 Comm: syz-executor822 Not tainted 5.7.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ __kasan_report.cold+0x5/0x4d mm/kasan/report.c:515
+ kasan_report+0x33/0x50 mm/kasan/common.c:625
+ check_memory_region_inline mm/kasan/generic.c:187 [inline]
+ check_memory_region+0x141/0x190 mm/kasan/generic.c:193
+ memset+0x20/0x40 mm/kasan/common.c:85
+ memset include/linux/string.h:366 [inline]
+ choke_reset+0x208/0x340 net/sched/sch_choke.c:326
+ qdisc_reset+0x6b/0x520 net/sched/sch_generic.c:910
+ dev_deactivate_queue.constprop.0+0x13c/0x240 net/sched/sch_generic.c:1138
+ netdev_for_each_tx_queue include/linux/netdevice.h:2197 [inline]
+ dev_deactivate_many+0xe2/0xba0 net/sched/sch_generic.c:1195
+ dev_deactivate+0xf8/0x1c0 net/sched/sch_generic.c:1233
+ qdisc_graft+0xd25/0x1120 net/sched/sch_api.c:1051
+ tc_modify_qdisc+0xbab/0x1a00 net/sched/sch_api.c:1670
+ rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5454
+ netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2416
+ __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+
+Fixes: 77e62da6e60c ("sch_choke: drop all packets in queue during reset")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/serial/qcserial.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/sched/sch_choke.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/serial/qcserial.c
-+++ b/drivers/usb/serial/qcserial.c
-@@ -173,6 +173,7 @@ static const struct usb_device_id id_tab
- 	{DEVICE_SWI(0x413c, 0x81b3)},	/* Dell Wireless 5809e Gobi(TM) 4G LTE Mobile Broadband Card (rev3) */
- 	{DEVICE_SWI(0x413c, 0x81b5)},	/* Dell Wireless 5811e QDL */
- 	{DEVICE_SWI(0x413c, 0x81b6)},	/* Dell Wireless 5811e QDL */
-+	{DEVICE_SWI(0x413c, 0x81cc)},	/* Dell Wireless 5816e */
- 	{DEVICE_SWI(0x413c, 0x81cf)},   /* Dell Wireless 5819 */
- 	{DEVICE_SWI(0x413c, 0x81d0)},   /* Dell Wireless 5819 */
- 	{DEVICE_SWI(0x413c, 0x81d1)},   /* Dell Wireless 5818 */
+--- a/net/sched/sch_choke.c
++++ b/net/sched/sch_choke.c
+@@ -327,7 +327,8 @@ static void choke_reset(struct Qdisc *sc
+ 
+ 	sch->q.qlen = 0;
+ 	sch->qstats.backlog = 0;
+-	memset(q->tab, 0, (q->tab_mask + 1) * sizeof(struct sk_buff *));
++	if (q->tab)
++		memset(q->tab, 0, (q->tab_mask + 1) * sizeof(struct sk_buff *));
+ 	q->head = q->tail = 0;
+ 	red_restart(&q->vars);
+ }
 
 
