@@ -2,149 +2,83 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3E6C2D0FB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0982C2D0F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9943E20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9719520714
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:51:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbgEMBuL (ORCPT
+        id S1731939AbgEMBvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 21:50:11 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4398 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726028AbgEMBuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 21:50:10 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 73FC533283DC5F6787D9;
-        Wed, 13 May 2020 09:50:08 +0800 (CST)
-Received: from [10.65.58.147] (10.65.58.147) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Wed, 13 May 2020
- 09:50:00 +0800
-Subject: Re: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for
- non-hotplug capable devices
-To:     Jay Vosburgh <jay.vosburgh@canonical.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <18609.1588812972@famine>
- <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <9908.1589311230@famine>
-CC:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <ashok.raj@intel.com>,
-        liudongdong 00290354 <liudongdong3@huawei.com>,
-        Linuxarm <linuxarm@huawei.com>
-From:   Yicong Yang <yangyicong@hisilicon.com>
-Message-ID: <1216d38b-bc0a-b4d5-967f-f5a86d96287c@hisilicon.com>
-Date:   Wed, 13 May 2020 09:50:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Tue, 12 May 2020 21:51:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41828 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbgEMBvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 21:51:12 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6406D206F5;
+        Wed, 13 May 2020 01:51:10 +0000 (UTC)
+Date:   Tue, 12 May 2020 21:51:08 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [patch V4 part 3 01/29] x86/traps: Mark fixup_bad_iret()
+ noinstr
+Message-ID: <20200512215108.5ea110b7@oasis.local.home>
+In-Reply-To: <CALCETrW1pZ0NiN3F4g3=S+KpM79T9PbaYVC3Zr5p6P2rvk4v0A@mail.gmail.com>
+References: <20200505134354.774943181@linutronix.de>
+        <20200505134903.346741553@linutronix.de>
+        <CALCETrW1pZ0NiN3F4g3=S+KpM79T9PbaYVC3Zr5p6P2rvk4v0A@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <9908.1589311230@famine>
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.58.147]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/13 3:20, Jay Vosburgh wrote:
-> sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->
->> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>
->> If there are non-hotplug capable devices connected to a given
->> port, then during the fatal error recovery(triggered by DPC or
->> AER), after calling reset_link() function, we cannot rely on
->> hotplug handler to detach and re-enumerate the device drivers
->> in the affected bus. Instead, we will have to let the error
->> recovery handler call report_slot_reset() for all devices in
->> the bus to notify about the reset operation. Although this is
->> only required for non hot-plug capable devices, doing it for
->> hotplug capable devices should not affect the functionality.
-> 	Yicong,
->
-> 	Does the patch below also resolve the issue for you, as with
-> your changed version of my original patch?
+On Fri, 8 May 2020 17:39:00 -0700
+Andy Lutomirski <luto@kernel.org> wrote:
 
-Yes. It works.
+> On Tue, May 5, 2020 at 7:15 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > This is called from deep entry ASM in a situation where instrumentation
+> > will cause more harm than providing useful information.
+> >  
+> 
+> Acked-by: Andy Lutomirski <luto@kernel.org>
+> 
+> Maybe add to changelog:
+> 
+> Switch from memmove() to memcpy() because memmove() can't be called
+> from noinstr code.
 
+Yes please, because I was about to say that there was changes that
+didn't seem to fit the change log.
 
->
-> 	-J
->
->> Along with above issue, this fix also applicable to following
->> issue.
->>
->> Commit 6d2c89441571 ("PCI/ERR: Update error status after
->> reset_link()") added support to store status of reset_link()
->> call. Although this fixed the error recovery issue observed if
->> the initial value of error status is PCI_ERS_RESULT_DISCONNECT
->> or PCI_ERS_RESULT_NO_AER_DRIVER, it also discarded the status
->> result from report_frozen_detected. This can cause a failure to
->> recover if _NEED_RESET is returned by report_frozen_detected and
->> report_slot_reset is not invoked.
->>
->> Such an event can be induced for testing purposes by reducing the
->> Max_Payload_Size of a PCIe bridge to less than that of a device
->> downstream from the bridge, and then initiating I/O through the
->> device, resulting in oversize transactions.  In the presence of DPC,
->> this results in a containment event and attempted reset and recovery
->> via pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not
->> invoked, and the device does not recover.
->>
->> [original patch is from jay.vosburgh@canonical.com]
->> [original patch link https://lore.kernel.org/linux-pci/18609.1588812972@famine/]
->> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
->> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
->> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->> ---
->> drivers/pci/pcie/err.c | 19 +++++++++++++++----
->> 1 file changed, 15 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->> index 14bb8f54723e..db80e1ecb2dc 100644
->> --- a/drivers/pci/pcie/err.c
->> +++ b/drivers/pci/pcie/err.c
->> @@ -165,13 +165,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->> 	pci_dbg(dev, "broadcast error_detected message\n");
->> 	if (state == pci_channel_io_frozen) {
->> 		pci_walk_bus(bus, report_frozen_detected, &status);
->> -		status = reset_link(dev);
->> -		if (status != PCI_ERS_RESULT_RECOVERED) {
->> +		status = PCI_ERS_RESULT_NEED_RESET;
->> +	} else {
->> +		pci_walk_bus(bus, report_normal_detected, &status);
->> +	}
->> +
->> +	if (status == PCI_ERS_RESULT_NEED_RESET) {
->> +		if (reset_link) {
->> +			if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
->> +				status = PCI_ERS_RESULT_DISCONNECT;
->> +		} else {
->> +			if (pci_bus_error_reset(dev))
->> +				status = PCI_ERS_RESULT_DISCONNECT;
->> +		}
->> +
->> +		if (status == PCI_ERS_RESULT_DISCONNECT) {
->> 			pci_warn(dev, "link reset failed\n");
->> 			goto failed;
->> 		}
->> -	} else {
->> -		pci_walk_bus(bus, report_normal_detected, &status);
->> 	}
->>
->> 	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
->> -- 
->> 2.17.1
->>
-> ---
-> 	-Jay Vosburgh, jay.vosburgh@canonical.com
-> .
->
+I would also add a comment in the code saying that we need the temp
+variable to use memcpy as memmove can't be used in noinstr code.
 
+-- Steve
