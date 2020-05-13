@@ -2,52 +2,52 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C58A1CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8952CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A663B206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CE7120575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364228;
-	bh=KU4EZxfFw3BnyZQ9fUN0IP4fieRje8nMyeSfD9J6E6Q=;
+	s=default; t=1589364236;
+	bh=bHdmZDYvm4sZsTCmDc+bJ2o87qNAxyOF5X9rKGj+pcM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yvtIYcnvxqtsGfCpIWHf+t9wYXnavOXsi1S8/wvJi85PuoMK4J9HDUB02geqZ1H8v
-	 PSvD87UnLa1FI+AE2bKgEsuNxaIqKzWV78OBkQWLcQ3X426BXH864ub5sFJBAHP9tP
-	 Kk/GQ9v7BYzXmFfw4bqhgNijaC1v/j9Egxk2uVrk=
+	b=PRMa65gUzwGT3ajDEzzKB6Mh5tGWq1PL/Ekh1LPeVj1Qk9J8o7yF5mxXuKgPQec9i
+	 Fo7WkdBcXT4gJHjyqK96yUGQtdEOJ6A4QpXLeyzV5DZMnlW6pfV7OPUsP2BLsuGlMz
+	 GnxVm8+cOObLTmO3sOI6RgVifmnEiioU4icJL2jk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388656AbgEMKDr (ORCPT
+        id S2388660AbgEMKD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:03:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46802 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 06:03:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733055AbgEMJsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:48:24 -0400
+        id S1732472AbgEMJsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:48:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C77D420769;
-        Wed, 13 May 2020 09:48:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F27A20753;
+        Wed, 13 May 2020 09:48:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363303;
-        bh=KU4EZxfFw3BnyZQ9fUN0IP4fieRje8nMyeSfD9J6E6Q=;
+        s=default; t=1589363293;
+        bh=bHdmZDYvm4sZsTCmDc+bJ2o87qNAxyOF5X9rKGj+pcM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nFQyf9Ah7lqTxK0D7eFheEQkCQCpot8iKDZFneFYEqw/9LCMSJ000NY0JN3WwXE9g
-         ec22VP+rAFQK0aOJwvJuZmdBfkh7/seK51XoDlJvg7bZi9SKoJlNvjG1NSHcxhSxRU
-         l3lKouCfRSOR3tzncM2xQcKmb9B5CP4YYYtz6Cwg=
+        b=0ZzTLut20IrjBGC9kJ+Ffz1PticEHaEPa2XzMJmeZHzXRzyPIBDt9UVdTACr3Kss7
+         mpHROFebF/htqBn7pJg/nOj1ruAyQ8pYjt6upx5ntYMJBLwDNgeV46e880+7+Aitao
+         ECLW+CxMrmbSsQiNnv/BKds+Pe8xvAcEIACsJO9I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Keith Busch <kbusch@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 02/90] nvme: refactor nvme_identify_ns_descs error handling
-Date:   Wed, 13 May 2020 11:43:58 +0200
-Message-Id: <20200513094409.193924197@linuxfoundation.org>
+        stable@vger.kernel.org, Allen Pais <allen.pais@oracle.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 16/90] net: dsa: Do not leave DSA master with NULL netdev_ops
+Date:   Wed, 13 May 2020 11:44:12 +0200
+Message-Id: <20200513094410.583502170@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -60,77 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit fb314eb0cbb2e11540d1ae1a7b28346397f621ef ]
+[ Upstream commit 050569fc8384c8056bacefcc246bcb2dfe574936 ]
 
-Move the handling of an error into the function from the caller, and
-only do it for an actual error on the admin command itself, not the
-command parsing, as that should be enough to deal with devices claiming
-a bogus version compliance.
+When ndo_get_phys_port_name() for the CPU port was added we introduced
+an early check for when the DSA master network device in
+dsa_master_ndo_setup() already implements ndo_get_phys_port_name(). When
+we perform the teardown operation in dsa_master_ndo_teardown() we would
+not be checking that cpu_dp->orig_ndo_ops was successfully allocated and
+non-NULL initialized.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+With network device drivers such as virtio_net, this leads to a NPD as
+soon as the DSA switch hanging off of it gets torn down because we are
+now assigning the virtio_net device's netdev_ops a NULL pointer.
+
+Fixes: da7b9e9b00d4 ("net: dsa: Add ndo_get_phys_port_name() for CPU port")
+Reported-by: Allen Pais <allen.pais@oracle.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Tested-by: Allen Pais <allen.pais@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/nvme/host/core.c | 28 +++++++++++++---------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
+ net/dsa/master.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 31b7dcd791c20..66147df86d883 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1071,8 +1071,17 @@ static int nvme_identify_ns_descs(struct nvme_ctrl *ctrl, unsigned nsid,
- 
- 	status = nvme_submit_sync_cmd(ctrl->admin_q, &c, data,
- 				      NVME_IDENTIFY_DATA_SIZE);
--	if (status)
-+	if (status) {
-+		dev_warn(ctrl->device,
-+			"Identify Descriptors failed (%d)\n", status);
-+		 /*
-+		  * Don't treat an error as fatal, as we potentially already
-+		  * have a NGUID or EUI-64.
-+		  */
-+		if (status > 0)
-+			status = 0;
- 		goto free_data;
-+	}
- 
- 	for (pos = 0; pos < NVME_IDENTIFY_DATA_SIZE; pos += len) {
- 		struct nvme_ns_id_desc *cur = data + pos;
-@@ -1730,26 +1739,15 @@ static void nvme_config_write_zeroes(struct gendisk *disk, struct nvme_ns *ns)
- static int nvme_report_ns_ids(struct nvme_ctrl *ctrl, unsigned int nsid,
- 		struct nvme_id_ns *id, struct nvme_ns_ids *ids)
+--- a/net/dsa/master.c
++++ b/net/dsa/master.c
+@@ -259,7 +259,8 @@ static void dsa_master_ndo_teardown(stru
  {
--	int ret = 0;
--
- 	memset(ids, 0, sizeof(*ids));
+ 	struct dsa_port *cpu_dp = dev->dsa_ptr;
  
- 	if (ctrl->vs >= NVME_VS(1, 1, 0))
- 		memcpy(ids->eui64, id->eui64, sizeof(id->eui64));
- 	if (ctrl->vs >= NVME_VS(1, 2, 0))
- 		memcpy(ids->nguid, id->nguid, sizeof(id->nguid));
--	if (ctrl->vs >= NVME_VS(1, 3, 0)) {
--		 /* Don't treat error as fatal we potentially
--		  * already have a NGUID or EUI-64
--		  */
--		ret = nvme_identify_ns_descs(ctrl, nsid, ids);
--		if (ret)
--			dev_warn(ctrl->device,
--				 "Identify Descriptors failed (%d)\n", ret);
--		if (ret > 0)
--			ret = 0;
--	}
--	return ret;
-+	if (ctrl->vs >= NVME_VS(1, 3, 0))
-+		return nvme_identify_ns_descs(ctrl, nsid, ids);
-+	return 0;
+-	dev->netdev_ops = cpu_dp->orig_ndo_ops;
++	if (cpu_dp->orig_ndo_ops)
++		dev->netdev_ops = cpu_dp->orig_ndo_ops;
+ 	cpu_dp->orig_ndo_ops = NULL;
  }
  
- static bool nvme_ns_ids_valid(struct nvme_ns_ids *ids)
--- 
-2.20.1
-
 
 
