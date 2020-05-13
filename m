@@ -2,153 +2,302 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B74BC2D0FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F7CC2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDD09204EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 691CD204EF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:18:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DOvMOj98"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="JcDElBEc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388921AbgEMOQx (ORCPT
+        id S2388925AbgEMOSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 10:16:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20896 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388850AbgEMOQw (ORCPT
+        Wed, 13 May 2020 10:18:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733142AbgEMOSB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 10:16:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589379411;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=PS89PFbaJnSwYMjQXVxl9VtXtII/zrxWxjZd/P8u9aY=;
-        b=DOvMOj98ZbC2sCGQ9Zi9T2bB4pHDeJAiW5S7b3TgNGcb0q7qaK+h2Hzs5Bz8vD09M2LdCu
-        RJYItkzQ+X89q/pnGMBklYd1Z3hAFEcUipwZIREl5MbJw3Fe+kyLF4tNX3Fc+zkkoc/dMq
-        2wOJ/MDGBLVjBr+xvk/sbTSR+D26v7Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-249-tMocgKD2Pe24Zd0c9o7nZg-1; Wed, 13 May 2020 10:16:47 -0400
-X-MC-Unique: tMocgKD2Pe24Zd0c9o7nZg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A84451005510;
-        Wed, 13 May 2020 14:16:45 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-115-240.rdu2.redhat.com [10.10.115.240])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 23AFE5D9C5;
-        Wed, 13 May 2020 14:16:45 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id A1D74220206; Wed, 13 May 2020 10:16:44 -0400 (EDT)
-Date:   Wed, 13 May 2020 10:16:44 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, x86@kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Gavin Shan <gshan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/8] KVM: x86: Interrupt-based mechanism for async_pf
- 'page present' notifications
-Message-ID: <20200513141644.GD173965@redhat.com>
-References: <20200511164752.2158645-1-vkuznets@redhat.com>
+        Wed, 13 May 2020 10:18:01 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 058D8C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 07:18:01 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id h17so12204393wrc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 07:18:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=00hkIgqy2TV8FgXbgC8btVc66deFvTlaw+vQ044Y+dc=;
+        b=JcDElBEc+piLMqL6G+GM86gdLAnj/1TS0BQwz9eaB2yDmcHjVn7sB2imiROSz2hBls
+         ZKF+eV9TbtkBEWv51PBiE1LgBKP9xveMj/mjLxhF3hYA+W8TxCbjxhCcaJ7dFcbxheAk
+         Hysx+N3I6IOKoKLnV/mf3gswvUTIkInwFo9UlQkPZDqsXUwu4Mr5daiEjtTg86TJZCL2
+         TH8IGUDuB5Wxqjfj6KKWZwPw+3L4yZiPPU4pXqTNZpMy4iate3uekYPVhaDcDyXSDXKY
+         7mlDJbds3nUwytt+ojNMIbeEBTnc4g7wL+QkYt3zUxDMSzxPDa6RHUvfqGS+FnrZtbBK
+         EZPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=00hkIgqy2TV8FgXbgC8btVc66deFvTlaw+vQ044Y+dc=;
+        b=nS9h2+dPd8UYCKlIj/QgQJlsO9xza9h3nCXbWDafUO1jf+XpWVA5/jBwQTv8wxN5JZ
+         JKT/a/glcxswuPAAH/TY6G2xOsdu4erm8nWKOZ/iFiCR4VpjpVlDDKxrXFzfoal0Ygmq
+         Sk07eBRVkSSJJaDkbbUt9/Ma26KTpCgcl4aa17rOMpXmz0vhZe6iANII71uI5T3BJDre
+         ri2zo/evK5lO3su2MWqVae2sKFwrF07ooBSbDRFJqNDRf0cQil38KnOoLS6jo8J96wvq
+         ZUDI0RBelsuDCv6jT2qrGOu29PoI5ToJz7eU4gN320LNpnBDMS0pqFpzHr7ZCunSYGq9
+         xCog==
+X-Gm-Message-State: AGi0Pua86Lw97lTw34hPR+j9hrMtKJwKYd4mOqNPzQJW24mSywr/HHh1
+        xPAjpHFWjvSxeAbCnP7gkO7J8Hlw1FtY4Q==
+X-Google-Smtp-Source: APiQypKYTtyutwBonrNiYjKQhDV8kI/nCyjkiNiCUZwlLML1lYpXii9+IbE/H8ZMAB1HTNXfQW+uvg==
+X-Received: by 2002:adf:e483:: with SMTP id i3mr29928256wrm.88.1589379478447;
+        Wed, 13 May 2020 07:17:58 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:4460:3fd3:382:4a71? ([2a01:e35:2ec0:82b0:4460:3fd3:382:4a71])
+        by smtp.gmail.com with ESMTPSA id 2sm27830241wre.25.2020.05.13.07.17.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 May 2020 07:17:57 -0700 (PDT)
+Subject: Re: [PATCH v3 3/4] soc: amlogic: meson-ee-pwrc: add support for
+ Meson8/Meson8b/Meson8m2
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        robh+dt@kernel.org, khilman@baylibre.com,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200420202612.369370-1-martin.blumenstingl@googlemail.com>
+ <20200420202612.369370-4-martin.blumenstingl@googlemail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <0a01e65d-5169-d528-49bd-e37ff970c211@baylibre.com>
+Date:   Wed, 13 May 2020 16:17:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511164752.2158645-1-vkuznets@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200420202612.369370-4-martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 06:47:44PM +0200, Vitaly Kuznetsov wrote:
-> Concerns were expressed around (ab)using #PF for KVM's async_pf mechanism,
-> it seems that re-using #PF exception for a PV mechanism wasn't a great
-> idea after all. The Grand Plan is to switch to using e.g. #VE for 'page
-> not present' events and normal APIC interrupts for 'page ready' events.
-> This series does the later.
-
-Hi Vitaly,
-
-How does any of this impact nested virtualization code (if any).
-
-I have tried understanding that logic, but I have to admit, I could
-never get it.
-
-arch/x86/kvm/mmu/mmu.c
-
-int kvm_handle_page_fault(struct kvm_vcpu *vcpu, u64 error_code,
-                                u64 fault_address, char *insn, int insn_len)
-{
-        switch (vcpu->arch.apf.host_apf_reason) {
-		case KVM_PV_REASON_PAGE_NOT_PRESENT:
-			kvm_async_pf_task_wait(fault_address, 0);
-		case KVM_PV_REASON_PAGE_READY:
-			kvm_async_pf_task_wake(fault_address);
-	}
-}
-
-Vivek
-
+On 20/04/2020 22:26, Martin Blumenstingl wrote:
+> This adds support for the power domains on Meson8/Meson8b/Meson8m2.
+> Meson8 doesn't use any reset lines while Meson8b and Meson8m2 use the
+> same set of reset lines (which is different from the newer SoCs).
+> Add dedicated compatible strings for Meson8, Meson8b and Meson8m2 to
+> support these differences.
 > 
-> Changes since RFC:
-> - Using #PF for 'page ready' is deprecated and removed [Paolo Bonzini]
-> - 'reason' field in 'struct kvm_vcpu_pv_apf_data' is not used for 'page ready'
->   notifications and 'pageready_token' is not used for 'page not present' events
->   [Paolo Bonzini]
-> - Renamed MSR_KVM_ASYNC_PF2 -> MSR_KVM_ASYNC_PF_INT [Peter Xu]
-> - Drop 'enabled' field from MSR_KVM_ASYNC_PF_INT [Peter Xu]
-> - Other minor changes supporting the above.
+> Notable differences between Meson8 and G12A are:
+> - there is no HHI_VPU_MEM_PD_REG2 on the 32-bit SoCs
+> - the Meson8b datasheet describes an "audio DSP memory" power domain
+>   which is used for the hardware audio decoder
+> - the "amlogic,ao-sysctrl" only includes the power management related
+>   registers on the 32-bit SoCs, meaning the for example the
+>   AO_RTI_GEN_PWR_SLEEP0 register is at offset (0x2 << 2) rather than
+>   (0x3a << 2). As result of this (0x38 << 2) is subtracted from the
+>   register offsets, which is the start of the power management related
+>   registers.
 > 
-> Vitaly Kuznetsov (8):
->   Revert "KVM: async_pf: Fix #DF due to inject "Page not Present" and
->     "Page Ready" exceptions simultaneously"
->   KVM: x86: extend struct kvm_vcpu_pv_apf_data with token info
->   KVM: introduce kvm_read_guest_offset_cached()
->   KVM: x86: interrupt based APF page-ready event delivery
->   KVM: x86: acknowledgment mechanism for async pf page ready
->     notifications
->   KVM: x86: announce KVM_FEATURE_ASYNC_PF_INT
->   KVM: x86: Switch KVM guest to using interrupts for page ready APF
->     delivery
->   KVM: x86: drop KVM_PV_REASON_PAGE_READY case from
->     kvm_handle_page_fault()
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+>  drivers/soc/amlogic/meson-ee-pwrc.c | 72 +++++++++++++++++++++++++++--
+>  1 file changed, 69 insertions(+), 3 deletions(-)
 > 
->  Documentation/virt/kvm/cpuid.rst     |   6 ++
->  Documentation/virt/kvm/msr.rst       | 106 ++++++++++++++------
->  arch/s390/include/asm/kvm_host.h     |   2 +
->  arch/x86/entry/entry_32.S            |   5 +
->  arch/x86/entry/entry_64.S            |   5 +
->  arch/x86/include/asm/hardirq.h       |   3 +
->  arch/x86/include/asm/irq_vectors.h   |   6 +-
->  arch/x86/include/asm/kvm_host.h      |   7 +-
->  arch/x86/include/asm/kvm_para.h      |   6 ++
->  arch/x86/include/uapi/asm/kvm_para.h |  11 ++-
->  arch/x86/kernel/irq.c                |   9 ++
->  arch/x86/kernel/kvm.c                |  42 ++++++--
->  arch/x86/kvm/cpuid.c                 |   3 +-
->  arch/x86/kvm/mmu/mmu.c               |  10 +-
->  arch/x86/kvm/x86.c                   | 142 ++++++++++++++++++---------
->  include/linux/kvm_host.h             |   3 +
->  include/uapi/linux/kvm.h             |   1 +
->  virt/kvm/async_pf.c                  |  10 ++
->  virt/kvm/kvm_main.c                  |  19 +++-
->  19 files changed, 295 insertions(+), 101 deletions(-)
-> 
-> -- 
-> 2.25.4
+> diff --git a/drivers/soc/amlogic/meson-ee-pwrc.c b/drivers/soc/amlogic/meson-ee-pwrc.c
+> index 3f0261d53ad9..b30868da456a 100644
+> --- a/drivers/soc/amlogic/meson-ee-pwrc.c
+> +++ b/drivers/soc/amlogic/meson-ee-pwrc.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/reset-controller.h>
+>  #include <linux/reset.h>
+>  #include <linux/clk.h>
+> +#include <dt-bindings/power/meson8-power.h>
+>  #include <dt-bindings/power/meson-g12a-power.h>
+>  #include <dt-bindings/power/meson-sm1-power.h>
+>  
+> @@ -22,6 +23,12 @@
+>  #define AO_RTI_GEN_PWR_SLEEP0		(0x3a << 2)
+>  #define AO_RTI_GEN_PWR_ISO0		(0x3b << 2)
+>  
+> +/*
+> + * Meson8/Meson8b/Meson8m2 only expose the power management registers of
+> + * the AO-bus as syscon. Above register offsets need to subtract this offset.
+> + */
+> +#define AO_RTI_GEN_MESON8_PMU_OFFSET	(0x38 << 2)
+
+This is weird, I would directly add the MESON8 PWR_SLEEP0 offset directly.
+
+> +
+>  /* HHI Offsets */
+>  
+>  #define HHI_MEM_PD_REG0			(0x40 << 2)
+> @@ -73,6 +80,13 @@ static struct meson_ee_pwrc_top_domain g12a_pwrc_vpu = {
+>  	.iso_mask = BIT(9),
+>  };
+>  
+> +static struct meson_ee_pwrc_top_domain meson8_pwrc_vpu = {
+> +	.sleep_reg = AO_RTI_GEN_PWR_SLEEP0 - AO_RTI_GEN_MESON8_PMU_OFFSET,
+> +	.sleep_mask = BIT(8),
+> +	.iso_reg = AO_RTI_GEN_PWR_SLEEP0 - AO_RTI_GEN_MESON8_PMU_OFFSET,
+> +	.iso_mask = BIT(9),
+> +};
+> +
+>  #define SM1_EE_PD(__bit)					\
+>  	{							\
+>  		.sleep_reg = AO_RTI_GEN_PWR_SLEEP0, 		\
+> @@ -124,10 +138,20 @@ static struct meson_ee_pwrc_mem_domain g12a_pwrc_mem_vpu[] = {
+>  	VPU_HHI_MEMPD(HHI_MEM_PD_REG0),
+>  };
+>  
+> -static struct meson_ee_pwrc_mem_domain g12a_pwrc_mem_eth[] = {
+> +static struct meson_ee_pwrc_mem_domain meson8_pwrc_mem_eth[] = {
+>  	{ HHI_MEM_PD_REG0, GENMASK(3, 2) },
+>  };
+
+I would rename it meson_pwrc... since it's the same on all SoCs.
+
+>  
+> +static struct meson_ee_pwrc_mem_domain meson8_pwrc_audio_dsp_mem[] = {
+> +	{ HHI_MEM_PD_REG0, GENMASK(1, 0) },
+> +};
+> +
+> +static struct meson_ee_pwrc_mem_domain meson8_pwrc_mem_vpu[] = {
+> +	VPU_MEMPD(HHI_VPU_MEM_PD_REG0),
+> +	VPU_MEMPD(HHI_VPU_MEM_PD_REG1),
+> +	VPU_HHI_MEMPD(HHI_MEM_PD_REG0),
+> +};
+> +
+>  static struct meson_ee_pwrc_mem_domain sm1_pwrc_mem_vpu[] = {
+>  	VPU_MEMPD(HHI_VPU_MEM_PD_REG0),
+>  	VPU_MEMPD(HHI_VPU_MEM_PD_REG1),
+> @@ -201,7 +225,27 @@ static bool pwrc_ee_get_power(struct meson_ee_pwrc_domain *pwrc_domain);
+>  static struct meson_ee_pwrc_domain_desc g12a_pwrc_domains[] = {
+>  	[PWRC_G12A_VPU_ID]  = VPU_PD("VPU", &g12a_pwrc_vpu, g12a_pwrc_mem_vpu,
+>  				     pwrc_ee_get_power, 11, 2),
+> -	[PWRC_G12A_ETH_ID] = MEM_PD("ETH", g12a_pwrc_mem_eth),
+> +	[PWRC_G12A_ETH_ID] = MEM_PD("ETH", meson8_pwrc_mem_eth),
+> +};
+> +
+> +static struct meson_ee_pwrc_domain_desc meson8_pwrc_domains[] = {
+> +	[PWRC_MESON8_VPU_ID]  = VPU_PD("VPU", &meson8_pwrc_vpu,
+> +				       meson8_pwrc_mem_vpu, pwrc_ee_get_power,
+> +				       0, 1),
+> +	[PWRC_MESON8_ETHERNET_MEM_ID] = MEM_PD("ETHERNET_MEM",
+> +						  meson8_pwrc_mem_eth),
+> +	[PWRC_MESON8_AUDIO_DSP_MEM_ID] = MEM_PD("AUDIO_DSP_MEM",
+> +						meson8_pwrc_audio_dsp_mem),
+> +};
+> +
+> +static struct meson_ee_pwrc_domain_desc meson8b_pwrc_domains[] = {
+> +	[PWRC_MESON8_VPU_ID]  = VPU_PD("VPU", &meson8_pwrc_vpu,
+> +				       meson8_pwrc_mem_vpu, pwrc_ee_get_power,
+> +				       11, 1),
+> +	[PWRC_MESON8_ETHERNET_MEM_ID] = MEM_PD("ETHERNET_MEM",
+> +						  meson8_pwrc_mem_eth),
+> +	[PWRC_MESON8_AUDIO_DSP_MEM_ID] = MEM_PD("AUDIO_DSP_MEM",
+> +						meson8_pwrc_audio_dsp_mem),
+>  };
+>  
+>  static struct meson_ee_pwrc_domain_desc sm1_pwrc_domains[] = {
+> @@ -216,7 +260,7 @@ static struct meson_ee_pwrc_domain_desc sm1_pwrc_domains[] = {
+>  	[PWRC_SM1_GE2D_ID] = TOP_PD("GE2D", &sm1_pwrc_ge2d, sm1_pwrc_mem_ge2d,
+>  				    pwrc_ee_get_power),
+>  	[PWRC_SM1_AUDIO_ID] = MEM_PD("AUDIO", sm1_pwrc_mem_audio),
+> -	[PWRC_SM1_ETH_ID] = MEM_PD("ETH", g12a_pwrc_mem_eth),
+> +	[PWRC_SM1_ETH_ID] = MEM_PD("ETH", meson8_pwrc_mem_eth),
+>  };
+>  
+>  struct meson_ee_pwrc_domain {
+> @@ -470,12 +514,34 @@ static struct meson_ee_pwrc_domain_data meson_ee_g12a_pwrc_data = {
+>  	.domains = g12a_pwrc_domains,
+>  };
+>  
+> +static struct meson_ee_pwrc_domain_data meson_ee_m8_pwrc_data = {
+> +	.count = ARRAY_SIZE(meson8_pwrc_domains),
+> +	.domains = meson8_pwrc_domains,
+> +};
+> +
+> +static struct meson_ee_pwrc_domain_data meson_ee_m8b_pwrc_data = {
+> +	.count = ARRAY_SIZE(meson8b_pwrc_domains),
+> +	.domains = meson8b_pwrc_domains,
+> +};
+> +
+>  static struct meson_ee_pwrc_domain_data meson_ee_sm1_pwrc_data = {
+>  	.count = ARRAY_SIZE(sm1_pwrc_domains),
+>  	.domains = sm1_pwrc_domains,
+>  };
+>  
+>  static const struct of_device_id meson_ee_pwrc_match_table[] = {
+> +	{
+> +		.compatible = "amlogic,meson8-pwrc",
+> +		.data = &meson_ee_m8_pwrc_data,
+> +	},
+> +	{
+> +		.compatible = "amlogic,meson8b-pwrc",
+> +		.data = &meson_ee_m8b_pwrc_data,
+> +	},
+> +	{
+> +		.compatible = "amlogic,meson8m2-pwrc",
+> +		.data = &meson_ee_m8b_pwrc_data,
+> +	},
+>  	{
+>  		.compatible = "amlogic,meson-g12a-pwrc",
+>  		.data = &meson_ee_g12a_pwrc_data,
 > 
 
+With these fixed:
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
