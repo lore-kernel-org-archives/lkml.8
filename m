@@ -2,89 +2,220 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0D4C2D0FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFF6CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE158204EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5383C20643
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:25:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HyPMrQAV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bUhpZbiZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387676AbgEMNZl (ORCPT
+        id S2387715AbgEMNZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:25:41 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22687 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1733225AbgEMNZk (ORCPT
+        Wed, 13 May 2020 09:25:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54734 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727792AbgEMNZo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:25:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589376338;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=d/0WQiW+co/T0Lh806Aa2CF0lrVFjIjJV8t4w61WLTw=;
-        b=HyPMrQAVCoA9TwjWHmuIkLwMpDeZ0dvqnHvbnZM8NjUP2RYf/ned0zXjoc4OWWn1s2SNJB
-        VdvncxMmBAgjgiDU34hJrXnpYaP7YA7qo53JX1lBEkz0KHyuB+2Y6KmtraZXuDSiJs/Rp8
-        r9BQZUd97LjpY+QOHcCU0ugdURKGEII=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-166-QSRiE1hJM-O7Lq496hJNkw-1; Wed, 13 May 2020 09:25:35 -0400
-X-MC-Unique: QSRiE1hJM-O7Lq496hJNkw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 360CB18FE866;
-        Wed, 13 May 2020 13:25:30 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-59.rdu2.redhat.com [10.10.112.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 31ED9783B3;
-        Wed, 13 May 2020 13:25:19 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200513062649.2100053-24-hch@lst.de>
-References: <20200513062649.2100053-24-hch@lst.de> <20200513062649.2100053-1-hch@lst.de>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     dhowells@redhat.com, "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        linux-nvme@lists.infradead.org, linux-sctp@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
-        drbd-dev@lists.linbit.com, linux-cifs@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-rdma@vger.kernel.org,
-        cluster-devel@redhat.com, Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, Neil Horman <nhorman@tuxdriver.com>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev@vger.kernel.org, Vlad Yasevich <vyasevich@gmail.com>,
-        linux-kernel@vger.kernel.org, Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>, ocfs2-devel@oss.oracle.com
-Subject: Re: [PATCH 23/33] ipv6: add ip6_sock_set_recverr
+        Wed, 13 May 2020 09:25:44 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B502EC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:25:43 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id g1so11855743ljk.7
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:25:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ctNRDk9XGc9CHMoQDqvFHi5vxID2gsh5buG4nKb35qU=;
+        b=bUhpZbiZX2ExbTaWxKBu12anjLM5QsTRXZlxtQ3J8phy61HMAdwQtD/ciJ+RZjbB4l
+         TPiNYZ65LO4eOpef3IRXMgDqW9ncENwhQD1JgamCKjDODuXK56Uu4R1w8hyMfiCDsAo2
+         VPg4XaBBY0T7VQYirgFnBafM3HyKbdlg6geDLIBI5fLzWoyp7j+lNuetuCdW/TwIpFac
+         0y92eoZJ7VyFwMDiMpSCqsh6xgcCE21azzNivuZED4bgxqPL/9aJTikReB2bz2qrJYYl
+         qllIyroLbq3nA7NUh5FsKfkowUcdK8FUA7DTLHdzanutUgrwV3jEpKZG/xFDwi4/+hv2
+         6OTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ctNRDk9XGc9CHMoQDqvFHi5vxID2gsh5buG4nKb35qU=;
+        b=dGKkjH6lu3hwTN7thG77qhPvau0fFGqI0HBKmi6iGoVUMwZDTI+eaFA8V5mcyfPC7L
+         Ajk6aeIoyGyf8lCT5RByjTNHeSbfjBtQG9fzaQnWupCFHP9w6gP5RBFXMQ6NiUDQcjAc
+         QdvDC2RdayNlw2LxoRmekyokZxGlBHapRxw9ztLYRDrcU2kL5ApY+z7KH6cKEWLfb7UE
+         nYDmvaLzyOLG7rpXjfSaWXcYvjij+1lsBenD1AFL6apP3mgGc4lU9Im8RwQ1Tb2wWOla
+         ThuxGrPTJS9yGVkGbNgvJ0c+W8BNqfMk8kS02Mvhn6nbLOzzU8Qu1UbPApcvtxGEfCao
+         eqPQ==
+X-Gm-Message-State: AOAM532+72XtAG5xuqA9dtkyIWPA/B6rg2pG/eWvXuYVlBZK7Th86yJE
+        XO58pcXjhFzSoqLBpgVYpmrx4feAb5qnjzxCZbJJaQ==
+X-Google-Smtp-Source: ABdhPJyqozVvtlkhNQ2kjPBoNrEpitOUatm0N2iEFAYkKpZxPDAQF/b9Bz5PZ5Dn8DuGzBpGrEQBjOxYYNoQxFqzAmk=
+X-Received: by 2002:a2e:3209:: with SMTP id y9mr16226819ljy.154.1589376341852;
+ Wed, 13 May 2020 06:25:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3124570.1589376319.1@warthog.procyon.org.uk>
-Date:   Wed, 13 May 2020 14:25:19 +0100
-Message-ID: <3124571.1589376319@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <20200513123335.28122-1-vincent.guittot@linaro.org>
+ <20200513124540.GB12425@lorien.usersys.redhat.com> <CAKfTPtBFP5eAV-u02x42U2cQnWA56RP+wbj78rWpzj560OS+-g@mail.gmail.com>
+ <20200513131337.GF12425@lorien.usersys.redhat.com> <CAKfTPtDYmi9wz3r1G8baG2cM3wh6004CDT11HaAu8L7-wWv=Gw@mail.gmail.com>
+ <20200513131808.GG12425@lorien.usersys.redhat.com>
+In-Reply-To: <20200513131808.GG12425@lorien.usersys.redhat.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 13 May 2020 15:25:29 +0200
+Message-ID: <CAKfTPtBpYWDz=ZeKKa1BGOVZ+PqM=kbbgSBQpn7msxMV_5v5uA@mail.gmail.com>
+Subject: Re: [PATCH v2] sched/fair: enqueue_task_fair optimization
+To:     Phil Auld <pauld@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Tao Zhou <ouwen210@hotmail.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christoph Hellwig <hch@lst.de> wrote:
+On Wed, 13 May 2020 at 15:18, Phil Auld <pauld@redhat.com> wrote:
+>
+> On Wed, May 13, 2020 at 03:15:53PM +0200 Vincent Guittot wrote:
+> > On Wed, 13 May 2020 at 15:13, Phil Auld <pauld@redhat.com> wrote:
+> > >
+> > > On Wed, May 13, 2020 at 03:10:28PM +0200 Vincent Guittot wrote:
+> > > > On Wed, 13 May 2020 at 14:45, Phil Auld <pauld@redhat.com> wrote:
+> > > > >
+> > > > > Hi Vincent,
+> > > > >
+> > > > > On Wed, May 13, 2020 at 02:33:35PM +0200 Vincent Guittot wrote:
+> > > > > > enqueue_task_fair jumps to enqueue_throttle label when cfs_rq_of(se) is
+> > > > > > throttled which means that se can't be NULL and we can skip the test.
+> > > > > >
+> > > > >
+> > > > > s/be NULL/be non-NULL/
+> > > > >
+> > > > > I think.
+> > > >
+> > > > This sentence refers to the move of enqueue_throttle and the fact that
+> > > > se can't be null when goto enqueue_throttle and we can jump directly
+> > > > after the if statement, which is now removed in v2 because se is
+> > > > always NULL if we don't use goto enqueue_throttle.
+> > > >
+> > > > I haven't change the commit message for the remove of if statement
+> > > >
+> > >
+> > > Fair enough, it just seems backwards from the intent of the patch now.
+> > >
+> > > There is also an extra }  after the update_overutilized_status.
+> >
+> > don't know what I did but it's crap.  sorry about that
+> >
+>
+> No worries. I didn't see it when I read it either. The compiler told me :)
 
-> Add a helper to directly set the IPV6_RECVERR sockopt from kernel space
-> without going through a fake uaccess.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Yeah, but i thought that i compiled it which is obviously not true
 
-Reviewed-by: David Howells <dhowells@redhat.com>
-
+>
+>
+> > Let me prepare a v3
+> >
+> > >
+> > >
+> > > Cheers,
+> > > Phil
+> > >
+> > >
+> > >
+> > > > >
+> > > > > It's more like if it doesn't jump to the label then se must be NULL for
+> > > > > the loop to terminate.  The final loop is a NOP if se is NULL. The check
+> > > > > wasn't protecting that.
+> > > > >
+> > > > > Otherwise still
+> > > > >
+> > > > > > Reviewed-by: Phil Auld <pauld@redhat.com>
+> > > > >
+> > > > > Cheers,
+> > > > > Phil
+> > > > >
+> > > > >
+> > > > > > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> > > > > > ---
+> > > > > >
+> > > > > > v2 changes:
+> > > > > > - Remove useless if statement
+> > > > > >
+> > > > > >  kernel/sched/fair.c | 39 ++++++++++++++++++++-------------------
+> > > > > >  1 file changed, 20 insertions(+), 19 deletions(-)
+> > > > > >
+> > > > > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > > > > > index a0c690d57430..b51b12d63c39 100644
+> > > > > > --- a/kernel/sched/fair.c
+> > > > > > +++ b/kernel/sched/fair.c
+> > > > > > @@ -5513,28 +5513,29 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+> > > > > >                         list_add_leaf_cfs_rq(cfs_rq);
+> > > > > >       }
+> > > > > >
+> > > > > > -enqueue_throttle:
+> > > > > > -     if (!se) {
+> > > > > > -             add_nr_running(rq, 1);
+> > > > > > -             /*
+> > > > > > -              * Since new tasks are assigned an initial util_avg equal to
+> > > > > > -              * half of the spare capacity of their CPU, tiny tasks have the
+> > > > > > -              * ability to cross the overutilized threshold, which will
+> > > > > > -              * result in the load balancer ruining all the task placement
+> > > > > > -              * done by EAS. As a way to mitigate that effect, do not account
+> > > > > > -              * for the first enqueue operation of new tasks during the
+> > > > > > -              * overutilized flag detection.
+> > > > > > -              *
+> > > > > > -              * A better way of solving this problem would be to wait for
+> > > > > > -              * the PELT signals of tasks to converge before taking them
+> > > > > > -              * into account, but that is not straightforward to implement,
+> > > > > > -              * and the following generally works well enough in practice.
+> > > > > > -              */
+> > > > > > -             if (flags & ENQUEUE_WAKEUP)
+> > > > > > -                     update_overutilized_status(rq);
+> > > > > > +     /* At this point se is NULL and we are at root level*/
+> > > > > > +     add_nr_running(rq, 1);
+> > > > > > +
+> > > > > > +     /*
+> > > > > > +      * Since new tasks are assigned an initial util_avg equal to
+> > > > > > +      * half of the spare capacity of their CPU, tiny tasks have the
+> > > > > > +      * ability to cross the overutilized threshold, which will
+> > > > > > +      * result in the load balancer ruining all the task placement
+> > > > > > +      * done by EAS. As a way to mitigate that effect, do not account
+> > > > > > +      * for the first enqueue operation of new tasks during the
+> > > > > > +      * overutilized flag detection.
+> > > > > > +      *
+> > > > > > +      * A better way of solving this problem would be to wait for
+> > > > > > +      * the PELT signals of tasks to converge before taking them
+> > > > > > +      * into account, but that is not straightforward to implement,
+> > > > > > +      * and the following generally works well enough in practice.
+> > > > > > +      */
+> > > > > > +     if (flags & ENQUEUE_WAKEUP)
+> > > > > > +             update_overutilized_status(rq);
+> > > > > >
+> > > > > >       }
+> > > > > >
+> > > > > > +enqueue_throttle:
+> > > > > >       if (cfs_bandwidth_used()) {
+> > > > > >               /*
+> > > > > >                * When bandwidth control is enabled; the cfs_rq_throttled()
+> > > > > > --
+> > > > > > 2.17.1
+> > > > > >
+> > > > >
+> > > > > --
+> > > > >
+> > > >
+> > >
+> > > --
+> > >
+> >
+>
+> --
+>
