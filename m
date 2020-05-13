@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD124C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C6FC2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0D1E24933
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04A0420769
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363353;
-	bh=itXvDwyjUsWVEwzQ/nVMU6G0336LcaPwTAHQFT1ft0c=;
+	s=default; t=1589363356;
+	bh=1CMv9hFWmICCdrJOEUu6oBzHCYSfNEa4RMkguyk+ykY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kx4iCUcBlqBI1veCIMSAszTqzLzX4R+OPMG9aDoPC0LH94hUyhhtvpSQJnEFe1bBO
-	 swmV2+pIqnbZfT1lMmo88cn700gOwgy1mDuUD6kk4iE0vd0vzibYgvueJbIy+xZdag
-	 gb5DuMwINxYmaQ+DHoyOe35fTRlAK0cpXBJ49Mz8=
+	b=ZVlURa6mJ58RNJnv7yMmsImi0ahsJ5wyjsA6I3Xg19mWoxs3x+NJTfe7hL3D+gt/C
+	 TDoE98YzCk5z1o6vW6AQmA6ug5hw49zKLGCvvbAa9MKu9j0Y2+tyIS3XBV0xinUqSC
+	 GL0DafF5/AC4rKesP6XKUSTFF4OGetJfLaWxOo/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733196AbgEMJtM (ORCPT
+        id S1733203AbgEMJtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:49:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47884 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:49:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732597AbgEMJtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:49:06 -0400
+        id S1733167AbgEMJtI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:49:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62DCB20575;
-        Wed, 13 May 2020 09:49:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2F9A20575;
+        Wed, 13 May 2020 09:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363345;
-        bh=itXvDwyjUsWVEwzQ/nVMU6G0336LcaPwTAHQFT1ft0c=;
+        s=default; t=1589363348;
+        bh=1CMv9hFWmICCdrJOEUu6oBzHCYSfNEa4RMkguyk+ykY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=11sxAr0/jSJGhcDiLHln/0qUbao1NKTG9BiDbymOsFAQAYd2G+ibd5ABlZHPVUXXQ
-         9xvhoul1wM3OUPH8/F22A3PtyiWzO7GSh1rnUlBBx5oQiS7lWtX5MyZlsCq1BtP0oD
-         unECuPeZ+krARpVRZP/I1bi33HaKXuCLvpnXghTk=
+        b=jHNSp2kW1XxrE59WSN+jl/siRlInjgrn8KXgaqDX+0O1HAxRh8wgg0l+PqPAob4UT
+         5XxefDpFyI4Q2FFdlAbAhUsP+pKuLB5RqPvRmSjII+gAi6Im/OQjoCCIw43WnkX/Hu
+         yOYoF9ynwUR2ZHJcstJy+ZB7EIhm1INXat6vKN74=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 35/90] bnxt_en: Fix VLAN acceleration handling in bnxt_fix_features().
-Date:   Wed, 13 May 2020 11:44:31 +0200
-Message-Id: <20200513094412.253086906@linuxfoundation.org>
+        stable@vger.kernel.org, Erez Shitrit <erezsh@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Alex Vesker <valex@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.4 36/90] net/mlx5: DR, On creation set CQs arm_db member to right value
+Date:   Wed, 13 May 2020 11:44:32 +0200
+Message-Id: <20200513094412.377136556@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -59,51 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Erez Shitrit <erezsh@mellanox.com>
 
-[ Upstream commit c72cb303aa6c2ae7e4184f0081c6d11bf03fb96b ]
+[ Upstream commit 8075411d93b6efe143d9f606f6531077795b7fbf ]
 
-The current logic in bnxt_fix_features() will inadvertently turn on both
-CTAG and STAG VLAN offload if the user tries to disable both.  Fix it
-by checking that the user is trying to enable CTAG or STAG before
-enabling both.  The logic is supposed to enable or disable both CTAG and
-STAG together.
+In polling mode, set arm_db member to a value that will avoid CQ
+event recovery by the HW.
+Otherwise we might get event without completion function.
+In addition,empty completion function to was added to protect from
+unexpected events.
 
-Fixes: 5a9f6b238e59 ("bnxt_en: Enable and disable RX CTAG and RX STAG VLAN acceleration together.")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 297cccebdc5a ("net/mlx5: DR, Expose an internal API to issue RDMA operations")
+Signed-off-by: Erez Shitrit <erezsh@mellanox.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Reviewed-by: Alex Vesker <valex@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/steering/dr_send.c |   14 ++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -9755,6 +9755,7 @@ static netdev_features_t bnxt_fix_featur
- 					   netdev_features_t features)
- {
- 	struct bnxt *bp = netdev_priv(dev);
-+	netdev_features_t vlan_features;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_send.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_send.c
+@@ -689,6 +689,12 @@ static void dr_cq_event(struct mlx5_core
+ 	pr_info("CQ event %u on CQ #%u\n", event, mcq->cqn);
+ }
  
- 	if ((features & NETIF_F_NTUPLE) && !bnxt_rfs_capable(bp))
- 		features &= ~NETIF_F_NTUPLE;
-@@ -9771,12 +9772,14 @@ static netdev_features_t bnxt_fix_featur
- 	/* Both CTAG and STAG VLAN accelaration on the RX side have to be
- 	 * turned on or off together.
- 	 */
--	if ((features & (NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_HW_VLAN_STAG_RX)) !=
--	    (NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_HW_VLAN_STAG_RX)) {
-+	vlan_features = features & (NETIF_F_HW_VLAN_CTAG_RX |
-+				    NETIF_F_HW_VLAN_STAG_RX);
-+	if (vlan_features != (NETIF_F_HW_VLAN_CTAG_RX |
-+			      NETIF_F_HW_VLAN_STAG_RX)) {
- 		if (dev->features & NETIF_F_HW_VLAN_CTAG_RX)
- 			features &= ~(NETIF_F_HW_VLAN_CTAG_RX |
- 				      NETIF_F_HW_VLAN_STAG_RX);
--		else
-+		else if (vlan_features)
- 			features |= NETIF_F_HW_VLAN_CTAG_RX |
- 				    NETIF_F_HW_VLAN_STAG_RX;
- 	}
++static void dr_cq_complete(struct mlx5_core_cq *mcq,
++			   struct mlx5_eqe *eqe)
++{
++	pr_err("CQ completion CQ: #%u\n", mcq->cqn);
++}
++
+ static struct mlx5dr_cq *dr_create_cq(struct mlx5_core_dev *mdev,
+ 				      struct mlx5_uars_page *uar,
+ 				      size_t ncqe)
+@@ -750,6 +756,7 @@ static struct mlx5dr_cq *dr_create_cq(st
+ 	mlx5_fill_page_frag_array(&cq->wq_ctrl.buf, pas);
+ 
+ 	cq->mcq.event = dr_cq_event;
++	cq->mcq.comp  = dr_cq_complete;
+ 
+ 	err = mlx5_core_create_cq(mdev, &cq->mcq, in, inlen, out, sizeof(out));
+ 	kvfree(in);
+@@ -761,7 +768,12 @@ static struct mlx5dr_cq *dr_create_cq(st
+ 	cq->mcq.set_ci_db = cq->wq_ctrl.db.db;
+ 	cq->mcq.arm_db = cq->wq_ctrl.db.db + 1;
+ 	*cq->mcq.set_ci_db = 0;
+-	*cq->mcq.arm_db = 0;
++
++	/* set no-zero value, in order to avoid the HW to run db-recovery on
++	 * CQ that used in polling mode.
++	 */
++	*cq->mcq.arm_db = cpu_to_be32(2 << 28);
++
+ 	cq->mcq.vector = 0;
+ 	cq->mcq.irqn = irqn;
+ 	cq->mcq.uar = uar;
 
 
