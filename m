@@ -2,103 +2,239 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D4AC43460
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F30D7C433F2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A8A021852
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:56:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589381766;
-	bh=TmLJzQWM5J8FyJ9QlgN1qYfCl5hvcrcADs5LgKo6/Jw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xDLKHmEcKJT4xgEXB3j/hWXga00q/H7sogQdIcBEwMNMNx4W66wVKWGxZEHUom5if
-	 KCt/qDr5yID4APOqDZO58QarTfq+2bvhrZ7uiIG37Drznv9u+Rk/CsUExfbKrtXEd9
-	 uMA1afVPMdW4LuRgc3THVbBvQULHEboOvgOegKIk=
+	by mail.kernel.org (Postfix) with ESMTP id F01E9221FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:56:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zWu3kFMz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389084AbgEMO4F (ORCPT
+        id S2389096AbgEMO40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 10:56:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48952 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388167AbgEMO4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 10:56:02 -0400
-Received: from localhost (unknown [106.200.233.149])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A79FF21897;
-        Wed, 13 May 2020 14:56:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589381762;
-        bh=TmLJzQWM5J8FyJ9QlgN1qYfCl5hvcrcADs5LgKo6/Jw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TFtbvYQ69SHBfWqu/xVVJ29wQp9SPqb8sfBFiSSlV88txTzMPGp8+AEySmRnErpew
-         Qwbr2HM1l2Wyiw17aBThX2Q2WrNeslml7Yx9L8Gtfnf6XBjRofbaCzfX+uelaL2EMj
-         40Yp5m4i/5C1h/SHS8LjfG7puAhzDJp9J0wf73Oc=
-Date:   Wed, 13 May 2020 20:25:58 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH] dmaengine: qcom: bam_dma: Replace zero-length array with
- flexible-array
-Message-ID: <20200513145558.GK14092@vkoul-mobl>
-References: <20200508210707.GA24136@embeddedor>
+        Wed, 13 May 2020 10:56:26 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40854 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728568AbgEMO40 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 10:56:26 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04DEtnKA048125;
+        Wed, 13 May 2020 09:55:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589381749;
+        bh=0p70bdl/DS8LJV46/WfQvFGJxPDm65T9Js3GVTop9dg=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=zWu3kFMzU/DCSvMnR/s0IFIFNhAMtMgw9sMCpqszjl/l80veVM8pdSI2BsRVDxW3p
+         9oUklYXB7G0nz7t6hJjkPdVVsQoQmor7Kh8z/6SbMP/8rRFdqyW7jDtl2l8Jt9N1ie
+         hT3z1YD+4MkcqqRqKn8doeP0AdWESkd/86B9ng2U=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04DEtnZh116739
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 13 May 2020 09:55:49 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 13
+ May 2020 09:55:48 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 13 May 2020 09:55:48 -0500
+Received: from [10.250.74.234] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04DEtloQ101784;
+        Wed, 13 May 2020 09:55:47 -0500
+Subject: Re: [EXT] Re: [v1,net-next, 1/2] ethtool: add setting frame
+ preemption of traffic classes
+From:   Murali Karicheri <m-karicheri2@ti.com>
+To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Po Liu <po.liu@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "hauke.mehrtens@intel.com" <hauke.mehrtens@intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "saeedm@mellanox.com" <saeedm@mellanox.com>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
+        "jiri@mellanox.com" <jiri@mellanox.com>,
+        "ayal@mellanox.com" <ayal@mellanox.com>,
+        "pablo@netfilter.org" <pablo@netfilter.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     "simon.horman@netronome.com" <simon.horman@netronome.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+References: <20191127094517.6255-1-Po.Liu@nxp.com>
+ <87a75br4ze.fsf@linux.intel.com>
+ <VE1PR04MB64968E2DE71D1BCE48C6E17192EE0@VE1PR04MB6496.eurprd04.prod.outlook.com>
+ <87a74lgnad.fsf@linux.intel.com>
+ <1c06e30e-8999-2c40-e631-1d67b3d9ce39@ti.com>
+Message-ID: <968be6d0-813e-c820-1fec-0ac85c838e7f@ti.com>
+Date:   Wed, 13 May 2020 10:55:47 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508210707.GA24136@embeddedor>
+In-Reply-To: <1c06e30e-8999-2c40-e631-1d67b3d9ce39@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08-05-20, 16:07, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+Hi Vinicius,
 
-Applied, thanks
+On 3/18/20 10:07 AM, Murali Karicheri wrote:
+> Hi Vinicius,
+> 
+> On 03/12/2020 07:34 PM, Vinicius Costa Gomes wrote:
+>> Hi,
+>>
+>> Po Liu <po.liu@nxp.com> writes:
+>>
+>>> Hi Vinicius,
+>>>
+>>>
+>>> Br,
+>>> Po Liu
+>>>
+>>>> -----Original Message-----
+>>>> From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+>>>> Sent: 2020年2月22日 5:44
+>>>> To: Po Liu <po.liu@nxp.com>; davem@davemloft.net;
+>>>> hauke.mehrtens@intel.com; gregkh@linuxfoundation.org; 
+>>>> allison@lohutok.net;
+>>>> tglx@linutronix.de; hkallweit1@gmail.com; saeedm@mellanox.com;
+>>>> andrew@lunn.ch; f.fainelli@gmail.com; alexandru.ardelean@analog.com;
+>>>> jiri@mellanox.com; ayal@mellanox.com; pablo@netfilter.org; linux-
+>>>> kernel@vger.kernel.org; netdev@vger.kernel.org
+>>>> Cc: simon.horman@netronome.com; Claudiu Manoil
+>>>> <claudiu.manoil@nxp.com>; Vladimir Oltean <vladimir.oltean@nxp.com>;
+>>>> Alexandru Marginean <alexandru.marginean@nxp.com>; Xiaoliang Yang
+>>>> <xiaoliang.yang_1@nxp.com>; Roy Zang <roy.zang@nxp.com>; Mingkai Hu
+>>>> <mingkai.hu@nxp.com>; Jerry Huang <jerry.huang@nxp.com>; Leo Li
+>>>> <leoyang.li@nxp.com>; Po Liu <po.liu@nxp.com>
+>>>> Subject: [EXT] Re: [v1,net-next, 1/2] ethtool: add setting frame 
+>>>> preemption of
+>>>> traffic classes
+>>>>
+>>>> Caution: EXT Email
+>>>>
+>>>> Hi,
+>>>>
+>>>> Po Liu <po.liu@nxp.com> writes:
+>>>>
+>>>>> IEEE Std 802.1Qbu standard defined the frame preemption of port
+>>>>> traffic classes. This patch introduce a method to set traffic classes
+>>>>> preemption. Add a parameter 'preemption' in struct
+>>>>> ethtool_link_settings. The value will be translated to a binary, each
+>>>>> bit represent a traffic class. Bit "1" means preemptable traffic
+>>>>> class. Bit "0" means express traffic class.  MSB represent high number
+>>>>> traffic class.
+>>>>>
+>>>>> If hardware support the frame preemption, driver could set the
+>>>>> ethernet device with hw_features and features with NETIF_F_PREEMPTION
+>>>>> when initializing the port driver.
+>>>>>
+>>>>> User can check the feature 'tx-preemption' by command 'ethtool -k
+>>>>> devname'. If hareware set preemption feature. The property would be a
+>>>>> fixed value 'on' if hardware support the frame preemption.
+>>>>> Feature would show a fixed value 'off' if hardware don't support the
+>>>>> frame preemption.
+>>>>>
+>>>>> Command 'ethtool devname' and 'ethtool -s devname preemption N'
+>>>>> would show/set which traffic classes are frame preemptable.
+>>>>>
+>>>>> Port driver would implement the frame preemption in the function
+>>>>> get_link_ksettings() and set_link_ksettings() in the struct 
+>>>>> ethtool_ops.
+>>>>>
+>>>>
+>>>> Any updates on this series? If you think that there's something that 
+>>>> I could help,
+>>>> just tell.
+>>>
+>>> Sorry for the long time not involve the discussion. I am focus on 
+>>> other tsn code for tc flower.
+>>> If you can take more about this preemption serial, that would be good.
+>>>
+>>> I summary some suggestions from Marali Karicheri and Ivan Khornonzhuk 
+>>> and by you and also others:
+>>> - Add config the fragment size, hold advance, release advance and flags;
+>>>      My comments about the fragment size is in the Qbu spec limit the 
+>>> fragment size " the minimum non-final fragment size is 64,
+>>> 128, 192, or 256 octets " this setting would affect the guardband 
+>>> setting for Qbv. But the ethtool setting could not involve this 
+>>> issues but by the taprio side.
+>>> - " Furthermore, this setting could be extend for a serial setting 
+>>> for mac and traffic class."  "Better not to using the traffic class 
+>>> concept."
+>>>     Could adding a serial setting by "ethtool --preemption xxx" or 
+>>> other name. I don' t think it is good to involve in the queue control 
+>>> since queues number may bigger than the TC number.
+>>> - The ethtool is the better choice to configure the preemption
+>>>    I agree.
+>>
+>> Just a quick update. I was able to dedicate some time to this, and have
+>> something aproaching RFC-quality, but it needs more testing.
+>>
+> Great! I have got my frame preemption working on my SoC. Currently I am
+> using some defaults. I test it by using statistics provided by the
+> SoC. I will be able to integrate and test your patch using my internal
+> version and will include it in my patch to upstream once I am ready.
+> 
+Any progress on your side for a patch for the support?
+
+I have posted my EST offload series for AM65x CPSW to netdev list today
+at
+
+https://marc.info/?l=linux-netdev&m=158937640015582&w=2
+https://marc.info/?l=linux-netdev&m=158937639515579&w=2
+https://marc.info/?l=linux-netdev&m=158937638315573&w=2
+
+Next on my list of things to do is the IET FPE support for which I need
+to have ethtool interface to allow configuring the express/preemptible
+queues and feature enable/disable. Currently I am using a ethtool
+priv-flags and some defaults. If you can post a patch, I will be able
+to integrate and test it on AM65x CPSW driver and provide my comments/
+Tested-by:
+
+Regards,
+
+Murali
+
+> Regards,
+> 
+> Murali
+>> So, question, what were you using for testing this? Anything special?
+>>
+>> And btw, thanks for the summary of the discussion.
+>>
+>>>
+>>> Thanks！
+>>>>
+>>>>
+>>>> Cheers,
+>>>> -- 
+>>>> Vinicius
+>>
+>>
+> 
 
 -- 
-~Vinod
+Murali Karicheri
+Texas Instruments
