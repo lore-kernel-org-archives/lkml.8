@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6175FCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBC0CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33D2B20740
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60AF220740
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363547;
-	bh=BzKH8StmHV6/JIwreyqHM9gQEKpaQpdBcq80m+A7K+0=;
+	s=default; t=1589363550;
+	bh=ZuB+gw9ZoEOdoMX/3lgixjJvw6tsb6ZPvbabwUWcTlM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QojHtLWuYyH6286GixBKtaPpMlf0awNQkpcQsetKvjCX4yosRwDEYYMq015AURHbD
-	 JCPwfFe3OD+wygYoGpmkNwYc740QTSavIOPVdhOssMtPRj8cvjHh2iCn0P+71VeNa4
-	 j3VpC7nXkHzmRa2cDl0b979q3lmbIU4YZBDyzdyI=
+	b=B1KKI+hA818kOqRGWOfmwpezdYOgJaz5tPEq2T8Mpu+NRkaNCttNO4M2Lm4kHgwJP
+	 LBRuVhnDEbVXlYWrVus73ozNqDZ+F7CXu3EVUZb+FThSlRiNliAviyKHAjZWZlU5NI
+	 89EKGhBgIROUKWuXfwtzyPDYNz9A6sJAIu4ovYtg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387794AbgEMJw0 (ORCPT
+        id S1732905AbgEMJw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:52:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53678 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:52:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732840AbgEMJwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:52:21 -0400
+        id S1732878AbgEMJwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:52:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6590220740;
-        Wed, 13 May 2020 09:52:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0CF7206D6;
+        Wed, 13 May 2020 09:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363540;
-        bh=BzKH8StmHV6/JIwreyqHM9gQEKpaQpdBcq80m+A7K+0=;
+        s=default; t=1589363543;
+        bh=ZuB+gw9ZoEOdoMX/3lgixjJvw6tsb6ZPvbabwUWcTlM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R25uVRiPLkmvfCsblK+M/7a+Vgn4ZSn+F5HoiQtVGZhi6SkQV0nqar3b3j27lDocS
-         G5R6so3HSjhVUW39HONVYlVhtsWwcjsfZE/5yqTKSQVNYOOt8EexXt/icFYBtu3ZHF
-         W/XAa3Dnv4i+jPKp3vXPJcNwceu07+68HnmOkYWc=
+        b=i7D7sUhpKUUwa2Z4zFhU1Odgdyt6kwxbrgxOA2Ec9V5letwoxcyrsNIj3andppX9K
+         6PU/sO3EtMnjsUCFARUNv2cHC8d+DzM3nbBmU5lV38LqTCqW1+ldqjdACQlg+TroPh
+         5Pu8VXfDea431peFOViBEbXXZ8y7rAsUYOaRD6mk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Nicolas Pitre <nico@fluxnic.net>,
+        syzbot+0bfda3ade1ee9288a1be@syzkaller.appspotmail.com,
+        Sam Ravnborg <sam@ravnborg.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 004/118] drm/amdgpu: drop redundant cg/pg ungate on runpm enter
-Date:   Wed, 13 May 2020 11:43:43 +0200
-Message-Id: <20200513094418.009604063@linuxfoundation.org>
+Subject: [PATCH 5.6 005/118] vt: fix unicode console freeing with a common interface
+Date:   Wed, 13 May 2020 11:43:44 +0200
+Message-Id: <20200513094418.099677638@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -60,40 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Quan <evan.quan@amd.com>
+From: Nicolas Pitre <nico@fluxnic.net>
 
-[ Upstream commit f7b52890daba570bc8162d43c96b5583bbdd4edd ]
+[ Upstream commit 57d38f26d81e4275748b69372f31df545dcd9b71 ]
 
-CG/PG ungate is already performed in ip_suspend_phase1. Otherwise,
-the CG/PG ungate will be performed twice. That will cause gfxoff
-disablement is performed twice also on runpm enter while gfxoff
-enablemnt once on rump exit. That will put gfxoff into disabled
-state.
+By directly using kfree() in different places we risk missing one if
+it is switched to using vfree(), especially if the corresponding
+vmalloc() is hidden away within a common abstraction.
 
-Fixes: b2a7e9735ab286 ("drm/amdgpu: fix the hw hang during perform system reboot and reset")
-Signed-off-by: Evan Quan <evan.quan@amd.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Oh wait, that's exactly what happened here.
+
+So let's fix this by creating a common abstraction for the free case
+as well.
+
+Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
+Reported-by: syzbot+0bfda3ade1ee9288a1be@syzkaller.appspotmail.com
+Fixes: 9a98e7a80f95 ("vt: don't use kmalloc() for the unicode screen buffer")
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://lore.kernel.org/r/nycvar.YSQ.7.76.2005021043110.2671@knanqh.ubzr
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/tty/vt/vt.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index 1ddf2460cf834..5fcbacddb9b0e 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -3325,9 +3325,6 @@ int amdgpu_device_suspend(struct drm_device *dev, bool fbcon)
- 		}
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index cc1a041913654..699d8b56cbe75 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -365,9 +365,14 @@ static struct uni_screen *vc_uniscr_alloc(unsigned int cols, unsigned int rows)
+ 	return uniscr;
+ }
+ 
++static void vc_uniscr_free(struct uni_screen *uniscr)
++{
++	vfree(uniscr);
++}
++
+ static void vc_uniscr_set(struct vc_data *vc, struct uni_screen *new_uniscr)
+ {
+-	vfree(vc->vc_uni_screen);
++	vc_uniscr_free(vc->vc_uni_screen);
+ 	vc->vc_uni_screen = new_uniscr;
+ }
+ 
+@@ -1230,7 +1235,7 @@ static int vc_do_resize(struct tty_struct *tty, struct vc_data *vc,
+ 	err = resize_screen(vc, new_cols, new_rows, user);
+ 	if (err) {
+ 		kfree(newscreen);
+-		kfree(new_uniscr);
++		vc_uniscr_free(new_uniscr);
+ 		return err;
  	}
  
--	amdgpu_device_set_pg_state(adev, AMD_PG_STATE_UNGATE);
--	amdgpu_device_set_cg_state(adev, AMD_CG_STATE_UNGATE);
--
- 	amdgpu_ras_suspend(adev);
- 
- 	r = amdgpu_device_ip_suspend_phase1(adev);
 -- 
 2.20.1
 
