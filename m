@@ -2,176 +2,127 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2594ECA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75326CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C65CA204EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:16:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ZCqbDqjw"
+	by mail.kernel.org (Postfix) with ESMTP id 3A1A320671
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:16:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388848AbgEMOQK (ORCPT
+        id S2388890AbgEMOQU convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 10:16:10 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:38722 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731192AbgEMOQJ (ORCPT
+        Wed, 13 May 2020 10:16:20 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15442 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731192AbgEMOQU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 10:16:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589379368; x=1620915368;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=UzkFgk4KxPXdtpumytvjaT9DH3n8QRgbvV1ZsZ7ca9s=;
-  b=ZCqbDqjwfFrgaa0bDcK+j5Voj+1Cqbe9ukQQwmgHOXq/9TgJkgKBdcwD
-   qrnUZA8eQHNmbDzi3xFlQROaubIrNeCjsiYT3/vQmjoiJ/PtKAXhJuDRU
-   6DIYkTO3qxPpgte3AZ8ncmRKC+ZVZBxzmtG1PPzClHWuNcEC/kIjy8ssB
-   Ae6Ao1LKkbpq4a00CXP91T4oCQmf1pdCU9ATVPcJlPGGqeMGDrGN9uXda
-   99vPx/Y2XSHw3ATFME8s4dDzjDrwJsuf6MrvkBscSfiiWprGBOcoNZbNn
-   G9P0BuD8ZqCeov6HdsLa1kBKvT8JJc8XQLo6ApEMVSkgF24E4ouwZ2kx0
-   g==;
-IronPort-SDR: BAhFBmj8YgfLl9K0CKFV6Il6Sh3mNN5rA25bxiNtKTAFHTSbtw1UbUhFshasWmVsDmrUmh34OF
- 6V6JPqzxQ5e8fH9gJdbnXvkZS6ueKYbciyV84JBVSLybdKYySn2h39eApCA4yGMqbwSyCzbvRi
- 1WXiyYmrxUPcL+c0JEmHlzOMbdn7wFxc14zIurUdvC/9by6sHYiDbdrj8O1lTqx48LSTISNCGK
- 0mHXOw7MbZRfa8sRz171/iir+iS1yWQeYULipTTL777gBlA/OFTceROHJB1SQfarxYRdJrax7o
- v7g=
-X-IronPort-AV: E=Sophos;i="5.73,388,1583218800"; 
-   d="scan'208";a="76511186"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 May 2020 07:16:08 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 13 May 2020 07:16:08 -0700
-Received: from [10.171.246.28] (10.10.115.15) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Wed, 13 May 2020 07:16:05 -0700
-Subject: Re: [PATCH v4 3/5] net: macb: fix macb_get/set_wol() when moving to
- phylink
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-CC:     <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
-        "Claudiu Beznea" <claudiu.beznea@microchip.com>,
-        <harini.katakam@xilinx.com>,
-        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
-        <f.fainelli@gmail.com>, <antoine.tenart@bootlin.com>,
-        <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-References: <cover.1588763703.git.nicolas.ferre@microchip.com>
- <4aeebe901fde6db70a5ca12b10e793dd2ee6ce60.1588763703.git.nicolas.ferre@microchip.com>
- <20200513130536.GI1551@shell.armlinux.org.uk>
-From:   Nicolas Ferre <nicolas.ferre@microchip.com>
-Organization: microchip
-Message-ID: <c0bc2167-e49e-1026-94e3-cb5931755389@microchip.com>
-Date:   Wed, 13 May 2020 16:16:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 13 May 2020 10:16:20 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DEAJGO024747;
+        Wed, 13 May 2020 10:16:15 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3101m7cs0g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 May 2020 10:16:15 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04DEANsv025168;
+        Wed, 13 May 2020 10:16:15 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3101m7cryq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 May 2020 10:16:14 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04DEFYdR019846;
+        Wed, 13 May 2020 14:16:13 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma03fra.de.ibm.com with ESMTP id 3100ub0pnv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 May 2020 14:16:13 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04DEGAGW53019102
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 May 2020 14:16:10 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 35D37A4067;
+        Wed, 13 May 2020 14:16:10 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B60D3A4060;
+        Wed, 13 May 2020 14:16:09 +0000 (GMT)
+Received: from localhost (unknown [9.85.73.183])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 13 May 2020 14:16:09 +0000 (GMT)
+Date:   Wed, 13 May 2020 19:46:06 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Subject: Re: [PATCH] perf powerpc: Don't ignore sym-handling.c file
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Sandipan Das <sandipan@linux.ibm.com>
+Cc:     jolsa@kernel.org, leo.yan@linaro.org, linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20200509112113.174745-1-ravi.bangoria@linux.ibm.com>
+        <88066ce0-f586-b88d-75b5-2706684818d7@linux.ibm.com>
+        <20200512132737.GH28888@kernel.org>
+In-Reply-To: <20200512132737.GH28888@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200513130536.GI1551@shell.armlinux.org.uk>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+User-Agent: astroid/v0.15-13-gb675b421
+ (https://github.com/astroidmail/astroid)
+Message-Id: <1589379305.x6l3ijih7z.naveen@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-13_06:2020-05-13,2020-05-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 suspectscore=0 spamscore=0 cotscore=-2147483648
+ priorityscore=1501 clxscore=1011 impostorscore=0 bulkscore=0 phishscore=0
+ mlxscore=0 mlxlogscore=999 adultscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005130121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Russell,
-
-Thanks for the feedback.
-
-On 13/05/2020 at 15:05, Russell King - ARM Linux admin wrote:
-> On Wed, May 06, 2020 at 01:37:39PM +0200, nicolas.ferre@microchip.com wrote:
->> From: Nicolas Ferre <nicolas.ferre@microchip.com>
->>
->> Keep previous function goals and integrate phylink actions to them.
->>
->> phylink_ethtool_get_wol() is not enough to figure out if Ethernet driver
->> supports Wake-on-Lan.
->> Initialization of "supported" and "wolopts" members is done in phylink
->> function, no need to keep them in calling function.
->>
->> phylink_ethtool_set_wol() return value is not enough to determine
->> if WoL is enabled for the calling Ethernet driver. Call it first
->> but don't rely on its return value as most of simple PHY drivers
->> don't implement a set_wol() function.
->>
->> Fixes: 7897b071ac3b ("net: macb: convert to phylink")
->> Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
->> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
->> Cc: Claudiu Beznea <claudiu.beznea@microchip.com>
->> Cc: Harini Katakam <harini.katakam@xilinx.com>
->> Cc: Antoine Tenart <antoine.tenart@bootlin.com>
->> ---
->>   drivers/net/ethernet/cadence/macb_main.c | 18 ++++++++++--------
->>   1 file changed, 10 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
->> index 53e81ab048ae..24c044dc7fa0 100644
->> --- a/drivers/net/ethernet/cadence/macb_main.c
->> +++ b/drivers/net/ethernet/cadence/macb_main.c
->> @@ -2817,21 +2817,23 @@ static void macb_get_wol(struct net_device *netdev, struct ethtool_wolinfo *wol)
->>   {
->>        struct macb *bp = netdev_priv(netdev);
->>
->> -     wol->supported = 0;
->> -     wol->wolopts = 0;
->> -
->> -     if (bp->wol & MACB_WOL_HAS_MAGIC_PACKET)
->> +     if (bp->wol & MACB_WOL_HAS_MAGIC_PACKET) {
->>                phylink_ethtool_get_wol(bp->phylink, wol);
->> +             wol->supported |= WAKE_MAGIC;
->> +
->> +             if (bp->wol & MACB_WOL_ENABLED)
->> +                     wol->wolopts |= WAKE_MAGIC;
->> +     }
->>   }
->>
->>   static int macb_set_wol(struct net_device *netdev, struct ethtool_wolinfo *wol)
->>   {
->>        struct macb *bp = netdev_priv(netdev);
->> -     int ret;
->>
->> -     ret = phylink_ethtool_set_wol(bp->phylink, wol);
->> -     if (!ret)
->> -             return 0;
->> +     /* Pass the order to phylink layer.
->> +      * Don't test return value as set_wol() is often not supported.
->> +      */
->> +     phylink_ethtool_set_wol(bp->phylink, wol);
+Arnaldo Carvalho de Melo wrote:
+> Em Mon, May 11, 2020 at 11:45:09PM +0530, Sandipan Das escreveu:
+>> 
+>> On 09/05/20 4:51 pm, Ravi Bangoria wrote:
+>> > Commit 7eec00a74720 ("perf symbols: Consolidate symbol fixup issue")
+>> > removed powerpc specific sym-handling.c file from Build. This wasn't
+>> > caught by build CI because all functions in this file are declared
+>> > as __weak in common code. Fix it.
+>> > 
+>> > Fixes: 7eec00a74720 ("perf symbols: Consolidate symbol fixup issue")
+>> > Reported-by: Sandipan Das <sandipan@linux.ibm.com>
+>> > Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+>> > ---
+>> >  tools/perf/arch/powerpc/util/Build | 1 +
+>> >  1 file changed, 1 insertion(+)
+>> > 
+>> > diff --git a/tools/perf/arch/powerpc/util/Build b/tools/perf/arch/powerpc/util/Build
+>> > index e5c9504f8586..e86e210bf514 100644
+>> > --- a/tools/perf/arch/powerpc/util/Build
+>> > +++ b/tools/perf/arch/powerpc/util/Build
+>> > @@ -2,6 +2,7 @@ perf-y += header.o
+>> >  perf-y += kvm-stat.o
+>> >  perf-y += perf_regs.o
+>> >  perf-y += mem-events.o
+>> > +perf-y += sym-handling.o
+>> >  
+>> >  perf-$(CONFIG_DWARF) += dwarf-regs.o
+>> >  perf-$(CONFIG_DWARF) += skip-callchain-idx.o
+>> > 
+>> 
+>> Thanks for fixing this!
+>> 
+>> Acked-by: Sandipan Das <sandipan@linux.ibm.com>
 > 
-> If this returns an error, does that mean WOL works or does it not?
+> Leo, Naveen, can you comment on this?
 
-In my use case (simple phy: "Micrel KSZ8081"), if I have the error 
-"-EOPNOTSUPP", it simply means that this phy driver doesn't have the 
-set_wol() function. But on the MAC side, I can perfectly wake-up on WoL 
-event as the phy acts as a pass-through.
+Shoot -- this is a bad miss, I should have caught it. FWIW:
+Reviewed-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
 
-> Note that if set_wol() is not supported, this will return -EOPNOTSUPP.
-> What about other errors?
-
-True, I don't manage them. But for now this patch is a fix that only 
-reverts to previous behavior. In other terms, it only fixes the regression.
-
-But can I make the difference, and how, between?
-1/ the phy doesn't support WoL and could prevent the WoL to happen on 
-the MAC
-2/ the phy doesn't implement (yet) the set_wol() function, if MAC can 
-manage, it's fine
-
-
-> If you want to just ignore the case where it's not supported, then
-> this looks like a sledge hammer to crack a nut.
-
-Do you suggest that I just don't call phylink_ethtool_set_wol() at all?
-
-But what if the underlying phy does support WoL?
-
-Best regards,
--- 
-Nicolas Ferre
+Thanks,
+Naveen
