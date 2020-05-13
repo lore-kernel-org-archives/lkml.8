@@ -2,71 +2,112 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D7A9CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7143ACA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6452F206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D82320575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:04:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589364293;
+	bh=BkUzNAvRjDhZ5sh9KsFgyFVKv9jNomu1O2R+MD3pou8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LDn/I+mbhgDtFHMGhN9zEOTU9EIbXAlDcC6ou/IeRjRisAEQYTUq9sC99Od/1n8JT
+	 +5ijs+cNK+lhluWhSldXO24KRnqyhM1lvLhGm4xTZXnSUfGz/Co5etd5NfdyVhpcUv
+	 tkV8/JTiZcnSDARgbLjUfT75TGMJonn64KLuKu+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388705AbgEMKEn (ORCPT
+        id S2388711AbgEMKEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:04:43 -0400
-Received: from cmccmta3.chinamobile.com ([221.176.66.81]:10925 "EHLO
-        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732876AbgEMJrh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:47:37 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.15]) by rmmx-syy-dmz-app09-12009 (RichMail) with SMTP id 2ee95ebbc226b8f-ccef9; Wed, 13 May 2020 17:47:19 +0800 (CST)
-X-RM-TRANSID: 2ee95ebbc226b8f-ccef9
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from [172.20.144.88] (unknown[112.25.154.146])
-        by rmsmtp-syy-appsvr08-12008 (RichMail) with SMTP id 2ee85ebbc22539f-3d20b;
-        Wed, 13 May 2020 17:47:18 +0800 (CST)
-X-RM-TRANSID: 2ee85ebbc22539f-3d20b
-Subject: Re: [PATCH] net/mlx5e: Use IS_ERR() to check and simplify code
-To:     David Miller <davem@davemloft.net>
-Cc:     saeedm@mellanox.com, leon@kernel.org, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200507115010.10380-1-tangbin@cmss.chinamobile.com>
- <20200507.131834.1517984934609648952.davem@davemloft.net>
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-Message-ID: <febc1254-ad7f-f564-6607-9ac89f1fcf40@cmss.chinamobile.com>
-Date:   Wed, 13 May 2020 17:48:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 13 May 2020 06:04:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39914 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732876AbgEMKEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 06:04:49 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E505A206B8;
+        Wed, 13 May 2020 10:04:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589364288;
+        bh=BkUzNAvRjDhZ5sh9KsFgyFVKv9jNomu1O2R+MD3pou8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PV5yqOxp7v0teWZ5crR2ehluwOXrr3DcmlDcWZhM/f7bVtRBh3J3jGfx5jnfBhP2B
+         176rRIBdxukTGVFgS0qqR0iPcOSHajdIJXAg4RNUMFJJLU3l1lzt9L6CKaKl6WEa5S
+         EoNHAQIZWgoUsUYUmjrmADoa3W7ZzdcmSboXjA8g=
+Date:   Wed, 13 May 2020 12:04:46 +0200
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     "Ravich, Leonid" <Leonid.Ravich@dell.com>
+Cc:     "Idgar, Or" <Or.Idgar@dell.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: CMA enhancement - non-default areas in x86
+Message-ID: <20200513100446.GB868852@kroah.com>
+References: <CH2PR19MB3767236EDC9BE964FC3AB91BFEBF0@CH2PR19MB3767.namprd19.prod.outlook.com>
+ <20200513064755.GA763968@kroah.com>
+ <CH2PR19MB376794E120B9B02856DC87C3FEBF0@CH2PR19MB3767.namprd19.prod.outlook.com>
+ <20200513071413.GB766804@kroah.com>
+ <DM6PR19MB26827EFC4DDC6CB9DD5C52D098BF0@DM6PR19MB2682.namprd19.prod.outlook.com>
+ <20200513083343.GA772573@kroah.com>
+ <DM6PR19MB268231FBFEA47D7C4CEAF29098BF0@DM6PR19MB2682.namprd19.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200507.131834.1517984934609648952.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM6PR19MB268231FBFEA47D7C4CEAF29098BF0@DM6PR19MB2682.namprd19.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David:
+On Wed, May 13, 2020 at 09:43:45AM +0000, Ravich, Leonid wrote:
+> > On Wed, May 13, 2020 at 08:29:16AM +0000, Ravich, Leonid wrote:
+> > > PCIe NTB
+> > > Documentation/driver-api/ntb.rst
+> > 
+> > > 1) Basically PCI bridge between to root complex / PCI switches
+> > > 2) using out of OS memory is one solution but then this memory is
+> > > Limited for usage by other stack, ex: get_user_pages on this memory
+> > > will fail, Therefore attempting to use it for block layer with (o_direct) will
+> > fail.
+> > >
+> > > Acutely any generic stack which attempts to "pin" this memory will fail.
+> > 
+> > So why isn't the BIOS/UEFI properly reserving this from the general operating
+> > system's pages so that the driver knows to use them instead?
+> > 
+> > Is UEFI wrong here about these being valid memory ranges for general use?
+> > If so, why not fix that?  If not, how in the world is the OS supposed to know
+> > these memory ranges are _not_ for general use?  I feel like there is
+> > something missing here...
+> >
+> Maybe I am miss understanding something here , but if BIOS/UEFI will reserve this pages 
+> They will be "out of kernel" which will work for propriety driver but this memory will not 
+> be useable for generic driver which will attempt to pin this memory with get_user_pages() .
+> so we can go and try to fix that  (not sure this is the right way) .
 
-On 2020/5/8 4:18, David Miller wrote:
-> From: Tang Bin <tangbin@cmss.chinamobile.com>
-> Date: Thu,  7 May 2020 19:50:10 +0800
->
->> Use IS_ERR() and PTR_ERR() instead of PTR_ZRR_OR_ZERO()
->> to simplify code, avoid redundant judgements.
->>
->> Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
->> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-> Saeed, please pick this up.
+What do you mean by "propriety" driver vs. "generic" driver?
 
-Does this mean the patch has been received and I just have to wait?
+Shouldn't there be some "generic" way that UEFI tells any driver where
+these memory locations are that can not be used as general memory?  If
+not, try fixing up UEFI for that.
 
-Thanks,
+> another option here is to use some kernel infrastructure  which  from one side reserve the memory from general use
+> on the other hand kernel will be aware of this pages so get_user_pages()  will work on this memory .
+> 
+> from what we saw CMA infrastructure can support  such requirements.
 
-Tang Bin
+CMA needs to be told where to reserve the memory at boot time.  If you
+want to use that, great, but something has to tell it, so perhaps just
+get that info from UEFI as that is the "equilivant" to a device tree,
+right?
 
+Try it all out and see, all of this is pointless without real patches,
+which is why we almost never have these kinds of discussions without
+working code.
 
+thanks,
 
+greg k-h
