@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DABC2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 05:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45051C2D0FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 05:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC6920659
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 05:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2411A20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 05:43:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbgEMFnf (ORCPT
+        id S1729256AbgEMFnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 01:43:35 -0400
-Received: from mga17.intel.com ([192.55.52.151]:48154 "EHLO mga17.intel.com"
+        Wed, 13 May 2020 01:43:42 -0400
+Received: from mga01.intel.com ([192.55.52.88]:28729 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728784AbgEMFn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 01:43:29 -0400
-IronPort-SDR: a/xDlrz1Eka5xdLuonVeLLiMYVEoLpXO6SLZGFmurMX+AuLbqFGbjfGejYQ6RQIp7jmKPl4E0S
- zjCSWKjxu3cg==
+        id S1729161AbgEMFnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 01:43:35 -0400
+IronPort-SDR: 0NDnqg+bzE/iMMLaRXyDn2viLqZy08dOX04dgZ1lMOkIAWYwzBWybg/2uNQ9J6u1kzKtaKB5Rx
+ a3ZbKtzyWy4g==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 22:43:29 -0700
-IronPort-SDR: w1DYE8OUIPfH7tS3pzTdHdDDocTZdB/eL7KMVsCO7j50Kc/lYK1D5/BTNEtKZcUZ+9sHzFEqGc
- Pux7gbFtsTOg==
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 22:43:34 -0700
+IronPort-SDR: /7J2wgvlbA4JuFwXtFDpWIH4fynSgaRQnUJ8n65Npv3+9AnFcDm6osBNahWG9MM8WdhtUkcd/U
+ SXsjxbLwd9EA==
 X-IronPort-AV: E=Sophos;i="5.73,386,1583222400"; 
-   d="scan'208";a="464010649"
+   d="scan'208";a="341142971"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 22:43:29 -0700
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 22:43:33 -0700
 From:   ira.weiny@intel.com
 To:     linux-ext4@vger.kernel.org,
         Andreas Dilger <adilger.kernel@dilger.ca>,
@@ -41,9 +41,9 @@ Cc:     Ira Weiny <ira.weiny@intel.com>, Al Viro <viro@zeniv.linux.org.uk>,
         Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
         "Darrick J. Wong" <darrick.wong@oracle.com>,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/9] fs/ext4: Disallow verity if inode is DAX
-Date:   Tue, 12 May 2020 22:43:17 -0700
-Message-Id: <20200513054324.2138483-3-ira.weiny@intel.com>
+Subject: [PATCH 9/9] Documentation/dax: Update DAX enablement for ext4
+Date:   Tue, 12 May 2020 22:43:24 -0700
+Message-Id: <20200513054324.2138483-10-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200513054324.2138483-1-ira.weiny@intel.com>
 References: <20200513054324.2138483-1-ira.weiny@intel.com>
@@ -56,55 +56,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-Verity and DAX are incompatible.  Changing the DAX mode due to a verity
-flag change is wrong without a corresponding address_space_operations
-update.
-
-Make the 2 options mutually exclusive by returning an error if DAX was
-set first.
-
-(Setting DAX is already disabled if Verity is set first.)
+Update the document to reflect ext4 and xfs now behave the same.
 
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
 ---
-Changes:
-	remove WARN_ON_ONCE
-	Add documentation for DAX/Verity exclusivity
+Changes from RFC:
+	Update with ext2 text...
 ---
- Documentation/filesystems/ext4/verity.rst | 7 +++++++
- fs/ext4/verity.c                          | 3 +++
- 2 files changed, 10 insertions(+)
+ Documentation/filesystems/dax.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/filesystems/ext4/verity.rst b/Documentation/filesystems/ext4/verity.rst
-index 3e4c0ee0e068..51ab1aa17e59 100644
---- a/Documentation/filesystems/ext4/verity.rst
-+++ b/Documentation/filesystems/ext4/verity.rst
-@@ -39,3 +39,10 @@ is encrypted as well as the data itself.
+diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.txt
+index 735fb4b54117..265c4f808dbf 100644
+--- a/Documentation/filesystems/dax.txt
++++ b/Documentation/filesystems/dax.txt
+@@ -25,7 +25,7 @@ size when creating the filesystem.
+ Currently 3 filesystems support DAX: ext2, ext4 and xfs.  Enabling DAX on them
+ is different.
  
- Verity files cannot have blocks allocated past the end of the verity
- metadata.
-+
-+Verity and DAX
-+--------------
-+
-+Verity and DAX are not compatible and attempts to set both of these flags on a
-+file will fail.
-+
-diff --git a/fs/ext4/verity.c b/fs/ext4/verity.c
-index dc5ec724d889..f05a09fb2ae4 100644
---- a/fs/ext4/verity.c
-+++ b/fs/ext4/verity.c
-@@ -113,6 +113,9 @@ static int ext4_begin_enable_verity(struct file *filp)
- 	handle_t *handle;
- 	int err;
+-Enabling DAX on ext4 and ext2
++Enabling DAX on ext2
+ -----------------------------
  
-+	if (IS_DAX(inode))
-+		return -EINVAL;
-+
- 	if (ext4_verity_in_progress(inode))
- 		return -EBUSY;
+ When mounting the filesystem, use the "-o dax" option on the command line or
+@@ -33,8 +33,8 @@ add 'dax' to the options in /etc/fstab.  This works to enable DAX on all files
+ within the filesystem.  It is equivalent to the '-o dax=always' behavior below.
  
+ 
+-Enabling DAX on xfs
+--------------------
++Enabling DAX on xfs and ext4
++----------------------------
+ 
+ Summary
+ -------
 -- 
 2.25.1
 
