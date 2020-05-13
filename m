@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E000C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 861ECCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 336BA205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D4CF205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:57:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363819;
-	bh=SphKFXtyq2bYK1PdVCX7qx6+wpQEnI7wpi1YanHsKVE=;
+	s=default; t=1589363828;
+	bh=KdalOttMtsBE8uYrABJNSSiaNAf56Ov/U4l6ehMvrgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r5NgDjt6XN31LXTtwgyd/9UZKL/O65GIXw58+9BSw4RNiG4KnIg3kv1+ca2y/4wLR
-	 AYpM8V/MjgGR3qm41FK19MKM7ql6mOQPoJHCydcnA7cK0lyl+YTzPrVqpDJw5ltOna
-	 Q+YQgYLrbJF6y0P/gr5gQyvXf0zZYlUSmq7Rlp7M=
+	b=d1MH8qI3ePyOsnC7tNrZTNC7fowgZE/Y+XM9h8hpr5kdS3luK6UlJHZIKTXs3/tRc
+	 1Dqci4orP8kH1GFkv5yPjXyChwXWsXXWxKtCtm5XL0sEkLMeJO8kPpb2GWkACmBWoa
+	 FzT37ShnaJ+48XGCLkS/K0dhihwTlPaMMSdoqj2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388344AbgEMJz4 (ORCPT
+        id S2388457AbgEMJ5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:55:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59322 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:57:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388318AbgEMJzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:55:54 -0400
+        id S2388289AbgEMJzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:55:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DF4120575;
-        Wed, 13 May 2020 09:55:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15321206D6;
+        Wed, 13 May 2020 09:55:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363753;
-        bh=SphKFXtyq2bYK1PdVCX7qx6+wpQEnI7wpi1YanHsKVE=;
+        s=default; t=1589363741;
+        bh=KdalOttMtsBE8uYrABJNSSiaNAf56Ov/U4l6ehMvrgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n4OAPbPfJ6b+yIKuH8Hyljid7yQXIJLknW2yFe9Fz+B+hvYuqBpl2BRfVincHUn7q
-         0g5pBCLukz5sQQhE5upseVk6z/eQ6ObZbGx42RA19jY0+W8cbGetJCpdX+YYYGT1DV
-         +9h3Btq5NAh09J8d26yLPp6JpjTRxQYDfwXHOV7A=
+        b=izpNnQu4m3wxKgSBF3FZJ4X2IIcDD4TzkrJjqI6kJxq5pBSsv+Hmada9bdtrxBC0T
+         dYT85xkyqhv5O3EOb8jgIrKttlrXxr+GTwdT+iTm8E0Un3vpjYCmkXLdHZikrI9Ydp
+         RKBNKbKHcrKMvoqJbKo2ph43QjkD+53k+XD4IH28=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Andr=C3=A9=20Przywara?= <andre.przywara@arm.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 5.6 073/118] KVM: arm: vgic: Fix limit condition when writing to GICD_I[CS]ACTIVER
-Date:   Wed, 13 May 2020 11:44:52 +0200
-Message-Id: <20200513094424.094701745@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Graf <graf@amazon.com>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.6 105/118] KVM: x86: Fixes posted interrupt check for IRQs delivery modes
+Date:   Wed, 13 May 2020 11:45:24 +0200
+Message-Id: <20200513094426.736622542@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -60,46 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 
-commit 1c32ca5dc6d00012f0c964e5fdd7042fcc71efb1 upstream.
+commit 637543a8d61c6afe4e9be64bfb43c78701a83375 upstream.
 
-When deciding whether a guest has to be stopped we check whether this
-is a private interrupt or not. Unfortunately, there's an off-by-one bug
-here, and we fail to recognize a whole range of interrupts as being
-global (GICv2 SPIs 32-63).
+Current logic incorrectly uses the enum ioapic_irq_destination_types
+to check the posted interrupt destination types. However, the value was
+set using APIC_DM_XXX macros, which are left-shifted by 8 bits.
 
-Fix the condition from > to be >=.
+Fixes by using the APIC_DM_FIXED and APIC_DM_LOWEST instead.
 
-Cc: stable@vger.kernel.org
-Fixes: abd7229626b93 ("KVM: arm/arm64: Simplify active_change_prepare and plug race")
-Reported-by: André Przywara <andre.przywara@arm.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Fixes: (fdcf75621375 'KVM: x86: Disable posted interrupts for non-standard IRQs delivery modes')
+Cc: Alexander Graf <graf@amazon.com>
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Message-Id: <1586239989-58305-1-git-send-email-suravee.suthikulpanit@amd.com>
+Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+Tested-by: Maxim Levitsky <mlevitsk@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- virt/kvm/arm/vgic/vgic-mmio.c |    4 ++--
+ arch/x86/include/asm/kvm_host.h |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/virt/kvm/arm/vgic/vgic-mmio.c
-+++ b/virt/kvm/arm/vgic/vgic-mmio.c
-@@ -368,7 +368,7 @@ static void vgic_mmio_change_active(stru
- static void vgic_change_active_prepare(struct kvm_vcpu *vcpu, u32 intid)
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1664,8 +1664,8 @@ void kvm_set_msi_irq(struct kvm *kvm, st
+ static inline bool kvm_irq_is_postable(struct kvm_lapic_irq *irq)
  {
- 	if (vcpu->kvm->arch.vgic.vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3 ||
--	    intid > VGIC_NR_PRIVATE_IRQS)
-+	    intid >= VGIC_NR_PRIVATE_IRQS)
- 		kvm_arm_halt_guest(vcpu->kvm);
+ 	/* We can only post Fixed and LowPrio IRQs */
+-	return (irq->delivery_mode == dest_Fixed ||
+-		irq->delivery_mode == dest_LowestPrio);
++	return (irq->delivery_mode == APIC_DM_FIXED ||
++		irq->delivery_mode == APIC_DM_LOWEST);
  }
  
-@@ -376,7 +376,7 @@ static void vgic_change_active_prepare(s
- static void vgic_change_active_finish(struct kvm_vcpu *vcpu, u32 intid)
- {
- 	if (vcpu->kvm->arch.vgic.vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3 ||
--	    intid > VGIC_NR_PRIVATE_IRQS)
-+	    intid >= VGIC_NR_PRIVATE_IRQS)
- 		kvm_arm_resume_guest(vcpu->kvm);
- }
- 
+ static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu)
 
 
