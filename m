@@ -2,51 +2,51 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C69CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C26CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59D75206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A226C206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364076;
-	bh=iiOvWsJz9xiC3AmULUmzoArSo4nHTVHWNQqV589ZIEI=;
+	s=default; t=1589364084;
+	bh=Ez+HzjOW/kVjeb7BJUsCWE4kuKqi8dg53pjN7LeiX/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NoEHvDRKfFIhv3B6pZT7UwwRwMrrasDQTiIf7Imt/v7ztHwUJPLx6gCOTG5uEXICa
-	 DL4tKn4whw8IpCVtKPMPptWDo6LJvqTCNsg0m+V8mRKljftUbhran49Xn2V9xtEjAZ
-	 oforcJAwxRhL90f/DWl4FSrm3N1OLOm38SRmNceU=
+	b=epRehKS5iSMD/keN2ZHGfi6XhmHPGV44uMTJOGEGOxGAKzuJzEda0DBSCBcrovWvY
+	 4DIrg7N6bpZ8vg+YR3PVSZLk4m41BcKSY9loIpyWwP/rbxiTAy0yhJVWEbXULo0H1f
+	 1AafC/2gCm+ZeaNR7Dt9BhvBHXK52NHQmFzSPSfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388608AbgEMKBP (ORCPT
+        id S2388368AbgEMKBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:01:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51822 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 06:01:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387624AbgEMJvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:51:15 -0400
+        id S1733014AbgEMJvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:51:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A5EA20740;
-        Wed, 13 May 2020 09:51:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93E8620753;
+        Wed, 13 May 2020 09:51:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363474;
-        bh=iiOvWsJz9xiC3AmULUmzoArSo4nHTVHWNQqV589ZIEI=;
+        s=default; t=1589363465;
+        bh=Ez+HzjOW/kVjeb7BJUsCWE4kuKqi8dg53pjN7LeiX/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sS5etvhv3B8NJ4LhfMxrvmCt6c8Idoak1L+tdwwIoqZO8FBS5jOmb/wke2cGmh3vJ
-         JrdOk9mYwm4lFOaPVHkBe2MCnc7+NirmDadwMYp5vGsleB57VJUbEBcTRV6czdMXZT
-         RiK7Os2myGTx5268N7gWS+vspYct/NpYhq6cJkfI=
+        b=bvVwdafoxzMcQJD2iTm1TXrrwUFohLi1rDiGBM+SQM11uA1yMg98Rf+zr2uxJTQh+
+         xHn29FjTv/x2eZzqvQDtUpkU6sVSuETmdHYx6B/Hf8quMYcqp8Q1Q7THP355FtsU3L
+         0NEZANVujUMoz8tqd60Zhi/1J0ummE0OevtP25ZM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 90/90] fanotify: merge duplicate events on parent and child
-Date:   Wed, 13 May 2020 11:45:26 +0200
-Message-Id: <20200513094418.515684247@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        =?UTF-8?q?Julian=20Gro=C3=9F?= <julian.g@posteo.de>
+Subject: [PATCH 5.4 46/90] USB: uas: add quirk for LaCie 2Big Quadra
+Date:   Wed, 13 May 2020 11:44:42 +0200
+Message-Id: <20200513094413.692137944@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -59,55 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Goldstein <amir73il@gmail.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit f367a62a7cad2447d835a9f14fc63997a9137246 ]
+commit 9f04db234af691007bb785342a06abab5fb34474 upstream.
 
-With inotify, when a watch is set on a directory and on its child, an
-event on the child is reported twice, once with wd of the parent watch
-and once with wd of the child watch without the filename.
+This device needs US_FL_NO_REPORT_OPCODES to avoid going
+through prolonged error handling on enumeration.
 
-With fanotify, when a watch is set on a directory and on its child, an
-event on the child is reported twice, but it has the exact same
-information - either an open file descriptor of the child or an encoded
-fid of the child.
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-by: Julian Groß <julian.g@posteo.de>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200429155218.7308-1-oneukum@suse.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-The reason that the two identical events are not merged is because the
-object id used for merging events in the queue is the child inode in one
-event and parent inode in the other.
-
-For events with path or dentry data, use the victim inode instead of the
-watched inode as the object id for event merging, so that the event
-reported on parent will be merged with the event reported on the child.
-
-Link: https://lore.kernel.org/r/20200319151022.31456-9-amir73il@gmail.com
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/notify/fanotify/fanotify.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/usb/storage/unusual_uas.h |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.c
-index 14d0ac4664595..f5d30573f4a99 100644
---- a/fs/notify/fanotify/fanotify.c
-+++ b/fs/notify/fanotify/fanotify.c
-@@ -314,7 +314,12 @@ struct fanotify_event *fanotify_alloc_event(struct fsnotify_group *group,
- 	if (!event)
- 		goto out;
- init: __maybe_unused
--	fsnotify_init_event(&event->fse, (unsigned long)inode);
-+	/*
-+	 * Use the victim inode instead of the watching inode as the id for
-+	 * event queue, so event reported on parent is merged with event
-+	 * reported on child when both directory and child watches exist.
-+	 */
-+	fsnotify_init_event(&event->fse, (unsigned long)id);
- 	event->mask = mask;
- 	if (FAN_GROUP_FLAG(group, FAN_REPORT_TID))
- 		event->pid = get_pid(task_pid(current));
--- 
-2.20.1
-
+--- a/drivers/usb/storage/unusual_uas.h
++++ b/drivers/usb/storage/unusual_uas.h
+@@ -28,6 +28,13 @@
+  * and don't forget to CC: the USB development list <linux-usb@vger.kernel.org>
+  */
+ 
++/* Reported-by: Julian Groß <julian.g@posteo.de> */
++UNUSUAL_DEV(0x059f, 0x105f, 0x0000, 0x9999,
++		"LaCie",
++		"2Big Quadra USB3",
++		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
++		US_FL_NO_REPORT_OPCODES),
++
+ /*
+  * Apricorn USB3 dongle sometimes returns "USBSUSBSUSBS" in response to SCSI
+  * commands in UAS mode.  Observed with the 1.28 firmware; are there others?
 
 
