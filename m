@@ -2,117 +2,103 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19397CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CEC8CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:18:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2917206E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 721462078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:18:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mvista-com.20150623.gappssmtp.com header.i=@mvista-com.20150623.gappssmtp.com header.b="YsA9fgHH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qIQ/roFG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732550AbgEMLSc (ORCPT
+        id S1732653AbgEMLSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 07:18:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34870 "EHLO
+        Wed, 13 May 2020 07:18:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732494AbgEMLSa (ORCPT
+        with ESMTP id S1732494AbgEMLSm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 07:18:30 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09E8BC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 04:18:28 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id r66so21080085oie.5
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 04:18:28 -0700 (PDT)
+        Wed, 13 May 2020 07:18:42 -0400
+Received: from mail-ot1-x336.google.com (mail-ot1-x336.google.com [IPv6:2607:f8b0:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D0B0C061A0C;
+        Wed, 13 May 2020 04:18:42 -0700 (PDT)
+Received: by mail-ot1-x336.google.com with SMTP id m18so13061939otq.9;
+        Wed, 13 May 2020 04:18:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mvista-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BrYzLniezoDD4jCcvGE9yS2QzVsTTMBnOOwvkU8zNzA=;
-        b=YsA9fgHHa2e5ncH25Q88XbMFzpKGXlpGE3QR/2LaNziM/owblmqmFkQB/x4emIWvbj
-         1Brwjz/mJUDeFzqFPpqG5VvWRW9uAzeieKEfSxXQyrrTp3NCxfN9s+ZlHxHiUeObisgx
-         UVMbHGSyyoJXb17zhfVHTD1AjcxSJLYV46fV9fNKjBDABuaJu79wuUHsx1FT59O6ncb9
-         r/L0ALdZMYv/ugvzo902/viYrPobOlW9gMNZuPFbBN7HlPswY/JO8zU24u3+sD3vgn+7
-         AyejM9N5+E5dJud5xcC4jVcdazBm2RXtAW3ilJ6nS+SuGZKxV6R148L3yA8G2vdGl0jJ
-         m+9g==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oE5WugBSvo3pc9Klj8s/jpRZAtxSj2G+F/MbpaTNg1E=;
+        b=qIQ/roFGWT0wnElL1u/7xlOD30VWRxKL/kWfMOz9XSiybqFmJCFHj46GoL6JzY1SSz
+         Ibd6SFS30RtGUlGxPgwcRyrBR2Y6MHwj9XGjxJwW2xKpE/aR+DaApklL/FdAfzpLQQk0
+         0vwFCa+qkbqkzbtM4az9cxsD349mVx63BIJ1xdMWPqqtCsH0/lPJrlDQjeLSLxPa7obg
+         hyzXCloM5NaJnAteJMRGODZ0/CPD5Bhfg0Pc5vFX6da30d9FV2X+x6BKJDnUaIC+2AKo
+         BRbrnDIX65+B9ScKBqE7TkYUXBYn2ocirCo0PbkOWKYBtq0w0+zXS0KZDJxCYxSGPBRs
+         Ugag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BrYzLniezoDD4jCcvGE9yS2QzVsTTMBnOOwvkU8zNzA=;
-        b=JyfZhCejCxceqE/XbqlKZ/dQ0aP+AEs61qlGTYxBi7jLSBc7QePzy7k9Kt+CLLqvcO
-         Znxg7mnua8DNgm47D6ieQdCXtYnLfae6zkuIRnmprs8KeaBogI8qahTnuvkpfxkMD8lv
-         V2kbf24OFF2iFTwgICvRKA8sV49N4L3jWzMN9Q2NBHzgWdfgnQt/AAR90XzoA3UZ+ymr
-         k8DWxEA1O9PLzVyBU67+md2mWm9807RBJ5mJIL3OAe94E1LkkrFjBcxaXNiXUBzbBdam
-         K5qyI5Fp3mL/BZDPekbUVS/LvtYfyYpAqboMwgshsAS0U6sNbfkwUU+gJ79VLuOnyhzI
-         2pvQ==
-X-Gm-Message-State: AGi0PuZsX1ah6IqV6CfGGZVaWUELRBRijuVFr7cHWgSggpBod2IcCR+b
-        tRw7asQJId677pSQ/6XRHCqvVGlCFbg=
-X-Google-Smtp-Source: APiQypLuNe12ugFwb8BiDgFQhZs6T49t8p9NJ0NCnmSifXnS4d7Rz9x8ZD84j5T6gRTZK6XeTAMC9A==
-X-Received: by 2002:aca:ed4d:: with SMTP id l74mr25612399oih.104.1589368707413;
-        Wed, 13 May 2020 04:18:27 -0700 (PDT)
-Received: from minyard.net ([2001:470:b8f6:1b:8b39:c3f3:f502:5c4e])
-        by smtp.gmail.com with ESMTPSA id n11sm5941751oij.21.2020.05.13.04.18.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 13 May 2020 04:18:26 -0700 (PDT)
-Date:   Wed, 13 May 2020 06:18:25 -0500
-From:   Corey Minyard <cminyard@mvista.com>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     minyard@acm.org, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] char: ipmi: convert to use i2c_new_client_device()
-Message-ID: <20200513111825.GB9928@minyard.net>
-Reply-To: cminyard@mvista.com
-References: <20200326210958.13051-2-wsa+renesas@sang-engineering.com>
- <20200512214532.14117-1-minyard@acm.org>
- <20200513083745.GC1043@ninjato>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition:in-reply-to
+         :user-agent;
+        bh=oE5WugBSvo3pc9Klj8s/jpRZAtxSj2G+F/MbpaTNg1E=;
+        b=mqg28o5JFk4r7W4xZT45DPIuX/uEdUypUwPsCfNXDSoAY0QdxI+02kUwisYEteOntH
+         QvPdmfdSvOjB1XbtrABo0cUc1ySZs7rtVsljFFe8cH1VVrWZ5is8CKpsUtmqb6BYdCbC
+         /I0rQeef8dLEG0YeFZRLGnzSfw+V95lLT11Y7G6TbatxLZupJzd9z6Gsq7H5enELAUPL
+         dD6G1jCBnJx1oCKwRs0GIDr8XjNFxyKboysHAl9eJF/cEIlPQAxH2SqRSZUrQuVkMGMm
+         D2gzpOVCpJGT51lE40JBvm524fUJu1DUZzXH0Bn6wLfT3uQ4M6Diiomx8QzxNzWmijTO
+         uswA==
+X-Gm-Message-State: AGi0PuZqZ1FomE83IriiVdKQncAOXcC17H7fljIKtyL7gmaWukmAk46p
+        KbZUJaxTNXnmodmROTmEUrkwQHo=
+X-Google-Smtp-Source: APiQypJNI+0DqoZkxv+pvtTS/nokl0RUPsTqcsL74LIkxNq+hbftSmgsNFZGnInQahLn73kLueZ4Gg==
+X-Received: by 2002:a05:6830:3148:: with SMTP id c8mr19784748ots.138.1589368721635;
+        Wed, 13 May 2020 04:18:41 -0700 (PDT)
+Received: from serve.minyard.net ([47.184.149.130])
+        by smtp.gmail.com with ESMTPSA id v9sm5952456oib.56.2020.05.13.04.18.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 04:18:41 -0700 (PDT)
+Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:8b39:c3f3:f502:5c4e])
+        by serve.minyard.net (Postfix) with ESMTPSA id 59923180042;
+        Wed, 13 May 2020 11:18:40 +0000 (UTC)
+Date:   Wed, 13 May 2020 06:18:39 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Corey Minyard <cminyard@mvista.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: Re: linux-next: Signed-off-by missing for commit in the ipmi tree
+Message-ID: <20200513111839.GS9902@minyard.net>
+Reply-To: minyard@acm.org
+References: <20200513103034.4de3c630@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513083745.GC1043@ninjato>
+In-Reply-To: <20200513103034.4de3c630@canb.auug.org.au>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 10:37:46AM +0200, Wolfram Sang wrote:
-> On Tue, May 12, 2020 at 04:45:32PM -0500, minyard@acm.org wrote:
-> > From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> > 
-> > Move away from the deprecated API.
-> > 
-> > Based on a patch by Wolfram Sang <wsa+renesas@sang-engineering.com>.
-> > 
-> > Signed-off-by: Corey Minyard <cminyard@mvista.com>
-> > ---
-> > I think this works.
+On Wed, May 13, 2020 at 10:30:34AM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Yes, we can do it like this (despite the question from earlier if it is
-> really needed). I fixed other drivers using this pattern, too.
-
-I was wondering whether this is really needed, too, but I'm not 100%
-sure it can be removed in all cases.  This is the safer route.
-
+> Commit
 > 
-> As Stephen Rothwell pointed out, you either need to remove my "From:" or
-> add my SoB. I am fine with both.
+>   73d0824e48eb ("char: ipmi: convert to use i2c_new_client_device()")
+> 
+> is missing a Signed-off-by from its author.
 
-It was enough of a rewrite that you as the author didn't seem right.
-I've fixed the From line, sorry about that.
+Fixed, thanks.
 
 -corey
 
 > 
-> Thanks,
-> 
->    Wolfram
-> 
+> -- 
+> Cheers,
+> Stephen Rothwell
 
 
