@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9453ECA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79177CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B562206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 578DB20740
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363341;
-	bh=xqrh2MopQeipAcdHacog6ivfLRVDwUVB/2W23jrA/+4=;
+	s=default; t=1589363344;
+	bh=r+JP3xxzpaAOKW2E6JRFN18/pSj2M/sFLWWmAZPHAkE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Cv76wTFlNOPnE85XcxQym7GKpJvA39fv0NpWPS//NxT/7ZvDNnSyGblJeaJuscjx
-	 BDN+2A6xpnqmd+q+OwNQynffZNXxJykKkAPxwq+By86hlbrU6LtQxHu+gOuHw4uNBX
-	 iqI2z1mr9KwUEGJGnSdwaMReZsEdL+8YVim+6J2o=
+	b=wntm6z/aCAFG3mIXUzEG+RydsFa3rtyLtv0/McvpO35ObYmREreoKJK78C+njl+9Q
+	 ZfUWv4woFJkis+0BYjiSu5+YlloPFTitYqYweumHx01gXkcAV47KyvUxUf+C1V4iUv
+	 CzjdnT8rIFpuKsEn1S2gxLcoLSIwMLwOr4aWCrgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732651AbgEMJtA (ORCPT
+        id S1733168AbgEMJtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:49:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47540 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:49:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733139AbgEMJsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:48:54 -0400
+        id S1730822AbgEMJtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:49:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88CEA206D6;
-        Wed, 13 May 2020 09:48:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27EEE20575;
+        Wed, 13 May 2020 09:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363333;
-        bh=xqrh2MopQeipAcdHacog6ivfLRVDwUVB/2W23jrA/+4=;
+        s=default; t=1589363340;
+        bh=r+JP3xxzpaAOKW2E6JRFN18/pSj2M/sFLWWmAZPHAkE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yTHo7GTPFu1j5Tr2Ig067yn+toFH63xd5Vo1tjrgo48sUrovps3b6Hx5vuwzlfLQ1
-         t36giFRZQmq+mtIk1JuQ5u6XtSlLSpZW5ROZPyT0TF3G4FWQ+58qcBzgfd9obsZMfa
-         9CmVv7+1aVNNLIKqigF4EFK8Rf5SFBrJcdmL40tU=
+        b=Hv8oO4Eop+5/yl4WoxJPUiVcy2VnxwaQljU4fbTAyvmAlBTZfXR3+YoYQPnNLbz0n
+         RsIuHlt5bMGcCAllpOCtwCJJOcZ/5hU1gTpi52mgYYbbrrhV5xBZ/UTl7Xc4cpEbuN
+         IUjlRqRt+CpkAGDOrHY6kLuvKDm6UDO2JhXh1754=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Briscoe <ietf@bobbriscoe.net>,
-        Olivier Tilmans <olivier.tilmans@nokia-bell-labs.com>,
-        Dave Taht <dave.taht@gmail.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 30/90] tunnel: Propagate ECT(1) when decapsulating as recommended by RFC6040
-Date:   Wed, 13 May 2020 11:44:26 +0200
-Message-Id: <20200513094411.682649645@linuxfoundation.org>
+Subject: [PATCH 5.4 33/90] bnxt_en: Improve AER slot reset.
+Date:   Wed, 13 May 2020 11:44:29 +0200
+Message-Id: <20200513094412.011192060@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -63,113 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Toke Høiland-Jørgensen" <toke@redhat.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit b723748750ece7d844cdf2f52c01d37f83387208 ]
+[ Upstream commit bae361c54fb6ac6eba3b4762f49ce14beb73ef13 ]
 
-RFC 6040 recommends propagating an ECT(1) mark from an outer tunnel header
-to the inner header if that inner header is already marked as ECT(0). When
-RFC 6040 decapsulation was implemented, this case of propagation was not
-added. This simply appears to be an oversight, so let's fix that.
+Improve the slot reset sequence by disabling the device to prevent bad
+DMAs if slot reset fails.  Return the proper result instead of always
+PCI_ERS_RESULT_RECOVERED to the caller.
 
-Fixes: eccc1bb8d4b4 ("tunnel: drop packet if ECN present with not-ECT")
-Reported-by: Bob Briscoe <ietf@bobbriscoe.net>
-Reported-by: Olivier Tilmans <olivier.tilmans@nokia-bell-labs.com>
-Cc: Dave Taht <dave.taht@gmail.com>
-Cc: Stephen Hemminger <stephen@networkplumber.org>
-Signed-off-by: Toke HÃ¸iland-JÃ¸rgensen <toke@redhat.com>
+Fixes: 6316ea6db93d ("bnxt_en: Enable AER support.")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/inet_ecn.h |   57 +++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 55 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/include/net/inet_ecn.h
-+++ b/include/net/inet_ecn.h
-@@ -99,6 +99,20 @@ static inline int IP_ECN_set_ce(struct i
- 	return 1;
- }
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -12066,12 +12066,15 @@ static pci_ers_result_t bnxt_io_slot_res
+ 		}
+ 	}
  
-+static inline int IP_ECN_set_ect1(struct iphdr *iph)
-+{
-+	u32 check = (__force u32)iph->check;
-+
-+	if ((iph->tos & INET_ECN_MASK) != INET_ECN_ECT_0)
-+		return 0;
-+
-+	check += (__force u16)htons(0x100);
-+
-+	iph->check = (__force __sum16)(check + (check>=0xFFFF));
-+	iph->tos ^= INET_ECN_MASK;
-+	return 1;
-+}
-+
- static inline void IP_ECN_clear(struct iphdr *iph)
- {
- 	iph->tos &= ~INET_ECN_MASK;
-@@ -134,6 +148,22 @@ static inline int IP6_ECN_set_ce(struct
- 	return 1;
- }
- 
-+static inline int IP6_ECN_set_ect1(struct sk_buff *skb, struct ipv6hdr *iph)
-+{
-+	__be32 from, to;
-+
-+	if ((ipv6_get_dsfield(iph) & INET_ECN_MASK) != INET_ECN_ECT_0)
-+		return 0;
-+
-+	from = *(__be32 *)iph;
-+	to = from ^ htonl(INET_ECN_MASK << 20);
-+	*(__be32 *)iph = to;
-+	if (skb->ip_summed == CHECKSUM_COMPLETE)
-+		skb->csum = csum_add(csum_sub(skb->csum, (__force __wsum)from),
-+				     (__force __wsum)to);
-+	return 1;
-+}
-+
- static inline void ipv6_copy_dscp(unsigned int dscp, struct ipv6hdr *inner)
- {
- 	dscp &= ~INET_ECN_MASK;
-@@ -159,6 +189,25 @@ static inline int INET_ECN_set_ce(struct
- 	return 0;
- }
- 
-+static inline int INET_ECN_set_ect1(struct sk_buff *skb)
-+{
-+	switch (skb->protocol) {
-+	case cpu_to_be16(ETH_P_IP):
-+		if (skb_network_header(skb) + sizeof(struct iphdr) <=
-+		    skb_tail_pointer(skb))
-+			return IP_ECN_set_ect1(ip_hdr(skb));
-+		break;
-+
-+	case cpu_to_be16(ETH_P_IPV6):
-+		if (skb_network_header(skb) + sizeof(struct ipv6hdr) <=
-+		    skb_tail_pointer(skb))
-+			return IP6_ECN_set_ect1(skb, ipv6_hdr(skb));
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * RFC 6040 4.2
-  *  To decapsulate the inner header at the tunnel egress, a compliant
-@@ -208,8 +257,12 @@ static inline int INET_ECN_decapsulate(s
- 	int rc;
- 
- 	rc = __INET_ECN_decapsulate(outer, inner, &set_ce);
--	if (!rc && set_ce)
--		INET_ECN_set_ce(skb);
-+	if (!rc) {
-+		if (set_ce)
-+			INET_ECN_set_ce(skb);
-+		else if ((outer & INET_ECN_MASK) == INET_ECN_ECT_1)
-+			INET_ECN_set_ect1(skb);
+-	if (result != PCI_ERS_RESULT_RECOVERED && netif_running(netdev))
+-		dev_close(netdev);
++	if (result != PCI_ERS_RESULT_RECOVERED) {
++		if (netif_running(netdev))
++			dev_close(netdev);
++		pci_disable_device(pdev);
 +	}
  
- 	return rc;
+ 	rtnl_unlock();
+ 
+-	return PCI_ERS_RESULT_RECOVERED;
++	return result;
  }
+ 
+ /**
 
 
