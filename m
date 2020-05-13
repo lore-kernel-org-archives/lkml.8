@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A563BC2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51780C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BEEC24929
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A37B2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:28:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qenFgteX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fLErZ9RW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729985AbgEMG2T (ORCPT
+        id S1730308AbgEMG21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 02:28:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46038 "EHLO
+        Wed, 13 May 2020 02:28:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729904AbgEMG2P (ORCPT
+        with ESMTP id S1729411AbgEMG2V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 02:28:15 -0400
+        Wed, 13 May 2020 02:28:21 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D2A9C061A0E;
-        Tue, 12 May 2020 23:28:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 818A1C061A0C;
+        Tue, 12 May 2020 23:28:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=IEh9ZmFO5wqxAq2bKvDDXMAdX0GdkIAJdFHyY8t97p8=; b=qenFgteXPMvirhjEH2enSeyV21
-        f4E+NEvJ9QbgSFZvZtp0iTzaa7y5uByORVHVlIdzeIIzXe0Ihnv/g3E7oECj48+tEcP3LFhD+pc+G
-        kx7ymBLjEMXF4lv+JFUYt1209tyklN+RSCRGczbQ6UQZQDJAEF5N9RPwO/lOhOImcXhAdT8/AvfnT
-        OsbwRKlVoMX5plFMUr1gR6Lc+o5xj2eH05lulOd6vsIHm27b0ut4FsvtP0SllvJ5YyhokrX2XmnFg
-        OxmWWt/8cLwAa6uKDTD6mJOgvYQyhtc00TsCmkFESx0Fqqh4Mg/74QFEdFbI1/qdqIWt9YvlHn09W
-        58MCTq0Q==;
+        bh=trhEuTIn4Vg1DhT2avaHLce2knn1iz/f6nKwvZ2I5VY=; b=fLErZ9RWcPdCrJe8PN8doo4THM
+        XwKQxHDFt3rFQLUc+chfdiyQ26TV1RW8HyH1/zrR+BZUvcncrPN68MW2C0lrXXww+My2XyFZWtQlC
+        JgIQMKO7ut8N8TyQN+GiykC6nm8Oy7yNSDW5+0tihXApIVVmlV6ILUU2JalBr4L3fgCFDNN8lwIEa
+        4/Q8w2aYzE5347WNGTNWtb5CvdN0fTKXWe5L5HFlMG5Uj5EIYjYEkIXcahz6Y5wTfGqw757xZXkt1
+        RHBzfLCnJMUucSSreMLMVyWIi2HbzKvW7+wVJZNnSG5vCdO25dCKJUPQwhX++i0ZUdMnYy5g33vSd
+        55BX8sOw==;
 Received: from [2001:4bb8:180:9d3f:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jYkrF-0003zu-13; Wed, 13 May 2020 06:27:09 +0000
+        id 1jYkrL-000471-Cn; Wed, 13 May 2020 06:27:15 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
@@ -57,9 +57,9 @@ Cc:     Eric Dumazet <edumazet@google.com>,
         ocfs2-devel@oss.oracle.com, netdev@vger.kernel.org,
         linux-sctp@vger.kernel.org, ceph-devel@vger.kernel.org,
         rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org
-Subject: [PATCH 06/33] net: add sock_set_timestamps
-Date:   Wed, 13 May 2020 08:26:21 +0200
-Message-Id: <20200513062649.2100053-7-hch@lst.de>
+Subject: [PATCH 08/33] net: add sock_set_rcvbuf
+Date:   Wed, 13 May 2020 08:26:23 +0200
+Message-Id: <20200513062649.2100053-9-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513062649.2100053-1-hch@lst.de>
 References: <20200513062649.2100053-1-hch@lst.de>
@@ -71,115 +71,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper to directly set the SO_TIMESTAMP* sockopts from kernel space
+Add a helper to directly set the SO_RCVBUFFORCE sockopt from kernel space
 without going through a fake uaccess.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- include/net/sock.h       |  1 +
- net/core/sock.c          | 47 +++++++++++++++++++++++++---------------
- net/rxrpc/local_object.c |  8 +------
- 3 files changed, 31 insertions(+), 25 deletions(-)
+ fs/dlm/lowcomms.c  |  7 +-----
+ include/net/sock.h |  1 +
+ net/core/sock.c    | 59 +++++++++++++++++++++++++---------------------
+ 3 files changed, 34 insertions(+), 33 deletions(-)
 
+diff --git a/fs/dlm/lowcomms.c b/fs/dlm/lowcomms.c
+index 16d616c180613..223c185ecd0c7 100644
+--- a/fs/dlm/lowcomms.c
++++ b/fs/dlm/lowcomms.c
+@@ -1297,7 +1297,6 @@ static int sctp_listen_for_all(void)
+ 	struct socket *sock = NULL;
+ 	int result = -EINVAL;
+ 	struct connection *con = nodeid2con(0, GFP_NOFS);
+-	int bufsize = NEEDED_RMEM;
+ 	int one = 1;
+ 
+ 	if (!con)
+@@ -1312,11 +1311,7 @@ static int sctp_listen_for_all(void)
+ 		goto out;
+ 	}
+ 
+-	result = kernel_setsockopt(sock, SOL_SOCKET, SO_RCVBUFFORCE,
+-				 (char *)&bufsize, sizeof(bufsize));
+-	if (result)
+-		log_print("Error increasing buffer space on socket %d", result);
+-
++	sock_set_rcvbuf(sock->sk, NEEDED_RMEM);
+ 	result = kernel_setsockopt(sock, SOL_SCTP, SCTP_NODELAY, (char *)&one,
+ 				   sizeof(one));
+ 	if (result < 0)
 diff --git a/include/net/sock.h b/include/net/sock.h
-index b63ea15362065..cf8a30e0168de 100644
+index 4cedde585424f..e1ed40ff01312 100644
 --- a/include/net/sock.h
 +++ b/include/net/sock.h
-@@ -2692,5 +2692,6 @@ void sock_set_linger(struct sock *sk, bool onoff, unsigned int linger);
+@@ -2692,6 +2692,7 @@ void sock_set_linger(struct sock *sk, bool onoff, unsigned int linger);
  void sock_set_priority(struct sock *sk, u32 priority);
  void sock_set_sndtimeo(struct sock *sk, unsigned int secs);
+ void sock_set_keepalive(struct sock *sk, bool keepalive);
++void sock_set_rcvbuf(struct sock *sk, int val);
  int sock_bindtoindex(struct sock *sk, int ifindex);
-+void sock_set_timestamps(struct sock *sk, bool val, bool new, bool ns);
+ void sock_set_timestamps(struct sock *sk, bool val, bool new, bool ns);
  
- #endif	/* _SOCK_H */
 diff --git a/net/core/sock.c b/net/core/sock.c
-index 4b7439308caec..1589f242ecc7e 100644
+index dfd2b839f88bb..6af01b757cf24 100644
 --- a/net/core/sock.c
 +++ b/net/core/sock.c
-@@ -772,6 +772,28 @@ void sock_set_sndtimeo(struct sock *sk, unsigned int secs)
+@@ -804,6 +804,35 @@ void sock_set_keepalive(struct sock *sk, bool keepalive)
  }
- EXPORT_SYMBOL(sock_set_sndtimeo);
+ EXPORT_SYMBOL(sock_set_keepalive);
  
-+static void __sock_set_timestamps(struct sock *sk, bool val, bool new, bool ns)
++void __sock_set_rcvbuf(struct sock *sk, int val)
 +{
-+	if (val)  {
-+		sock_valbool_flag(sk, SOCK_TSTAMP_NEW, new);
-+		sock_valbool_flag(sk, SOCK_RCVTSTAMPNS, ns);
-+		sock_set_flag(sk, SOCK_RCVTSTAMP);
-+		sock_enable_timestamp(sk, SOCK_TIMESTAMP);
-+	} else {
-+		sock_reset_flag(sk, SOCK_RCVTSTAMP);
-+		sock_reset_flag(sk, SOCK_RCVTSTAMPNS);
-+		sock_reset_flag(sk, SOCK_TSTAMP_NEW);
-+	}
++	/* Ensure val * 2 fits into an int, to prevent max_t() from treating it
++	 * as a negative value.
++	 */
++	val = min_t(int, val, INT_MAX / 2);
++	sk->sk_userlocks |= SOCK_RCVBUF_LOCK;
++
++	/* We double it on the way in to account for "struct sk_buff" etc.
++	 * overhead.   Applications assume that the SO_RCVBUF setting they make
++	 * will allow that much actual data to be received on that socket.
++	 *
++	 * Applications are unaware that "struct sk_buff" and other overheads
++	 * allocate from the receive buffer during socket buffer allocation.
++	 *
++	 * And after considering the possible alternatives, returning the value
++	 * we actually used in getsockopt is the most desirable behavior.
++	 */
++	WRITE_ONCE(sk->sk_rcvbuf, max_t(int, val * 2, SOCK_MIN_RCVBUF));
 +}
 +
-+void sock_set_timestamps(struct sock *sk, bool val, bool new, bool ns)
++void sock_set_rcvbuf(struct sock *sk, int val)
 +{
 +	lock_sock(sk);
-+	__sock_set_timestamps(sk, val, new, ns);
++	__sock_set_rcvbuf(sk, val);
 +	release_sock(sk);
 +}
-+EXPORT_SYMBOL(sock_set_timestamps);
++EXPORT_SYMBOL(sock_set_rcvbuf);
 +
  /*
   *	This is meant for all protocols to use and covers goings on
   *	at the socket level. Everything here is generic.
-@@ -953,28 +975,17 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
+@@ -900,30 +929,7 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
+ 		 * play 'guess the biggest size' games. RCVBUF/SNDBUF
+ 		 * are treated in BSD as hints
+ 		 */
+-		val = min_t(u32, val, sysctl_rmem_max);
+-set_rcvbuf:
+-		/* Ensure val * 2 fits into an int, to prevent max_t()
+-		 * from treating it as a negative value.
+-		 */
+-		val = min_t(int, val, INT_MAX / 2);
+-		sk->sk_userlocks |= SOCK_RCVBUF_LOCK;
+-		/*
+-		 * We double it on the way in to account for
+-		 * "struct sk_buff" etc. overhead.   Applications
+-		 * assume that the SO_RCVBUF setting they make will
+-		 * allow that much actual data to be received on that
+-		 * socket.
+-		 *
+-		 * Applications are unaware that "struct sk_buff" and
+-		 * other overheads allocate from the receive buffer
+-		 * during socket buffer allocation.
+-		 *
+-		 * And after considering the possible alternatives,
+-		 * returning the value we actually used in getsockopt
+-		 * is the most desirable behavior.
+-		 */
+-		WRITE_ONCE(sk->sk_rcvbuf,
+-			   max_t(int, val * 2, SOCK_MIN_RCVBUF));
++		__sock_set_rcvbuf(sk, min_t(u32, val, sysctl_rmem_max));
  		break;
  
- 	case SO_TIMESTAMP_OLD:
-+		__sock_set_timestamps(sk, valbool, false, false);
+ 	case SO_RCVBUFFORCE:
+@@ -935,9 +941,8 @@ int sock_setsockopt(struct socket *sock, int level, int optname,
+ 		/* No negative values (to prevent underflow, as val will be
+ 		 * multiplied by 2).
+ 		 */
+-		if (val < 0)
+-			val = 0;
+-		goto set_rcvbuf;
++		__sock_set_rcvbuf(sk, max(val, 0));
 +		break;
- 	case SO_TIMESTAMP_NEW:
-+		__sock_set_timestamps(sk, valbool, true, false);
-+		break;
- 	case SO_TIMESTAMPNS_OLD:
-+		__sock_set_timestamps(sk, valbool, false, true);
-+		break;
- 	case SO_TIMESTAMPNS_NEW:
--		if (valbool)  {
--			if (optname == SO_TIMESTAMP_NEW || optname == SO_TIMESTAMPNS_NEW)
--				sock_set_flag(sk, SOCK_TSTAMP_NEW);
--			else
--				sock_reset_flag(sk, SOCK_TSTAMP_NEW);
--
--			if (optname == SO_TIMESTAMP_OLD || optname == SO_TIMESTAMP_NEW)
--				sock_reset_flag(sk, SOCK_RCVTSTAMPNS);
--			else
--				sock_set_flag(sk, SOCK_RCVTSTAMPNS);
--			sock_set_flag(sk, SOCK_RCVTSTAMP);
--			sock_enable_timestamp(sk, SOCK_TIMESTAMP);
--		} else {
--			sock_reset_flag(sk, SOCK_RCVTSTAMP);
--			sock_reset_flag(sk, SOCK_RCVTSTAMPNS);
--			sock_reset_flag(sk, SOCK_TSTAMP_NEW);
--		}
-+		__sock_set_timestamps(sk, valbool, true, true);
- 		break;
--
- 	case SO_TIMESTAMPING_NEW:
- 		sock_set_flag(sk, SOCK_TSTAMP_NEW);
- 		/* fall through */
-diff --git a/net/rxrpc/local_object.c b/net/rxrpc/local_object.c
-index 01135e54d95d2..562ea36c96b0f 100644
---- a/net/rxrpc/local_object.c
-+++ b/net/rxrpc/local_object.c
-@@ -189,13 +189,7 @@ static int rxrpc_open_socket(struct rxrpc_local *local, struct net *net)
- 		}
  
- 		/* We want receive timestamps. */
--		opt = 1;
--		ret = kernel_setsockopt(local->socket, SOL_SOCKET, SO_TIMESTAMPNS_OLD,
--					(char *)&opt, sizeof(opt));
--		if (ret < 0) {
--			_debug("setsockopt failed");
--			goto error;
--		}
-+		sock_set_timestamps(local->socket->sk, true, false, true);
- 		break;
- 
- 	default:
+ 	case SO_KEEPALIVE:
+ 		if (sk->sk_prot->keepalive)
 -- 
 2.26.2
 
