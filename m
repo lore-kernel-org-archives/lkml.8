@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1453CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9185CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE62324927
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E9E5205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363646;
-	bh=M5p3zLfAleWDXPsPPHQNNSsr2W4h5MyjY1VDgTNd4Y0=;
+	s=default; t=1589363653;
+	bh=YXLFxgx/cR+xQ8Urciq83J/EM61NJniqRVSKvI+Ss68=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MRIkjttIMaD4bpWX0xARYTmUiN8iVgxrWIzjDk6LBOIhzpkh3G14Mkkwjf1cVhFrc
-	 DM0d/nwtx7wyUAaKPXCoMJ2bcqnEz/w2cvPm4f2CGSA3ZZ64gLcpm6lYCVXvcLGyyP
-	 cmuuHpenozFGWKApjIt57XtIMD49IM2fDXxEXEmw=
+	b=RYF8uCurioRaEUOsseL4WaWylJKtpyNPNH9+3cOtkVNRXCvdWn+Ra4Kf2mSgJ7R7+
+	 wmuYz3T7NS6PqZ5460ObXO3oVPruVQdb7xj9Wlta/Ts6BZ6H+ha0YQOq032wGgnpmM
+	 c1EX9u+wT+3XVbw+KXjm60wgyKxWC5DEY5ZCkB5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388049AbgEMJyG (ORCPT
+        id S2388067AbgEMJyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:54:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56258 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:54:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732826AbgEMJyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:54:02 -0400
+        id S1732826AbgEMJyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:54:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8E38205ED;
-        Wed, 13 May 2020 09:54:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F781205ED;
+        Wed, 13 May 2020 09:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363641;
-        bh=M5p3zLfAleWDXPsPPHQNNSsr2W4h5MyjY1VDgTNd4Y0=;
+        s=default; t=1589363646;
+        bh=YXLFxgx/cR+xQ8Urciq83J/EM61NJniqRVSKvI+Ss68=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wkgwf1AYX/Rsdn28SfDvfEkyXuY72BcYm0piFeFpxLBdQK5k4vh4CLer6/tdkZAub
-         kzO5gm6eyitg5RjF1PFDg/v6EDRub+HBFZ+eotRwn7m1oJD7lFfMK9Eon9NnrQctLU
-         fQuVjr2M32hCtsJpgd7eRHhesGHYxoGl/yAizSd4=
+        b=A5zxQ4emUI9wsU31i6tLwh1NCiMxeQFqOL6AHW2eM3p/hxlJmBMZPDSKEFRDEzlTD
+         G0dt0Panf8K4uvCwTuylkVDnOjNL5XNt757Gu0BV+sRlcFkODaNy+yHbJrIO3rlbJM
+         AHaYf6pvwzS3HWzkhGbkgyQFlRl//RB7//iq2DgE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
-        Willem de Bruijn <willemb@google.com>,
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 029/118] net: stricter validation of untrusted gso packets
-Date:   Wed, 13 May 2020 11:44:08 +0200
-Message-Id: <20200513094420.134868117@linuxfoundation.org>
+Subject: [PATCH 5.6 031/118] net/tls: Fix sk_psock refcnt leak in bpf_exec_tx_verdict()
+Date:   Wed, 13 May 2020 11:44:10 +0200
+Message-Id: <20200513094420.270139384@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -60,105 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 9274124f023b5c56dc4326637d4f787968b03607 ]
+[ Upstream commit 095f5614bfe16e5b3e191b34ea41b10d6fdd4ced ]
 
-Syzkaller again found a path to a kernel crash through bad gso input:
-a packet with transport header extending beyond skb_headlen(skb).
+bpf_exec_tx_verdict() invokes sk_psock_get(), which returns a reference
+of the specified sk_psock object to "psock" with increased refcnt.
 
-Tighten validation at kernel entry:
+When bpf_exec_tx_verdict() returns, local variable "psock" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
 
-- Verify that the transport header lies within the linear section.
+The reference counting issue happens in one exception handling path of
+bpf_exec_tx_verdict(). When "policy" equals to NULL but "psock" is not
+NULL, the function forgets to decrease the refcnt increased by
+sk_psock_get(), causing a refcnt leak.
 
-    To avoid pulling linux/tcp.h, verify just sizeof tcphdr.
-    tcp_gso_segment will call pskb_may_pull (th->doff * 4) before use.
+Fix this issue by calling sk_psock_put() on this error path before
+bpf_exec_tx_verdict() returns.
 
-- Match the gso_type against the ip_proto found by the flow dissector.
-
-Fixes: bfd5f4a3d605 ("packet: Add GSO/csum offload support.")
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/virtio_net.h |   26 ++++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+ net/tls/tls_sw.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/include/linux/virtio_net.h
-+++ b/include/linux/virtio_net.h
-@@ -3,6 +3,8 @@
- #define _LINUX_VIRTIO_NET_H
- 
- #include <linux/if_vlan.h>
-+#include <uapi/linux/tcp.h>
-+#include <uapi/linux/udp.h>
- #include <uapi/linux/virtio_net.h>
- 
- static inline int virtio_net_hdr_set_proto(struct sk_buff *skb,
-@@ -28,17 +30,25 @@ static inline int virtio_net_hdr_to_skb(
- 					bool little_endian)
- {
- 	unsigned int gso_type = 0;
-+	unsigned int thlen = 0;
-+	unsigned int ip_proto;
- 
- 	if (hdr->gso_type != VIRTIO_NET_HDR_GSO_NONE) {
- 		switch (hdr->gso_type & ~VIRTIO_NET_HDR_GSO_ECN) {
- 		case VIRTIO_NET_HDR_GSO_TCPV4:
- 			gso_type = SKB_GSO_TCPV4;
-+			ip_proto = IPPROTO_TCP;
-+			thlen = sizeof(struct tcphdr);
- 			break;
- 		case VIRTIO_NET_HDR_GSO_TCPV6:
- 			gso_type = SKB_GSO_TCPV6;
-+			ip_proto = IPPROTO_TCP;
-+			thlen = sizeof(struct tcphdr);
- 			break;
- 		case VIRTIO_NET_HDR_GSO_UDP:
- 			gso_type = SKB_GSO_UDP;
-+			ip_proto = IPPROTO_UDP;
-+			thlen = sizeof(struct udphdr);
- 			break;
- 		default:
- 			return -EINVAL;
-@@ -57,16 +67,22 @@ static inline int virtio_net_hdr_to_skb(
- 
- 		if (!skb_partial_csum_set(skb, start, off))
- 			return -EINVAL;
-+
-+		if (skb_transport_offset(skb) + thlen > skb_headlen(skb))
-+			return -EINVAL;
- 	} else {
- 		/* gso packets without NEEDS_CSUM do not set transport_offset.
- 		 * probe and drop if does not match one of the above types.
- 		 */
- 		if (gso_type && skb->network_header) {
-+			struct flow_keys_basic keys;
-+
- 			if (!skb->protocol)
- 				virtio_net_hdr_set_proto(skb, hdr);
- retry:
--			skb_probe_transport_header(skb);
--			if (!skb_transport_header_was_set(skb)) {
-+			if (!skb_flow_dissect_flow_keys_basic(NULL, skb, &keys,
-+							      NULL, 0, 0, 0,
-+							      0)) {
- 				/* UFO does not specify ipv4 or 6: try both */
- 				if (gso_type & SKB_GSO_UDP &&
- 				    skb->protocol == htons(ETH_P_IP)) {
-@@ -75,6 +91,12 @@ retry:
- 				}
- 				return -EINVAL;
- 			}
-+
-+			if (keys.control.thoff + thlen > skb_headlen(skb) ||
-+			    keys.basic.ip_proto != ip_proto)
-+				return -EINVAL;
-+
-+			skb_set_transport_header(skb, keys.control.thoff);
+--- a/net/tls/tls_sw.c
++++ b/net/tls/tls_sw.c
+@@ -800,6 +800,8 @@ static int bpf_exec_tx_verdict(struct sk
+ 			*copied -= sk_msg_free(sk, msg);
+ 			tls_free_open_rec(sk);
  		}
++		if (psock)
++			sk_psock_put(sk, psock);
+ 		return err;
  	}
- 
+ more_data:
 
 
