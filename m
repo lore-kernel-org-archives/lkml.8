@@ -2,133 +2,153 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B0E5C2D0FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFFEC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AEFF20708
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37BDC20708
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:31:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ZSVlgXkk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iop6+lQM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731970AbgEMGbh (ORCPT
+        id S1732386AbgEMGb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 02:31:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46596 "EHLO
+        Wed, 13 May 2020 02:31:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732396AbgEMGbd (ORCPT
+        with ESMTP id S1730224AbgEMG2Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 02:31:33 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5910C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 23:31:32 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id mq3so10669871pjb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 23:31:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=2csGsD+au94C9xmTiACbfUOMQ7XhAMYTWeJo+alYFFI=;
-        b=ZSVlgXkkpJtSfN7qkaqSe1HuEAcdJz+206DgqQ9a8bBTg1j86M/AV1JMXsfvt6a2jG
-         yj/qedw70QPli6gaJfIS7IWASeacoIDxNbSyu9WdaQPEBjWsWQcEo5g5MJrVhANXE2rX
-         0zouj2RZsoJ6qnQ2ByQjeFr7YxZ7NE5uAypGs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=2csGsD+au94C9xmTiACbfUOMQ7XhAMYTWeJo+alYFFI=;
-        b=YYXEwDAViHHlP8fMNUpSU6oQCV5EV+EtbDOkGMjJC3ztrIfCtox57UbfVlAmpgcCjK
-         x2lsHZAuYof6JO+btIRtmfp2T1khNbJ7bN2PSloANyT2PvnUofPvImA91SKr2jQvuWfj
-         F0xTWca5OZE0eR9lop1Ha+PmVSA/9UK1St9veFYJJgU4wfj9Q2d5hj/HmZsYDctmpGsB
-         7OjjcmWMfACyGlAi74RMvPV3GJGUjFXDPpeWBX2iJaGX3sHv4YLtbUPMFm5Mtm/4/cZw
-         atQL4hsXsnG7h0xIOUoyaZ5lOOxft1wNCdXWdHlzv0mMqakzj/QvleEw6+UxPZJyaleJ
-         helg==
-X-Gm-Message-State: AOAM530slZ6d1jd/8sSxNX1WclKvCwEUMDbCYm4XaC1axSa5jKVbwI6E
-        2+BCHGYOybt8jR3PWQyQltpMZA==
-X-Google-Smtp-Source: ABdhPJzun7l0BGdVwIAv5LpJTCZ51XWx8WkOrhjqdl2WVdRNTqaM1ew0r90ShpQV04nRKtPQ735vBg==
-X-Received: by 2002:a17:902:8505:: with SMTP id bj5mr7220884plb.192.1589351492246;
-        Tue, 12 May 2020 23:31:32 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id c1sm13716735pfo.152.2020.05.12.23.31.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 May 2020 23:31:31 -0700 (PDT)
-Subject: Re: [PATCH v5 6/7] misc: bcm-vk: add Broadcom VK driver
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Desmond Yan <desmond.yan@broadcom.com>,
-        James Hu <james.hu@broadcom.com>
-References: <20200508002739.19360-1-scott.branden@broadcom.com>
- <20200508002739.19360-7-scott.branden@broadcom.com>
- <20200513003830.GJ11244@42.do-not-panic.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <60372b2f-c03d-6384-43a7-8b97413b6672@broadcom.com>
-Date:   Tue, 12 May 2020 23:31:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 13 May 2020 02:28:25 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3307C061A0E;
+        Tue, 12 May 2020 23:28:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=s72P1h+1SNuz7i/KZdDHVL0BNdtDFvr9evesnBZmvnY=; b=iop6+lQMoytdXn0tR1X1WsTkVu
+        LemLeVMF1/vfug3Ex0f+zgiJ+4pvaBjzAd9YqYi5hK9SSWUaePKkSoKOu4jouytgw+cUuzOGBNefv
+        KkTcW1PMpToaP/UflMWEcFDQiuY+zj2HZVphKwu4atba5n+X/0AVDbFXzczQGcytCiO2Qby7x1iHp
+        Z//K/VbYaGhwo4kBuw3yZMh02ZyxGx4A+1pbotn5ELAw1vKuWsK7zRFKv2mNAsYHc3bDmTvYvWoc3
+        lM1dJepybio6uT0orWBunNhA0vk+hpyb2jFye2bYIEUitQY9/8/ZSaBOqqU4HAzxuV2DzBxJhoUiO
+        R/9s0xKw==;
+Received: from [2001:4bb8:180:9d3f:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jYkrr-0004ay-Lb; Wed, 13 May 2020 06:27:48 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Jon Maloy <jmaloy@redhat.com>,
+        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org,
+        target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
+        linux-cifs@vger.kernel.org, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, netdev@vger.kernel.org,
+        linux-sctp@vger.kernel.org, ceph-devel@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org
+Subject: [PATCH 19/33] ipv4: add ip_sock_set_freebind
+Date:   Wed, 13 May 2020 08:26:34 +0200
+Message-Id: <20200513062649.2100053-20-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200513062649.2100053-1-hch@lst.de>
+References: <20200513062649.2100053-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20200513003830.GJ11244@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luis,
+Add a helper to directly set the IP_FREEBIND sockopt from kernel space
+without going through a fake uaccess.
 
-On 2020-05-12 5:38 p.m., Luis Chamberlain wrote:
-> On Thu, May 07, 2020 at 05:27:38PM -0700, Scott Branden wrote:
->> +#if defined(CONFIG_REQ_FW_INTO_BUF_PRIV)
->> +
->> +#define KERNEL_PREAD_FLAG_PART	0x0001 /* Allow reading part of file */
->> +#define REQUEST_FIRMWARE_INTO_BUF request_firmware_into_buf_priv
->> +int request_firmware_into_buf_priv(const struct firmware **firmware_p,
->> +				   const char *name, struct device *device,
->> +				   void *buf, size_t size,
->> +				   size_t offset, unsigned int pread_flags);
->> +
->> +#else
->> +
->> +#define REQUEST_FIRMWARE_INTO_BUF request_firmware_into_buf
->> +
->> +#endif
->> +
->> +#endif
-> Please clean this up, the code must reflect only the code upstream. No
-> config stuff like this should be used on the driver. I had to stop my
-> review here.
-The CONFIG_ prefix shouldn't have been there as there is no Kconfig 
-option to select this.
-Would like to just change it to a normal define without CONFIG_ prefix 
-instead?
-This code is here to allow a limited version of the driver to run on 
-older kernels which do not have the necessary partial file read support.
-By having it in the upstream codebase we don't need to maintain an 
-internal version of the driver.  User can take the upstream kernel 
-module and compile it against an old version of the kernel by via the 
-define.
->    Luis
-Regards,
-Scott
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/target/iscsi/iscsi_target_login.c | 13 +++----------
+ include/net/ip.h                          |  1 +
+ net/ipv4/ip_sockglue.c                    |  8 ++++++++
+ 3 files changed, 12 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/target/iscsi/iscsi_target_login.c b/drivers/target/iscsi/iscsi_target_login.c
+index 165fa573bcb29..9f69e16cfef5f 100644
+--- a/drivers/target/iscsi/iscsi_target_login.c
++++ b/drivers/target/iscsi/iscsi_target_login.c
+@@ -15,6 +15,7 @@
+ #include <linux/sched/signal.h>
+ #include <linux/idr.h>
+ #include <linux/tcp.h>        /* TCP_NODELAY */
++#include <net/ip.h>
+ #include <net/ipv6.h>         /* ipv6_addr_v4mapped() */
+ #include <scsi/iscsi_proto.h>
+ #include <target/target_core_base.h>
+@@ -855,7 +856,7 @@ int iscsit_setup_np(
+ 	struct sockaddr_storage *sockaddr)
+ {
+ 	struct socket *sock = NULL;
+-	int backlog = ISCSIT_TCP_BACKLOG, ret, opt = 0, len;
++	int backlog = ISCSIT_TCP_BACKLOG, ret, len;
+ 
+ 	switch (np->np_network_transport) {
+ 	case ISCSI_TCP:
+@@ -900,15 +901,7 @@ int iscsit_setup_np(
+ 	if (np->np_network_transport == ISCSI_TCP)
+ 		tcp_sock_set_nodelay(sock->sk, true);
+ 	sock_set_reuseaddr(sock->sk, SK_CAN_REUSE);
+-
+-	opt = 1;
+-	ret = kernel_setsockopt(sock, IPPROTO_IP, IP_FREEBIND,
+-			(char *)&opt, sizeof(opt));
+-	if (ret < 0) {
+-		pr_err("kernel_setsockopt() for IP_FREEBIND"
+-			" failed\n");
+-		goto fail;
+-	}
++	ip_sock_set_freebind(sock->sk, true);
+ 
+ 	ret = kernel_bind(sock, (struct sockaddr *)&np->np_sockaddr, len);
+ 	if (ret < 0) {
+diff --git a/include/net/ip.h b/include/net/ip.h
+index 2fc52e26fa88b..1e2feca8630d0 100644
+--- a/include/net/ip.h
++++ b/include/net/ip.h
+@@ -766,5 +766,6 @@ static inline bool inetdev_valid_mtu(unsigned int mtu)
+ }
+ 
+ void ip_sock_set_tos(struct sock *sk, int val);
++void ip_sock_set_freebind(struct sock *sk, bool val);
+ 
+ #endif	/* _IP_H */
+diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
+index 1733ac78c21aa..0c40887a817f8 100644
+--- a/net/ipv4/ip_sockglue.c
++++ b/net/ipv4/ip_sockglue.c
+@@ -581,6 +581,14 @@ void ip_sock_set_tos(struct sock *sk, int val)
+ }
+ EXPORT_SYMBOL(ip_sock_set_tos);
+ 
++void ip_sock_set_freebind(struct sock *sk, bool val)
++{
++	lock_sock(sk);
++	inet_sk(sk)->freebind = val;
++	release_sock(sk);
++}
++EXPORT_SYMBOL(ip_sock_set_freebind);
++
+ /*
+  *	Socket option code for IP. This is the end of the line after any
+  *	TCP,UDP etc options on an IP socket.
+-- 
+2.26.2
+
