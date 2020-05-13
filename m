@@ -2,195 +2,206 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B46CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBC7CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47EF820643
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CC61204EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:35:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z3zy8N5e"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="H8+uyPoi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388549AbgEMNfQ (ORCPT
+        id S2388565AbgEMNfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:35:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56176 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388498AbgEMNfC (ORCPT
+        Wed, 13 May 2020 09:35:23 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:38058 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388015AbgEMNdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:35:02 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78C50C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:35:02 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id r17so10608123lff.9
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:35:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AbLaM0zuS8RSNZ5KCHHZ6Ac152Q0ScrgI1ljQOu9aJE=;
-        b=Z3zy8N5e/5EgnatAgskbT9OXirHcNqQ7fTlo/YKqHV1m5BM1RVkKBpuiIyRaEQWi7A
-         zO6YxV0ROpQ6WIuWP9zXO7fqir2p3ilOa6tRn/Sk3FLWOMVdmfVet/OBGYLotV2ovWuF
-         Hrds8StM+QFbwfMZbrm1xouLulRg/WzYRi305dZ8QDIuF/vaH+uB/GZm6iSOVPqxl/g3
-         Xlxwd39klDGBj45LEzSyGeKLdICjpN+To1D5o2xAS1FchGZ5tPXjAikGdum/gp+y23Bh
-         llqYknMfCUZRZGmHkN0z7/eyytGU+4k9LSObmyuXIWY/uqRHd9fMpbBZn5eap5HGsqxn
-         9wdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AbLaM0zuS8RSNZ5KCHHZ6Ac152Q0ScrgI1ljQOu9aJE=;
-        b=C3Ys1FVyQZ7FCwOrba2pUYR7vqDAnYDjJFXwTgNX4e4FUjy7vYvgJZU5BuOZdEk2hb
-         K97NkWpsLYpkNMDqApIg13XO7vrLWcwwnp1vdBuY9rd4Krs/5NUejQBjnOCz9HzVtY39
-         TBtOGrBtS/jUVncTicUG3QD5c54VG6rTd4xrpxbfOEq9VxJQEf3p17oiTNN23QFJVaN/
-         iQS8sVe/SLFLLy/i/Si8m3dSN7M+4ivKWTB07HmT+2amtgJKgT/rvhzUzfX10k13qeXJ
-         I0Fw02z+Im7yElGMM5Q9SRLTtUpjYQBW6HhxgucZZK/+nI7pgo3aWTK+ERX4rET/OQtV
-         fdLw==
-X-Gm-Message-State: AOAM532MQPxjBtBxi85nIBgg7I1lduoQRJbNUzTq/E8aoH9b2I2yQk+a
-        /+yLXgZC01Y5mKMDKnP8HirtXjhhi1PjGJmxciPX3A==
-X-Google-Smtp-Source: ABdhPJwfDPLhZmMoBn1O6IHENozAHHXWYdX6zwDLq85eaDYbcafk51r8oY0LcH3KbleB+lci1jFw6H8KtWuXpRg1hpU=
-X-Received: by 2002:ac2:4293:: with SMTP id m19mr8978614lfh.204.1589376899941;
- Wed, 13 May 2020 06:34:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <1589273314-12060-1-git-send-email-sumit.garg@linaro.org> <20200512142533.ta4uejwmq5gchtlx@holly.lan>
-In-Reply-To: <20200512142533.ta4uejwmq5gchtlx@holly.lan>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Wed, 13 May 2020 19:04:48 +0530
-Message-ID: <CAFA6WYOV7oPbYE=9fXueYMacb5wv0r9T6F8tmECt-Eafe-fctw@mail.gmail.com>
-Subject: Re: [PATCH] kgdb: Fix broken handling of printk() in NMI context
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 13 May 2020 09:33:09 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200513133306euoutp02f7cecd193194111328495340431d6e06~OmcRDN4te0034400344euoutp02H
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 13:33:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200513133306euoutp02f7cecd193194111328495340431d6e06~OmcRDN4te0034400344euoutp02H
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1589376786;
+        bh=gZGVsSDcbwrljYEHVBEjPEV3W1/1ADc/2P3q0AYBce4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=H8+uyPoiLwlb3LLCNjBZkYMvcq2apGQ2utb0ajKqzaHfnYsxj1W55ETtK7qiB+Ld+
+         qUqqJbgqXT2JD9OvjxHx5bgizFOmDDMBkfCManSnuVpllS5JHkcOsbns/h97947dpa
+         l3NPDt0diltZmNto47ouOM2UoWw84OTohfaGNcTY=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200513133306eucas1p28688f5d44bb4367f2d155b5e4b7eb5e7~OmcQuEj1v1832718327eucas1p2V;
+        Wed, 13 May 2020 13:33:06 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 94.D8.60698.217FBBE5; Wed, 13
+        May 2020 14:33:06 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200513133305eucas1p15187ed8fa1e4af181cafa5c65ddab4cd~OmcQBXNLu2350623506eucas1p1C;
+        Wed, 13 May 2020 13:33:05 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200513133305eusmtrp199c625ef01bb9c222eb86c8836b03bd5~OmcQAmRBa1011910119eusmtrp1G;
+        Wed, 13 May 2020 13:33:05 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-c7-5ebbf712db37
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 59.37.07950.117FBBE5; Wed, 13
+        May 2020 14:33:05 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200513133304eusmtip170a2c07de6cad9434cec876a3cc4adde~OmcPXpCC80693306933eusmtip1_;
+        Wed, 13 May 2020 13:33:04 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Qiang Yu <yuq825@gmail.com>,
+        lima@lists.freedesktop.org
+Subject: [PATCH v5 13/38] drm: lima: fix common struct sg_table related
+ issues
+Date:   Wed, 13 May 2020 15:32:20 +0200
+Message-Id: <20200513133245.6408-13-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200513133245.6408-1-m.szyprowski@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGKsWRmVeSWpSXmKPExsWy7djPc7pC33fHGZxZLWrRe+4kk8XGGetZ
+        Lf5vm8hsceXrezaLlauPMlks2G9t8XneJjaLL1ceMllsenyN1eLyrjlsFmuP3GW3OPjhCavF
+        h7VfmRx4PdbMW8PosffbAhaPnbPusnts//aA1eN+93Emj81L6j1u/3vM7DH5xnJGj903G9g8
+        +rasYvT4vEkugDuKyyYlNSezLLVI3y6BK+N7Ux9jwXPpinUT2lgbGKeJdzFyckgImEi8e7uD
+        pYuRi0NIYAWjxI19D5ggnC+MEjvXnGCGcD4zStxuuAdUxgHWsneTCER8OaPEsin9CB2v9rax
+        gMxlEzCU6HrbxQZiiwi0Mkqc6OUBKWIWuMwkMf9oE1iRsECAxOYTS9hBbBYBVYndHw+xgmzg
+        FbCV2NRdAHGfvMTqDQeYQWxOoPCrO/vBbpUQOMYu8WTdb2aIIheJQ1unQNnCEq+Ob2GHsGUk
+        Tk/ugWpoZpR4eG4tO4TTwyhxuWkGI0SVtcSdc7/YQDYzC2hKrN+lDxF2lGhtuAT1Mp/EjbeC
+        IGFmIHPStunMEGFeiY42IYhqNYlZx9fBrT144RLUOR4SR879ZIQE0GFGia3LVzFOYJSfhbBs
+        ASPjKkbx1NLi3PTUYuO81HK94sTc4tK8dL3k/NxNjMDUdPrf8a87GPf9STrEKMDBqMTD++D6
+        7jgh1sSy4srcQ4wSHMxKIrx+64FCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeY0XvYwVEkhPLEnN
+        Tk0tSC2CyTJxcEo1MBbFS6S9m1bfWHE+6P/dL95Kr+UVy0Ikvj7XaxfiZlG+/O5A0qZfgpWf
+        4n+7r1jCn/x1ip1UMrPVukI93qKH2792nrK8buCVmSfaZ1xtOXXSlLB5n3/Jm5c5y05S/SAu
+        xDNtbvFrxm/nLRJ/m7ZUFhrOMO9QP6CZnb7ngelZviaxusApHHxmSizFGYmGWsxFxYkAwK2W
+        fkkDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOIsWRmVeSWpSXmKPExsVy+t/xu7qC33fHGdxarWzRe+4kk8XGGetZ
+        Lf5vm8hsceXrezaLlauPMlks2G9t8XneJjaLL1ceMllsenyN1eLyrjlsFmuP3GW3OPjhCavF
+        h7VfmRx4PdbMW8PosffbAhaPnbPusnts//aA1eN+93Emj81L6j1u/3vM7DH5xnJGj903G9g8
+        +rasYvT4vEkugDtKz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSez
+        LLVI3y5BL+N7Ux9jwXPpinUT2lgbGKeJdzFycEgImEjs3STSxcjFISSwlFFi/6rJzF2MnEBx
+        GYmT0xpYIWxhiT/Xutggij4xSkw+1AZWxCZgKNH1FiIhItDJKDGt+yM7iMMscJtJ4szcCWBV
+        wgJ+EntufmcCsVkEVCV2fzzECrKaV8BWYlN3AcQGeYnVGw6AlXMChV/d2c8CYgsJ5EvsXbyP
+        bQIj3wJGhlWMIqmlxbnpucVGesWJucWleel6yfm5mxiBkbLt2M8tOxi73gUfYhTgYFTi4bW4
+        tTtOiDWxrLgy9xCjBAezkgiv33qgEG9KYmVValF+fFFpTmrxIUZToJsmMkuJJucDozivJN7Q
+        1NDcwtLQ3Njc2MxCSZy3Q+BgjJBAemJJanZqakFqEUwfEwenVAOjDEcLk+FOpv6nAjM2O0yb
+        zzL7mtMs/bg7EZrXbn6Q3BjP9mnVzGpjwy7+Nw8TG9zy5bpP1H+dxbg5b5cno/X31kmCfjPj
+        bkoFqP0XOvzJ+Fv1J0XfTrtTrbefySr+lve84bd/4lbbLxVNye6fls1deMRl5Xr5Y3Zna18e
+        VFnnEPnoeiPPhF+VSizFGYmGWsxFxYkA3PtXr6oCAAA=
+X-CMS-MailID: 20200513133305eucas1p15187ed8fa1e4af181cafa5c65ddab4cd
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200513133305eucas1p15187ed8fa1e4af181cafa5c65ddab4cd
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200513133305eucas1p15187ed8fa1e4af181cafa5c65ddab4cd
+References: <20200513132114.6046-1-m.szyprowski@samsung.com>
+        <20200513133245.6408-1-m.szyprowski@samsung.com>
+        <CGME20200513133305eucas1p15187ed8fa1e4af181cafa5c65ddab4cd@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 May 2020 at 19:55, Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
->
-> On Tue, May 12, 2020 at 02:18:34PM +0530, Sumit Garg wrote:
-> > Since commit 42a0bb3f7138 ("printk/nmi: generic solution for safe printk
-> > in NMI"), kgdb entry in NMI context defaults to use safe NMI printk()
->
-> I didn't see the author on Cc: nor any of the folks whose hands it
-> passed through. It would definitely be good to involve them in this
-> discussion.
->
+The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
+returns the number of the created entries in the DMA address space.
+However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
+dma_unmap_sg must be called with the original number of the entries
+passed to the dma_map_sg().
 
-Thanks for updating the Cc: list.
+struct sg_table is a common structure used for describing a non-contiguous
+memory buffer, used commonly in the DRM and graphics subsystems. It
+consists of a scatterlist with memory pages and DMA addresses (sgl entry),
+as well as the number of scatterlist entries: CPU pages (orig_nents entry)
+and DMA mapped pages (nents entry).
 
->
-> > which involves CPU specific buffers and deferred printk() until exit from
-> > NMI context.
-> >
-> > But kgdb being a stop-the-world debugger, we don't want to defer printk()
-> > especially backtrace on corresponding CPUs. So instead switch to normal
-> > printk() mode in kgdb_cpu_enter() if entry is in NMI context.
->
-> So, firstly I should *definitely* take a mea cupla for not shouting
-> about this at the time (I was on Cc:... twice). Only thing I can say
-> confidently is that the test suite didn't yell about this and so I
-> didn't look at this as closely as I should have done (and that it
-> didn't yell is mostly because I'm still building out the test suite
-> coverage).
->
-> Anyhow...
->
-> This feels a little like we are smearing the printk() interception logic
-> across the kernel in ways that make things hard to read. If we accepted
-> this patch we then have, the new NMI interception logic, the old kdb
-> interception logic and some hacks in the kgdb trap handler to defang the
-> NMI interception logic and force the kdb logic to kick in.
->
-> Wouldn't it be better to migrate kdb interception logic up a couple of
-> levels so that it continues to function even when we are in nmi printk
-> mode. That way *all* the printk() interception code would end up in
-> one place.
->
+It turned out that it was a common mistake to misuse nents and orig_nents
+entries, calling DMA-mapping functions with a wrong number of entries or
+ignoring the number of mapped entries returned by the dma_map_sg()
+function.
 
-Yes it would be better to have all printk() interception code at one
-place. Let me see if I can come up with an integrated logic.
+To avoid such issues, lets use a common dma-mapping wrappers operating
+directly on the struct sg_table objects and use scatterlist page
+iterators where possible. This, almost always, hides references to the
+nents and orig_nents entries, making the code robust, easier to follow
+and copy/paste safe.
 
-> Finally some clue description of how to provoke the problem would be
-> useful... that sort of things helps me to grow the test suite coverage.
->
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+For more information, see '[PATCH v5 00/38] DRM: fix struct sg_table nents
+vs. orig_nents misuse' thread:
+https://lore.kernel.org/linux-iommu/20200513132114.6046-1-m.szyprowski@samsung.com/T/
+---
+ drivers/gpu/drm/lima/lima_gem.c | 11 ++++++++---
+ drivers/gpu/drm/lima/lima_vm.c  |  5 ++---
+ 2 files changed, 10 insertions(+), 6 deletions(-)
 
-Sure I will update the description. BTW, this issue can be easily
-reproduced via issuing a backtrace (kdb command: "bt or btc") on a CPU
-which entered kgdb in NMI context.
+diff --git a/drivers/gpu/drm/lima/lima_gem.c b/drivers/gpu/drm/lima/lima_gem.c
+index 5404e0d..cda43f6 100644
+--- a/drivers/gpu/drm/lima/lima_gem.c
++++ b/drivers/gpu/drm/lima/lima_gem.c
+@@ -69,8 +69,7 @@ int lima_heap_alloc(struct lima_bo *bo, struct lima_vm *vm)
+ 		return ret;
+ 
+ 	if (bo->base.sgt) {
+-		dma_unmap_sg(dev, bo->base.sgt->sgl,
+-			     bo->base.sgt->nents, DMA_BIDIRECTIONAL);
++		dma_unmap_sgtable(dev, bo->base.sgt, DMA_BIDIRECTIONAL, 0);
+ 		sg_free_table(bo->base.sgt);
+ 	} else {
+ 		bo->base.sgt = kmalloc(sizeof(*bo->base.sgt), GFP_KERNEL);
+@@ -80,7 +79,13 @@ int lima_heap_alloc(struct lima_bo *bo, struct lima_vm *vm)
+ 		}
+ 	}
+ 
+-	dma_map_sg(dev, sgt.sgl, sgt.nents, DMA_BIDIRECTIONAL);
++	ret = dma_map_sgtable(dev, &sgt, DMA_BIDIRECTIONAL, 0);
++	if (ret) {
++		sg_free_table(&sgt);
++		kfree(bo->base.sgt);
++		bo->base.sgt = NULL;
++		return ret;
++	}
+ 
+ 	*bo->base.sgt = sgt;
+ 
+diff --git a/drivers/gpu/drm/lima/lima_vm.c b/drivers/gpu/drm/lima/lima_vm.c
+index 5b92fb8..2b2739a 100644
+--- a/drivers/gpu/drm/lima/lima_vm.c
++++ b/drivers/gpu/drm/lima/lima_vm.c
+@@ -124,7 +124,7 @@ int lima_vm_bo_add(struct lima_vm *vm, struct lima_bo *bo, bool create)
+ 	if (err)
+ 		goto err_out1;
+ 
+-	for_each_sg_dma_page(bo->base.sgt->sgl, &sg_iter, bo->base.sgt->nents, 0) {
++	for_each_sgtable_dma_page(bo->base.sgt, &sg_iter, 0) {
+ 		err = lima_vm_map_page(vm, sg_page_iter_dma_address(&sg_iter),
+ 				       bo_va->node.start + offset);
+ 		if (err)
+@@ -298,8 +298,7 @@ int lima_vm_map_bo(struct lima_vm *vm, struct lima_bo *bo, int pageoff)
+ 	mutex_lock(&vm->lock);
+ 
+ 	base = bo_va->node.start + (pageoff << PAGE_SHIFT);
+-	for_each_sg_dma_page(bo->base.sgt->sgl, &sg_iter,
+-			     bo->base.sgt->nents, pageoff) {
++	for_each_sgtable_dma_page(bo->base.sgt, &sg_iter, pageoff) {
+ 		err = lima_vm_map_page(vm, sg_page_iter_dma_address(&sg_iter),
+ 				       base + offset);
+ 		if (err)
+-- 
+1.9.1
 
--Sumit
-
->
-> Daniel.
->
->
-> >
-> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> > ---
-> >
-> > Similar change was posted earlier specific to arm64 here [1]. But after
-> > discussions it emerged out that this broken handling of printk() in NMI
-> > context should be a common problem that is relevant to other archs as well.
-> > So fix this handling in kgdb_cpu_enter() as there can be multiple entry
-> > points to kgdb in NMI context.
-> >
-> > [1] https://lkml.org/lkml/2020/4/24/328
-> >
-> >  kernel/debug/debug_core.c | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> >
-> > diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-> > index 2b7c9b6..ab2933f 100644
-> > --- a/kernel/debug/debug_core.c
-> > +++ b/kernel/debug/debug_core.c
-> > @@ -567,6 +567,15 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
-> >       kgdb_info[ks->cpu].enter_kgdb++;
-> >       kgdb_info[ks->cpu].exception_state |= exception_state;
-> >
-> > +     /*
-> > +      * kgdb entry in NMI context defaults to use safe NMI printk() which
-> > +      * involves CPU specific buffers and deferred printk() until exit from
-> > +      * NMI context. But kgdb being a stop-the-world debugger, we don't want
-> > +      * to defer printk(). So instead switch to normal printk() mode here.
-> > +      */
-> > +     if (in_nmi())
-> > +             printk_nmi_exit();
-> > +
-> >       if (exception_state == DCPU_WANT_MASTER)
-> >               atomic_inc(&masters_in_kgdb);
-> >       else
-> > @@ -635,6 +644,8 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
-> >                       atomic_dec(&slaves_in_kgdb);
-> >                       dbg_touch_watchdogs();
-> >                       local_irq_restore(flags);
-> > +                     if (in_nmi())
-> > +                             printk_nmi_enter();
-> >                       return 0;
-> >               }
-> >               cpu_relax();
-> > @@ -772,6 +783,8 @@ static int kgdb_cpu_enter(struct kgdb_state *ks, struct pt_regs *regs,
-> >       raw_spin_unlock(&dbg_master_lock);
-> >       dbg_touch_watchdogs();
-> >       local_irq_restore(flags);
-> > +     if (in_nmi())
-> > +             printk_nmi_enter();
-> >
-> >       return kgdb_info[cpu].ret_state;
-> >  }
-> > --
-> > 2.7.4
-> >
