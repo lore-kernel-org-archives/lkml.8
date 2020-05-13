@@ -2,215 +2,121 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AEDC2D0F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA25C2D0F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7DCA206CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:59:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="MpB0XIHM"
+	by mail.kernel.org (Postfix) with ESMTP id AA49420714
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:02:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728424AbgEMB7v (ORCPT
+        id S1728384AbgEMCCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 21:59:51 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:56972 "EHLO vps0.lunn.ch"
+        Tue, 12 May 2020 22:02:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726885AbgEMB7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 21:59:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=b7RrNiCav3BfKDCsCqG8wApdlCITQbgBHil/CGwVYAg=; b=MpB0XIHMrWz/zvuNFYXzCW7MDy
-        sMF4pPrI/ZsxszE0NkWmGn3WpEf6JOQK3Lfri383ika76/qcGqdaNbc4frx1gQiGI4Puqm5AeZ3IR
-        0Rwxxxo5fnzWphG95HH9K6RoYCLUVXOh8B8I8oNFT0VuU++gK6SHyATGqagAzFtPFcuM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jYggS-0027Tw-91; Wed, 13 May 2020 03:59:44 +0200
-Date:   Wed, 13 May 2020 03:59:44 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Yonglong Liu <liuyonglong@huawei.com>
-Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linuxarm@huawei.com, Salil Mehta <salil.mehta@huawei.com>
-Subject: Re: [question] net: phy: rtl8211f: link speed shows 1000Mb/s but
- actual link speed in phy is 100Mb/s
-Message-ID: <20200513015944.GA501603@lunn.ch>
-References: <478f871a-583d-01f1-9cc5-2eea56d8c2a7@huawei.com>
- <20200512140017.GK409897@lunn.ch>
- <ef25a0a2-e13f-def1-5e91-ceae1bfaf333@huawei.com>
+        id S1726287AbgEMCCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 22:02:34 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6FCA206CC;
+        Wed, 13 May 2020 02:02:31 +0000 (UTC)
+Date:   Tue, 12 May 2020 22:02:30 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [patch V5 02/38] x86/entry/64: Use native swapgs in
+ asm_native_load_gs_index()
+Message-ID: <20200512220230.629a230f@oasis.local.home>
+In-Reply-To: <20200512213809.583980272@linutronix.de>
+References: <20200512210059.056244513@linutronix.de>
+        <20200512213809.583980272@linutronix.de>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ef25a0a2-e13f-def1-5e91-ceae1bfaf333@huawei.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 09:34:13AM +0800, Yonglong Liu wrote:
-> Hi, Andrew:
-> 	Thanks for your reply!
+On Tue, 12 May 2020 23:01:01 +0200
+Thomas Gleixner <tglx@linutronix.de> wrote:
+
+> When PARAVIRT_XXL is in use, then load_gs_index() uses
+> xen_load_gs_index() and (asm_))native_load_gs_index() is unused.
 > 
-> On 2020/5/12 22:00, Andrew Lunn wrote:
-> > On Tue, May 12, 2020 at 08:48:21PM +0800, Yonglong Liu wrote:
-> >> I use two devices, both support 1000M speed, they are directly connected
-> >> with a network cable. Two devices enable autoneg, and then do the following
-> >> test repeatedly:
-> >> 	ifconfig eth5 down
-> >> 	ifconfig eth5 up
-> >> 	sleep $((RANDOM%6))
-> >> 	ifconfig eth5 down
-> >> 	ifconfig eth5 up
-> >> 	sleep 10
-> >>
-> >> With low probability, one device A link up with 100Mb/s, the other B link up with
-> >> 1000Mb/s(the actual link speed read from phy is 100Mb/s), and the network can
-> >> not work.
-> >>
-> >> device A:
-> >> Settings for eth5:
-> >>         Supported ports: [ TP ]
-> >>         Supported link modes:   10baseT/Half 10baseT/Full
-> >>                                 100baseT/Half 100baseT/Full
-> >>                                 1000baseT/Full
-> >>         Supported pause frame use: Symmetric Receive-only
-> >>         Supports auto-negotiation: Yes
-> >>         Supported FEC modes: Not reported
-> >>         Advertised link modes:  10baseT/Half 10baseT/Full
-> >>                                 100baseT/Half 100baseT/Full
-> >>                                 1000baseT/Full
-> >>         Advertised pause frame use: Symmetric
-> >>         Advertised auto-negotiation: Yes
-> >>         Advertised FEC modes: Not reported
-> >>         Link partner advertised link modes:  10baseT/Half 10baseT/Full
-> >>                                              100baseT/Half 100baseT/Full
-> >>         Link partner advertised pause frame use: Symmetric
-> >>         Link partner advertised auto-negotiation: Yes
-> >>         Link partner advertised FEC modes: Not reported
-> >>         Speed: 100Mb/s
-> >>         Duplex: Full
-> >>         Port: MII
-> >>         PHYAD: 3
-> >>         Transceiver: internal
-> >>         Auto-negotiation: on
-> >>         Current message level: 0x00000036 (54)
-> >>                                probe link ifdown ifup
-> >>         Link detected: yes
-> >>
-> >> The regs value read from mdio are:
-> >> reg 9 = 0x200
-> >> reg a = 0
-> >>
-> >> device B:
-> >> Settings for eth5:
-> >>         Supported ports: [ TP ]
-> >>         Supported link modes:   10baseT/Half 10baseT/Full
-> >>                                 100baseT/Half 100baseT/Full
-> >>                                 1000baseT/Full
-> >>         Supported pause frame use: Symmetric Receive-only
-> >>         Supports auto-negotiation: Yes
-> >>         Supported FEC modes: Not reported
-> >>         Advertised link modes:  10baseT/Half 10baseT/Full
-> >>                                 100baseT/Half 100baseT/Full
-> >>                                 1000baseT/Full
-> >>         Advertised pause frame use: Symmetric
-> >>         Advertised auto-negotiation: Yes
-> >>         Advertised FEC modes: Not reported
-> >>         Link partner advertised link modes:  10baseT/Half 10baseT/Full
-> >>                                              100baseT/Half 100baseT/Full
-> >>                                              1000baseT/Full
-> >>         Link partner advertised pause frame use: Symmetric
-> >>         Link partner advertised auto-negotiation: Yes
-> >>         Link partner advertised FEC modes: Not reported
-> >>         Speed: 1000Mb/s
-> >>         Duplex: Full
-> >>         Port: MII
-> >>         PHYAD: 3
-> >>         Transceiver: internal
-> >>         Auto-negotiation: on
-> >>         Current message level: 0x00000036 (54)
-> >>                                probe link ifdown ifup
-> >>         Link detected: yes
-> >>
-> >> The regs value read from mdio are:
-> >> reg 9 = 0
-> >> reg a = 0x800
-> >>
-> >> I had talk to the FAE of rtl8211f, they said if negotiation failed with 1000Mb/s,
-> >> rtl8211f will change reg 9 to 0, than try to negotiation with 100Mb/s.
-> >>
-> >> The problem happened as:
-> >> ifconfig eth5 up -> phy_start -> phy_start_aneg -> phy_modify_changed(MII_CTRL1000)
-> >> (this time both A and B, reg 9 = 0x200) -> wait for link up -> (B: reg 9 changed to 0)
-> >> -> link up.
-> > 
-> > This sounds like downshift, but not correctly working. 1Gbps requires
-> > that 4 pairs in the cable work. If a 1Gbps link is negotiated, but
-> > then does not establish because one of the pairs is broken, some PHYs
-> > will try to 'downshift'. They drop down to 100Mbps, which only
-> > requires two pairs of the cable to work. To do this, the PHY should
-> > change what it is advertising, to no longer advertise 1G, just 100M
-> > and 10M. The link partner should then try to use 100Mbps and
-> > hopefully, a link is established.
-> > 
-> > Looking at the ethtool, you can see device A is reporting device B is
-> > only advertising upto 100Mbps. Yet it is locally using 1G. That is
-> > broken. So i would say device A has the problem. Are both PHYs
-> > rtl8211f?
+> It's therefore pointless to use the paravirtualized SWAPGS implementation
+> in asm_native_load_gs_index(). Switch it to a plain swapgs.
 > 
-> Both PHY is rtl8211f. I think Device B is broken. Device B advertising
-> it supported 1G, but actually, in phy, downshift to 100M, so Device B
-> link up with 1G in driver side, but actually 100M in phy.
-
-You have to be careful with the output of ethtool. Downshift is not
-part of 802.3. There i no standard register to indicate it has
-happened. Sometimes there is a vendor register. You should check the
-datasheet, and look at what other PHY drivers do for this, and
-phy_check_downshift().
-
-> > Are you 100% sure your cable and board layout is good? Is it
-> > trying downshift because something is broken? Fix the
-> > cable/connector and the
-
-> Will check the layout with hardware engineer. This happened with a low
-> probability. When this happened, another down/up operation or restart
-> autoneg will solved.
- 
-> > reason to downshift goes away. But it does not solve the problem if a
-> > customer has a broken cable. So you might want to deliberately cut a
-> > pair in the cable so it becomes 100% reproducable and try to debug it
-> > further. See if you can find out why auto-neg is not working
-> > correctly.
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Juergen Gross <jgross@suse.com>
+> ---
+>  arch/x86/entry/entry_64.S |    6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> So, your opinion is, maybe we should checkout whether the hardware layout
-> or cable have problem?
+> --- a/arch/x86/entry/entry_64.S
+> +++ b/arch/x86/entry/entry_64.S
+> @@ -1043,11 +1043,11 @@ idtentry simd_coprocessor_error		do_simd
+>   */
+>  SYM_FUNC_START(asm_native_load_gs_index)
 
-Well, there are a couple of issues here.
+Small nit, but I would just call this: asm_load_gs_index.
 
-It could be a hardware problem. Best case, it is the cable. But if you
-can reproduce it with other boards, it is a board design issue, which
-you might want to get fixed. If it happens for you in the lab, it will
-probably happen out in the field.
+The "native" word is usually reserved for functions that are for bare
+metal and have a paravirt counterpart. As there is a
+native_load_gs_index(), I don't envision a need for a paravirt version
+of the asm function.
 
-You should also consider what you want to happen with a cable that
-really is broken. It would be nice if downshift worked. Slower
-networking is better than no networking. Unless you have a requirement
-that 100Mbps is too slow for your use case. So you might want to debug
-what is going wrong when downshift happens.
+Other than that.
 
-> By the way, do we have some mechanism to solve this downshift in software
-> side? If the PHY advertising downshift to 100M, but software still have
-> advertising with 1G(just like Device B), it will always have a broken network.
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-You might get some ideas from phy_check_downshift(). A lot will
-depended on what information you can get from the PHY.
+-- Steve
 
-	 Andrew
+
+>  	FRAME_BEGIN
+> -	SWAPGS
+> +	swapgs
+>  .Lgs_change:
+>  	movl	%edi, %gs
+>  2:	ALTERNATIVE "", "mfence", X86_BUG_SWAPGS_FENCE
+> -	SWAPGS
+> +	swapgs
+>  	FRAME_END
+>  	ret
+>  SYM_FUNC_END(asm_native_load_gs_index)
+> @@ -1057,7 +1057,7 @@ EXPORT_SYMBOL(asm_native_load_gs_index)
+>  	.section .fixup, "ax"
+>  	/* running with kernelgs */
+>  SYM_CODE_START_LOCAL_NOALIGN(.Lbad_gs)
+> -	SWAPGS					/* switch back to user gs */
+> +	swapgs					/* switch back to user gs */
+>  .macro ZAP_GS
+>  	/* This can't be a string because the preprocessor needs to see it. */
+>  	movl $__USER_DS, %eax
+
