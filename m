@@ -2,136 +2,90 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07AA9C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F08EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2E8F206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0B502054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:07:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589396601;
-	bh=JI6Bcx1e5I0b//i3CRdT98HUPH8i1BeSBewHUjyc5Gc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=T3WJy0Wt1DMeNReGK11MFULy8yrMO14yUeYHJTAzA6uGud2a6WY3mn/cUltGQeetM
-	 4znVeqscP5tjbTZTINAz0wylmbTiI553Ls1grS6SLLe5zHz6QZ6/hEGqFjdIVGLgWQ
-	 jcmARypsgCdJ6ulX9fnpEV0YGjbmFFqsFm0YZKrc=
+	s=default; t=1589396839;
+	bh=6ic+6n1wGdR4/pvLTH/MP65+OfXLiPfd9XYBKnzj5LE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=kuyxA1bzti1MD1R8ff5oe2MW/iUiBxBwC7X+TYNUD8NCkGA7sPp49RPyeGhQvQ8V9
+	 0wN/sBji5seLiVJuV09nOsWQMGiJ1TyAJjLnKpx+VDyDrMD+FrmVs9VNNyTyk04f/K
+	 vJp6KgdrOSj8mfpQPEPLg6OrV3dmnlFO33+xv6Yk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390441AbgEMTDS (ORCPT
+        id S2390277AbgEMTHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 15:03:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37136 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 15:07:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390021AbgEMTDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 15:03:17 -0400
-Received: from localhost.localdomain (pool-96-246-152-186.nycmny.fios.verizon.net [96.246.152.186])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1732218AbgEMTHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 15:07:17 -0400
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E31F20671;
-        Wed, 13 May 2020 19:03:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20DB12054F;
+        Wed, 13 May 2020 19:07:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589396597;
-        bh=JI6Bcx1e5I0b//i3CRdT98HUPH8i1BeSBewHUjyc5Gc=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=z59eA5eRAiyCiuxUQzprR/t+ePsfTbHqMebUvWR9hw+6ql5W3gWarFW8b+usW31Wk
-         9ViZb7sqp8IyDK/8aHlqMQSKcDNHrtP5NGhtQU1iYj/UDBdR+PyEtkVFhZcEqYiJ5D
-         d1pMsiBjZ5JNPWirsmOYIKSiy+7o2LmuHO9bVfCs=
-Message-ID: <1589396593.5098.166.camel@kernel.org>
-Subject: Re: [PATCH v5 1/7] fs: introduce kernel_pread_file* support
-From:   Mimi Zohar <zohar@kernel.org>
-To:     Scott Branden <scott.branden@broadcom.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>
-Date:   Wed, 13 May 2020 15:03:13 -0400
-In-Reply-To: <0e6b5f65-8c61-b02e-7d35-b4ae52aebcf3@broadcom.com>
-References: <20200508002739.19360-1-scott.branden@broadcom.com>
-         <20200508002739.19360-2-scott.branden@broadcom.com>
-         <1589395153.5098.158.camel@kernel.org>
-         <0e6b5f65-8c61-b02e-7d35-b4ae52aebcf3@broadcom.com>
+        s=default; t=1589396837;
+        bh=6ic+6n1wGdR4/pvLTH/MP65+OfXLiPfd9XYBKnzj5LE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EBccvFjgyFZKOaGw8K7zRaf94Y0GYjmBm3DVxnG/mr99sytI1GEXGGKNw4h1testq
+         YAXlpbUlELnBw+zbEXKgNTYCv0DWPQ++h5wrBnqJCFQZKmFrf1MHkGFqn6URrD1VCb
+         X8sLenn4g31EV+qEfTegBWcSzb8rseKCo48bNsoc=
+Received: by mail-lj1-f172.google.com with SMTP id g4so830654ljl.2;
+        Wed, 13 May 2020 12:07:16 -0700 (PDT)
+X-Gm-Message-State: AOAM530Q2aiSgi1JMAXi6o0n/3IsLjfLZE3GLQigXM2lVMT2Ana1ItaB
+        EocEJMtZ+cY7uZqvcBo+I07hPc7Y/MMRWL2TmXE=
+X-Google-Smtp-Source: ABdhPJwhjKXZi/3px+fkVHMw+xlVjv1OBZRwcd2CD1ekChseDXAGim42sSfrsnEAiUSt7Io9FYoYMR4DfNKC8IhTYnw=
+X-Received: by 2002:a05:651c:1025:: with SMTP id w5mr331990ljm.113.1589396834316;
+ Wed, 13 May 2020 12:07:14 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200507192209.GA16290@embeddedor>
+In-Reply-To: <20200507192209.GA16290@embeddedor>
+From:   Song Liu <song@kernel.org>
+Date:   Wed, 13 May 2020 12:07:03 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW5auRH2K5YyxGL6P4sy7hugF1N2s3AVj7GYOj_9EWKmFA@mail.gmail.com>
+Message-ID: <CAPhsuW5auRH2K5YyxGL6P4sy7hugF1N2s3AVj7GYOj_9EWKmFA@mail.gmail.com>
+Subject: Re: [PATCH] md/raid1: Replace zero-length array with flexible-array
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     linux-raid <linux-raid@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-05-13 at 11:53 -0700, Scott Branden wrote:
-> Hi Mimi,
-> 
-> On 2020-05-13 11:39 a.m., Mimi Zohar wrote:
-> > [Cc'ing linux-security-module, linux-integrity]
-> >
-> > On Thu, 2020-05-07 at 17:27 -0700, Scott Branden wrote:
-> >> Add kernel_pread_file* support to kernel to allow for partial read
-> >> of files with an offset into the file.  Existing kernel_read_file
-> >> functions call new kernel_pread_file functions with offset=0 and
-> >> flags=KERNEL_PREAD_FLAG_WHOLE.
-> >>
-> >> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-> >> ---
-> > <snip>
-> >
-> >> @@ -941,14 +955,16 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
-> The checkpatch shows this as kernel_read_file when it is actually the 
-> new function kernel_pread_file.
-> Please see the call to kernel_pread_file from kernel_read_file in the 
-> complete patch rather this snippet.
-> >>   
-> >>   		if (bytes == 0)
-> >>   			break;
-> >> +
-> >> +		buf_pos += bytes;
-> >>   	}
-> >>   
-> >> -	if (pos != i_size) {
-> >> +	if (pos != read_end) {
-> >>   		ret = -EIO;
-> >>   		goto out_free;
-> >>   	}
-> >>   
-> >> -	ret = security_kernel_post_read_file(file, *buf, i_size, id);
-> >> +	ret = security_kernel_post_read_file(file, *buf, alloc_size, id);
-> >>   	if (!ret)
-> >>   		*size = pos;
-> > Prior to the patch set that introduced this security hook, firmware
-> > would be read twice, once for measuring/appraising the firmware and
-> > again reading the file contents into memory.  Partial reads will break
-> > both IMA's measuring the file and appraising the file signatures.
-> The partial file read support is needed for request_firmware_into_buf 
-> from drivers.  The EXPORT_SYMBOL_GPL is being removed so that
-> there can be no abuse of the partial file read support.  Such file 
-> integrity checks are not needed for this use case.  The partial file 
-> (firmware image) is actually downloaded in portions and verified on the 
-> device it is loaded to.
+On Thu, May 7, 2020 at 12:17 PM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
+>
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+>
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+>
 
-It's all fine that the device will verify the firmware, but shouldn't
-the kernel be able to also verify the firmware file signature it is
-providing to the device, before providing it?
+[...]
 
-The device firmware is being downloaded piecemeal from somewhere and
-won't be measured?
+>
+> This issue was found with the help of Coccinelle.
+>
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Mimi
+Applied to md-next. Thanks!
