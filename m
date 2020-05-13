@@ -7,168 +7,169 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05030C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF18CC47076
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C561720769
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AEAF20769
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:14:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="b8H3/C8I";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RgT8M9sA"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="czYOe0fH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730313AbgEMINx (ORCPT
+        id S1730507AbgEMIOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 04:13:53 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:53329 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726092AbgEMINw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 04:13:52 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 2175F5801B1;
-        Wed, 13 May 2020 04:13:51 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 13 May 2020 04:13:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=IGYOtJGhA33KVDBJeTx7LYHUsdb
-        eHZGIIUvV55V/pTo=; b=b8H3/C8IbYqfZrWAZDXls/QijycsCbs+xDvfu6K8u8W
-        5AQ/eTVHtwSbkcntqYZHPN0amfjE76nFi6IimdDSsxzMeNIxY1Pd+U7Zr5dLcyt6
-        t6Ir/bGJB85Pf3Hx11oMIeZUrA+KGV75Wl68Xw8wS/xFwnVvzZxScynqNA/J8+n/
-        f9jxDWit2CpPsBxbHw2M7EdwIXAhvfm4eLBO1Xb5PsLZhTgDdv5JfXAGKjnZT5+X
-        0YFziQghcrvVlgUyabEtY3eeay5znE1oM8nBlG0t67Y+sGviGpwd0I+7eQFMoICJ
-        VWiBn+0Fc67m++efoWcJwFstzZFslbPKvOk0QeFAdXQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=IGYOtJ
-        GhA33KVDBJeTx7LYHUsdbeHZGIIUvV55V/pTo=; b=RgT8M9sARsIBM7K0v2kxbW
-        3vdVUdBfWTY1uN/32ARoO7SEwTcqOU4ScxvSGS6339FCUqVQdI9IhOxDxattfrVT
-        ADTWifW9FKJuSMCwJYPiiEMbL5dfrYfE0GcV80sv3L+cmoWREOzbPGdM1avQwIa/
-        QZjvKn83IbWVv1OatKyyVpoYN2a2wrJI9+2AHtbsyUTDmj+DYZRYJwvwysnh0+SD
-        8p4jL5wUK7PHY/HMxxHH1Wzu4SRF9nFDIE6gDf5coSg2mLACDMz3mvctMmshZmtl
-        ZiCban1pvxftHA3yCFUudXcTZy85RWa3s1xvrBM/pW2+wZ+uxB9ghUbzznfM1UUw
-        ==
-X-ME-Sender: <xms:O6y7Xo1gWNRjX-uUeIA21csySJCs40dts9pgbWjr25yvCN92r9NJUA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrleeggddtudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihimhgv
-    ucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtth
-    gvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheeiheeg
-    udenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:O6y7XjHmUWAg7jfXhBO8YZpU6LpxIbYSYV6vXLs5_3QGcI3MfhWnWQ>
-    <xmx:O6y7Xg5hO0LEpGli15YGEIItHzmJ7b8BQZlFKWFPnjuKvFmmZW_m8g>
-    <xmx:O6y7Xh1TRm5CCQl3T2_VeXBT9eT0JFpgeiPaZ-3ZI0JmNNOZ2PhIpg>
-    <xmx:P6y7Xi-b_jpaSvZ34-DHJuWqeJEpw28r6AwybMhBBAQRdSR0SJ4www>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0D151328005E;
-        Wed, 13 May 2020 04:13:46 -0400 (EDT)
-Date:   Wed, 13 May 2020 10:13:45 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 03/91] dt-bindings: clock: Add a binding for the RPi
- Firmware clocks
-Message-ID: <20200513081345.zgey4k2ff4njtovm@gilmour.lan>
-References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
- <69e869b0a79ea17f2cdb79df986409963672495a.1587742492.git-series.maxime@cerno.tech>
- <20200511214727.GA20924@bogus>
+        Wed, 13 May 2020 04:14:52 -0400
+Received: from mail-dm6nam12on2076.outbound.protection.outlook.com ([40.107.243.76]:6123
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729106AbgEMIOv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 04:14:51 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KjllQCkzPNV2aQ2/odEvUh5qC41WgnfkRHAIOWZNes5UQrybFuOO84rrNWnKqi3koQnNlWOt9PhKvhuJ1bnyU0Y0H2oupPCLQSUW5yAS2HI+qnHAsDU9M64lwyPS0YfuJ0YoiuNdG/YYtSIikpTMZgZt8X00yR1IOT0xOgo5Y/Gs6hMzcNeos2QjjiUB5cAYuREHBgshiHtOX6cPCl9a8apbWcSly/Y+VAZIt0D+B8CdzZ/Y4oEcuR36loeO7LOf+F+6xQJOfGRqYAktrRtye3D/pPBK9iVHEDihlVV6CeRW0N2DT9tVYoxGPiGZufgiHuwojVEIvPPbyNIrhfam0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WOzs+h1e7R6ni1UU0+56qupOGZmo5U07dQKKWa1XxJ8=;
+ b=c86jelvbjFrJD/diY5XEIjc6d7mcqvRrgI23empdLEcJVaiwV+G2pujNwsukfpnrq44L7d4IjxI4klWbmJha6SmQxtiG5jfcZgNLroSgOErkM8dOclATENKK+DUTOnGkeBCBUQifPC/6jFHEutfDWUd3+iQG+x4iHa/+G6MuTkJ4cn8iswLF9oZiGPBg+woT4SBnnC6he0iFsogbw4SiEg/XIUoxti4GPnod+8JjxacICRAHuGVEOh6Kuv3JfJuUZxV0JGQHvFcB6m9d/J6w2KeZ3Xgm4jBUdDeVsFYedAXneHGanJ30GXrN05kNcS8il4VQf+8MxAvhSbZEpw1g2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WOzs+h1e7R6ni1UU0+56qupOGZmo5U07dQKKWa1XxJ8=;
+ b=czYOe0fHDwjLFQuZ1qxJqsfPtBCmt3wqOm7II9nrq5h2nTkERpLguIt/csYiooWPaicWLYDrY+g57ypMfZDqJCQIlh+JdVU24TOibDUSmDV94IMGPiGeZohp77LQBhUqQvTx0Dahy5Lbv7icg9hc2ClnM7QExGQuOD7QA9XaBdE=
+Received: from BYAPR13MB2614.namprd13.prod.outlook.com (2603:10b6:a03:b4::12)
+ by BYAPR13MB2582.namprd13.prod.outlook.com (2603:10b6:a03:b2::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.13; Wed, 13 May
+ 2020 08:14:47 +0000
+Received: from BYAPR13MB2614.namprd13.prod.outlook.com
+ ([fe80::c0fc:30a3:5e5f:c2b6]) by BYAPR13MB2614.namprd13.prod.outlook.com
+ ([fe80::c0fc:30a3:5e5f:c2b6%7]) with mapi id 15.20.3000.013; Wed, 13 May 2020
+ 08:14:47 +0000
+From:   Sagar Kadam <sagar.kadam@sifive.com>
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>
+CC:     "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Anup Patel <Anup.Patel@wdc.com>
+Subject: RE: [PATCH v1 1/1] tty: serial: add missing spin_lock_init for SiFive
+ serial console
+Thread-Topic: [PATCH v1 1/1] tty: serial: add missing spin_lock_init for
+ SiFive serial console
+Thread-Index: AQHWJewOGC/Eei+2vk+umicyZNhzfailFmOAgACF5wCAABQpMA==
+Date:   Wed, 13 May 2020 08:14:47 +0000
+Message-ID: <BYAPR13MB261414A78707F1020FC529B599BF0@BYAPR13MB2614.namprd13.prod.outlook.com>
+References: <1589019852-21505-2-git-send-email-sagar.kadam@sifive.com>
+ <mhng-b2e9c16c-ee06-4c78-800d-a7725d6c74a3@palmerdabbelt-glaptop1>
+ <20200513065938.GA764901@kroah.com>
+In-Reply-To: <20200513065938.GA764901@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linuxfoundation.org; dkim=none (message not signed)
+ header.d=none;linuxfoundation.org; dmarc=none action=none
+ header.from=sifive.com;
+x-originating-ip: [116.74.146.90]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 68c5cccf-2acb-4d23-3057-08d7f715b39c
+x-ms-traffictypediagnostic: BYAPR13MB2582:
+x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR13MB25822069D0290E9221B9224E99BF0@BYAPR13MB2582.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0402872DA1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /J9dm8lKwM64k4m9ZGTMbKYStLJv0UYn3V/u2RbnZA7MtrPqQkCTp5SJpH2vmabOxFibKfDw92GwQEdn77Ir2N39bqYbPGUXyKf2/9d5PR/JIwBUpOmH95IR7R9oV1vAAzAJAXkGTgTjRExA+DxCRXg+bzWnShwRIDEHad7HELJcDzfUFWZz/HTnpg8iBow4JUKBaRwsyEgVTxeZOP5twi0+VNQLlcpQ9qNw9Y+bIX6BZsTQRv+AfN4xhoJka3XoZt2P5MrTqE4Hm+cBBYr5t2xv5rVf53kRpuXqqNKdpACBhIM7Ot1d5AuTPUFIj5rGgzMXw3a3YP/KIG5xFqajVDYjDbyedjUTaaaXZVW12D1YFuJSrrWJu/Ss6MzDANMdhRoaJ2wnxh1/feOL2zC/0h7dYK8i0m+8fZPTWb45OM3DY2zk9msFfYvlDGGcF1SoAMHfGGgFUoIcxBDFbzPpmDeYq+GrPqgKS2Rn5QicOfdLS/eNQWz53vK/5TqV62vccmurGOzyRj37P0TBobqsZ+JMEmp6uParK6HFlo2tOsryhHHwz8PBDoASIDM2ZeE+tgBUPzrb3zc1z2uBov+dYucJflyBlgrU2kE6tjnHieI=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR13MB2614.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(6029001)(396003)(376002)(136003)(346002)(39850400004)(366004)(33430700001)(4326008)(66946007)(66446008)(76116006)(66476007)(26005)(8676002)(64756008)(9686003)(54906003)(186003)(110136005)(66556008)(316002)(8936002)(71200400001)(55016002)(33656002)(2906002)(5660300002)(86362001)(55236004)(6506007)(7696005)(478600001)(53546011)(44832011)(966005)(33440700001)(52536014);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: FvYIdnZUvMhh+M7YFv3I8x0Fhe9agQYQP6yFGq/vvCI4BhL24rVJF3Cbkm+ev30Q3NYmzrk1H3D8Ilsc8b44WqH4QCJ+WxxrH7nCiGgvuezzrfeW/3pN/6osIyuzVI0HlXLa05MhIsFKQYyefb6sEaOJwgyRfnLuBh9TqI7hgGnt3Fuzd1plA9qdOJiEJ028LOQTu9ynXU1hdKh+dY0oV9rH2TWx4Cvc6XfOG6qx/F9yR+KbLasY47/BJHKY3UNntSvEZo9Inq1PV0o4AseX6+rfy4UrpG8stRwxTlRWUe1nCX/IwuRCowsMHyecwzTnLXqoP+0SIjAvFgtpyJzHLRpNEyrLWO0l4SjSqrYTuZaiszcwyG4ogJsUKC+0EDB5zaxYZtPZHfI++rcC5QEj9Y1/khJ515lwn6bU6njQg7AATfCsoHAkFkX4U+1TshkAyVPbL+7Fo0JYj8UkpZ2YGeiS/chhe8weNuD2paXnREk=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4inkvqvn6iczrxel"
-Content-Disposition: inline
-In-Reply-To: <20200511214727.GA20924@bogus>
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 68c5cccf-2acb-4d23-3057-08d7f715b39c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2020 08:14:47.4986
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DPK4THBJdpYxHbCOHD5ho1OqWHevqymxkhRFV5HZllqQFxXfnsn7mVMOFOe0E9Tp2qHyh0PkC3e6M6jL6TQ09Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR13MB2582
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Greg and Palmer,
 
---4inkvqvn6iczrxel
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Rob,
-
-On Mon, May 11, 2020 at 04:47:27PM -0500, Rob Herring wrote:
-> On Fri, Apr 24, 2020 at 05:33:44PM +0200, Maxime Ripard wrote:
-> > The firmware running on the RPi VideoCore can be used to discover and
-> > change the various clocks running in the BCM2711. Since devices will
-> > need to use them through the DT, let's add a pretty simple binding.
-> >=20
-> > Cc: Michael Turquette <mturquette@baylibre.com>
-> > Cc: Stephen Boyd <sboyd@kernel.org>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: linux-clk@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> > ---
-> >  Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware=
-=2Eyaml | 24 ++++++++++++++++++++++++
-> >  1 file changed, 24 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2=
-835-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,b=
-cm2835-firmware.yaml
-> > index cec540c052b6..b48ed875eb8e 100644
-> > --- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-fir=
-mware.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-fir=
-mware.yaml
-> > @@ -22,6 +22,25 @@ properties:
-> >        Phandle to the firmware device's Mailbox.
-> >        (See: ../mailbox/mailbox.txt for more information)
-> > =20
-> > +  clocks:
-> > +    type: object
-> > +
-> > +    properties:
-> > +      compatible:
-> > +        const: raspberrypi,firmware-clocks
-> > +
-> > +      "#clock-cells":
-> > +        const: 1
-> > +        description: >
-> > +          The argument is the ID of the clocks contained by the
-> > +          firmware messages.
+> -----Original Message-----
+> From: Greg KH <gregkh@linuxfoundation.org>
+> Sent: Wednesday, May 13, 2020 12:30 PM
+> To: Palmer Dabbelt <palmer@dabbelt.com>
+> Cc: Sagar Kadam <sagar.kadam@sifive.com>; linux-serial@vger.kernel.org;
+> linux-riscv@lists.infradead.org; linux-kernel@vger.kernel.org; Paul Walms=
+ley
+> <paul.walmsley@sifive.com>; aou@eecs.berkeley.edu; Atish Patra
+> <Atish.Patra@wdc.com>; Anup Patel <Anup.Patel@wdc.com>
+> Subject: Re: [PATCH v1 1/1] tty: serial: add missing spin_lock_init for S=
+iFive
+> serial console
 >=20
-> Not really any reason to make this a child node. The parent can be a=20
-> clock provider.
+> [External Email] Do not click links or attachments unless you recognize t=
+he
+> sender and know the content is safe
+>=20
+> On Tue, May 12, 2020 at 04:00:23PM -0700, Palmer Dabbelt wrote:
+> > On Sat, 09 May 2020 03:24:12 PDT (-0700), sagar.kadam@sifive.com wrote:
+> > > An uninitialised spin lock for sifive serial console raises a bad
+> > > magic spin_lock error as reported and discussed here [1].
+> > > Initialising the spin lock resolves the issue.
+> > >
+> > > The fix is tested on HiFive Unleashed A00 board with Linux 5.7-rc4
+> > > and OpenSBI v0.7
+> > >
+> > > [1]
+> > > https://lore.kernel.org/linux-riscv/b9fe49483a903f404e7acc15a6efbef7
+> > > 56db28ae.camel@wdc.com
+> > >
+> > > Fixes: 45c054d0815b ("tty: serial: add driver for the SiFive UART")
+> > > Reported-by: Atish Patra <Atish.Patra@wdc.com>
+> > > Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+> > > ---
+> > >  drivers/tty/serial/sifive.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/drivers/tty/serial/sifive.c
+> > > b/drivers/tty/serial/sifive.c index 13eadcb..0b5110d 100644
+> > > --- a/drivers/tty/serial/sifive.c
+> > > +++ b/drivers/tty/serial/sifive.c
+> > > @@ -883,6 +883,7 @@ console_initcall(sifive_console_init);
+> > >
+> > >  static void __ssp_add_console_port(struct sifive_serial_port *ssp)
+> > > {
+> > > +   spin_lock_init(&ssp->port.lock);
+> > >     sifive_serial_console_ports[ssp->port.line] =3D ssp;  }
+> >
+> > Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+> > Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
+> >
 
-This was meant to provide some consistency for that driver. It already has =
-a nod
-for the GPIOs exposed through the firmware in the RPi where you could make =
-the
-exact same argument, so I guess that, while we shouldn't make the same choi=
-ces
-if we had to design it from scratch, it's more important to keep the same d=
-esign
-choices for a given binding?
+Thanks for the review.
 
-Maxime
+> > I'm assuming it's going in through Greg's tree.
+>=20
+> Sure, I'll be glad to take it.
+>=20
 
---4inkvqvn6iczrxel
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks for accepting it within your tree.
 
------BEGIN PGP SIGNATURE-----
+BR,
+Sagar Kadam
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXrusOQAKCRDj7w1vZxhR
-xeVJAQDmR19y9u8phgKYgLVg8JA98FXCMq4WNwsekwqGe+stqgD9FsYBv4DsAMVZ
-IsGpCnj5GT0yoXdBxhf+6rQUuVZMMA4=
-=cQQz
------END PGP SIGNATURE-----
-
---4inkvqvn6iczrxel--
+> greg k-h
