@@ -2,119 +2,273 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29927C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C90C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E658205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 549E7205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:03:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sIOoypzA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mofTovKH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732108AbgEMQDj (ORCPT
+        id S2389545AbgEMQDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 12:03:39 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:50547 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733083AbgEMQDi (ORCPT
+        Wed, 13 May 2020 12:03:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51228 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733083AbgEMQDo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 12:03:38 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589385817; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=kEBIs/oaNin2Z9K6D7y/7Hpeud0pz7SvZSJBK6qoAtA=;
- b=sIOoypzAJ9uXkDcTNM+cWSPm9ceGPvUpcFwYI++zIqDd71RDYbpCPwaYHO/t9CayUXRVqKUU
- BSAffLCGc2Gkpz+5KNouT7Vt6ygitcaawMd2BbW9ZpTIObIr1ToP0+mi8QpAh3ycA8dUB44W
- q7GoYVPFVWbKVACn4T6niMBxmhA=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ebc1a4a.7f67db884bc8-smtp-out-n04;
- Wed, 13 May 2020 16:03:22 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 99D04C44788; Wed, 13 May 2020 16:03:22 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 64BE4C433BA;
-        Wed, 13 May 2020 16:03:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 64BE4C433BA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Wed, 13 May 2020 12:03:44 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADAF1C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 09:03:44 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id d26so2548577otc.7
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 09:03:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=2yckO2TkP2k0AsxRF9e+7sqUhdk1Os8wsLi84bIyRJ0=;
+        b=mofTovKHvxwnI+GKQwHvnLaXIL4eYMo+R2LtuVCJStB4NLUB7+Wjp7CxSEGZo3816C
+         oT8rmxV857SpKbWgvvpwhq4EuBHih/TMWHH9XLDfKAkE//OHVPQxQMtosUbNbu8fk551
+         JEpzgjIfM2SFsaiufkUeLyqCZQUHJlwflKmbrTBvGf1sYDnbTeNzIByfEHjc/p/EIwZJ
+         7CoZdQCwl1fzS2ZU1rAiHorpQ8UUlHMgb+pdl+RKXUPS5477Dclwd5QF+/SuPL+Sgh6l
+         W2/Juy9R/8mXb/DsSnAj+wk+K+0/lscNKUySY830h/WB3Uf2EhrbaO9TxYZwPMyQKm/j
+         MHSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=2yckO2TkP2k0AsxRF9e+7sqUhdk1Os8wsLi84bIyRJ0=;
+        b=Zj11mpmmaAzOr2OUXYQA0bQH3AF+7hxYEymJnfV4gBguWCZwK1MXxev25shDTjF1JK
+         zLkvuMY7pxHrlncv/EisNYnewiA7q77Gn4hHXax3vkCMQH500oxNeH6duXUFEKwwybo3
+         RzluHGrMr/qFo8oOTqga+kYhkHnxpJo5Ap8VcUbhdULUnYEGQfizy4likVrrPU27KLDA
+         c7oNV7x3EkLfckr5rBcpezNJNhr58NpSIsAxPjZVAaKagkwKmMMj2gweA4Vo7A5SavVu
+         cYTm+mVsw004KFqgMJeLCe2muxWCuj3ZoGLSUp+1oZWBDiW+jtMf3djP0O3AMiCRJAr1
+         Bkdw==
+X-Gm-Message-State: AOAM533js19MHsl5s+MsBCzBVjULrdwJjrGzBHJ+BPceXCn+uQK9tWnt
+        W9PWQ+sKuF8NvMN5j5HyK0UqCuhonmChyroMcdTkQQ==
+X-Google-Smtp-Source: ABdhPJxCBFTkjVqW1LM0Wlimll2ubVx4f7hGBjqApdkLnMDvbC1oTcaby0cSdclRlkBrm7wgjVnnw91Nql3yNw1IYu4=
+X-Received: by 2002:a9d:e93:: with SMTP id 19mr82527otj.371.1589385823847;
+ Wed, 13 May 2020 09:03:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] wcn36xx: Replace zero-length array with flexible-array
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200507151758.GA4962@embeddedor>
-References: <20200507151758.GA4962@embeddedor>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        wcn36xx@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200513160322.99D04C44788@smtp.codeaurora.org>
-Date:   Wed, 13 May 2020 16:03:22 +0000 (UTC)
+References: <1588920063-17624-1-git-send-email-charante@codeaurora.org>
+ <20200512085221.GB3557007@kroah.com> <a3cbf675-becc-1713-bcdc-664ddfe4a544@codeaurora.org>
+ <20200513125112.GC1083139@kroah.com> <20200513154653.GK206103@phenom.ffwll.local>
+In-Reply-To: <20200513154653.GK206103@phenom.ffwll.local>
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+Date:   Wed, 13 May 2020 21:33:32 +0530
+Message-ID: <CAO_48GF0GMDJH1Wx4p5pfS4t57bh_BJO2=CmOpj_XCBnF0CbCQ@mail.gmail.com>
+Subject: Re: [PATCH v2] dma-buf: fix use-after-free in dmabuffs_dname
+To:     Greg KH <greg@kroah.com>,
+        Charan Teja Kalla <charante@codeaurora.org>,
+        Chenbo Feng <fengc@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        Linaro MM SIG <linaro-mm-sig@lists.linaro.org>,
+        vinmenon@codeaurora.org, Greg Hackmann <ghackmann@google.com>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+On Wed, 13 May 2020 at 21:16, Daniel Vetter <daniel@ffwll.ch> wrote:
+>
+> On Wed, May 13, 2020 at 02:51:12PM +0200, Greg KH wrote:
+> > On Wed, May 13, 2020 at 05:40:26PM +0530, Charan Teja Kalla wrote:
+> > >
+> > > Thank you Greg for the comments.
+> > > On 5/12/2020 2:22 PM, Greg KH wrote:
+> > > > On Fri, May 08, 2020 at 12:11:03PM +0530, Charan Teja Reddy wrote:
+> > > >> The following race occurs while accessing the dmabuf object exported as
+> > > >> file:
+> > > >> P1                               P2
+> > > >> dma_buf_release()          dmabuffs_dname()
+> > > >>                     [say lsof reading /proc/<P1 pid>/fd/<num>]
+> > > >>
+> > > >>                     read dmabuf stored in dentry->d_fsdata
+> > > >> Free the dmabuf object
+> > > >>                     Start accessing the dmabuf structure
+> > > >>
+> > > >> In the above description, the dmabuf object freed in P1 is being
+> > > >> accessed from P2 which is resulting into the use-after-free. Below is
+> > > >> the dump stack reported.
+> > > >>
+> > > >> We are reading the dmabuf object stored in the dentry->d_fsdata but
+> > > >> there is no binding between the dentry and the dmabuf which means that
+> > > >> the dmabuf can be freed while it is being read from ->d_fsdata and
+> > > >> inuse. Reviews on the patch V1 says that protecting the dmabuf inuse
+> > > >> with an extra refcount is not a viable solution as the exported dmabuf
+> > > >> is already under file's refcount and keeping the multiple refcounts on
+> > > >> the same object coordinated is not possible.
+> > > >>
+> > > >> As we are reading the dmabuf in ->d_fsdata just to get the user passed
+> > > >> name, we can directly store the name in d_fsdata thus can avoid the
+> > > >> reading of dmabuf altogether.
+> > > >>
+> > > >> Call Trace:
+> > > >>  kasan_report+0x12/0x20
+> > > >>  __asan_report_load8_noabort+0x14/0x20
+> > > >>  dmabuffs_dname+0x4f4/0x560
+> > > >>  tomoyo_realpath_from_path+0x165/0x660
+> > > >>  tomoyo_get_realpath
+> > > >>  tomoyo_check_open_permission+0x2a3/0x3e0
+> > > >>  tomoyo_file_open
+> > > >>  tomoyo_file_open+0xa9/0xd0
+> > > >>  security_file_open+0x71/0x300
+> > > >>  do_dentry_open+0x37a/0x1380
+> > > >>  vfs_open+0xa0/0xd0
+> > > >>  path_openat+0x12ee/0x3490
+> > > >>  do_filp_open+0x192/0x260
+> > > >>  do_sys_openat2+0x5eb/0x7e0
+> > > >>  do_sys_open+0xf2/0x180
+> > > >>
+> > > >> Fixes: bb2bb9030425 ("dma-buf: add DMA_BUF_SET_NAME ioctls")
+> > > >> Reported-by: syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com
+> > > >> Cc: <stable@vger.kernel.org> [5.3+]
+> > > >> Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
+> > > >> ---
+> > > >>
+> > > >> Changes in v2:
+> > > >>
+> > > >> - Pass the user passed name in ->d_fsdata instead of dmabuf
+> > > >> - Improve the commit message
+> > > >>
+> > > >> Changes in v1: (https://patchwork.kernel.org/patch/11514063/)
+> > > >>
+> > > >>  drivers/dma-buf/dma-buf.c | 17 ++++++++++-------
+> > > >>  1 file changed, 10 insertions(+), 7 deletions(-)
+> > > >>
+> > > >> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+> > > >> index 01ce125..0071f7d 100644
+> > > >> --- a/drivers/dma-buf/dma-buf.c
+> > > >> +++ b/drivers/dma-buf/dma-buf.c
+> > > >> @@ -25,6 +25,7 @@
+> > > >>  #include <linux/mm.h>
+> > > >>  #include <linux/mount.h>
+> > > >>  #include <linux/pseudo_fs.h>
+> > > >> +#include <linux/dcache.h>
+> > > >>
+> > > >>  #include <uapi/linux/dma-buf.h>
+> > > >>  #include <uapi/linux/magic.h>
+> > > >> @@ -40,15 +41,13 @@ struct dma_buf_list {
+> > > >>
+> > > >>  static char *dmabuffs_dname(struct dentry *dentry, char *buffer, int buflen)
+> > > >>  {
+> > > >> -        struct dma_buf *dmabuf;
+> > > >>          char name[DMA_BUF_NAME_LEN];
+> > > >>          size_t ret = 0;
+> > > >>
+> > > >> -        dmabuf = dentry->d_fsdata;
+> > > >> -        dma_resv_lock(dmabuf->resv, NULL);
+> > > >> -        if (dmabuf->name)
+> > > >> -                ret = strlcpy(name, dmabuf->name, DMA_BUF_NAME_LEN);
+> > > >> -        dma_resv_unlock(dmabuf->resv);
+> > > >> +        spin_lock(&dentry->d_lock);
+> > > >
+> > > > Are you sure this lock always protects d_fsdata?
+> > >
+> > > I think yes. In the dma-buf.c, I have to make sure that d_fsdata should
+> > > always be under d_lock thus it will be protected. (In this posted patch
+> > > there is one place(in dma_buf_set_name) that is missed, will update this
+> > > in V3).
+> > >
+> > > >
+> > > >> +        if (dentry->d_fsdata)
+> > > >> +                ret = strlcpy(name, dentry->d_fsdata, DMA_BUF_NAME_LEN);
+> > > >> +        spin_unlock(&dentry->d_lock);
+> > > >>
+> > > >>          return dynamic_dname(dentry, buffer, buflen, "/%s:%s",
+> > > >>                               dentry->d_name.name, ret > 0 ? name : "");
+> > > >
+> > > > If the above check fails the name will be what?  How could d_name.name
+> > > > be valid but d_fsdata not be valid?
+> > >
+> > > In case of check fails, empty string "" is appended to the name by the
+> > > code, ret > 0 ? name : "", ret is initialized to zero. Thus the name
+> > > string will be like "/dmabuf:".
+> >
+> > So multiple objects can have the same "name" if this happens to multiple
+> > ones at once?
+> >
+> > > Regarding the validity of d_fsdata, we are setting the dmabuf's
+> > > dentry->d_fsdata to NULL in the dma_buf_release() thus can go invalid if
+> > > that dmabuf is in the free path.
+> >
+> > Why are we allowing the name to be set if the dmabuf is on the free path
+> > at all?  Shouldn't that be the real fix here?
+> >
+> > > >> @@ -80,12 +79,16 @@ static int dma_buf_fs_init_context(struct fs_context *fc)
+> > > >>  static int dma_buf_release(struct inode *inode, struct file *file)
+> > > >>  {
+> > > >>          struct dma_buf *dmabuf;
+> > > >> +        struct dentry *dentry = file->f_path.dentry;
+> > > >>
+> > > >>          if (!is_dma_buf_file(file))
+> > > >>                  return -EINVAL;
+> > > >>
+> > > >>          dmabuf = file->private_data;
+> > > >>
+> > > >> +        spin_lock(&dentry->d_lock);
+> > > >> +        dentry->d_fsdata = NULL;
+> > > >> +        spin_unlock(&dentry->d_lock);
+> > > >>          BUG_ON(dmabuf->vmapping_counter);
+> > > >>
+> > > >>          /*
+> > > >> @@ -343,6 +346,7 @@ static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
+> > > >>          }
+> > > >>          kfree(dmabuf->name);
+> > > >>          dmabuf->name = name;
+> > > >> +        dmabuf->file->f_path.dentry->d_fsdata = name;
+> > > >
+> > > > You are just changing the use of d_fsdata from being a pointer to the
+> > > > dmabuf to being a pointer to the name string?  What's to keep that name
+> > > > string around and not have the same reference counting issues that the
+> > > > dmabuf structure itself has?  Who frees that string memory?
+> > > >
+> > >
+> > > Yes, I am just storing the name string in the d_fsdata in place of
+> > > dmabuf and this helps to get rid of any extra refcount requirement.
+> > > Because the user passed name carried in the d_fsdata is copied to the
+> > > local buffer in dmabuffs_dname under spin_lock(d_lock) and the same
+> > > d_fsdata is set to NULL(under the d_lock only) when that dmabuf is in
+> > > the release path. So, when d_fsdata is NULL, name string is not accessed
+> > > from the dmabuffs_dname thus extra count is not required.
+> > >
+> > > String memory, stored in the dmabuf->name, is released from the
+> > > dma_buf_release(). Flow will be like, It fist sets d_fsdata=NULL and
+> > > then free the dmabuf->name.
+> > >
+> > > However from your comments I have realized that there is a race in this
+> > > patch when using the name string between dma_buf_set_name() and
+> > > dmabuffs_dname(). But, If the idea of passing the name string inplace of
+> > > dmabuf in d_fsdata looks fine, I can update this next patch.
+> >
+> > I'll leave that to the dmabuf authors/maintainers, but it feels odd to
+> > me...
+>
+> I have zero clue about fs internals. This all scares me, that's all. I
+> know enough about lifetime bugs that if you don't deeply understand a
+> subsystem, all that's guaranteed is that you will get it wrong.
 
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Likewise, and that made me realise that the 'fix' may not be as
+innocuous or quick.
 
-Patch applied to ath-next branch of ath.git, thanks.
+I will try to check with some folks more experienced than me in the fs
+domain and see what is the logical way to handle it.
 
-ec431188b419 wcn36xx: Replace zero-length array with flexible-array
+>
+> /me out
+>
+> Cheers, Daniel
+>
 
--- 
-https://patchwork.kernel.org/patch/11534309/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Best,
+Sumit.
