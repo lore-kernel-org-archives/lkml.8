@@ -2,155 +2,98 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41691C2D0FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D62F9CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2139720769
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B464B20740
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:13:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="aMIw5BMz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="q2NMnLi+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730995AbgEMLNq (ORCPT
+        id S1731030AbgEMLNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 13 May 2020 07:13:49 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:33659 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730957AbgEMLNq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 13 May 2020 07:13:46 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:54730 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730914AbgEMLNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 07:13:45 -0400
-Received: from zn.tnic (p200300ec2f0ac30080c108a4f2a14d75.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:c300:80c1:8a4:f2a1:4d75])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5F1231EC0330;
-        Wed, 13 May 2020 13:13:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1589368423;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=5DShX4VU/NjBWaapSRN6k1YnbaJnNyw9V9LW9QgRqyo=;
-        b=aMIw5BMzlTRYeeZXGKDnswten8IxM5kB72e5LQNSHKB8n9TKQgxYCiOaukgz4TjDNwHYqd
-        VB77nQc8kaI/me57e0ilGdxFrJg73P5Yv8efy35fj+KJLA815R2nxO+FoBLDGs6L1E4zlC
-        f7It7iW/cILUxz3zZgJ3EpqUE3V8VSQ=
-Date:   Wed, 13 May 2020 13:13:40 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 24/75] x86/boot/compressed/64: Unmap GHCB page before
- booting the kernel
-Message-ID: <20200513111340.GD4025@zn.tnic>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-25-joro@8bytes.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1589368425; x=1620904425;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=CeCU0xN3PPX4jtlITIpADGChyNcptCOI5+8PaEEcfQc=;
+  b=q2NMnLi+xt28ulIx3W1xKr2hNLSOlMstS1CHrdZxs1rVTMHVcS5TVMNI
+   xTzotNmO52WLdH8M4rA/ZBKHv0X6Tf753GbYH4DM3roHuJUiN+Wx2Q2CY
+   cpxF+0PT07guP2R7hBWAW7fSRL9N5EmDbxGnJcShts5hF6uk0QiCnHzWf
+   cs0mDyn6yxLir5GZ7SWGYYmiwMRt8aKknJjKR/G76BhzAEPEA8ddFzZUx
+   5p9/wDBESU4f+n83LWq/HKDsDL0036YhqgnAg4WuVGFwfJT4idowdFZ+v
+   a+lfGjvMhg8cdVHYQAGrK2K300ij/VLWu0DxVYbJ5wmXm7q0Fam5xCTjS
+   A==;
+IronPort-SDR: T7zeETlOhwDeM7bmaZlpb8ZrPAip7XABnfCf3Y4x3pGfxcPk2X6k9+l6uT5F5C5aRLqidYabCD
+ ztbx0R9ZVw9IYsiqSPKy8k4KjUp3ezLjPCjTNvd4Z04SC6Ad5C8XPVm7VTe2KUBhlZWfWPM7Vk
+ Ael3JSsl98taH6FAfcyn/jgtBmR/HgiTsOk+h9W4V2v60u10uA9ZAL029oflCfDgJo6kkslARE
+ lOaPRTqlfImXgxRytGWpPwvznuTafTm2+Jf9CittWQUGCbjcRrJ4O/ErGu9waRAJZfI+tRDxrO
+ zqk=
+X-IronPort-AV: E=Sophos;i="5.73,387,1583218800"; 
+   d="scan'208";a="79429653"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 May 2020 04:13:44 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 13 May 2020 04:13:44 -0700
+Received: from rob-ult-m19940.microchip.com (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Wed, 13 May 2020 04:13:43 -0700
+From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+To:     <linux-i2c@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <ludovic.desroches@microchip.com>, <nicolas.ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <wsa@kernel.org>,
+        <linus.walleij@linaro.org>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: [PATCH] i2c: at91: Restore pinctrl state if can't get scl/sda gpios
+Date:   Wed, 13 May 2020 14:13:22 +0300
+Message-ID: <20200513111322.111114-1-codrin.ciubotariu@microchip.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200428151725.31091-25-joro@8bytes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 05:16:34PM +0200, Joerg Roedel wrote:
-> @@ -302,9 +313,13 @@ void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
->  	 *	- User faults
->  	 *	- Reserved bits set
->  	 */
-> -	if (error_code & (X86_PF_PROT | X86_PF_USER | X86_PF_RSVD)) {
-> +	if (ghcb_fault ||
-> +	    error_code & (X86_PF_PROT | X86_PF_USER | X86_PF_RSVD)) {
->  		/* Print some information for debugging */
-> -		error_putstr("Unexpected page-fault:");
-> +		if (ghcb_fault)
-> +			error_putstr("Page-fault on GHCB page:");
-> +		else
-> +			error_putstr("Unexpected page-fault:");
+If there is a strict pinmux or if simply the scl/sda gpios are missing,
+the pins will remain in gpio mode, compromizing the I2C bus.
+Change to the default state of the pins before returning the error.
 
-You could carve out the info dumping into a separate function to
-unclutter this if-statement (diff ontop):
+Fixes: a53acc7ebf27 ("i2c: at91: Fix pinmux after devm_gpiod_get() for bus recovery")
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+---
+ drivers/i2c/busses/i2c-at91-master.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index d3771d455249..c1979fc0f853 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -296,6 +296,22 @@ int set_page_non_present(unsigned long address)
- 	return set_clr_page_flags(&mapping_info, address, 0, _PAGE_PRESENT);
- }
+diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
+index d4a3aef4a594..363d540a8345 100644
+--- a/drivers/i2c/busses/i2c-at91-master.c
++++ b/drivers/i2c/busses/i2c-at91-master.c
+@@ -877,6 +877,7 @@ static int at91_init_twi_recovery_gpio(struct platform_device *pdev,
+ 			gpiod_put(rinfo->scl_gpiod);
+ 			rinfo->scl_gpiod = NULL;
+ 		}
++		pinctrl_select_state(dev->pinctrl, dev->pinctrl_pins_default);
+ 		return -EINVAL;
+ 	}
  
-+static void do_pf_error(const char *msg, unsigned long error_code,
-+			unsigned long address, unsigned long ip)
-+{
-+	error_putstr(msg);
-+
-+	error_putstr("\nError Code: ");
-+	error_puthex(error_code);
-+	error_putstr("\nCR2: 0x");
-+	error_puthex(address);
-+	error_putstr("\nRIP relative to _head: 0x");
-+	error_puthex(ip - (unsigned long)_head);
-+	error_putstr("\n");
-+
-+	error("Stopping.\n");
-+}
-+
- void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
- {
- 	unsigned long address = native_read_cr2();
-@@ -309,27 +325,15 @@ void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
- 
- 	/*
- 	 * Check for unexpected error codes. Unexpected are:
-+	 *	- Faults on the GHCB page due to unexpected #VCs
- 	 *	- Faults on present pages
- 	 *	- User faults
- 	 *	- Reserved bits set
- 	 */
--	if (ghcb_fault ||
--	    error_code & (X86_PF_PROT | X86_PF_USER | X86_PF_RSVD)) {
--		/* Print some information for debugging */
--		if (ghcb_fault)
--			error_putstr("Page-fault on GHCB page:");
--		else
--			error_putstr("Unexpected page-fault:");
--		error_putstr("\nError Code: ");
--		error_puthex(error_code);
--		error_putstr("\nCR2: 0x");
--		error_puthex(address);
--		error_putstr("\nRIP relative to _head: 0x");
--		error_puthex(regs->ip - (unsigned long)_head);
--		error_putstr("\n");
--
--		error("Stopping.\n");
--	}
-+	if (ghcb_fault)
-+		do_pf_error("Page-fault on GHCB page:", error_code, address, regs->ip);
-+	else if (error_code & (X86_PF_PROT | X86_PF_USER | X86_PF_RSVD))
-+		do_pf_error("Unexpected page-fault:", error_code, address, regs->ip);
- 
- 	/*
- 	 * Error code is sane - now identity map the 2M region around
-
 -- 
-Regards/Gruss,
-    Boris.
+2.25.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
