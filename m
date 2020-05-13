@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1403CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3941C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B588420753
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 915EF20753
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363627;
-	bh=cI0BwQC4ApYzVqysMzmdDssAVDo50Q5Yw2k+j67F9Og=;
+	s=default; t=1589363631;
+	bh=+feFlMH+aRpu3ZqDbPLETijhIkIBmj5Z97hvv1TLdeA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hY/wEbfWOgevj/MqMXk/bCHV+EoYYCqSSXn+sbdGiqTFvwQ0GeZPqBI0vH2/SdjR0
-	 tC+Hq+q0gRGDYu/K0BBYYWu3qktXtrv56drXBK7gJairlP2r8/wo7l4gG2Jk/1p3PE
-	 bK2XjDSpBSGwF181vj/6MqIzJmYfD8qJbF7Y+Vr4=
+	b=MmqOhYaj52H4fCLIbiTb/uXOrBloAh6Aujepp7XPleGPxMN6nFsE+biQZOUj4D7Yx
+	 Y2D26NlgkOyGY9IbbgDWadKZ54+UoJS2rC2IKHr39mvyLCPB4dUu/CqjotiJwWCknN
+	 zerUUxjtVPF4BQmQ+6PrEznJueogtl2IuHHFh+d4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388004AbgEMJxq (ORCPT
+        id S2388014AbgEMJxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:53:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55818 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:53:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733061AbgEMJxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:53:42 -0400
+        id S1733061AbgEMJxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:53:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F70920643;
-        Wed, 13 May 2020 09:53:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58056205ED;
+        Wed, 13 May 2020 09:53:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363621;
-        bh=cI0BwQC4ApYzVqysMzmdDssAVDo50Q5Yw2k+j67F9Og=;
+        s=default; t=1589363626;
+        bh=+feFlMH+aRpu3ZqDbPLETijhIkIBmj5Z97hvv1TLdeA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RtZXLir/DiwfMsW0/ydW1ZnMPMUfidAxiO5acOC3J6iBI5lgeJ2OSvahPZyupHChv
-         7wvZKbCqK86wOg+CLIATlV6omu32n10ZBe7ApNu5EhXr/7AHPhLX0bb4blQ6L/C7LR
-         cHKPrrMZ3LOpSyc6BHgQ8Bzb3CYq2YjWF5GUWxvg=
+        b=eVLP1ueKtIC3HEtMi+Hj3VH61h/VdZ/qpX5PRcWvj8GJQbwlE9A8yGH0egnuDC6An
+         AQnZAxxlSyQmo0l5HLCapfXuNPpWDN/kp0kY+EKQS+omlTU+Eu3pE/phJ9J+beTnau
+         lJXmvMfOgkwhoE5Vc0uzFjHpkRffC97X5nSExA6A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>,
         Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.6 057/118] HID: wacom: Read HID_DG_CONTACTMAX directly for non-generic devices
-Date:   Wed, 13 May 2020 11:44:36 +0200
-Message-Id: <20200513094422.017069947@linuxfoundation.org>
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 5.6 059/118] Revert "HID: wacom: generic: read the number of expected touches on a per collection basis"
+Date:   Wed, 13 May 2020 11:44:38 +0200
+Message-Id: <20200513094422.171935594@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -61,48 +60,172 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gerecke <jason.gerecke@wacom.com>
+From: Jason Gerecke <killertofu@gmail.com>
 
-commit 778fbf4179991e7652e97d7f1ca1f657ef828422 upstream.
+commit b43f977dd281945960c26b3ef67bba0fa07d39d9 upstream.
 
-We've recently switched from extracting the value of HID_DG_CONTACTMAX
-at a fixed offset (which may not be correct for all tablets) to
-injecting the report into the driver for the generic codepath to handle.
-Unfortunately, this change was made for *all* tablets, even those which
-aren't generic. Because `wacom_wac_report` ignores reports from non-
-generic devices, the contact count never gets initialized. Ultimately
-this results in the touch device itself failing to probe, and thus the
-loss of touch input.
+This reverts commit 15893fa40109f5e7c67eeb8da62267d0fdf0be9d.
 
-This commit adds back the fixed-offset extraction for non-generic devices.
+The referenced commit broke pen and touch input for a variety of devices
+such as the Cintiq Pro 32. Affected devices may appear to work normally
+for a short amount of time, but eventually loose track of actual touch
+state and can leave touch arbitration enabled which prevents the pen
+from working. The commit is not itself required for any currently-available
+Bluetooth device, and so we revert it to correct the behavior of broken
+devices.
 
-Link: https://github.com/linuxwacom/input-wacom/issues/155
-Fixes: 184eccd40389 ("HID: wacom: generic: read HID_DG_CONTACTMAX from any feature report")
+This breakage occurs due to a mismatch between the order of collections
+and the order of usages on some devices. This commit tries to read the
+contact count before processing events, but will fail if the contact
+count does not occur prior to the first logical finger collection. This
+is the case for devices like the Cintiq Pro 32 which place the contact
+count at the very end of the report.
+
+Without the contact count set, touches will only be partially processed.
+The `wacom_wac_finger_slot` function will not open any slots since the
+number of contacts seen is greater than the expectation of 0, but we will
+still end up calling `input_mt_sync_frame` for each finger anyway. This
+can cause problems for userspace separate from the issue currently taking
+place in the kernel. Only once all of the individual finger collections
+have been processed do we finally get to the enclosing collection which
+contains the contact count. The value ends up being used for the *next*
+report, however.
+
+This delayed use of the contact count can cause the driver to loose track
+of the actual touch state and believe that there are contacts down when
+there aren't. This leaves touch arbitration enabled and prevents the pen
+from working. It can also cause userspace to incorrectly treat single-
+finger input as gestures.
+
+Link: https://github.com/linuxwacom/input-wacom/issues/146
 Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
 Reviewed-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
-CC: stable@vger.kernel.org # 5.3+
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
+Fixes: 15893fa40109 ("HID: wacom: generic: read the number of expected touches on a per collection basis")
+Cc: stable@vger.kernel.org # 5.3+
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/wacom_sys.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/hid/wacom_wac.c |   79 +++++++++---------------------------------------
+ 1 file changed, 16 insertions(+), 63 deletions(-)
 
---- a/drivers/hid/wacom_sys.c
-+++ b/drivers/hid/wacom_sys.c
-@@ -319,9 +319,11 @@ static void wacom_feature_mapping(struct
- 			data[0] = field->report->id;
- 			ret = wacom_get_report(hdev, HID_FEATURE_REPORT,
- 					       data, n, WAC_CMD_RETRIES);
--			if (ret == n) {
-+			if (ret == n && features->type == HID_GENERIC) {
- 				ret = hid_report_raw_event(hdev,
- 					HID_FEATURE_REPORT, data, n, 0);
-+			} else if (ret == 2 && features->type != HID_GENERIC) {
-+				features->touch_max = data[1];
- 			} else {
- 				features->touch_max = 16;
- 				hid_warn(hdev, "wacom_feature_mapping: "
+--- a/drivers/hid/wacom_wac.c
++++ b/drivers/hid/wacom_wac.c
+@@ -2637,9 +2637,25 @@ static void wacom_wac_finger_pre_report(
+ 			case HID_DG_TIPSWITCH:
+ 				hid_data->last_slot_field = equivalent_usage;
+ 				break;
++			case HID_DG_CONTACTCOUNT:
++				hid_data->cc_report = report->id;
++				hid_data->cc_index = i;
++				hid_data->cc_value_index = j;
++				break;
+ 			}
+ 		}
+ 	}
++
++	if (hid_data->cc_report != 0 &&
++	    hid_data->cc_index >= 0) {
++		struct hid_field *field = report->field[hid_data->cc_index];
++		int value = field->value[hid_data->cc_value_index];
++		if (value)
++			hid_data->num_expected = value;
++	}
++	else {
++		hid_data->num_expected = wacom_wac->features.touch_max;
++	}
+ }
+ 
+ static void wacom_wac_finger_report(struct hid_device *hdev,
+@@ -2649,7 +2665,6 @@ static void wacom_wac_finger_report(stru
+ 	struct wacom_wac *wacom_wac = &wacom->wacom_wac;
+ 	struct input_dev *input = wacom_wac->touch_input;
+ 	unsigned touch_max = wacom_wac->features.touch_max;
+-	struct hid_data *hid_data = &wacom_wac->hid_data;
+ 
+ 	/* If more packets of data are expected, give us a chance to
+ 	 * process them rather than immediately syncing a partial
+@@ -2663,7 +2678,6 @@ static void wacom_wac_finger_report(stru
+ 
+ 	input_sync(input);
+ 	wacom_wac->hid_data.num_received = 0;
+-	hid_data->num_expected = 0;
+ 
+ 	/* keep touch state for pen event */
+ 	wacom_wac->shared->touch_down = wacom_wac_finger_count_touches(wacom_wac);
+@@ -2738,73 +2752,12 @@ static void wacom_report_events(struct h
+ 	}
+ }
+ 
+-static void wacom_set_num_expected(struct hid_device *hdev,
+-				   struct hid_report *report,
+-				   int collection_index,
+-				   struct hid_field *field,
+-				   int field_index)
+-{
+-	struct wacom *wacom = hid_get_drvdata(hdev);
+-	struct wacom_wac *wacom_wac = &wacom->wacom_wac;
+-	struct hid_data *hid_data = &wacom_wac->hid_data;
+-	unsigned int original_collection_level =
+-		hdev->collection[collection_index].level;
+-	bool end_collection = false;
+-	int i;
+-
+-	if (hid_data->num_expected)
+-		return;
+-
+-	// find the contact count value for this segment
+-	for (i = field_index; i < report->maxfield && !end_collection; i++) {
+-		struct hid_field *field = report->field[i];
+-		unsigned int field_level =
+-			hdev->collection[field->usage[0].collection_index].level;
+-		unsigned int j;
+-
+-		if (field_level != original_collection_level)
+-			continue;
+-
+-		for (j = 0; j < field->maxusage; j++) {
+-			struct hid_usage *usage = &field->usage[j];
+-
+-			if (usage->collection_index != collection_index) {
+-				end_collection = true;
+-				break;
+-			}
+-			if (wacom_equivalent_usage(usage->hid) == HID_DG_CONTACTCOUNT) {
+-				hid_data->cc_report = report->id;
+-				hid_data->cc_index = i;
+-				hid_data->cc_value_index = j;
+-
+-				if (hid_data->cc_report != 0 &&
+-				    hid_data->cc_index >= 0) {
+-
+-					struct hid_field *field =
+-						report->field[hid_data->cc_index];
+-					int value =
+-						field->value[hid_data->cc_value_index];
+-
+-					if (value)
+-						hid_data->num_expected = value;
+-				}
+-			}
+-		}
+-	}
+-
+-	if (hid_data->cc_report == 0 || hid_data->cc_index < 0)
+-		hid_data->num_expected = wacom_wac->features.touch_max;
+-}
+-
+ static int wacom_wac_collection(struct hid_device *hdev, struct hid_report *report,
+ 			 int collection_index, struct hid_field *field,
+ 			 int field_index)
+ {
+ 	struct wacom *wacom = hid_get_drvdata(hdev);
+ 
+-	if (WACOM_FINGER_FIELD(field))
+-		wacom_set_num_expected(hdev, report, collection_index, field,
+-				       field_index);
+ 	wacom_report_events(hdev, report, collection_index, field_index);
+ 
+ 	/*
 
 
