@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 499D9C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 701F4CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C73E2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51D0920753
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363746;
-	bh=b0Dt2ils4KFk41Bev6B/9rkZLl6V5s0FFZr0nRWIiFo=;
+	s=default; t=1589363748;
+	bh=jBWitMYFdNu0214x8a7VCY4Sq+QrJC98y5VwtH5igU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JjlUlJnaeikXBUTMFxJnvjhyF/BzMDIT9RtwjtNeovPUWhhLYSlDSnQ7BoJZLagEw
-	 P4xr8cIfsrbjiL3syhvaHB0zktMxQEXX+EhaKabtBbu/NmYUb7WkUZQVoze3vhP4pP
-	 oJCQVPVqx1nzWiPETVh3m23+mXUyIT7vBLudenG0=
+	b=o+oSezj40cvXvIqQT4ueHT6ETebfzETtqr/u7NbAe0FLDewUu7XNME2DPE93Nb5eW
+	 JDY/iVRmhh+9FW2WaCGhe1tMIi/ESJy0lGb0tLRycYGApx8VRCJom/1F+qpw+/NNJ5
+	 pb9lg1l9eMpkj2Xwm/JyFY4CxXWlnFwQ018Y1xeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388304AbgEMJzp (ORCPT
+        id S2388313AbgEMJzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:55:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58938 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:55:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387618AbgEMJzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:55:40 -0400
+        id S2388299AbgEMJzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:55:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4990205ED;
-        Wed, 13 May 2020 09:55:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7270A20753;
+        Wed, 13 May 2020 09:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363739;
-        bh=b0Dt2ils4KFk41Bev6B/9rkZLl6V5s0FFZr0nRWIiFo=;
+        s=default; t=1589363743;
+        bh=jBWitMYFdNu0214x8a7VCY4Sq+QrJC98y5VwtH5igU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GvYtjdFvW62eneXzdyit8i+DauSEe3dIueCQiR5U4PICWYTWM+bKULEeOyPFAVZ3y
-         mAjNIXRohEacYIJ0IU9AqM3c56Y3Gi5mwuSdUiO1g7l7KxhE/XrrTmRUw+16Hw8ViN
-         NuDTMtPlFhBxobFgJcwpC4eFOVRWB1bMbSAVl9oA=
+        b=SHQ5rOCEqXBs0maeZWtTCY8XTo0vf20aLgNKyD6fnHAz+0/jP8t1dOay80InMws2i
+         TXOGzOluB/eXPyG03fBKjL1NizzR/XaQ26dMRMrnDANG3tXjglRFKHZYdTIQ9nq6Zx
+         ozfrxu2XqtsDGEyy04L5TAjmf4BOL3qoRDA7Pn7g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
-        Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>
-Subject: [PATCH 5.6 104/118] x86/unwind/orc: Fix premature unwind stoppage due to IRET frames
-Date:   Wed, 13 May 2020 11:45:23 +0200
-Message-Id: <20200513094426.370964643@linuxfoundation.org>
+        stable@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.6 069/118] crypto: arch/nhpoly1305 - process in explicit 4k chunks
+Date:   Wed, 13 May 2020 11:44:48 +0200
+Message-Id: <20200513094423.857357935@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -65,215 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Jason A. Donenfeld <Jason@zx2c4.com>
 
-commit 81b67439d147677d844d492fcbd03712ea438f42 upstream.
+commit a9a8ba90fa5857c2c8a0e32eef2159cec717da11 upstream.
 
-The following execution path is possible:
+Rather than chunking via PAGE_SIZE, this commit changes the arch
+implementations to chunk in explicit 4k parts, so that calculations on
+maximum acceptable latency don't suddenly become invalid on platforms
+where PAGE_SIZE isn't 4k, such as arm64.
 
-  fsnotify()
-    [ realign the stack and store previous SP in R10 ]
-    <IRQ>
-      [ only IRET regs saved ]
-      common_interrupt()
-        interrupt_entry()
-	  <NMI>
-	    [ full pt_regs saved ]
-	    ...
-	    [ unwind stack ]
-
-When the unwinder goes through the NMI and the IRQ on the stack, and
-then sees fsnotify(), it doesn't have access to the value of R10,
-because it only has the five IRET registers.  So the unwind stops
-prematurely.
-
-However, because the interrupt_entry() code is careful not to clobber
-R10 before saving the full regs, the unwinder should be able to read R10
-from the previously saved full pt_regs associated with the NMI.
-
-Handle this case properly.  When encountering an IRET regs frame
-immediately after a full pt_regs frame, use the pt_regs as a backup
-which can be used to get the C register values.
-
-Also, note that a call frame resets the 'prev_regs' value, because a
-function is free to clobber the registers.  For this fix to work, the
-IRET and full regs frames must be adjacent, with no FUNC frames in
-between.  So replace the FUNC hint in interrupt_entry() with an
-IRET_REGS hint.
-
-Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Jones <dsj@fb.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lore.kernel.org/r/97a408167cc09f1cfa0de31a7b70dd88868d743f.1587808742.git.jpoimboe@redhat.com
+Fixes: 0f961f9f670e ("crypto: x86/nhpoly1305 - add AVX2 accelerated NHPoly1305")
+Fixes: 012c82388c03 ("crypto: x86/nhpoly1305 - add SSE2 accelerated NHPoly1305")
+Fixes: a00fa0c88774 ("crypto: arm64/nhpoly1305 - add NEON-accelerated NHPoly1305")
+Fixes: 16aae3595a9d ("crypto: arm/nhpoly1305 - add NEON-accelerated NHPoly1305")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Reviewed-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/entry/entry_64.S     |    4 +--
- arch/x86/include/asm/unwind.h |    2 -
- arch/x86/kernel/unwind_orc.c  |   51 ++++++++++++++++++++++++++++++++----------
- 3 files changed, 43 insertions(+), 14 deletions(-)
+ arch/arm/crypto/nhpoly1305-neon-glue.c   |    2 +-
+ arch/arm64/crypto/nhpoly1305-neon-glue.c |    2 +-
+ arch/x86/crypto/nhpoly1305-avx2-glue.c   |    2 +-
+ arch/x86/crypto/nhpoly1305-sse2-glue.c   |    2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -511,7 +511,7 @@ SYM_CODE_END(spurious_entries_start)
-  * +----------------------------------------------------+
-  */
- SYM_CODE_START(interrupt_entry)
--	UNWIND_HINT_FUNC
-+	UNWIND_HINT_IRET_REGS offset=16
- 	ASM_CLAC
- 	cld
+--- a/arch/arm/crypto/nhpoly1305-neon-glue.c
++++ b/arch/arm/crypto/nhpoly1305-neon-glue.c
+@@ -30,7 +30,7 @@ static int nhpoly1305_neon_update(struct
+ 		return crypto_nhpoly1305_update(desc, src, srclen);
  
-@@ -543,9 +543,9 @@ SYM_CODE_START(interrupt_entry)
- 	pushq	5*8(%rdi)		/* regs->eflags */
- 	pushq	4*8(%rdi)		/* regs->cs */
- 	pushq	3*8(%rdi)		/* regs->ip */
-+	UNWIND_HINT_IRET_REGS
- 	pushq	2*8(%rdi)		/* regs->orig_ax */
- 	pushq	8(%rdi)			/* return address */
--	UNWIND_HINT_FUNC
+ 	do {
+-		unsigned int n = min_t(unsigned int, srclen, PAGE_SIZE);
++		unsigned int n = min_t(unsigned int, srclen, SZ_4K);
  
- 	movq	(%rdi), %rdi
- 	jmp	2f
---- a/arch/x86/include/asm/unwind.h
-+++ b/arch/x86/include/asm/unwind.h
-@@ -19,7 +19,7 @@ struct unwind_state {
- #if defined(CONFIG_UNWINDER_ORC)
- 	bool signal, full_regs;
- 	unsigned long sp, bp, ip;
--	struct pt_regs *regs;
-+	struct pt_regs *regs, *prev_regs;
- #elif defined(CONFIG_UNWINDER_FRAME_POINTER)
- 	bool got_irq;
- 	unsigned long *bp, *orig_sp, ip;
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -378,9 +378,38 @@ static bool deref_stack_iret_regs(struct
- 	return true;
- }
+ 		kernel_neon_begin();
+ 		crypto_nhpoly1305_update_helper(desc, src, n, _nh_neon);
+--- a/arch/arm64/crypto/nhpoly1305-neon-glue.c
++++ b/arch/arm64/crypto/nhpoly1305-neon-glue.c
+@@ -30,7 +30,7 @@ static int nhpoly1305_neon_update(struct
+ 		return crypto_nhpoly1305_update(desc, src, srclen);
  
-+/*
-+ * If state->regs is non-NULL, and points to a full pt_regs, just get the reg
-+ * value from state->regs.
-+ *
-+ * Otherwise, if state->regs just points to IRET regs, and the previous frame
-+ * had full regs, it's safe to get the value from the previous regs.  This can
-+ * happen when early/late IRQ entry code gets interrupted by an NMI.
-+ */
-+static bool get_reg(struct unwind_state *state, unsigned int reg_off,
-+		    unsigned long *val)
-+{
-+	unsigned int reg = reg_off/8;
-+
-+	if (!state->regs)
-+		return false;
-+
-+	if (state->full_regs) {
-+		*val = ((unsigned long *)state->regs)[reg];
-+		return true;
-+	}
-+
-+	if (state->prev_regs) {
-+		*val = ((unsigned long *)state->prev_regs)[reg];
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
- bool unwind_next_frame(struct unwind_state *state)
- {
--	unsigned long ip_p, sp, orig_ip = state->ip, prev_sp = state->sp;
-+	unsigned long ip_p, sp, tmp, orig_ip = state->ip, prev_sp = state->sp;
- 	enum stack_type prev_type = state->stack_info.type;
- 	struct orc_entry *orc;
- 	bool indirect = false;
-@@ -442,39 +471,35 @@ bool unwind_next_frame(struct unwind_sta
- 		break;
+ 	do {
+-		unsigned int n = min_t(unsigned int, srclen, PAGE_SIZE);
++		unsigned int n = min_t(unsigned int, srclen, SZ_4K);
  
- 	case ORC_REG_R10:
--		if (!state->regs || !state->full_regs) {
-+		if (!get_reg(state, offsetof(struct pt_regs, r10), &sp)) {
- 			orc_warn("missing regs for base reg R10 at ip %pB\n",
- 				 (void *)state->ip);
- 			goto err;
- 		}
--		sp = state->regs->r10;
- 		break;
+ 		kernel_neon_begin();
+ 		crypto_nhpoly1305_update_helper(desc, src, n, _nh_neon);
+--- a/arch/x86/crypto/nhpoly1305-avx2-glue.c
++++ b/arch/x86/crypto/nhpoly1305-avx2-glue.c
+@@ -29,7 +29,7 @@ static int nhpoly1305_avx2_update(struct
+ 		return crypto_nhpoly1305_update(desc, src, srclen);
  
- 	case ORC_REG_R13:
--		if (!state->regs || !state->full_regs) {
-+		if (!get_reg(state, offsetof(struct pt_regs, r13), &sp)) {
- 			orc_warn("missing regs for base reg R13 at ip %pB\n",
- 				 (void *)state->ip);
- 			goto err;
- 		}
--		sp = state->regs->r13;
- 		break;
+ 	do {
+-		unsigned int n = min_t(unsigned int, srclen, PAGE_SIZE);
++		unsigned int n = min_t(unsigned int, srclen, SZ_4K);
  
- 	case ORC_REG_DI:
--		if (!state->regs || !state->full_regs) {
-+		if (!get_reg(state, offsetof(struct pt_regs, di), &sp)) {
- 			orc_warn("missing regs for base reg DI at ip %pB\n",
- 				 (void *)state->ip);
- 			goto err;
- 		}
--		sp = state->regs->di;
- 		break;
+ 		kernel_fpu_begin();
+ 		crypto_nhpoly1305_update_helper(desc, src, n, _nh_avx2);
+--- a/arch/x86/crypto/nhpoly1305-sse2-glue.c
++++ b/arch/x86/crypto/nhpoly1305-sse2-glue.c
+@@ -29,7 +29,7 @@ static int nhpoly1305_sse2_update(struct
+ 		return crypto_nhpoly1305_update(desc, src, srclen);
  
- 	case ORC_REG_DX:
--		if (!state->regs || !state->full_regs) {
-+		if (!get_reg(state, offsetof(struct pt_regs, dx), &sp)) {
- 			orc_warn("missing regs for base reg DX at ip %pB\n",
- 				 (void *)state->ip);
- 			goto err;
- 		}
--		sp = state->regs->dx;
- 		break;
+ 	do {
+-		unsigned int n = min_t(unsigned int, srclen, PAGE_SIZE);
++		unsigned int n = min_t(unsigned int, srclen, SZ_4K);
  
- 	default:
-@@ -501,6 +526,7 @@ bool unwind_next_frame(struct unwind_sta
- 
- 		state->sp = sp;
- 		state->regs = NULL;
-+		state->prev_regs = NULL;
- 		state->signal = false;
- 		break;
- 
-@@ -512,6 +538,7 @@ bool unwind_next_frame(struct unwind_sta
- 		}
- 
- 		state->regs = (struct pt_regs *)sp;
-+		state->prev_regs = NULL;
- 		state->full_regs = true;
- 		state->signal = true;
- 		break;
-@@ -523,6 +550,8 @@ bool unwind_next_frame(struct unwind_sta
- 			goto err;
- 		}
- 
-+		if (state->full_regs)
-+			state->prev_regs = state->regs;
- 		state->regs = (void *)sp - IRET_FRAME_OFFSET;
- 		state->full_regs = false;
- 		state->signal = true;
-@@ -537,8 +566,8 @@ bool unwind_next_frame(struct unwind_sta
- 	/* Find BP: */
- 	switch (orc->bp_reg) {
- 	case ORC_REG_UNDEFINED:
--		if (state->regs && state->full_regs)
--			state->bp = state->regs->bp;
-+		if (get_reg(state, offsetof(struct pt_regs, bp), &tmp))
-+			state->bp = tmp;
- 		break;
- 
- 	case ORC_REG_PREV_SP:
+ 		kernel_fpu_begin();
+ 		crypto_nhpoly1305_update_helper(desc, src, n, _nh_sse2);
 
 
