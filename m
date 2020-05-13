@@ -2,156 +2,146 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98199C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E6B2C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73111206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E4A620769
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:21:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731780AbgEMHVj (ORCPT
+        id S1732099AbgEMHVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 03:21:39 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2201 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729793AbgEMHVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 03:21:39 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 7E0816D919ACC1985133;
-        Wed, 13 May 2020 08:21:34 +0100 (IST)
-Received: from fraeml703-chm.china.huawei.com (10.206.15.52) by
- lhreml710-chm.china.huawei.com (10.201.108.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.1913.5; Wed, 13 May 2020 08:21:34 +0100
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- fraeml703-chm.china.huawei.com (10.206.15.52) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Wed, 13 May 2020 09:21:33 +0200
-Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
- fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1913.007;
- Wed, 13 May 2020 09:21:33 +0200
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        "david.safford@gmail.com" <david.safford@gmail.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "jmorris@namei.org" <jmorris@namei.org>,
-        "John Johansen" <john.johansen@canonical.com>,
-        "matthewgarrett@google.com" <matthewgarrett@google.com>
-CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Subject: RE: [RFC][PATCH 1/3] evm: Move hooks outside LSM infrastructure
-Thread-Topic: [RFC][PATCH 1/3] evm: Move hooks outside LSM infrastructure
-Thread-Index: AQHWHfmwvisCdHYC6kmVk7fgFWuzYaibYCWAgAAX0QCAAMB1IIAAb0AAgAApg3CAADIngIAAzgGAgACHqACABHSroIAAjWsAgAC7FtCAAFxigIAAJvQA///zHACAACsKoIAAFJCAgADcpfA=
-Date:   Wed, 13 May 2020 07:21:33 +0000
-Message-ID: <4fb6c8457ac44af3b464fab712a10a37@huawei.com>
-References: <20200429073935.11913-1-roberto.sassu@huawei.com>
-         <1588794293.4624.21.camel@linux.ibm.com>
-         <1588799408.4624.28.camel@linux.ibm.com>
-         <ab879f9e66874736a40e9c566cadc272@huawei.com>
-         <1588864628.5685.78.camel@linux.ibm.com>
-         <750ab4e0990f47e4aea10d0e580b1074@huawei.com>
-         <1588884313.5685.110.camel@linux.ibm.com>
-         <84e6acad739a415aa3e2457b5c37979f@huawei.com>
-         <1588957684.5146.70.camel@linux.ibm.com>
-         <414644a0be9e4af880452f4b5079aba1@huawei.com>
-         <1589233010.5091.49.camel@linux.ibm.com>
-         <09ee169cfd70492cb526bcb30f99d693@huawei.com>
-         <1589293025.5098.53.camel@linux.ibm.com>
-         <d3f4a53e386d4bb1b8c608ac8b6bec1f@huawei.com>
-         <1589298622.5098.67.camel@linux.ibm.com>
-         <fcdb168d27214b5e85c3b741f184cde9@huawei.com>
- <1589312281.5098.91.camel@linux.ibm.com>
-In-Reply-To: <1589312281.5098.91.camel@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.47.21.67]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 13 May 2020 03:21:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54432 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731804AbgEMHVm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 03:21:42 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76F8BC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 00:21:42 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jYlhs-00012g-PP; Wed, 13 May 2020 09:21:32 +0200
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jYlhs-0008Jd-7d; Wed, 13 May 2020 09:21:32 +0200
+Date:   Wed, 13 May 2020 09:21:32 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     vkoul@kernel.org, shawnguo@kernel.org,
+        u.kleine-koenig@pengutronix.de, robh+dt@kernel.org,
+        festevam@gmail.com, dan.j.williams@intel.com, mark.rutland@arm.com,
+        catalin.marinas@arm.com, will.deacon@arm.com,
+        l.stach@pengutronix.de, martin.fuzzey@flowbird.group,
+        kernel@pengutronix.de, linux-spi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v7 RESEND 07/13] spi: imx: fix ERR009165
+Message-ID: <20200513072132.GL5877@pengutronix.de>
+References: <1589218356-17475-1-git-send-email-yibin.gong@nxp.com>
+ <1589218356-17475-8-git-send-email-yibin.gong@nxp.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589218356-17475-8-git-send-email-yibin.gong@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 08:06:09 up 83 days, 13:36, 88 users,  load average: 0.20, 0.23,
+ 0.18
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBNaW1pIFpvaGFyIFttYWlsdG86em9oYXJAbGludXguaWJtLmNvbV0NCj4gU2VudDog
-VHVlc2RheSwgTWF5IDEyLCAyMDIwIDk6MzggUE0NCj4gT24gVHVlLCAyMDIwLTA1LTEyIGF0IDE2
-OjMxICswMDAwLCBSb2JlcnRvIFNhc3N1IHdyb3RlOg0KPiA+ID4gRnJvbTogTWltaSBab2hhciBb
-bWFpbHRvOnpvaGFyQGxpbnV4LmlibS5jb21dDQo+IA0KPiA+ID4gPiA+IEVhY2ggdGltZSB0aGUg
-RVZNIHByb3RlY3RlZCBmaWxlIG1ldGFkYXRhIGlzIHVwZGF0ZWQsIHRoZSBFVk0NCj4gSE1BQw0K
-PiA+ID4gaXMNCj4gPiA+ID4gPiB1cGRhdGVkLCBhc3N1bWluZyB0aGUgZXhpc3RpbmcgRVZNIEhN
-QUMgaXMgdmFsaWQuIMKgVXNlcnNwYWNlDQo+IHNob3VsZA0KPiA+ID4gPiA+IG5vdCBoYXZlIGFj
-Y2VzcyB0byB0aGUgSE1BQyBrZXksIHNvIHdlIG9ubHkgYWxsb3cgd3JpdGluZyBFVk0NCj4gPiA+
-ID4gPiBzaWduYXR1cmVzLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gVGhlIG9ubHkgZGlmZmVyZW5j
-ZSBiZXR3ZWVuIHdyaXRpbmcgdGhlIG9yaWdpbmFsIEVWTSBzaWduYXR1cmUgYW5kDQo+IHRoZQ0K
-PiA+ID4gPiA+IG5ldyBwb3J0YWJsZSBhbmQgaW1tdXRhYmxlIHNpZ25hdHVyZSBpcyB0aGUgc2Vj
-dXJpdHkuaW1hIHhhdHRyDQo+ID4gPiA+ID4gcmVxdWlyZW1lbnQuIMKgU2luY2UgdGhlIG5ldyBF
-Vk0gc2lnbmF0dXJlIGRvZXMgbm90IGluY2x1ZGUgdGhlDQo+ID4gPiA+ID4gZmlsZXN5c3RlbSBz
-cGVjaWZpYyBkYXRhLCBzb21ldGhpbmcgZWxzZSBuZWVkcyB0byBiaW5kIHRoZSBmaWxlDQo+ID4g
-PiA+ID4gbWV0YWRhdGEgdG8gdGhlIGZpbGUgZGF0YS4gwqBUaHVzIHRoZSBJTUEgeGF0dHIgcmVx
-dWlyZW1lbnQuDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBBc3N1bWluZyB0aGF0IHRoZSBuZXcgRVZN
-IHNpZ25hdHVyZSBpcyB3cml0dGVuIGxhc3QsIGFzIGxvbmcgYXMgdGhlcmUNCj4gPiA+ID4gPiBp
-cyBhbiBJTUEgeGF0dHIsIHRoZXJlIHNob3VsZG4ndCBiZSBhIHByb2JsZW0gd3JpdGluZyB0aGUg
-bmV3IEVWTQ0KPiA+ID4gPiA+IHNpZ25hdHVyZS4NCj4gPiA+ID4NCj4gPiA+ID4gICAgICAgICAv
-KiBmaXJzdCBuZWVkIHRvIGtub3cgdGhlIHNpZyB0eXBlICovDQo+ID4gPiA+ICAgICAgICAgcmMg
-PSB2ZnNfZ2V0eGF0dHJfYWxsb2MoZGVudHJ5LCBYQVRUUl9OQU1FX0VWTSwgKGNoYXINCj4gPiA+
-ICoqKSZ4YXR0cl9kYXRhLCAwLA0KPiA+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIEdGUF9OT0ZTKTsNCj4gPiA+ID4gICAgICAgICBpZiAocmMgPD0gMCkgew0KPiA+ID4gPiAg
-ICAgICAgICAgICAgICAgZXZtX3N0YXR1cyA9IElOVEVHUklUWV9GQUlMOw0KPiA+ID4gPiAgICAg
-ICAgICAgICAgICAgaWYgKHJjID09IC1FTk9EQVRBKSB7DQo+ID4gPiA+ICAgICAgICAgICAgICAg
-ICAgICAgICAgIHJjID0gZXZtX2ZpbmRfcHJvdGVjdGVkX3hhdHRycyhkZW50cnkpOw0KPiA+ID4g
-PiAgICAgICAgICAgICAgICAgICAgICAgICBpZiAocmMgPiAwKQ0KPiA+ID4gPiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIGV2bV9zdGF0dXMgPSBJTlRFR1JJVFlfTk9MQUJFTDsNCj4g
-PiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgZWxzZSBpZiAocmMgPT0gMCkNCj4gPiA+ID4g
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBldm1fc3RhdHVzID0gSU5URUdSSVRZX05P
-WEFUVFJTOyAvKiBuZXcgZmlsZSAqLw0KPiA+ID4gPg0KPiA+ID4gPiBJZiBFVk1fQUxMT1dfTUVU
-QURBVEFfV1JJVEVTIGlzIGNsZWFyZWQsIG9ubHkgdGhlIGZpcnN0IHhhdHRyDQo+ID4gPiA+IGNh
-biBiZSB3cml0dGVuIChzdGF0dXMgSU5URUdSSVRZX05PWEFUVFJTIGlzIG9rKS4gQWZ0ZXIsDQo+
-ID4gPiA+IGV2bV9maW5kX3Byb3RlY3RlZF94YXR0cnMoKSByZXR1cm5zIHJjID4gMCwgc28gdGhl
-IHN0YXR1cyBpcw0KPiA+ID4gPiBJTlRFR1JJVFlfTk9MQUJFTCwgd2hpY2ggaXMgbm90IGlnbm9y
-ZWQgYnkgZXZtX3Byb3RlY3RfeGF0dHIoKS4NCj4gPiA+DQo+ID4gPiBXaXRoIEVWTSBITUFDIGVu
-YWJsZWQsIGFzIGEgcmVzdWx0IG9mIHdyaXRpbmcgdGhlIGZpcnN0IHByb3RlY3RlZA0KPiA+ID4g
-eGF0dHIsIGFuIEVWTSBITUFDIHNob3VsZCBiZSBjYWxjdWxhdGVkIGFuZCB3cml0dGVuIGluDQo+
-ID4gPiBldm1faW5vZGVfcG9zdF9zZXR4YXR0cigpLg0KPiA+DQo+ID4gVG8gc29sdmUgdGhlIG9y
-ZGVyaW5nIGlzc3VlLCB3b3VsZG4ndCBhbGxvd2luZyBzZXR4YXR0cigpIG9uIGEgZmlsZQ0KPiA+
-IHdpdGggcG9ydGFibGUgc2lnbmF0dXJlIHRoYXQgZG9lcyBub3QgeWV0IHBhc3MgdmVyaWZpY2F0
-aW9uIGJlIHNhZmU/DQo+ID4gZXZtX3VwZGF0ZV9ldm14YXR0cigpIGNoZWNrcyBpZiB0aGUgc2ln
-bmF0dXJlIGlzIHBvcnRhYmxlIGFuZA0KPiA+IGlmIHllcywgZG9lcyBub3QgY2FsY3VsYXRlIHRo
-ZSBITUFDLg0KPiANCj4gQmVmb3JlIGFncmVlaW5nIHRvIGFsbG93aW5nIHRoZSBwcm90ZWN0ZWQg
-eGF0dHJzIHRvIGJlIHdyaXR0ZW4gb24gYQ0KPiBmaWxlIHdpdGggYSBwb3J0YWJsZSBzaWduYXR1
-cmUgdGhhdCBkb2VzIG5vdCB5ZXQgcGFzcyB2ZXJpZmljYXRpb24gYXJlDQo+IHNhZmUsIHdvdWxk
-IHdlIGJlIGludHJvZHVjaW5nIGFueSBuZXcgdHlwZXMgb2YgYXR0YWNrcz8NCg0KQWxsb3dpbmcg
-eGF0dHIvYXR0ciB1cGRhdGUgbWVhbnMgdGhhdCBzb21lb25lIGNhbiBkbzoNCg0Kc2V0eGF0dHIo
-cGF0aCwgInNlY3VyaXR5LmV2bSIsIC4uLik7CXdpdGggdHlwZT01DQoNCmFsbCBzdWJzZXF1ZW50
-IHNldHhhdHRyKCkvc2V0YXR0cigpIHN1Y2NlZWQgdW50aWwgdGhlIGNvcnJlY3QNCmNvbWJpbmF0
-aW9uIGlzIHNldC4NCg0KQXQgdGhhdCBwb2ludCwgYW55IHhhdHRyL2F0dHIgb3BlcmF0aW9uIGZh
-aWxzLCBldmVuIGlmIG9uZSB0cmllcyB0byBzZXQNCmFuIHhhdHRyIHdpdGggdGhlIHNhbWUgdmFs
-dWUuIElmIHdlIHN0aWxsIGRlbnkgdGhlIG9wZXJhdGlvbiB3aGVuIHRoZQ0KdmVyaWZpY2F0aW9u
-IHN1Y2NlZWRzLCB3ZSBoYXZlIHRvIGZpeCB0aGF0Lg0KDQpJdCBpcyBjb21tb24gdGhhdCB0aGUg
-c2lnbmF0dXJlIHBhc3NlcyB2ZXJpZmljYXRpb24gYmVmb3JlIHVzZXIgc3BhY2UNCnRvb2xzIGZp
-bmlzaCB0byBzZXQgeGF0dHJzL2F0dHJzLiBGb3IgZXhhbXBsZSwgaWYgYSBmaWxlIGlzIGNyZWF0
-ZWQgd2l0aA0KbW9kZSA2NDQgYW5kIHRoaXMgd2FzIHRoZSBtb2RlIGF0IHRoZSB0aW1lIG9mIHNp
-Z25pbmcsIGFueSBhdHRlbXB0DQpieSB0YXIgZm9yIGV4YW1wbGUgdG8gc2V0IGFnYWluIHRoZSBz
-YW1lIG1vZGUgZmFpbHMuDQoNCklmIGFsbG93aW5nIGEgY2hhbmdlIG9mIHhhdHRycy9hdHRycyBm
-b3IgcG9ydGFibGUgc2lnbmF0dXJlcyBpcyBzYWZlIG9yDQpub3QsIEkgd291bGQgc2F5IHllcy4g
-UG9ydGFibGUgc2lnbmF0dXJlcyBjYW5ub3QgYmUgbW9kaWZpZWQgZXZlbg0KaWYgX192ZnNfc2V0
-eGF0dHJfbm9wZXJtKCkgaXMgY2FsbGVkIGRpcmVjdGx5Lg0KDQo+IEZvciBleGFtcGxlLCB3b3Vs
-ZCB3ZSBkaWZmZXJlbnRpYXRlIGJldHdlZW4gcG9ydGFibGUgc2lnbmF0dXJlcyB0aGF0DQo+IGRv
-bid0IHBhc3MgdmVyaWZpY2F0aW9uIGFuZCBvbmVzIHRoYXQgZG8/IMKgSWYgd2UgZG9uJ3QgZGlm
-ZmVyZW50aWF0ZSwNCj4gY291bGQgaXQgYmUgdXNlZCBmb3IgRG9TPyDCoFNob3VsZCBpdCBiZSBs
-aW1pdGVkIHRvIG5ldyBmaWxlcz8NCg0KSSB3b3VsZCBwcmVmZXIgdG8gbG9jayBmaWxlcyB3aGVu
-IHNpZ25hdHVyZXMgcGFzcyB0aGUgdmVyaWZpY2F0aW9uIHRvDQphdm9pZCBhY2NpZGVudGFsIGNo
-YW5nZXMuDQoNClVubGVzcyB3ZSBmaW5kIGEgYmV0dGVyIHdheSB0byBpZGVudGlmeSBuZXcgZmls
-ZSwgd2l0aG91dCBkZXBlbmRpbmcNCm9uIHRoZSBhcHByYWlzYWwgcG9saWN5LCBJIHdvdWxkIGFs
-bG93IHRoZSBvcGVyYXRpb24gZXZlbiBmb3IgZXhpc3RpbmcNCmZpbGVzLg0KDQpSb2JlcnRvDQoN
-CkhVQVdFSSBURUNITk9MT0dJRVMgRHVlc3NlbGRvcmYgR21iSCwgSFJCIDU2MDYzDQpNYW5hZ2lu
-ZyBEaXJlY3RvcjogTGkgUGVuZywgTGkgSmlhbiwgU2hpIFlhbmxpDQo=
+On Tue, May 12, 2020 at 01:32:30AM +0800, Robin Gong wrote:
+> Change to XCH  mode even in dma mode, please refer to the below
+> errata:
+> https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf
+
+This patch is the one bisecting will end up with when somebody uses an
+older SDMA firmware or the ROM scripts. It should have a better
+description what happens and what should be done about it.
+
+Sascha
+
+> 
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+> Acked-by: Mark Brown <broonie@kernel.org>
+> ---
+>  drivers/spi/spi-imx.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
+> index f4f28a4..70df8e6 100644
+> --- a/drivers/spi/spi-imx.c
+> +++ b/drivers/spi/spi-imx.c
+> @@ -585,8 +585,8 @@ static int mx51_ecspi_prepare_transfer(struct spi_imx_data *spi_imx,
+>  	ctrl |= mx51_ecspi_clkdiv(spi_imx, t->speed_hz, &clk);
+>  	spi_imx->spi_bus_clk = clk;
+>  
+> -	if (spi_imx->usedma)
+> -		ctrl |= MX51_ECSPI_CTRL_SMC;
+> +	/* ERR009165: work in XHC mode as PIO */
+> +	ctrl &= ~MX51_ECSPI_CTRL_SMC;
+>  
+>  	writel(ctrl, spi_imx->base + MX51_ECSPI_CTRL);
+>  
+> @@ -617,7 +617,7 @@ static void mx51_setup_wml(struct spi_imx_data *spi_imx)
+>  	 * and enable DMA request.
+>  	 */
+>  	writel(MX51_ECSPI_DMA_RX_WML(spi_imx->wml - 1) |
+> -		MX51_ECSPI_DMA_TX_WML(spi_imx->wml) |
+> +		MX51_ECSPI_DMA_TX_WML(0) |
+>  		MX51_ECSPI_DMA_RXT_WML(spi_imx->wml) |
+>  		MX51_ECSPI_DMA_TEDEN | MX51_ECSPI_DMA_RXDEN |
+>  		MX51_ECSPI_DMA_RXTDEN, spi_imx->base + MX51_ECSPI_DMA);
+> @@ -1171,7 +1171,11 @@ static int spi_imx_dma_configure(struct spi_master *master)
+>  	tx.direction = DMA_MEM_TO_DEV;
+>  	tx.dst_addr = spi_imx->base_phys + MXC_CSPITXDATA;
+>  	tx.dst_addr_width = buswidth;
+> -	tx.dst_maxburst = spi_imx->wml;
+> +	/*
+> +	 * For ERR009165 with tx_wml = 0 could enlarge burst size to fifo size
+> +	 * to speed up fifo filling as possible.
+> +	 */
+> +	tx.dst_maxburst = spi_imx->devtype_data->fifo_size;
+>  	ret = dmaengine_slave_config(master->dma_tx, &tx);
+>  	if (ret) {
+>  		dev_err(spi_imx->dev, "TX dma configuration failed with %d\n", ret);
+> @@ -1265,10 +1269,6 @@ static int spi_imx_sdma_init(struct device *dev, struct spi_imx_data *spi_imx,
+>  {
+>  	int ret;
+>  
+> -	/* use pio mode for i.mx6dl chip TKT238285 */
+> -	if (of_machine_is_compatible("fsl,imx6dl"))
+> -		return 0;
+> -
+>  	spi_imx->wml = spi_imx->devtype_data->fifo_size / 2;
+>  
+>  	/* Prepare for TX DMA: */
+> -- 
+> 2.7.4
+> 
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
