@@ -2,196 +2,141 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B5DCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A66ABC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28DFE206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86A0F206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:55:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UBNz8U1A"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="kEw7j3J8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733003AbgEMMyu (ORCPT
+        id S1733049AbgEMMz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 08:54:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728313AbgEMMyt (ORCPT
+        Wed, 13 May 2020 08:55:56 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:29476 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733012AbgEMMz4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 08:54:49 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 125F8C061A0C;
-        Wed, 13 May 2020 05:54:48 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id v12so20716613wrp.12;
-        Wed, 13 May 2020 05:54:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=gjKKMxa6xHI1LOhBmFUHbDk1I1ew8jSwGc3Qoec8V+Q=;
-        b=UBNz8U1As5Vt7c5ZDDS1AoaWSmwZKNX6frEeTvbyV71E0BCKVyd2TEF4KA3888hxpS
-         l6mSMgwqDLXr2mFZR7GpBZr0Wkrtw6gCHanK5TOuUuI9qa8Ndv7P98jrySSmVln7LFwJ
-         +O+V5roxN+jRG60EAHChKxZGgr+s0YC4RCi9K2hDcnPf6CY/Zl62PyWvc1hyXzHLarKh
-         PoFqjzdCzb2/0MKKPDcLAAxyZR+gLiRn0CtPGr+Mdp5jZL480s1myIvtg8taa26ANgHg
-         WGPXa6jNEpWIBQ8WY2LjglX2XDGGDBUaRL62Xj13Uj9hmBT2SFyFuzXH2CMMqHjkY3Kq
-         XBBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=gjKKMxa6xHI1LOhBmFUHbDk1I1ew8jSwGc3Qoec8V+Q=;
-        b=DXw+PWej1TzOXWEezifwXEwSVSx5cq6P8BrJejMmDCdruGxTIDIlYC9KSlLikZ3kkA
-         jZKPCydIgRfjIdw0XQe3XnLi9Brbf/bZ1l9OG6sAmTnojNCVkgClzq1hIRz+MoJkUQ4P
-         HzdUhtLDgHBNc8AlTJpJtNL+w2RQOofAEYHH8ZowRCsedE2tM80+VmjA2Gwn86/6qmla
-         6w3iXEXR5+CLWkVktqmR9bI60laQ6xy/xr628ky8UKuY1Y8Maoge4l8lvEWXQjbTEpge
-         lnuBNQtEHotnEtDWFHIvKDWMUslZQcE+K1WRFP2TDvWbYfFEeShoe8plgaHhrFH8hhQD
-         j/Zw==
-X-Gm-Message-State: AGi0PuajDTnPgnUc7IbEFfUrC3W1hrGGDyPTIAQwvipArOMeitpZCVlR
-        fxhWOWh5SQi5XtqGCLGKPo4=
-X-Google-Smtp-Source: APiQypLJGcQe8kgxzp9RurwNj5AFOM4KYK86duozmEFZkimTMBGkUPYtCVcNV/c9bznSQgyJbAP0xA==
-X-Received: by 2002:a5d:4806:: with SMTP id l6mr31495243wrq.121.1589374486610;
-        Wed, 13 May 2020 05:54:46 -0700 (PDT)
-Received: from AnsuelXPS (host122-89-dynamic.247-95-r.retail.telecomitalia.it. [95.247.89.122])
-        by smtp.gmail.com with ESMTPSA id s11sm36459960wms.5.2020.05.13.05.54.44
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 May 2020 05:54:45 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Stanimir Varbanov'" <svarbanov@mm-sol.com>,
-        "'Bjorn Andersson'" <bjorn.andersson@linaro.org>
-Cc:     "'Sham Muthayyan'" <smuthayy@codeaurora.org>,
-        "'Andy Gross'" <agross@kernel.org>,
-        "'Bjorn Helgaas'" <bhelgaas@google.com>,
-        "'Rob Herring'" <robh+dt@kernel.org>,
-        "'Mark Rutland'" <mark.rutland@arm.com>,
-        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
-        "'Andrew Murray'" <amurray@thegoodpenguin.co.uk>,
-        "'Philipp Zabel'" <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200430220619.3169-1-ansuelsmth@gmail.com> <20200430220619.3169-10-ansuelsmth@gmail.com> <3dc89ec6-d550-9402-1a4a-ca0c6f1e1fb9@mm-sol.com>
-In-Reply-To: <3dc89ec6-d550-9402-1a4a-ca0c6f1e1fb9@mm-sol.com>
-Subject: R: [PATCH v3 09/11] PCI: qcom: add ipq8064 rev2 variant and set tx term offset
-Date:   Wed, 13 May 2020 14:54:41 +0200
-Message-ID: <02df01d62925$acd160a0$067421e0$@gmail.com>
+        Wed, 13 May 2020 08:55:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1589374555; x=1620910555;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=71agoK2Lf2NcrvRKduazxlxfbvYG5gjDX3+0wemNjCw=;
+  b=kEw7j3J8Lg4DwRYfGV4TWwm19Mi5fvwPznVCKoEhCeosxX4cMtq5qGpK
+   5HlVLaiwltFUBGV92YyJ8C8zcDZs/emt3ZLnGKrVcHuVLKwpiYbWiVDrB
+   SrTbJKssRFhxo4USE4C+StM+E9hu5BnLsO5wNwbCF8HA8Z8IqJOMvNeyF
+   jded16ChrSfnEEAEelXXXtdHHrXx2TcjpHPuTYjpewkYnaBqp/P2gzjDI
+   LnV3MBHL6J9NNvTOXGC1NXs36/q6RXLs9bZLRMVooNmVqTGJ3fMoUtBd+
+   yaTpJUjvEb4crVCUr3dfvC/DUa4JK3k7Cyw2Ojtp/Jncvz4Pk4t3pwoRL
+   Q==;
+IronPort-SDR: 3Bbqq+3ueyuEU0vcFJ63If04Fklj8PCnVSsmtda/MfpzXzLeqBZv06fQHy9pyyPmCnNbtRr+0a
+ WKD8Sfn8OkWwYsBSil4fsWOrrGRJoDowIhYPnCMK08AvJmX7pZ/EXNgGSYq79ci5/nEx5RWj70
+ mwSIziKMbOkRgj/N237z1EX/Kkra6yNHUeCsDuY7rS9uKCqDBBXbGr8dzn9k6No+gjmoT8Cw3I
+ R7cuwk+XjmQNHshM9gm7mEbUFj8srYBXqe4n0XXL58LCAGSjnt3RhOmuz/UFFD9kWdP7Pu2Cdt
+ iUk=
+X-IronPort-AV: E=Sophos;i="5.73,387,1583218800"; 
+   d="scan'208";a="76494509"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 May 2020 05:55:55 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 13 May 2020 05:55:57 -0700
+Received: from soft-dev15.microsemi.net (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Wed, 13 May 2020 05:55:52 -0700
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+To:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        "Michael Turquette" <mturquette@baylibre.com>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 00/14] Adding support for Microchip Sparx5 SoC
+Date:   Wed, 13 May 2020 14:55:18 +0200
+Message-ID: <20200513125532.24585-1-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: it
-Thread-Index: AQH0plL6ngkayUAAEEU7BifA9vEwhgKDdr3rAu/CbUKoPWRmMA==
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Hi Ansuel,
-> 
-> On 5/1/20 1:06 AM, Ansuel Smith wrote:
-> > From: Sham Muthayyan <smuthayy@codeaurora.org>
-> >
-> > Add tx term offset support to pcie qcom driver need in some revision of
-> > the ipq806x SoC.
-> > Ipq8064 have tx term offset set to 7.
-> > Ipq8064-v2 revision and ipq8065 have the tx term offset set to 0.
-> >
-> > Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-> > Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-qcom.c | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c
-> b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index da8058fd1925..372d2c8508b5 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -45,6 +45,9 @@
-> >  #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
-> >
-> >  #define PCIE20_PARF_PHY_CTRL			0x40
-> > +#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(12,
-> 16)
-> 
-> The mask definition is not correct. Should be GENMASK(20, 16)
-> 
-> > +#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
-> > +
-> >  #define PCIE20_PARF_PHY_REFCLK			0x4C
-> >  #define PHY_REFCLK_SSP_EN			BIT(16)
-> >  #define PHY_REFCLK_USE_PAD			BIT(12)
-> > @@ -118,6 +121,7 @@ struct qcom_pcie_resources_2_1_0 {
-> >  	u32 tx_swing_full;
-> >  	u32 tx_swing_low;
-> >  	u32 rx0_eq;
-> > +	u8 phy_tx0_term_offset;
-> >  };
-> >
-> >  struct qcom_pcie_resources_1_0_0 {
-> > @@ -318,6 +322,11 @@ static int
-> qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
-> >  	if (IS_ERR(res->ext_reset))
-> >  		return PTR_ERR(res->ext_reset);
-> >
-> > +	if (of_device_is_compatible(dev->of_node, "qcom,pcie-ipq8064"))
-> > +		res->phy_tx0_term_offset = 7;
-> 
-> Before your change the phy_tx0_term_offser was 0 for apq8064, but here
-> you change it to 7, why?
-> 
+This patch series adds support for Microchip Sparx5 SoC, the CPU
+system of a advanced, TSN capable gigabit switch. The CPU is an armv8
+x 2 CPU core (A53).
 
-apq8064 board should use qcom,pcie-apq8064 right? This should be set to 0
-only with pcie-ipq8064 compatible. Tell me if I'm wrong.
+Although this is an ARM core, it shares some peripherals with the
+Microsemi Ocelot SoC.
 
-> > +	else
-> > +		res->phy_tx0_term_offset = 0;
-> > +
-> >  	res->phy_reset = devm_reset_control_get_exclusive(dev, "phy");
-> >  	return PTR_ERR_OR_ZERO(res->phy_reset);
-> >  }
-> > @@ -402,6 +411,11 @@ static int qcom_pcie_init_2_1_0(struct
-> qcom_pcie *pcie)
-> >  	/* enable PCIe clocks and resets */
-> >  	qcom_clear_and_set_dword(pcie->parf + PCIE20_PARF_PHY_CTRL,
-> BIT(0), 0);
-> >
-> > +	/* set TX termination offset */
-> > +	qcom_clear_and_set_dword(pcie->parf + PCIE20_PARF_PHY_CTRL,
-> > +			PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK,
-> 
-> As the mask definition is incorrect you actually clear 12 to 16 bit in
-> the register where is another PHY parameter. Is that was intentional?
-> 
+This is the first official revision of the series.
 
-Will check this and the wrong genmask.
+Lars Povlsen (14):
+  pinctrl: ocelot: Should register GPIO's even if not irq controller
+  pinctrl: ocelot: Remove instance number from pin functions
+  pinctrl: ocelot: Fix GPIO interrupt decoding on Jaguar2
+  arm64: sparx5: Add support for Microchip 2xA53 SoC
+  dt-bindings: arm: sparx5: Add documentation for Microchip Sparx5 SoC
+  arm64: dts: sparx5: Add basic cpu support
+  dt-bindings: pinctrl: ocelot: Add Sparx5 SoC support
+  arm64: dts: sparx5: Add pinctrl support
+  pinctrl: ocelot: Add Sparx5 SoC support
+  dt-bindings: clock: sparx5: Add Sparx5 SoC DPLL clock
+  dt-bindings: clock: sparx5: Add bindings include file
+  clk: sparx5: Add Sparx5 SoC DPLL clock driver
+  arm64: dts: sparx5: Add Sparx5 SoC DPLL clock
+  arm64: dts: sparx5: Add i2c devices, i2c muxes
 
-> > +			PHY_CTRL_PHY_TX0_TERM_OFFSET(res-
-> >phy_tx0_term_offset));
-> > +
-> >  	writel(PCS_DEEMPH_TX_DEEMPH_GEN1(res->tx_deemph_gen1) |
-> >  	       PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(res-
-> >tx_deemph_gen2_3p5db) |
-> >  	       PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(res-
-> >tx_deemph_gen2_6db),
-> > @@ -1485,6 +1499,7 @@ static int qcom_pcie_probe(struct
-> platform_device *pdev)
-> >  static const struct of_device_id qcom_pcie_match[] = {
-> >  	{ .compatible = "qcom,pcie-apq8084", .data = &ops_1_0_0 },
-> >  	{ .compatible = "qcom,pcie-ipq8064", .data = &ops_2_1_0 },
-> > +	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &ops_2_1_0 },
-> >  	{ .compatible = "qcom,pcie-apq8064", .data = &ops_2_1_0 },
-> >  	{ .compatible = "qcom,pcie-msm8996", .data = &ops_2_3_2 },
-> >  	{ .compatible = "qcom,pcie-ipq8074", .data = &ops_2_3_3 },
-> >
-> 
-> --
-> regards,
-> Stan
+ .../bindings/arm/microchip,sparx5.yaml        |  87 +++
+ .../bindings/clock/microchip,sparx5-dpll.yaml |  46 ++
+ .../bindings/pinctrl/mscc,ocelot-pinctrl.txt  |   4 +-
+ MAINTAINERS                                   |   9 +
+ arch/arm64/Kconfig.platforms                  |  14 +
+ arch/arm64/boot/dts/Makefile                  |   1 +
+ arch/arm64/boot/dts/microchip/Makefile        |   4 +
+ arch/arm64/boot/dts/microchip/sparx5.dtsi     | 202 +++++++
+ .../boot/dts/microchip/sparx5_pcb125.dts      |  21 +
+ .../boot/dts/microchip/sparx5_pcb134.dts      |  17 +
+ .../dts/microchip/sparx5_pcb134_board.dtsi    | 252 ++++++++
+ .../boot/dts/microchip/sparx5_pcb134_emmc.dts |  17 +
+ .../boot/dts/microchip/sparx5_pcb135.dts      |  17 +
+ .../dts/microchip/sparx5_pcb135_board.dtsi    |  92 +++
+ .../boot/dts/microchip/sparx5_pcb135_emmc.dts |  17 +
+ .../boot/dts/microchip/sparx5_pcb_common.dtsi |  19 +
+ drivers/clk/Makefile                          |   1 +
+ drivers/clk/clk-sparx5.c                      | 269 +++++++++
+ drivers/pinctrl/pinctrl-ocelot.c              | 558 +++++++++++++++---
+ include/dt-bindings/clock/microchip,sparx5.h  |  23 +
+ 20 files changed, 1587 insertions(+), 83 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/microchip,sparx5-dpll.yaml
+ create mode 100644 arch/arm64/boot/dts/microchip/Makefile
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5.dtsi
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135_board.dtsi
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
+ create mode 100644 arch/arm64/boot/dts/microchip/sparx5_pcb_common.dtsi
+ create mode 100644 drivers/clk/clk-sparx5.c
+ create mode 100644 include/dt-bindings/clock/microchip,sparx5.h
 
+--
+2.26.2
