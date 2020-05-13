@@ -2,119 +2,115 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFFCCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11453CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93378223E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B858223E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:39:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="bMtNP9ht"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="yO+lKrES"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388687AbgEMNje (ORCPT
+        id S2388713AbgEMNjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:39:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387966AbgEMNi7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:38:59 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70616C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:38:59 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id z72so18928062wmc.2
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:38:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xyRGlbI4Ky3Dk3+EyeqNaJIIfLuLQ5HFlEzVPTO9nr4=;
-        b=bMtNP9htiHa4g6CO0FhlyLgjdmVg2uoH/JS6A+XeeQjNSsWHJ8U8m0wdZGnw1Y+0aL
-         kW8OYvE+eNBeWbbm/5Gab5wkT1yO1e6mIJUToNMcIPXRt7iTR0/vCIetz/nAJn27FLLz
-         jhPPpIRzrjCO7NAduITv9ZIwigQhrw9Qrd7XSq6ZHbMgGPCG8DIfXLK4Mz26e6UyQIsC
-         kFE/QS0MJpOZwOAHP/JmflUOLkHqqpPF2Ucefo9KzZkVgBFzOPS1UsPF3YxZe44yFlfI
-         eGemUuSFNmHex8uVKB8LTn1f6/I4kJhidJrkgjKQ+bDuFwMnHX66Mv8lS/yNh7KxVHHy
-         5Qiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xyRGlbI4Ky3Dk3+EyeqNaJIIfLuLQ5HFlEzVPTO9nr4=;
-        b=H29xdZXxmYCcimU978ceCG76/j/ILSB12Xjsb7Uw/GG7QrAuM3rDpuer64TdvPFt+I
-         WZmBQvreDews2ZXS/ZSwb7tDunTSYyHNFVoJqEVWGGSNWjnujX1uTPzNCvBVHbvWiJQZ
-         FmnwOSLgifmHiHLQU1FLtivvD3gP9lKM53x90JSnPuMyLYFF5u+DOkL+bVqd9aVkwFHF
-         SDVsrdDZ2C2FH3rElm2ofRmRES8a2Xac+on5TluyMxILxhCJ3MUshpOkOwGEdNMrzFeD
-         /g746F1Yza88N1imuAG9kQjKckEVpkccLdreogP/McZptdS2VA/b9S+WFA90jgEp6CUt
-         N9EQ==
-X-Gm-Message-State: AGi0PuaU7WWC+DkFeN5De1ei1TreRFG0yXImuQ3MD2380mhky4JbgBVE
-        NO/xN8kHRPLDS2XIajSsqPjVGQ==
-X-Google-Smtp-Source: APiQypIjxnkrTUJVBpGMV8YOgo+iI7d5niRSc7PWL+lVfFV/KjhGlb+A6PRiT5dOGTNyca62+5s28w==
-X-Received: by 2002:a1c:3581:: with SMTP id c123mr32473872wma.150.1589377130947;
-        Wed, 13 May 2020 06:38:50 -0700 (PDT)
-Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
-        by smtp.gmail.com with ESMTPSA id m6sm26202653wrq.5.2020.05.13.06.38.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 06:38:50 -0700 (PDT)
-From:   Martijn Coenen <maco@android.com>
-To:     axboe@kernel.dk, hch@lst.de, ming.lei@redhat.com
-Cc:     narayan@google.com, zezeozue@google.com, maco@google.com,
-        kernel-team@android.com, bvanassche@acm.org,
-        Chaitanya.Kulkarni@wdc.com, jaegeuk@kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Martijn Coenen <maco@android.com>, Bob Liu <bob.liu@oracle.com>
-Subject: [PATCH v5 01/11] loop: Call loop_config_discard() only after new config is applied
-Date:   Wed, 13 May 2020 15:38:35 +0200
-Message-Id: <20200513133845.244903-2-maco@android.com>
-X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
-In-Reply-To: <20200513133845.244903-1-maco@android.com>
-References: <20200513133845.244903-1-maco@android.com>
+        Wed, 13 May 2020 09:39:40 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:57898 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728787AbgEMNjc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 09:39:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=hKK0PusahUIxbCyM9tysfdHvsir7N5IvBCEky0jEiNY=; b=yO+lKrESHBVdVl79yB038dn1C0
+        0RBiUREpZ6oVmSLcN/Y3XjsZA8aHMFK9vMWIIYZ0wxHZsjF/+b6rRcN8jPRcKIAn94UDiwQrnC/3k
+        kJoP0jS9KqXGzSml+Im1iUz7oLti+haAV8uVUuu8u9S731vOv78LsOU1fRMu4PRlWobw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jYrbZ-002AKi-MH; Wed, 13 May 2020 15:39:25 +0200
+Date:   Wed, 13 May 2020 15:39:25 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH net-next v1] net: phy: tja11xx: add cable-test support
+Message-ID: <20200513133925.GD499265@lunn.ch>
+References: <20200513123440.19580-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513123440.19580-1-o.rempel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-loop_set_status() calls loop_config_discard() to configure discard for
-the loop device; however, the discard configuration depends on whether
-the loop device uses encryption, and when we call it the encryption
-configuration has not been updated yet. Move the call down so we apply
-the correct discard configuration based on the new configuration.
+On Wed, May 13, 2020 at 02:34:40PM +0200, Oleksij Rempel wrote:
+> Add initial cable testing support.
+> This PHY needs only 100usec for this test and it is recommended to run it
+> before the link is up. For now, provide at least ethtool support, so it
+> can be tested by more developers.
+> 
+> This patch was tested with TJA1102 PHY with following results:
+> - No cable, is detected as open
+> - 1m cable, with no connected other end and detected as open
+> - a 40m cable (out of spec, max lenght should be 15m) is detected as OK.
+> 
+> Current patch do not provide polarity test support. This test would
+> indicate not proper wire connection, where "+" wire of main phy is
+> connected to the "-" wire of the link partner.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  drivers/net/phy/nxp-tja11xx.c | 106 +++++++++++++++++++++++++++++++++-
+>  1 file changed, 105 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
+> index ca5f9d4dc57ed..8b743d25002b9 100644
+> --- a/drivers/net/phy/nxp-tja11xx.c
+> +++ b/drivers/net/phy/nxp-tja11xx.c
+> @@ -5,6 +5,7 @@
+>   */
+>  #include <linux/delay.h>
+>  #include <linux/ethtool.h>
+> +#include <linux/ethtool_netlink.h>
+>  #include <linux/kernel.h>
+>  #include <linux/mdio.h>
+>  #include <linux/mii.h>
+> @@ -26,6 +27,7 @@
+>  #define MII_ECTRL_POWER_MODE_NO_CHANGE	(0x0 << 11)
+>  #define MII_ECTRL_POWER_MODE_NORMAL	(0x3 << 11)
+>  #define MII_ECTRL_POWER_MODE_STANDBY	(0xc << 11)
+> +#define MII_ECTRL_CABLE_TEST		BIT(5)
+>  #define MII_ECTRL_CONFIG_EN		BIT(2)
+>  #define MII_ECTRL_WAKE_REQUEST		BIT(0)
+>  
+> @@ -55,6 +57,11 @@
+>  #define MII_GENSTAT			24
+>  #define MII_GENSTAT_PLL_LOCKED		BIT(14)
+>  
+> +#define MII_EXTSTAT			25
+> +#define MII_EXTSTAT_SHORT_DETECT	BIT(8)
+> +#define MII_EXTSTAT_OPEN_DETECT		BIT(7)
+> +#define MII_EXTSTAT_POLARITY_DETECT	BIT(6)
+> +
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Bob Liu <bob.liu@oracle.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martijn Coenen <maco@android.com>
----
- drivers/block/loop.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Do these registers all conform to the standard? Can we pull this code
+out into a library which all standards conformant PHY drivers can use?
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index da693e6a834e..f1754262fc94 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -1334,8 +1334,6 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- 		}
- 	}
- 
--	loop_config_discard(lo);
--
- 	memcpy(lo->lo_file_name, info->lo_file_name, LO_NAME_SIZE);
- 	memcpy(lo->lo_crypt_name, info->lo_crypt_name, LO_NAME_SIZE);
- 	lo->lo_file_name[LO_NAME_SIZE-1] = 0;
-@@ -1359,6 +1357,8 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- 		lo->lo_key_owner = uid;
- 	}
- 
-+	loop_config_discard(lo);
-+
- 	/* update dio if lo_offset or transfer is changed */
- 	__loop_update_dio(lo, lo->use_dio);
- 
--- 
-2.26.2.645.ge9eca65c58-goog
+The code itself looks O.K.
 
+    Andrew
