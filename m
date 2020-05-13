@@ -2,165 +2,248 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FE6CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA452CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38F4624932
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94740205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:01:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ueBZ7Xbb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F0eVoq99"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbgEMNAY (ORCPT
+        id S1732093AbgEMNBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:00:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50806 "EHLO
+        Wed, 13 May 2020 09:01:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbgEMNAX (ORCPT
+        with ESMTP id S1728172AbgEMNBC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:00:23 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CEC9C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:00:23 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id y22so4522652qki.3
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:00:23 -0700 (PDT)
+        Wed, 13 May 2020 09:01:02 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A370C061A0C;
+        Wed, 13 May 2020 06:01:02 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id y9so4202520plk.10;
+        Wed, 13 May 2020 06:01:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+cW70ChImxuqV2RBsl6w7NV4YFDYwLH2CWpZPYn8bwc=;
-        b=ueBZ7XbbZpEcGa6ncc1N99qMbGVjWNDNqkGunZjHci2h023ddhN8dJF1xJmuaONvN+
-         9TslYt/mBrZfFRMUkZb5agEyvyh5UhClFCX8DxTW9eEizKKEOfRycRQMTr4rMIjDot/o
-         2S1/8fFrfFxOfEbPhC5ryqLCeT+ahFmll6lbagvvUuCl/dCAQvux7Imp3edG0zObITXY
-         FQdfjaibsbo0zy2Y98ouPjVoqSnHj+N+OSzDvhSoWupA8W4KCX+NwYzCuc9mnmYL8jEO
-         OEnsjfGAuj6B/HOEA/3Mo835BKZDDu9hEyQNf++9enhJKbUQWDpFnZcS+rTSXyWFFyXA
-         5VQg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dNZP1hODCFjbYeHZ6HY6IqS7arCegZXm1NX93ncNYxA=;
+        b=F0eVoq99v+yZoZPlVsmr5bfX3WQzXzO3jrEsoLbHFRaz0rh71VAnMcLeKslTMoPYo0
+         +f6bs4L/o0N2GPA8gn+8xkcbMVODC5FRfti908GOviJRtZwjk77Bn5xIn1vshLoPxroN
+         dkfHUGXWlq/SmhudSjrHYNJbTJ2gA0lHSSnRTvrbsMT4rO54nw5hSLudmy5lgtcPBuNY
+         30CHSvoFyacwDHXxAx/vFw1w11b5SCEH8uWUWS9JZOLL65V4LB6aTLnRMZl+dYfREpr3
+         jEq6KSZL4bT5POgEdLkUnLUqT4MdnCE83Gj6cLz5lBxAmstQSnJU9vZTeU14jQqjuOQM
+         cadw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+cW70ChImxuqV2RBsl6w7NV4YFDYwLH2CWpZPYn8bwc=;
-        b=SyHScNkUXO/R31m78wFeuouNkw3BrtKQpi8lZcO7KNpGcLY2KuMEq7/Q3wIoOF7oQ4
-         DOFYEYGMKXQNFIu20d3fy2rThRMwgP8decD5SxtGNVxfHCI8IlBjiyQyGqR6/gaYvVeO
-         YSAV6kHQhnh1l45WHfJ5i6IcQLBaBY+wZdYgHDWeVVwIset0XCWnVp4kZrPywBV5c5UT
-         U5gVlo5NtNmdXyBFtGUd4nSBqX85NN/FOSQbEJW6tLDvIEuiIFTXqdLt9b2bYbNEWTkf
-         nUB83GR68mLWHInaWwNJbNNgdnmFGWeoheyanC9VA3JOn6JrbdwQWYgd4LbG7t3vHeW2
-         D3ew==
-X-Gm-Message-State: AGi0PubCzhW6acuS1oBgcR6CoQLMudy6C9X+70zZYc8YISLq8NVLyGAS
-        1P2Pt8n9DuPExN8OY7FAZv5INg==
-X-Google-Smtp-Source: APiQypKwvGZuJBxRqVUHNYuvoj8QpY7uTR3OAQ4b8juIRpGo91ZqMW8ow8DkU+0C6ZNMsRFoLm9hcg==
-X-Received: by 2002:a37:84b:: with SMTP id 72mr15538452qki.252.1589374821767;
-        Wed, 13 May 2020 06:00:21 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:2627])
-        by smtp.gmail.com with ESMTPSA id t202sm13798497qke.97.2020.05.13.06.00.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 06:00:20 -0700 (PDT)
-Date:   Wed, 13 May 2020 09:00:02 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Kernel Team <kernel-team@fb.com>
-Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
- LRU
-Message-ID: <20200513130002.GC488426@cmpxchg.org>
-References: <20200211175507.178100-1-hannes@cmpxchg.org>
- <20200512212936.GA450429@cmpxchg.org>
- <CALOAHbAZ0eUmrBGt=J0cJZzPmDtPKpfMK0jrUNa0Z_-JfDLoXA@mail.gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dNZP1hODCFjbYeHZ6HY6IqS7arCegZXm1NX93ncNYxA=;
+        b=Dzo2dWTvTqZgP5jTrZAi0B5FI8H4WnqXxRtuEZg48h0xaQJX6EF37krVgL62voCoOg
+         giikGXVdkC3W67uomQ40C90H70Ucd9+RFf+RQ031faZye7Bd3GNBH8JP5qZkEGNQ+Jve
+         nslAtqGFcpuqf1LkUE9Baoxz9h+XVPhrqO3HHhZ33E++7q3MbXeAuhrxP/Rd6IcUQS8u
+         nP4JGVwrxwyO1j+FbeKApf2bC/l2J4PJJP9YJhQwjDU4MFVSwtfgz5Q73+utGyAHTZwe
+         7PyHBim7lT/DV6KdvUN0qjKGCDB+unBa7IoGb41WxRHdihFKwOMs1oN35FLCBUMUCWiB
+         2Dgw==
+X-Gm-Message-State: AGi0PubFQTUadYX1MnhVCveDl6BJ1/hgV6XKOqytpdbIYtr2o650QVzy
+        o3jpLLlwPXuxUCcWlP1xgQg=
+X-Google-Smtp-Source: APiQypLLSQgmWWxsG4cq2ppEMWxlqwHTqTZBjGb31C6Q9n1uRmshCtRcG2vBumhlfetaI0nbfHsN4Q==
+X-Received: by 2002:a17:902:b107:: with SMTP id q7mr24093526plr.177.1589374861634;
+        Wed, 13 May 2020 06:01:01 -0700 (PDT)
+Received: from localhost ([203.205.141.39])
+        by smtp.gmail.com with ESMTPSA id 188sm14544421pfg.218.2020.05.13.06.01.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 May 2020 06:01:00 -0700 (PDT)
+From:   Xiangyang Zhang <xyz.sun.ok@gmail.com>
+To:     manishc@marvell.com, GR-Linux-NIC-Dev@marvell.com
+Cc:     gregkh@linuxfoundation.org, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Xiangyang Zhang <xyz.sun.ok@gmail.com>
+Subject: [PATCH] staging: qlge: Remove unnecessary spaces in qlge_main.c
+Date:   Wed, 13 May 2020 21:00:42 +0800
+Message-Id: <20200513130042.13185-1-xyz.sun.ok@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALOAHbAZ0eUmrBGt=J0cJZzPmDtPKpfMK0jrUNa0Z_-JfDLoXA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 09:32:58AM +0800, Yafang Shao wrote:
-> On Wed, May 13, 2020 at 5:29 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> >
-> > On Tue, Feb 11, 2020 at 12:55:07PM -0500, Johannes Weiner wrote:
-> > > The VFS inode shrinker is currently allowed to reclaim inodes with
-> > > populated page cache. As a result it can drop gigabytes of hot and
-> > > active page cache on the floor without consulting the VM (recorded as
-> > > "inodesteal" events in /proc/vmstat).
-> >
-> > I'm sending a rebased version of this patch.
-> >
-> > We've been running with this change in the Facebook fleet since
-> > February with no ill side effects observed.
-> >
-> > However, I just spent several hours chasing a mysterious reclaim
-> > problem that turned out to be this bug again on an unpatched system.
-> >
-> > In the scenario I was debugging, the problem wasn't that we were
-> > losing cache, but that we were losing the non-resident information for
-> > previously evicted cache.
-> >
-> > I understood the file set enough to know it was thrashing like crazy,
-> > but it didn't register as refaults to the kernel. Without detecting
-> > the refaults, reclaim wouldn't start swapping to relieve the
-> > struggling cache (plenty of cold anon memory around). It also meant
-> > the IO delays of those refaults didn't contribute to memory pressure
-> > in psi, which made userspace blind to the situation as well.
-> >
-> > The first aspect means we can get stuck in pathological thrashing, the
-> > second means userspace OOM detection breaks and we can leave servers
-> > (or Android devices, for that matter) hopelessly livelocked.
-> >
-> > New patch attached below. I hope we can get this fixed in 5.8, it's
-> > really quite a big hole in our cache management strategy.
-> >
-> > ---
-> > From 8db0b846ca0b7a136c0d3d8a1bee3d576990ba11 Mon Sep 17 00:00:00 2001
-> > From: Johannes Weiner <hannes@cmpxchg.org>
-> > Date: Tue, 11 Feb 2020 12:55:07 -0500
-> > Subject: [PATCH] vfs: keep inodes with page cache off the inode shrinker LRU
-> >
-> > The VFS inode shrinker is currently allowed to reclaim cold inodes
-> > with populated page cache. This behavior goes back to CONFIG_HIGHMEM
-> > setups, which required the ability to drop page cache in large highem
-> > zones to free up struct inodes in comparatively tiny lowmem zones.
-> >
-> > However, it has significant side effects that are hard to justify on
-> > systems without highmem:
-> >
-> > - It can drop gigabytes of hot and active page cache on the floor
-> > without consulting the VM (recorded as "inodesteal" events in
-> > /proc/vmstat). Such an "aging inversion" between unreferenced inodes
-> > holding hot cache easily happens in practice: for example, a git tree
-> > whose objects are accessed frequently but no open file descriptors are
-> > maintained throughout.
-> >
-> 
-> Hi Johannes,
-> 
-> I think it is reasonable to keep inodes with _active_ page cache off
-> the inode shrinker LRU, but I'm not sure whether it is proper to keep
-> the inodes with _only_ inactive page cache off the inode list lru
-> neither. Per my understanding, if the inode has only inactive page
-> cache, then invalidate all these inactive page cache could save the
-> reclaimer's time, IOW, it may improve the performance in this case.
+Fix checkpatch.pl check:
 
-The shrinker doesn't know whether pages are active or inactive.
+  CHECK: No space is necessary after a cast
 
-There is a PageActive() flag, but that's a sampled state that's only
-uptodate when page reclaim is running. All the active pages could be
-stale and getting deactivated on the next scan; all the inactive pages
-could have page table references that would get them activated on the
-next reclaim run etc.
+Signed-off-by: Xiangyang Zhang <xyz.sun.ok@gmail.com>
+---
+ drivers/staging/qlge/qlge_main.c | 36 ++++++++++++++++----------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
-You'd have to duplicate aspects of page reclaim itself to be sure
-you're axing the right pages.
+diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
+index 93df4f79b21d..a9163fb659d9 100644
+--- a/drivers/staging/qlge/qlge_main.c
++++ b/drivers/staging/qlge/qlge_main.c
+@@ -236,8 +236,8 @@ int ql_write_cfg(struct ql_adapter *qdev, void *ptr, int size, u32 bit,
+ 		goto exit;
+ 	}
+ 
+-	ql_write32(qdev, ICB_L, (u32) map);
+-	ql_write32(qdev, ICB_H, (u32) (map >> 32));
++	ql_write32(qdev, ICB_L, (u32)map);
++	ql_write32(qdev, ICB_H, (u32)(map >> 32));
+ 
+ 	mask = CFG_Q_MASK | (bit << 16);
+ 	value = bit | (q_id << CFG_Q_SHIFT);
+@@ -439,7 +439,7 @@ static int ql_set_mac_addr(struct ql_adapter *qdev, int set)
+ 	status = ql_sem_spinlock(qdev, SEM_MAC_ADDR_MASK);
+ 	if (status)
+ 		return status;
+-	status = ql_set_mac_addr_reg(qdev, (u8 *) addr,
++	status = ql_set_mac_addr_reg(qdev, (u8 *)addr,
+ 				     MAC_ADDR_TYPE_CAM_MAC,
+ 				     qdev->func * MAX_CQ);
+ 	ql_sem_unlock(qdev, SEM_MAC_ADDR_MASK);
+@@ -841,7 +841,7 @@ int ql_read_xgmac_reg64(struct ql_adapter *qdev, u32 reg, u64 *data)
+ 	if (status)
+ 		goto exit;
+ 
+-	*data = (u64) lo | ((u64) hi << 32);
++	*data = (u64)lo | ((u64)hi << 32);
+ 
+ exit:
+ 	return status;
+@@ -1631,7 +1631,7 @@ static void ql_process_mac_rx_skb(struct ql_adapter *qdev,
+ 		} else if ((ib_mac_rsp->flags2 & IB_MAC_IOCB_RSP_U) &&
+ 				(ib_mac_rsp->flags3 & IB_MAC_IOCB_RSP_V4)) {
+ 			/* Unfragmented ipv4 UDP frame. */
+-			struct iphdr *iph = (struct iphdr *) skb->data;
++			struct iphdr *iph = (struct iphdr *)skb->data;
+ 
+ 			if (!(iph->frag_off &
+ 				htons(IP_MF|IP_OFFSET))) {
+@@ -1920,7 +1920,7 @@ static void ql_process_mac_split_rx_intr(struct ql_adapter *qdev,
+ 		} else if ((ib_mac_rsp->flags2 & IB_MAC_IOCB_RSP_U) &&
+ 				(ib_mac_rsp->flags3 & IB_MAC_IOCB_RSP_V4)) {
+ 		/* Unfragmented ipv4 UDP frame. */
+-			struct iphdr *iph = (struct iphdr *) skb->data;
++			struct iphdr *iph = (struct iphdr *)skb->data;
+ 
+ 			if (!(iph->frag_off &
+ 				htons(IP_MF|IP_OFFSET))) {
+@@ -2301,7 +2301,7 @@ static int __qlge_vlan_rx_add_vid(struct ql_adapter *qdev, u16 vid)
+ 	u32 enable_bit = MAC_ADDR_E;
+ 	int err;
+ 
+-	err = ql_set_mac_addr_reg(qdev, (u8 *) &enable_bit,
++	err = ql_set_mac_addr_reg(qdev, (u8 *)&enable_bit,
+ 				  MAC_ADDR_TYPE_VLAN, vid);
+ 	if (err)
+ 		netif_err(qdev, ifup, qdev->ndev,
+@@ -2332,7 +2332,7 @@ static int __qlge_vlan_rx_kill_vid(struct ql_adapter *qdev, u16 vid)
+ 	u32 enable_bit = 0;
+ 	int err;
+ 
+-	err = ql_set_mac_addr_reg(qdev, (u8 *) &enable_bit,
++	err = ql_set_mac_addr_reg(qdev, (u8 *)&enable_bit,
+ 				  MAC_ADDR_TYPE_VLAN, vid);
+ 	if (err)
+ 		netif_err(qdev, ifup, qdev->ndev,
+@@ -2473,7 +2473,7 @@ static int ql_tso(struct sk_buff *skb, struct ob_mac_tso_iocb_req *mac_iocb_ptr)
+ 
+ 		mac_iocb_ptr->opcode = OPCODE_OB_MAC_TSO_IOCB;
+ 		mac_iocb_ptr->flags3 |= OB_MAC_TSO_IOCB_IC;
+-		mac_iocb_ptr->frame_len = cpu_to_le32((u32) skb->len);
++		mac_iocb_ptr->frame_len = cpu_to_le32((u32)skb->len);
+ 		mac_iocb_ptr->total_hdrs_len =
+ 		    cpu_to_le16(skb_transport_offset(skb) + tcp_hdrlen(skb));
+ 		mac_iocb_ptr->net_trans_offset =
+@@ -2511,7 +2511,7 @@ static void ql_hw_csum_setup(struct sk_buff *skb,
+ 	__sum16 *check;
+ 
+ 	mac_iocb_ptr->opcode = OPCODE_OB_MAC_TSO_IOCB;
+-	mac_iocb_ptr->frame_len = cpu_to_le32((u32) skb->len);
++	mac_iocb_ptr->frame_len = cpu_to_le32((u32)skb->len);
+ 	mac_iocb_ptr->net_trans_offset =
+ 		cpu_to_le16(skb_network_offset(skb) |
+ 		skb_transport_offset(skb) << OB_MAC_TRANSPORT_HDR_SHIFT);
+@@ -2542,7 +2542,7 @@ static netdev_tx_t qlge_send(struct sk_buff *skb, struct net_device *ndev)
+ 	struct ql_adapter *qdev = netdev_priv(ndev);
+ 	int tso;
+ 	struct tx_ring *tx_ring;
+-	u32 tx_ring_idx = (u32) skb->queue_mapping;
++	u32 tx_ring_idx = (u32)skb->queue_mapping;
+ 
+ 	tx_ring = &qdev->tx_ring[tx_ring_idx];
+ 
+@@ -2569,7 +2569,7 @@ static netdev_tx_t qlge_send(struct sk_buff *skb, struct net_device *ndev)
+ 	mac_iocb_ptr->txq_idx = tx_ring_idx;
+ 	tx_ring_desc->skb = skb;
+ 
+-	mac_iocb_ptr->frame_len = cpu_to_le16((u16) skb->len);
++	mac_iocb_ptr->frame_len = cpu_to_le16((u16)skb->len);
+ 
+ 	if (skb_vlan_tag_present(skb)) {
+ 		netif_printk(qdev, tx_queued, KERN_DEBUG, qdev->ndev,
+@@ -2992,7 +2992,7 @@ static int ql_start_rx_ring(struct ql_adapter *qdev, struct rx_ring *rx_ring)
+ 	rx_ring->sbq.base_indirect_dma = shadow_reg_dma;
+ 
+ 	/* PCI doorbell mem area + 0x00 for consumer index register */
+-	rx_ring->cnsmr_idx_db_reg = (u32 __iomem *) doorbell_area;
++	rx_ring->cnsmr_idx_db_reg = (u32 __iomem *)doorbell_area;
+ 	rx_ring->cnsmr_idx = 0;
+ 	rx_ring->curr_entry = rx_ring->cq_base;
+ 
+@@ -3092,7 +3092,7 @@ static int ql_start_tx_ring(struct ql_adapter *qdev, struct tx_ring *tx_ring)
+ 	 * Assign doorbell registers for this tx_ring.
+ 	 */
+ 	/* TX PCI doorbell mem area for tx producer index */
+-	tx_ring->prod_idx_db_reg = (u32 __iomem *) doorbell_area;
++	tx_ring->prod_idx_db_reg = (u32 __iomem *)doorbell_area;
+ 	tx_ring->prod_idx = 0;
+ 	/* TX PCI doorbell mem area + 0x04 */
+ 	tx_ring->valid_db_reg = doorbell_area + 0x04;
+@@ -3115,7 +3115,7 @@ static int ql_start_tx_ring(struct ql_adapter *qdev, struct tx_ring *tx_ring)
+ 	ql_init_tx_ring(qdev, tx_ring);
+ 
+ 	err = ql_write_cfg(qdev, wqicb, sizeof(*wqicb), CFG_LRQ,
+-			   (u16) tx_ring->wq_id);
++			   (u16)tx_ring->wq_id);
+ 	if (err) {
+ 		netif_err(qdev, ifup, qdev->ndev, "Failed to load tx_ring.\n");
+ 		return err;
+@@ -3447,7 +3447,7 @@ static int ql_start_rss(struct ql_adapter *qdev)
+ 	struct ricb *ricb = &qdev->ricb;
+ 	int status = 0;
+ 	int i;
+-	u8 *hash_id = (u8 *) ricb->hash_cq_id;
++	u8 *hash_id = (u8 *)ricb->hash_cq_id;
+ 
+ 	memset((void *)ricb, 0, sizeof(*ricb));
+ 
+@@ -4202,7 +4202,7 @@ static void qlge_set_multicast_list(struct net_device *ndev)
+ 			goto exit;
+ 		i = 0;
+ 		netdev_for_each_mc_addr(ha, ndev) {
+-			if (ql_set_mac_addr_reg(qdev, (u8 *) ha->addr,
++			if (ql_set_mac_addr_reg(qdev, (u8 *)ha->addr,
+ 						MAC_ADDR_TYPE_MULTI_MAC, i)) {
+ 				netif_err(qdev, hw, qdev->ndev,
+ 					  "Failed to loadmulticast address.\n");
+@@ -4239,7 +4239,7 @@ static int qlge_set_mac_address(struct net_device *ndev, void *p)
+ 	status = ql_sem_spinlock(qdev, SEM_MAC_ADDR_MASK);
+ 	if (status)
+ 		return status;
+-	status = ql_set_mac_addr_reg(qdev, (u8 *) ndev->dev_addr,
++	status = ql_set_mac_addr_reg(qdev, (u8 *)ndev->dev_addr,
+ 				     MAC_ADDR_TYPE_CAM_MAC,
+ 				     qdev->func * MAX_CQ);
+ 	if (status)
+-- 
+2.19.1
 
-It also wouldn't be a reliable optimization. This only happens when
-there is a disconnect between the inode and the cache life time, which
-is true for some situations but not others.
