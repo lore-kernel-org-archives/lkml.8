@@ -2,98 +2,109 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B97C1C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA3EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:46:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7400E205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1F65205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:46:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QNUHh62X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390274AbgEMSpq (ORCPT
+        id S2390224AbgEMSqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 14:45:46 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38905 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390103AbgEMSpn (ORCPT
+        Wed, 13 May 2020 14:46:49 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40584 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732218AbgEMSqs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 14:45:43 -0400
-Received: by mail-pg1-f193.google.com with SMTP id u5so141840pgn.5;
-        Wed, 13 May 2020 11:45:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oGExS5qpyhaJE9sRdyvo65rhkDZrEjTLCCqtKDwIC/k=;
-        b=TS/6HqhyaUBitGN4hJlVvmHSFhkuo70+216kyjBQDE1WZjef3NGT/YuohVXnCKZr7z
-         K4PJgBtP1wkjYZNeHCOUTKvZeggbMRYrUPv0kGtbOUxxXjB0868SRXo5nj2JebjktftL
-         IvFmHQJqsyhNa8c5iPBpd2+wzW660tNQcojBVoZiRfU5OQi/BBL8H9pan2p7VymaHAko
-         wN1u32p6TWkDOYso15HTxqJL2328FnrUWVcyLCaXGnAsP+fN/vTBcapBq/2ZVUH2B6AY
-         +NlLPGmghXU30Cq1kmHJcpUU1RbuVGxR1r3omjcrYaogMV8KW2lJad5a5hzsFuqNzKKL
-         X/SQ==
-X-Gm-Message-State: AOAM5338Ixu2NVbtVMVyhA5hkSRag2/BM++OtuHK2zdZiRvOSVvkWnr8
-        Mmya9dyMxMYZK56jbGtBOn4=
-X-Google-Smtp-Source: ABdhPJxuCtZ6LqG/D7UsLLlMEE3Gj8Q00WqSwzmkuBnzsqf4vGt4xYIyJ/k3v57Ipr7A3TPHVfXEFQ==
-X-Received: by 2002:a62:7d91:: with SMTP id y139mr631244pfc.172.1589395542971;
-        Wed, 13 May 2020 11:45:42 -0700 (PDT)
-Received: from ?IPv6:2601:647:4802:9070:59e0:deac:a73c:5d11? ([2601:647:4802:9070:59e0:deac:a73c:5d11])
-        by smtp.gmail.com with ESMTPSA id g10sm238580pfk.103.2020.05.13.11.45.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 May 2020 11:45:41 -0700 (PDT)
-Subject: Re: remove kernel_setsockopt and kernel_getsockopt
-To:     Christoph Hellwig <hch@lst.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        linux-nvme@lists.infradead.org, linux-sctp@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
-        drbd-dev@lists.linbit.com, linux-cifs@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-rdma@vger.kernel.org,
-        cluster-devel@redhat.com, Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, Neil Horman <nhorman@tuxdriver.com>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev@vger.kernel.org, Vlad Yasevich <vyasevich@gmail.com>,
-        linux-kernel@vger.kernel.org, Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>, ocfs2-devel@oss.oracle.com
-References: <20200513062649.2100053-1-hch@lst.de>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <2c9a28f7-4268-2295-0d64-ada9178a5553@grimberg.me>
-Date:   Wed, 13 May 2020 11:45:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.7.0
+        Wed, 13 May 2020 14:46:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589395607;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kmVswhhUfzJrVfazGuns3TDSU4rliVl1t7Fe7MJ2Xjk=;
+        b=QNUHh62X6Hxqex+YARrTp8r+Ig6ceH3+SubSKZvACJ18Wg/J9nIfDxNP6pGYO6Q5e5CN23
+        +4W+soCAzrbMY0coGS+gpm6JDX1/iBYWEHtK+YL6xLp0lRgWfJkzPhvdBGme6rUEq0XaDY
+        sx313dtW/8NhG7jEVxl6zGuLipsDjn0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-176-3FG-WDhRPhC2M-vzl3GMaQ-1; Wed, 13 May 2020 14:46:45 -0400
+X-MC-Unique: 3FG-WDhRPhC2M-vzl3GMaQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4480F474;
+        Wed, 13 May 2020 18:46:43 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-115-240.rdu2.redhat.com [10.10.115.240])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5DC75196AE;
+        Wed, 13 May 2020 18:46:41 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 79601220206; Wed, 13 May 2020 14:46:41 -0400 (EDT)
+Date:   Wed, 13 May 2020 14:46:41 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, x86@kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Gavin Shan <gshan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/8] KVM: x86: interrupt based APF page-ready event
+ delivery
+Message-ID: <20200513184641.GF173965@redhat.com>
+References: <20200511164752.2158645-1-vkuznets@redhat.com>
+ <20200511164752.2158645-5-vkuznets@redhat.com>
+ <20200512142411.GA138129@redhat.com>
+ <87lflxm9sy.fsf@vitty.brq.redhat.com>
+ <20200512180704.GE138129@redhat.com>
+ <877dxgmcjv.fsf@vitty.brq.redhat.com>
+ <20200513135350.GB173965@redhat.com>
+ <87ftc3lxqc.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200513062649.2100053-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87ftc3lxqc.fsf@vitty.brq.redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 13, 2020 at 04:23:55PM +0200, Vitaly Kuznetsov wrote:
 
-> Hi Dave,
+[..]
+> >> Also,
+> >> kdump kernel may not even support APF so it will get very confused when
+> >> APF events get delivered.
+> >
+> > New kernel can just ignore these events if it does not support async
+> > pf? 
+> >
+> > This is somewhat similar to devices still doing interrupts in new
+> > kernel. And solution for that seemed to be doing a "reset" of devices
+> > in new kernel. We probably need similar logic where in new kernel
+> > we simply disable "async pf" so that we don't get new notifications.
 > 
-> this series removes the kernel_setsockopt and kernel_getsockopt
-> functions, and instead switches their users to small functions that
-> implement setting (or in one case getting) a sockopt directly using
-> a normal kernel function call with type safety and all the other
-> benefits of not having a function call.
-> 
-> In some cases these functions seem pretty heavy handed as they do
-> a lock_sock even for just setting a single variable, but this mirrors
-> the real setsockopt implementation - counter to that a few kernel
-> drivers just set the fields directly already.
-> 
-> Nevertheless the diffstat looks quite promising:
-> 
->   42 files changed, 721 insertions(+), 799 deletions(-)
+> Right and that's what we're doing - just disabling new notifications.
 
-For the nvme-tcp bits,
+Nice.
 
-Acked-by: Sagi Grimberg <sagi@grimberg.me>
+So why there is a need to deliver "page ready" notifications
+to guest after guest has disabled async pf. Atleast kdump does not
+seem to need it. It will boot into second kernel anyway, irrespective
+of the fact whether it receives page ready or not.
+
+Thanks
+Vivek
+
