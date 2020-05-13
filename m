@@ -2,106 +2,89 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FB2C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C0EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2314205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81827205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:25:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bEjIIae+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732656AbgEMXYY (ORCPT
+        id S1732669AbgEMXZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 19:24:24 -0400
-Received: from www62.your-server.de ([213.133.104.62]:39596 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732374AbgEMXYW (ORCPT
+        Wed, 13 May 2020 19:25:29 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42122 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732580AbgEMXZ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 19:24:22 -0400
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jZ0jb-0000nW-H0; Thu, 14 May 2020 01:24:19 +0200
-Received: from [178.196.57.75] (helo=pc-9.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1jZ0jb-0007qv-2t; Thu, 14 May 2020 01:24:19 +0200
-Subject: Re: [PATCH 11/18] maccess: remove strncpy_from_unsafe
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-parisc@vger.kernel.org,
-        linux-um <linux-um@lists.infradead.org>,
-        Netdev <netdev@vger.kernel.org>, bpf@vger.kernel.org,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        bgregg@netflix.com
-References: <20200513160038.2482415-1-hch@lst.de>
- <20200513160038.2482415-12-hch@lst.de>
- <CAHk-=wj=u+nttmd1huNES2U=9nePtmk7WgR8cMLCYS8wc=rhdA@mail.gmail.com>
- <20200513192804.GA30751@lst.de>
- <0c1a7066-b269-9695-b94a-bb5f4f20ebd8@iogearbox.net>
- <CAHk-=wiivWJ70PotzCK-j7K4Y612NJBA2d+iN6Rz-bfMxCpwjQ@mail.gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <2a03633b-419d-643f-b787-ca1520e2229b@iogearbox.net>
-Date:   Thu, 14 May 2020 01:24:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 13 May 2020 19:25:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589412328;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=PRvLFN1ITMU2V/ezwJVoycF2INOx4EKs0X6HDBhlvdA=;
+        b=bEjIIae+ZCRG0hW1ZwbT4SPJq/L1FhSztmX2pbbhMr0W8mKMFiAyNRH2hyW14HgKSAExEN
+        9Bmz7ymgInL5c6mhZ8/Vg+jrGMCKenDtJMQbSaRThDvdTAP7VcFcVMU+I3biNlz1BRuRuO
+        ekwVO6IZSc+vjcepQL7xToBZh3GiIJ0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-17-Q3t3JDRnPuyTFHa4LvzaUg-1; Wed, 13 May 2020 19:25:23 -0400
+X-MC-Unique: Q3t3JDRnPuyTFHa4LvzaUg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A87E580183C;
+        Wed, 13 May 2020 23:25:21 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-59.rdu2.redhat.com [10.10.112.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0FAED6E708;
+        Wed, 13 May 2020 23:25:19 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <004ec27a-cc3a-c75c-952b-ff371b82b8d1@schaufler-ca.com>
+References: <004ec27a-cc3a-c75c-952b-ff371b82b8d1@schaufler-ca.com> <CAEjxPJ6pFdDfm55pv9bT3CV5DTFF9VqzRmG_Xi5bKNxPaGuOLg@mail.gmail.com> <158932282880.2885325.2688622278854566047.stgit@warthog.procyon.org.uk>
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     dhowells@redhat.com, stephen.smalley.work@gmail.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Paul Moore <paul@paul-moore.com>, keyrings@vger.kernel.org,
+        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] keys: Make the KEY_NEED_* perms an enum rather than a mask
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wiivWJ70PotzCK-j7K4Y612NJBA2d+iN6Rz-bfMxCpwjQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25811/Wed May 13 14:11:53 2020)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3612471.1589412319.1@warthog.procyon.org.uk>
+Date:   Thu, 14 May 2020 00:25:19 +0100
+Message-ID: <3612472.1589412319@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/14/20 1:03 AM, Linus Torvalds wrote:
-> On Wed, May 13, 2020 at 3:36 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
->>
->> It's used for both.
-> 
-> Daniel, BPF real;ly needs to make up its mind about that.
-> 
-> You *cannot* use ti for both.
-> 
-> Yes, it happens to work on x86 and some other architectures.
-> 
-> But on other architectures, the exact same pointer value can be a
-> kernel pointer or a user pointer.
+Casey Schaufler <casey@schaufler-ca.com> wrote:
 
-Right, it has the same issue as with the old probe helper. I was merely stating that
-there are existing users (on x86) out there that use it this way, even though broken
-generally.
+> > -	if (perm & ~KEY_NEED_ALL)
+> > -		return -EINVAL;
+> > +	switch (need_perm) {
+> > +	default:
+> > +		return -EACCES;
+> ...
+> Is the change from -EINVAL to -EACCES a bug fix?
+> Does it introduce an incompatibility?
 
->> Given this is enabled on pretty much all program types, my
->> assumption would be that usage is still more often on kernel memory than user one.
-> 
-> You need to pick one.
-> 
-> If you know it is a user pointer, use strncpy_from_user() (possibly
-> with disable_pagefault() aka strncpy_from_user_nofault()).
-> 
-> And if you know it is a kernel pointer, use strncpy_from_unsafe() (aka
-> strncpy_from_kernel_nofault()).
-> 
-> You really can't pick the "randomly one or the other guess what I mean " option.
+It shouldn't happen.  All the actual cases should be covered explicitly in the
+switch.  It's to catch a programming issue in the kernel where a new value
+gets added to the enum but not propagated to all the places that check for it.
 
-My preference would be to have %s, %sK, %sU for bpf_trace_printk() where the latter two
-result in an explicit strncpy_from_kernel_nofault() or strncpy_from_user_nofault()
-choice while the %s is converted as per your suggestion and it would still allow for a
-grace period to convert existing users to the new variants, similar with what we did on
-the bpf_probe_read_kernel() and bpf_probe_read_user() helpers to get this sorted out.
+I'd actually prefer it to be something even more obvious, especially as EINVAL
+is so widely used in the kernel.  Should I put a WARN_ON in there?
 
-Thanks,
-Daniel
+David
+
