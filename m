@@ -2,120 +2,86 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB322C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6298C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2FF62054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D19F42065C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:09:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589411385;
+	bh=MDKKhxS3qnWK4BCrQ1PaiGfthIWnaDdy/Elx3PLfxkk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tkn7tHhfR7p8SU6KtrjjYIh47wEuQpcYfL6KrZsedv+I3bFEXlKkuFSYJQ9DmQaAj
+	 VX6/fz5/KGzKQkbywcUrkVyvjucIq0JhbLOuDphoxSvwvczDavq78oRpsozXzLoTjO
+	 yI7XODvsj6T+16aVBeFT+t1TrFzr6zNrQtRcJej0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732462AbgEMXJd (ORCPT
+        id S1732487AbgEMXJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 19:09:33 -0400
-Received: from mga18.intel.com ([134.134.136.126]:49358 "EHLO mga18.intel.com"
+        Wed, 13 May 2020 19:09:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732151AbgEMXJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 19:09:33 -0400
-IronPort-SDR: ChnACrQ/nlAlRRpEz6OigGc4nO25Ll1gBxiDxOwFPd5igRnaWW62co8hNJ7FMnhyUWgnV1SY8c
- bKxppW4l9Esw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 16:09:32 -0700
-IronPort-SDR: FpN+OY1K71+x9lmhQ/R4t4qwERrf/qTusZ1FBnThNG4M39goM1tFnsuO/WDX+bOXeczqIJ0DEx
- wqKjm7T9eLzQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,389,1583222400"; 
-   d="scan'208";a="372053949"
-Received: from rthurerx-mobl.ger.corp.intel.com ([10.249.36.107])
-  by fmsmga001.fm.intel.com with ESMTP; 13 May 2020 16:09:25 -0700
-Message-ID: <ba92f60e41cee1be11b30e8383268b1e1ce896b1.camel@linux.intel.com>
-Subject: Re: [PATCH v29 00/20] Intel SGX foundations
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Jordan Hand <jorhand@linux.microsoft.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org
-Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
-        sean.j.christopherson@intel.com, nhorman@redhat.com,
-        npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com
-Date:   Thu, 14 May 2020 02:09:19 +0300
-In-Reply-To: <e50f4c00-12e6-19e6-ead3-f180074bceea@linux.microsoft.com>
-References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
-         <e50f4c00-12e6-19e6-ead3-f180074bceea@linux.microsoft.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1-2 
+        id S1732151AbgEMXJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 19:09:41 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 961762054F;
+        Wed, 13 May 2020 23:09:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589411381;
+        bh=MDKKhxS3qnWK4BCrQ1PaiGfthIWnaDdy/Elx3PLfxkk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vxxgJDwVu3ejPYUlWha5J3HdCxu1uNF6+1tzoc0keVPog+ccKulCDqnX0bKh9CCf4
+         goBt6UPCK6LGM9Yu17EJznVJqD3FEgEeY7C1Wf/qn/nEpimeMT2k27ycRqxONiI1I3
+         FTbcaYC3kbXd3voWoeI84psE+sh1BbAVXRBhDLY0=
+Date:   Wed, 13 May 2020 18:14:16 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH RESEND] tpm: eventlog: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200513231416.GQ4897@embeddedor>
+References: <20200507040912.GA31382@embeddedor>
+ <20200513213905.GB31974@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513213905.GB31974@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-05-06 at 09:39 -0700, Jordan Hand wrote:
-> On 4/21/20 2:52 PM, Jarkko Sakkinen wrote:
-> > Intel(R) SGX is a set of CPU instructions that can be used by applications
-> > to set aside private regions of code and data. The code outside the enclave
-> > is disallowed to access the memory inside the enclave by the CPU access
-> > control.
+On Thu, May 14, 2020 at 12:39:05AM +0300, Jarkko Sakkinen wrote:
 > > 
-> > There is a new hardware unit in the processor called Memory Encryption
-> > Engine (MEE) starting from the Skylake microacrhitecture. BIOS can define
-> > one or many MEE regions that can hold enclave data by configuring them with
-> > PRMRR registers.
+> > [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> > [2] https://github.com/KSPP/linux/issues/21
+> > [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> > [4] https://github.com/KSPP/linux/issues/43
 > > 
-> > The MEE automatically encrypts the data leaving the processor package to
-> > the MEE regions. The data is encrypted using a random key whose life-time
-> > is exactly one power cycle.
-> > 
-> > The current implementation requires that the firmware sets
-> > IA32_SGXLEPUBKEYHASH* MSRs as writable so that ultimately the kernel can
-> > decide what enclaves it wants run. The implementation does not create
-> > any bottlenecks to support read-only MSRs later on.
-> > 
-> > You can tell if your CPU supports SGX by looking into /proc/cpuinfo:
-> > 
-> > 	cat /proc/cpuinfo  | grep sgx
-> > 
-> > v29:
-> > * The selftest has been moved to selftests/sgx. Because SGX is an execution
-> >    environment of its own, it really isn't a great fit with more "standard"
-> >    x86 tests.
-> > 
-> >    The RSA key is now generated on fly and the whole signing process has
-> >    been made as part of the enclave loader instead of signing the enclave
-> >    during the compilation time.
-> > 
-> >    Finally, the enclave loader loads now the test enclave directly from its
-> >    ELF file, which means that ELF file does not need to be coverted as raw
-> >    binary during the build process.
-> > * Version the mm_list instead of using on synchronize_mm() when adding new
-> >    entries. We hold the write lock for the mm_struct, and dup_mm() can thus
-> >    deadlock with the page reclaimer, which could hold the lock for the old
-> >    mm_struct.
-> > * Disallow mmap(PROT_NONE) from /dev/sgx. Any mapping (e.g. anonymous) can
-> >    be used to reserve the address range. Now /dev/sgx supports only opaque
-> >    mappings to the (initialized) enclave data.
-> > * Make the vDSO callable directly from C by preserving RBX and taking leaf
-> >    from RCX.
-> > 
+> > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > 
-> Tested with the Open Enclave SDK on top of Intel PSW. Specifically built 
-> the Intel PSW with changes to support /dev/sgx mapping[1] new in v29.
+> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 > 
-> Tested-by: Jordan Hand <jorhand@linux.microsoft.com>
-> 
-> [1] https://github.com/intel/linux-sgx/pull/530
 
-Thank you!
+Hi Jarkko,
 
-/Jarkko
+Thanks for your RB.
 
+There is a v2 of this patch:
 
+https://lore.kernel.org/lkml/20200508163826.GA768@embeddedor/
+
+Thanks
+--
+Gustavo
