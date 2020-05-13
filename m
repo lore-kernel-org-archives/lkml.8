@@ -1,118 +1,120 @@
-Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D19C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D530C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14F7920722
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:45:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589492710;
-	bh=SrjBxjuvO2xIOH81KR141yOl4ZrKeyzuGmHkqf9XFGA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=LO1/7aakk13J4x+BeGXAuKYgQFpu43zl5uTnp97yyBmfZtLArqXM8nnExtm4EAYAE
-	 nd6rmblsr7l7diyY5Q3J/2ALphbct8bVCXt47QIXjgJf4jrk5kOmsWdqSh9XtWHbH1
-	 +FvV2WD1/eSMvaRhLxiHyo9NRs2WyRr5KXI6D5yw=
+	by mail.kernel.org (Postfix) with ESMTP id F106320671
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:40:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WWSgjyrC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgENVpJ (ORCPT
+        id S2390239AbgEMSka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 17:45:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56294 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726216AbgENVpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 17:45:09 -0400
-Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70B3E20709;
-        Thu, 14 May 2020 21:45:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589492708;
-        bh=SrjBxjuvO2xIOH81KR141yOl4ZrKeyzuGmHkqf9XFGA=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=R1VGab0Nt7+Xgr5r/YG6q2wVuG7JVAdqrEdlDRXs3RvfywgsAc4R6hWti66JDBWHK
-         A19V4brp1JkCbas+v55UFeYRwpl9i0vPpCje/eM/DUk4XMaRxUQ39XqMc0HAXcrccM
-         Bua6aWzIvEf76Sl8QdMsAwp5sOf5I439+y5EojkA=
-Date:   Thu, 14 May 2020 23:45:04 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        live-patching@vger.kernel.org, Joe Perches <joe@perches.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: adjust to livepatch .klp.arch removal
-In-Reply-To: <bfe91b2d-e319-bf12-6a15-4f200d0e8ea4@linux.vnet.ibm.com>
-Message-ID: <nycvar.YFH.7.76.2005142344230.25812@cbobk.fhfr.pm>
-References: <20200509073258.5970-1-lukas.bulwahn@gmail.com> <bfe91b2d-e319-bf12-6a15-4f200d0e8ea4@linux.vnet.ibm.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 13 May 2020 14:40:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1733166AbgEMSka (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 14:40:30 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E722C061A0C;
+        Wed, 13 May 2020 11:40:30 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id 72so252855otu.1;
+        Wed, 13 May 2020 11:40:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:from:date:subject;
+        bh=UxFgBfxYrtbfoSRrOJwSR/jyUGAcjc3AvR5Q5DZlML4=;
+        b=WWSgjyrCoTbyAWUxcuhfmVBWMnDa/jr0mgszsCK06LeZ7T6hNUulr/inWZhSUl/Ezi
+         DyDQ6QCTwZSd2IpimRKqvKKFRPnlUgjbqcNI0f9vOZYB2S5HIud7LUGgnEKUT5QsZzT5
+         mpWRflLfR3jn7FdB6vKWgvRxda7/Yc0+H6U6cB/MRB2mm7ejQbWWRRaCBVSql9L6NhnK
+         PFn4eIV1VPXGbSj8l/qx4K47ZMOLNo1zRwgCa2n0C1CSqZao4YENbHVPdWaPT4MbQUpx
+         wek+nx01r+715FsDqJwkbCmrTXufoYYn2J2iBsxLDtZFsU/Z7Wg8l+AFOJxNXqRCDPMU
+         z0bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:from:date:subject;
+        bh=UxFgBfxYrtbfoSRrOJwSR/jyUGAcjc3AvR5Q5DZlML4=;
+        b=fryzC6BZw+ZEjKGDHgh+72sm8YU0f38zTsAUH76lEmV+kCirRQ5YcYemrSqNSKXfQl
+         awF2c7uwF1K1e6HC4xsr19vyl2WIgbuSfFW+dAkj3MfzTOz24YlAcHl5E9JvTCiCLXjm
+         PfHEMAcudYc/2vBEu0SuPjmsKQf4pYfifAghOwbaZnQkkuXdFxSo06ITDWOmgwl5UkHV
+         TnfFhmn82tGjoGpEHc6xzuHJpmEct8vfFc4x4hETk3fmwsaVmMVYhIKex1r+9Sd9/8zj
+         AF2CVOgYWbj7ZK2S8Cc6hNWFWUM9qDYb1zQ56oRhMTZChcWPHV+Tqx+sBRmwNkQjO0uW
+         vbfA==
+X-Gm-Message-State: AOAM533SD2cbFWPdNmNIH3o1J+nSzvdeH/aVfmaHi0YlSY53xBfWNj3b
+        JWQlmuYWIRepYF4p2x+wp+E=
+X-Google-Smtp-Source: ABdhPJzYMTolrbvJsxED0OyBKcnX7Ev6/+qqUrrtWH2tXqca0oe0DZLCUoeSbkoWWuokmgUcd9LVjw==
+X-Received: by 2002:a9d:4b18:: with SMTP id q24mr597103otf.31.1589395229593;
+        Wed, 13 May 2020 11:40:29 -0700 (PDT)
+Received: from localhost (cpe-70-112-70-240.austin.res.rr.com. [70.112.70.240])
+        by smtp.gmail.com with ESMTPSA id v17sm6222113oif.51.2020.05.13.11.39.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 11:40:28 -0700 (PDT)
+Message-ID: <5ebc3f1c.1c69fb81.772f9.7003@mx.google.com>
+From:   scott.shumate@gmail.com
+Date:   Wed, 13 May 2020 13:39:26 -0500
+Subject: [PATCH] HID: sony: Fix for broken buttons on DS3 USB dongles
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 9 May 2020, Kamalesh Babulal wrote:
+Fix for non-working buttons on knock-off USB dongles for Sony
+controllers. These USB dongles are used to connect older Sony DA/DS1/DS2
+controllers via USB and are common on Amazon, AliExpress, etc.  Without
+the patch, the square, X, and circle buttons do not function.  These
+dongles used to work prior to kernel 4.10 but removing the global DS3
+report fixup in this commit exposed the problem:
 
-> > Commit 1d05334d2899 ("livepatch: Remove .klp.arch") removed
-> > arch/x86/kernel/livepatch.c, but missed to adjust the LIVE PATCHING entry
-> > in MAINTAINERS.
-> > 
-> > Since then, ./scripts/get_maintainer.pl --self-test=patterns complains:
-> > 
-> >   warning: no file matches  F:  arch/x86/kernel/livepatch.c
-> > 
-> > So, drop that obsolete file entry in MAINTAINERS.
-> 
-> Patch looks good to me,  you probably want to add following architecture
-> specific livepatching header files to the list:
-> 
-> arch/s390/include/asm/livepatch.h
-> arch/powerpc/include/asm/livepatch.h
+commit e19a267b9987 Author: Roderick Colenbrander
+ <roderick.colenbrander@sony.com>
+Date:   Tue Mar 7 15:45:08 2017 -0800
 
-Good point, thanks for spotting it Kamalesh. I've queued the patch below 
-on top.
+    HID: sony: DS3 comply to Linux gamepad spec
 
+Many people reported the problem on the Ubuntu forums and are working
+around the problem by falling back to the 4.9 hid-sony driver.
 
+The problem stems from these dongles incorrectly reporting their button
+count as 13 instead of 16.  This patch fixes up the report descriptor by
+changing the button report count to 16 and removing 3 padding bits.
 
-From: Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH] livepatch: add arch-specific headers to MAINTAINERS
-
-Add arch-specific livepatch.h for s390 and powerpc to MAINTAINERS
-F: patterns.
-
-Reported-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Scott Shumate <scott.shumate@gmail.com>
 ---
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7e0827670425..8e14444eb98d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9854,6 +9854,8 @@ S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/livepatching/livepatching.git
- F:	Documentation/ABI/testing/sysfs-kernel-livepatch
- F:	Documentation/livepatch/
-+F:	arch/powerpc/include/asm/livepatch.h
-+F:	arch/s390/include/asm/livepatch.h
- F:	arch/x86/include/asm/livepatch.h
- F:	include/linux/livepatch.h
- F:	kernel/livepatch/
-
-
--- 
-Jiri Kosina
-SUSE Labs
-
+diff --git a/drivers/hid/hid-sony.c b/drivers/hid/hid-sony.c
+index 4c6ed6ef31f1..2f073f536070 100644
+--- a/drivers/hid/hid-sony.c
++++ b/drivers/hid/hid-sony.c
+@@ -867,6 +867,23 @@ static u8 *sony_report_fixup(struct hid_device *hdev, u8 *rdesc,
+ 	if (sc->quirks & PS3REMOTE)
+ 		return ps3remote_fixup(hdev, rdesc, rsize);
+ 
++	/*
++	 * Some knock-off USB dongles incorrectly report their button count
++	 * as 13 instead of 16 causing three non-functional buttons.
++	 */
++	if ((sc->quirks & SIXAXIS_CONTROLLER_USB) && *rsize >= 45 &&
++		/* Report Count (13) */
++		rdesc[23] == 0x95 && rdesc[24] == 0x0D &&
++		/* Usage Maximum (13) */
++		rdesc[37] == 0x29 && rdesc[38] == 0x0D &&
++		/* Report Count (3) */
++		rdesc[43] == 0x95 && rdesc[44] == 0x03) {
++		hid_info(hdev, "Fixing up USB dongle report descriptor\n");
++		rdesc[24] = 0x10;
++		rdesc[38] = 0x10;
++		rdesc[44] = 0x00;
++	}
++
+ 	return rdesc;
+ }
+ 
