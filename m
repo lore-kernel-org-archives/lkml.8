@@ -2,86 +2,85 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8911CC2D0F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B74C2D0FB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 616CE206CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F5F72176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:16:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589336219;
+	bh=LHbveZk/oFTWUENr+xxHClWMPPe+U8XFYXPq7TGFf84=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MvRy2qWnEinmh2fJiVMobkxB+q0eBD5JkpHhhNWMHV5Wtv8t83sYZGQeeCy0pewaj
+	 jKIbUtnmsXPtN31c9eyq/jMQREpYHbXo6C71JPfywF9gqilqVeV9ejzrSKh6HuvYcT
+	 NTT5tjng2TtmC0lEM9kkTIqSzQeLrad6YWw8CunA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbgEMCNQ (ORCPT
+        id S1728432AbgEMCQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 22:13:16 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55562 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727792AbgEMCNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 22:13:16 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9D0CB1D573112B1D5684;
-        Wed, 13 May 2020 10:13:14 +0800 (CST)
-Received: from [10.133.206.78] (10.133.206.78) by smtp.huawei.com
- (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 13 May
- 2020 10:13:12 +0800
-To:     Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>
-CC:     Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-From:   Zefan Li <lizefan@huawei.com>
-Subject: [PATCH] cgroup: Remove stale comments
-Message-ID: <0ce73f20-6b19-38c7-81c5-b0b71013fcb7@huawei.com>
-Date:   Wed, 13 May 2020 10:13:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Tue, 12 May 2020 22:16:58 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36084 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbgEMCQ6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 22:16:58 -0400
+Received: by mail-ot1-f66.google.com with SMTP id t3so12234100otp.3;
+        Tue, 12 May 2020 19:16:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=a2wqEiR2YO61/IM28RCF3k1La3GOe9RC7Vyta+XxUIs=;
+        b=G3byAfV6OKO/eomHZKMG1s+l+Y9nS/419iAg+zq+C9co0zqosDk3pOG5cuHemuQV/x
+         oLd9l+mpC5/urRI9Nj2qw3X0U/qnBOHaZT2MfIMl7ESsNdPVSNoibMTCog0cZGD57CCr
+         Y3zNHffpvQrYAnmc+afDXNIUWx3id8I5oRWX6chl6UkvBAarEbV06PYRO+gLoN9Bu8Pl
+         vDAoUXi2djm+l941J/cUDn0bNG8mvjP9eNncqpIInKqWLLf9/EhFwUfSOf6rQEanVAvb
+         8bVgDb+i/WAqkBiBe91l06TC4NHrNcCQG9uDiNPQkYkWvD36M2BzYSshzoDnOeO5dnAA
+         Ux6A==
+X-Gm-Message-State: AGi0PubmxjWU7nT/pIR5jc5xaZEYnFJxk1rrqJsTJ0EjRJUl7+JoXjPe
+        /ZXUEJOgmDtrutoXqsuoBQ==
+X-Google-Smtp-Source: APiQypKRTpQwgp+rBKDYfr3vpom+3FfInuZDYIisAS2nc0jQdulhFvoyzkUjMKXdHprWZ80vJXQQuA==
+X-Received: by 2002:a9d:7a8a:: with SMTP id l10mr18385009otn.302.1589336217276;
+        Tue, 12 May 2020 19:16:57 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id q68sm1400827ooa.29.2020.05.12.19.16.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 19:16:56 -0700 (PDT)
+Received: (nullmailer pid 9003 invoked by uid 1000);
+        Wed, 13 May 2020 02:16:55 -0000
+Date:   Tue, 12 May 2020 21:16:55 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        sre@kernel.org, linux-pm@vger.kernel.org, robh+dt@kernel.org
+Subject: Re: [PATCH 2/3] dt-bindings: power: supply: Document
+ maxim,rcomp-value for max17040
+Message-ID: <20200513021655.GA8915@bogus>
+References: <20200504221300.3153-1-xc-racer2@live.ca>
+ <BN6PR04MB0660F4D09451AE8F1DB284D3A3A60@BN6PR04MB0660.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.206.78]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BN6PR04MB0660F4D09451AE8F1DB284D3A3A60@BN6PR04MB0660.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- The default root is where we can create v2 cgroups.
-- The __DEVEL__sane_behavior mount option has been removed long long ago.
+On Mon,  4 May 2020 15:12:59 -0700, Jonathan Bakker wrote:
+> The rcomp value is a device-specific value for configuration based
+> on specific chemistries.  There is no public documentation on how
+> to tune it.
+> 
+> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> ---
+>  .../devicetree/bindings/power/supply/max17040_battery.txt      | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
 
-Signed-off-by: Li Zefan <lizefan@huawei.com>
----
-
-found these when fixing the netprio cgroup bug.
-
----
- kernel/cgroup/cgroup.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
-
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 06b5ea9..7a01674 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -153,11 +153,7 @@ static struct static_key_true *cgroup_subsys_on_dfl_key[] = {
- 
- static DEFINE_PER_CPU(struct cgroup_rstat_cpu, cgrp_dfl_root_rstat_cpu);
- 
--/*
-- * The default hierarchy, reserved for the subsystems that are otherwise
-- * unattached - it never has more than a single cgroup, and all tasks are
-- * part of that cgroup.
-- */
-+/* the default hierarchy */
- struct cgroup_root cgrp_dfl_root = { .cgrp.rstat_cpu = &cgrp_dfl_root_rstat_cpu };
- EXPORT_SYMBOL_GPL(cgrp_dfl_root);
- 
-@@ -251,9 +247,6 @@ bool cgroup_ssid_enabled(int ssid)
-  * cases where a subsystem should behave differnetly depending on the
-  * interface version.
-  *
-- * The set of behaviors which change on the default hierarchy are still
-- * being determined and the mount option is prefixed with __DEVEL__.
-- *
-  * List of changed behaviors:
-  *
-  * - Mount options "noprefix", "xattr", "clone_children", "release_agent"
--- 
-2.7.4
+Acked-by: Rob Herring <robh@kernel.org>
