@@ -2,226 +2,161 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7EDC2D0F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 04:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A47A0C2D0FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 04:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55BDB20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 04:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F097205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 04:33:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aZL0Qe9m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbgEMEcU (ORCPT
+        id S1726294AbgEMEdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 00:32:20 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3976 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725898AbgEMEcU (ORCPT
+        Wed, 13 May 2020 00:33:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725837AbgEMEdl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 00:32:20 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04D4VQfY038053;
-        Wed, 13 May 2020 00:31:43 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3101m6v7jc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 00:31:42 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04D4Vaj8038405;
-        Wed, 13 May 2020 00:31:42 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3101m6v7j0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 00:31:42 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04D4UEVU007517;
-        Wed, 13 May 2020 04:31:41 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma04dal.us.ibm.com with ESMTP id 3100ubmjx4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 04:31:41 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04D4Vdsq12517636
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 May 2020 04:31:39 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0A82F78063;
-        Wed, 13 May 2020 04:31:40 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0B90F7805C;
-        Wed, 13 May 2020 04:31:35 +0000 (GMT)
-Received: from LeoBras (unknown [9.85.165.91])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 13 May 2020 04:31:35 +0000 (GMT)
-Message-ID: <ba97d52df60ac9c4a4afc2c03121a8c263aa5a15.camel@linux.ibm.com>
-Subject: Re: [PATCH 1/1] powerpc/rtas: Implement reentrant rtas call
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Nathan Lynch <nathanl@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Nadav Amit <namit@vmware.com>
-Date:   Wed, 13 May 2020 01:31:30 -0300
-In-Reply-To: <87ftdb87jf.fsf@linux.ibm.com>
-References: <20200408223901.760733-1-leonardo@linux.ibm.com>
-         <87ftdb87jf.fsf@linux.ibm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-h1B/JIutLyKglRH0NDZG"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Wed, 13 May 2020 00:33:41 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C907C061A0C;
+        Tue, 12 May 2020 21:33:41 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id u15so2377151plm.2;
+        Tue, 12 May 2020 21:33:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SpeVlvoHtplfi+oUdsBTfyUIXeujKWYPsXxeQ/08g2Y=;
+        b=aZL0Qe9mJBvc8mpi6POVeAbEttQw2apSZ0LmznYTKYfpz/3OdJadhuABLPS6768kHM
+         UTZyVv6pYvF+bLh1H/ibC/o+7+KFC2OnMJECvBYLIi0T6qlwoT3FtwDJlaeQGWGi/Th2
+         8XLTjg13pxBKftDAOZtT6VxwmDFPCLrp2c1o7fBERVeq+0Op647Mjm4ygiKNlVmT6OKy
+         hWp0fD1Glp0L6AXXDBUIHrHPNRgUcd2YS9etByIhva0Zr38BtN+64971+5LnVTiEVARf
+         V06s1uSVP9OqkL29dJbTJ8vAG+jTJvGYXcAYqStNur7LjKMESIXNWUegN+dXysQEJKAU
+         iapA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SpeVlvoHtplfi+oUdsBTfyUIXeujKWYPsXxeQ/08g2Y=;
+        b=Fh2sU4OgAQKL4GiUG4V0Bkcr7Hjk0iVRNAZQfJOM468cXhEDLkAck7ucD2XNWWWINE
+         xmyPK6BpKu9AsAQ4uV5Fec8BtHgVYtjZsJZh3+1ME/AdK6fiW2K/CW2zDw/fJl26cH5s
+         aH6aW1P40AT7NwO2s7itsSPJXpnaVu58thnbE6qq5LD9N/UTwxvXL+q9bXmV6WTlf47H
+         X6Aw9Ef6nXe6ypgH6qaOH11hTzw6bEZOhzkUQ2AY39MHSW2mFrh3j0GSwKqNlQC7Fcnz
+         f9CtE3aahVF2bXDrN56nT2P8RMiJY10x/2CGfVwWdqsiK1V79rRKgS8Ffs3GnC/Cp3fk
+         ElBg==
+X-Gm-Message-State: AGi0PuY/QOciAhZMKct6wZfzPdMoIxnByZCzT01wC4Dwnpi+dKBwPGip
+        GUo+Y6upRjOsviXA98nZKBibV/nw1zc=
+X-Google-Smtp-Source: APiQypL18DxG/LOoifVUnCYCiAztnWetyuawD7zKxILZO4c+zjlQCcq/VP4Xv930X36sUcV4yVLsLw==
+X-Received: by 2002:a17:90a:fd8c:: with SMTP id cx12mr31791989pjb.211.1589344420770;
+        Tue, 12 May 2020 21:33:40 -0700 (PDT)
+Received: from sol (220-235-91-3.dyn.iinet.net.au. [220.235.91.3])
+        by smtp.gmail.com with ESMTPSA id p9sm4695992pgb.19.2020.05.12.21.33.36
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 May 2020 21:33:40 -0700 (PDT)
+Date:   Wed, 13 May 2020 12:33:33 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        "Bujanda, Hector" <Hector.Bujanda@digi.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] gpiolib: add GPIO_SET_DEBOUNCE_IOCTL
+Message-ID: <20200513043333.GA10419@sol>
+References: <20200419001858.105281-1-hector.bujanda@digi.com>
+ <CAMRc=MeHun_WEApEXP59ZszGa2n+wbU9qq3wU1VO9o590rO-Pw@mail.gmail.com>
+ <CACRpkdaeXFW5K=Npy2ubWsffc7aepEQ5kSJ2HrkrESjaTy_psQ@mail.gmail.com>
+ <CAMRc=MdwSpWkgLTHN+6cOdG7aBAWWYFBC4+tfSNtA2HgX6s_3A@mail.gmail.com>
+ <B0E9AFA73AF60B42B6D323E0C4FEB06F01AFAC5A@dor-sms-xch01.digi.com>
+ <20200430145844.GA28588@sol>
+ <CAMRc=Md5-OgNySDG+XHKow0YSzcZHNtWWPwbmd159fpWL8YAJA@mail.gmail.com>
+ <CACRpkdbZPhkzuUvwDnBWTvweBukQRcWx0w=2seQsVBEP8Fv_BA@mail.gmail.com>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-12_08:2020-05-11,2020-05-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 suspectscore=0 spamscore=0 cotscore=-2147483648
- priorityscore=1501 clxscore=1011 impostorscore=0 bulkscore=0 phishscore=0
- mlxscore=0 mlxlogscore=999 adultscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005130036
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbZPhkzuUvwDnBWTvweBukQRcWx0w=2seQsVBEP8Fv_BA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 12, 2020 at 07:55:42PM +0200, Linus Walleij wrote:
+> On Mon, May 4, 2020 at 12:32 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> 
 
---=-h1B/JIutLyKglRH0NDZG
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I hope Bart doesn't mind if I jump in here, but I've started working on
+this so hopefully I can address most of your points...
 
-Hello Nathan, thanks for the feedback!
+> > Ideally we'd have to introduce new versions of gpioevent_request,
+> > gpioline_request, gpioline_info and gpioevent_data structs - this time
+> > with enough additional padding and no alignment issues. Then we could
+> > add the debounce properly.
+> 
+> Hm that sounds massive. Is it really that bad?
+> 
 
-On Fri, 2020-04-10 at 14:28 -0500, Nathan Lynch wrote:
-> Leonardo Bras <leonardo@linux.ibm.com> writes:
-> > Implement rtas_call_reentrant() for reentrant rtas-calls:
-> > "ibm,int-on", "ibm,int-off",ibm,get-xive" and  "ibm,set-xive".
-> >=20
-> > On LoPAPR Version 1.1 (March 24, 2016), from 7.3.10.1 to 7.3.10.4,
-> > items 2 and 3 say:
-> >=20
-> > 2 - For the PowerPC External Interrupt option: The * call must be
-> > reentrant to the number of processors on the platform.
-> > 3 - For the PowerPC External Interrupt option: The * argument call
-> > buffer for each simultaneous call must be physically unique.
-> >=20
-> > So, these rtas-calls can be called in a lockless way, if using
-> > a different buffer for each call.
-> >=20
+Agreed - it is massive - we end up replacing the majority of the
+existing structs and ioctls.
 
-> From the language in the spec it's clear that these calls are intended
-> to be reentrant with respect to themselves, but it's less clear to me
-> that they are safe to call simultaneously with respect to each other or
-> arbitrary other RTAS methods.
+If we want to be able to set debounce in the request(s), not just in
+SET_CONFIG, then we need new requests as there is no room in the
+existing.  If we want to be able to report that config in the info then
+we need new infos for the same reason.  The info_changed contains an
+info so that has to change as well. And the event_data has a 32/64bit
+alignment issue so it was already up for replacement.
 
-In my viewpoint, being reentrant to themselves, without being reentrant
-to others would be very difficult to do, considering the way the
-rtas_call is crafted to work.
+So it could be worse, but not much.
 
-I mean, I have no experience in rtas code, it's my viewpoint. In my
-thoughts there is something like this:
+> > This would of course add a lot of cruft to the uAPI code. I'd start by
+> > moving it out of drivers/gpio/gpiolib.c into a new file:
+> > drivers/gpio/gpiolib-cdev.c. This way we'd have everything related to
+> > the character device in one place. It would make it easier to: a) add
+> > a config option for disabling it entirely and b) add a config option
+> > to disable the v1 of the ioctl()s.
+> 
+> Its good to break out for code maintenance no matter what we do
+> with it :)
+>
 
-common_path -> selects function by token -> reentrant function
-					|-> non-reentrant function
+It definitely is, and I'll submit a patch soon, that hopefully can be
+applied immediately before the next dev window opens, to do just that.
 
-If there is one function that is reentrant, it means the common_path
-and function selection by token would need to be reentrant too.
+> I would however not make it in any way totally optional, because the
+> big win with the character device over the legacy sysfs is to always
+> be available.
+> 
 
-> > This can be useful to avoid deadlocks in crashing, where rtas-calls are
-> > needed, but some other thread crashed holding the rtas.lock.
->=20
-> Are these calls commonly used in the crash-handling path? Is this
-> addressing a real issue you've seen?
->=20
+And if you build it into your kernel, which will be the default, it
+still will be.
 
-Yes, I noticed deadlocks during crashes, like this one:
-#0 arch_spin_lock
-#1  lock_rtas ()=20
-#2  rtas_call (token=3D8204, nargs=3D1, nret=3D1, outputs=3D0x0)
-#3  ics_rtas_mask_real_irq (hw_irq=3D4100)=20
-#4  machine_kexec_mask_interrupts
-#5  default_machine_crash_shutdown
-#6  machine_crash_shutdown=20
-#7  __crash_kexec
-#8  crash_kexec
-#9  oops_end
+But maybe there are specific applications that don't need cdev and
+would be interested in reducing kernel bloat?
 
-On ics_rtas_mask_real_irq() we have both ibm_int_off and ibm_set_xive,
-so it makes sense to also add ibm_int_on and ibm_get_xive as reentrant
-too.
+> > Linus: about the software-debounce you mentioned: do you think it
+> > somehow plugs the hole we identified here?
+> 
+> Hm, I don't quite understand what the hole is I guess...
+> 
 
-Full discussion available on this thread:
-http://patchwork.ozlabs.org/project/linuxppc-dev/patch/20200401000020.59044=
-7-1-leonardo@linux.ibm.com/
+I'll leave this one for Bart - the more I re-read the thread the less
+certain I am as well.
 
->=20
-> > +/*
-> > + * Used for reentrant rtas calls.
-> > + * According to LoPAR documentation, only "ibm,int-on", "ibm,int-off",
-> > + * "ibm,get-xive" and "ibm,set-xive" are currently reentrant.
-> > + * Reentrant calls need their own rtas_args buffer, so not using rtas.=
-args.
-> > + */
->=20
-> Please use kernel-doc format in new code.
+I will note that Bart correctly mentioned that the uapi doesn't return
+an error if the user requests bias that is not supported by the driver
+- gpio_set_bias absorbs the error.
 
-Sure, v2 is going to be fixed.
+That isn't by intent - it is the way gpiod_direction_input
+behaved before I added bias to cdev. It was left that way as I was
+unsure on the broader implications of changing it, and wasn't keen on
+implementing a cdev specific gpiod_direction_input either.
+I'm open to suggestions if you would like to change that.
 
->=20
->=20
-> > +int rtas_call_reentrant(int token, int nargs, int nret, int *outputs, =
-...)
-> > +{
-> > +	va_list list;
-> > +	struct rtas_args rtas_args;
-> > +
-> > +	if (!rtas.entry || token =3D=3D RTAS_UNKNOWN_SERVICE)
-> > +		return -1;
-> > +
-> > +	va_start(list, outputs);
-> > +	va_rtas_call_unlocked(&rtas_args, token, nargs, nret, list);
-> > +	va_end(list);
->=20
-> No, I don't think you can place the RTAS argument buffer on the stack:
->=20
->   7.2.7, Software Implementation Note:
->   | The OS must be aware that the effective address range for RTAS is 4
->   | GB when instantiated in 32-bit mode and the OS should not pass RTAS
->   | addresses or blocks of data which might fall outside of this range.
-
-Agree, moved to PACA.
-
-I will send a v2 soon, it will be a 2-patch patchset.
-
-Best regards,
-Leonardo Bras
-
---=-h1B/JIutLyKglRH0NDZG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl67eCMACgkQlQYWtz9S
-ttQSLw/5AdNmiQ0LgG7a7BXJuq1+1ry8fn+YHyXeXN3k8BPdtaa2e3q/BtnAYBhK
-eRg3Dkbg9ztSd29F3cbqbJbsLm9PoaHSCkawE4E8fMaCeDgaKXucGPuuVCQOn40d
-G5hIf4XL0Ixz/zj0fcd8lh1ZZ+n61tAuoI6e3e5iRnaajyVjZpJwxI94lDPr3J4x
-jZWtazF9as1wYdkQRAwt5GiLHkzyyuw9mknJBwNVbPl1KtvCeCyaqIOKH/oIFp0n
-DvI5CLqy5Qm99j4V8e6nir6gUalsPChYnrn3RITPIFAdaS3Rk7a1Bk1OfOol1iOQ
-Sym3Tpnm70gxaosK2UAJLJxbq5EJmT/VzfWznuodWZ+N/Erp0+a7P4G3xB8mNJ+x
-6J/8122/GzeFubaTnvOcMqEgemcaJMseiJd3jQClQQBH/aHITKgIc9IDwzSifr5y
-tRUk3KTD8MfwNQtV53Q/JAJHrWTy0SEFl1slR+8Jv2UoyN1a/6sKrJgJkFQmOVEy
-ErGQpGtGW9rUXvy/Yt5jXHeTvNWbSuDbKh/XalbXyk6mLTcvx37L+85m8xaqatNf
-Xmz5a5DuqcLfD+0D7ExIKCruyG52Z72esbo4C0m1oZd9QLrIGgaZcZmigzpa6Clb
-hGqApNUPOUgE308Lnjvll3Eo2HUeyjnCbZav+YseEvVO6KbYyL8=
-=NL/i
------END PGP SIGNATURE-----
-
---=-h1B/JIutLyKglRH0NDZG--
-
+Cheers,
+Kent.
