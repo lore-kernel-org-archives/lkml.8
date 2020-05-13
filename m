@@ -2,135 +2,170 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C0CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9686AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F3A1205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41746205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:39:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gmxuHP6A"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="j7MN4vwO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390229AbgEMSju (ORCPT
+        id S2390237AbgEMSj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 14:39:50 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:51531 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389724AbgEMSjt (ORCPT
+        Wed, 13 May 2020 14:39:57 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:18865 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390230AbgEMSj4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 14:39:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589395188;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=BavTkUCkU5lOlqm34/OAaeadhok337Em0LQ0JqmIrBo=;
-        b=gmxuHP6ADh1Bv9k+0KdJJJ6AL5OZUCGwnJO3ebUbm/seNh0xa2Ecg+dNCcufj6x7rDhLQ6
-        AuKWGxcLT+KIk1wzOM7mhnBkT2cmz6MkZsNZTpblpp1786M0L6SZinNjAXBVDN7cg6vdGX
-        C5Gza7tQ9sd4/i0MaWvpYm2ZZ+b3PT8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-369-7m8wSnxJNiOuKndsraMyMg-1; Wed, 13 May 2020 14:39:42 -0400
-X-MC-Unique: 7m8wSnxJNiOuKndsraMyMg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 13 May 2020 14:39:56 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589395195; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=jCjI/gfur3KFMSkfL+KsuB3WZ9C3iTq+gW/Y6HRbx7U=; b=j7MN4vwOqflxRtGsOsl9nT6jdgDOWCM1VKmb9LKb60DCADctyUvHxHXhvHFnau0Zdz0z6teD
+ X2rYFG9M2RFiXKDyNFhEBZ+a4ta4R6OV/jFuk2x+UkY66v8ViDOQ0IxvvXeMy11qjGo9eE/k
+ +EQ+LLOsZ1/8bP6YOvkElPHVNrE=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebc3eee.7fe5ffe3ba78-smtp-out-n05;
+ Wed, 13 May 2020 18:39:42 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3D8E0C433BA; Wed, 13 May 2020 18:39:42 +0000 (UTC)
+Received: from [10.46.162.249] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2B184873065;
+        (Authenticated sender: hemantk)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B6A1EC433D2;
         Wed, 13 May 2020 18:39:40 +0000 (UTC)
-Received: from krava (unknown [10.40.195.109])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 107A75D9C5;
-        Wed, 13 May 2020 18:39:34 +0000 (UTC)
-Date:   Wed, 13 May 2020 20:39:32 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf parse-events: Make add PMU verbose output clearer
-Message-ID: <20200513183932.GC3343750@krava>
-References: <20200513001729.21155-1-irogers@google.com>
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B6A1EC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=hemantk@codeaurora.org
+Subject: Re: [PATCH v1 3/5] bus: mhi: core: Skip handling BHI irq if MHI reg
+ access is not allowed
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jhugo@codeaurora.org, bbhatt@codeaurora.org
+References: <1589248989-23824-1-git-send-email-hemantk@codeaurora.org>
+ <1589248989-23824-4-git-send-email-hemantk@codeaurora.org>
+ <20200512065349.GE4928@Mani-XPS-13-9360>
+ <5e9a15ed-4bad-744a-af07-b28c3bcc47c4@codeaurora.org>
+ <20200513070402.GA26866@Mani-XPS-13-9360>
+From:   Hemant Kumar <hemantk@codeaurora.org>
+Message-ID: <d8893525-f19d-d839-5ba3-218b5ee2ed20@codeaurora.org>
+Date:   Wed, 13 May 2020 11:39:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513001729.21155-1-irogers@google.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200513070402.GA26866@Mani-XPS-13-9360>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 05:17:29PM -0700, Ian Rogers wrote:
+Hi Mani,
 
-SNIP
+On 5/13/20 12:04 AM, Manivannan Sadhasivam wrote:
+> On Tue, May 12, 2020 at 05:28:45PM -0700, Hemant Kumar wrote:
+>> Hi Mani,
+>>
+>> On 5/11/20 11:53 PM, Manivannan Sadhasivam wrote:
+>>> On Mon, May 11, 2020 at 07:03:07PM -0700, Hemant Kumar wrote:
+>>>> Driver continues handling of BHI interrupt even if MHI register access
+>>>> is not allowed. By doing so it calls the status call back and performs
+>>>> early notification for the MHI client. This is not needed when MHI
+>>>> register access is not allowed. Hence skip the handling in this case and
+>>>> return. Also add debug log to print device state, local EE and device EE
+>>>> when reg access is valid.
+>>>>
+>>>> Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
+>>>> Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+>>>> ---
+>>>>    drivers/bus/mhi/core/main.c | 21 ++++++++++++++-------
+>>>>    1 file changed, 14 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+>>>> index 9ec9b36..467c0ba 100644
+>>>> --- a/drivers/bus/mhi/core/main.c
+>>>> +++ b/drivers/bus/mhi/core/main.c
+>>>> @@ -369,22 +369,29 @@ irqreturn_t mhi_irq_handler(int irq_number, void *dev)
+>>>>    	return IRQ_HANDLED;
+>>>>    }
+>>>> -irqreturn_t mhi_intvec_threaded_handler(int irq_number, void *dev)
+>>>> +irqreturn_t mhi_intvec_threaded_handler(int irq_number, void *priv)
+>>>>    {
+>>>> -	struct mhi_controller *mhi_cntrl = dev;
+>>>> +	struct mhi_controller *mhi_cntrl = priv;
+>>>> +	struct device *dev = &mhi_cntrl->mhi_dev->dev;
+>>>>    	enum mhi_state state = MHI_STATE_MAX;
+>>>>    	enum mhi_pm_state pm_state = 0;
+>>>>    	enum mhi_ee_type ee = 0;
+>>>>    	write_lock_irq(&mhi_cntrl->pm_lock);
+>>>> -	if (MHI_REG_ACCESS_VALID(mhi_cntrl->pm_state)) {
+>>>> -		state = mhi_get_mhi_state(mhi_cntrl);
+>>>> -		ee = mhi_cntrl->ee;
+>>>> -		mhi_cntrl->ee = mhi_get_exec_env(mhi_cntrl);
+>>>> +	if (!MHI_REG_ACCESS_VALID(mhi_cntrl->pm_state)) {
+>>>> +		write_unlock_irq(&mhi_cntrl->pm_lock);
+>>>
+>>> write_lock is only used for protecting 'mhi_cntrl->ee' but here we are not
+>>> updating it if reg access is not valid. So there is no reason to hold this lock.
+>> Original code is using write_lock to protect pm_state as well as
+>> mhi_cntrl->ee. This patch is keeping the lock same as original code. Just if
+>> condition logic is negated here due to that write_unlock_irq is added under
+>> if condition.
+> 
+> 'mhi_cntrl->pm_state' is not always protected by 'pm_lock' and that too
+> write_lock is used here but 'pm_state' is not modified. So as like in most of
+> the places, locks are abused here as well.
+> 
+> I think after 5.8, you should really think about fixing the usage of locks
+> throughout the MHI stack.
+> 
+> So I'll take this patch as it is.
+> 
+Thanks for accepting this patch. Will revisit and review usage of locks 
+in MHI stack and identify areas of improvement.
+> Thanks,
+> Mani
+> 
+>>>
+>>>> +		goto exit_intvec;
+>>>>    	}
+>>>> +	state = mhi_get_mhi_state(mhi_cntrl);
+>>>> +	ee = mhi_cntrl->ee;
+>>>> +	mhi_cntrl->ee = mhi_get_exec_env(mhi_cntrl);
+>>>
+>>> But it is needed here.
+>>>
+>>> Thanks,
+>>> Mani
+>>>
+>>>> +	dev_dbg(dev, "local ee:%s device ee:%s dev_state:%s\n",
+>>>> +		TO_MHI_EXEC_STR(mhi_cntrl->ee), TO_MHI_EXEC_STR(ee),
+>>>> +		TO_MHI_STATE_STR(state));
+>>>> +
+>>>>    	if (state == MHI_STATE_SYS_ERR) {
+>>>> -		dev_dbg(&mhi_cntrl->mhi_dev->dev, "System error detected\n");
+>>>> +		dev_dbg(dev, "System error detected\n");
+>>>>    		pm_state = mhi_tryset_pm_state(mhi_cntrl,
+>>>>    					       MHI_PM_SYS_ERR_DETECT);
+>>>>    	}
+>>>> -- 
+>>>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>>>> a Linux Foundation Collaborative Project
+>>
+>> -- 
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
 
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 92bd7fafcce6..71d0290b616a 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -1056,7 +1056,8 @@ static char *pmu_formats_string(struct list_head *formats)
->   * Setup one of config[12] attr members based on the
->   * user input data - term parameter.
->   */
-> -static int pmu_config_term(struct list_head *formats,
-> +static int pmu_config_term(const char *pmu_name,
-> +			   struct list_head *formats,
->  			   struct perf_event_attr *attr,
->  			   struct parse_events_term *term,
->  			   struct list_head *head_terms,
-> @@ -1082,16 +1083,24 @@ static int pmu_config_term(struct list_head *formats,
->  
->  	format = pmu_find_format(formats, term->config);
->  	if (!format) {
-> -		if (verbose > 0)
-> -			printf("Invalid event/parameter '%s'\n", term->config);
-> +		char *pmu_term = pmu_formats_string(formats);
-> +		char *unknown_term;
-> +		char *help_msg;
-> +
-> +		if (asprintf(&unknown_term,
-> +				"unknown term '%s' for pmu '%s'",
-> +				term->config, pmu_name) < 0)
-> +			unknown_term = strdup("unknown term");
-
-is that really necessary? is asprintf fails, strdup will probably too,
-and parse_events__handle_error checks on the !str, so we should be fine
-
-other than that it looks ok to me
-
-thanks,
-jirka
-
-> +		help_msg = parse_events_formats_error_string(pmu_term);
->  		if (err) {
-> -			char *pmu_term = pmu_formats_string(formats);
-> -
->  			parse_events__handle_error(err, term->err_term,
-> -				strdup("unknown term"),
-> -				parse_events_formats_error_string(pmu_term));
-> -			free(pmu_term);
-> +						   unknown_term,
-> +						   help_msg);
-> +		} else {
-> +			pr_debug("%s (%s)\n", unknown_term, help_msg);
-> +			free(unknown_term);
->  		}
-> +		free(pmu_term);
-
-SNIP
-
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
