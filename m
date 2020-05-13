@@ -2,212 +2,97 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9A6C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3676FCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 788F7206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363401;
-	bh=ZWmbWeHoxrCZKZAI2cVp5fZFEQluLq7A9wzOCFUwaBI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tOIyCaquUFNGSOgwVVMdm4pjqIh+R5IjLUkrgUm+NZ1OcPzE3ymJigrjbjDuYw5g5
-	 Dy4Y0ROeNKWyDNAvsZwNH7DOODFf7cXsYFatp94ZThxjxRz65/nn2PFYSy6JmYiSqc
-	 GbZ383XikhYZveQaW1e1IrU25LggDx6AtgmAAsVo=
+	by mail.kernel.org (Postfix) with ESMTP id 11EFF206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cI5NR0Fm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732701AbgEMJuA (ORCPT
+        id S2387435AbgEMJuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:50:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49326 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733311AbgEMJtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:49:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83FE520753;
-        Wed, 13 May 2020 09:49:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363395;
-        bh=ZWmbWeHoxrCZKZAI2cVp5fZFEQluLq7A9wzOCFUwaBI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=njMjhlTVe6jOetpSmX/ewF5f950RQnILwwJvOod0DvVJbyar3u9P7kBGibCirJb0K
-         8rAA321yk3vP6/2SHslQjUDKTnCgzXuOzvfKkIebBA0YUiLlkLWuAbkU0P6v6BJ0Xm
-         lP1UN3aZIl+t4rxnWKLL86051GWJcg0JsjgUu/e4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yoji <yoji.fujihar.min@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Markus Elfring <elfring@users.sourceforge.net>, 1vier1@web.de,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 57/90] ipc/mqueue.c: change __do_notify() to bypass check_kill_permission()
-Date:   Wed, 13 May 2020 11:44:53 +0200
-Message-Id: <20200513094415.832073282@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
-References: <20200513094408.810028856@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 13 May 2020 05:50:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49262 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387418AbgEMJt6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:49:58 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0B76C061A0C;
+        Wed, 13 May 2020 02:49:58 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id u10so6618558pls.8;
+        Wed, 13 May 2020 02:49:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vI1HSpo7JSbwTRD9lhLBPGbReloovre1TONkkWI4K8s=;
+        b=cI5NR0Fmf0b3v4RmzfC93mlJjUuGrnz+wojY6kn0wMKI0CqhzbAaR68zlAPTfc8dlv
+         nEo440GlsOwFtHLvmIwgjuS3b21nqoISVskSnOTWHvxRLJrdNWFj6QMTmLmtSrHcvII1
+         f21gkgvPL17ChZSaMzaeZarWmyda5FX9Kr5ukmdzmNBgSSse2lehTc0Ks5vhNtVA0/mE
+         9rpVuAwhTwRu4icbbs7byMez/Yo1v+A11a88VyXl7uI1WJZAZarE356ybl82sEjjXRZ5
+         8G2lnX/haRNYHv8EmMYC+JvmoyXtaKWUhedE/OBMwOR4zYnDyClehHQNyZI5AqEinVaV
+         sbng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vI1HSpo7JSbwTRD9lhLBPGbReloovre1TONkkWI4K8s=;
+        b=abcJAl2ciZe1+rQEyAm0KavHP1h120wmdnahsKjDU0VQBCwljrm1YKMih15GGmO2+a
+         c7R0Kf83OWxOinsJ9d5XKvy6Lk71Q0gh/vkFn0l/AAgCoGuBBBQaYzmwEwUq35jyEkX+
+         A/K1hqw9CYUdf/qzC6qyb99FzXbUoZOcUI/S+7YDqJc9OlPO0r5VBZa5qAohxE0C/4zq
+         siNy7fNGlXCV97TBLUy8p78m7QX34FXVn1LcepyvpF2iyiONLIOJE2U8267SUxooOyQ3
+         N49vO+Cobfgxc/h+36PZ1m3IiNhsmxXtjS8A5mPmRyZNkqA6ToillKlRjzmIwLeFJSv2
+         Dicw==
+X-Gm-Message-State: AGi0PuY445Iqi3v54nG6GlPWwD83cdT77UbY982OxGpObje+WDxxM48Z
+        +rFP3uvnUOvmTtc1Kf6fZRg292nUgMyxPkTWFAo=
+X-Google-Smtp-Source: APiQypKJ0EhcKN4EMwA2AMwX12EH/qNwRgFeDBPkHlJLKVpoAB7ilzcQdSoNb7EilT7ycg/niDjp4WWhY8w/d/sAxM4=
+X-Received: by 2002:a17:90b:3717:: with SMTP id mg23mr34645016pjb.129.1589363398238;
+ Wed, 13 May 2020 02:49:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1589361736-816-1-git-send-email-jprakash@codeaurora.org> <1589361736-816-5-git-send-email-jprakash@codeaurora.org>
+In-Reply-To: <1589361736-816-5-git-send-email-jprakash@codeaurora.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 13 May 2020 12:49:51 +0300
+Message-ID: <CAHp75Vex+hm2pVat_VVH5gAqPDbm-VQMes56wC=RUcQeM=z7vA@mail.gmail.com>
+Subject: Re: [PATCH V4 4/5] iio: adc: Update error checks and debug prints
+To:     Jishnu Prakash <jprakash@codeaurora.org>
+Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        smohanad@codeaurora.org, kgunda@codeaurora.org,
+        aghayal@codeaurora.org, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-arm-msm@vger.kernel.org,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-arm-msm-owner@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleg Nesterov <oleg@redhat.com>
+On Wed, May 13, 2020 at 12:23 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
+>
+> Change pr_err/pr_debug statements to dev_err/dev_dbg for
+> increased clarity. Also clean up some return value checks.
 
-commit b5f2006144c6ae941726037120fa1001ddede784 upstream.
+'Also' on the commit message == 'split this to two'.
+But here is a ping pong style of patches (you introduce a problem in
+one patch and fix it in the following).
 
-Commit cc731525f26a ("signal: Remove kernel interal si_code magic")
-changed the value of SI_FROMUSER(SI_MESGQ), this means that mq_notify() no
-longer works if the sender doesn't have rights to send a signal.
-
-Change __do_notify() to use do_send_sig_info() instead of kill_pid_info()
-to avoid check_kill_permission().
-
-This needs the additional notify.sigev_signo != 0 check, shouldn't we
-change do_mq_notify() to deny sigev_signo == 0 ?
-
-Test-case:
-
-	#include <signal.h>
-	#include <mqueue.h>
-	#include <unistd.h>
-	#include <sys/wait.h>
-	#include <assert.h>
-
-	static int notified;
-
-	static void sigh(int sig)
-	{
-		notified = 1;
-	}
-
-	int main(void)
-	{
-		signal(SIGIO, sigh);
-
-		int fd = mq_open("/mq", O_RDWR|O_CREAT, 0666, NULL);
-		assert(fd >= 0);
-
-		struct sigevent se = {
-			.sigev_notify	= SIGEV_SIGNAL,
-			.sigev_signo	= SIGIO,
-		};
-		assert(mq_notify(fd, &se) == 0);
-
-		if (!fork()) {
-			assert(setuid(1) == 0);
-			mq_send(fd, "",1,0);
-			return 0;
-		}
-
-		wait(NULL);
-		mq_unlink("/mq");
-		assert(notified);
-		return 0;
-	}
-
-[manfred@colorfullife.com: 1) Add self_exec_id evaluation so that the implementation matches do_notify_parent 2) use PIDTYPE_TGID everywhere]
-Fixes: cc731525f26a ("signal: Remove kernel interal si_code magic")
-Reported-by: Yoji <yoji.fujihar.min@gmail.com>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Manfred Spraul <manfred@colorfullife.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Markus Elfring <elfring@users.sourceforge.net>
-Cc: <1vier1@web.de>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/e2a782e4-eab9-4f5c-c749-c07a8f7a4e66@colorfullife.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- ipc/mqueue.c |   34 ++++++++++++++++++++++++++--------
- 1 file changed, 26 insertions(+), 8 deletions(-)
-
---- a/ipc/mqueue.c
-+++ b/ipc/mqueue.c
-@@ -82,6 +82,7 @@ struct mqueue_inode_info {
- 
- 	struct sigevent notify;
- 	struct pid *notify_owner;
-+	u32 notify_self_exec_id;
- 	struct user_namespace *notify_user_ns;
- 	struct user_struct *user;	/* user who created, for accounting */
- 	struct sock *notify_sock;
-@@ -709,28 +710,44 @@ static void __do_notify(struct mqueue_in
- 	 * synchronously. */
- 	if (info->notify_owner &&
- 	    info->attr.mq_curmsgs == 1) {
--		struct kernel_siginfo sig_i;
- 		switch (info->notify.sigev_notify) {
- 		case SIGEV_NONE:
- 			break;
--		case SIGEV_SIGNAL:
--			/* sends signal */
-+		case SIGEV_SIGNAL: {
-+			struct kernel_siginfo sig_i;
-+			struct task_struct *task;
-+
-+			/* do_mq_notify() accepts sigev_signo == 0, why?? */
-+			if (!info->notify.sigev_signo)
-+				break;
- 
- 			clear_siginfo(&sig_i);
- 			sig_i.si_signo = info->notify.sigev_signo;
- 			sig_i.si_errno = 0;
- 			sig_i.si_code = SI_MESGQ;
- 			sig_i.si_value = info->notify.sigev_value;
--			/* map current pid/uid into info->owner's namespaces */
- 			rcu_read_lock();
-+			/* map current pid/uid into info->owner's namespaces */
- 			sig_i.si_pid = task_tgid_nr_ns(current,
- 						ns_of_pid(info->notify_owner));
--			sig_i.si_uid = from_kuid_munged(info->notify_user_ns, current_uid());
-+			sig_i.si_uid = from_kuid_munged(info->notify_user_ns,
-+						current_uid());
-+			/*
-+			 * We can't use kill_pid_info(), this signal should
-+			 * bypass check_kill_permission(). It is from kernel
-+			 * but si_fromuser() can't know this.
-+			 * We do check the self_exec_id, to avoid sending
-+			 * signals to programs that don't expect them.
-+			 */
-+			task = pid_task(info->notify_owner, PIDTYPE_TGID);
-+			if (task && task->self_exec_id ==
-+						info->notify_self_exec_id) {
-+				do_send_sig_info(info->notify.sigev_signo,
-+						&sig_i, task, PIDTYPE_TGID);
-+			}
- 			rcu_read_unlock();
--
--			kill_pid_info(info->notify.sigev_signo,
--				      &sig_i, info->notify_owner);
- 			break;
-+		}
- 		case SIGEV_THREAD:
- 			set_cookie(info->notify_cookie, NOTIFY_WOKENUP);
- 			netlink_sendskb(info->notify_sock, info->notify_cookie);
-@@ -1315,6 +1332,7 @@ retry:
- 			info->notify.sigev_signo = notification->sigev_signo;
- 			info->notify.sigev_value = notification->sigev_value;
- 			info->notify.sigev_notify = SIGEV_SIGNAL;
-+			info->notify_self_exec_id = current->self_exec_id;
- 			break;
- 		}
- 
-
-
+-- 
+With Best Regards,
+Andy Shevchenko
