@@ -2,140 +2,148 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB6EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA33C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E166720659
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:18:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gb6ABaw7"
+	by mail.kernel.org (Postfix) with ESMTP id 498322064E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:18:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731111AbgEMPSX (ORCPT
+        id S1732035AbgEMPSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:18:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44146 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728692AbgEMPSW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:18:22 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7653CC061A0C;
-        Wed, 13 May 2020 08:18:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
-        bh=1tZgH8MNeghSPyWNWnOBlGuYAdG9LL5O6RnEdePT1vE=; b=gb6ABaw7RHKKCr1HU766fZDB8U
-        SB3h6fppxsH05Z02CrRcbdER5PcWclAq30iLWhi9toAcrYx2gDTi2f6Ygq2i3bRxwrtVW7K2alru7
-        a+2SkgnNRPyVTAjzPq9QrRPgZ7yeMbl2gC2E2b3QQ6seYdYrig544U3QgoVJPrQB+7RDAvAdQJ/Ts
-        rgvKSg3kEfaXw9mw1je4fbu3TRJcZ2Q1tpcfypeCRLm5C/8RRahy35PNCo2iPB5R/H6RIa+gUJkkA
-        hH9pzFXBD+vbbm+BjX1GgxPVCk5WVYTD1l6LYY8oGm33ACtlpFIvBju6/vnq9aBVH05Hr06pZP8zD
-        9sSHwAHw==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jYt9J-0005kF-21; Wed, 13 May 2020 15:18:21 +0000
-Subject: Re: mmotm 2020-05-11-15-43 uploaded (ethernet/ti/ti_cpsw)
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        linux-omap@vger.kernel.org
-References: <20200511224430.HDJjRC68z%akpm@linux-foundation.org>
- <9ba4bac8-d4ec-c2d2-373f-3a631523cb2f@infradead.org>
- <a6e2a4ff-1ec5-4d86-4d00-ce62fbf1813f@ti.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <86830472-e970-cf07-49ae-2970fd99c25e@infradead.org>
-Date:   Wed, 13 May 2020 08:18:20 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 13 May 2020 11:18:44 -0400
+Received: from mga06.intel.com ([134.134.136.31]:37459 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728692AbgEMPSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 11:18:43 -0400
+IronPort-SDR: XBAO56FGfdHKvt7Ps5lAsWUCUlMImvJHDIczkVOGX1InYZYtZchCI0ezeQJEP51GfRcjZpEkMB
+ bULchRFVDcug==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 08:18:43 -0700
+IronPort-SDR: ZYUSbumjQv0c93Qa2sJu6X8ea2I6840uLUiFkzZ+VI+MZNfSQZdlNMce96urcLoifwV9JDXFw9
+ iSQ364fXHd5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,388,1583222400"; 
+   d="scan'208";a="371935382"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 13 May 2020 08:18:41 -0700
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: [PATCH] kobject: Make sure the parent does not get released before its children
+Date:   Wed, 13 May 2020 18:18:40 +0300
+Message-Id: <20200513151840.36400-1-heikki.krogerus@linux.intel.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <a6e2a4ff-1ec5-4d86-4d00-ce62fbf1813f@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/13/20 2:20 AM, Grygorii Strashko wrote:
-> 
-> 
-> On 12/05/2020 05:12, Randy Dunlap wrote:
->> On 5/11/20 3:44 PM, Andrew Morton wrote:
->>> The mm-of-the-moment snapshot 2020-05-11-15-43 has been uploaded to
->>>
->>>     http://www.ozlabs.org/~akpm/mmotm/
->>>
->>> mmotm-readme.txt says
->>>
->>> README for mm-of-the-moment:
->>>
->>> http://www.ozlabs.org/~akpm/mmotm/
->>>
->>> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
->>> more than once a week.
->>>
->>> You will need quilt to apply these patches to the latest Linus release (5.x
->>> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
->>> http://ozlabs.org/~akpm/mmotm/series
->>>
->>> The file broken-out.tar.gz contains two datestamp files: .DATE and
->>> .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
->>> followed by the base kernel version against which this patch series is to
->>> be applied.
->>>
->>> This tree is partially included in linux-next.  To see which patches are
->>> included in linux-next, consult the `series' file.  Only the patches
->>> within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
->>> linux-next.
->>>
->>>
->>> A full copy of the full kernel tree with the linux-next and mmotm patches
->>> already applied is available through git within an hour of the mmotm
->>> release.  Individual mmotm releases are tagged.  The master branch always
->>> points to the latest release, so it's constantly rebasing.
->>>
->>>     https://github.com/hnaz/linux-mm
->>>
->>> The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
->>> contains daily snapshots of the -mm tree.  It is updated more frequently
->>> than mmotm, and is untested.
->>>
->>> A git copy of this tree is also available at
->>>
->>>     https://github.com/hnaz/linux-mm
->>
->> on i386:
->>
->> ERROR: modpost: "cpts_register" [drivers/net/ethernet/ti/ti_cpsw_new.ko] undefined!
->> ERROR: modpost: "cpts_unregister" [drivers/net/ethernet/ti/ti_cpsw_new.ko] undefined!
->> ERROR: modpost: "cpts_tx_timestamp" [drivers/net/ethernet/ti/ti_cpsw_new.ko] undefined!
->> ERROR: modpost: "cpts_create" [drivers/net/ethernet/ti/ti_cpsw_new.ko] undefined!
->> ERROR: modpost: "cpts_misc_interrupt" [drivers/net/ethernet/ti/ti_cpsw_new.ko] undefined!
->> ERROR: modpost: "cpts_release" [drivers/net/ethernet/ti/ti_cpsw_new.ko] undefined!
->> ERROR: modpost: "cpts_tx_timestamp" [drivers/net/ethernet/ti/ti_cpsw.ko] undefined!
->> ERROR: modpost: "cpts_create" [drivers/net/ethernet/ti/ti_cpsw.ko] undefined!
->> ERROR: modpost: "cpts_misc_interrupt" [drivers/net/ethernet/ti/ti_cpsw.ko] undefined!
->> ERROR: modpost: "cpts_release" [drivers/net/ethernet/ti/ti_cpsw.ko] undefined!
->>
->>
->> Full randconfig file is attached.
->>
-> 
-> It's expected to be fixed by
-> https://lkml.org/lkml/2020/5/12/333
+In the function kobject_cleanup(), kobject_del(kobj) is
+called before the kobj->release(). That makes it possible to
+release the parent of the kobject before the kobject itself.
 
-Works for me. Thanks.
+To fix that, adding function __kboject_del() that does
+everything that kobject_del() does except release the parent
+reference. kobject_cleanup() then calls __kobject_del()
+instead of kobject_del(), and separately decrements the
+reference count of the parent kobject after kobj->release()
+has been called.
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Fixes: 7589238a8cf3 ("Revert "software node: Simplify software_node_release() function"")
+Cc: Brendan Higgins <brendanhiggins@google.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Suggested-by: "Rafael J. Wysocki" <rafael@kernel.org>
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+---
+ lib/kobject.c | 30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
+diff --git a/lib/kobject.c b/lib/kobject.c
+index 65fa7bf70c57..32432036bef8 100644
+--- a/lib/kobject.c
++++ b/lib/kobject.c
+@@ -599,14 +599,7 @@ int kobject_move(struct kobject *kobj, struct kobject *new_parent)
+ }
+ EXPORT_SYMBOL_GPL(kobject_move);
+ 
+-/**
+- * kobject_del() - Unlink kobject from hierarchy.
+- * @kobj: object.
+- *
+- * This is the function that should be called to delete an object
+- * successfully added via kobject_add().
+- */
+-void kobject_del(struct kobject *kobj)
++static void __kobject_del(struct kobject *kobj)
+ {
+ 	struct kernfs_node *sd;
+ 	const struct kobj_type *ktype;
+@@ -625,9 +618,23 @@ void kobject_del(struct kobject *kobj)
+ 
+ 	kobj->state_in_sysfs = 0;
+ 	kobj_kset_leave(kobj);
+-	kobject_put(kobj->parent);
+ 	kobj->parent = NULL;
+ }
++
++/**
++ * kobject_del() - Unlink kobject from hierarchy.
++ * @kobj: object.
++ *
++ * This is the function that should be called to delete an object
++ * successfully added via kobject_add().
++ */
++void kobject_del(struct kobject *kobj)
++{
++	struct kobject *parent = kobj->parent;
++
++	__kobject_del(kobj);
++	kobject_put(parent);
++}
+ EXPORT_SYMBOL(kobject_del);
+ 
+ /**
+@@ -663,6 +670,7 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
+  */
+ static void kobject_cleanup(struct kobject *kobj)
+ {
++	struct kobject *parent = kobj->parent;
+ 	struct kobj_type *t = get_ktype(kobj);
+ 	const char *name = kobj->name;
+ 
+@@ -684,7 +692,7 @@ static void kobject_cleanup(struct kobject *kobj)
+ 	if (kobj->state_in_sysfs) {
+ 		pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
+ 			 kobject_name(kobj), kobj);
+-		kobject_del(kobj);
++		__kobject_del(kobj);
+ 	}
+ 
+ 	if (t && t->release) {
+@@ -698,6 +706,8 @@ static void kobject_cleanup(struct kobject *kobj)
+ 		pr_debug("kobject: '%s': free name\n", name);
+ 		kfree_const(name);
+ 	}
++
++	kobject_put(parent);
+ }
+ 
+ #ifdef CONFIG_DEBUG_KOBJECT_RELEASE
 -- 
-~Randy
+2.26.2
+
