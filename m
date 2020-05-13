@@ -2,127 +2,100 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88816C2D0FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD1AC2D0FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6466F206B7
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:51:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="m6ad7mNk"
+	by mail.kernel.org (Postfix) with ESMTP id 2F5EC206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:51:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589374316;
+	bh=1SBdssmchS7etFt8Hcpk8fQ7VCPg4FYqBUt6sF72B5g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hBZfz4DOECcVlkSfViAQGPgu1H+7j7Ww7Zagd3dZ5FwQqMIpKA1AIRDx7TWnzwMAi
+	 a55PFdNvJUN7lXIE8/8PZqxvmxhOPhivYEVJK2nH3NCHuSqQMW8eaSDETK06S7EZv6
+	 hejL26M8j2v5Bb2REAqyPInW4fIYN9BtFeKSPHS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732009AbgEMMvs (ORCPT
+        id S1732886AbgEMMvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 08:51:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49440 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728172AbgEMMvr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 08:51:47 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73CC4C05BD0A
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 05:51:46 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id 190so11559278qki.1
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 05:51:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=I21hL7AkwUgdNPUI4l7KTQwvXQoa/NOyWUo4IiS5Zaw=;
-        b=m6ad7mNkFXWQP2LAar13cizth8P3iKliOem15ctBmD+RRB5NWWGZ4hVFaLb43OUHF4
-         dEfbKyHnbdTPvph0NO3q6QQG3feEsDR1NN/aDJiylAVOx6elqA7EySRBy4zgPJs7Fz0/
-         Wh3NuXdccvtT3AKlZIUnJi/oe7DjFVTOpq20lvPm5ktnPdoP012Lk/9j/pUDGJCnQSsG
-         TmFagaUtz3vbm20kiJmFo0AhIIm3asYdCe/QXnsQdcQLCh91UXycsxj5M4FwgjK5Th4v
-         OuuA5GD8cz9mUhRoZ9e54BvWpbbFTnY1KxAJWQ9Fh7pEfNmqL/JrbXuEeLjTtGaJiHKf
-         PtmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=I21hL7AkwUgdNPUI4l7KTQwvXQoa/NOyWUo4IiS5Zaw=;
-        b=S3NvikDSZsI/K36+VkbWgbgXNvZQx8iLciqJsE/EbgUKqSAFtwbumwMvMjMAG/TMcb
-         yDHRG2G0xl8j7vS46PW8Q1iRjos2hkyF23Z+CCkzUtol2fB9XlIXRJsySTSg2p+1RtM1
-         Jv0Mlj+sZ/yA4dp/07jNYmRoYiYTGLzbJkUDdPAb8dLMzY4PrcacLbsKpbN1xqWuk5zD
-         VLAOLJtaf+ClEE+4hypTEjzHnI7bM1ZOw3o9gzUdv3ts3cMJrseXJ2PZ48yhMU9AUYKN
-         DKcNYRW0nqJTLKCJnaKuQczR/GzaT779sxmR4Qu7NtdpESpkFl811rwen/pUHwrlcp4s
-         lZng==
-X-Gm-Message-State: AGi0PuanFWStVV7e7InGQD6swFd9tNL5M+EB2qAovS9X6AlTm0nPuM9Q
-        6viI1c/Xqg/hWsE1V6nbqfJv2Q==
-X-Google-Smtp-Source: APiQypKy6izjhUbivG+/I6PWV8eR0peu4dabx2HIoItXGvYLmzKEIJJmSlJIMmuJWfJIdDxUx9gC8w==
-X-Received: by 2002:a37:61d8:: with SMTP id v207mr26564281qkb.146.1589374305465;
-        Wed, 13 May 2020 05:51:45 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id t67sm13779002qka.17.2020.05.13.05.51.44
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 13 May 2020 05:51:44 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jYqrQ-0008K6-D9; Wed, 13 May 2020 09:51:44 -0300
-Date:   Wed, 13 May 2020 09:51:44 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org,
-        target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-cifs@vger.kernel.org, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, netdev@vger.kernel.org,
-        linux-sctp@vger.kernel.org, ceph-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 11/33] tcp: tcp_sock_set_nodelay
-Message-ID: <20200513125144.GC29989@ziepe.ca>
-References: <20200513062649.2100053-1-hch@lst.de>
- <20200513062649.2100053-12-hch@lst.de>
+        Wed, 13 May 2020 08:51:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47978 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731779AbgEMMvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 08:51:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C33F6206B7;
+        Wed, 13 May 2020 12:51:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589374312;
+        bh=1SBdssmchS7etFt8Hcpk8fQ7VCPg4FYqBUt6sF72B5g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OhEM8JhEn/lJos7yaxYu6g2ZU9D8JyDCADcM+2ZZ+L7kaoQ5Kqjgr6WE63xVWYNm3
+         PUttciyF4c3ojFT2P7SWDpwh9M+5487VZWdWYsKiwzfT2RiIbNvQTFc1NPVbEwcaxQ
+         ybwWLmTXc9XexFxejMYj2YDLQq5vGFBcBi5e8Nk8=
+Date:   Wed, 13 May 2020 14:51:50 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Guillaume Tucker <guillaume.tucker@collabora.com>
+Cc:     kernelci@groups.io, kernel-build-reports@lists.linaro.org,
+        automated-testing@lists.yoctoproject.org,
+        linux-next@vger.kernel.org, stable@vger.kernel.org,
+        Ard Biesheuvel <ardb@kernel.org>, agross@kernel.org,
+        qcomlt-patches@lists.linaro.org,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>, ulf.hansson@linaro.org,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>, linux-pm@vger.kernel.org,
+        vireshk@kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
+        kernel@collabora.com, kernelci@baylibre.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: kernelci.org transitioning to functional testing
+Message-ID: <20200513125150.GA1084253@kroah.com>
+References: <66aae710-1ee9-fb67-1a1b-997eeb70dc04@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513062649.2100053-12-hch@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <66aae710-1ee9-fb67-1a1b-997eeb70dc04@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 08:26:26AM +0200, Christoph Hellwig wrote:
-> Add a helper to directly set the TCP_NODELAY sockopt from kernel space
-> without going through a fake uaccess.  Cleanup the callers to avoid
-> pointless wrappers now that this is a simple function call.
+On Wed, May 13, 2020 at 12:13:24PM +0100, Guillaume Tucker wrote:
+> As kernelci.org is expanding its functional testing
+> capabilities, the concept of boot testing is now being
+> deprecated.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/block/drbd/drbd_int.h             |  7 ----
->  drivers/block/drbd/drbd_main.c            |  2 +-
->  drivers/block/drbd/drbd_receiver.c        |  4 +--
->  drivers/infiniband/sw/siw/siw_cm.c        | 24 +++-----------
->  drivers/nvme/host/tcp.c                   |  9 +-----
->  drivers/nvme/target/tcp.c                 | 12 ++-----
->  drivers/target/iscsi/iscsi_target_login.c | 15 ++-------
->  fs/cifs/connect.c                         | 10 ++----
->  fs/dlm/lowcomms.c                         |  8 ++---
->  fs/ocfs2/cluster/tcp.c                    | 20 ++----------
->  include/linux/tcp.h                       |  1 +
->  net/ceph/messenger.c                      | 11 ++-----
->  net/ipv4/tcp.c                            | 39 +++++++++++++++--------
->  net/rds/tcp.c                             | 11 +------
->  net/rds/tcp.h                             |  1 -
->  net/rds/tcp_listen.c                      |  2 +-
->  16 files changed, 49 insertions(+), 127 deletions(-)
+> Next Monday 18th May, the web dashboard on https://kernelci.org
+> will be updated to primarily show functional test results
+> rather than boot results.  The Boots tab will still be
+> available until 5th June to ease the transition.
+> 
+> The new equivalent to boot testing is the *baseline* test suite
+> which also runs sanity checks using dmesg and bootrr[1].
+> 
+> Boot email reports will eventually be replaced with baseline
+> reports.  For those of you already familiar with the test email
+> reports, they will be simplified to only show regressions with
+> links to the dashboard for all the details.
+> 
+> Some functional tests are already being run by kernelci.org,
+> results have only been shared by email so far but they will
+> become visible on the web dashboard next week.  In particular:
+> v4l2-compliance, i-g-t for DRM/KMS and Panfrost,
+> suspend/resume...
+> 
+> And of course, a lot of functional test suites are in the
+> process of being added: kselftest, KUnit, LTP, xfstests,
+> extended i-g-t coverage and many more.
+> 
+> The detailed schedule is available on a GitHub issue[2].
 
-No problem with the siw change
+Very cool stuff, thanks so much to everyone involved for making this
+happen, it's really helpful.
 
-Acked-by: Jason Gunthorpe <jgg@mellanox.com>
-
-Jason
+greg k-h
