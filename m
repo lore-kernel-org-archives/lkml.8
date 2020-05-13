@@ -2,98 +2,111 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C621C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD940C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D204A204EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AC70204EF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:15:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="STKdRmSn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390840AbgEMUPM (ORCPT
+        id S2390856AbgEMUPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 16:15:12 -0400
-Received: from smtp05.smtpout.orange.fr ([80.12.242.127]:22779 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388033AbgEMUPK (ORCPT
+        Wed, 13 May 2020 16:15:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388033AbgEMUPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 16:15:10 -0400
-Received: from localhost.localdomain ([93.22.149.176])
-        by mwinf5d52 with ME
-        id eLEy2200C3obZW503LEzLB; Wed, 13 May 2020 22:15:07 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 13 May 2020 22:15:07 +0200
-X-ME-IP: 93.22.149.176
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     kvalo@codeaurora.org, davem@davemloft.net, pradeepc@codeaurora.org
-Cc:     ath11k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] ath11k: Fix some resource leaks in error path in 'ath11k_thermal_register()'
-Date:   Wed, 13 May 2020 22:14:54 +0200
-Message-Id: <20200513201454.258111-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 13 May 2020 16:15:12 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F20FC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 13:15:12 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id n18so240926pfa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 13:15:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=saf/dg73iQUEG32PJPB+LsnpbZToQT0BzCAbRbBNs70=;
+        b=STKdRmSnETqjJhs6vMObw3hhA8VDOKkp84e8+JmEIZHKqrczIq3bwDlgWuQFS57iO+
+         SEgg4lklR/kkwwVrZYXGC4PBIejoQFAFslRIefmmC3wsFPUp32lShPM8CXCh4mv+9dKw
+         05PZe5x07ktKjVnAx1wCyg1lWI9As4CBQDQ+kdX3JOQ2CGOaBQdmWSBwId8N5TJZhVv5
+         gCZ7G1Gg+3W5/7W8l1CAhkmzdXdQFnU+sc+MjBCrl131Z9xUPMcyAnhuYntdrTP2QRd7
+         PQ3+NlA6N+1p6HKBe5+IVNiaczHLFyGXQenNl8jgFxv1eXFpUUqqW8+sokL37o7OwsRV
+         5Caw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=saf/dg73iQUEG32PJPB+LsnpbZToQT0BzCAbRbBNs70=;
+        b=ZL4IugANTUbmBfdOpEXI3VP9gQKFkJJGUv+Ep78HUTrTKuzXcAZkqxdCuFJuUOYmr6
+         b/OqXGh2uQ4rzmcSyV/RyqMUn9iFGB1gOWsBhx7cTzJMXjfX8y41dOBPb5HGgH4VKra5
+         H200TpDKaBnfZ5epzwWAaYS3ND1+hsXItE0miIkkrZd4S+wMaRIQNhziXB3MYG9EqbEY
+         i2jXvxxoJYwqjZru/L9lbbCivUcW1ocrJzyURzAzS4VBnU4VKOfwv2ezGrVyAzsdNyeq
+         bm7xbdmeAgEhzvnelMRfBxa6jNUYuXpbenXjNcimzp3LzXK3+/OFT9KLYDxY8eaiNMY1
+         PrNg==
+X-Gm-Message-State: AOAM530iKt7N7X2+QJIFW+BQfO6Imh/cWS67RYUShy+903WrJdzQbY/5
+        uFWZQ57FTluNOJy9SuIylNE=
+X-Google-Smtp-Source: ABdhPJxcCgJHd9Dv4D5IY2/U3ipK8lTO2C2aeNWbi79YGoKK9FPttu3p3OkjxftAMq6m6F5RV/LCDQ==
+X-Received: by 2002:a63:2244:: with SMTP id t4mr891818pgm.375.1589400911936;
+        Wed, 13 May 2020 13:15:11 -0700 (PDT)
+Received: from jordon-HP-15-Notebook-PC.domain.name ([122.167.196.79])
+        by smtp.gmail.com with ESMTPSA id u9sm327161pfn.197.2020.05.13.13.15.08
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 May 2020 13:15:11 -0700 (PDT)
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+To:     akpm@linux-foundation.org, dan.carpenter@oracle.com, jgg@ziepe.ca,
+        dsterba@suse.com, arnd@arndb.de, ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org,
+        Souptick Joarder <jrdr.linux@gmail.com>
+Subject: [PATCH] drivers/virt/fsl_hypervisor: Correcting error handling path
+Date:   Thu, 14 May 2020 01:53:16 +0530
+Message-Id: <1589401396-31210-1-git-send-email-jrdr.linux@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If 'thermal_cooling_device_register()' fails, we must undo what has been
-allocated so far. So we must go to 'err_thermal_destroy' instead of
-returning directly
+First, when memory allocation for sg_list_unaligned failed, there
+is no point of calling put_pages() as we haven't pinned any pages.
 
-In case of error in 'ath11k_thermal_register()', the previous
-'thermal_cooling_device_register()' call must also be undone. Move the
-'ar->thermal.cdev = cdev' a few lines above in order for this to be done
-in 'ath11k_thermal_unregister()' which is called in the error handling
-path.
+Second, if get_user_pages_fast() failed we should unpinned num_pinned
+pages, no point of checking till num_pages.
 
-Fixes: 2a63bbca06b2 ("ath11k: add thermal cooling device support")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+This will address both.
+
+Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
 ---
-I'm not 100% confident with this patch.
+ drivers/virt/fsl_hypervisor.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-- When calling 'ath11k_thermal_unregister()', we try to release some
-  resources that have not been allocated yet. I don't know if it can be an
-  issue or not.
-- I think that we should propagate the error code, instead of forcing
-  -EINVAL.
----
- drivers/net/wireless/ath/ath11k/thermal.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath11k/thermal.c b/drivers/net/wireless/ath/ath11k/thermal.c
-index 259dddbda2c7..5a7e150c621b 100644
---- a/drivers/net/wireless/ath/ath11k/thermal.c
-+++ b/drivers/net/wireless/ath/ath11k/thermal.c
-@@ -174,9 +174,12 @@ int ath11k_thermal_register(struct ath11k_base *sc)
- 		if (IS_ERR(cdev)) {
- 			ath11k_err(sc, "failed to setup thermal device result: %ld\n",
- 				   PTR_ERR(cdev));
--			return -EINVAL;
-+			ret = -EINVAL;
-+			goto err_thermal_destroy;
- 		}
+diff --git a/drivers/virt/fsl_hypervisor.c b/drivers/virt/fsl_hypervisor.c
+index 1b0b11b..ea344d7 100644
+--- a/drivers/virt/fsl_hypervisor.c
++++ b/drivers/virt/fsl_hypervisor.c
+@@ -157,7 +157,7 @@ static long ioctl_memcpy(struct fsl_hv_ioctl_memcpy __user *p)
  
-+		ar->thermal.cdev = cdev;
-+
- 		ret = sysfs_create_link(&ar->hw->wiphy->dev.kobj, &cdev->device.kobj,
- 					"cooling_device");
- 		if (ret) {
-@@ -184,7 +187,6 @@ int ath11k_thermal_register(struct ath11k_base *sc)
- 			goto err_thermal_destroy;
- 		}
+ 	unsigned int i;
+ 	long ret = 0;
+-	int num_pinned; /* return value from get_user_pages() */
++	int num_pinned = 0; /* return value from get_user_pages() */
+ 	phys_addr_t remote_paddr; /* The next address in the remote buffer */
+ 	uint32_t count; /* The number of bytes left to copy */
  
--		ar->thermal.cdev = cdev;
- 		if (!IS_REACHABLE(CONFIG_HWMON))
- 			return 0;
+@@ -293,7 +293,7 @@ static long ioctl_memcpy(struct fsl_hv_ioctl_memcpy __user *p)
  
+ exit:
+ 	if (pages) {
+-		for (i = 0; i < num_pages; i++)
++		for (i = 0; i < num_pinned; i++)
+ 			if (pages[i])
+ 				put_page(pages[i]);
+ 	}
 -- 
-2.25.1
+1.9.1
 
