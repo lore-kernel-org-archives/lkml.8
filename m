@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D09B0CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC7DCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8AC1206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AD1D20753
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363738;
-	bh=Utj4unmRqlPXrHEzY9x3fEDqoQcq55JvcGGoPofXDVw=;
+	s=default; t=1589363741;
+	bh=lzC80R2tk7ApyrTkRZ63q8mqBzSTeWMMDyNZcdjk2vQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1CnF2+MWKfzvMACQnfwOB0pkNiSLePz+SOTbYtBxOZnBT3PDDIn/VnvWuukBwkYjk
-	 9q7gi9bcbxSgSp48A49a5REL7oQtPRIuHoiB7yraocfcd2H2xSUd0K3d48qc8OSd17
-	 4fQ9/deGpWx52sIoYHcJXu9OpqGe9rLIwY6+hQ+A=
+	b=ElC0Zxki6OEJ4MgA1EIk7rNr8yvsx6SN2ET/B3bkK4pyWq74CkxK5V7mf6fwioyPy
+	 l3W9Z4TipwZAOTWoXJJgeiYlfrBIgsrBudv2LSo72poHCy8G3RWiGd5xrTbrBARarU
+	 J+eGT+C6BOwRyd9LlOKC36+s9bAhV/O8n3enPgRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388291AbgEMJzh (ORCPT
+        id S2388295AbgEMJzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:55:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58772 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:55:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388280AbgEMJze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:55:34 -0400
+        id S2388289AbgEMJzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:55:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 821D724939;
-        Wed, 13 May 2020 09:55:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBF9420575;
+        Wed, 13 May 2020 09:55:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363734;
-        bh=Utj4unmRqlPXrHEzY9x3fEDqoQcq55JvcGGoPofXDVw=;
+        s=default; t=1589363736;
+        bh=lzC80R2tk7ApyrTkRZ63q8mqBzSTeWMMDyNZcdjk2vQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s0JM+9UQkjOjPbLEq77qWtYUZQ4gzxIlNEKoDyrelLcqMLnuOk45Sf7Xvb00P13Jw
-         6mqNNAiddrvwQM3pV5sHmN4eBsPmw0nTR2kZzg6sKJMYtiXsDVjvb1lQlCMu+bdE7K
-         8lO4rugAV7X7aiaSBoyEvT6FFungk+9vIDPydNZY=
+        b=vuLKsVfMfyXVtLZlzTJK/V7nBRsQC1faguSFRH7LUDmNi+rzuUQzQUsaI9LKYi6cL
+         EKQWHJ2d9bDEWNszN9tcpB2/Qec8EuJeHT654Whx4lWZlZ1HLEJqPvbfojvrryQV92
+         BXxt3rhXi1BAoOIY/rfyMkmd8mULUY8uCvvlyzS8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
-        Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>
-Subject: [PATCH 5.6 103/118] x86/unwind/orc: Fix error path for bad ORC entry type
-Date:   Wed, 13 May 2020 11:45:22 +0200
-Message-Id: <20200513094426.285709112@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.6 068/118] tracing: Add a vmalloc_sync_mappings() for safe measure
+Date:   Wed, 13 May 2020 11:44:47 +0200
+Message-Id: <20200513094423.803385902@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -65,41 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit a0f81bf26888048100bf017fadf438a5bdffa8d8 upstream.
+commit 11f5efc3ab66284f7aaacc926e9351d658e2577b upstream.
 
-If the ORC entry type is unknown, nothing else can be done other than
-reporting an error.  Exit the function instead of breaking out of the
-switch statement.
+x86_64 lazily maps in the vmalloc pages, and the way this works with per_cpu
+areas can be complex, to say the least. Mappings may happen at boot up, and
+if nothing synchronizes the page tables, those page mappings may not be
+synced till they are used. This causes issues for anything that might touch
+one of those mappings in the path of the page fault handler. When one of
+those unmapped mappings is touched in the page fault handler, it will cause
+another page fault, which in turn will cause a page fault, and leave us in
+a loop of page faults.
 
-Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Jones <dsj@fb.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lore.kernel.org/r/a7fa668ca6eabbe81ab18b2424f15adbbfdc810a.1587808742.git.jpoimboe@redhat.com
+Commit 763802b53a42 ("x86/mm: split vmalloc_sync_all()") split
+vmalloc_sync_all() into vmalloc_sync_unmappings() and
+vmalloc_sync_mappings(), as on system exit, it did not need to do a full
+sync on x86_64 (although it still needed to be done on x86_32). By chance,
+the vmalloc_sync_all() would synchronize the page mappings done at boot up
+and prevent the per cpu area from being a problem for tracing in the page
+fault handler. But when that synchronization in the exit of a task became a
+nop, it caused the problem to appear.
+
+Link: https://lore.kernel.org/r/20200429054857.66e8e333@oasis.local.home
+
+Cc: stable@vger.kernel.org
+Fixes: 737223fbca3b1 ("tracing: Consolidate buffer allocation code")
+Reported-by: "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
+Suggested-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/unwind_orc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -531,7 +531,7 @@ bool unwind_next_frame(struct unwind_sta
- 	default:
- 		orc_warn("unknown .orc_unwind entry type %d for ip %pB\n",
- 			 orc->type, (void *)orig_ip);
--		break;
-+		goto err;
- 	}
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -8452,6 +8452,19 @@ static int allocate_trace_buffers(struct
+ 	 */
+ 	allocate_snapshot = false;
+ #endif
++
++	/*
++	 * Because of some magic with the way alloc_percpu() works on
++	 * x86_64, we need to synchronize the pgd of all the tables,
++	 * otherwise the trace events that happen in x86_64 page fault
++	 * handlers can't cope with accessing the chance that a
++	 * alloc_percpu()'d memory might be touched in the page fault trace
++	 * event. Oh, and we need to audit all other alloc_percpu() and vmalloc()
++	 * calls in tracing, because something might get triggered within a
++	 * page fault trace event!
++	 */
++	vmalloc_sync_mappings();
++
+ 	return 0;
+ }
  
- 	/* Find BP: */
 
 
