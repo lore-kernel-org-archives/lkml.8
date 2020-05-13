@@ -2,109 +2,128 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCFAC2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 922BAC2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72F6220769
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71DD920769
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:43:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="TG2XL/Lz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731620AbgEMLnD (ORCPT
+        id S1731560AbgEMLn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 07:43:03 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57712 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726743AbgEMLnC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 07:43:02 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id C55B28030886;
-        Wed, 13 May 2020 11:42:59 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id aNaijVBmqsGE; Wed, 13 May 2020 14:42:59 +0300 (MSK)
-Date:   Wed, 13 May 2020 14:42:58 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 00/17] spi: dw: Add generic DW DMA controller support
-Message-ID: <20200513114258.ataikbtajhyty5y3@mobilestation>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200508133336.GK4820@sirena.org.uk>
- <20200512200733.bdbbhkjkwjd5yzqq@mobilestation>
- <20200513102324.GB4803@sirena.org.uk>
- <20200513110407.uaosfxebsgnllsf4@mobilestation>
- <20200513112116.GE4803@sirena.org.uk>
+        Wed, 13 May 2020 07:43:27 -0400
+Received: from ns.mm-sol.com ([37.157.136.199]:33783 "EHLO extserv.mm-sol.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730865AbgEMLn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 07:43:26 -0400
+Received: from [192.168.1.2] (212-5-158-106.ip.btc-net.bg [212.5.158.106])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id 9C99ECF91;
+        Wed, 13 May 2020 14:43:22 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1589370203; bh=SfnCIB+8RFBof4rOiXKZEaO1H4Zs48OzWFikIfT1iwQ=;
+        h=Subject:To:Cc:From:Date:From;
+        b=TG2XL/Lz+6wKPzf06k6uckSQT66ndTZ1r1+kKU7cOezGqpnPjSF26SMuR02fm/M+z
+         gwN2M1aaB1stRmsmmmGRGdrmvS3Sdycjc5/r0MOSzPkvgby3hl79aeF7JlDzIybZq5
+         +vlWZrLULb0105fVqQpL/230Zp0eGCTCIl1oMm2rw7QUJGV4XJLwNEon4QwdRXdoP+
+         VDE6otKk9QjNaoMaoWnpaNOmW38mXTtqz+aM9gxjNzKcgwL8DbrwAEUD1Le9NKmNBs
+         NkCjPEYfa2+wEpX8EUffhfbT1OS9RMT2rFXja3EJZ1xL0HBBH0i0JChMhW7+la+qJO
+         p5XGs0TOaKsMQ==
+Subject: Re: R: [PATCH v3 08/11] devicetree: bindings: pci: document PARF
+ params bindings
+To:     Rob Herring <robh@kernel.org>, ansuelsmth@gmail.com
+Cc:     'Bjorn Andersson' <bjorn.andersson@linaro.org>,
+        'Andy Gross' <agross@kernel.org>,
+        'Bjorn Helgaas' <bhelgaas@google.com>,
+        'Mark Rutland' <mark.rutland@arm.com>,
+        'Lorenzo Pieralisi' <lorenzo.pieralisi@arm.com>,
+        'Andrew Murray' <amurray@thegoodpenguin.co.uk>,
+        'Philipp Zabel' <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200430220619.3169-1-ansuelsmth@gmail.com>
+ <20200430220619.3169-9-ansuelsmth@gmail.com> <20200507181044.GA15159@bogus>
+ <062301d624a6$8be610d0$a3b23270$@gmail.com> <20200512154544.GA823@bogus>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Message-ID: <99f42001-0f41-5e63-f6ad-2e744ec86d36@mm-sol.com>
+Date:   Wed, 13 May 2020 14:43:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200513112116.GE4803@sirena.org.uk>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200512154544.GA823@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 12:21:16PM +0100, Mark Brown wrote:
-> On Wed, May 13, 2020 at 02:04:07PM +0300, Serge Semin wrote:
-> > On Wed, May 13, 2020 at 11:23:24AM +0100, Mark Brown wrote:
-> 
-> > > The conversion to YAML format should be the very last thing in the patch
-> > > series,
-> 
-> > Hm, haven't heard about this requirement. Could you point me out to a doc or
-> > some discussion concerning this for future reference? It's not a first DT
-> > conversion patch I've submitted and non of them were addressed with such
-> > request. I do understand that the order of DT concerning patches can be
-> > important and agree to fix it by updating the original legacy binding first,
-> > then perform a conversion. But placing the conversion in a tail of the series
-> > just seems unnecessary. The patch can be dropped from any place of the series
-> > if for some reason Rob would be late with review.
-> 
-> This is a practical observation based on the fact that there is a huge
-> backlog of reviews of DT binding conversions and that those conversions
-> typically go through several review cycles and that not everyone who's
-> sending patches to the kernel is fully up to speed on processes or has
-> strong English.  By telling people (including other people who find
-> instructions on the list) to put the conversion right at the end of the
-> series I am avoiding any ambiguity or confusion about ordering with
-> regard to any other patches to the DT, including any new patches that
-> get added to the series.
-> 
-> > Personally I prefer placing all DT changes in the head of the series, so Rob
-> > wouldn't need to search through the whole patchset looking for the DT-related
-> > patches.
-> 
-> Ideally the YAML conversions would be done entirely separately to other
-> development rather than as part of a bigger series, they're pretty much
-> orthogonal anyway.  Sadly there's obvious content collisions with any
-> new development that adds DT stuff so that's not always the most
-> practical thing.
 
-Ok. I see your point. I'll move the conversion patch to the tail of the series
-after rebasing the patchset on top of the spi/for-next branch. Thanks for
-clarification.
 
--Sergey
+On 5/12/20 6:45 PM, Rob Herring wrote:
+> On Thu, May 07, 2020 at 09:34:35PM +0200, ansuelsmth@gmail.com wrote:
+>>> On Fri, May 01, 2020 at 12:06:15AM +0200, Ansuel Smith wrote:
+>>>> It is now supported the editing of Tx De-Emphasis, Tx Swing and
+>>>> Rx equalization params on ipq8064. Document this new optional params.
+>>>>
+>>>> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+>>>> ---
+>>>>  .../devicetree/bindings/pci/qcom,pcie.txt     | 36 +++++++++++++++++++
+>>>>  1 file changed, 36 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>>> b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>>>> index 6efcef040741..8cc5aea8a1da 100644
+>>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>>>> @@ -254,6 +254,42 @@
+>>>>  			- "perst-gpios"	PCIe endpoint reset signal line
+>>>>  			- "wake-gpios"	PCIe endpoint wake signal line
+>>>>
+>>>> +- qcom,tx-deemph-gen1:
+>>>> +	Usage: optional (available for ipq/apq8064)
+>>>> +	Value type: <u32>
+>>>> +	Definition: Gen1 De-emphasis value.
+>>>> +		    For ipq806x should be set to 24.
+>>>
+>>> Unless these need to be tuned per board, then the compatible string for
+>>> ipq806x should imply all these settings.
+>>>
+>>
+>> It was requested by v2 to make this settings tunable. These don't change are
+>> all the same for every ipq806x SoC. The original implementation had this 
+>> value hardcoded for ipq806x. Should I restore this and drop this patch?
+> 
+> Yes, please.
+
+I still think that the values for tx deemph and tx swing should be
+tunable. But I can live with them in the driver if they not break
+support for apq8064.
+
+The default values in the registers for apq8064 and ipq806x are:
+
+			default		your change
+TX_DEEMPH_GEN1		21		24
+TX_DEEMPH_GEN2_3_5DB	21		24
+TX_DEEMPH_GEN2_6DB	32		34
+
+TX_SWING_FULL		121		120
+TX_SWING_LOW		121		120
+
+So until now (without your change) apq8064 worked with default values.
+
+> 
+> Rob
+> 
+
+-- 
+regards,
+Stan
