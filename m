@@ -2,101 +2,91 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB84C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 952A9CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4CC206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:38:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MxYtgadZ"
+	by mail.kernel.org (Postfix) with ESMTP id 6D64C206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:39:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730953AbgEMJib (ORCPT
+        id S1732463AbgEMJjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:38:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47476 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726532AbgEMJib (ORCPT
+        Wed, 13 May 2020 05:39:55 -0400
+Received: from dispatch1-us1.ppe-hosted.com ([148.163.129.52]:39352 "EHLO
+        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728224AbgEMJjz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:38:31 -0400
-Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A2D7C061A0C;
-        Wed, 13 May 2020 02:38:31 -0700 (PDT)
-Received: by mail-vk1-xa42.google.com with SMTP id v23so4080736vke.13;
-        Wed, 13 May 2020 02:38:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wBsI8/q9tCGEEr55DJmDyAoQAE0dfC+ZmLFYnoZKRCY=;
-        b=MxYtgadZIuiNwe154KOVvjuls/0cwiolNG2D9UH9scIN/ePCk8mhg33byFHHVmf9Lo
-         5791+hCe5kOsHfd6lXsklQ29x9dARBVEQbQw0YFuNxd33xvKOHa7gJwNSPy1Jy5EejHS
-         ZFIIXzSsh2EXBM3S0HNPbUxKCntLv0s6rn7+oNVTxCKOSl96yrhvm95FdSMfJbQOLQor
-         byRRgFAILKpv4Xpms63nR0Qs7sL2syoxP3R1+VdzWUUFzS6aWc/2yC06x0YO3WPLlEQk
-         PVfLyEBljZ/VHiiSZw9omyHNLvAjGok1IICKKgT2A6KdNWPEmxXBJHlr/n85hlcTuzbv
-         vlLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wBsI8/q9tCGEEr55DJmDyAoQAE0dfC+ZmLFYnoZKRCY=;
-        b=aboneyqEef7AjCzlUdUFN5EjIKqiyR4735bc8mal+ggsuQ22Hrfyu5tP9/YTtKvnbf
-         LtQriJVfzUu7fqfbkU6IInkq3cwgF+0aVjD266Xf34/cd3GVIgB7fbbSH8hQuJpxsNX6
-         HWNqB+TiiKjJr88OmS/1ocxfTwD6aD8VF4djxFcxz8TuOjzKzY6aXRtXxQ5DhJwrwQ3m
-         DDn52QpiN0oGKi62wb4ZCdey5U7ip5NNiEq6d9mouEWXqnMdklyE17tHQh0QB4kqUI36
-         IRoApq+QnW29ph2BqweNq3LTzf5dA6e7JS17milfN3qgLdJ2de6O+BGJHUafgRRWQ3k/
-         swAA==
-X-Gm-Message-State: AGi0PuZumfmhwyx1DjfkHoipmn7QBxRJEpl+2E6Tzexsey3JjwAfI4mc
-        FxVIpiIfjJyXAM04ZCLRxux8/SFfkV2AvJZi3H4rkg==
-X-Google-Smtp-Source: APiQypKmaaAa47QovnAzyFDTLeQNTPb9fvrKbCBsSUUUr20M3otbNDJLYwk5l9cb4/1Lsw0VMkkPYL0pPw04l6brm5E=
-X-Received: by 2002:a1f:a454:: with SMTP id n81mr20221401vke.6.1589362710294;
- Wed, 13 May 2020 02:38:30 -0700 (PDT)
+        Wed, 13 May 2020 05:39:55 -0400
+Received: from mx1-us1.ppe-hosted.com (unknown [10.7.65.60])
+        by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id B6E226006B;
+        Wed, 13 May 2020 09:39:54 +0000 (UTC)
+Received: from us4-mdac16-14.ut7.mdlocal (unknown [10.7.65.238])
+        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id B4A712009A;
+        Wed, 13 May 2020 09:39:54 +0000 (UTC)
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from mx1-us1.ppe-hosted.com (unknown [10.7.66.35])
+        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 487931C004F;
+        Wed, 13 May 2020 09:39:54 +0000 (UTC)
+Received: from webmail.solarflare.com (uk.solarflare.com [193.34.186.16])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id CB35D48005F;
+        Wed, 13 May 2020 09:39:53 +0000 (UTC)
+Received: from [10.17.20.203] (10.17.20.203) by ukex01.SolarFlarecom.com
+ (10.17.10.4) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 13 May
+ 2020 10:39:47 +0100
+Subject: Re: [PATCH][next] sfc: fix dereference of table before it is null
+ checked
+To:     Colin King <colin.king@canonical.com>,
+        Solarflare linux maintainers <linux-net-drivers@solarflare.com>,
+        Martin Habets <mhabets@solarflare.com>,
+        "David S . Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>
+CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200512171355.221810-1-colin.king@canonical.com>
+From:   Edward Cree <ecree@solarflare.com>
+Message-ID: <680245f9-e26d-87e1-6e52-138302950e06@solarflare.com>
+Date:   Wed, 13 May 2020 10:39:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20200316163907.13709-1-wsa+renesas@sang-engineering.com> <20200512162837.GJ13516@ninjato>
-In-Reply-To: <20200512162837.GJ13516@ninjato>
-From:   Emil Velikov <emil.l.velikov@gmail.com>
-Date:   Wed, 13 May 2020 10:35:49 +0100
-Message-ID: <CACvgo526Ut+rpi9TXP4jZKPZmRUbnh8U-ETj7VTAz9ykut5Uig@mail.gmail.com>
-Subject: Re: [PATCH 0/2] drm: encoder_slave: some updates
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-renesas-soc@vger.kernel.org,
-        Dave Airlie <airlied@redhat.com>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200512171355.221810-1-colin.king@canonical.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-Originating-IP: [10.17.20.203]
+X-ClientProxiedBy: ocex03.SolarFlarecom.com (10.20.40.36) To
+ ukex01.SolarFlarecom.com (10.17.10.4)
+X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1020-25416.003
+X-TM-AS-Result: No-3.998300-8.000000-10
+X-TMASE-MatchedRID: +c13yJDs902Q0e+Zbzl6QvZvT2zYoYOwC/ExpXrHizzalJpeFb3A2AzC
+        4kGpAim5MfxNln1FsCZEM+a80Fik2m0EKIw8Yc1pmvnKSb020hxXjjsM2/DfxsbJavo8UnfR9WX
+        m+yhJKyhrLBQyc0DNWpGTpe1iiCJq71zr0FZRMbCWlioo2ZbGwdmzcdRxL+xwKrauXd3MZDVu4X
+        ahMwgGvMSZYRZ6lSrPRIFUqxkBLlV8Z3pE9vTn43HN0Hf8/0hAYa6zuRJ7MeptVPWBZvQASn3zG
+        QdUBqY5Ut3qL8UMiT/ktbyhRJHSSQbEQIfFpkwHBtlgFh29qnpKzBwu5JpklnOUuoTXM7r4Qwym
+        txuJ6y0=
+X-TM-AS-User-Approved-Sender: Yes
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--3.998300-8.000000
+X-TMASE-Version: SMEX-12.5.0.1300-8.5.1020-25416.003
+X-MDID: 1589362794-1a_JcRE-r6Ol
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
-
-On Wed, 13 May 2020 at 10:10, Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
+On 12/05/2020 18:13, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 >
-> On Mon, Mar 16, 2020 at 05:39:05PM +0100, Wolfram Sang wrote:
-> > While converting I2C users to new APIs, I found a refcounting problem in
-> > the encoder_slave implementation. This series fixes it and converts to
-> > the new API.
-> >
-> > Based on linux-next and only build tested.
-> >
-> > Wolfram Sang (2):
-> >   drm: encoder_slave: fix refcouting error for modules
-> >   drm: encoder_slave: use new I2C API
-> >
-> >  drivers/gpu/drm/drm_encoder_slave.c | 15 +++++----------
-> >  1 file changed, 5 insertions(+), 10 deletions(-)
+> Currently pointer table is being dereferenced on a null check of
+> table->must_restore_filters before it is being null checked, leading
+> to a potential null pointer dereference issue.  Fix this by null
+> checking table before dereferencing it when checking for a null
+> table->must_restore_filters.
 >
-> Is there someone I should add to the CC list maybe?
->
-The series is:
-Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
-
-Unless someone beats me to it, I'll commit them to drm-misc later today.
-
--Emil
+> Addresses-Coverity: ("Dereference before null check")
+> Fixes: e4fe938cff04 ("sfc: move 'must restore' flags out of ef10-specific nic_data")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Edward Cree <ecree@solarflare.com>
