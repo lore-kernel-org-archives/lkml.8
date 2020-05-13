@@ -2,97 +2,94 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9FAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D8BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8ACFE205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABE11205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:14:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lHuOQ7kU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="w3mvih03"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389865AbgEMRNX (ORCPT
+        id S2389864AbgEMROl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 13:13:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33844 "EHLO
+        Wed, 13 May 2020 13:14:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389431AbgEMRNX (ORCPT
+        with ESMTP id S1732731AbgEMROk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 13:13:23 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E81FC061A0C;
-        Wed, 13 May 2020 10:13:23 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id k7so6394121pjs.5;
-        Wed, 13 May 2020 10:13:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CESDIXK5iziXykt0Y/ez2vWrIKygUcVw6M6S2Ji/JxM=;
-        b=lHuOQ7kUnqQ2J0pAG3sD5Jmpiv/ZRrptG88vVBX3a6kKvOnEj9jay5x80zP7d27cU0
-         hsnrdGm01EqSgogJIz7up6/iww5HRrxBkHIrnvZVX980yyqqQVn5hsIq3aNQdOkMkWZq
-         sshgStyWmPTxxWtzMEIG5deLjiaPpOuoZcaE6NZFHEJS9D/zEvmjLaB6z/kL6pz1AbCi
-         w7s06b1aApuoQjttFuvOQQVG6undKKO+yPHP2N8lHCAgxRX0hmmLOYSQrRCq8Zs0yu1D
-         L2O9cp3DoSh0+CO5hrgxoXAc6Y8DKaAN93O88wgIQc2QyQ7DQty+5Xd3+nxK9AoYj2YC
-         kxTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CESDIXK5iziXykt0Y/ez2vWrIKygUcVw6M6S2Ji/JxM=;
-        b=VE5kdUUFQv3Dp+a9XYbyIeSSEjdYCAvxC1ZAcTe9SAIXRcI4n5tEax7jLzuV4INc3s
-         6X877dgG/p0olmP4KU/xAVowjRybtY+vRKDHXy15EnSR3OTNFg8uRnGpGZMrQSslWkX6
-         0gQ27pbSv7TDrayGq5FhN/joLvmXUv4uqg9jZtycfPipBtjjytHAWr0EqIAF9/AHcQtb
-         C/XsGiTeqNxfoRx7K7XQgCqUCNTcyFsJvxNCQFYUzKFRrqV27INACOJvWmkfuATJL4Mi
-         GIEp7AH/90HbA7TP5KLo1drRg+TzdYFXXoqlr6F6Ix/CGmWP55PVqkSR3RbGV2KS/jgC
-         tcHw==
-X-Gm-Message-State: AGi0PuZO/pmbJ8gL3/fTlNd2IfpsCB4LqZVDltZ3cIUius0/XH069rW5
-        wQfZM5K4CEg7t/7NYoy0W1bp2SsDagDlhYtjWG00CcK9J40=
-X-Google-Smtp-Source: APiQypJb2ISh0rO+fH9GikkKZila88U9u2hScbncsFLhBKJ17A2wWU2g4j/yfe5q/bd2kIKf2YRxCXnmezeOzQ619E0=
-X-Received: by 2002:a17:90b:3717:: with SMTP id mg23mr36843294pjb.129.1589390002549;
- Wed, 13 May 2020 10:13:22 -0700 (PDT)
+        Wed, 13 May 2020 13:14:40 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 513FFC061A0C;
+        Wed, 13 May 2020 10:14:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HStHYMCHMAld2jAQY6gz1O8fAw0LWyJlNm7iC5JM3JA=; b=w3mvih03C8N35b+4Bo9Ot7tr2
+        jgtW5Sh5X8sNAYy+j5tqw4QcbGeYxbFikVgq8C+oIlEF5CjnIMqJO1PWLeN7cBnMjSyiV3x+FcIAf
+        US/X62EecXyz/0yIwlFJMTbYLsLBo89lYTmYwkBOQs9mSvd6WpfW9toFpDcXegZcAnjyT0TyrCNsz
+        WuYZRUoazDCr7Of5oCHqIJ0mCfcP4jmBLBcT3DsE0L9yqVM4K+VY0vrT9Y022pjMxYVkkOzXcarUr
+        Y7jc3k7yCWBKIsDshlPTRoynB/MT993/+xWLOX+Y8l2oDGgTLuRwTnoAHxtwI3n/d4/YDrnTgy49T
+        nHSAJfAkw==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:39836)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jYuxe-0005Lq-1O; Wed, 13 May 2020 18:14:29 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jYuxY-0007xA-TL; Wed, 13 May 2020 18:14:20 +0100
+Date:   Wed, 13 May 2020 18:14:20 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Doug Berger <opendmb@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 1/4] net: ethernet: validate pause autoneg
+ setting
+Message-ID: <20200513171420.GL1551@shell.armlinux.org.uk>
+References: <1589243050-18217-1-git-send-email-opendmb@gmail.com>
+ <1589243050-18217-2-git-send-email-opendmb@gmail.com>
+ <20200512004714.GD409897@lunn.ch>
+ <ae63b295-b6e3-6c34-c69d-9e3e33bf7119@gmail.com>
+ <20200512185503.GD1551@shell.armlinux.org.uk>
+ <0cf740ed-bd13-89d5-0f36-1e5305210e97@gmail.com>
+ <20200513053405.GE1551@shell.armlinux.org.uk>
+ <20200513092050.GB1605@shell.armlinux.org.uk>
+ <20200513134925.GE499265@lunn.ch>
 MIME-Version: 1.0
-References: <1589388975-15499-1-git-send-email-alencar.fmce@imbel.gov.br>
-In-Reply-To: <1589388975-15499-1-git-send-email-alencar.fmce@imbel.gov.br>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 13 May 2020 20:13:16 +0300
-Message-ID: <CAHp75VeycGutrfTCrVP-9V61ag-KbNHfykQXHWU-8hwEFOerMQ@mail.gmail.com>
-Subject: Re: [PATCH v2] video: fbdev: ssd1307fb: Added support to Column offset
-To:     Rodrigo Rolim Mendes de Alencar <455.rodrigo.alencar@gmail.com>
-Cc:     linux-fbdev@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rodrigo Rolim Mendes de Alencar <alencar.fmce@imbel.gov.br>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513134925.GE499265@lunn.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 7:56 PM Rodrigo Rolim Mendes de Alencar
-<455.rodrigo.alencar@gmail.com> wrote:
->
-> This patch provides support for displays like VGM128064B0W10,
-> which requires a column offset of 2, i.e., its segments starts
-> in SEG2 and ends in SEG129.
+On Wed, May 13, 2020 at 03:49:25PM +0200, Andrew Lunn wrote:
+> Hi Russell, Doug
+> 
+> With netlink ethtool we have the possibility of adding a new API to
+> control this. And we can leave the IOCTL API alone, and the current
+> ethtool commands. We can add a new command to ethtool which uses the new API.
+> 
+> Question is, do we want to do this? Would we be introducing yet more
+> confusion, rather than making the situation better?
 
-Also, include Rob as well into Cc.
-
-...
-
-> +       if (device_property_read_u32(node, "solomon,col-offset", &par->col_offset))
-> +               par->col_offset = 0;
-> +
->         if (device_property_read_u32(dev, "solomon,com-offset", &par->com_offset))
->                 par->com_offset = 0;
-
-Have you ever compile it?
+The conclusion I came to was that I would document the deficiencies
+and do no more; I think people are used to its current quirky
+behaviour.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
