@@ -2,94 +2,102 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D8BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E02DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABE11205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA5DB205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:17:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="w3mvih03"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lB+abop1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389864AbgEMROl (ORCPT
+        id S2389853AbgEMRRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 13:14:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34040 "EHLO
+        Wed, 13 May 2020 13:17:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732731AbgEMROk (ORCPT
+        with ESMTP id S1732731AbgEMRRy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 13:14:40 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 513FFC061A0C;
-        Wed, 13 May 2020 10:14:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=HStHYMCHMAld2jAQY6gz1O8fAw0LWyJlNm7iC5JM3JA=; b=w3mvih03C8N35b+4Bo9Ot7tr2
-        jgtW5Sh5X8sNAYy+j5tqw4QcbGeYxbFikVgq8C+oIlEF5CjnIMqJO1PWLeN7cBnMjSyiV3x+FcIAf
-        US/X62EecXyz/0yIwlFJMTbYLsLBo89lYTmYwkBOQs9mSvd6WpfW9toFpDcXegZcAnjyT0TyrCNsz
-        WuYZRUoazDCr7Of5oCHqIJ0mCfcP4jmBLBcT3DsE0L9yqVM4K+VY0vrT9Y022pjMxYVkkOzXcarUr
-        Y7jc3k7yCWBKIsDshlPTRoynB/MT993/+xWLOX+Y8l2oDGgTLuRwTnoAHxtwI3n/d4/YDrnTgy49T
-        nHSAJfAkw==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:39836)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jYuxe-0005Lq-1O; Wed, 13 May 2020 18:14:29 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jYuxY-0007xA-TL; Wed, 13 May 2020 18:14:20 +0100
-Date:   Wed, 13 May 2020 18:14:20 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Doug Berger <opendmb@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 1/4] net: ethernet: validate pause autoneg
- setting
-Message-ID: <20200513171420.GL1551@shell.armlinux.org.uk>
-References: <1589243050-18217-1-git-send-email-opendmb@gmail.com>
- <1589243050-18217-2-git-send-email-opendmb@gmail.com>
- <20200512004714.GD409897@lunn.ch>
- <ae63b295-b6e3-6c34-c69d-9e3e33bf7119@gmail.com>
- <20200512185503.GD1551@shell.armlinux.org.uk>
- <0cf740ed-bd13-89d5-0f36-1e5305210e97@gmail.com>
- <20200513053405.GE1551@shell.armlinux.org.uk>
- <20200513092050.GB1605@shell.armlinux.org.uk>
- <20200513134925.GE499265@lunn.ch>
+        Wed, 13 May 2020 13:17:54 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01696C061A0C;
+        Wed, 13 May 2020 10:17:53 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id w65so25355pfc.12;
+        Wed, 13 May 2020 10:17:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2++y918DL6PTyMaBo9uWOYP73v5btFVUqOxYUo6Bzug=;
+        b=lB+abop11oXqetyMDjeQ+mgP1UCQEbaWzlG2CTB7t4rromwp/ZK1Bf+3X2Z9T3UURu
+         nNtRu3PTsVC4F9DJZmQndwAJP+xyjIlYc3hLu/37qTl/wIjP9zAWJaZgK7EPs/MwFhMB
+         82ALQaSyAfUgoEFucO/nEYzdCAaWzPaa/uxramJ8sdm68DGfDIOqXmUfJzU8Lb0Ahx+q
+         s4YbFfJYYu0V19R4ZrU7Kk+dmV5aVIZfJfBWqUtNlXffOI7LuP8/e+ay1n6ROdyc/EuP
+         iw43akFsbKDBMu0rcCUbYCmnJ4vlNmQaa+0emilBElguLzjmihAz4ZyFChPxOOlmPoC/
+         FpSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2++y918DL6PTyMaBo9uWOYP73v5btFVUqOxYUo6Bzug=;
+        b=cThWce+7kUzBbKi0t6q+Csg9TouyoQeVAcy8pw2Tz3lrWtcs9sfjUE2d8jpQ9xq8MI
+         iqp0ebGNTa5KGwjTzg0ef9SP2Ht5NJ7ERzh2qusZQcxgb7iY0iTRw0b6QahoTc0191+W
+         yJIsu2ZlCVbic00cUDXoOrlG6eJjOSK45OkA6Lv0PH7sqQT2iF/0iK9MVEMeFs3PnNU+
+         up/SzN/KK0yPLXY5sroWSS5vcmrQUECl/wrDtVnuLooACy4CSVRjzmsQqxsrWEWitQLy
+         FxQsc/40EHEo5FnWXDUExV9nKu1A7bRsUAhrB+enwRqDsbjtfKG/MN3L2TEfqyVyHTc2
+         IGdA==
+X-Gm-Message-State: AOAM530UwWHUrq4P42PEGQJC5Ffzawct0PDGjzb0e7S7VHpDIb9zU7TK
+        lWmJEkffjH+VLHtxc7JY+B6ToXatVnxq5fGNu/A=
+X-Google-Smtp-Source: ABdhPJx3ye+2uJcTGtYr1d0+pqiV/lh8ldJSlQrDipXGD+anGJWN0wqNeyc34Wt/CdrT8pyL2Xjt02E+0HIpqvdeFQA=
+X-Received: by 2002:a62:5ec7:: with SMTP id s190mr316240pfb.130.1589390273448;
+ Wed, 13 May 2020 10:17:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513134925.GE499265@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200512204009.4751-1-bernhardu@mailbox.org> <2656984b-3eec-c6d0-f992-8f1f8973fe3e@redhat.com>
+In-Reply-To: <2656984b-3eec-c6d0-f992-8f1f8973fe3e@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 13 May 2020 20:17:46 +0300
+Message-ID: <CAHp75VejzaZL26ztQMFGjAAMC3B8mkSnXSvGhyFeiHUbUUpp=w@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Add info for the Trekstor
+ Yourbook C11B
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     =?UTF-8?Q?Bernhard_=C3=9Cbelacker?= <bernhardu@mailbox.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Otmar Meier <otmarjun.meier@nexgo.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 03:49:25PM +0200, Andrew Lunn wrote:
-> Hi Russell, Doug
-> 
-> With netlink ethtool we have the possibility of adding a new API to
-> control this. And we can leave the IOCTL API alone, and the current
-> ethtool commands. We can add a new command to ethtool which uses the new API.
-> 
-> Question is, do we want to do this? Would we be introducing yet more
-> confusion, rather than making the situation better?
+On Tue, May 12, 2020 at 11:44 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 5/12/20 10:40 PM, Bernhard =C3=9Cbelacker wrote:
+> > Add touchscreen info for the Trekstor Yourbook C11B. It seems to
+> > use the same touchscreen as the Primebook C11, so we only add a new DMI
+> > match.
+> >
+> > Cc: Otmar Meier <otmarjun.meier@nexgo.de>
+> > Reported-and-tested-by: Otmar Meier <otmarjun.meier@nexgo.de>
+> > Signed-off-by: Bernhard =C3=9Cbelacker <bernhardu@mailbox.org>
+>
+> Thank you, patch looks good to me:
+>
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
 
-The conclusion I came to was that I would document the deficiencies
-and do no more; I think people are used to its current quirky
-behaviour.
+This doesn't apply to our for-next.
+Please, rebase, add Hans' tag and resend, thanks!
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+--=20
+With Best Regards,
+Andy Shevchenko
