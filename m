@@ -2,113 +2,105 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E078DC2D0F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 933C2C2D0FB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF8B3206CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:25:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SD72C28Y"
+	by mail.kernel.org (Postfix) with ESMTP id 665EF20718
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:28:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589340516;
+	bh=oXOtkflP/lPwOvtUdJ6IKZzypvTPv0rmUjbVn27O7IU=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=gJhwi1qP2f3XFxWMp+iUE+pOF2jN2/0Awaa6XablrDWOHIybgNpYl1gGl6M/5mn2U
+	 1kmQYXkDGquh1TPkdsWGNkmkS9qqa8koFNXTCGKwSL0A+c+aWrqXhB7HYJ3VzvP3bi
+	 zw+42J6Dsc1GqBTmbJCISatAUQ3A0KF+rFB0m6xQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728279AbgEMDZG (ORCPT
+        id S1728483AbgEMD2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 23:25:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725898AbgEMDZF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 23:25:05 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 110ADC061A0C;
-        Tue, 12 May 2020 20:25:05 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id w18so3554445ilm.13;
-        Tue, 12 May 2020 20:25:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i2hpSCEA71CdBoR8zyCf5TsQFdbDC/7JhU+YtBp8w/M=;
-        b=SD72C28YR1ZFgOrMY4hBeDisEq8Cnui1Bt30cjyF5urT9CHr5KTC5UShjWOESwR3kB
-         3hk9XToUwnUHuKcLDHEi0dnkVNfTjSd9LiZORhnINQAIG7MVwUSSELI2w17/oB7MVDOk
-         YPKjrnVJ4knRlH+2bfIfseuh4PFPk0afcJtvYtSMjAAdc4JmLgyoh63IZxQuvCv0sxYM
-         CXRV6eRr4uH1cNvQFVVv4+dYS7Uy4tcxChEFhPifECmVL2N43p92irilI3FQ1BC6hd9U
-         mf3f0LZrFEHim7woJiNc//I44ebLpS+mzG2NCUACpP50L0nYzFG85lCnMTxSUdCpP7Qz
-         vvpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i2hpSCEA71CdBoR8zyCf5TsQFdbDC/7JhU+YtBp8w/M=;
-        b=lmh/66GemW4v4XTGU/9A6qn/TDMPNqyr+oGWVplsRE2jeCO+DS3hcT0wORDJDR2E7u
-         HiI8gnaKbvx2+15wA063/eX5cJJyq7yl6x3+XGQETuxtstr6TxDsFjKhb0kLjVD0bjbo
-         yX3N4OpGmvYbe5Dy4zAPPEsNU/7OIf86d9cUJ6gbCARDpIlqI1UmdSRLDpAA8L6ZAfES
-         welOFnBo6ZX33OrwioPCY92eVd1QtcCSYRDtj8Zzbv0gyHiybOzfJ2ocFE761lSXO0t+
-         Ej5TLJ5nt+OW2vIL3p1l86Cxi/+Vru8Fj6zyi5CQZPzlJmbCi6AKbOsEuEXSOHNH1RPm
-         4YzA==
-X-Gm-Message-State: AGi0Pua5Tp01lOaov2YSgs4TRTKXmqzvS+A4v1xbocAyLbkqzvEuS4zv
-        8HN4/xiyuatTm6p62Tkl22E9O6uNir5WlZi8kek=
-X-Google-Smtp-Source: APiQypJnUo4uwgtS1g9yU7Bk0lrPGmYugPhbKHnO907ATbaaQs+jEqpVaMdl34GTTkUaypnqbRf9pMbdNEsZvV3eDB4=
-X-Received: by 2002:a92:8c4c:: with SMTP id o73mr12333010ild.172.1589340304245;
- Tue, 12 May 2020 20:25:04 -0700 (PDT)
+        Tue, 12 May 2020 23:28:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52158 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725898AbgEMD2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 23:28:35 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 243E1206E5;
+        Wed, 13 May 2020 03:28:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589340515;
+        bh=oXOtkflP/lPwOvtUdJ6IKZzypvTPv0rmUjbVn27O7IU=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=zlEH/FDD2RinraGixKSClRPcGfnSjghSk4v4R+4B+ZAXmghBlRTyvsmmXtbc0G6BQ
+         ZB+vfBe8S+5Za+ybXFkKvurp2uqtvqi6CAxJYWHr+hOIVt4lWKKDxIS4PSe3cciItL
+         MELXkF96N8Ia0QNckxFQN9SU3YZF26oIQgesSv38=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190906185931.19288-1-navid.emamdoost@gmail.com> <CA+ASDXMnp-GTkrT7B5O+dtopJUmGBay=Tn=-nf1LW1MtaVOr+w@mail.gmail.com>
-In-Reply-To: <CA+ASDXMnp-GTkrT7B5O+dtopJUmGBay=Tn=-nf1LW1MtaVOr+w@mail.gmail.com>
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Tue, 12 May 2020 22:24:53 -0500
-Message-ID: <CAEkB2EQf-Q+q9QSwwj=Q208yAJj5hhSDrDiHqyU3WeSod2Bo+Q@mail.gmail.com>
-Subject: Re: [PATCH] ath9k: release allocated buffer if timed out
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200511105556.5b13a4b4@canb.auug.org.au>
+References: <20200511105556.5b13a4b4@canb.auug.org.au>
+Subject: Re: linux-next: build failure after merge of the clk tree
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Date:   Tue, 12 May 2020 20:28:34 -0700
+Message-ID: <158934051438.215346.17117203400874095019@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Brian,
+Quoting Stephen Rothwell (2020-05-10 17:55:56)
+> Hi all,
+>=20
+> After merging the clk tree, today's linux-next build (arm
+> multi_v7_defconfig) failed like this:
+>=20
+> arch/arm/mach-mmp/time.c:37:10: fatal error: clock.h: No such file or dir=
+ectory
+>    37 | #include "clock.h"
+>       |          ^~~~~~~~~
+>=20
+> Caused by commit
+>=20
+>   e4d1fdf89751 ("ARM: mmp: Remove legacy clk code")
+>=20
+> I have disabled CONFIG_ARCH_MPP for today.  (For some reason, this
+> build error did not show up until several more trees had been merged
+> ...)
+>=20
 
-On Tue, May 12, 2020 at 11:57 AM Brian Norris <briannorris@chromium.org> wrote:
->
-> On Fri, Sep 6, 2019 at 11:59 AM Navid Emamdoost
-> <navid.emamdoost@gmail.com> wrote:
-> >
-> > In ath9k_wmi_cmd, the allocated network buffer needs to be released
-> > if timeout happens. Otherwise memory will be leaked.
-> >
-> > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
->
-> I wonder, did you actually test your patches? I ask, because it seems
-> that all your patches are of the same mechanical variety (produced by
-> some sort of research project?), and if I look around a bit, I see
-I found this via static analysis and as a result, did had the inputs
-to test it with (like the way fuzzing works).
-It may be beneficial if you could point me to any testing
-infrastructure that you use or are aware of for future cases.
+Ok yeah I removed that clock.h file and then forgot to find any users of
+the header file.
 
-> several mistakes and regressions noted on your other patches. And
-> recently, I see someone reporting a 5.4 kernel regression, which looks
-> a lot like it was caused by this patch:
->
-> https://bugzilla.kernel.org/show_bug.cgi?id=207703#c1
->
-> I'll propose a revert, if there's no evidence this was actually tested
-> or otherwise confirmed to fix a real bug.
->
-> Brian
-
-
-
--- 
-Navid.
+---8<----
+diff --git a/arch/arm/mach-mmp/pxa168.c b/arch/arm/mach-mmp/pxa168.c
+index b642e900727a..1e9389245d0e 100644
+--- a/arch/arm/mach-mmp/pxa168.c
++++ b/arch/arm/mach-mmp/pxa168.c
+@@ -19,7 +19,6 @@
+ #include <asm/system_misc.h>
+=20
+ #include "addr-map.h"
+-#include "clock.h"
+ #include "common.h"
+ #include <linux/soc/mmp/cputype.h>
+ #include "devices.h"
+diff --git a/arch/arm/mach-mmp/time.c b/arch/arm/mach-mmp/time.c
+index 049a65f47b42..41b2e8abc9e6 100644
+--- a/arch/arm/mach-mmp/time.c
++++ b/arch/arm/mach-mmp/time.c
+@@ -34,7 +34,6 @@
+ #include "regs-apbc.h"
+ #include "irqs.h"
+ #include <linux/soc/mmp/cputype.h>
+-#include "clock.h"
+=20
+ #define TIMERS_VIRT_BASE	TIMERS1_VIRT_BASE
