@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CE2C2D0FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14813CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DEE320575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB257206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:59:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363964;
-	bh=EnnBG/aX6Kg6Mk78SEPquxSEbjde6dpFg9+8Mqr0Sik=;
+	s=default; t=1589363965;
+	bh=IflCjPG2xi5TTNJDFZpm013QD6WriFjIurebSx5OlPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v4+vXeL2iPy/d7i3cQsk8UoBMkxu45Wq2XQAaVKmiOASnkO473/GReu5DcTmK5Kvu
-	 +ImMtA0nyB6O19es0mmLU/taJmZlYUnHmNkxNUhM0zSm9QOt1ZYqR/Vw7FYPVZCPpo
-	 XWWAYnIfdx2tK6uoCOpdX0QF+WEFaZjHjMSBhfE0=
+	b=oQhWFFdpTXBGYccUv4zBUDdESwK0J7f1ctzOfXmB6Wj9XwfLIVq9ze8T/MEjLC1LE
+	 IShYRdm7LGiMUgoOfMi/kjxkS5JcvXLdrhuFevtnnwahusf/MYszSHfJNgCTuskbHR
+	 ElTliQuqt0bhSNKm5q0qkfFnPSeDT6IdyCwjGuH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387961AbgEMJxc (ORCPT
+        id S2387953AbgEMJx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:53:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55422 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:53:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732590AbgEMJxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:53:24 -0400
+        id S2387926AbgEMJxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:53:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D68C2312A;
-        Wed, 13 May 2020 09:53:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B25A723127;
+        Wed, 13 May 2020 09:53:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363604;
-        bh=EnnBG/aX6Kg6Mk78SEPquxSEbjde6dpFg9+8Mqr0Sik=;
+        s=default; t=1589363597;
+        bh=IflCjPG2xi5TTNJDFZpm013QD6WriFjIurebSx5OlPg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IvQ3aA2+YBUt8wkzZWP6i0SGWhzM6snfYvRZrxs9Zw9CrYBm9bTe+ToJGVXjAALOx
-         pPz6tk2XuTyM7o2s32ENnk0Iw7J3dVpW3DDI/CpXSTIxLRlEoByDt2CuIdMMaXc7NP
-         4QFBRuivNiFKwbjFbZRTcgbWWsyxRuQdfUj7ffvk=
+        b=KGk+qwp9eRbERVfZMuc4fCWLkAhrbuQ5LB0vFW4uWbpl0trYmPK8wVMEHHRV5XYQQ
+         syEEpz/glAvij97WC2j5vk8wxlNsjYMHU5hIAz1KrbPpEHBqeiMow6RaTIQwT6E2Np
+         HMryQ8ov1F5NJRN9OF2+rONHPd5EhvQZKJQPrbaM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 051/118] net: mvpp2: cls: Prevent buffer overflow in mvpp2_ethtool_cls_rule_del()
-Date:   Wed, 13 May 2020 11:44:30 +0200
-Message-Id: <20200513094421.611319013@linuxfoundation.org>
+        stable@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.6 048/118] net/mlx5: Fix command entry leak in Internal Error State
+Date:   Wed, 13 May 2020 11:44:27 +0200
+Message-Id: <20200513094421.411784983@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -59,36 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Moshe Shemesh <moshe@mellanox.com>
 
-[ Upstream commit 722c0f00d4feea77475a5dc943b53d60824a1e4e ]
+[ Upstream commit cece6f432cca9f18900463ed01b97a152a03600a ]
 
-The "info->fs.location" is a u32 that comes from the user via the
-ethtool_set_rxnfc() function.  We need to check for invalid values to
-prevent a buffer overflow.
+Processing commands by cmd_work_handler() while already in Internal
+Error State will result in entry leak, since the handler process force
+completion without doorbell. Forced completion doesn't release the entry
+and event completion will never arrive, so entry should be released.
 
-I copy and pasted this check from the mvpp2_ethtool_cls_rule_ins()
-function.
-
-Fixes: 90b509b39ac9 ("net: mvpp2: cls: Add Classification offload support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 73dd3a4839c1 ("net/mlx5: Avoid using pending command interface slots")
+Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/mellanox/mlx5/core/cmd.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-@@ -1422,6 +1422,9 @@ int mvpp2_ethtool_cls_rule_del(struct mv
- 	struct mvpp2_ethtool_fs *efs;
- 	int ret;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+@@ -922,6 +922,10 @@ static void cmd_work_handler(struct work
+ 		MLX5_SET(mbox_out, ent->out, syndrome, drv_synd);
  
-+	if (info->fs.location >= MVPP2_N_RFS_ENTRIES_PER_FLOW)
-+		return -EINVAL;
-+
- 	efs = port->rfs_rules[info->fs.location];
- 	if (!efs)
- 		return -EINVAL;
+ 		mlx5_cmd_comp_handler(dev, 1UL << ent->idx, true);
++		/* no doorbell, no need to keep the entry */
++		free_ent(cmd, ent->idx);
++		if (ent->callback)
++			free_cmd(ent);
+ 		return;
+ 	}
+ 
 
 
