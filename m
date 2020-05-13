@@ -2,85 +2,85 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2666FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 869E5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 797AF2065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7E8A20671
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:57:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ihkW/azm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SIyHO821"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389776AbgEMQ5o (ORCPT
+        id S1732671AbgEMQ5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 12:57:44 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24956 "EHLO
+        Wed, 13 May 2020 12:57:50 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34609 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727120AbgEMQ5n (ORCPT
+        by vger.kernel.org with ESMTP id S1727120AbgEMQ5t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 12:57:43 -0400
+        Wed, 13 May 2020 12:57:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589389061;
+        s=mimecast20190719; t=1589389068;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=TsxSghf7MNf8lrzt7f1NuiWBq67H+L8HsCSjzXb5Uq4=;
-        b=ihkW/azmA417lidWGUCorMcKpWTK3iQutfOULZuCcHRPdLHd/mMR+R+SjxdOEuo9YeZoBt
-        p1JhoZzUkuLcGqe3mcI4io+QEchq6ljBkByyrEfhZImI9GMNMpQ52Kn9q+Q1e/sh8+99xG
-        uQa3hymYimEuRxnCvDB+RBg9BngwtQ8=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-249-HjHzM1r3M2KzAdZEw5iwWQ-1; Wed, 13 May 2020 12:57:37 -0400
-X-MC-Unique: HjHzM1r3M2KzAdZEw5iwWQ-1
-Received: by mail-wm1-f69.google.com with SMTP id n66so1897210wme.4
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 09:57:37 -0700 (PDT)
+        bh=q+xvrP5HCSZn98A/eBhzQxvMQQhmNlPPcvFZhur0b14=;
+        b=SIyHO821M9SSpWD4oDcLk5kvUzKrs+N+wcwxYZ+gzVhiKiH+Du67mjKR1h71oZkOt8+jIC
+        g9mJhlN5nnxgHipTc5wf3YO/hc+wfhl5iTxTpninQDRxTpV5aEKTsxIxKLlhPGs+92Z5Ye
+        KGOIte+5mGwWMarw95GuXAHJ1X7S+yI=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-447-_0ztxGaaMAmK_5lareSYIw-1; Wed, 13 May 2020 12:57:44 -0400
+X-MC-Unique: _0ztxGaaMAmK_5lareSYIw-1
+Received: by mail-wr1-f70.google.com with SMTP id g10so15270wrr.10
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 09:57:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=TsxSghf7MNf8lrzt7f1NuiWBq67H+L8HsCSjzXb5Uq4=;
-        b=fBENK2RwFjCpvCtf+1z0d9zbgk5VRcWKSogwPwiB10Eosjq43Z+JqCjY7CZ6QY1Zq8
-         fnSxEd+KuS262jIaBQ2SVcQd3ak3F9A9GKHJuTXxrt6MF5FRHjodXHjewPqAIzZYQ8K6
-         tqZB5PggfH294OudxiD/6uTiaNA+rSOoYMP34gRz/58ZYcWuSYmyRvKApWdJ84KnBE9L
-         d4gyoPVuNxNOPTYNHNPtXNmXs3eTMrpBkVbWVIxos7ga3SCv1W3MLoWjApN/6fYFO6W9
-         CmCrm/tria+iiXMXRQ9N1ilEo0I/K8GNLncKfDeReCzVYF2MqnE8iJqxtjn2Q0XV9T6S
-         wQ6w==
-X-Gm-Message-State: AOAM533GuKTvblQc0mj8pRogGt4vAz6FF6N1P3lonICGPJ0O/A9B4y9C
-        XqmzUprt0EkdzahEEZXdQNzWoauPLoCgXPIldvQuDRP76DdklybD2f+ZMIcmytCkGEV2em7x9Ix
-        2HWlXRMX2qg4CJvqsYALA3Ott
-X-Received: by 2002:a1c:6383:: with SMTP id x125mr6588338wmb.165.1589389056759;
-        Wed, 13 May 2020 09:57:36 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyj8p+RYxwgl01K8TGQDzDHFIR3LmsqjtBpKkaLFIMPU6LGzrOZS6f+FmTJj1vlAutHicKbLQ==
-X-Received: by 2002:a1c:6383:: with SMTP id x125mr6588310wmb.165.1589389056434;
-        Wed, 13 May 2020 09:57:36 -0700 (PDT)
+        bh=q+xvrP5HCSZn98A/eBhzQxvMQQhmNlPPcvFZhur0b14=;
+        b=rjj9TastjyJ38bCF2OAkLx/u68/AQ88RvDcGl9nUQp2luLwQU8xtxMT/kC4kZ04Lo1
+         QnTbC02OTIVRECS/uwW8wGBRknafBGVFr7azODYAJLgQduviicJdXvHiM8Zj/8lLJOgF
+         pFUR3mtER6lkYCEwwTb40Ol9DLeYM2r0DZMq7CJlCaTg7ECb1btItOO4FcTLKflbH/Zx
+         D2TvWAqz1cuQiXX6RUNIJHnr9lNeH0/ycYApzUbNw5uLaECvd9KCiqlY2M5ZvJeyDsmD
+         IkTLNGdiOP3UAjG3ldp3xkMu3OB8wqc5rCcDvXlipeWv//cFHK7BnOz2QWWpQE78m0bH
+         2aCw==
+X-Gm-Message-State: AGi0PuahmXYMJlMsKtsmea53K6BfstNOvqpoN1N9fb8FlkJPfYwSCgaa
+        ixkAcH80vq5NjX8HE/oo7EXvJO+9JFFJSYdyAIg3uz5hQzIm1cssB8BfxqFT++EyZJjDUN6SkjH
+        IYYjI8qjmBSu82LfLG626IwLB
+X-Received: by 2002:a1c:4b02:: with SMTP id y2mr21762726wma.115.1589389063667;
+        Wed, 13 May 2020 09:57:43 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKrBJBjE7Y00pTETr4m9i5isoBWAm8ifHUQHTW7HtyCACojXJzTUOKStCNKWMs3GgiRNq9WKQ==
+X-Received: by 2002:a1c:4b02:: with SMTP id y2mr21762710wma.115.1589389063368;
+        Wed, 13 May 2020 09:57:43 -0700 (PDT)
 Received: from [192.168.1.27] (lfbn-lyo-1-134-107.w86-202.abo.wanadoo.fr. [86.202.218.107])
-        by smtp.gmail.com with ESMTPSA id r3sm13050153wmh.48.2020.05.13.09.57.35
+        by smtp.gmail.com with ESMTPSA id d6sm116094wra.63.2020.05.13.09.57.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 May 2020 09:57:35 -0700 (PDT)
-Subject: Re: [RFC][PATCH 3/5] objtool: Add support for relocations without
- addends
+        Wed, 13 May 2020 09:57:42 -0700 (PDT)
+Subject: Re: [RFC][PATCH 4/5] objtool: Enable compilation of objtool for all
+ architectures
 To:     Matt Helsley <mhelsley@vmware.com>, linux-kernel@vger.kernel.org,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Miroslav Benes <mbenes@suse.cz>,
         Steven Rostedt <rostedt@goodmis.org>
 References: <cover.1588888003.git.mhelsley@vmware.com>
- <17ee3f6f2a246008aaae70f92df24ae92fa0e21e.1588888003.git.mhelsley@vmware.com>
- <f79a3872-b9ad-a966-71fb-4451e0901281@redhat.com>
- <20200513162648.GJ9040@rlwimi.vmware.com>
+ <9f709ea2ae66cc03b3ff3329baa8f670ccd0e368.1588888003.git.mhelsley@vmware.com>
+ <f9eedb02-54fe-fb96-fbcc-5f40f41e571a@redhat.com>
+ <20200513155948.GI9040@rlwimi.vmware.com>
 From:   Julien Thierry <jthierry@redhat.com>
-Message-ID: <61c35ce2-47b3-1f62-d4ec-da9984289c5d@redhat.com>
-Date:   Wed, 13 May 2020 17:55:21 +0100
+Message-ID: <e369f0a9-30fc-5754-8cff-bf238ab0b716@redhat.com>
+Date:   Wed, 13 May 2020 17:55:31 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200513162648.GJ9040@rlwimi.vmware.com>
+In-Reply-To: <20200513155948.GI9040@rlwimi.vmware.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -91,139 +91,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 5/13/20 5:26 PM, Matt Helsley wrote:
-> On Tue, May 12, 2020 at 06:04:50PM +0100, Julien Thierry wrote:
+On 5/13/20 4:59 PM, Matt Helsley wrote:
+> On Tue, May 12, 2020 at 06:04:56PM +0100, Julien Thierry wrote:
 >> Hi Matt,
 >>
 >> On 5/11/20 6:35 PM, Matt Helsley wrote:
->>> Currently objtool only collects information about relocations with
->>> addends. In recordmcount, which we are about to merge into objtool,
->>> some supported architectures do not use rela relocations. Since
->>> object files use one or the other the list can be reused.
+>>> objtool currently only compiles for x86 architectures. This is
+>>> fine as it presently does not support tooling for other
+>>> architectures. However, we would like to be able to convert other
+>>> kernel tools to run as objtool sub commands because they too
+>>> process ELF object files. This will allow us to convert tools
+>>> such as recordmcount to use objtool's ELF code.
 >>>
->>> Signed-off-by: Matt Helsley <mhelsley@vmware.com>
->>> ---
->>>    tools/objtool/elf.c | 55 ++++++++++++++++++++++++++++++++++++---------
->>>    tools/objtool/elf.h |  5 ++++-
->>>    2 files changed, 49 insertions(+), 11 deletions(-)
+>>> Since much of recordmcount's ELF code is copy-paste code to/from
+>>> a variety of other kernel tools (look at modpost for example) this
+>>> means that if we can convert recordmcount we can convert more.
 >>>
->>> diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
->>> index c4857fa3f1d1..cd841e3df87d 100644
->>> --- a/tools/objtool/elf.c
->>> +++ b/tools/objtool/elf.c
->>> @@ -465,12 +465,14 @@ static int read_relas(struct elf *elf)
->>>    	unsigned long nr_rela, max_rela = 0, tot_rela = 0;
->>>    	list_for_each_entry(sec, &elf->sections, list) {
->>> -		if (sec->sh.sh_type != SHT_RELA)
->>> +		if ((sec->sh.sh_type != SHT_RELA) &&
->>> +		     (sec->sh.sh_type != SHT_REL))
->>>    			continue;
->>> -		sec->base = find_section_by_name(elf, sec->name + 5);
->>> +		sec->base = find_section_by_name(elf, sec->name +
->>> +				((sec->sh.sh_type != SHT_REL) ? 5 : 4));
->>>    		if (!sec->base) {
->>> -			WARN("can't find base section for rela section %s",
->>> +			WARN("can't find base section for relocation section %s",
->>>    			     sec->name);
->>>    			return -1;
->>>    		}
->>> @@ -486,13 +488,26 @@ static int read_relas(struct elf *elf)
->>>    			}
->>>    			memset(rela, 0, sizeof(*rela));
->>> -			if (!gelf_getrela(sec->data, i, &rela->rela)) {
->>> -				WARN_ELF("gelf_getrela");
->>> -				return -1;
->>> +			switch(sec->sh.sh_type) {
->>> +			case SHT_REL:
->>> +				if (!gelf_getrel(sec->data, i, &rela->rel)) {
->>> +					WARN_ELF("gelf_getrel");
->>> +					return -1;
->>> +				}
->>> +				rela->addend = 0;
->>> +				break;
->>> +			case SHT_RELA:
->>> +				if (!gelf_getrela(sec->data, i, &rela->rela)) {
->>> +					WARN_ELF("gelf_getrela");
->>> +					return -1;
->>> +				}
->>> +				rela->addend = rela->rela.r_addend;
->>> +				break;
->>> +			default:
->>> +				break;
->>>    			}
->>>    			rela->type = GELF_R_TYPE(rela->rela.r_info);
->>> -			rela->addend = rela->rela.r_addend;
->>>    			rela->offset = rela->rela.r_offset;
->>>    			symndx = GELF_R_SYM(rela->rela.r_info);
->>>    			rela->sym = find_symbol_by_index(elf, symndx);
->>> @@ -717,17 +732,27 @@ int elf_rebuild_rela_section(struct section *sec)
->>>    	struct rela *rela;
->>>    	int nr, idx = 0, size;
->>>    	GElf_Rela *relas;
->>> +	GElf_Rel *rels;
->>>    	nr = 0;
->>>    	list_for_each_entry(rela, &sec->rela_list, list)
->>>    		nr++;
->>> +	/*
->>> +	 * Allocate a buffer for relocations with addends but also use
->>> +	 * it for other relocations too. The section type determines
->>> +	 * the size of the section, the buffer used, and the entries.
->>> +	 */
->>>    	size = nr * sizeof(*relas);
->>>    	relas = malloc(size);
->>>    	if (!relas) {
->>>    		perror("malloc");
->>>    		return -1;
->>>    	}
->>> +	rels = (void *)relas;
->>> +	if (sec->sh.sh_type == SHT_REL) {
->>> +		size = nr * sizeof(*rels);
->>> +	}
+>>> We define a "missing" architecture which contains weak definitions
+>>> for tools that do not exist on all architectures. In this case the
+>>> "check" and "orc" tools do not exist on all architectures.
+>>>
+>>> To test building for other architectures ($arch below):
+>>>
+>>> 	cd tools/objtool/arch
+>>> 	ln -s missing $arch
+>>> 	make O=build-$arch ARCH=$arch tools/objtool
+>>>
 >>
->> This looks a bit error prone to me.
->>
->> What about having:
->>
->>      void *rel_buf;
->>      [...]
->>      size = nr * (sec->sh.sh_type == SHT_REL ? sizeof(GElf_Rel) :
->> sizeof(GElf_Rela));
+>> Since the stuff under arch/missing is only weak symbols to make up for
+>> missing subcmd implementations, can we put everything in a file
+>> subcmd_defaults.c (name up for debate!) that would be always be compiled an
+>> linked. And some SUBCMD_XXX is set to "y", the corresponding object file
+>> gets compiled and overrides the weak symbols from subcmd_defaults.c .
 > 
-> I like reducing to a single size expression but I'm not a fan of hard-coding
-> the GElf_Rel[a] types here -- I prefer sizeof(*relas) and sizeof(*rels)
-> since that makes it clear the sizes will match the types of the pointers
-> that will be used to access them. So I've changed it to:
+> Hmm, I like keeping them separated along similar lines to the other
+> code because it makes it easier to see the intended correspondence and
+> likely will keep the files more readable / smaller. I could
+> just move them out of arch/missing and into missing_check.c and so forth.
 > 
-> 	size = nr * ((sec->sh.sh_type == SHT_REL) ? sizeof(*rels) : sizeof(*relas));
+> What do you think of that?
 > 
->>      rel_buf = malloc(size);
->>      [...]
->>
->> And then casting rel_buf to the correct pointer type in the fitting switch
->> cases?
-> 
-> I'm thinking it's simpler with fewer variables. I don't think
-> moving the cast into the switch cases makes it any clearer. It's also
-> odd because we'll keep re-initializing relas or rels to rel_buf each loop
-> iteration. Finally, this approach has the advantage that, when reviewing
-> the patch, it's clear that the original code handling RELA relocation entries
-> isn't changing -- you can see it's just shifting into one of the cases
-> (below).
-> 
-> Do you still prefer introducing rel_buf?
 
-On a completely personal taste, yes. I do not like having two local 
-variables in the same scope pointing at the same data but with an 
-implied "you should only use one or the other under the right 
-circumstances".
+I do prefer that to the introduction of an arch/missing.
 
-But my main concern was having an allocation of a certain size and then 
-modifying the size (might have been valid if sizeof(GElf_Rel) <= 
-sizeof(GElf_Rela), but I must admit I did not bother to check). Since 
-you've addressed that issue, the rest is just a matter of taste so 
-better left to the maintainers.
+Still, I'm not sure I see much benefit in splitting those small 
+implementations in separate files, but it's not a problem either. This 
+seems more a matter of taste rather than one approach working better 
+than the other. So it's more up to what the maintainer prefer! :)
 
-Thanks,
+>>> diff --git a/tools/objtool/Build b/tools/objtool/Build
+>>> index 66f44f5cd2a6..fb6e6faf6f10 100644
+>>> --- a/tools/objtool/Build
+>>> +++ b/tools/objtool/Build
+>>> @@ -1,11 +1,12 @@
+>>>    objtool-y += arch/$(SRCARCH)/
+>>> +
+>>> +objtool-$(SUBCMD_CHECK) += check.o
+>>> +objtool-$(SUBCMD_ORC) += orc_gen.o
+>>> +objtool-$(SUBCMD_ORC) += orc_dump.o
+>>> +
+>>>    objtool-y += builtin-check.o
+>>>    objtool-y += builtin-orc.o
+>>> -objtool-y += check.o
+>>> -objtool-y += orc_gen.o
+>>> -objtool-y += orc_dump.o
+>>>    objtool-y += elf.o
+>>> -objtool-y += special.o
+>>
+>> I'm not convinced by the moving of special under arch/x86 and I didn't
+>> understand it at first.
+>>
+>> I guess you did it because it is only used by the check subcmd, which is
+>> currently only implemented by x86. Is that the reason?
+> 
+> Yeah, that was the original reasoning and this is an artifact of the
+> previous patch set.
+>   
+>> I feel that the proper way to do it would be to leave special.c/h where they
+>> are and have "objtool-$(SUBCMD_CHECK) += special.o". Unless there was some
+>> other motivation for it.
+> 
+> This makes sense. I'll incorporate that in the next posting.
+> 
+
+Great, thanks!
 
 -- 
 Julien Thierry
