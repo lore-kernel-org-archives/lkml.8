@@ -2,129 +2,145 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10345CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF380CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4BAB206E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 920E5206E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:18:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732361AbgEMLRZ (ORCPT
+        id S1732484AbgEMLSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 07:17:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:43658 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730286AbgEMLRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 07:17:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9309830E;
-        Wed, 13 May 2020 04:17:24 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E8C9C3F71E;
-        Wed, 13 May 2020 04:17:22 -0700 (PDT)
-Date:   Wed, 13 May 2020 12:17:17 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        helgaas@kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 0/4] USB: pci-quirks: Add Raspberry Pi 4 quirk
-Message-ID: <20200513111717.GA32365@e121166-lin.cambridge.arm.com>
-References: <20200505161318.26200-1-nsaenzjulienne@suse.de>
+        Wed, 13 May 2020 07:18:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732405AbgEMLSH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 07:18:07 -0400
+Received: from smtp-42ab.mail.infomaniak.ch (smtp-42ab.mail.infomaniak.ch [IPv6:2001:1600:3:17::42ab])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FB72C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 04:18:07 -0700 (PDT)
+Received: from smtp-2-0000.mail.infomaniak.ch (unknown [10.5.36.107])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49MXGL6nZBzlhDCt;
+        Wed, 13 May 2020 13:18:02 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 49MXGJ55kJzlhFDc;
+        Wed, 13 May 2020 13:18:00 +0200 (CEST)
+Subject: Re: [PATCH v5 4/6] selftest/openat2: Add tests for O_MAYEXEC
+ enforcing
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20200505153156.925111-1-mic@digikod.net>
+ <20200505153156.925111-5-mic@digikod.net> <202005121452.4DED41A@keescook>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <6fc6bbe4-da18-1b8d-a61c-558f5a4a4908@digikod.net>
+Date:   Wed, 13 May 2020 13:18:00 +0200
+User-Agent: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505161318.26200-1-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <202005121452.4DED41A@keescook>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 06:13:13PM +0200, Nicolas Saenz Julienne wrote:
-> On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
-> loaded directly from an EEPROM or, if not present, by the SoC's
-> co-processor, VideoCore. This series adds support for the later.
-> 
-> Note that there are a set of constraints we have to consider:
->  - We need to make sure the VideoCore firmware interface is up and
->    running before running the VL805 firmware load call.
-> 
->  - There is no way to discern RPi4's VL805 chip from other platforms',
->    so we need the firmware load to happen *before* running
->    quirk_usb_handoff_xhci(). Failure to do so results in an unwarranted
->    5 second wait while the fixup code polls xHC's non-existing state.
-> 
-> By Florian's suggestion I've been spending some time exploring the device
-> link[1] API in order to see if that could save us from explicitly creating
-> probe dependencies between pcie-brcmstb and firmware/raspberrypi (patch #3).
-> Technically these dependencies could be inferred from DT. It turns out Saravana
-> Kannan has been looking at this already. A new boot mechanism, activated with
-> fw_devlink=on takes care of the device probe ordering on devices with
-> consumer/supplier relationships. For now this relationship is created based on
-> the usage of generic DT properties, but has no support for vendor-specifc DT
-> properties, which we'd be forced to use in order to create a relationship
-> between our two devices since our setup is highly non generic. There will
-> probably be at some point support for such properties, and we will then be able
-> to revisit some of this code.
-> 
-> All this is based on the work by Tim Gover in RPi's downstream
-> kernel[2].
-> 
-> [1] https://www.kernel.org/doc/html/v4.13/driver-api/device_link.html
-> [2] https://github.com/raspberrypi/linux/commit/9935b4c7e360b4494b4cb6e3ce797238a1ab78bd
-> 
-> ---
-> 
-> Changes since v7:
->  - Address Stefan's comments
-> 
-> Changes since v6:
->  - Make rpi_firmware_init_vl805() more robust
->  - Rewrite comments and patch descriptions to be more accessible to non RPi
->    fluent people
->  - Removed Florian's Reviewed-by in patch #2 as function changed
->    substantially
->  - Tested with/witout u-boot
-> 
-> Changes since v5:
->  - Fix issues reported by Kbuild test robot
-> 
-> Changes since v4:
->  - Addressed Sergei's comments
->  - Fix potential warning in patch #2
-> 
-> Changes since v3:
->  - Addressed Greg's comments
-> 
-> There was no v2, my bad.
-> 
-> Changes since v1:
->  - Addressed Floarians comments
-> 
-> Nicolas Saenz Julienne (4):
->   soc: bcm2835: Add notify xHCI reset property
->   firmware: raspberrypi: Introduce vl805 init routine
->   PCI: brcmstb: Wait for Raspberry Pi's firmware when present
->   USB: pci-quirks: Add Raspberry Pi 4 quirk
-> 
->  drivers/firmware/Kconfig                   |  3 +-
->  drivers/firmware/raspberrypi.c             | 61 ++++++++++++++++++++++
->  drivers/pci/controller/pcie-brcmstb.c      | 17 ++++++
->  drivers/usb/host/pci-quirks.c              | 16 ++++++
->  include/soc/bcm2835/raspberrypi-firmware.h |  9 +++-
->  5 files changed, 104 insertions(+), 2 deletions(-)
 
-Hi Nicolas,
+On 12/05/2020 23:57, Kees Cook wrote:
+> On Tue, May 05, 2020 at 05:31:54PM +0200, Mickaël Salaün wrote:
+>> Test propagation of noexec mount points or file executability through
+>> files open with or without O_MAYEXEC, thanks to the
+>> fs.open_mayexec_enforce sysctl.
+>>
+>> Signed-off-by: Mickaël Salaün <mic@digikod.net>
+>> Reviewed-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+>> Cc: Aleksa Sarai <cyphar@cyphar.com>
+>> Cc: Al Viro <viro@zeniv.linux.org.uk>
+>> Cc: Kees Cook <keescook@chromium.org>
+>> Cc: Shuah Khan <shuah@kernel.org>
+> 
+> Yay tests! :) Notes below...
+> 
+>> diff --git a/tools/testing/selftests/openat2/Makefile b/tools/testing/selftests/openat2/Makefile
+>> index 4b93b1417b86..cb98bdb4d5b1 100644
+>> --- a/tools/testing/selftests/openat2/Makefile
+>> +++ b/tools/testing/selftests/openat2/Makefile
+>> @@ -1,7 +1,8 @@
+>>  # SPDX-License-Identifier: GPL-2.0-or-later
+>>  
+>>  CFLAGS += -Wall -O2 -g -fsanitize=address -fsanitize=undefined
+>> -TEST_GEN_PROGS := openat2_test resolve_test rename_attack_test
+>> +LDLIBS += -lcap
+>> +TEST_GEN_PROGS := openat2_test resolve_test rename_attack_test omayexec_test
+> 
+> I realize the others have _test in their name, but that feels intensely
+> redundant to me. :)
 
-should I queue this series via the PCI tree ? Just let me know, most of
-the changes are not in the PCI tree, asking in order to
-minimize/simplify conflicts handling if possible.
+It is redundant in the path name but it is useful to match the generated
+files e.g., in gitignore.
 
-Lorenzo
+> 
+>> [...]
+>> diff --git a/tools/testing/selftests/openat2/omayexec_test.c b/tools/testing/selftests/openat2/omayexec_test.c
+>> new file mode 100644
+>> index 000000000000..7052c852daf8
+>> --- /dev/null
+>> +++ b/tools/testing/selftests/openat2/omayexec_test.c
+>> [...]
+>> +FIXTURE_DATA(mount_exec_file_exec) { };
+> 
+> For each of these, Please use "FIXTURE" not "FIXTURE_DATA". See:
+> 1ae81d78a8b2 ("selftests/seccomp: Adjust test fixture counts")
+
+Indeed.
+
+> 
+>> +FIXTURE_SETUP(mount_exec_file_exec)
+>> +{
+>> +	create_workspace(_metadata, 1, 1);
+> 
+> Maybe save the system's original sysctl in create_workspace() instead
+> of always restoring it to 0 in delete_workspace()?
+
+Right.
+
+> 
+> Otherwise, looks good!
+> 
+
+Thanks.
