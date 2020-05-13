@@ -2,117 +2,154 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7115C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C8ACA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8774520673
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:16:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="iQxgcZlf"
+	by mail.kernel.org (Postfix) with ESMTP id 5047A20673
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:16:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589357811;
+	bh=rsI2U+x4/Gm7XrR6f6K48fiAR9xJmXIbk7lQHBey9NY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dpM/JyLcvSMTfXVWtl4rkHukzyW1kAj+71PBIMr/kIvNU53PnrCn0SrEyQR7lv2+L
+	 OBejGoIkXPTL5jIWD7q6xmClaIwXZzEawOpdvNrxGnYPDrHnYqpTYuSbPjHNO3ab3B
+	 J36gtM9fXJJrEIAFQe/bJNNngKxoS7ogaq/uxSg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732045AbgEMIQh (ORCPT
+        id S1732133AbgEMIQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 04:16:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34668 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730127AbgEMIQg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 04:16:36 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF27DC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 01:16:35 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id l11so13773157wru.0
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 01:16:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=68iwW7UL5e+iBKHN9tLOFWom89CxDwBg9Pl7JVWSM4A=;
-        b=iQxgcZlfMjQRPPSZ5uhlo40CDVFDwQDPhpCcdsYyHOfgi4n0ZaVS++9T0jRrzyRZ04
-         fU6dl0Pen+0Z0PIn6Vx5xNs5Jl6MUspRHOuRbEMq7iEmLkbBRKDrKkhRyczBYPML//aq
-         edMFxpqStGDfiV3UKCM3zyuQ57zUGb2xVAaec=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=68iwW7UL5e+iBKHN9tLOFWom89CxDwBg9Pl7JVWSM4A=;
-        b=YQqcIJxvaSGWlViPGFkclIOrrgSxtcdr/y4KSEOL1RaV265B828VVAeao1GG4hBmVR
-         eXGBHuEsrNn9qyFaWYwjhvak5opmyT4mxonJ5Jbh9/QASkcVKEEoIj8pdCNunJtQOs5T
-         jBkgnpvdM7Q3k+MQuZzE1FBe21i6jpFOaTv8MaoBhpdbZNHqUvNf6Kvq/yKzBzG+vYoa
-         +Oo2faluErKkZv0bD8dMGV6XaC37w0xK8ILlLObbLRV7Cy3MRNXGVmcae3HDDwE+dAvU
-         +BVZMqEeYeuWQ3xckmUpUVeUtotT9HuTaqqoJhWO6Md9KlIoFvnySty0OiWdQtp6Kgw2
-         QoZw==
-X-Gm-Message-State: AGi0PuZ8/ZKeslf8+sEw3MADuT3xIIWZKaYFuKTVWvVJY08igLCRG3M+
-        pQLOolkfvkztxicTfd9SwnpKAA==
-X-Google-Smtp-Source: APiQypIGGpDRAERxZPNv77vPASHntgpN+ldwaZOVqADykf4NdpezOORDz6NX3UgSVw9HxdlctxvzpQ==
-X-Received: by 2002:adf:f5c4:: with SMTP id k4mr27137925wrp.23.1589357794549;
-        Wed, 13 May 2020 01:16:34 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id j206sm25587279wmj.20.2020.05.13.01.16.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 May 2020 01:16:33 -0700 (PDT)
-Subject: Re: [PATCH v5 1/7] fs: introduce kernel_pread_file* support
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Mimi Zohar <zohar@linux.vnet.ibm.com>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>
-References: <20200508002739.19360-1-scott.branden@broadcom.com>
- <20200508002739.19360-2-scott.branden@broadcom.com>
- <20200513002741.GG11244@42.do-not-panic.com>
- <2e4bc125-5fe5-e3e5-4881-29374da942aa@broadcom.com>
- <20200513065133.GB764247@kroah.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <6f12fada-3ff6-e0f2-279a-20a2363c8881@broadcom.com>
-Date:   Wed, 13 May 2020 01:16:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 13 May 2020 04:16:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38788 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730127AbgEMIQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 04:16:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B14F320673;
+        Wed, 13 May 2020 08:16:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589357809;
+        bh=rsI2U+x4/Gm7XrR6f6K48fiAR9xJmXIbk7lQHBey9NY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KckMHzdeYY8VBZ9gq5pTkCg8Zsv1VTSYRlHTSJ383KMas0WwCVioNSPh/LXgwlIwS
+         HiB+Bq+4rNBRXejqNLQsWAtbItGmEAhwMlG3N6m1uX/PF6jYRBFmCDmNXAV7ZNxCwa
+         rzlnGyzn5nA407CH51kAb1L3TVbvStXwaiKJgfrg=
+Date:   Wed, 13 May 2020 10:16:46 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Sean Young <sean@mess.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH 2/3] input: serio: allow more than one byte to be sent at
+ once
+Message-ID: <20200513081646.GA770255@kroah.com>
+References: <20200507135337.2343-1-sean@mess.org>
+ <20200507135337.2343-2-sean@mess.org>
+ <20200507202546.GM89269@dtor-ws>
+ <20200507205918.GA13370@gofer.mess.org>
+ <20200511065118.GA1293993@kroah.com>
+ <20200512090724.GA31990@gofer.mess.org>
 MIME-Version: 1.0
-In-Reply-To: <20200513065133.GB764247@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512090724.GA31990@gofer.mess.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 12, 2020 at 10:07:24AM +0100, Sean Young wrote:
+> On Mon, May 11, 2020 at 08:51:18AM +0200, Greg KH wrote:
+> > On Thu, May 07, 2020 at 09:59:18PM +0100, Sean Young wrote:
+> > > On Thu, May 07, 2020 at 01:25:46PM -0700, Dmitry Torokhov wrote:
+> > > > On Thu, May 07, 2020 at 02:53:36PM +0100, Sean Young wrote:
+> > > > > serio drivers can only send one byte at a time. If the underlying tty
+> > > > > is a usb serial port, then each byte will be put into separate usb
+> > > > > urbs, which is not efficient.
+> > > > > 
+> > > > > Additionally, the Infrared Toy device refuses to transmit IR if the
+> > > > > IR data is sent one byte at a time. IR data is formatted in u16 values,
+> > > > > and the firmware expects complete u16 values in the packet.
+> > > > > 
+> > > > > https://github.com/DangerousPrototypes/USB_IR_Toy/blob/master/Firmware-main/IRs.c#L240
+> > > > 
+> > > > Ummm, serial protocol data size is at most 9 bits so I have no earthly
+> > > > idea how they expect to get 16.
+> > > 
+> > > serio is a layer on top several serial protocols, including ttys. ttys allow
+> > > more than one byte to be written at a time, see struct tty_operations:
+> > > 
+> > >         int  (*write)(struct tty_struct * tty,
+> > >                       const unsigned char *buf, int count);
+> > > 
+> > > ttys would be very inefficient if you could only write one byte at a time,
+> > > and they are very serial.
+> > > 
+> > > This patch exposes the underlying tty write() functionality to serio. When
+> > > the underlying tty is a usb serial port this makes for far fewer usb packets
+> > > being used to send the same data, and fixes my driver problem, and it
+> > > would reduce the number of calls in a few other cases too.
+> > > 
+> > > I'm happy to rework the patch if there are comments on the style or
+> > > approach.
+> > 
+> > Why not just use the ir-usb.c driver for this device instead?
+> 
+> So this device is the infrared kind which rc-core (in drivers/media/rc/)
+> supports, remotes and such things (not for serial IR). So by using a 
+> rc-core driver, it can use kernel IR decoding, BPF decoding, lirc chardev
+> and rc keymaps, etc.
 
+So why do you want to user serio for this?  serio should only be for
+input devices with a serial protocol.
 
-On 2020-05-12 11:51 p.m., Greg Kroah-Hartman wrote:
-> On Tue, May 12, 2020 at 11:23:27PM -0700, Scott Branden wrote:
->> Hi Luis,
->>
->> A few comments inline before I cleanup.
->>
->> We do not export symbols when there are no in-kernel users.
->>
->> Note: Existing kernel_read_file_from_path_initns is not used in the kernel.
->> Should we delete that as well?
-> Probably, yes.
-I found drivers/base/firmware_loader calls 
-kernel_read_file_from_path_initns so EXPORT_SYMBOL_GPL can stay there.
-> thanks,
->
-> greg k-h
+> This device is a PIC18F2550 type device, which is a usb serial port
+> microcontroller type with some firmware and IR diodes:
+> 	http://dangerousprototypes.com/docs/USB_IR_Toy_v2
+> 
+> serio supports a whole bunch of usb serial devices which can be attached
+> via inputattach(1). Not all of these are input devices, for example there
+> are two cec devices too.
+> 
+> Now, in many of these drivers, multiple bytes need to be written to the
+> device in order to send it a command, for example in
+> drivers/input/touchscreen/elo.c:
+> 
+>         for (i = 0; i < ELO10_PACKET_LEN; i++) {
+>                 csum += packet[i];
+>                 if (serio_write(elo->serio, packet[i]))
+>                         goto out;
+>         }
+> 
+> So if serio had an interface for sending a buffer, that would be less
+> call overhead. In fact, if the underlying serio is a serial usb port,
+> that would much more efficient on the usb layer too (one usb roundtrips in
+> stead of ELO10_PACKET_LEN roundtrips), like so:
+> 
+> 	serio_write_buf(elo->serio, packet, ELO10_PACKET_LEN);
+> 
+> So what I'm suggesting is extending the serio interface to allow sending
+> a buffer of bytes. Of course serio isn't just usb serial ports. There quite
+> a few instances of serio_register_port() in the kernel. Many of them
+> can be extended to support sending a buffer rather than a single byte,
+> if this makes sense. For example the ps2 serio port takes a mutex for every
+> byte, so this could be more efficient by reducing it to one mutex lock
+> per buffer.
+> 
+> Now it would be nice to have a discussion about this rather than being
+> dismissed with:
 
+I think a custom usb driver that exposes the interfaces as input devices
+is going to be the simplest thing for you to do here as you will have
+full control over the packet size and format much easier.  Odds are it
+will be less work overall for this.
+
+thanks,
+
+greg k-h
