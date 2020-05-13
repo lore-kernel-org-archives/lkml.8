@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3516ACA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F78C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C5C420769
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AE04206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:55:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363721;
-	bh=t+dAG2ciSY11/anwEimjtMYFr2ia36uqkw+4TtFXdvI=;
+	s=default; t=1589363730;
+	bh=21ZeV7DMXJGDzla/Lkcyv+lxyssas6Aup9sjf/i5oZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OKQHMMdk43JDq5Ej+pODEXSarad/aEb0t8HkIbH0IBcjfxr11j6VTSgFhlpxBAPyQ
-	 P/WgZ0Yr4wueu3taAVEuqy8Cvxe3K3lBSJ9q+7IhVuKRqwItjR2Y/IO4gSGrwm3ZvN
-	 ITIAsb4EdgHPKl49cY3E2A6nTtLghq2ZcMfQMb08=
+	b=KzS601vOrk8NnWzN2dBTbOO6E/DnXx7SqyK1yECBrBPvaRucBKomHSAnSWhtQEVh9
+	 6QBpGSpV5TXccy1Z++vSIHgzGo95Hs4Ftlz36AIFsbO257t0LYhTQb2LOZ86CMZjVr
+	 Dr3y1BgNfbGDy67+/tQuqGPSAcB/kC8fLrMJujCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388248AbgEMJzU (ORCPT
+        id S2387473AbgEMJz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:55:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58124 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:55:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387681AbgEMJzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:55:13 -0400
+        id S2387714AbgEMJzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:55:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DD7220753;
-        Wed, 13 May 2020 09:55:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4673E20753;
+        Wed, 13 May 2020 09:55:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363712;
-        bh=t+dAG2ciSY11/anwEimjtMYFr2ia36uqkw+4TtFXdvI=;
+        s=default; t=1589363724;
+        bh=21ZeV7DMXJGDzla/Lkcyv+lxyssas6Aup9sjf/i5oZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AkugV0PKxlvssvh82iagRhIuq165x/oeDh/Pvd6jkIir2EIyPrpm/T24RPm5F8IHW
-         IP8Dg1moZGeNLHk/m4X6unfrWz9l6W+MOY22kR33Jacvq/wkxZnZrKLuV2AaoFjB6L
-         osBU0V1a/9FGSSbYyQtapRN5TJjmAS8kO/i5CloE=
+        b=WjoV7rqigxuLzgoVpDJvhwz6vqXvol0WUx3FJmIxgTzb7XIIgp3AqqlYUtdJndfEs
+         axSukLbmPx3vyh0BVH435pdYvaLlqvHwUQk6JzU/4EwMw7m1VHo6Vud5yfosxcFsSj
+         0YKDjf7b2tcc4qPGbfec2/qGeT7IR7m0jy7opTFY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 5.6 094/118] batman-adv: Fix refcnt leak in batadv_store_throughput_override
-Date:   Wed, 13 May 2020 11:45:13 +0200
-Message-Id: <20200513094425.545848374@linuxfoundation.org>
+        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
+        Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>
+Subject: [PATCH 5.6 099/118] x86/entry/64: Fix unwind hints in __switch_to_asm()
+Date:   Wed, 13 May 2020 11:45:18 +0200
+Message-Id: <20200513094425.959397282@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -61,46 +65,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-commit 6107c5da0fca8b50b4d3215e94d619d38cc4a18c upstream.
+commit 96c64806b4bf35f5edb465cafa6cec490e424a30 upstream.
 
-batadv_show_throughput_override() invokes batadv_hardif_get_by_netdev(),
-which gets a batadv_hard_iface object from net_dev with increased refcnt
-and its reference is assigned to a local pointer 'hard_iface'.
+UNWIND_HINT_FUNC has some limitations: specifically, it doesn't reset
+all the registers to undefined.  This causes objtool to get confused
+about the RBP push in __switch_to_asm(), resulting in bad ORC data.
 
-When batadv_store_throughput_override() returns, "hard_iface" becomes
-invalid, so the refcount should be decreased to keep refcount balanced.
+While __switch_to_asm() does do some stack magic, it's otherwise a
+normal callable-from-C function, so just annotate it as a function,
+which makes objtool happy and allows it to produces the correct hints
+automatically.
 
-The issue happens in one error path of
-batadv_store_throughput_override(). When batadv_parse_throughput()
-returns NULL, the refcnt increased by batadv_hardif_get_by_netdev() is
-not decreased, causing a refcnt leak.
-
-Fix this issue by jumping to "out" label when batadv_parse_throughput()
-returns NULL.
-
-Fixes: 0b5ecc6811bd ("batman-adv: add throughput override attribute to hard_ifaces")
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Fixes: 8c1f75587a18 ("x86/entry/64: Add unwind hint annotations")
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Dave Jones <dsj@fb.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Link: https://lore.kernel.org/r/03d0411920d10f7418f2e909210d8e9a3b2ab081.1587808742.git.jpoimboe@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/batman-adv/sysfs.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/entry/entry_64.S |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/net/batman-adv/sysfs.c
-+++ b/net/batman-adv/sysfs.c
-@@ -1150,7 +1150,7 @@ static ssize_t batadv_store_throughput_o
- 	ret = batadv_parse_throughput(net_dev, buff, "throughput_override",
- 				      &tp_override);
- 	if (!ret)
--		return count;
-+		goto out;
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -279,8 +279,7 @@ SYM_CODE_END(entry_SYSCALL_64)
+  * %rdi: prev task
+  * %rsi: next task
+  */
+-SYM_CODE_START(__switch_to_asm)
+-	UNWIND_HINT_FUNC
++SYM_FUNC_START(__switch_to_asm)
+ 	/*
+ 	 * Save callee-saved registers
+ 	 * This must match the order in inactive_task_frame
+@@ -321,7 +320,7 @@ SYM_CODE_START(__switch_to_asm)
+ 	popq	%rbp
  
- 	old_tp_override = atomic_read(&hard_iface->bat_v.throughput_override);
- 	if (old_tp_override == tp_override)
+ 	jmp	__switch_to
+-SYM_CODE_END(__switch_to_asm)
++SYM_FUNC_END(__switch_to_asm)
+ 
+ /*
+  * A newly forked process directly context switches into this address.
 
 
