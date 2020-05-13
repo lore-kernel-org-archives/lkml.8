@@ -2,108 +2,77 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EA0C2D0F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA899C2D0FB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C4B920718
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:20:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GCL+RLNG"
+	by mail.kernel.org (Postfix) with ESMTP id 9B16024927
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:20:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589340025;
+	bh=QM6wYalvcbWtwF5fby2SPnx+NbpXHDyRdSzRSoHFRas=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=zjd8YTFV30iquuxSYXkSZNuCOJNb7cGr65I7nCwQBFThWKBsYfJseCwbh/XaQaF8D
+	 La4GiWr3XNjBEwrI253IPxmocNa7e19bZ8qfLBulUPtnZQElHDQKXaWBTBtjvSoxko
+	 nEBdxoNEIe0uhQlBMZI9UMKxAl8WTkUJ3HGa24eo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbgEMDUO (ORCPT
+        id S1728897AbgEMDUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 23:20:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45180 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725898AbgEMDUO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 23:20:14 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26067C061A0C;
-        Tue, 12 May 2020 20:20:14 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k19so6264319pll.9;
-        Tue, 12 May 2020 20:20:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=XD38n6V2qgxBXjjSdcj6JhmtoFkm4TOzDKrNrbaIs58=;
-        b=GCL+RLNGTfuzoG5Yzug/3bMHJ6vKT724tq3dBa5FfW7CopyevpsfdnHx+5sOgs8MqM
-         8LUxoZnoJmX6tAA6FqskPW9f4Y96qZfgXwufvUEOcquHDo3qgEBXKBd9Ml2ehw0F5S/h
-         +Ksz0ZWtMOTkHAl74wn1J0fgDTPn/MDGWDEwWwKTI+sFzkGxg0SOUpnr++Jl3VKkhyIN
-         ShMbvhaiymMxF4kRztcLrLkioA0GJ4mj+NxXlKq3p7kcw+63Id4VDJhQwobcw0+I2oUM
-         ZQnIB/qNNhS++NT09sKaoR/y7kMrZbxO28526lYidPseVuoY9uXK8VGJKU3snpIhX64Y
-         1GCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XD38n6V2qgxBXjjSdcj6JhmtoFkm4TOzDKrNrbaIs58=;
-        b=SulV17PjaG0rRo6eE04IK9uy5WCQY6hsxBJuN+wAq0PMPdtuTI3C0HxiG9T9quzIRi
-         seATxXsVKvJOOUaYb0rqOKezsLrcoSZGd6WC6Z5q3Bb9L+Gjr3wujB4L65VOmszenK4Q
-         DSQMewPTcbGfMXNRiGaNMFY/RE/OROELKpUgvtlpevuzkPR5YUb51VDQ5/RE7UyuxD2l
-         8yPC15kEbJtQHeOG2iAnyBWRSoOCsUGU/s0xdjwYMJj1yWgjBb3O9ZTn+3JJuDK73ufq
-         Xq7Gqa08+A2O8isOF0MFp1cvaAN0k+Zsl/Ma3SrEUHZYBEU5nO/Rqs3t3FzS1dYINfrV
-         8rdg==
-X-Gm-Message-State: AOAM531rxFOtxdAU4WzbZeosRjJNjQsEKKWBUnMND0jMLi7kOpWqfYbn
-        3+0PglGbfTXQ59z7KyrSgTo=
-X-Google-Smtp-Source: ABdhPJxWJquSm8ASVk33Y1E9Tt7eLgRGCFaCdLv9wK04M5FlZPcxFjH1w7Xx8sX2SX2BKqMVTdMMPA==
-X-Received: by 2002:a17:902:ab96:: with SMTP id f22mr6160334plr.221.1589340013659;
-        Tue, 12 May 2020 20:20:13 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id a2sm11679287pgh.57.2020.05.12.20.20.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 May 2020 20:20:12 -0700 (PDT)
-Subject: Re: [PATCH v2 net-next 2/3] net: dsa: felix: Configure Time-Aware
- Scheduler via taprio offload
-To:     Xiaoliang Yang <xiaoliang.yang_1@nxp.com>, po.liu@nxp.com,
-        claudiu.manoil@nxp.com, alexandru.marginean@nxp.com,
-        vladimir.oltean@nxp.com, leoyang.li@nxp.com, mingkai.hu@nxp.com,
-        andrew@lunn.ch, vivien.didelot@gmail.com, davem@davemloft.net,
-        jiri@resnulli.us, idosch@idosch.org, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        horatiu.vultur@microchip.com, alexandre.belloni@bootlin.com,
-        allan.nielsen@microchip.com, joergen.andreasen@microchip.com,
-        UNGLinuxDriver@microchip.com, vinicius.gomes@intel.com,
-        nikolay@cumulusnetworks.com, roopa@cumulusnetworks.com,
-        linux-devel@linux.nxdi.nxp.com
-References: <20200513022510.18457-1-xiaoliang.yang_1@nxp.com>
- <20200513022510.18457-3-xiaoliang.yang_1@nxp.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <c0408d43-d8a3-31ab-82ea-e5940a97be47@gmail.com>
-Date:   Tue, 12 May 2020 20:20:10 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.0
+        Tue, 12 May 2020 23:20:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51048 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725898AbgEMDUY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 23:20:24 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67E6420718;
+        Wed, 13 May 2020 03:20:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589340024;
+        bh=QM6wYalvcbWtwF5fby2SPnx+NbpXHDyRdSzRSoHFRas=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=kJRR6ClzOaY1Qfz1FAGcHFurZ5dSIeoNKiGYgIY8aFIqCcIENtNQc9HFOkZ/pn3w5
+         IiUWFC1232Sdkk7gXs7lWHS94b6rATk3qj/9uuNk0IQLiJth8byQmBc0Glx+mK2+OH
+         P78Q9fYnUdpDX8UJQG0jiV7FXtSeytdrG6ksSf8c=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200513022510.18457-3-xiaoliang.yang_1@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200511105556.5b13a4b4@canb.auug.org.au>
+References: <20200511105556.5b13a4b4@canb.auug.org.au>
+Subject: Re: linux-next: build failure after merge of the clk tree
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Date:   Tue, 12 May 2020 20:20:23 -0700
+Message-ID: <158934002362.215346.193807448749037189@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Stephen Rothwell (2020-05-10 17:55:56)
+> Hi all,
+>=20
+> After merging the clk tree, today's linux-next build (arm
+> multi_v7_defconfig) failed like this:
+>=20
+> arch/arm/mach-mmp/time.c:37:10: fatal error: clock.h: No such file or dir=
+ectory
+>    37 | #include "clock.h"
+>       |          ^~~~~~~~~
+>=20
+> Caused by commit
+>=20
+>   e4d1fdf89751 ("ARM: mmp: Remove legacy clk code")
+>=20
+> I have disabled CONFIG_ARCH_MPP for today.  (For some reason, this
+> build error did not show up until several more trees had been merged
 
-
-On 5/12/2020 7:25 PM, Xiaoliang Yang wrote:
-> Ocelot VSC9959 switch supports time-based egress shaping in hardware
-> according to IEEE 802.1Qbv. This patch add support for TAS configuration
-> on egress port of VSC9959 switch.
-> 
-> Felix driver is an instance of Ocelot family, with a DSA front-end. The
-> patch uses tc taprio hardware offload to setup TAS set function on felix
-> driver.
-> 
-> Signed-off-by: Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
-> Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+Thanks. I see this error so it must be something on my end.
