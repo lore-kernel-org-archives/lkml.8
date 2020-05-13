@@ -2,228 +2,108 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C29C6C2D0F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B62EAC2D0FB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5682176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 978522312B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:07:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728571AbgEMDE2 (ORCPT
+        id S1728128AbgEMDHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 23:04:28 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2503 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725898AbgEMDE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 23:04:28 -0400
-Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 3805D5D8613628C86A89;
-        Wed, 13 May 2020 11:04:22 +0800 (CST)
-Received: from dggeme760-chm.china.huawei.com (10.3.19.106) by
- DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Wed, 13 May 2020 11:04:21 +0800
-Received: from [127.0.0.1] (10.57.37.248) by dggeme760-chm.china.huawei.com
- (10.3.19.106) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1913.5; Wed, 13
- May 2020 11:04:21 +0800
-Subject: Re: [question] net: phy: rtl8211f: link speed shows 1000Mb/s but
- actual link speed in phy is 100Mb/s
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>, Salil Mehta <salil.mehta@huawei.com>
-References: <478f871a-583d-01f1-9cc5-2eea56d8c2a7@huawei.com>
- <20200512140017.GK409897@lunn.ch>
- <ef25a0a2-e13f-def1-5e91-ceae1bfaf333@huawei.com>
- <20200513015944.GA501603@lunn.ch>
-From:   Yonglong Liu <liuyonglong@huawei.com>
-Message-ID: <3f996ac2-7920-008e-3b83-b8b82cc89b31@huawei.com>
-Date:   Wed, 13 May 2020 11:04:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-MIME-Version: 1.0
-In-Reply-To: <20200513015944.GA501603@lunn.ch>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.37.248]
-X-ClientProxiedBy: dggeme716-chm.china.huawei.com (10.1.199.112) To
- dggeme760-chm.china.huawei.com (10.3.19.106)
-X-CFilter-Loop: Reflected
+        Tue, 12 May 2020 23:07:42 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:45484 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725898AbgEMDHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 23:07:41 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D93F9201201;
+        Wed, 13 May 2020 05:07:37 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 42BE5201200;
+        Wed, 13 May 2020 05:07:33 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C9014402B4;
+        Wed, 13 May 2020 11:07:26 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        amit.kucheria@verdurent.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] thermal: imx8mm: Add get_trend ops
+Date:   Wed, 13 May 2020 10:58:08 +0800
+Message-Id: <1589338689-15700-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/13 9:59, Andrew Lunn wrote:
-> On Wed, May 13, 2020 at 09:34:13AM +0800, Yonglong Liu wrote:
->> Hi, Andrew:
->> 	Thanks for your reply!
->>
->> On 2020/5/12 22:00, Andrew Lunn wrote:
->>> On Tue, May 12, 2020 at 08:48:21PM +0800, Yonglong Liu wrote:
->>>> I use two devices, both support 1000M speed, they are directly connected
->>>> with a network cable. Two devices enable autoneg, and then do the following
->>>> test repeatedly:
->>>> 	ifconfig eth5 down
->>>> 	ifconfig eth5 up
->>>> 	sleep $((RANDOM%6))
->>>> 	ifconfig eth5 down
->>>> 	ifconfig eth5 up
->>>> 	sleep 10
->>>>
->>>> With low probability, one device A link up with 100Mb/s, the other B link up with
->>>> 1000Mb/s(the actual link speed read from phy is 100Mb/s), and the network can
->>>> not work.
->>>>
->>>> device A:
->>>> Settings for eth5:
->>>>         Supported ports: [ TP ]
->>>>         Supported link modes:   10baseT/Half 10baseT/Full
->>>>                                 100baseT/Half 100baseT/Full
->>>>                                 1000baseT/Full
->>>>         Supported pause frame use: Symmetric Receive-only
->>>>         Supports auto-negotiation: Yes
->>>>         Supported FEC modes: Not reported
->>>>         Advertised link modes:  10baseT/Half 10baseT/Full
->>>>                                 100baseT/Half 100baseT/Full
->>>>                                 1000baseT/Full
->>>>         Advertised pause frame use: Symmetric
->>>>         Advertised auto-negotiation: Yes
->>>>         Advertised FEC modes: Not reported
->>>>         Link partner advertised link modes:  10baseT/Half 10baseT/Full
->>>>                                              100baseT/Half 100baseT/Full
->>>>         Link partner advertised pause frame use: Symmetric
->>>>         Link partner advertised auto-negotiation: Yes
->>>>         Link partner advertised FEC modes: Not reported
->>>>         Speed: 100Mb/s
->>>>         Duplex: Full
->>>>         Port: MII
->>>>         PHYAD: 3
->>>>         Transceiver: internal
->>>>         Auto-negotiation: on
->>>>         Current message level: 0x00000036 (54)
->>>>                                probe link ifdown ifup
->>>>         Link detected: yes
->>>>
->>>> The regs value read from mdio are:
->>>> reg 9 = 0x200
->>>> reg a = 0
->>>>
->>>> device B:
->>>> Settings for eth5:
->>>>         Supported ports: [ TP ]
->>>>         Supported link modes:   10baseT/Half 10baseT/Full
->>>>                                 100baseT/Half 100baseT/Full
->>>>                                 1000baseT/Full
->>>>         Supported pause frame use: Symmetric Receive-only
->>>>         Supports auto-negotiation: Yes
->>>>         Supported FEC modes: Not reported
->>>>         Advertised link modes:  10baseT/Half 10baseT/Full
->>>>                                 100baseT/Half 100baseT/Full
->>>>                                 1000baseT/Full
->>>>         Advertised pause frame use: Symmetric
->>>>         Advertised auto-negotiation: Yes
->>>>         Advertised FEC modes: Not reported
->>>>         Link partner advertised link modes:  10baseT/Half 10baseT/Full
->>>>                                              100baseT/Half 100baseT/Full
->>>>                                              1000baseT/Full
->>>>         Link partner advertised pause frame use: Symmetric
->>>>         Link partner advertised auto-negotiation: Yes
->>>>         Link partner advertised FEC modes: Not reported
->>>>         Speed: 1000Mb/s
->>>>         Duplex: Full
->>>>         Port: MII
->>>>         PHYAD: 3
->>>>         Transceiver: internal
->>>>         Auto-negotiation: on
->>>>         Current message level: 0x00000036 (54)
->>>>                                probe link ifdown ifup
->>>>         Link detected: yes
->>>>
->>>> The regs value read from mdio are:
->>>> reg 9 = 0
->>>> reg a = 0x800
->>>>
->>>> I had talk to the FAE of rtl8211f, they said if negotiation failed with 1000Mb/s,
->>>> rtl8211f will change reg 9 to 0, than try to negotiation with 100Mb/s.
->>>>
->>>> The problem happened as:
->>>> ifconfig eth5 up -> phy_start -> phy_start_aneg -> phy_modify_changed(MII_CTRL1000)
->>>> (this time both A and B, reg 9 = 0x200) -> wait for link up -> (B: reg 9 changed to 0)
->>>> -> link up.
->>>
->>> This sounds like downshift, but not correctly working. 1Gbps requires
->>> that 4 pairs in the cable work. If a 1Gbps link is negotiated, but
->>> then does not establish because one of the pairs is broken, some PHYs
->>> will try to 'downshift'. They drop down to 100Mbps, which only
->>> requires two pairs of the cable to work. To do this, the PHY should
->>> change what it is advertising, to no longer advertise 1G, just 100M
->>> and 10M. The link partner should then try to use 100Mbps and
->>> hopefully, a link is established.
->>>
->>> Looking at the ethtool, you can see device A is reporting device B is
->>> only advertising upto 100Mbps. Yet it is locally using 1G. That is
->>> broken. So i would say device A has the problem. Are both PHYs
->>> rtl8211f?
->>
->> Both PHY is rtl8211f. I think Device B is broken. Device B advertising
->> it supported 1G, but actually, in phy, downshift to 100M, so Device B
->> link up with 1G in driver side, but actually 100M in phy.
-> 
-> You have to be careful with the output of ethtool. Downshift is not
-> part of 802.3. There i no standard register to indicate it has
-> happened. Sometimes there is a vendor register. You should check the
-> datasheet, and look at what other PHY drivers do for this, and
-> phy_check_downshift().
-> 
->>> Are you 100% sure your cable and board layout is good? Is it
->>> trying downshift because something is broken? Fix the
->>> cable/connector and the
-> 
->> Will check the layout with hardware engineer. This happened with a low
->> probability. When this happened, another down/up operation or restart
->> autoneg will solved.
->  
->>> reason to downshift goes away. But it does not solve the problem if a
->>> customer has a broken cable. So you might want to deliberately cut a
->>> pair in the cable so it becomes 100% reproducable and try to debug it
->>> further. See if you can find out why auto-neg is not working
->>> correctly.
->>
->> So, your opinion is, maybe we should checkout whether the hardware layout
->> or cable have problem?
-> 
-> Well, there are a couple of issues here.
-> 
-> It could be a hardware problem. Best case, it is the cable. But if you
-> can reproduce it with other boards, it is a board design issue, which
-> you might want to get fixed. If it happens for you in the lab, it will
-> probably happen out in the field.
-> 
-> You should also consider what you want to happen with a cable that
-> really is broken. It would be nice if downshift worked. Slower
-> networking is better than no networking. Unless you have a requirement
-> that 100Mbps is too slow for your use case. So you might want to debug
-> what is going wrong when downshift happens.
-> 
->> By the way, do we have some mechanism to solve this downshift in software
->> side? If the PHY advertising downshift to 100M, but software still have
->> advertising with 1G(just like Device B), it will always have a broken network.
-> 
-> You might get some ideas from phy_check_downshift(). A lot will
-> depended on what information you can get from the PHY.
-> 
-> 	 Andrew
-> 
+Add get_trend ops for i.MX8MM thermal to apply fast cooling
+mechanism, when temperature exceeds passive trip point, the
+highest cooling action will be applied, and when temperature
+drops to lower than the margin below passive trip point, the
+lowest cooling action will be applied.
 
-Hi, Andrew:
-	Thanks very much! That's so helpfull!
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/thermal/imx8mm_thermal.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-> .
-> 
+diff --git a/drivers/thermal/imx8mm_thermal.c b/drivers/thermal/imx8mm_thermal.c
+index e6061e2..8f6a0b8 100644
+--- a/drivers/thermal/imx8mm_thermal.c
++++ b/drivers/thermal/imx8mm_thermal.c
+@@ -38,6 +38,8 @@
+ #define TMU_VER1		0x1
+ #define TMU_VER2		0x2
+ 
++#define IMX_TEMP_COOL_MARGIN	10000
++
+ struct thermal_soc_data {
+ 	u32 num_sensors;
+ 	u32 version;
+@@ -103,8 +105,33 @@ static int tmu_get_temp(void *data, int *temp)
+ 	return tmu->socdata->get_temp(data, temp);
+ }
+ 
++static int tmu_get_trend(void *p, int trip, enum thermal_trend *trend)
++{
++	struct tmu_sensor *sensor = p;
++	int trip_temp, temp, ret;
++
++	if (!sensor->tzd)
++		return -EINVAL;
++
++	ret = sensor->tzd->ops->get_trip_temp(sensor->tzd, trip, &trip_temp);
++	if (ret)
++		return ret;
++
++	temp = READ_ONCE(sensor->tzd->temperature);
++
++	if (temp > trip_temp)
++		*trend = THERMAL_TREND_RAISE_FULL;
++	else if (temp < (trip_temp - IMX_TEMP_COOL_MARGIN))
++		*trend = THERMAL_TREND_DROP_FULL;
++	else
++		*trend = THERMAL_TREND_STABLE;
++
++	return 0;
++}
++
+ static struct thermal_zone_of_device_ops tmu_tz_ops = {
+ 	.get_temp = tmu_get_temp,
++	.get_trend = tmu_get_trend,
+ };
+ 
+ static void imx8mm_tmu_enable(struct imx8mm_tmu *tmu, bool enable)
+-- 
+2.7.4
 
