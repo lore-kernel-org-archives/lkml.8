@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1487DC4345B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DDEC4345E
 	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FDE920814
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B9BA20825
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:00:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="JjTS/Fg9"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="KEWtE9DJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389172AbgEMPAQ (ORCPT
+        id S2389182AbgEMPAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:00:16 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:49043 "EHLO
+        Wed, 13 May 2020 11:00:19 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:56868 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389142AbgEMPAD (ORCPT
+        by vger.kernel.org with ESMTP id S2389140AbgEMPAC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:00:03 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DEwJuu008668;
-        Wed, 13 May 2020 16:59:49 +0200
+        Wed, 13 May 2020 11:00:02 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DEwEa0012652;
+        Wed, 13 May 2020 16:59:51 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=JWzwrNh3nE/7ShXP/Ib08KUjuRLg+lYaWrsytOK3vj8=;
- b=JjTS/Fg9Wazr9t3Jks16qyc7mKewLkMmzffYnzpYJHXTAMweL9XSlTg7uKRmOmEC0ugk
- lgTdLp1r2m+CkRty7fkl3O6kZ+4Fecrz+Xzy4n6/Sv5rdnlKJD7UvS911BZ8jQC43kSp
- 3lO+K9ELoLsnbrgpGfHPWpv8sXeWt2YGOvXHoix/PYWKO2FgvKovLFmj9CWGTUC7T8Zg
- u6ywRmAKbhPeiFWqfJ5jeslt0Z/daYCET/lczXHk0PAl34UjiqeVfcZrXLGoppDNcaIm
- lKR9bFFSOutwnUT0PdYKgAJaQd9ogUKH96dTG8uZwzNcm6j1VZokRWrXRlaVxV1YP9MS IQ== 
+ bh=YKDaVDrP2xQNZLQzpmWzpO0+LvV9JwL1ShvubDmLjTg=;
+ b=KEWtE9DJ7xxHgWkTGUhfZtXbV9C9E4/GLgnfcf87m4lFvA/00B9DJOFrQa0+qCUW7h9r
+ CYT5MRQxYWC9GDcNwsNcMqBQON8V2hUPdnTy5MXyqYoiIVr6F1nyLhO5zmlCCR/XnLUY
+ /dw+zLhvk0iiauPFWN4Z95IeUDFoR4Il7lmeAQDRpGzMmo//vgBxMx5xb6fxw/j19NWM
+ QiOCyMa9e2ZMCMZOZtZPWATIRSoBVx766XYzqKB08Na6cFHvvs4/86oZMrc4A1tedQRr
+ icLUpI5cgb3Py6W5zujWsZnku5n4idrslsEpnIHN47a5ueZrJdMH90vsrqHcOaNbrzQa oA== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3100vqde9u-1
+        by mx07-00178001.pphosted.com with ESMTP id 3100vn5e3h-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 16:59:49 +0200
+        Wed, 13 May 2020 16:59:51 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5DBAD100034;
-        Wed, 13 May 2020 16:59:49 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8C9EB10002A;
+        Wed, 13 May 2020 16:59:51 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4FF572D3006;
-        Wed, 13 May 2020 16:59:49 +0200 (CEST)
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7DB8C2D3006;
+        Wed, 13 May 2020 16:59:51 +0200 (CEST)
 Received: from localhost (10.75.127.50) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 13 May 2020 16:59:48
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 13 May 2020 16:59:50
  +0200
 From:   Benjamin Gaignard <benjamin.gaignard@st.com>
 To:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
@@ -57,16 +57,16 @@ CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
         Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH 07/15] ARM: dts: stm32: update led nodes names for stm32f769-disco
-Date:   Wed, 13 May 2020 16:59:27 +0200
-Message-ID: <20200513145935.22493-8-benjamin.gaignard@st.com>
+Subject: [PATCH 09/15] ARM: dts: stm32: remove useless interrupt-names property on stm32f743
+Date:   Wed, 13 May 2020 16:59:29 +0200
+Message-ID: <20200513145935.22493-10-benjamin.gaignard@st.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <20200513145935.22493-1-benjamin.gaignard@st.com>
 References: <20200513145935.22493-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE3.st.com
+X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG3NODE3.st.com
  (10.75.127.9)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
  definitions=2020-05-13_06:2020-05-13,2020-05-13 signatures=0
@@ -75,31 +75,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update led nodes names to be aligned with yaml description
+Driver doesn't use interrupt's name to get it so remove it from
+the node.
 
 Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 ---
- arch/arm/boot/dts/stm32f769-disco.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/stm32h743.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/stm32f769-disco.dts b/arch/arm/boot/dts/stm32f769-disco.dts
-index 1626e00bb2cb..0ce7fbc20fa4 100644
---- a/arch/arm/boot/dts/stm32f769-disco.dts
-+++ b/arch/arm/boot/dts/stm32f769-disco.dts
-@@ -66,11 +66,11 @@
- 
- 	leds {
- 		compatible = "gpio-leds";
--		green {
-+		led-green {
- 			gpios = <&gpioj 5 GPIO_ACTIVE_HIGH>;
- 			linux,default-trigger = "heartbeat";
+diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
+index 05eb02e6d083..e1de90ade786 100644
+--- a/arch/arm/boot/dts/stm32h743.dtsi
++++ b/arch/arm/boot/dts/stm32h743.dtsi
+@@ -487,7 +487,6 @@
+ 			assigned-clock-parents = <&rcc LSE_CK>;
+ 			interrupt-parent = <&exti>;
+ 			interrupts = <17 IRQ_TYPE_EDGE_RISING>;
+-			interrupt-names = "alarm";
+ 			st,syscfg = <&pwrcfg 0x00 0x100>;
+ 			status = "disabled";
  		};
--		red {
-+		led-red {
- 			gpios = <&gpioj 13 GPIO_ACTIVE_HIGH>;
- 		};
- 	};
 -- 
 2.15.0
 
