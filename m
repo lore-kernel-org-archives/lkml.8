@@ -2,166 +2,115 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B1EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 623C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F0C3205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:34:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a5bkxw4l"
+	by mail.kernel.org (Postfix) with ESMTP id 6ADA72054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:36:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732736AbgEMXeV (ORCPT
+        id S1732740AbgEMXgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 19:34:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37138 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732727AbgEMXeS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 19:34:18 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09242C05BD0A
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 16:34:17 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id f4so51378pjm.2
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 16:34:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=9+kHGmySmNxox5wuBQoQwck1bLpTOuP5gTxm3+9miDE=;
-        b=a5bkxw4lZ5KtU/7XSy6vFoZNzxoQzbwCg8Ve+eRR31EJupSDG7nd9WLXO+x/fuH+oD
-         T1iajkovrL+KE9IJDAnGZnwmEOeil6jnqMj0ZttdnSHvAjbD2Xl9s8EUwYBVXUeQAo9q
-         t1ZXN1sRSkY/OXB5O/18TcHvWPlpTqquHyqAw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=9+kHGmySmNxox5wuBQoQwck1bLpTOuP5gTxm3+9miDE=;
-        b=oEi9ZlAM1EFH1t6IcQHvfZHoR68kuU7+qCjKeDTC8EEG/+ypp7fs/iR0M/AurNy2c2
-         ZTmkc2xv3fK6s1OxxwN7kOJZ0rq50wu5jFRGIRPVqdfha4O/tjdkyQsMPYBdUewQETPy
-         DAYrZ+P41tuf4VX23N+WBI47YQA+WjACvmLUItseQqyBCDKfgCJSQKE6EYDl34zJtRxR
-         JGjmVUfKWEnDuY3jRrjf/CgV3A616Z5p/AWwNw0XfyZ8n6pejLAYu69tSwgjIlLgjJb8
-         KJjbO6gQwvQe63ij3c15vPEQP7+f9tVPplNzMJubGg5u1ZsYb06GFiXfVEFx4BS0Edte
-         egaw==
-X-Gm-Message-State: AOAM530XfvV/sWm+xXrWdmf5RxsX696tLE9woBkl4OQ2WKYFg/Q5DoKY
-        PX7pqnlQvVQTxPMTnN97TEBQig==
-X-Google-Smtp-Source: ABdhPJx1Ph3/b2uAHkh09Mf7p8FRkdK0oKGy1ttISPQpTjgvGcQqjdCtv4Wgy2sxJ8WWEUMPB5YOOA==
-X-Received: by 2002:a17:90b:1994:: with SMTP id mv20mr863273pjb.41.1589412856445;
-        Wed, 13 May 2020 16:34:16 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k2sm568374pfd.108.2020.05.13.16.34.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 16:34:15 -0700 (PDT)
-Date:   Wed, 13 May 2020 16:34:14 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Mimi Zohar <zohar@kernel.org>
-Cc:     Scott Branden <scott.branden@broadcom.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>
-Subject: Re: [PATCH v5 1/7] fs: introduce kernel_pread_file* support
-Message-ID: <202005131630.8B1ECE0@keescook>
-References: <0e6b5f65-8c61-b02e-7d35-b4ae52aebcf3@broadcom.com>
- <1589396593.5098.166.camel@kernel.org>
- <e1b92047-7003-0615-3d58-1388ec27c78a@broadcom.com>
- <1589398747.5098.178.camel@kernel.org>
- <a228ae0f-d551-e0e8-446e-5ae63462c520@broadcom.com>
- <1589404814.5098.185.camel@kernel.org>
- <20200513212847.GT11244@42.do-not-panic.com>
- <1589407924.5098.208.camel@kernel.org>
- <f8de785c-60df-3fec-c2c6-b1dd2c77db17@broadcom.com>
- <1589410843.5098.220.camel@kernel.org>
+        Wed, 13 May 2020 19:36:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36108 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732638AbgEMXgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 19:36:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 1BD01AB64;
+        Wed, 13 May 2020 23:36:32 +0000 (UTC)
+Date:   Thu, 14 May 2020 01:36:16 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: gcc-10: kernel stack is corrupted and fails to boot
+Message-ID: <20200513233616.GD6733@zn.tnic>
+References: <20200509120707.188595-2-arnd@arndb.de>
+ <87v9l24qz6.fsf@kamboji.qca.qualcomm.com>
+ <87r1vq4qev.fsf@kamboji.qca.qualcomm.com>
+ <87d078tjl0.fsf_-_@kamboji.qca.qualcomm.com>
+ <20200513154847.GA158356@rani.riverdale.lan>
+ <CAK8P3a3KpM91+jv6+7KSKFRpwLqf38Lz1wbGhkFFyfDb9oahgA@mail.gmail.com>
+ <20200513214128.GB6733@zn.tnic>
+ <CAK8P3a3XPCyNM7s3vbn8JYK6swA3ZpPtTWB+uhmAE3YEX-nmig@mail.gmail.com>
+ <20200513222038.GC6733@zn.tnic>
+ <CAHk-=wgybuOF+Jp2XYWqM7Xn1CW6szWQw_FgVoFh5jx_4YoCVw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1589410843.5098.220.camel@kernel.org>
+In-Reply-To: <CAHk-=wgybuOF+Jp2XYWqM7Xn1CW6szWQw_FgVoFh5jx_4YoCVw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 07:00:43PM -0400, Mimi Zohar wrote:
-> On Wed, 2020-05-13 at 15:48 -0700, Scott Branden wrote:
-> > 
-> > On 2020-05-13 3:12 p.m., Mimi Zohar wrote:
-> > > On Wed, 2020-05-13 at 21:28 +0000, Luis Chamberlain wrote:
-> > >> On Wed, May 13, 2020 at 05:20:14PM -0400, Mimi Zohar wrote:
-> > >>> On Wed, 2020-05-13 at 12:41 -0700, Scott Branden wrote:
-> > >>>> On 2020-05-13 12:39 p.m., Mimi Zohar wrote:
-> > >>>>> On Wed, 2020-05-13 at 12:18 -0700, Scott Branden wrote:
-> > >>>>>> On 2020-05-13 12:03 p.m., Mimi Zohar wrote:
-> > >>>>>>> On Wed, 2020-05-13 at 11:53 -0700, Scott Branden wrote:
-> > >>>>>> Even if the kernel successfully verified the firmware file signature it
-> > >>>>>> would just be wasting its time.† The kernel in these use cases is not always
-> > >>>>>> trusted.† The device needs to authenticate the firmware image itself.
-> > >>>>> There are also environments where the kernel is trusted and limits the
-> > >>>>> firmware being provided to the device to one which they signed.
-> > >>>>>
-> > >>>>>>> The device firmware is being downloaded piecemeal from somewhere and
-> > >>>>>>> won't be measured?
-> > >>>>>> It doesn't need to be measured for current driver needs.
-> > >>>>> Sure the device doesn't need the kernel measuring the firmware, but
-> > >>>>> hardened environments do measure firmware.
-> > >>>>>
-> > >>>>>> If someone has such need the infrastructure could be added to the kernel
-> > >>>>>> at a later date.† Existing functionality is not broken in any way by
-> > >>>>>> this patch series.
-> > >>>>> Wow! †You're saying that your patch set takes precedence over the
-> > >>>>> existing expectations and can break them.
-> > >>>> Huh? I said existing functionality is NOT broken by this patch series.
-> > >>> Assuming a system is configured to measure and appraise firmware
-> > >>> (rules below), with this change the firmware file will not be properly
-> > >>> measured and will fail signature verification.
-> > So no existing functionality has been broken.
-> > >>>
-> > >>> Sample IMA policy rules:
-> > >>> measure func=FIRMWARE_CHECK
-> > >>> appraise func=FIRMWARE_CHECK appraise_type=imasig
-> > >> Would a pre and post lsm hook for pread do it?
-> > > IMA currently measures and verifies the firmware file signature on the
-> > > post hook. †The file is read once into a buffer. †With this change,
-> > > IMA would need to be on the pre hook, to read the entire file,
-> > > calculating the file hash and verifying the file signature. †Basically
-> > > the firmware would be read once for IMA and again for the device.
-> > The entire file may not fit into available memory to measure and 
-> > verify.† Hence the reason for a partial read.
+On Wed, May 13, 2020 at 04:13:53PM -0700, Linus Torvalds wrote:
+> The check itself doesn't seem worth it. If your worry is that an empty
+> asm() can be optimized away, then don't use an empty asm!
+
+gcc guys said we should use that since the first attempt using
+
+__attribute__((optimize("-fno-stack-protector")))
+
+didn't work because, well, that attribute turned out to be "not suitable in
+production code". :)
+
+Full thread here:
+
+https://lore.kernel.org/lkml/20200314164451.346497-1-slyfox@gentoo.org/
+
+> In other words, the only reason for that check seems to be a worry
+> that simply isn't worth having.
+
+Yes, that was me asking for a way to check whether any future gccs would
+violate that. But if they'd do that, they would break a lot of code
+depending on it.
+
+> In fact, I think the check is wrong anyway, since the main thing I can
+> see that would do a tailcall despite the empty asm is link-time
+> optimizations that that check doesn't even check for!
 > 
-> Previously, IMA pre-read the file in page size chunks in order to
-> calculate the file hash. †To avoid reading the file twice, the file is
-> now read into a buffer.
+> So everything I see there just screams "the check is bogus" to me. The
+> check doesn't work, and if it were to work it only means that the
+> prevent_tail_call_optimization() thing is too fragile.
 
-Can the VFS be locked in some way and then using the partial reads would
-trigger the "read twice" mode? I.e. something like:
+So I did test it trivially by removing the asm("") and then it would
+tailcall optimize. But we didn't think about LTO so hm, that would
+probably break it.
 
-open
-first partial read:
-	lock file contents (?)
-	perform full page-at-a-time-read-and-measure
-	rewind, read partial
-other partial reads
-final partial read
-	unlock
+> Just put a full memory barrier in there, with an actual "mfence"
+> instruction or whatever, so that you know that the check is pointless,
+> and so that you know that a link-time optimizer can't turn the
+> call+return into a tailcall.
+
+Right, the intention here was to have it arch-agnostic in
+include/linux/compiler.h because powerpc might need it too soon:
+
+arch/powerpc/kernel/smp.c:1296: boot_init_stack_canary();
+
+Looking at them, they do have an mb() too so how about this then
+instead?
+
+#define prevent_tail_call_optimization()	mb()
+
+Thx.
 
 -- 
-Kees Cook
+Regards/Gruss,
+    Boris.
+
+SUSE Software Solutions Germany GmbH, GF: Felix Imend√∂rffer, HRB 36809, AG N√ºrnberg
