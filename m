@@ -2,80 +2,90 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF220C2D0FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D6BCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAB9D2064E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 560A4205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:18:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QSsayEV4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387583AbgEMNRY (ORCPT
+        id S2387738AbgEMNSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:17:24 -0400
-Received: from out28-122.mail.aliyun.com ([115.124.28.122]:45162 "EHLO
-        out28-122.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728456AbgEMNRX (ORCPT
+        Wed, 13 May 2020 09:18:02 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:23433 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387714AbgEMNR6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:17:23 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.3909549|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.00931302-0.000242601-0.990444;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03301;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.HY0oTOn_1589375829;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HY0oTOn_1589375829)
-          by smtp.aliyun-inc.com(10.147.41.120);
-          Wed, 13 May 2020 21:17:19 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-clk@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
-        paul@crapouillou.net, dongsheng.qiu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-Subject: [PATCH v8 0/6] Add support for the X1830 and fix bugs for X1000
-Date:   Wed, 13 May 2020 21:16:38 +0800
-Message-Id: <1589375804-78423-2-git-send-email-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1589375804-78423-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1589375804-78423-1-git-send-email-zhouyanjie@wanyeetech.com>
+        Wed, 13 May 2020 09:17:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589375877;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=uvCkRI/K32PIBqaQ7LcOfghe4diMRxEm5e5JsVQlwss=;
+        b=QSsayEV4hsn+RkiKYSWzBlNSmpl0HhPjcwU69qH2To92aOaEnfKqOmAbQfFPtz0362nk0f
+        c/tr3Z43oCSA9Aw42wwMEZKE3y4UyF2IWuNzvqU/8LKcgmGZh19Q6LeSBFj4ctdttE3gXf
+        JCRArBt5F0gIfjglFgS+mYiuRSfJauM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-133-9T7X1SL4M7u16KqBfljjIQ-1; Wed, 13 May 2020 09:17:52 -0400
+X-MC-Unique: 9T7X1SL4M7u16KqBfljjIQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 53C148014C0;
+        Wed, 13 May 2020 13:17:49 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-59.rdu2.redhat.com [10.10.112.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E8A53610F2;
+        Wed, 13 May 2020 13:17:41 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200513062649.2100053-22-hch@lst.de>
+References: <20200513062649.2100053-22-hch@lst.de> <20200513062649.2100053-1-hch@lst.de>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     dhowells@redhat.com, "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        linux-nvme@lists.infradead.org, linux-sctp@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
+        drbd-dev@lists.linbit.com, linux-cifs@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-rdma@vger.kernel.org,
+        cluster-devel@redhat.com, Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, Neil Horman <nhorman@tuxdriver.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev@vger.kernel.org, Vlad Yasevich <vyasevich@gmail.com>,
+        linux-kernel@vger.kernel.org, Jon Maloy <jmaloy@redhat.com>,
+        Ying Xue <ying.xue@windriver.com>, ocfs2-devel@oss.oracle.com
+Subject: Re: [PATCH 21/33] ipv4: add ip_sock_set_mtu_discover
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3123897.1589375861.1@warthog.procyon.org.uk>
+Date:   Wed, 13 May 2020 14:17:41 +0100
+Message-ID: <3123898.1589375861@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v7->v8:
-1.Rebase [3/6] on top of linux-next, because "ingenic,cgu.txt" has
-been converted to "ingenic,cgu.yaml".
+Christoph Hellwig <hch@lst.de> wrote:
 
-周琰杰 (Zhou Yanjie) (6):
-  clk: Ingenic: Remove unnecessary spinlock when reading registers.
-  clk: Ingenic: Adjust cgu code to make it compatible with X1830.
-  dt-bindings: clock: Add X1830 bindings.
-  clk: Ingenic: Add CGU driver for X1830.
-  dt-bindings: clock: Add and reorder ABI for X1000.
-  clk: X1000: Add FIXDIV for SSI clock of X1000.
+> +		ip_sock_set_mtu_discover(conn->params.local->socket->sk,
+> +				IP_PMTUDISC_DONT);
 
- .../devicetree/bindings/clock/ingenic,cgu.yaml     |   2 +
- drivers/clk/ingenic/Kconfig                        |  10 +
- drivers/clk/ingenic/Makefile                       |   1 +
- drivers/clk/ingenic/cgu.c                          |  28 +-
- drivers/clk/ingenic/cgu.h                          |   4 +
- drivers/clk/ingenic/jz4725b-cgu.c                  |   4 +
- drivers/clk/ingenic/jz4740-cgu.c                   |   4 +
- drivers/clk/ingenic/jz4770-cgu.c                   |   8 +-
- drivers/clk/ingenic/jz4780-cgu.c                   |   3 +
- drivers/clk/ingenic/x1000-cgu.c                    |  62 +++-
- drivers/clk/ingenic/x1830-cgu.c                    | 388 +++++++++++++++++++++
- include/dt-bindings/clock/x1000-cgu.h              |  62 ++--
- include/dt-bindings/clock/x1830-cgu.h              |  53 +++
- 13 files changed, 580 insertions(+), 49 deletions(-)
- create mode 100644 drivers/clk/ingenic/x1830-cgu.c
- create mode 100644 include/dt-bindings/clock/x1830-cgu.h
+Um... The socket in question could be an AF_INET6 socket, not an AF_INET4
+socket - I presume it will work in that case.  If so:
 
--- 
-2.7.4
+Reviewed-by: David Howells <dhowells@redhat.com> [rxrpc bits]
 
