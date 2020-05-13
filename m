@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC271C2D0F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8104FC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4C1024932
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4C6206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:30:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbgEMCaR (ORCPT
+        id S1728774AbgEMCaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 22:30:17 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:40920 "EHLO inva020.nxp.com"
+        Tue, 12 May 2020 22:30:19 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:41266 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728590AbgEMCaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 22:30:12 -0400
+        id S1728685AbgEMCaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 22:30:17 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3A9E31A130A;
-        Wed, 13 May 2020 04:30:10 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A12DD1A12EB;
+        Wed, 13 May 2020 04:30:15 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id AC9491A132C;
-        Wed, 13 May 2020 04:30:00 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 06EE21A1329;
+        Wed, 13 May 2020 04:30:06 +0200 (CEST)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 4054F402BC;
-        Wed, 13 May 2020 10:29:48 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7BF09402BE;
+        Wed, 13 May 2020 10:29:53 +0800 (SGT)
 From:   Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
 To:     xiaoliang.yang_1@nxp.com, po.liu@nxp.com, claudiu.manoil@nxp.com,
         alexandru.marginean@nxp.com, vladimir.oltean@nxp.com,
@@ -40,9 +40,9 @@ To:     xiaoliang.yang_1@nxp.com, po.liu@nxp.com, claudiu.manoil@nxp.com,
         joergen.andreasen@microchip.com, UNGLinuxDriver@microchip.com,
         vinicius.gomes@intel.com, nikolay@cumulusnetworks.com,
         roopa@cumulusnetworks.com, linux-devel@linux.nxdi.nxp.com
-Subject: [PATCH v2 net-next 1/3] net: dsa: felix: qos classified based on pcp
-Date:   Wed, 13 May 2020 10:25:08 +0800
-Message-Id: <20200513022510.18457-2-xiaoliang.yang_1@nxp.com>
+Subject: [PATCH v2 net-next 3/3] net: dsa: felix: add support Credit Based Shaper(CBS) for hardware offload
+Date:   Wed, 13 May 2020 10:25:10 +0800
+Message-Id: <20200513022510.18457-4-xiaoliang.yang_1@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200513022510.18457-1-xiaoliang.yang_1@nxp.com>
 References: <20200513022510.18457-1-xiaoliang.yang_1@nxp.com>
@@ -52,59 +52,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set the default QoS Classification based on PCP and DEI of vlan tag,
-after that, frames can be Classified to different Qos based on PCP tag.
-If there is no vlan tag or vlan ignored, use port default Qos.
+VSC9959 hardware support the Credit Based Shaper(CBS) which part
+of the IEEE-802.1Qav. This patch support sch_cbs set for VSC9959.
 
 Signed-off-by: Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
 ---
- drivers/net/dsa/ocelot/felix.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/net/dsa/ocelot/felix_vsc9959.c | 50 +++++++++++++++++++++++++-
+ 1 file changed, 49 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
-index a2dfd73f8a1a..58d6b0f454e5 100644
---- a/drivers/net/dsa/ocelot/felix.c
-+++ b/drivers/net/dsa/ocelot/felix.c
-@@ -289,6 +289,27 @@ static void felix_phylink_mac_link_up(struct dsa_switch *ds, int port,
- 			 QSYS_SWITCH_PORT_MODE, port);
+diff --git a/drivers/net/dsa/ocelot/felix_vsc9959.c b/drivers/net/dsa/ocelot/felix_vsc9959.c
+index efdcc547e0c9..df4498c0e864 100644
+--- a/drivers/net/dsa/ocelot/felix_vsc9959.c
++++ b/drivers/net/dsa/ocelot/felix_vsc9959.c
+@@ -207,7 +207,7 @@ static const u32 vsc9959_qsys_regmap[] = {
+ 	REG(QSYS_QMAXSDU_CFG_6,			0x00f62c),
+ 	REG(QSYS_QMAXSDU_CFG_7,			0x00f648),
+ 	REG(QSYS_PREEMPTION_CFG,		0x00f664),
+-	REG_RESERVED(QSYS_CIR_CFG),
++	REG(QSYS_CIR_CFG,			0x000000),
+ 	REG(QSYS_EIR_CFG,			0x000004),
+ 	REG(QSYS_SE_CFG,			0x000008),
+ 	REG(QSYS_SE_DWRR_CFG,			0x00000c),
+@@ -1332,6 +1332,52 @@ static int vsc9959_qos_port_tas_set(struct ocelot *ocelot, int port,
+ 	return ret;
  }
  
-+static void felix_port_qos_map_init(struct ocelot *ocelot, int port)
++static int vsc9959_qos_port_cbs_set(struct dsa_switch *ds, int port,
++				    struct tc_cbs_qopt_offload *cbs_qopt)
 +{
-+	int i;
++	struct ocelot *ocelot = ds->priv;
++	int port_ix = port * 8 + cbs_qopt->queue;
++	u32 rate, burst;
++
++	if (cbs_qopt->queue >= ds->num_tx_queues)
++		return -EINVAL;
++
++	if (!cbs_qopt->enable) {
++		ocelot_write_gix(ocelot, QSYS_CIR_CFG_CIR_RATE(0) |
++				 QSYS_CIR_CFG_CIR_BURST(0),
++				 QSYS_CIR_CFG, port_ix);
++
++		ocelot_rmw_gix(ocelot, 0, QSYS_SE_CFG_SE_AVB_ENA,
++			       QSYS_SE_CFG, port_ix);
++
++		return 0;
++	}
++
++	/* Rate unit is 100 kbps */
++	rate = DIV_ROUND_UP(cbs_qopt->idleslope, 100);
++	/* Avoid using zero rate */
++	rate = clamp_t(u32, rate, 1, GENMASK(14, 0));
++	/* Burst unit is 4kB */
++	burst = DIV_ROUND_UP(cbs_qopt->hicredit, 4096);
++	/* Avoid using zero burst size */
++	burst = clamp_t(u32, rate, 1, GENMASK(5, 0));
++	ocelot_write_gix(ocelot,
++			 QSYS_CIR_CFG_CIR_RATE(rate) |
++			 QSYS_CIR_CFG_CIR_BURST(burst),
++			 QSYS_CIR_CFG,
++			 port_ix);
 +
 +	ocelot_rmw_gix(ocelot,
-+		       ANA_PORT_QOS_CFG_QOS_PCP_ENA,
-+		       ANA_PORT_QOS_CFG_QOS_PCP_ENA,
-+		       ANA_PORT_QOS_CFG,
-+		       port);
++		       QSYS_SE_CFG_SE_FRM_MODE(0) |
++		       QSYS_SE_CFG_SE_AVB_ENA,
++		       QSYS_SE_CFG_SE_AVB_ENA |
++		       QSYS_SE_CFG_SE_FRM_MODE_M,
++		       QSYS_SE_CFG,
++		       port_ix);
 +
-+	for (i = 0; i < FELIX_NUM_TC * 2; i++) {
-+		ocelot_rmw_ix(ocelot,
-+			      (ANA_PORT_PCP_DEI_MAP_DP_PCP_DEI_VAL & i) |
-+			      ANA_PORT_PCP_DEI_MAP_QOS_PCP_DEI_VAL(i),
-+			      ANA_PORT_PCP_DEI_MAP_DP_PCP_DEI_VAL |
-+			      ANA_PORT_PCP_DEI_MAP_QOS_PCP_DEI_VAL_M,
-+			      ANA_PORT_PCP_DEI_MAP,
-+			      port, i);
-+	}
++	return 0;
 +}
 +
- static void felix_get_strings(struct dsa_switch *ds, int port,
- 			      u32 stringset, u8 *data)
- {
-@@ -547,6 +568,11 @@ static int felix_setup(struct dsa_switch *ds)
- 			ocelot_configure_cpu(ocelot, port,
- 					     OCELOT_TAG_PREFIX_NONE,
- 					     OCELOT_TAG_PREFIX_LONG);
-+
-+		/* Set the default QoS Classification based on PCP and DEI
-+		 * bits of vlan tag.
-+		 */
-+		felix_port_qos_map_init(ocelot, port);
+ static int vsc9959_port_setup_tc(struct dsa_switch *ds, int port,
+ 				 enum tc_setup_type type,
+ 				 void *type_data)
+@@ -1341,6 +1387,8 @@ static int vsc9959_port_setup_tc(struct dsa_switch *ds, int port,
+ 	switch (type) {
+ 	case TC_SETUP_QDISC_TAPRIO:
+ 		return vsc9959_qos_port_tas_set(ocelot, port, type_data);
++	case TC_SETUP_QDISC_CBS:
++		return vsc9959_qos_port_cbs_set(ds, port, type_data);
+ 	default:
+ 		return -EOPNOTSUPP;
  	}
- 
- 	/* Include the CPU port module in the forwarding mask for unknown
 -- 
 2.17.1
 
