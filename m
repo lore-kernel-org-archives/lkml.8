@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DDDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D882FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1035A207CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B480207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589388455;
-	bh=hYHHYYaIjhq2WC73z/SlpaRnlEZFHSMmjus8CtbgDLA=;
+	s=default; t=1589388457;
+	bh=DpqSfsq1NEtjbPTH3BFadiNAreRXsV2vPnKorvlK8ws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GF1cpQIEn4vTEEyJgoO45u+X+tE+2crpdJVg3WO3xSU0+9U88a3JGe5QMqlGW9qC6
-	 3CoWNvcgAGCn1RSR0FYbY/VEIdjHBL6li/W2qssdE4X9s2mx/KHHqWFuYR0JK0fSlu
-	 vLb1yOgHrjHGCeoYwZIjbN22qrkiZKYYTGECRrGU=
+	b=rPzoY6FaYJh8MoI9abVhiYJFI2Yn6Y1jbMz68Bt8vzsjhPv2ZvtpFaCJuMWP++4mY
+	 VFnkFCau3xPYdicM4zgELErMFOSQMBSgG2Ji4X4mLrihi1K30v5DlIe9jTOp6QVOst
+	 tGprcdizcYDAvkv56KGIoWsaEVup0tGiKwbcKZKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389759AbgEMQrd (ORCPT
+        id S2389769AbgEMQrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 12:47:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53352 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 12:47:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389736AbgEMQr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 12:47:29 -0400
+        id S2389749AbgEMQrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 12:47:31 -0400
 Received: from lenoir.home (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25F03207CB;
-        Wed, 13 May 2020 16:47:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E1F420794;
+        Wed, 13 May 2020 16:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589388449;
-        bh=hYHHYYaIjhq2WC73z/SlpaRnlEZFHSMmjus8CtbgDLA=;
+        s=default; t=1589388451;
+        bh=DpqSfsq1NEtjbPTH3BFadiNAreRXsV2vPnKorvlK8ws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SvUC75M1tEFamYkQwWEQohI5UKKZSTXDJlkDnf3E7G/ogS/4XJlaEKpwYW2/YKqrP
-         Te2wG31CkMGtL3WK88NvZkMeak3lBo2Qx3OuQAlpxbDoVOEhHMKwkMFJrdOrDi9Hux
-         +Rl8YHzXhnYKlkG2IEUa83/jvrb9ZwbCikUbK14E=
+        b=lhDTh4QdCOE7/RLfFy+shT69iXAxT+qpry12C0XA+kijbcpB1sm+W8KtRYnvU4z8l
+         nW2Opkh8g6IPYxxMTSdpOQwqVNGSEMhDhytKIwwIC89yiiEf+eBeUv1wtSXNFxm8G3
+         xYyVlTlaQRA0+KbfZH1mB3koT2vLwBZL5yNmOZ+0=
 From:   Frederic Weisbecker <frederic@kernel.org>
 To:     "Paul E . McKenney" <paulmck@kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
@@ -48,9 +48,9 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Lai Jiangshan <jiangshanlai@gmail.com>,
         Joel Fernandes <joel@joelfernandes.org>,
         Josh Triplett <josh@joshtriplett.org>
-Subject: [PATCH 05/10] rcu: Remove useless conditional nocb unlock
-Date:   Wed, 13 May 2020 18:47:09 +0200
-Message-Id: <20200513164714.22557-6-frederic@kernel.org>
+Subject: [PATCH 06/10] rcu: Make nocb_cb kthread parkable
+Date:   Wed, 13 May 2020 18:47:10 +0200
+Message-Id: <20200513164714.22557-7-frederic@kernel.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200513164714.22557-1-frederic@kernel.org>
 References: <20200513164714.22557-1-frederic@kernel.org>
@@ -61,8 +61,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not only is it in the bad order (rdp->nocb_lock should be unlocked after
-rnp) but it's also dead code as we are in the !offloaded path.
+This will be necessary to correctly implement rdp de-offloading. We
+don't want rcu_do_batch() in nocb_cb kthread to race with local
+rcu_do_batch().
 
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 Cc: Paul E. McKenney <paulmck@kernel.org>
@@ -72,21 +73,33 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Lai Jiangshan <jiangshanlai@gmail.com>
 Cc: Joel Fernandes <joel@joelfernandes.org>
 ---
- kernel/rcu/tree.c | 1 -
- 1 file changed, 1 deletion(-)
+ kernel/rcu/tree_plugin.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 804cf7dfff03..cc95419f6491 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -3680,7 +3680,6 @@ void rcutree_migrate_callbacks(int cpu)
- 		raw_spin_unlock_rcu_node(my_rnp); /* irqs remain disabled. */
- 		__call_rcu_nocb_wake(my_rdp, true, flags);
- 	} else {
--		rcu_nocb_unlock(my_rdp); /* irqs remain disabled. */
- 		raw_spin_unlock_irqrestore_rcu_node(my_rnp, flags);
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 1dd3fdd675a1..43ecc047af26 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -2104,7 +2104,9 @@ static void nocb_cb_wait(struct rcu_data *rdp)
+ 	if (needwake_gp)
+ 		rcu_gp_kthread_wake();
+ 	swait_event_interruptible_exclusive(rdp->nocb_cb_wq,
+-				 !READ_ONCE(rdp->nocb_cb_sleep));
++				    !READ_ONCE(rdp->nocb_cb_sleep) ||
++				    kthread_should_park());
++
+ 	if (!smp_load_acquire(&rdp->nocb_cb_sleep)) { /* VVV */
+ 		/* ^^^ Ensure CB invocation follows _sleep test. */
+ 		return;
+@@ -2125,6 +2127,8 @@ static int rcu_nocb_cb_kthread(void *arg)
+ 	// if there are no more ready callbacks, waits for them.
+ 	for (;;) {
+ 		nocb_cb_wait(rdp);
++		if (kthread_should_park())
++			kthread_parkme();
+ 		cond_resched_tasks_rcu_qs();
  	}
- 	if (needwake)
+ 	return 0;
 -- 
 2.25.0
 
