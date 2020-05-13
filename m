@@ -2,191 +2,117 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88861C2D0FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7362CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC3D204EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:11:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65ED6204EF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:13:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="GvvFdOv5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LC9Vpj5a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388861AbgEMOLx (ORCPT
+        id S2388871AbgEMONm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 10:11:53 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:38182 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388793AbgEMOLu (ORCPT
+        Wed, 13 May 2020 10:13:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34098 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733142AbgEMONm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 10:11:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589379109; x=1620915109;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Dj/tqGjjDtj2A9PaqeSsjiB8UtDRZ0jP0v5pZdM7/yE=;
-  b=GvvFdOv5hDTqp67Lz8INK4LbULY9nuhbZyPIe0mBJfw1DlRt3IsV8q3D
-   0fb77ocElGgMP5+BnxyleRYXmmTWnbodcIJzmnyM5c399+qEtWQmwfAiz
-   y6aABiZjhd9AYEnxgIhRv/P+t6Rk2H2nDEmmRzQUJ7ZBNYuEG7C8mt4me
-   Tw0NYhTJ957KC47PO94+89ggGz993dMu1PEERGHu6NAJEwMA5/yy17SHn
-   CvwyPySaCGobqMkkBZQZApmUzvYnW/gyIMNOHNvo8VywetuD/2EMj3YMv
-   /H2CoiPCCcfN0uemTRpo3RkRZtaH7cOpR7ghwo3vqBfsSE2MbxPZ0iH4C
-   A==;
-IronPort-SDR: GCvGB2O5qzhphdVtjFPJUTIZwX2bvDRmVC5jMlmG08bTSDE/UpKDexka79h8f1+0xeh1otbyAS
- ghS/6GRQIEWmYOv/ttTRyTxh4LlbTxjfg/O1nb25iLprkvGj1M+29RjIJKU0wpTvahP2fcP798
- n69qE+4Vxm1x/zXGZlttuXMmFPYDnsyz48p/qNSvlug9HzZzkh5o7OHIWdZ7gRVoaOG4S9Fm1i
- J+hXXCqMsuOaO/y72T+Wop97ARfagWMWYzDwbNqi8QHJN1Ln/Pfp8C39B+0TnD9/0dAEgy2VUP
- 5rQ=
-X-IronPort-AV: E=Sophos;i="5.73,388,1583218800"; 
-   d="scan'208";a="76510168"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 May 2020 07:11:49 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 13 May 2020 07:11:48 -0700
-Received: from soft-dev15.microsemi.net (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 13 May 2020 07:11:46 -0700
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-To:     SoC Team <soc@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 3/3] arm64: dts: sparx5: Add SGPIO devices
-Date:   Wed, 13 May 2020 16:11:34 +0200
-Message-ID: <20200513141134.25819-4-lars.povlsen@microchip.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513141134.25819-1-lars.povlsen@microchip.com>
-References: <20200513141134.25819-1-lars.povlsen@microchip.com>
+        Wed, 13 May 2020 10:13:42 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3750EC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 07:13:42 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id e10so10116960vsp.12
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 07:13:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bCRPmBf+bIjv/gHr5AWk1RbyQw6taBIM/9TqKHo+x6E=;
+        b=LC9Vpj5aGvdbFDALXhMdOIffXIYZMOViIbG8buo3eE2kTLhqobBlVArL4MjS1BaDl2
+         tb4rVQZIZXXorGlfKKmOKYPcouXTjKMPBTrkB9BYmfaGP0f0wIO08O/i7ZH5pE1zF0Q8
+         lMxY2Beahh2WRSBmW5CxCP9GSHdc+ZxGU/j6MLzvFuNJ4zr/EGtYjkTwc+CvXGADZ+n1
+         faoCkcpDbZ7o/f9xQFdDLLIg6ms+H6xHKIgLs0U8hr2n67qnMTDv4k4hk6pRUMysBgfZ
+         1FfWy7me2GLJvholeW2hkll4VaZqD8JgjhZ2pz5Rs474s59hAAIwuihwx0RuSzAkN+Si
+         xyZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bCRPmBf+bIjv/gHr5AWk1RbyQw6taBIM/9TqKHo+x6E=;
+        b=IFItUO0u0mN/v7opKuqbM7PGbuuaUCZu7LDDPRnJpBtDhII38yjB+Qma8HHEgq17HM
+         aWhD+eq/R/k5kKMoprKwGn0n2ViB7bZllT+rILhmMJT7EFqYRFgYlESBk8xLUSD4b/Kk
+         0Im8kQkvjCXsAanPEws3Ybu5K7ZWBwj3riJPgB70teVEAbhBqr2nWyiPFqiPiZ4zoGmK
+         A9/rF8nPlfyWC0v/0Wsopopp/EmTzHQPY2jU0xXD9EEdvU9ttJfO924z/yIMskFMzawa
+         qyQ87I/X2AwkHn92Y2/nDaDaO6SSisIhxp5TBLv20GPUjAAGT1g0EiMvidymeb2WVEjq
+         wc6Q==
+X-Gm-Message-State: AGi0PubXUViQAAeNAEjAZzSM6ksFktOSHVXUhgtsFMebZMAArDvxoiCD
+        AjwgROKK2bdNM7MzMMWD/H3NERFjNmpCuyg7Q/8=
+X-Google-Smtp-Source: APiQypK9PkckYUve5Fg/x7q8ws6y5o++n4e5ZTL0yAeOlVub3u/qpyw0N169OJJ8fNITTRZ0bO00qR2kL/85wz6J/Qs=
+X-Received: by 2002:a67:ffcf:: with SMTP id w15mr19434925vsq.213.1589379219878;
+ Wed, 13 May 2020 07:13:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <125a8c31e106dc68e6d3e3395cecc766db7fb897.camel@gmail.com>
+ <20200513070847.GM2571@lahna.fi.intel.com> <CAD2FfiHsUjLC1K=HvF74LbRaKoc_zz6bOmGLQrQbW4CywWCP9A@mail.gmail.com>
+ <20200513091100.GY2571@lahna.fi.intel.com>
+In-Reply-To: <20200513091100.GY2571@lahna.fi.intel.com>
+From:   Richard Hughes <hughsient@gmail.com>
+Date:   Wed, 13 May 2020 15:13:28 +0100
+Message-ID: <CAD2FfiGNErUhz=7DH6Z37X573hSkJkzbOEXbb++X+Ey5WLc9=Q@mail.gmail.com>
+Subject: Re: [PATCH] mfd: Export LPC attributes for the system SPI chip
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     ptyser@xes-inc.com, Lee Jones <lee.jones@linaro.org>,
+        tudor.ambarus@microchip.com,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        allison@lohutok.net, tglx@linutronix.de, jethro@fortanix.com,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds SGPIO devices for the Sparx5 SoC and configures it for the
-applicable reference boards.
+On Wed, 13 May 2020 at 10:11, Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> > I can fix up all those, but out of interest how did you "know" the
+> > right three digit identifier to use?
+> I work for Intel ;-)
 
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
----
- arch/arm64/boot/dts/microchip/sparx5.dtsi     | 52 +++++++++++++++++++
- .../boot/dts/microchip/sparx5_pcb125.dts      |  5 ++
- .../dts/microchip/sparx5_pcb134_board.dtsi    |  5 ++
- 3 files changed, 62 insertions(+)
+Hah, okay, thanks :)
 
-diff --git a/arch/arm64/boot/dts/microchip/sparx5.dtsi b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-index 60629861a5157..b4fda5616536c 100644
---- a/arch/arm64/boot/dts/microchip/sparx5.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-@@ -213,6 +213,22 @@ si2_pins: si2-pins {
- 				function = "si2";
- 			};
+> > I'm really wondering if drivers/mfd/lpc_ich.c is the right place for
+> > this kind of "just expose one byte of PCI config space" functionality.
+> Ideally there is one driver per device.
 
-+			sgpio0_pins: sgpio-pins {
-+				pins = "GPIO_0", "GPIO_1", "GPIO_2", "GPIO_3";
-+				function = "sg0";
-+			};
-+
-+			sgpio1_pins: sgpio1-pins {
-+				pins = "GPIO_4", "GPIO_5", "GPIO_12", "GPIO_13";
-+				function = "sg1";
-+			};
-+
-+			sgpio2_pins: sgpio2-pins {
-+				pins = "GPIO_30", "GPIO_31", "GPIO_32",
-+				       "GPIO_33";
-+				function = "sg2";
-+			};
-+
- 			uart_pins: uart-pins {
- 				pins = "GPIO_10", "GPIO_11";
- 				function = "uart";
-@@ -243,6 +259,42 @@ emmc_pins: emmc-pins {
- 			};
- 		};
+My idea in https://github.com/hughsie/spi_lpc was to not actually
+register a pci_driver.
 
-+		sgpio0: gpio@61101036c {
-+			compatible = "mscc,ocelot-sgpio";
-+			status = "disabled";
-+			clocks = <&sys_clk>;
-+			pinctrl-0 = <&sgpio0_pins>;
-+			pinctrl-names = "default";
-+			reg = <0x6 0x1101036c 0x100>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&gpio 0 64 64>;
-+		};
-+
-+		sgpio1: gpio@611010484 {
-+			compatible = "mscc,ocelot-sgpio";
-+			status = "disabled";
-+			clocks = <&sys_clk>;
-+			pinctrl-0 = <&sgpio1_pins>;
-+			pinctrl-names = "default";
-+			reg = <0x6 0x11010484 0x100>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&gpio 0 128 64>;
-+		};
-+
-+		sgpio2: gpio@61101059c {
-+			compatible = "mscc,ocelot-sgpio";
-+			status = "disabled";
-+			clocks = <&sys_clk>;
-+			pinctrl-0 = <&sgpio2_pins>;
-+			pinctrl-names = "default";
-+			reg = <0x6 0x1101059c 0x100>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&gpio 0 192 64>;
-+		};
-+
- 		i2c0: i2c@600101000 {
- 			compatible = "snps,designware-i2c";
- 			status = "disabled";
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-index 94c4c3fd5a786..fd4f5b3ddcc49 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-@@ -55,6 +55,11 @@ spi-flash@1 {
- 	};
- };
+> If this is touching the 00:1f.5 PCI device (SPI-NOR controller) then the
+> right place is the intel-spi-pci.c as that's the driver for this
+> controller.
 
-+&sgpio0 {
-+	status = "okay";
-+	microchip,sgpio-ports = <0x00FFFFFF>;
-+};
-+
- &i2c1 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi b/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
-index 628a05d3f57ce..2f781258f8c99 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb134_board.dtsi
-@@ -47,6 +47,11 @@ spi-flash@0 {
- 	};
- };
+So Cannon Lake, Cannon Point and Ice Lake would go into
+drivers/mtd/spi-nor/controllers/intel-spi-pci.c and the systems like
+Sunrise Point using an ISA bridge would use drivers/mfd/lpc_ich.c?
 
-+&sgpio0 {
-+	status = "okay";
-+	microchip,sgpio-ports = <0x00FFFFFF>;
-+};
-+
- &gpio {
- 	i2cmux_pins_i: i2cmux-pins-i {
- 	       pins = "GPIO_16", "GPIO_17", "GPIO_18", "GPIO_19",
---
-2.26.2
+> We can put this there so that it does not enable the SPI-NOR
+> functionality itself and the mark the SPI-NOR functionality only as
+> being dangerous or something like that.
+
+I think getting the distros to enable SPI_INTEL_SPI_PCI might be a
+tough sell. Could we perhaps remove the DANGEROUS label as it's not
+writeable without a module option?
+
+> > > > +     char tmp[2];
+> > > Wouldn't this need to account the '\0' as well?
+> You sprint() there "%d\n", so that includes a number, '\n' and '\0' unless
+> I'm missing something.
+
+Doh, of course you're right. Will fix, thanks.
+
+Richard
