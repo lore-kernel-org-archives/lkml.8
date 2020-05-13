@@ -2,33 +2,30 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A68C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B43AFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39E132065C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6482B2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:57:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390545AbgEMS5b (ORCPT
+        id S2390582AbgEMS5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 14:57:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49950 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390395AbgEMS4g (ORCPT
+        Wed, 13 May 2020 14:57:55 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51886 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390068AbgEMS4e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 14:56:36 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D747AC05BD0A;
-        Wed, 13 May 2020 11:56:35 -0700 (PDT)
+        Wed, 13 May 2020 14:56:34 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: sre)
-        with ESMTPSA id 8CCAA2A29D1
+        with ESMTPSA id E38EE2A25D4
 Received: by jupiter.universe (Postfix, from userid 1000)
-        id 844EA480109; Wed, 13 May 2020 20:56:29 +0200 (CEST)
+        id 6F40C480102; Wed, 13 May 2020 20:56:29 +0200 (CEST)
 From:   Sebastian Reichel <sebastian.reichel@collabora.com>
 To:     Sebastian Reichel <sre@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -37,9 +34,9 @@ To:     Sebastian Reichel <sre@kernel.org>,
 Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, kernel@collabora.com,
         Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCHv1 11/19] power: supply: sbs-battery: add POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT/VOLTAGE_MAX support
-Date:   Wed, 13 May 2020 20:56:07 +0200
-Message-Id: <20200513185615.508236-12-sebastian.reichel@collabora.com>
+Subject: [PATCHv1 04/19] power: supply: core: add POWER_SUPPLY_HEALTH_CALIBRATION_REQUIRED
+Date:   Wed, 13 May 2020 20:56:00 +0200
+Message-Id: <20200513185615.508236-5-sebastian.reichel@collabora.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513185615.508236-1-sebastian.reichel@collabora.com>
 References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
@@ -50,65 +47,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Expose maximum charge current/voltage information requested
-by the battery.
+Some battery fuel gauges know when the battery needs to
+be recalibrated before providing usable values. This
+should be reported via the health property.
 
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- drivers/power/supply/sbs-battery.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ Documentation/ABI/testing/sysfs-class-power | 2 +-
+ drivers/power/supply/power_supply_sysfs.c   | 1 +
+ include/linux/power_supply.h                | 1 +
+ 3 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
-index b697a42d9ccf..e6f61baa9bed 100644
---- a/drivers/power/supply/sbs-battery.c
-+++ b/drivers/power/supply/sbs-battery.c
-@@ -46,6 +46,8 @@ enum {
- 	REG_CHEMISTRY,
- 	REG_MANUFACTURER,
- 	REG_MODEL_NAME,
-+	REG_CHARGE_CURRENT,
-+	REG_CHARGE_VOLTAGE,
+diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
+index e6d7348766b2..216d61a22f1e 100644
+--- a/Documentation/ABI/testing/sysfs-class-power
++++ b/Documentation/ABI/testing/sysfs-class-power
+@@ -205,7 +205,7 @@ Description:
+ 		Valid values: "Unknown", "Good", "Overheat", "Dead",
+ 			      "Over voltage", "Unspecified failure", "Cold",
+ 			      "Watchdog timer expire", "Safety timer expire",
+-			      "Over current"
++			      "Over current", "Calibration required"
+ 
+ What:		/sys/class/power_supply/<supply_name>/precharge_current
+ Date:		June 2017
+diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+index 78d5382e69f1..bc79560229b5 100644
+--- a/drivers/power/supply/power_supply_sysfs.c
++++ b/drivers/power/supply/power_supply_sysfs.c
+@@ -100,6 +100,7 @@ static const char * const POWER_SUPPLY_HEALTH_TEXT[] = {
+ 	[POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE] = "Watchdog timer expire",
+ 	[POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE]   = "Safety timer expire",
+ 	[POWER_SUPPLY_HEALTH_OVERCURRENT]	    = "Over current",
++	[POWER_SUPPLY_HEALTH_CALIBRATION_REQUIRED]  = "Calibration required",
  };
  
- #define REG_ADDR_SPEC_INFO		0x1A
-@@ -114,6 +116,10 @@ static const struct chip_data {
- 		SBS_DATA(POWER_SUPPLY_PROP_TIME_TO_EMPTY_AVG, 0x12, 0, 65535),
- 	[REG_TIME_TO_FULL] =
- 		SBS_DATA(POWER_SUPPLY_PROP_TIME_TO_FULL_AVG, 0x13, 0, 65535),
-+	[REG_CHARGE_CURRENT] =
-+		SBS_DATA(POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX, 0x14, 0, 65535),
-+	[REG_CHARGE_VOLTAGE] =
-+		SBS_DATA(POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX, 0x15, 0, 65535),
- 	[REG_STATUS] =
- 		SBS_DATA(POWER_SUPPLY_PROP_STATUS, 0x16, 0, 65535),
- 	[REG_CAPACITY_LEVEL] =
-@@ -163,6 +169,8 @@ static enum power_supply_property sbs_properties[] = {
- 	POWER_SUPPLY_PROP_CHARGE_NOW,
- 	POWER_SUPPLY_PROP_CHARGE_FULL,
- 	POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
-+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX,
-+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX,
- 	/* Properties of type `const char *' */
- 	POWER_SUPPLY_PROP_MANUFACTURER,
- 	POWER_SUPPLY_PROP_MODEL_NAME
-@@ -531,6 +539,8 @@ static void  sbs_unit_adjustment(struct i2c_client *client,
- 	case POWER_SUPPLY_PROP_CURRENT_NOW:
- 	case POWER_SUPPLY_PROP_CURRENT_AVG:
- 	case POWER_SUPPLY_PROP_CHARGE_NOW:
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX:
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX:
- 	case POWER_SUPPLY_PROP_CHARGE_FULL:
- 	case POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN:
- 		val->intval *= BASE_UNIT_CONVERSION;
-@@ -749,6 +759,8 @@ static int sbs_get_property(struct power_supply *psy,
- 	case POWER_SUPPLY_PROP_TIME_TO_FULL_AVG:
- 	case POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN:
- 	case POWER_SUPPLY_PROP_VOLTAGE_MAX_DESIGN:
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX:
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX:
- 	case POWER_SUPPLY_PROP_CAPACITY:
- 	case POWER_SUPPLY_PROP_CAPACITY_ERROR_MARGIN:
- 		ret = sbs_get_property_index(client, psp);
+ static const char * const POWER_SUPPLY_TECHNOLOGY_TEXT[] = {
+diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+index 63ffe2a0a87b..ac1345a48ad0 100644
+--- a/include/linux/power_supply.h
++++ b/include/linux/power_supply.h
+@@ -61,6 +61,7 @@ enum {
+ 	POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE,
+ 	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
+ 	POWER_SUPPLY_HEALTH_OVERCURRENT,
++	POWER_SUPPLY_HEALTH_CALIBRATION_REQUIRED,
+ };
+ 
+ enum {
 -- 
 2.26.2
 
