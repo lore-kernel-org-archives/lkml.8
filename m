@@ -2,174 +2,145 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBB9C2D0F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 039C7C2D0F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4C720714
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D50AD20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:21:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="MofD5KKp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ljrH8A9j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbgEMCVQ (ORCPT
+        id S1728667AbgEMCVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 22:21:16 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:15849 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728056AbgEMCVQ (ORCPT
+        Tue, 12 May 2020 22:21:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36196 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbgEMCVt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 22:21:16 -0400
-X-UUID: 05b6ab5c543b4fe6b82e34aafd627e20-20200513
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=FEa8S57yUP1uBt7sF+Iuhy7qLD+6bZVqAcdAPC8F9JE=;
-        b=MofD5KKpO/m36BxdJRtjBzFkVHXb10wjpOslr9htC/NJWkvKVnPxstr/NMHx1QQyZstkHJ6vrNnLLJbsI9xXEwU81tlcEMmeGf8AlA4Tm+Rq7ynThQR/0wtp2gtWsshF2uOdPC3ZvSK8sOknIW9FGMpNifr1QpbN1tSpMcgPaig=;
-X-UUID: 05b6ab5c543b4fe6b82e34aafd627e20-20200513
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2030145763; Wed, 13 May 2020 10:21:10 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 13 May 2020 10:21:03 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 13 May 2020 10:21:03 +0800
-Message-ID: <1589336464.3197.68.camel@mtkswgap22>
-Subject: Re: [PATCH v1 4/4] scsi: ufs: Fix WriteBooster flush during runtime
- suspend
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     "Asutosh Das (asd)" <asutoshd@codeaurora.org>
-CC:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>, <beanhuo@micron.com>, <cang@codeaurora.org>,
-        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>
-Date:   Wed, 13 May 2020 10:21:04 +0800
-In-Reply-To: <3740c6fa-77f1-53eb-ec8e-8f9d09f2646f@codeaurora.org>
-References: <20200512104750.8711-1-stanley.chu@mediatek.com>
-         <20200512104750.8711-5-stanley.chu@mediatek.com>
-         <3740c6fa-77f1-53eb-ec8e-8f9d09f2646f@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 12 May 2020 22:21:49 -0400
+Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65AFAC061A0C;
+        Tue, 12 May 2020 19:21:49 -0700 (PDT)
+Received: by mail-qk1-x734.google.com with SMTP id c64so15877109qkf.12;
+        Tue, 12 May 2020 19:21:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GGhhasXuuhbZjHtgDHKIzfraEsH+O3PDW7OXcZoDnTg=;
+        b=ljrH8A9jIhOz1bLzUXsd4W/0wzUcVOq7F66qXSqMsIz7LCMRUnWeIkJLbQ6FwolPtN
+         d0HDeiJ1aITAaRZG2HoExZkhsZ7ivor5BuZlleh8DY7Z7R+T2kzdY+bZ+ZaOciEk7HRt
+         HOGV3IIK3BfG2dwXq4htDjuiHhPcNV4HPI7VxM2DIWelLCBnkJInihhUMXWXZlpL1Ekk
+         3IJXp4HW7dTqIJNuYNkEyjEKklU98PsaQHEn8cw7Hev00thiSSRCaknX/qseY1+/hEqi
+         Tgxl03vLRjxgRtQ1xwaKae3amlcgo6dJcNNcTGX+jRUIqlL0mb9aipcU3FVTvFjVK0li
+         P0iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GGhhasXuuhbZjHtgDHKIzfraEsH+O3PDW7OXcZoDnTg=;
+        b=jfZYpuSX86/ycpjmSBhHoB2T/EpJpNl2e7ooLOsr5EkhKj3yilcZXznMb5ZbhXNq+H
+         LZ5rcZRyyQK5vQx2h+M3CT3cQFxfFh6SstVAU2/4n/XX4I0KqC7Lyvxw0u+ZAVal1iTM
+         eUfgrnz/xoS8HLOlvo8uFrmaDpifvGA2YJyEzVX/hWzffGYs6iEPFr3qTe/UTrhfYWTY
+         DrypL+wf5KsXi9TtzSR7vHX4Hz8sCjgDGMl4MIDFZXsG3gBqJpIbPrR9IKfiLajdG9Ky
+         pfh2i6hkoQpBMWgNorhNWeq1mGO/GpuFrAhj5PLFNgffMSH/82Z2kyLo4ppnu0DKFNLJ
+         9tsA==
+X-Gm-Message-State: AGi0PubgZAfEwhTti4ID5Oqrc+z4UTuXIurumgnUyJqrGcqJKkasxUnX
+        h/GsA9ICaMs+g07jJiEG5VzA2KAF
+X-Google-Smtp-Source: APiQypKu8v/2I7/OWB4sgxAbXpPmJJqNhaNw8iT27Qit56iaxZo5BPkP/W1EOP1fqwvwAbIEAWr7eg==
+X-Received: by 2002:a37:8302:: with SMTP id f2mr23347571qkd.220.1589336507479;
+        Tue, 12 May 2020 19:21:47 -0700 (PDT)
+Received: from ?IPv6:2601:282:803:7700:4082:2138:4ed8:3e6? ([2601:282:803:7700:4082:2138:4ed8:3e6])
+        by smtp.googlemail.com with ESMTPSA id y23sm14321189qta.37.2020.05.12.19.21.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 May 2020 19:21:46 -0700 (PDT)
+Subject: Re: [v5,iproute2-next 1/2] iproute2-next:tc:action: add a gate
+ control action
+To:     Po Liu <Po.Liu@nxp.com>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     vinicius.gomes@intel.com, stephen@networkplumber.org,
+        dcaratti@redhat.com, davem@davemloft.net, vlad@buslov.dev,
+        claudiu.manoil@nxp.com, vladimir.oltean@nxp.com,
+        alexandru.marginean@nxp.com
+References: <20200506084020.18106-2-Po.Liu@nxp.com>
+ <20200508070247.6084-1-Po.Liu@nxp.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <5b3606fc-6903-da8b-94c6-b93eac1308f7@gmail.com>
+Date:   Tue, 12 May 2020 20:21:44 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200508070247.6084-1-Po.Liu@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQXN1dG9zaCwNCg0KT24gVHVlLCAyMDIwLTA1LTEyIGF0IDEwOjA0IC0wNzAwLCBBc3V0b3No
-IERhcyAoYXNkKSB3cm90ZToNCj4gSGkgU3RhbmxleSwNCj4gDQo+IE9uIDUvMTIvMjAyMCAzOjQ3
-IEFNLCBTdGFubGV5IENodSB3cm90ZToNCj4gPiBDdXJyZW50bHkgVUZTIGhvc3QgZHJpdmVyIHBy
-b21pc2VzIFZDQyBzdXBwbHkgaWYgVUZTIGRldmljZQ0KPiA+IG5lZWRzIHRvIGRvIFdyaXRlQm9v
-c3RlciBmbHVzaCBkdXJpbmcgcnVudGltZSBzdXNwZW5kLg0KPiA+IA0KPiA+IEhvd2V2ZXIgdGhl
-IFVGUyBzcGVjaWZpY2F0aW9uIG1lbnRpb25zLA0KPiA+IA0KPiA+ICJXaGlsZSB0aGUgZmx1c2hp
-bmcgb3BlcmF0aW9uIGlzIGluIHByb2dyZXNzLCB0aGUgZGV2aWNlIGlzDQo+ID4gaW4gQWN0aXZl
-IHBvd2VyIG1vZGUuIg0KPiA+IA0KPiA+IFRoZXJlZm9yZSBVRlMgaG9zdCBkcml2ZXIgbmVlZHMg
-dG8gcHJvbWlzZSBtb3JlOiBLZWVwIFVGUw0KPiA+IGRldmljZSBhcyAiQWN0aXZlIHBvd2VyIG1v
-ZGUiLCBvdGhlcndpc2UgVUZTIGRldmljZSBzaGFsbCBub3QNCj4gPiBkbyBhbnkgZmx1c2ggaWYg
-ZGV2aWNlIGVudGVycyBTbGVlcCBvciBQb3dlckRvd24gcG93ZXIgbW9kZS4NCj4gPiANCj4gPiBG
-aXggdGhpcyBieSBub3QgY2hhbmdpbmcgZGV2aWNlIHBvd2VyIG1vZGUgaWYgV3JpdGVCb29zdGVy
-DQo+ID4gZmx1c2ggaXMgcmVxdWlyZWQgaW4gdWZzaGNkX3N1c3BlbmQoKS4NCj4gPiANCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBTdGFubGV5IENodSA8c3RhbmxleS5jaHVAbWVkaWF0ZWsuY29tPg0KPiA+
-IC0tLQ0KPiA+ICAgZHJpdmVycy9zY3NpL3Vmcy91ZnMuaCAgICB8ICAxIC0NCj4gPiAgIGRyaXZl
-cnMvc2NzaS91ZnMvdWZzaGNkLmMgfCAzOSArKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0t
-LS0tLS0tLS0NCj4gPiAgIDIgZmlsZXMgY2hhbmdlZCwgMTkgaW5zZXJ0aW9ucygrKSwgMjEgZGVs
-ZXRpb25zKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc2NzaS91ZnMvdWZzLmgg
-Yi9kcml2ZXJzL3Njc2kvdWZzL3Vmcy5oDQo+ID4gaW5kZXggYjMxMzUzNDRhYjNmLi45ZTRiYzJl
-OTdhZGEgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9zY3NpL3Vmcy91ZnMuaA0KPiA+ICsrKyBi
-L2RyaXZlcnMvc2NzaS91ZnMvdWZzLmgNCj4gPiBAQCAtNTc3LDcgKzU3Nyw2IEBAIHN0cnVjdCB1
-ZnNfZGV2X2luZm8gew0KPiA+ICAgCXUzMiBkX2V4dF91ZnNfZmVhdHVyZV9zdXA7DQo+ID4gICAJ
-dTggYl93Yl9idWZmZXJfdHlwZTsNCj4gPiAgIAl1MzIgZF93Yl9hbGxvY191bml0czsNCj4gPiAt
-CWJvb2wga2VlcF92Y2Nfb247DQo+ID4gICAJdTggYl9wcmVzcnZfdXNwY19lbjsNCj4gPiAgIH07
-DQo+ID4gICANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYyBiL2Ry
-aXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMNCj4gPiBpbmRleCAxNjlhMzM3OWU0NjguLjJkMGFmZjhh
-YzI2MCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jDQo+ID4gKysr
-IGIvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYw0KPiA+IEBAIC04MTAxLDggKzgxMDEsNyBAQCBz
-dGF0aWMgdm9pZCB1ZnNoY2RfdnJlZ19zZXRfbHBtKHN0cnVjdCB1ZnNfaGJhICpoYmEpDQo+ID4g
-ICAJICAgICFoYmEtPmRldl9pbmZvLmlzX2x1X3Bvd2VyX29uX3dwKSB7DQo+ID4gICAJCXVmc2hj
-ZF9zZXR1cF92cmVnKGhiYSwgZmFsc2UpOw0KPiA+ICAgCX0gZWxzZSBpZiAoIXVmc2hjZF9pc191
-ZnNfZGV2X2FjdGl2ZShoYmEpKSB7DQo+ID4gLQkJaWYgKCFoYmEtPmRldl9pbmZvLmtlZXBfdmNj
-X29uKQ0KPiA+IC0JCQl1ZnNoY2RfdG9nZ2xlX3ZyZWcoaGJhLT5kZXYsIGhiYS0+dnJlZ19pbmZv
-LnZjYywgZmFsc2UpOw0KPiA+ICsJCXVmc2hjZF90b2dnbGVfdnJlZyhoYmEtPmRldiwgaGJhLT52
-cmVnX2luZm8udmNjLCBmYWxzZSk7DQo+ID4gICAJCWlmICghdWZzaGNkX2lzX2xpbmtfYWN0aXZl
-KGhiYSkpIHsNCj4gPiAgIAkJCXVmc2hjZF9jb25maWdfdnJlZ19scG0oaGJhLCBoYmEtPnZyZWdf
-aW5mby52Y2NxKTsNCj4gPiAgIAkJCXVmc2hjZF9jb25maWdfdnJlZ19scG0oaGJhLCBoYmEtPnZy
-ZWdfaW5mby52Y2NxMik7DQo+ID4gQEAgLTgxNzIsNiArODE3MSw3IEBAIHN0YXRpYyBpbnQgdWZz
-aGNkX3N1c3BlbmQoc3RydWN0IHVmc19oYmEgKmhiYSwgZW51bSB1ZnNfcG1fb3AgcG1fb3ApDQo+
-ID4gICAJZW51bSB1ZnNfcG1fbGV2ZWwgcG1fbHZsOw0KPiA+ICAgCWVudW0gdWZzX2Rldl9wd3Jf
-bW9kZSByZXFfZGV2X3B3cl9tb2RlOw0KPiA+ICAgCWVudW0gdWljX2xpbmtfc3RhdGUgcmVxX2xp
-bmtfc3RhdGU7DQo+ID4gKwlib29sIGtlZXBfY3Vycl9kZXZfcHdyX21vZGUgPSBmYWxzZTsNCj4g
-PiAgIA0KPiA+ICAgCWhiYS0+cG1fb3BfaW5fcHJvZ3Jlc3MgPSAxOw0KPiA+ICAgCWlmICghdWZz
-aGNkX2lzX3NodXRkb3duX3BtKHBtX29wKSkgew0KPiA+IEBAIC04MjI2LDI4ICs4MjI2LDI3IEBA
-IHN0YXRpYyBpbnQgdWZzaGNkX3N1c3BlbmQoc3RydWN0IHVmc19oYmEgKmhiYSwgZW51bSB1ZnNf
-cG1fb3AgcG1fb3ApDQo+ID4gICAJCQkvKiBtYWtlIHN1cmUgdGhhdCBhdXRvIGJrb3BzIGlzIGRp
-c2FibGVkICovDQo+ID4gICAJCQl1ZnNoY2RfZGlzYWJsZV9hdXRvX2Jrb3BzKGhiYSk7DQo+ID4g
-ICAJCX0NCj4gPiArDQo+ID4gICAJCS8qDQo+ID4gLQkJICogV2l0aCB3YiBlbmFibGVkLCBpZiB0
-aGUgYmtvcHMgaXMgZW5hYmxlZCBvciBpZiB0aGUNCj4gPiAtCQkgKiBjb25maWd1cmVkIFdCIHR5
-cGUgaXMgNzAlIGZ1bGwsIGtlZXAgdmNjIE9ODQo+ID4gLQkJICogZm9yIHRoZSBkZXZpY2UgdG8g
-Zmx1c2ggdGhlIHdiIGJ1ZmZlcg0KPiA+ICsJCSAqIElmIGRldmljZSBuZWVkcyB0byBkbyBCS09Q
-IG9yIFdCIGJ1ZmZlciBmbHVzaCwga2VlcCBkZXZpY2UNCj4gPiArCQkgKiBwb3dlciBtb2RlIGFz
-ICJhY3RpdmUgcG93ZXIgbW9kZSIgYW5kIGl0cyBWQ0Mgc3VwcGx5Lg0KPiA+ICAgCQkgKi8NCj4g
-PiAtCQlpZiAoKGhiYS0+YXV0b19ia29wc19lbmFibGVkICYmIHVmc2hjZF9pc193Yl9hbGxvd2Vk
-KGhiYSkpIHx8DQo+ID4gLQkJICAgIHVmc2hjZF93Yl9rZWVwX3ZjY19vbihoYmEpKQ0KPiA+IC0J
-CQloYmEtPmRldl9pbmZvLmtlZXBfdmNjX29uID0gdHJ1ZTsNCj4gPiAtCQllbHNlDQo+ID4gLQkJ
-CWhiYS0+ZGV2X2luZm8ua2VlcF92Y2Nfb24gPSBmYWxzZTsNCj4gPiAtCX0gZWxzZSB7DQo+ID4g
-LQkJaGJhLT5kZXZfaW5mby5rZWVwX3ZjY19vbiA9IGZhbHNlOw0KPiA+ICsJCWtlZXBfY3Vycl9k
-ZXZfcHdyX21vZGUgPSBoYmEtPmF1dG9fYmtvcHNfZW5hYmxlZCB8fA0KPiA+ICsJCQl1ZnNoY2Rf
-d2Jfa2VlcF92Y2Nfb24oaGJhKTsNCj4gPiAgIAl9DQo+ID4gICANCj4gPiAtCWlmICgocmVxX2Rl
-dl9wd3JfbW9kZSAhPSBoYmEtPmN1cnJfZGV2X3B3cl9tb2RlKSAmJg0KPiA+IC0JICAgICgodWZz
-aGNkX2lzX3J1bnRpbWVfcG0ocG1fb3ApICYmICFoYmEtPmF1dG9fYmtvcHNfZW5hYmxlZCkgfHwN
-Cj4gPiAtCSAgICAhdWZzaGNkX2lzX3J1bnRpbWVfcG0ocG1fb3ApKSkgew0KPiA+IC0JCS8qIGVu
-c3VyZSB0aGF0IGJrb3BzIGlzIGRpc2FibGVkICovDQo+ID4gLQkJdWZzaGNkX2Rpc2FibGVfYXV0
-b19ia29wcyhoYmEpOw0KPiA+IC0JCXJldCA9IHVmc2hjZF9zZXRfZGV2X3B3cl9tb2RlKGhiYSwg
-cmVxX2Rldl9wd3JfbW9kZSk7DQo+ID4gLQkJaWYgKHJldCkNCj4gPiAtCQkJZ290byBlbmFibGVf
-Z2F0aW5nOw0KPiA+ICsJaWYgKHJlcV9kZXZfcHdyX21vZGUgIT0gaGJhLT5jdXJyX2Rldl9wd3Jf
-bW9kZSkgew0KPiA+ICsJCWlmICgodWZzaGNkX2lzX3J1bnRpbWVfcG0ocG1fb3ApICYmICFoYmEt
-PmF1dG9fYmtvcHNfZW5hYmxlZCkgfHwNCj4gPiArCQkgICAgIXVmc2hjZF9pc19ydW50aW1lX3Bt
-KHBtX29wKSkgew0KPiA+ICsJCQkvKiBlbnN1cmUgdGhhdCBia29wcyBpcyBkaXNhYmxlZCAqLw0K
-PiA+ICsJCQl1ZnNoY2RfZGlzYWJsZV9hdXRvX2Jrb3BzKGhiYSk7DQo+ID4gKwkJfQ0KPiA+ICsN
-Cj4gPiArCQlpZiAoIWtlZXBfY3Vycl9kZXZfcHdyX21vZGUpIHsNCj4gPiArCQkJcmV0ID0gdWZz
-aGNkX3NldF9kZXZfcHdyX21vZGUoaGJhLCByZXFfZGV2X3B3cl9tb2RlKTsNCj4gPiArCQkJaWYg
-KHJldCkNCj4gPiArCQkJCWdvdG8gZW5hYmxlX2dhdGluZzsNCj4gPiArCQl9DQo+ID4gICAJfQ0K
-PiA+ICAgDQo+ID4gICAJZmx1c2hfd29yaygmaGJhLT5lZWhfd29yayk7DQo+ID4gDQo+IA0KPiBD
-YW4geW91IHBsZWFzZSBjb25maXJtIHRoYXQgeW91J3ZlIHRlc3RlZCBhbmQgZm91bmQgdGhhdCB3
-aXRoIHRoZSANCj4gcHJldmlvdXMgY29kZSwgdGhlIGZsdXNoIG9wZXJhdGlvbiBpbiB0aGUgZGV2
-aWNlIHdhcyBub3QgaGFwcGVuaW5nLg0KPiANCj4gSWYgc28sIHBsZWFzZSBjYW4geW91IGxldCBt
-ZSBrbm93IHRoZSB0ZXN0LWNhc2UgdGhhdCB5b3UgcmFuIHRvIGZpZ3VyZSANCj4gdGhpcyBvdXQu
-DQo+IA0KPiBJJ2QgbGlrZSB0byB2ZXJpZnkgdGhpcyBhdCBteSBlbmQuDQoNClNvcnJ5IGN1cnJl
-bnRseSBJIGhhdmUgbm8gZWFzeSB0ZXN0IGNhc2VzIG9yIHNjcmlwdHMgYXZhaWxhYmxlLg0KDQpU
-byBwcmVjaXNlbHkgY29uZmlybSB0aGUgZmx1c2ggYmVoYXZpb3IgYnkgbG9ncywgSSBhZGRlZCBz
-b21lIGNvZGVzIHRvDQpxdWVyeSAiYXZhaWxhYmxlIFdyaXRlQm9vc3RlciBidWZmZXIiIGJlZm9y
-ZSBlbnRlcmluZyBydW50aW1lIHN1c3BlbmQNCmFuZCBhZnRlciBsZWF2aW5nIHJ1bnRpbWUgcmVz
-dW1lLCBhbmQgb2JzZXJ2ZSB0aGUgdHJlbmQgb2YgYXZhaWxhYmxlDQpXcml0ZUJvb3N0ZXIgYnVm
-ZmVyLg0KDQpNeSB0ZXN0IHN0ZXBzIGFyZSBhcyBiZWxvdywNCg0KMS4gQ3JlYXRlIGEgd3JpdGVy
-IHRvIHdyaXRlIGxhcmdlIGRhdGEgaW4gYSBzaG9ydCB0aW1lIHRvIGZpbGwtaW4NCldyaXRlQm9v
-c3RlciBidWZmZXIuDQoNCjIuIERvIHNvbWV0aGluZyB0byBwcmV2ZW50IHN5c3RlbSBzdXNwZW5k
-DQoNCjMuIERvIHNvbWV0aGluZyB0byBwcmV2ZW50IGxpbmsgZW50ZXJpbmcgSGliZXJuOCwgZm9y
-IGV4YW1wbGUsIGRpc2FibGUNCkF1dG8tSGliZXJuOCBhbmQgZGlzYWJsZSBIaWJlcm44IGR1cmlu
-ZyBjbG9jayBnYXRpbmcuIEJlY2F1c2UgdGhlDQpIaWJlcm44IHBlcmlvZCBiZWZvcmUgcnVudGlt
-ZS1zdXNwZW5kIGlzIGtub3duIHRoYXQgVkNDIGlzIHByb3ZpZGVkIGFuZA0KZGV2aWNlIGNhbiBm
-bHVzaCBXcml0ZUJvb3N0ZXIgYnVmZmVyIGlmICJGbHVzaCBEdXJpbmcgSDgiIGlzIGVuYWJsZWQg
-YXMNCnVwc3RyZWFtIGtlcm5lbCBjdXJyZW50bHkuDQoNCjQuIFNocmluayB0aGUgcnVudGltZSBz
-dXNwZW5kIGRlbGF5IChtYXliZSAxMDBtcyB+IDIwMG1zKSB0byBtYWtlDQpydW50aW1lIHN1c3Bl
-bmQgaGFwcGVuIGVhcmxpZXIuDQoNCjUuIEFmdGVyICJhdmFpbGFibGUgV3JpdGVCb3NvdGVyIGJ1
-ZmZlciIgcmVhY2hlcyBsb3dlci1sZXZlbCwgZm9yDQpleGFtcGxlLCAxMCUsIHN0b3AgdGhlIHdy
-aXRlci4NCg0KNi4gT2JzZXJ2ZSB0aGUgdHJlbmQgb2YgV3JpdGVCb29zdGVyIGF2YWlsYWJsZSBi
-dWZmZXIuDQoNCg0KSW4gdGhlIHByZXZpb3VzIGNvZGUsIHRoZSBhdmFpbGFibGUgV3JpdGVCb29z
-dGVyIGJ1ZmZlciBpcyBpbmNyZWFzZWQNCnZlcnkgdmVyeSBzbG93bHkuIEVzcGVjaWFsbHkgbm8g
-aW5jcmVhc2luZyBpcyBvYnNlcnZlZCBkdXJpbmcNCnJ1bnRpbWUtc3VzcGVuZC4NCg0KQWZ0ZXIg
-YXBwbHlpbmcgdGhpcyBmaXgsIHRoZSBhdmFpbGFibGUgV3JpdGVCb29zdGVyIGJ1ZmZlciBpcyBp
-bmNyZWFzZWQNCm11Y2ggZmFzdGVyIGFuZCB0aGUgaW5jcmVhc2luZyBjYW4gYmUgZWFzaWx5IG9i
-c2VydmVkIGR1cmluZw0KcnVudGltZS1zdXNwZW5kLg0KDQpUaGFua3MsDQpTdGFubGV5IENodQ0K
-DQo+IA0KPiAtLQ0KPiBUaGFua3MsDQo+IC1hc2QNCj4gDQoNCg==
+On 5/8/20 1:02 AM, Po Liu wrote:
+> Introduce a ingress frame gate control flow action.
+> Tc gate action does the work like this:
+> Assume there is a gate allow specified ingress frames can pass at
+> specific time slot, and also drop at specific time slot. Tc filter
+> chooses the ingress frames, and tc gate action would specify what slot
+> does these frames can be passed to device and what time slot would be
+> dropped.
+> Tc gate action would provide an entry list to tell how much time gate
+> keep open and how much time gate keep state close. Gate action also
+> assign a start time to tell when the entry list start. Then driver would
+> repeat the gate entry list cyclically.
+> For the software simulation, gate action require the user assign a time
+> clock type.
+> 
+> Below is the setting example in user space. Tc filter a stream source ip
+> address is 192.168.0.20 and gate action own two time slots. One is last
+> 200ms gate open let frame pass another is last 100ms gate close let
+> frames dropped.
+> 
+>  # tc qdisc add dev eth0 ingress
+>  # tc filter add dev eth0 parent ffff: protocol ip \
+> 
+>             flower src_ip 192.168.0.20 \
+>             action gate index 2 clockid CLOCK_TAI \
+>             sched-entry open 200000000ns -1 8000000b \
+>             sched-entry close 100000000ns
+> 
+>  # tc chain del dev eth0 ingress chain 0
+> 
+> "sched-entry" follow the name taprio style. Gate state is
+> "open"/"close". Follow the period nanosecond. Then next -1 is internal
+> priority value means which ingress queue should put to. "-1" means
+> wildcard. The last value optional specifies the maximum number of
+> MSDU octets that are permitted to pass the gate during the specified
+> time interval, the overlimit frames would be dropped.
+> 
+> Below example shows filtering a stream with destination mac address is
+> 10:00:80:00:00:00 and ip type is ICMP, follow the action gate. The gate
+> action would run with one close time slot which means always keep close.
+> The time cycle is total 200000000ns. The base-time would calculate by:
+> 
+>      1357000000000 + (N + 1) * cycletime
+> 
+> When the total value is the future time, it will be the start time.
+> The cycletime here would be 200000000ns for this case.
+> 
+>  #tc filter add dev eth0 parent ffff:  protocol ip \
+>            flower skip_hw ip_proto icmp dst_mac 10:00:80:00:00:00 \
+>            action gate index 12 base-time 1357000000000ns \
+>            sched-entry CLOSE 200000000ns \
+>            clockid CLOCK_TAI
+> 
+> Signed-off-by: Po Liu <Po.Liu@nxp.com>
+> ---
+>
+
+applied to iproute2-next. Thanks,
 
