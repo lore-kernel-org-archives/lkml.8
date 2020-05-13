@@ -2,90 +2,179 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA29C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0F9C2D0FB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D288A206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 299A2206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:04:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E6TUYI8+"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="cSolVG+V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732105AbgEMBDS (ORCPT
+        id S1732106AbgEMBEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 21:03:18 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37837 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728131AbgEMBDR (ORCPT
+        Tue, 12 May 2020 21:04:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52540 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728131AbgEMBEn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 21:03:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589331796;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JQNnDWT5Bs7MtMyHapTaDwxpkFi8C8mU48tE9Jr7L7Q=;
-        b=E6TUYI8+2PRIQW+/uZwJYEY9/5Vjjo68b/OP35eHB2mhWtNcxSPpIpGKjmAtDp/icHE+MZ
-        MUy4oTllui4vIDpN4Pr4s2VVrko+jAOwd4o0dZ+Y84Z1eHKC4hJm46Y7QPdbOSzTejqrbx
-        DFU2oTPXI9uVNCKKM8gbJJ2/GkEGEX0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-33-5rNWuHwCOtSi3l-fRAog8w-1; Tue, 12 May 2020 21:03:12 -0400
-X-MC-Unique: 5rNWuHwCOtSi3l-fRAog8w-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7E0DE8005B7;
-        Wed, 13 May 2020 01:03:10 +0000 (UTC)
-Received: from localhost (unknown [10.10.110.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 662B6648D7;
-        Wed, 13 May 2020 01:03:07 +0000 (UTC)
-Date:   Tue, 12 May 2020 18:03:06 -0700 (PDT)
-Message-Id: <20200512.180306.1060369920104837686.davem@redhat.com>
-To:     olteanv@gmail.com
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, vivien.didelot@gmail.com,
-        kuba@kernel.org, eric.dumazet@gmail.com, jiri@mellanox.com,
-        idosch@idosch.org, rmk+kernel@armlinux.org.uk,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: dsa: sja1105: disable rxvlan offload for
- the DSA master
-From:   David Miller <davem@redhat.com>
-In-Reply-To: <20200512234921.25460-1-olteanv@gmail.com>
-References: <20200512234921.25460-1-olteanv@gmail.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        Tue, 12 May 2020 21:04:43 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43B38C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 18:04:42 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id x1so12671946ejd.8
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 18:04:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Fj4opsPMDblqFUFIej0/iRtaonK5CbR7vEqqPMW7suo=;
+        b=cSolVG+V9TjCt0pigpGPrE2bDc55Y6SIA4M75EFxVCrmdwd45jUcJbiolGStxazqhO
+         +LQ51n2r3619oSKe9EcqrtPHPPt3znHrE9XerOH6JeIDMGK+ErRmON4h9mJCw7klbtxz
+         a7bPNo07JX5zFIw1+UsZdaEGS2Krvd30LkEm27qpRH5edqWqiGjbsaFjfmjYADUN3P3F
+         dcnEABd6N3fR2NUREBHRQcWr23xSP3J2eqCpNaRYVIk6sDSRKwafzAEDe4cKh0XhXdJR
+         LH7dgPKz83m9mmDIyxvenlfPq/2IQ1SU6eNP2879YvGr2FR+xiZrWm6nazmbYubgpeST
+         3qUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fj4opsPMDblqFUFIej0/iRtaonK5CbR7vEqqPMW7suo=;
+        b=h1xi4HIJgnonHiN2ymuXJrimscQ9DOEL1zTcXdKaS1nQ2GXOIYdrIWqR3rkBaG6nwA
+         DwY4imrsjKtdZkg69Sh29a+zEX6ybX/vGRFNWJEY5WhYJHzkewl/vVKyATWpEin3Q+Lp
+         iKKCN+6pL4QvfSmiHKPiwvwNUAeBzTbg0ZHg4h03NDXAL7gwAYiVdmXy5kCKaXkNNe29
+         iamqNd7GrDMa5hyFR9mZ9nsX3kDo8F1W752pdN9J0yyQXMBM1W8Hs3lyOBD190vaHf2I
+         wp4TeygQGQEi1aNFARCf8/sVCiyxV2MJSICSJM40lcCVzpH/Zrl6vO0+fyYHK4Q1VJhS
+         Dzmg==
+X-Gm-Message-State: AGi0Pub8IfUQyznSWJ6mMKBuk9FDmx0kTFhYQvsvl/U9/6mU4xAIgcNs
+        eBdW68H3Ys7qtUDzv8VLsSHbML4xfCpotnHh0RP1Is/7kQ==
+X-Google-Smtp-Source: APiQypLPMo6NpS/jVOE7h4tTgOx35FR4dSq5IjzFg7m9DKJ6aj2r5nCeoldQwIvFU7wkrFX1ByHhJgYGQABp8XHSSHA=
+X-Received: by 2002:a17:906:31da:: with SMTP id f26mr17037312ejf.308.1589331880824;
+ Tue, 12 May 2020 18:04:40 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAEjxPJ6pFdDfm55pv9bT3CV5DTFF9VqzRmG_Xi5bKNxPaGuOLg@mail.gmail.com>
+ <158932282880.2885325.2688622278854566047.stgit@warthog.procyon.org.uk>
+In-Reply-To: <158932282880.2885325.2688622278854566047.stgit@warthog.procyon.org.uk>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 12 May 2020 21:04:29 -0400
+Message-ID: <CAHC9VhQhYz8xZ6MGv0S9q2D-gReb0Pqqb=2+oX=NVuxb_F5WfA@mail.gmail.com>
+Subject: Re: [PATCH] keys: Make the KEY_NEED_* perms an enum rather than a mask
+To:     David Howells <dhowells@redhat.com>
+Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        keyrings@vger.kernel.org, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <olteanv@gmail.com>
-Date: Wed, 13 May 2020 02:49:21 +0300
+On Tue, May 12, 2020 at 6:33 PM David Howells <dhowells@redhat.com> wrote:
+> Since the meaning of combining the KEY_NEED_* constants is undefined, make
+> it so that you can't do that by turning them into an enum.
+>
+> The enum is also given some extra values to represent special
+> circumstances, such as:
+>
+>  (1) The '0' value is reserved and causes a warning to trap the parameter
+>      being unset.
+>
+>  (2) The key is to be unlinked and we require no permissions on it, only
+>      the keyring, (this replaces the KEY_LOOKUP_FOR_UNLINK flag).
+>
+>  (3) An override due to CAP_SYS_ADMIN.
+>
+>  (4) An override due to an instantiation token being present.
+>
+>  (5) The permissions check is being deferred to later key_permission()
+>      calls.
+>
+> The extra values give the opportunity for LSMs to audit these situations.
+>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> cc: Paul Moore <paul@paul-moore.com>
+> cc: Stephen Smalley <stephen.smalley.work@gmail.com>
+> cc: Casey Schaufler <casey@schaufler-ca.com>
+> cc: keyrings@vger.kernel.org
+> cc: selinux@vger.kernel.org
+> ---
+>
+>  include/linux/key.h          |   30 ++++++++++++++++-----------
+>  include/linux/security.h     |    6 +++--
+>  security/keys/internal.h     |    8 ++++---
+>  security/keys/keyctl.c       |   16 ++++++++-------
+>  security/keys/permission.c   |   31 ++++++++++++++++++++++------
+>  security/keys/process_keys.c |   46 ++++++++++++++++++++----------------------
+>  security/security.c          |    6 +++--
+>  security/selinux/hooks.c     |   25 ++++++++++++++++-------
+>  security/smack/smack_lsm.c   |   31 +++++++++++++++++++++-------
+>  9 files changed, 124 insertions(+), 75 deletions(-)
 
-> From: Vladimir Oltean <vladimir.oltean@nxp.com>
-> 
-> On sja1105 operating in best_effort_vlan_filtering mode (when the TPID
-> of the DSA tags is 0x8100), it can be seen that __netif_receive_skb_core
-> calls __vlan_hwaccel_clear_tag right before passing the skb to the DSA
-> packet_type handler.
-> 
-> This means that the tagger does not see the VLAN tag in the skb, nor in
-> the skb meta data.
-> 
-> The patch that started zeroing the skb VLAN tag is:
-> 
->   commit d4b812dea4a236f729526facf97df1a9d18e191c
->   Author: Eric Dumazet <edumazet@xxxxxxxxxx>
->   Date:   Thu Jul 18 07:19:26 2013 -0700
-> 
->       vlan: mask vlan prio bits
+Thanks for clarifying this, it helps a lot.
 
-Eric, please review.
+My comments below are nitpicky, but take them into account, the style
+of the SELinux code changes makes my eyes hurt.
 
+> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> index 0b4e32161b77..3ff6b6dfc5ca 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -6541,20 +6541,31 @@ static void selinux_key_free(struct key *k)
+>
+>  static int selinux_key_permission(key_ref_t key_ref,
+>                                   const struct cred *cred,
+> -                                 unsigned perm)
+> +                                 enum key_need_perm need_perm)
+>  {
+>         struct key *key;
+>         struct key_security_struct *ksec;
+> -       u32 sid;
+> +       u32 perm, sid;
+>
+> -       /* if no specific permissions are requested, we skip the
+> -          permission check. No serious, additional covert channels
+> -          appear to be created. */
+> -       if (perm == 0)
+> +       switch (need_perm) {
+> +       case KEY_NEED_UNLINK:
+> +       case KEY_SYSADMIN_OVERRIDE:
+> +       case KEY_AUTHTOKEN_OVERRIDE:
+> +       case KEY_DEFER_PERM_CHECK:
+>                 return 0;
+> +       default:
+> +               WARN_ON(1);
+> +               return -EPERM;
+
+Please move the default case to the bottom of the switch statement.
+
+> -       sid = cred_sid(cred);
+> +       case KEY_NEED_VIEW:     perm = KEY__VIEW;       break;
+> +       case KEY_NEED_READ:     perm = KEY__READ;       break;
+> +       case KEY_NEED_WRITE:    perm = KEY__WRITE;      break;
+> +       case KEY_NEED_SEARCH:   perm = KEY__SEARCH;     break;
+> +       case KEY_NEED_LINK:     perm = KEY__LINK;       break;
+> +       case KEY_NEED_SETATTR:  perm = KEY__SETATTR;    break;
+
+Please don't put the case statements all on one line, use the more
+traditional multi-line format.  For example:
+
+  case KEY_NEED_SETATTR:
+          perm = KEY__SETATTR;
+          break;
+
+> +       }
+>
+> +       sid = cred_sid(cred);
+>         key = key_ref_to_ptr(key_ref);
+>         ksec = key->security;
+
+-- 
+paul moore
+www.paul-moore.com
