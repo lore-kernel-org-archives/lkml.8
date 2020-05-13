@@ -2,196 +2,184 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E70C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3127AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B59952065C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D5C720675
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589409894;
-	bh=SaXEtxehBPXNgHzxv6SxCYt0qjGeXgQurv3G6wTPpAU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=SQfqoFjpUFZSb+aQPCdpIVrK0GfNjyfTK2S3neBX2YN0B1fCS9lORKdoTMDmKyjrF
-	 FwAlVbgsmGWspiOh0WxmNp8JvMg0MfoJZw9LHLek/o9Pczy/wfWMOSyNaMcsQ3BPU0
-	 BxOSgTzKLAGGcfzLn1VRj9wd3ZBITCYVukZ/1TBQ=
+	s=default; t=1589409933;
+	bh=qHcFY6z3oHblTxipGa/jod0jDUvQKxTYNakIfoX5jRM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CBdg8y8svbjGcAlyx/7FmvXT0AYMJ8aZjSWjvLZ48k+EcGtNlFLnJmumH+5SBskWB
+	 0FP9kjuwlHRKgAhW4cBSJ6dpVufYZnSbmfi2izvV0aq3sZWOw/bKIH05tEm1fQ5Eyo
+	 h4UG+TWeQrmLfL2y7iirs+kgojYQ9usrnO+xhJpw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731644AbgEMWoy (ORCPT
+        id S1731675AbgEMWpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 18:44:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59166 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 18:45:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731497AbgEMWox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 18:44:53 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        id S1726383AbgEMWpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 18:45:31 -0400
+Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6F6F204EF;
-        Wed, 13 May 2020 22:44:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 020482053B;
+        Wed, 13 May 2020 22:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589409892;
-        bh=SaXEtxehBPXNgHzxv6SxCYt0qjGeXgQurv3G6wTPpAU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=jbkIbctTPcxjp+MFlS9oh6QvN2AiF2pz772yweD79fJfp5R4pmoh8sihgRDr31Lav
-         IUfFd49RzCmsgnizlgF9BHMgD1CVdlWZ63DRybM2zpY2nqzKreSWGjcvaTuKDI61Gi
-         +BsgJBAV2aV7sHg9VFkYnYGeM+cY7IfZIEKAqlao=
-Date:   Wed, 13 May 2020 17:44:49 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     bhelgaas@google.com, jay.vosburgh@canonical.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-Subject: Re: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for
- non-hotplug capable devices
-Message-ID: <20200513224449.GA347443@bjorn-Precision-5520>
+        s=default; t=1589409930;
+        bh=qHcFY6z3oHblTxipGa/jod0jDUvQKxTYNakIfoX5jRM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZFXwNtQXoPYKZiHvzmknYGL0bCxES+BEE0rW4CL5QJk+llM3ui+Q0yk2x/poUxAOf
+         bXe0sBI0fILH7Mw1ODIk/0aNhnnVtMMg6Mc4YfQ7/20w64HkMJYqft8s+w/xIb5tIc
+         KQWo84A7lGHXaIls5ZiVOe0BfIaHXy3GZVbrJWpw=
+Date:   Thu, 14 May 2020 00:45:26 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Josh Triplett <josh@joshtriplett.org>
+Subject: Re: [PATCH 08/10] rcu: Allow to deactivate nocb on a CPU
+Message-ID: <20200513224525.GA18303@lenoir>
+References: <20200513164714.22557-1-frederic@kernel.org>
+ <20200513164714.22557-9-frederic@kernel.org>
+ <20200513183831.GV2869@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20200513183831.GV2869@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 06, 2020 at 08:32:59PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On Wed, May 13, 2020 at 11:38:31AM -0700, Paul E. McKenney wrote:
+> On Wed, May 13, 2020 at 06:47:12PM +0200, Frederic Weisbecker wrote:
+> > +static void __rcu_nocb_rdp_deoffload(struct rcu_data *rdp)
+> > +{
+> > +	unsigned long flags;
+> > +	struct rcu_node *rnp = rdp->mynode;
+> > +
+> > +	printk("De-offloading %d\n", rdp->cpu);
+> > +	kthread_park(rdp->nocb_cb_kthread);
 > 
-> If there are non-hotplug capable devices connected to a given
-> port, then during the fatal error recovery(triggered by DPC or
-> AER), after calling reset_link() function, we cannot rely on
-> hotplug handler to detach and re-enumerate the device drivers
-> in the affected bus. Instead, we will have to let the error
-> recovery handler call report_slot_reset() for all devices in
-> the bus to notify about the reset operation. Although this is
-> only required for non hot-plug capable devices, doing it for
-> hotplug capable devices should not affect the functionality.
-
-Apparently this fixes a bug.  Can you include a link to a problem
-report?  The above is a description of a *solution*, but it's hard to
-understand without starting with the problem itself.
-
-The above talks about reset_link(), which is only used in the
-io_frozen case.  In that case, I think the only thing this patch
-changes is that when reset_link() fails, we'll return with
-PCI_ERS_RESULT_DISCONNECT instead of whatever reset_link()
-returned.
-
-What this patch *does* change is that in the normal_detected case, we
-previously never called reset_link() but now we will if an
-.error_detected() callback requested it.
-
-> Along with above issue, this fix also applicable to following
-> issue.
+> I am a bit concerned about this, because from this point until the
+> end of this function, no RCU callbacks can be invoked for this CPU.
+> This could be a problem if there is a callback flood in progress, and
+> such callback floods are in fact one reason that the sysadm might want
+> to be switching from offloaded to non-offloaded.  Is it possible to
+> move this kthread_park() to the end of this function?  Yes, this can
+> result in concurrent invocation of different callbacks for this CPU,
+> but because we have excluded rcu_barrier(), that should be OK.
 > 
-> Commit 6d2c89441571 ("PCI/ERR: Update error status after
-> reset_link()") added support to store status of reset_link()
-> call. Although this fixed the error recovery issue observed if
-> the initial value of error status is PCI_ERS_RESULT_DISCONNECT
-> or PCI_ERS_RESULT_NO_AER_DRIVER, it also discarded the status
-> result from report_frozen_detected. This can cause a failure to
-> recover if _NEED_RESET is returned by report_frozen_detected and
-> report_slot_reset is not invoked.
+> Or is there some failure mode that I am failing to see?  (Wouldn't
+> be the first time...)
 
-Sorry, I'm not following this explanation.  IIUC this fixes a bug when
-the channel is frozen and .error_detected() returns NEED_RESET.
+Heh I actually worried about that. Ok the issue is that it leaves
+a window where nocb_cb and local caller of rcu_do_batch() can
+compete but the local caller doesn't lock the nocb_lock.
 
-In that case, the current code does:
+So there are two ways to solve that.:
 
-  * state == io_frozen
-  * .error_detected() returns status == NEED_RESET
-  * status = reset_link()
-  * if status != RECOVERED, we return status
-  * otherwise status == RECOVERED
-  * we do not call report_slot_reset()
-  * we return RECOVERED
+1)  - set cblist->offloaded = 0 locally
+    - From the kthread while calling rcu_do_batch():
+      check the value of cblist->offloaded everytime after
+      we call rcu_nocb_lock() and stop messsing with the
+      cblist and return when we see cblist->offloaded == 0
+    - Allow to handle cblist locally without taking the nocb_lock
+    - Park kthread
 
-It does seem like we *should* call the .slot_reset() callbacks, but
-the only time we return recovery failure is if reset_link() failed.
+But there I'm worried about races. Imagine we have:
 
-I can certainly understand if drivers don't recover when we reset
-their device but don't call their .slot_reset() callback.  Is that
-what this fixes?
 
-After the patch,
+      Kthread                     Local
+      --------                   -------
+      rcu_do_batch() {
+          rcu_nocb_lock()
+          do stuff with cblist
+          rcu_nocb_unlock()
+                                 rcu_nocb_lock()
+                                 set cblist->offloaded = 0
+                                 rcu_nocb_unlock()
+                                 ===> INT or preemption
+                                 rcu_do_batch() {
+                                     do stuff with cblist
 
-  * state == io_frozen
-  * .error_detected() returns status == NEED_RESET
-  * we set status = NEED_RESET (doesn't change anything in this case)
-  * we call reset_link()
-  * if reset_link() failed, we return DISCONNECT
-  * otherwise continue with status == NEED_RESET
-  * we *do* call report_slot_reset()
-  * we return whatever .slot_reset() returned
+Are we guaranteed that the Local CPU will see the updates from
+the kthread while calling rcu_do_batch()? I would tend to say
+yes but I'm not entirely sure...
 
-I think the change to call .slot_reset() makes sense, but that's not
-at all clear from the commit log.  Am I understanding the behavior
-correctly?
+Oh wait, that solution also implies that we can't re-enqueue
+extracted callbacks if we spent took much time in threaded
+rcu_do_batch(), as the cblist may have been offloaded while
+we executed the extracted callbacks.
 
-> Such an event can be induced for testing purposes by reducing the
-> Max_Payload_Size of a PCIe bridge to less than that of a device
-> downstream from the bridge, and then initiating I/O through the
-> device, resulting in oversize transactions.  In the presence of DPC,
-> this results in a containment event and attempted reset and recovery
-> via pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not
-> invoked, and the device does not recover.
+That's a lot of corner cases to handle, which is why I prefer
+the other solution:
 
-Use "pcie_do_recovery()" and "report_slot_reset()" (including the
-parentheses) to follow convention.  Also fix other occurrences above.
+2) enum cblist_offloaded {
+        CBLIST_NOT_OFFLOADED,
+        CBLIST_(DE)OFFLOADING,
+        CBLIST_OFFLOADED
+   }
 
-> [original patch is from jay.vosburgh@canonical.com]
-> [original patch link https://lore.kernel.org/linux-pci/18609.1588812972@famine/]
-> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
-> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
->  drivers/pci/pcie/err.c | 19 +++++++++++++++----
->  1 file changed, 15 insertions(+), 4 deletions(-)
+ - Locally set cblist->offloaded =  CBLIST_DEOFFLOADING
+ - From the kthread while calling rcu_do_batch(), do as
+   usual.
+ - Local CPU can call rcu_do_batch() and if it sees CBLIST_DEOFFLOADING,
+   rcu_nocb_lock() will take the lock.
+ - Park kthread
+ - Locally set cblist->offloaded =  CBLIST_NOT_OFFLOADED
+ - Local calls to rcu_do_batch() won't take the lock anymore.
+
+
+> > +static long rcu_nocb_rdp_deoffload(void *arg)
+> > +{
+> > +	struct rcu_data *rdp = arg;
+> > +
+> > +	WARN_ON_ONCE(rdp->cpu != raw_smp_processor_id());
+> > +	__rcu_nocb_rdp_deoffload(rdp);
+> > +
+> > +	return 0;
+> > +}
 > 
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index 14bb8f54723e..db80e1ecb2dc 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -165,13 +165,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  	pci_dbg(dev, "broadcast error_detected message\n");
->  	if (state == pci_channel_io_frozen) {
->  		pci_walk_bus(bus, report_frozen_detected, &status);
-> -		status = reset_link(dev);
-> -		if (status != PCI_ERS_RESULT_RECOVERED) {
-> +		status = PCI_ERS_RESULT_NEED_RESET;
-> +	} else {
-> +		pci_walk_bus(bus, report_normal_detected, &status);
-> +	}
-> +
-> +	if (status == PCI_ERS_RESULT_NEED_RESET) {
-> +		if (reset_link) {
-> +			if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
-> +				status = PCI_ERS_RESULT_DISCONNECT;
-> +		} else {
-> +			if (pci_bus_error_reset(dev))
-> +				status = PCI_ERS_RESULT_DISCONNECT;
+> For example, is the problem caused by invocations of this
+> rcu_nocb_rdp_deoffload() function?
 
-As far as I can tell, there is no caller of pcie_do_recovery() where
-reset_link is NULL, so this call of pci_bus_error_reset() looks like
-dead code.
+How so?
 
-We did not previously check whether reset_link was NULL, and this
-patch changes nothing that could result in it being NULL.
+> But if so, do we really need to acquire rcu_state.barrier_mutex?
 
-> +		}
-> +
-> +		if (status == PCI_ERS_RESULT_DISCONNECT) {
->  			pci_warn(dev, "link reset failed\n");
->  			goto failed;
->  		}
-> -	} else {
-> -		pci_walk_bus(bus, report_normal_detected, &status);
->  	}
->  
->  	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
-> -- 
-> 2.17.1
+Indeed it was probably not needed if we parked the kthread before
+anything, as we would have kept the callbacks ordering.
+
+But now if we allow concurrent callbacks execution during the small
+window, we'll need it.
+
 > 
+> That aside, if it is possible to do the switch without interrupting
+> callback invocation?  Or is your idea that because we are always executing
+> on the CPU being deoffloaded, that CPU has been prevented from posting
+> callbacks in any case?
+
+No in the tiny window between kthread_park() and the irqs being disabled,
+the workqueue can be preempted and thus call_rcu() can be called anytime.
+
+> If the latter, does that mean that it is not
+> possible to deoffload offlined CPUs?  (Not sure whether this restriction
+> is a real problem, but figured that I should ask.)
+
+Ah in the case of offlined CPUs I simply call the function directly from the CPU
+that disables the nocb remotely. So we remotely park the kthread (that we
+always do anyway) and set offlined.
+
+Thanks.
