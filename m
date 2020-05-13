@@ -2,255 +2,183 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 418C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0268CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E50F3206A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CA1F205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:53:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dXhLrquR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403830AbgEMTx2 (ORCPT
+        id S2387991AbgEMTxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 15:53:28 -0400
-Received: from mga09.intel.com ([134.134.136.24]:40268 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390158AbgEMTx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 15:53:27 -0400
-IronPort-SDR: S0In4TOSUWf0TUGwUQtKjAlr39IXzIHTR8IPSePhNDs8PDd9LFNOlx7zrzl0deJiVn/B2S53fH
- dX9UnhTBkn+w==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 12:53:26 -0700
-IronPort-SDR: 0hLI12gI1+kzBdk3hMVJSDPGiWJwA0RgpYe9vIrW/v9dmBukg/rSI77PGEuzDY62fxEmvD980g
- KDWIsPfyTTMg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,388,1583222400"; 
-   d="scan'208";a="464248049"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga006.fm.intel.com with ESMTP; 13 May 2020 12:53:26 -0700
-Date:   Wed, 13 May 2020 12:53:26 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Jan Kara <jack@suse.cz>, linux-ext4@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/9] fs/ext4: Make DAX mount option a tri-state
-Message-ID: <20200513195325.GA2140786@iweiny-DESK2.sc.intel.com>
-References: <20200513054324.2138483-1-ira.weiny@intel.com>
- <20200513054324.2138483-8-ira.weiny@intel.com>
- <20200513143526.GG27709@quack2.suse.cz>
- <20200513181717.GA2077014@magnolia>
+        Wed, 13 May 2020 15:53:52 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:26160 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732875AbgEMTxv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 15:53:51 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589399630; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=e34hcWJf1dwWUrXW+nXPpywwnaaeWmUQ6fC6pmySpV0=;
+ b=dXhLrquR32Q9zWWMEmsz+yHHfTz6Z637XbsgLDXeEndymQkFhU0YbNTUpUEogxK5qifTbcQs
+ aiYFp7Ooj89JCsSPdDBhjQe1FMDWlnm+f44j79gTlDR+WobvRqLLATqK0IGGBwjz8opVBLVP
+ zYJwFTUNhoivpc8+mW7H+WnN32U=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebc504e.7fa948b996c0-smtp-out-n03;
+ Wed, 13 May 2020 19:53:50 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 43A8CC43636; Wed, 13 May 2020 19:53:49 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: psodagud)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6E2EEC433D2;
+        Wed, 13 May 2020 19:53:48 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513181717.GA2077014@magnolia>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 13 May 2020 12:53:48 -0700
+From:   psodagud@codeaurora.org
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     john.stultz@linaro.org, sboyd@kernel.org, tj@kernel.org,
+        linux-kernel@vger.kernel.org, saravanak@google.com,
+        pkondeti@codeaurora.org, Joonwoo Park <joonwoop@codeaurora.org>
+Subject: Re: [PATCH v3 1/2] timer: make deferrable cpu unbound timers really
+ not bound to a cpu
+In-Reply-To: <87a72lkx9t.fsf@nanos.tec.linutronix.de>
+References: <1588444137-18651-1-git-send-email-psodagud@codeaurora.org>
+ <1588444137-18651-2-git-send-email-psodagud@codeaurora.org>
+ <87a72lkx9t.fsf@nanos.tec.linutronix.de>
+Message-ID: <dbc01cd27346bb465744b93ece2b6362@codeaurora.org>
+X-Sender: psodagud@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 11:17:17AM -0700, Darrick J. Wong wrote:
-> On Wed, May 13, 2020 at 04:35:26PM +0200, Jan Kara wrote:
-> > On Tue 12-05-20 22:43:22, ira.weiny@intel.com wrote:
-> > > From: Ira Weiny <ira.weiny@intel.com>
-> > > 
-> > > We add 'always', 'never', and 'inode' (default).  '-o dax' continue to
-> > > operate the same.
-> > > 
-> > > Specifically we introduce a 2nd DAX mount flag EXT4_MOUNT2_DAX_NEVER and set
-> > > it and EXT4_MOUNT_DAX_ALWAYS appropriately.
-> > > 
-> > > We also force EXT4_MOUNT2_DAX_NEVER if !CONFIG_FS_DAX.
-> > > 
-> > > https://lore.kernel.org/lkml/20200405061945.GA94792@iweiny-DESK2.sc.intel.com/
-> > > 
-> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > > 
-> > > ---
-> > > Changes from RFC:
-> > > 	Combine remount check for DAX_NEVER with DAX_ALWAYS
-> > > 	Update ext4_should_enable_dax()
-> > > ---
-> > >  fs/ext4/ext4.h  |  1 +
-> > >  fs/ext4/inode.c |  2 ++
-> > >  fs/ext4/super.c | 43 +++++++++++++++++++++++++++++++++++++------
-> > >  3 files changed, 40 insertions(+), 6 deletions(-)
-> > > 
-> > > diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> > > index 86a0994332ce..01d1de838896 100644
-> > > --- a/fs/ext4/ext4.h
-> > > +++ b/fs/ext4/ext4.h
-> > > @@ -1168,6 +1168,7 @@ struct ext4_inode_info {
-> > >  						      blocks */
-> > >  #define EXT4_MOUNT2_HURD_COMPAT		0x00000004 /* Support HURD-castrated
-> > >  						      file systems */
-> > > +#define EXT4_MOUNT2_DAX_NEVER		0x00000008 /* Do not allow Direct Access */
-> > >  
-> > >  #define EXT4_MOUNT2_EXPLICIT_JOURNAL_CHECKSUM	0x00000008 /* User explicitly
-> > >  						specified journal checksum */
-> > > diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> > > index 23e42a223235..140b1930e2f4 100644
-> > > --- a/fs/ext4/inode.c
-> > > +++ b/fs/ext4/inode.c
-> > > @@ -4400,6 +4400,8 @@ int ext4_get_inode_loc(struct inode *inode, struct ext4_iloc *iloc)
-> > >  
-> > >  static bool ext4_should_enable_dax(struct inode *inode)
-> > >  {
-> > > +	if (test_opt2(inode->i_sb, DAX_NEVER))
-> > > +		return false;
-> > >  	if (!S_ISREG(inode->i_mode))
-> > >  		return false;
-> > >  	if (ext4_should_journal_data(inode))
-> > > diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> > > index 5ec900fdf73c..e01a040a58a9 100644
-> > > --- a/fs/ext4/super.c
-> > > +++ b/fs/ext4/super.c
-> > > @@ -1505,6 +1505,7 @@ enum {
-> > >  	Opt_jqfmt_vfsold, Opt_jqfmt_vfsv0, Opt_jqfmt_vfsv1, Opt_quota,
-> > >  	Opt_noquota, Opt_barrier, Opt_nobarrier, Opt_err,
-> > >  	Opt_usrquota, Opt_grpquota, Opt_prjquota, Opt_i_version, Opt_dax,
-> > > +	Opt_dax_str,
-> > >  	Opt_stripe, Opt_delalloc, Opt_nodelalloc, Opt_warn_on_error,
-> > >  	Opt_nowarn_on_error, Opt_mblk_io_submit,
-> > >  	Opt_lazytime, Opt_nolazytime, Opt_debug_want_extra_isize,
-> > > @@ -1570,6 +1571,7 @@ static const match_table_t tokens = {
-> > >  	{Opt_barrier, "barrier"},
-> > >  	{Opt_nobarrier, "nobarrier"},
-> > >  	{Opt_i_version, "i_version"},
-> > > +	{Opt_dax_str, "dax=%s"},
-> > 
-> > Hum, maybe it would be easier to handle this like we do with e.g. 'data='
-> > mount option? I.e. like:
-> > 
-> > 	{Opt_dax_always, "dax=always"},
-> > 	{Opt_dax_never, "dax=never"},
-> > 	{Opt_dax_inode, "dax=inode"),
-> > 
-> > and then handle these three tokens... Not that it would be a big difference
-> > but that's why we usually handle mount options with small "enums" in ext4.
+Hi Tglx,
 
-We could, but at this point it would need to be reworked for the new option
-parsing code anyway...
+On 2020-05-06 06:28, Thomas Gleixner wrote:
+> Prasad Sodagudi <psodagud@codeaurora.org> writes:
+>> To make all cpu unbound deferrable timers are scalable, introduce a 
+>> common
+>> timer base which is only for cpu unbound deferrable timers to make 
+>> those
+>> are indeed cpu unbound so that can be scheduled by any of non idle 
+>> cpus.
+>> This common timer fixes scalability issue of delayed work and all 
+>> other cpu
+>> unbound deferrable timer using implementations.
+> 
+> Scalability? That's really the wrong term here. A global timer base is
+> the opposite and you really want to explain why this is not creating a
+> scalability problem on large systems.
+> 
+>>  #ifdef CONFIG_SMP
+>> +struct timer_base timer_base_deferrable;
+>>  unsigned int sysctl_timer_migration = 1;
+>> 
+>>  DEFINE_STATIC_KEY_FALSE(timers_migration_enabled);
+>> @@ -841,8 +842,14 @@ static inline struct timer_base 
+>> *get_timer_cpu_base(u32 tflags, u32 cpu)
+>>  	 * If the timer is deferrable and NO_HZ_COMMON is set then we need
+>>  	 * to use the deferrable base.
+>>  	 */
+>> -	if (IS_ENABLED(CONFIG_NO_HZ_COMMON) && (tflags & TIMER_DEFERRABLE))
+>> -		base = per_cpu_ptr(&timer_bases[BASE_DEF], cpu);
+>> +	if (IS_ENABLED(CONFIG_NO_HZ_COMMON) && (tflags & TIMER_DEFERRABLE)) 
+>> {
+>> +#ifdef CONFIG_SMP
+>> +		base = &timer_base_deferrable;
+>> +#endif
+> 
+> There are definitely smarter ways of solving this than sprinkling
+> #ifdef's around the code.
 
-I've kind of been waiting to see if another round of those patches were
-submitted but looks like they are taking more work.
+I am able to understand all other comments and I will address all those 
+comments in the next patch set.
+It is not clear to me how to avoid #ifdef's in this case. Could you 
+please share an example here?
+
 
 > 
-> I was hoping that we could hoist the tristate enum bits out of XFS and
-> simply share them across the three DAX filesystems, but I have no idea
-> if that will work with a filesystem that hasn't been converted to the
-> new mount option parsing api.  I'm betting no. :/
+>> +		if (tflags & TIMER_PINNED)
+>> +			base = per_cpu_ptr(&timer_bases[BASE_DEF], cpu);
+>> +	}
+>> +
+>>  	return base;
+>>  }
+>> @@ -1785,8 +1798,14 @@ static __latent_entropy void 
+>> run_timer_softirq(struct softirq_action *h)
+>>  	struct timer_base *base = this_cpu_ptr(&timer_bases[BASE_STD]);
+>> 
+>>  	__run_timers(base);
+>> -	if (IS_ENABLED(CONFIG_NO_HZ_COMMON))
+>> +	if (IS_ENABLED(CONFIG_NO_HZ_COMMON)) {
+>>  		__run_timers(this_cpu_ptr(&timer_bases[BASE_DEF]));
+>> +#ifdef CONFIG_SMP
+>> +		if (tick_do_timer_cpu == TICK_DO_TIMER_NONE ||
+>> +				tick_do_timer_cpu == smp_processor_id())
+>> +			__run_timers(&timer_base_deferrable);
+>> +#endif
 > 
-> (FWIW see enum xfs_dax_mode and struct constant_table dax_param_enums in
-> fs/xfs/xfs_super.c in the for-next tree.)
-> 
-> Hm, otoh I don't see any recent posting of an ext4 mount parsing
-> conversion series, so yeah this is probably as good as can be done until
-> that happens.
->
-
-That is my thinking.
-
-I wanted to get this series out because as a feature it would be nice if this
-went in together with XFS for 5.8.  But I understand if we want to wait.
-
-Ira
+> Again, this can be solved in readable ways. Just slapping #ifdefs all
+> over the place is sloppy and lazy.
+Sorry. I will try to address this.  It is not clear to me how to avoid 
+#ifdefs in this case too.
+Please provide me more information.
 
 > 
-> --D
+> Aside of that accessing the tick internals here open coded is just a
+> layering violation.
+I will fix this and avoid using referring to tick internals here.
+
 > 
-> > 								Honza
-> > 
-> > >  	{Opt_dax, "dax"},
-> > >  	{Opt_stripe, "stripe=%u"},
-> > >  	{Opt_delalloc, "delalloc"},
-> > > @@ -1767,6 +1769,7 @@ static const struct mount_opts {
-> > >  	{Opt_min_batch_time, 0, MOPT_GTE0},
-> > >  	{Opt_inode_readahead_blks, 0, MOPT_GTE0},
-> > >  	{Opt_init_itable, 0, MOPT_GTE0},
-> > > +	{Opt_dax_str, 0, MOPT_STRING},
-> > >  	{Opt_dax, EXT4_MOUNT_DAX_ALWAYS, MOPT_SET},
-> > >  	{Opt_stripe, 0, MOPT_GTE0},
-> > >  	{Opt_resuid, 0, MOPT_GTE0},
-> > > @@ -2076,13 +2079,32 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
-> > >  		}
-> > >  		sbi->s_jquota_fmt = m->mount_opt;
-> > >  #endif
-> > > -	} else if (token == Opt_dax) {
-> > > +	} else if (token == Opt_dax || token == Opt_dax_str) {
-> > >  #ifdef CONFIG_FS_DAX
-> > > -		ext4_msg(sb, KERN_WARNING,
-> > > -		"DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
-> > > -		sbi->s_mount_opt |= m->mount_opt;
-> > > +		char *tmp = match_strdup(&args[0]);
-> > > +
-> > > +		if (!tmp || !strcmp(tmp, "always")) {
-> > > +			ext4_msg(sb, KERN_WARNING,
-> > > +				"DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
-> > > +			sbi->s_mount_opt |= EXT4_MOUNT_DAX_ALWAYS;
-> > > +			sbi->s_mount_opt2 &= ~EXT4_MOUNT2_DAX_NEVER;
-> > > +		} else if (!strcmp(tmp, "never")) {
-> > > +			sbi->s_mount_opt2 |= EXT4_MOUNT2_DAX_NEVER;
-> > > +			sbi->s_mount_opt &= ~EXT4_MOUNT_DAX_ALWAYS;
-> > > +		} else if (!strcmp(tmp, "inode")) {
-> > > +			sbi->s_mount_opt &= ~EXT4_MOUNT_DAX_ALWAYS;
-> > > +			sbi->s_mount_opt2 &= ~EXT4_MOUNT2_DAX_NEVER;
-> > > +		} else {
-> > > +			ext4_msg(sb, KERN_WARNING, "DAX invalid option.");
-> > > +			kfree(tmp);
-> > > +			return -1;
-> > > +		}
-> > > +
-> > > +		kfree(tmp);
-> > >  #else
-> > >  		ext4_msg(sb, KERN_INFO, "dax option not supported");
-> > > +		sbi->s_mount_opt2 |= EXT4_MOUNT2_DAX_NEVER;
-> > > +		sbi->s_mount_opt &= ~EXT4_MOUNT_DAX_ALWAYS;
-> > >  		return -1;
-> > >  #endif
-> > >  	} else if (token == Opt_data_err_abort) {
-> > > @@ -2306,6 +2328,13 @@ static int _ext4_show_options(struct seq_file *seq, struct super_block *sb,
-> > >  	if (DUMMY_ENCRYPTION_ENABLED(sbi))
-> > >  		SEQ_OPTS_PUTS("test_dummy_encryption");
-> > >  
-> > > +	if (test_opt2(sb, DAX_NEVER))
-> > > +		SEQ_OPTS_PUTS("dax=never");
-> > > +	else if (test_opt(sb, DAX_ALWAYS))
-> > > +		SEQ_OPTS_PUTS("dax=always");
-> > > +	else
-> > > +		SEQ_OPTS_PUTS("dax=inode");
-> > > +
-> > >  	ext4_show_quota_options(seq, sb);
-> > >  	return 0;
-> > >  }
-> > > @@ -5425,10 +5454,12 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
-> > >  		goto restore_opts;
-> > >  	}
-> > >  
-> > > -	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_DAX_ALWAYS) {
-> > > +	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_DAX_ALWAYS ||
-> > > +	    (sbi->s_mount_opt2 ^ old_opts.s_mount_opt2) & EXT4_MOUNT2_DAX_NEVER) {
-> > >  		ext4_msg(sb, KERN_WARNING, "warning: refusing change of "
-> > > -			"dax flag with busy inodes while remounting");
-> > > +			"dax mount option with busy inodes while remounting");
-> > >  		sbi->s_mount_opt ^= EXT4_MOUNT_DAX_ALWAYS;
-> > > +		sbi->s_mount_opt2 ^= EXT4_MOUNT2_DAX_NEVER;
-> > >  	}
-> > >  
-> > >  	if (sbi->s_mount_flags & EXT4_MF_FS_ABORTED)
-> > > -- 
-> > > 2.25.1
-> > > 
-> > -- 
-> > Jan Kara <jack@suse.com>
-> > SUSE Labs, CR
+>> +	}
+>>  }
+>> 
+>>  /*
+>> @@ -2025,6 +2044,16 @@ static void __init init_timer_cpu(int cpu)
+>>  	}
+>>  }
+>> 
+>> +#if defined(CONFIG_NO_HZ_COMMON) && defined(CONFIG_SMP)
+>> +static void __init init_timer_deferrable_global(void)
+>> +{
+>> +	timer_base_deferrable.cpu = nr_cpu_ids;
+> 
+> This was obviously never tested with CONFIG_DEBUG_PER_CPU_MAPS=y as 
+> this
+> will simply result in out of bounds accesses.
+
+Sure. I will test this CONFIG_DEBUG_PER_CPU_MAPS=y enabled before 
+pushing the next patch set.
+> 
+>>  static void __init init_timer_cpus(void)
+>>  {
+>>  	int cpu;
+>> @@ -2036,6 +2065,9 @@ static void __init init_timer_cpus(void)
+>>  void __init init_timers(void)
+>>  {
+>>  	init_timer_cpus();
+>> +#if defined(CONFIG_NO_HZ_COMMON) && defined(CONFIG_SMP)
+>> +	init_timer_deferrable_global();
+>> +#endif
+> 
+> Stub functions exist to avoid this unreadable #ifdef garbage.
+Got it. I will fix this in the next patch set.
+
+> 
+> Thanks,
+> 
+>         tglx
