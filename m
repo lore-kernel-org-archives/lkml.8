@@ -2,229 +2,145 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5748DC2D0FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 05:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A57C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 05:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C91720718
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 05:07:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61C98206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 05:07:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="W6XQSLOB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbgEMFHm (ORCPT
+        id S1728697AbgEMFHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 01:07:42 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:39035 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726078AbgEMFHm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 01:07:42 -0400
-Received: from dread.disaster.area (pa49-195-157-175.pa.nsw.optusnet.com.au [49.195.157.175])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id D73B2820747;
-        Wed, 13 May 2020 15:07:28 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jYjc6-0002pv-QB; Wed, 13 May 2020 15:07:26 +1000
-Date:   Wed, 13 May 2020 15:07:26 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, joel@joelfernandes.org, viro@zeniv.linux.org.uk
-Subject: Re: [PATCH RFC tip/core/rcu] Add shrinker to shift to
- fast/inefficient GP mode
-Message-ID: <20200513050726.GP2005@dread.disaster.area>
-References: <20200507170006.GA155220@cmpxchg.org>
- <20200507170903.GR2869@paulmck-ThinkPad-P72>
- <20200507183102.GB155220@cmpxchg.org>
- <20200507190905.GX2869@paulmck-ThinkPad-P72>
- <6d93affb-6505-1bf3-58a0-c67c34a18a9e@yandex-team.ru>
- <20200508144638.GF2869@paulmck-ThinkPad-P72>
- <8671cc58-11e0-b9f0-74b1-264fea58b23c@yandex-team.ru>
- <20200509160900.GM2869@paulmck-ThinkPad-P72>
- <20200513013238.GM2005@dread.disaster.area>
- <20200513031826.GN2869@paulmck-ThinkPad-P72>
+        Wed, 13 May 2020 01:07:45 -0400
+Received: from mout.web.de ([212.227.15.3]:48043 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726092AbgEMFHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 01:07:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1589346444;
+        bh=awRnFdgBH3fX5PWX/umE3yv7RIh+nzXqsgwIaGT6ulw=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=W6XQSLOB1mCX9j+it33gw5mlecyj/ONRtcT2dbzMq4NF5I2kcFmTQBhhYHi9I50bk
+         1gPuc2u9ytijSHLkj/iyT8ZIxsbigp347T3egI8s5TZeO0I3vB9ZukAWhKhv0Pkq7o
+         +lLisu+KGOnnLbekqlffjJSc0lK0bzmwbtclwS4s=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.102.128]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LphiA-1ivZZy1EtK-00fPph; Wed, 13
+ May 2020 07:07:24 +0200
+Subject: Re: net/sonic: Software evolution around the application of coding
+ standards
+To:     Finn Thain <fthain@telegraphics.com.au>, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Christophe Jaillet <christophe.jaillet@wanadoo.fr>
+References: <b7651b26-ac1e-6281-efb2-7eff0018b158@web.de>
+ <alpine.LNX.2.22.394.2005100922240.11@nippy.intranet>
+ <9d279f21-6172-5318-4e29-061277e82157@web.de>
+ <alpine.LNX.2.22.394.2005101738510.11@nippy.intranet>
+ <bc70e24c-dd31-75b7-6ece-2ad31982641e@web.de>
+ <alpine.LNX.2.22.394.2005110845060.8@nippy.intranet>
+ <9994a7de-0399-fb34-237a-a3c71b3cf568@web.de>
+ <alpine.LNX.2.22.394.2005120905410.8@nippy.intranet>
+ <3fabce05-7da9-7daa-d92c-411369f35b4a@web.de>
+ <alpine.LNX.2.22.394.2005131028450.20@nippy.intranet>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <47b7cfc3-68a1-b1da-9761-ab27dc8118ad@web.de>
+Date:   Wed, 13 May 2020 07:07:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513031826.GN2869@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=ONQRW0k9raierNYdzxQi9Q==:117 a=ONQRW0k9raierNYdzxQi9Q==:17
-        a=kj9zAlcOel0A:10 a=sTwFKg_x9MkA:10 a=7-415B0cAAAA:8
-        a=NYnCsdded2GFJZhLyaUA:9 a=9mhhKmxl66si1vE4:21 a=xlqD83RrnHhrfY9c:21
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <alpine.LNX.2.22.394.2005131028450.20@nippy.intranet>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:nDSkwFdULNgSxdqXss3zH8tCBNaOgcJ5bAlcdfp7TSYfAPJfKtm
+ tfZGduWzX34YpsHFUt4YG541/KZ8CaK1zpoy661EcS9LeoErtwKoYgRB1jqOwSqZ6z2UhH4
+ 2wsGUMrcwYOyWqHLzKh3jRUw6s5A7XncohHykvu9F/zAYxU9YD4S2crD4C6Z1KRIPLSJJ+n
+ FUgA+hE3DhyNMjJJFVUsw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:YZm/vBr9jNA=:zzQC/HQYfzs3Xa6ho18ODk
+ qqm9IRTsTEt6BVRdUK0ldMjd9mQQLVAnV58s/fIiT57HJp/5//R6rOsXbo5cp5aZRwOlUmE0T
+ 1Rb0n8OWvXeddv3WgMB53Nyp5RyLcRrS2KOsTo/GRWnxQXv1Q5ALruw3dDhGw5Y5rZHLrExtX
+ cgPuWZ2ph76NHRPpfcN08u6JFbRYMr19sLLF7Iir1EPgxyfNZt6fXLCvQcizUrJPWtIc8UJOQ
+ n8cv8iHfZH9vW3pW7s9fSYOBhH/Xn6wBXXg0Gr87bC+239iXxz65s/HPqy5m6hruIE9Ks3dN8
+ jNbNMHXSWuYDGnAbnj6mMdPf+BcbNbmauJA/LkboUF2zZygzv/pBLnVH3/871oDMQe43IANLq
+ Rt/2CZVTo5V3Pf/MPbDsmfG3cVIeWOW7lF9oVgta63Goktb9SBY+85nCD4wcI7SIjnS5hB63E
+ uCYRoF07Mey8+t6aI31LwRftUdFbPbYOJf0wsK2mmtPvk/wuraN8uOnJFhi5IeI7/wq55Xgtv
+ IJbFQ3+sHqw4HayIjRkyH4egVzaBi1FRPIuYaSPNm2tRkG5xnvRV6umYStMLqBVboXFAaV+Sv
+ YO6v5E5plFUK78ZfkC6ZRlInXnCgw4rR9CM0a3SQ05K/7HPTP9YXNo7HSQIgW3YodlHT4Dm5O
+ 097mdVGsxW+YfZX7sGVgD7muCObwtxe/uVzOfPP406fE1YUsyWZZPmBa7j99hNkIy6wuqnwG/
+ UAu8aoHJAOglqm0SS9Ntwvs2kQrXXv8mK96ZE2YZhqylBev3o/L4+eoalTvDH6jJ9DfmhzwzQ
+ hG1Ntd2ThleuvAsXMeGFGGjObBumj8redm/ISPEF1sUb7i5cPRcILVhsb9pFzJHR8m9pjVwXh
+ IzJ5Li5qtW/vioaK3KS0mgQohW0QpRWsd25nZ/Nnqt18Krp9qllHuR2mROeMA28cWI4Qa7MC0
+ NI/IV7Wbe7OcxkwAYqflkPNQnxDT4ewaIegOOImmAgxr85lNuuOe16KrN1cMS5vppmjuaRQH+
+ KSxSdwZlgLT5CKszR22VoKxQ2CxLEyDpV79TnzKUzLQCGRtF8yC+vmLTlySjeDR/Uk+y6VXwi
+ mWPGsmRkPb8FK1S9UcyQNJFq/5AUzpYYA5O8KyxwyoxiWkrUiVHKmLihfUm1y0NIx37Z77Agd
+ CnTjL76siMfyHFX4x3q956giukO/O9UtnloaCm9qTjC441C7xYkVcjolUtTi0QuGLDw9gjsvu
+ 1qYcyfkQvs6rlFfrL
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 08:18:26PM -0700, Paul E. McKenney wrote:
-> On Wed, May 13, 2020 at 11:32:38AM +1000, Dave Chinner wrote:
-> > On Sat, May 09, 2020 at 09:09:00AM -0700, Paul E. McKenney wrote:
-> > > On Sat, May 09, 2020 at 11:54:40AM +0300, Konstantin Khlebnikov wrote:
-> > > > On 08/05/2020 17.46, Paul E. McKenney wrote:
-> > > > > Easy for me to provide "start fast and inefficient mode" and "stop fast
-> > > > > and inefficient mode" APIs for MM to call!
-> > > > > 
-> > > > > How about rcu_mempressure_start() and rcu_mempressure_end()?  I would
-> > > > > expect them not to nest (as in if you need them to nest, please let
-> > > > > me know).  I would not expect these to be invoked all that often (as in
-> > > > > if you do need them to be fast and scalable, please let me know). >
-> > > > > RCU would then be in fast/inefficient mode if either MM told it to be
-> > > > > or if RCU had detected callback overload on at least one CPU.
-> > > > > 
-> > > > > Seem reasonable?
-> > > > 
-> > > > Not exactly nested calls, but kswapd threads are per numa node.
-> > > > So, at some level nodes under pressure must be counted.
-> > > 
-> > > Easy enough, especially given that RCU already "counts" CPUs having
-> > > excessive numbers of callbacks.  But assuming that the transitions to/from
-> > > OOM are rare, I would start by just counting them with a global counter.
-> > > If the counter is non-zero, RCU is in fast and inefficient mode.
-> > > 
-> > > > Also forcing rcu calls only for cpus in one numa node might be useful.
-> > > 
-> > > Interesting.  RCU currently evaluates a given CPU by comparing the
-> > > number of callbacks against a fixed cutoff that can be set at boot using
-> > > rcutree.qhimark, which defaults to 10,000.  When this cutoff is exceeded,
-> > > RCU becomes more aggressive about invoking callbacks on that CPU, for
-> > > example, by sacrificing some degree of real-time response.  I believe
-> > > that this heuristic would also serve the OOM use case well.
-> > 
-> > So one of the things that I'm not sure people have connected here is
-> > that memory reclaim done by shrinkers is one of the things that
-> > drives huge numbers of call_rcu() callbacks to free memory via rcu.
-> > If we are reclaiming dentries and inodes, then we can be pushing
-> > thousands to hundreds of thousands of objects into kfree_rcu()
-> > and/or direct call_rcu() calls to free these objects in a single
-> > reclaim pass. 
-> 
-> Good point!
-> 
-> > Hence the trigger for RCU going into "excessive callback" mode
-> > might, in fact, be kswapd running a pass over the shrinkers. i.e.
-> > memory reclaim itself can be responsible for pushing RCU into this "OOM
-> > pressure" situation.
-> > 
-> > So perhaps we've missed a trick here by not having the memory
-> > reclaim routines trigger RCU callbacks at the end of a priority
-> > scan. The shrinkers have queued the objects for freeing, but they
-> > haven't actually been freed yet and so things like slab pages
-> > haven't actually been returned to the free pool even though the
-> > shrinkers have said "freed this many objects"...
-> > 
-> > i.e. perhaps the right solution here is a "rcu_run_callbacks()"
-> > function that memory reclaim calls before backing off and/or winding
-> > up reclaim priority.
-> 
-> It would not be hard to make something that put RCU into fast/inefficient
-> mode for a couple of grace periods.  I will also look into the possibility
-> of speeding up callback invocation.
-> 
-> It might also make sense to put RCU grace periods into fast mode while
-> running the shrinkers that are freeing dentries and inodes.  However,
-> kbuild test robot reports ugly regressions when putting RCU into
-> fast/inefficient mode to quickly and too often.  As in 78.5% degradation
-> on one of the benchmarks.
+> When the people who write and review the coding standards are the same
+> people who write and review the code, the standards devolve (given the
+> prevailing incentives).
 
-I don't think it should be dependent on what specific shrinkers
-free. There are other objects that may be RCU freed by shrinkers,
-so it really shouldn't be applied just to specific shrinker
-instances.
+A coding style is applied also for Linux software. This coding style
+supports some alternatives for implementation details.
+Deviations from the recommended style are occasionally tolerated.
+But some developers care to improve the compliance with the current standa=
+rd
+at various source code places, don't they?
 
-> > > > I wonder if direct-reclaim should at some stage simply wait for RCU QS.
-> > > > I.e. call rcu_barrier() or similar somewhere before invoking OOM.
-> > > 
-> > > The rcu_oom_count() function in the patch starting this thread returns the
-> > > total number of outstanding callbacks queued on all CPUs.  So one approach
-> > > would be to invoke this function, and if the return value was truly
-> > > huge (taking size of memory and who knows that all else into account),
-> > > do the rcu_barrier() to wait for RCU to clear its current backlog.
-> > 
-> > The shrinker scan control structure has a node mask in it to
-> > indicate what node (and hence CPUs) it should be reclaiming from.
-> > This information comes from the main reclaim scan routine, so it
-> > would be trivial to feed straight into the RCU code to have it
-> > act on just the CPUs/node that we are reclaiming memory from...
-> 
-> For the callbacks, RCU can operate on CPUs, in theory anyway.  The
-> grace period itself, however, is inherently global.
-
-*nod*
-
-The memory reclaim backoffs tend to be in the order of 50-100
-milliseconds, though, so we are talking multiple grace periods here,
-right? In which case, triggering a grace period expiry before a
-backoff takes place might make a lot sense...
-
-> > > On the NUMA point, it would be dead easy for me to supply a function
-> > > that returned the number of callbacks on a given CPU, which would allow
-> > > you to similarly evaluate a NUMA node, a cgroup, or whatever.
-> > 
-> > I'd think it runs the other way around - we optimisitically call the
-> > RCU layer to do cleanup, and the RCU layer decides if there's enough
-> > queued callbacks on the cpus/node to run callbacks immediately. It
-> > would even be provided with the scan priority to indicate the level
-> > of desperation memory reclaim is under....
-> 
-> Easy for RCU to count the number of callbacks.  That said, it has no
-> idea which callbacks are which.  Perhaps kfree_rcu() could gather that
-> information from the slab allocator, though.
-> 
-> > > > All GFP_NOFAIL users should allow direct-reclaim, thus this loop
-> > > > in page_alloc shouldn't block RCU and doesn't need special care.
-> > > 
-> > > I must defer to you guys on this.  The main caution is the duration of
-> > > direct reclaim.  After all, if it is too long, the kfree_rcu() instance
-> > > would have been better of just invoking synchronize_rcu().
-> > 
-> > Individual callers of kfree_rcu() have no idea of the load on RCU,
-> > nor how long direct reclaim is taking. Calling synchronize_rcu()
-> > incorrectly has pretty major downsides to it, so nobody should be
-> > trying to expedite kfree_rcu() unless there is a good reason to do
-> > so (e.g. at unmount to ensure everything allocated by a filesystem
-> > has actually been freed). Hence I'd much prefer the decision to
-> > expedite callbacks is made by the RCU subsystem based on it's known
-> > callback load and some indication of how close memory reclaim is to
-> > declaring OOM...
-> 
-> Sorry, I was unclear.  There is a new single-argument kfree_rcu() under
-> way that does not require an rcu_head in the structure being freed.
-> However, in this case, kfree_rcu() might either allocate the memory
-> that is needed to track the memory to be freed on the one hand or just
-> invoke synchronize_rcu() on the other.  So this decision would be taken
-> inside kfree_rcu(), and not be visible to either core RCU or the caller
-> of kfree_rcu().
-
-Ah. The need to allocate memory to free memory, and with that comes
-the requirement of a forwards progress guarantee. It's mempools all
-over again :P
-
-Personally, though, designing functionality that specifically
-requires memory allocation to free memory seems like an incredibly
-fragile thing to be doing. I don't know the use case here, though,
-but jsut the general description of what you are trying to do rings
-alarm bells in my head...
-
-> This decision is made based on whether or not the allocator provides
-> kfree_rcu() the memory needed.  The tradeoff is what GFP flags are
-> supplied.
-
-So there's a reclaim recursion problem here, too?
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Regards,
+Markus
