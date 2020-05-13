@@ -2,182 +2,183 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44009CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9C1CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F3DE206E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 884BD20769
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:16:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pKvPSW2t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731890AbgEMLPY (ORCPT
+        id S1732199AbgEMLQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 07:15:24 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35140 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730567AbgEMLPX (ORCPT
+        Wed, 13 May 2020 07:16:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730286AbgEMLQ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 07:15:23 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DB1xpa022374;
-        Wed, 13 May 2020 07:15:06 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3101m17sxu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 07:15:05 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04DBAo9K061317;
-        Wed, 13 May 2020 07:15:05 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3101m17swb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 07:15:05 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04DBF2k9020086;
-        Wed, 13 May 2020 11:15:02 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04fra.de.ibm.com with ESMTP id 3100uc0jnq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 11:15:02 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04DBF0OB57082046
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 May 2020 11:15:00 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 275BCAE045;
-        Wed, 13 May 2020 11:15:00 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C7DC1AE04D;
-        Wed, 13 May 2020 11:14:54 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.94.237])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 13 May 2020 11:14:54 +0000 (GMT)
-Subject: Re: [PATCH v5 3/4] sched: Allow sched_{get,set}attr to change
- latency_nice of the task
-From:   Parth Shah <parth@linux.ibm.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com, vincent.guittot@linaro.org,
-        qais.yousef@arm.com, chris.hyser@oracle.com,
-        pkondeti@codeaurora.org, patrick.bellasi@matbug.net,
-        valentin.schneider@arm.com, David.Laight@ACULAB.COM,
-        pjt@google.com, pavel@ucw.cz, tj@kernel.org,
-        dhaval.giani@oracle.com, qperret@google.com,
-        tim.c.chen@linux.intel.com
-References: <20200228090755.22829-1-parth@linux.ibm.com>
- <20200228090755.22829-4-parth@linux.ibm.com>
- <00bf190a-6d84-48aa-83cb-b25e6c24777c@arm.com>
- <6fc4bbba-c024-1248-4837-977f0adba2d3@linux.ibm.com>
-Message-ID: <c5e16960-3e81-5c89-f765-5a4e08622958@linux.ibm.com>
-Date:   Wed, 13 May 2020 16:44:53 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 13 May 2020 07:16:28 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F6BFC061A0C;
+        Wed, 13 May 2020 04:16:27 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id v17so5140186ote.0;
+        Wed, 13 May 2020 04:16:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=kmT3haoKYL7RaHgaxSv/OLDSB0fCvleON4tKRznJs/E=;
+        b=pKvPSW2tdPeQB7JcDzETIxB6dRyvhPkU+ceLt8PJLxG9l3jxbkO8KzEEXdCAkMbKUK
+         8OX/PCIzHtwVt4kfQqPiuZDAKqaaOyesvpj66CcWN5+PlXG52diEmq/TFYj5npR1xCFP
+         Vxdc+RBudn6c+QsTEpBx33ku6ZSlNn3vRdHgYdurFQ0dxuRKkXtqKwrgYZ0O7chkqylB
+         6bma4N2RvLfkz8RyyiF64ouT+rVUA0ktFFfMuow8NBCH0LQQBB//TTJ+TbAohu/ZTv0E
+         aYukrRFoxouG0LpdV1L9zeaRYERlz0FwKl9sf51XCPW6xycf5/luehiY+s58kSR1y4L5
+         YwUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=kmT3haoKYL7RaHgaxSv/OLDSB0fCvleON4tKRznJs/E=;
+        b=b0+jopkOfYGtRPGmHDjrF8l+O3hxkjVCokG5ShaBmrcDzEayB10QGbKqwKIyf/948H
+         66SdhyLJPOmVIqCJYOqAxZ7EmmNbbuOqCf8gRBlstK4eqHbsWlfOZ06d6HQ+7NR/Np9W
+         s0ue9zLAbhyUTUebPUjVhoLO3Moxr2PDiM3LHngQEZlzMYXtS3i/qvdKiB59pDNobvq5
+         SGXGA+OYANy3nevkWGwfABo7rPIRJcJfdjRrmX8WsI5onCLdMXFiE4zb5hbgUq+hk2ld
+         BK3tc76D36V5hi6TDHIjREMHl1rqKu3C6rJEIQadLJ6aVlxs5M/sPXCoXPfkAbaFdOYG
+         VI7A==
+X-Gm-Message-State: AGi0PuZwg4Ugh0xj06GMqQtLjFlpYo5Z/BLhLUNOOAlQx4bzAFkWr70k
+        tT0xHQ7chO3t301/4hUCbUMOMJjmpm2D1H6IVCxdnVKGzfqdTg==
+X-Google-Smtp-Source: APiQypKCiadeMjqy4HJtxD3P1eyF9SmDO+r0O/RiOm5MGnBXerJmlguCBMcOgC8R7fErOqw5TY8VqepeP/PyfymSizA=
+X-Received: by 2002:a9d:7390:: with SMTP id j16mr18834815otk.43.1589368586398;
+ Wed, 13 May 2020 04:16:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <6fc4bbba-c024-1248-4837-977f0adba2d3@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-13_04:2020-05-11,2020-05-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 cotscore=-2147483648 impostorscore=0 phishscore=0
- clxscore=1015 mlxlogscore=999 malwarescore=0 lowpriorityscore=0
- bulkscore=0 mlxscore=0 adultscore=0 spamscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005130096
+References: <1586945948-11026-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1586945948-11026-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200512222648.GD2542285@oden.dyn.berto.se>
+In-Reply-To: <20200512222648.GD2542285@oden.dyn.berto.se>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Wed, 13 May 2020 12:16:00 +0100
+Message-ID: <CA+V-a8tC2KrspKWGHn8=+7DYjOUNuBXn+biS9NDB+qcqnd6f9w@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] media: rcar-vin: Invalidate pipeline if conversion
+ is not possible on input formats
+To:     Niklas <niklas.soderlund@ragnatech.se>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Niklas,
 
+Thank you for the review.
 
-On 5/13/20 3:11 PM, Parth Shah wrote:
-> 
-> 
-> On 5/11/20 4:43 PM, Dietmar Eggemann wrote:
->> On 28/02/2020 10:07, Parth Shah wrote:
->>> Introduce the latency_nice attribute to sched_attr and provide a
->>> mechanism to change the value with the use of sched_setattr/sched_getattr
->>> syscall.
->>>
->>> Also add new flag "SCHED_FLAG_LATENCY_NICE" to hint the change in
->>> latency_nice of the task on every sched_setattr syscall.
->>>
->>> Signed-off-by: Parth Shah <parth@linux.ibm.com>
->>> Reviewed-by: Qais Yousef <qais.yousef@arm.com>
->>
->> [...]
->>
->> ndif /* _UAPI_LINUX_SCHED_TYPES_H */
->>> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
->>> index 866ea3d2d284..cd1fb9c8be26 100644
->>> --- a/kernel/sched/core.c
->>> +++ b/kernel/sched/core.c
->>> @@ -4710,6 +4710,9 @@ static void __setscheduler_params(struct task_struct *p,
->>>  	p->rt_priority = attr->sched_priority;
->>>  	p->normal_prio = normal_prio(p);
->>>  	set_load_weight(p, true);
->>> +
->>> +	if (attr->sched_flags & SCHED_FLAG_LATENCY_NICE)
->>> +		p->latency_nice = attr->sched_latency_nice;
->>>  }
->>
->> How do you make sure that p->latency_nice can be set independently from
->> p->static_prio?
->>
->> AFAICS, util_clamp achieves this by relying on SCHED_FLAG_KEEP_PARAMS,
->> so completely bypassing __setscheduler_params() and using it's own
->> __setscheduler_uclamp().
->>
-> 
-> Right. good catch.
-> Use of SCHED_FLAG_LATENCY_NICE/SCHED_FLAG_ALL is must to change
-> latency_nice value, but currently setting latency_nice value also changes
-> static_prio.
-> 
-> One possible solution here is to move the above code to _setscheduler():
-> 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 6031ec58c7ae..44bcbf060718 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -4731,9 +4731,6 @@ static void __setscheduler_params(struct task_struct *p,
->         p->rt_priority = attr->sched_priority;
->         p->normal_prio = normal_prio(p);
->         set_load_weight(p, true);
-> -
-> -       if (attr->sched_flags & SCHED_FLAG_LATENCY_NICE)
-> -               p->latency_nice = attr->sched_latency_nice;
->  }
-> 
->  /* Actually do priority change: must hold pi & rq lock. */
-> @@ -4749,6 +4746,13 @@ static void __setscheduler(struct rq *rq, struct
-> task_struct *p,
-> 
->         __setscheduler_params(p, attr);
-> 
-> +       /*
-> +        * Change latency_nice value only when SCHED_FLAG_LATENCY_NICE or
-> +        * SCHED_FLAG_ALL sched_flag is set.
-> +        */
-> +       if (attr->sched_flags & SCHED_FLAG_LATENCY_NICE)
-> +               p->latency_nice = attr->sched_latency_nice;
-> +
-> 
-> This should allow setting value only on above flags, also restricts setting
-> the value when SCHED_FLAG_KEEP_PARAMS/SCHED_FLAG_KEEP_ALL is passed.
+On Tue, May 12, 2020 at 11:26 PM Niklas <niklas.soderlund@ragnatech.se> wro=
+te:
+>
+> Hi Lad,
+>
+> Thanks for your work.
+>
+> On 2020-04-15 11:19:06 +0100, Lad Prabhakar wrote:
+> > Up until now the VIN was capable to convert any of its supported input =
+mbus
+> > formats to any of it's supported output pixel formats. With the additio=
+n of
+> > RAW formats this is no longer true.
+>
+> Add blank line.
+>
+> > This patch invalidates the pipeline by adding a check if given vin inpu=
+t
+> > format can be converted to supported output pixel format.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> I like this patch I think there is a typo bellow and patch [1] have been
+> merged in the media-tree which unfortunately addes one more thing to do
+> in this patch. In rvin_enum_fmt_vid_cap() there is a TODO noted for what
+> needs to be done. In imagine the fix is simple and the end result would
+> look something like this.
+>
+>     switch (f->mbus_code) {
+>     case 0:
+>     case MEDIA_BUS_FMT_YUYV8_1X16:
+>     case MEDIA_BUS_FMT_UYVY8_1X16:
+>     case MEDIA_BUS_FMT_UYVY8_2X8:
+>     case MEDIA_BUS_FMT_UYVY10_2X10:
+>     case MEDIA_BUS_FMT_RGB888_1X24:
+>         break;
+>     case MEDIA_BUS_FMT_SRGGB8_1X8:
+>         if (f->index)
+>             return -EINVAL;
+>
+>         f->pixelformat =3D V4L2_PIX_FMT_SRGGB8;
+>         return 0;
+>     case default:
+>         return -EINVAL;
+>     }
+>
+> 1. d5f74a1eff9aef3b ("media: rcar-vin: Make use of V4L2_CAP_IO_MC")
+>
+Sure Ill take of care of this and just repost this patch is that OK with yo=
+u ?
 
-and also get rid of __setscheduler_params(p, attr) when
-attr->sched_flags == SCHED_FLAG_LATENCY_NICE
+> > ---
+> >  drivers/media/platform/rcar-vin/rcar-dma.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media=
+/platform/rcar-vin/rcar-dma.c
+> > index 1a30cd036371..48bd9bfc3948 100644
+> > --- a/drivers/media/platform/rcar-vin/rcar-dma.c
+> > +++ b/drivers/media/platform/rcar-vin/rcar-dma.c
+> > @@ -1109,13 +1109,17 @@ static int rvin_mc_validate_format(struct rvin_=
+dev *vin, struct v4l2_subdev *sd,
+> >       case MEDIA_BUS_FMT_UYVY8_1X16:
+> >       case MEDIA_BUS_FMT_UYVY8_2X8:
+> >       case MEDIA_BUS_FMT_UYVY10_2X10:
+> > +             break;
+> >       case MEDIA_BUS_FMT_RGB888_1X24:
+> > -             vin->mbus_code =3D fmt.format.code;
+>
+> This is not right is it?
+>
+> Should you not add a case for MEDIA_BUS_FMT_SRGGB8_1X8 instead of taking
+> over MEDIA_BUS_FMT_RGB888_1X24?
+>
+Agreed, I blindly took this suggestion from your previous comments [1].
 
-Other way is surely to bypass keep_param check just like UCLAMP.
+[1] https://lkml.org/lkml/2020/3/19/858
 
-> 
-> 
-> Thanks,
-> Parth
-> 
+Cheers,
+--Prabhakar Lad
+
+> > +             if (vin->format.pixelformat !=3D V4L2_PIX_FMT_SRGGB8)
+> > +                     return -EPIPE;
+> >               break;
+> >       default:
+> >               return -EPIPE;
+> >       }
+> >
+> > +     vin->mbus_code =3D fmt.format.code;
+> > +
+> >       switch (fmt.format.field) {
+> >       case V4L2_FIELD_TOP:
+> >       case V4L2_FIELD_BOTTOM:
+> > --
+> > 2.20.1
+> >
+>
+> --
+> Regards,
+> Niklas S=C3=B6derlund
