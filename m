@@ -2,385 +2,148 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9099BCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CFBC2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 506BD204EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D411205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:26:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cSBc9mHf"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cW+1fl8G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388979AbgEMOYF (ORCPT
+        id S2388990AbgEMO0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 10:24:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39910 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388790AbgEMOYF (ORCPT
+        Wed, 13 May 2020 10:26:30 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8391 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388827AbgEMO03 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 10:24:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589379841;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9hxa3pyn7WxrSiMYejxZ3g3vD/+4zkOzwGU8zsXuLvo=;
-        b=cSBc9mHfmoCzbo6B4JgjVfN1Nk5oBGxVQ9/hSWfJJx1ZKADu/GXjMI4MUKUUbIU4+5jB3s
-        tmRk73ujbch+KYaZZmq79IyT1MW1Ib5l6xooH7hKZsSUJSRmIp6cvJ1j0hTy+S8igAF+Js
-        iU3xWtE9qmV0tCNqun4RYiSsxWORBfM=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-130-zc5gDb66Oe25HT7QJmDQiA-1; Wed, 13 May 2020 10:24:00 -0400
-X-MC-Unique: zc5gDb66Oe25HT7QJmDQiA-1
-Received: by mail-wm1-f70.google.com with SMTP id m11so565001wml.5
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 07:23:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=9hxa3pyn7WxrSiMYejxZ3g3vD/+4zkOzwGU8zsXuLvo=;
-        b=G/s7RWwzE+hdX/aRNrP13iyHopueZTN1yzB4nL0/wM1WDbQITYkSyROw7t958L8O49
-         skOSZg5TRnD8+VNlFAlw8exMH0IlC92bGCtj/DHFqAVisOuLz9R4ty1de0UzUOpeaB8C
-         Npqcx3ARn0st9vGHEeSJd6yLugocO5AgHzE88BvAmBphaxS6SQbDVqZFOr5Mge5HwhAZ
-         fvsySNoKcTrxRuAP8NnZN/y+ir+4MfjoiNRQrjFbXK3UEq/vWH3tlhLStjrG6VXmi60W
-         denk/9oktuDs6bHWUtLbSDPXfed86+65hxuAZmHRFqsyODc9Jk8HHyBzmbyYnthn1E35
-         MFug==
-X-Gm-Message-State: AGi0PuYK7aQ8YYfEYM7NkhXHm+1VlKvk05LaENfTFi3SycWutNIQ3Q9o
-        QbhFAIY0bjOQpRLno9Qh6YT1NVk48CXKgJa5m4wQl8PzHJ3nJeTrqcfzzL1Q+uCew7S8XTxhI1C
-        p+z3floPzKUir0DvW0hc9Rv2g
-X-Received: by 2002:a5d:4e0a:: with SMTP id p10mr30663410wrt.215.1589379838373;
-        Wed, 13 May 2020 07:23:58 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJjUvLLshvObF5pQzc2nDS/Gwgm0XJv2KPrIhD18TAvwccu4AahTPPjG5VvdPXzOQJS8pyq9Q==
-X-Received: by 2002:a5d:4e0a:: with SMTP id p10mr30663365wrt.215.1589379837973;
-        Wed, 13 May 2020 07:23:57 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id n6sm24745963wrt.58.2020.05.13.07.23.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 07:23:57 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     kvm@vger.kernel.org, x86@kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Gavin Shan <gshan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/8] KVM: x86: interrupt based APF page-ready event delivery
-In-Reply-To: <20200513135350.GB173965@redhat.com>
-References: <20200511164752.2158645-1-vkuznets@redhat.com> <20200511164752.2158645-5-vkuznets@redhat.com> <20200512142411.GA138129@redhat.com> <87lflxm9sy.fsf@vitty.brq.redhat.com> <20200512180704.GE138129@redhat.com> <877dxgmcjv.fsf@vitty.brq.redhat.com> <20200513135350.GB173965@redhat.com>
-Date:   Wed, 13 May 2020 16:23:55 +0200
-Message-ID: <87ftc3lxqc.fsf@vitty.brq.redhat.com>
+        Wed, 13 May 2020 10:26:29 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ebc030c0000>; Wed, 13 May 2020 07:24:12 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 13 May 2020 07:26:28 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 13 May 2020 07:26:28 -0700
+Received: from [10.40.103.138] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 May
+ 2020 14:26:19 +0000
+Subject: Re: RE: [PATCH v6 09/10] arm64: efi: Export screen_info
+To:     Michael Kelley <mikelley@microsoft.com>,
+        Arnd Bergmann <arnd@arndb.de>
+CC:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        Andy Whitcroft <apw@canonical.com>,
+        vkuznets <vkuznets@redhat.com>, Jason Wang <jasowang@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>
+References: <1584200119-18594-1-git-send-email-mikelley@microsoft.com>
+ <1584200119-18594-10-git-send-email-mikelley@microsoft.com>
+ <CAK8P3a1YUjhaVUmjVC2pCoTTBTU408iN44Q=QZ0RDz8rmzJisQ@mail.gmail.com>
+ <MW2PR2101MB10524254D2FE3EFC72329465D7F70@MW2PR2101MB1052.namprd21.prod.outlook.com>
+ <CAK8P3a1YCtc3LJ-_3iT90_Srehb96gLHvTXsbJ0wT6NFYCG=TQ@mail.gmail.com>
+ <MW2PR2101MB1052E413218D295EF24E5E05D7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
+From:   Nikhil Mahale <nmahale@nvidia.com>
+Message-ID: <f2b63853-24ae-d6b7-cd43-5792c0d4d31b@nvidia.com>
+Date:   Wed, 13 May 2020 19:56:14 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <MW2PR2101MB1052E413218D295EF24E5E05D7F40@MW2PR2101MB1052.namprd21.prod.outlook.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589379852; bh=x1UAKVn8+/u2cz6MzDi8dZRv1jolqDgwkL4uosH9XXA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=cW+1fl8Ga69Q1QXp46sGezHshzti2A6hHcqXU68jSAv0HbHLeJQvepipXJ0eSuDBo
+         51KMndVzf/sPPYlWVGm/bE21jU3XJS+EeiVEM2ruDJCnu64Jz80k49jv2OjlI7Vnjj
+         DhPtiz/99TQ94aCjvD+0pTQoBQQ/lwcbhEddYghMCPLZE9sM9eXPYXm18cFxeGfTO2
+         15ETxGo1tsLmjRLBCgkqhz7TYdryxI170K82U/Oez6e+yjci90BE8uVyGq0TXp/K63
+         ks9G06QTA88P3fNC9kzZfxZonCfJndFQz5TkuaWAKoONJmCQ+9rIQ5hxcdLWAb+Cng
+         7pKiTeecW804A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vivek Goyal <vgoyal@redhat.com> writes:
+On 3/20/20 3:16 AM, Michael Kelley wrote:
+> From: Arnd Bergmann <arnd@arndb.de> Sent: Wednesday, March 18, 2020 2:27 AM
+>>
+>> On Wed, Mar 18, 2020 at 1:18 AM Michael Kelley <mikelley@microsoft.com> wrote:
+>>> From: Arnd Bergmann <arnd@arndb.de>
+>>>> On Sat, Mar 14, 2020 at 4:36 PM Michael Kelley <mikelley@microsoft.com> wrote:
+>>>>>
+>>>>> The Hyper-V frame buffer driver may be built as a module, and
+>>>>> it needs access to screen_info. So export screen_info.
+>>>>>
+>>>>> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+>>>>
+>>>> Is there any chance of using a more modern KMS based driver for the screen
+>>>> than the old fbdev subsystem? I had hoped to one day completely remove
+>>>> support for the old CONFIG_VIDEO_FBDEV and screen_info from modern
+>>>> architectures.
+>>>>
+>>>
+>>> The current hyperv_fb.c driver is all we have today for the synthetic Hyper-V
+>>> frame buffer device.  That driver builds and runs on both ARM64 and x86.
+>>>
+>>> I'm not knowledgeable about video/graphics drivers, but when you
+>>> say "a more modern KMS based driver", are you meaning one based on
+>>> DRM & KMS?  Does DRM make sense for a "dumb" frame buffer device?
+>>> Are there any drivers that would be a good pattern to look at?
+>>
+>> It used to be a lot harder to write a DRM driver compared to an fbdev
+>> driver, but this has changed to the opposite over the years.
+>>
+>> A fairly minimal example would be drivers/gpu/drm/pl111/pl111_drv.c
+>> or anything in drivers/gpu/drm/tiny/, but you may want to look at the
+>> other hypervisor platforms first, i.e drivers/gpu/drm/virtio/virtgpu_drv.c,
+>> drivers/gpu/drm/vmwgfx/vmwgfx_drv.c, drivers/gpu/drm/xen/xen_drm_front.c,
+>> drivers/gpu/drm/qxl/qxl_drv.c, and drivers/gpu/drm/bochs/bochs_drv.c.
+>>
+> 
+> Thanks for the pointers, especially for the other hypervisors.
+> 
+Sorry if anybody in 'to' or 'cc' is receiving this reply multiple times.
+I had configured by email client incorrectly to reply.
 
-> On Wed, May 13, 2020 at 11:03:48AM +0200, Vitaly Kuznetsov wrote:
->> Vivek Goyal <vgoyal@redhat.com> writes:
->> 
->> > On Tue, May 12, 2020 at 05:50:53PM +0200, Vitaly Kuznetsov wrote:
->> >> Vivek Goyal <vgoyal@redhat.com> writes:
->> >> 
->> >> >
->> >> > So if we are using a common structure "kvm_vcpu_pv_apf_data" to deliver
->> >> > type1 and type2 events, to me it makes sense to retain existing
->> >> > KVM_PV_REASON_PAGE_READY and KVM_PV_REASON_PAGE_NOT_PRESENT. Just that
->> >> > in new scheme of things, KVM_PV_REASON_PAGE_NOT_PRESENT will be delivered
->> >> > using #PF (and later possibly using #VE) and KVM_PV_REASON_PAGE_READY
->> >> > will be delivered using interrupt.
->> >> 
->> >> We use different fields for page-not-present and page-ready events so
->> >> there is no intersection. If we start setting KVM_PV_REASON_PAGE_READY
->> >> to 'reason' we may accidentally destroy a 'page-not-present' event.
->> >
->> > This is confusing. So you mean at one point of time we might be using
->> > same shared data structure for two events.
->> >
->> > - ->reason will be set to 1 and you will inject page_not_present
->> >   execption.
->> >
->> > - If some page gets ready, you will now set ->token and queue 
->> >   page ready exception. 
->> >
->> > Its very confusing. Can't we serialize the delivery of these events. So
->> > that only one is in progress so that this structure is used by one event
->> > at a time.
->> 
->> This is not how the mechanism (currently) works:
->> - A process accesses a page which is swapped out
->> 
->> - We deliver synchronious APF (#PF) to the guest, it freezes the process
->> and switches to another one.
->> 
->> - Another process accesses a swapped out page, APF is delivered and it
->> also got frozen
->> 
->> ...
->> 
->> - At some point one of the previously unavailable pages become available
->> (not necessarily the last or the first one) and we deliver this info via
->> asynchronous APF (now interrupt).
->> 
->> - Note, after we deliver the interrupt and before it is actually
->> consumed we may have another synchronous APF (#PF) event.
->> 
->> So we really need to separate memory locations for synchronous (type-1,
->> #PF,...) and asynchronous (type-2, interrupt, ...) data.
->> 
->> The naming is unfortunate and misleading, I agree. What is currently
->> named 'reason' should be something like 'apf_flag_for_pf' and it just
->> means to distinguish real #PF from APF. This is going away in the
->> future, we won't be abusing #PF anymore so I'd keep it as it is now,
->> maybe add another comment somewhere.
->
-> Shouldn't we do #VE changes also at the same time. Otherwise we are
-> again creating this intermediate mode where synchronous notifications
-> happen using #PF. Once we move to #VE, old guests will again stop
-> getting async #PF? 
->
-> Also there is this issue of who is using this common shared area
-> between host and guest (struct kvm_vcpu_pv_apf_data) and how to 
-> use fields in this struct without breaking existing guests.
->
-> For now I see you have modified meaning of fields of this structure
-> (->reason) beacuse you are not concerned about older guets because
-> they will not receive async pf to begin with. If that's the case,
-> renaming even reason makes sense. Havind said that, as we are
-> planning to not use this data structure for synchronous notifications,
-> creating this intermediate mode is just going to create more
-> confusion. So in new ABI, we should not even try to make use of
-> ->reason and design #VE changes at the same time. Core problem with
-> current ABI is racy access to ->reason and this patch set does not
-> get rid of that race anyway.
+screen_info is still useful with a modern KMS-based driver.  It exposes
+the mode parameters that the GOP driver chose.  This information is
+needed to implement seamless or glitchless boot, by both ensuring that
+the scanout parameters don't change and being able to read back the
+scanout image to populate the initial contents of the new surface.
 
-Well, at least 'page ready' notifications don't access reason and can't
-collide with real #PF which is already an improvement :-)
+This works today on arches which implement (U)EFI and export
+screen_info, including x86 and powerpc, but doesn't work on arm or
+arm64.  As arm64 systems that implement UEFI with real GOP drivers
+become more prevalent, it would be nice to be have these features there
+as well.
 
->
->> The other location is
->> 'pageready_token' and it actually contains the token. This is to stay
->> long term so any suggestions for better naming are welcome.
->
-> pageready_token makes sense if this structure is being used both
-> types of notifications otherwise just ->token might be enough.
+Thanks,
+Nikhil Mahale
 
-Yes, sure, when we stop using this structure for type-1 APF 'pageready_'
-prefix becomes superfluous.
-
->
->> 
->> We could've separated these two memory locations completely and
->> e.g. used the remaining 56 bits of MSR_KVM_ASYNC_PF_INT as the new
->> location information. Maybe we should do that just to avoid the
->> confusion.
->
-> If this is V2 of ABI, why not do "struct struct kvm_vcpu_pv_apf_data_v2"
-> instead? Only reason you seem to be sticking to existing structure and
-> ->reason fields because of #PF based sync notifications which is planned
-> to go away soon. So if we do both the changes together, there is no
-> need to keep this confusion w.r.t ->reason and existing structure.
->
-
-Yes, sure. I don't know if Paolo already has #VE patches in his stash
-but we can definitely keep this on the list untill the second half is
-done, no rush.
-
->> 
->> >
->> > Also how do I extend it now to do error delivery. Please keep that in
->> > mind. We don't want to be redesigning this stuff again. Its already
->> > very complicated.
->> >
->> > I really need ->reason field to be usable in both the paths so that
->> > error can be delivered.
->> 
->> If we want to use 'reason' for both we'll get into a weird scenario when
->> exception is blocking interrupt and, what's more confusing, vice
->> versa. I'd like to avoid this complexity in KVM code. My suggestion
->> would be to rename 'reason' to something like 'pf_abuse_flag' so it
->> doesn't cause the confusion and add new 'reason' after 'token'.
->> 
->> >
->> > And this notion of same structure being shared across multiple events
->> > at the same time is just going to create more confusion, IMHO. If we
->> > can decouple it by serializing it, that definitely feels simpler to
->> > understand.
->> 
->> What if we just add sub-structures to the structure, e.g. 
->> 
->> struct kvm_vcpu_pv_apf_data {
->>         struct {
->>             __u32 apf_flag;
->>         } legacy_apf_data;
->>         struct {
->>             __u32 token;
->>         } apf_interrupt_data;
->>         ....
->>         __u8 pad[56];                                                                                  |
->>         __u32 enabled;                                                                                 |
->> };    
->> 
->> would it make it more obvious?
->
-> To me this seems like an improvement. Just looking at it, it is clear
-> to me who is using what. But soon legacy_apf_data will be unused. Its
-> not clear to me when will be able to get rid of apf_flag and reuse it
-> for something else without having to worry about older guests.
->
-> This will be second best option, if for some reason we don't want to
-> do #VE changes at the same time. To make new design cleaner and more
-> understandable, doing #VE changes at the same time will be good.
-
-No objections :-)
-
->
->> 
->> >
->> >> 
->> >> With this patchset we have two completely separate channels:
->> >> 1) Page-not-present goes through #PF and 'reason' in struct
->> >> kvm_vcpu_pv_apf_data.
->> >> 2) Page-ready goes through interrupt and 'pageready_token' in the same
->> >> kvm_vcpu_pv_apf_data.
->> >> 
->> >> >
->> >> >> +
->> >> >> +	Note, previously, type 2 (page present) events were delivered via the
->> >> >> +	same #PF exception as type 1 (page not present) events but this is
->> >> >> +	now deprecated.
->> >> >
->> >> >> If bit 3 (interrupt based delivery) is not set APF events are not delivered.
->> >> >
->> >> > So all the old guests which were getting async pf will suddenly find
->> >> > that async pf does not work anymore (after hypervisor update). And
->> >> > some of them might report it as performance issue (if there were any
->> >> > performance benefits to be had with async pf).
->> >> 
->> >> We still do APF_HALT but generally yes, there might be some performance
->> >> implications. My RFC was preserving #PF path but the suggestion was to
->> >> retire it completely. (and I kinda like it because it makes a lot of
->> >> code go away)
->> >
->> > Ok. I don't have strong opinion here. If paolo likes it this way, so be
->> > it. :-)
->> 
->> APF is a slowpath for overcommited scenarios and when we switch to
->> APF_HALT we allow the host to run some other guest while PF is
->> processed. This is not the same from guest's perspective but from host's
->> we're fine as we're not wasting cycles.
->> 
->> >
->> >> 
->> >> >
->> >> > [..]
->> >> >>  
->> >> >>  bool kvm_arch_can_inject_async_page_present(struct kvm_vcpu *vcpu)
->> >> >>  {
->> >> >> -	if (!(vcpu->arch.apf.msr_val & KVM_ASYNC_PF_ENABLED))
->> >> >> +	if (!kvm_pv_async_pf_enabled(vcpu))
->> >> >>  		return true;
->> >> >
->> >> > What does above mean. If async pf is not enabled, then it returns true,
->> >> > implying one can inject async page present. But if async pf is not
->> >> > enabled, there is no need to inject these events.
->> >> 
->> >> AFAIU this is a protection agains guest suddenly disabling APF
->> >> mechanism.
->> >
->> > Can we provide that protection in MSR implementation. That is once APF
->> > is enabled, it can't be disabled. Or it is a feature that we allow
->> > guest to disable APF and want it that way?
->> 
->> We need to allow to disable the feature. E.g. think about kdump
->> scenario, for example. Before we switch to kdump kernel we need to make
->> sure there's no more 'magic' memory which can suggenly change.
->
-> So are we waiting to receive all page ready events before we switch
-> to kdump kernel? If yes, that's not good. Existing kernel is corrupted
-> and nothing meaningful can be done. So we should switch to next
-> kernel asap. Previous kernel is dying anyway, so we don't care to
-> receive page ready events.
-
-No, we don't wait. We just disable the feature so no new notifications
-will get delivered (if they are the new kernel will get confused). If we
-happen to access one of the previously-unavailable pages again the host
-will just freeze us untill the page is ready, no harm done.
-
->
->> Also,
->> kdump kernel may not even support APF so it will get very confused when
->> APF events get delivered.
->
-> New kernel can just ignore these events if it does not support async
-> pf? 
->
-> This is somewhat similar to devices still doing interrupts in new
-> kernel. And solution for that seemed to be doing a "reset" of devices
-> in new kernel. We probably need similar logic where in new kernel
-> we simply disable "async pf" so that we don't get new notifications.
-
-Right and that's what we're doing - just disabling new notifications.
-
->
-> IOW, waiting in crashed kernel for all page ready events does not
-> sound like a good option. It reduces the reliability of kdump
-> operation. 
-
-AFAIK we don't wait (kvm_pv_guest_cpu_reboot() -> kvm_pv_disable_apf()
--> wrmsrl()).
-
->
->> 
->> >
->> >> What do we do with all the 'page ready' events after, we
->> >> can't deliver them anymore. So we just eat them (hoping guest will
->> >> unfreeze all processes on its own before disabling the mechanism).
->> >> 
->> >> It is the existing logic, my patch doesn't change it.
->> >
->> > I see its existing logic. Just it is very confusing and will be good
->> > if we can atleast explain it with some comments.
->> >
->> > I don't know what to make out of this.
->> >
->> > bool kvm_arch_can_inject_async_page_present(struct kvm_vcpu *vcpu)
->> > {
->> >         if (!(vcpu->arch.apf.msr_val & KVM_ASYNC_PF_ENABLED))
->> >                 return true;
->> >         else
->> >                 return kvm_can_do_async_pf(vcpu);
->> > }
->> >
->> > If feature is disabled, then do inject async pf page present. If feature
->> > is enabled and check whether we can inject async pf right now or not.
->> >
->> > It probably will help if this check if feature being enabled/disabled
->> > is outside kvm_arch_can_inject_async_page_present() at the callsite
->> > of kvm_arch_can_inject_async_page_present() and there we explain that
->> > why it is important to inject page ready events despite the fact
->> > that feature is disabled.
->> 
->> This code would definitely love some comments added, will do in the next
->> version. And I'll also think how to improve the readability, thanks for
->> the feedback!
->
-> It definitely needs a comment (if it makes sense to still send page
-> ready events to guest).
->
-
--- 
-Vitaly
-
+> Michael
+> 
