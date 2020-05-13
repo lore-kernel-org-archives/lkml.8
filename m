@@ -2,369 +2,183 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A8BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF1AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFC002054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:50:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61C8C20794
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:50:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=seznam.cz header.i=@seznam.cz header.b="ewxniBxk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mALEYYK8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390313AbgEMSuf (ORCPT
+        id S2390280AbgEMSue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 14:50:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48980 "EHLO
+        Wed, 13 May 2020 14:50:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387462AbgEMSue (ORCPT
+        by vger.kernel.org with ESMTP id S1732990AbgEMSue (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 13 May 2020 14:50:34 -0400
-Received: from mxa2.seznam.cz (mxa2.seznam.cz [IPv6:2a02:598:2::90])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D2A4C061A0C;
-        Wed, 13 May 2020 11:50:33 -0700 (PDT)
-Received: from email.seznam.cz
-        by email-smtpc25a.ng.seznam.cz (email-smtpc25a.ng.seznam.cz [10.23.18.34])
-        id 5989d7e10287838858201bbf;
-        Wed, 13 May 2020 20:50:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seznam.cz; s=beta;
-        t=1589395821; bh=7OSh5aIXDq9/eo++d56tCZG9ZYJX4E/V+wxJv3MwvRI=;
-        h=Received:From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-         Content-Transfer-Encoding;
-        b=ewxniBxkw2CEd+RHE9YBPBcxcdsLae2+rx5djacSBGHPH17PuJkS0yDZcOqVN7R3C
-         de5eVtqTAzqzOUd/8LKS8IvzrBFBgXkzsXYzgS80tg+Pddkh2m8Hbr3gDz0Jg6psTW
-         QbnSuNBPkG5mvycaBK30QwL5/8yZ4+jPcGTPvcyc=
-Received: from localhost.localdomain (212.69.128.228 [212.69.128.228])
-        by email-relay21.ng.seznam.cz (Seznam SMTPD 1.3.114) with ESMTP;
-        Wed, 13 May 2020 20:50:17 +0200 (CEST)  
-From:   michael.srba@seznam.cz
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Michael Srba <michael.srba@seznam.cz>
-Subject: [PATCH] arm64: dts: qcom: msm8916: Disable coresight by default
-Date:   Wed, 13 May 2020 20:47:35 +0200
-Message-Id: <20200513184735.30104-1-michael.srba@seznam.cz>
-X-Mailer: git-send-email 2.24.0
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 355C9C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 11:50:34 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id r25so22358464oij.4
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 11:50:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gF7ry1mbM7fH2mfZhBrN61I9RHF3g4e2U2mjzd7WWlA=;
+        b=mALEYYK8D61rp5d/79HI5C1oDy43P5TyDU/PAK87eW4hEBy7jtaOQnK+MsH7jrethN
+         OTqsRTznNo1DvpJP6StHtuW73GUgjWTnhbMksMvtVXWi2MXvLs34vxrY3A6TniEzk24J
+         47xWY+ge0hNTywcWmHgJB70gqqZXcpbFEYgKzKE1TFlRRKTzmgIak3U9w2VXAXfBF5/6
+         bMBChginNrtBowCRLfGLiOt86OGFlcAPOSVUcGbmJGhxra+JJNePPXTpjOoHt21bfKiu
+         turObOFLi0sssPNoDQntfjBnPm+KtY7QflI50GQLVNYuViTyRE6EnguswdybH1RqWUtu
+         wp9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gF7ry1mbM7fH2mfZhBrN61I9RHF3g4e2U2mjzd7WWlA=;
+        b=ubBb/GlzUaETQrnelDcaOu8GxET+gfz4OKCJ3pZ1UkMvnjhGkl5X8p/+yTim+4Yejr
+         IwzBihnH1Z7cCpxP7AIZM0B0/m6h2IW2VOay7eKG+gZXVPAmctjSgFNKalIQ9JDrc8hg
+         aGJw/jl3M+Y8iI0vo7CJGui36dX00zFekmSPKjlSjQR7IYvUGJfwBGafOkHnIfWI+H07
+         ghE3bwR+SNmktx+PbJQFevAD3mGWAVOqidqrqQ0hXcBONZ5j7adJ5cQsuZOGkQpLc9Un
+         CDbm7c9i3a4QKRpQkiL7gkpIhIGwBTfp+qkNPJPH9nyk+XYFmrszyYgYBur0XOhZmfZm
+         MhtQ==
+X-Gm-Message-State: AGi0PuaFpg3DAVgarn9zcMJFHLvHWPoyfG6wJw6ErYSDY/rsnwSiRQjQ
+        p1gudVgls7f1DAzCv4i2ShQFX7BPmsy9ziySgBBcYQ==
+X-Google-Smtp-Source: APiQypIEKJFeF+lgnkz8Tq993Iilrj94Ej+GwieEWvE7aDT8mqqgcpkiC+GNGixkDgX8+HWp8iNGDrRnx4Auj2EyKBI=
+X-Received: by 2002:aca:3254:: with SMTP id y81mr8101691oiy.172.1589395833327;
+ Wed, 13 May 2020 11:50:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200513013415.148858-1-saravanak@google.com> <20200513082209.GB770255@kroah.com>
+ <CAGETcx9TJxOre+vmdeeioAt5toyo1qYz=fq2S3aZSiroH1TsAQ@mail.gmail.com>
+In-Reply-To: <CAGETcx9TJxOre+vmdeeioAt5toyo1qYz=fq2S3aZSiroH1TsAQ@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 13 May 2020 11:49:57 -0700
+Message-ID: <CAGETcx8pATaNMrwHQtF2_Yds1D6JOLTDgyD7Tda6cku+dz3wJw@mail.gmail.com>
+Subject: Re: [PATCH v1] driver core: Add state_synced sysfs file for devices
+ that support it
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Srba <michael.srba@seznam.cz>
+On Wed, May 13, 2020 at 1:34 AM Saravana Kannan <saravanak@google.com> wrote:
+>
+> On Wed, May 13, 2020 at 1:22 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Tue, May 12, 2020 at 06:34:15PM -0700, Saravana Kannan wrote:
+> > > This can be used to check if a device supports sync_state() callbacks
+> > > and therefore keeps resources left on by the bootloader enabled till all
+> > > its consumers have probed.
+> > >
+> > > This can also be used to check if sync_state() has been called for a
+> > > device or whether it is still trying to keep resources enabled because
+> > > they were left enabled by the bootloader and all its consumers haven't
+> > > probed yet.
+> > >
+> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > ---
+> > >  .../ABI/testing/sysfs-devices-state_synced    | 24 +++++++++++++++++++
+> > >  drivers/base/dd.c                             | 16 +++++++++++++
+> > >  2 files changed, 40 insertions(+)
+> > >  create mode 100644 Documentation/ABI/testing/sysfs-devices-state_synced
+> > >
+> > > diff --git a/Documentation/ABI/testing/sysfs-devices-state_synced b/Documentation/ABI/testing/sysfs-devices-state_synced
+> > > new file mode 100644
+> > > index 000000000000..0c922d7d02fc
+> > > --- /dev/null
+> > > +++ b/Documentation/ABI/testing/sysfs-devices-state_synced
+> > > @@ -0,0 +1,24 @@
+> > > +What:                /sys/devices/.../state_synced
+> > > +Date:                May 2020
+> > > +Contact:     Saravana Kannan <saravanak@google.com>
+> > > +Description:
+> > > +             The /sys/devices/.../state_synced attribute is only present for
+> > > +             devices whose bus types or driver provides the .sync_state()
+> > > +             callback. The number read from it (0 or 1) reflects the value
+> > > +             of the device's 'state_synced' field. A value of 0 means the
+> > > +             .sync_state() callback hasn't been called yet. A value of 1
+> > > +             means the .sync_state() callback has been called.
+> > > +
+> > > +             Generally, if a device has sync_state() support and has some of
+> > > +             the resources it provides enabled at the time the kernel starts
+> > > +             (Eg: enabled by hardware reset or bootloader or anything that
+> > > +             run before the kernel starts), then it'll keep those resources
+> > > +             enabled and in a state that's compatible with the state they
+> > > +             were in at the start of the kernel. The device will stop doing
+> > > +             this only when the sync_state() callback has been called --
+> > > +             which happens only when all its consumer devices are registered
+> > > +             and have probed successfully. Resources that were left disabled
+> > > +             at the time the kernel starts are not affected or limited in
+> > > +             any way by sync_state() callbacks.
+> > > +
+> > > +
+> > > diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> > > index 48ca81cb8ebc..72599436ae84 100644
+> > > --- a/drivers/base/dd.c
+> > > +++ b/drivers/base/dd.c
+> > > @@ -458,6 +458,13 @@ static void driver_deferred_probe_add_trigger(struct device *dev,
+> > >               driver_deferred_probe_trigger();
+> > >  }
+> > >
+> > > +static ssize_t state_synced_show(struct device *dev,
+> > > +                              struct device_attribute *attr, char *buf)
+> > > +{
+> > > +     return sprintf(buf, "%u\n", dev->state_synced);
+> > > +}
+> > > +static DEVICE_ATTR_RO(state_synced);
+> > > +
+> > >  static int really_probe(struct device *dev, struct device_driver *drv)
+> > >  {
+> > >       int ret = -EPROBE_DEFER;
+> > > @@ -531,9 +538,16 @@ static int really_probe(struct device *dev, struct device_driver *drv)
+> > >               goto dev_groups_failed;
+> > >       }
+> > >
+> > > +     if (dev_has_sync_state(dev) &&
+> > > +         device_create_file(dev, &dev_attr_state_synced)) {
+> > > +             dev_err(dev, "state_synced sysfs add failed\n");
+> > > +             goto dev_sysfs_state_synced_failed;
+> > > +     }
+> >
+> > Why not add this to the groups above this and only enable it if needed
+> > at runtime?
+>
+> Those groups above seem to be driver specific groups. Looking at the
+> code, some drivers seem to be setting them. Also, this attribute can
+> only be decided after a driver has successfully bound to the device
+> because dev_has_sync_state() has to check the bus and the driver for
+> sync_state() support.
+>
+> > The is_visible() callback should be what you need to use here.
+>
+> If this is an attribute specific property, it might work. I'll take a look.
 
-On some msm8916 devices, attempts at initializing coresight cause the boot to
-fail. This was fixed by disabling the coresight-related nodes in the board dts
-files. However, a cleaner approach was chosen for fixing the same issue on
-msm8998: disabling coresight by default, and enabling it in board dts files
-where desired.
+I took a look at is_visible(). It only makes sense for a group of
+attributes that are exposed in a sub directory. But state_synced is a
+top level property IMO. What I'm doing is similar to the "online"
+attribute that's exposed for a device.
 
-This patch implements the same solution for msm8916, removes now redundant 
-overwrites in board specific dts files and and enables coresight in db410c's
-board dts in order to keep the current behavior.
+And even if I create a group with one lone attribute, I'll still have
+to add it after the device has probed or have to call
+sysfs_update_groups() after the device is probed to update the
+visibility. Seems quite messy and unnecessarily complicated.
 
-Fixes: b1fcc5702a41 ("arm64: dts: qcom: msm8916: Add CTI options")
-Signed-off-by: Michael Srba <michael.srba@seznam.cz>
+I'd like to keep this an attribute and not create a group for that
+reason. Does that sound okay to you? I'll obviously still do the clean
+up correctly.
 
----
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi     | 21 +++++++++++
- .../boot/dts/qcom/msm8916-longcheer-l8150.dts | 23 ------------
- .../qcom/msm8916-samsung-a2015-common.dtsi    | 23 ------------
- arch/arm64/boot/dts/qcom/msm8916.dtsi         | 35 +++++++++++++++++++
- 4 files changed, 56 insertions(+), 46 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-index 14982762088d..07c150b0ed54 100644
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-@@ -519,6 +519,27 @@ mpps@a000 {
- 		wcnss@a21b000 {
- 			status = "okay";
- 		};
-+
-+		tpiu@820000 { status = "okay"; };
-+		funnel@821000 { status = "okay"; };
-+		replicator@824000 { status = "okay"; };
-+		etf@825000 { status = "okay"; };
-+		etr@826000 { status = "okay"; };
-+		funnel@841000 { status = "okay"; };
-+		debug@850000 { status = "okay"; };
-+		debug@852000 { status = "okay"; };
-+		debug@854000 { status = "okay"; };
-+		debug@856000 { status = "okay"; };
-+		etm@85c000 { status = "okay"; };
-+		etm@85d000 { status = "okay"; };
-+		etm@85e000 { status = "okay"; };
-+		etm@85f000 { status = "okay"; };
-+		cti@810000 { status = "okay"; };
-+		cti@811000 { status = "okay"; };
-+		cti@858000 { status = "okay"; };
-+		cti@859000 { status = "okay"; };
-+		cti@85a000 { status = "okay"; };
-+		cti@85b000 { status = "okay"; };
- 	};
- 
- 	usb2513 {
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts b/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
-index d1ccb9472c8b..691eb1a87bc9 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
-@@ -82,29 +82,6 @@ phy {
- 		wcnss@a21b000 {
- 			status = "okay";
- 		};
--
--		/*
--		 * Attempting to enable these devices causes a "synchronous
--		 * external abort". Suspected cause is that the debug power
--		 * domain is not enabled by default on this device.
--		 * Disable these devices for now to avoid the crash.
--		 *
--		 * See: https://lore.kernel.org/linux-arm-msm/20190618202623.GA53651@gerhold.net/
--		 */
--		tpiu@820000 { status = "disabled"; };
--		funnel@821000 { status = "disabled"; };
--		replicator@824000 { status = "disabled"; };
--		etf@825000 { status = "disabled"; };
--		etr@826000 { status = "disabled"; };
--		funnel@841000 { status = "disabled"; };
--		debug@850000 { status = "disabled"; };
--		debug@852000 { status = "disabled"; };
--		debug@854000 { status = "disabled"; };
--		debug@856000 { status = "disabled"; };
--		etm@85c000 { status = "disabled"; };
--		etm@85d000 { status = "disabled"; };
--		etm@85e000 { status = "disabled"; };
--		etm@85f000 { status = "disabled"; };
- 	};
- 
- 	// FIXME: Use extcon device provided by charger driver when available
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-index 43c5e0f882f1..af812f76e8be 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-@@ -75,29 +75,6 @@ phy {
- 		wcnss@a21b000 {
- 			status = "okay";
- 		};
--
--		/*
--		 * Attempting to enable these devices causes a "synchronous
--		 * external abort". Suspected cause is that the debug power
--		 * domain is not enabled by default on this device.
--		 * Disable these devices for now to avoid the crash.
--		 *
--		 * See: https://lore.kernel.org/linux-arm-msm/20190618202623.GA53651@gerhold.net/
--		 */
--		tpiu@820000 { status = "disabled"; };
--		funnel@821000 { status = "disabled"; };
--		replicator@824000 { status = "disabled"; };
--		etf@825000 { status = "disabled"; };
--		etr@826000 { status = "disabled"; };
--		funnel@841000 { status = "disabled"; };
--		debug@850000 { status = "disabled"; };
--		debug@852000 { status = "disabled"; };
--		debug@854000 { status = "disabled"; };
--		debug@856000 { status = "disabled"; };
--		etm@85c000 { status = "disabled"; };
--		etm@85d000 { status = "disabled"; };
--		etm@85e000 { status = "disabled"; };
--		etm@85f000 { status = "disabled"; };
- 	};
- 
- 	gpio-keys {
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 8b429954ea29..5cf117e247df 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -1228,6 +1228,8 @@ tpiu@820000 {
- 			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
- 
-+			status = "disabled";
-+
- 			in-ports {
- 				port {
- 					tpiu_in: endpoint {
-@@ -1244,6 +1246,8 @@ funnel@821000 {
- 			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
- 
-+			status = "disabled";
-+
- 			in-ports {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-@@ -1283,6 +1287,8 @@ replicator@824000 {
- 			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
- 
-+			status = "disabled";
-+
- 			out-ports {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-@@ -1317,6 +1323,8 @@ etf@825000 {
- 			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
- 
-+			status = "disabled";
-+
- 			in-ports {
- 				port {
- 					etf_in: endpoint {
-@@ -1341,6 +1349,8 @@ etr@826000 {
- 			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
- 
-+			status = "disabled";
-+
- 			in-ports {
- 				port {
- 					etr_in: endpoint {
-@@ -1357,6 +1367,8 @@ funnel@841000 {	/* APSS funnel only 4 inputs are used */
- 			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
- 
-+			status = "disabled";
-+
- 			in-ports {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-@@ -1402,6 +1414,7 @@ debug@850000 {
- 			clocks = <&rpmcc RPM_QDSS_CLK>;
- 			clock-names = "apb_pclk";
- 			cpu = <&CPU0>;
-+			status = "disabled";
- 		};
- 
- 		debug@852000 {
-@@ -1410,6 +1423,7 @@ debug@852000 {
- 			clocks = <&rpmcc RPM_QDSS_CLK>;
- 			clock-names = "apb_pclk";
- 			cpu = <&CPU1>;
-+			status = "disabled";
- 		};
- 
- 		debug@854000 {
-@@ -1418,6 +1432,7 @@ debug@854000 {
- 			clocks = <&rpmcc RPM_QDSS_CLK>;
- 			clock-names = "apb_pclk";
- 			cpu = <&CPU2>;
-+			status = "disabled";
- 		};
- 
- 		debug@856000 {
-@@ -1426,6 +1441,7 @@ debug@856000 {
- 			clocks = <&rpmcc RPM_QDSS_CLK>;
- 			clock-names = "apb_pclk";
- 			cpu = <&CPU3>;
-+			status = "disabled";
- 		};
- 
- 		etm0: etm@85c000 {
-@@ -1438,6 +1454,8 @@ etm0: etm@85c000 {
- 
- 			cpu = <&CPU0>;
- 
-+			status = "disabled";
-+
- 			out-ports {
- 				port {
- 					etm0_out: endpoint {
-@@ -1457,6 +1475,8 @@ etm1: etm@85d000 {
- 
- 			cpu = <&CPU1>;
- 
-+			status = "disabled";
-+
- 			out-ports {
- 				port {
- 					etm1_out: endpoint {
-@@ -1476,6 +1496,8 @@ etm2: etm@85e000 {
- 
- 			cpu = <&CPU2>;
- 
-+			status = "disabled";
-+
- 			out-ports {
- 				port {
- 					etm2_out: endpoint {
-@@ -1495,6 +1517,8 @@ etm3: etm@85f000 {
- 
- 			cpu = <&CPU3>;
- 
-+			status = "disabled";
-+
- 			out-ports {
- 				port {
- 					etm3_out: endpoint {
-@@ -1512,6 +1536,8 @@ cti@810000 {
- 
- 			clocks = <&rpmcc RPM_QDSS_CLK>;
- 			clock-names = "apb_pclk";
-+
-+			status = "disabled";
- 		};
- 
- 		/* CTI 1 - TPIU connections */
-@@ -1521,6 +1547,8 @@ cti@811000 {
- 
- 			clocks = <&rpmcc RPM_QDSS_CLK>;
- 			clock-names = "apb_pclk";
-+
-+			status = "disabled";
- 		};
- 
- 		/* CTIs 2-11 - no information - not instantiated */
-@@ -1538,6 +1566,7 @@ cti@858000 {
- 			cpu = <&CPU0>;
- 			arm,cs-dev-assoc = <&etm0>;
- 
-+			status = "disabled";
- 		};
- 
- 		/* CTI - CPU-1 */
-@@ -1551,6 +1580,8 @@ cti@859000 {
- 
- 			cpu = <&CPU1>;
- 			arm,cs-dev-assoc = <&etm1>;
-+
-+			status = "disabled";
- 		};
- 
- 		/* CTI - CPU-2 */
-@@ -1564,6 +1595,8 @@ cti@85a000 {
- 
- 			cpu = <&CPU2>;
- 			arm,cs-dev-assoc = <&etm2>;
-+
-+			status = "disabled";
- 		};
- 
- 		/* CTI - CPU-3 */
-@@ -1577,6 +1610,8 @@ cti@85b000 {
- 
- 			cpu = <&CPU3>;
- 			arm,cs-dev-assoc = <&etm3>;
-+
-+			status = "disabled";
- 		};
- 
- 
--- 
-2.24.0
-
+-Saravana
