@@ -2,68 +2,99 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B04C43459
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9198CC43446
 	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25B8321527
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:52:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589381555;
-	bh=Cxocxxjlh8HclAZR/lNU7FkEh0Xtsq9c7G0JwAnbsEk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RHbmN3An9aSe2aopkchktW6rn9cYMTDg9QK3txdwM2W7BAFEUDb7fJgaKWRzuNllu
-	 Rzvazz+WsP5b5td4rs3TlePi8nb6tvtFEaRv4hGMmokq7t4nW+Aj8pqd7wmOaq4o2c
-	 LrrwfuUlGvndty/pkQLP65YEWQkZ1MzRbArCwq54=
+	by mail.kernel.org (Postfix) with ESMTP id 5180422268
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:00:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="wt5Ru6nc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389074AbgEMOwe (ORCPT
+        id S2389138AbgEMPAA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 10:52:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45850 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728345AbgEMOwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 10:52:31 -0400
-Received: from localhost (unknown [106.200.233.149])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14F4E20EDD;
-        Wed, 13 May 2020 14:52:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589381550;
-        bh=Cxocxxjlh8HclAZR/lNU7FkEh0Xtsq9c7G0JwAnbsEk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GNQMdr7K2j5oRwahDcwjCBo8rliDx0uJAZiwO4LUNwB2m2SpTHHZYOCrtyfDspFKZ
-         tL9jkJrddURL7E4ZyDtfQGPzrBewgf8UfxyEeNCQ7GT1KOXCShYgb9XvCl8PhzWuse
-         5zdMKwIxZJY5sN+jOO33iwrrk2lJs1GpvWET+iTo=
-Date:   Wed, 13 May 2020 20:22:26 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Samuel Zou <zou_wei@huawei.com>
-Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] dmaengine: ti: k3-udma: Use PTR_ERR_OR_ZERO() to
- simplify code
-Message-ID: <20200513145226.GJ14092@vkoul-mobl>
-References: <1588757146-38858-1-git-send-email-zou_wei@huawei.com>
+        Wed, 13 May 2020 11:00:00 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:36874 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728692AbgEMO77 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 10:59:59 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DEv04V016507;
+        Wed, 13 May 2020 16:59:44 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=gGm+A+xLfFLIdcplBj2XagGVRg1huBKVNN3U+ziANAM=;
+ b=wt5Ru6ncq/krmYZIHfxLjeZhJ4Q8YszE/s9iMAM2fB0v6lIxxPjydWgOsoVcIl+DQBdH
+ 90qetO/XA2HZM8lHaWLSlcFSmL+S6bje0RvHVxPYQ4IXVRQcHo50qa2plBHg+nKL3fcV
+ 1rGuCJYxbg2vyA4ajohcAuTkFSOR1+g/BJU8XhdJf8RI6Wzbr4QyW11mvOTnhdQVabaM
+ djOORT0E74ch4iUgifLbA6ApNAO7Fz0zRara2/8VrjzXB1kWIEk18gZXjF09zpqKOC0X
+ iAP6qxm40unuakCQlx43A1iq7RtTLvQNF3kIZrirGmdsiVtOfqzPXuNqrjP1PkKTsPnn uQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 3100vydgkq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 May 2020 16:59:43 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B12BA100034;
+        Wed, 13 May 2020 16:59:42 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9C4E42D3004;
+        Wed, 13 May 2020 16:59:42 +0200 (CEST)
+Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 13 May 2020 16:59:41
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <gregkh@linuxfoundation.org>
+CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH 01/15] ARM: dts: stm32: remove useless interrupt-names property on stm32f429
+Date:   Wed, 13 May 2020 16:59:21 +0200
+Message-ID: <20200513145935.22493-2-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20200513145935.22493-1-benjamin.gaignard@st.com>
+References: <20200513145935.22493-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588757146-38858-1-git-send-email-zou_wei@huawei.com>
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-13_06:2020-05-13,2020-05-13 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06-05-20, 17:25, Samuel Zou wrote:
-> Fixes coccicheck warnings:
-> 
-> drivers/dma/ti/k3-udma.c:1294:1-3: WARNING: PTR_ERR_OR_ZERO can be used
-> drivers/dma/ti/k3-udma.c:1311:1-3: WARNING: PTR_ERR_OR_ZERO can be used
-> drivers/dma/ti/k3-udma.c:1376:1-3: WARNING: PTR_ERR_OR_ZERO can be used
+Driver doesn't use interrupt's name to get it so remove it from
+the node.
 
-Applied, thanks
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ arch/arm/boot/dts/stm32f429.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
 
+diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+index d7770699feb5..3537430fd4a3 100644
+--- a/arch/arm/boot/dts/stm32f429.dtsi
++++ b/arch/arm/boot/dts/stm32f429.dtsi
+@@ -322,7 +322,6 @@
+ 			assigned-clock-parents = <&rcc 1 CLK_LSE>;
+ 			interrupt-parent = <&exti>;
+ 			interrupts = <17 1>;
+-			interrupt-names = "alarm";
+ 			st,syscfg = <&pwrcfg 0x00 0x100>;
+ 			status = "disabled";
+ 		};
 -- 
-~Vinod
+2.15.0
+
