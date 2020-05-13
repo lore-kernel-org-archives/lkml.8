@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA380CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63408C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80F1D20575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3465D20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363918;
-	bh=Gfi63/hHDSs12PkUQ2zqadY7CKv2HaQWnYt1yzmH+sI=;
+	s=default; t=1589363926;
+	bh=T7mwNA+BukZCmqrM9ItDpviYepoJkudAyU7T2jHsWvU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I+D0SIztYfiCaPFg82ZzTSSKWXIw77TDxTFZOOZ4eM5gIDsbrZxzJ80kZu9YdVpvE
-	 QyQMCg4LHOtN19jgfpKUySImsrmd1kTp75bPeAm8IOtAHKriPjSjYJ6dcXc8vfkJWW
-	 qbqZrQp6JbWNNi3X+MsaCF2PovFsfp29fDF1Mgx0=
+	b=nZ7muwOoeaqGjhl150/w6EROEGFPOntnLqdbkpmfUQtpi0JBMJLqZk7tK3fk78ry/
+	 1Avuk2V4hWtTNIxKwcATbsrBzLAg7bA3r4aLppFd6QQCMVECZllDsq+myBY+SzcNfu
+	 WfsvNZvtgg1NAGymzxOUaxuK3OEv0B3MxaCNl9pA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387664AbgEMJyh (ORCPT
+        id S2388253AbgEMJ6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:54:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56996 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:58:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388105AbgEMJyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:54:31 -0400
+        id S2387594AbgEMJyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:54:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D2A7205ED;
-        Wed, 13 May 2020 09:54:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C171205ED;
+        Wed, 13 May 2020 09:54:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363670;
-        bh=Gfi63/hHDSs12PkUQ2zqadY7CKv2HaQWnYt1yzmH+sI=;
+        s=default; t=1589363661;
+        bh=T7mwNA+BukZCmqrM9ItDpviYepoJkudAyU7T2jHsWvU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i0LIkoXGcj7hceyei4r60UElT2jennMNnmU82Lk0UG3oxbwQq2rBGxW1USv6hgxxR
-         z+TCTtAoHmcFVnfXK4ro0B4xs92CyVJjNocytTmbVK2HtbvCJsZWBfYxYKajSSepHK
-         UcmoMe4OHTF37k1y37VkM3s3TsyiIckR9VB/77M4=
+        b=FqXnel3UlCEJrREz9bIauTo2l4w7Zxg8gRBv4C/+gAFHMB8poVONFVXQe8+uw11ZE
+         C0K+7rIYe/F7oYaUXl0WG18VcGYD0pkvkxet8qYvQlLbdOSSYRvKM8AsN20P3DR5ZJ
+         1r8/BdqeBi+YHb7NyTi+xT5+sD1UxlBbusiExJ/A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 5.6 079/118] drm: ingenic-drm: add MODULE_DEVICE_TABLE
-Date:   Wed, 13 May 2020 11:44:58 +0200
-Message-Id: <20200513094424.471966317@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Kyrill Tkachov <kyrylo.tkachov@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 5.6 075/118] arm64: hugetlb: avoid potential NULL dereference
+Date:   Wed, 13 May 2020 11:44:54 +0200
+Message-Id: <20200513094424.216202240@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -59,33 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: H. Nikolaus Schaller <hns@goldelico.com>
+From: Mark Rutland <mark.rutland@arm.com>
 
-commit c59359a02d14a7256cd508a4886b7d2012df2363 upstream.
+commit 027d0c7101f50cf03aeea9eebf484afd4920c8d3 upstream.
 
-so that the driver can load by matching the device tree
-if compiled as module.
+The static analyzer in GCC 10 spotted that in huge_pte_alloc() we may
+pass a NULL pmdp into pte_alloc_map() when pmd_alloc() returns NULL:
 
-Cc: stable@vger.kernel.org # v5.3+
-Fixes: 90b86fcc47b4 ("DRM: Add KMS driver for the Ingenic JZ47xx SoCs")
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Link: https://patchwork.freedesktop.org/patch/msgid/1694a29b7a3449b6b662cec33d1b33f2ee0b174a.1588574111.git.hns@goldelico.com
+|   CC      arch/arm64/mm/pageattr.o
+|   CC      arch/arm64/mm/hugetlbpage.o
+|                  from arch/arm64/mm/hugetlbpage.c:10:
+| arch/arm64/mm/hugetlbpage.c: In function ‘huge_pte_alloc’:
+| ./arch/arm64/include/asm/pgtable-types.h:28:24: warning: dereference of NULL ‘pmdp’ [CWE-690] [-Wanalyzer-null-dereference]
+| ./arch/arm64/include/asm/pgtable.h:436:26: note: in expansion of macro ‘pmd_val’
+| arch/arm64/mm/hugetlbpage.c:242:10: note: in expansion of macro ‘pte_alloc_map’
+|     |arch/arm64/mm/hugetlbpage.c:232:10:
+|     |./arch/arm64/include/asm/pgtable-types.h:28:24:
+| ./arch/arm64/include/asm/pgtable.h:436:26: note: in expansion of macro ‘pmd_val’
+| arch/arm64/mm/hugetlbpage.c:242:10: note: in expansion of macro ‘pte_alloc_map’
+
+This can only occur when the kernel cannot allocate a page, and so is
+unlikely to happen in practice before other systems start failing.
+
+We can avoid this by bailing out if pmd_alloc() fails, as we do earlier
+in the function if pud_alloc() fails.
+
+Fixes: 66b3923a1a0f ("arm64: hugetlb: add support for PTE contiguous bit")
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Reported-by: Kyrill Tkachov <kyrylo.tkachov@arm.com>
+Cc: <stable@vger.kernel.org> # 4.5.x-
+Cc: Will Deacon <will@kernel.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/ingenic/ingenic-drm.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/mm/hugetlbpage.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/gpu/drm/ingenic/ingenic-drm.c
-+++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-@@ -843,6 +843,7 @@ static const struct of_device_id ingenic
- 	{ .compatible = "ingenic,jz4770-lcd", .data = &jz4770_soc_info },
- 	{ /* sentinel */ },
- };
-+MODULE_DEVICE_TABLE(of, ingenic_drm_of_match);
+--- a/arch/arm64/mm/hugetlbpage.c
++++ b/arch/arm64/mm/hugetlbpage.c
+@@ -230,6 +230,8 @@ pte_t *huge_pte_alloc(struct mm_struct *
+ 		ptep = (pte_t *)pudp;
+ 	} else if (sz == (CONT_PTE_SIZE)) {
+ 		pmdp = pmd_alloc(mm, pudp, addr);
++		if (!pmdp)
++			return NULL;
  
- static struct platform_driver ingenic_drm_driver = {
- 	.driver = {
+ 		WARN_ON(addr & (sz - 1));
+ 		/*
 
 
