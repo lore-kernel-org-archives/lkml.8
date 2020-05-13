@@ -2,271 +2,263 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E9EC2D0FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 510E1C2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C629206B7
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:51:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589374262;
-	bh=GiNQtUvlI/QA8uxSucbsN5b7N7V9jpkoyi9xE/A8IdU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d1AiCTXcSlVXB6KJtkrIHDf/zq+yq09yp+dXKdPBZ1scBexbXnUrtcnwnChX70j4e
-	 LiSth79kOoyqkjLe8J4lQakcW8UQNK6r5FwwFzRPNWvUFILdAlyuUByLLWutJ6dQT9
-	 PfgUYgKVP86US4flDQiA0qN4L54r/sx/s7wBv3Ug=
+	by mail.kernel.org (Postfix) with ESMTP id 2F4DE2492C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:51:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="SXLj0aP6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VxSOX7XO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729534AbgEMMvB (ORCPT
+        id S1731723AbgEMMvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 08:51:01 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:34125 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728413AbgEMMvB (ORCPT
+        Wed, 13 May 2020 08:51:20 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:54299 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728172AbgEMMvT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 08:51:01 -0400
-Received: by mail-pj1-f66.google.com with SMTP id l73so1683023pjb.1;
-        Wed, 13 May 2020 05:51:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6BvwL5VtTpPQh7+ZmwOEfJsJh+MpmaSNjEDc7fe17Cg=;
-        b=Fkek79DlDffswWdHSOgeeE7JK4Q/5BG/IxxYMALliBPZ5WbyphGOLhXmhVkebRAvTg
-         v8IlOEBvzLj1d5koNKZgt6vdKy3SgAJzUzUgmWJ1uKs/ratWFUf0nUbH1krQhlN+luFG
-         Y3LCmkKeCjnbeYihblv/ijWZf2m/SN7qvNjF8oZFLSB0Y45lDHwH8MtTmqNqGZpi6X0b
-         6RUCFy8g6HpymFDmsFoCTFrcINoMi4zvxh82M5k4e4i2y0Ai/NVxsNyXopU1W4Y5tR0Q
-         wtv/XEqJaM9+XZzQQSY7s6rIov/8jXJnxGVsBVr6IzPPCRPjuMsC1Z4NDhenIxJNwHLJ
-         ZVNw==
-X-Gm-Message-State: AOAM5335OwijoB4CYaSFOS7/hg/AfmvlEqwPa0zucC5I4YhCTub+opW1
-        xMqzGVtr4Zo8dWP+UiSEsVs=
-X-Google-Smtp-Source: ABdhPJxU6OZTFJl9CuEar2G//kflpf1HvLC9sMqCBGP9NVlaiP14CRGt8VPr7k+V9EoPThlFqVPOjg==
-X-Received: by 2002:a17:90a:2051:: with SMTP id n75mr9566197pjc.112.1589374259957;
-        Wed, 13 May 2020 05:50:59 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id z5sm14825173pfz.109.2020.05.13.05.50.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 05:50:58 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id C87234063E; Wed, 13 May 2020 12:50:57 +0000 (UTC)
-Date:   Wed, 13 May 2020 12:50:57 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Xiaoming Ni <nixiaoming@huawei.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Helge Deller <deller@gmx.de>,
-        Parisc List <linux-parisc@vger.kernel.org>, yzaikin@google.com,
-        linux-fsdevel@vger.kernel.org,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, gregkh@linuxfoundation.org
-Subject: Re: linux-next: manual merge of the vfs tree with the parisc-hd tree
-Message-ID: <20200513125057.GM11244@42.do-not-panic.com>
-References: <20200511111123.68ccbaa3@canb.auug.org.au>
- <99095805-8cbe-d140-e2f1-0c5a3e84d7e7@huawei.com>
- <20200512003305.GX11244@42.do-not-panic.com>
- <87y2pxs73w.fsf@x220.int.ebiederm.org>
- <20200512172413.GC11244@42.do-not-panic.com>
- <87k11hrqzc.fsf@x220.int.ebiederm.org>
- <20200512220341.GE11244@42.do-not-panic.com>
- <3ccd08a5-cac6-3ca1-ed33-3cb62c982443@huawei.com>
+        Wed, 13 May 2020 08:51:19 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id D10997E3;
+        Wed, 13 May 2020 08:51:17 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Wed, 13 May 2020 08:51:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=aeqv2tw69Ou73Ks80LeYEsoBf/9
+        Sf5jfqw/n6jWNiu8=; b=SXLj0aP6PySWVLoEkMErwoCIBG+JjYjz58KGTwK1jYV
+        OAXUgL7/JgHQJoS5YT6tYDmeXt6Yah6LLk9d2rJljbTrxYBt/3kIn4miy5E9nbcH
+        C4CYx6MWJIiqMQLEAAgDhWFzEBNNNXts1t+WNOY3Z7Ygs4MFJdMUC3e+UbgZtMR9
+        vpeAffBK9MrrfNtonxB15jRfjOr+Cfc1n4a761+i4QeUUV0vo6FFDe/4MMhzoHI7
+        xILmvnZ/8aH3KSWA+nUMau4amQ6vZiiC3oVu+fppJLTKwjDXS4NTLBji+868lyUp
+        /z9trypv5BEZN1MFDyjzASHqCFlh9AXjdwCNoTY1mdQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=aeqv2t
+        w69Ou73Ks80LeYEsoBf/9Sf5jfqw/n6jWNiu8=; b=VxSOX7XO3Luoc6SGQ8yML1
+        wQm8wqEySAq7L37HSqmMGUUIhGcp2Lx94/389Q/Odx/q5EZao5rKNaAgvn4yIK74
+        pB1Egez1vLGUNTtHOqlG+wvYQs1momAIJ8B+sFhTanqxczznriMIBp6Qeo/oiUpA
+        0KK4cJVk0srCT1zI4ngnr/hEgS4QX0OiRYoN5W50zdJ0W2vIiJhGy/1AQ7L6DdQ8
+        GWlTF6in56wR2dh8qnc7TNZpL+2k6gzaxP7zqMh/TpJmAJUcMLCO4GkjS9frleKK
+        0i+mGRW3C7E3WaIFHSaRHZ22NSKIPpJ1nfLRpgJPGkrdvZw1jZJyJhmFjWs38Uzg
+        ==
+X-ME-Sender: <xms:Re27XuilwUPxPKx6DMenaG_3Vn6lN5yxWRuM9NPQ1AM2CzUMPpVbiA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrleeggdehiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
+    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepueelledthe
+    ekleethfeludduvdfhffeuvdffudevgeehkeegieffveehgeeftefgnecuffhomhgrihhn
+    pehkvghrnhgvlhdrohhrghenucfkphepkeefrdekiedrkeelrddutdejnecuvehluhhsth
+    gvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghh
+    rdgtohhm
+X-ME-Proxy: <xmx:Re27XvAvWD7I2NeDu3pksH7bdl1q2JVCN1tTGXKCAF1HgQKmUmkRkA>
+    <xmx:Re27XmFhPg8X-I6bdXiE67fszAM5wOP79uk2EyfIY8mzyJWo7k1eOg>
+    <xmx:Re27XnQIXLEcTicx_crz3QqYk8YsFK0MSidNs1hUNM6pKNBm4t_4JA>
+    <xmx:Re27XilVBJDe2n5T5CpedX62uSXSDqJigAHQCLl3ryn9aKgYPMMC4Q>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id CE6B83066309;
+        Wed, 13 May 2020 08:51:16 -0400 (EDT)
+Date:   Wed, 13 May 2020 14:51:12 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Charan Teja Kalla <charante@codeaurora.org>
+Cc:     sumit.semwal@linaro.org, ghackmann@google.com, fengc@google.com,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, vinmenon@codeaurora.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2] dma-buf: fix use-after-free in dmabuffs_dname
+Message-ID: <20200513125112.GC1083139@kroah.com>
+References: <1588920063-17624-1-git-send-email-charante@codeaurora.org>
+ <20200512085221.GB3557007@kroah.com>
+ <a3cbf675-becc-1713-bcdc-664ddfe4a544@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3ccd08a5-cac6-3ca1-ed33-3cb62c982443@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <a3cbf675-becc-1713-bcdc-664ddfe4a544@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 12:04:02PM +0800, Xiaoming Ni wrote:
-> On 2020/5/13 6:03, Luis Chamberlain wrote:
-> > On Tue, May 12, 2020 at 12:40:55PM -0500, Eric W. Biederman wrote:
-> > > Luis Chamberlain <mcgrof@kernel.org> writes:
-> > > 
-> > > > On Tue, May 12, 2020 at 06:52:35AM -0500, Eric W. Biederman wrote:
-> > > > > Luis Chamberlain <mcgrof@kernel.org> writes:
-> > > > > 
-> > > > > > +static struct ctl_table fs_base_table[] = {
-> > > > > > +	{
-> > > > > > +		.procname	= "fs",
-> > > > > > +		.mode		= 0555,
-> > > > > > +		.child		= fs_table,
-> > > > > > +	},
-> > > > > > +	{ }
-> > > > > > +};
-> > > > >    ^^^^^^^^^^^^^^^^^^^^^^^^ You don't need this at all.
-> > > > > > > +static int __init fs_procsys_init(void)
-> > > > > > +{
-> > > > > > +	struct ctl_table_header *hdr;
-> > > > > > +
-> > > > > > +	hdr = register_sysctl_table(fs_base_table);
-> > > > >                ^^^^^^^^^^^^^^^^^^^^^ Please use register_sysctl instead.
-> > > > > 	AKA
-> > > > >          hdr = register_sysctl("fs", fs_table);
-> > > > 
-> > > > Ah, much cleaner thanks!
-> > > 
-> > > It is my hope you we can get rid of register_sysctl_table one of these
-> > > days.  It was the original interface but today it is just a
-> > > compatibility wrapper.
-> > > 
-> > > I unfortunately ran out of steam last time before I finished converting
-> > > everything over.
+On Wed, May 13, 2020 at 05:40:26PM +0530, Charan Teja Kalla wrote:
+> 
+> Thank you Greg for the comments.
+> On 5/12/2020 2:22 PM, Greg KH wrote:
+> > On Fri, May 08, 2020 at 12:11:03PM +0530, Charan Teja Reddy wrote:
+> >> The following race occurs while accessing the dmabuf object exported as
+> >> file:
+> >> P1				P2
+> >> dma_buf_release()          dmabuffs_dname()
+> >> 			   [say lsof reading /proc/<P1 pid>/fd/<num>]
+> >>
+> >> 			   read dmabuf stored in dentry->d_fsdata
+> >> Free the dmabuf object
+> >> 			   Start accessing the dmabuf structure
+> >>
+> >> In the above description, the dmabuf object freed in P1 is being
+> >> accessed from P2 which is resulting into the use-after-free. Below is
+> >> the dump stack reported.
+> >>
+> >> We are reading the dmabuf object stored in the dentry->d_fsdata but
+> >> there is no binding between the dentry and the dmabuf which means that
+> >> the dmabuf can be freed while it is being read from ->d_fsdata and
+> >> inuse. Reviews on the patch V1 says that protecting the dmabuf inuse
+> >> with an extra refcount is not a viable solution as the exported dmabuf
+> >> is already under file's refcount and keeping the multiple refcounts on
+> >> the same object coordinated is not possible.
+> >>
+> >> As we are reading the dmabuf in ->d_fsdata just to get the user passed
+> >> name, we can directly store the name in d_fsdata thus can avoid the
+> >> reading of dmabuf altogether.
+> >>
+> >> Call Trace:
+> >>  kasan_report+0x12/0x20
+> >>  __asan_report_load8_noabort+0x14/0x20
+> >>  dmabuffs_dname+0x4f4/0x560
+> >>  tomoyo_realpath_from_path+0x165/0x660
+> >>  tomoyo_get_realpath
+> >>  tomoyo_check_open_permission+0x2a3/0x3e0
+> >>  tomoyo_file_open
+> >>  tomoyo_file_open+0xa9/0xd0
+> >>  security_file_open+0x71/0x300
+> >>  do_dentry_open+0x37a/0x1380
+> >>  vfs_open+0xa0/0xd0
+> >>  path_openat+0x12ee/0x3490
+> >>  do_filp_open+0x192/0x260
+> >>  do_sys_openat2+0x5eb/0x7e0
+> >>  do_sys_open+0xf2/0x180
+> >>
+> >> Fixes: bb2bb9030425 ("dma-buf: add DMA_BUF_SET_NAME ioctls")
+> >> Reported-by: syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com
+> >> Cc: <stable@vger.kernel.org> [5.3+]
+> >> Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
+> >> ---
+> >>
+> >> Changes in v2: 
+> >>
+> >> - Pass the user passed name in ->d_fsdata instead of dmabuf
+> >> - Improve the commit message
+> >>
+> >> Changes in v1: (https://patchwork.kernel.org/patch/11514063/)
+> >>
+> >>  drivers/dma-buf/dma-buf.c | 17 ++++++++++-------
+> >>  1 file changed, 10 insertions(+), 7 deletions(-)
+> >>
+> >> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+> >> index 01ce125..0071f7d 100644
+> >> --- a/drivers/dma-buf/dma-buf.c
+> >> +++ b/drivers/dma-buf/dma-buf.c
+> >> @@ -25,6 +25,7 @@
+> >>  #include <linux/mm.h>
+> >>  #include <linux/mount.h>
+> >>  #include <linux/pseudo_fs.h>
+> >> +#include <linux/dcache.h>
+> >>  
+> >>  #include <uapi/linux/dma-buf.h>
+> >>  #include <uapi/linux/magic.h>
+> >> @@ -40,15 +41,13 @@ struct dma_buf_list {
+> >>  
+> >>  static char *dmabuffs_dname(struct dentry *dentry, char *buffer, int buflen)
+> >>  {
+> >> -	struct dma_buf *dmabuf;
+> >>  	char name[DMA_BUF_NAME_LEN];
+> >>  	size_t ret = 0;
+> >>  
+> >> -	dmabuf = dentry->d_fsdata;
+> >> -	dma_resv_lock(dmabuf->resv, NULL);
+> >> -	if (dmabuf->name)
+> >> -		ret = strlcpy(name, dmabuf->name, DMA_BUF_NAME_LEN);
+> >> -	dma_resv_unlock(dmabuf->resv);
+> >> +	spin_lock(&dentry->d_lock);
 > > 
-> > Let's give it one more go. I'll start with the fs stuff.
+> > Are you sure this lock always protects d_fsdata?
+> 
+> I think yes. In the dma-buf.c, I have to make sure that d_fsdata should
+> always be under d_lock thus it will be protected. (In this posted patch
+> there is one place(in dma_buf_set_name) that is missed, will update this
+> in V3).
+> 
 > > 
-> >    Luis
+> >> +	if (dentry->d_fsdata)
+> >> +		ret = strlcpy(name, dentry->d_fsdata, DMA_BUF_NAME_LEN);
+> >> +	spin_unlock(&dentry->d_lock);
+> >>  
+> >>  	return dynamic_dname(dentry, buffer, buflen, "/%s:%s",
+> >>  			     dentry->d_name.name, ret > 0 ? name : "");
 > > 
-> > .
+> > If the above check fails the name will be what?  How could d_name.name
+> > be valid but d_fsdata not be valid?
+> 
+> In case of check fails, empty string "" is appended to the name by the
+> code, ret > 0 ? name : "", ret is initialized to zero. Thus the name
+> string will be like "/dmabuf:".
+
+So multiple objects can have the same "name" if this happens to multiple
+ones at once?
+
+> Regarding the validity of d_fsdata, we are setting the dmabuf's
+> dentry->d_fsdata to NULL in the dma_buf_release() thus can go invalid if
+> that dmabuf is in the free path.
+
+Why are we allowing the name to be set if the dmabuf is on the free path
+at all?  Shouldn't that be the real fix here?
+
+> >> @@ -80,12 +79,16 @@ static int dma_buf_fs_init_context(struct fs_context *fc)
+> >>  static int dma_buf_release(struct inode *inode, struct file *file)
+> >>  {
+> >>  	struct dma_buf *dmabuf;
+> >> +	struct dentry *dentry = file->f_path.dentry;
+> >>  
+> >>  	if (!is_dma_buf_file(file))
+> >>  		return -EINVAL;
+> >>  
+> >>  	dmabuf = file->private_data;
+> >>  
+> >> +	spin_lock(&dentry->d_lock);
+> >> +	dentry->d_fsdata = NULL;
+> >> +	spin_unlock(&dentry->d_lock);
+> >>  	BUG_ON(dmabuf->vmapping_counter);
+> >>  
+> >>  	/*
+> >> @@ -343,6 +346,7 @@ static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
+> >>  	}
+> >>  	kfree(dmabuf->name);
+> >>  	dmabuf->name = name;
+> >> +	dmabuf->file->f_path.dentry->d_fsdata = name;
+> > 
+> > You are just changing the use of d_fsdata from being a pointer to the
+> > dmabuf to being a pointer to the name string?  What's to keep that name
+> > string around and not have the same reference counting issues that the
+> > dmabuf structure itself has?  Who frees that string memory?
 > > 
 > 
-> If we register each feature in its own feature code file using register() to
-> register the sysctl interface. To avoid merge conflicts when different
-> features modify sysctl.c at the same time.
-> that is, try to Avoid mixing code with multiple features in the same code
-> file.
+> Yes, I am just storing the name string in the d_fsdata in place of
+> dmabuf and this helps to get rid of any extra refcount requirement.
+> Because the user passed name carried in the d_fsdata is copied to the
+> local buffer in dmabuffs_dname under spin_lock(d_lock) and the same
+> d_fsdata is set to NULL(under the d_lock only) when that dmabuf is in
+> the release path. So, when d_fsdata is NULL, name string is not accessed
+> from the dmabuffs_dname thus extra count is not required.
 > 
-> For example, the multiple file interfaces defined in sysctl.c by the
-> hung_task feature can  be moved to hung_task.c.
+> String memory, stored in the dmabuf->name, is released from the
+> dma_buf_release(). Flow will be like, It fist sets d_fsdata=NULL and
+> then free the dmabuf->name.
 > 
-> Perhaps later, without centralized sysctl.c ?
-> Is this better?
-> 
-> Thanks
-> Xiaoming Ni
-> 
-> ---
->  include/linux/sched/sysctl.h |  8 +----
->  kernel/hung_task.c           | 78
-> +++++++++++++++++++++++++++++++++++++++++++-
->  kernel/sysctl.c              | 50 ----------------------------
->  3 files changed, 78 insertions(+), 58 deletions(-)
-> 
-> diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
-> index d4f6215..bb4e0d3 100644
-> --- a/include/linux/sched/sysctl.h
-> +++ b/include/linux/sched/sysctl.h
-> @@ -7,14 +7,8 @@
->  struct ctl_table;
-> 
->  #ifdef CONFIG_DETECT_HUNG_TASK
-> -extern int	     sysctl_hung_task_check_count;
-> -extern unsigned int  sysctl_hung_task_panic;
-> +/* used for block/ */
->  extern unsigned long sysctl_hung_task_timeout_secs;
-> -extern unsigned long sysctl_hung_task_check_interval_secs;
-> -extern int sysctl_hung_task_warnings;
-> -extern int proc_dohung_task_timeout_secs(struct ctl_table *table, int
-> write,
-> -					 void __user *buffer,
-> -					 size_t *lenp, loff_t *ppos);
->  #else
->  /* Avoid need for ifdefs elsewhere in the code */
->  enum { sysctl_hung_task_timeout_secs = 0 };
-> diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-> index 14a625c..53589f2 100644
-> --- a/kernel/hung_task.c
-> +++ b/kernel/hung_task.c
-> @@ -20,10 +20,10 @@
->  #include <linux/utsname.h>
->  #include <linux/sched/signal.h>
->  #include <linux/sched/debug.h>
-> +#include <linux/kmemleak.h>
->  #include <linux/sched/sysctl.h>
-> 
->  #include <trace/events/sched.h>
-> -
->  /*
->   * The number of tasks checked:
->   */
-> @@ -296,8 +296,84 @@ static int watchdog(void *dummy)
->  	return 0;
->  }
-> 
-> +/*
-> + * This is needed for proc_doulongvec_minmax of
-> sysctl_hung_task_timeout_secs
-> + * and hung_task_check_interval_secs
-> + */
-> +static unsigned long hung_task_timeout_max = (LONG_MAX / HZ);
+> However from your comments I have realized that there is a race in this
+> patch when using the name string between dma_buf_set_name() and
+> dmabuffs_dname(). But, If the idea of passing the name string inplace of
+> dmabuf in d_fsdata looks fine, I can update this next patch.
 
-This is not generic so it can stay in this file.
+I'll leave that to the dmabuf authors/maintainers, but it feels odd to
+me...
 
-> +static int __maybe_unused neg_one = -1;
+thanks,
 
-This is generic so we can share it, I suggest we just rename this
-for now to sysctl_neg_one, export it to a symbol namespace,
-EXPORT_SYMBOL_NS_GPL(sysctl_neg_one, SYSCTL) and then import it with
-MODULE_IMPORT_NS(SYSCTL)
-
-
-> +static struct ctl_table hung_task_sysctls[] = {
-
-We want to wrap this around with CONFIG_SYSCTL, so a cleaner solution
-is something like this:
-
-diff --git a/kernel/Makefile b/kernel/Makefile
-index a42ac3a58994..689718351754 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -88,7 +88,9 @@ obj-$(CONFIG_KCOV) += kcov.o
- obj-$(CONFIG_KPROBES) += kprobes.o
- obj-$(CONFIG_FAIL_FUNCTION) += fail_function.o
- obj-$(CONFIG_KGDB) += debug/
--obj-$(CONFIG_DETECT_HUNG_TASK) += hung_task.o
-+obj-$(CONFIG_DETECT_HUNG_TASK) += hung_tasks.o
-+hung_tasks-y := hung_task.o
-+hung_tasks-$(CONFIG_SYSCTL) += hung_task_sysctl.o
- obj-$(CONFIG_LOCKUP_DETECTOR) += watchdog.o
- obj-$(CONFIG_HARDLOCKUP_DETECTOR_PERF) += watchdog_hld.o
- obj-$(CONFIG_SECCOMP) += seccomp.o
-
-> +/* get /proc/sys/kernel root */
-> +static struct ctl_table sysctls_root[] = {
-> +	{
-> +		.procname       = "kernel",
-> +		.mode           = 0555,
-> +		.child          = hung_task_sysctls,
-> +	},
-> +	{}
-> +};
-> +
-
-And as per Eric, this is not needed, we can simplify this more, as noted
-below.
-
-> +static int __init hung_task_sysctl_init(void)
-> +{
-> +	struct ctl_table_header *srt = register_sysctl_table(sysctls_root);
-
-You want instead something like::
-
-        struct ctl_table_header *srt;
-
-	srt = register_sysctl("kernel", hung_task_sysctls);
-> +
-> +	if (!srt)
-> +		return -ENOMEM;
-> +	kmemleak_not_leak(srt);
-> +	return 0;
-> +}
-> +
-
->  static int __init hung_task_init(void)
->  {
-> +	int ret = hung_task_sysctl_init();
-> +
-> +	if (ret != 0)
-> +		return ret;
-> +
-
-And just #ifdef this around CONFIG_SYSCTL.
-
-  Luis
+greg k-h
