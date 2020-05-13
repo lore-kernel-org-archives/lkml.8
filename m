@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B83C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E23F9C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09372206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B925C206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364222;
-	bh=LUb+bO3zK4qWq5zgFW0JLezZ7BG2T63AmtuwtwMe7NM=;
+	s=default; t=1589364225;
+	bh=cFAc/IDSVmen1vlXx4gXPx148PrTuQYtAWHIc1Ke8Nc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lyLcj6Q5Go7ZNMp1cIqQLiNLYu6RcuNBy5zJ0O4sChAS7NbeeFDJe+qb0fRHxRMCI
-	 JIDlOTs7C2ETmGr+zcwN3UcLpbzmFthJTUezchOrHi0ts3cCRrZ5lZ7THoc/Xp8PMU
-	 Pxwh3rJf9Q+tekhh9oEmyMwLjRQkxnc2fVZ+gPrQ=
+	b=o+n396JQk5cJP1qw4I0/MSCAXnQAh1LZkAYbTd1qrI0aqntUjK7ayyYf7lZB4xi5l
+	 xRWp5WMrx5QbHS5RlWKCHzZK97T+CRISWoAvOPApQwgE739/CHGBAIUiSEtB9xe3Dm
+	 jXPyRcpdzDGYRqjZG86FXjvkw61sM72eNRt9Sllc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388345AbgEMKDk (ORCPT
+        id S1733054AbgEMJsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:03:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47166 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:48:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733098AbgEMJsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:48:38 -0400
+        id S1733032AbgEMJsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:48:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD9CD20753;
-        Wed, 13 May 2020 09:48:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F70020753;
+        Wed, 13 May 2020 09:48:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363318;
-        bh=LUb+bO3zK4qWq5zgFW0JLezZ7BG2T63AmtuwtwMe7NM=;
+        s=default; t=1589363296;
+        bh=cFAc/IDSVmen1vlXx4gXPx148PrTuQYtAWHIc1Ke8Nc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HIoHn3EiREKRX6wdl2CylHd1LhUYGplRrEvoTANgEdub/SXlTmT0k6a5dsg3ttvly
-         ilMvwUiRazF5hjZdlMKRU2sM8EyLdCK50DgVBcAa1rQn3IV9zYy6DpFSO7JKZD40mD
-         S7dUUZbd0Sm6CeOoMuqxCCfYcY7WLNByjwjNzk5M=
+        b=OJ0d6gSDjMk83z5X9zRh6vQ6P+dVzo1P0IL9DVm8gOU4yUYNbZdHM0hQFpcRrQ6kD
+         XWnqR3afxR/a/McZ1tmwy2qari/ctHzdkair0UmaceJVXE/lXb4YpY4ArbPY/YoIfc
+         EbWboVsHb/5dhs+hDc4sH1EdQb0IC2Yz14wEhsj8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matt Jolly <Kangie@footclan.ninja>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Yash Shah <yash.shah@sifive.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Dejin Zheng <zhengdejin5@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 25/90] net: usb: qmi_wwan: add support for DW5816e
-Date:   Wed, 13 May 2020 11:44:21 +0200
-Message-Id: <20200513094411.251621056@linuxfoundation.org>
+Subject: [PATCH 5.4 17/90] net: macb: fix an issue about leak related system resources
+Date:   Wed, 13 May 2020 11:44:13 +0200
+Message-Id: <20200513094410.642137919@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -60,29 +63,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Jolly <Kangie@footclan.ninja>
+From: Dejin Zheng <zhengdejin5@gmail.com>
 
-[ Upstream commit 57c7f2bd758eed867295c81d3527fff4fab1ed74 ]
+[ Upstream commit b959c77dac09348955f344104c6a921ebe104753 ]
 
-Add support for Dell Wireless 5816e to drivers/net/usb/qmi_wwan.c
+A call of the function macb_init() can fail in the function
+fu540_c000_init. The related system resources were not released
+then. use devm_platform_ioremap_resource() to replace ioremap()
+to fix it.
 
-Signed-off-by: Matt Jolly <Kangie@footclan.ninja>
-Acked-by: Bjørn Mork <bjorn@mork.no>
+Fixes: c218ad559020ff9 ("macb: Add support for SiFive FU540-C000")
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Reviewed-by: Yash Shah <yash.shah@sifive.com>
+Suggested-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/qmi_wwan.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/cadence/macb_main.c |   12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1359,6 +1359,7 @@ static const struct usb_device_id produc
- 	{QMI_FIXED_INTF(0x413c, 0x81b3, 8)},	/* Dell Wireless 5809e Gobi(TM) 4G LTE Mobile Broadband Card (rev3) */
- 	{QMI_FIXED_INTF(0x413c, 0x81b6, 8)},	/* Dell Wireless 5811e */
- 	{QMI_FIXED_INTF(0x413c, 0x81b6, 10)},	/* Dell Wireless 5811e */
-+	{QMI_FIXED_INTF(0x413c, 0x81cc, 8)},	/* Dell Wireless 5816e */
- 	{QMI_FIXED_INTF(0x413c, 0x81d7, 0)},	/* Dell Wireless 5821e */
- 	{QMI_FIXED_INTF(0x413c, 0x81d7, 1)},	/* Dell Wireless 5821e preproduction config */
- 	{QMI_FIXED_INTF(0x413c, 0x81e0, 0)},	/* Dell Wireless 5821e with eSIM support*/
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -4054,15 +4054,9 @@ static int fu540_c000_clk_init(struct pl
+ 
+ static int fu540_c000_init(struct platform_device *pdev)
+ {
+-	struct resource *res;
+-
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	if (!res)
+-		return -ENODEV;
+-
+-	mgmt->reg = ioremap(res->start, resource_size(res));
+-	if (!mgmt->reg)
+-		return -ENOMEM;
++	mgmt->reg = devm_platform_ioremap_resource(pdev, 1);
++	if (IS_ERR(mgmt->reg))
++		return PTR_ERR(mgmt->reg);
+ 
+ 	return macb_init(pdev);
+ }
 
 
