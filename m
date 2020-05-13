@@ -2,154 +2,108 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 498D1C2D0FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C9ECA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22B9E2078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F4EC205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:39:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="X+Pnoou2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eIH2EZXK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731353AbgEMLhy (ORCPT
+        id S1731165AbgEMLju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 07:37:54 -0400
-Received: from ns.mm-sol.com ([37.157.136.199]:32816 "EHLO extserv.mm-sol.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726743AbgEMLhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 07:37:54 -0400
-Received: from [192.168.1.2] (212-5-158-106.ip.btc-net.bg [212.5.158.106])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id 19027CF91;
-        Wed, 13 May 2020 14:37:50 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1589369870; bh=vfFd3tN8fY41qxqKZE3PIorbD8ml40L+TC5l6z6T08A=;
-        h=Subject:To:Cc:From:Date:From;
-        b=X+Pnoou2SLbu2sfzGWfpORVx0ejVJcRL1Ccdkk79uMY5aj/8dH0+xpNxZwWHre9F9
-         GvJEOwmVeD+TdA47tdvGLLbRGXmJb22sP8QqJzZnw/285r6mOUkOfAt7AOndp5rIVZ
-         t9z3RnKA5ivk1zCTrdaImt/d3X0EE8p/PDkI5NJevcj6zxGOuZi79rn2l72YtFRxMK
-         SB3t0avid9xpTMUvzCiROGDUvZ+Vq8iTgmKlNsom7hT3ZIg2CdfbItn9nZCNVS8E/o
-         JI8NiyIoXxg9HSG8dicAALSACDSx+hKGbkUaA0LzzlMhvjQHZ3o19+WMtCoLQVjxIG
-         l7qXpZJvEYf5w==
-Subject: Re: [PATCH v3 09/11] PCI: qcom: add ipq8064 rev2 variant and set tx
- term offset
-To:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Sham Muthayyan <smuthayy@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Wed, 13 May 2020 07:39:50 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25555 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727794AbgEMLju (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 07:39:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589369988;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8iykZIXI4IdeXAxO1qeWLOQ71RfoRoi6nrusDeqTAHA=;
+        b=eIH2EZXKC6tGzYiFF20bTgvt3ll/LOIH0hVE1ISxkY7fx5/irJolcJVh+0GQ/K4DjY44Fc
+        C0Is4Hw1fw21KM5pL0I0+AyL1XYQWE6NZWhZn2Mo+BiEDKVNy+oWW3/BjDLI8rw59LsQih
+        X0CIAkYQZE21S5l05BAnMj5ZRYyas1k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-437-5QuVWD6CMLuBDbs3J0yzuA-1; Wed, 13 May 2020 07:39:47 -0400
+X-MC-Unique: 5QuVWD6CMLuBDbs3J0yzuA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6A976835B41;
+        Wed, 13 May 2020 11:39:45 +0000 (UTC)
+Received: from krava (unknown [10.40.195.109])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 33A885D9C5;
+        Wed, 13 May 2020 11:39:42 +0000 (UTC)
+Date:   Wed, 13 May 2020 13:39:41 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Anand K Mistry <amistry@google.com>
+Cc:     linux-perf-users@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200430220619.3169-1-ansuelsmth@gmail.com>
- <20200430220619.3169-10-ansuelsmth@gmail.com>
-From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-Message-ID: <3dc89ec6-d550-9402-1a4a-ca0c6f1e1fb9@mm-sol.com>
-Date:   Wed, 13 May 2020 14:37:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] perf record: Use an eventfd to wakeup when done
+Message-ID: <20200513113941.GK3158213@krava>
+References: <20200508145624.1.I4d7421c6bbb1f83ea58419082481082e19097841@changeid>
+ <20200513122012.v3.1.I4d7421c6bbb1f83ea58419082481082e19097841@changeid>
 MIME-Version: 1.0
-In-Reply-To: <20200430220619.3169-10-ansuelsmth@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513122012.v3.1.I4d7421c6bbb1f83ea58419082481082e19097841@changeid>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ansuel,
-
-On 5/1/20 1:06 AM, Ansuel Smith wrote:
-> From: Sham Muthayyan <smuthayy@codeaurora.org>
+On Wed, May 13, 2020 at 12:20:23PM +1000, Anand K Mistry wrote:
+> The setting and checking of 'done' contains a rare race where the signal
+> handler setting 'done' is run after checking to break the loop, but
+> before waiting in evlist__poll(). In this case, the main loop won't wake
+> up until either another signal is sent, or the perf data fd causes a
+> wake up.
 > 
-> Add tx term offset support to pcie qcom driver need in some revision of
-> the ipq806x SoC.
-> Ipq8064 have tx term offset set to 7.
-> Ipq8064-v2 revision and ipq8065 have the tx term offset set to 0.
+> The following simple script can trigger this condition (but you might
+> need to run it for several hours):
+> for ((i = 0; i >= 0; i++)) ; do
+>   echo "Loop $i"
+>   delay=$(echo "scale=4; 0.1 * $RANDOM/32768" | bc)
+>   ./perf record -- sleep 30000000 >/dev/null&
+>   pid=$!
+>   sleep $delay
+>   kill -TERM $pid
+>   echo "PID $pid"
+>   wait $pid
+> done
 > 
-> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> At some point, the loop will stall. Adding logging, even though perf has
+> received the SIGTERM and set 'done = 1', perf will remain sleeping until
+> a second signal is sent.
+> 
+> Signed-off-by: Anand K Mistry <amistry@google.com>
+> 
 > ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index da8058fd1925..372d2c8508b5 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -45,6 +45,9 @@
->  #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
->  
->  #define PCIE20_PARF_PHY_CTRL			0x40
-> +#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(12, 16)
+> Changes in v3:
+> - Move done_fd creation to below session initialisation
+> - Close done_fd on exit
+> - Log errno when write(done_fd) fails
 
-The mask definition is not correct. Should be GENMASK(20, 16)
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-> +#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
-> +
->  #define PCIE20_PARF_PHY_REFCLK			0x4C
->  #define PHY_REFCLK_SSP_EN			BIT(16)
->  #define PHY_REFCLK_USE_PAD			BIT(12)
-> @@ -118,6 +121,7 @@ struct qcom_pcie_resources_2_1_0 {
->  	u32 tx_swing_full;
->  	u32 tx_swing_low;
->  	u32 rx0_eq;
-> +	u8 phy_tx0_term_offset;
->  };
->  
->  struct qcom_pcie_resources_1_0_0 {
-> @@ -318,6 +322,11 @@ static int qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
->  	if (IS_ERR(res->ext_reset))
->  		return PTR_ERR(res->ext_reset);
->  
-> +	if (of_device_is_compatible(dev->of_node, "qcom,pcie-ipq8064"))
-> +		res->phy_tx0_term_offset = 7;
+thanks,
+jirka
 
-Before your change the phy_tx0_term_offser was 0 for apq8064, but here
-you change it to 7, why?
-
-> +	else
-> +		res->phy_tx0_term_offset = 0;
-> +
->  	res->phy_reset = devm_reset_control_get_exclusive(dev, "phy");
->  	return PTR_ERR_OR_ZERO(res->phy_reset);
->  }
-> @@ -402,6 +411,11 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
->  	/* enable PCIe clocks and resets */
->  	qcom_clear_and_set_dword(pcie->parf + PCIE20_PARF_PHY_CTRL, BIT(0), 0);
->  
-> +	/* set TX termination offset */
-> +	qcom_clear_and_set_dword(pcie->parf + PCIE20_PARF_PHY_CTRL,
-> +			PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK,
-
-As the mask definition is incorrect you actually clear 12 to 16 bit in
-the register where is another PHY parameter. Is that was intentional?
-
-> +			PHY_CTRL_PHY_TX0_TERM_OFFSET(res->phy_tx0_term_offset));
-> +
->  	writel(PCS_DEEMPH_TX_DEEMPH_GEN1(res->tx_deemph_gen1) |
->  	       PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(res->tx_deemph_gen2_3p5db) |
->  	       PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(res->tx_deemph_gen2_6db),
-> @@ -1485,6 +1499,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-apq8084", .data = &ops_1_0_0 },
->  	{ .compatible = "qcom,pcie-ipq8064", .data = &ops_2_1_0 },
-> +	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &ops_2_1_0 },
->  	{ .compatible = "qcom,pcie-apq8064", .data = &ops_2_1_0 },
->  	{ .compatible = "qcom,pcie-msm8996", .data = &ops_2_3_2 },
->  	{ .compatible = "qcom,pcie-ipq8074", .data = &ops_2_3_3 },
-> 
-
--- 
-regards,
-Stan
