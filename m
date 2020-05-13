@@ -2,51 +2,56 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E09CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C00CDCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 952CB20575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96CAC20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:01:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364060;
-	bh=4iIVcTifZvL8nu1DaxM0FGI8SpGg4kPPmBLvdLJ7DP4=;
+	s=default; t=1589364068;
+	bh=bRprwhULdLSmMkWbpcyasmCDFpAt5pBcEH9Ox3Ydgq8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=19snHUWK9AXt/i90zO8C4GkS/3cpVBB+nSMxxUZP8niLq8bjiJeXUTWCHpFunheZr
-	 +raVwXIEGXstNyhcF+Gez01Trhi8Q2X3xUQjLNFxiVdkHoxU0mGrb2f+yqfLnzW+9C
-	 KmSs8VqHM0zyTVLgp0DshOIjbxc1zpOpjasM9TXI=
+	b=Ur/F1Ij/6PrueTt+JmaicI+PnB6UdXTKJmUlmzuM7he4q+jCTbdEQYAo38YylBaeh
+	 ZJrznKhTxw4ye3eWmRI9umwXuz7ZeNayKrzoEdZq8o4zc5Xp/VXej2XWop9KiCS+n/
+	 am18o2utT55CKOs5aEiY9XJTbnRXJOe0w99IiIss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388496AbgEMKA7 (ORCPT
+        id S2388606AbgEMKBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:00:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52516 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 06:01:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733095AbgEMJve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:51:34 -0400
+        id S1732597AbgEMJv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:51:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBD2F20575;
-        Wed, 13 May 2020 09:51:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D6BE20575;
+        Wed, 13 May 2020 09:51:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363494;
-        bh=4iIVcTifZvL8nu1DaxM0FGI8SpGg4kPPmBLvdLJ7DP4=;
+        s=default; t=1589363486;
+        bh=bRprwhULdLSmMkWbpcyasmCDFpAt5pBcEH9Ox3Ydgq8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Umg0bJnL8E45SeV8qEWNo8vZxTosocDjWN+6C0tiETRO1mdWw9Lq4WV+Z44ZqouFF
-         MSidN25WqDJaWl0M14iO4L/M6knlauKGcNF12UQ1sHckA+sHkZ3Yfv8oKYgumVLhKU
-         qKzygc7SD538kSpw6OnacVgVnaSHp9IgLyDMc6II=
+        b=TOdhm98QoyN1zxiihXFvHogMlKEGTF4lYqlyvijl70CHODg3X/lXdQb7j+4AsX4Dj
+         vYaHVaPZ4KM2GL5JQ/vqpummv4jtIrSeZHSAEFQe4UMDqm7UStywI0UjpyXf8LvEQb
+         gA7QLRqoqkyvww+rIqgwhRxYSSA85Iwm/ZwVlke8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 89/90] fsnotify: replace inode pointer with an object id
-Date:   Wed, 13 May 2020 11:45:25 +0200
-Message-Id: <20200513094418.433237700@linuxfoundation.org>
+        stable@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 86/90] mm, memcg: fix error return value of mem_cgroup_css_alloc()
+Date:   Wed, 13 May 2020 11:45:22 +0200
+Message-Id: <20200513094418.119037500@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -59,113 +64,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Goldstein <amir73il@gmail.com>
+From: Yafang Shao <laoar.shao@gmail.com>
 
-[ Upstream commit dfc2d2594e4a79204a3967585245f00644b8f838 ]
+commit 11d6761218d19ca06ae5387f4e3692c4fa9e7493 upstream.
 
-The event inode field is used only for comparison in queue merges and
-cannot be dereferenced after handle_event(), because it does not hold a
-refcount on the inode.
+When I run my memcg testcase which creates lots of memcgs, I found
+there're unexpected out of memory logs while there're still enough
+available free memory.  The error log is
 
-Replace it with an abstract id to do the same thing.
+  mkdir: cannot create directory 'foo.65533': Cannot allocate memory
 
-Link: https://lore.kernel.org/r/20200319151022.31456-8-amir73il@gmail.com
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The reason is when we try to create more than MEM_CGROUP_ID_MAX memcgs,
+an -ENOMEM errno will be set by mem_cgroup_css_alloc(), but the right
+errno should be -ENOSPC "No space left on device", which is an
+appropriate errno for userspace's failed mkdir.
+
+As the errno really misled me, we should make it right.  After this
+patch, the error log will be
+
+  mkdir: cannot create directory 'foo.65533': No space left on device
+
+[akpm@linux-foundation.org: s/EBUSY/ENOSPC/, per Michal]
+[akpm@linux-foundation.org: s/EBUSY/ENOSPC/, per Michal]
+Fixes: 73f576c04b94 ("mm: memcontrol: fix cgroup creation failure after many small jobs")
+Suggested-by: Matthew Wilcox <willy@infradead.org>
+Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Michal Hocko <mhocko@kernel.org>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Link: http://lkml.kernel.org/r/20200407063621.GA18914@dhcp22.suse.cz
+Link: http://lkml.kernel.org/r/1586192163-20099-1-git-send-email-laoar.shao@gmail.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/notify/fanotify/fanotify.c        | 4 ++--
- fs/notify/inotify/inotify_fsnotify.c | 4 ++--
- fs/notify/inotify/inotify_user.c     | 2 +-
- include/linux/fsnotify_backend.h     | 7 +++----
- 4 files changed, 8 insertions(+), 9 deletions(-)
+ mm/memcontrol.c |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.c
-index 5778d1347b351..14d0ac4664595 100644
---- a/fs/notify/fanotify/fanotify.c
-+++ b/fs/notify/fanotify/fanotify.c
-@@ -26,7 +26,7 @@ static bool should_merge(struct fsnotify_event *old_fsn,
- 	old = FANOTIFY_E(old_fsn);
- 	new = FANOTIFY_E(new_fsn);
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -5101,19 +5101,22 @@ static struct mem_cgroup *mem_cgroup_all
+ 	unsigned int size;
+ 	int node;
+ 	int __maybe_unused i;
++	long error = -ENOMEM;
  
--	if (old_fsn->inode != new_fsn->inode || old->pid != new->pid ||
-+	if (old_fsn->objectid != new_fsn->objectid || old->pid != new->pid ||
- 	    old->fh_type != new->fh_type || old->fh_len != new->fh_len)
- 		return false;
+ 	size = sizeof(struct mem_cgroup);
+ 	size += nr_node_ids * sizeof(struct mem_cgroup_per_node *);
  
-@@ -314,7 +314,7 @@ struct fanotify_event *fanotify_alloc_event(struct fsnotify_group *group,
- 	if (!event)
- 		goto out;
- init: __maybe_unused
--	fsnotify_init_event(&event->fse, inode);
-+	fsnotify_init_event(&event->fse, (unsigned long)inode);
- 	event->mask = mask;
- 	if (FAN_GROUP_FLAG(group, FAN_REPORT_TID))
- 		event->pid = get_pid(task_pid(current));
-diff --git a/fs/notify/inotify/inotify_fsnotify.c b/fs/notify/inotify/inotify_fsnotify.c
-index d510223d302ca..589dee9629938 100644
---- a/fs/notify/inotify/inotify_fsnotify.c
-+++ b/fs/notify/inotify/inotify_fsnotify.c
-@@ -39,7 +39,7 @@ static bool event_compare(struct fsnotify_event *old_fsn,
- 	if (old->mask & FS_IN_IGNORED)
- 		return false;
- 	if ((old->mask == new->mask) &&
--	    (old_fsn->inode == new_fsn->inode) &&
-+	    (old_fsn->objectid == new_fsn->objectid) &&
- 	    (old->name_len == new->name_len) &&
- 	    (!old->name_len || !strcmp(old->name, new->name)))
- 		return true;
-@@ -118,7 +118,7 @@ int inotify_handle_event(struct fsnotify_group *group,
- 		mask &= ~IN_ISDIR;
+ 	memcg = kzalloc(size, GFP_KERNEL);
+ 	if (!memcg)
+-		return NULL;
++		return ERR_PTR(error);
  
- 	fsn_event = &event->fse;
--	fsnotify_init_event(fsn_event, inode);
-+	fsnotify_init_event(fsn_event, (unsigned long)inode);
- 	event->mask = mask;
- 	event->wd = i_mark->wd;
- 	event->sync_cookie = cookie;
-diff --git a/fs/notify/inotify/inotify_user.c b/fs/notify/inotify/inotify_user.c
-index 107537a543fd8..81ffc8629fc4b 100644
---- a/fs/notify/inotify/inotify_user.c
-+++ b/fs/notify/inotify/inotify_user.c
-@@ -635,7 +635,7 @@ static struct fsnotify_group *inotify_new_group(unsigned int max_events)
- 		return ERR_PTR(-ENOMEM);
- 	}
- 	group->overflow_event = &oevent->fse;
--	fsnotify_init_event(group->overflow_event, NULL);
-+	fsnotify_init_event(group->overflow_event, 0);
- 	oevent->mask = FS_Q_OVERFLOW;
- 	oevent->wd = -1;
- 	oevent->sync_cookie = 0;
-diff --git a/include/linux/fsnotify_backend.h b/include/linux/fsnotify_backend.h
-index 1915bdba2fad9..64cfb5446f4d4 100644
---- a/include/linux/fsnotify_backend.h
-+++ b/include/linux/fsnotify_backend.h
-@@ -133,8 +133,7 @@ struct fsnotify_ops {
-  */
- struct fsnotify_event {
- 	struct list_head list;
--	/* inode may ONLY be dereferenced during handle_event(). */
--	struct inode *inode;	/* either the inode the event happened to or its parent */
-+	unsigned long objectid;	/* identifier for queue merges */
- };
+ 	memcg->id.id = idr_alloc(&mem_cgroup_idr, NULL,
+ 				 1, MEM_CGROUP_ID_MAX,
+ 				 GFP_KERNEL);
+-	if (memcg->id.id < 0)
++	if (memcg->id.id < 0) {
++		error = memcg->id.id;
+ 		goto fail;
++	}
  
- /*
-@@ -500,10 +499,10 @@ extern void fsnotify_finish_user_wait(struct fsnotify_iter_info *iter_info);
- extern bool fsnotify_prepare_user_wait(struct fsnotify_iter_info *iter_info);
- 
- static inline void fsnotify_init_event(struct fsnotify_event *event,
--				       struct inode *inode)
-+				       unsigned long objectid)
- {
- 	INIT_LIST_HEAD(&event->list);
--	event->inode = inode;
-+	event->objectid = objectid;
+ 	memcg->vmstats_local = alloc_percpu(struct memcg_vmstats_percpu);
+ 	if (!memcg->vmstats_local)
+@@ -5158,7 +5161,7 @@ static struct mem_cgroup *mem_cgroup_all
+ fail:
+ 	mem_cgroup_id_remove(memcg);
+ 	__mem_cgroup_free(memcg);
+-	return NULL;
++	return ERR_PTR(error);
  }
  
- #else
--- 
-2.20.1
-
+ static struct cgroup_subsys_state * __ref
+@@ -5169,8 +5172,8 @@ mem_cgroup_css_alloc(struct cgroup_subsy
+ 	long error = -ENOMEM;
+ 
+ 	memcg = mem_cgroup_alloc();
+-	if (!memcg)
+-		return ERR_PTR(error);
++	if (IS_ERR(memcg))
++		return ERR_CAST(memcg);
+ 
+ 	memcg->high = PAGE_COUNTER_MAX;
+ 	memcg->soft_limit = PAGE_COUNTER_MAX;
+@@ -5220,7 +5223,7 @@ mem_cgroup_css_alloc(struct cgroup_subsy
+ fail:
+ 	mem_cgroup_id_remove(memcg);
+ 	mem_cgroup_free(memcg);
+-	return ERR_PTR(-ENOMEM);
++	return ERR_PTR(error);
+ }
+ 
+ static int mem_cgroup_css_online(struct cgroup_subsys_state *css)
 
 
