@@ -2,321 +2,163 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1572C2D0FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 04:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3325FC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 04:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAAA4207BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 04:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04FC8206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 04:04:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="RyzYhpPE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726059AbgEMEEP (ORCPT
+        id S1726090AbgEMEEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 00:04:15 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:49300 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725837AbgEMEEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 00:04:14 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9CC39B0CD71847D5C5A4;
-        Wed, 13 May 2020 12:04:11 +0800 (CST)
-Received: from [127.0.0.1] (10.67.102.197) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Wed, 13 May 2020
- 12:04:09 +0800
-Subject: Re: linux-next: manual merge of the vfs tree with the parisc-hd tree
-To:     Luis Chamberlain <mcgrof@kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-CC:     Al Viro <viro@ZenIV.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Helge Deller <deller@gmx.de>,
-        "Parisc List" <linux-parisc@vger.kernel.org>, <yzaikin@google.com>,
-        <linux-fsdevel@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, <gregkh@linuxfoundation.org>
-References: <20200511111123.68ccbaa3@canb.auug.org.au>
- <99095805-8cbe-d140-e2f1-0c5a3e84d7e7@huawei.com>
- <20200512003305.GX11244@42.do-not-panic.com>
- <87y2pxs73w.fsf@x220.int.ebiederm.org>
- <20200512172413.GC11244@42.do-not-panic.com>
- <87k11hrqzc.fsf@x220.int.ebiederm.org>
- <20200512220341.GE11244@42.do-not-panic.com>
-From:   Xiaoming Ni <nixiaoming@huawei.com>
-Message-ID: <3ccd08a5-cac6-3ca1-ed33-3cb62c982443@huawei.com>
-Date:   Wed, 13 May 2020 12:04:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 13 May 2020 00:04:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52072 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725943AbgEMEEt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 00:04:49 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABCB0C061A0C;
+        Tue, 12 May 2020 21:04:49 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49MLfR3Tk6z9sSW;
+        Wed, 13 May 2020 14:04:47 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1589342687;
+        bh=Yjz2Wb53OWN9TUkOZ7whQvlOOqFIz+DhbA+ZZbNQp6s=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=RyzYhpPET7AgTJXwFj8NIqOhPbYyh6o3OcZ5C0Ew/dCgpI0i40FU1S11pAGd6EX5r
+         mI+jbUAZbrlIVLwUbtCWBNtjyETSpFGLIpgGNA9Du/OVmZQq/H9zt8DznynDbPvPYj
+         ZFXGgiEWc/xkvcL84DHJzGpLDe6eo8K8w+fICRzyfoU7JZ+ttOXXP0oOGup3D02Lng
+         DirKtgmgMm2FXmOv0RxAvsmFWrDNFKm06D/zJ3QUzZfP3x1xkRlswDfo/eVBePiBAP
+         hBgLAgDgVMktz0mAHVgtMopvVyTDpcpJqwjYwqza9DJExq63uLIu/CR+sjar/3OwEK
+         pFE/FPWhAkW/g==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Qian Cai <cai@lca.pw>
+Cc:     paulus@ozlabs.org, benh@kernel.crashing.org,
+        catalin.marinas@arm.com, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: Re: [PATCH] powerpc/kvm: silence kmemleak false positives
+In-Reply-To: <20200509015538.3183-1-cai@lca.pw>
+References: <20200509015538.3183-1-cai@lca.pw>
+Date:   Wed, 13 May 2020 14:05:07 +1000
+Message-ID: <87h7wkbhu4.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20200512220341.GE11244@42.do-not-panic.com>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.197]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/13 6:03, Luis Chamberlain wrote:
-> On Tue, May 12, 2020 at 12:40:55PM -0500, Eric W. Biederman wrote:
->> Luis Chamberlain <mcgrof@kernel.org> writes:
->>
->>> On Tue, May 12, 2020 at 06:52:35AM -0500, Eric W. Biederman wrote:
->>>> Luis Chamberlain <mcgrof@kernel.org> writes:
->>>>
->>>>> +static struct ctl_table fs_base_table[] = {
->>>>> +	{
->>>>> +		.procname	= "fs",
->>>>> +		.mode		= 0555,
->>>>> +		.child		= fs_table,
->>>>> +	},
->>>>> +	{ }
->>>>> +};
->>>>    ^^^^^^^^^^^^^^^^^^^^^^^^ You don't need this at all.
->>>>>> +static int __init fs_procsys_init(void)
->>>>> +{
->>>>> +	struct ctl_table_header *hdr;
->>>>> +
->>>>> +	hdr = register_sysctl_table(fs_base_table);
->>>>                ^^^^^^^^^^^^^^^^^^^^^ Please use register_sysctl instead.
->>>> 	AKA
->>>>          hdr = register_sysctl("fs", fs_table);
->>>
->>> Ah, much cleaner thanks!
->>
->> It is my hope you we can get rid of register_sysctl_table one of these
->> days.  It was the original interface but today it is just a
->> compatibility wrapper.
->>
->> I unfortunately ran out of steam last time before I finished converting
->> everything over.
-> 
-> Let's give it one more go. I'll start with the fs stuff.
-> 
->    Luis
-> 
-> .
-> 
+Qian Cai <cai@lca.pw> writes:
+> kvmppc_pmd_alloc() and kvmppc_pte_alloc() allocate some memory but then
+> pud_populate() and pmd_populate() will use __pa() to reference the newly
+> allocated memory. The same is in xive_native_provision_pages().
 
-If we register each feature in its own feature code file using 
-register() to register the sysctl interface. To avoid merge conflicts 
-when different features modify sysctl.c at the same time.
-that is, try to Avoid mixing code with multiple features in the same 
-code file.
+Can you please split this into two patches, one for the KVM cases and
+one for xive.
 
-For example, the multiple file interfaces defined in sysctl.c by the 
-hung_task feature can  be moved to hung_task.c.
+That way the KVM patch can go via the kvm-ppc tree, and I'll take the
+xive one via powerpc.
 
-Perhaps later, without centralized sysctl.c ?
-Is this better?
+> Since kmemleak is unable to track the physical memory resulting in false
+> positives, silence those by using kmemleak_ignore().
+>
+> unreferenced object 0xc000201c382a1000 (size 4096):
+>   comm "qemu-kvm", pid 124828, jiffies 4295733767 (age 341.250s)
+>   hex dump (first 32 bytes):
+>     c0 00 20 09 f4 60 03 87 c0 00 20 10 72 a0 03 87  .. ..`.... .r...
+>     c0 00 20 0e 13 a0 03 87 c0 00 20 1b dc c0 03 87  .. ....... .....
+>   backtrace:
+>     [<000000004cc2790f>] kvmppc_create_pte+0x838/0xd20 [kvm_hv]
+>     kvmppc_pmd_alloc at arch/powerpc/kvm/book3s_64_mmu_radix.c:366
+>     (inlined by) kvmppc_create_pte at arch/powerpc/kvm/book3s_64_mmu_radix.c:590
+>     [<00000000d123c49a>] kvmppc_book3s_instantiate_page+0x2e0/0x8c0 [kvm_hv]
+>     [<00000000bb549087>] kvmppc_book3s_radix_page_fault+0x1b4/0x2b0 [kvm_hv]
+>     [<0000000086dddc0e>] kvmppc_book3s_hv_page_fault+0x214/0x12a0 [kvm_hv]
+>     [<000000005ae9ccc2>] kvmppc_vcpu_run_hv+0xc5c/0x15f0 [kvm_hv]
+>     [<00000000d22162ff>] kvmppc_vcpu_run+0x34/0x48 [kvm]
+>     [<00000000d6953bc4>] kvm_arch_vcpu_ioctl_run+0x314/0x420 [kvm]
+>     [<000000002543dd54>] kvm_vcpu_ioctl+0x33c/0x950 [kvm]
+>     [<0000000048155cd6>] ksys_ioctl+0xd8/0x130
+>     [<0000000041ffeaa7>] sys_ioctl+0x28/0x40
+>     [<000000004afc4310>] system_call_exception+0x114/0x1e0
+>     [<00000000fb70a873>] system_call_common+0xf0/0x278
+> unreferenced object 0xc0002001f0c03900 (size 256):
+>   comm "qemu-kvm", pid 124830, jiffies 4295735235 (age 326.570s)
+>   hex dump (first 32 bytes):
+>     c0 00 20 10 fa a0 03 87 c0 00 20 10 fa a1 03 87  .. ....... .....
+>     c0 00 20 10 fa a2 03 87 c0 00 20 10 fa a3 03 87  .. ....... .....
+>   backtrace:
+>     [<0000000023f675b8>] kvmppc_create_pte+0x854/0xd20 [kvm_hv]
+>     kvmppc_pte_alloc at arch/powerpc/kvm/book3s_64_mmu_radix.c:356
+>     (inlined by) kvmppc_create_pte at arch/powerpc/kvm/book3s_64_mmu_radix.c:593
+>     [<00000000d123c49a>] kvmppc_book3s_instantiate_page+0x2e0/0x8c0 [kvm_hv]
+>     [<00000000bb549087>] kvmppc_book3s_radix_page_fault+0x1b4/0x2b0 [kvm_hv]
+>     [<0000000086dddc0e>] kvmppc_book3s_hv_page_fault+0x214/0x12a0 [kvm_hv]
+>     [<000000005ae9ccc2>] kvmppc_vcpu_run_hv+0xc5c/0x15f0 [kvm_hv]
+>     [<00000000d22162ff>] kvmppc_vcpu_run+0x34/0x48 [kvm]
+>     [<00000000d6953bc4>] kvm_arch_vcpu_ioctl_run+0x314/0x420 [kvm]
+>     [<000000002543dd54>] kvm_vcpu_ioctl+0x33c/0x950 [kvm]
+>     [<0000000048155cd6>] ksys_ioctl+0xd8/0x130
+>     [<0000000041ffeaa7>] sys_ioctl+0x28/0x40
+>     [<000000004afc4310>] system_call_exception+0x114/0x1e0
+>     [<00000000fb70a873>] system_call_common+0xf0/0x278
+> unreferenced object 0xc000201b53e90000 (size 65536):
+>   comm "qemu-kvm", pid 124557, jiffies 4295650285 (age 364.370s)
+>   hex dump (first 32 bytes):
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>   backtrace:
+>     [<00000000acc2fb77>] xive_native_alloc_vp_block+0x168/0x210
+>     xive_native_provision_pages at arch/powerpc/sysdev/xive/native.c:645
+>     (inlined by) xive_native_alloc_vp_block at arch/powerpc/sysdev/xive/native.c:674
+>     [<000000004d5c7964>] kvmppc_xive_compute_vp_id+0x20c/0x3b0 [kvm]
+>     [<0000000055317cd2>] kvmppc_xive_connect_vcpu+0xa4/0x4a0 [kvm]
+>     [<0000000093dfc014>] kvm_arch_vcpu_ioctl+0x388/0x508 [kvm]
+>     [<00000000d25aea0f>] kvm_vcpu_ioctl+0x15c/0x950 [kvm]
+>     [<0000000048155cd6>] ksys_ioctl+0xd8/0x130
+>     [<0000000041ffeaa7>] sys_ioctl+0x28/0x40
+>     [<000000004afc4310>] system_call_exception+0x114/0x1e0
+>     [<00000000fb70a873>] system_call_common+0xf0/0x278
+>
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  arch/powerpc/kvm/book3s_64_mmu_radix.c | 16 ++++++++++++++--
+>  arch/powerpc/sysdev/xive/native.c      |  4 ++++
+>  2 files changed, 18 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/book3s_64_mmu_radix.c
+> index aa12cd4078b3..bc6c1aa3d0e9 100644
+> --- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
+> +++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
+> @@ -353,7 +353,13 @@ static struct kmem_cache *kvm_pmd_cache;
 
-Thanks
-Xiaoming Ni
+This should probably also have an include of <linux/kmemleak.h> ?
 
----
-  include/linux/sched/sysctl.h |  8 +----
-  kernel/hung_task.c           | 78 
-+++++++++++++++++++++++++++++++++++++++++++-
-  kernel/sysctl.c              | 50 ----------------------------
-  3 files changed, 78 insertions(+), 58 deletions(-)
-
-diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
-index d4f6215..bb4e0d3 100644
---- a/include/linux/sched/sysctl.h
-+++ b/include/linux/sched/sysctl.h
-@@ -7,14 +7,8 @@
-  struct ctl_table;
-
-  #ifdef CONFIG_DETECT_HUNG_TASK
--extern int	     sysctl_hung_task_check_count;
--extern unsigned int  sysctl_hung_task_panic;
-+/* used for block/ */
-  extern unsigned long sysctl_hung_task_timeout_secs;
--extern unsigned long sysctl_hung_task_check_interval_secs;
--extern int sysctl_hung_task_warnings;
--extern int proc_dohung_task_timeout_secs(struct ctl_table *table, int 
-write,
--					 void __user *buffer,
--					 size_t *lenp, loff_t *ppos);
-  #else
-  /* Avoid need for ifdefs elsewhere in the code */
-  enum { sysctl_hung_task_timeout_secs = 0 };
-diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-index 14a625c..53589f2 100644
---- a/kernel/hung_task.c
-+++ b/kernel/hung_task.c
-@@ -20,10 +20,10 @@
-  #include <linux/utsname.h>
-  #include <linux/sched/signal.h>
-  #include <linux/sched/debug.h>
-+#include <linux/kmemleak.h>
-  #include <linux/sched/sysctl.h>
-
-  #include <trace/events/sched.h>
--
-  /*
-   * The number of tasks checked:
-   */
-@@ -296,8 +296,84 @@ static int watchdog(void *dummy)
-  	return 0;
-  }
-
-+/*
-+ * This is needed for proc_doulongvec_minmax of 
-sysctl_hung_task_timeout_secs
-+ * and hung_task_check_interval_secs
-+ */
-+static unsigned long hung_task_timeout_max = (LONG_MAX / HZ);
-+static int __maybe_unused neg_one = -1;
-+static struct ctl_table hung_task_sysctls[] = {
-+	{
-+		.procname	= "hung_task_panic",
-+		.data		= &sysctl_hung_task_panic,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_ONE,
-+	},
-+	{
-+		.procname	= "hung_task_check_count",
-+		.data		= &sysctl_hung_task_check_count,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= SYSCTL_ZERO,
-+	},
-+	{
-+		.procname	= "hung_task_timeout_secs",
-+		.data		= &sysctl_hung_task_timeout_secs,
-+		.maxlen		= sizeof(unsigned long),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dohung_task_timeout_secs,
-+		.extra2		= &hung_task_timeout_max,
-+	},
-+	{
-+		.procname	= "hung_task_check_interval_secs",
-+		.data		= &sysctl_hung_task_check_interval_secs,
-+		.maxlen		= sizeof(unsigned long),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dohung_task_timeout_secs,
-+		.extra2		= &hung_task_timeout_max,
-+	},
-+	{
-+		.procname	= "hung_task_warnings",
-+		.data		= &sysctl_hung_task_warnings,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= &neg_one,
-+	},
-+	{}
-+};
-+
-+/* get /proc/sys/kernel root */
-+static struct ctl_table sysctls_root[] = {
-+	{
-+		.procname       = "kernel",
-+		.mode           = 0555,
-+		.child          = hung_task_sysctls,
-+	},
-+	{}
-+};
-+
-+static int __init hung_task_sysctl_init(void)
-+{
-+	struct ctl_table_header *srt = register_sysctl_table(sysctls_root);
-+
-+	if (!srt)
-+		return -ENOMEM;
-+	kmemleak_not_leak(srt);
-+	return 0;
-+}
-+
-  static int __init hung_task_init(void)
-  {
-+	int ret = hung_task_sysctl_init();
-+
-+	if (ret != 0)
-+		return ret;
-+
-  	atomic_notifier_chain_register(&panic_notifier_list, &panic_block);
-
-  	/* Disable hung task detector on suspend */
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 8a176d8..45a1153 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -149,13 +149,6 @@
-  static int ngroups_max = NGROUPS_MAX;
-  static const int cap_last_cap = CAP_LAST_CAP;
-
--/*
-- * This is needed for proc_doulongvec_minmax of 
-sysctl_hung_task_timeout_secs
-- * and hung_task_check_interval_secs
-- */
--#ifdef CONFIG_DETECT_HUNG_TASK
--static unsigned long hung_task_timeout_max = (LONG_MAX/HZ);
--#endif
-
-  #ifdef CONFIG_INOTIFY_USER
-  #include <linux/inotify.h>
-@@ -1085,49 +1078,6 @@ static int sysrq_sysctl_handler(struct ctl_table 
-*table, int write,
-  		.proc_handler	= proc_dointvec,
-  	},
-  #endif
--#ifdef CONFIG_DETECT_HUNG_TASK
--	{
--		.procname	= "hung_task_panic",
--		.data		= &sysctl_hung_task_panic,
--		.maxlen		= sizeof(int),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= SYSCTL_ZERO,
--		.extra2		= SYSCTL_ONE,
--	},
--	{
--		.procname	= "hung_task_check_count",
--		.data		= &sysctl_hung_task_check_count,
--		.maxlen		= sizeof(int),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= SYSCTL_ZERO,
--	},
--	{
--		.procname	= "hung_task_timeout_secs",
--		.data		= &sysctl_hung_task_timeout_secs,
--		.maxlen		= sizeof(unsigned long),
--		.mode		= 0644,
--		.proc_handler	= proc_dohung_task_timeout_secs,
--		.extra2		= &hung_task_timeout_max,
--	},
--	{
--		.procname	= "hung_task_check_interval_secs",
--		.data		= &sysctl_hung_task_check_interval_secs,
--		.maxlen		= sizeof(unsigned long),
--		.mode		= 0644,
--		.proc_handler	= proc_dohung_task_timeout_secs,
--		.extra2		= &hung_task_timeout_max,
--	},
--	{
--		.procname	= "hung_task_warnings",
--		.data		= &sysctl_hung_task_warnings,
--		.maxlen		= sizeof(int),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= &neg_one,
--	},
--#endif
-  #ifdef CONFIG_RT_MUTEXES
-  	{
-  		.procname	= "max_lock_depth",
--- 
-1.8.5.6
+>  static pte_t *kvmppc_pte_alloc(void)
+>  {
+> -	return kmem_cache_alloc(kvm_pte_cache, GFP_KERNEL);
+> +	pte_t *pte;
+> +
+> +	pte = kmem_cache_alloc(kvm_pte_cache, GFP_KERNEL);
+> +	/* pmd_populate() will only reference _pa(pte). */
+> +	kmemleak_ignore(pte);
+> +
+> +	return pte;
+>  }
+>  
+>  static void kvmppc_pte_free(pte_t *ptep)
 
 
+cheers
