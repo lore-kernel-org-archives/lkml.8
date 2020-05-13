@@ -2,113 +2,108 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FDBCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 274E6CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D23FD20575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p7i6gqiU"
+	by mail.kernel.org (Postfix) with ESMTP id 09D7820575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589364047;
+	bh=v7NdYPKBxwZImOHEBfWad5B/TjWWCPo/UVSdqEdgSU4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LYSuBYRZJtzeHhWWVEG1vir+MkiQEZD8pqo0OtYh+rUaPw4J9w07GW8UaPNSalWb5
+	 gM/t8D5AKHYIdWES4atdm+E9wGl3YF6ER6PZlW76NVsJ2aGVBmzcVpJaEZieWPyiJk
+	 ACdTkZS6c78ZuLJr+2z/FGWtd76dslv3AAvtt9Xg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388026AbgEMKAm (ORCPT
+        id S2388600AbgEMKAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:00:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49534 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387696AbgEMJvo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:51:44 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 833F4C061A0C;
-        Wed, 13 May 2020 02:51:44 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x2so7775815pfx.7;
-        Wed, 13 May 2020 02:51:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hjiKJ7FJyTyiMTQabLbMdyXHxAd5Y5rApctKC8YRsHE=;
-        b=p7i6gqiUSXTtK8sEqLVDaHCAQ4YPJvlMltihgkLN7PhyQ+GkAQ13GNyAEymKYACWAF
-         Z8VAhvK8B1LJYKmMS2KF1M/TV8DHztjkQco/ZFyFDXNzKiaIx4RZz7xBWFDR16ITIdCx
-         jHEg/QgmnkBftkMGLGoPfM0qxMz1CpHKozcnhaKuOi2jeiARYIRZPQByw9cY8tbS/AAk
-         hC1GDea4nZlaXy0tn6iJbsACuFTdha5CqiXFVYBskwh9+LslZOdOnNMFMqY7kJ7Opqbs
-         yTRB1F1Q/nICpbSz/IUXIDs8pDHgXq//6RETRj7c91UGb18dnxDJt9uZo1YSTMW8mSq8
-         4WWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hjiKJ7FJyTyiMTQabLbMdyXHxAd5Y5rApctKC8YRsHE=;
-        b=LYQZCWjglxnBoqWh97RtefJXqLeJE4Nx6JnWUgs/mmwkBOSRvz7QMmo5T1mkK38pVo
-         kiU0S8Pmxxi4ebGYCCUttfEhnXBKiUC3KUl6CuKCr0wB2a6lX8hbfhLnnPDSwgf6exS/
-         sm5GUe9faNTQJP8gOphIg+LqpXYewSqEZAj0T0LZ6VCA6NcBfSTOSTLu8HwO5Z5MSP6K
-         JiYFkBlEL0tJR6YIQGbX+wwhIq5YoNwBoZV0vLLiRavuwoc4iA7Itk7OHROULeCe3tZt
-         +vXmSE/QFIymMPCYit3rrU3MZj/s0ilq9RUEUl8o8jGOUdIcqRHQPf3XceeRyWtB86Ee
-         Viuw==
-X-Gm-Message-State: AGi0PubInIQmkABs6348LPCQKrUzly6g1CCNxkd9iMR0Ma3wvDSuixSm
-        Sj+rfdJq7Wo67LSDmWS749eX9AxF4OY7QsIq3O4=
-X-Google-Smtp-Source: APiQypIgIamK3+3CJqNCYmJC4K3blTlFkyzYGSrlGUS2dxYhc98NURSl+FWvlL20we5SAXLj5NrJHWb6PfApdwXRfzI=
-X-Received: by 2002:a62:7f11:: with SMTP id a17mr24262558pfd.36.1589363503255;
- Wed, 13 May 2020 02:51:43 -0700 (PDT)
+        Wed, 13 May 2020 06:00:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52714 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387689AbgEMJvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:51:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB03D206D6;
+        Wed, 13 May 2020 09:51:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589363501;
+        bh=v7NdYPKBxwZImOHEBfWad5B/TjWWCPo/UVSdqEdgSU4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Yo09FBccf0ZViA2jCReqZ0QAYQBLkhIs9yIK7UuYvdhQtZu+iDLZk4oxvp00coDBu
+         yqcMfIxD0xPqg1A7+TBqpGTWgCOSn9sW1LSB4BipmMoDxCWX9JQLqn12M+RgFt12O6
+         rzmgAksD4GaWh4zfu4iWO702r848AJVtGj8PhdUs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Anton Eidelman <anton@lightbitslabs.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 010/118] nvme: fix possible hang when ns scanning fails during error recovery
+Date:   Wed, 13 May 2020 11:43:49 +0200
+Message-Id: <20200513094418.563762283@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
+References: <20200513094417.618129545@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <1589361736-816-1-git-send-email-jprakash@codeaurora.org> <1589361736-816-6-git-send-email-jprakash@codeaurora.org>
-In-Reply-To: <1589361736-816-6-git-send-email-jprakash@codeaurora.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 13 May 2020 12:51:36 +0300
-Message-ID: <CAHp75Vf-bFfrZ7uCOnXuzT+p+itkcmkE61=ezZzN8yDFQHABdw@mail.gmail.com>
-Subject: Re: [PATCH V4 5/5] iio: adc: Clean up ADC code common to PMIC5 and PMIC7
-To:     Jishnu Prakash <jprakash@codeaurora.org>
-Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        smohanad@codeaurora.org, kgunda@codeaurora.org,
-        aghayal@codeaurora.org, Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-arm-msm@vger.kernel.org,
-        linux-iio <linux-iio@vger.kernel.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 12:24 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
->
-> This commit includes the following changes:
-> Add a common function used for read_raw callback for
-> both PMIC5 and PMIC7 ADCs.
-> Add exit function for ADC.
-> Add info_property under adc_data to more efficiently
-> distinguish PMIC5 and PMIC7 ADCs.
+From: Sagi Grimberg <sagi@grimberg.me>
 
-Something happened to the editor settings. We have lines up to 72
-(recommended) characters.
+[ Upstream commit 59c7c3caaaf8750df4ec3255082f15eb4e371514 ]
 
-...
+When the controller is reconnecting, the host fails I/O and admin
+commands as the host cannot reach the controller. ns scanning may
+revalidate namespaces during that period and it is wrong to remove
+namespaces due to these failures as we may hang (see 205da2434301).
 
-> @@ -512,6 +518,7 @@ static int adc5_read_raw(struct iio_dev *indio_dev,
->                         &adc5_prescale_ratios[prop->prescale],
->                         adc->data,
->                         adc_code_volt, val);
-> +
->                 if (ret)
->                         return ret;
->
+One command that may fail is nvme_identify_ns_descs. Since we return
+success due to having ns identify descriptor list optional, we continue
+to compare ns identifiers in nvme_revalidate_disk, obviously fail and
+return -ENODEV to nvme_validate_ns, which will remove the namespace.
 
-Unrelated.
+Exactly what we don't want to happen.
 
+Fixes: 22802bf742c2 ("nvme: Namepace identification descriptor list is optional")
+Tested-by: Anton Eidelman <anton@lightbitslabs.com>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Keith Busch <kbusch@kernel.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/nvme/host/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 545e9e5f1b737..84f20369d8467 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1082,7 +1082,7 @@ static int nvme_identify_ns_descs(struct nvme_ctrl *ctrl, unsigned nsid,
+ 		  * Don't treat an error as fatal, as we potentially already
+ 		  * have a NGUID or EUI-64.
+ 		  */
+-		if (status > 0)
++		if (status > 0 && !(status & NVME_SC_DNR))
+ 			status = 0;
+ 		goto free_data;
+ 	}
 -- 
-With Best Regards,
-Andy Shevchenko
+2.20.1
+
+
+
