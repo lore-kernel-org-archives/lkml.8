@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E765C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4220B2054F
+	by mail.kernel.org (Postfix) with ESMTP id F28822064E
 	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:28:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389662AbgEMQ2U (ORCPT
+        id S2389672AbgEMQ2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 12:28:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55100 "EHLO
+        Wed, 13 May 2020 12:28:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730657AbgEMQ2T (ORCPT
+        with ESMTP id S1730657AbgEMQ2U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 12:28:19 -0400
+        Wed, 13 May 2020 12:28:20 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83780C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 09:28:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 067B8C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 09:28:20 -0700 (PDT)
 Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1jYuEz-0000ME-LU; Wed, 13 May 2020 18:28:17 +0200
+        id 1jYuEz-0000ME-Uv; Wed, 13 May 2020 18:28:18 +0200
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
@@ -35,9 +35,9 @@ Cc:     Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
         Ingo Molnar <mingo@kernel.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 1/3] sched/swait: Add swait_event_lock_irq()
-Date:   Wed, 13 May 2020 18:27:30 +0200
-Message-Id: <20200513162732.977489-2-bigeasy@linutronix.de>
+Subject: [PATCH 2/3] workqueue: Use swait for wq_manager_wait
+Date:   Wed, 13 May 2020 18:27:31 +0200
+Message-Id: <20200513162732.977489-3-bigeasy@linutronix.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513162732.977489-1-bigeasy@linutronix.de>
 References: <20200513162732.977489-1-bigeasy@linutronix.de>
@@ -48,65 +48,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The workqueue code is currently not RT compatible due to nesting of
-regular spinlocks inside of raw spinlocks and locking of spinlocks
-inside of regions which are truly atomic even on a RT kernel.
+The workqueue code has it's internal spinlock (pool::lock) and also
+implicit spinlock usage in the wq_manager waitqueue. These spinlocks
+are converted to 'sleeping' spinlocks on a RT-kernel.
 
-One part of this problem are the wait queues as they use regular
-spinlocks internally.
+Workqueue functions can be invoked from contexts which are truly atomic
+even on a PREEMPT_RT enabled kernel. Taking sleeping locks from such
+contexts is forbidden.
 
-The semantical requirements of the workqueue code are also met by simple
-waitqueues. This allows to solve the lock nesting problem because they
-use a raw spinlock to protect the waiter list.
+pool::lock can be converted to a raw spinlock as the lock held times
+are short. But the workqueue manager waitqueue is handled inside of
+pool::lock held regions which again violates the lock nesting rules
+of raw and regular spinlocks.
 
-But workqueues use wait_event_lock_irq() which is not yet provided by the
-simple waitqueue code.
+The manager waitqueue has no special requirements like custom wakeup
+callbacks or mass wakeups. While it does not use exclusive wait mode
+explicitly there is no strict requirement to queue the waiters in a
+particular order as there should be only one waiter at a time anyway.
 
-Provide the straight forward counterpart to prepare for the conversion.
+This allows to replace the waitqueue with a simple waitqueue which
+solves the locking problem because simple waitqueues use raw spinlocks
+to protect their waiter list.
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- include/linux/swait.h | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ kernel/workqueue.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/swait.h b/include/linux/swait.h
-index 73e06e9986d4b..d86bc68a39d3d 100644
---- a/include/linux/swait.h
-+++ b/include/linux/swait.h
-@@ -297,4 +297,30 @@ do {									\
- 	__ret;								\
- })
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 891ccad5f2716..c2ead0577f02b 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -50,6 +50,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/sched/isolation.h>
+ #include <linux/nmi.h>
++#include <linux/swait.h>
 =20
-+#define __swait_event_lock_irq(wq, condition, lock, cmd)		\
-+	___swait_event(wq, condition, TASK_UNINTERRUPTIBLE, 0,		\
-+		       raw_spin_unlock_irq(&lock);			\
-+		       cmd;						\
-+		       schedule();					\
-+		       raw_spin_lock_irq(&lock))
-+
-+/**
-+ * swait_event_lock_irq - Sleep until a condition gets true.
-+ * @wq: The waitqueue to wait on.
-+ * @condition: A C expression for the event to wait for.
-+ * @lock: A locked raw_spinlock_t which will be released during schedule().
-+ *
-+ * The process is put to sleep (TASK_UNINTERRUPTIBLE) until the @condition
-+ * evaluates to true. The @condition is checked each time the waitqueue @w=
-q is
-+ * woken up with @lock acquired. The @lock is released during schedule(). =
-The
-+ * function must be invoked with the lock acquired and it exits with the l=
-ock
-+ * acquired.
-+ */
-+#define swait_event_lock_irq(wq, condition, lock)			\
-+	do {								\
-+		if (condition)						\
-+			break;						\
-+		__swait_event_lock_irq(wq, condition, lock, );		\
-+	} while (0)
-+
- #endif /* _LINUX_SWAIT_H */
+ #include "workqueue_internal.h"
+=20
+@@ -301,7 +302,7 @@ static struct workqueue_attrs *wq_update_unbound_numa_a=
+ttrs_buf;
+ static DEFINE_MUTEX(wq_pool_mutex);	/* protects pools and workqueues list =
+*/
+ static DEFINE_MUTEX(wq_pool_attach_mutex); /* protects worker attach/detac=
+h */
+ static DEFINE_SPINLOCK(wq_mayday_lock);	/* protects wq->maydays list */
+-static DECLARE_WAIT_QUEUE_HEAD(wq_manager_wait); /* wait for manager to go=
+ away */
++static DECLARE_SWAIT_QUEUE_HEAD(wq_manager_wait); /* wait for manager to g=
+o away */
+=20
+ static LIST_HEAD(workqueues);		/* PR: list of all workqueues */
+ static bool workqueue_freezing;		/* PL: have wqs started freezing? */
+@@ -2140,7 +2141,7 @@ static bool manage_workers(struct worker *worker)
+=20
+ 	pool->manager =3D NULL;
+ 	pool->flags &=3D ~POOL_MANAGER_ACTIVE;
+-	wake_up(&wq_manager_wait);
++	swake_up_one(&wq_manager_wait);
+ 	return true;
+ }
+=20
+@@ -3541,7 +3542,7 @@ static void put_unbound_pool(struct worker_pool *pool)
+ 	 * manager and @pool gets freed with the flag set.
+ 	 */
+ 	spin_lock_irq(&pool->lock);
+-	wait_event_lock_irq(wq_manager_wait,
++	swait_event_lock_irq(wq_manager_wait,
+ 			    !(pool->flags & POOL_MANAGER_ACTIVE), pool->lock);
+ 	pool->flags |=3D POOL_MANAGER_ACTIVE;
+=20
 --=20
 2.26.2
 
