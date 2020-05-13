@@ -2,64 +2,119 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E4AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D5AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F35F20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DE1B205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:51:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="QgBfCmP3"
+	dkim=pass (1024-bit key) header.d=seznam.cz header.i=@seznam.cz header.b="jQ/2ofxG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732034AbgEMPuA (ORCPT
+        id S1730406AbgEMPvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:50:00 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:58248 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728490AbgEMPuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:50:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=CAERETo3HmCt4cbe7skcUAdSIJs8TS922Vv3SvzLnWo=; b=QgBfCmP3WmKmpu6AFL6yVYiciq
-        tlhwOShfjy+y8zbLvLsZLYnwvCB1KcWONL3FUxrPaFR3vIeC+gQ4pi0I4Mc6H6AJlZlllJnesOh5J
-        ae7LL5bwGY6eLSJVHQrzBaHrWegML8A7ADQWcrJRRxhLwEF82ck04tel3r4y0b1IkzAk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jYtdp-002B9b-U1; Wed, 13 May 2020 17:49:53 +0200
-Date:   Wed, 13 May 2020 17:49:53 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Michael Walle <michael@walle.cc>,
-        Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] net: phy: at803x: add cable test support
-Message-ID: <20200513154953.GI499265@lunn.ch>
-References: <20200513120648.14415-1-o.rempel@pengutronix.de>
- <0c80397b-58b8-0807-0b98-695db8068e25@gmail.com>
- <20200513154544.gwcccvbicpvrj6vm@pengutronix.de>
+        Wed, 13 May 2020 11:51:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49242 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729121AbgEMPvW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 11:51:22 -0400
+X-Greylist: delayed 82 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 13 May 2020 08:51:21 PDT
+Received: from mxa2.seznam.cz (mxa2.seznam.cz [IPv6:2a02:598:2::90])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A0B4C061A0C;
+        Wed, 13 May 2020 08:51:21 -0700 (PDT)
+Received: from email.seznam.cz
+        by email-smtpc6b.ng.seznam.cz (email-smtpc6b.ng.seznam.cz [10.23.13.165])
+        id 52fbe97b09f5bd1253522525;
+        Wed, 13 May 2020 17:51:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seznam.cz; s=beta;
+        t=1589385077; bh=aNMmxbEhQ4116ra/TFzsO/WUqMIRJ1ETfre2+VnJRMc=;
+        h=Received:From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
+         Content-Transfer-Encoding;
+        b=jQ/2ofxGw8oM4xo/Rv9UY2PnBABlc+GCQRAXJeIbUjXkTgD5ybptwHbzSONO7jjz6
+         i8OMc626J4g1sDvHh9/Meizj5J1Tl6Jvn8nas2Di1oOuRmKV9WeESyfh1digR1kecW
+         WTe2+ucJsV+dGOK3W/wlhApDSpq2IexHh6YLcNSQ=
+Received: from localhost.localdomain (212.69.128.228 [212.69.128.228])
+        by email-relay12.ng.seznam.cz (Seznam SMTPD 1.3.114) with ESMTP;
+        Wed, 13 May 2020 17:49:49 +0200 (CEST)  
+From:   michael.srba@seznam.cz
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Michael Srba <michael.srba@seznam.cz>
+Subject: [PATCH] arm64: dts: qcom: disable the new cti nodes on devices with broken coresight
+Date:   Wed, 13 May 2020 17:47:18 +0200
+Message-Id: <20200513154718.17401-1-michael.srba@seznam.cz>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513154544.gwcccvbicpvrj6vm@pengutronix.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Uff.. i missed this. Then I'll need only to add some changes on top of
-> his patch.
+From: Michael Srba <michael.srba@seznam.cz>
 
-I've been chatting with mwalle on IRC today. There should be a repost
-of the patches soon.
+Attempting to enable these devices causes a "synchronous
+external abort". Suspected cause is that the debug power
+domain is not enabled by default on this device.
+Disable these devices for now to avoid the crash.
 
-   Andrew
+See: https://lore.kernel.org/linux-arm-msm/20190618202623.GA53651@gerhold.net/
+
+Fixes: b1fcc5702a41 ("arm64: dts: qcom: msm8916: Add CTI options")
+Signed-off-by: Michael Srba <michael.srba@seznam.cz>
+
+---
+ arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts       | 6 ++++++
+ arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi | 6 ++++++
+ 2 files changed, 12 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts b/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
+index d1ccb9472c8b..28983b871a70 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
++++ b/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
+@@ -105,6 +105,12 @@ wcnss@a21b000 {
+ 		etm@85d000 { status = "disabled"; };
+ 		etm@85e000 { status = "disabled"; };
+ 		etm@85f000 { status = "disabled"; };
++		cti@810000 { status = "disabled"; };
++		cti@811000 { status = "disabled"; };
++		cti@858000 { status = "disabled"; };
++		cti@859000 { status = "disabled"; };
++		cti@85a000 { status = "disabled"; };
++		cti@85b000 { status = "disabled"; };
+ 	};
+ 
+ 	// FIXME: Use extcon device provided by charger driver when available
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
+index 43c5e0f882f1..8569a1532a3f 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
+@@ -98,6 +98,12 @@ wcnss@a21b000 {
+ 		etm@85d000 { status = "disabled"; };
+ 		etm@85e000 { status = "disabled"; };
+ 		etm@85f000 { status = "disabled"; };
++		cti@810000 { status = "disabled"; };
++		cti@811000 { status = "disabled"; };
++		cti@858000 { status = "disabled"; };
++		cti@859000 { status = "disabled"; };
++		cti@85a000 { status = "disabled"; };
++		cti@85b000 { status = "disabled"; };
+ 	};
+ 
+ 	gpio-keys {
+-- 
+2.24.0
+
