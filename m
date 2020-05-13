@@ -2,176 +2,104 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C06E8C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83802CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A819C2078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D8C82078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:27:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="K7nyBuJV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729836AbgEML0F (ORCPT
+        id S1729430AbgEML1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 07:26:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38228 "EHLO mx2.suse.de"
+        Wed, 13 May 2020 07:27:44 -0400
+Received: from mout.gmx.net ([212.227.17.22]:60017 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726020AbgEML0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 07:26:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 957CDAF36;
-        Wed, 13 May 2020 11:26:05 +0000 (UTC)
-Message-ID: <e3f5ea8acdeee14571f77060b5711fce46d86bd1.camel@suse.de>
-Subject: Re: [PATCH v8 0/4] USB: pci-quirks: Add Raspberry Pi 4 quirk
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        helgaas@kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>
-Date:   Wed, 13 May 2020 13:26:00 +0200
-In-Reply-To: <20200513111717.GA32365@e121166-lin.cambridge.arm.com>
-References: <20200505161318.26200-1-nsaenzjulienne@suse.de>
-         <20200513111717.GA32365@e121166-lin.cambridge.arm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-AhWRdoINwjRGD4bp+/gD"
-User-Agent: Evolution 3.36.2 
+        id S1726081AbgEML1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 07:27:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1589369260;
+        bh=cCH9ce0ofK04oJWNLTkL+FMK4Lj+/hzJecDZWq+GvUU=;
+        h=X-UI-Sender-Class:To:References:Subject:Cc:From:Date:In-Reply-To;
+        b=K7nyBuJV6u5n19FLRuyTLVKcAvPI7E5FePoelJBEJaQszqY7Aw7doma5DbqxhP1np
+         Bvr/G2LDw7U/Vq6ZL6F7Mo6/e5CBr6P8gLeK6rv7ai5PBFV3a8tQ1H8o579ul9b2d/
+         FFwgSc5L1laZPCUczy4kqIMEeqP0ezMqmo78/aOY=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [10.93.10.6] ([196.52.84.7]) by mail.gmx.com (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MzhnN-1jCKeg3owL-00vfzI; Wed, 13
+ May 2020 13:27:40 +0200
+To:     Jason@zx2c4.com
+References: <20200507224530.2993316-1-Jason@zx2c4.com>
+Subject: [PATCH] Kconfig: default to CC_OPTIMIZE_FOR_PERFORMANCE_O3 for gcc >=
+ 10
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   "Artem S. Tashkinov" <aros@gmx.com>
+Message-ID: <2e80bcf3-d744-3869-2f74-5c1799761ead@gmx.com>
+Date:   Wed, 13 May 2020 16:27:38 +0500
 MIME-Version: 1.0
+In-Reply-To: <20200507224530.2993316-1-Jason@zx2c4.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: ru
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:s8AsjOmGBnJEPBU5yKvJLXAVzgSjJ52CahDBSmYoV1XN693uHZo
+ uVOM5h44Ak7M+pL12ap/wSQNlNntWxwECvvl7AvEHZGiacpycgm7QXPWrIlUHf+T8SOnS2f
+ 60sO4PvH3Wr15Zq2RRvobcpLeu9vXiL3RsJLWWrJS5YMlAKMBsdKGvqnLrty/AQZQGyFsPP
+ dLEG7ShQU4T2ZAXvEldJg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:JPXaNvrnZoE=:jcEmt7eeeRcH4fNWhQmGTa
+ y6TiM1n3qexiPLTw+9/6KR91InUsJdE7FoC6g/Eiwf97x7wSg0a3rwOwvV6qJp5fmVCclqkC+
+ VYDj2ECMZE0q5IwtQbSdNQNAyrwTlCSMMz6Dt6vfA8iepf0sO3YY/5qusN0jS29Uk/qo1/WiV
+ axBm4Eux+EKcMJeegpDQ4YS0YjnG8b6Srep02g8jQtyMPqNfWpyJ29kG5IT9P2Ya317hjcclc
+ 7klaqEsuv9w4Tivt3ilnYyyxC84AUpI+Cu+erDIQJslMgHgSUTJ/6OAyZ6Q0fFuukJ5elMz+u
+ rNIAdgWB3peNdd0VZ7d5oAgjjGegmnsrCtyJJbxzRshkXxx/3/wv5mE8EKtdTqAJaS4xhGOLT
+ RENvFgyAySciMdVyiMt81qsShVMw9DprFUwa8O1/xaRMbnvwn/yuFcgqY2vq3m5URtb91MWHB
+ 0MvG6/VLqJAqQtdRht9QY6JvCeNeQ55iiP8WaM34f1wqfLqp3eSdIr2GD7dMHqH44tkJ+1L4F
+ e9cFmtERG6KJR5s8MrkeFiqsM+YgwegpVjdiOmy5h/CaIhRknM6NrzY2ZFz+G2B/TFTtqLxjm
+ hLoR0fClVEnNAW4ZAX4shh5Bk0WjyVwNeYhF8sVkzHtLGkCy9nOAckgIqG+UhdBMoJA5ZOC/y
+ pzA71xiidQ3EmiIY/EBlzz+WmCYhiIDuY9ahG2ziqzvygKk8Q9uQ08+LUePImp25fki4b40zL
+ KhRe4GgmMPV8NZM/fThHeblly9OvaxBBBd1vjDPyoj4SOt/8vnb56V2PsSGLxRie0x1Qg7juJ
+ Q70GXNbOyLZJCNJWBkH7Ipsg8bXbNZZlRAFw3PZV2aVJgSSx2KSr9SYHowWjWXuYtJ6MJ5/6r
+ QQzceGJdbATiLwheTWCclzw++Kma83lMFJENNWe/aQ6MMRVyAeu78xjc7QhsD9bs1+jfEf6+l
+ TCIfWIZiNFpzu0+D++VWEyBTvK4qEaeaJZtrMopI/U8s8A86fVC9auqN2NwWwpCxX6TCAwZXK
+ 89Zw9AkovVNTNsS53zpXlmwEBjgyprLPadajKdY/YY+sK3WDiTiuKZvHhPhZ1rC3EuYNemkT8
+ eZJKuLFJx2iiHWvYmPrzLrrbk07cVpHBJoWCnkF2xVa7fYKZs6sRleqVZLMvtHk7DSirhratV
+ HeMEl53PcPUTT1eEmk+n0batrLOIJe15xZPxEvxB+0yZQb4URMrIG8Z5E6OW+rdMU5Pgs/ewY
+ l7H4GHcp59t0nW1jT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+ > GCC 10 appears to have changed -O2 in order to make compilation time
+faster when using -flto, seemingly at the expense of performance, in
+particular with regards to how the inliner works. Since -O3 these days
+shouldn't have the same set of bugs as 10 years ago, this commit
+defaults new kernel compiles to -O3 when using gcc >=3D 10.
 
---=-AhWRdoINwjRGD4bp+/gD
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+It's a strong "no" from me.
 
-On Wed, 2020-05-13 at 12:17 +0100, Lorenzo Pieralisi wrote:
-> On Tue, May 05, 2020 at 06:13:13PM +0200, Nicolas Saenz Julienne wrote:
-> > On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either b=
-e
-> > loaded directly from an EEPROM or, if not present, by the SoC's
-> > co-processor, VideoCore. This series adds support for the later.
-> >=20
-> > Note that there are a set of constraints we have to consider:
-> >  - We need to make sure the VideoCore firmware interface is up and
-> >    running before running the VL805 firmware load call.
-> >=20
-> >  - There is no way to discern RPi4's VL805 chip from other platforms',
-> >    so we need the firmware load to happen *before* running
-> >    quirk_usb_handoff_xhci(). Failure to do so results in an unwarranted
-> >    5 second wait while the fixup code polls xHC's non-existing state.
-> >=20
-> > By Florian's suggestion I've been spending some time exploring the devi=
-ce
-> > link[1] API in order to see if that could save us from explicitly creat=
-ing
-> > probe dependencies between pcie-brcmstb and firmware/raspberrypi (patch=
- #3).
-> > Technically these dependencies could be inferred from DT. It turns out
-> > Saravana
-> > Kannan has been looking at this already. A new boot mechanism, activate=
-d
-> > with
-> > fw_devlink=3Don takes care of the device probe ordering on devices with
-> > consumer/supplier relationships. For now this relationship is created b=
-ased
-> > on
-> > the usage of generic DT properties, but has no support for vendor-speci=
-fc DT
-> > properties, which we'd be forced to use in order to create a relationsh=
-ip
-> > between our two devices since our setup is highly non generic. There wi=
-ll
-> > probably be at some point support for such properties, and we will then=
- be
-> > able
-> > to revisit some of this code.
-> >=20
-> > All this is based on the work by Tim Gover in RPi's downstream
-> > kernel[2].
-> >=20
-> > [1] https://www.kernel.org/doc/html/v4.13/driver-api/device_link.html
-> > [2]=20
-> >=20
-https://github.com/raspberrypi/linux/commit/9935b4c7e360b4494b4cb6e3ce79723=
-8a1ab78bd
-> >=20
-> > ---
-> >=20
-> > Changes since v7:
-> >  - Address Stefan's comments
-> >=20
-> > Changes since v6:
-> >  - Make rpi_firmware_init_vl805() more robust
-> >  - Rewrite comments and patch descriptions to be more accessible to non=
- RPi
-> >    fluent people
-> >  - Removed Florian's Reviewed-by in patch #2 as function changed
-> >    substantially
-> >  - Tested with/witout u-boot
-> >=20
-> > Changes since v5:
-> >  - Fix issues reported by Kbuild test robot
-> >=20
-> > Changes since v4:
-> >  - Addressed Sergei's comments
-> >  - Fix potential warning in patch #2
-> >=20
-> > Changes since v3:
-> >  - Addressed Greg's comments
-> >=20
-> > There was no v2, my bad.
-> >=20
-> > Changes since v1:
-> >  - Addressed Floarians comments
-> >=20
-> > Nicolas Saenz Julienne (4):
-> >   soc: bcm2835: Add notify xHCI reset property
-> >   firmware: raspberrypi: Introduce vl805 init routine
-> >   PCI: brcmstb: Wait for Raspberry Pi's firmware when present
-> >   USB: pci-quirks: Add Raspberry Pi 4 quirk
-> >=20
-> >  drivers/firmware/Kconfig                   |  3 +-
-> >  drivers/firmware/raspberrypi.c             | 61 ++++++++++++++++++++++
-> >  drivers/pci/controller/pcie-brcmstb.c      | 17 ++++++
-> >  drivers/usb/host/pci-quirks.c              | 16 ++++++
-> >  include/soc/bcm2835/raspberrypi-firmware.h |  9 +++-
-> >  5 files changed, 104 insertions(+), 2 deletions(-)
->=20
-> Hi Nicolas,
->=20
-> should I queue this series via the PCI tree ? Just let me know, most of
-> the changes are not in the PCI tree, asking in order to
-> minimize/simplify conflicts handling if possible.
+1) Aside from rare Gentoo users no one has extensively tested -O3 with
+the kernel - even Gentoo defaults to -O2 for kernel compilation
 
-Yes, I agree, it's better if you take the whole thing.
+2) -O3 _always_ bloats the code by a large amount which means both
+vmlinux/bzImage and modules will become bigger, and slower to load from
+the disk
 
-Thanks,
-Nicolas
+3) -O3 does _not_ necessarily makes the code run faster
 
+4) If GCC10 has removed certain options for the -O2 optimization level
+you could just readded them as compilation flags without forcing -O3 by
+default on everyone
 
---=-AhWRdoINwjRGD4bp+/gD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+5) If you still insist on -O3 I guess everyone would be happy if you
+just made two KConfig options:
 
------BEGIN PGP SIGNATURE-----
+OPTIMIZE_O2 (-O2)
+OPTIMIZE_O3_EVEN_MOAR (-O3)
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl672UkACgkQlfZmHno8
-x/6lzQgAtDUjnjJd0Zuqd4pj4VT1XSzzQNMButVbZ5d+gcCtJR68q5lNzhejWtjL
-hc8ncq03srEPDueXQiuwqK/kMxG9emt5s65ZAW7cmlzNeq300bdyQLbJKRApXdPO
-ACtx3+KFOvLfOmeFzTD94DZL8yrfsTs3aEDuOgJeUfTheiUyySR3W+tWLUsJ9Fwo
-aT3NaDPv/7raoV3TOJ/+lfXHZ3Mu2fbvawVjDaea0ksVLCgHP+0RKVljzIty9HUJ
-TCuM5xm6H817e4x2d41HQliJeHTxAuA5ZUKHrYmtrJ3Z76Fs+XrwesCvM+vha9VS
-5zKyHpHrTNN0ORi89ZN5EtKhUNrpvg==
-=XtBQ
------END PGP SIGNATURE-----
-
---=-AhWRdoINwjRGD4bp+/gD--
-
+Best regards,
+Artem
