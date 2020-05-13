@@ -2,194 +2,203 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4781BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FC6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA608205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 872ED205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:50:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ECX2to14"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M4L96kVZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390000AbgEMRsg (ORCPT
+        id S2390002AbgEMRu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 13:48:36 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:50357 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732670AbgEMRsg (ORCPT
+        Wed, 13 May 2020 13:50:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39556 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389805AbgEMRu2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 13:48:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589392114;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eQomhzuW4Cs2AjAbkSBWe/UTSeGb0joo7UtJLPw4J4M=;
-        b=ECX2to14q6N5GLftxUf6aOl5ywIiBORuNkZObVCvZggwuYQV6FNVgdAoF0JSLic0i97yoX
-        h1vSMHPzHwxUHjfwbSHVfRkYPhazyjFLgAepz2JVjRGwYUv9ZoMq7yGgEpNNpCQ2ExcVI/
-        UblOWpqT+HqBe+RFo0XCfizDG3xGDvA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-130-G88DI2OoNu6tUsF93zBg-w-1; Wed, 13 May 2020 13:48:26 -0400
-X-MC-Unique: G88DI2OoNu6tUsF93zBg-w-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 54D8D84B8A7;
-        Wed, 13 May 2020 17:48:24 +0000 (UTC)
-Received: from krava (unknown [10.40.195.109])
-        by smtp.corp.redhat.com (Postfix) with SMTP id A05525C49B;
-        Wed, 13 May 2020 17:48:20 +0000 (UTC)
-Date:   Wed, 13 May 2020 19:48:19 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Paul Clarke <pc@us.ibm.com>, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 2/2] perf test: Improve pmu event metric testing
-Message-ID: <20200513174819.GA3343750@krava>
-References: <20200513062236.854-1-irogers@google.com>
- <20200513062236.854-2-irogers@google.com>
+        Wed, 13 May 2020 13:50:28 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99B99C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 10:50:27 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id f18so496455lja.13
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 10:50:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=WDWcfT3+toKvx/QbSYq3IfgLQ4Ag9VHbt7vkJOTIQcA=;
+        b=M4L96kVZtACgifD95COKMoR3C+jvdmjC+sBw31DjcSMni2jSjPqbVDZXmKCvZ7dHXp
+         UanAQ34EAiMCzsdTbfHc0cJKp14ulxUhphTgpvGdALVhxCZx3xsraOk8WPqxJtgDSHNx
+         5fDgN/SsXGOWf5YWDxcTTdGaNmgzKnw5AAGbAOb7QXfE8SvZ10QLx+7+sG91v3hnp1K+
+         j/wdnRepr+DnL+fsBFz+PDKDJBSBvS01hZVj26a3jEex6kS1JyQo3tDZ1y+RmGBT2rlG
+         njzJcx7R8bKtfOEHe7lgq3hQaQpRlRfl4KeqIPEXNtON8ks64VhwcH04iUqUyHlWOVi/
+         kYqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WDWcfT3+toKvx/QbSYq3IfgLQ4Ag9VHbt7vkJOTIQcA=;
+        b=TzrdFq1Q5K8PqJnXXGW42+1f3c7mPyvLFCnRXiJ6NEHUBs8odkI0FEz6fTvoZrUv7R
+         9pJcxTtOu5AYwLiAmAKaCSRt/0j0K0KV/MyCU03UXJ3g/lEt8HOIM60Q/zAVgepjX+qg
+         syyc4bCxtXBYh8RFtHVt69qmHOp0Tzi8gClQk5yXfrXev/lO5szH/q0IwoyZ4Ug3rHnT
+         dSt8iw2hyOQBwwsyTGWKbsOtvUBOki/u6LrrukQ8Z0auEdZVz4T4/tUmkTdkOt8B6SXu
+         Gy7ALA2Mig+EXksvpmcrJqRqU9UE2mUCVtaW754WwyzOVpizsw1QlTtsHGH/lStHttzS
+         Ho8g==
+X-Gm-Message-State: AOAM53319a7/STQj1jE7ttOZAA//KXQSvN2OiXwLuurgSMp0I8ew0exS
+        xjS4gmSbE+3yzQR8pK9o0G8CNTwODa/1LVHaVKEijg==
+X-Google-Smtp-Source: ABdhPJxgDxf7qQjQMeGUC3B8dc6vpIKzopfyn+EckbsQgbzzs9f5yjN6rt3ECaGWFNanWjOjvI20Bn8QebXGNuo7YSc=
+X-Received: by 2002:a2e:8912:: with SMTP id d18mr160083lji.123.1589392225106;
+ Wed, 13 May 2020 10:50:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513062236.854-2-irogers@google.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <20200513094408.810028856@linuxfoundation.org>
+In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 13 May 2020 23:20:13 +0530
+Message-ID: <CA+G9fYufijvAAz9RmVybi_Aygc+R=5-BT3w772dhmYOK+4BuZg@mail.gmail.com>
+Subject: Re: [PATCH 5.4 00/90] 5.4.41-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 11:22:36PM -0700, Ian Rogers wrote:
-
-SNIP
-
-> +
-> +static int check_parse_id(const char *id, bool same_cpu, struct pmu_event *pe)
-> +{
-> +	struct parse_events_error error;
-> +	struct evlist *evlist;
-> +	int ret;
-> +
-> +	/* Numbers are always valid. */
-> +	if (is_number(id))
-> +		return 0;
-> +
-> +	evlist = evlist__new();
-> +	memset(&error, 0, sizeof(error));
-> +	ret = parse_events(evlist, id, &error);
-> +	if (ret && same_cpu) {
-> +		fprintf(stderr,
-> +			"\nWARNING: Parse event failed metric '%s' id '%s' expr '%s'\n",
-> +			pe->metric_name, id, pe->metric_expr);
-> +		fprintf(stderr, "Error string '%s' help '%s'\n",
-> +			error.str, error.help);
-> +	} else if (ret) {
-> +		pr_debug3("Parse event failed, but for an event that may not be supported by this CPU.\nid '%s' metric '%s' expr '%s'\n",
-> +			id, pe->metric_name, pe->metric_expr);
-> +	}
-
-I wonder if we could add 'fake pmu' that would be used for tests
-and use it parse_events_add_pmu to add 'fake' evsel but the name
-would be correct.. we could add parse_events_state::fake_pmu bool
-for that
-
-rest of the event types (other than pmu syntax) might be ok
+On Wed, 13 May 2020 at 15:19, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.4.41 release.
+> There are 90 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 15 May 2020 09:41:20 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.4.41-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
 
-> +	evlist__delete(evlist);
-> +	free(error.str);
-> +	free(error.help);
-> +	free(error.first_str);
-> +	free(error.first_help);
-> +	/* TODO: too many metrics are broken to fail on this test currently. */
-> +	return 0;
-> +}
-> +
-> +static int test_parsing(void)
-> +{
-> +	struct pmu_events_map *cpus_map = perf_pmu__find_map(NULL);
-> +	struct pmu_events_map *map;
-> +	struct pmu_event *pe;
-> +	int i, j, k;
-> +	const char **ids;
-> +	int idnum;
-> +	int ret = 0;
-> +	struct expr_parse_ctx ctx;
-> +	double result;
-> +
-> +	i = 0;
-> +	for (;;) {
-> +		map = &pmu_events_map[i++];
-> +		if (!map->table) {
-> +			map = NULL;
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-hum, what's the map = NULL for in here?
+NOTE:
+While running libhugetlbfs fallocate_stress.sh on stable-rc 5.4 branch kern=
+el
+on arm64 hikey device. The following kernel Internal error: Oops: found.
+https://lore.kernel.org/stable/CA+G9fYvvDjA5t+zi0Zyn2F6D=3D7aE-Gu-m13o47LXY=
+YfCD3SvrA@mail.gmail.com/T/#u
 
-thanks,
-jirka
+Summary
+------------------------------------------------------------------------
 
-> +			break;
-> +		}
-> +		j = 0;
-> +		for (;;) {
-> +			pe = &map->table[j++];
-> +			if (!pe->name && !pe->metric_group && !pe->metric_name)
-> +				break;
-> +			if (!pe->metric_expr)
-> +				continue;
-> +			if (expr__find_other(pe->metric_expr, NULL,
-> +						&ids, &idnum, 0) < 0) {
-> +				pr_debug("Parse other failed for map %s %s %s\n",
-> +					map->cpuid, map->version, map->type);
-> +				pr_debug("On metric %s\n", pe->metric_name);
-> +				pr_debug("On expression %s\n", pe->metric_expr);
-> +				ret++;
-> +				continue;
-> +			}
-> +			expr__ctx_init(&ctx);
-> +
-> +			/*
-> +			 * Add all ids with a made up value. The value may
-> +			 * trigger divide by zero when subtracted and so try to
-> +			 * make them unique.
-> +			 */
-> +			for (k = 0; k < idnum; k++)
-> +				expr__add_id(&ctx, ids[k], k + 1);
-> +
-> +			for (k = 0; k < idnum; k++) {
-> +				if (check_parse_id(ids[k], map == cpus_map, pe))
-> +					ret++;
-> +			}
-> +
-> +			if (expr__parse(&result, &ctx, pe->metric_expr, 0)) {
-> +				pr_debug("Parse failed for map %s %s %s\n",
-> +					map->cpuid, map->version, map->type);
-> +				pr_debug("On metric %s\n", pe->metric_name);
-> +				pr_debug("On expression %s\n", pe->metric_expr);
-> +				ret++;
-> +			}
-> +			for (k = 0; k < idnum; k++)
-> +				zfree(&ids[k]);
-> +			free(ids);
-> +		}
-> +	}
-> +	return ret;
+kernel: 5.4.41-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.4.y
+git commit: 132220af41e6fd872e8c8d08d7b4e3a1b674f843
+git describe: v5.4.40-91-g132220af41e6
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
+ld/v5.4.40-91-g132220af41e6
 
-SNIP
+No regressions (compared to build v5.4.40)
 
+No fixes (compared to build v5.4.40)
+
+Ran 33743 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* kselftest/networking
+* libgpiod
+* libhugetlbfs
+* linux-log-parser
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* perf
+* v4l2-compliance
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fs-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-sched-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-native/networking
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+* kselftest-vsyscall-mode-none/networking
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
