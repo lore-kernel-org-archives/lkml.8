@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78075C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F82AC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5300B206A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:29:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E114920708
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:29:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bg0Uo11G"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L0xgcDwW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732301AbgEMG30 (ORCPT
+        id S1729460AbgEMG3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 02:29:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46252 "EHLO
+        Wed, 13 May 2020 02:29:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732256AbgEMG3R (ORCPT
+        with ESMTP id S1732175AbgEMG3F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 02:29:17 -0400
+        Wed, 13 May 2020 02:29:05 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37949C061A0C;
-        Tue, 12 May 2020 23:29:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3618AC061A0C;
+        Tue, 12 May 2020 23:29:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=5TSZ8ysmfXzR1IyTmnCaDhVaLMJELOeh31MTPRTaaRg=; b=bg0Uo11GWZx6GNXGrHbkE3nXm0
-        taqofikn5nC4WaRZXCxqiSLdyTkTTFW5UNIP24uAjeFOM0EGzvoL482lUYdOvuu8ct1+aXLqQRisK
-        6IYJ3L4rSu39PvpsULY2UJkLwdTRuDVZY8Fco6Or/xpdxPXu9+REO84oBiXIgLQEKEUsbndw+l3jD
-        P/kY4BPZ6CSprNiOIYEi+t10fgZtRaBF0v01Zui1LQjdoJY7+Y9FsoK3ElMqA/MVS2tzQavYzdHYF
-        H9zewZGSEh4qP5IaY/4GsS2p/qUC1IRH7wlQcQHP9T+NHtpHjccmmK3YGr7hqB0o89AydBPZb9WDB
-        HSJ6jAGA==;
+        bh=sYCeJWkvwiDcLO4azUz4Lghn771ZTzcCvIj3ODxfKA4=; b=L0xgcDwWBew/hUDnMRVxjAFIu0
+        nr3l2q6XF2Vl5FSu5iuND7L/B2s0+8lrY924YcHINLJjs2142Hvi/lu17oLe8a5J7XrMXSQn1vZ+s
+        KBdAEHb6c/nnwY5To5NpuwJe8USThbqwt/dx1BNtU4i0rsfEG1zyWAvoQtPe4Fn6tBCQ6dafGi6ti
+        sSF+YmLo/T0y5dtSly4MHmSA1G3UtgRy+xGkAB7nKDU2CUQp6V12yTilYZ/C2KcbvR3q/BB0ButgR
+        Tw5mexnLFPfVVKybEa3N1yFk0d6sUieQD9fw+qvEadIByagJTSJpz2Mw0hAKD9fkVdDYSQR4fa2Q+
+        MTpTE7mQ==;
 Received: from [2001:4bb8:180:9d3f:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jYksI-000522-Iw; Wed, 13 May 2020 06:28:15 +0000
+        id 1jYksb-0005Jo-4P; Wed, 13 May 2020 06:28:33 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
@@ -57,9 +57,9 @@ Cc:     Eric Dumazet <edumazet@google.com>,
         ocfs2-devel@oss.oracle.com, netdev@vger.kernel.org,
         linux-sctp@vger.kernel.org, ceph-devel@vger.kernel.org,
         rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org
-Subject: [PATCH 27/33] sctp: export sctp_setsockopt_bindx
-Date:   Wed, 13 May 2020 08:26:42 +0200
-Message-Id: <20200513062649.2100053-28-hch@lst.de>
+Subject: [PATCH 33/33] net: remove kernel_getsockopt
+Date:   Wed, 13 May 2020 08:26:48 +0200
+Message-Id: <20200513062649.2100053-34-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513062649.2100053-1-hch@lst.de>
 References: <20200513062649.2100053-1-hch@lst.de>
@@ -71,77 +71,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-And call it directly from dlm instead of going through kernel_setsockopt.
+No users left.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/dlm/lowcomms.c       | 13 ++++++++-----
- include/net/sctp/sctp.h |  3 +++
- net/sctp/socket.c       |  5 +++--
- 3 files changed, 14 insertions(+), 7 deletions(-)
+ include/linux/net.h |  2 --
+ net/socket.c        | 34 ----------------------------------
+ 2 files changed, 36 deletions(-)
 
-diff --git a/fs/dlm/lowcomms.c b/fs/dlm/lowcomms.c
-index b722a09a7ca05..e4939d770df53 100644
---- a/fs/dlm/lowcomms.c
-+++ b/fs/dlm/lowcomms.c
-@@ -1005,14 +1005,17 @@ static int sctp_bind_addrs(struct connection *con, uint16_t port)
- 		memcpy(&localaddr, dlm_local_addr[i], sizeof(localaddr));
- 		make_sockaddr(&localaddr, port, &addr_len);
- 
--		if (!i)
-+		if (!i) {
- 			result = kernel_bind(con->sock,
- 					     (struct sockaddr *)&localaddr,
- 					     addr_len);
--		else
--			result = kernel_setsockopt(con->sock, SOL_SCTP,
--						   SCTP_SOCKOPT_BINDX_ADD,
--						   (char *)&localaddr, addr_len);
-+		} else {
-+			lock_sock(con->sock->sk);
-+			result = sctp_setsockopt_bindx(con->sock->sk,
-+					(struct sockaddr *)&localaddr, addr_len,
-+					SCTP_BINDX_ADD_ADDR);
-+			release_sock(con->sock->sk);
-+		}
- 
- 		if (result < 0) {
- 			log_print("Can't bind to %d addr number %d, %d.\n",
-diff --git a/include/net/sctp/sctp.h b/include/net/sctp/sctp.h
-index 3ab5c6bbb90bd..f702b14d768ba 100644
---- a/include/net/sctp/sctp.h
-+++ b/include/net/sctp/sctp.h
-@@ -615,4 +615,7 @@ static inline bool sctp_newsk_ready(const struct sock *sk)
- 	return sock_flag(sk, SOCK_DEAD) || sk->sk_socket;
+diff --git a/include/linux/net.h b/include/linux/net.h
+index ece7513326293..e10f378194a59 100644
+--- a/include/linux/net.h
++++ b/include/linux/net.h
+@@ -303,8 +303,6 @@ int kernel_connect(struct socket *sock, struct sockaddr *addr, int addrlen,
+ 		   int flags);
+ int kernel_getsockname(struct socket *sock, struct sockaddr *addr);
+ int kernel_getpeername(struct socket *sock, struct sockaddr *addr);
+-int kernel_getsockopt(struct socket *sock, int level, int optname, char *optval,
+-		      int *optlen);
+ int kernel_sendpage(struct socket *sock, struct page *page, int offset,
+ 		    size_t size, int flags);
+ int kernel_sendpage_locked(struct sock *sk, struct page *page, int offset,
+diff --git a/net/socket.c b/net/socket.c
+index f37c3ef508691..49000f0d87f71 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -3715,40 +3715,6 @@ int kernel_getpeername(struct socket *sock, struct sockaddr *addr)
  }
+ EXPORT_SYMBOL(kernel_getpeername);
  
-+int sctp_setsockopt_bindx(struct sock *sk, struct sockaddr *kaddrs,
-+		int addrs_size, int op);
-+
- #endif /* __net_sctp_h__ */
-diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-index 1c96b52c4aa28..30c981d9f6158 100644
---- a/net/sctp/socket.c
-+++ b/net/sctp/socket.c
-@@ -979,8 +979,8 @@ int sctp_asconf_mgmt(struct sctp_sock *sp, struct sctp_sockaddr_entry *addrw)
-  *
-  * Returns 0 if ok, <0 errno code on error.
-  */
--static int sctp_setsockopt_bindx(struct sock *sk, struct sockaddr *kaddrs,
--				 int addrs_size, int op)
-+int sctp_setsockopt_bindx(struct sock *sk, struct sockaddr *kaddrs,
-+		int addrs_size, int op)
- {
- 	int err;
- 	int addrcnt = 0;
-@@ -1032,6 +1032,7 @@ static int sctp_setsockopt_bindx(struct sock *sk, struct sockaddr *kaddrs,
- 		return -EINVAL;
- 	}
- }
-+EXPORT_SYMBOL(sctp_setsockopt_bindx);
- 
- static int sctp_connect_new_asoc(struct sctp_endpoint *ep,
- 				 const union sctp_addr *daddr,
+-/**
+- *	kernel_getsockopt - get a socket option (kernel space)
+- *	@sock: socket
+- *	@level: API level (SOL_SOCKET, ...)
+- *	@optname: option tag
+- *	@optval: option value
+- *	@optlen: option length
+- *
+- *	Assigns the option length to @optlen.
+- *	Returns 0 or an error.
+- */
+-
+-int kernel_getsockopt(struct socket *sock, int level, int optname,
+-			char *optval, int *optlen)
+-{
+-	mm_segment_t oldfs = get_fs();
+-	char __user *uoptval;
+-	int __user *uoptlen;
+-	int err;
+-
+-	uoptval = (char __user __force *) optval;
+-	uoptlen = (int __user __force *) optlen;
+-
+-	set_fs(KERNEL_DS);
+-	if (level == SOL_SOCKET)
+-		err = sock_getsockopt(sock, level, optname, uoptval, uoptlen);
+-	else
+-		err = sock->ops->getsockopt(sock, level, optname, uoptval,
+-					    uoptlen);
+-	set_fs(oldfs);
+-	return err;
+-}
+-EXPORT_SYMBOL(kernel_getsockopt);
+-
+ /**
+  *	kernel_sendpage - send a &page through a socket (kernel space)
+  *	@sock: socket
 -- 
 2.26.2
 
