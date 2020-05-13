@@ -2,103 +2,165 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFDCCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE37CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9362020753
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABE2F2078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:25:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbgEMLZF (ORCPT
+        id S1729299AbgEMLZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 07:25:05 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:57550 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbgEMLZD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 07:25:03 -0400
-Received: from fsav105.sakura.ne.jp (fsav105.sakura.ne.jp [27.133.134.232])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 04DBOOjo033442;
-        Wed, 13 May 2020 20:24:24 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav105.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav105.sakura.ne.jp);
- Wed, 13 May 2020 20:24:24 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav105.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 04DBOOjV033412
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Wed, 13 May 2020 20:24:24 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] printk: Add loglevel for "do not print to consoles".
-To:     Michal Hocko <mhocko@kernel.org>, Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-References: <4dae86af-1d9a-f5a8-cff6-aa91ec038a79@i-love.sakura.ne.jp>
- <20200428121828.GP28637@dhcp22.suse.cz>
- <b4d74234-8009-9ffd-011f-bd5d1a4b85f6@i-love.sakura.ne.jp>
- <20200428154532.GU28637@dhcp22.suse.cz>
- <b1d507b1-dae7-f526-c74a-d465ddecea6a@i-love.sakura.ne.jp>
- <20200429142106.GG28637@dhcp22.suse.cz>
- <a59271f1-b3fc-26d1-f0a2-5ec351d0095e@i-love.sakura.ne.jp>
- <20200513062652.GM413@jagdpanzerIV.localdomain>
- <a75d6560-ad99-5b02-3648-247c27c3a398@i-love.sakura.ne.jp>
- <20200513100413.GH17734@linux-b0ei> <20200513104938.GW29153@dhcp22.suse.cz>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <d66c38d9-dd97-072d-e1a7-949e9573b38d@i-love.sakura.ne.jp>
-Date:   Wed, 13 May 2020 20:24:24 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 13 May 2020 07:25:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37952 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726020AbgEMLZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 07:25:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3A21AAF36;
+        Wed, 13 May 2020 11:25:22 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id BD4A51E12AE; Wed, 13 May 2020 13:25:18 +0200 (CEST)
+Date:   Wed, 13 May 2020 13:25:18 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     ira.weiny@intel.com
+Cc:     linux-ext4@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/9] fs/ext4: Change EXT4_MOUNT_DAX to
+ EXT4_MOUNT_DAX_ALWAYS
+Message-ID: <20200513112518.GD27709@quack2.suse.cz>
+References: <20200513054324.2138483-1-ira.weiny@intel.com>
+ <20200513054324.2138483-5-ira.weiny@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200513104938.GW29153@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513054324.2138483-5-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/05/13 19:49, Michal Hocko wrote:
-> On Wed 13-05-20 12:04:13, Petr Mladek wrote:
->> What is so special about  OOM dump task so that it would deserve such
->> complications?
+On Tue 12-05-20 22:43:19, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
 > 
-> Nothing really. Except for the potential amount of the output.
+> In prep for the new tri-state mount option which then introduces
+> EXT4_MOUNT_DAX_NEVER.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-"echo t > /proc/sysrq-trigger" from userspace program is another example.
+Looks good to me. You can add:
 
-> But as
-> you've said there are two ways around that. Disable this output if you
-> do not need it or make it a lower loglevel. 
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-Disable this output for syslog is not acceptable for me, but disable this
-output for consoles is preferable for me.
-
-> I simply cannot tell whether somebody considers
-> dump_tasks an important information to be printed on consoles.
-
-I don't think dump_tasks() is important information to be printed on consoles.
-But since somebody might think dump_tasks() is important information to be
-printed on consoles, I suggest switching KERN_NO_CONSOLES using e.g. sysctl.
+								Honza
 
 > 
-> If there is any need to control which messages should be routed to which
-> backend then the proper solution would be to filter messages per log
-> level per backend.
-
-Possible backends will be "zero or more than zero" consoles + "zero or one"
-syslog, and KERN_NO_CONSOLES is a method for force selecting "zero" console
-backend.
-
->                    But I have no idea how feasible this is for the
-> existing infrastructure - or maybe it already exists...
-
-There is per-console loglevel proposal (which allows selecting "some" console
-backends). But it is based on KERN_$LOGLEVEL which is too rough-grained.
+> ---
+> Changes:
+> 	New patch
+> ---
+>  fs/ext4/ext4.h  |  4 ++--
+>  fs/ext4/inode.c |  2 +-
+>  fs/ext4/super.c | 12 ++++++------
+>  3 files changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> index 91eb4381cae5..1a3daf2d18ef 100644
+> --- a/fs/ext4/ext4.h
+> +++ b/fs/ext4/ext4.h
+> @@ -1123,9 +1123,9 @@ struct ext4_inode_info {
+>  #define EXT4_MOUNT_MINIX_DF		0x00080	/* Mimics the Minix statfs */
+>  #define EXT4_MOUNT_NOLOAD		0x00100	/* Don't use existing journal*/
+>  #ifdef CONFIG_FS_DAX
+> -#define EXT4_MOUNT_DAX			0x00200	/* Direct Access */
+> +#define EXT4_MOUNT_DAX_ALWAYS		0x00200	/* Direct Access */
+>  #else
+> -#define EXT4_MOUNT_DAX			0
+> +#define EXT4_MOUNT_DAX_ALWAYS		0
+>  #endif
+>  #define EXT4_MOUNT_DATA_FLAGS		0x00C00	/* Mode for data writes: */
+>  #define EXT4_MOUNT_JOURNAL_DATA		0x00400	/* Write data to journal */
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 2a4aae6acdcb..a10ff12194db 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -4400,7 +4400,7 @@ int ext4_get_inode_loc(struct inode *inode, struct ext4_iloc *iloc)
+>  
+>  static bool ext4_should_use_dax(struct inode *inode)
+>  {
+> -	if (!test_opt(inode->i_sb, DAX))
+> +	if (!test_opt(inode->i_sb, DAX_ALWAYS))
+>  		return false;
+>  	if (!S_ISREG(inode->i_mode))
+>  		return false;
+> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> index 9873ab27e3fa..d0434b513919 100644
+> --- a/fs/ext4/super.c
+> +++ b/fs/ext4/super.c
+> @@ -1767,7 +1767,7 @@ static const struct mount_opts {
+>  	{Opt_min_batch_time, 0, MOPT_GTE0},
+>  	{Opt_inode_readahead_blks, 0, MOPT_GTE0},
+>  	{Opt_init_itable, 0, MOPT_GTE0},
+> -	{Opt_dax, EXT4_MOUNT_DAX, MOPT_SET},
+> +	{Opt_dax, EXT4_MOUNT_DAX_ALWAYS, MOPT_SET},
+>  	{Opt_stripe, 0, MOPT_GTE0},
+>  	{Opt_resuid, 0, MOPT_GTE0},
+>  	{Opt_resgid, 0, MOPT_GTE0},
+> @@ -3974,7 +3974,7 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+>  				 "both data=journal and dioread_nolock");
+>  			goto failed_mount;
+>  		}
+> -		if (test_opt(sb, DAX)) {
+> +		if (test_opt(sb, DAX_ALWAYS)) {
+>  			ext4_msg(sb, KERN_ERR, "can't mount with "
+>  				 "both data=journal and dax");
+>  			goto failed_mount;
+> @@ -4084,7 +4084,7 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+>  		goto failed_mount;
+>  	}
+>  
+> -	if (sbi->s_mount_opt & EXT4_MOUNT_DAX) {
+> +	if (sbi->s_mount_opt & EXT4_MOUNT_DAX_ALWAYS) {
+>  		if (ext4_has_feature_inline_data(sb)) {
+>  			ext4_msg(sb, KERN_ERR, "Cannot use DAX on a filesystem"
+>  					" that may contain inline data");
+> @@ -5404,7 +5404,7 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
+>  			err = -EINVAL;
+>  			goto restore_opts;
+>  		}
+> -		if (test_opt(sb, DAX)) {
+> +		if (test_opt(sb, DAX_ALWAYS)) {
+>  			ext4_msg(sb, KERN_ERR, "can't mount with "
+>  				 "both data=journal and dax");
+>  			err = -EINVAL;
+> @@ -5425,10 +5425,10 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
+>  		goto restore_opts;
+>  	}
+>  
+> -	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_DAX) {
+> +	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_DAX_ALWAYS) {
+>  		ext4_msg(sb, KERN_WARNING, "warning: refusing change of "
+>  			"dax flag with busy inodes while remounting");
+> -		sbi->s_mount_opt ^= EXT4_MOUNT_DAX;
+> +		sbi->s_mount_opt ^= EXT4_MOUNT_DAX_ALWAYS;
+>  	}
+>  
+>  	if (sbi->s_mount_flags & EXT4_MF_FS_ABORTED)
+> -- 
+> 2.25.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
