@@ -8,70 +8,69 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD2FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB778C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:46:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C246B206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2FDF2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:46:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RW1G+oga"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J9f+VXD3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729960AbgEMVqs (ORCPT
+        id S1729919AbgEMVqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 17:46:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48580 "EHLO
+        Wed, 13 May 2020 17:46:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729799AbgEMVqp (ORCPT
+        by vger.kernel.org with ESMTP id S1729793AbgEMVqo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 17:46:45 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C7ACC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 14:46:45 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id n5so15317527wmd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 14:46:45 -0700 (PDT)
+        Wed, 13 May 2020 17:46:44 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0294FC061A0C;
+        Wed, 13 May 2020 14:46:43 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id g14so12828072wme.1;
+        Wed, 13 May 2020 14:46:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qwEXZysR23CccmrNbp4oN3ldgqd9cJzH2UZSb4ihijw=;
-        b=RW1G+ogaAUWg4GP/IAaKNDiWpKHIvYpQnbau/mVBhnk3xIed4Kf27YNjBWyThTty/b
-         aa6RzDE2vVQpDzT4KYj0Hg1pX7a86XwH8Gkjh+dqN2ijY/Bh7VOGNBKaBvllUvvgTe7V
-         JYtYdUkSr9CrVUUlGhGy0qMnqJzhlEs9Gg1WhRCbrsggDPN8rSk+V+Xjj/ZBwbDca1zn
-         Zqxq/ucDBkApCW26k1BrUvDs0z4ynUSWmSjyaEkSz0+q23ekyBhQTXxIbOAkQi1qEUd3
-         PJfBW7d+pq1xy7EbcafYMm7NFocw/Ek9E40OFAv8yotfqMA/LMU73/trnk1ziQrnvLwP
-         0KLw==
+        bh=1ZhpfY5SsXwRMXVq8oG2SQckFQ1KlcXnx8okrJoqKCA=;
+        b=J9f+VXD35N9xl7mX+0T+f83yVVR/BgYM8RMEZCYaz1RSjI+MkVij2f44TNmQ9iGE86
+         6etFqrZUffKYP1M1wze/ps4CpisiMrwWTnMSr2L2m5nhNa5DdRhGtiWzYXGCcH4SCHOR
+         6bCmg4p+pF7wkc1n7vujJNPXgs88iP/adct8b8CQYCOEt+lQFy8tdVg3kvLTiy1MZ6jP
+         f3tO1rfpK8afd0A1SGtKTrY4qsre9OxjLK3sQ7TXtxEP9Sff2EyVlkXtvXZteu5nRCWR
+         lo+fGAss0/qYhP8AefeSr+vcsIXkj77mG7qPVT6Roqq2qA6M+07ju8yV/+hXTmOmBSQa
+         zFnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qwEXZysR23CccmrNbp4oN3ldgqd9cJzH2UZSb4ihijw=;
-        b=f+it13AJeJlnXIpX1Megs6xT5/1msegScfy1Tt3fiCloD9vtpuHrLAWBcPMBKb3lvc
-         7I01GoeN3PXDMVc4ZwrhsC3O9z5j+3oCMFsrvJBRUGDID+aN2wLvSpteSxz4iKS6W7sZ
-         ZAbbyM+LRLlXFgDNNta1KWj87jxI/vi1DfqPLYOcpMZQPjgT3WHbg5RTQxgLcKMaE9R5
-         IyEzQFWD40Iab7NW+p9lExdmO5LdAIsj7bjIO4H9zg9rtCMcBRFCJUC2jpBtnaPMqh0x
-         jwprqY58M7jkOUU12Ufos13or/ReRPMOd1y2MTIQHFQNFjZBnzOzow3LwkQgQitaZ1lH
-         3WbA==
-X-Gm-Message-State: AOAM531SAoMFfzh4MvxDoYKMUjxNLd4sVVyqTKpREUM5q8W4h15Ify/b
-        BcC9WSaDA6resgLfFV26ow0Cg0c5
-X-Google-Smtp-Source: ABdhPJyLIg3eccKezg4f5axysxo4mad1I/De7u6J1LU+oD/g9NIWVf+Zl8ski/Ae57u9v6OoYfDaPA==
-X-Received: by 2002:a1c:e188:: with SMTP id y130mr9611614wmg.105.1589406403908;
-        Wed, 13 May 2020 14:46:43 -0700 (PDT)
+        bh=1ZhpfY5SsXwRMXVq8oG2SQckFQ1KlcXnx8okrJoqKCA=;
+        b=iwlpSnesA003heahe3TXNA8WHJ+5hef3ZvDERHXgeW78TVsvwW3uitjTfIc+Dt1vbg
+         P270oCZKA18rV5W0UAFNpgZrUWAu5XtwRYASj+O4AOVjkKeNtRndA+wJpx0Ldes4g/D7
+         WL3Ucylb6368LOMI09UifLKnBFjRWcR0s7ljLX9uhc9ZxV8aul5eZGr8W7Rier4J2Itv
+         P4Q7gHabLQkGDy9vNwQYb5ufrzHvefTQA/18bbcEDR6UgjiIX7waX/XI7ukixuG/aydF
+         4NQqn4x521tKaVqJLqVnE1o1NGEdxcAc9gPKia/19/+8twazSYjuuDKnl+zPvgM7UNlm
+         qdrg==
+X-Gm-Message-State: AGi0PubGby046EE7y0YbCDUJasz82FRdQtFgHTX2D9WLeyU/DHxV/pZu
+        6o8OahCeuJnfPMy57oIeV54=
+X-Google-Smtp-Source: APiQypIZ4r5SZkRDB6NXjJjmJhzn7tVrsiIl9AH/93M3gz7vnmZP+aNiDzxAEY/+SIIWvDX/w43OYQ==
+X-Received: by 2002:a1c:f012:: with SMTP id a18mr43223777wmb.116.1589406401788;
+        Wed, 13 May 2020 14:46:41 -0700 (PDT)
 Received: from localhost.localdomain (cpc91192-cmbg18-2-0-cust374.5-4.cable.virginm.net. [80.6.113.119])
-        by smtp.gmail.com with ESMTPSA id m23sm1699734wmg.45.2020.05.13.14.46.42
+        by smtp.gmail.com with ESMTPSA id m23sm1699734wmg.45.2020.05.13.14.46.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 14:46:43 -0700 (PDT)
+        Wed, 13 May 2020 14:46:41 -0700 (PDT)
 From:   Emil Velikov <emil.l.velikov@gmail.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     emil.l.velikov@gmail.com,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 06/11] powerpc/xmon: constify sysrq_key_op
-Date:   Wed, 13 May 2020 22:43:46 +0100
-Message-Id: <20200513214351.2138580-6-emil.l.velikov@gmail.com>
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>, linux-alpha@vger.kernel.org
+Subject: [PATCH 04/11] alpha: constify sysrq_key_op
+Date:   Wed, 13 May 2020 22:43:44 +0100
+Message-Id: <20200513214351.2138580-4-emil.l.velikov@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200513214351.2138580-1-emil.l.velikov@gmail.com>
 References: <20200513214351.2138580-1-emil.l.velikov@gmail.com>
@@ -88,32 +87,32 @@ sysrq_key_op. As such we can add the notation.
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Jiri Slaby <jslaby@suse.com>
 Cc: linux-kernel@vger.kernel.org
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: linuxppc-dev@lists.ozlabs.org
+Cc: Richard Henderson <rth@twiddle.net>
+Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+Cc: Matt Turner <mattst88@gmail.com>
+Cc: linux-alpha@vger.kernel.org
 Signed-off-by: Emil Velikov <emil.l.velikov@gmail.com>
 ---
 Please keep me in the CC list, as I'm not subscribed to the list.
 
 IMHO it would be better if this gets merged this via the tty tree.
 ---
- arch/powerpc/xmon/xmon.c | 2 +-
+ arch/alpha/kernel/setup.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
-index 7af840c0fc93..0d8ca5c9f131 100644
---- a/arch/powerpc/xmon/xmon.c
-+++ b/arch/powerpc/xmon/xmon.c
-@@ -3842,7 +3842,7 @@ static void sysrq_handle_xmon(int key)
- 		xmon_init(0);
- }
+diff --git a/arch/alpha/kernel/setup.c b/arch/alpha/kernel/setup.c
+index dd7f770f23cf..6fa802c495b4 100644
+--- a/arch/alpha/kernel/setup.c
++++ b/arch/alpha/kernel/setup.c
+@@ -431,7 +431,7 @@ register_cpus(void)
+ arch_initcall(register_cpus);
  
--static struct sysrq_key_op sysrq_xmon_op = {
-+static const struct sysrq_key_op sysrq_xmon_op = {
- 	.handler =	sysrq_handle_xmon,
- 	.help_msg =	"xmon(x)",
- 	.action_msg =	"Entering xmon",
+ #ifdef CONFIG_MAGIC_SYSRQ
+-static struct sysrq_key_op srm_sysrq_reboot_op = {
++static const struct sysrq_key_op srm_sysrq_reboot_op = {
+ 	.handler	= machine_halt,
+ 	.help_msg       = "reboot(b)",
+ 	.action_msg     = "Resetting",
 -- 
 2.25.1
 
