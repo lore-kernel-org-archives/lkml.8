@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDEEC2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9453ECA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA26820740
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B562206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363337;
-	bh=6Nj0ivymC0ECNsWFCc3YPYlbmxZtWC1YnpOr92BuU0g=;
+	s=default; t=1589363341;
+	bh=xqrh2MopQeipAcdHacog6ivfLRVDwUVB/2W23jrA/+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kX//3MJJzpeMZ6MZRWjaUvOQ91FPhqHpbmqVOOE3HS32BsoEGs8t2NMWYwkBjA2yH
-	 4pjlXUnuc3kwVDZuRb7fi+XoQjknFgIihn+LOUNA4zCSot5H4bNed1aNAxoSobitJM
-	 I660B6ejHapRwZSNfZuxzTR1tcafdmgZnEqt0KZA=
+	b=0Cv76wTFlNOPnE85XcxQym7GKpJvA39fv0NpWPS//NxT/7ZvDNnSyGblJeaJuscjx
+	 BDN+2A6xpnqmd+q+OwNQynffZNXxJykKkAPxwq+By86hlbrU6LtQxHu+gOuHw4uNBX
+	 iqI2z1mr9KwUEGJGnSdwaMReZsEdL+8YVim+6J2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733153AbgEMJs5 (ORCPT
+        id S1732651AbgEMJtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:48:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47418 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:49:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733126AbgEMJst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:48:49 -0400
+        id S1733139AbgEMJsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:48:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9F1320753;
-        Wed, 13 May 2020 09:48:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88CEA206D6;
+        Wed, 13 May 2020 09:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363328;
-        bh=6Nj0ivymC0ECNsWFCc3YPYlbmxZtWC1YnpOr92BuU0g=;
+        s=default; t=1589363333;
+        bh=xqrh2MopQeipAcdHacog6ivfLRVDwUVB/2W23jrA/+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a/mUl48VaZ91nIMJvJoW7V85Lzvjoi3xcevLEbAXwQLMhc8709iKZZjAcvNiIMDD3
-         AA2z2aUeNRDqlHhHKkYQkH2f0AWX/sh59B6ujLSh1Nflm9JYDGfzUEzr7k/ynpbKQ9
-         8KSfNJa/l+Br+4fqAZBKRGAMgtStgzH/mMb5gxmk=
+        b=yTHo7GTPFu1j5Tr2Ig067yn+toFH63xd5Vo1tjrgo48sUrovps3b6Hx5vuwzlfLQ1
+         t36giFRZQmq+mtIk1JuQ5u6XtSlLSpZW5ROZPyT0TF3G4FWQ+58qcBzgfd9obsZMfa
+         9CmVv7+1aVNNLIKqigF4EFK8Rf5SFBrJcdmL40tU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>,
-        Tuong Lien <tuong.t.lien@dektech.com.au>,
+        stable@vger.kernel.org, Bob Briscoe <ietf@bobbriscoe.net>,
+        Olivier Tilmans <olivier.tilmans@nokia-bell-labs.com>,
+        Dave Taht <dave.taht@gmail.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 29/90] tipc: fix partial topology connection closure
-Date:   Wed, 13 May 2020 11:44:25 +0200
-Message-Id: <20200513094411.572153309@linuxfoundation.org>
+Subject: [PATCH 5.4 30/90] tunnel: Propagate ECT(1) when decapsulating as recommended by RFC6040
+Date:   Wed, 13 May 2020 11:44:26 +0200
+Message-Id: <20200513094411.682649645@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -61,51 +63,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tuong Lien <tuong.t.lien@dektech.com.au>
+From: "Toke Høiland-Jørgensen" <toke@redhat.com>
 
-[ Upstream commit 980d69276f3048af43a045be2925dacfb898a7be ]
+[ Upstream commit b723748750ece7d844cdf2f52c01d37f83387208 ]
 
-When an application connects to the TIPC topology server and subscribes
-to some services, a new connection is created along with some objects -
-'tipc_subscription' to store related data correspondingly...
-However, there is one omission in the connection handling that when the
-connection or application is orderly shutdown (e.g. via SIGQUIT, etc.),
-the connection is not closed in kernel, the 'tipc_subscription' objects
-are not freed too.
-This results in:
-- The maximum number of subscriptions (65535) will be reached soon, new
-subscriptions will be rejected;
-- TIPC module cannot be removed (unless the objects  are somehow forced
-to release first);
+RFC 6040 recommends propagating an ECT(1) mark from an outer tunnel header
+to the inner header if that inner header is already marked as ECT(0). When
+RFC 6040 decapsulation was implemented, this case of propagation was not
+added. This simply appears to be an oversight, so let's fix that.
 
-The commit fixes the issue by closing the connection if the 'recvmsg()'
-returns '0' i.e. when the peer is shutdown gracefully. It also includes
-the other unexpected cases.
-
-Acked-by: Jon Maloy <jmaloy@redhat.com>
-Acked-by: Ying Xue <ying.xue@windriver.com>
-Signed-off-by: Tuong Lien <tuong.t.lien@dektech.com.au>
+Fixes: eccc1bb8d4b4 ("tunnel: drop packet if ECN present with not-ECT")
+Reported-by: Bob Briscoe <ietf@bobbriscoe.net>
+Reported-by: Olivier Tilmans <olivier.tilmans@nokia-bell-labs.com>
+Cc: Dave Taht <dave.taht@gmail.com>
+Cc: Stephen Hemminger <stephen@networkplumber.org>
+Signed-off-by: Toke HÃ¸iland-JÃ¸rgensen <toke@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tipc/topsrv.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ include/net/inet_ecn.h |   57 +++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 55 insertions(+), 2 deletions(-)
 
---- a/net/tipc/topsrv.c
-+++ b/net/tipc/topsrv.c
-@@ -402,10 +402,11 @@ static int tipc_conn_rcv_from_sock(struc
- 		read_lock_bh(&sk->sk_callback_lock);
- 		ret = tipc_conn_rcv_sub(srv, con, &s);
- 		read_unlock_bh(&sk->sk_callback_lock);
-+		if (!ret)
-+			return 0;
- 	}
--	if (ret < 0)
--		tipc_conn_close(con);
- 
-+	tipc_conn_close(con);
- 	return ret;
+--- a/include/net/inet_ecn.h
++++ b/include/net/inet_ecn.h
+@@ -99,6 +99,20 @@ static inline int IP_ECN_set_ce(struct i
+ 	return 1;
  }
  
++static inline int IP_ECN_set_ect1(struct iphdr *iph)
++{
++	u32 check = (__force u32)iph->check;
++
++	if ((iph->tos & INET_ECN_MASK) != INET_ECN_ECT_0)
++		return 0;
++
++	check += (__force u16)htons(0x100);
++
++	iph->check = (__force __sum16)(check + (check>=0xFFFF));
++	iph->tos ^= INET_ECN_MASK;
++	return 1;
++}
++
+ static inline void IP_ECN_clear(struct iphdr *iph)
+ {
+ 	iph->tos &= ~INET_ECN_MASK;
+@@ -134,6 +148,22 @@ static inline int IP6_ECN_set_ce(struct
+ 	return 1;
+ }
+ 
++static inline int IP6_ECN_set_ect1(struct sk_buff *skb, struct ipv6hdr *iph)
++{
++	__be32 from, to;
++
++	if ((ipv6_get_dsfield(iph) & INET_ECN_MASK) != INET_ECN_ECT_0)
++		return 0;
++
++	from = *(__be32 *)iph;
++	to = from ^ htonl(INET_ECN_MASK << 20);
++	*(__be32 *)iph = to;
++	if (skb->ip_summed == CHECKSUM_COMPLETE)
++		skb->csum = csum_add(csum_sub(skb->csum, (__force __wsum)from),
++				     (__force __wsum)to);
++	return 1;
++}
++
+ static inline void ipv6_copy_dscp(unsigned int dscp, struct ipv6hdr *inner)
+ {
+ 	dscp &= ~INET_ECN_MASK;
+@@ -159,6 +189,25 @@ static inline int INET_ECN_set_ce(struct
+ 	return 0;
+ }
+ 
++static inline int INET_ECN_set_ect1(struct sk_buff *skb)
++{
++	switch (skb->protocol) {
++	case cpu_to_be16(ETH_P_IP):
++		if (skb_network_header(skb) + sizeof(struct iphdr) <=
++		    skb_tail_pointer(skb))
++			return IP_ECN_set_ect1(ip_hdr(skb));
++		break;
++
++	case cpu_to_be16(ETH_P_IPV6):
++		if (skb_network_header(skb) + sizeof(struct ipv6hdr) <=
++		    skb_tail_pointer(skb))
++			return IP6_ECN_set_ect1(skb, ipv6_hdr(skb));
++		break;
++	}
++
++	return 0;
++}
++
+ /*
+  * RFC 6040 4.2
+  *  To decapsulate the inner header at the tunnel egress, a compliant
+@@ -208,8 +257,12 @@ static inline int INET_ECN_decapsulate(s
+ 	int rc;
+ 
+ 	rc = __INET_ECN_decapsulate(outer, inner, &set_ce);
+-	if (!rc && set_ce)
+-		INET_ECN_set_ce(skb);
++	if (!rc) {
++		if (set_ce)
++			INET_ECN_set_ce(skb);
++		else if ((outer & INET_ECN_MASK) == INET_ECN_ECT_1)
++			INET_ECN_set_ect1(skb);
++	}
+ 
+ 	return rc;
+ }
 
 
