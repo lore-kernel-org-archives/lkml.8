@@ -2,53 +2,52 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 166B9C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 472D4CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2D0720753
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 296A9205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363801;
-	bh=Jze8i4rj65vnF9d3Kd8ooqtpOb+CdZklIrrCf6FWc/k=;
+	s=default; t=1589363803;
+	bh=tuV8TrIntQx/Va+AYnfJhtfpfekpiuaiuOMv9B7aI6w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kEWsXotJ7XyGyy2OQzyeWK96ApyP+UHWFJou5UUnFX7M1IaQ7aqGMcppFza1ZgwYU
-	 4yRO/V2ESY2VK/FKrk3oQwVzTAwHW6zST5zez2AIBiQQbm+bHMkxNGRYlHBTuFDTuC
-	 GJiKpUcW2jgPEAWtcsot+NDyfvxtHEdwY74RYIY4=
+	b=uexZ85DYLzcJuVTgoEpbD+K/pKrDSkA87QkSDbIlsgDV4YxsJS7RQR3svUEXKerSA
+	 0Z+ySvpR9GVM3TZp7c+lESkeBtEwGxWOOKIi5nJT2NaTVsJf4G2I+QUtILjC4SGc0k
+	 sfy0T2+BlHWGOIg5fYr9r41xXr7Mrlz+KThIrvDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388440AbgEMJ4g (ORCPT
+        id S2388397AbgEMJ4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:56:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60108 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:56:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387919AbgEMJ40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:56:26 -0400
+        id S2388353AbgEMJz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:55:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDC35206D6;
-        Wed, 13 May 2020 09:56:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F02D20575;
+        Wed, 13 May 2020 09:55:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363785;
-        bh=Jze8i4rj65vnF9d3Kd8ooqtpOb+CdZklIrrCf6FWc/k=;
+        s=default; t=1589363758;
+        bh=tuV8TrIntQx/Va+AYnfJhtfpfekpiuaiuOMv9B7aI6w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AsWYbkl2L6iVk07dNf2EoCw0JbpnIE3kvaGp9mQb0h9YBn1Vthb+dQ14DNcjsuLqu
-         XiCC3yyoYURzvb82TYcRlr8iUedqXKQs7n5Ny1Me7u9nPojMEyynbt/Fz3ebEl+ofk
-         WRuvCJ1Z4A7q3hJYAVdjA+B67D+TE7CupusMVMM0=
+        b=FezR223wX2w5IGIakI27MdsTlXNCMwHxaX9n2Vs/lYYlWCQgcVKr0h2P/9pxpW2gK
+         KgzPAkTK1v1DKFMCREOdlopAxnr2F5V1XG6x2iXXTzbyhTEINU5PkSmk2jjvsTvJeU
+         VIEoU41fPEf4eWgS3vRwyN8/FTPF3Arn8LxyDOgI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yufen Yu <yuyufen@huawei.com>,
-        Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 115/118] bdi: add a ->dev_name field to struct backing_dev_info
-Date:   Wed, 13 May 2020 11:45:34 +0200
-Message-Id: <20200513094427.983612846@linuxfoundation.org>
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.6 107/118] netfilter: nat: never update the UDP checksum when its 0
+Date:   Wed, 13 May 2020 11:45:26 +0200
+Message-Id: <20200513094427.452324281@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -61,62 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Guillaume Nault <gnault@redhat.com>
 
-[ Upstream commit 6bd87eec23cbc9ed222bed0f5b5b02bf300e9a8d ]
+commit ea64d8d6c675c0bb712689b13810301de9d8f77a upstream.
 
-Cache a copy of the name for the life time of the backing_dev_info
-structure so that we can reference it even after unregistering.
+If the UDP header of a local VXLAN endpoint is NAT-ed, and the VXLAN
+device has disabled UDP checksums and enabled Tx checksum offloading,
+then the skb passed to udp_manip_pkt() has hdr->check == 0 (outer
+checksum disabled) and skb->ip_summed == CHECKSUM_PARTIAL (inner packet
+checksum offloaded).
 
-Fixes: 68f23b89067f ("memcg: fix a crash in wb_workfn when a device disappears")
-Reported-by: Yufen Yu <yuyufen@huawei.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Because of the ->ip_summed value, udp_manip_pkt() tries to update the
+outer checksum with the new address and port, leading to an invalid
+checksum sent on the wire, as the original null checksum obviously
+didn't take the old address and port into account.
+
+So, we can't take ->ip_summed into account in udp_manip_pkt(), as it
+might not refer to the checksum we're acting on. Instead, we can base
+the decision to update the UDP checksum entirely on the value of
+hdr->check, because it's null if and only if checksum is disabled:
+
+  * A fully computed checksum can't be 0, since a 0 checksum is
+    represented by the CSUM_MANGLED_0 value instead.
+
+  * A partial checksum can't be 0, since the pseudo-header always adds
+    at least one non-zero value (the UDP protocol type 0x11) and adding
+    more values to the sum can't make it wrap to 0 as the carry is then
+    added to the wrapped number.
+
+  * A disabled checksum uses the special value 0.
+
+The problem seems to be there from day one, although it was probably
+not visible before UDP tunnels were implemented.
+
+Fixes: 5b1158e909ec ("[NETFILTER]: Add NAT support for nf_conntrack")
+Signed-off-by: Guillaume Nault <gnault@redhat.com>
+Reviewed-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/linux/backing-dev-defs.h | 1 +
- mm/backing-dev.c                 | 5 +++--
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ net/netfilter/nf_nat_proto.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/include/linux/backing-dev-defs.h b/include/linux/backing-dev-defs.h
-index 4fc87dee005ab..2849bdbb3acbe 100644
---- a/include/linux/backing-dev-defs.h
-+++ b/include/linux/backing-dev-defs.h
-@@ -220,6 +220,7 @@ struct backing_dev_info {
- 	wait_queue_head_t wb_waitq;
- 
- 	struct device *dev;
-+	char dev_name[64];
- 	struct device *owner;
- 
- 	struct timer_list laptop_mode_wb_timer;
-diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-index 680e5028d0fc5..3f2480e4c5af3 100644
---- a/mm/backing-dev.c
-+++ b/mm/backing-dev.c
-@@ -938,7 +938,8 @@ int bdi_register_va(struct backing_dev_info *bdi, const char *fmt, va_list args)
- 	if (bdi->dev)	/* The driver needs to use separate queues per device */
- 		return 0;
- 
--	dev = device_create_vargs(bdi_class, NULL, MKDEV(0, 0), bdi, fmt, args);
-+	vsnprintf(bdi->dev_name, sizeof(bdi->dev_name), fmt, args);
-+	dev = device_create(bdi_class, NULL, MKDEV(0, 0), bdi, bdi->dev_name);
- 	if (IS_ERR(dev))
- 		return PTR_ERR(dev);
- 
-@@ -1047,7 +1048,7 @@ const char *bdi_dev_name(struct backing_dev_info *bdi)
+--- a/net/netfilter/nf_nat_proto.c
++++ b/net/netfilter/nf_nat_proto.c
+@@ -68,15 +68,13 @@ static bool udp_manip_pkt(struct sk_buff
+ 			  enum nf_nat_manip_type maniptype)
  {
- 	if (!bdi || !bdi->dev)
- 		return bdi_unknown_name;
--	return dev_name(bdi->dev);
-+	return bdi->dev_name;
- }
- EXPORT_SYMBOL_GPL(bdi_dev_name);
+ 	struct udphdr *hdr;
+-	bool do_csum;
  
--- 
-2.20.1
-
+ 	if (skb_ensure_writable(skb, hdroff + sizeof(*hdr)))
+ 		return false;
+ 
+ 	hdr = (struct udphdr *)(skb->data + hdroff);
+-	do_csum = hdr->check || skb->ip_summed == CHECKSUM_PARTIAL;
++	__udp_manip_pkt(skb, iphdroff, hdr, tuple, maniptype, !!hdr->check);
+ 
+-	__udp_manip_pkt(skb, iphdroff, hdr, tuple, maniptype, do_csum);
+ 	return true;
+ }
+ 
 
 
