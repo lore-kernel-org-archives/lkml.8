@@ -2,146 +2,113 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE1DC2D0FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F613C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA798206D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 243CA206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:16:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="2S7urPYt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ntcO3ZNR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729287AbgEMGNW (ORCPT
+        id S1729443AbgEMGQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 02:13:22 -0400
-Received: from mail-mw2nam10on2052.outbound.protection.outlook.com ([40.107.94.52]:61729
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728712AbgEMGNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 02:13:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cJVvH8In/+G9c4tXCGcTQKc/etKi2w2AnIrUDimLivKI7yRNF/n1sObcH50ckIyuMT26oD/TMMQ15c6w1EQWpZy1SPw37fWi5TWjaX3HpJppaEN+rrhYfMdBsT0e5Z3IthKYIgMlywfAqr+UIxDzHSlj2qBwobyoniA3kb3gI+HRmzJEhZtn2Oge+P7JxHwsWC1CnS+GMXYcnV39ti68TsClURKREwdjA4UMih5ululEJRbxTvVRYLF27fI8pOeXuSHLWc1b2GqcBdYqy05dz3oQ5bLd1pvKck+wB9UeHMdb+RaaiolofIMDpfQ7w3prYrm+dpXZMx8tsGC3u8vtpw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gBFz5SDhd0eEXJjI9Po5h6KJ0d2ZsCkkqaiTuRGK5n8=;
- b=bDlYJgWkZMU1Mkf93uWeIyxLwBS+U1r65x07iQMrBJN7XBvja/6gCrgyTRFpjpY01qfhNryNGz7l/jfNxJ9ZafpvySrqYkhmHMzpWAHrmFHgoCeErC2iCv5/blpqBsDILWYNczjmYEbEAeb4zjeoXfo0/AiL/RL7LtZ8dZTEytJvPpzB3NzkxCznKzmmYon/n6867UV/vA7lAU8Ew4Ox7l+3m3cIJI+tOaXQCjv2YILGgKzcljd2NaPFWx9d5qGBB9II0EFTnKSZcEvvWiEJJAqdNyhKMsJGORNIhaTSBTMzh2eqNZYbVgfA5uLYlo5wzQa44y/LF5NU/z6elVsinQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gBFz5SDhd0eEXJjI9Po5h6KJ0d2ZsCkkqaiTuRGK5n8=;
- b=2S7urPYtsQSleFVXjy+UQvIv/aOkKG9o2fOm5XKPjWk9doPf/qmCc+8sPcYhD10daYxAZVX2wf3iUB0yvMa3bqUr1vrPRDCI9rNb9nEOsxUFT/9U8TD1DuCy5YhMk/zo5QKrMqDwy7iDHIM8RIRR9Tkas2zMtgImSAhvddG0MzM=
-Received: from MN2PR05MB6381.namprd05.prod.outlook.com (2603:10b6:208:d6::24)
- by MN2PR05MB6128.namprd05.prod.outlook.com (2603:10b6:208:d0::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.13; Wed, 13 May
- 2020 06:13:17 +0000
-Received: from MN2PR05MB6381.namprd05.prod.outlook.com
- ([fe80::7803:13e7:2e4d:58ff]) by MN2PR05MB6381.namprd05.prod.outlook.com
- ([fe80::7803:13e7:2e4d:58ff%3]) with mapi id 15.20.3000.016; Wed, 13 May 2020
- 06:13:17 +0000
-From:   Ashwin H <ashwinh@vmware.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     "x86@kernel.org" <x86@kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@kernel.org" <stable@kernel.org>,
-        Srivatsa Bhat <srivatsab@vmware.com>,
-        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        Steven Rostedt <srostedt@vmware.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v4.19.x] make 'user_access_begin()' do 'access_ok()'
-Thread-Topic: [PATCH v4.19.x] make 'user_access_begin()' do 'access_ok()'
-Thread-Index: AQHWKIdKPHhk+fo7OUe7+WKkK8SJkqilhT4AgABhFAA=
-Date:   Wed, 13 May 2020 06:13:17 +0000
-Message-ID: <89DE19F6-4CB0-4324-A630-C8574C8D591C@vmware.com>
-References: <d29f87f3f3abb4e496866253bd170faad976f687.1589305630.git.ashwinh@vmware.com>
- <20200513055548.GA743118@kroah.com>
-In-Reply-To: <20200513055548.GA743118@kroah.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Microsoft-MacOutlook/10.1e.0.191013
-authentication-results: linuxfoundation.org; dkim=none (message not signed)
- header.d=none;linuxfoundation.org; dmarc=none action=none
- header.from=vmware.com;
-x-originating-ip: [49.206.7.228]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 049e9cc0-3f52-4bf3-9bc6-08d7f704ba5b
-x-ms-traffictypediagnostic: MN2PR05MB6128:
-x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR05MB61284193AE9538F3AE969D85CDBF0@MN2PR05MB6128.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:363;
-x-forefront-prvs: 0402872DA1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: tZ1SR9vEYoMmkDMXaHQg58/S1Nk/E+CnDXjfna2ZkScIVlAaYxchGxKUjlh+Hp22R4gUOt6GVww09JGqc1iFI2qQpe/m/XHD+0c9llOc13J06LfHbrkglOwo2PkNih2TK9sOPhSBxHlc0NIKIUg1V/cGbJPS1wzZxMtLGptj00AEfSRE5YKdhbNNRzMT2VqlOssoA0bV0FVhSdzvbk6w1+vZilxVfoJREn77raXH2gS1XsaI8UX82Qsopzp2w0KA8qvJYsz12lEls6Na8IhDLzs/F/Ps2KuJzsgdmECpt4W2pFgVm5nc6lcF3U2fNA06wKKTdhZHxGU2gsKbI1eSejNtgZ4egGjQ4eOscgVRM+PYeg2m99NdIUlF+ERi5LK033AtrZTeqTv7EvmgwTH/Mm/6D2SgBJof/jp8/B0meLK/2MK4SDAqhuKBFlgvFo5FNmh7pRLZrPJCXxCdp7MG9LfB9g03DeBQ28hxA4s4y7rUBjzo7Gm8ehQs0A+yPQiowjr7V2679sEhHsPUo7fsfg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR05MB6381.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(39860400002)(376002)(366004)(346002)(33430700001)(316002)(4326008)(5660300002)(54906003)(66946007)(66446008)(6916009)(2616005)(55236004)(86362001)(33656002)(91956017)(76116006)(8676002)(478600001)(36756003)(6506007)(26005)(33440700001)(64756008)(186003)(8936002)(71200400001)(6486002)(66476007)(66556008)(2906002)(6512007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: S1onAZF74xd06+gd1zKKbYhqVZ1Ci+YFKde3u8dr2MsklEaXqcZbxmff2oH1dUGHOCUTo/gjc5sBj7Gfbpb1w52urb9qtMoV3CMb4HNf8hXvlRZAOEOvGl368JPnImwN68RB4AHj7br0itSZKRL6W/kMhsbRVaJnYQsPX4naCzyFwnPVD1IMl4YDlPWbJKcN33xpIYNdqq8CnwlBVrA3uM8kcd7cRwMaHyMnXGQe/VhJ5rWL8IEjKB3Mc2kH4Wl+29+wCD4efXq+zyNXzMpKusKac/DkZ3PWRk9nNRbXkrEMrAzmhvNcNagA4VhD2dTjTv7dyv2XMylztYxhYwJo++HPzSSfzC/WU1FI5jx+GerPd0TiSpd93qDQAqFGzx5g2X8H0KUMEWGXSLdbjxF4jOZtla9gy79OwX6Q2c1rIioYwREHFameKkjDv8pA+TzsidGuE/XdDv2m8qWvH5dwyfSVQqi4E+pKh05gZLnPSAg=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6BC3DB5552E3ED498BA63811C6FA422C@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 049e9cc0-3f52-4bf3-9bc6-08d7f704ba5b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2020 06:13:17.2961
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eiqiN0qlXXwUXRyHd8wuDt6Glr9TI7nbjZQUaVYq7V60uEog3pArS7A0OaPQcPczZSuEBAulgth20MK/p0pfAw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6128
+        Wed, 13 May 2020 02:16:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729339AbgEMGQd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 02:16:33 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C662CC061A0C;
+        Tue, 12 May 2020 23:16:33 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id m7so6418368plt.5;
+        Tue, 12 May 2020 23:16:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=4P7Jmu1wB5Ll0AGHsZRpAyAy8TKotTUse5s5Zg+TmsY=;
+        b=ntcO3ZNRqNCj3v306aTURqjC4SXZM/QXdc2XY2xkEZc8bGy2d48bEYCC4VJU2IuPam
+         4vLUgbLQogoqUNP3I8cKjsePXH5zCLgDqN4pEYZSDBCAAID03QYsNadYKCYvY/wZFCaL
+         wb5TKHO5oJr8DPTkj/4J4UvzVw2J0GF2PUMb2jtON5b4KNl8p1P0vEAo5V+eUC/fqrJ8
+         kFLF9qhBOqGEHDx6ZS5mOVHGnfWGYeLUltI7BJ02RGJ7FCBM8J953IhuWjHRadAY1c4x
+         1p0L0thKV+Vz12jMAj5ZzlvIaYZZeR5vQs3E5eQZyMZtxF1cPV2meoMo5Wumhlze0pO/
+         Mmhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4P7Jmu1wB5Ll0AGHsZRpAyAy8TKotTUse5s5Zg+TmsY=;
+        b=FUAUbQTITr1ZurJJg5NIrunl95SCDl1kEQioootALAQZGmO3IqyrIqtxMvsJhMQv9i
+         D4buwi4jCP1ZtEYxR+Uu/dh7Q2qquCml1PpHtvIbQ24SNWaAzRGCW/0ysHpyeKOd7tgG
+         uHaFmG7QFunt9EzrVQVgJw4Y9weTRI25SqTiBEXlwTsELzfjaIupIdTpfN0f+09wPkte
+         SgM80Tw1X1XUXGoupaPDrzAeKRcfB25WjUnErncih4Bz3BmheqtM47WZ6864TbF1Gfof
+         K+Mf27XLcKtm8yZS3GZ9GY5D0Yqv8bY3Tw0jrQjMxAjeF9zjitwVQTEaQ8xJMyOmWiVU
+         Bh/A==
+X-Gm-Message-State: AGi0Puas3xmQUT/iUtfep0z+35jm96YxWa1TuE0URparRlITqBh3Sh36
+        W3lv9R5bmuEOQFsT0uP8dg==
+X-Google-Smtp-Source: APiQypIVAe3Y2IFLqVPDfvqPdcx84q6cDZvd4VEecsP+LhfY0VOyh1Zpz2J7wC8zOHvT+2TS1TSRrg==
+X-Received: by 2002:a17:902:ee15:: with SMTP id z21mr22649386plb.71.1589350593171;
+        Tue, 12 May 2020 23:16:33 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4071:5b5:d53:89fb:f860:f992:54ab])
+        by smtp.gmail.com with ESMTPSA id b8sm13262212pft.11.2020.05.12.23.16.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 23:16:32 -0700 (PDT)
+From:   madhuparnabhowmik10@gmail.com
+To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        kuba@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sfr@canb.auug.org.au, frextrite@gmail.com, joel@joelfernandes.org,
+        paulmck@kernel.org, cai@lca.pw,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH] Fix suspicious RCU usage warning
+Date:   Wed, 13 May 2020 11:46:10 +0530
+Message-Id: <20200513061610.22313-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBwYXRjaCBmaXhlcyBDVkUtMjAxOC0yMDY2OSBpbiA0LjE5IHRyZWUuDQoNCu+7v09uIDEz
-LzA1LzIwLCAxMTozNiBBTSwgIkdyZWcgS0giIDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz4g
-d3JvdGU6DQoNCiAgICBPbiBXZWQsIE1heSAxMywgMjAyMCBhdCAwNzoxOToyMUFNICswNTMwLCBh
-c2h3aW4taCB3cm90ZToNCiAgICA+IEZyb206IExpbnVzIFRvcnZhbGRzIDx0b3J2YWxkc0BsaW51
-eC1mb3VuZGF0aW9uLm9yZz4NCiAgICA+IA0KICAgID4gY29tbWl0IDU5NGNjMjUxZmRkMGQyMzFk
-MzQyZDg4YjJmZGZmNGJjNDJmYjA2OTAgdXBzdHJlYW0uDQogICAgPiANCiAgICA+IE9yaWdpbmFs
-bHksIHRoZSBydWxlIHVzZWQgdG8gYmUgdGhhdCB5b3UnZCBoYXZlIHRvIGRvIGFjY2Vzc19vaygp
-DQogICAgPiBzZXBhcmF0ZWx5LCBhbmQgdGhlbiB1c2VyX2FjY2Vzc19iZWdpbigpIGJlZm9yZSBh
-Y3R1YWxseSBkb2luZyB0aGUNCiAgICA+IGRpcmVjdCAob3B0aW1pemVkKSB1c2VyIGFjY2Vzcy4N
-CiAgICA+IA0KICAgID4gQnV0IGV4cGVyaWVuY2UgaGFzIHNob3duIHRoYXQgcGVvcGxlIHRoZW4g
-ZGVjaWRlIG5vdCB0byBkbyBhY2Nlc3Nfb2soKQ0KICAgID4gYXQgYWxsLCBhbmQgaW5zdGVhZCBy
-ZWx5IG9uIGl0IGJlaW5nIGltcGxpZWQgYnkgb3RoZXIgb3BlcmF0aW9ucyBvcg0KICAgID4gc2lt
-aWxhci4gIFdoaWNoIG1ha2VzIGl0IHZlcnkgaGFyZCB0byB2ZXJpZnkgdGhhdCB0aGUgYWNjZXNz
-IGhhcw0KICAgID4gYWN0dWFsbHkgYmVlbiByYW5nZS1jaGVja2VkLg0KICAgID4gDQogICAgPiBJ
-ZiB5b3UgdXNlIHRoZSB1bnNhZmUgZGlyZWN0IHVzZXIgYWNjZXNzZXMsIGhhcmR3YXJlIGZlYXR1
-cmVzIChlaXRoZXINCiAgICA+IFNNQVAgLSBTdXBlcnZpc29yIE1vZGUgQWNjZXNzIFByb3RlY3Rp
-b24gLSBvbiB4ODYsIG9yIFBBTiAtIFByaXZpbGVnZWQNCiAgICA+IEFjY2VzcyBOZXZlciAtIG9u
-IEFSTSkgZG8gZm9yY2UgeW91IHRvIHVzZSB1c2VyX2FjY2Vzc19iZWdpbigpLiAgQnV0DQogICAg
-PiBub3RoaW5nIHJlYWxseSBmb3JjZXMgdGhlIHJhbmdlIGNoZWNrLg0KICAgID4gDQogICAgPiBC
-eSBwdXR0aW5nIHRoZSByYW5nZSBjaGVjayBpbnRvIHVzZXJfYWNjZXNzX2JlZ2luKCksIHdlIGFj
-dHVhbGx5IGZvcmNlDQogICAgPiBwZW9wbGUgdG8gZG8gdGhlIHJpZ2h0IHRoaW5nICh0bSksIGFu
-ZCB0aGUgcmFuZ2UgY2hlY2sgdmlsbCBiZSB2aXNpYmxlDQogICAgPiBuZWFyIHRoZSBhY3R1YWwg
-YWNjZXNzZXMuICBXZSBoYXZlIHdheSB0b28gbG9uZyBhIGhpc3Rvcnkgb2YgcGVvcGxlDQogICAg
-PiB0cnlpbmcgdG8gYXZvaWQgdGhlbS4NCiAgICA+IA0KICAgID4gU2lnbmVkLW9mZi1ieTogTGlu
-dXMgVG9ydmFsZHMgPHRvcnZhbGRzQGxpbnV4LWZvdW5kYXRpb24ub3JnPg0KICAgID4gU2lnbmVk
-LW9mZi1ieTogQXNod2luIEggPGFzaHdpbmhAdm13YXJlLmNvbT4NCiAgICA+IC0tLQ0KICAgID4g
-IGFyY2gveDg2L2luY2x1ZGUvYXNtL3VhY2Nlc3MuaCAgICAgICAgICAgICB8IDExICsrKysrKysr
-KystDQogICAgPiAgZHJpdmVycy9ncHUvZHJtL2k5MTUvaTkxNV9nZW1fZXhlY2J1ZmZlci5jIHwg
-MTUgKysrKysrKysrKysrKy0tDQogICAgPiAgaW5jbHVkZS9saW51eC91YWNjZXNzLmggICAgICAg
-ICAgICAgICAgICAgIHwgIDIgKy0NCiAgICA+ICBrZXJuZWwvY29tcGF0LmMgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgfCAgNiArKy0tLS0NCiAgICA+ICBrZXJuZWwvZXhpdC5jICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgfCAgNiArKy0tLS0NCiAgICA+ICBsaWIvc3RybmNweV9mcm9t
-X3VzZXIuYyAgICAgICAgICAgICAgICAgICAgfCAgOSArKysrKy0tLS0NCiAgICA+ICBsaWIvc3Ry
-bmxlbl91c2VyLmMgICAgICAgICAgICAgICAgICAgICAgICAgfCAgOSArKysrKy0tLS0NCiAgICA+
-ICA3IGZpbGVzIGNoYW5nZWQsIDM4IGluc2VydGlvbnMoKyksIDIwIGRlbGV0aW9ucygtKQ0KICAg
-IA0KICAgIEFyZSB5b3Ugd2FudGluZyB0aGlzIG1lcmdlZCB0byBhIHNwZWNpZmljIHN0YWJsZSBr
-ZXJuZWwgdHJlZT8gIElmIHNvLCB3aHk/DQogICAgDQogICAgdGhhbmtzLA0KICAgIA0KICAgIGdy
-ZWcgay1oDQogICAgDQoNCg==
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+
+This patch fixes the following warning:
+
+=============================
+WARNING: suspicious RCU usage
+5.7.0-rc4-next-20200507-syzkaller #0 Not tainted
+-----------------------------
+net/ipv6/ip6mr.c:124 RCU-list traversed in non-reader section!!
+
+ipmr_new_table() returns an existing table, but there is no table at
+init. Therefore the condition: either holding rtnl or the list is empty
+is used.
+
+Suggested-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+---
+ net/ipv6/ip6mr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/ipv6/ip6mr.c b/net/ipv6/ip6mr.c
+index 65a54d74acc1..fbe282bb8036 100644
+--- a/net/ipv6/ip6mr.c
++++ b/net/ipv6/ip6mr.c
+@@ -98,7 +98,7 @@ static void ipmr_expire_process(struct timer_list *t);
+ #ifdef CONFIG_IPV6_MROUTE_MULTIPLE_TABLES
+ #define ip6mr_for_each_table(mrt, net) \
+ 	list_for_each_entry_rcu(mrt, &net->ipv6.mr6_tables, list, \
+-				lockdep_rtnl_is_held())
++				lockdep_rtnl_is_held() ||  list_empty(&net->ipv6.mr6_tables))
+ 
+ static struct mr_table *ip6mr_mr_table_iter(struct net *net,
+ 					    struct mr_table *mrt)
+-- 
+2.17.1
+
