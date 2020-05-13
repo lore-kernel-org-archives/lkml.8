@@ -2,145 +2,106 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E998AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA9DEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7826D2065C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:38:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="j0p6SIqo"
+	by mail.kernel.org (Postfix) with ESMTP id 6CA8320671
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:39:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589398753;
+	bh=KXxqBrzLeeAqHk4gtdn0I0ZYxOj9nDjdnEZkDmE/AD0=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=G9tlc4W4v1AydEh2g02qAfbZ+SW7aGb+hFUPl9Za6y+gYG2WLOqmXujGBfQ4HLfs/
+	 b+7VctGezQbzp94/BDZYrbDPSzhswh/Wi287oi9QQ9H/C7pJZCWDrRCOk/UcedQrU9
+	 qCQ7EYsgKp3C3DBEA0ujAa/+fBkDUBcRO0313c0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390762AbgEMTij (ORCPT
+        id S2390770AbgEMTjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 15:38:39 -0400
-Received: from mail.efficios.com ([167.114.26.124]:36782 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732626AbgEMTih (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 15:38:37 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id E56E42BD8E7;
-        Wed, 13 May 2020 15:38:35 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id EdVF3ZjFOAPe; Wed, 13 May 2020 15:38:35 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 9B7E32BD8E6;
-        Wed, 13 May 2020 15:38:35 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 9B7E32BD8E6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1589398715;
-        bh=W7Fi27HMs3xcXMs3/c0ZIWP7wGZIeXMC5xcLnPV/8NU=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=j0p6SIqoQm7EwhaBLW+kWxlRbeZrU/USPnDxeLJz/XUDkN/KAQBUK0gQHsleCgnhU
-         CAxECLTsUlEhpDybEy8bCmNp0Rk7cUqJaPCVrfA1Atze+6n+rtNQwUmc9whg+cwSIC
-         kfMPSA8d+5Rgumnrg+Lw12o1+XiTaNcONDVWhmpBDzrSVghKDxBlhA9DogDmTmdZP2
-         5MRwDVGV/NjcXAJZ13KUpQ45WA78iI/V36rsqcUDviTNRayCd2dwt+qjQ0QPv8Th31
-         0cmOJAZMBXLRBel60VLJuahfEt7/Si7GofIIw8ixbzuIC9uWJirsWtYqxMKy7+EEG2
-         Q6SH0cnUVd+yA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id iN0qKPAMr3wt; Wed, 13 May 2020 15:38:35 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 8CBEF2BD939;
-        Wed, 13 May 2020 15:38:35 -0400 (EDT)
-Date:   Wed, 13 May 2020 15:38:35 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Yuchung Cheng <ycheng@google.com>,
-        Jonathan Rajotte-Julien <joraj@efficios.com>
-Message-ID: <341326348.19635.1589398715534.JavaMail.zimbra@efficios.com>
-Subject: [regression] TC_MD5SIG on established sockets
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF76 (Linux)/8.8.15_GA_3928)
-Thread-Index: VOzrMcTkJnQRmnFkM79HnTFxDREPXw==
-Thread-Topic: TC_MD5SIG on established sockets
+        Wed, 13 May 2020 15:39:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55264 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732218AbgEMTjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 15:39:11 -0400
+Received: from localhost.localdomain (pool-96-246-152-186.nycmny.fios.verizon.net [96.246.152.186])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90A7620659;
+        Wed, 13 May 2020 19:39:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589398751;
+        bh=KXxqBrzLeeAqHk4gtdn0I0ZYxOj9nDjdnEZkDmE/AD0=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=icAvLYRsMmmlKalnFgVitIB6YgqA5lAMu+YhIRLXxIIiq3BVLuq9N95zqswodsRBB
+         1iKYOsmVyCZO60BoDYbCKNJEIhejePOe3LB4KNE1PQagmFEiJF8x/qSDynheLtg1Pf
+         3SUpbR9S+ZBoeJkotoGwwocdmG39FBSjNE2dKy/k=
+Message-ID: <1589398747.5098.178.camel@kernel.org>
+Subject: Re: [PATCH v5 1/7] fs: introduce kernel_pread_file* support
+From:   Mimi Zohar <zohar@kernel.org>
+To:     Scott Branden <scott.branden@broadcom.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>
+Date:   Wed, 13 May 2020 15:39:07 -0400
+In-Reply-To: <e1b92047-7003-0615-3d58-1388ec27c78a@broadcom.com>
+References: <20200508002739.19360-1-scott.branden@broadcom.com>
+         <20200508002739.19360-2-scott.branden@broadcom.com>
+         <1589395153.5098.158.camel@kernel.org>
+         <0e6b5f65-8c61-b02e-7d35-b4ae52aebcf3@broadcom.com>
+         <1589396593.5098.166.camel@kernel.org>
+         <e1b92047-7003-0615-3d58-1388ec27c78a@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, 2020-05-13 at 12:18 -0700, Scott Branden wrote:
+> On 2020-05-13 12:03 p.m., Mimi Zohar wrote:
+> > On Wed, 2020-05-13 at 11:53 -0700, Scott Branden wrote:
 
-I am reporting a regression with respect to use of TCP_MD5SIG/TCP_MD5SIG_EXT
-on established sockets. It is observed by a customer.
+> Even if the kernel successfully verified the firmware file signature it
+> would just be wasting its time.  The kernel in these use cases is not always
+> trusted.  The device needs to authenticate the firmware image itself.
 
-This issue is introduced by this commit:
+There are also environments where the kernel is trusted and limits the
+firmware being provided to the device to one which they signed.
 
-commit 721230326891 "tcp: md5: reject TCP_MD5SIG or TCP_MD5SIG_EXT on established sockets"
+> > The device firmware is being downloaded piecemeal from somewhere and
+> > won't be measured?
+> It doesn't need to be measured for current driver needs.
 
-The intent of this commit appears to be to fix a use of uninitialized value in
-tcp_parse_options(). The change introduced by this commit is to disallow setting
-the TCP_MD5SIG{,_EXT} socket options on an established socket.
+Sure the device doesn't need the kernel measuring the firmware, but
+hardened environments do measure firmware.
 
-The justification for this change appears in the commit message:
+> If someone has such need the infrastructure could be added to the kernel
+> at a later date.  Existing functionality is not broken in any way by 
+> this patch series.
 
-   "I believe this was caused by a TCP_MD5SIG being set on live
-    flow.
-    
-    This is highly unexpected, since TCP option space is limited.
-    
-    For instance, presence of TCP MD5 option automatically disables
-    TCP TimeStamp option at SYN/SYNACK time, which we can not do
-    once flow has been established.
-    
-    Really, adding/deleting an MD5 key only makes sense on sockets
-    in CLOSE or LISTEN state."
+Wow!  You're saying that your patch set takes precedence over the
+existing expectations and can break them.
 
-However, reading through RFC2385 [1], this justification does not appear
-correct. Quoting to the RFC:
-
-   "This password never appears in the connection stream, and the actual
-    form of the password is up to the application. It could even change
-    during the lifetime of a particular connection so long as this change
-    was synchronized on both ends"
-
-The paragraph above clearly underlines that changing the MD5 signature of
-a live TCP socket is allowed.
-
-I also do not understand why it would be invalid to transition an established
-TCP socket from no-MD5 to MD5, or transition from MD5 to no-MD5. Quoting the
-RFC:
-
-  "The total header size is also an issue.  The TCP header specifies
-   where segment data starts with a 4-bit field which gives the total
-   size of the header (including options) in 32-byte words.  This means
-   that the total size of the header plus option must be less than or
-   equal to 60 bytes -- this leaves 40 bytes for options."
-
-The paragraph above seems to be the only indication that some TCP options
-cannot be combined on a given TCP socket: if the resulting header size does
-not fit. However, I do not see anything in the specification preventing any
-of the following use-cases on an established TCP socket:
-
-- Transition from no-MD5 to MD5,
-- Transition from MD5 to no-MD5,
-- Changing the MD5 key associated with a socket.
-
-As long as the resulting combination of options does not exceed the available
-header space.
-
-Can we please fix this KASAN report in a way that does not break user-space
-applications expectations about Linux' implementation of RFC2385 ?
-
-Thanks,
-
-Mathieu
-
-[1] RFC2385: https://tools.ietf.org/html/rfc2385
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Mimi
