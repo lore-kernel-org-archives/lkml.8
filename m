@@ -2,201 +2,110 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D07C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 678BDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 883EC2065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:15:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eQW/TUMe"
+	by mail.kernel.org (Postfix) with ESMTP id 0709D2065C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:15:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589393740;
+	bh=DRVgA+6vHSXA9HT1ILwpPT8oWoxmN3Nwo5ztWxLd0w8=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=JeevsNiLIDXltBsWo/wY5FzOmqsbEI0u681Mf9EFS8zYO9BHvVnLf8s9Xjxe5ZJc7
+	 DnE2drAYt+Xtdf4nr/uegT68cN1MZ4mgFU+hkD3UbG49KOfRnB/UasOnaSRWpRvKuW
+	 Usq5obj4n1p9cXYqnn94ES4OGMRfm/cplSA6mTQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390093AbgEMSPJ (ORCPT
+        id S2390101AbgEMSPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 14:15:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43378 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1733175AbgEMSPI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 14:15:08 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 584E3C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 11:15:08 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id u15so649508ljd.3
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 11:15:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Bkr4q6KgnIghiuZ1zTrapdF/Gu24379MOs7c4e1m2Yo=;
-        b=eQW/TUMeuC16ZZo/W86VPQ7vAGrBb+8hrhuKb1qKAsK6M7M+owMmBxIHkFSmhNOMHI
-         xTpqefWhiMZ/TV2a1WFk7Zb/+AHbxiTbYBb6EXnJ/ilQU+TVIomYKuUT7cvMoL51clKY
-         FtND/mYn38cocMoLwXTSlLhDKvPQEA3v6+I1j1Q5/N8Vim0OBicIIgBYxrlbKTNvvedz
-         9DyZpM9uE/vWXvbur8w905LQTxgj6uQ1W38SnI6S3SCQWNb+G7FV6iFIuWhg0N6ViGhv
-         Evey2/hgtPkakdKiQp+6wLVAYS2/2WpEmDsXgp2+Xp0wpkXyoqgZ0/NodL9jIAMw1wvB
-         j1YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Bkr4q6KgnIghiuZ1zTrapdF/Gu24379MOs7c4e1m2Yo=;
-        b=I/9qSVa63g8JEY5igS3I5mY3Tv4bCT8LQA8ueFRyj+ZTr/kDCIlQG7YcABkBGKsIIs
-         BPBI8cp1dvN2ZNVZKLfhRXeZoQB+pr2lobWy5I4/1MqkPDsUTUhFxB7cCojVv9g9vQLP
-         170GcE+u1h8VTns9MtO6PQsDf+UJKumvtdauZc2daqfroUBgwW+G04M8tSXyXAxjzDK6
-         o5Pq+rjVLEABwFrYYU0svGb9Uh6x78eMrLFdosUGQbaNieUxFQnoaVlPTtlspULgjv9S
-         0TuR8/qL5gaLr8dZ2y7JMl+n9wEuLI8tJ/NvQ/y2ZZnDGxOicU8kWdE1x2AjbFxTbg6g
-         89jA==
-X-Gm-Message-State: AOAM531Mdsgo7BtjFxMnrd9ZepVsCOoIWhTlgf686GXkjn4nUfIMYRVe
-        kPngQIBiRndYACbwmiPWZQqcwl2s8wZZVTOOqdY5Ng==
-X-Google-Smtp-Source: ABdhPJy3XT5ZxT6sKZtaU1bh/J3kW03+8WYfZ0HkT0FrgmtUHBjJkSNcX7SDYsr3UbhBtzBNXRn3W/XDywUzvZFaTWM=
-X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr193118ljm.165.1589393706623;
- Wed, 13 May 2020 11:15:06 -0700 (PDT)
+        Wed, 13 May 2020 14:15:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59430 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733175AbgEMSPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 14:15:38 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3842020659;
+        Wed, 13 May 2020 18:15:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589393738;
+        bh=DRVgA+6vHSXA9HT1ILwpPT8oWoxmN3Nwo5ztWxLd0w8=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=B4HiprMPYKY2LGIXSa2C3vRE/sysCHRAaJSHwpyKXRu0YO6jGfjBkXNbgYGNOZzNV
+         JrhxliQAfAZhA9Qv3L99pwbUh2HPLZIcPO6OWlwRDn7WeMlzFLXdHdtldjKMl0HAPA
+         6Bgh3UG+ARH+NElpOIf30gMishdIvXmEnd+RprD8=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 5B59E352352C; Wed, 13 May 2020 11:15:37 -0700 (PDT)
+Date:   Wed, 13 May 2020 11:15:37 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Josh Triplett <josh@joshtriplett.org>
+Subject: Re: [PATCH 00/10] rcu: Allow a CPU to leave and reenter NOCB state
+Message-ID: <20200513181537.GS2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200513164714.22557-1-frederic@kernel.org>
 MIME-Version: 1.0
-References: <20200513094351.100352960@linuxfoundation.org>
-In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 13 May 2020 23:44:54 +0530
-Message-ID: <CA+G9fYtM7ajECL6tJySrkSH2X-UG_S33cxDt18y5-zE1MUHbjQ@mail.gmail.com>
-Subject: Re: [PATCH 4.19 00/48] 4.19.123-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513164714.22557-1-frederic@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020 at 15:17, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.123 release.
-> There are 48 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 15 May 2020 09:41:20 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.123-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Wed, May 13, 2020 at 06:47:04PM +0200, Frederic Weisbecker wrote:
+> This is a necessary step toward making nohz_full controllable through
+> cpuset. Next step should be to allow a CPU to be nocb even if it wasn't
+> part of the nocb set on boot.
+> 
+> The core design of this set is mostly based on suggestions from Paul
+> of course.
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/frederic/linux-dynticks.git
+> 	rcu/nohz
+> 
+> HEAD: 31cb4ee9da4e9cc6314498ff22d83f0d872b1a88
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Very cool!!!  A few comments on individual commits on a quick first
+scan, and more later.
 
-NOTE:
-While running LTP sched on stable-rc 4.19 branch kernel on arm64 hikey devi=
-ce.
-Thermal alarm triggered and followed by kernel warnings and Internal error:
-https://lore.kernel.org/stable/CA+G9fYvo2yUVicoZ7fOYf8=3DQxTtS8nW-Z2JGD4iLt=
-U61E6xNdw@mail.gmail.com/T/#u
+							Thanx, Paul
 
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.19.123-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: 6d5c161fb73d8e3d1a5a0efcf2d089b939a1e165
-git describe: v4.19.122-49-g6d5c161fb73d
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.122-49-g6d5c161fb73d
-
-No regressions (compared to build v4.19.122)
-
-No fixes (compared to build v4.19.122)
-
-Ran 32876 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* kselftest/networking
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-hugetlb-tests
-* ltp-ipc-tests
-* ltp-mm-tests
-* ltp-sched-tests
-* perf
-* v4l2-compliance
-* kvm-unit-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-io-tests
-* ltp-math-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-native/networking
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-* kselftest-vsyscall-mode-none/networking
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+> Thanks,
+> 	Frederic
+> ---
+> 
+> Frederic Weisbecker (10):
+>       rcu: Directly lock rdp->nocb_lock on nocb code entrypoints
+>       rcu: Use direct rdp->nocb_lock operations on local calls
+>       rcu: Make locking explicit in do_nocb_deferred_wakeup_common()
+>       rcu: Implement rcu_segcblist_is_offloaded() config dependent
+>       rcu: Remove useless conditional nocb unlock
+>       rcu: Make nocb_cb kthread parkable
+>       rcu: Temporarily assume that nohz full CPUs might not be NOCB
+>       rcu: Allow to deactivate nocb on a CPU
+>       rcu: Allow to re-offload a CPU that used to be nocb
+>       rcu: Nocb (de)activate through sysfs
+> 
+> 
+>  include/linux/rcu_segcblist.h |   2 +
+>  include/linux/rcupdate.h      |   4 ++
+>  kernel/cpu.c                  |  23 +++++++
+>  kernel/rcu/rcu_segcblist.c    |   6 +-
+>  kernel/rcu/rcu_segcblist.h    |   8 ++-
+>  kernel/rcu/tree.c             |  24 +++----
+>  kernel/rcu/tree.h             |   2 +-
+>  kernel/rcu/tree_plugin.h      | 149 ++++++++++++++++++++++++++++++++++--------
+>  8 files changed, 172 insertions(+), 46 deletions(-)
