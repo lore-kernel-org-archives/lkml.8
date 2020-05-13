@@ -2,200 +2,58 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E357C2D0FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A445CCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6653221FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:35:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Zna+bq8f"
+	by mail.kernel.org (Postfix) with ESMTP id 84C88221FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:35:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388618AbgEMNfh (ORCPT
+        id S2388622AbgEMNfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:35:37 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:58687 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387607AbgEMNdF (ORCPT
+        Wed, 13 May 2020 09:35:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388599AbgEMNff (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:33:05 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200513133302euoutp01ec0862913406e399e4ec4a125fe44f5d~OmcNWpfra2150421504euoutp010
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 13:33:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200513133302euoutp01ec0862913406e399e4ec4a125fe44f5d~OmcNWpfra2150421504euoutp010
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1589376782;
-        bh=Y3Ut1ToGHUzDuHty6PKvQvWWCbWEQibieCAmIQZoNYY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zna+bq8f4F1yKKhjhy6IiKT5tqvfOylN6Dd+VCCoc4cc0VYJ/OUvdXL5UZg4eW4qE
-         MkATLuCZh/xvTkTvw1FZao3M0x3Pjbm9pI6bm1NhOHz2zHuF3idsqc1MdHQG9yeSVM
-         ZBdpkiuopSsDwOh4uzRdmmxgYF94e+LTbzmGaVtE=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200513133302eucas1p2d79ae1c80ae6d1dba237b1505033373b~OmcM65dzq0359403594eucas1p2T;
-        Wed, 13 May 2020 13:33:02 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id DF.C8.60698.E07FBBE5; Wed, 13
-        May 2020 14:33:02 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200513133301eucas1p28c059d25e488ed5ec10feb8f414a1af2~OmcMooeKf2972529725eucas1p26;
-        Wed, 13 May 2020 13:33:01 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200513133301eusmtrp11a8f6059fe0dd13159bee8d29db5dee6~OmcMn5gIh1011910119eusmtrp1y;
-        Wed, 13 May 2020 13:33:01 +0000 (GMT)
-X-AuditID: cbfec7f5-a29ff7000001ed1a-b8-5ebbf70edf04
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id B3.37.07950.D07FBBE5; Wed, 13
-        May 2020 14:33:01 +0100 (BST)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200513133301eusmtip1afa7a07517696ee6065475ad21a65ac3~OmcL-x7aM0693306933eusmtip17;
-        Wed, 13 May 2020 13:33:01 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Russell King <linux@armlinux.org.uk>
-Subject: [PATCH v5 08/38] drm: armada: fix common struct sg_table related
- issues
-Date:   Wed, 13 May 2020 15:32:15 +0200
-Message-Id: <20200513133245.6408-8-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200513133245.6408-1-m.szyprowski@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WSfSxVYRzHe845997j5tpxKU9U5m610bwN22leqq21kz968Yc/VHRwhsV1
-        dy/CWq5ECCOzMCFZyut1s1t5u2/lZsr7hCimbJiX8rZaqXsd9N/n932+3+f727MHR4VKji0e
-        JY5jpGI6WsTlY6qun33OFpttwW5KlQWZ29uNkM3FTRzyr6oAJYfXl7nk87q3CFmp9ibXhqcR
-        UjkzwiGHWsu4pK6oA5ANbyZ5pHblK+e0OVVfXg+ooZEBlOrYqMSolxtTHOrLfQNCvahOoT5t
-        zaBU4WgNoNrG5Fwqr6UWUKvKo5f2B/F9wpnoqARG6up3nR/5aFCJSHIOJS4YUoEcjFtnAzMc
-        Ep6wJX8MzQZ8XEg8A7C17x6XHdYAVKvuIiaXkFgFUN4YtJso38jaMdUA+EFXwdtLbD4u2E5w
-        CXeYvZjNNbE1kQ7gu1xzkwklNAjMWFrYNlkRAfB9jgIzMUYcg5mzGp6JBYQPnCxRoGydPaxT
-        aLbZjPCF8xNqzHQRJDp5sLJEi7Cms7C6aJ7LshWcN7TwWD4MewpzdgJpAE73NvDYIQfAoTvF
-        gHV5w4neX8Y0btzPETa1urLyGZg18BQzyZCwgKOLliYZNeID1UOUlQUwM0PIuo/DUkPjXq22
-        f3Bnfwqqqyo47AvpAdSq+9F8YF/6v6wSgFpgw8TLYiIYmYeYuekio2Nk8eIIl7DYGCUw/qSe
-        LcP6K9D5O1QHCByIzAVTH9uChRw6QZYUowMQR0XWggtNRkkQTiclM9LYEGl8NCPTATscE9kI
-        PKrmrgmJCDqOucEwEka6e4rgZrZyYOkeR7a/tm3lL59XJHZp/LfaQ+0DLjZ4+nv5epR5VU2K
-        6+0CVujxcuUfidstxzwnsVCb9jngambghF7fnfIt+VLfj33TB5ynHMSSk70pWLzDKfURW8V3
-        hVVeSEH65Sup55aKZjNg+3xzmH7h9twG9SREfZA+0b1c5Tfd1y6XBIowWSTt7oRKZfQ/Tb2g
-        k0UDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCIsWRmVeSWpSXmKPExsVy+t/xu7q833fHGVxptrDoPXeSyWLjjPWs
-        Fv+3TWS2uPL1PZvFytVHmSwW7Le2+HLlIZPFpsfXWC0u75rDZnFo6l5Gi7VH7rJbHPzwhNWB
-        x2PNvDWMHpevXWT22PttAYvH9m8PWD3udx9n8ti8pN7j9r/HzB6Tbyxn9Nh9s4HNo2/LKkaP
-        z5vkArij9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX07WxSUnMyy1KL9O0S
-        9DLmXtrEVNAjWfH6eCNjA+MtkS5GTg4JAROJed862boYuTiEBJYySqya94kRIiEjcXJaAyuE
-        LSzx51oXVNEnRomuhinMIAk2AUOJrrcQCRGBTkaJad0f2UEcZoFjTBILf31kAakSFgiQ+Ntx
-        gw3EZhFQleh4doAdxOYVsJG4O3MDM8QKeYnVGw6A2ZwCthKv7uwH6xUSyJfYu3gf2wRGvgWM
-        DKsYRVJLi3PTc4uN9IoTc4tL89L1kvNzNzECY2TbsZ9bdjB2vQs+xCjAwajEw2txa3ecEGti
-        WXFl7iFGCQ5mJRFev/VAId6UxMqq1KL8+KLSnNTiQ4ymQEdNZJYSTc4Hxm9eSbyhqaG5haWh
-        ubG5sZmFkjhvh8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQZGr+nS7pItDGyZTr/fMJxsNlnvU/rh
-        2edzvLXGD0WuqF38e/G+3upTj+qcZctk7FXOZRidqXrlntzRI7WF24Z7YQrD7xN7pXmDAy+2
-        Rrcyb311SeJk+QG+fT+OXH5ht7WWx+fDx/ZlG9TqTmhvd1Ddy5L9VUpmv1R39k/1JuFw8xxu
-        34/tNb+UWIozEg21mIuKEwFSansSpwIAAA==
-X-CMS-MailID: 20200513133301eucas1p28c059d25e488ed5ec10feb8f414a1af2
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200513133301eucas1p28c059d25e488ed5ec10feb8f414a1af2
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200513133301eucas1p28c059d25e488ed5ec10feb8f414a1af2
-References: <20200513132114.6046-1-m.szyprowski@samsung.com>
-        <20200513133245.6408-1-m.szyprowski@samsung.com>
-        <CGME20200513133301eucas1p28c059d25e488ed5ec10feb8f414a1af2@eucas1p2.samsung.com>
+        Wed, 13 May 2020 09:35:35 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E51B8C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:35:34 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jYrXg-0003nv-N2; Wed, 13 May 2020 15:35:24 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 25DB8100605; Wed, 13 May 2020 15:35:23 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Balbir Singh <sblbir@amazon.com>, linux-kernel@vger.kernel.org
+Cc:     jpoimboe@redhat.com, tony.luck@intel.com, keescook@chromium.org,
+        benh@kernel.crashing.org, x86@kernel.org, dave.hansen@intel.com,
+        thomas.lendacky@amd.com, Balbir Singh <sblbir@amazon.com>
+Subject: Re: [PATCH v6 1/6] arch/x86/kvm: Refactor l1d flush lifecycle management
+In-Reply-To: <20200510014803.12190-2-sblbir@amazon.com>
+References: <20200510014803.12190-1-sblbir@amazon.com> <20200510014803.12190-2-sblbir@amazon.com>
+Date:   Wed, 13 May 2020 15:35:23 +0200
+Message-ID: <87o8qs2c10.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
-returns the number of the created entries in the DMA address space.
-However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
-dma_unmap_sg must be called with the original number of the entries
-passed to the dma_map_sg().
+Balbir Singh <sblbir@amazon.com> writes:
 
-struct sg_table is a common structure used for describing a non-contiguous
-memory buffer, used commonly in the DRM and graphics subsystems. It
-consists of a scatterlist with memory pages and DMA addresses (sgl entry),
-as well as the number of scatterlist entries: CPU pages (orig_nents entry)
-and DMA mapped pages (nents entry).
+> Subject: [PATCH v6 1/6] arch/x86/kvm: Refactor....
 
-It turned out that it was a common mistake to misuse nents and orig_nents
-entries, calling DMA-mapping functions with a wrong number of entries or
-ignoring the number of mapped entries returned by the dma_map_sg()
-function.
+arch/x86/kvm: is really not the correct subsystem prefix...
 
-To avoid such issues, lets use a common dma-mapping wrappers operating
-directly on the struct sg_table objects and use scatterlist page
-iterators where possible. This, almost always, hides references to the
-nents and orig_nents entries, making the code robust, easier to follow
-and copy/paste safe.
-
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
-For more information, see '[PATCH v5 00/38] DRM: fix struct sg_table nents
-vs. orig_nents misuse' thread:
-https://lore.kernel.org/linux-iommu/20200513132114.6046-1-m.szyprowski@samsung.com/T/
----
- drivers/gpu/drm/armada/armada_gem.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpu/drm/armada/armada_gem.c b/drivers/gpu/drm/armada/armada_gem.c
-index 976685f..0d61da5 100644
---- a/drivers/gpu/drm/armada/armada_gem.c
-+++ b/drivers/gpu/drm/armada/armada_gem.c
-@@ -395,7 +395,7 @@ int armada_gem_pwrite_ioctl(struct drm_device *dev, void *data,
- 
- 		mapping = dobj->obj.filp->f_mapping;
- 
--		for_each_sg(sgt->sgl, sg, count, i) {
-+		for_each_sgtable_sg(sgt, sg, i) {
- 			struct page *page;
- 
- 			page = shmem_read_mapping_page(mapping, i);
-@@ -407,8 +407,8 @@ int armada_gem_pwrite_ioctl(struct drm_device *dev, void *data,
- 			sg_set_page(sg, page, PAGE_SIZE, 0);
- 		}
- 
--		if (dma_map_sg(attach->dev, sgt->sgl, sgt->nents, dir) == 0) {
--			num = sgt->nents;
-+		if (dma_map_sgtable(attach->dev, sgt, dir, 0)) {
-+			num = count;
- 			goto release;
- 		}
- 	} else if (dobj->page) {
-@@ -418,7 +418,7 @@ int armada_gem_pwrite_ioctl(struct drm_device *dev, void *data,
- 
- 		sg_set_page(sgt->sgl, dobj->page, dobj->obj.size, 0);
- 
--		if (dma_map_sg(attach->dev, sgt->sgl, sgt->nents, dir) == 0)
-+		if (dma_map_sgtable(attach->dev, sgt, dir, 0))
- 			goto free_table;
- 	} else if (dobj->linear) {
- 		/* Single contiguous physical region - no struct page */
-@@ -449,11 +449,11 @@ static void armada_gem_prime_unmap_dma_buf(struct dma_buf_attachment *attach,
- 	int i;
- 
- 	if (!dobj->linear)
--		dma_unmap_sg(attach->dev, sgt->sgl, sgt->nents, dir);
-+		dma_unmap_sgtable(attach->dev, sgt, dir, 0);
- 
- 	if (dobj->obj.filp) {
- 		struct scatterlist *sg;
--		for_each_sg(sgt->sgl, sg, sgt->nents, i)
-+		for_each_sgtable_sg(sgt, sg, i)
- 			put_page(sg_page(sg));
- 	}
- 
--- 
-1.9.1
-
+I'll fix it up this time.
