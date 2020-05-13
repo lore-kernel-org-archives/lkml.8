@@ -2,31 +2,32 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A10EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10198C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76EA620794
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 015D620659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:25:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="AGAtow/+"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="WKFWqdKG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729060AbgEMVZG (ORCPT
+        id S1729092AbgEMVZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 17:25:06 -0400
-Received: from vps.xff.cz ([195.181.215.36]:33716 "EHLO vps.xff.cz"
+        Wed, 13 May 2020 17:25:09 -0400
+Received: from vps.xff.cz ([195.181.215.36]:33848 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728519AbgEMVY6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 17:24:58 -0400
+        id S1728930AbgEMVZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 17:25:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1589405095; bh=vP1dm4GPwt9nOrSXUHYZrlnzV+QSD/t/nvTNldUmjRI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=AGAtow/+Ns2CtpuJASys9AiJwXRyXtcsBjbwnwXu4bag20du1XxyFuFHDrpYchGlo
-         NiC7NU6/u9eN7M+v2qu6Bz1jd4pU4R44lCUgURa6vC8Vuzo0KD7k4xgwHXncLQOgGX
-         t4b4TbkM6HRmS9Jm72MKnKTw/OkLwGm9ILrmaHrE=
+        t=1589405096; bh=EGlnhGF9HFzfhNynA3a7K3hCeMUdwmy+scXIROM79hs=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=WKFWqdKGe/1UtrdK8Qxu+U/Xkc69HyrKL129zl+D9hMucBoLVpby0z4N0/Vbk8fDh
+         kEvdYTTsJ3AOFUqTT7BM0+9kl41DX7U+3Z+SCwTaWFsoDZeJ8ECtvnYR4nom3k6sEz
+         OIz6p1lX9YD5uOUqYBVVqzYbue4KiGI32nqhh5HA=
 From:   Ondrej Jirman <megous@megous.com>
 To:     linux-sunxi@googlegroups.com,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -38,15 +39,16 @@ To:     linux-sunxi@googlegroups.com,
         Chen-Yu Tsai <wens@csie.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Icenowy Zheng <icenowy@aosc.io>
-Cc:     Ondrej Jirman <megous@megous.com>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Samuel Holland <samuel@sholland.org>,
         Martijn Braam <martijn@brixit.nl>, Luca Weiss <luca@z3ntu.xyz>,
-        Bhushan Shah <bshah@kde.org>
-Subject: [PATCH v3 0/5] Add support for PinePhone LCD panel
-Date:   Wed, 13 May 2020 23:24:46 +0200
-Message-Id: <20200513212451.1919013-1-megous@megous.com>
+        Bhushan Shah <bshah@kde.org>, Ondrej Jirman <megous@megous.com>
+Subject: [PATCH v3 4/5] arm64: dts: sun50i-a64-pinephone: Enable LCD support on PinePhone
+Date:   Wed, 13 May 2020 23:24:50 +0200
+Message-Id: <20200513212451.1919013-5-megous@megous.com>
+In-Reply-To: <20200513212451.1919013-1-megous@megous.com>
+References: <20200513212451.1919013-1-megous@megous.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,84 +56,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset adds support for the LCD panel of PinePhone.
+From: Icenowy Zheng <icenowy@aosc.io>
 
-The first 3 patches are for the panel itself, and the last 2 patches are
-for enabling it on PinePhone.
+PinePhone uses PWM backlight and a XBD599 LCD panel over DSI for
+display.
 
-I've tested this on PinePhone 1.0 and 1.2.
+Backlight levels curve was optimized by Martijn Braam using a
+lux meter.
 
-Please take a look.
+Add its device nodes.
 
-thank you and regards,
-  Ondrej Jirman
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Martijn Braam <martijn@brixit.nl>
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+---
+ .../allwinner/sun50i-a64-pinephone-1.1.dts    | 19 ++++++++++
+ .../dts/allwinner/sun50i-a64-pinephone.dtsi   | 35 +++++++++++++++++++
+ 2 files changed, 54 insertions(+)
 
-
-Changes in v3:
-- Panel driver renamed to the name of the LCD controller
-- Re-organize the driver slightly to more easily support more panels
-  based on the same controller.
-- Add patch to enable the touchscreen to complete the LCD support
-  on PinePhone.
-- Dropped the "DSI fix" patch (the driver seems to work for me without it)
-- Improved brightness levels handling:
-  - PinePhone 1.0 uses default levels generated by the driver
-  - On PinePhone 1.1 duty cycles < 20% lead to black screen, so
-    default levels can't be used. Martijn Braam came up with a
-    list of duty cycle values that lead to perception of linear
-    brigtness level <-> light intensity on PinePhone 1.1
-- There was some feedback on v2 about this being similar to st7701.
-  It's only similar in name. Most of the "user commands" are different,
-  so I opted to keep this in a new driver instead of creating st770x.
-  
-  Anyone who likes to check the differences, here are datasheets:
-
-  - https://megous.com/dl/tmp/ST7703_DS_v01_20160128.pdf
-  - https://megous.com/dl/tmp/ST7701.pdf
-
-Changes in v2:
-- DT Example fix.
-- DT Format fix.
-- Raised copyright info to 2020.
-- Sort panel operation functions.
-- Sort inclusion.
-
-
--- For phone owners: --
-
-There's an open question on how to set the backlight brightness values
-on post 1.0 revision phone, since lower duty cycles (< 10-20%) lead
-to backlight being black. It would be nice if more people can test
-the various backlight levels on 1.1 and 1.2 revision with this change
-in dts:
-
-       brightness-levels = <0 1000>;
-       num-interpolated-steps = <1000>;
-
-and report at what brightness level the backlight turns on. So far it
-seems this has a wide range. Lowest useable duty cycle for me is ~7%
-on 1.2 and for Martijn ~20% on 1.1.
-
-Icenowy Zheng (4):
-  dt-bindings: vendor-prefixes: Add Xingbangda
-  dt-bindings: panel: Add binding for Xingbangda XBD599 panel
-  drm: panel: Add Xingbangda XBD599 panel (ST7703 controller)
-  arm64: dts: sun50i-a64-pinephone: Enable LCD support on PinePhone
-
-Ondrej Jirman (1):
-  arm64: dts: sun50i-a64-pinephone: Add touchscreen support
-
- .../display/panel/sitronix,st7703.yaml        |  63 +++
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- .../allwinner/sun50i-a64-pinephone-1.1.dts    |  19 +
- .../dts/allwinner/sun50i-a64-pinephone.dtsi   |  54 +++
- drivers/gpu/drm/panel/Kconfig                 |  10 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- drivers/gpu/drm/panel/panel-sitronix-st7703.c | 386 ++++++++++++++++++
- 7 files changed, 535 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/sitronix,st7703.yaml
- create mode 100644 drivers/gpu/drm/panel/panel-sitronix-st7703.c
-
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
+index 06a775c41664..3e99a87e9ce5 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone-1.1.dts
+@@ -9,3 +9,22 @@ / {
+ 	model = "Pine64 PinePhone Braveheart (1.1)";
+ 	compatible = "pine64,pinephone-1.1", "allwinner,sun50i-a64";
+ };
++
++&backlight {
++	power-supply = <&reg_ldo_io0>;
++	/*
++	 * PWM backlight circuit on this PinePhone revision was changed since
++	 * 1.0, and the lowest PWM duty cycle that doesn't lead to backlight
++	 * being off is around 20%. Duty cycle for the lowest brightness level
++	 * also varries quite a bit between individual boards, so the lowest
++	 * value here was chosen as a safe default.
++	 */
++	brightness-levels = <
++		774  793  814  842
++		882  935  1003 1088
++		1192 1316 1462 1633
++		1830 2054 2309 2596
++		2916 3271 3664 4096>;
++	num-interpolated-steps = <50>;
++	default-brightness-level = <400>;
++};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+index cefda145c3c9..e60b57f8ac14 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+@@ -16,6 +16,13 @@ aliases {
+ 		serial0 = &uart0;
+ 	};
+ 
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
++		enable-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
++		/* Backlight configuration differs per PinePhone revision. */
++	};
++
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
+@@ -84,6 +91,30 @@ &dai {
+ 	status = "okay";
+ };
+ 
++&de {
++	status = "okay";
++};
++
++&dphy {
++	status = "okay";
++};
++
++&dsi {
++	vcc-dsi-supply = <&reg_dldo1>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	status = "okay";
++
++	panel@0 {
++		compatible = "xingbangda,xbd599", "sitronix,st7703";
++		reg = <0>;
++		reset-gpios = <&pio 3 23 GPIO_ACTIVE_LOW>; /* PD23 */
++		iovcc-supply = <&reg_dldo2>;
++		vcc-supply = <&reg_ldo_io0>;
++		backlight = <&backlight>;
++	};
++};
++
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -188,6 +219,10 @@ &r_pio {
+ 	 */
+ };
+ 
++&r_pwm {
++	status = "okay";
++};
++
+ &r_rsb {
+ 	status = "okay";
+ 
 -- 
 2.26.2
 
