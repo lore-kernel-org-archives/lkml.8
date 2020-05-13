@@ -2,52 +2,54 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F14D9CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDD5CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D13A720753
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7120A23128
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:46:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363174;
-	bh=jpdaPpHao6OeULRHplp+4KkK02unGY3r6eZUySCwHaM=;
+	s=default; t=1589363178;
+	bh=329AiQM0KavVaWXkv+g4W1c7NSgAQWjHdkTzidhBu5c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yH9YHPDfEl4xtvTe5OL+bkpdRxbWnwpwA3NMrRpdKdN9Bq7O5OGwOlzgpq+5Ns4XA
-	 fesITyUkU60lGgfeQX+UmUXs+qX9Xbar+nxtjLkklto8eZw6cHZPH57kKHb8KXzLFM
-	 ty7WjslfMo/6XA/RDgclufIkmaW1ZlA//UFjPJh8=
+	b=X8sNyiMI18brsQWGGpLHD7LxUOR072ac90u/putOXLkYEra3hXXs7UkAKn8h4blC1
+	 col2W9Dd158sx4OdEvnWBmsTrZCEaJ0yDockQZJb4i/3bd11ZZ0/54qqoiC1TYMtLm
+	 O3GDbrU4v7DHGjzGQZvBSnNq2822sEeaQaCkTHIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732594AbgEMJqO (ORCPT
+        id S1732604AbgEMJqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:46:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43452 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:46:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726492AbgEMJqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:46:09 -0400
+        id S1732595AbgEMJqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:46:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67F8020740;
-        Wed, 13 May 2020 09:46:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8973720740;
+        Wed, 13 May 2020 09:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363168;
-        bh=jpdaPpHao6OeULRHplp+4KkK02unGY3r6eZUySCwHaM=;
+        s=default; t=1589363174;
+        bh=329AiQM0KavVaWXkv+g4W1c7NSgAQWjHdkTzidhBu5c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WoWofrOCEaxW0E7UULadyUuknM/4CGjZ2nQjMObusz0is/FXaY8Q0VGG/oe0eK3kj
-         u3EUgCmBjI3mtrE9QXrOC7U0WvD+PEjoUiGxO0k+CxyTudgV79fYsE4WI1dwQlC8sr
-         7+fiSXfy9q7GviOhSifCzEa4OSGVuYTqrohcW1m0=
+        b=W1UHIExTP++gCsm86MDaclOM60fGbGj2YjEV285Wg3lHOTV9lnPVQSAF6y0nJ3TH9
+         uOQct7+jQIifPRj7h1SbLlFUbobjEK45PabPFQNhrGC1MBB743T8ZVMM2KSq3iJtkQ
+         Tr9/h3SCRTc9gSG0/ieE/yRFV94+sRX4mZf4Dvns=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.19 14/48] net/mlx5: Fix forced completion access non initialized command entry
-Date:   Wed, 13 May 2020 11:44:40 +0200
-Message-Id: <20200513094354.999572106@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Zanussi <zanussi@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 02/48] tracing/kprobes: Fix a double initialization typo
+Date:   Wed, 13 May 2020 11:44:28 +0200
+Message-Id: <20200513094352.173810992@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
 References: <20200513094351.100352960@linuxfoundation.org>
@@ -60,46 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Moshe Shemesh <moshe@mellanox.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit f3cb3cebe26ed4c8036adbd9448b372129d3c371 ]
+[ Upstream commit dcbd21c9fca5e954fd4e3d91884907eb6d47187e ]
 
-mlx5_cmd_flush() will trigger forced completions to all valid command
-entries. Triggered by an asynch event such as fast teardown it can
-happen at any stage of the command, including command initialization.
-It will trigger forced completion and that can lead to completion on an
-uninitialized command entry.
+Fix a typo that resulted in an unnecessary double
+initialization to addr.
 
-Setting MLX5_CMD_ENT_STATE_PENDING_COMP only after command entry is
-initialized will ensure force completion is treated only if command
-entry is initialized.
+Link: http://lkml.kernel.org/r/158779374968.6082.2337484008464939919.stgit@devnote2
 
-Fixes: 73dd3a4839c1 ("net/mlx5: Avoid using pending command interface slots")
-Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
-Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Tom Zanussi <zanussi@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: c7411a1a126f ("tracing/kprobe: Check whether the non-suffixed symbol is notrace")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/cmd.c |    2 +-
+ kernel/trace/trace_kprobe.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-@@ -862,7 +862,6 @@ static void cmd_work_handler(struct work
- 	}
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index 65b4e28ff425f..c45b017bacd47 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -538,7 +538,7 @@ static bool __within_notrace_func(unsigned long addr)
  
- 	cmd->ent_arr[ent->idx] = ent;
--	set_bit(MLX5_CMD_ENT_STATE_PENDING_COMP, &ent->state);
- 	lay = get_inst(cmd, ent->idx);
- 	ent->lay = lay;
- 	memset(lay, 0, sizeof(*lay));
-@@ -884,6 +883,7 @@ static void cmd_work_handler(struct work
+ static bool within_notrace_func(struct trace_kprobe *tk)
+ {
+-	unsigned long addr = addr = trace_kprobe_address(tk);
++	unsigned long addr = trace_kprobe_address(tk);
+ 	char symname[KSYM_NAME_LEN], *p;
  
- 	if (ent->callback)
- 		schedule_delayed_work(&ent->cb_timeout_work, cb_timeout);
-+	set_bit(MLX5_CMD_ENT_STATE_PENDING_COMP, &ent->state);
- 
- 	/* Skip sending command to fw if internal error */
- 	if (pci_channel_offline(dev->pdev) ||
+ 	if (!__within_notrace_func(addr))
+-- 
+2.20.1
+
 
 
