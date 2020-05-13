@@ -2,329 +2,130 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E45C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F8C620809
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53C50207EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:28:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389272AbgEMP0i (ORCPT
+        id S1732341AbgEMP2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:26:38 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2205 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731638AbgEMP0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:26:37 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 9CF1E36D2772B07885EB;
-        Wed, 13 May 2020 16:26:35 +0100 (IST)
-Received: from [127.0.0.1] (10.210.165.35) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Wed, 13 May
- 2020 16:26:33 +0100
-Subject: Re: [PATCH 2/2] perf test: Improve pmu event metric testing
-To:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Paul Clarke <pc@us.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Stephane Eranian <eranian@google.com>
-References: <20200513062236.854-1-irogers@google.com>
- <20200513062236.854-2-irogers@google.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <ac88604a-56c2-b632-57c2-3bee316dcea7@huawei.com>
-Date:   Wed, 13 May 2020 16:25:39 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 13 May 2020 11:28:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45664 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729257AbgEMP2G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 11:28:06 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFD42C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 08:28:06 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jYtIX-0007C3-Pu; Wed, 13 May 2020 17:27:53 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 3D63D100605; Wed, 13 May 2020 17:27:53 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Balbir Singh <sblbir@amazon.com>, linux-kernel@vger.kernel.org
+Cc:     jpoimboe@redhat.com, tony.luck@intel.com, keescook@chromium.org,
+        benh@kernel.crashing.org, x86@kernel.org, dave.hansen@intel.com,
+        thomas.lendacky@amd.com, Balbir Singh <sblbir@amazon.com>
+Subject: Re: [PATCH v6 5/6] Optionally flush L1D on context switch
+In-Reply-To: <20200510014803.12190-6-sblbir@amazon.com>
+References: <20200510014803.12190-1-sblbir@amazon.com> <20200510014803.12190-6-sblbir@amazon.com>
+Date:   Wed, 13 May 2020 17:27:53 +0200
+Message-ID: <878shv3ldy.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200513062236.854-2-irogers@google.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.165.35]
-X-ClientProxiedBy: lhreml701-chm.china.huawei.com (10.201.108.50) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/05/2020 07:22, Ian Rogers wrote:
-> Break pmu-events test into 2 and add a test to verify that all pmu metric
-> expressions simply parse. Try to parse all metric ids/events, failing if
-> metrics for the current architecture fail to parse.
-> 
-> Tested on power9, skylakex, haswell, broadwell, westmere, sandybridge and
-> ivybridge with the patch set in place.
-> May fail on other architectures if metrics are invalid. In particular s390
-> is untested, but its expressions are trivial. The event encodings could
-> be wrong. The other untested architectures with expressions are power8,
-> cascadelakex, tremontx, skylake, jaketown, ivytown and variants of
-> haswell and broadwell. For these the expression encoding is valid but
-> the event encodings may not be.
-> 
+Balbir Singh <sblbir@amazon.com> writes:
 
-Out of interest, if we could move the validation of metrics to jevents, 
-how much functionality would we still have here?
-
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Implement a mechanism to selectively flush the L1D cache. The goal is to
+> allow tasks that are paranoid due to the recent snoop assisted data sampling
+> vulnerabilites, to flush their L1D on being switched out.  This protects
+> their data from being snooped or leaked via side channels after the task
+> has context switched out.
+>
+> There are two scenarios we might want to protect against, a task leaving
+> the CPU with data still in L1D (which is the main concern of this patch),
+> the second scenario is a malicious task coming in (not so well trusted)
+> for which we want to clean up the cache before it starts. Only the case
+> for the former is addressed.
+>
+> A new thread_info flag TIF_SPEC_FLUSH_L1D is added to track tasks which
+> opt-into L1D flushing. cpu_tlbstate.last_user_mm_spec is used to convert
+> the TIF flags into mm state (per cpu via last_user_mm_spec) in
+> cond_mitigation(), which then used to do decide when to call flush_l1d().
+>
+> Add prctl()'s to opt-in to the L1D cache on context switch out, the
+> existing mechanisms of tracking prev_mm via cpu_tlbstate is
+> reused to track state of the tasks and to flush the L1D cache.
+> The prctl interface is generic and can be ported over to other
+> architectures.
+>
+> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Balbir Singh <sblbir@amazon.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 > ---
->   tools/perf/tests/builtin-test.c |   5 +
->   tools/perf/tests/pmu-events.c   | 158 ++++++++++++++++++++++++++++++--
->   tools/perf/tests/tests.h        |   2 +
->   3 files changed, 159 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> index 3471ec52ea11..8147c17c71ab 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -75,6 +75,11 @@ static struct test generic_tests[] = {
->   	{
->   		.desc = "PMU events",
->   		.func = test__pmu_events,
-> +		.subtest = {
-> +			.get_nr		= test__pmu_events_subtest_get_nr,
-> +			.get_desc	= test__pmu_events_subtest_get_desc,
-> +		},
-> +
->   	},
->   	{
->   		.desc = "DSO data read",
-> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-> index d64261da8bf7..c18b9ce8cace 100644
-> --- a/tools/perf/tests/pmu-events.c
-> +++ b/tools/perf/tests/pmu-events.c
-> @@ -8,6 +8,10 @@
->   #include <linux/zalloc.h>
->   #include "debug.h"
->   #include "../pmu-events/pmu-events.h"
-> +#include "util/evlist.h"
-> +#include "util/expr.h"
-> +#include "util/parse-events.h"
-> +#include <ctype.h>
->   
->   struct perf_pmu_test_event {
->   	struct pmu_event event;
-> @@ -144,7 +148,7 @@ static struct pmu_events_map *__test_pmu_get_events_map(void)
->   }
->   
->   /* Verify generated events from pmu-events.c is as expected */
-> -static int __test_pmu_event_table(void)
-> +static int test_pmu_event_table(void)
->   {
->   	struct pmu_events_map *map = __test_pmu_get_events_map();
->   	struct pmu_event *table;
-> @@ -347,14 +351,11 @@ static int __test__pmu_event_aliases(char *pmu_name, int *count)
->   	return res;
->   }
->   
-> -int test__pmu_events(struct test *test __maybe_unused,
-> -		     int subtest __maybe_unused)
-> +
-> +static int test_aliases(void)
->   {
->   	struct perf_pmu *pmu = NULL;
->   
-> -	if (__test_pmu_event_table())
-> -		return -1;
-> -
->   	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
->   		int count = 0;
->   
-> @@ -377,3 +378,148 @@ int test__pmu_events(struct test *test __maybe_unused,
->   
->   	return 0;
->   }
-> +
-> +static bool is_number(const char *str)
-> +{
-> +	size_t i;
-> +
-> +	for (i = 0; i < strlen(str); i++) {
-> +		if (!isdigit(str[i]) && str[i] != '.')
-> +			return false;
-> +	}
-> +	return true;
-> +}
+>  arch/x86/include/asm/thread_info.h |  7 ++++-
+>  arch/x86/mm/tlb.c                  | 44 ++++++++++++++++++++++++++++--
+>  include/uapi/linux/prctl.h         |  4 +++
+>  kernel/sys.c                       | 20 ++++++++++++++
+>  4 files changed, 72 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
+> index 8de8ceccb8bc..67de693d9ba1 100644
+> --- a/arch/x86/include/asm/thread_info.h
+> +++ b/arch/x86/include/asm/thread_info.h
+> @@ -84,7 +84,7 @@ struct thread_info {
+>  #define TIF_SYSCALL_AUDIT	7	/* syscall auditing active */
+>  #define TIF_SECCOMP		8	/* secure computing */
+>  #define TIF_SPEC_IB		9	/* Indirect branch speculation mitigation */
+> -#define TIF_SPEC_FORCE_UPDATE	10	/* Force speculation MSR update in context switch */
+> +#define TIF_SPEC_FLUSH_L1D	10	/* Flush L1D on mm switches (processes) */
+>  #define TIF_USER_RETURN_NOTIFY	11	/* notify kernel of userspace return */
+>  #define TIF_UPROBE		12	/* breakpointed or singlestepping */
+>  #define TIF_PATCH_PENDING	13	/* pending live patching update */
+> @@ -96,6 +96,7 @@ struct thread_info {
+>  #define TIF_MEMDIE		20	/* is terminating due to OOM killer */
+>  #define TIF_POLLING_NRFLAG	21	/* idle is polling for TIF_NEED_RESCHED */
+>  #define TIF_IO_BITMAP		22	/* uses I/O bitmap */
+> +#define TIF_SPEC_FORCE_UPDATE	23	/* Force speculation MSR update in context switch */
+>  #define TIF_FORCED_TF		24	/* true if TF in eflags artificially */
+>  #define TIF_BLOCKSTEP		25	/* set when we want DEBUGCTLMSR_BTF */
+>  #define TIF_LAZY_MMU_UPDATES	27	/* task is updating the mmu lazily */
+> @@ -132,6 +133,7 @@ struct thread_info {
+>  #define _TIF_ADDR32		(1 << TIF_ADDR32)
+>  #define _TIF_X32		(1 << TIF_X32)
+>  #define _TIF_FSCHECK		(1 << TIF_FSCHECK)
+> +#define _TIF_SPEC_FLUSH_L1D	(1 << TIF_SPEC_FLUSH_L1D)
 
-if there is no helper already for this, is this really the best place to 
-put it? Maybe others will need it in future.
+Bah. These defines are ordered in the same way as the TIF defines....
 
-> +
-> +static int check_parse_id(const char *id, bool same_cpu, struct pmu_event *pe)
-> +{
-> +	struct parse_events_error error;
-> +	struct evlist *evlist;
-> +	int ret;
-> +
-> +	/* Numbers are always valid. */
-> +	if (is_number(id))
-> +		return 0;
-> +
-> +	evlist = evlist__new();
-> +	memset(&error, 0, sizeof(error));
-> +	ret = parse_events(evlist, id, &error);
-> +	if (ret && same_cpu) {
-> +		fprintf(stderr,
-> +			"\nWARNING: Parse event failed metric '%s' id '%s' expr '%s'\n",
-> +			pe->metric_name, id, pe->metric_expr);
-> +		fprintf(stderr, "Error string '%s' help '%s'\n",
-> +			error.str, error.help);
+>  /*
+> - * Bits to mangle the TIF_SPEC_IB state into the mm pointer which is
+> + * Bits to mangle the TIF_SPEC_* state into the mm pointer which is
+>   * stored in cpu_tlb_state.last_user_mm_spec.
+>   */
+>  #define LAST_USER_MM_IBPB	0x1UL
+> -#define LAST_USER_MM_SPEC_MASK	(LAST_USER_MM_IBPB)
+> +#define LAST_USER_MM_L1D_FLUSH	0x2UL
+> +#define LAST_USER_MM_SPEC_MASK	(LAST_USER_MM_IBPB | LAST_USER_MM_L1D_FLUSH)
 
-do you really need to spill lines like this?
+You lost
 
-> +	} else if (ret) {
-> +		pr_debug3("Parse event failed, but for an event that may not be supported by this CPU.\nid '%s' metric '%s' expr '%s'\n",
-> +			id, pe->metric_name, pe->metric_expr);
-> +	}
-> +	evlist__delete(evlist);
-> +	free(error.str);
-> +	free(error.help);
-> +	free(error.first_str);
-> +	free(error.first_help);
-> +	/* TODO: too many metrics are broken to fail on this test currently. */
-> +	return 0;
-> +}
-> +
-> +static int test_parsing(void)
-> +{
-> +	struct pmu_events_map *cpus_map = perf_pmu__find_map(NULL);
-> +	struct pmu_events_map *map;
-> +	struct pmu_event *pe;
-> +	int i, j, k;
-> +	const char **ids;
-> +	int idnum;
-> +	int ret = 0;
-> +	struct expr_parse_ctx ctx;
-> +	double result;
-> +
-> +	i = 0;
-> +	for (;;) {
-> +		map = &pmu_events_map[i++];
-> +		if (!map->table) {
-> +			map = NULL;
-> +			break;
-> +		}
-> +		j = 0;
-> +		for (;;) {
-> +			pe = &map->table[j++];
-> +			if (!pe->name && !pe->metric_group && !pe->metric_name)
-> +				break;
-> +			if (!pe->metric_expr)
-> +				continue;
++       BUILD_BUG_ON(TIF_SPEC_FLUSH_L1D != TIF_SPEC_IB + 1);
 
-we could probably make a for_each_metric_helper(), as this code seems 
-duplicated a few times (like metricgroup__add_netric())
-
-> +			if (expr__find_other(pe->metric_expr, NULL,
-> +						&ids, &idnum, 0) < 0) {
-> +				pr_debug("Parse other failed for map %s %s %s\n",
-> +					map->cpuid, map->version, map->type);
-> +				pr_debug("On metric %s\n", pe->metric_name);
-> +				pr_debug("On expression %s\n", pe->metric_expr);
-> +				ret++;
-> +				continue;
-> +			}
-> +			expr__ctx_init(&ctx);
-> +
-> +			/*
-> +			 * Add all ids with a made up value. The value may
-> +			 * trigger divide by zero when subtracted and so try to
-> +			 * make them unique.
-> +			 */
-> +			for (k = 0; k < idnum; k++)
-> +				expr__add_id(&ctx, ids[k], k + 1);
-> +
-> +			for (k = 0; k < idnum; k++) {
-> +				if (check_parse_id(ids[k], map == cpus_map, pe))
-> +					ret++;
-> +			}
-> +
-> +			if (expr__parse(&result, &ctx, pe->metric_expr, 0)) {
-> +				pr_debug("Parse failed for map %s %s %s\n",
-> +					map->cpuid, map->version, map->type);
-> +				pr_debug("On metric %s\n", pe->metric_name);
-> +				pr_debug("On expression %s\n", pe->metric_expr);
-
-this code could be factored out a lot, see about 20 lines above
-
-> +				ret++;
-> +			}
-> +			for (k = 0; k < idnum; k++)
-> +				zfree(&ids[k]);
-> +			free(ids);
-> +		}
-> +	}
-> +	return ret;
-> +}
-> +
-> +static const struct {
-> +	int (*func)(void);
-> +	const char *desc;
-> +} pmu_events_testcase_table[] = {
-> +	{
-> +		.func = test_pmu_event_table,
-> +		.desc = "PMU event table sanity",
-> +	},
-> +	{
-> +		.func = test_aliases,
-> +		.desc = "PMU event map aliases",
-> +	},
-> +	{
-> +		.func = test_parsing,
-> +		.desc = "Parsing of PMU event table metrics",
-> +	},
-> +};
-
-I assume "perf test 10" will run all testcases, right?
-
-> +
-> +const char *test__pmu_events_subtest_get_desc(int i)
-> +{
-> +	if (i < 0 || i >= (int)ARRAY_SIZE(pmu_events_testcase_table))
-> +		return NULL;
-> +	return pmu_events_testcase_table[i].desc;
-> +}
-> +
-> +int test__pmu_events_subtest_get_nr(void)
-> +{
-> +	return (int)ARRAY_SIZE(pmu_events_testcase_table);
-> +}
-> +
-> +int test__pmu_events(struct test *test __maybe_unused, int i)
-> +{
-> +	if (i < 0 || i >= (int)ARRAY_SIZE(pmu_events_testcase_table))
-> +		return TEST_FAIL;
-> +	return pmu_events_testcase_table[i].func();
-> +}
-> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-> index d6d4ac34eeb7..8e316c30ed3c 100644
-> --- a/tools/perf/tests/tests.h
-> +++ b/tools/perf/tests/tests.h
-> @@ -50,6 +50,8 @@ int test__perf_evsel__tp_sched_test(struct test *test, int subtest);
->   int test__syscall_openat_tp_fields(struct test *test, int subtest);
->   int test__pmu(struct test *test, int subtest);
->   int test__pmu_events(struct test *test, int subtest);
-> +const char *test__pmu_events_subtest_get_desc(int subtest);
-> +int test__pmu_events_subtest_get_nr(void);
->   int test__attr(struct test *test, int subtest);
->   int test__dso_data(struct test *test, int subtest);
->   int test__dso_data_cache(struct test *test, int subtest);
-> 
-
+from patch I gave you.
