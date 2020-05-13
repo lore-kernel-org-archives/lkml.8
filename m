@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 581AECA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EDDCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39679206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBBE420740
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363162;
-	bh=pUIO6TEaK9n0rE5E5dO/hj2zx7EL6SpRabCZcLs9Ka8=;
+	s=default; t=1589363165;
+	bh=hS3ulpwO73UOM39R35oZ7+2kvPKwl2jgqQWmIFVJpSA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lIpyJT2+sTHGrXiGrB/yadgT6kGifGmlhvH5LGihNzOTBbHtKbH6cfp2LhYon1CH5
-	 EpL4oqYeBvm+fxrAgFowFCpFnaQ9INRE9AVSvYhRShEkLKgdijhp9OHeVRM9B/NziC
-	 Tymt3GQszUlq82XHkcZhMH81KZ1Gx05g3nGrmtUM=
+	b=0UGY7H6bt3KIFesi5s+EcwxRBVHzhuLBBrW2seQJksyyon/XdPoKMrbbq1E68jzYN
+	 Jfe8OJ1XUJKkvWqtSlNXfNH5jzmCytVFpnT0cNxDulkxBvYospI8mPV1Hn0wQ0fb06
+	 5w/AAhL31UBZgzmmefZvKXd1IFHvG0ORRgHb344Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732544AbgEMJqB (ORCPT
+        id S1732561AbgEMJqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:46:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43164 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:46:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730661AbgEMJp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:45:59 -0400
+        id S1726492AbgEMJqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:46:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 909E4206F5;
-        Wed, 13 May 2020 09:45:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04EBD20740;
+        Wed, 13 May 2020 09:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363159;
-        bh=pUIO6TEaK9n0rE5E5dO/hj2zx7EL6SpRabCZcLs9Ka8=;
+        s=default; t=1589363161;
+        bh=hS3ulpwO73UOM39R35oZ7+2kvPKwl2jgqQWmIFVJpSA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ScC8bFUwz3Csx6LjTaiHvogbm2hIToL0WW77QMzEaL3ixCr7j8jvHnuh1LRKWQg0B
-         F6nRcrxqISXzm5UyVUTmhIGmdhJl8w6TFZII+cC6R5dRxLou8sHlKrYBWaIeh1Bpuh
-         x9sXdh+bvVIKh1KXSFPOQTunnfLPuSxfZ6t9KWWM=
+        b=PIKEshmtpimBk/Sw1IoqGdi/TlYIUN9GausC1hT+VQyHA6E/BWKM64e52flwOTYCq
+         ENRndUjNgr04WnpZw4p4rDAGgzi012eyu3bggBV7lxd/f3xEB0pyXE0/QmaS+7QsWQ
+         SS3JKEcqdS1FvDQhPSEH1v/OmV592TsMUbIQAGGU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
+        syzbot+0251e883fe39e7a0cb0a@syzkaller.appspotmail.com,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 10/48] sch_choke: avoid potential panic in choke_reset()
-Date:   Wed, 13 May 2020 11:44:36 +0200
-Message-Id: <20200513094354.391305028@linuxfoundation.org>
+Subject: [PATCH 4.19 11/48] sch_sfq: validate silly quantum values
+Date:   Wed, 13 May 2020 11:44:37 +0200
+Message-Id: <20200513094354.518501516@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
 References: <20200513094351.100352960@linuxfoundation.org>
@@ -63,67 +63,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 8738c85c72b3108c9b9a369a39868ba5f8e10ae0 ]
+[ Upstream commit df4953e4e997e273501339f607b77953772e3559 ]
 
-If choke_init() could not allocate q->tab, we would crash later
-in choke_reset().
+syzbot managed to set up sfq so that q->scaled_quantum was zero,
+triggering an infinite loop in sfq_dequeue()
 
-BUG: KASAN: null-ptr-deref in memset include/linux/string.h:366 [inline]
-BUG: KASAN: null-ptr-deref in choke_reset+0x208/0x340 net/sched/sch_choke.c:326
-Write of size 8 at addr 0000000000000000 by task syz-executor822/7022
+More generally, we must only accept quantum between 1 and 2^18 - 7,
+meaning scaled_quantum must be in [1, 0x7FFF] range.
 
-CPU: 1 PID: 7022 Comm: syz-executor822 Not tainted 5.7.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- __kasan_report.cold+0x5/0x4d mm/kasan/report.c:515
- kasan_report+0x33/0x50 mm/kasan/common.c:625
- check_memory_region_inline mm/kasan/generic.c:187 [inline]
- check_memory_region+0x141/0x190 mm/kasan/generic.c:193
- memset+0x20/0x40 mm/kasan/common.c:85
- memset include/linux/string.h:366 [inline]
- choke_reset+0x208/0x340 net/sched/sch_choke.c:326
- qdisc_reset+0x6b/0x520 net/sched/sch_generic.c:910
- dev_deactivate_queue.constprop.0+0x13c/0x240 net/sched/sch_generic.c:1138
- netdev_for_each_tx_queue include/linux/netdevice.h:2197 [inline]
- dev_deactivate_many+0xe2/0xba0 net/sched/sch_generic.c:1195
- dev_deactivate+0xf8/0x1c0 net/sched/sch_generic.c:1233
- qdisc_graft+0xd25/0x1120 net/sched/sch_api.c:1051
- tc_modify_qdisc+0xbab/0x1a00 net/sched/sch_api.c:1670
- rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5454
- netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
- ___sys_sendmsg+0x100/0x170 net/socket.c:2416
- __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+Otherwise, we also could have a loop in sfq_dequeue()
+if scaled_quantum happens to be 0x8000, since slot->allot
+could indefinitely switch between 0 and 0x8000.
 
-Fixes: 77e62da6e60c ("sch_choke: drop all packets in queue during reset")
+Fixes: eeaeb068f139 ("sch_sfq: allow big packets and be fair")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc: Cong Wang <xiyou.wangcong@gmail.com>
+Reported-by: syzbot+0251e883fe39e7a0cb0a@syzkaller.appspotmail.com
+Cc: Jason A. Donenfeld <Jason@zx2c4.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_choke.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/sched/sch_sfq.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/net/sched/sch_choke.c
-+++ b/net/sched/sch_choke.c
-@@ -327,7 +327,8 @@ static void choke_reset(struct Qdisc *sc
- 
- 	sch->q.qlen = 0;
- 	sch->qstats.backlog = 0;
--	memset(q->tab, 0, (q->tab_mask + 1) * sizeof(struct sk_buff *));
-+	if (q->tab)
-+		memset(q->tab, 0, (q->tab_mask + 1) * sizeof(struct sk_buff *));
- 	q->head = q->tail = 0;
- 	red_restart(&q->vars);
- }
+--- a/net/sched/sch_sfq.c
++++ b/net/sched/sch_sfq.c
+@@ -641,6 +641,15 @@ static int sfq_change(struct Qdisc *sch,
+ 	if (ctl->divisor &&
+ 	    (!is_power_of_2(ctl->divisor) || ctl->divisor > 65536))
+ 		return -EINVAL;
++
++	/* slot->allot is a short, make sure quantum is not too big. */
++	if (ctl->quantum) {
++		unsigned int scaled = SFQ_ALLOT_SIZE(ctl->quantum);
++
++		if (scaled <= 0 || scaled > SHRT_MAX)
++			return -EINVAL;
++	}
++
+ 	if (ctl_v1 && !red_check_params(ctl_v1->qth_min, ctl_v1->qth_max,
+ 					ctl_v1->Wlog))
+ 		return -EINVAL;
 
 
