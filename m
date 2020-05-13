@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01681CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B80A1CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCB9B20753
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9266320753
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363385;
-	bh=OBjA4hsPp4PLfpQ8jjfg+PmSNwEel0QxiScbjp+evq0=;
+	s=default; t=1589363390;
+	bh=TvsZ9x45JSetsMTqI7i24qd6HnpVpWez8dXLTlvaFSQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cZ803IVoS3l9ai5SkR4pONVOa5KkFkRBJHd/KD//RibrvIzlO6N9d7MIHgEad77k4
-	 +DTDGQLnrMlSuKDYXTxqir9PLaBkJMVZiCHewgH45m++iDrAHORTfwb9CNri1ZZ+TV
-	 /tz8x//PKYVXDxOrUSE4OEIP2LQ4Ofoha4J7eOc0=
+	b=cTkxqAldq2p2BlOOIhcXh9Ie+gYCnxMgKbpQeHakcw2iMOMquLhion+dTJlZ4KbgY
+	 +sbHDf7zbnI3cenB6nHARgRGVyu6Xqcac0Nq7jZadNIcBrqJJVrUWDXOPYI/s4ax06
+	 1uk3Ff3ir2zrn4pOFpN9LintoxLjveUeqHZOXNdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733289AbgEMJtp (ORCPT
+        id S1733300AbgEMJtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:49:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48902 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:49:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733282AbgEMJtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:49:41 -0400
+        id S1733287AbgEMJtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:49:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9BFA23126;
-        Wed, 13 May 2020 09:49:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51A4720753;
+        Wed, 13 May 2020 09:49:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363380;
-        bh=OBjA4hsPp4PLfpQ8jjfg+PmSNwEel0QxiScbjp+evq0=;
+        s=default; t=1589363382;
+        bh=TvsZ9x45JSetsMTqI7i24qd6HnpVpWez8dXLTlvaFSQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gmfp9PtJC5UZ768ssv3TMiKhWX8wSaoJvczeait7mwcCyme7duqav+xp4xH0ANGTV
-         IeB8C/rFECm1vIzYMdUJq8L0iKDoc//YTebQagR3W8RyNRg2zQJQy4cgINYLPcz3r0
-         iMCoOTawUrSGF3Yj8v3Dzw7Bc+s+XeCPFcV6BRho=
+        b=vVbOMfDntMJqV44d+09hpDkLlAGbdhnDWl04DWC8GM5VefufKNvZCT2fIEab+Imo2
+         DUUPVTy7JzaBD/4pOhQ/2INnCIytGCEUAXzSUfgZ/QypuB6Lkk15Ukhm11FJKCxZiq
+         jwl1Mz+VRWRxPh3pylCkWUslSOzN1tCFKOvqmoMs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pierre Morel <pmorel@linux.ibm.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        Qian Cai <cailca@icloud.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Subject: [PATCH 5.4 51/90] KVM: s390: Remove false WARN_ON_ONCE for the PQAP instruction
-Date:   Wed, 13 May 2020 11:44:47 +0200
-Message-Id: <20200513094414.195096237@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.4 52/90] KVM: VMX: Explicitly clear RFLAGS.CF and RFLAGS.ZF in VM-Exit RSB path
+Date:   Wed, 13 May 2020 11:44:48 +0200
+Message-Id: <20200513094414.306377659@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -63,48 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Borntraeger <borntraeger@de.ibm.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 5615e74f48dcc982655543e979b6c3f3f877e6f6 upstream.
+commit c7cb2d650c9e78c03bd2d1c0db89891825f8c0f4 upstream.
 
-In LPAR we will only get an intercept for FC==3 for the PQAP
-instruction. Running nested under z/VM can result in other intercepts as
-well as ECA_APIE is an effective bit: If one hypervisor layer has
-turned this bit off, the end result will be that we will get intercepts for
-all function codes. Usually the first one will be a query like PQAP(QCI).
-So the WARN_ON_ONCE is not right. Let us simply remove it.
+Clear CF and ZF in the VM-Exit path after doing __FILL_RETURN_BUFFER so
+that KVM doesn't interpret clobbered RFLAGS as a VM-Fail.  Filling the
+RSB has always clobbered RFLAGS, its current incarnation just happens
+clear CF and ZF in the processs.  Relying on the macro to clear CF and
+ZF is extremely fragile, e.g. commit 089dd8e53126e ("x86/speculation:
+Change FILL_RETURN_BUFFER to work with objtool") tweaks the loop such
+that the ZF flag is always set.
 
-Cc: Pierre Morel <pmorel@linux.ibm.com>
-Cc: Tony Krowiak <akrowiak@linux.ibm.com>
-Cc: stable@vger.kernel.org # v5.3+
-Fixes: e5282de93105 ("s390: ap: kvm: add PQAP interception for AQIC")
-Link: https://lore.kernel.org/kvm/20200505083515.2720-1-borntraeger@de.ibm.com
-Reported-by: Qian Cai <cailca@icloud.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Reported-by: Qian Cai <cai@lca.pw>
+Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: f2fde6a5bcfcf ("KVM: VMX: Move RSB stuffing to before the first RET after VM-Exit")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Message-Id: <20200506035355.2242-1-sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/kvm/priv.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/kvm/vmx/vmenter.S |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/s390/kvm/priv.c
-+++ b/arch/s390/kvm/priv.c
-@@ -626,10 +626,12 @@ static int handle_pqap(struct kvm_vcpu *
- 	 * available for the guest are AQIC and TAPQ with the t bit set
- 	 * since we do not set IC.3 (FIII) we currently will only intercept
- 	 * the AQIC function code.
-+	 * Note: running nested under z/VM can result in intercepts for other
-+	 * function codes, e.g. PQAP(QCI). We do not support this and bail out.
- 	 */
- 	reg0 = vcpu->run->s.regs.gprs[0];
- 	fc = (reg0 >> 24) & 0xff;
--	if (WARN_ON_ONCE(fc != 0x03))
-+	if (fc != 0x03)
- 		return -EOPNOTSUPP;
+--- a/arch/x86/kvm/vmx/vmenter.S
++++ b/arch/x86/kvm/vmx/vmenter.S
+@@ -86,6 +86,9 @@ ENTRY(vmx_vmexit)
+ 	/* IMPORTANT: Stuff the RSB immediately after VM-Exit, before RET! */
+ 	FILL_RETURN_BUFFER %_ASM_AX, RSB_CLEAR_LOOPS, X86_FEATURE_RETPOLINE
  
- 	/* PQAP instruction is allowed for guest kernel only */
++	/* Clear RFLAGS.CF and RFLAGS.ZF to preserve VM-Exit, i.e. !VM-Fail. */
++	or $1, %_ASM_AX
++
+ 	pop %_ASM_AX
+ .Lvmexit_skip_rsb:
+ #endif
 
 
