@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 357AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BACE1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFA58205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62B7D205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:47:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390328AbgEMSrJ (ORCPT
+        id S2390329AbgEMSrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 14:47:09 -0400
-Received: from out28-147.mail.aliyun.com ([115.124.28.147]:46192 "EHLO
-        out28-147.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390287AbgEMSrD (ORCPT
+        Wed, 13 May 2020 14:47:11 -0400
+Received: from out28-100.mail.aliyun.com ([115.124.28.100]:43164 "EHLO
+        out28-100.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390202AbgEMSrH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 14:47:03 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.00615743-0.00147889-0.992364;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16370;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=19;RT=19;SR=0;TI=SMTPD_---.HY8LAU0_1589395602;
+        Wed, 13 May 2020 14:47:07 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07453629|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0280056-0.000386409-0.971608;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03299;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=19;RT=19;SR=0;TI=SMTPD_---.HY8LAU0_1589395602;
 Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HY8LAU0_1589395602)
           by smtp.aliyun-inc.com(10.147.44.118);
-          Thu, 14 May 2020 02:46:58 +0800
+          Thu, 14 May 2020 02:47:02 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     linux-mips@vger.kernel.org
@@ -36,9 +36,9 @@ Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         hns@goldelico.com, ebiederm@xmission.com,
         dongsheng.qiu@ingenic.com, yanfei.li@ingenic.com,
         sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH v7 3/6] clocksource: Ingenic: Add high resolution timer support for SMP.
-Date:   Thu, 14 May 2020 02:46:14 +0800
-Message-Id: <1589395578-87441-5-git-send-email-zhouyanjie@wanyeetech.com>
+Subject: [PATCH v7 5/6] MIPS: Ingenic: Add 'cpus' node for Ingenic SoCs.
+Date:   Thu, 14 May 2020 02:46:16 +0800
+Message-Id: <1589395578-87441-7-git-send-email-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1589395578-87441-1-git-send-email-zhouyanjie@wanyeetech.com>
 References: <1589395578-87441-1-git-send-email-zhouyanjie@wanyeetech.com>
@@ -50,9 +50,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable clock event handling on per CPU core basis.
-Make sure that interrupts raised on the first core execute
-event handlers on the correct CPU core.
+Add 'cpus' node to the jz4740.dtsi, jz4770.dtsi, jz4780.dtsi
+and x1000.dtsi files.
 
 Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
 Tested-by: Paul Boddie <paul@boddie.org.uk>
@@ -61,280 +60,144 @@ Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 
 Notes:
     v1->v2:
-    1.Adjust function naming to make it more reasonable.
-    2.Replace function smp_call_function_single() with
-      smp_call_function_single_async() in order to resolve
-      the warning below:
-    
-    [    0.350942] smp: Brought up 1 node, 2 CPUs
-    [    0.365497] ------------[ cut here ]------------
-    [    0.365522] WARNING: CPU: 0 PID: 1 at kernel/smp.c:300 smp_call_function_single+0x110/0x200
-    [    0.365533] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc1+ #5
-    [    0.365537] Stack : 00000000 59c73bcd 00000037 80074e80 80000000 80670000 805a0000 80620590
-    [    0.365557]         8065ce38 8fc0dc8c 806d0000 00000000 80670000 00000001 8fc0dc20 59c73bcd
-    [    0.365574]         00000000 00000000 806f0000 80670000 00000000 806dab00 00000000 2d302e35
-    [    0.365591]         203a6d6d 806e0000 806e0000 70617773 80670000 00000000 00000000 00000009
-    [    0.365610]         00000000 8fc94e20 8fc0de30 80690000 00000018 803592dc 00000000 806d0000
-    [    0.365627]         ...
-    [    0.365634] Call Trace:
-    [    0.365647] [<8001b9a0>] show_stack+0x6c/0x12c
-    [    0.365663] [<804aed20>] dump_stack+0x98/0xc8
-    [    0.365673] [<8003044c>] __warn+0xc4/0xe8
-    [    0.365682] [<800304f4>] warn_slowpath_fmt+0x84/0xb8
-    [    0.365690] [<800a886c>] smp_call_function_single+0x110/0x200
-    [    0.365703] ---[ end trace 5785856ca39c79d5 ]---
-    [    0.365557]         8065ce38 8fc0dc8c 806d0000 00000000 80670000 00000001 8fc0dc20 59c73bcd
-    [    0.365574]         00000000 00000000 806f0000 80670000 00000000 806dab00 00000000 2d302e35
-    [    0.365591]         203a6d6d 806e0000 806e0000 70617773 80670000 00000000 00000000 00000009
-    [    0.365610]         00000000 8fc94e20 8fc0de30 80690000 00000018 803592dc 00000000 806d0000
-    [    0.365627]         ...
-    [    0.365634] Call Trace:
-    [    0.365647] [<8001b9a0>] show_stack+0x6c/0x12c
-    [    0.365663] [<804aed20>] dump_stack+0x98/0xc8
-    [    0.365673] [<8003044c>] __warn+0xc4/0xe8
-    [    0.365682] [<800304f4>] warn_slowpath_fmt+0x84/0xb8
-    [    0.365690] [<800a886c>] smp_call_function_single+0x110/0x200
-    [    0.365703] ---[ end trace 5785856ca39c79d5 ]---
+    No change.
     
     v2->v3:
-    No Change.
+    No change.
     
     v3->v4:
     Rebase on top of kernel 5.6-rc1.
     
     v4->v5:
-    Move the check for (evt->event_handler) from "ingenic_per_cpu_event_handler"
-    to "ingenic_tcu_cevt_cb".
+    No change.
     
     v5->v6:
     No change.
     
     v6->v7:
-    Remove unnecessary check for "NR_CPUS > 1".
+    Update compatible strings.
 
- drivers/clocksource/ingenic-timer.c | 103 ++++++++++++++++++++++++++++--------
- 1 file changed, 82 insertions(+), 21 deletions(-)
+ arch/mips/boot/dts/ingenic/jz4740.dtsi | 14 ++++++++++++++
+ arch/mips/boot/dts/ingenic/jz4770.dtsi | 15 ++++++++++++++-
+ arch/mips/boot/dts/ingenic/jz4780.dtsi | 23 +++++++++++++++++++++++
+ arch/mips/boot/dts/ingenic/x1000.dtsi  | 14 ++++++++++++++
+ 4 files changed, 65 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clocksource/ingenic-timer.c b/drivers/clocksource/ingenic-timer.c
-index 4963336..9aae939 100644
---- a/drivers/clocksource/ingenic-timer.c
-+++ b/drivers/clocksource/ingenic-timer.c
-@@ -1,7 +1,8 @@
+diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+index a3301ba..1f2f896 100644
+--- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+@@ -7,6 +7,20 @@
+ 	#size-cells = <1>;
+ 	compatible = "ingenic,jz4740";
+ 
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "ingenic,xburst-mxu1.0";
++			reg = <0>;
++
++			clocks = <&cgu JZ4740_CLK_CCLK>;
++			clock-names = "cpu";
++		};
++	};
++
+ 	cpuintc: interrupt-controller {
+ 		#address-cells = <0>;
+ 		#interrupt-cells = <1>;
+diff --git a/arch/mips/boot/dts/ingenic/jz4770.dtsi b/arch/mips/boot/dts/ingenic/jz4770.dtsi
+index 0bfb9ed..12c7101 100644
+--- a/arch/mips/boot/dts/ingenic/jz4770.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4770.dtsi
+@@ -1,5 +1,4 @@
  // SPDX-License-Identifier: GPL-2.0
- /*
-- * JZ47xx SoCs TCU IRQ driver
-+ * XBurst SoCs TCU IRQ driver
-  * Copyright (C) 2019 Paul Cercueil <paul@crapouillou.net>
-+ * Copyright (C) 2020 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-  */
+-
+ #include <dt-bindings/clock/jz4770-cgu.h>
  
- #include <linux/bitops.h>
-@@ -21,18 +22,23 @@
+ / {
+@@ -7,6 +6,20 @@
+ 	#size-cells = <1>;
+ 	compatible = "ingenic,jz4770";
  
- #include <dt-bindings/clock/ingenic,tcu.h>
- 
-+static DEFINE_PER_CPU(call_single_data_t, ingenic_cevt_csd);
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
- struct ingenic_soc_info {
- 	unsigned int num_channels;
- };
- 
- struct ingenic_tcu {
- 	struct regmap *map;
-+	struct device_node *np;
- 	struct clk *timer_clk, *cs_clk;
-+	unsigned int timer_local[NR_CPUS];
- 	unsigned int timer_channel, cs_channel;
- 	struct clock_event_device cevt;
- 	struct clocksource cs;
--	char name[4];
-+	char name[8];
- 	unsigned long pwm_channels_mask;
-+	int cpu;
- };
- 
- static struct ingenic_tcu *ingenic_tcu;
-@@ -81,6 +87,24 @@ static int ingenic_tcu_cevt_set_next(unsigned long next,
- 	return 0;
- }
- 
-+static void ingenic_per_cpu_event_handler(void *info)
-+{
-+	struct clock_event_device *cevt = (struct clock_event_device *) info;
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "ingenic,xburst-fpu1.0-mxu1.1";
++			reg = <0>;
 +
-+	cevt->event_handler(cevt);
-+}
++			clocks = <&cgu JZ4770_CLK_CCLK>;
++			clock-names = "cpu";
++		};
++	};
 +
-+static void ingenic_tcu_per_cpu_cb(struct clock_event_device *evt)
-+{
-+	struct ingenic_tcu *tcu = to_ingenic_tcu(evt);
-+	call_single_data_t *csd;
+ 	cpuintc: interrupt-controller {
+ 		#address-cells = <0>;
+ 		#interrupt-cells = <1>;
+diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+index bb89653..03aeeff 100644
+--- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+@@ -8,6 +8,29 @@
+ 	#size-cells = <1>;
+ 	compatible = "ingenic,jz4780";
+ 
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+	csd = &per_cpu(ingenic_cevt_csd, tcu->cpu);
-+	csd->info = (void *) evt;
-+	csd->func = ingenic_per_cpu_event_handler;
-+	smp_call_function_single_async(tcu->cpu, csd);
-+}
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "ingenic,xburst-fpu1.0-mxu1.1";
++			reg = <0>;
 +
- static irqreturn_t ingenic_tcu_cevt_cb(int irq, void *dev_id)
- {
- 	struct clock_event_device *evt = dev_id;
-@@ -89,7 +113,7 @@ static irqreturn_t ingenic_tcu_cevt_cb(int irq, void *dev_id)
- 	regmap_write(tcu->map, TCU_REG_TECR, BIT(tcu->timer_channel));
- 
- 	if (evt->event_handler)
--		evt->event_handler(evt);
-+		ingenic_tcu_per_cpu_cb(evt);
- 
- 	return IRQ_HANDLED;
- }
-@@ -105,14 +129,21 @@ static struct clk * __init ingenic_tcu_get_clock(struct device_node *np, int id)
- 	return of_clk_get_from_provider(&args);
- }
- 
--static int __init ingenic_tcu_timer_init(struct device_node *np,
--					 struct ingenic_tcu *tcu)
-+static int ingenic_tcu_setup_per_cpu_cevt(struct device_node *np,
-+				     unsigned int channel)
- {
--	unsigned int timer_virq, channel = tcu->timer_channel;
-+	unsigned int timer_virq;
- 	struct irq_domain *domain;
-+	struct ingenic_tcu *tcu;
- 	unsigned long rate;
- 	int err;
- 
-+	tcu = kzalloc(sizeof(*tcu), GFP_KERNEL);
-+	if (!tcu)
-+		return -ENOMEM;
++			clocks = <&cgu JZ4780_CLK_CPU>;
++			clock-names = "cpu";
++		};
 +
-+	tcu->map = ingenic_tcu->map;
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "ingenic,xburst-fpu1.0-mxu1.1";
++			reg = <1>;
 +
- 	tcu->timer_clk = ingenic_tcu_get_clock(np, channel);
- 	if (IS_ERR(tcu->timer_clk))
- 		return PTR_ERR(tcu->timer_clk);
-@@ -139,13 +170,15 @@ static int __init ingenic_tcu_timer_init(struct device_node *np,
- 		goto err_clk_disable;
- 	}
- 
--	snprintf(tcu->name, sizeof(tcu->name), "TCU");
-+	snprintf(tcu->name, sizeof(tcu->name), "TCU%u", channel);
- 
- 	err = request_irq(timer_virq, ingenic_tcu_cevt_cb, IRQF_TIMER,
- 			  tcu->name, &tcu->cevt);
- 	if (err)
- 		goto err_irq_dispose_mapping;
- 
-+	tcu->cpu = smp_processor_id();
-+	tcu->timer_channel = channel;
- 	tcu->cevt.cpumask = cpumask_of(smp_processor_id());
- 	tcu->cevt.features = CLOCK_EVT_FEAT_ONESHOT;
- 	tcu->cevt.name = tcu->name;
-@@ -166,6 +199,25 @@ static int __init ingenic_tcu_timer_init(struct device_node *np,
- 	return err;
- }
- 
-+static int ingenic_tcu_setup_cevt(unsigned int cpu)
-+{
-+	int ret;
++			clocks = <&cgu JZ4780_CLK_CORE1>;
++			clock-names = "cpu";
++		};
++	};
 +
-+	ret = ingenic_tcu_setup_per_cpu_cevt(ingenic_tcu->np,
-+						ingenic_tcu->timer_local[cpu]);
-+	if (ret)
-+		goto err_tcu_clocksource_cleanup;
+ 	cpuintc: interrupt-controller {
+ 		#address-cells = <0>;
+ 		#interrupt-cells = <1>;
+diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi b/arch/mips/boot/dts/ingenic/x1000.dtsi
+index 147f7d5..2205e1b 100644
+--- a/arch/mips/boot/dts/ingenic/x1000.dtsi
++++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
+@@ -8,6 +8,20 @@
+ 	#size-cells = <1>;
+ 	compatible = "ingenic,x1000", "ingenic,x1000e";
+ 
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+	return 0;
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "ingenic,xburst-fpu1.0-mxu1.1";
++			reg = <0>;
 +
-+err_tcu_clocksource_cleanup:
-+	clocksource_unregister(&ingenic_tcu->cs);
-+	clk_disable_unprepare(ingenic_tcu->cs_clk);
-+	clk_put(ingenic_tcu->cs_clk);
-+	kfree(ingenic_tcu);
-+	return ret;
-+}
++			clocks = <&cgu X1000_CLK_CPU>;
++			clock-names = "cpu";
++		};
++	};
 +
- static int __init ingenic_tcu_clocksource_init(struct device_node *np,
- 					       struct ingenic_tcu *tcu)
- {
-@@ -240,6 +292,7 @@ static int __init ingenic_tcu_init(struct device_node *np)
- 	const struct ingenic_soc_info *soc_info = id->data;
- 	struct ingenic_tcu *tcu;
- 	struct regmap *map;
-+	unsigned cpu = 0;
- 	long rate;
- 	int ret;
- 
-@@ -253,13 +306,18 @@ static int __init ingenic_tcu_init(struct device_node *np)
- 	if (!tcu)
- 		return -ENOMEM;
- 
--	/* Enable all TCU channels for PWM use by default except channels 0/1 */
--	tcu->pwm_channels_mask = GENMASK(soc_info->num_channels - 1, 2);
-+	/*
-+	 * Enable all TCU channels for PWM use by default except channels 0/1,
-+	 * and channel 2 if target CPU is JZ4780 and SMP is selected.
-+	 */
-+	tcu->pwm_channels_mask = GENMASK(soc_info->num_channels - 1,
-+								NR_CPUS + 1);
- 	of_property_read_u32(np, "ingenic,pwm-channels-mask",
- 			     (u32 *)&tcu->pwm_channels_mask);
- 
--	/* Verify that we have at least two free channels */
--	if (hweight8(tcu->pwm_channels_mask) > soc_info->num_channels - 2) {
-+	/* Verify that we have at least NR_CPUS + 1 free channels */
-+	if (hweight8(tcu->pwm_channels_mask) >
-+			soc_info->num_channels - NR_CPUS + 1) {
- 		pr_crit("%s: Invalid PWM channel mask: 0x%02lx\n", __func__,
- 			tcu->pwm_channels_mask);
- 		ret = -EINVAL;
-@@ -267,13 +325,19 @@ static int __init ingenic_tcu_init(struct device_node *np)
- 	}
- 
- 	tcu->map = map;
-+	tcu->np = np;
- 	ingenic_tcu = tcu;
- 
--	tcu->timer_channel = find_first_zero_bit(&tcu->pwm_channels_mask,
-+	tcu->timer_local[cpu] = find_first_zero_bit(&tcu->pwm_channels_mask,
- 						 soc_info->num_channels);
-+
-+	for (cpu = 1; cpu < NR_CPUS; cpu++)
-+		tcu->timer_local[cpu] = find_next_zero_bit(
-+				&tcu->pwm_channels_mask, soc_info->num_channels,
-+				tcu->timer_local[cpu - 1] + 1);
-+
- 	tcu->cs_channel = find_next_zero_bit(&tcu->pwm_channels_mask,
--					     soc_info->num_channels,
--					     tcu->timer_channel + 1);
-+			soc_info->num_channels, tcu->timer_local[cpu - 1] + 1);
- 
- 	ret = ingenic_tcu_clocksource_init(np, tcu);
- 	if (ret) {
-@@ -281,9 +345,10 @@ static int __init ingenic_tcu_init(struct device_node *np)
- 		goto err_free_ingenic_tcu;
- 	}
- 
--	ret = ingenic_tcu_timer_init(np, tcu);
--	if (ret)
--		goto err_tcu_clocksource_cleanup;
-+	/* Setup clock events on each CPU core */
-+	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "Ingenic XBurst: online",
-+				ingenic_tcu_setup_cevt, NULL);
-+	WARN_ON(ret < 0);
- 
- 	/* Register the sched_clock at the end as there's no way to undo it */
- 	rate = clk_get_rate(tcu->cs_clk);
-@@ -291,10 +356,6 @@ static int __init ingenic_tcu_init(struct device_node *np)
- 
- 	return 0;
- 
--err_tcu_clocksource_cleanup:
--	clocksource_unregister(&tcu->cs);
--	clk_disable_unprepare(tcu->cs_clk);
--	clk_put(tcu->cs_clk);
- err_free_ingenic_tcu:
- 	kfree(tcu);
- 	return ret;
+ 	cpuintc: interrupt-controller {
+ 		#address-cells = <0>;
+ 		#interrupt-cells = <1>;
 -- 
 2.7.4
 
