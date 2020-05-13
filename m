@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BB2CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E8CCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B99F5206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C98B206E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:01:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364103;
-	bh=PxxD+AtPUxU1hPfNd8GJ8/uakU5BMMPdimIcf+3tcyI=;
+	s=default; t=1589364108;
+	bh=wN63/d8bY6lKcZMrGG0Tt2Sxn2DQckb0HCInWH1OSmo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WhzXA6drUoaIhIMWc5pWeoVA6DizDrBUa8tACRroobXvU6PQOWpzYs4l7rjpD+CVQ
-	 ErO8XUKnYSLW2Q/tBwmQwNRLsfsYEQJbsZz15t8GFRVyjhKUrIZrDqsuKKbMXLcc3w
-	 2nLa23w8ibBZzYYvPeNTUWxSndHdk9EVVXD0umX4=
+	b=UxeCi14y8z0v8Aw0CddaVvKPXEHqb3YsPThaxR0e8NlA2mhyqzuwCytTqN3+7+Wxg
+	 gPYNNfRWlxB0cnaWfiH6EWjbeob2cIUCXtXqpKtCyBJ8vjIpIofNnpufhF2IrUvutv
+	 Z6c1H9kM3ZfclULpTlWIsk94i0GkQkUqEx+pTl7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388620AbgEMKBn (ORCPT
+        id S1732927AbgEMKBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:01:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50970 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 06:01:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387555AbgEMJus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:50:48 -0400
+        id S1732886AbgEMJuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:50:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73E24206D6;
-        Wed, 13 May 2020 09:50:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12F1720740;
+        Wed, 13 May 2020 09:50:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363447;
-        bh=PxxD+AtPUxU1hPfNd8GJ8/uakU5BMMPdimIcf+3tcyI=;
+        s=default; t=1589363445;
+        bh=wN63/d8bY6lKcZMrGG0Tt2Sxn2DQckb0HCInWH1OSmo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZjmQQnpi6dNiuEymJVhpGBZc+dFPsJMq16yuglN0cRICSkVrXinMH2u6gozdAKGBS
-         KpZGVjmhIf7SlcU2xDVMWrcTx7T0Ce6y3cw5d00RTHWE5w8IICxtmHP8sNiXGkhse3
-         sJ0y1pQpSivWATydvOpzpJwOLOn26l9FLTPDU9nQ=
+        b=EjSc9uCPvWl4LDsYp0jUYPP50WVoG+jNDSKjknhCIlxJIR0sehaq6V9Gnd/R/0j1g
+         PeY2LTKQcc+1WI2Smy0W/KAk2V6Ypey/zAlxoyIRKnOf0HJZ5EdZOCwt6ntwN5j2tU
+         xYt3tMs2SLSWj6TcLOd2hXJoIsjM8AkIMuUopEmg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -50,9 +50,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Vince Weaver <vincent.weaver@maine.edu>
-Subject: [PATCH 5.4 77/90] x86/unwind/orc: Fix error path for bad ORC entry type
-Date:   Wed, 13 May 2020 11:45:13 +0200
-Message-Id: <20200513094417.295125775@linuxfoundation.org>
+Subject: [PATCH 5.4 76/90] x86/unwind/orc: Prevent unwinding before ORC initialization
+Date:   Wed, 13 May 2020 11:45:12 +0200
+Message-Id: <20200513094417.204174530@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -67,11 +67,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-commit a0f81bf26888048100bf017fadf438a5bdffa8d8 upstream.
+commit 98d0c8ebf77e0ba7c54a9ae05ea588f0e9e3f46e upstream.
 
-If the ORC entry type is unknown, nothing else can be done other than
-reporting an error.  Exit the function instead of breaking out of the
-switch statement.
+If the unwinder is called before the ORC data has been initialized,
+orc_find() returns NULL, and it tries to fall back to using frame
+pointers.  This can cause some unexpected warnings during boot.
+
+Move the 'orc_init' check from orc_find() to __unwind_init(), so that it
+doesn't even try to unwind from an uninitialized state.
 
 Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
 Reviewed-by: Miroslav Benes <mbenes@suse.cz>
@@ -83,23 +86,34 @@ Cc: Jann Horn <jannh@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lore.kernel.org/r/a7fa668ca6eabbe81ab18b2424f15adbbfdc810a.1587808742.git.jpoimboe@redhat.com
+Link: https://lore.kernel.org/r/069d1499ad606d85532eb32ce39b2441679667d5.1587808742.git.jpoimboe@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/unwind_orc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/unwind_orc.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 --- a/arch/x86/kernel/unwind_orc.c
 +++ b/arch/x86/kernel/unwind_orc.c
-@@ -528,7 +528,7 @@ bool unwind_next_frame(struct unwind_sta
- 	default:
- 		orc_warn("unknown .orc_unwind entry type %d for ip %pB\n",
- 			 orc->type, (void *)orig_ip);
--		break;
-+		goto err;
- 	}
+@@ -142,9 +142,6 @@ static struct orc_entry *orc_find(unsign
+ {
+ 	static struct orc_entry *orc;
  
- 	/* Find BP: */
+-	if (!orc_init)
+-		return NULL;
+-
+ 	if (ip == 0)
+ 		return &null_orc_entry;
+ 
+@@ -582,6 +579,9 @@ EXPORT_SYMBOL_GPL(unwind_next_frame);
+ void __unwind_start(struct unwind_state *state, struct task_struct *task,
+ 		    struct pt_regs *regs, unsigned long *first_frame)
+ {
++	if (!orc_init)
++		goto done;
++
+ 	memset(state, 0, sizeof(*state));
+ 	state->task = task;
+ 
 
 
