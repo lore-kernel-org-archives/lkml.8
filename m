@@ -2,75 +2,123 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6726CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB86CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E43E920657
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51C74204EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:47:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388739AbgEMNqp (ORCPT
+        id S2388151AbgEMNr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:46:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40144 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 09:47:27 -0400
+Received: from mga18.intel.com ([134.134.136.126]:5072 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726061AbgEMNqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:46:45 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA549204EA;
-        Wed, 13 May 2020 13:46:43 +0000 (UTC)
-Date:   Wed, 13 May 2020 09:46:42 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <dima@arista.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH] printk: Add loglevel for "do not print to consoles".
-Message-ID: <20200513094642.56bf50f7@gandalf.local.home>
-In-Reply-To: <20564555-7b84-f716-5dcd-978f76ad459a@i-love.sakura.ne.jp>
-References: <20200427062117.GC486@jagdpanzerIV.localdomain>
-        <4dae86af-1d9a-f5a8-cff6-aa91ec038a79@i-love.sakura.ne.jp>
-        <20200428121828.GP28637@dhcp22.suse.cz>
-        <b4d74234-8009-9ffd-011f-bd5d1a4b85f6@i-love.sakura.ne.jp>
-        <20200428154532.GU28637@dhcp22.suse.cz>
-        <b1d507b1-dae7-f526-c74a-d465ddecea6a@i-love.sakura.ne.jp>
-        <20200429142106.GG28637@dhcp22.suse.cz>
-        <a59271f1-b3fc-26d1-f0a2-5ec351d0095e@i-love.sakura.ne.jp>
-        <20200513062652.GM413@jagdpanzerIV.localdomain>
-        <a75d6560-ad99-5b02-3648-247c27c3a398@i-love.sakura.ne.jp>
-        <20200513100413.GH17734@linux-b0ei>
-        <20564555-7b84-f716-5dcd-978f76ad459a@i-love.sakura.ne.jp>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726061AbgEMNr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 09:47:26 -0400
+IronPort-SDR: EXCtIL+YRbdcxYFtALXnhCa/psN9R1koqx0bCs7WtbgYTNM9MiUryoMUD1/l9QV5h/gulij/E1
+ IRg0FVIGfWig==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 06:47:26 -0700
+IronPort-SDR: pNqlTqHsTVGc/mVmZM9FvraTTA2PsxB4ZVZwANI3eH9UxRZx4i0sJ6GmytwqL+XeaojD3r6byj
+ hQvKPWqhUHhQ==
+X-IronPort-AV: E=Sophos;i="5.73,387,1583222400"; 
+   d="scan'208";a="409691293"
+Received: from lhawrylk-desk.ger.corp.intel.com ([10.213.1.184])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 06:47:21 -0700
+Message-ID: <657cc4d8c6a5791ec89ef122ee84f72ff60d4089.camel@linux.intel.com>
+Subject: Re: [GRUB PATCH RFC 00/18] i386: Intel TXT secure launcher
+From:   Lukasz Hawrylko <lukasz.hawrylko@linux.intel.com>
+To:     The development of GNU GRUB <grub-devel@gnu.org>
+Cc:     linux-kernel@vger.kernel.org, trenchboot-devel@googlegroups.com,
+        x86@kernel.org, alexander.burmashev@oracle.com,
+        andrew.cooper3@citrix.com, ard.biesheuvel@linaro.org,
+        dpsmith@apertussolutions.com, eric.snowberg@oracle.com,
+        javierm@redhat.com, kanth.ghatraju@oracle.com,
+        konrad.wilk@oracle.com, krystian.hebel@3mdeb.com,
+        michal.zygowski@3mdeb.com, mjg59@google.com, phcoder@gmail.com,
+        piotr.krol@3mdeb.com, pjones@redhat.com, ross.philipson@oracle.com
+Date:   Wed, 13 May 2020 15:47:19 +0200
+In-Reply-To: <20200507110634.2yvzirauq5md7d2q@tomti.i.net-space.pl>
+References: <20200504232132.23570-1-daniel.kiper@oracle.com>
+         <2dad6366d2fceb0a9e36f284a8ed5a8ed86d8756.camel@linux.intel.com>
+         <20200507110634.2yvzirauq5md7d2q@tomti.i.net-space.pl>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020 20:03:53 +0900
-Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> wrote:
+Hi Daniel
 
-> I think that basically only oops (e.g. WARN()/BUG()/panic()) messages worth
-> printing to consoles and the rest messages do not worth printing to consoles.
-> Existing KERN_$LOGLEVEL is too rough-grained.
+On Thu, 2020-05-07 at 13:06 +0200, Daniel Kiper wrote:
+> > There is a function that verifies if platform is TXT capable
+> > -grub_txt_verify_platform(), it only checks SMX and GETSEC features.
+> > Although BIOS should enforce both VMX and VT-d enabled when enabling
+> > TXT, I think that adding these check here as redundancy may be a good
+> 
+> The TXT spec has the following pseudocode:
+> 
+>   //
+>   // Intel TXT detection
+>   // Execute on all logical processors for compatibility with
+>   // multiple processor systems
+>   //
+>   1. CPUID(EAX=1);
+>   2. IF (SMX not supported) OR (VMX not supported) {
+>   3. Fail measured environment startup;
+>   4. }
+> 
+> However, a few lines above you can find this:
+> 
+>   Lines 1 - 4: Before attempting to launch the measured environment, the
+>   system software should check that all logical processors support VMX and
+>   SMX (the check for VMX support is not necessary if the environment to be
+>   launched will not use VMX).
+> 
+> Hence, AIUI, I am allowed to check SMX only. And I do not think that the
+> bootloader should enforce VMX. If the kernel wants VMX then it should
+> check the platform config. The booloader should just look for features
+> which are really required to properly execute GETSEC[SENTER].
 
-And this statement is exactly why I believe you are wrong.
+I agree with you that spec does not clearly define if VMX is required or
+not. In theory you can use TXT without VMX, however this is highly
+impractical because in that configuration it is impossible to use STM to
+protect MLE from SMI handler as STM feature requires VMX.
 
-Because *I* think messages to the console is more important than messages
-to the logs. Several of my servers are only monitored by the console. I
-seldom look at the logs on those machines.
+All real-life MLE implementations should use STM to be compliant with
+TXT idea that MLE does not have a security dependency on the pre-
+existing software environment. You can find more information about STM
+here: 
 
-This is a policy decision, and must be made by user space. Your use case is
-not applicable to everyone else's use case. And should not be set in stone
-by the kernel.
+https://software.intel.com/content/dam/develop/external/us/en/documents/stm-user-guide-001-819978.pdf
 
--- Steve
+Anyway, I have asked TXT spec owner to clarify VMX situation in next
+document revision.
+
+> 
+> PS By the way, I found an issue in TXT spec. TXT.VER.FSBIF refers to
+>    TXT.VER.EMIF which does not exist in spec. I suppose that it is
+>    remnant from previous TXT spec versions. It seems to me that it
+>    should be changed to TXT.VER.QPIIF. TXT.VER.QPIIF descriptions
+>    properly, IMO, refers back to TXT.VER.FSBIF.
+
+Yes, this is remnant from old document versions, thank you for finding
+that issue. Here are changes that will go to next revision:
+
+ * register 0x100 (TXT.VER.FSBIF) does not exist for many years and will
+   be removed from TXT spec
+ * register 0x200 is called TXT.VER.EMIF and indicates if chipset is
+   debug of production fused
+
+Thanks,
+Lukasz
+
