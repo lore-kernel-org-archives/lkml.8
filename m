@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E73CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1071CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 538F920753
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B917720769
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:48:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363278;
-	bh=pJesTuX6nSzbDXw15ZRfrK4YK0CxSdh0G/uLjpfbVo0=;
+	s=default; t=1589363280;
+	bh=04SOpmy/nQi3IPuBwWUpHz+7j9p4iDrmYSVTlxJeMQQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IEbWfJOHie6dCPqeg3V/mbXUaMT/6/cUHTocZiuwXtZT6iyEaeVOJzJu1O9LMBWe6
-	 oEf1nAFRl9GwRD1/qUq3rUzGcpYLaK4apQ0cn3Z5KZdqnynEz9J2XaVHBL6d9XfOiH
-	 dwd+7T6LN4qKjtkiUfhtK/MOKGBaufHY9Esc/WzM=
+	b=g3jPeE3WVDi/9MD9yEpEfUwOlFTJMS4eADHYHHk23A+VgYaPh1VsyA0o3zl50SmVz
+	 D+3gE/RaO1pnYwbWWDMHpeM0PSLVxw9E9mNK/r/mL1c52ztYIu4bRHXkyD1s5N3Jp1
+	 1ShaSi/L5AX/hEz3s+x1x9XzFi908zMw8qfTk9jI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732969AbgEMJr5 (ORCPT
+        id S1732977AbgEMJsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:47:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45978 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:48:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732948AbgEMJrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:47:52 -0400
+        id S1732954AbgEMJry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:47:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D16223126;
-        Wed, 13 May 2020 09:47:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8127C20769;
+        Wed, 13 May 2020 09:47:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363271;
-        bh=pJesTuX6nSzbDXw15ZRfrK4YK0CxSdh0G/uLjpfbVo0=;
+        s=default; t=1589363274;
+        bh=04SOpmy/nQi3IPuBwWUpHz+7j9p4iDrmYSVTlxJeMQQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1EHM4UhblKPcFQpKH10qoWuf9xrkOZNgCsggCvRp6dLkkhm3rUg6zIX/wes0er336
-         2AonE0vc+aJ1BmO3hSF2/endFZGMm+gki+6zxalXQPLgXvOzCw7SVq/q8F3g6HNlsJ
-         fRD44IO4SaXnLRkWsNibkrneGqFN7SHxi68wcMw0=
+        b=oj51+2HNvS06f4HOLBsm+Twx23pJAjFeMow/Ipb5EIsRJ7RKTCUKuorFiyIcToTP0
+         FSAAIjH7ibOk/rw0ZXOq+pPmSuu0CO96GcjhEfPqVqmdUVlBCcKjfJ+KXBdRHPmaGm
+         xyHwdznk+madrane+0l+8ej30d1KRytyVC8MkXKA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Andr=C3=A9=20Przywara?= <andre.przywara@arm.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 4.19 25/48] KVM: arm: vgic: Fix limit condition when writing to GICD_I[CS]ACTIVER
-Date:   Wed, 13 May 2020 11:44:51 +0200
-Message-Id: <20200513094357.307209096@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 16/48] bnxt_en: Improve AER slot reset.
+Date:   Wed, 13 May 2020 11:44:42 +0200
+Message-Id: <20200513094355.306462715@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
 References: <20200513094351.100352960@linuxfoundation.org>
@@ -60,46 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Michael Chan <michael.chan@broadcom.com>
 
-commit 1c32ca5dc6d00012f0c964e5fdd7042fcc71efb1 upstream.
+[ Upstream commit bae361c54fb6ac6eba3b4762f49ce14beb73ef13 ]
 
-When deciding whether a guest has to be stopped we check whether this
-is a private interrupt or not. Unfortunately, there's an off-by-one bug
-here, and we fail to recognize a whole range of interrupts as being
-global (GICv2 SPIs 32-63).
+Improve the slot reset sequence by disabling the device to prevent bad
+DMAs if slot reset fails.  Return the proper result instead of always
+PCI_ERS_RESULT_RECOVERED to the caller.
 
-Fix the condition from > to be >=.
-
-Cc: stable@vger.kernel.org
-Fixes: abd7229626b93 ("KVM: arm/arm64: Simplify active_change_prepare and plug race")
-Reported-by: André Przywara <andre.przywara@arm.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Fixes: 6316ea6db93d ("bnxt_en: Enable AER support.")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- virt/kvm/arm/vgic/vgic-mmio.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/virt/kvm/arm/vgic/vgic-mmio.c
-+++ b/virt/kvm/arm/vgic/vgic-mmio.c
-@@ -381,7 +381,7 @@ static void vgic_mmio_change_active(stru
- static void vgic_change_active_prepare(struct kvm_vcpu *vcpu, u32 intid)
- {
- 	if (vcpu->kvm->arch.vgic.vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3 ||
--	    intid > VGIC_NR_PRIVATE_IRQS)
-+	    intid >= VGIC_NR_PRIVATE_IRQS)
- 		kvm_arm_halt_guest(vcpu->kvm);
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -9300,8 +9300,11 @@ static pci_ers_result_t bnxt_io_slot_res
+ 		}
+ 	}
+ 
+-	if (result != PCI_ERS_RESULT_RECOVERED && netif_running(netdev))
+-		dev_close(netdev);
++	if (result != PCI_ERS_RESULT_RECOVERED) {
++		if (netif_running(netdev))
++			dev_close(netdev);
++		pci_disable_device(pdev);
++	}
+ 
+ 	rtnl_unlock();
+ 
+@@ -9312,7 +9315,7 @@ static pci_ers_result_t bnxt_io_slot_res
+ 			 err); /* non-fatal, continue */
+ 	}
+ 
+-	return PCI_ERS_RESULT_RECOVERED;
++	return result;
  }
  
-@@ -389,7 +389,7 @@ static void vgic_change_active_prepare(s
- static void vgic_change_active_finish(struct kvm_vcpu *vcpu, u32 intid)
- {
- 	if (vcpu->kvm->arch.vgic.vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3 ||
--	    intid > VGIC_NR_PRIVATE_IRQS)
-+	    intid >= VGIC_NR_PRIVATE_IRQS)
- 		kvm_arm_resume_guest(vcpu->kvm);
- }
- 
+ /**
 
 
