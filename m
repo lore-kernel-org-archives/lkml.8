@@ -2,51 +2,52 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D0BCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3C4C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76B0220769
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7CDF206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364184;
-	bh=Snpmvv0YuV91IW1ciI0eICakPwNAYNUaaKoQhGWBYVs=;
+	s=default; t=1589364188;
+	bh=7h3ilf4yRUxzBh/TqzooOJcpzlutNJdFmVpnoQVo1lo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k4AludAFtKi7wOwClAwvTqe3sE7lVRU8Yj9G1Q1mU7AIIcRyUAMbKMl7CdgIFak2k
-	 1rSpl1Ft+TclIlHq4aen6+VDZJBmbQjT40nRxYr7d3hyxZcYgu55+uWYt2bJwtktGi
-	 tN9fr4js2kd4XpJWl/8g2/6sreOvLYxJ5w/PN/Fg=
+	b=nn8nrZawpBgWS1ErFwr+P2zsiEBMTWE5DR3L4UWOf56Zjg27D0NwuZeFQuX6jBGHq
+	 c6CYa3Pk62FSHGf1xqx9AYkcXDzY3R8N5NnUpSqjxoPKPVpnfu7ysrQicBYYYxp5pL
+	 Ujj0A67fO5Ihlaht+ZmzSCYBX2EvPlejykMIcoLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387654AbgEMKDD (ORCPT
+        id S1733230AbgEMJtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:03:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48560 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:49:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733248AbgEMJtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:49:31 -0400
+        id S1732596AbgEMJtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:49:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFD9F2493C;
-        Wed, 13 May 2020 09:49:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9253520769;
+        Wed, 13 May 2020 09:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363370;
-        bh=Snpmvv0YuV91IW1ciI0eICakPwNAYNUaaKoQhGWBYVs=;
+        s=default; t=1589363358;
+        bh=7h3ilf4yRUxzBh/TqzooOJcpzlutNJdFmVpnoQVo1lo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NKB08oiHMS29A/Ar8z1A1Fjklm/9FcRXC8a2zy91TcF6pTBbqfe+LzLTJPhkYzxKv
-         KqrWXLr6hnJ6LuuQo0k2wB+9CVSSfmwEbwYGcG/tcj2572mredA5SEndmuBCbgEQV5
-         u9sum44pGipNgjzB//v47ptpQ52yZFNIp+2ymeJE=
+        b=DuS5vARycaSlMWkYXUmbjxG/Jz7GgwXAw+uteXzV4CCKJH6ygQhOE/kqxkZlGWtQV
+         wUGS3uAo9nVO2H0V8vUUsX1mUVZo9sNQ45FrXx4uPk/TIvR3w6SlyT70ZeXlJwFfJc
+         /V4RoC3ldWKedq3kNNaRycJroeJBiXrHN5fJV/1w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 39/90] net: mvpp2: prevent buffer overflow in mvpp22_rss_ctx()
-Date:   Wed, 13 May 2020 11:44:35 +0200
-Message-Id: <20200513094412.739673889@linuxfoundation.org>
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 06/90] drm/amdgpu: move kfd suspend after ip_suspend_phase1
+Date:   Wed, 13 May 2020 11:44:02 +0200
+Message-Id: <20200513094409.731798624@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -59,33 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Evan Quan <evan.quan@amd.com>
 
-[ Upstream commit 39bd16df7c31bb8cf5dfd0c88e42abd5ae10029d ]
+[ Upstream commit c457a273e118bb96e1db8d1825f313e6cafe4258 ]
 
-The "rss_context" variable comes from the user via  ethtool_get_rxfh().
-It can be any u32 value except zero.  Eventually it gets passed to
-mvpp22_rss_ctx() and if it is over MVPP22_N_RSS_TABLES (8) then it
-results in an array overflow.
+This sequence change should be safe as what did in ip_suspend_phase1
+is to suspend DCE only. And this is a prerequisite for coming
+redundant cg/pg ungate dropping.
 
-Fixes: 895586d5dc32 ("net: mvpp2: cls: Use RSS contexts to handle RSS tables")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 487eca11a321ef ("drm/amdgpu: fix gfx hang during suspend with video playback (v2)")
+Signed-off-by: Evan Quan <evan.quan@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -4319,6 +4319,8 @@ static int mvpp2_ethtool_get_rxfh_contex
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index 630e8342d1625..ca2a0770aad2e 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -3073,12 +3073,12 @@ int amdgpu_device_suspend(struct drm_device *dev, bool suspend, bool fbcon)
+ 	amdgpu_device_set_pg_state(adev, AMD_PG_STATE_UNGATE);
+ 	amdgpu_device_set_cg_state(adev, AMD_CG_STATE_UNGATE);
  
- 	if (!mvpp22_rss_is_supported())
- 		return -EOPNOTSUPP;
-+	if (rss_context >= MVPP22_N_RSS_TABLES)
-+		return -EINVAL;
+-	amdgpu_amdkfd_suspend(adev);
+-
+ 	amdgpu_ras_suspend(adev);
  
- 	if (hfunc)
- 		*hfunc = ETH_RSS_HASH_CRC32;
+ 	r = amdgpu_device_ip_suspend_phase1(adev);
+ 
++	amdgpu_amdkfd_suspend(adev);
++
+ 	/* evict vram memory */
+ 	amdgpu_bo_evict_vram(adev);
+ 
+-- 
+2.20.1
+
 
 
