@@ -2,278 +2,172 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E96BFC2D0F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F94BC2D0FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B798220769
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:04:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589353448;
-	bh=z5/UecUrUHljRx/JikYXR9sF//4LikHQS4aB/GwnvjU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=loz+kZcpPxumXSHby/7v2gpectyeRdrIZHiEEyLW9klw27rmDqr5LquXkBm46rwX9
-	 AYIQHjoC3gI5ogqgylTKZgHF7PzAuyLVIrBGp9KJsvxHMaj3i1aLdHHOIJTy8t0N7L
-	 8rv1awnllBzby8k16AURPe/hW989RQvkMO31iFnI=
+	by mail.kernel.org (Postfix) with ESMTP id 0F64E206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:04:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cY9kffmc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730042AbgEMHEI (ORCPT
+        id S1730224AbgEMHEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 03:04:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40250 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728680AbgEMHEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 03:04:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AF29206F5;
-        Wed, 13 May 2020 07:04:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589353445;
-        bh=z5/UecUrUHljRx/JikYXR9sF//4LikHQS4aB/GwnvjU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OQZ3pGiOPKp6SgVTRSE2qeOC039IyjUqUznX/HgRk0tW2LeotNasx5P6Q/FAFw6EG
-         154VOIjRZeJ199eNVaQcLZ93kU0s9G6JCnj7ggYb08m/JKHbh9AWISehbLtUwtI32P
-         5j2x/M2ZgP9d8T+8nL6B9xdkAozzG11jLKV4FAeU=
-Date:   Wed, 13 May 2020 09:04:03 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     rananta@codeaurora.org
-Cc:     Jiri Slaby <jslaby@suse.cz>, andrew@daynix.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tty: hvc: Fix data abort due to race in hvc_open
-Message-ID: <20200513070403.GB764901@kroah.com>
-References: <20200428032601.22127-1-rananta@codeaurora.org>
- <20200506094851.GA2787548@kroah.com>
- <98bbe7afabf48d8e8fe839fdc9e836a5@codeaurora.org>
- <20200510064819.GB3400311@kroah.com>
- <77d889be4e0cb0e6e30f96199e2d843d@codeaurora.org>
- <20200511073913.GA1347819@kroah.com>
- <0f7791f5-0a53-59f6-7277-247a789f30c2@suse.cz>
- <20200512082551.GA3526567@kroah.com>
- <417b1d320bda37410788430979dd708d@codeaurora.org>
+        Wed, 13 May 2020 03:04:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51686 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729737AbgEMHEL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 03:04:11 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F144BC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 00:04:10 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id j21so7373300pgb.7
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 00:04:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Z1F2s/+f+lw9uO7rQ55VG5I1nlicDx+n8EcbwlW6GEY=;
+        b=cY9kffmcGW07Z5UEg2E491/shdagnh+lsIJV/FzgCG2qF5NAAQMIOJJ8UQLJt6Utm8
+         HOviAhzLo5bTShXUfI8T8WaD3YeSy4E2I6KUTmSTp+i5JLTWz9wLY4Lc80KTvBE4isoJ
+         xNBk1KN5zz9eRGwlBpAFn1uhwoavUYpNp/fb+EWka8AKuG8XlKJ7x+ycXIJSLK54Feho
+         YCdxChR2fIWNL2xIfYp0tsiPvMj78Yh4hcgpG1b7TB3sfa8P8oehtN5C3hJqxoxh9oxl
+         ZOkNTRFTqaUxPV2wipBjVcsvShi2+aFzGWhGW/FAWRJHUTsNQtVpucSgEzYj8AudW52I
+         oJOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Z1F2s/+f+lw9uO7rQ55VG5I1nlicDx+n8EcbwlW6GEY=;
+        b=Hu6LWZldVjdGkuijlv2BdB8Wefi0D1Lx5M9mQvhR/T9frrxFxNl5+xtoeGlB4vqo3n
+         6T/zueFAqkOWeshfPMOXDJAKbQEgbeJUiA+gJegBIWj4wW8jmqQFmuCcflj+oc/rkj6x
+         WPyGg9i6/hO7Tsa9OYoIHyRebp7qeC93zR7072iWzs1piBXY4J9u5o0xF6qRXtP4G/h4
+         jDxU/IzC5y2u6SMLffc1tULo1eTnoc0JYQlBB2iSeXo+Pe+IJ5wlavmDVJ7PrDXQMWsG
+         aFlnQRPkSYfTcNPkPswcR5AgjhQwXLJyzzX5S05lO7PUFC70ukQF0SJZwjfpPhhJiD8k
+         S64w==
+X-Gm-Message-State: AGi0PuZiROByywAYYYh0BvxnZj1hYQ9KbqktlP+oIFF8JUA4PGu6OMhJ
+        QxLmm8OpCCXktiAMWSaE+kHu
+X-Google-Smtp-Source: APiQypL6xJQlrhvV3Y3+lPYNU7n5DCbP8jl8IH33zTYY2mG0swMjDBMjF6OdQlplq3rFwPPKyOf0VQ==
+X-Received: by 2002:a63:ed50:: with SMTP id m16mr24321664pgk.271.1589353450263;
+        Wed, 13 May 2020 00:04:10 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:30b:c888:d8ce:4edd:4c38:4a1b])
+        by smtp.gmail.com with ESMTPSA id g14sm13652430pfh.49.2020.05.13.00.04.06
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 13 May 2020 00:04:09 -0700 (PDT)
+Date:   Wed, 13 May 2020 12:34:03 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Hemant Kumar <hemantk@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jhugo@codeaurora.org, bbhatt@codeaurora.org
+Subject: Re: [PATCH v1 3/5] bus: mhi: core: Skip handling BHI irq if MHI reg
+ access is not allowed
+Message-ID: <20200513070402.GA26866@Mani-XPS-13-9360>
+References: <1589248989-23824-1-git-send-email-hemantk@codeaurora.org>
+ <1589248989-23824-4-git-send-email-hemantk@codeaurora.org>
+ <20200512065349.GE4928@Mani-XPS-13-9360>
+ <5e9a15ed-4bad-744a-af07-b28c3bcc47c4@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <417b1d320bda37410788430979dd708d@codeaurora.org>
+In-Reply-To: <5e9a15ed-4bad-744a-af07-b28c3bcc47c4@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 02:39:50PM -0700, rananta@codeaurora.org wrote:
-> On 2020-05-12 01:25, Greg KH wrote:
-> > On Tue, May 12, 2020 at 09:22:15AM +0200, Jiri Slaby wrote:
-> > > On 11. 05. 20, 9:39, Greg KH wrote:
-> > > > On Mon, May 11, 2020 at 12:23:58AM -0700, rananta@codeaurora.org wrote:
-> > > >> On 2020-05-09 23:48, Greg KH wrote:
-> > > >>> On Sat, May 09, 2020 at 06:30:56PM -0700, rananta@codeaurora.org wrote:
-> > > >>>> On 2020-05-06 02:48, Greg KH wrote:
-> > > >>>>> On Mon, Apr 27, 2020 at 08:26:01PM -0700, Raghavendra Rao Ananta wrote:
-> > > >>>>>> Potentially, hvc_open() can be called in parallel when two tasks calls
-> > > >>>>>> open() on /dev/hvcX. In such a scenario, if the
-> > > >>>>>> hp->ops->notifier_add()
-> > > >>>>>> callback in the function fails, where it sets the tty->driver_data to
-> > > >>>>>> NULL, the parallel hvc_open() can see this NULL and cause a memory
-> > > >>>>>> abort.
-> > > >>>>>> Hence, serialize hvc_open and check if tty->private_data is NULL
-> > > >>>>>> before
-> > > >>>>>> proceeding ahead.
-> > > >>>>>>
-> > > >>>>>> The issue can be easily reproduced by launching two tasks
-> > > >>>>>> simultaneously
-> > > >>>>>> that does nothing but open() and close() on /dev/hvcX.
-> > > >>>>>> For example:
-> > > >>>>>> $ ./simple_open_close /dev/hvc0 & ./simple_open_close /dev/hvc0 &
-> > > >>>>>>
-> > > >>>>>> Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
-> > > >>>>>> ---
-> > > >>>>>>  drivers/tty/hvc/hvc_console.c | 16 ++++++++++++++--
-> > > >>>>>>  1 file changed, 14 insertions(+), 2 deletions(-)
-> > > >>>>>>
-> > > >>>>>> diff --git a/drivers/tty/hvc/hvc_console.c
-> > > >>>>>> b/drivers/tty/hvc/hvc_console.c
-> > > >>>>>> index 436cc51c92c3..ebe26fe5ac09 100644
-> > > >>>>>> --- a/drivers/tty/hvc/hvc_console.c
-> > > >>>>>> +++ b/drivers/tty/hvc/hvc_console.c
-> > > >>>>>> @@ -75,6 +75,8 @@ static LIST_HEAD(hvc_structs);
-> > > >>>>>>   */
-> > > >>>>>>  static DEFINE_MUTEX(hvc_structs_mutex);
-> > > >>>>>>
-> > > >>>>>> +/* Mutex to serialize hvc_open */
-> > > >>>>>> +static DEFINE_MUTEX(hvc_open_mutex);
-> > > >>>>>>  /*
-> > > >>>>>>   * This value is used to assign a tty->index value to a hvc_struct
-> > > >>>>>> based
-> > > >>>>>>   * upon order of exposure via hvc_probe(), when we can not match it
-> > > >>>>>> to
-> > > >>>>>> @@ -346,16 +348,24 @@ static int hvc_install(struct tty_driver
-> > > >>>>>> *driver, struct tty_struct *tty)
-> > > >>>>>>   */
-> > > >>>>>>  static int hvc_open(struct tty_struct *tty, struct file * filp)
-> > > >>>>>>  {
-> > > >>>>>> -	struct hvc_struct *hp = tty->driver_data;
-> > > >>>>>> +	struct hvc_struct *hp;
-> > > >>>>>>  	unsigned long flags;
-> > > >>>>>>  	int rc = 0;
-> > > >>>>>>
-> > > >>>>>> +	mutex_lock(&hvc_open_mutex);
-> > > >>>>>> +
-> > > >>>>>> +	hp = tty->driver_data;
-> > > >>>>>> +	if (!hp) {
-> > > >>>>>> +		rc = -EIO;
-> > > >>>>>> +		goto out;
-> > > >>>>>> +	}
-> > > >>>>>> +
-> > > >>>>>>  	spin_lock_irqsave(&hp->port.lock, flags);
-> > > >>>>>>  	/* Check and then increment for fast path open. */
-> > > >>>>>>  	if (hp->port.count++ > 0) {
-> > > >>>>>>  		spin_unlock_irqrestore(&hp->port.lock, flags);
-> > > >>>>>>  		hvc_kick();
-> > > >>>>>> -		return 0;
-> > > >>>>>> +		goto out;
-> > > >>>>>>  	} /* else count == 0 */
-> > > >>>>>>  	spin_unlock_irqrestore(&hp->port.lock, flags);
-> > > >>>>>
-> > > >>>>> Wait, why isn't this driver just calling tty_port_open() instead of
-> > > >>>>> trying to open-code all of this?
-> > > >>>>>
-> > > >>>>> Keeping a single mutext for open will not protect it from close, it will
-> > > >>>>> just slow things down a bit.  There should already be a tty lock held by
-> > > >>>>> the tty core for open() to keep it from racing things, right?
-> > > >>>> The tty lock should have been held, but not likely across
-> > > >>>> ->install() and
-> > > >>>> ->open() callbacks, thus resulting in a race between hvc_install() and
-> > > >>>> hvc_open(),
-> > > >>>
-> > > >>> How?  The tty lock is held in install, and should not conflict with
-> > > >>> open(), otherwise, we would be seeing this happen in all tty drivers,
-> > > >>> right?
-> > > >>>
-> > > >> Well, I was expecting the same, but IIRC, I see that the open() was being
-> > > >> called in parallel for the same device node.
-> > > >
-> > > > So open and install are happening at the same time?  And the tty_lock()
-> > > > does not protect the needed fields from being protected properly?  If
-> > > > not, what fields are being touched without the lock?
-> > > >
-> > > >> Is it expected that the tty core would allow only one thread to
-> > > >> access the dev-node, while blocking the other, or is it the client
-> > > >> driver's responsibility to handle the exclusiveness?
-> > > >
-> > > > The tty core should handle this correctly, for things that can mess
-> > > > stuff up (like install and open at the same time).  A driver should not
-> > > > have to worry about that.
-> > > >
-> > > >>>> where hvc_install() sets a data and the hvc_open() clears it.
-> > > >>>> hvc_open()
-> > > >>>> doesn't
-> > > >>>> check if the data was set to NULL and proceeds.
-> > > >>>
-> > > >>> What data is being set that hvc_open is checking?
-> > > >> hvc_install sets tty->private_data to hp, while hvc_open sets it to NULL (in
-> > > >> one of the paths).
-> > > >
-> > > > I see no use of private_data in drivers/tty/hvc/ so what exactly are you
-> > > > referring to?
-> > > 
-> > > He likely means tty->driver_data. And there exactly lays the issue.
-> > > 
-> > > commit bdb498c20040616e94b05c31a0ceb3e134b7e829
-> > > Author: Jiri Slaby <jslaby@suse.cz>
-> > > Date:   Tue Aug 7 21:48:04 2012 +0200
-> > > 
-> > >     TTY: hvc_console, add tty install
-> > > 
-> > > added hvc_install but did not move 'tty->driver_data = NULL;' from
-> > > hvc_open's fail path to hvc_cleanup.
-> > > 
-> > > IOW hvc_open now NULLs tty->driver_data even for another task which
-> > > opened the tty earlier. The same holds for
-> > > "tty_port_tty_set(&hp->port,
-> > > NULL);" there. And actually "tty_port_put(&hp->port);" is also
-> > > incorrect
-> > > for the 2nd task opening the tty.
-> > > 
-> > > So, a mutex with tty->driver_data check in open is not definitely the
-> > > way to go. This mess needs to be sorted out properly. Sure, a good
-> > > start
-> > > would be a conversion to tty_port_open. Right after dropping "tty:
-> > > hvc:
-> > > Fix data abort due to race in hvc_open" from tty/tty-next :).
-> > 
-> > I've now reverted this commit so we can start from a "clean" place.
-> > 
-> > > What I *don't* understand is why hp->ops->notifier_add fails, given
-> > > the
-> > > open does not allow multiple opens anyway?
-> > 
-> > I don't understand that either.  Raghavendra, can you show a real trace
-> > for this issue that shows this?
-> > 
-> Let me know if this helps:
+On Tue, May 12, 2020 at 05:28:45PM -0700, Hemant Kumar wrote:
+> Hi Mani,
 > 
-> [  265.332900] Unable to handle kernel NULL pointer dereference at virtual
-> address 00000000000000a8
-> [  265.332920] Mem abort info:
-> [  265.332934]   ESR = 0x96000006
-> [  265.332950]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [  265.332963]   SET = 0, FnV = 0
-> [  265.332975]   EA = 0, S1PTW = 0
-> [  265.332985] Data abort info:
-> [  265.332997]   ISV = 0, ISS = 0x00000006
-> [  265.333008]   CM = 0, WnR = 0
-> [  265.333025] user pgtable: 4k pages, 39-bit VAs, pgdp=00000001620f3000
-> [  265.333038] [00000000000000a8] pgd=00000001620f2003,
-> pud=00000001620f2003, pmd=0000000000000000
-> [  265.333071] Internal error: Oops: 96000006 [#1] PREEMPT SMP
-> [  265.333424] CPU: 1 PID: 5653 Comm: stress-ng-dev Tainted: G S      W  O
-> 5.4.12-g04866e0 #1
-> [  265.333458] pstate: 80400085 (Nzcv daIf +PAN -UAO)
-> [  265.333499] pc : _raw_spin_lock_irqsave+0x40/0x7c
-> [  265.333517] lr : _raw_spin_lock_irqsave+0x38/0x7c
-> [  265.333530] sp : ffffffc02436ba40
-> [  265.333542] x29: ffffffc02436ba40 x28: 0000000000020800
-> [  265.333562] x27: ffffffdfb4046490 x26: ffffff8101b83400
-> [  265.333580] x25: ffffff80e163ad00 x24: ffffffdfb45c7798
-> [  265.333598] x23: ffffff8101b83668 x22: ffffffdfb4974000
-> [  265.333617] x21: 0000000000000001 x20: 00000000000000a8
-> [  265.333634] x19: 0000000000000000 x18: ffffff80e0b0d460
-> [  265.333652] x17: 0000000000000000 x16: 0000000001000000
-> [  265.333670] x15: 0000000001000000 x14: 00000000f8000000
-> [  265.333688] x13: 0000000000000000 x12: 0000000000000001
-> [  265.333706] x11: 17f5f16765f64600 x10: 17f5f16765f64600
-> [  265.333724] x9 : ffffffdfb3444244 x8 : 0000000000000000
-> [  265.333741] x7 : 0000000000000000 x6 : 0000000000000000
-> [  265.333759] x5 : 0000000000000000 x4 : 0000000000000002
-> [  265.333776] x3 : ffffffc02436b9c0 x2 : ffffffdfb40456e0
-> [  265.333794] x1 : ffffffc02436b9c0 x0 : ffffffdfb3444244
-> [  265.333812] Call trace:
-> [  265.333831]  _raw_spin_lock_irqsave+0x40/0x7c
-> [  265.333859]  hvc_open$61deaf328f140fd7df47c115ec866fa5+0x28/0x174
-> [  265.333882]  tty_open$86bd494905ebe22944bf63b711173de3+0x3d0/0x584
-> [  265.333921]  chrdev_open$4083aaa799bca8e0e1e0c8dc1947aa96+0x1c4/0x248
-> [  265.333940]  do_dentry_open+0x258/0x3b0
-> [  265.333956]  vfs_open+0x2c/0x38
-> [  265.333975]  path_openat+0x898/0xedc
-> [  265.333991]  do_filp_open+0x78/0x124
-> [  265.334006]  do_sys_open+0x13c/0x298
-> [  265.334022]  __arm64_sys_openat+0x28/0x34
-> [  265.334044]  el0_svc_common+0xb8/0x1b4
-> [  265.334059]  el0_svc_handler+0x6c/0x88
-> [  265.334079]  el0_svc+0x8/0xc
-> [  265.334110] Code: 52800035 97b9fec7 aa1f03e8 f9800291 (885ffe81)
-> [  265.334130] ---[ end trace ac90e3099a98e99f ]---
-> [  265.334146] Kernel panic - not syncing: Fatal exception
+> On 5/11/20 11:53 PM, Manivannan Sadhasivam wrote:
+> > On Mon, May 11, 2020 at 07:03:07PM -0700, Hemant Kumar wrote:
+> > > Driver continues handling of BHI interrupt even if MHI register access
+> > > is not allowed. By doing so it calls the status call back and performs
+> > > early notification for the MHI client. This is not needed when MHI
+> > > register access is not allowed. Hence skip the handling in this case and
+> > > return. Also add debug log to print device state, local EE and device EE
+> > > when reg access is valid.
+> > > 
+> > > Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
+> > > Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> > > ---
+> > >   drivers/bus/mhi/core/main.c | 21 ++++++++++++++-------
+> > >   1 file changed, 14 insertions(+), 7 deletions(-)
+> > > 
+> > > diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+> > > index 9ec9b36..467c0ba 100644
+> > > --- a/drivers/bus/mhi/core/main.c
+> > > +++ b/drivers/bus/mhi/core/main.c
+> > > @@ -369,22 +369,29 @@ irqreturn_t mhi_irq_handler(int irq_number, void *dev)
+> > >   	return IRQ_HANDLED;
+> > >   }
+> > > -irqreturn_t mhi_intvec_threaded_handler(int irq_number, void *dev)
+> > > +irqreturn_t mhi_intvec_threaded_handler(int irq_number, void *priv)
+> > >   {
+> > > -	struct mhi_controller *mhi_cntrl = dev;
+> > > +	struct mhi_controller *mhi_cntrl = priv;
+> > > +	struct device *dev = &mhi_cntrl->mhi_dev->dev;
+> > >   	enum mhi_state state = MHI_STATE_MAX;
+> > >   	enum mhi_pm_state pm_state = 0;
+> > >   	enum mhi_ee_type ee = 0;
+> > >   	write_lock_irq(&mhi_cntrl->pm_lock);
+> > > -	if (MHI_REG_ACCESS_VALID(mhi_cntrl->pm_state)) {
+> > > -		state = mhi_get_mhi_state(mhi_cntrl);
+> > > -		ee = mhi_cntrl->ee;
+> > > -		mhi_cntrl->ee = mhi_get_exec_env(mhi_cntrl);
+> > > +	if (!MHI_REG_ACCESS_VALID(mhi_cntrl->pm_state)) {
+> > > +		write_unlock_irq(&mhi_cntrl->pm_lock);
+> > 
+> > write_lock is only used for protecting 'mhi_cntrl->ee' but here we are not
+> > updating it if reg access is not valid. So there is no reason to hold this lock.
+> Original code is using write_lock to protect pm_state as well as
+> mhi_cntrl->ee. This patch is keeping the lock same as original code. Just if
+> condition logic is negated here due to that write_unlock_irq is added under
+> if condition.
 
-Hm, do you have a strace showing the close happening at the same time?
-What about install()?
+'mhi_cntrl->pm_state' is not always protected by 'pm_lock' and that too
+write_lock is used here but 'pm_state' is not modified. So as like in most of
+the places, locks are abused here as well.
 
-And what line in hvc_open() does that offset correspond to?
+I think after 5.8, you should really think about fixing the usage of locks
+throughout the MHI stack.
 
-thanks,
+So I'll take this patch as it is.
 
-greg k-h
+Thanks,
+Mani
+
+> > 
+> > > +		goto exit_intvec;
+> > >   	}
+> > > +	state = mhi_get_mhi_state(mhi_cntrl);
+> > > +	ee = mhi_cntrl->ee;
+> > > +	mhi_cntrl->ee = mhi_get_exec_env(mhi_cntrl);
+> > 
+> > But it is needed here.
+> > 
+> > Thanks,
+> > Mani
+> > 
+> > > +	dev_dbg(dev, "local ee:%s device ee:%s dev_state:%s\n",
+> > > +		TO_MHI_EXEC_STR(mhi_cntrl->ee), TO_MHI_EXEC_STR(ee),
+> > > +		TO_MHI_STATE_STR(state));
+> > > +
+> > >   	if (state == MHI_STATE_SYS_ERR) {
+> > > -		dev_dbg(&mhi_cntrl->mhi_dev->dev, "System error detected\n");
+> > > +		dev_dbg(dev, "System error detected\n");
+> > >   		pm_state = mhi_tryset_pm_state(mhi_cntrl,
+> > >   					       MHI_PM_SYS_ERR_DETECT);
+> > >   	}
+> > > -- 
+> > > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> > > a Linux Foundation Collaborative Project
+> 
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
