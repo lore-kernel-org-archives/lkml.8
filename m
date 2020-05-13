@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EDDCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF59C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBBE420740
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DCBA20753
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:46:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363165;
-	bh=hS3ulpwO73UOM39R35oZ7+2kvPKwl2jgqQWmIFVJpSA=;
+	s=default; t=1589363168;
+	bh=0QOzYPBYJcT+FoFtXF0SFF7Km3E2Ug+EeUE4jgl4fLw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0UGY7H6bt3KIFesi5s+EcwxRBVHzhuLBBrW2seQJksyyon/XdPoKMrbbq1E68jzYN
-	 Jfe8OJ1XUJKkvWqtSlNXfNH5jzmCytVFpnT0cNxDulkxBvYospI8mPV1Hn0wQ0fb06
-	 5w/AAhL31UBZgzmmefZvKXd1IFHvG0ORRgHb344Y=
+	b=aNUIRyyopuNMuMvE6CP63nr2gFv18YSyU5jCgQjZA+6Yb59zX8UVsY2Klr04llefW
+	 2LZ4ksPOUTPFmOnA9iP0o+1rgDiKzGr07lU5Cy/B3aGnbeHl8VLhHmCWwPt+GKam/X
+	 ubFftjcRaNjT12WJCd9SsvocWKlQEy6C5Z5cnp1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732561AbgEMJqF (ORCPT
+        id S1732575AbgEMJqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:46:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43240 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:46:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726492AbgEMJqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:46:02 -0400
+        id S1726492AbgEMJqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:46:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04EBD20740;
-        Wed, 13 May 2020 09:46:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6691720753;
+        Wed, 13 May 2020 09:46:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363161;
-        bh=hS3ulpwO73UOM39R35oZ7+2kvPKwl2jgqQWmIFVJpSA=;
+        s=default; t=1589363163;
+        bh=0QOzYPBYJcT+FoFtXF0SFF7Km3E2Ug+EeUE4jgl4fLw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PIKEshmtpimBk/Sw1IoqGdi/TlYIUN9GausC1hT+VQyHA6E/BWKM64e52flwOTYCq
-         ENRndUjNgr04WnpZw4p4rDAGgzi012eyu3bggBV7lxd/f3xEB0pyXE0/QmaS+7QsWQ
-         SS3JKEcqdS1FvDQhPSEH1v/OmV592TsMUbIQAGGU=
+        b=m8NlDofhX9a4NDlaXYknC2a51JNMtX/lqXG5xr2BeIZXPgWlt3ukk0WKoMOc/EEhH
+         pQx6sroy4IGTLnQQuOY3ylZxzuOY+4F4Hnfl1UhZNyyN3Cv8XhaDeuwc66E5LcnEA2
+         LC2fsBNWRfIqaNUjm+lhwdxifVgTK+PpMBtzOU0I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot+0251e883fe39e7a0cb0a@syzkaller.appspotmail.com,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        stable@vger.kernel.org, Jon Maloy <jmaloy@redhat.com>,
+        Ying Xue <ying.xue@windriver.com>,
+        Tuong Lien <tuong.t.lien@dektech.com.au>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 11/48] sch_sfq: validate silly quantum values
-Date:   Wed, 13 May 2020 11:44:37 +0200
-Message-Id: <20200513094354.518501516@linuxfoundation.org>
+Subject: [PATCH 4.19 12/48] tipc: fix partial topology connection closure
+Date:   Wed, 13 May 2020 11:44:38 +0200
+Message-Id: <20200513094354.704448534@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
 References: <20200513094351.100352960@linuxfoundation.org>
@@ -61,47 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Tuong Lien <tuong.t.lien@dektech.com.au>
 
-[ Upstream commit df4953e4e997e273501339f607b77953772e3559 ]
+[ Upstream commit 980d69276f3048af43a045be2925dacfb898a7be ]
 
-syzbot managed to set up sfq so that q->scaled_quantum was zero,
-triggering an infinite loop in sfq_dequeue()
+When an application connects to the TIPC topology server and subscribes
+to some services, a new connection is created along with some objects -
+'tipc_subscription' to store related data correspondingly...
+However, there is one omission in the connection handling that when the
+connection or application is orderly shutdown (e.g. via SIGQUIT, etc.),
+the connection is not closed in kernel, the 'tipc_subscription' objects
+are not freed too.
+This results in:
+- The maximum number of subscriptions (65535) will be reached soon, new
+subscriptions will be rejected;
+- TIPC module cannot be removed (unless the objects  are somehow forced
+to release first);
 
-More generally, we must only accept quantum between 1 and 2^18 - 7,
-meaning scaled_quantum must be in [1, 0x7FFF] range.
+The commit fixes the issue by closing the connection if the 'recvmsg()'
+returns '0' i.e. when the peer is shutdown gracefully. It also includes
+the other unexpected cases.
 
-Otherwise, we also could have a loop in sfq_dequeue()
-if scaled_quantum happens to be 0x8000, since slot->allot
-could indefinitely switch between 0 and 0x8000.
-
-Fixes: eeaeb068f139 ("sch_sfq: allow big packets and be fair")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot+0251e883fe39e7a0cb0a@syzkaller.appspotmail.com
-Cc: Jason A. Donenfeld <Jason@zx2c4.com>
+Acked-by: Jon Maloy <jmaloy@redhat.com>
+Acked-by: Ying Xue <ying.xue@windriver.com>
+Signed-off-by: Tuong Lien <tuong.t.lien@dektech.com.au>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_sfq.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ net/tipc/topsrv.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/net/sched/sch_sfq.c
-+++ b/net/sched/sch_sfq.c
-@@ -641,6 +641,15 @@ static int sfq_change(struct Qdisc *sch,
- 	if (ctl->divisor &&
- 	    (!is_power_of_2(ctl->divisor) || ctl->divisor > 65536))
- 		return -EINVAL;
-+
-+	/* slot->allot is a short, make sure quantum is not too big. */
-+	if (ctl->quantum) {
-+		unsigned int scaled = SFQ_ALLOT_SIZE(ctl->quantum);
-+
-+		if (scaled <= 0 || scaled > SHRT_MAX)
-+			return -EINVAL;
-+	}
-+
- 	if (ctl_v1 && !red_check_params(ctl_v1->qth_min, ctl_v1->qth_max,
- 					ctl_v1->Wlog))
- 		return -EINVAL;
+--- a/net/tipc/topsrv.c
++++ b/net/tipc/topsrv.c
+@@ -409,10 +409,11 @@ static int tipc_conn_rcv_from_sock(struc
+ 		read_lock_bh(&sk->sk_callback_lock);
+ 		ret = tipc_conn_rcv_sub(srv, con, &s);
+ 		read_unlock_bh(&sk->sk_callback_lock);
++		if (!ret)
++			return 0;
+ 	}
+-	if (ret < 0)
+-		tipc_conn_close(con);
+ 
++	tipc_conn_close(con);
+ 	return ret;
+ }
+ 
 
 
