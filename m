@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 255DCCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CC5CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E90FF20753
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE73020740
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363598;
-	bh=3xG9TPjkLb2LpCYLww4vtZNrSlVKi1DeIqN36zfxsWM=;
+	s=default; t=1589363601;
+	bh=x6W/Pxf4cTQTlMo1ktdLzg2nMjER+L4G8RuHBtd4C3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DscVrLzEDTbZnbkMthCGCdYgX8BpqyeLUXFbjvMJZIraFGTMqcHSCg5Aotx2WpJys
-	 9w6xbgrcmCwQJuznK1DTOurSAHIasaB6IuDSefpwRIFAywu6sFY/HxN2t2X1PxwFMu
-	 9AMwFEzVqbKt5Kukwzs1U5b886R58qM7BOpDN/mU=
+	b=eMO5SeaLyMF7Pw08VntheQjcFLdl54t28pq8hoGOdTeO6hTDREU6HwUtWWm58H7Fj
+	 7ZiRBm+ko7HTsceSRdNyhwLNtGWkxMS8lySLe3aCW+w0E6smrmuatqdwImxqRAHHmA
+	 MPIY51/Fb+pV9JyGA4oIfJFkQlcdjWTYPxFFJ8/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387420AbgEMJxM (ORCPT
+        id S2387438AbgEMJxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:53:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54956 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:53:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733311AbgEMJxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:53:10 -0400
+        id S2387501AbgEMJxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:53:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 236A423127;
-        Wed, 13 May 2020 09:53:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D55F20740;
+        Wed, 13 May 2020 09:53:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363589;
-        bh=3xG9TPjkLb2LpCYLww4vtZNrSlVKi1DeIqN36zfxsWM=;
+        s=default; t=1589363594;
+        bh=x6W/Pxf4cTQTlMo1ktdLzg2nMjER+L4G8RuHBtd4C3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2upPZgJZFpeGRQMA8wWB6Gdh9kaf+F6NTx0Yn9WK1XC7SL+b7fBJJm2CW/wASjSfT
-         PO9q5p57668O+8G85HSiy9bLT6BWjIuQ+VsyeeYHY45+gkCsrj7VtSYH8/n6tgJ8Ml
-         4LZNMkzHU5M5326GcEOjA0FFl9aXabi19GZ/Ug2E=
+        b=BzAcAZzaG3M8vvaWZnjp7yqj8mPs1VTE+sUo3thnuecVMxCKxyIoJQ2DvnuRbixAY
+         Rqa6A1T2H1jQKH6KiS8mWFHxj8Vn5auBRsBQuMQdv+AVXLWIw8OTloRzLOVTY6j+xU
+         lftbGT5YS3Sb9BH/RShhOQ1peQpCL/csvKXw0egw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 045/118] bnxt_en: Fix VLAN acceleration handling in bnxt_fix_features().
-Date:   Wed, 13 May 2020 11:44:24 +0200
-Message-Id: <20200513094421.215548764@linuxfoundation.org>
+        stable@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.6 047/118] net/mlx5: Fix forced completion access non initialized command entry
+Date:   Wed, 13 May 2020 11:44:26 +0200
+Message-Id: <20200513094421.346220119@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -59,51 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Moshe Shemesh <moshe@mellanox.com>
 
-[ Upstream commit c72cb303aa6c2ae7e4184f0081c6d11bf03fb96b ]
+[ Upstream commit f3cb3cebe26ed4c8036adbd9448b372129d3c371 ]
 
-The current logic in bnxt_fix_features() will inadvertently turn on both
-CTAG and STAG VLAN offload if the user tries to disable both.  Fix it
-by checking that the user is trying to enable CTAG or STAG before
-enabling both.  The logic is supposed to enable or disable both CTAG and
-STAG together.
+mlx5_cmd_flush() will trigger forced completions to all valid command
+entries. Triggered by an asynch event such as fast teardown it can
+happen at any stage of the command, including command initialization.
+It will trigger forced completion and that can lead to completion on an
+uninitialized command entry.
 
-Fixes: 5a9f6b238e59 ("bnxt_en: Enable and disable RX CTAG and RX STAG VLAN acceleration together.")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Setting MLX5_CMD_ENT_STATE_PENDING_COMP only after command entry is
+initialized will ensure force completion is treated only if command
+entry is initialized.
+
+Fixes: 73dd3a4839c1 ("net/mlx5: Avoid using pending command interface slots")
+Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/cmd.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -9794,6 +9794,7 @@ static netdev_features_t bnxt_fix_featur
- 					   netdev_features_t features)
- {
- 	struct bnxt *bp = netdev_priv(dev);
-+	netdev_features_t vlan_features;
- 
- 	if ((features & NETIF_F_NTUPLE) && !bnxt_rfs_capable(bp))
- 		features &= ~NETIF_F_NTUPLE;
-@@ -9810,12 +9811,14 @@ static netdev_features_t bnxt_fix_featur
- 	/* Both CTAG and STAG VLAN accelaration on the RX side have to be
- 	 * turned on or off together.
- 	 */
--	if ((features & (NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_HW_VLAN_STAG_RX)) !=
--	    (NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_HW_VLAN_STAG_RX)) {
-+	vlan_features = features & (NETIF_F_HW_VLAN_CTAG_RX |
-+				    NETIF_F_HW_VLAN_STAG_RX);
-+	if (vlan_features != (NETIF_F_HW_VLAN_CTAG_RX |
-+			      NETIF_F_HW_VLAN_STAG_RX)) {
- 		if (dev->features & NETIF_F_HW_VLAN_CTAG_RX)
- 			features &= ~(NETIF_F_HW_VLAN_CTAG_RX |
- 				      NETIF_F_HW_VLAN_STAG_RX);
--		else
-+		else if (vlan_features)
- 			features |= NETIF_F_HW_VLAN_CTAG_RX |
- 				    NETIF_F_HW_VLAN_STAG_RX;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+@@ -888,7 +888,6 @@ static void cmd_work_handler(struct work
  	}
+ 
+ 	cmd->ent_arr[ent->idx] = ent;
+-	set_bit(MLX5_CMD_ENT_STATE_PENDING_COMP, &ent->state);
+ 	lay = get_inst(cmd, ent->idx);
+ 	ent->lay = lay;
+ 	memset(lay, 0, sizeof(*lay));
+@@ -910,6 +909,7 @@ static void cmd_work_handler(struct work
+ 
+ 	if (ent->callback)
+ 		schedule_delayed_work(&ent->cb_timeout_work, cb_timeout);
++	set_bit(MLX5_CMD_ENT_STATE_PENDING_COMP, &ent->state);
+ 
+ 	/* Skip sending command to fw if internal error */
+ 	if (pci_channel_offline(dev->pdev) ||
 
 
