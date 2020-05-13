@@ -2,57 +2,109 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B6B3CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AD5C2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47363204EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73CB1204EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:49:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="lT1SmIiR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388743AbgEMNrp (ORCPT
+        id S2388376AbgEMNtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:47:45 -0400
-Received: from verein.lst.de ([213.95.11.211]:46653 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726061AbgEMNro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:47:44 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 643AB68BEB; Wed, 13 May 2020 15:47:41 +0200 (CEST)
-Date:   Wed, 13 May 2020 15:47:41 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v5 00/38] DRM: fix struct sg_table nents vs. orig_nents
- misuse
-Message-ID: <20200513134741.GA12712@lst.de>
-References: <CGME20200513132127eucas1p23f6be10bbd627e69e36d2451068b3204@eucas1p2.samsung.com> <20200513132114.6046-1-m.szyprowski@samsung.com>
+        Wed, 13 May 2020 09:49:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388112AbgEMNtN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 09:49:13 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 508EDC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:49:13 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id z22so13734100lfd.0
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:49:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dNRjVusiQR0m8ObDJasAniiwjGsfLhZSJItKMA1wtWo=;
+        b=lT1SmIiRfh/M7ufVVskYrskIw70xhs5ozf7aqW6I4XdUc2PF1Jfz/VnN3U2OKlbGBG
+         uiXpMTyWTP27DCO+LF1v62OO+ez/U6NV5GJprTm6JwGPDdNwG2CANtbfESjurw1ac3dp
+         3hQfHFrOjudX9KR106oYVr03N1k1UExGO53F/trhMW44w96UX5G4tatRvsrb5vdoQtmR
+         ENFNdIsBzh7h45NU8oIUDGcgi3AAeLEYO+y6YbDX1ZFg7GzXh7SAhBr+F4Jt0TpkF5uk
+         27RjNLz5tqFbfZClHdhCBvxWmN/hHf8S6HzYNfMtZN0keetxTPxwoCmYFzZ7IuNMSJ1w
+         lU0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dNRjVusiQR0m8ObDJasAniiwjGsfLhZSJItKMA1wtWo=;
+        b=H5HvhR1Ssz1fRMc4FRHSApbNbq1PYSw1G0j5IBqjJW9wBfFzX/he8W1TYD35Y8fohB
+         hLXvbtDtjYlEjgQ2mY03iTgEoW9yk8MgG3Ire5mbrM2g6sFrt7ItjN1wiX2Czhnu3ywe
+         +qeyhasFW1dfRxuENxjTLphPrXZdhrQsiu+oJS6p922PBVh1+0l/6si/toiInVCPcpKZ
+         AKj7zOLEKOE0tePmRN0R22uNQmApk+LTszE9gYZq+NN46jwHowh7jddX9jABNpZXRfri
+         lJRxy8/laRlwoKofOFkpTWHVT/VNBXYXEfvDQ8mRoHXnT+mOI4ytaeCdCmUELrlsrxZj
+         PUtQ==
+X-Gm-Message-State: AOAM532kL9XIAD/wcWIzyWQyoNg+fTNm62J/XSIBGKAaOYHtroHNFNS7
+        yOqmyHwJI2HfMNqqulJjM5Hl7B/FcBxSJWSCikgIHA==
+X-Google-Smtp-Source: ABdhPJxDIlOiKQEjNVjIYYuRWZVqAtm0VIiXHSumjO4vIkHQpJkCx+MCtUc4lBL6USUR7ZeCUOs5rEQuTMiJ2UuvZcE=
+X-Received: by 2002:a19:7104:: with SMTP id m4mr14624165lfc.75.1589377751720;
+ Wed, 13 May 2020 06:49:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513132114.6046-1-m.szyprowski@samsung.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20200429140341.13294-1-maco@android.com> <20200429140341.13294-11-maco@android.com>
+ <CAB0TPYHwor85-fWKu+OMT-1ys2L7OSqVoReJRzNOMAE0xK+yzg@mail.gmail.com>
+ <1f3064a9-105f-02bb-6a1a-eb9875d292e3@kernel.dk> <4416f60a-6050-5067-6881-0ee9ef944669@kernel.dk>
+ <CAB0TPYHikHc3tTTQcUOOZsYZmqNxGtthpkPX_z6dKgy+V8kovg@mail.gmail.com> <20200513102256.GA2087@lst.de>
+In-Reply-To: <20200513102256.GA2087@lst.de>
+From:   Martijn Coenen <maco@android.com>
+Date:   Wed, 13 May 2020 15:49:00 +0200
+Message-ID: <CAB0TPYHBJTykz-x1nHPYK+ELzOhFu-7RgvKbdorqfbqmGcFqgA@mail.gmail.com>
+Subject: Re: [PATCH v4 10/10] loop: Add LOOP_CONFIGURE ioctl
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Narayan Kamath <narayan@google.com>,
+        Zimuzo Ezeozue <zezeozue@google.com>, kernel-team@android.com,
+        Martijn Coenen <maco@google.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ming Lei <ming.lei@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've pushed out a branch with the first three patches here:
+On Wed, May 13, 2020 at 12:22 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Wed, May 13, 2020 at 09:07:43AM +0200, Martijn Coenen wrote:
+> > On Wed, May 13, 2020 at 4:30 AM Jens Axboe <axboe@kernel.dk> wrote:
+> > > > Looks acceptable to me, but I'm getting a failure applying it to
+> > > > for-5.8/drivers on this patch:
+> > > >
+> > > > Applying: loop: Refactor loop_set_status() size calculation
+> > > >
+> > > > So you'll probably want to respin on the right branch.
+> >
+> > This series depends on a separate bugfix I sent to LKML earlier - see
+> > https://lkml.org/lkml/2020/3/31/755 . I mentioned it in [00/10] of
+> > this series, but perhaps I should have just included that patch.
+> >
+> > I just verified that patch + this series still applies cleanly on your
+> > for-5.8/drivers tree, but if you prefer I send a v5 with that patch
+> > going first let me know.
+>
+> You probably want to resend with the fix includes as the first patch.
+> And drop the truncation check now that we figured out that we don't
+> actually need it.
 
-   git://git.infradead.org/users/hch/dma-mapping.git dma-sg_table-helper
+Just sent v5, thanks!
 
-Gitweb:
-
-   http://git.infradead.org/users/hch/dma-mapping.git/shortlog/refs/heads/dma-sg_table-helper
-
-and merged it into the dma-mapping for-next tree.  Unless someone shouts
-the branch should be considered immutable in 24 hours.
+Martijn
