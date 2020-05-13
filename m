@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4425DC2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 482BACA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 182BB20769
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D00220769
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363472;
-	bh=KaBdmx0FEom7Oa5L1jSWEFIFXl5TMxoTKMFAD99rzvk=;
+	s=default; t=1589363475;
+	bh=IflCjPG2xi5TTNJDFZpm013QD6WriFjIurebSx5OlPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1M00hune8ZFSlUWXifJeOdhpU6eghtCvQx2T9+KHPxOHZW6p2ncmWh8bHxvBTcp8d
-	 Yx5ITfwoCmgFRSdfBo72uqHY23EMwMjKWEJwv477JZLO4Zc/MUAaE3gq17XO7Y/srk
-	 SLljwmGKnUHDlL7PoQmwmPI7IJxIuDx27mWXawW4=
+	b=EWO2qmD8M6yorblzfoU0gy7P3Ym68lp1qDnU2BmrW+yKZeBOo7Ea2A/UJGqoO/ToG
+	 x1x7H/ecvamw0F9VhqCAeDK3FJO/wE1HvoOZQ/TZ03xILcDyCi5n1ZS4fxzxqkB3MB
+	 aPfqmw3+j/ZVDhUggzT8WmUYMV5Sqj79HvLUhKDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387617AbgEMJvL (ORCPT
+        id S1728731AbgEMJvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:51:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51594 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:51:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387603AbgEMJvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:51:08 -0400
+        id S2387611AbgEMJvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:51:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AE8E20575;
-        Wed, 13 May 2020 09:51:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75AFE23127;
+        Wed, 13 May 2020 09:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363467;
-        bh=KaBdmx0FEom7Oa5L1jSWEFIFXl5TMxoTKMFAD99rzvk=;
+        s=default; t=1589363469;
+        bh=IflCjPG2xi5TTNJDFZpm013QD6WriFjIurebSx5OlPg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OAx7GN0SY1Uo24yWRpjLR6JJUU1F6+NDx44Jc4k6K9MqAjAZjkpWqy0TRj8V93GRL
-         VeQm9m59sz1g/5+Ldj/J7gXGMof8nq38pWkh5QIY9eQbmXTvHB6WDClPr+YLcfiee/
-         rIs6jzzNgEZD4uQ0mASKT+Bswo112pwBSPFQBGJo=
+        b=PGR8w8gGCv/nICGbPiGmFw3O4FqYKrPBx/rCnd8g9s3T47U1U1n2u8NDxuqNM/4ye
+         ebuIpi+Yp8PouCMMyOE2LOQxSDNYJ67Dg9Q78YWpYwn8bKFLZWJl4HXrJcJ0a8bl9/
+         KblESoDdDoJUyl7xf8lkW5IKp2IW4i5RDfV0Lb88=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-usb@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
-        Bryan ODonoghue <bryan.odonoghue@linaro.org>,
-        Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 5.4 47/90] usb: chipidea: msm: Ensure proper controller reset using role switch API
-Date:   Wed, 13 May 2020 11:44:43 +0200
-Message-Id: <20200513094413.789775786@linuxfoundation.org>
+        stable@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.4 38/90] net/mlx5: Fix command entry leak in Internal Error State
+Date:   Wed, 13 May 2020 11:44:34 +0200
+Message-Id: <20200513094412.612953424@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -61,44 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+From: Moshe Shemesh <moshe@mellanox.com>
 
-commit 91edf63d5022bd0464788ffb4acc3d5febbaf81d upstream.
+[ Upstream commit cece6f432cca9f18900463ed01b97a152a03600a ]
 
-Currently we check to make sure there is no error state on the extcon
-handle for VBUS when writing to the HS_PHY_GENCONFIG_2 register. When using
-the USB role-switch API we still need to write to this register absent an
-extcon handle.
+Processing commands by cmd_work_handler() while already in Internal
+Error State will result in entry leak, since the handler process force
+completion without doorbell. Forced completion doesn't release the entry
+and event completion will never arrive, so entry should be released.
 
-This patch makes the appropriate update to ensure the write happens if
-role-switching is true.
-
-Fixes: 05559f10ed79 ("usb: chipidea: add role switch class support")
-Cc: stable <stable@vger.kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-usb@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Link: https://lore.kernel.org/r/20200507004918.25975-2-peter.chen@kernel.org
+Fixes: 73dd3a4839c1 ("net/mlx5: Avoid using pending command interface slots")
+Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/chipidea/ci_hdrc_msm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/cmd.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/usb/chipidea/ci_hdrc_msm.c
-+++ b/drivers/usb/chipidea/ci_hdrc_msm.c
-@@ -114,7 +114,7 @@ static int ci_hdrc_msm_notify_event(stru
- 			hw_write_id_reg(ci, HS_PHY_GENCONFIG_2,
- 					HS_PHY_ULPI_TX_PKT_EN_CLR_FIX, 0);
+--- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+@@ -922,6 +922,10 @@ static void cmd_work_handler(struct work
+ 		MLX5_SET(mbox_out, ent->out, syndrome, drv_synd);
  
--		if (!IS_ERR(ci->platdata->vbus_extcon.edev)) {
-+		if (!IS_ERR(ci->platdata->vbus_extcon.edev) || ci->role_switch) {
- 			hw_write_id_reg(ci, HS_PHY_GENCONFIG_2,
- 					HS_PHY_SESS_VLD_CTRL_EN,
- 					HS_PHY_SESS_VLD_CTRL_EN);
+ 		mlx5_cmd_comp_handler(dev, 1UL << ent->idx, true);
++		/* no doorbell, no need to keep the entry */
++		free_ent(cmd, ent->idx);
++		if (ent->callback)
++			free_cmd(ent);
+ 		return;
+ 	}
+ 
 
 
