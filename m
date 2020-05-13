@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA45BC2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 772EEC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A62452492E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52BD7206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:42:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EH/x+7C1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DwrxDAXM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729525AbgEMGlo (ORCPT
+        id S1729574AbgEMGmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 02:41:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48174 "EHLO
+        Wed, 13 May 2020 02:42:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728712AbgEMGln (ORCPT
+        with ESMTP id S1728712AbgEMGmn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 02:41:43 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F045C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 23:41:43 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id g11so3207552plp.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 23:41:43 -0700 (PDT)
+        Wed, 13 May 2020 02:42:43 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5217C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 23:42:43 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id v63so7573174pfb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 23:42:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=TEOOM5pOLFuCD0JNuG+xQHOyUpCjh1jvRN2yDj9HYr0=;
-        b=EH/x+7C1HU7YxLs7m98yahVwIJPnz8bxLR2i6LAqgFXxc8rwzlEAY/xf9Dh8/p/7iI
-         sqAjzbuzA9ZELOOxe8qQ1Qg4KaXF/LAv8Ozldpi25gg5qZ6uJMPk5eyBWlQt9cQd8r8j
-         3OrASK4tYsAmkX+tNPDKYPJBfjHBVsHNdp7SjvXsfp2xDihh4VlI104Umg7ogMA21eLI
-         wthunohJNL1Y+VkmEjNE8CZr/L4Ou+7pT0bVHqgM3iYLjk6t8T9V0MCEVK1jF3Sz0Mfu
-         WzYtuKxG+NQQeeNgJHwQ5QYFpUlY6J7PjIsLeLclo7vtV6CYgzZl3ataQINy/zEQC57s
-         Ddqg==
+        bh=uV9bBaTw0tJvxNRTn3rCW/1JXCNDLBhH/iWFHyMVTBE=;
+        b=DwrxDAXM1Dmb9a0+R6V0fJcQ+7mkOX/VTCvmSYpaibcHNZUR8S0eNh8WaLtFN7/ueK
+         po5fGew1zfdjzwZ3OB8bG2A4iba36emUZa6uB1eW5ix/bp449E9QkOyw761Hb97mp2uY
+         1woBEMeFuoYUYqHEvMUK+Am0AQbEejb1dgJeyicYC9UQBdPdX50TbnXTw6xifmc+hzKp
+         sCuckJ3RWBDZefiNXjrUvWkdyCjvB2dwgVMTv2LVZFLKvdhVM2KDyuntRg9nQ/xiJfG5
+         cBHu+9F99oy2Bmm5cl/rSlDArm7VmD5fF4dOKUznXV0Z17e9mxYLt+FLz7APCaads/cp
+         KIfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TEOOM5pOLFuCD0JNuG+xQHOyUpCjh1jvRN2yDj9HYr0=;
-        b=Dl0ZzusCDWf6025BXIw0dd1GbE3HWD6ryptsYyukmDeZwwMfL3ANlN2amCnBwgsXMp
-         Q+wFtYb3tU8vqAv7A9Wp1xs1aNTNAtRL/v29Y7JOEbQdBQ1UkrxltOCPjgbjfdEiAVnv
-         R6AhRC9gOKnEQAU7eVCS/okD4Gd+GlGOjh82sTxIYkFtl9pIvyM4tUXfTryuaLOR8AeZ
-         ASW30d5zxTqT4qxBN2YKC4OWugCOon4G/pLwcn2k2KpmbZbjGI4QR8CUhtUcz78PE+dy
-         xAOB79TTx5r6uaQGKSa+DXkLoeImjeUu/N0hrjQhCMrUVt2Xy9BFEmEOOPmYySCU/mIt
-         p5Rg==
-X-Gm-Message-State: AOAM533Q6XaDyO0F3hp9I1DdQVZm4CDGCS4lKj124AOVHmJyD2u5ZCEr
-        TwT/JzvJ2la7ZgI1GA8+yfcnbA==
-X-Google-Smtp-Source: ABdhPJxsasRtKgMGmifMB6ARKkzFRs15NkOKQ9hC/Cq0i7VetsjNOJuBOne18nCwbu0LkEPx+sI3+A==
-X-Received: by 2002:a17:902:a714:: with SMTP id w20mr13716550plq.336.1589352102800;
-        Tue, 12 May 2020 23:41:42 -0700 (PDT)
+        bh=uV9bBaTw0tJvxNRTn3rCW/1JXCNDLBhH/iWFHyMVTBE=;
+        b=ifcB3l0wi1+bCZZWU0KDA/DHu1Kqvpo+dbNW6Ucaf1eeIEv1yS34ljRHK81yF7z2BC
+         GssPw94EqC/wLd751h4b80FRCGmqHcJQovUnvJCDViZj+qlFRxb/+q/fXWJKUjPOdZBb
+         3ku7BM5DjG6Z2yIsUq9CvFca4OXbtcVRGjPmncIxs28j5w4XxQDVQls1kh3enaypopbA
+         73bFr30JptDm8OXy+JQpHdFnlwD/uEX8N8VD2sRpAlTEXU6cbqeTgVZI7oFEpMpOsUoL
+         ejTUdHfmJvQO2l/sHPQ/DhLLFPTSN+m9/sgrvcNW9AvGuDig0b+YGgXdqsl5MSxit5sA
+         iRJg==
+X-Gm-Message-State: AOAM533TphNSGFYbgdtD+4D3pAnSCnHIRbjVABbXuOuHH3BCPDqHGeMs
+        RRydEimpYJcsUzarn9B9sQ2zrA==
+X-Google-Smtp-Source: ABdhPJx/qDkXeMVh8VzZ2nRqWK2JUXlGS93kHPk7P1gvPAWW5dMOe4C7ABnJrcRcrUNJytVknLBXDw==
+X-Received: by 2002:a63:1946:: with SMTP id 6mr5667506pgz.287.1589352163229;
+        Tue, 12 May 2020 23:42:43 -0700 (PDT)
 Received: from localhost ([122.167.130.103])
-        by smtp.gmail.com with ESMTPSA id 9sm12174992pgr.17.2020.05.12.23.41.41
+        by smtp.gmail.com with ESMTPSA id gz19sm14406418pjb.7.2020.05.12.23.42.42
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 May 2020 23:41:41 -0700 (PDT)
-Date:   Wed, 13 May 2020 12:11:39 +0530
+        Tue, 12 May 2020 23:42:42 -0700 (PDT)
+Date:   Wed, 13 May 2020 12:12:40 +0530
 From:   Viresh Kumar <viresh.kumar@linaro.org>
 To:     Georgi Djakov <georgi.djakov@linaro.org>
 Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, rjw@rjwysocki.net,
@@ -69,15 +69,14 @@ Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, rjw@rjwysocki.net,
         jcrouse@codeaurora.org, evgreen@chromium.org,
         linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 04/10] OPP: Add support for parsing interconnect
- bandwidth
-Message-ID: <20200513064139.5kxjjddcooqcvny3@vireshk-i7>
+Subject: Re: [PATCH v8 08/10] cpufreq: dt: Validate all interconnect paths
+Message-ID: <20200513064240.dpyz32brehhztex3@vireshk-i7>
 References: <20200512125327.1868-1-georgi.djakov@linaro.org>
- <20200512125327.1868-5-georgi.djakov@linaro.org>
+ <20200512125327.1868-9-georgi.djakov@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200512125327.1868-5-georgi.djakov@linaro.org>
+In-Reply-To: <20200512125327.1868-9-georgi.djakov@linaro.org>
 User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -85,146 +84,98 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 12-05-20, 15:53, Georgi Djakov wrote:
-> The OPP bindings now support bandwidth values, so add support to parse it
-> from device tree and store it into the new dev_pm_opp_icc_bw struct, which
-> is part of the dev_pm_opp.
+> Currently when we check for the available resources, we assume that there
+> is only one interconnect path, but in fact it could be more than one. Do
+> some validation to determine the number of paths and verify if each one
+> of them is available.
 > 
 > Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 > ---
 > v8:
-> * Drop bandwidth requests and free memory in _opp_table_kref_release.
-> * Take into account the supply_count in struct size calculations.
-> * Free the temporary arrays for peak and average bandwidth.
-> * Fix the check for opp-level.
-> * Use dev_warn insted of dev_dbg.
-> * Rename _of_find_icc_paths to _of_find_icc_paths.
-> * Rename the variable count to supply_count.
+> * New patch.
 
-Added this delta to this patch:
+Merged this with the 7th patch and applied this delta:
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index a3dd0bc9b9f6..8b640eac86d5 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -1000,7 +1000,7 @@ static struct opp_table *_allocate_opp_table(struct device *dev, int index)
- 	}
- 
- 	/* Find interconnect path(s) for the device */
--	ret = _of_find_icc_paths(opp_table, dev);
-+	ret = dev_pm_opp_of_find_icc_paths(dev, opp_table);
- 	if (ret)
- 		dev_warn(dev, "%s: Error finding interconnect paths: %d\n",
- 			 __func__, ret);
-diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-index a41c0dc2ac04..15f30ed70bbc 100644
---- a/drivers/opp/of.c
-+++ b/drivers/opp/of.c
-@@ -332,10 +332,12 @@ static int _of_opp_alloc_required_opps(struct opp_table *opp_table,
- 	return ret;
+diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
+index 15d70112454c..79742bbd221f 100644
+--- a/drivers/cpufreq/cpufreq-dt.c
++++ b/drivers/cpufreq/cpufreq-dt.c
+@@ -13,7 +13,6 @@
+ #include <linux/cpufreq.h>
+ #include <linux/cpumask.h>
+ #include <linux/err.h>
+-#include <linux/interconnect.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/pm_opp.h>
+@@ -91,49 +90,6 @@ static const char *find_supply_name(struct device *dev)
+ 	return name;
  }
  
--int _of_find_icc_paths(struct opp_table *opp_table, struct device *dev)
-+int dev_pm_opp_of_find_icc_paths(struct device *dev,
-+				 struct opp_table *opp_table)
+-static int find_icc_paths(struct device *dev)
+-{
+-	struct device_node *np;
+-	struct icc_path **paths;
+-	int i, count, num_paths;
+-	int ret = 0;
+-
+-	np = of_node_get(dev->of_node);
+-	if (!np)
+-		return 0;
+-
+-	count = of_count_phandle_with_args(np, "interconnects",
+-					   "#interconnect-cells");
+-	of_node_put(np);
+-	if (count < 0)
+-		return 0;
+-
+-	/* two phandles when #interconnect-cells = <1> */
+-	if (count % 2) {
+-		dev_err(dev, "%s: Invalid interconnects values\n", __func__);
+-		return -EINVAL;
+-	}
+-
+-	num_paths = count / 2;
+-	paths = kcalloc(num_paths, sizeof(*paths), GFP_KERNEL);
+-	if (!paths)
+-		return -ENOMEM;
+-
+-	for (i = 0; i < num_paths; i++) {
+-		paths[i] = of_icc_get_by_index(dev, i);
+-		ret = PTR_ERR_OR_ZERO(paths[i]);
+-		if (ret)
+-			break;
+-	}
+-
+-	while (i--)
+-		icc_put(paths[i]);
+-
+-	kfree(paths);
+-
+-	return ret;
+-}
+-
+ static int resources_available(void)
  {
- 	struct device_node *np;
- 	int ret, i, count, num_paths;
-+	struct icc_path **paths;
+ 	struct device *cpu_dev;
+@@ -165,15 +121,9 @@ static int resources_available(void)
  
- 	np = of_node_get(dev->of_node);
- 	if (!np)
-@@ -354,15 +356,14 @@ int _of_find_icc_paths(struct opp_table *opp_table, struct device *dev)
- 	}
+ 	clk_put(cpu_clk);
  
- 	num_paths = count / 2;
--	opp_table->paths = kcalloc(num_paths, sizeof(*opp_table->paths),
--				   GFP_KERNEL);
--	if (!opp_table->paths)
-+	paths = kcalloc(num_paths, sizeof(*paths), GFP_KERNEL);
-+	if (!paths)
- 		return -ENOMEM;
+-	ret = find_icc_paths(cpu_dev);
+-	if (ret) {
+-		if (ret == -EPROBE_DEFER)
+-			dev_dbg(cpu_dev, "defer icc path: %d\n", ret);
+-		else
+-			dev_err(cpu_dev, "failed to get icc path: %d\n", ret);
+-
++	ret = dev_pm_opp_of_find_icc_paths(cpu_dev, NULL);
++	if (ret)
+ 		return ret;
+-	}
  
- 	for (i = 0; i < num_paths; i++) {
--		opp_table->paths[i] = of_icc_get_by_index(dev, i);
--		if (IS_ERR(opp_table->paths[i])) {
--			ret = PTR_ERR(opp_table->paths[i]);
-+		paths[i] = of_icc_get_by_index(dev, i);
-+		if (IS_ERR(paths[i])) {
-+			ret = PTR_ERR(paths[i]);
- 			if (ret != -EPROBE_DEFER) {
- 				dev_err(dev, "%s: Unable to get path%d: %d\n",
- 					__func__, i, ret);
-@@ -370,19 +371,23 @@ int _of_find_icc_paths(struct opp_table *opp_table, struct device *dev)
- 			goto err;
- 		}
- 	}
--	opp_table->path_count = num_paths;
-+
-+	if (opp_table) {
-+		opp_table->paths = paths;
-+		opp_table->path_count = num_paths;
-+	}
- 
- 	return 0;
- 
- err:
- 	while (i--)
--		icc_put(opp_table->paths[i]);
-+		icc_put(paths[i]);
- 
--	kfree(opp_table->paths);
--	opp_table->paths = NULL;
-+	kfree(paths);
- 
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(dev_pm_opp_of_find_icc_paths);
- 
- static bool _opp_is_supported(struct device *dev, struct opp_table *opp_table,
- 			      struct device_node *np)
-diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-index 17d45119d9bc..2b81ffef1ba4 100644
---- a/drivers/opp/opp.h
-+++ b/drivers/opp/opp.h
-@@ -231,14 +231,12 @@ void _of_clear_opp_table(struct opp_table *opp_table);
- struct opp_table *_managed_opp(struct device *dev, int index);
- void _of_opp_free_required_opps(struct opp_table *opp_table,
- 				struct dev_pm_opp *opp);
--int _of_find_icc_paths(struct opp_table *opp_table, struct device *dev);
- #else
- static inline void _of_init_opp_table(struct opp_table *opp_table, struct device *dev, int index) {}
- static inline void _of_clear_opp_table(struct opp_table *opp_table) {}
- static inline struct opp_table *_managed_opp(struct device *dev, int index) { return NULL; }
- static inline void _of_opp_free_required_opps(struct opp_table *opp_table,
- 					      struct dev_pm_opp *opp) {}
--static inline int _of_find_icc_paths(struct opp_table *opp_table, struct device *dev) { return 0; }
- #endif
- 
- #ifdef CONFIG_DEBUG_FS
-diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-index cfceb0290401..d5c4a329321d 100644
---- a/include/linux/pm_opp.h
-+++ b/include/linux/pm_opp.h
-@@ -372,6 +372,7 @@ int dev_pm_opp_of_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpuma
- struct device_node *dev_pm_opp_of_get_opp_desc_node(struct device *dev);
- struct device_node *dev_pm_opp_get_of_node(struct dev_pm_opp *opp);
- int of_get_required_opp_performance_state(struct device_node *np, int index);
-+int dev_pm_opp_of_find_icc_paths(struct device *dev, struct opp_table *opp_table);
- void dev_pm_opp_of_register_em(struct cpumask *cpus);
- #else
- static inline int dev_pm_opp_of_add_table(struct device *dev)
-@@ -420,6 +421,11 @@ static inline int of_get_required_opp_performance_state(struct device_node *np,
- {
- 	return -ENOTSUPP;
- }
-+
-+static inline int dev_pm_opp_of_find_icc_paths(struct device *dev, struct opp_table *opp_table)
-+{
-+	return -ENOTSUPP;
-+}
- #endif
- 
- #endif		/* __LINUX_OPP_H__ */
+ 	name = find_supply_name(cpu_dev);
+ 	/* Platform doesn't require regulator */
 
 -- 
 viresh
