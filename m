@@ -2,113 +2,196 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FF4C2D0FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F093C2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4C942492C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:58:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589374685;
-	bh=z8ktgUv0RqO7zvZCUaDL+1/C1Qami3n63M3XsUU5y0Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=INlWRaFhiM6sUjMGiElmmsxLc/rqwQBurefaoaz98/0LWcFZnqqJ1mn8Z82rSodow
-	 g3sHUK46PbNmEogeGncX3pYqtdjFeKqC9RCpyMD7HpsPfp29CmtTxVvFHQeb/a40iJ
-	 uZdw3qWjNJCYkzavm7f0NtiRuKkpUezj2NMN84gs=
+	by mail.kernel.org (Postfix) with ESMTP id 19346205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:58:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KD2wVadA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728588AbgEMM6F (ORCPT
+        id S1733064AbgEMM6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 08:58:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54060 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729345AbgEMM6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 08:58:04 -0400
-Received: from localhost (unknown [106.200.233.149])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09A2F20753;
-        Wed, 13 May 2020 12:58:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589374683;
-        bh=z8ktgUv0RqO7zvZCUaDL+1/C1Qami3n63M3XsUU5y0Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KU0Kz0GUcvuniZJeT5XqGvbln7iZQmRyoVX2qel6IiXd1LwLWp8cHmounYzweHPe6
-         DUAiwWPMlCGbDm4yeWath3SACqH1XJ8Cp5gHUsH16g53JIimP/t99xmEQlxo9jAnt/
-         eWsol2Lh2cI9pdEgM15dtngtE0ozxI6Kj4Z87HFs=
-Date:   Wed, 13 May 2020 18:27:59 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andreas =?iso-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v13 0/5] usb: xhci: Add support for Renesas USB
- controllers
-Message-ID: <20200513125759.GI14092@vkoul-mobl>
-References: <20200506060025.1535960-1-vkoul@kernel.org>
- <edb2df23-6193-fdb1-d9f9-ffc33a40c05e@linux.intel.com>
- <20200513124007.GA1082134@kroah.com>
- <f15262e7-3f46-5574-59cc-d98488f299fc@linux.intel.com>
- <20200513125231.GA1084414@kroah.com>
+        Wed, 13 May 2020 08:58:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729345AbgEMM6p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 08:58:45 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA78DC061A0C;
+        Wed, 13 May 2020 05:58:44 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id p123so2264058oop.12;
+        Wed, 13 May 2020 05:58:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VpypxEyENRJvROK6xHUL5Ckp8cqPiu+d4URbR3v3TwI=;
+        b=KD2wVadAGyIh11NpAP/DdtGIgop1WPoYhQk+DFExxk4bhPbEpAH1Qo7KIQHvFSw30R
+         yFuPjY6oQTyfKGwpb+FgLCU9y/yJIhHIqe5a7PFAmDZAecHf/mit4+04qV0oNssK3i/j
+         K2fLGCHafAXNCPyZUtYQjFWbK/6j5NzSQPtp6TqwHTQkUEg2ng6yh7lIyFvBArktiKwQ
+         e0FLR3sD9HMws7w7vG+nySxH2y6KY/zGrOdVK+q5p/hRmH/ZorCkSsJGNh2oK7jaRM8e
+         q1yrE1WztV87Ndk9Y+DF3ayPOjQ0XlDIGzCpASYeiiM9Mnsi4unJBS9n/nLQNAp66yn3
+         ZMkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VpypxEyENRJvROK6xHUL5Ckp8cqPiu+d4URbR3v3TwI=;
+        b=NYFmnIAWbITh9hYXpESi4af25X9RIqNEhk/7zzckFT1FJCIG+mzKmf24v8cDtEuO6R
+         TSZG90Z7l7SENRUmrqm6pkR+ZWs3/E5Wn4mGnIlRv2jXpv+M7VKz8Cyc5JYiZ/o/Cx9u
+         VqNlNIJXtrPN2cLZD7bGRvaj6PkcyIxO2uNec8dpaXWCpC7amYzv4Pn2I0pv16TdW9D0
+         eVmQV6+0nW8qEbzyJBX7JW3r6oNfjx1ldfW9Ikadk9pjQwLkTSd5wjN4NpPWvTfQkJ29
+         1SUNI9XB5mf+o7RlOpwfuL+k3lYKTyC+uAMjcfhzyicptBlIkgM8xqGLRtSJ5oCwS0k+
+         0NsQ==
+X-Gm-Message-State: AOAM533hVA2T77Rj26QKWVfQnlRryoC2h/rvaBo7PIWBm6B+OA4JqZGa
+        hLYqMjyWcR83yTEcGLNGbFqkrQedYOnZ7WvM9VQ=
+X-Google-Smtp-Source: ABdhPJzCzVPkb1YUyPt/lT+Z2bHmPg8/v0GHD5UerKMlhExlv0eM5dz2Pp1xlblcs6eQg9cH5CIJaQ+39t3PJEmw4Gg=
+X-Received: by 2002:a4a:a2c4:: with SMTP id r4mr1160804ool.71.1589374724283;
+ Wed, 13 May 2020 05:58:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513125231.GA1084414@kroah.com>
+References: <CAEjxPJ6pFdDfm55pv9bT3CV5DTFF9VqzRmG_Xi5bKNxPaGuOLg@mail.gmail.com>
+ <158932282880.2885325.2688622278854566047.stgit@warthog.procyon.org.uk>
+In-Reply-To: <158932282880.2885325.2688622278854566047.stgit@warthog.procyon.org.uk>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Wed, 13 May 2020 08:58:33 -0400
+Message-ID: <CAEjxPJ4=ZN_jKP2nX5mrMA3OxC8XLsYEmCPCD-78H4XQw=_hCA@mail.gmail.com>
+Subject: Re: [PATCH] keys: Make the KEY_NEED_* perms an enum rather than a mask
+To:     David Howells <dhowells@redhat.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        keyrings@vger.kernel.org, SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-05-20, 14:52, Greg Kroah-Hartman wrote:
-> On Wed, May 13, 2020 at 03:51:28PM +0300, Mathias Nyman wrote:
-> > On 13.5.2020 15.40, Greg Kroah-Hartman wrote:
-> > > On Wed, May 13, 2020 at 03:19:29PM +0300, Mathias Nyman wrote:
-> > >> On 6.5.2020 9.00, Vinod Koul wrote:
-> > >>> This series add support for Renesas USB controllers uPD720201 and uPD720202.
-> > >>> These require firmware to be loaded and in case devices have ROM those can
-> > >>> also be programmed if empty. If ROM is programmed, it runs from ROM as well.
-> > >>>
-> > >>> This includes patches from Christian which supported these controllers w/o
-> > >>> ROM and later my patches for ROM support and debugfs hook for rom erase and
-> > >>> export of xhci-pci functions.
-> > >>>
-> > >>
-> > >> First four patches look ok to me, but 5/5 that adds rom erase debugfs support
-> > >> still needs some work.
-> > >>
-> > >> If you prefer I can take the first four, maybe we can get them to 5.8, and then
-> > >> later add that debugs rom erase support.
-> > >>
-> > >> Let me know what you prefer
-> > > 
-> > > Oops, I just added all of these to my testing tree :)
-> > > 
-> > > What's wrong with the debugfs patch?  I can drop it, but it seemed
-> > > simple enough to me.
-> > 
-> > Added "usb_renesas" directory under debugfs root when we have easily accessible
-> > debugfs/usb/xhci directory to use as parent. 
-> 
-> I've responded to the patch now, sorry I missed that.
+On Tue, May 12, 2020 at 6:33 PM David Howells <dhowells@redhat.com> wrote:
+>
+> Since the meaning of combining the KEY_NEED_* constants is undefined, make
+> it so that you can't do that by turning them into an enum.
+>
+> The enum is also given some extra values to represent special
+> circumstances, such as:
+>
+>  (1) The '0' value is reserved and causes a warning to trap the parameter
+>      being unset.
+>
+>  (2) The key is to be unlinked and we require no permissions on it, only
+>      the keyring, (this replaces the KEY_LOOKUP_FOR_UNLINK flag).
+>
+>  (3) An override due to CAP_SYS_ADMIN.
 
-I can send an update on top of this to use xhci root, or respin this
-patch, either ways is fine by me.
+CAP_SYS_ADMIN should never skip SELinux checking.  Even for Smack,
+there is a separate capability (CAP_MAC_ADMIN) for that purpose.
 
-> > Also not checking if adding directory failed (if debufs not supported)
-> 
-> That's fine and encouraged to do :)
+>  (4) An override due to an instantiation token being present.
 
-Yes, I have known you 'encouraging' folks for that, hence coded it :)
+Not sure what this means but again we shouldn't skip SELinux checking
+based on mere possession of an object capability (not a POSIX
+capability).
 
-Thanks
--- 
-~Vinod
+>
+>  (5) The permissions check is being deferred to later key_permission()
+>      calls.
+>
+> The extra values give the opportunity for LSMs to audit these situations.
+> ---
+
+> diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
+> index 7d8de1c9a478..6763ee45e04d 100644
+> --- a/security/keys/keyctl.c
+> +++ b/security/keys/keyctl.c
+> @@ -434,7 +434,7 @@ long keyctl_invalidate_key(key_serial_t id)
+>
+>                 /* Root is permitted to invalidate certain special keys */
+>                 if (capable(CAP_SYS_ADMIN)) {
+> -                       key_ref = lookup_user_key(id, 0, 0);
+> +                       key_ref = lookup_user_key(id, 0, KEY_SYSADMIN_OVERRIDE);
+
+It would be better if the permission indicated the actual operation
+(e.g. KEY_NEED_INVALIDATE_SPECIAL), and the decision whether to permit
+CAP_SYS_ADMIN processes to override was left to the security modules.
+SELinux doesn't automatically allow CAP_SYS_ADMIN processes to do
+everything.
+
+> @@ -479,7 +479,8 @@ long keyctl_keyring_clear(key_serial_t ringid)
+>
+>                 /* Root is permitted to invalidate certain special keyrings */
+>                 if (capable(CAP_SYS_ADMIN)) {
+> -                       keyring_ref = lookup_user_key(ringid, 0, 0);
+> +                       keyring_ref = lookup_user_key(ringid, 0,
+> +                                                     KEY_SYSADMIN_OVERRIDE);
+
+Ditto.
+
+> @@ -663,7 +664,7 @@ long keyctl_describe_key(key_serial_t keyid,
+>                                 key_put(instkey);
+>                                 key_ref = lookup_user_key(keyid,
+>                                                           KEY_LOOKUP_PARTIAL,
+> -                                                         0);
+> +                                                         KEY_AUTHTOKEN_OVERRIDE);
+
+Similarly, it would be better if the permission indicated the
+operation (e.g. KEY_NEED_DESCRIBE) rather than the means by which it
+is being authorized.  A MAC scheme won't allow mere knowledge of a
+token/password-capability to permit violation of its policy.
+
+> @@ -1471,7 +1472,7 @@ long keyctl_set_timeout(key_serial_t id, unsigned timeout)
+>                                 key_put(instkey);
+>                                 key_ref = lookup_user_key(id,
+>                                                           KEY_LOOKUP_PARTIAL,
+> -                                                         0);
+> +                                                         KEY_AUTHTOKEN_OVERRIDE);
+
+Ditto.
+
+> @@ -1579,7 +1580,8 @@ long keyctl_get_security(key_serial_t keyid,
+>                         return PTR_ERR(instkey);
+>                 key_put(instkey);
+>
+> -               key_ref = lookup_user_key(keyid, KEY_LOOKUP_PARTIAL, 0);
+> +               key_ref = lookup_user_key(keyid, KEY_LOOKUP_PARTIAL,
+> +                                         KEY_AUTHTOKEN_OVERRIDE);
+
+Ditto
+
+> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> index 0b4e32161b77..3ff6b6dfc5ca 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -6541,20 +6541,31 @@ static void selinux_key_free(struct key *k)
+>
+>  static int selinux_key_permission(key_ref_t key_ref,
+>                                   const struct cred *cred,
+> -                                 unsigned perm)
+> +                                 enum key_need_perm need_perm)
+>  {
+>         struct key *key;
+>         struct key_security_struct *ksec;
+> -       u32 sid;
+> +       u32 perm, sid;
+>
+> -       /* if no specific permissions are requested, we skip the
+> -          permission check. No serious, additional covert channels
+> -          appear to be created. */
+> -       if (perm == 0)
+> +       switch (need_perm) {
+> +       case KEY_NEED_UNLINK:
+> +       case KEY_SYSADMIN_OVERRIDE:
+> +       case KEY_AUTHTOKEN_OVERRIDE:
+> +       case KEY_DEFER_PERM_CHECK:
+>                 return 0;
+
+We really shouldn't be skipping any/all checking on CAP_SYS_ADMIN or
+an AUTHTOKEN; those should still be subject to MAC policy.
