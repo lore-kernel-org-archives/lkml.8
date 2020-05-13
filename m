@@ -2,111 +2,84 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9674CC2D0FB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D0EC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7172820753
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:38:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589330315;
-	bh=cOjm/7GwqsA2ILplEdz4M1jv9gxyYn4Rl5iu9+dYr7s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hYFl8ORPvXcbQUh7NmUuK8zqSUt1VZJnrDClJ45rTUL29hZunRbdBvEPNwYh6vy2R
-	 zWC0vnc20IHkfqzvxkrgys58hjzxobfP9AQKzKIYhiuWMXocNx7SMV/hpA7HtwadM/
-	 RuNH0tAev3P9HzVPjnHhpM6yq/WiYZE50vPnIZHw=
+	by mail.kernel.org (Postfix) with ESMTP id AA60B2492A
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:39:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731790AbgEMAie (ORCPT
+        id S1731803AbgEMAjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 20:38:34 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33816 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728131AbgEMAie (ORCPT
+        Tue, 12 May 2020 20:39:48 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:62897 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726031AbgEMAjs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 20:38:34 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g11so2895193plp.1;
-        Tue, 12 May 2020 17:38:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CwfbmlNBUU40Zjz8zlAOmtB3ueHeKYzt7ce5wGYgKFA=;
-        b=aqH3pLaspKAfdvXZwLL+58pl/C0iJGFYNZL9atbYNikaxnaboV71owlw3D92JfvO52
-         9Sw7zuGnvVs3qsa0ApEweFJZjUZyrqNDe4obTWdgwjzpWrdfOV1AEAuu1Gb0eiql5upu
-         9LVVb1XJGntMunkvt9nun+ezBsbvd49ziTxGlXL3MsMZw81wPFh0LKzifFYt1cV6ioLL
-         EwCj8D2NbAIvS8afGYccqfmo2wzaT+gzJQ7ZO06v36zTfe84tUOCJLqnY4UQbUyGTi5R
-         OQx89I+OnxW6MV3WNoxvMZIDC3mBvful16jnzhkwCQ4RLPVDxTqLTO+jr1ocBfZLa7Kb
-         6Faw==
-X-Gm-Message-State: AGi0Puaq/9hTNvkY2An66cyZMbS8frs00te00VhubT+nvAq4qVCuIFHl
-        omaUKZsGlJK1LxOqrl1SICQ=
-X-Google-Smtp-Source: APiQypJrCgiM6NaHCnvonCFy7Yn3t2eJw+MEKj198/6OsHFmSqfNPQsM3ObIs9iYeLONwztqCuqQlw==
-X-Received: by 2002:a17:902:bd81:: with SMTP id q1mr22856141pls.46.1589330312971;
-        Tue, 12 May 2020 17:38:32 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id j26sm13098929pfr.215.2020.05.12.17.38.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 17:38:31 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 60B934063E; Wed, 13 May 2020 00:38:30 +0000 (UTC)
-Date:   Wed, 13 May 2020 00:38:30 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
+        Tue, 12 May 2020 20:39:48 -0400
+Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 12 May 2020 17:39:47 -0700
+Received: from gurus-linux.qualcomm.com ([10.46.162.81])
+  by ironmsg02-sd.qualcomm.com with ESMTP; 12 May 2020 17:39:47 -0700
+Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
+        id 73B494D9E; Tue, 12 May 2020 17:39:47 -0700 (PDT)
+From:   Guru Das Srinagesh <gurus@codeaurora.org>
+To:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
         Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Desmond Yan <desmond.yan@broadcom.com>,
-        James Hu <james.hu@broadcom.com>
-Subject: Re: [PATCH v5 6/7] misc: bcm-vk: add Broadcom VK driver
-Message-ID: <20200513003830.GJ11244@42.do-not-panic.com>
-References: <20200508002739.19360-1-scott.branden@broadcom.com>
- <20200508002739.19360-7-scott.branden@broadcom.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508002739.19360-7-scott.branden@broadcom.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        linux-arm-kernel@lists.infradead.org,
+        Guru Das Srinagesh <gurus@codeaurora.org>
+Subject: [RESEND PATCH v14 02/11] hwmon: pwm-fan: Use 64-bit division macro
+Date:   Tue, 12 May 2020 17:39:36 -0700
+Message-Id: <cc56a6017ecd1a8e8abba9ededf18d9e2311a4c2.1589330178.git.gurus@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <cover.1589330178.git.gurus@codeaurora.org>
+References: <cover.1589330178.git.gurus@codeaurora.org>
+In-Reply-To: <cover.1589330178.git.gurus@codeaurora.org>
+References: <cover.1589330178.git.gurus@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 05:27:38PM -0700, Scott Branden wrote:
-> +#if defined(CONFIG_REQ_FW_INTO_BUF_PRIV)
-> +
-> +#define KERNEL_PREAD_FLAG_PART	0x0001 /* Allow reading part of file */
-> +#define REQUEST_FIRMWARE_INTO_BUF request_firmware_into_buf_priv
-> +int request_firmware_into_buf_priv(const struct firmware **firmware_p,
-> +				   const char *name, struct device *device,
-> +				   void *buf, size_t size,
-> +				   size_t offset, unsigned int pread_flags);
-> +
-> +#else
-> +
-> +#define REQUEST_FIRMWARE_INTO_BUF request_firmware_into_buf
-> +
-> +#endif
-> +
-> +#endif
+Since the PWM framework is switching struct pwm_args.period's datatype
+to u64, prepare for this transition by using DIV_ROUND_UP_ULL to handle
+a 64-bit dividend.
 
-Please clean this up, the code must reflect only the code upstream. No
-config stuff like this should be used on the driver. I had to stop my
-review here.
+Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+---
+ drivers/hwmon/pwm-fan.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  Luis
+diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
+index 30b7b3e..17bb642 100644
+--- a/drivers/hwmon/pwm-fan.c
++++ b/drivers/hwmon/pwm-fan.c
+@@ -447,7 +447,7 @@ static int pwm_fan_resume(struct device *dev)
+ 		return 0;
+ 
+ 	pwm_get_args(ctx->pwm, &pargs);
+-	duty = DIV_ROUND_UP(ctx->pwm_value * (pargs.period - 1), MAX_PWM);
++	duty = DIV_ROUND_UP_ULL(ctx->pwm_value * (pargs.period - 1), MAX_PWM);
+ 	ret = pwm_config(ctx->pwm, duty, pargs.period);
+ 	if (ret)
+ 		return ret;
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
