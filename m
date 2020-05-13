@@ -2,176 +2,103 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 813CACA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD98CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DDAF20740
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:35:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F3FB20740
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:37:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LGlk4Sox"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="Ybjla2kU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732308AbgEMIfg (ORCPT
+        id S1732322AbgEMIhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 04:35:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37602 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbgEMIfg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 04:35:36 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBDA6C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 01:35:34 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id d26so1526436otc.7
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 01:35:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KA7iaRwKyQU/DbW+v3q/rxbvNUjeMSpAhHPzsxnLI+Q=;
-        b=LGlk4SoxCLCmjsHIETakzjhKgymWpgXG0APfAIM+adiGsaVmA2JqFrwoNdNDJ9IsUm
-         vB4oxu6Pzqj2RBazLWSbX9T/Xeli8hHlxESL8IMz2Jzlm9Q6HYiDrwzdFQBGBgJFBTZi
-         j+xed0+XZWTAlHhcRB/ANdUQ/1l7tTGF1a3ME/vE5JFnzi0HUZUxzVap/yWJLrAwHwJY
-         Zcbf+I3vF/ZRjgULoK7RjRdPAj8K4kZVD+bW25oSU/q9nWGDxvDhiGqQq8nLBLlUxhTB
-         InaOO05XJdWTRbkgCglneldx8GLO7kiHwF4MZ+1bBWcDGZ6Sub8fZSe9U1WACqd52Q/e
-         jDfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KA7iaRwKyQU/DbW+v3q/rxbvNUjeMSpAhHPzsxnLI+Q=;
-        b=IW7x4NhCwroMFeOOg3VROyGgvQahwbeBXt+T8AP4U/U5u3KQ/9xSyrJZqSZu1yHh+I
-         uEuUUxESszpcu/6hishKz083GPorZQVPQ3wmNtjxIjA0uUPprAdt1Ryv4qqGzx9tBrJa
-         YKGEoQ+bjcZyNi31M7xwzOTPA4fPksigxZ1cFOb4Ufb086mzcFanKmijOpj7bOny0ydI
-         zcITAfh3uR+tB6WqfaVpXlvktpSMGXagPxI21Agyqaw5zXdGd+DwIsMtOL2H451DWj+k
-         A3aQSd3pb43lyYpaeQmEiMJ98mlGnTnJFYRSnnNGYG0r/F9kUZtUO6TEvCXFCX3htC/t
-         8QYQ==
-X-Gm-Message-State: AGi0Pub9Cl4e78MC2n76/gdR/zCVDN/Mxn0ws/wNBYDwhkVjQ/PrKvHI
-        TUzaPvCXqXVyD46Ea0VDLBJV+lLcP2lP3u2uh86PJA==
-X-Google-Smtp-Source: APiQypKG1jpeHPtIYqXqqPvvUODnp63p3EfI9HPjXEK2KnG8KGDQSeKVof0Ng6JuVkmQaNFUyFiIGFFVd5ezUZq5Ldo=
-X-Received: by 2002:a05:6830:1e45:: with SMTP id e5mr19594675otj.236.1589358933497;
- Wed, 13 May 2020 01:35:33 -0700 (PDT)
+        Wed, 13 May 2020 04:37:48 -0400
+Received: from www.zeus03.de ([194.117.254.33]:42026 "EHLO mail.zeus03.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726092AbgEMIhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 04:37:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=OG4/TUlRa/Km5Fzod2UGV4khLRkH
+        9Ea1loCjzOxACaA=; b=Ybjla2kUPcqEAp0pxUCr6IL5u/aq6dAZg1d9JcBa0ira
+        vGTTFyBwShqkGu15SXirDoOyvYF/IhOy0F18G2j2H1q9/kT3CWj/gdRFq3D1v8D8
+        B6X6TuY0C0OCxgu/Qc42ZdkWh/Jq2kJzD9t38pQTzVleHFyNkhbmgxJ/2th9K+s=
+Received: (qmail 3269378 invoked from network); 13 May 2020 10:37:46 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 May 2020 10:37:46 +0200
+X-UD-Smtp-Session: l3s3148p1@xmGRfoOlRtkgAwDPXwcWAIZZjypw6UMc
+Date:   Wed, 13 May 2020 10:37:46 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     minyard@acm.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, Corey Minyard <cminyard@mvista.com>
+Subject: Re: [PATCH] char: ipmi: convert to use i2c_new_client_device()
+Message-ID: <20200513083745.GC1043@ninjato>
+References: <20200326210958.13051-2-wsa+renesas@sang-engineering.com>
+ <20200512214532.14117-1-minyard@acm.org>
 MIME-Version: 1.0
-References: <20200513013415.148858-1-saravanak@google.com> <20200513082209.GB770255@kroah.com>
-In-Reply-To: <20200513082209.GB770255@kroah.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 13 May 2020 01:34:57 -0700
-Message-ID: <CAGETcx9TJxOre+vmdeeioAt5toyo1qYz=fq2S3aZSiroH1TsAQ@mail.gmail.com>
-Subject: Re: [PATCH v1] driver core: Add state_synced sysfs file for devices
- that support it
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5QAgd0e35j3NYeGe"
+Content-Disposition: inline
+In-Reply-To: <20200512214532.14117-1-minyard@acm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 1:22 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Tue, May 12, 2020 at 06:34:15PM -0700, Saravana Kannan wrote:
-> > This can be used to check if a device supports sync_state() callbacks
-> > and therefore keeps resources left on by the bootloader enabled till all
-> > its consumers have probed.
-> >
-> > This can also be used to check if sync_state() has been called for a
-> > device or whether it is still trying to keep resources enabled because
-> > they were left enabled by the bootloader and all its consumers haven't
-> > probed yet.
-> >
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >  .../ABI/testing/sysfs-devices-state_synced    | 24 +++++++++++++++++++
-> >  drivers/base/dd.c                             | 16 +++++++++++++
-> >  2 files changed, 40 insertions(+)
-> >  create mode 100644 Documentation/ABI/testing/sysfs-devices-state_synced
-> >
-> > diff --git a/Documentation/ABI/testing/sysfs-devices-state_synced b/Documentation/ABI/testing/sysfs-devices-state_synced
-> > new file mode 100644
-> > index 000000000000..0c922d7d02fc
-> > --- /dev/null
-> > +++ b/Documentation/ABI/testing/sysfs-devices-state_synced
-> > @@ -0,0 +1,24 @@
-> > +What:                /sys/devices/.../state_synced
-> > +Date:                May 2020
-> > +Contact:     Saravana Kannan <saravanak@google.com>
-> > +Description:
-> > +             The /sys/devices/.../state_synced attribute is only present for
-> > +             devices whose bus types or driver provides the .sync_state()
-> > +             callback. The number read from it (0 or 1) reflects the value
-> > +             of the device's 'state_synced' field. A value of 0 means the
-> > +             .sync_state() callback hasn't been called yet. A value of 1
-> > +             means the .sync_state() callback has been called.
-> > +
-> > +             Generally, if a device has sync_state() support and has some of
-> > +             the resources it provides enabled at the time the kernel starts
-> > +             (Eg: enabled by hardware reset or bootloader or anything that
-> > +             run before the kernel starts), then it'll keep those resources
-> > +             enabled and in a state that's compatible with the state they
-> > +             were in at the start of the kernel. The device will stop doing
-> > +             this only when the sync_state() callback has been called --
-> > +             which happens only when all its consumer devices are registered
-> > +             and have probed successfully. Resources that were left disabled
-> > +             at the time the kernel starts are not affected or limited in
-> > +             any way by sync_state() callbacks.
-> > +
-> > +
-> > diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> > index 48ca81cb8ebc..72599436ae84 100644
-> > --- a/drivers/base/dd.c
-> > +++ b/drivers/base/dd.c
-> > @@ -458,6 +458,13 @@ static void driver_deferred_probe_add_trigger(struct device *dev,
-> >               driver_deferred_probe_trigger();
-> >  }
-> >
-> > +static ssize_t state_synced_show(struct device *dev,
-> > +                              struct device_attribute *attr, char *buf)
-> > +{
-> > +     return sprintf(buf, "%u\n", dev->state_synced);
-> > +}
-> > +static DEVICE_ATTR_RO(state_synced);
-> > +
-> >  static int really_probe(struct device *dev, struct device_driver *drv)
-> >  {
-> >       int ret = -EPROBE_DEFER;
-> > @@ -531,9 +538,16 @@ static int really_probe(struct device *dev, struct device_driver *drv)
-> >               goto dev_groups_failed;
-> >       }
-> >
-> > +     if (dev_has_sync_state(dev) &&
-> > +         device_create_file(dev, &dev_attr_state_synced)) {
-> > +             dev_err(dev, "state_synced sysfs add failed\n");
-> > +             goto dev_sysfs_state_synced_failed;
-> > +     }
->
-> Why not add this to the groups above this and only enable it if needed
-> at runtime?
 
-Those groups above seem to be driver specific groups. Looking at the
-code, some drivers seem to be setting them. Also, this attribute can
-only be decided after a driver has successfully bound to the device
-because dev_has_sync_state() has to check the bus and the driver for
-sync_state() support.
+--5QAgd0e35j3NYeGe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> The is_visible() callback should be what you need to use here.
+On Tue, May 12, 2020 at 04:45:32PM -0500, minyard@acm.org wrote:
+> From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>=20
+> Move away from the deprecated API.
+>=20
+> Based on a patch by Wolfram Sang <wsa+renesas@sang-engineering.com>.
+>=20
+> Signed-off-by: Corey Minyard <cminyard@mvista.com>
+> ---
+> I think this works.
 
-If this is an attribute specific property, it might work. I'll take a look.
+Yes, we can do it like this (despite the question from earlier if it is
+really needed). I fixed other drivers using this pattern, too.
 
->  That
-> will save you lots of housekeeping as well as properly remove the
-> attribute when the device is removed from the system (which you didn't
-> explicitly do in this patch...)
+As Stephen Rothwell pointed out, you either need to remove my "From:" or
+add my SoB. I am fine with both.
 
-I had a nagging feeling I was missing something. Duh! I'll make sure I
-do proper clean up in v2.
+Thanks,
 
-Thanks for the review.
+   Wolfram
 
--Saravana
+
+--5QAgd0e35j3NYeGe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl67sdkACgkQFA3kzBSg
+KbZc6Q//Qy9PcisKiZItyJKAXN51ct0m3wgrDYvLsUd0H91ROrFV01xRfcqyUyh3
+xyvwAejOPaQvtfwoN/iyaXaU7k2Yf6RHv6UIcDUp+/kDV7ZE0KWCcRdEbw5uIR0h
+7pkcyMlzlO5Jb1WY5mKQd3BWhgMjv0b0FJvKa+t2j/xZpmpZHBrUJDZRs+0WDbJc
+mgMdg3UrJzuiIlKQ6jsLvalRIkTs2K0vEYmaJlg29J5l97NbTNOb7nXRO6YqKNmB
+7aqWbxZHsU1frGokluyACOd+Z9bx0H6R7GuiE6MsnNovlVapfYB/HXvuLAUt9OJO
+jWgYnvajJ0S71JDO/dbVGGNZe13dTeU8JfOHntnDLOiaoaaUSQ3YdHm2NWqGMKNY
+4PquR4B2a2SIRK3Or4W3eABDg+m4oMZ5E4ijmUJB6WwkrhTbKhO/af83Uot+35hr
+zFEjFbqe9yCGGvQteD13r7Vefs0HsTP9J0eZM/r5yD63Q4Z8bwVrujNWl7/jcMYM
+OyGsYKj+umEcqKyXH9PXaLu5zLyPQtuum+ZzYc/nsGyatpLVB5X+20M5CqzgPqH7
+7Eo9CpMlYO3+KDd3SBstZ/TjNo2tRC9zzg3vy3r7/ZpCBSa8YoXJfcfaHMsE76NL
+nJxEHVVs+udEStW/Td0MujBTVYa7NGrX44UZ84Lq97cMa0+glPU=
+=ZqST
+-----END PGP SIGNATURE-----
+
+--5QAgd0e35j3NYeGe--
