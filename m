@@ -2,93 +2,128 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D14C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874B8CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE21F20740
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:49:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589359782;
-	bh=Qauh/VwoTNTJSJLEJKWQMbLlhyJq/zOthvGyPHoKN80=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dBdV4BH13Im/xkFYrAvfIEdLzhdYb1vtWK0OXyf/K7jYgwbLyOpVRZlfHrP8NfniV
-	 XTVX1f7zw8D7egvIj/sn/wwSdgBo16RMGgD5AVR06BI0q0pWe21wvfW4dEK9guilgM
-	 bsBqUvnzj56w5jX3O30t+RraVCVXQQ+Be4qIu0P4=
+	by mail.kernel.org (Postfix) with ESMTP id 6E03C20769
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:49:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732430AbgEMItl (ORCPT
+        id S1732444AbgEMItv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 04:49:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36652 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730237AbgEMItl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 04:49:41 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91BAF206F5;
-        Wed, 13 May 2020 08:49:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589359780;
-        bh=Qauh/VwoTNTJSJLEJKWQMbLlhyJq/zOthvGyPHoKN80=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rxgeSGbpGJGcIZyG6xdYlVcNjSvCvtsQUe79QDaTpoIoMwNBen7tL/1ZtaQHXC0ch
-         alUNBeEp82sfVe4/75o6xYhC3CjgHss9Gj8a8aZNBwYNqyKdg1I63Hks+Bhz244xxE
-         2Ux1qlhTs5J0tBfy2TuK2JRKaZqDxUaZgwyqNk4s=
-Date:   Wed, 13 May 2020 16:49:34 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     fugang.duan@nxp.com
-Cc:     robh+dt@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, Anson.Huang@nxp.com,
-        devicetree@vger.kernel.org, aisheng.dong@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] arm64: dts: imx8mp: add "fsl,imx6sx-fec" compatible
- string
-Message-ID: <20200513084933.GF26997@dragon>
-References: <1588154654-13684-1-git-send-email-fugang.duan@nxp.com>
+        Wed, 13 May 2020 04:49:51 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:52797 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730237AbgEMItu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 04:49:50 -0400
+Received: from mail-qt1-f176.google.com ([209.85.160.176]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Mf3yk-1isIb847q6-00gapj; Wed, 13 May 2020 10:49:49 +0200
+Received: by mail-qt1-f176.google.com with SMTP id v4so12611970qte.3;
+        Wed, 13 May 2020 01:49:48 -0700 (PDT)
+X-Gm-Message-State: AGi0PuZZjMlN5xkIYcIaxdIlLzEhcSdL9WjPMH+i+gyzPVDjn3TYJTq/
+        tdDEk68tTH7Yi+V207U5LNoxtkIif6BvQmmdSlQ=
+X-Google-Smtp-Source: APiQypK6RUzPiElv+0LgA+6SydZJEi9vK6ik3U1AQWnKjKYzEXjlb1LdHL6niV9xcSMp8+HKBSU6JwsHgY+K4sDw6LY=
+X-Received: by 2002:aed:2441:: with SMTP id s1mr19473552qtc.304.1589359787721;
+ Wed, 13 May 2020 01:49:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588154654-13684-1-git-send-email-fugang.duan@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200509120707.188595-1-arnd@arndb.de> <20200509120707.188595-2-arnd@arndb.de>
+ <87v9l24qz6.fsf@kamboji.qca.qualcomm.com> <87r1vq4qev.fsf@kamboji.qca.qualcomm.com>
+ <87d078tjl0.fsf_-_@kamboji.qca.qualcomm.com>
+In-Reply-To: <87d078tjl0.fsf_-_@kamboji.qca.qualcomm.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 13 May 2020 10:49:31 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1dxJAHCZ19=sPUkDi5wLWeJ6KKtD09Wmjqkz27TQN6Xw@mail.gmail.com>
+Message-ID: <CAK8P3a1dxJAHCZ19=sPUkDi5wLWeJ6KKtD09Wmjqkz27TQN6Xw@mail.gmail.com>
+Subject: Re: gcc-10: kernel stack is corrupted and fails to boot
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:JJN1tmrdOdKjQ3HrZDQA1NwEQzGoEDIMifl3gugwcCK/5A9NvPU
+ Z6afJTIDF7hHiBwR5E/92B1Zq+p4oA9EDm0fajQhaP8vz2CpV/oCrYnv77QYN08zMCHHPrd
+ 4C5Y7mf0FtszIIHTcEy5zH85sM79TrZBgdOfaFppJdcyNErZg/XPqipmlhmTHa+aRx8JTeu
+ dbYLmXNpeJa3FbYk5bxDw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xB2cQ7s5EkM=:CSwT9l9HTeEag2TifN23jU
+ a9Mk3QM9Y95IwL2nffX7VzcejIdnze2zGM2cz6L19jVufModHEAhQdlKp+bHI7IXpwdwflDon
+ rEKabKvAVW0rnoftejcRQ0OqEVvEfLXFZVeUzuaLtYvkKEKJpmIkha+Tq9WaWoJ650dbDa5jK
+ XZbjThAe5TKm/WrW6aIyMSE76j/VeaQxhZPJL7OBsD2PRU+cZRoxmYm1MlG3fjILHFqXzU1HS
+ UFR4mKurcI34ADv/ZMrJznEqazP5oSaE+Y8mornSZFjcf3h+atun30JrkAvgxrrcUUCAddyTh
+ MeMWm/hcwUX3JCYEyXWPzb7XBuY9U4PTy/XFcWNfNryehRbzRgbsJOqQQ+viZI58k2fubMMn3
+ DZNYlLr6YYR92zS7ZdS3vtcQc9WvuFqHN4x2ikXLhFsXOAJi8Hnh1C4iZEJAxE8ltcesGkJ22
+ MaYQjAIg51pkG9OHcubMFfKB3+pbhwEpnJUgyKuXEli+NgAGHs4KhPYbFW2Lvcl2QgKtEI/Dc
+ zNGK/j+8mdJrZTx15REgBWoMdSzzb1CvInpNktYq6Q1kqg7lp5CmcvmOG2OSZy+6rfXHyX07z
+ lW7rTYzK8JJcgAYg18hBwDVwonpAUeijHFTdkuGwdMuLorv+hok2kthcqIwcKeQq4fPHlY4M/
+ 1nw9+c2XuUCdZukHdESBGqOEJCQ+ca0S/wLs6bxX4y4yd18fRspNUJNLyY+NVRlTV4JDByzo+
+ rwhMXhY6UWkTtTPGbUxEVnhIj3xa7gfxXaoAtsaW6BxCivmUSUvO5MQAoAf2pNyppOpiUnY+K
+ 4E2LLAt9wbfjjtPbHh5JnOf6YXg5tsDJuOatOx3jgjcplzON4k=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 29, 2020 at 06:04:14PM +0800, fugang.duan@nxp.com wrote:
-> From: Fugang Duan <fugang.duan@nxp.com>
-> 
-> Add "fsl,imx6sx-fec" compatible string for fec node, then
-> i.MX8MP EVK ethernet function can work now.
-> 
-> Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> index 9b1616e59d58..b5df957c5063 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> @@ -615,7 +615,7 @@
->  			};
->  
->  			fec: ethernet@30be0000 {
-> -				compatible = "fsl,imx8mp-fec", "fsl,imx8mq-fec";
-> +				compatible = "fsl,imx8mp-fec", "fsl,imx8mq-fec", "fsl,imx6sx-fec";
+On Wed, May 13, 2020 at 8:50 AM Kalle Valo <kvalo@codeaurora.org> wrote:
+>
+> Kalle Valo <kvalo@codeaurora.org> writes:
+>
+> > This motivated me to switch to using GCC 10.x and I noticed that you had
+> > already upgraded crosstool so it was a trivial thing to do, awesome :)
+> >
+> > https://mirrors.edge.kernel.org/pub/tools/crosstool/
+>
+> And now I have a problem :) I first noticed that my x86 testbox is not
+> booting when I compile the kernel with GCC 10.1.0 from crosstool. I
+> didn't get any error messages so I just downgraded the compiler and the
+> kernel was booting fine again. Next I decided to try GCC 10.1 with my
+> x86 laptop and it also failed to boot, but this time I got kernel logs
+> and saw this:
+>
+> Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: start_secodary+0x178/0x180
+>
+> Call Trace:
+> dump_stack
+> panic
+> ? _raw_spin_unlock_irqrestore
+> ? start_secondary
+> __stack_chk_fail
+> start_secondary
+> secondary_startup
+>
+> (I wrote the above messages manually from a picture so expect typos)
+>
+> Then also on my x86 laptop I downgraded the compiler to GCC 8.1.0 (from
+> crosstool), rebuilt the exactly same kernel version and the kernel
+> booted without issues.
+>
+> I'm using 5.7.0-rc4-wt-ath+ which is basically v5.7-rc4 plus latest
+> wireless patches, and I doubt the wireless patches are making any
+> difference this early in the boot. All compilers I use are prebuilt
+> binaries from kernel.org crosstool repo[1] with addition of ccache
+> v3.4.1 to speed up my builds.
+>
+> Any ideas? How should I debug this further?
 
-In this case, "fsl,imx8mq-fec" can be dropped?
+At least if it fails reproducibly, it's probably not too hard to drill
+down further. Some ideas:
 
-Shawn
+* I'd first try to reproduce it in qemu. Since you don't even need
+  any user space or modules, I would simply try
+  $ qemu-system-x86_64 -nographic -monitor none -append
+"console=ttyS0" -serial stdio -smp 4 -kernel arch/x86/boot/bzImage
+  I tried it here with an x86 defconfig linux-next kernel but did not
+  run into the problem you described. If you share your .config,
+  I can try reproducing with that as well. Once there is a reproducer
+  in qemu, it should be trivial to step through it using gdb.
 
->  				reg = <0x30be0000 0x10000>;
->  				interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
->  					     <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>,
-> -- 
-> 2.17.1
-> 
+* There are still two prerelease compiler versions on kernel.org,
+  from February and from April. You can try each one to see
+  if this was a recent regression. It's also possible that there is
+  a problem with my specific builds of gcc-10.1, and that the
+  compiler is actually fine for others.The gcc-10 packages in
+  Fedora/Debian/Ubuntu are probably better tested.
+
+       Arnd
