@@ -2,99 +2,102 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 520D7C433E8
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E72C433EA
 	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB4B3207D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57F44214F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:01:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="02JQy10i"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kMw1t4Fo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389347AbgEMPBZ (ORCPT
+        id S2389357AbgEMPBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:01:25 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:49047 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389141AbgEMPAD (ORCPT
+        Wed, 13 May 2020 11:01:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41512 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389141AbgEMPB1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:00:03 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DEwJut008668;
-        Wed, 13 May 2020 16:59:47 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=S05pCgK8uWODd8RKtzygV/WicL2iwG1ylDDr0DNrkBw=;
- b=02JQy10iogJpp2aYijzyKo5v4HiJUHo14501F4YVI2mEpSaEQeBr/fQ3/uC5a4Rjyrs6
- 4nwViSiYAc5p9Oi02FSMvszXqhXkgc/DcsykWbICjMkk+NHjT1ZAPUFUnZMFZbOy3u33
- Yw1Y2VhWKuwTKW5uNOKg0oXZYzx1167cXQ65dLrx2JXQs2XAKo9IvmXtBlqu3eRG5zxM
- xjlDm6gblRwL52U8YLyPj7i0E0iP2zh40G3nfHnM1is1ROJl/OYASA02s54qRRWYf19/
- 1a2thPoAr89Abn9AonYJAab8GIBgaiQ7Q+N33htGkmEnCeiBt7JLUO/3Xa3Y13JPrc2i 1A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3100vqde9a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 16:59:47 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2540310002A;
-        Wed, 13 May 2020 16:59:47 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 16CBC2D3006;
-        Wed, 13 May 2020 16:59:47 +0200 (CEST)
-Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 13 May 2020 16:59:46
- +0200
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH 05/15] ARM: dts: stm32: remove useless interrupt-names property on stm32f746
-Date:   Wed, 13 May 2020 16:59:25 +0200
-Message-ID: <20200513145935.22493-6-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20200513145935.22493-1-benjamin.gaignard@st.com>
-References: <20200513145935.22493-1-benjamin.gaignard@st.com>
+        Wed, 13 May 2020 11:01:27 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2A88C061A0C;
+        Wed, 13 May 2020 08:01:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=DmrZcraATTKpezV6Q30kyckoxm8JSVjW6okXPFLe6l8=; b=kMw1t4FoBCZOGmkMPomMQwnW+Z
+        Jr+jmw5I+1xdHsW6TD8v0jNvwLNCwTh6c4fDjCBrzI1ZJVnDxOJEgzJfGenUZa6dhVQ9citzzKhtz
+        9/ALc0ixW2HXGlPdsA2qd+c95eb36/i7CDRh5vi7s/zsVuhmX0e+5YKH4SvsubEUY6y8j9ZiMqtEO
+        k4GGYrre1ohw7DjuF3xw08FidcSJ1s6kPZnAJFuGqTqJ0PUKIutKGA7w/tZZqkNSZ2VxLyZK2eWDk
+        QsyJAAg8cMwOyhcnAgar9sw8t+kwwEcspANvFdUN0STxP95t+xj9SeCqxaTzej2NAuQZQGRtqw8JF
+        rDFlGqIg==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jYsss-0007Ms-QN; Wed, 13 May 2020 15:01:22 +0000
+Subject: Re: [PATCH 2/3] pinctrl: mchp-sgpio: Add pinctrl driver for Microsemi
+ Serial GPIO
+List-Id: <soc.lore.kernel.org>
+To:     Lars Povlsen <lars.povlsen@microchip.com>,
+        SoC Team <soc@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+References: <20200513141134.25819-1-lars.povlsen@microchip.com>
+ <20200513141134.25819-3-lars.povlsen@microchip.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <fb104436-69c1-3f5a-85d9-af0aee35547f@infradead.org>
+Date:   Wed, 13 May 2020 08:01:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-13_06:2020-05-13,2020-05-13 signatures=0
+In-Reply-To: <20200513141134.25819-3-lars.povlsen@microchip.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Driver doesn't use interrupt's name to get it so remove it from
-the node.
+On 5/13/20 7:11 AM, Lars Povlsen wrote:
+> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+> index 834c59950d1cf..2b0e9021fd7e0 100644
+> --- a/drivers/pinctrl/Kconfig
+> +++ b/drivers/pinctrl/Kconfig
+> @@ -396,6 +396,23 @@ config PINCTRL_OCELOT
+>  	select OF_GPIO
+>  	select REGMAP_MMIO
+> 
+> +config PINCTRL_MSCC_SGPIO
+> +	bool "Pinctrl driver for Microsemi Serial GPIO"
+> +	depends on OF
+> +	depends on HAS_IOMEM
+> +	select GPIOLIB
+> +	select GENERIC_PINCONF
+> +	select GENERIC_PINCTRL_GROUPS
+> +	select GENERIC_PINMUX_FUNCTIONS
+> +	select OF_GPIO
+> +	help
+> +          Support for the VCoreIII SoC serial GPIO device. By using a
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- arch/arm/boot/dts/stm32f746.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+Line above should be indented with one tab + 2 spaces...
+like the lines below.
 
-diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f746.dtsi
-index 93c063796780..5d69a0c653eb 100644
---- a/arch/arm/boot/dts/stm32f746.dtsi
-+++ b/arch/arm/boot/dts/stm32f746.dtsi
-@@ -304,7 +304,6 @@
- 			assigned-clock-parents = <&rcc 1 CLK_LSE>;
- 			interrupt-parent = <&exti>;
- 			interrupts = <17 1>;
--			interrupt-names = "alarm";
- 			st,syscfg = <&pwrcfg 0x00 0x100>;
- 			status = "disabled";
- 		};
+> +	  serial interface, the SIO controller significantly extends
+> +	  the number of available GPIOs with a minimum number of
+> +	  additional pins on the device. The primary purpose of the
+> +	  SIO controller is to connect control signals from SFP
+> +	  modules and to act as an LED controller.
+> +
+
+thanks.
 -- 
-2.15.0
+~Randy
 
