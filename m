@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 943FCC2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53569CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A408206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2186120740
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363524;
-	bh=sNOdC6l34grf0tjzOwQiEk/LXwF/cadj8L/pHwWz5eY=;
+	s=default; t=1589363532;
+	bh=IDIvI+1772k1Od1sxCmC/aHtQx79JKNpyEUnrjOlVXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dVqjszu9FyPADU1W/1CbqcwMiDJ5sNNRM8f14bREoqvoV8V2h5gyPUQpl0erfRQZ4
-	 X8PjIZLjg/N9f3FLmsz/DyO7/fgTrC5G9qlrTq0vWgXBNtX8uJ8gSKYPMDzQUKxpLU
-	 LXOTHDGRUTWQTvAF6CepCD9Y0MnVGQmoCk4cQyiY=
+	b=XXeUJMJlamnjh9KUbnaQS56xO/9bnngXb/6IhouHqTwtNHu63E/EKdCtTc3o9kqfk
+	 porX0Zb7kxl21OqdcllosYJ6Dzu5NpnAny/t16NhS8oR34RcXbXYJnuAIVzL6sm8HW
+	 urDFGTsYf1cOG5uUrZVTdaPhvsWr7lt6lBTzyxCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387743AbgEMJwD (ORCPT
+        id S1733131AbgEMJwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:52:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53170 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:52:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387727AbgEMJv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:51:59 -0400
+        id S2387742AbgEMJwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:52:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DBEF206D6;
-        Wed, 13 May 2020 09:51:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B76B20753;
+        Wed, 13 May 2020 09:52:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363518;
-        bh=sNOdC6l34grf0tjzOwQiEk/LXwF/cadj8L/pHwWz5eY=;
+        s=default; t=1589363523;
+        bh=IDIvI+1772k1Od1sxCmC/aHtQx79JKNpyEUnrjOlVXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hw2jQLeqY5Ds1/VEdUAzO2wxiqmhUeBvCFenrzG9+IPMMhgJm4bSgMGie9W1dyWlC
-         7bbcOKY9d5LvGCNmkKeuG9a+G5D8zZSyBhtZxcmg8WKXz9VYLxA6E/gWNchx2H5XPc
-         SY1zhu7ooY9wtpk1MUgelzU/Bfv7AejY982+N6SU=
+        b=tFLi1xkaOkBO/l0NImxgnmPSbepuXh8tSbLVKOf2fT+Plik4NEazpGwLOMUUrQIzE
+         nfhSxw/ac5U6mYcvXh3sxuF2ULwOy4P/ediPiiVPmB0vqM+zntUw9SfOFysuA6NPjS
+         fOZAL03TZSs0BlmOA5Ygh3EwR0cZTcXAOHkp294s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        stable@vger.kernel.org, Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 017/118] fq_codel: fix TCA_FQ_CODEL_DROP_BATCH_SIZE sanity checks
-Date:   Wed, 13 May 2020 11:43:56 +0200
-Message-Id: <20200513094419.243485566@linuxfoundation.org>
+Subject: [PATCH 5.6 019/118] mlxsw: spectrum_acl_tcam: Position vchunk in a vregion list properly
+Date:   Wed, 13 May 2020 11:43:58 +0200
+Message-Id: <20200513094419.427217170@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -60,32 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Jiri Pirko <jiri@mellanox.com>
 
-[ Upstream commit 14695212d4cd8b0c997f6121b6df8520038ce076 ]
+[ Upstream commit 6ef4889fc0b3aa6ab928e7565935ac6f762cee6e ]
 
-My intent was to not let users set a zero drop_batch_size,
-it seems I once again messed with min()/max().
+Vregion helpers to get min and max priority depend on the correct
+ordering of vchunks in the vregion list. However, the current code
+always adds new chunk to the end of the list, no matter what the
+priority is. Fix this by finding the correct place in the list and put
+vchunk there.
 
-Fixes: 9d18562a2278 ("fq_codel: add batch ability to fq_codel_drop()")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Fixes: 22a677661f56 ("mlxsw: spectrum: Introduce ACL core with simple TCAM implementation")
+Signed-off-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_fq_codel.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_tcam.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
---- a/net/sched/sch_fq_codel.c
-+++ b/net/sched/sch_fq_codel.c
-@@ -416,7 +416,7 @@ static int fq_codel_change(struct Qdisc
- 		q->quantum = max(256U, nla_get_u32(tb[TCA_FQ_CODEL_QUANTUM]));
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_tcam.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_tcam.c
+@@ -986,8 +986,9 @@ mlxsw_sp_acl_tcam_vchunk_create(struct m
+ 				unsigned int priority,
+ 				struct mlxsw_afk_element_usage *elusage)
+ {
++	struct mlxsw_sp_acl_tcam_vchunk *vchunk, *vchunk2;
+ 	struct mlxsw_sp_acl_tcam_vregion *vregion;
+-	struct mlxsw_sp_acl_tcam_vchunk *vchunk;
++	struct list_head *pos;
+ 	int err;
  
- 	if (tb[TCA_FQ_CODEL_DROP_BATCH_SIZE])
--		q->drop_batch_size = min(1U, nla_get_u32(tb[TCA_FQ_CODEL_DROP_BATCH_SIZE]));
-+		q->drop_batch_size = max(1U, nla_get_u32(tb[TCA_FQ_CODEL_DROP_BATCH_SIZE]));
+ 	if (priority == MLXSW_SP_ACL_TCAM_CATCHALL_PRIO)
+@@ -1025,7 +1026,14 @@ mlxsw_sp_acl_tcam_vchunk_create(struct m
+ 	}
  
- 	if (tb[TCA_FQ_CODEL_MEMORY_LIMIT])
- 		q->memory_limit = min(1U << 31, nla_get_u32(tb[TCA_FQ_CODEL_MEMORY_LIMIT]));
+ 	mlxsw_sp_acl_tcam_rehash_ctx_vregion_changed(vregion);
+-	list_add_tail(&vchunk->list, &vregion->vchunk_list);
++
++	/* Position the vchunk inside the list according to priority */
++	list_for_each(pos, &vregion->vchunk_list) {
++		vchunk2 = list_entry(pos, typeof(*vchunk2), list);
++		if (vchunk2->priority > priority)
++			break;
++	}
++	list_add_tail(&vchunk->list, pos);
+ 	mutex_unlock(&vregion->lock);
+ 
+ 	return vchunk;
 
 
