@@ -4,60 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B581C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E950C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AE9020575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E22F206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363908;
-	bh=h8SEZHcxjevCrV+7KP1HulgHGIYU8bJnnCg8YvMO62M=;
+	s=default; t=1589363912;
+	bh=8nWeuh1x24TWSX1tL7laF5UYkrmye3w6vE49+0gyclc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m2Mu+j3I9HGNcCFZaxj99liBGU9aOtcRUW91SQEz2szttb1/JB0QFTawC+YPJREAu
-	 cnLd4HiOpczXRAmr36NYG86PDvWUurW/3m7oVJA2+8kDC8ovA17DtM3F8VaE1s6LF2
-	 XWafzNT8CfLPvulHCPPLqiX4W35Y1yAKuBBBtEUg=
+	b=VtPw63ytXh3f/GazmNlohXe+eM/viXRJ/b4EqSVgnYrmwLODBx0Y/2WKMkGZuSsu7
+	 ioTsHdoUwFqdQi2NB7JSC3h5b+pR9TQwcqrRhr+G/ABNT/mhjhN4XeymyE2OCYRhPQ
+	 IgAyeilRTJs74IYw3298KpxWjOoqYg+U+7ByWhdI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388161AbgEMJyt (ORCPT
+        id S2388533AbgEMJ6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:54:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57376 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:58:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733274AbgEMJyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:54:46 -0400
+        id S2388156AbgEMJys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:54:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19BF22176D;
-        Wed, 13 May 2020 09:54:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82E4920753;
+        Wed, 13 May 2020 09:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363685;
-        bh=h8SEZHcxjevCrV+7KP1HulgHGIYU8bJnnCg8YvMO62M=;
+        s=default; t=1589363688;
+        bh=8nWeuh1x24TWSX1tL7laF5UYkrmye3w6vE49+0gyclc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZDxc3J3Ea+O0fLvuKY04N/YwJGB5zzWH/ZrmoH1xUTB/qkoHQQN2h0spiFoAaU4zM
-         ggSJRKL86HsHRsjlHFNhfX+igUsFdWfCtBWdHBnzH9SsZWqVI5ld5KT7kDCVUK18cE
-         8z1TiMGV/bQ3XvDzhAmuOzikcp6O67gd/ixbUgHo=
+        b=sw7EG0NABIr/Cy+Rb8ZBAY4175lOw8ZGVivrUU3vVjsua1GTqlsbygWiCHaqaJicu
+         HbuD5ABaMmr5EJnGS9t+D7ONSsGcGte0l1+EdCZjD16F7iROpI8GCDb2Pgd3zuc2XH
+         8LhjNSCGvrfborx08qapPR+EbKN9Jjdzha/fGlQU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        stable@vger.kernel.org, Henry Willard <henry.willard@oracle.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Baoquan He <bhe@redhat.com>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Oscar Salvador <osalvador@suse.de>,
+        David Hildenbrand <david@redhat.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Vlastimil Babka <vbabka@suse.cz>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.6 084/118] mm/page_alloc: fix watchdog soft lockups during set_zone_contiguous()
-Date:   Wed, 13 May 2020 11:45:03 +0200
-Message-Id: <20200513094424.804010952@linuxfoundation.org>
+Subject: [PATCH 5.6 085/118] mm: limit boost_watermark on small zones
+Date:   Wed, 13 May 2020 11:45:04 +0200
+Message-Id: <20200513094424.870600250@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -70,62 +63,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Henry Willard <henry.willard@oracle.com>
 
-commit e84fe99b68ce353c37ceeecc95dce9696c976556 upstream.
+commit 14f69140ff9c92a0928547ceefb153a842e8492c upstream.
 
-Without CONFIG_PREEMPT, it can happen that we get soft lockups detected,
-e.g., while booting up.
+Commit 1c30844d2dfe ("mm: reclaim small amounts of memory when an
+external fragmentation event occurs") adds a boost_watermark() function
+which increases the min watermark in a zone by at least
+pageblock_nr_pages or the number of pages in a page block.
 
-  watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [swapper/0:1]
-  CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.6.0-next-20200331+ #4
-  Hardware name: Red Hat KVM, BIOS 1.11.1-4.module+el8.1.0+4066+0f1aadab 04/01/2014
-  RIP: __pageblock_pfn_to_page+0x134/0x1c0
-  Call Trace:
-   set_zone_contiguous+0x56/0x70
-   page_alloc_init_late+0x166/0x176
-   kernel_init_freeable+0xfa/0x255
-   kernel_init+0xa/0x106
-   ret_from_fork+0x35/0x40
+On Arm64, with 64K pages and 512M huge pages, this is 8192 pages or
+512M.  It does this regardless of the number of managed pages managed in
+the zone or the likelihood of success.
 
-The issue becomes visible when having a lot of memory (e.g., 4TB)
-assigned to a single NUMA node - a system that can easily be created
-using QEMU.  Inside VMs on a hypervisor with quite some memory
-overcommit, this is fairly easy to trigger.
+This can put the zone immediately under water in terms of allocating
+pages from the zone, and can cause a small machine to fail immediately
+due to OoM.  Unlike set_recommended_min_free_kbytes(), which
+substantially increases min_free_kbytes and is tied to THP,
+boost_watermark() can be called even if THP is not active.
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
+The problem is most likely to appear on architectures such as Arm64
+where pageblock_nr_pages is very large.
+
+It is desirable to run the kdump capture kernel in as small a space as
+possible to avoid wasting memory.  In some architectures, such as Arm64,
+there are restrictions on where the capture kernel can run, and
+therefore, the space available.  A capture kernel running in 768M can
+fail due to OoM immediately after boost_watermark() sets the min in zone
+DMA32, where most of the memory is, to 512M.  It fails even though there
+is over 500M of free memory.  With boost_watermark() suppressed, the
+capture kernel can run successfully in 448M.
+
+This patch limits boost_watermark() to boosting a zone's min watermark
+only when there are enough pages that the boost will produce positive
+results.  In this case that is estimated to be four times as many pages
+as pageblock_nr_pages.
+
+Mel said:
+
+: There is no harm in marking it stable.  Clearly it does not happen very
+: often but it's not impossible.  32-bit x86 is a lot less common now
+: which would previously have been vulnerable to triggering this easily.
+: ppc64 has a larger base page size but typically only has one zone.
+: arm64 is likely the most vulnerable, particularly when CMA is
+: configured with a small movable zone.
+
+Fixes: 1c30844d2dfe ("mm: reclaim small amounts of memory when an external fragmentation event occurs")
+Signed-off-by: Henry Willard <henry.willard@oracle.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Reviewed-by: Baoquan He <bhe@redhat.com>
-Reviewed-by: Shile Zhang <shile.zhang@linux.alibaba.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc: Shile Zhang <shile.zhang@linux.alibaba.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Alexander Duyck <alexander.duyck@gmail.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Oscar Salvador <osalvador@suse.de>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Acked-by: Mel Gorman <mgorman@techsingularity.net>
+Cc: Vlastimil Babka <vbabka@suse.cz>
 Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200416073417.5003-1-david@redhat.com
+Link: http://lkml.kernel.org/r/1588294148-6586-1-git-send-email-henry.willard@oracle.com
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/page_alloc.c |    1 +
- 1 file changed, 1 insertion(+)
+ mm/page_alloc.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 --- a/mm/page_alloc.c
 +++ b/mm/page_alloc.c
-@@ -1555,6 +1555,7 @@ void set_zone_contiguous(struct zone *zo
- 		if (!__pageblock_pfn_to_page(block_start_pfn,
- 					     block_end_pfn, zone))
- 			return;
-+		cond_resched();
- 	}
+@@ -2351,6 +2351,14 @@ static inline void boost_watermark(struc
  
- 	/* We confirm that there is no hole */
+ 	if (!watermark_boost_factor)
+ 		return;
++	/*
++	 * Don't bother in zones that are unlikely to produce results.
++	 * On small machines, including kdump capture kernels running
++	 * in a small area, boosting the watermark can cause an out of
++	 * memory situation immediately.
++	 */
++	if ((pageblock_nr_pages * 4) > zone_managed_pages(zone))
++		return;
+ 
+ 	max_boost = mult_frac(zone->_watermark[WMARK_HIGH],
+ 			watermark_boost_factor, 10000);
 
 
