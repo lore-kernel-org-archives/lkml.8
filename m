@@ -7,54 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EAABCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5702DCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD2620575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E614206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364256;
-	bh=CsbIO5dipL0iKBcIfukTEXl367sjdfnK/Vip1aGHx/E=;
+	s=default; t=1589364260;
+	bh=FhvBPJNLASY6lwiZHMtDLrA+Rzd1BcGIVp+X4GlC4p0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ou0P/fnk9JqKQ7K0sbhFyfBrNDXspbT95v5bfCPYsdbmz4ExLwpz69F4bwVPLy8it
-	 tl3+zGXcmjj5MBwBXSVHReicHT/MRfGmnMHagYmPRYVa/E6FiDwqn5/hfeAsVkQfWf
-	 fq6CktjCE1v78v+XJhWPhLgYGXchVz08pPOGM8HU=
+	b=K/t2R4SA7SOhMBHFFUQaQIN906R2r5PlN665D5f5Uax0P1pWIAJlMV8yAn1qnVrTy
+	 JKP72Zx+Wm62E1GBw0PUh1kgcHGmXVK7OM4Top8+jFF4E3fwBoIqQrOseDknEIMCEE
+	 hGFAe3SQ961N8hO60AGMloY20kHgacU3ew4rF4kI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732930AbgEMJrt (ORCPT
+        id S2388672AbgEMKET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:47:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45520 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 06:04:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732875AbgEMJrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:47:32 -0400
+        id S1732924AbgEMJrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:47:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9728520753;
-        Wed, 13 May 2020 09:47:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DFE72492D;
+        Wed, 13 May 2020 09:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363252;
-        bh=CsbIO5dipL0iKBcIfukTEXl367sjdfnK/Vip1aGHx/E=;
+        s=default; t=1589363266;
+        bh=FhvBPJNLASY6lwiZHMtDLrA+Rzd1BcGIVp+X4GlC4p0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=13e+ky6kqbqQihHKlo8ToHijGMn8KfNE9QGWaS+2K1mL+DNZxRjYWTd784V08BcY2
-         y2Qmy37iAYHssb6KMnmlq66ZnS4TLX22GuJqBOLHUwmAyXEHTZ9cy7LF8100SoYuFA
-         J6Xx3mRSvRikxQjr5u+lt/Ld+FVrfwtgPqc4ymaY=
+        b=uyKqZ9oRmCeDj2f2luzYXtopV0qkeRl1ye1gjhwJY7jSi5yPQg73Xq4Z+XHVBObhW
+         xXUO/gBv1/CeFnWA/9NMVKpCu8MoDcKVkxdwjxXbmbZ9AZ8MMkFRQIm2AC9U8oB/dc
+         GYQmg98eRDRtXhoaTbrHQfBNYNYuX+59OpfZ0dWk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vince Weaver <vincent.weaver@maine.edu>,
-        Dave Jones <dsj@fb.com>, Steven Rostedt <rostedt@goodmis.org>,
-        Vegard Nossum <vegard.nossum@oracle.com>,
-        Joe Mario <jmario@redhat.com>, Miroslav Benes <mbenes@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.19 46/48] objtool: Fix stack offset tracking for indirect CFAs
-Date:   Wed, 13 May 2020 11:45:12 +0200
-Message-Id: <20200513094404.559723075@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        Johan Hovold <johan@kernel.org>,
+        syzbot+d29e9263e13ce0b9f4fd@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 23/48] USB: serial: garmin_gps: add sanity checking for data length
+Date:   Wed, 13 May 2020 11:44:49 +0200
+Message-Id: <20200513094356.758557175@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
 References: <20200513094351.100352960@linuxfoundation.org>
@@ -67,50 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit d8dd25a461e4eec7190cb9d66616aceacc5110ad upstream.
+commit e9b3c610a05c1cdf8e959a6d89c38807ff758ee6 upstream.
 
-When the current frame address (CFA) is stored on the stack (i.e.,
-cfa->base == CFI_SP_INDIRECT), objtool neglects to adjust the stack
-offset when there are subsequent pushes or pops.  This results in bad
-ORC data at the end of the ENTER_IRQ_STACK macro, when it puts the
-previous stack pointer on the stack and does a subsequent push.
+We must not process packets shorter than a packet ID
 
-This fixes the following unwinder warning:
-
-  WARNING: can't dereference registers at 00000000f0a6bdba for ip interrupt_entry+0x9f/0xa0
-
-Fixes: 627fce14809b ("objtool: Add ORC unwind table generation")
-Reported-by: Vince Weaver <vincent.weaver@maine.edu>
-Reported-by: Dave Jones <dsj@fb.com>
-Reported-by: Steven Rostedt <rostedt@goodmis.org>
-Reported-by: Vegard Nossum <vegard.nossum@oracle.com>
-Reported-by: Joe Mario <jmario@redhat.com>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Jann Horn <jannh@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/853d5d691b29e250333332f09b8e27410b2d9924.1587808742.git.jpoimboe@redhat.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-and-tested-by: syzbot+d29e9263e13ce0b9f4fd@syzkaller.appspotmail.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/objtool/check.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/serial/garmin_gps.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -1315,7 +1315,7 @@ static int update_insn_state_regs(struct
- 	struct cfi_reg *cfa = &state->cfa;
- 	struct stack_op *op = &insn->stack_op;
+--- a/drivers/usb/serial/garmin_gps.c
++++ b/drivers/usb/serial/garmin_gps.c
+@@ -1138,8 +1138,8 @@ static void garmin_read_process(struct g
+ 		   send it directly to the tty port */
+ 		if (garmin_data_p->flags & FLAGS_QUEUING) {
+ 			pkt_add(garmin_data_p, data, data_length);
+-		} else if (bulk_data ||
+-			   getLayerId(data) == GARMIN_LAYERID_APPL) {
++		} else if (bulk_data || (data_length >= sizeof(u32) &&
++				getLayerId(data) == GARMIN_LAYERID_APPL)) {
  
--	if (cfa->base != CFI_SP)
-+	if (cfa->base != CFI_SP && cfa->base != CFI_SP_INDIRECT)
- 		return 0;
- 
- 	/* push */
+ 			spin_lock_irqsave(&garmin_data_p->lock, flags);
+ 			garmin_data_p->flags |= APP_RESP_SEEN;
 
 
