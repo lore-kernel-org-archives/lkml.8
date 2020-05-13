@@ -2,98 +2,92 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C55C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9394C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F8EE2065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31D0220659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:03:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tb4AK0vZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389773AbgEMRC1 (ORCPT
+        id S2389798AbgEMRDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 13:02:27 -0400
-Received: from mga04.intel.com ([192.55.52.120]:29114 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728068AbgEMRC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 13:02:26 -0400
-IronPort-SDR: 2tIy2cQRE7kVM3Fe8y5aJ7jBhQVQLXjQ0dHGkuW+ofvKjbKUfT8fHB+Mq1lMk8Qk3Y/LpQ+eT7
- OEJUq0S8jVtw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 10:02:26 -0700
-IronPort-SDR: gCy9wK+Erqq5I80MrdV08xRdDFkYGJWEIYtYTy6HoBSr2zMXykhuN7W73ffP12lI4Ct1GsWRd3
- xhEXFOhtKAKg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,388,1583222400"; 
-   d="scan'208";a="464007965"
-Received: from tvladisl-mobl.ger.corp.intel.com (HELO localhost) ([10.252.49.129])
-  by fmsmga005.fm.intel.com with ESMTP; 13 May 2020 10:02:23 -0700
-Date:   Wed, 13 May 2020 20:02:23 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     David Howells <dhowells@redhat.com>, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KEYS: Replace zero-length array with flexible-array
-Message-ID: <20200513170223.GC25598@linux.intel.com>
-References: <20200507185710.GA14910@embeddedor>
+        Wed, 13 May 2020 13:03:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728068AbgEMRD3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 13:03:29 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6595FC061A0C;
+        Wed, 13 May 2020 10:03:29 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id mq3so11379105pjb.1;
+        Wed, 13 May 2020 10:03:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mteLG302SDv6O1LHZdZapeGH7XY/9R6hk4XYfbaGd4o=;
+        b=tb4AK0vZ3DhX+9Grv0A9JGO2YmZyb+6M3JrE0r7yPbhyFW5aOdpQxOiuOreFlXYR/I
+         X7kxYBb49oda8jMXFRKr73XZCEM9q9vJfrUpq0JMBLsYQZSeTBYuZ0SJa/JJchRoAGip
+         XIy8tUExVfiBC5+A0DhfF10s9YxKA1r3szArRaVFsjw6C/KtD1tEzYyPEwXQz2PwSU5r
+         xr4qH0FsyRkU4RFVM5jQudN0DbJqur85mYijIvgcscu4i7NqkxVAjpm68jLxfm6f9LFu
+         GB2JjxOcGDg3LQlW6jxF/kFxcMnM2VCnv8GwzMnX79zd9YP7VT+dv6I8504+382uTj/T
+         lEhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mteLG302SDv6O1LHZdZapeGH7XY/9R6hk4XYfbaGd4o=;
+        b=KBe8whj2f5VwJhsmlaRk+jHVlgMxyvVeRZMFcMa2WgmGPwThuePvJ9Gh1h4X7D/yN4
+         ACqiDKYW6+kGIUNHH1iuMTD8cmKOngkkkjD/Aw+sq4/G+TiB79cXgqrJozV3Z/ZVVckS
+         2CmFb4mSE3h+xi02hBvO+kQ0fUMQ+oJOrunzxKhROyd/MNaVOQJPWKytPATWKUtnPYQm
+         9BYm0ebFrRnBGUMj+T18Tc1edKiKON5Z821DL+8/W2SSmgUIBhe6J1vcSXuigayhoyLm
+         aS6PtZTwo3I2iZoW+o5mA/wvDbubIWvhLk9snrHsGPqDaxcDouJUULK5s7geF4pAFFzG
+         AetQ==
+X-Gm-Message-State: AOAM531wbjSZ7qOGRlNhl6AkobMbaKBAjInKkZfizAEPzfii3CMjV6KA
+        k/F0eCVT0HWqlyVCwKtxG4Y=
+X-Google-Smtp-Source: ABdhPJy5eXtlxGaOfurDiWAnsNFyw3menyB+3BAV06D7otLRifTvFYh+nNBD4uW7Xq4GrEZNJBLLbw==
+X-Received: by 2002:a17:902:5588:: with SMTP id g8mr113400pli.321.1589389408994;
+        Wed, 13 May 2020 10:03:28 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id a6sm89225pfk.159.2020.05.13.10.03.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 13 May 2020 10:03:28 -0700 (PDT)
+Date:   Wed, 13 May 2020 10:03:26 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 00/48] 4.19.123-rc1 review
+Message-ID: <20200513170326.GA224971@roeck-us.net>
+References: <20200513094351.100352960@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200507185710.GA14910@embeddedor>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 01:57:10PM -0500, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
+On Wed, May 13, 2020 at 11:44:26AM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.123 release.
+> There are 48 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Build results:
+	total: 155 pass: 155 fail: 0
+Qemu test results:
+	total: 421 pass: 421 fail: 0
 
-David, can you pick this up? [*]
-
-[*] Maybe a good workflow to start with is the following that you mostly
-pick up the pure keyring patches. We can retune this over time if/when
-needed.
-
-/Jarkko
+Guenter
