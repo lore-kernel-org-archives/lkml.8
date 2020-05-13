@@ -4,57 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA51CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C94C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17C1020769
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 151AE206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363487;
-	bh=kRo67pmpyuQs429SixwVJcGbtcWjE06LrpqfDcKfVTg=;
+	s=default; t=1589363489;
+	bh=90R9d456XOzRYbcfVgnZtYoyVzTMA4FXJCi9jzO42zE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bsq35Psz5BRNwjocOamWilPhbMGczRuI8kinfhcjIVGPeBFssgXsJOnBe5ggOyPLL
-	 92dsk5ghdzpfmgd9C6aWolbFu4sV2P6SZPyGXGRrk2x7+XFLTCMdThVN1Adcy5/fbN
-	 sPKDk3frMl+JSqhL0xm2Pn52cJPiKhOVYf7xiuBI=
+	b=cd9h/y2/Z7Y2cAjUtux0zW8y1bPrp9Ku0y2fGAP3CqL3O3WI36u+XVzV6qzTVqWm7
+	 uzo5MOrZo+Sh88C4fa64tcoINTjkpB7oUptzTT9PtSoBk6zTkCvpfsqGW46YTTEBJv
+	 uousnqNk7r6Hsx4exVpxLCUzZiuVmtYZdBWe8McU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387652AbgEMJv0 (ORCPT
+        id S2387658AbgEMJv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:51:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52012 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:51:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732826AbgEMJvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:51:20 -0400
+        id S1732717AbgEMJvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:51:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1002A20740;
-        Wed, 13 May 2020 09:51:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D91D206D6;
+        Wed, 13 May 2020 09:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363479;
-        bh=kRo67pmpyuQs429SixwVJcGbtcWjE06LrpqfDcKfVTg=;
+        s=default; t=1589363482;
+        bh=90R9d456XOzRYbcfVgnZtYoyVzTMA4FXJCi9jzO42zE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EAKdxtoq22HmHvNKjvWcZis4ma00ZpUcWiv+MAAhiAT0N2Gjmtx8Ord9r3qGZUTdj
-         tRqYeuhlGo7lR3GFE82QaAY18hxSOuJjgx9gM8BrHknw/HW6GLcoHKzT6HU3lvz8dg
-         80H4pFVEyQv+9vUCoUMc1+YLxAEuuF1XfGPYPXNQ=
+        b=c66uPGtOnA2bm3TrgevUyX7TJUoWOwqpG0Mj7aRgu4frzM60B6Jq5tVRnIxhvcxu9
+         fk4IXl+6Hr4bDx9qze01wiK0fsxk/Rs55juAwsyXH7xIVNEK5p0wyeIVWyVXiknoIe
+         dpEHSaWF9meFtmjGu9XLxF/Hdg++Upd0AQ6FqhQU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vince Weaver <vincent.weaver@maine.edu>,
-        Dave Jones <dsj@fb.com>, Steven Rostedt <rostedt@goodmis.org>,
-        Vegard Nossum <vegard.nossum@oracle.com>,
-        Joe Mario <jmario@redhat.com>, Miroslav Benes <mbenes@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.4 83/90] objtool: Fix stack offset tracking for indirect CFAs
-Date:   Wed, 13 May 2020 11:45:19 +0200
-Message-Id: <20200513094417.832803844@linuxfoundation.org>
+        stable@vger.kernel.org, Julia Lawall <Julia.Lawall@inria.fr>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 5.4 84/90] iommu/virtio: Reverse arguments to list_add
+Date:   Wed, 13 May 2020 11:45:20 +0200
+Message-Id: <20200513094417.937658233@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -67,50 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Julia Lawall <Julia.Lawall@inria.fr>
 
-commit d8dd25a461e4eec7190cb9d66616aceacc5110ad upstream.
+commit fb3637a113349f53830f7d6ca45891b7192cd28f upstream.
 
-When the current frame address (CFA) is stored on the stack (i.e.,
-cfa->base == CFI_SP_INDIRECT), objtool neglects to adjust the stack
-offset when there are subsequent pushes or pops.  This results in bad
-ORC data at the end of the ENTER_IRQ_STACK macro, when it puts the
-previous stack pointer on the stack and does a subsequent push.
+Elsewhere in the file, there is a list_for_each_entry with
+&vdev->resv_regions as the second argument, suggesting that
+&vdev->resv_regions is the list head.  So exchange the
+arguments on the list_add call to put the list head in the
+second argument.
 
-This fixes the following unwinder warning:
-
-  WARNING: can't dereference registers at 00000000f0a6bdba for ip interrupt_entry+0x9f/0xa0
-
-Fixes: 627fce14809b ("objtool: Add ORC unwind table generation")
-Reported-by: Vince Weaver <vincent.weaver@maine.edu>
-Reported-by: Dave Jones <dsj@fb.com>
-Reported-by: Steven Rostedt <rostedt@goodmis.org>
-Reported-by: Vegard Nossum <vegard.nossum@oracle.com>
-Reported-by: Joe Mario <jmario@redhat.com>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Jann Horn <jannh@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/853d5d691b29e250333332f09b8e27410b2d9924.1587808742.git.jpoimboe@redhat.com
+Fixes: 2a5a31487445 ("iommu/virtio: Add probe request")
+Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
+Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Link: https://lore.kernel.org/r/1588704467-13431-1-git-send-email-Julia.Lawall@inria.fr
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+
 ---
- tools/objtool/check.c |    2 +-
+ drivers/iommu/virtio-iommu.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -1402,7 +1402,7 @@ static int update_insn_state_regs(struct
- 	struct cfi_reg *cfa = &state->cfa;
- 	struct stack_op *op = &insn->stack_op;
+--- a/drivers/iommu/virtio-iommu.c
++++ b/drivers/iommu/virtio-iommu.c
+@@ -454,7 +454,7 @@ static int viommu_add_resv_mem(struct vi
+ 	if (!region)
+ 		return -ENOMEM;
  
--	if (cfa->base != CFI_SP)
-+	if (cfa->base != CFI_SP && cfa->base != CFI_SP_INDIRECT)
- 		return 0;
+-	list_add(&vdev->resv_regions, &region->list);
++	list_add(&region->list, &vdev->resv_regions);
+ 	return 0;
+ }
  
- 	/* push */
 
 
