@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACEFBCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7457CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89A28206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EC2D206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:05:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364318;
-	bh=FR8Ifg9rP8tzSzi0f8DEsEecajjqrvZMp0gu9VxDTkE=;
+	s=default; t=1589364321;
+	bh=2cKhX3xfB6ZFEbpbrR4NOu89GxoweIZyJxrTXHQ9D+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FtDbPFrJ7Aos8KlMXGzEuzHh7IYGg/ieQsrsvn3zkRqjU+PkU43x786ov543y8JQ4
-	 QhFDYHg+fE9wJclngkZJHjYbS3Fj14H0ntopBf2VLGwBwMBf3DcZsor1326ClRGlrp
-	 7rBK0GYWs252swk70VCF9nXJZabnUlaveXomjciI=
+	b=B+a1PL0NLCulEqAki4Feqpl9AK5NmI+6OxmQXiX/tWHwA2m9fg7lIWVKrf5o2DgTZ
+	 PxRLhZtHDeOx4wH16xeT9Kxbi4FFLBjHa1ML5ijaqEer8FybRGmk81oXoHSPm+OqkT
+	 R3fkgei4wlnur8AtiEEH3RUshLIbviUOO+SX8Kqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732722AbgEMJqt (ORCPT
+        id S1732700AbgEMJqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:46:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44318 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:46:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732689AbgEMJqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:46:46 -0400
+        id S1732678AbgEMJqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:46:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62FB1206F5;
-        Wed, 13 May 2020 09:46:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52346206F5;
+        Wed, 13 May 2020 09:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363205;
-        bh=FR8Ifg9rP8tzSzi0f8DEsEecajjqrvZMp0gu9VxDTkE=;
+        s=default; t=1589363198;
+        bh=2cKhX3xfB6ZFEbpbrR4NOu89GxoweIZyJxrTXHQ9D+U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cP1VEZuVVxRB8UMZfiX2oe7mjhnbF5wv3N8UVboLxibiz37jxDH6Wy8iqTCPfNfkP
-         4BHCfnfzyqG1nf0VrhXx4CLjxIiveBCjqyFSg9Lw7e2yKYJGORK9Ajt3HxjqHafLDb
-         j2F44J+oe7BVw0NuN3CbE4Vr0n3M51gaDP0BkSMc=
+        b=FKK3l31inBJru0o5NKo+RLwxQgmoNCncuFrpTtDBiyjTbf4Y6+1olP81YDJggZsKr
+         iAvU2ugrr6d8L0GJmGxm921w1gdQgmH4QlJcG0oRCGOQjLX1N85sT5yjnH0qkEFJdJ
+         kGbWYEQh/v2OduBH7fCWue933Qg7Mjr/1dj7pFBE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oscar Carter <oscar.carter@gmx.com>,
-        Richard Yeh <rcy@google.com>
-Subject: [PATCH 4.19 29/48] staging: gasket: Check the return value of gasket_get_bar_index()
-Date:   Wed, 13 May 2020 11:44:55 +0200
-Message-Id: <20200513094358.457452609@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 4.19 26/48] KVM: arm64: Fix 32bit PC wrap-around
+Date:   Wed, 13 May 2020 11:44:52 +0200
+Message-Id: <20200513094357.501897308@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
 References: <20200513094351.100352960@linuxfoundation.org>
@@ -59,39 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oscar Carter <oscar.carter@gmx.com>
+From: Marc Zyngier <maz@kernel.org>
 
-commit 769acc3656d93aaacada814939743361d284fd87 upstream.
+commit 0225fd5e0a6a32af7af0aefac45c8ebf19dc5183 upstream.
 
-Check the return value of gasket_get_bar_index function as it can return
-a negative one (-EINVAL). If this happens, a negative index is used in
-the "gasket_dev->bar_data" array.
+In the unlikely event that a 32bit vcpu traps into the hypervisor
+on an instruction that is located right at the end of the 32bit
+range, the emulation of that instruction is going to increment
+PC past the 32bit range. This isn't great, as userspace can then
+observe this value and get a bit confused.
 
-Addresses-Coverity-ID: 1438542 ("Negative array index read")
-Fixes: 9a69f5087ccc2 ("drivers/staging: Gasket driver framework + Apex driver")
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Richard Yeh <rcy@google.com>
-Link: https://lore.kernel.org/r/20200501155118.13380-1-oscar.carter@gmx.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Conversly, userspace can do things like (in the context of a 64bit
+guest that is capable of 32bit EL0) setting PSTATE to AArch64-EL0,
+set PC to a 64bit value, change PSTATE to AArch32-USR, and observe
+that PC hasn't been truncated. More confusion.
+
+Fix both by:
+- truncating PC increments for 32bit guests
+- sanitizing all 32bit regs every time a core reg is changed by
+  userspace, and that PSTATE indicates a 32bit mode.
+
+Cc: stable@vger.kernel.org
+Acked-by: Will Deacon <will@kernel.org>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/gasket/gasket_core.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/kvm/guest.c     |    7 +++++++
+ virt/kvm/arm/hyp/aarch32.c |    8 ++++++--
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
---- a/drivers/staging/gasket/gasket_core.c
-+++ b/drivers/staging/gasket/gasket_core.c
-@@ -933,6 +933,10 @@ do_map_region(const struct gasket_dev *g
- 		gasket_get_bar_index(gasket_dev,
- 				     (vma->vm_pgoff << PAGE_SHIFT) +
- 				     driver_desc->legacy_mmap_address_offset);
+--- a/arch/arm64/kvm/guest.c
++++ b/arch/arm64/kvm/guest.c
+@@ -179,6 +179,13 @@ static int set_core_reg(struct kvm_vcpu
+ 	}
+ 
+ 	memcpy((u32 *)regs + off, valp, KVM_REG_SIZE(reg->id));
 +
-+	if (bar_index < 0)
-+		return DO_MAP_REGION_INVALID;
++	if (*vcpu_cpsr(vcpu) & PSR_MODE32_BIT) {
++		int i;
 +
- 	phys_base = gasket_dev->bar_data[bar_index].phys_base + phys_offset;
- 	while (mapped_bytes < map_length) {
- 		/*
++		for (i = 0; i < 16; i++)
++			*vcpu_reg32(vcpu, i) = (u32)*vcpu_reg32(vcpu, i);
++	}
+ out:
+ 	return err;
+ }
+--- a/virt/kvm/arm/hyp/aarch32.c
++++ b/virt/kvm/arm/hyp/aarch32.c
+@@ -125,12 +125,16 @@ static void __hyp_text kvm_adjust_itstat
+  */
+ void __hyp_text kvm_skip_instr32(struct kvm_vcpu *vcpu, bool is_wide_instr)
+ {
++	u32 pc = *vcpu_pc(vcpu);
+ 	bool is_thumb;
+ 
+ 	is_thumb = !!(*vcpu_cpsr(vcpu) & PSR_AA32_T_BIT);
+ 	if (is_thumb && !is_wide_instr)
+-		*vcpu_pc(vcpu) += 2;
++		pc += 2;
+ 	else
+-		*vcpu_pc(vcpu) += 4;
++		pc += 4;
++
++	*vcpu_pc(vcpu) = pc;
++
+ 	kvm_adjust_itstate(vcpu);
+ }
 
 
