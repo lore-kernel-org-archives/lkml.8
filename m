@@ -2,129 +2,113 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC44CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C10CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7F1920575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 880D520575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:02:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364134;
-	bh=uOdmIxsIY5mVo19Rvp98hxeHLUkyCpu6hxH7U1G3Sgg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gMLfKxOskwbaF5a7SVq0XScYH0toYASvo5FgF1XdiQcmE+K6KTwLxxeTiyGbGXrE7
-	 w5M9Shb1wZrCIfpYsZ/LeG3KxtBwOeZurN3ki5F6BQPb1b8xyfct4H428EHcDMlhmT
-	 nsC7Xm2KI3PwRgBj409Zzn3G5MccWniLJkYdmilc=
+	s=default; t=1589364140;
+	bh=4teFK8yAPQaudrvOkMtxHTK4dS9GB4B0H+iGbpSKcXE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AtycYca60Xa+tRsCQbR4rGQydXtXpoQZq02FQwhAYIG75OOVNMnPcJ5IOe3uMNG4U
+	 Z/pTOYl84ztkO931c5rjE5DZ4wW0XOQ3A0hTTpuZgADtSDmdJLGX9avPb3LVfSUPrc
+	 5vNA0B4AfEgpmYaWP7EdGZFtU3CqFKh3I3SeKMZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388637AbgEMKCO (ORCPT
+        id S2388644AbgEMKCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:02:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50068 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 06:02:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387474AbgEMJuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:50:19 -0400
+        id S2387474AbgEMKCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 06:02:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECBFB20575;
-        Wed, 13 May 2020 09:50:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7271E206B8;
+        Wed, 13 May 2020 10:02:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363419;
-        bh=uOdmIxsIY5mVo19Rvp98hxeHLUkyCpu6hxH7U1G3Sgg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nYLfg0pmfRzJkD5kaZ0+Pn8/SQvk84Jevc1jjfo2maTMfCACnI29396v2AZ9JFymg
-         BSek8ml6jRu6sChe2PCaukpg3FBd3gn9uAoeIz3Zz+zWgqJ1bCyDriFoQkcvtk+mbs
-         SJrs4zVuytn38b7EYP5damRQpuD9lp65ZbUVpGIg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vincent Chen <vincent.chen@sifive.com>,
-        Anup Patel <anup@brainfault.org>,
-        Yash Shah <yash.shah@sifive.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>
-Subject: [PATCH 5.4 66/90] riscv: set max_pfn to the PFN of the last page
-Date:   Wed, 13 May 2020 11:45:02 +0200
-Message-Id: <20200513094416.347394093@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
-References: <20200513094408.810028856@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1589364135;
+        bh=4teFK8yAPQaudrvOkMtxHTK4dS9GB4B0H+iGbpSKcXE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jFr2qo1yZ16htVmXSelC+yVYkaYSuZGpz2WvaV0I1WIqo2vLRXY0NIN69zSxbgCsY
+         m/OG5MeRhHsU6xUhe1+UCHt7S1Wtpt0bXwueF+Kc+j6iClm8Ab/jY6w/KXMeO4pXfT
+         ABUKgSTqKWPwHMSSJ9d9NIJf1cXL3NFa109Vn960=
+Date:   Wed, 13 May 2020 12:02:13 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Quentin Perret <qperret@google.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Benjamin Segall <bsegall@google.com>,
+        Mel Gorman <mgorman@suse.de>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Todd Kjos <tkjos@google.com>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+Subject: Re: [PATCH 00/14] Modularize schedutil
+Message-ID: <20200513100213.GA868852@kroah.com>
+References: <CAJZ5v0jKMgFsR0dXDt4si5hT9QF2evaoMS-13y-Qde8UpcaARg@mail.gmail.com>
+ <20200512092102.GA16151@google.com>
+ <CAJZ5v0hm3Tv2yZKLzM9a+kJuB1V5_eFOEKT-uM318dzeKV3_Qw@mail.gmail.com>
+ <20200512135813.GA101124@google.com>
+ <CAJZ5v0hN708uvurZ-3oo90qUJFw3=Eg0OmtTaOKXQgNPXhCkFg@mail.gmail.com>
+ <20200512151120.GB101124@google.com>
+ <CAJZ5v0inoge=nWQtv-rU_ReQUMZA5w-PZXuSpHHj1UHn-S7aSA@mail.gmail.com>
+ <20200512162630.GC101124@google.com>
+ <CAJZ5v0ges4=e2HkHpVk4E1yF1VsBm9H5noqMz-MxX9DK_kt6Xg@mail.gmail.com>
+ <20200513094117.GB225140@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513094117.GB225140@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Chen <vincent.chen@sifive.com>
+On Wed, May 13, 2020 at 10:41:17AM +0100, Quentin Perret wrote:
+> Hi Rafael,
+> 
+> On Tuesday 12 May 2020 at 19:30:52 (+0200), Rafael J. Wysocki wrote:
+> > I don't see any technical reason for making schedutil modular in the
+> > context of GKI other than to make the GKI image smaller, but I don't
+> > expect that to be significant enough.
+> 
+> The fact that we can make the image smaller, and we give vendors one
+> less reason to not-want GKI _is_ desirable IMO.
+> 
+>   $ size vmlinux.*
+>      text	   data	    bss	    dec	    hex	filename
+>   19225963	9601976	 491084	29319023	1bf5f6f	vmlinux.after
+>   19230599	9603236	 491084	29324919	1bf7677	vmlinux.before
+> 
+> ^ that's with the series applied. 'before' means sugov is =y, and
+> 'after' is sugov =m. So modularizing saves just over 4K on text, and a
+> bit of data too. Is it significant? Maybe not. But it's quite likely
+> that those who don't use schedutil will find any unnecessary byte to be
+> one too many.
 
-commit c749bb2d554825e007cbc43b791f54e124dadfce upstream.
+It's not significant at all, just always build it in, no one will notice
+it, it's just a page or two.  Serial port drivers are way bigger :)
 
-The current max_pfn equals to zero. In this case, I found it caused users
-cannot get some page information through /proc such as kpagecount in v5.6
-kernel because of new sanity checks. The following message is displayed by
-stress-ng test suite with the command "stress-ng --verbose --physpage 1 -t
-1" on HiFive unleashed board.
+thanks,
 
- # stress-ng --verbose --physpage 1 -t 1
- stress-ng: debug: [109] 4 processors online, 4 processors configured
- stress-ng: info: [109] dispatching hogs: 1 physpage
- stress-ng: debug: [109] cache allocate: reducing cache level from L3 (too high) to L0
- stress-ng: debug: [109] get_cpu_cache: invalid cache_level: 0
- stress-ng: info: [109] cache allocate: using built-in defaults as no suitable cache found
- stress-ng: debug: [109] cache allocate: default cache size: 2048K
- stress-ng: debug: [109] starting stressors
- stress-ng: debug: [109] 1 stressor spawned
- stress-ng: debug: [110] stress-ng-physpage: started [110] (instance 0)
- stress-ng: error: [110] stress-ng-physpage: cannot read page count for address 0x3fd34de000 in /proc/kpagecount, errno=0 (Success)
- stress-ng: error: [110] stress-ng-physpage: cannot read page count for address 0x3fd32db078 in /proc/kpagecount, errno=0 (Success)
- ...
- stress-ng: error: [110] stress-ng-physpage: cannot read page count for address 0x3fd32db078 in /proc/kpagecount, errno=0 (Success)
- stress-ng: debug: [110] stress-ng-physpage: exited [110] (instance 0)
- stress-ng: debug: [109] process [110] terminated
- stress-ng: info: [109] successful run completed in 1.00s
- #
-
-After applying this patch, the kernel can pass the test.
-
- # stress-ng --verbose --physpage 1 -t 1
- stress-ng: debug: [104] 4 processors online, 4 processors configured stress-ng: info: [104] dispatching hogs: 1 physpage
- stress-ng: info: [104] cache allocate: using defaults, can't determine cache details from sysfs
- stress-ng: debug: [104] cache allocate: default cache size: 2048K
- stress-ng: debug: [104] starting stressors
- stress-ng: debug: [104] 1 stressor spawned
- stress-ng: debug: [105] stress-ng-physpage: started [105] (instance 0) stress-ng: debug: [105] stress-ng-physpage: exited [105] (instance 0) stress-ng: debug: [104] process [105] terminated
- stress-ng: info: [104] successful run completed in 1.01s
- #
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
-Reviewed-by: Anup Patel <anup@brainfault.org>
-Reviewed-by: Yash Shah <yash.shah@sifive.com>
-Tested-by: Yash Shah <yash.shah@sifive.com>
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/riscv/mm/init.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -116,7 +116,8 @@ void __init setup_bootmem(void)
- 	memblock_reserve(vmlinux_start, vmlinux_end - vmlinux_start);
- 
- 	set_max_mapnr(PFN_DOWN(mem_size));
--	max_low_pfn = PFN_DOWN(memblock_end_of_DRAM());
-+	max_pfn = PFN_DOWN(memblock_end_of_DRAM());
-+	max_low_pfn = max_pfn;
- 
- #ifdef CONFIG_BLK_DEV_INITRD
- 	setup_initrd();
-
-
+greg k-h
