@@ -2,237 +2,178 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29963C2D0FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B265CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF0A62065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCBA620690
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:32:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="EGO9TAK+"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lJ2nSg+2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387924AbgEMNbv (ORCPT
+        id S2387946AbgEMNcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:31:51 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:59452 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387897AbgEMNbp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:31:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589376706; x=1620912706;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=TCs5xQ14bvTR7/FIdlrnC54EzExnsRiTdR5p1t9z2r0=;
-  b=EGO9TAK+Zcr6qllgic/YO9gNO9kOKsNazoHGcDbIwWhBi2mg8Ml3I8lJ
-   VYXo+HF57wmS42FiVhx8CLODpmHR1GvHf4wbjzolgZY9Q2+ScvTVjJfbP
-   qb0X9DfrWU0WpYZlHY42u/fFEJHhF4nvFHKtJIchQIf5VqF9ab9ESN5Fe
-   bnRtbnJ8NvJ2Fdfb6tfk3BC+dx9NePJH9WfOKa9SYYnwDcCbKMIooFAD2
-   OM0a1VqJGIlgzBZoxwfWo0b4jLER2d0DvY5GeuCJnu703+sJ3TYMNOqdX
-   UZ7VAA/kFmSMfZYHanalzda/sWUadPgl9qV79i9KOHemLQS+H7IDoAoxf
-   w==;
-IronPort-SDR: BHbrpwrZHZL1tZv25WFNX/YakRXze4CAn171M37amxdxeMGb569HFFJv4+vzS5AJEXTx4yKU45
- 8FDBBFy6bpxmLaW72f7yd3GAn7KtUP3RXzDv0kkVB6LurlauUcO8gLkM6suxyqMVSqeTKqpztY
- Y7oYTeVyerrcMQCgiqjHwfPADHKmYRjqKcAWkdQ2WVvCLyXWCxYawJdUTRi9JirPk+Q0frrr7U
- yz2iuL38l6KBeSAsAD57PV7fVs9VFxI0bkEm8UniDi4W2jAuA3uG9kg6Gm41XtJR3IJ4rLwVSH
- TD8=
-X-IronPort-AV: E=Sophos;i="5.73,387,1583218800"; 
-   d="scan'208";a="75770681"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 May 2020 06:31:43 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 13 May 2020 06:31:43 -0700
-Received: from soft-dev15.microsemi.net (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 13 May 2020 06:31:40 -0700
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        SoC Team <soc@kernel.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 3/3] arm64: dts: sparx5: Add Sparx5 eMMC support
-Date:   Wed, 13 May 2020 15:31:22 +0200
-Message-ID: <20200513133122.25121-4-lars.povlsen@microchip.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513133122.25121-1-lars.povlsen@microchip.com>
-References: <20200513133122.25121-1-lars.povlsen@microchip.com>
+        Wed, 13 May 2020 09:32:14 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:57834 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733281AbgEMNcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 09:32:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=HyO1+4PL1ry4EHRvApM2dkFGIw/Z4bh+/HXu49Gei1w=; b=lJ2nSg+2amnjt4bLbGibfEWJG1
+        UGeYTelQhtqRIMYYa8byavoe0uLrrqmfQ+b4N90hQ7fQk4TWwKO7DArZP78dxfnNveugSdqgI0PQM
+        gkPovlywJ/Qv0Gom9Sxn7enQJWVfxgruXaOwnJVbDgCQrv7cv008a2XCPd3kVL3DDR8g=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jYrUX-002AEv-Qj; Wed, 13 May 2020 15:32:09 +0200
+Date:   Wed, 13 May 2020 15:32:09 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH v1] net: phy: at803x: add cable test support
+Message-ID: <20200513133209.GC499265@lunn.ch>
+References: <20200513120648.14415-1-o.rempel@pengutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513120648.14415-1-o.rempel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds eMMC support to the applicable Sparx5 board configuration
-files.
+On Wed, May 13, 2020 at 02:06:48PM +0200, Oleksij Rempel wrote:
+> The cable test seems to be support by all of currently support Atherso
+> PHYs, so add support for all of them. This patch was tested only on
+> AR9331 PHY with following results:
+> - No cable is detected as short
+> - A 15m long cable connected only on one side is detected as 9m open.
 
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
----
- arch/arm64/boot/dts/microchip/sparx5.dtsi     | 24 +++++++++++++++++++
- .../boot/dts/microchip/sparx5_pcb125.dts      | 23 ++++++++++++++++++
- .../boot/dts/microchip/sparx5_pcb134_emmc.dts | 23 ++++++++++++++++++
- .../boot/dts/microchip/sparx5_pcb135_emmc.dts | 23 ++++++++++++++++++
- 4 files changed, 93 insertions(+)
+That sounds wrong. What about a shorted 15m cable? Is it also 9m?  Do
+you have any other long cables you can test with? Is it always 1/2 the
+cable length?
 
-diff --git a/arch/arm64/boot/dts/microchip/sparx5.dtsi b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-index 3e94ac9e7dd51..f09a49c41ce19 100644
---- a/arch/arm64/boot/dts/microchip/sparx5.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-@@ -5,6 +5,7 @@
+> - A cable test with active link partner will provide no usable results.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  drivers/net/phy/at803x.c | 141 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 141 insertions(+)
+> 
+> diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
+> index f4fec5f644e91..03ec500defb34 100644
+> --- a/drivers/net/phy/at803x.c
+> +++ b/drivers/net/phy/at803x.c
+> @@ -7,11 +7,13 @@
+>   * Author: Matus Ujhelyi <ujhelyi.m@gmail.com>
+>   */
+>  
+> +#include <linux/bitfield.h>
+>  #include <linux/phy.h>
+>  #include <linux/module.h>
+>  #include <linux/string.h>
+>  #include <linux/netdevice.h>
+>  #include <linux/etherdevice.h>
+> +#include <linux/ethtool_netlink.h>
+>  #include <linux/of_gpio.h>
+>  #include <linux/bitfield.h>
+>  #include <linux/gpio/consumer.h>
+> @@ -48,6 +50,20 @@
+>  #define AT803X_SMART_SPEED_BYPASS_TIMER		BIT(1)
+>  #define AT803X_LED_CONTROL			0x18
+>  
+> +/* Cable Tester Contol Register */
+> +#define AT803X_CABLE_DIAG_CTRL			0x16
+> +#define AT803X_CABLE_DIAG_MDI_PAIR		GENMASK(9, 8)
+> +#define AT803X_CABLE_DIAG_EN			BIT(0)
+> +
+> +/* Cable Tester Status Register */
+> +#define AT803X_CABLE_DIAG_STATUS		0x1c
+> +#define AT803X_CABLE_DIAG_RESULT		GENMASK(9, 8)
+> +#define AT803X_CABLE_DIAG_RESULT_OK		0
+> +#define AT803X_CABLE_DIAG_RESULT_SHORT		1
+> +#define AT803X_CABLE_DIAG_RESULT_OPEN		2
+> +#define AT803X_CABLE_DIAG_RESULT_FAIL		3
+> +#define AT803X_CABLE_DIAG_DTIME			GENMASK(7, 0)
+> +
+>  #define AT803X_DEVICE_ADDR			0x03
+>  #define AT803X_LOC_MAC_ADDR_0_15_OFFSET		0x804C
+>  #define AT803X_LOC_MAC_ADDR_16_31_OFFSET	0x804B
+> @@ -122,6 +138,7 @@ MODULE_AUTHOR("Matus Ujhelyi");
+>  MODULE_LICENSE("GPL");
+>  
+>  struct at803x_priv {
+> +	struct phy_device *phydev;
+>  	int flags;
+>  #define AT803X_KEEP_PLL_ENABLED	BIT(0)	/* don't turn off internal PLL */
+>  	u16 clk_25m_reg;
+> @@ -129,6 +146,9 @@ struct at803x_priv {
+>  	struct regulator_dev *vddio_rdev;
+>  	struct regulator_dev *vddh_rdev;
+>  	struct regulator *vddio;
+> +	struct work_struct cable_test_work;
+> +	bool cable_test_finished;
+> +	int cable_test_ret;
+>  };
+>  
+>  struct at803x_context {
+> @@ -168,6 +188,113 @@ static int at803x_debug_reg_mask(struct phy_device *phydev, u16 reg,
+>  	return phy_write(phydev, AT803X_DEBUG_DATA, val);
+>  }
+  
+> +static void at803x_cable_test_work(struct work_struct *work)
+> +{
+> +	struct at803x_priv *priv = container_of(work, struct at803x_priv,
+> +						cable_test_work);
+> +	struct phy_device *phydev = priv->phydev;
+> +	int i, ret = 0, pairs = 4;
+> +
+> +	if (phydev->phy_id == ATH9331_PHY_ID)
+> +		pairs = 2;
+> +
+> +	for (i = 0; i < pairs; i++) {
+> +		ret = at803x_cable_test_pair(phydev, i);
+> +		if (ret)
+> +			break;
+> +	}
+> +
+> +	priv->cable_test_ret = ret;
+> +	priv->cable_test_finished = true;
+> +
+> +	phy_queue_state_machine(phydev, 0);
+> +}
+> +
+> +static int at803x_cable_test_start(struct phy_device *phydev)
+> +{
+> +	struct at803x_priv *priv = phydev->priv;
+> +
+> +	if (!priv->cable_test_finished) {
+> +		phydev_err(phydev, "cable test is already running\n");
+> +		return -EIO;
+> +	}
+> +
+> +	priv->cable_test_finished = false;
+> +	schedule_work(&priv->cable_test_work);
 
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/microchip,sparx5.h>
+You don't need the work queue. You cannot spend a long time in
+at803x_cable_test_start(), but you can in
+at803x_cable_test_get_status(). So start the first the measurement of
+the first pair in at803x_cable_test_start(), and do the rest in
+of the work in at803x_cable_test_get_status().
 
- / {
- 	compatible = "microchip,sparx5";
-@@ -151,6 +152,20 @@ timer1: timer@600105000 {
- 			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
- 		};
+If we see there is a common pattern of wanting
+at803x_cable_test_get_status() to run immediately, not one second
+later, we can change to core to support that.
 
-+		sdhci0: sdhci@600800000 {
-+			compatible = "microchip,dw-sparx5-sdhci";
-+			status = "disabled";
-+			reg = <0x6 0x00800000 0x1000>;
-+			pinctrl-0 = <&emmc_pins>;
-+			pinctrl-names = "default";
-+			clocks = <&clks CLK_ID_AUX1>;
-+			clock-names = "core";
-+			assigned-clocks = <&clks CLK_ID_AUX1>;
-+			assigned-clock-rates = <800000000>;
-+			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+			bus-width = <8>;
-+		};
-+
- 		gpio: pinctrl@6110101e0 {
- 			compatible = "microchip,sparx5-pinctrl";
- 			reg = <0x6 0x110101e0 0x90>, <0x6 0x10508010 0x100>;
-@@ -180,6 +195,15 @@ i2c2_pins: i2c2-pins {
- 				pins = "GPIO_28", "GPIO_29";
- 				function = "twi2";
- 			};
-+
-+			emmc_pins: emmc-pins {
-+				pins = "GPIO_34", "GPIO_35", "GPIO_36",
-+					"GPIO_37", "GPIO_38", "GPIO_39",
-+					"GPIO_40", "GPIO_41", "GPIO_42",
-+					"GPIO_43", "GPIO_44", "GPIO_45",
-+					"GPIO_46", "GPIO_47";
-+				function = "emmc";
-+			};
- 		};
-
- 		i2c0: i2c@600101000 {
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-index 91ee5b6cfc37a..573309fe45823 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb125.dts
-@@ -16,6 +16,29 @@ memory@0 {
- 	};
- };
-
-+&gpio {
-+	emmc_pins: emmc-pins {
-+		/* NB: No "GPIO_35", "GPIO_36", "GPIO_37"
-+		 * (N/A: CARD_nDETECT, CARD_WP, CARD_LED)
-+		 */
-+		pins = "GPIO_34", "GPIO_38", "GPIO_39",
-+			"GPIO_40", "GPIO_41", "GPIO_42",
-+			"GPIO_43", "GPIO_44", "GPIO_45",
-+			"GPIO_46", "GPIO_47";
-+		drive-strength = <3>;
-+		function = "emmc";
-+	};
-+};
-+
-+&sdhci0 {
-+	status = "okay";
-+	bus-width = <8>;
-+	non-removable;
-+	pinctrl-0 = <&emmc_pins>;
-+	max-frequency = <8000000>;
-+	microchip,clock-delay = <10>;
-+};
-+
- &i2c1 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
-index 10081a66961bb..bbb9852c1f151 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb134_emmc.dts
-@@ -15,3 +15,26 @@ memory@0 {
- 		reg = <0x00000000 0x00000000 0x10000000>;
- 	};
- };
-+
-+&gpio {
-+	emmc_pins: emmc-pins {
-+		/* NB: No "GPIO_35", "GPIO_36", "GPIO_37"
-+		 * (N/A: CARD_nDETECT, CARD_WP, CARD_LED)
-+		 */
-+		pins = "GPIO_34", "GPIO_38", "GPIO_39",
-+			"GPIO_40", "GPIO_41", "GPIO_42",
-+			"GPIO_43", "GPIO_44", "GPIO_45",
-+			"GPIO_46", "GPIO_47";
-+		drive-strength = <3>;
-+		function = "emmc";
-+	};
-+};
-+
-+&sdhci0 {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_pins>;
-+	non-removable;
-+	max-frequency = <52000000>;
-+	bus-width = <8>;
-+	microchip,clock-delay = <10>;
-+};
-diff --git a/arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts b/arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
-index 741f0e12260e5..f82266fe2ad49 100644
---- a/arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
-+++ b/arch/arm64/boot/dts/microchip/sparx5_pcb135_emmc.dts
-@@ -15,3 +15,26 @@ memory@0 {
- 		reg = <0x00000000 0x00000000 0x10000000>;
- 	};
- };
-+
-+&gpio {
-+	emmc_pins: emmc-pins {
-+		/* NB: No "GPIO_35", "GPIO_36", "GPIO_37"
-+		 * (N/A: CARD_nDETECT, CARD_WP, CARD_LED)
-+		 */
-+		pins = "GPIO_34", "GPIO_38", "GPIO_39",
-+			"GPIO_40", "GPIO_41", "GPIO_42",
-+			"GPIO_43", "GPIO_44", "GPIO_45",
-+			"GPIO_46", "GPIO_47";
-+		drive-strength = <3>;
-+		function = "emmc";
-+	};
-+};
-+
-+&sdhci0 {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_pins>;
-+	non-removable;
-+	max-frequency = <52000000>;
-+	bus-width = <8>;
-+	microchip,clock-delay = <10>;
-+};
---
-2.26.2
+       Andrew
