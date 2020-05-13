@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C8BC2D0FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 871DAC2D0FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B92FF205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6792E206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:59:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363951;
-	bh=SGaKQ42/q5MzHFlFc3vcMri57SJXW5qWc7ZdigDy81Q=;
+	s=default; t=1589363955;
+	bh=pGMOmfgZYD4hG2YOmoxa8HOQPBwC8mhC3RTXFJgBhFU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tEGy8KcJ9Qe1blq3zPi7DfrvGO7vLrgPy4xAL48RKLhJKHSWeu80RgohAUXdTiDHU
-	 mD8t5LpmUXRp4okXuc2Jise/Gwq88PUAYJ0nlzBkBY91ReKZ06hpHiET1WHDj3mei2
-	 lfuZkEaLAn0jhMfke3ZRaoKYMzuGXzoO+p7t+ldc=
+	b=Gg3BdnuGlIDXZXsZWi8/tlXrQSZ4cD32MmmlhVHHyZyCOjSDdKH6fsilerXXaOZuR
+	 jjkSGYfER0Ve0JmV8y4hI0W9Bt9RZYEX3MLOIvjP+hAHs6IWJT1ksv4WtYmDxSPK/x
+	 lAnn9Xrz1OciuObmOigtTrChH30JIFon58l17LTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733129AbgEMJxl (ORCPT
+        id S2388352AbgEMJ7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:53:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55696 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:59:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387981AbgEMJxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:53:37 -0400
+        id S1732603AbgEMJxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:53:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D40F20575;
-        Wed, 13 May 2020 09:53:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED2FF20575;
+        Wed, 13 May 2020 09:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363616;
-        bh=SGaKQ42/q5MzHFlFc3vcMri57SJXW5qWc7ZdigDy81Q=;
+        s=default; t=1589363624;
+        bh=pGMOmfgZYD4hG2YOmoxa8HOQPBwC8mhC3RTXFJgBhFU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wJiurDlzXommhqYlmwtjYy+Wj7jD1/Z8o5TRk+7pTFYxpzO0GJkiNJeg7c7HCvFKo
-         C1YCV6UIfkkobJDeul5WWjFNVK5lRFpMov3eeaC1Dfg+9qOLkTDx43gRnBBwbvHN7L
-         c6E9QwacCvotUIhWB0FN1QYQgbDUfeFFNBW+4o3M=
+        b=xdjm2uVTZaZKfKnt6/9aZItU0RkMVQLaxv+9CZwnEipq45U0o16VJCq/FIiHc/dEs
+         M8UP9StKQlVccDAgyBUn6hnyYypAvFHOKc+cn4Yl0KgwZyUUbY1MuKBNis1pz3qAN/
+         +XMcNP4gdUG+dsAZzYXBoA+Wy9v5E5XN78MolyfA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 055/118] wireguard: socket: remove errant restriction on looping to self
-Date:   Wed, 13 May 2020 11:44:34 +0200
-Message-Id: <20200513094421.879122821@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jere=20Lepp=C3=A4nen?= <jere.leppanen@nokia.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 5.6 058/118] sctp: Fix bundling of SHUTDOWN with COOKIE-ACK
+Date:   Wed, 13 May 2020 11:44:37 +0200
+Message-Id: <20200513094422.085722067@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -59,163 +62,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+From: Jere Leppänen <jere.leppanen@nokia.com>
 
-[ Upstream commit b673e24aad36981f327a6570412ffa7754de8911 ]
+commit 145cb2f7177d94bc54563ed26027e952ee0ae03c upstream.
 
-It's already possible to create two different interfaces and loop
-packets between them. This has always been possible with tunnels in the
-kernel, and isn't specific to wireguard. Therefore, the networking stack
-already needs to deal with that. At the very least, the packet winds up
-exceeding the MTU and is discarded at that point. So, since this is
-already something that happens, there's no need to forbid the not very
-exceptional case of routing a packet back to the same interface; this
-loop is no different than others, and we shouldn't special case it, but
-rather rely on generic handling of loops in general. This also makes it
-easier to do interesting things with wireguard such as onion routing.
+When we start shutdown in sctp_sf_do_dupcook_a(), we want to bundle
+the SHUTDOWN with the COOKIE-ACK to ensure that the peer receives them
+at the same time and in the correct order. This bundling was broken by
+commit 4ff40b86262b ("sctp: set chunk transport correctly when it's a
+new asoc"), which assigns a transport for the COOKIE-ACK, but not for
+the SHUTDOWN.
 
-At the same time, we add a selftest for this, ensuring that both onion
-routing works and infinite routing loops do not crash the kernel. We
-also add a test case for wireguard interfaces nesting packets and
-sending traffic between each other, as well as the loop in this case
-too. We make sure to send some throughput-heavy traffic for this use
-case, to stress out any possible recursion issues with the locks around
-workqueues.
+Fix this by passing a reference to the COOKIE-ACK chunk as an argument
+to sctp_sf_do_9_2_start_shutdown() and onward to
+sctp_make_shutdown(). This way the SHUTDOWN chunk is assigned the same
+transport as the COOKIE-ACK chunk, which allows them to be bundled.
 
-Fixes: e7096c131e51 ("net: WireGuard secure network tunnel")
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+In sctp_sf_do_9_2_start_shutdown(), the void *arg parameter was
+previously unused. Now that we're taking it into use, it must be a
+valid pointer to a chunk, or NULL. There is only one call site where
+it's not, in sctp_sf_autoclose_timer_expire(). Fix that too.
+
+Fixes: 4ff40b86262b ("sctp: set chunk transport correctly when it's a new asoc")
+Signed-off-by: Jere Leppänen <jere.leppanen@nokia.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/wireguard/socket.c             |   12 ------
- tools/testing/selftests/wireguard/netns.sh |   54 +++++++++++++++++++++++++++--
- 2 files changed, 51 insertions(+), 15 deletions(-)
 
---- a/drivers/net/wireguard/socket.c
-+++ b/drivers/net/wireguard/socket.c
-@@ -76,12 +76,6 @@ static int send4(struct wg_device *wg, s
- 			net_dbg_ratelimited("%s: No route to %pISpfsc, error %d\n",
- 					    wg->dev->name, &endpoint->addr, ret);
- 			goto err;
--		} else if (unlikely(rt->dst.dev == skb->dev)) {
--			ip_rt_put(rt);
--			ret = -ELOOP;
--			net_dbg_ratelimited("%s: Avoiding routing loop to %pISpfsc\n",
--					    wg->dev->name, &endpoint->addr);
--			goto err;
- 		}
- 		if (cache)
- 			dst_cache_set_ip4(cache, &rt->dst, fl.saddr);
-@@ -149,12 +143,6 @@ static int send6(struct wg_device *wg, s
- 			net_dbg_ratelimited("%s: No route to %pISpfsc, error %d\n",
- 					    wg->dev->name, &endpoint->addr, ret);
- 			goto err;
--		} else if (unlikely(dst->dev == skb->dev)) {
--			dst_release(dst);
--			ret = -ELOOP;
--			net_dbg_ratelimited("%s: Avoiding routing loop to %pISpfsc\n",
--					    wg->dev->name, &endpoint->addr);
--			goto err;
- 		}
- 		if (cache)
- 			dst_cache_set_ip6(cache, dst, &fl.saddr);
---- a/tools/testing/selftests/wireguard/netns.sh
-+++ b/tools/testing/selftests/wireguard/netns.sh
-@@ -48,8 +48,11 @@ cleanup() {
- 	exec 2>/dev/null
- 	printf "$orig_message_cost" > /proc/sys/net/core/message_cost
- 	ip0 link del dev wg0
-+	ip0 link del dev wg1
- 	ip1 link del dev wg0
-+	ip1 link del dev wg1
- 	ip2 link del dev wg0
-+	ip2 link del dev wg1
- 	local to_kill="$(ip netns pids $netns0) $(ip netns pids $netns1) $(ip netns pids $netns2)"
- 	[[ -n $to_kill ]] && kill $to_kill
- 	pp ip netns del $netns1
-@@ -77,18 +80,20 @@ ip0 link set wg0 netns $netns2
- key1="$(pp wg genkey)"
- key2="$(pp wg genkey)"
- key3="$(pp wg genkey)"
-+key4="$(pp wg genkey)"
- pub1="$(pp wg pubkey <<<"$key1")"
- pub2="$(pp wg pubkey <<<"$key2")"
- pub3="$(pp wg pubkey <<<"$key3")"
-+pub4="$(pp wg pubkey <<<"$key4")"
- psk="$(pp wg genpsk)"
- [[ -n $key1 && -n $key2 && -n $psk ]]
+---
+ net/sctp/sm_statefuns.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+--- a/net/sctp/sm_statefuns.c
++++ b/net/sctp/sm_statefuns.c
+@@ -1865,7 +1865,7 @@ static enum sctp_disposition sctp_sf_do_
+ 		 */
+ 		sctp_add_cmd_sf(commands, SCTP_CMD_REPLY, SCTP_CHUNK(repl));
+ 		return sctp_sf_do_9_2_start_shutdown(net, ep, asoc,
+-						     SCTP_ST_CHUNK(0), NULL,
++						     SCTP_ST_CHUNK(0), repl,
+ 						     commands);
+ 	} else {
+ 		sctp_add_cmd_sf(commands, SCTP_CMD_NEW_STATE,
+@@ -5470,7 +5470,7 @@ enum sctp_disposition sctp_sf_do_9_2_sta
+ 	 * in the Cumulative TSN Ack field the last sequential TSN it
+ 	 * has received from the peer.
+ 	 */
+-	reply = sctp_make_shutdown(asoc, NULL);
++	reply = sctp_make_shutdown(asoc, arg);
+ 	if (!reply)
+ 		goto nomem;
  
- configure_peers() {
- 	ip1 addr add 192.168.241.1/24 dev wg0
--	ip1 addr add fd00::1/24 dev wg0
-+	ip1 addr add fd00::1/112 dev wg0
+@@ -6068,7 +6068,7 @@ enum sctp_disposition sctp_sf_autoclose_
+ 	disposition = SCTP_DISPOSITION_CONSUME;
+ 	if (sctp_outq_is_empty(&asoc->outqueue)) {
+ 		disposition = sctp_sf_do_9_2_start_shutdown(net, ep, asoc, type,
+-							    arg, commands);
++							    NULL, commands);
+ 	}
  
- 	ip2 addr add 192.168.241.2/24 dev wg0
--	ip2 addr add fd00::2/24 dev wg0
-+	ip2 addr add fd00::2/112 dev wg0
- 
- 	n1 wg set wg0 \
- 		private-key <(echo "$key1") \
-@@ -230,9 +235,38 @@ n1 ping -W 1 -c 1 192.168.241.2
- n1 wg set wg0 private-key <(echo "$key3")
- n2 wg set wg0 peer "$pub3" preshared-key <(echo "$psk") allowed-ips 192.168.241.1/32 peer "$pub1" remove
- n1 ping -W 1 -c 1 192.168.241.2
-+n2 wg set wg0 peer "$pub3" remove
- 
--ip1 link del wg0
-+# Test that we can route wg through wg
-+ip1 addr flush dev wg0
-+ip2 addr flush dev wg0
-+ip1 addr add fd00::5:1/112 dev wg0
-+ip2 addr add fd00::5:2/112 dev wg0
-+n1 wg set wg0 private-key <(echo "$key1") peer "$pub2" preshared-key <(echo "$psk") allowed-ips fd00::5:2/128 endpoint 127.0.0.1:2
-+n2 wg set wg0 private-key <(echo "$key2") listen-port 2 peer "$pub1" preshared-key <(echo "$psk") allowed-ips fd00::5:1/128 endpoint 127.212.121.99:9998
-+ip1 link add wg1 type wireguard
-+ip2 link add wg1 type wireguard
-+ip1 addr add 192.168.241.1/24 dev wg1
-+ip1 addr add fd00::1/112 dev wg1
-+ip2 addr add 192.168.241.2/24 dev wg1
-+ip2 addr add fd00::2/112 dev wg1
-+ip1 link set mtu 1340 up dev wg1
-+ip2 link set mtu 1340 up dev wg1
-+n1 wg set wg1 listen-port 5 private-key <(echo "$key3") peer "$pub4" allowed-ips 192.168.241.2/32,fd00::2/128 endpoint [fd00::5:2]:5
-+n2 wg set wg1 listen-port 5 private-key <(echo "$key4") peer "$pub3" allowed-ips 192.168.241.1/32,fd00::1/128 endpoint [fd00::5:1]:5
-+tests
-+# Try to set up a routing loop between the two namespaces
-+ip1 link set netns $netns0 dev wg1
-+ip0 addr add 192.168.241.1/24 dev wg1
-+ip0 link set up dev wg1
-+n0 ping -W 1 -c 1 192.168.241.2
-+n1 wg set wg0 peer "$pub2" endpoint 192.168.241.2:7
- ip2 link del wg0
-+ip2 link del wg1
-+! n0 ping -W 1 -c 10 -f 192.168.241.2 || false # Should not crash kernel
-+
-+ip0 link del wg1
-+ip1 link del wg0
- 
- # Test using NAT. We now change the topology to this:
- # ┌────────────────────────────────────────┐    ┌────────────────────────────────────────────────┐     ┌────────────────────────────────────────┐
-@@ -282,6 +316,20 @@ pp sleep 3
- n2 ping -W 1 -c 1 192.168.241.1
- n1 wg set wg0 peer "$pub2" persistent-keepalive 0
- 
-+# Test that onion routing works, even when it loops
-+n1 wg set wg0 peer "$pub3" allowed-ips 192.168.242.2/32 endpoint 192.168.241.2:5
-+ip1 addr add 192.168.242.1/24 dev wg0
-+ip2 link add wg1 type wireguard
-+ip2 addr add 192.168.242.2/24 dev wg1
-+n2 wg set wg1 private-key <(echo "$key3") listen-port 5 peer "$pub1" allowed-ips 192.168.242.1/32
-+ip2 link set wg1 up
-+n1 ping -W 1 -c 1 192.168.242.2
-+ip2 link del wg1
-+n1 wg set wg0 peer "$pub3" endpoint 192.168.242.2:5
-+! n1 ping -W 1 -c 1 192.168.242.2 || false # Should not crash kernel
-+n1 wg set wg0 peer "$pub3" remove
-+ip1 addr del 192.168.242.1/24 dev wg0
-+
- # Do a wg-quick(8)-style policy routing for the default route, making sure vethc has a v6 address to tease out bugs.
- ip1 -6 addr add fc00::9/96 dev vethc
- ip1 -6 route add default via fc00::1
+ 	return disposition;
 
 
