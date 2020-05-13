@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F05CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD124C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB73B20740
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0D1E24933
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363349;
-	bh=yIahxyLVvpeHsIvh5nZrGyfivLAhdGiTimNYRD4HgwM=;
+	s=default; t=1589363353;
+	bh=itXvDwyjUsWVEwzQ/nVMU6G0336LcaPwTAHQFT1ft0c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0v9ZO1hNklAjAJ32yBRmm/73PZPkEPk5HuZPZRaYFJYJA10n3F5AQSmSFB7rx9nz7
-	 qk4MM/roW8zfWHBvxU4jYJKuv46YXcuAlNzR/ACscv3TZV4waI5678gFxMXHDxUneq
-	 MXT1jcHwamM6rTIeFSpnNNtvp98IcYtjIswClUzc=
+	b=kx4iCUcBlqBI1veCIMSAszTqzLzX4R+OPMG9aDoPC0LH94hUyhhtvpSQJnEFe1bBO
+	 swmV2+pIqnbZfT1lMmo88cn700gOwgy1mDuUD6kk4iE0vd0vzibYgvueJbIy+xZdag
+	 gb5DuMwINxYmaQ+DHoyOe35fTRlAK0cpXBJ49Mz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733185AbgEMJtH (ORCPT
+        id S1733196AbgEMJtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:49:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47802 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:49:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733167AbgEMJtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:49:03 -0400
+        id S1732597AbgEMJtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:49:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9580220575;
-        Wed, 13 May 2020 09:49:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62DCB20575;
+        Wed, 13 May 2020 09:49:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363343;
-        bh=yIahxyLVvpeHsIvh5nZrGyfivLAhdGiTimNYRD4HgwM=;
+        s=default; t=1589363345;
+        bh=itXvDwyjUsWVEwzQ/nVMU6G0336LcaPwTAHQFT1ft0c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f8U4txmnXgCxFUhAF6KuDZrJwm6j5OvxgUrmYsLQswJoGEk/4i6njFZeAUMVTJ6gC
-         gPFV13ssYayPfEFs7i0oUQNPaYztz/k9OJA/gGSSPt+AaPZgW7CuL0nSnelKEHlPI5
-         xYFl5El7/xv1AYAmXN4xY0UG6ZMbzcKufTTo6ujk=
+        b=11sxAr0/jSJGhcDiLHln/0qUbao1NKTG9BiDbymOsFAQAYd2G+ibd5ABlZHPVUXXQ
+         9xvhoul1wM3OUPH8/F22A3PtyiWzO7GSh1rnUlBBx5oQiS7lWtX5MyZlsCq1BtP0oD
+         unECuPeZ+krARpVRZP/I1bi33HaKXuCLvpnXghTk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 34/90] bnxt_en: Return error when allocating zero size context memory.
-Date:   Wed, 13 May 2020 11:44:30 +0200
-Message-Id: <20200513094412.131286092@linuxfoundation.org>
+Subject: [PATCH 5.4 35/90] bnxt_en: Fix VLAN acceleration handling in bnxt_fix_features().
+Date:   Wed, 13 May 2020 11:44:31 +0200
+Message-Id: <20200513094412.253086906@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -61,31 +61,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit bbf211b1ecb891c7e0cc7888834504183fc8b534 ]
+[ Upstream commit c72cb303aa6c2ae7e4184f0081c6d11bf03fb96b ]
 
-bnxt_alloc_ctx_pg_tbls() should return error when the memory size of the
-context memory to set up is zero.  By returning success (0), the caller
-may proceed normally and may crash later when it tries to set up the
-memory.
+The current logic in bnxt_fix_features() will inadvertently turn on both
+CTAG and STAG VLAN offload if the user tries to disable both.  Fix it
+by checking that the user is trying to enable CTAG or STAG before
+enabling both.  The logic is supposed to enable or disable both CTAG and
+STAG together.
 
-Fixes: 08fe9d181606 ("bnxt_en: Add Level 2 context memory paging support.")
+Fixes: 5a9f6b238e59 ("bnxt_en: Enable and disable RX CTAG and RX STAG VLAN acceleration together.")
 Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
 +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -6649,7 +6649,7 @@ static int bnxt_alloc_ctx_pg_tbls(struct
- 	int rc;
+@@ -9755,6 +9755,7 @@ static netdev_features_t bnxt_fix_featur
+ 					   netdev_features_t features)
+ {
+ 	struct bnxt *bp = netdev_priv(dev);
++	netdev_features_t vlan_features;
  
- 	if (!mem_size)
--		return 0;
-+		return -EINVAL;
- 
- 	ctx_pg->nr_pages = DIV_ROUND_UP(mem_size, BNXT_PAGE_SIZE);
- 	if (ctx_pg->nr_pages > MAX_CTX_TOTAL_PAGES) {
+ 	if ((features & NETIF_F_NTUPLE) && !bnxt_rfs_capable(bp))
+ 		features &= ~NETIF_F_NTUPLE;
+@@ -9771,12 +9772,14 @@ static netdev_features_t bnxt_fix_featur
+ 	/* Both CTAG and STAG VLAN accelaration on the RX side have to be
+ 	 * turned on or off together.
+ 	 */
+-	if ((features & (NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_HW_VLAN_STAG_RX)) !=
+-	    (NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_HW_VLAN_STAG_RX)) {
++	vlan_features = features & (NETIF_F_HW_VLAN_CTAG_RX |
++				    NETIF_F_HW_VLAN_STAG_RX);
++	if (vlan_features != (NETIF_F_HW_VLAN_CTAG_RX |
++			      NETIF_F_HW_VLAN_STAG_RX)) {
+ 		if (dev->features & NETIF_F_HW_VLAN_CTAG_RX)
+ 			features &= ~(NETIF_F_HW_VLAN_CTAG_RX |
+ 				      NETIF_F_HW_VLAN_STAG_RX);
+-		else
++		else if (vlan_features)
+ 			features |= NETIF_F_HW_VLAN_CTAG_RX |
+ 				    NETIF_F_HW_VLAN_STAG_RX;
+ 	}
 
 
