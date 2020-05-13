@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B450C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7263CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F09C224927
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97C442492E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363260;
-	bh=RrYNDVF9HXul2vNPsToXe3YIBU4nNCaxQyFAzTw5/zQ=;
+	s=default; t=1589363261;
+	bh=fhNrhicOFpTPi5d4hyZ4np9bnClrHaWnKQSRWxqvbFc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uAITzNXPyhQKdUB42WUinLzm3K9rtz2SEUQU6oKkKZdbM9D9NPRtjCfLKXhNVcw4j
-	 rm9uZinZxZT5AU3Tfyq9BXh5tgwN4KOeW50hGtHW3I8kBJ5tI0+hyXXKY2ITsS/+qj
-	 4Jno9J/87DSpUupAqPAgJN+NyQhKf//66FaZ6LcA=
+	b=cAApHdzPtq7OVKgr5yru0oXZ5pcBDvVvfpbAAbGrJaj++aW6WWkt1XSHh7I+JBqXL
+	 8w26OY70Ht8sH0r59F3U5Eqt7BOhGC/KT7NmU3sYFvWwqCw705l/zvR/C3HS/c6suw
+	 LvQFUMICzygpPi3Uqw0MMY5sd/UQZKBL/UMiCKjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732893AbgEMJri (ORCPT
+        id S1732902AbgEMJrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:47:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45282 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:47:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732844AbgEMJrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:47:23 -0400
+        id S1732856AbgEMJrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:47:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 037CF2078C;
-        Wed, 13 May 2020 09:47:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C6FD20769;
+        Wed, 13 May 2020 09:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363242;
-        bh=RrYNDVF9HXul2vNPsToXe3YIBU4nNCaxQyFAzTw5/zQ=;
+        s=default; t=1589363244;
+        bh=fhNrhicOFpTPi5d4hyZ4np9bnClrHaWnKQSRWxqvbFc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Od+COt4W3NfFV/8L7ORGjZONFW7mAfJh6f6UPr7wCs4sLSfl5pIwMZloPsuLV+443
-         JsHiVGOb/+kb6fDRoJVRKXrKfpAdOkuO+rsOBMpkglBVenH11ssW0BHqdQUF77ryyg
-         xACoV6BFzvLASwmb8EhCWKlfml9G/QF1XZnO6j6s=
+        b=OoO+qGREg+K0OyExCbCntt/fqFY0axSmv/ifa4hzfseq0D2cZCKpjPC1GFbMRche2
+         oBMFD0N+8KMK+PqdsfGZi+y2RPLhzRWzphW1KEf5A26/D5YTKRQRyB5JUM2jnK6Az7
+         m6t2BDP7h08hQK9LwoHCwAFQFYDu7YLg4JPpmBII=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
-        Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>
-Subject: [PATCH 4.19 43/48] x86/unwind/orc: Fix premature unwind stoppage due to IRET frames
-Date:   Wed, 13 May 2020 11:45:09 +0200
-Message-Id: <20200513094403.458754310@linuxfoundation.org>
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.19 44/48] netfilter: nat: never update the UDP checksum when its 0
+Date:   Wed, 13 May 2020 11:45:10 +0200
+Message-Id: <20200513094403.869182531@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
 References: <20200513094351.100352960@linuxfoundation.org>
@@ -65,215 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Guillaume Nault <gnault@redhat.com>
 
-commit 81b67439d147677d844d492fcbd03712ea438f42 upstream.
+commit ea64d8d6c675c0bb712689b13810301de9d8f77a upstream.
 
-The following execution path is possible:
+If the UDP header of a local VXLAN endpoint is NAT-ed, and the VXLAN
+device has disabled UDP checksums and enabled Tx checksum offloading,
+then the skb passed to udp_manip_pkt() has hdr->check == 0 (outer
+checksum disabled) and skb->ip_summed == CHECKSUM_PARTIAL (inner packet
+checksum offloaded).
 
-  fsnotify()
-    [ realign the stack and store previous SP in R10 ]
-    <IRQ>
-      [ only IRET regs saved ]
-      common_interrupt()
-        interrupt_entry()
-	  <NMI>
-	    [ full pt_regs saved ]
-	    ...
-	    [ unwind stack ]
+Because of the ->ip_summed value, udp_manip_pkt() tries to update the
+outer checksum with the new address and port, leading to an invalid
+checksum sent on the wire, as the original null checksum obviously
+didn't take the old address and port into account.
 
-When the unwinder goes through the NMI and the IRQ on the stack, and
-then sees fsnotify(), it doesn't have access to the value of R10,
-because it only has the five IRET registers.  So the unwind stops
-prematurely.
+So, we can't take ->ip_summed into account in udp_manip_pkt(), as it
+might not refer to the checksum we're acting on. Instead, we can base
+the decision to update the UDP checksum entirely on the value of
+hdr->check, because it's null if and only if checksum is disabled:
 
-However, because the interrupt_entry() code is careful not to clobber
-R10 before saving the full regs, the unwinder should be able to read R10
-from the previously saved full pt_regs associated with the NMI.
+  * A fully computed checksum can't be 0, since a 0 checksum is
+    represented by the CSUM_MANGLED_0 value instead.
 
-Handle this case properly.  When encountering an IRET regs frame
-immediately after a full pt_regs frame, use the pt_regs as a backup
-which can be used to get the C register values.
+  * A partial checksum can't be 0, since the pseudo-header always adds
+    at least one non-zero value (the UDP protocol type 0x11) and adding
+    more values to the sum can't make it wrap to 0 as the carry is then
+    added to the wrapped number.
 
-Also, note that a call frame resets the 'prev_regs' value, because a
-function is free to clobber the registers.  For this fix to work, the
-IRET and full regs frames must be adjacent, with no FUNC frames in
-between.  So replace the FUNC hint in interrupt_entry() with an
-IRET_REGS hint.
+  * A disabled checksum uses the special value 0.
 
-Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Jones <dsj@fb.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lore.kernel.org/r/97a408167cc09f1cfa0de31a7b70dd88868d743f.1587808742.git.jpoimboe@redhat.com
+The problem seems to be there from day one, although it was probably
+not visible before UDP tunnels were implemented.
+
+Fixes: 5b1158e909ec ("[NETFILTER]: Add NAT support for nf_conntrack")
+Signed-off-by: Guillaume Nault <gnault@redhat.com>
+Reviewed-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/entry/entry_64.S     |    4 +--
- arch/x86/include/asm/unwind.h |    2 -
- arch/x86/kernel/unwind_orc.c  |   51 ++++++++++++++++++++++++++++++++----------
- 3 files changed, 43 insertions(+), 14 deletions(-)
+ net/netfilter/nf_nat_proto_udp.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -575,7 +575,7 @@ END(spurious_entries_start)
-  * +----------------------------------------------------+
-  */
- ENTRY(interrupt_entry)
--	UNWIND_HINT_FUNC
-+	UNWIND_HINT_IRET_REGS offset=16
- 	ASM_CLAC
- 	cld
+--- a/net/netfilter/nf_nat_proto_udp.c
++++ b/net/netfilter/nf_nat_proto_udp.c
+@@ -66,15 +66,14 @@ static bool udp_manip_pkt(struct sk_buff
+ 			  enum nf_nat_manip_type maniptype)
+ {
+ 	struct udphdr *hdr;
+-	bool do_csum;
  
-@@ -607,9 +607,9 @@ ENTRY(interrupt_entry)
- 	pushq	5*8(%rdi)		/* regs->eflags */
- 	pushq	4*8(%rdi)		/* regs->cs */
- 	pushq	3*8(%rdi)		/* regs->ip */
-+	UNWIND_HINT_IRET_REGS
- 	pushq	2*8(%rdi)		/* regs->orig_ax */
- 	pushq	8(%rdi)			/* return address */
--	UNWIND_HINT_FUNC
+ 	if (!skb_make_writable(skb, hdroff + sizeof(*hdr)))
+ 		return false;
  
- 	movq	(%rdi), %rdi
- 	jmp	2f
---- a/arch/x86/include/asm/unwind.h
-+++ b/arch/x86/include/asm/unwind.h
-@@ -19,7 +19,7 @@ struct unwind_state {
- #if defined(CONFIG_UNWINDER_ORC)
- 	bool signal, full_regs;
- 	unsigned long sp, bp, ip;
--	struct pt_regs *regs;
-+	struct pt_regs *regs, *prev_regs;
- #elif defined(CONFIG_UNWINDER_FRAME_POINTER)
- 	bool got_irq;
- 	unsigned long *bp, *orig_sp, ip;
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -364,9 +364,38 @@ static bool deref_stack_iret_regs(struct
+ 	hdr = (struct udphdr *)(skb->data + hdroff);
+-	do_csum = hdr->check || skb->ip_summed == CHECKSUM_PARTIAL;
++	__udp_manip_pkt(skb, l3proto, iphdroff, hdr, tuple, maniptype,
++			!!hdr->check);
+ 
+-	__udp_manip_pkt(skb, l3proto, iphdroff, hdr, tuple, maniptype, do_csum);
  	return true;
  }
  
-+/*
-+ * If state->regs is non-NULL, and points to a full pt_regs, just get the reg
-+ * value from state->regs.
-+ *
-+ * Otherwise, if state->regs just points to IRET regs, and the previous frame
-+ * had full regs, it's safe to get the value from the previous regs.  This can
-+ * happen when early/late IRQ entry code gets interrupted by an NMI.
-+ */
-+static bool get_reg(struct unwind_state *state, unsigned int reg_off,
-+		    unsigned long *val)
-+{
-+	unsigned int reg = reg_off/8;
-+
-+	if (!state->regs)
-+		return false;
-+
-+	if (state->full_regs) {
-+		*val = ((unsigned long *)state->regs)[reg];
-+		return true;
-+	}
-+
-+	if (state->prev_regs) {
-+		*val = ((unsigned long *)state->prev_regs)[reg];
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
- bool unwind_next_frame(struct unwind_state *state)
- {
--	unsigned long ip_p, sp, orig_ip = state->ip, prev_sp = state->sp;
-+	unsigned long ip_p, sp, tmp, orig_ip = state->ip, prev_sp = state->sp;
- 	enum stack_type prev_type = state->stack_info.type;
- 	struct orc_entry *orc;
- 	bool indirect = false;
-@@ -420,39 +449,35 @@ bool unwind_next_frame(struct unwind_sta
- 		break;
- 
- 	case ORC_REG_R10:
--		if (!state->regs || !state->full_regs) {
-+		if (!get_reg(state, offsetof(struct pt_regs, r10), &sp)) {
- 			orc_warn("missing regs for base reg R10 at ip %pB\n",
- 				 (void *)state->ip);
- 			goto err;
- 		}
--		sp = state->regs->r10;
- 		break;
- 
- 	case ORC_REG_R13:
--		if (!state->regs || !state->full_regs) {
-+		if (!get_reg(state, offsetof(struct pt_regs, r13), &sp)) {
- 			orc_warn("missing regs for base reg R13 at ip %pB\n",
- 				 (void *)state->ip);
- 			goto err;
- 		}
--		sp = state->regs->r13;
- 		break;
- 
- 	case ORC_REG_DI:
--		if (!state->regs || !state->full_regs) {
-+		if (!get_reg(state, offsetof(struct pt_regs, di), &sp)) {
- 			orc_warn("missing regs for base reg DI at ip %pB\n",
- 				 (void *)state->ip);
- 			goto err;
- 		}
--		sp = state->regs->di;
- 		break;
- 
- 	case ORC_REG_DX:
--		if (!state->regs || !state->full_regs) {
-+		if (!get_reg(state, offsetof(struct pt_regs, dx), &sp)) {
- 			orc_warn("missing regs for base reg DX at ip %pB\n",
- 				 (void *)state->ip);
- 			goto err;
- 		}
--		sp = state->regs->dx;
- 		break;
- 
- 	default:
-@@ -479,6 +504,7 @@ bool unwind_next_frame(struct unwind_sta
- 
- 		state->sp = sp;
- 		state->regs = NULL;
-+		state->prev_regs = NULL;
- 		state->signal = false;
- 		break;
- 
-@@ -490,6 +516,7 @@ bool unwind_next_frame(struct unwind_sta
- 		}
- 
- 		state->regs = (struct pt_regs *)sp;
-+		state->prev_regs = NULL;
- 		state->full_regs = true;
- 		state->signal = true;
- 		break;
-@@ -501,6 +528,8 @@ bool unwind_next_frame(struct unwind_sta
- 			goto err;
- 		}
- 
-+		if (state->full_regs)
-+			state->prev_regs = state->regs;
- 		state->regs = (void *)sp - IRET_FRAME_OFFSET;
- 		state->full_regs = false;
- 		state->signal = true;
-@@ -515,8 +544,8 @@ bool unwind_next_frame(struct unwind_sta
- 	/* Find BP: */
- 	switch (orc->bp_reg) {
- 	case ORC_REG_UNDEFINED:
--		if (state->regs && state->full_regs)
--			state->bp = state->regs->bp;
-+		if (get_reg(state, offsetof(struct pt_regs, bp), &tmp))
-+			state->bp = tmp;
- 		break;
- 
- 	case ORC_REG_PREV_SP:
 
 
