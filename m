@@ -7,47 +7,57 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3948DC2D0FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A6BC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ACBE206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B1602176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364314;
-	bh=cii3RA0dRVbmrD5M0uBBg2e5sz48zv7qjEyq0VJ164Y=;
+	s=default; t=1589364315;
+	bh=853l+9UiXx+OavAyqV37pC94g58ea9ljbt/QGbIiwTc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PyXjHxg+RJaGpEFih/2W+w1kwY56BT05y6WYUFxSrmnsZSYdaKO8y2fbInVBQQNFe
-	 sR5euj800fp0iRBWg04iWBheEeNHmxu1QPGjGYALsGZlFdMtjtjqqZerdgbNnrqXcb
-	 u8Ll4l0I4JYI4Y4v8q6uTnssPKibmRNPWP6+0sIs=
+	b=KFHBsBuTd020wrLKZD17fjRBMw2qzqhYl1wzL+eF/oE/qlza7X2CtffZ1YK5NW3Ge
+	 mu2F9FWmMtoklMj/0Hd/l7RC/SDm9dAZHu9wlJnDi4yJl0LYvIcOY1jw4IGHRzlY9T
+	 fQIQZ2J35SK+mgbLd3sju57OwGfYS2N1OA0Kfgd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388285AbgEMKFN (ORCPT
+        id S1732732AbgEMJqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:05:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44446 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:46:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732741AbgEMJqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:46:53 -0400
+        id S1732701AbgEMJqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:46:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C59FA206F5;
-        Wed, 13 May 2020 09:46:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 010A120740;
+        Wed, 13 May 2020 09:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363213;
-        bh=cii3RA0dRVbmrD5M0uBBg2e5sz48zv7qjEyq0VJ164Y=;
+        s=default; t=1589363203;
+        bh=853l+9UiXx+OavAyqV37pC94g58ea9ljbt/QGbIiwTc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KnSN2wEqsGQHk32Xy7Q4ki9aiZFdpCgCw9aBJCTu811eQy7sPsAw5500nXfrV0h+e
-         aMqvR6kdOeblluAHBcnRQAKoakK2j46xGcSKFfPSQ+7G0aFJ6ncc/v+ODrBNN3z0SW
-         3FueqiHZrvR0O7D4oOqKYGN1BCXzsRa4D5JyA5Ww=
+        b=GxUSAyYn8tL9r2+j83T3ITm2F2Ub238m4vEyXzmXvD4tKUk0ddLO/D01CSbCs9FM3
+         p2NzB7Um87qG9Ige5dp8CEL3DiYMzPdujpCam6Q0hHknCW3f5GvJCX4BJa2/AqF2Dr
+         5KTfdH9UEGw0Gii/N4lJQ6LBBG6u+KPmm8n/ddNY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tobias Urdin <tobias.urdin@binero.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 32/48] KVM: VMX: Mark RCX, RDX and RSI as clobbered in vmx_vcpu_run()s asm blob
-Date:   Wed, 13 May 2020 11:44:58 +0200
-Message-Id: <20200513094359.588081417@linuxfoundation.org>
+        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Baoquan He <bhe@redhat.com>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 28/48] mm/page_alloc: fix watchdog soft lockups during set_zone_contiguous()
+Date:   Wed, 13 May 2020 11:44:54 +0200
+Message-Id: <20200513094358.273935547@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
 References: <20200513094351.100352960@linuxfoundation.org>
@@ -60,76 +70,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: David Hildenbrand <david@redhat.com>
 
-Based on upstream commit f3689e3f17f064fd4cd5f0cb01ae2395c94f39d9.
+commit e84fe99b68ce353c37ceeecc95dce9696c976556 upstream.
 
-Save RCX, RDX and RSI to fake outputs to coerce the compiler into
-treating them as clobbered.  RCX in particular is likely to be reused by
-the compiler to dereference the 'struct vcpu_vmx' pointer, which will
-result in a null pointer dereference now that RCX is zeroed by the asm
-blob.
+Without CONFIG_PREEMPT, it can happen that we get soft lockups detected,
+e.g., while booting up.
 
-Tag the asm() blob as volatile to prevent GCC from dropping the blob,
-which is possible now that the blob has output values, all of which are
-unused.
+  watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [swapper/0:1]
+  CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.6.0-next-20200331+ #4
+  Hardware name: Red Hat KVM, BIOS 1.11.1-4.module+el8.1.0+4066+0f1aadab 04/01/2014
+  RIP: __pageblock_pfn_to_page+0x134/0x1c0
+  Call Trace:
+   set_zone_contiguous+0x56/0x70
+   page_alloc_init_late+0x166/0x176
+   kernel_init_freeable+0xfa/0x255
+   kernel_init+0xa/0x106
+   ret_from_fork+0x35/0x40
 
-Upstream commit f3689e3f17f06 ("KVM: VMX: Save RSI to an unused output
-in the vCPU-run asm blob") is not a direct equivalent of this patch. As
-its shortlog states, it only tagged RSI as clobbered, whereas here RCX
-and RDX are also clobbered.
+The issue becomes visible when having a lot of memory (e.g., 4TB)
+assigned to a single NUMA node - a system that can easily be created
+using QEMU.  Inside VMs on a hypervisor with quite some memory
+overcommit, this is fairly easy to trigger.
 
-In upstream at the time of the offending commit (b4be98039a92 in 4.19,
-0e0ab73c9a024 upstream), the inline asm blob had previously been moved
-to a dedicated helper, __vmx_vcpu_run().  For unrelated reasons,
-__vmx_vcpu_run() was put into its own optimization unit, which for all
-intents and purposes made it impossible to consume clobbered registers
-because RCX, RDX and RSI are volatile and __vmx_vcpu_run() couldn't
-itself be inlined.  In other words, the bug existed but couldn't be hit.
-
-Similarly, the lack of "volatile" was also a bug in upstream that was
-hidden by an unrelated change that exists in upstream but not in 4.19.
-In this case, the asm blob also uses ASM_CALL_CONSTRAINT (marks RSP as
-being an input/output constraint) in upstream to play nice with objtool
-due the blob making a CALL.  In 4.19, there is no CALL and thus no
-ASM_CALL_CONSTRAINT.
-
-Furthermore, both of the lurking bugs were blasted away in upstream by
-commits 5e0781df1899 ("KVM: VMX: Move vCPU-run code to a proper assembly
-routine") and fc2ba5a27a1a ("KVM: VMX: Call vCPU-run asm sub-routine
-from C and remove clobbering"), i.e. these bugs will never be directly
-fixed in upstream.
-
-Reported-by: Tobias Urdin <tobias.urdin@binero.com>
-Fixes: b4be98039a92 ("KVM: VMX: Zero out *all* general purpose registers after VM-Exit")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Reviewed-by: Baoquan He <bhe@redhat.com>
+Reviewed-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: Shile Zhang <shile.zhang@linux.alibaba.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Alexander Duyck <alexander.duyck@gmail.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200416073417.5003-1-david@redhat.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ mm/page_alloc.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -10771,7 +10771,7 @@ static void __noclone vmx_vcpu_run(struc
- 	else if (static_branch_unlikely(&mds_user_clear))
- 		mds_clear_cpu_buffers();
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1422,6 +1422,7 @@ void set_zone_contiguous(struct zone *zo
+ 		if (!__pageblock_pfn_to_page(block_start_pfn,
+ 					     block_end_pfn, zone))
+ 			return;
++		cond_resched();
+ 	}
  
--	asm(
-+	asm volatile (
- 		/* Store host registers */
- 		"push %%" _ASM_DX "; push %%" _ASM_BP ";"
- 		"push %%" _ASM_CX " \n\t" /* placeholder for guest rcx */
-@@ -10882,7 +10882,8 @@ static void __noclone vmx_vcpu_run(struc
- 		".global vmx_return \n\t"
- 		"vmx_return: " _ASM_PTR " 2b \n\t"
- 		".popsection"
--	      : : "c"(vmx), "d"((unsigned long)HOST_RSP), "S"(evmcs_rsp),
-+	      : "=c"((int){0}), "=d"((int){0}), "=S"((int){0})
-+	      : "c"(vmx), "d"((unsigned long)HOST_RSP), "S"(evmcs_rsp),
- 		[launched]"i"(offsetof(struct vcpu_vmx, __launched)),
- 		[fail]"i"(offsetof(struct vcpu_vmx, fail)),
- 		[host_rsp]"i"(offsetof(struct vcpu_vmx, host_rsp)),
+ 	/* We confirm that there is no hole */
 
 
