@@ -2,266 +2,125 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBABC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:47:28 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 139BD20659
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD3CC433DF
 	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:47:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589384849;
-	bh=5kem4/aVxEbkg5P0WzUBcA8VXLdybo7YF1k5RfJnvaI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Bb7p8W7y8HQ//v3ZeN+RgEpMBGLZjhi5oej5WkVBkJDItcYbOP7HHouJc5GiGoCL/
-	 BHx4K+A/HfkC8ycUIVBH6CyEC4kCd3Lsb7FT5HsaYGmElfvwX2qhkRfA9sHIy2PVtL
-	 VIdLym5ukGNYNa9JYWpGLEr8a5YL77jGcPOLtX2w=
+Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
+	by mail.kernel.org (Postfix) with ESMTP id DE46F20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:47:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389250AbgEMPr2 (ORCPT
+        id S2389294AbgEMPr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 13 May 2020 11:47:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:49580 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729604AbgEMPr2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 13 May 2020 11:47:28 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42847 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728678AbgEMPr0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:47:26 -0400
-Received: by mail-pl1-f196.google.com with SMTP id k19so6972159pll.9;
-        Wed, 13 May 2020 08:47:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=UKtoyXmk8DQV9UmBrwTh6/Xuuv7ELuyspspuuYsxWDw=;
-        b=f9g9qN2JjWT8QQkmJ42kiedffM5T/P/0uCuB8AB2FURXTygVjQrhRnNURhSToPiXFa
-         qMFTSZS3qnslVoHynfpGNEV8MVjQBBhpMut+XN3WmdPu8KhPD0NqzmJCNvGxSPZ2GXqW
-         oeBM9v3oiGGboLHZIV9RxrYkt+Wp9lSIJ87zpmuUwajq9o2zpk1iwMFNJ862U7iWIM9H
-         qrkViM3r/akymp+lEBzgeIZpVLSLu6ClUKgZJqTScSlJiiPvbc/aCpctPZEQe7sbn+gT
-         oSYRHFtZkJJRJCQxM/v9iA5pvn+iZ7A/1UC8hxcB/m66Cfi4aSH0PHZgsQX+NpEeElHz
-         oRHg==
-X-Gm-Message-State: AOAM531b4vHsDVV+YIM2m3HCRWY3YobIcgn12F9S4W97djHLZI2SRWWu
-        z8tEzNwPQy75Spxmdxsmt0Y=
-X-Google-Smtp-Source: ABdhPJxQGn/vPjur1KgSFyLfTN6Jk0flECMISUEFHDdfsmuEssuMO+J1ElRVgoKK3xAAG73qE7Qfwg==
-X-Received: by 2002:a17:902:fe0c:: with SMTP id g12mr1603468plj.322.1589384844976;
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8EE931B;
+        Wed, 13 May 2020 08:47:26 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0513B3F305;
         Wed, 13 May 2020 08:47:24 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 98sm2298310pjo.12.2020.05.13.08.47.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 08:47:23 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id B6FE04063E; Wed, 13 May 2020 15:47:22 +0000 (UTC)
-Date:   Wed, 13 May 2020 15:47:22 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Rafael Aquini <aquini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        dyoung@redhat.com, bhe@redhat.com, corbet@lwn.net,
-        keescook@chromium.org, akpm@linux-foundation.org, cai@lca.pw,
-        rdunlap@infradead.org, tytso@mit.edu, bunk@kernel.org,
-        torvalds@linux-foundation.org, gregkh@linuxfoundation.org,
-        labbott@redhat.com, jeffm@suse.com, jikos@kernel.org, jeyu@suse.de,
-        tiwai@suse.de, AnDavis@suse.com, rpalethorpe@suse.de
-Subject: Re: [PATCH v4] kernel: add panic_on_taint
-Message-ID: <20200513154722.GR11244@42.do-not-panic.com>
-References: <20200513150026.1039987-1-aquini@redhat.com>
+Date:   Wed, 13 May 2020 16:47:19 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        helgaas@kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
+        linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v8 0/4] USB: pci-quirks: Add Raspberry Pi 4 quirk
+Message-ID: <20200513154719.GA3486@e121166-lin.cambridge.arm.com>
+References: <20200505161318.26200-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513150026.1039987-1-aquini@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200505161318.26200-1-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 11:00:26AM -0400, Rafael Aquini wrote:
-> Analogously to the introduction of panic_on_warn, this patch
-> introduces a kernel option named panic_on_taint in order to
-> provide a simple and generic way to stop execution and catch
-> a coredump when the kernel gets tainted by any given taint flag.
+On Tue, May 05, 2020 at 06:13:13PM +0200, Nicolas Saenz Julienne wrote:
+> On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
+> loaded directly from an EEPROM or, if not present, by the SoC's
+> co-processor, VideoCore. This series adds support for the later.
 > 
-> This is useful for debugging sessions as it avoids rebuilding
-> the kernel to explicitly add calls to panic() or BUG() into
-> code sites that introduce the taint flags of interest.
-> For instance, if one is interested in following up with
-> a post mortem analysis at the point a code path is hitting
-> a bad page (i.e. unaccount_page_cache_page(), or slab_bug()),
-> a crashdump could be collected by rebooting the kernel with
-> 'panic_on_taint=0x20' amended to the command line string.
+> Note that there are a set of constraints we have to consider:
+>  - We need to make sure the VideoCore firmware interface is up and
+>    running before running the VL805 firmware load call.
 > 
-> Another, perhaps less frequent, use for this option would be
-> as a mean for assuring a security policy case where only a
-> subset of taints, or no single taint (in paranoid mode),
-> is allowed for the running system.
-> The optional switch 'nousertaint' is handy in this particular
-> scenario as it will avoid userspace induced crashes by writes
-> to /proc/sys/kernel/tainted causing false positive hits for
-> such policies.
+>  - There is no way to discern RPi4's VL805 chip from other platforms',
+>    so we need the firmware load to happen *before* running
+>    quirk_usb_handoff_xhci(). Failure to do so results in an unwarranted
+>    5 second wait while the fixup code polls xHC's non-existing state.
 > 
-> Suggested-by: Qian Cai <cai@lca.pw>
-> Signed-off-by: Rafael Aquini <aquini@redhat.com>
+> By Florian's suggestion I've been spending some time exploring the device
+> link[1] API in order to see if that could save us from explicitly creating
+> probe dependencies between pcie-brcmstb and firmware/raspberrypi (patch #3).
+> Technically these dependencies could be inferred from DT. It turns out Saravana
+> Kannan has been looking at this already. A new boot mechanism, activated with
+> fw_devlink=on takes care of the device probe ordering on devices with
+> consumer/supplier relationships. For now this relationship is created based on
+> the usage of generic DT properties, but has no support for vendor-specifc DT
+> properties, which we'd be forced to use in order to create a relationship
+> between our two devices since our setup is highly non generic. There will
+> probably be at some point support for such properties, and we will then be able
+> to revisit some of this code.
+> 
+> All this is based on the work by Tim Gover in RPi's downstream
+> kernel[2].
+> 
+> [1] https://www.kernel.org/doc/html/v4.13/driver-api/device_link.html
+> [2] https://github.com/raspberrypi/linux/commit/9935b4c7e360b4494b4cb6e3ce797238a1ab78bd
+> 
 > ---
-> Changelog:
-> * v2: get rid of unnecessary/misguided compiler hints		(Luis)
->       enhance documentation text for the new kernel parameter	(Randy)
-> * v3: drop sysctl interface, keep it only as a kernel parameter (Luis)
-> * v4: change panic_on_taint input from alphabetical taint flags
->       to hexadecimal bitmasks, for clarity and extendability	(Luis)
 > 
->  Documentation/admin-guide/kdump/kdump.rst     |  7 ++++
->  .../admin-guide/kernel-parameters.txt         | 13 +++++++
->  include/linux/kernel.h                        |  4 +++
->  kernel/panic.c                                | 34 +++++++++++++++++++
->  kernel/sysctl.c                               | 11 +++++-
->  5 files changed, 68 insertions(+), 1 deletion(-)
+> Changes since v7:
+>  - Address Stefan's comments
 > 
-> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-> index ac7e131d2935..2707de840fd3 100644
-> --- a/Documentation/admin-guide/kdump/kdump.rst
-> +++ b/Documentation/admin-guide/kdump/kdump.rst
-> @@ -521,6 +521,13 @@ will cause a kdump to occur at the panic() call.  In cases where a user wants
->  to specify this during runtime, /proc/sys/kernel/panic_on_warn can be set to 1
->  to achieve the same behaviour.
->  
-> +Trigger Kdump on add_taint()
-> +============================
-> +
-> +The kernel parameter panic_on_taint facilitates calling panic() from within
-> +add_taint() whenever the value set in this bitmask matches with the bit flag
-> +being set by add_taint(). This will cause a kdump to occur at the panic() call.
-> +
->  Contact
->  =======
->  
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 7bc83f3d9bdf..ce17fdbec7d1 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -3401,6 +3401,19 @@
->  			bit 4: print ftrace buffer
->  			bit 5: print all printk messages in buffer
->  
-> +	panic_on_taint=	Bitmask for conditionally call panic() in add_taint()
-> +			Format: <hex>[,nousertaint]
-> +			Hexadecimal bitmask representing the set of TAINT flags
-> +			that will cause the kernel to panic when add_taint() is
-> +			called with any of the flags in this set.
-> +			The optional switch "nousertaint" can be utilized to
-> +			prevent userland forced crashes by writing to sysctl
-> +			/proc/sys/kernel/tainted any flagset matching with the
-> +			bitmask set on panic_on_taint.
-> +			See Documentation/admin-guide/tainted-kernels.rst for
-> +			extra details on the taint flags that users can pick
-> +			to compose the bitmask to assign to panic_on_taint.
-> +
->  	panic_on_warn	panic() instead of WARN().  Useful to cause kdump
->  			on a WARN().
->  
-> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-> index 9b7a8d74a9d6..70712944dffc 100644
-> --- a/include/linux/kernel.h
-> +++ b/include/linux/kernel.h
-> @@ -528,6 +528,8 @@ extern int panic_on_oops;
->  extern int panic_on_unrecovered_nmi;
->  extern int panic_on_io_nmi;
->  extern int panic_on_warn;
-> +extern unsigned long panic_on_taint;
-> +extern bool panic_on_taint_nousertaint;
->  extern int sysctl_panic_on_rcu_stall;
->  extern int sysctl_panic_on_stackoverflow;
->  
-> @@ -597,6 +599,8 @@ extern enum system_states {
->  #define TAINT_RANDSTRUCT		17
->  #define TAINT_FLAGS_COUNT		18
->  
-> +#define TAINT_FLAGS_MAX			((1UL << TAINT_FLAGS_COUNT) - 1)
-> +
->  struct taint_flag {
->  	char c_true;	/* character printed when tainted */
->  	char c_false;	/* character printed when not tainted */
-> diff --git a/kernel/panic.c b/kernel/panic.c
-> index b69ee9e76cb2..94b5c973770c 100644
-> --- a/kernel/panic.c
-> +++ b/kernel/panic.c
-> @@ -44,6 +44,8 @@ static int pause_on_oops_flag;
->  static DEFINE_SPINLOCK(pause_on_oops_lock);
->  bool crash_kexec_post_notifiers;
->  int panic_on_warn __read_mostly;
-> +unsigned long panic_on_taint;
-> +bool panic_on_taint_nousertaint = false;
->  
->  int panic_timeout = CONFIG_PANIC_TIMEOUT;
->  EXPORT_SYMBOL_GPL(panic_timeout);
-> @@ -434,6 +436,11 @@ void add_taint(unsigned flag, enum lockdep_ok lockdep_ok)
->  		pr_warn("Disabling lock debugging due to kernel taint\n");
->  
->  	set_bit(flag, &tainted_mask);
-> +
-> +	if (tainted_mask & panic_on_taint) {
-> +		panic_on_taint = 0;
-> +		panic("panic_on_taint set ...");
-> +	}
->  }
->  EXPORT_SYMBOL(add_taint);
->  
-> @@ -686,3 +693,30 @@ static int __init oops_setup(char *s)
->  	return 0;
->  }
->  early_param("oops", oops_setup);
-> +
-> +static int __init panic_on_taint_setup(char *s)
-> +{
-> +	char *taint_str;
-> +
-> +	if (!s)
-> +		return -EINVAL;
-> +
-> +	taint_str = strsep(&s, ",");
-> +	if (kstrtoul(taint_str, 16, &panic_on_taint))
-> +		return -EINVAL;
-> +
-> +	/* make sure panic_on_taint doesn't hold out-of-range TAINT flags */
-> +	panic_on_taint &= TAINT_FLAGS_MAX;
+> Changes since v6:
+>  - Make rpi_firmware_init_vl805() more robust
+>  - Rewrite comments and patch descriptions to be more accessible to non RPi
+>    fluent people
+>  - Removed Florian's Reviewed-by in patch #2 as function changed
+>    substantially
+>  - Tested with/witout u-boot
+> 
+> Changes since v5:
+>  - Fix issues reported by Kbuild test robot
+> 
+> Changes since v4:
+>  - Addressed Sergei's comments
+>  - Fix potential warning in patch #2
+> 
+> Changes since v3:
+>  - Addressed Greg's comments
+> 
+> There was no v2, my bad.
+> 
+> Changes since v1:
+>  - Addressed Floarians comments
+> 
+> Nicolas Saenz Julienne (4):
+>   soc: bcm2835: Add notify xHCI reset property
+>   firmware: raspberrypi: Introduce vl805 init routine
+>   PCI: brcmstb: Wait for Raspberry Pi's firmware when present
+>   USB: pci-quirks: Add Raspberry Pi 4 quirk
+> 
+>  drivers/firmware/Kconfig                   |  3 +-
+>  drivers/firmware/raspberrypi.c             | 61 ++++++++++++++++++++++
+>  drivers/pci/controller/pcie-brcmstb.c      | 17 ++++++
+>  drivers/usb/host/pci-quirks.c              | 16 ++++++
+>  include/soc/bcm2835/raspberrypi-firmware.h |  9 +++-
+>  5 files changed, 104 insertions(+), 2 deletions(-)
 
-While it may have made sennse for simplicity to not pr_warn_once on the
-proc_taint() case I think in this case we do want to pr_warn_once() as
-the user is wishing to DEFINITELY PANIC if such a taint flag is present.
+Applied to pci/brcmstb, thanks !
 
-> +
-> +	if (!panic_on_taint)
-> +		return -EINVAL;
-> +
-> +	if (s && !strcmp(s, "nousertaint"))
-> +		panic_on_taint_nousertaint = true;
-> +
-> +	pr_info("panic_on_taint: bitmask=0x%lx nousertaint_mode=%sabled\n",
-> +		panic_on_taint, panic_on_taint_nousertaint ? "en" : "dis");
-> +
-> +	return 0;
-> +}
-> +early_param("panic_on_taint", panic_on_taint_setup);
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index 8a176d8727a3..e257c965683a 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -2623,11 +2623,20 @@ static int proc_taint(struct ctl_table *table, int write,
->  		return err;
->  
->  	if (write) {
-> +		int i;
-> +
-> +		/*
-> +		 * If we are relying on panic_on_taint not producing
-> +		 * false positives due to userland input, bail out
-> +		 * before setting the requested taint flags.
-> +		 */
-> +		if (panic_on_taint_nousertaint && (tmptaint & panic_on_taint))
-> +			return -EINVAL;
-> +
-
-I like the compromise, but I think you also have to update this sysctl's
-documentation to reflect this is disabled if this new boot param is used.
-
-  Luis
+Lorenzo
