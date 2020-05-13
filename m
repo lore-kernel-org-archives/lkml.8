@@ -2,135 +2,117 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE157C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BCD8207BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:00:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="La8D4OSZ"
+	by mail.kernel.org (Postfix) with ESMTP id 2372D205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:00:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732438AbgEMQAI (ORCPT
+        id S2388077AbgEMQAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 12:00:08 -0400
-Received: from mail-dm6nam10on2050.outbound.protection.outlook.com ([40.107.93.50]:19892
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728692AbgEMQAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 12:00:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ixEnKjphisl1CSN0lBQEL9VhF/qsjHOA9xGdOkt8end0e8HHC/V1buS3JcW8BAJaDesZZQIe1Fb6DRpXP5Ej3uGm+kTsmdlHkH8iZAxhdN7oLwn6rlhcuIuAsht7PmhJMvSHr9ByOwMuFcdOeGXuRr0f+F0PgjnsegOM9janzzzqxvhskyWvvtWjWUbG1vJNpoCSnriNVECOl/N9fKOE9ovSZmdkTj+e67nUaxn6WG5lZmOjrxi0QOzf3FbOXDnEIR24D+DtKPwv6Xi7/4bLgxmqhBLB23bw424S1cgRooRnd2c23Hf2RZyDM2GUtWme4WmHscNsGisL7UcchxazEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XujP5eAhFBUmlXztzznPLZupd5FaJsEYiB4b+z3j2Wc=;
- b=QrqfiPtUXs3VqOxdmizKK+W4PFGaIWn3alqJZ+BlNSfXvWRQfm/70jmiIKveuXCrhDqL+4OScUNa44SugCMb5LhOvPF+h7kJnKdXuESsGQ3Um3irLhVKleM9Xjvnx/xugMQi9yoWqg8vi839EJLL382sYr5gXQmC4hXLQjQn1+IBgsSXG9tj58NF9GQcJboNUtUnBMQ614i6Cg5Gg0AGMKh5Jpt38hHxLSCXfgWAkhXH0JBIcyn0dB7WvdGLHRDvqmNmSWH5Mgte4aKnloLVR6L3CiDMfhEBUdTDwwsozUyL/HS4JX9EEo3QGg0Kpu7urvljtnpXXwB5/j6aw03lSA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XujP5eAhFBUmlXztzznPLZupd5FaJsEYiB4b+z3j2Wc=;
- b=La8D4OSZtPCz9mGMRB/9rHu04EqH/sfxM2Fy4yr0KKq5ny6RyPC0olQRWhUPCPPkgEdB5Nh35duRNjrHLKhEa6IKe1Vhkf9O2AuXIX5wNuXf7si07Vnord1z32xkONt7xEyy3NKyE3pX/K4lcqhqkhfZxeZkmrqKInD9R1im+XI=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
- by SN1PR12MB2400.namprd12.prod.outlook.com (2603:10b6:802:2f::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26; Wed, 13 May
- 2020 16:00:03 +0000
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::c0f:2938:784f:ed8d]) by SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::c0f:2938:784f:ed8d%7]) with mapi id 15.20.3000.022; Wed, 13 May 2020
- 16:00:03 +0000
-Subject: Re: [PATCH v4 0/3] arch/x86: Enable MPK feature on AMD
-To:     Paolo Bonzini <pbonzini@redhat.com>, corbet@lwn.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        sean.j.christopherson@intel.com
-Cc:     x86@kernel.org, vkuznets@redhat.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, mchehab+samsung@kernel.org,
-        changbin.du@intel.com, namit@vmware.com, bigeasy@linutronix.de,
-        yang.shi@linux.alibaba.com, asteinhauser@google.com,
-        anshuman.khandual@arm.com, jan.kiszka@siemens.com,
-        akpm@linux-foundation.org, steven.price@arm.com,
-        rppt@linux.vnet.ibm.com, peterx@redhat.com,
-        dan.j.williams@intel.com, arjunroy@google.com, logang@deltatee.com,
-        thellstrom@vmware.com, aarcange@redhat.com, justin.he@arm.com,
-        robin.murphy@arm.com, ira.weiny@intel.com, keescook@chromium.org,
-        jgross@suse.com, andrew.cooper3@citrix.com,
-        pawan.kumar.gupta@linux.intel.com, fenghua.yu@intel.com,
-        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
-        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <158932780954.44260.4292038705292213548.stgit@naples-babu.amd.com>
- <8cef30e5-5bb5-d3e2-3e0c-d30ec98818da@redhat.com>
-From:   Babu Moger <babu.moger@amd.com>
-Message-ID: <a60b3f06-4db4-38d9-b3aa-bcd27712e42b@amd.com>
-Date:   Wed, 13 May 2020 11:00:01 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-In-Reply-To: <8cef30e5-5bb5-d3e2-3e0c-d30ec98818da@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN6PR05CA0005.namprd05.prod.outlook.com
- (2603:10b6:805:de::18) To SN1PR12MB2560.namprd12.prod.outlook.com
- (2603:10b6:802:26::19)
+        Wed, 13 May 2020 12:00:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50692 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729561AbgEMQAb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 12:00:31 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2A4EC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 09:00:30 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jYto3-0005yx-Kv; Wed, 13 May 2020 18:00:27 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jYto2-0002qd-Pi; Wed, 13 May 2020 18:00:26 +0200
+Date:   Wed, 13 May 2020 18:00:26 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, Michael Walle <michael@walle.cc>,
+        kernel@pengutronix.de, "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v1] net: phy: at803x: add cable test support
+Message-ID: <20200513160026.fdls7kpxb6luuwed@pengutronix.de>
+References: <20200513120648.14415-1-o.rempel@pengutronix.de>
+ <0c80397b-58b8-0807-0b98-695db8068e25@gmail.com>
+ <20200513154544.gwcccvbicpvrj6vm@pengutronix.de>
+ <20200513154953.GI499265@lunn.ch>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.236.30.87] (165.204.77.1) by SN6PR05CA0005.namprd05.prod.outlook.com (2603:10b6:805:de::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.11 via Frontend Transport; Wed, 13 May 2020 16:00:01 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: ba1f4abc-0eb6-4451-87ce-08d7f756b299
-X-MS-TrafficTypeDiagnostic: SN1PR12MB2400:
-X-Microsoft-Antispam-PRVS: <SN1PR12MB2400E0AC7E36DC6032DB637195BF0@SN1PR12MB2400.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 0402872DA1
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Asz1zubyysV9XvlKLaE5N7wDIQ6F6G3Q19bx0buYoccEAzR/aa18wlAggIvR6T1prj+UV4ROLJzVubehybb3SEpsckcVWMI3G9fCt5MkBXWwWQajctKevMpvuP0vSdzKd2X2HadQHnCfbOkSGE0tsnCR/yVgMehqSamTEEbCd26JmjtAMkD2I8HStw7aX0roodKulGMppKsNe3IGQlbjUmaLONCm9S7iKqQHIBdWF8BQ3f6ngAtuqnsbvPFPoRZ4zLY3YjtWbutOOHUfEIHlCSop48NO9QIkW1bsoKq9GRjrbsIGN/UzBIpjAn4D6CxhPF1ch6efUX17eHx6XUOHlWMZKJQDyf3EfsBxYLFgfHIPXiIEl6kCbimjLnF3226tbFvjzum6AxQ51f90MpdqdVddNS+Plo6HECycojFHcSYidQgGcQ6fazl1Ms+u8qEHjSOid8sL0PeOS09jAY/FLKzRpAB6d13ZCOw9v/MfZ+E84wZsuAqrQ5+StiE9eITMVb3syIimRzODlv9uWrN6635c3JlUZMgjQstlbk3+D9SOXkF9y+hkAqRAckmgfeBO
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(136003)(346002)(376002)(396003)(33430700001)(956004)(44832011)(2906002)(478600001)(8936002)(66556008)(33440700001)(186003)(16526019)(53546011)(8676002)(86362001)(36756003)(4744005)(316002)(16576012)(66476007)(52116002)(26005)(6486002)(2616005)(4326008)(7406005)(31686004)(66946007)(7416002)(5660300002)(31696002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: uZMxNod/Hk+ssxe7PZotG/qPIzBSe6ZKTtcYVkzxyhCWErdtEvyP9hSvFRevRaA2/5s5WGR8iAGi0xf/d1Yxqy5aH0/MRouCRf+IfyI3Hfu0YYbiaEYD17ZPbosAU6ieA4jojwGNvut+UFu+nPgTuJSLLTHIJETUiXirExFzvtAIqhoVez7zZ48G7BNGpylr92antjPXeFX3X+ddMx0mOJShne/kqt4Ryt+GEIdehCx/qR7TBD0sJXY/nFIVXbFtddW/P2rRqjuoFPGsafR0xiW7T6kpn4H8nqcA/qhBUvoSt4p/aK+nVlbec51LcEBt4gY6B0ODRgPNyxnRkVIJ/G5W/PqlXzKU98+qF108lX3qB1ZxM4VQj6D/w+kUfLY1cfUBJ+f6pzDVMbG6b3//aXVe5deGl4gUaiENg0Fdk7tnhYgVOdxpc5TPBiSn/z43MTA66NhF8Wjn/jCcOr4ijffhT/cel93fx84WERejNxE=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba1f4abc-0eb6-4451-87ce-08d7f756b299
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2020 16:00:03.6366
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fwABPHGXrpVdiyJYuzS+KPWmYErmJD7f6L8INqLNW9e/FqxWdMAjAQReCEabsLqL
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2400
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6a7oqghoxjesv4z7"
+Content-Disposition: inline
+In-Reply-To: <20200513154953.GI499265@lunn.ch>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 17:54:56 up 180 days,  7:13, 182 users,  load average: 0.04, 0.08,
+ 0.05
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--6a7oqghoxjesv4z7
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 5/13/20 10:35 AM, Paolo Bonzini wrote:
-> On 13/05/20 01:58, Babu Moger wrote:
->> AMD's next generation of EPYC processors support the MPK (Memory
->> Protection Keys) feature.
->>
->> This series enables the feature on AMD and updates config parameters
->> and documentation to reflect the MPK support on x86 platforms.
->>
->> AMD documentation for MPK feature is available at "AMD64 Architecture
->> Programmer’s Manual Volume 2: System Programming, Pub. 24593 Rev. 3.34,
->> Section 5.6.6 Memory Protection Keys (MPK) Bit".
->>
->> The documentation can be obtained at the link below:
-> 
-> I'm queuing patches 2 and 3, since they are do not need any support in
-> common code.
+On Wed, May 13, 2020 at 05:49:53PM +0200, Andrew Lunn wrote:
+> > Uff.. i missed this. Then I'll need only to add some changes on top of
+> > his patch.
+>=20
+> I've been chatting with mwalle on IRC today. There should be a repost
+> of the patches soon.
 
-Thanks Paolo. I will just resubmit the patch #1 addressing Dave's feedback.
+Cool!
+@Michael, please CC me.
 
+you can include support for AR9331 and AR8032 in your patch (if you
+like)
+http://www.jhongtech.com/DOWN/ATHEROS--AR8032.pdf
+
+They have same register, but only 2 pairs.
+
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--6a7oqghoxjesv4z7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl68GZYACgkQ4omh9DUa
+UbMdlA/+O0iIZLBwArtGcqcdiVYupsTy1uBMg/9ZFt/f1XGNIgLXvf7Jy9ySSNeT
+ZNUOPpjJ+LnH5GpjhE6xVjq3hZ0IxI973b7Q5gWds10isDkljl9p+E6QPjJvhCnV
+btINYfg8BClFgDTvB0lBanAFs2Geny3AL4AR2EHND8mjtT2hRE3caXxd7kOxkbI2
+gXd322ndSZP+1HYedeGZLkI/RJTi37tDkM9dENGy706zjWzi+4FsFR0PVJdb0Bx6
+XLQ21B8C+/YYb1gj6cD1mi76GIaH0XaSoF5OO2oiW4ijOZZKgqX6/ZMTRl4iakgd
+cqYlgJ52Z//iCRyTQhyWyeEem9Chb33dBZicIjmaSZHqwIc0q6FkNdrYWjLFZg1b
+crFaeyfxopCnoZD7of5Gryx+PjHa9RFJKSiU8GVhdaW2VDB69XhuicxfQgMMefAo
+8xowyZgPbXrcxE9d1aZWbpmIzrK8EYMhuREk3S4JAKJEdz+3emLVExw8Wty5WhXS
+/AejFyTKqbOw/42iBXLCzeYEdHg1SaIoxdyhAosoB7LtiivGqI0MkbTP0+2UiSHO
+ohQAe0idYWEbByt057QwC2bK5gElRDZJUOL4Q8ncty2B5Wtb9SQESszC1Kaf0bGs
+2dYILv1mmM2ShJ0eiE4C0eAsn575hvlq4sIipq+84OJbfV3TFb8=
+=uxFm
+-----END PGP SIGNATURE-----
+
+--6a7oqghoxjesv4z7--
