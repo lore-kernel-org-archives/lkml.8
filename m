@@ -2,82 +2,202 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75136C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 641662065C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05C792065C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:11:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="wjvKNZur"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ha2rz7a+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390811AbgEMUKX (ORCPT
+        id S2390838AbgEMULU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 16:10:23 -0400
-Received: from www.zeus03.de ([194.117.254.33]:37392 "EHLO mail.zeus03.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388033AbgEMUKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 16:10:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=k1; bh=W7q9fn4XN2n9/68cf5tS2Enuv46
-        NvEawyvtgZa/O2lo=; b=wjvKNZur93eS31N2SCzLQcGDpAajcZrzhkOsQTz1TxN
-        VT95ilzXmFdbcUmFNrATRibu4tm32X2emLv3nIqzlNBbFho6hWuOmZLc6G07guK5
-        JFT3fQdOJYkP9xm4KYnHyA3SRth8wjyvqnPbCP+QlCtR1YYEnJ7/AMxV5iZFQrdg
-        =
-Received: (qmail 3475788 invoked from network); 13 May 2020 22:10:19 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 May 2020 22:10:19 +0200
-X-UD-Smtp-Session: l3s3148p1@i5BQK42lNN0gAwDPXwcWAIZZjypw6UMc
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-renesas-soc@vger.kernel.org
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/vblank: remove outdated and noisy output
-Date:   Wed, 13 May 2020 22:10:16 +0200
-Message-Id: <20200513201016.23047-1-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 13 May 2020 16:11:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33590 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388033AbgEMULT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 16:11:19 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8696EC061A0C;
+        Wed, 13 May 2020 13:11:19 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id g185so680831qke.7;
+        Wed, 13 May 2020 13:11:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Bu6Mn7nu/2nMhVqLxMtcXhprIvb1oiL88xKXB3rFnvs=;
+        b=ha2rz7a+uJSIrsNLif4JDODHzjcRXp87jUXkhEL+uI8YXozF6E43esRWkYOsJzLrSM
+         ByTUwpBZpCbutk1E+8Joqld19nq3FK/B5nHwWJ//YPb7IjJIY8MWOoLCASo0fEDL/86d
+         DnSjFGMeYuRF2yGqfW1B2Lgk4Pip9qE7Y4w8nIdM7/lMSJZEnxx7EbvhjX6JxFWao368
+         hFQB9e9zwx9vSXH3CjKICejxKsJKXNRmsedmcnoM/KSVmiH5JyAS+zETrHTy/O4XFaQo
+         xWvJRPMY9SVeMXkLzr4NhIquCG0k5yr0Wui6w7PK0/ibVMqKPE8DWSlHyUHg1LcKbnJt
+         713Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Bu6Mn7nu/2nMhVqLxMtcXhprIvb1oiL88xKXB3rFnvs=;
+        b=MQSGV8C8AR93lRbLcLD21EBhWzE3NDfP/lLR5qxvFScK3W+pnSDWe5UzVVP/zclT5p
+         vnI+n/yP2DOUozk/aYD8R2c1vuk+MzNASJTqvw/yu4WmsbkYbw8R3LOluYs8h49NttLU
+         fk3d/8gGMwmbHfobLJ32+hy7JUcAc/y+m3fD01AYHXF00uCl3R7RBfXDR85XREAf2vK7
+         wvdAol8HMZpXXrMEx70+55hdBkADAil1Ai7h5+bP8R7G/rlrLtZcUX8o8pbgSplPj2XA
+         7gWYjhR+NEN64IXNJlmA7lVumJbcvKEu6A7Y3WArDnzmxWBeNgwUSIO3E9uKTT/C3hpy
+         hg0A==
+X-Gm-Message-State: AOAM530yrEfZWgx1a+/leyQrUoypk/UxBrdJqb185TZvS3pDUmDTpvUB
+        Ppeu1LjhZtquplEfNgPEG1xQurL6Az/NkIaxSKvrXvQ//xs=
+X-Google-Smtp-Source: ABdhPJy9XpniT38I13QZIJ/GI7X+4v3jGCbSZ0uedfL9qJ9DsRL9/uVljftMTDd9/4jjkJLUfKHeFS0MrhTajYNO8No=
+X-Received: by 2002:a25:d103:: with SMTP id i3mr1370559ybg.182.1589400678679;
+ Wed, 13 May 2020 13:11:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CABUN9aCXZBTdYHSK5oSVX-HAA1wTWmyBW_ked_ydsCjsV-Ckaw@mail.gmail.com>
+ <20200513160116.GA2491@localhost.localdomain>
+In-Reply-To: <20200513160116.GA2491@localhost.localdomain>
+From:   Jonas Falkevik <jonas.falkevik@gmail.com>
+Date:   Wed, 13 May 2020 22:11:05 +0200
+Message-ID: <CABUN9aCuoA+CXLujUxXyiKWQPkwq9_eOXNqOR=MK7dPY++Fxng@mail.gmail.com>
+Subject: Re: [PATCH] sctp: check assoc before SCTP_ADDR_{MADE_PRIM,ADDED} event
+To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Cc:     Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-sctp@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xin Long <lucien.xin@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The R-Car DU driver calls drm_vblank_init via some helper functions in
-probe(). From what I checked, most drivers do this as well. I have a
-config now where DU always stays in deferred_probe state because of a
-missing dependency. This means that every time I rebind another driver
-like MMC, the vblank init message is displayed again when the DU driver
-is retried. Because the message doesn't really carry a useful
-information, I suggest to simply drop it.
+On Wed, May 13, 2020 at 6:01 PM Marcelo Ricardo Leitner
+<marcelo.leitner@gmail.com> wrote:
+>
+> On Wed, May 13, 2020 at 04:52:16PM +0200, Jonas Falkevik wrote:
+> > Do not generate SCTP_ADDR_{MADE_PRIM,ADDED} events for SCTP_FUTURE_ASSOC assocs.
+>
+> How did you get them?
+>
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
- drivers/gpu/drm/drm_vblank.c | 2 --
- 1 file changed, 2 deletions(-)
+I think one case is when receiving INIT chunk in sctp_sf_do_5_1B_init().
+Here a closed association is created, sctp_make_temp_assoc().
+Which is later used when calling sctp_process_init().
+In sctp_process_init() one of the first things are to call
+sctp_assoc_add_peer()
+on the closed / temp assoc.
 
-diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
-index da7b0b0c1090..ce9bed24c2da 100644
---- a/drivers/gpu/drm/drm_vblank.c
-+++ b/drivers/gpu/drm/drm_vblank.c
-@@ -483,8 +483,6 @@ int drm_vblank_init(struct drm_device *dev, unsigned int num_crtcs)
- 		seqlock_init(&vblank->seqlock);
- 	}
- 
--	DRM_INFO("Supports vblank timestamp caching Rev 2 (21.10.2013).\n");
--
- 	return 0;
- 
- err:
--- 
-2.20.1
+sctp_assoc_add_peer() are generating the SCTP_ADDR_ADDED event on the socket
+for the potentially new association.
 
+$ cat sctp.bpftrace
+#!/usr/local/bin/bpftrace
+
+BEGIN
+{
+   printf("Tracing sctp_assoc_add_peer\n");
+   printf("Hit Ctrl-C to end.\n");
+}
+
+kprobe:sctp_assoc_add_peer
+{
+   @[kstack]=count();
+}
+
+$ sudo bpftrace sctp.bpftrace
+Attaching 2 probes...
+Tracing sctp_assoc_add_peer
+Hit Ctrl-C to end.
+^C
+
+@[
+   sctp_assoc_add_peer+1
+   sctp_process_init+77
+   sctp_sf_do_5_1B_init+615
+   sctp_do_sm+132
+   sctp_endpoint_bh_rcv+256
+   sctp_rcv+2379
+   ip_protocol_deliver_rcu+393
+   ip_local_deliver_finish+68
+   ip_local_deliver+203
+   ip_rcv+156
+   __netif_receive_skb_one_core+96
+   process_backlog+164
+   net_rx_action+312
+   __softirqentry_text_start+238
+   do_softirq_own_stack+42
+   do_softirq.part.0+65
+   __local_bh_enable_ip+75
+   ip_finish_output2+415
+   ip_output+102
+   __ip_queue_xmit+364
+   sctp_packet_transmit+1814
+   sctp_outq_flush_ctrl.constprop.0+394
+   sctp_outq_flush+86
+   sctp_do_sm+3914
+   sctp_primitive_ASSOCIATE+44
+   __sctp_connect+707
+   sctp_inet_connect+98
+   __sys_connect+156
+   __x64_sys_connect+22
+   do_syscall_64+91
+   entry_SYSCALL_64_after_hwframe+68
+]: 1
+...
+
+> I'm thinking you're fixing a side-effect of another issue here. For
+> example, in sctp_assoc_update(), it first calls sctp_assoc_add_peer()
+> to only then call sctp_assoc_set_id(), which would generate the event
+> you might have seen. In this case, it should be allocating IDR before,
+> so that the event can be sent with the right assoc_id already.
+>
+> >
+> > These events are described in rfc6458#section-6.1
+> > SCTP_PEER_ADDR_CHANGE:
+> > This tag indicates that an address that is
+> > part of an existing association has experienced a change of
+> > state (e.g., a failure or return to service of the reachability
+> > of an endpoint via a specific transport address).
+> >
+> > Signed-off-by: Jonas Falkevik <jonas.falkevik@gmail.com>
+> > ---
+> >  net/sctp/associola.c | 11 ++++++++---
+> >  1 file changed, 8 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/net/sctp/associola.c b/net/sctp/associola.c
+> > index 437079a4883d..0c5dd295f9b8 100644
+> > --- a/net/sctp/associola.c
+> > +++ b/net/sctp/associola.c
+> > @@ -432,8 +432,10 @@ void sctp_assoc_set_primary(struct sctp_association *asoc,
+> >          changeover = 1 ;
+> >
+> >      asoc->peer.primary_path = transport;
+> > -    sctp_ulpevent_nofity_peer_addr_change(transport,
+> > -                          SCTP_ADDR_MADE_PRIM, 0);
+> > +    if (sctp_assoc2id(asoc) != SCTP_FUTURE_ASSOC)
+> > +        sctp_ulpevent_nofity_peer_addr_change(transport,
+> > +                              SCTP_ADDR_MADE_PRIM,
+> > +                              0);
+> >
+> >      /* Set a default msg_name for events. */
+> >      memcpy(&asoc->peer.primary_addr, &transport->ipaddr,
+> > @@ -714,7 +716,10 @@ struct sctp_transport *sctp_assoc_add_peer(struct
+> > sctp_association *asoc,
+> >      list_add_tail_rcu(&peer->transports, &asoc->peer.transport_addr_list);
+> >      asoc->peer.transport_count++;
+> >
+> > -    sctp_ulpevent_nofity_peer_addr_change(peer, SCTP_ADDR_ADDED, 0);
+> > +    if (sctp_assoc2id(asoc) != SCTP_FUTURE_ASSOC)
+> > +        sctp_ulpevent_nofity_peer_addr_change(peer,
+> > +                              SCTP_ADDR_ADDED,
+> > +                              0);
+> >
+> >      /* If we do not yet have a primary path, set one.  */
+> >      if (!asoc->peer.primary_path) {
+> > --
+> > 2.25.3
