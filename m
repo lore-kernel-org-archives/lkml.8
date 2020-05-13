@@ -2,263 +2,125 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C335AC2D0FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C79FFC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE3E206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:15:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MBj6EQHG"
+	by mail.kernel.org (Postfix) with ESMTP id B2718206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:16:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732640AbgEMMP7 (ORCPT
+        id S1732745AbgEMMQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 08:15:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732340AbgEMMP6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 08:15:58 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C452C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 05:15:58 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id z16so5958191uae.11
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 05:15:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=09R37UyziPgwn1Nn28wDcEoLu5IKO4m4ALNMAgJM4kI=;
-        b=MBj6EQHGwmC6elIl1U1sbpt1fWckfg85iHR6ZdIifhf6e12FTw9exoct51b1gKWGvy
-         pa/flvp339RQZFJpAuAWpvE1V6scAVMezDKv34SricUB6UXEpNScxrA3A5UA+v4Nobl9
-         9KPou1t4i2WQVRkH+Etbtq246m5vkI0uVO+iN/CaTqi4bUc6cl8EVNeFpIzrlCVc4VJe
-         OHGAnFOhe0WSTJ0TlXbcqJPJJA0pSyoHUb98pxSI4ADcUViI9wrAT47Y5KdWD/Y63HTg
-         HtBqTIDdL8EGwFpU/8E9BESM+zYj82+86mKQPAoqHZB6XvrQJxJ09RN2UUrFAbzdIbBm
-         4Ebg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=09R37UyziPgwn1Nn28wDcEoLu5IKO4m4ALNMAgJM4kI=;
-        b=CjHceVxiZbNErM03Ls/kEGYqpyJqwOlHIBYR6JHWQ9gDu/FxVrYuiDNJ281SmJhsJ3
-         OL5PM07jJmaGkGcedjYI/sh4lcCsrFJ6ki46IwYqSQd6ptPN070s158Mg0Yc2DVsCk19
-         7rN8xFZbtJksxQveQ+ozrxDav+jyebucAUDJOLRLKnIETof5i5CSBhC6c9hAwW8S+IKl
-         C/ZGZXVd1SrUekHdVQGcKOCioFGPUGyQ9jl3m094KdqtMLO+tGvg8m/Qtk+GvjCtn1lg
-         bm7hGYmLeaKRZt4/Yjjo9vsnelPfj23xcm1HAD94hLVp1+WiGpCsFU5V09AJJYxu3O6O
-         31kg==
-X-Gm-Message-State: AGi0PuYf3+mV4SKEQA6gy/ccoNAHwh2ALVvfWtk/Fr2v06iNwbvDKqF7
-        xNVMnwKCGhZJ9hceGpfnNoMJQKdpywVbzauAWNYHrDkGgzI=
-X-Google-Smtp-Source: APiQypI6K6WkbV2b5JG0GNaUTBKncfOz5kVnvft3b29ggsHnVFU9hKVoaYdJppHK25X49jpwum4gQEdswg9o5OXokwQ=
-X-Received: by 2002:ab0:6588:: with SMTP id v8mr20880328uam.100.1589372157298;
- Wed, 13 May 2020 05:15:57 -0700 (PDT)
+        Wed, 13 May 2020 08:16:43 -0400
+Received: from mga01.intel.com ([192.55.52.88]:56785 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731675AbgEMMQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 08:16:42 -0400
+IronPort-SDR: fufWq6ANfXbdsyo23WG4YKPeBc+JR1vCkXaj7TK4pts1ItDRhYlgSvxuLxqddBj9cqkpz+koQR
+ TWDMKgRIjhZg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 05:16:41 -0700
+IronPort-SDR: vxpSKFUq4un6BaMkWuW/HPptZRc+5qMKMNoe5QE5bKIqfs3dY5oA/+JG6itCGxg+lbhl9Mz110
+ 1my/3CM+CcQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,387,1583222400"; 
+   d="scan'208";a="298348570"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
+  by orsmga008.jf.intel.com with ESMTP; 13 May 2020 05:16:38 -0700
+Subject: Re: [PATCH v13 0/5] usb: xhci: Add support for Renesas USB
+ controllers
+To:     Vinod Koul <vkoul@kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        =?UTF-8?Q?Andreas_B=c3=b6hler?= <dev@aboehler.at>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200506060025.1535960-1-vkoul@kernel.org>
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
+ 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 fiD/
+Message-ID: <edb2df23-6193-fdb1-d9f9-ffc33a40c05e@linux.intel.com>
+Date:   Wed, 13 May 2020 15:19:29 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200513174706.3eeddb2b@xhacker.debian>
-In-Reply-To: <20200513174706.3eeddb2b@xhacker.debian>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 13 May 2020 14:15:21 +0200
-Message-ID: <CAPDyKFpE_uqiNQ22Fq9hDfb5pzMBdgmwgUbasEsEdXFkEOmq6A@mail.gmail.com>
-Subject: Re: [PATCH] Revert "mmc: sdhci-xenon: add runtime pm support and
- reimplement standby"
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200506060025.1535960-1-vkoul@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020 at 11:47, Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
->
-> This reverts commit a027b2c5fed78851e69fab395b02d127a7759fc7.
->
-> The HW supports auto clock gating, so it's useless to do runtime pm
-> in software.
+On 6.5.2020 9.00, Vinod Koul wrote:
+> This series add support for Renesas USB controllers uPD720201 and uPD720202.
+> These require firmware to be loaded and in case devices have ROM those can
+> also be programmed if empty. If ROM is programmed, it runs from ROM as well.
+> 
+> This includes patches from Christian which supported these controllers w/o
+> ROM and later my patches for ROM support and debugfs hook for rom erase and
+> export of xhci-pci functions.
+> 
 
-Runtime PM isn't soley about clock gating. Moreover it manages the
-"pltfm_host->clk", which means even if the controller supports auto
-clock gating, gating/ungating the externally provided clock still
-makes sense.
+First four patches look ok to me, but 5/5 that adds rom erase debugfs support
+still needs some work.
 
-Kind regards
-Uffe
+If you prefer I can take the first four, maybe we can get them to 5.8, and then
+later add that debugs rom erase support.
 
->
-> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-> ---
->  drivers/mmc/host/sdhci-xenon.c | 87 +++++++---------------------------
->  drivers/mmc/host/sdhci-xenon.h |  1 -
->  2 files changed, 16 insertions(+), 72 deletions(-)
->
-> diff --git a/drivers/mmc/host/sdhci-xenon.c b/drivers/mmc/host/sdhci-xenon.c
-> index 4703cd540c7f..85414e13e7ea 100644
-> --- a/drivers/mmc/host/sdhci-xenon.c
-> +++ b/drivers/mmc/host/sdhci-xenon.c
-> @@ -15,8 +15,6 @@
->  #include <linux/ktime.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> -#include <linux/pm.h>
-> -#include <linux/pm_runtime.h>
->
->  #include "sdhci-pltfm.h"
->  #include "sdhci-xenon.h"
-> @@ -539,24 +537,13 @@ static int xenon_probe(struct platform_device *pdev)
->         if (err)
->                 goto err_clk_axi;
->
-> -       pm_runtime_get_noresume(&pdev->dev);
-> -       pm_runtime_set_active(&pdev->dev);
-> -       pm_runtime_set_autosuspend_delay(&pdev->dev, 50);
-> -       pm_runtime_use_autosuspend(&pdev->dev);
-> -       pm_runtime_enable(&pdev->dev);
-> -       pm_suspend_ignore_children(&pdev->dev, 1);
-> -
->         err = sdhci_add_host(host);
->         if (err)
->                 goto remove_sdhc;
->
-> -       pm_runtime_put_autosuspend(&pdev->dev);
-> -
->         return 0;
->
->  remove_sdhc:
-> -       pm_runtime_disable(&pdev->dev);
-> -       pm_runtime_put_noidle(&pdev->dev);
->         xenon_sdhc_unprepare(host);
->  err_clk_axi:
->         clk_disable_unprepare(priv->axi_clk);
-> @@ -573,10 +560,6 @@ static int xenon_remove(struct platform_device *pdev)
->         struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->         struct xenon_priv *priv = sdhci_pltfm_priv(pltfm_host);
->
-> -       pm_runtime_get_sync(&pdev->dev);
-> -       pm_runtime_disable(&pdev->dev);
-> -       pm_runtime_put_noidle(&pdev->dev);
-> -
->         sdhci_remove_host(host, 0);
->
->         xenon_sdhc_unprepare(host);
-> @@ -593,78 +576,40 @@ static int xenon_suspend(struct device *dev)
->  {
->         struct sdhci_host *host = dev_get_drvdata(dev);
->         struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> -       struct xenon_priv *priv = sdhci_pltfm_priv(pltfm_host);
->         int ret;
->
-> -       ret = pm_runtime_force_suspend(dev);
-> +       ret = sdhci_suspend_host(host);
-> +       if (ret)
-> +               return ret;
->
-> -       priv->restore_needed = true;
-> +       clk_disable_unprepare(pltfm_host->clk);
->         return ret;
->  }
-> -#endif
->
-> -#ifdef CONFIG_PM
-> -static int xenon_runtime_suspend(struct device *dev)
-> +static int xenon_resume(struct device *dev)
->  {
->         struct sdhci_host *host = dev_get_drvdata(dev);
->         struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> -       struct xenon_priv *priv = sdhci_pltfm_priv(pltfm_host);
->         int ret;
->
-> -       ret = sdhci_runtime_suspend_host(host);
-> +       ret = clk_prepare_enable(pltfm_host->clk);
->         if (ret)
->                 return ret;
->
-> -       if (host->tuning_mode != SDHCI_TUNING_MODE_3)
-> -               mmc_retune_needed(host->mmc);
-> -
-> -       clk_disable_unprepare(pltfm_host->clk);
->         /*
-> -        * Need to update the priv->clock here, or when runtime resume
-> -        * back, phy don't aware the clock change and won't adjust phy
-> -        * which will cause cmd err
-> +        * If SoCs power off the entire Xenon, registers setting will
-> +        * be lost.
-> +        * Re-configure Xenon specific register to enable current SDHC
->          */
-> -       priv->clock = 0;
-> -       return 0;
-> -}
-> -
-> -static int xenon_runtime_resume(struct device *dev)
-> -{
-> -       struct sdhci_host *host = dev_get_drvdata(dev);
-> -       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> -       struct xenon_priv *priv = sdhci_pltfm_priv(pltfm_host);
-> -       int ret;
-> -
-> -       ret = clk_prepare_enable(pltfm_host->clk);
-> -       if (ret) {
-> -               dev_err(dev, "can't enable mainck\n");
-> +       ret = xenon_sdhc_prepare(host);
-> +       if (ret)
->                 return ret;
-> -       }
-> -
-> -       if (priv->restore_needed) {
-> -               ret = xenon_sdhc_prepare(host);
-> -               if (ret)
-> -                       goto out;
-> -               priv->restore_needed = false;
-> -       }
->
-> -       ret = sdhci_runtime_resume_host(host, 0);
-> -       if (ret)
-> -               goto out;
-> -       return 0;
-> -out:
-> -       clk_disable_unprepare(pltfm_host->clk);
-> -       return ret;
-> +       return sdhci_resume_host(host);
->  }
-> -#endif /* CONFIG_PM */
-> -
-> -static const struct dev_pm_ops sdhci_xenon_dev_pm_ops = {
-> -       SET_SYSTEM_SLEEP_PM_OPS(xenon_suspend,
-> -                               pm_runtime_force_resume)
-> -       SET_RUNTIME_PM_OPS(xenon_runtime_suspend,
-> -                          xenon_runtime_resume,
-> -                          NULL)
-> -};
-> +#endif
-> +
-> +static SIMPLE_DEV_PM_OPS(xenon_pmops, xenon_suspend, xenon_resume);
->
->  static const struct of_device_id sdhci_xenon_dt_ids[] = {
->         { .compatible = "marvell,armada-ap806-sdhci",},
-> @@ -678,7 +623,7 @@ static struct platform_driver sdhci_xenon_driver = {
->         .driver = {
->                 .name   = "xenon-sdhci",
->                 .of_match_table = sdhci_xenon_dt_ids,
-> -               .pm = &sdhci_xenon_dev_pm_ops,
-> +               .pm = &xenon_pmops,
->         },
->         .probe  = xenon_probe,
->         .remove = xenon_remove,
-> diff --git a/drivers/mmc/host/sdhci-xenon.h b/drivers/mmc/host/sdhci-xenon.h
-> index 593b82d7b68a..2b9b96e51261 100644
-> --- a/drivers/mmc/host/sdhci-xenon.h
-> +++ b/drivers/mmc/host/sdhci-xenon.h
-> @@ -89,7 +89,6 @@ struct xenon_priv {
->          */
->         void            *phy_params;
->         struct xenon_emmc_phy_regs *emmc_phy_regs;
-> -       bool restore_needed;
->  };
->
->  int xenon_phy_adj(struct sdhci_host *host, struct mmc_ios *ios);
-> --
-> 2.26.2
->
+Let me know what you prefer
+
+-Mathias
+
