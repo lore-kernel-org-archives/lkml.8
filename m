@@ -2,174 +2,215 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DCC5C2D0FB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AEDC2D0F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77A1720714
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7DCA206CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:59:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="MpB0XIHM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730560AbgEMByu (ORCPT
+        id S1728424AbgEMB7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 21:54:50 -0400
-Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:32862 "EHLO
-        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726028AbgEMByu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 21:54:50 -0400
-X-Greylist: delayed 1313 seconds by postgrey-1.27 at vger.kernel.org; Tue, 12 May 2020 21:54:48 EDT
-Received: from dread.disaster.area (pa49-195-157-175.pa.nsw.optusnet.com.au [49.195.157.175])
-        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id E353ED7B1C6;
-        Wed, 13 May 2020 11:32:40 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jYgGE-0001cR-CO; Wed, 13 May 2020 11:32:38 +1000
-Date:   Wed, 13 May 2020 11:32:38 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, joel@joelfernandes.org, viro@zeniv.linux.org.uk
-Subject: Re: [PATCH RFC tip/core/rcu] Add shrinker to shift to
- fast/inefficient GP mode
-Message-ID: <20200513013238.GM2005@dread.disaster.area>
-References: <20200507004240.GA9156@paulmck-ThinkPad-P72>
- <20200506175535.d4986a4d497071a410b69765@linux-foundation.org>
- <20200507170006.GA155220@cmpxchg.org>
- <20200507170903.GR2869@paulmck-ThinkPad-P72>
- <20200507183102.GB155220@cmpxchg.org>
- <20200507190905.GX2869@paulmck-ThinkPad-P72>
- <6d93affb-6505-1bf3-58a0-c67c34a18a9e@yandex-team.ru>
- <20200508144638.GF2869@paulmck-ThinkPad-P72>
- <8671cc58-11e0-b9f0-74b1-264fea58b23c@yandex-team.ru>
- <20200509160900.GM2869@paulmck-ThinkPad-P72>
+        Tue, 12 May 2020 21:59:51 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:56972 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726885AbgEMB7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 21:59:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=b7RrNiCav3BfKDCsCqG8wApdlCITQbgBHil/CGwVYAg=; b=MpB0XIHMrWz/zvuNFYXzCW7MDy
+        sMF4pPrI/ZsxszE0NkWmGn3WpEf6JOQK3Lfri383ika76/qcGqdaNbc4frx1gQiGI4Puqm5AeZ3IR
+        0Rwxxxo5fnzWphG95HH9K6RoYCLUVXOh8B8I8oNFT0VuU++gK6SHyATGqagAzFtPFcuM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jYggS-0027Tw-91; Wed, 13 May 2020 03:59:44 +0200
+Date:   Wed, 13 May 2020 03:59:44 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Yonglong Liu <liuyonglong@huawei.com>
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linuxarm@huawei.com, Salil Mehta <salil.mehta@huawei.com>
+Subject: Re: [question] net: phy: rtl8211f: link speed shows 1000Mb/s but
+ actual link speed in phy is 100Mb/s
+Message-ID: <20200513015944.GA501603@lunn.ch>
+References: <478f871a-583d-01f1-9cc5-2eea56d8c2a7@huawei.com>
+ <20200512140017.GK409897@lunn.ch>
+ <ef25a0a2-e13f-def1-5e91-ceae1bfaf333@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200509160900.GM2869@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=ONQRW0k9raierNYdzxQi9Q==:117 a=ONQRW0k9raierNYdzxQi9Q==:17
-        a=kj9zAlcOel0A:10 a=sTwFKg_x9MkA:10 a=7-415B0cAAAA:8
-        a=UnOJVGtEmMKoa6n_RpMA:9 a=VP7J8LPk42pBYOac:21 a=FTdNB1hloREqk2B-:21
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <ef25a0a2-e13f-def1-5e91-ceae1bfaf333@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 09, 2020 at 09:09:00AM -0700, Paul E. McKenney wrote:
-> On Sat, May 09, 2020 at 11:54:40AM +0300, Konstantin Khlebnikov wrote:
-> > On 08/05/2020 17.46, Paul E. McKenney wrote:
-> > > Easy for me to provide "start fast and inefficient mode" and "stop fast
-> > > and inefficient mode" APIs for MM to call!
-> > > 
-> > > How about rcu_mempressure_start() and rcu_mempressure_end()?  I would
-> > > expect them not to nest (as in if you need them to nest, please let
-> > > me know).  I would not expect these to be invoked all that often (as in
-> > > if you do need them to be fast and scalable, please let me know). >
-> > > RCU would then be in fast/inefficient mode if either MM told it to be
-> > > or if RCU had detected callback overload on at least one CPU.
-> > > 
-> > > Seem reasonable?
+On Wed, May 13, 2020 at 09:34:13AM +0800, Yonglong Liu wrote:
+> Hi, Andrew:
+> 	Thanks for your reply!
+> 
+> On 2020/5/12 22:00, Andrew Lunn wrote:
+> > On Tue, May 12, 2020 at 08:48:21PM +0800, Yonglong Liu wrote:
+> >> I use two devices, both support 1000M speed, they are directly connected
+> >> with a network cable. Two devices enable autoneg, and then do the following
+> >> test repeatedly:
+> >> 	ifconfig eth5 down
+> >> 	ifconfig eth5 up
+> >> 	sleep $((RANDOM%6))
+> >> 	ifconfig eth5 down
+> >> 	ifconfig eth5 up
+> >> 	sleep 10
+> >>
+> >> With low probability, one device A link up with 100Mb/s, the other B link up with
+> >> 1000Mb/s(the actual link speed read from phy is 100Mb/s), and the network can
+> >> not work.
+> >>
+> >> device A:
+> >> Settings for eth5:
+> >>         Supported ports: [ TP ]
+> >>         Supported link modes:   10baseT/Half 10baseT/Full
+> >>                                 100baseT/Half 100baseT/Full
+> >>                                 1000baseT/Full
+> >>         Supported pause frame use: Symmetric Receive-only
+> >>         Supports auto-negotiation: Yes
+> >>         Supported FEC modes: Not reported
+> >>         Advertised link modes:  10baseT/Half 10baseT/Full
+> >>                                 100baseT/Half 100baseT/Full
+> >>                                 1000baseT/Full
+> >>         Advertised pause frame use: Symmetric
+> >>         Advertised auto-negotiation: Yes
+> >>         Advertised FEC modes: Not reported
+> >>         Link partner advertised link modes:  10baseT/Half 10baseT/Full
+> >>                                              100baseT/Half 100baseT/Full
+> >>         Link partner advertised pause frame use: Symmetric
+> >>         Link partner advertised auto-negotiation: Yes
+> >>         Link partner advertised FEC modes: Not reported
+> >>         Speed: 100Mb/s
+> >>         Duplex: Full
+> >>         Port: MII
+> >>         PHYAD: 3
+> >>         Transceiver: internal
+> >>         Auto-negotiation: on
+> >>         Current message level: 0x00000036 (54)
+> >>                                probe link ifdown ifup
+> >>         Link detected: yes
+> >>
+> >> The regs value read from mdio are:
+> >> reg 9 = 0x200
+> >> reg a = 0
+> >>
+> >> device B:
+> >> Settings for eth5:
+> >>         Supported ports: [ TP ]
+> >>         Supported link modes:   10baseT/Half 10baseT/Full
+> >>                                 100baseT/Half 100baseT/Full
+> >>                                 1000baseT/Full
+> >>         Supported pause frame use: Symmetric Receive-only
+> >>         Supports auto-negotiation: Yes
+> >>         Supported FEC modes: Not reported
+> >>         Advertised link modes:  10baseT/Half 10baseT/Full
+> >>                                 100baseT/Half 100baseT/Full
+> >>                                 1000baseT/Full
+> >>         Advertised pause frame use: Symmetric
+> >>         Advertised auto-negotiation: Yes
+> >>         Advertised FEC modes: Not reported
+> >>         Link partner advertised link modes:  10baseT/Half 10baseT/Full
+> >>                                              100baseT/Half 100baseT/Full
+> >>                                              1000baseT/Full
+> >>         Link partner advertised pause frame use: Symmetric
+> >>         Link partner advertised auto-negotiation: Yes
+> >>         Link partner advertised FEC modes: Not reported
+> >>         Speed: 1000Mb/s
+> >>         Duplex: Full
+> >>         Port: MII
+> >>         PHYAD: 3
+> >>         Transceiver: internal
+> >>         Auto-negotiation: on
+> >>         Current message level: 0x00000036 (54)
+> >>                                probe link ifdown ifup
+> >>         Link detected: yes
+> >>
+> >> The regs value read from mdio are:
+> >> reg 9 = 0
+> >> reg a = 0x800
+> >>
+> >> I had talk to the FAE of rtl8211f, they said if negotiation failed with 1000Mb/s,
+> >> rtl8211f will change reg 9 to 0, than try to negotiation with 100Mb/s.
+> >>
+> >> The problem happened as:
+> >> ifconfig eth5 up -> phy_start -> phy_start_aneg -> phy_modify_changed(MII_CTRL1000)
+> >> (this time both A and B, reg 9 = 0x200) -> wait for link up -> (B: reg 9 changed to 0)
+> >> -> link up.
 > > 
-> > Not exactly nested calls, but kswapd threads are per numa node.
-> > So, at some level nodes under pressure must be counted.
+> > This sounds like downshift, but not correctly working. 1Gbps requires
+> > that 4 pairs in the cable work. If a 1Gbps link is negotiated, but
+> > then does not establish because one of the pairs is broken, some PHYs
+> > will try to 'downshift'. They drop down to 100Mbps, which only
+> > requires two pairs of the cable to work. To do this, the PHY should
+> > change what it is advertising, to no longer advertise 1G, just 100M
+> > and 10M. The link partner should then try to use 100Mbps and
+> > hopefully, a link is established.
+> > 
+> > Looking at the ethtool, you can see device A is reporting device B is
+> > only advertising upto 100Mbps. Yet it is locally using 1G. That is
+> > broken. So i would say device A has the problem. Are both PHYs
+> > rtl8211f?
 > 
-> Easy enough, especially given that RCU already "counts" CPUs having
-> excessive numbers of callbacks.  But assuming that the transitions to/from
-> OOM are rare, I would start by just counting them with a global counter.
-> If the counter is non-zero, RCU is in fast and inefficient mode.
+> Both PHY is rtl8211f. I think Device B is broken. Device B advertising
+> it supported 1G, but actually, in phy, downshift to 100M, so Device B
+> link up with 1G in driver side, but actually 100M in phy.
+
+You have to be careful with the output of ethtool. Downshift is not
+part of 802.3. There i no standard register to indicate it has
+happened. Sometimes there is a vendor register. You should check the
+datasheet, and look at what other PHY drivers do for this, and
+phy_check_downshift().
+
+> > Are you 100% sure your cable and board layout is good? Is it
+> > trying downshift because something is broken? Fix the
+> > cable/connector and the
+
+> Will check the layout with hardware engineer. This happened with a low
+> probability. When this happened, another down/up operation or restart
+> autoneg will solved.
+ 
+> > reason to downshift goes away. But it does not solve the problem if a
+> > customer has a broken cable. So you might want to deliberately cut a
+> > pair in the cable so it becomes 100% reproducable and try to debug it
+> > further. See if you can find out why auto-neg is not working
+> > correctly.
 > 
-> > Also forcing rcu calls only for cpus in one numa node might be useful.
-> 
-> Interesting.  RCU currently evaluates a given CPU by comparing the
-> number of callbacks against a fixed cutoff that can be set at boot using
-> rcutree.qhimark, which defaults to 10,000.  When this cutoff is exceeded,
-> RCU becomes more aggressive about invoking callbacks on that CPU, for
-> example, by sacrificing some degree of real-time response.  I believe
-> that this heuristic would also serve the OOM use case well.
+> So, your opinion is, maybe we should checkout whether the hardware layout
+> or cable have problem?
 
-So one of the things that I'm not sure people have connected here is
-that memory reclaim done by shrinkers is one of the things that
-drives huge numbers of call_rcu() callbacks to free memory via rcu.
-If we are reclaiming dentries and inodes, then we can be pushing
-thousands to hundreds of thousands of objects into kfree_rcu()
-and/or direct call_rcu() calls to free these objects in a single
-reclaim pass. 
+Well, there are a couple of issues here.
 
-Hence the trigger for RCU going into "excessive callback" mode
-might, in fact, be kswapd running a pass over the shrinkers. i.e.
-memory reclaim itself can be responsible for pushing RCU into this "OOM
-pressure" situation.
+It could be a hardware problem. Best case, it is the cable. But if you
+can reproduce it with other boards, it is a board design issue, which
+you might want to get fixed. If it happens for you in the lab, it will
+probably happen out in the field.
 
-So perhaps we've missed a trick here by not having the memory
-reclaim routines trigger RCU callbacks at the end of a priority
-scan. The shrinkers have queued the objects for freeing, but they
-haven't actually been freed yet and so things like slab pages
-haven't actually been returned to the free pool even though the
-shrinkers have said "freed this many objects"...
+You should also consider what you want to happen with a cable that
+really is broken. It would be nice if downshift worked. Slower
+networking is better than no networking. Unless you have a requirement
+that 100Mbps is too slow for your use case. So you might want to debug
+what is going wrong when downshift happens.
 
-i.e. perhaps the right solution here is a "rcu_run_callbacks()"
-function that memory reclaim calls before backing off and/or winding
-up reclaim priority.
+> By the way, do we have some mechanism to solve this downshift in software
+> side? If the PHY advertising downshift to 100M, but software still have
+> advertising with 1G(just like Device B), it will always have a broken network.
 
-> > I wonder if direct-reclaim should at some stage simply wait for RCU QS.
-> > I.e. call rcu_barrier() or similar somewhere before invoking OOM.
-> 
-> The rcu_oom_count() function in the patch starting this thread returns the
-> total number of outstanding callbacks queued on all CPUs.  So one approach
-> would be to invoke this function, and if the return value was truly
-> huge (taking size of memory and who knows that all else into account),
-> do the rcu_barrier() to wait for RCU to clear its current backlog.
+You might get some ideas from phy_check_downshift(). A lot will
+depended on what information you can get from the PHY.
 
-The shrinker scan control structure has a node mask in it to
-indicate what node (and hence CPUs) it should be reclaiming from.
-This information comes from the main reclaim scan routine, so it
-would be trivial to feed straight into the RCU code to have it
-act on just the CPUs/node that we are reclaiming memory from...
-
-> On the NUMA point, it would be dead easy for me to supply a function
-> that returned the number of callbacks on a given CPU, which would allow
-> you to similarly evaluate a NUMA node, a cgroup, or whatever.
-
-I'd think it runs the other way around - we optimisitically call the
-RCU layer to do cleanup, and the RCU layer decides if there's enough
-queued callbacks on the cpus/node to run callbacks immediately. It
-would even be provided with the scan priority to indicate the level
-of desperation memory reclaim is under....
-
-> > All GFP_NOFAIL users should allow direct-reclaim, thus this loop
-> > in page_alloc shouldn't block RCU and doesn't need special care.
-> 
-> I must defer to you guys on this.  The main caution is the duration of
-> direct reclaim.  After all, if it is too long, the kfree_rcu() instance
-> would have been better of just invoking synchronize_rcu().
-
-Individual callers of kfree_rcu() have no idea of the load on RCU,
-nor how long direct reclaim is taking. Calling synchronize_rcu()
-incorrectly has pretty major downsides to it, so nobody should be
-trying to expedite kfree_rcu() unless there is a good reason to do
-so (e.g. at unmount to ensure everything allocated by a filesystem
-has actually been freed). Hence I'd much prefer the decision to
-expedite callbacks is made by the RCU subsystem based on it's known
-callback load and some indication of how close memory reclaim is to
-declaring OOM...
-
-Cheers,
-
-Dave.
-
--- 
-Dave Chinner
-david@fromorbit.com
+	 Andrew
