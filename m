@@ -2,327 +2,119 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDB7C2D0FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5353AC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4D1420769
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 352D5206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:18:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FT0qn+z2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730123AbgEMHRc (ORCPT
+        id S1730418AbgEMHSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 03:17:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60738 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726020AbgEMHRb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 03:17:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 43165B1E7;
-        Wed, 13 May 2020 07:17:31 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Jan Kara <jack@suse.cz>
-Date:   Wed, 13 May 2020 17:17:20 +1000
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 1/2 V4] MM: replace PF_LESS_THROTTLE with PF_LOCAL_THROTTLE
-In-Reply-To: <871rnob8z3.fsf@notabene.neil.brown.name>
-References: <87tv2b7q72.fsf@notabene.neil.brown.name> <87v9miydai.fsf@notabene.neil.brown.name> <87ftdgw58w.fsf@notabene.neil.brown.name> <87wo6gs26e.fsf@notabene.neil.brown.name> <87tv1ks24t.fsf@notabene.neil.brown.name> <20200416151906.GQ23739@quack2.suse.cz> <87zhb5r30c.fsf@notabene.neil.brown.name> <20200422124600.GH8775@quack2.suse.cz> <871rnob8z3.fsf@notabene.neil.brown.name>
-Message-ID: <87y2pw9udb.fsf@notabene.neil.brown.name>
+        Wed, 13 May 2020 03:18:36 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:47428 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730170AbgEMHSf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 03:18:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589354314;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PsFr5VgA/I8bgRAUPFXVC7Lw5/2KGXHzA0YOGHShMaY=;
+        b=FT0qn+z28zv/g4ABSCMbmgDZD4h/lkHIiRMZnm3WHQ6SyI7Tww/yyNSJiN3eMtuS7R0vz8
+        ZoXILxxGJsk8l371YJlLb7y2TiJDqk0boVzCDMtzJOEuzG9uKVfg0jHUFvPs0giGLLg56+
+        eGxJ58fKut4htT0KM1hcYS2KyGuNSRQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-8-83QqhuSGMea6fVHJPVVfYg-1; Wed, 13 May 2020 03:18:30 -0400
+X-MC-Unique: 83QqhuSGMea6fVHJPVVfYg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0AEDD8014D5;
+        Wed, 13 May 2020 07:18:29 +0000 (UTC)
+Received: from [10.72.12.209] (ovpn-12-209.pek2.redhat.com [10.72.12.209])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C4E546E6E0;
+        Wed, 13 May 2020 07:18:22 +0000 (UTC)
+Subject: Re: [PATCH V2] ifcvf: move IRQ request/free to status change handlers
+To:     "Zhu, Lingshan" <lingshan.zhu@intel.com>, mst@redhat.com,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     lulu@redhat.com, dan.daly@intel.com, cunming.liang@intel.com
+References: <1589270444-3669-1-git-send-email-lingshan.zhu@intel.com>
+ <8aca85c3-3bf6-a1ec-7009-cd9a635647d7@redhat.com>
+ <5bbe0c21-8638-45e4-04e8-02ad0df44b38@intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <572ed6af-7a04-730e-c803-a41868091e88@redhat.com>
+Date:   Wed, 13 May 2020 15:18:21 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+In-Reply-To: <5bbe0c21-8638-45e4-04e8-02ad0df44b38@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+
+On 2020/5/13 下午12:42, Zhu, Lingshan wrote:
+>
+>
+> On 5/13/2020 12:12 PM, Jason Wang wrote:
+>>
+>> On 2020/5/12 下午4:00, Zhu Lingshan wrote:
+>>> This commit move IRQ request and free operations from probe()
+>>> to VIRTIO status change handler to comply with VIRTIO spec.
+>>>
+>>> VIRTIO spec 1.1, section 2.1.2 Device Requirements: Device Status Field
+>>> The device MUST NOT consume buffers or send any used buffer
+>>> notifications to the driver before DRIVER_OK.
+>>
+>>
+>> This comment needs to be checked as I said previously. It's only 
+>> needed if we're sure ifcvf can generate interrupt before DRIVER_OK.
+>>
+>>
+>>>
+>>> Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
+>>> ---
+>>> changes from V1:
+>>> remove ifcvf_stop_datapath() in status == 0 handler, we don't need 
+>>> to do this
+>>> twice; handle status == 0 after DRIVER_OK -> !DRIVER_OK handler 
+>>> (Jason Wang)
+>>
+>>
+>> Patch looks good to me, but with this patch ping cannot work on my 
+>> machine. (It works without this patch).
+>>
+>> Thanks
+> This is strange, it works on my machines, let's have a check offline.
+>
+> Thanks,
+> BR
+> Zhu Lingshan
 
 
-PF_LESS_THROTTLE exists for loop-back nfsd (and a similar need in the
-loop block driver and callers of prctl(PR_SET_IO_FLUSHER)), where a
-daemon needs to write to one bdi (the final bdi) in order to free up
-writes queued to another bdi (the client bdi).
+I give it a try with virito-vpda and a tiny userspace. Either works.
 
-The daemon sets PF_LESS_THROTTLE and gets a larger allowance of dirty
-pages, so that it can still dirty pages after other processses have been
-throttled.  The purpose of this is to avoid deadlock that happen when
-the PF_LESS_THROTTLE process must write for any dirty pages to be freed,
-but it is being thottled and cannot write.
+So it could be an issue of qemu codes.
 
-This approach was designed when all threads were blocked equally,
-independently on which device they were writing to, or how fast it was.
-Since that time the writeback algorithm has changed substantially with
-different threads getting different allowances based on non-trivial
-heuristics.  This means the simple "add 25%" heuristic is no longer
-reliable.
+Let's wait for Cindy to test if it really works.
 
-The important issue is not that the daemon needs a *larger* dirty page
-allowance, but that it needs a *private* dirty page allowance, so that
-dirty pages for the "client" bdi that it is helping to clear (the bdi for
-an NFS filesystem or loop block device etc) do not affect the throttling
-of the deamon writing to the "final" bdi.
-
-This patch changes the heuristic so that the task is not throttled when
-the bdi it is writing to has a dirty page count below below (or equal
-to) the free-run threshold for that bdi.  This ensures it will always be
-able to have some pages in flight, and so will not deadlock.
-
-In a steady-state, it is expected that PF_LOCAL_THROTTLE tasks might
-still be throttled by global threshold, but that is acceptable as it is
-only the deadlock state that is interesting for this flag.
-
-This approach of "only throttle when target bdi is busy" is consistent
-with the other use of PF_LESS_THROTTLE in current_may_throttle(), were
-it causes attention to be focussed only on the target bdi.
-
-So this patch
- - renames PF_LESS_THROTTLE to PF_LOCAL_THROTTLE,
- - removes the 25% bonus that that flag gives, and
- - If PF_LOCAL_THROTTLE is set, don't delay at all unless the
-   global and the local free-run thresholds are exceeded.
-
-Note that previously realtime threads were treated the same as
-PF_LESS_THROTTLE threads.  This patch does *not* change the behvaiour for
-real-time threads, so it is now different from the behaviour of nfsd and
-loop tasks.  I don't know what is wanted for realtime.
-
-Acked-by: Chuck Lever <chuck.lever@oracle.com> (for nfsd change)
-Signed-off-by: NeilBrown <neilb@suse.de>
-=2D--
- drivers/block/loop.c  |  2 +-
- fs/nfsd/vfs.c         |  9 +++++----
- include/linux/sched.h |  3 ++-
- kernel/sys.c          |  2 +-
- mm/page-writeback.c   | 41 +++++++++++++++++++++++++++++++++--------
- mm/vmscan.c           |  4 ++--
- 6 files changed, 44 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index da693e6a834e..d89c25ba3b89 100644
-=2D-- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -919,7 +919,7 @@ static void loop_unprepare_queue(struct loop_device *lo)
-=20
- static int loop_kthread_worker_fn(void *worker_ptr)
- {
-=2D	current->flags |=3D PF_LESS_THROTTLE | PF_MEMALLOC_NOIO;
-+	current->flags |=3D PF_LOCAL_THROTTLE | PF_MEMALLOC_NOIO;
- 	return kthread_worker_fn(worker_ptr);
- }
-=20
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 0aa02eb18bd3..c3fbab1753ec 100644
-=2D-- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -979,12 +979,13 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh =
-*fhp, struct nfsd_file *nf,
-=20
- 	if (test_bit(RQ_LOCAL, &rqstp->rq_flags))
- 		/*
-=2D		 * We want less throttling in balance_dirty_pages()
-=2D		 * and shrink_inactive_list() so that nfs to
-+		 * We want throttling in balance_dirty_pages()
-+		 * and shrink_inactive_list() to only consider
-+		 * the backingdev we are writing to, so that nfs to
- 		 * localhost doesn't cause nfsd to lock up due to all
- 		 * the client's dirty pages or its congested queue.
- 		 */
-=2D		current->flags |=3D PF_LESS_THROTTLE;
-+		current->flags |=3D PF_LOCAL_THROTTLE;
-=20
- 	exp =3D fhp->fh_export;
- 	use_wgather =3D (rqstp->rq_vers =3D=3D 2) && EX_WGATHER(exp);
-@@ -1037,7 +1038,7 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh =
-*fhp, struct nfsd_file *nf,
- 		nfserr =3D nfserrno(host_err);
- 	}
- 	if (test_bit(RQ_LOCAL, &rqstp->rq_flags))
-=2D		current_restore_flags(pflags, PF_LESS_THROTTLE);
-+		current_restore_flags(pflags, PF_LOCAL_THROTTLE);
- 	return nfserr;
- }
-=20
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 4418f5cb8324..5955a089df32 100644
-=2D-- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1481,7 +1481,8 @@ extern struct pid *cad_pid;
- #define PF_KSWAPD		0x00020000	/* I am kswapd */
- #define PF_MEMALLOC_NOFS	0x00040000	/* All allocation requests will inheri=
-t GFP_NOFS */
- #define PF_MEMALLOC_NOIO	0x00080000	/* All allocation requests will inheri=
-t GFP_NOIO */
-=2D#define PF_LESS_THROTTLE	0x00100000	/* Throttle me less: I clean memory =
-*/
-+#define PF_LOCAL_THROTTLE	0x00100000	/* Throttle writes only agasint the b=
-di I write to,
-+						 * I am cleaning dirty pages from some other bdi. */
- #define PF_KTHREAD		0x00200000	/* I am a kernel thread */
- #define PF_RANDOMIZE		0x00400000	/* Randomize virtual address space */
- #define PF_SWAPWRITE		0x00800000	/* Allowed to write to swap */
-diff --git a/kernel/sys.c b/kernel/sys.c
-index d325f3ab624a..180a2fa33f7f 100644
-=2D-- a/kernel/sys.c
-+++ b/kernel/sys.c
-@@ -2262,7 +2262,7 @@ int __weak arch_prctl_spec_ctrl_set(struct task_struc=
-t *t, unsigned long which,
- 	return -EINVAL;
- }
-=20
-=2D#define PR_IO_FLUSHER (PF_MEMALLOC_NOIO | PF_LESS_THROTTLE)
-+#define PR_IO_FLUSHER (PF_MEMALLOC_NOIO | PF_LOCAL_THROTTLE)
-=20
- SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, ar=
-g3,
- 		unsigned long, arg4, unsigned long, arg5)
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index 7326b54ab728..f02a71797781 100644
-=2D-- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -387,8 +387,7 @@ static unsigned long global_dirtyable_memory(void)
-  * Calculate @dtc->thresh and ->bg_thresh considering
-  * vm_dirty_{bytes|ratio} and dirty_background_{bytes|ratio}.  The caller
-  * must ensure that @dtc->avail is set before calling this function.  The
-=2D * dirty limits will be lifted by 1/4 for PF_LESS_THROTTLE (ie. nfsd) and
-=2D * real-time tasks.
-+ * dirty limits will be lifted by 1/4 for real-time tasks.
-  */
- static void domain_dirty_limits(struct dirty_throttle_control *dtc)
- {
-@@ -436,7 +435,7 @@ static void domain_dirty_limits(struct dirty_throttle_c=
-ontrol *dtc)
- 	if (bg_thresh >=3D thresh)
- 		bg_thresh =3D thresh / 2;
- 	tsk =3D current;
-=2D	if (tsk->flags & PF_LESS_THROTTLE || rt_task(tsk)) {
-+	if (rt_task(tsk)) {
- 		bg_thresh +=3D bg_thresh / 4 + global_wb_domain.dirty_limit / 32;
- 		thresh +=3D thresh / 4 + global_wb_domain.dirty_limit / 32;
- 	}
-@@ -486,7 +485,7 @@ static unsigned long node_dirty_limit(struct pglist_dat=
-a *pgdat)
- 	else
- 		dirty =3D vm_dirty_ratio * node_memory / 100;
-=20
-=2D	if (tsk->flags & PF_LESS_THROTTLE || rt_task(tsk))
-+	if (rt_task(tsk))
- 		dirty +=3D dirty / 4;
-=20
- 	return dirty;
-@@ -1653,8 +1652,12 @@ static void balance_dirty_pages(struct bdi_writeback=
- *wb,
- 		if (dirty <=3D dirty_freerun_ceiling(thresh, bg_thresh) &&
- 		    (!mdtc ||
- 		     m_dirty <=3D dirty_freerun_ceiling(m_thresh, m_bg_thresh))) {
-=2D			unsigned long intv =3D dirty_poll_interval(dirty, thresh);
-=2D			unsigned long m_intv =3D ULONG_MAX;
-+			unsigned long intv;
-+			unsigned long m_intv;
-+
-+		free_running:
-+			intv =3D dirty_poll_interval(dirty, thresh);
-+			m_intv =3D ULONG_MAX;
-=20
- 			current->dirty_paused_when =3D now;
- 			current->nr_dirtied =3D 0;
-@@ -1673,9 +1676,20 @@ static void balance_dirty_pages(struct bdi_writeback=
- *wb,
- 		 * Calculate global domain's pos_ratio and select the
- 		 * global dtc by default.
- 		 */
-=2D		if (!strictlimit)
-+		if (!strictlimit) {
- 			wb_dirty_limits(gdtc);
-=20
-+			if ((current->flags & PF_LOCAL_THROTTLE) &&
-+			    gdtc->wb_dirty <
-+			    dirty_freerun_ceiling(gdtc->wb_thresh,
-+						  gdtc->wb_bg_thresh))
-+				/*
-+				 * LOCAL_THROTTLE tasks must not be throttled
-+				 * when below the per-wb freerun ceiling.
-+				 */
-+				goto free_running;
-+		}
-+
- 		dirty_exceeded =3D (gdtc->wb_dirty > gdtc->wb_thresh) &&
- 			((gdtc->dirty > gdtc->thresh) || strictlimit);
-=20
-@@ -1689,9 +1703,20 @@ static void balance_dirty_pages(struct bdi_writeback=
- *wb,
- 			 * both global and memcg domains.  Choose the one
- 			 * w/ lower pos_ratio.
- 			 */
-=2D			if (!strictlimit)
-+			if (!strictlimit) {
- 				wb_dirty_limits(mdtc);
-=20
-+				if ((current->flags & PF_LOCAL_THROTTLE) &&
-+				    mdtc->wb_dirty <
-+				    dirty_freerun_ceiling(mdtc->wb_thresh,
-+							  mdtc->wb_bg_thresh))
-+					/*
-+					 * LOCAL_THROTTLE tasks must not be
-+					 * throttled when below the per-wb
-+					 * freerun ceiling.
-+					 */
-+					goto free_running;
-+			}
- 			dirty_exceeded |=3D (mdtc->wb_dirty > mdtc->wb_thresh) &&
- 				((mdtc->dirty > mdtc->thresh) || strictlimit);
-=20
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index a37c87b5aee2..b2f5deb3603c 100644
-=2D-- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1878,13 +1878,13 @@ static unsigned noinline_for_stack move_pages_to_lr=
-u(struct lruvec *lruvec,
-=20
- /*
-  * If a kernel thread (such as nfsd for loop-back mounts) services
-=2D * a backing device by writing to the page cache it sets PF_LESS_THROTTL=
-E.
-+ * a backing device by writing to the page cache it sets PF_LOCAL_THROTTLE.
-  * In that case we should only throttle if the backing device it is
-  * writing to is congested.  In other cases it is safe to throttle.
-  */
- static int current_may_throttle(void)
- {
-=2D	return !(current->flags & PF_LESS_THROTTLE) ||
-+	return !(current->flags & PF_LOCAL_THROTTLE) ||
- 		current->backing_dev_info =3D=3D NULL ||
- 		bdi_write_congested(current->backing_dev_info);
- }
-=2D-=20
-2.26.2
+Thanks
 
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl67nwEACgkQOeye3VZi
-gbl0EhAAo61GC9pWh+if1TLGzsiyMiMEUeFZ0Wm6khcyc5A+qbfVIUvhffZpqwpR
-TFwL0HTAj1jKE7WMWVEZ27Oaq5Mxi88IskYWh45SeeLt8+L0i7YFHU4KICNL2piQ
-0VIdKCts0ScxbwOAN16Pm1ydnHLWpNhBGIwI78/hT2pfLURiy1tcKYkPlRPtCuv5
-meYOsFZwMdrFB2lgRKnmHOAunmPx6ftLMFlQxd2eEou0O8oRF6R0RjpppgWMY0o8
-JWhQHaW/uYk+jC4z05CKYeJxxQ9QN0iS0XDQmDRywVIBlsw1Md4F1utsME4HaRxO
-tEaejVtjlKtJB3HMATyyMrFhVs8cjWChNtlpq2H/2FLu1/FsazUUm0HmUeLq7g0J
-1k3wr/p/abc17Ngxv2EnGPrdp5hLuxXR4dnbG6YmKBxor8iSl2Hc43YHpaMalSNX
-RQjo/eVFXn+j7F9NeRgLaMYC3a1Pvydj+HcgVmJ1hOlrrqzRrURYl3A2zH0RsIri
-BChtJiCrh0fvo3dL0YZuS1uh4e4TBEJny+SEDF43He5DW/kkIhDj2zwCc1bM52Vm
-ldQN6v1lFLd5GtKLl78siQ/OfW44FQA3RU1cQg/ruwJVe6Pcv03ekur/lP4cRdmi
-YNNjCiRCEQiO2NUu81S77FpvtcG6dj6ciNIyc1j2lZ5l5mh2OC0=
-=C/9S
------END PGP SIGNATURE-----
---=-=-=--
