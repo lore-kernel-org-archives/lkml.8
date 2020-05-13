@@ -4,53 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E0FCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FFBC2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AC5C206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96A3B20740
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363406;
-	bh=H6RK4Fn9JCQrahNvg7ybV844UB/P0cnu7StCAIBei8I=;
+	s=default; t=1589363410;
+	bh=h8SEZHcxjevCrV+7KP1HulgHGIYU8bJnnCg8YvMO62M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j4w1S+gYwrVWNXMnmyc1NdxGW6wjAl7cLiZe+AhEffiG2jpAtQBPHAY2zlW/G84Em
-	 z2IjW0d+L3GcS88IXieTxzA9nYjfL0mzW8gp1+TeqdtyXRpNT08HPtjIFNGhRcftXO
-	 dY9kkxkPKwxT6s08dQ0aAdAiyn7JqgycNjRP13wE=
+	b=2E/2wLfCusn8yFNpb7qGpieQJ5bM/msChyVXtrMcvnuqupudeNTgQ9qn0+q8thiwu
+	 WoOjlS9+lyDW9nsv9+rOo+2QI7sdV4tm2xnBwQKO/wHgcaNDOZKNMJTNrocz/O6rQt
+	 b0YjlPukqKdY4383aJcZ5ZKs8vX+zqPEJ82FUd9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387443AbgEMJuF (ORCPT
+        id S2387449AbgEMJuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:50:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49590 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:50:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387433AbgEMJuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:50:02 -0400
+        id S2387439AbgEMJuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:50:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5D5C23128;
-        Wed, 13 May 2020 09:50:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1836F23129;
+        Wed, 13 May 2020 09:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363402;
-        bh=H6RK4Fn9JCQrahNvg7ybV844UB/P0cnu7StCAIBei8I=;
+        s=default; t=1589363404;
+        bh=h8SEZHcxjevCrV+7KP1HulgHGIYU8bJnnCg8YvMO62M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NIABCVsMFeUEcsIOh0l7E83e8/AJBwu6FIxD9JFjf5wzYgfwJOzn85/kf5TbSfyB+
-         YufsjvSRjyXbtYqOqJfyTOBsHqF0OoTFBTsauxFCkKVbeOrDPEhFnKrVC/2Rg3jmlQ
-         n8dqLzLDb7mDStmfqrYPexHvmoIYq2dmGK75f1Qo=
+        b=vltDHl5JP/4GPOlG23YZx/3uxWIHAu9fdO1Ie26xkd/73XrI5uCDVlHPSXhwMm9Zo
+         xSkeiyJPM3FhLVLkajkdH/8QSwol+UqGZSnpNd+IhzfbXW2XpycamdL5z+a7rlblDZ
+         E6PuubCpBymihYy+UX3nQrDVNgPVJ52e/YqsZM9Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Khazhismel Kumykov <khazhy@google.com>,
+        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Roman Penyaev <rpenyaev@suse.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>, Heiher <r@hev.cc>,
-        Jason Baron <jbaron@akamai.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Baoquan He <bhe@redhat.com>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Oscar Salvador <osalvador@suse.de>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 59/90] eventpoll: fix missing wakeup for ovflist in ep_poll_callback
-Date:   Wed, 13 May 2020 11:44:55 +0200
-Message-Id: <20200513094415.943881845@linuxfoundation.org>
+Subject: [PATCH 5.4 60/90] mm/page_alloc: fix watchdog soft lockups during set_zone_contiguous()
+Date:   Wed, 13 May 2020 11:44:56 +0200
+Message-Id: <20200513094415.998966830@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -63,77 +70,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Khazhismel Kumykov <khazhy@google.com>
+From: David Hildenbrand <david@redhat.com>
 
-commit 0c54a6a44bf3d41e76ce3f583a6ece267618df2e upstream.
+commit e84fe99b68ce353c37ceeecc95dce9696c976556 upstream.
 
-In the event that we add to ovflist, before commit 339ddb53d373
-("fs/epoll: remove unnecessary wakeups of nested epoll") we would be
-woken up by ep_scan_ready_list, and did no wakeup in ep_poll_callback.
+Without CONFIG_PREEMPT, it can happen that we get soft lockups detected,
+e.g., while booting up.
 
-With that wakeup removed, if we add to ovflist here, we may never wake
-up.  Rather than adding back the ep_scan_ready_list wakeup - which was
-resulting in unnecessary wakeups, trigger a wake-up in ep_poll_callback.
+  watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [swapper/0:1]
+  CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.6.0-next-20200331+ #4
+  Hardware name: Red Hat KVM, BIOS 1.11.1-4.module+el8.1.0+4066+0f1aadab 04/01/2014
+  RIP: __pageblock_pfn_to_page+0x134/0x1c0
+  Call Trace:
+   set_zone_contiguous+0x56/0x70
+   page_alloc_init_late+0x166/0x176
+   kernel_init_freeable+0xfa/0x255
+   kernel_init+0xa/0x106
+   ret_from_fork+0x35/0x40
 
-We noticed that one of our workloads was missing wakeups starting with
-339ddb53d373 and upon manual inspection, this wakeup seemed missing to me.
-With this patch added, we no longer see missing wakeups.  I haven't yet
-tried to make a small reproducer, but the existing kselftests in
-filesystem/epoll passed for me with this patch.
+The issue becomes visible when having a lot of memory (e.g., 4TB)
+assigned to a single NUMA node - a system that can easily be created
+using QEMU.  Inside VMs on a hypervisor with quite some memory
+overcommit, this is fairly easy to trigger.
 
-[khazhy@google.com: use if/elif instead of goto + cleanup suggested by Roman]
-  Link: http://lkml.kernel.org/r/20200424190039.192373-1-khazhy@google.com
-Fixes: 339ddb53d373 ("fs/epoll: remove unnecessary wakeups of nested epoll")
-Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Roman Penyaev <rpenyaev@suse.de>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Roman Penyaev <rpenyaev@suse.de>
-Cc: Heiher <r@hev.cc>
-Cc: Jason Baron <jbaron@akamai.com>
+Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Reviewed-by: Baoquan He <bhe@redhat.com>
+Reviewed-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: Shile Zhang <shile.zhang@linux.alibaba.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Alexander Duyck <alexander.duyck@gmail.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Oscar Salvador <osalvador@suse.de>
 Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200424025057.118641-1-khazhy@google.com
+Link: http://lkml.kernel.org/r/20200416073417.5003-1-david@redhat.com
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/eventpoll.c |   18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ mm/page_alloc.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -1176,6 +1176,10 @@ static inline bool chain_epi_lockless(st
- {
- 	struct eventpoll *ep = epi->ep;
- 
-+	/* Fast preliminary check */
-+	if (epi->next != EP_UNACTIVE_PTR)
-+		return false;
-+
- 	/* Check that the same epi has not been just chained from another CPU */
- 	if (cmpxchg(&epi->next, EP_UNACTIVE_PTR, NULL) != EP_UNACTIVE_PTR)
- 		return false;
-@@ -1242,16 +1246,12 @@ static int ep_poll_callback(wait_queue_e
- 	 * chained in ep->ovflist and requeued later on.
- 	 */
- 	if (READ_ONCE(ep->ovflist) != EP_UNACTIVE_PTR) {
--		if (epi->next == EP_UNACTIVE_PTR &&
--		    chain_epi_lockless(epi))
-+		if (chain_epi_lockless(epi))
-+			ep_pm_stay_awake_rcu(epi);
-+	} else if (!ep_is_linked(epi)) {
-+		/* In the usual case, add event to ready list. */
-+		if (list_add_tail_lockless(&epi->rdllink, &ep->rdllist))
- 			ep_pm_stay_awake_rcu(epi);
--		goto out_unlock;
--	}
--
--	/* If this file is already in the ready list we exit soon */
--	if (!ep_is_linked(epi) &&
--	    list_add_tail_lockless(&epi->rdllink, &ep->rdllist)) {
--		ep_pm_stay_awake_rcu(epi);
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1555,6 +1555,7 @@ void set_zone_contiguous(struct zone *zo
+ 		if (!__pageblock_pfn_to_page(block_start_pfn,
+ 					     block_end_pfn, zone))
+ 			return;
++		cond_resched();
  	}
  
- 	/*
+ 	/* We confirm that there is no hole */
 
 
