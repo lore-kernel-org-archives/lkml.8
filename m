@@ -2,110 +2,124 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 056DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 409DAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24DF020671
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED6020671
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:31:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YWIog7V+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731913AbgEMPa1 (ORCPT
+        id S2389160AbgEMPbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:30:27 -0400
-Received: from outbound-smtp52.blacknight.com ([46.22.136.236]:36715 "EHLO
-        outbound-smtp52.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728678AbgEMPa0 (ORCPT
+        Wed, 13 May 2020 11:31:31 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:28046 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388974AbgEMPb1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:30:26 -0400
-Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
-        by outbound-smtp52.blacknight.com (Postfix) with ESMTPS id 49759FAA96
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 16:30:25 +0100 (IST)
-Received: (qmail 22053 invoked from network); 13 May 2020 15:30:25 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 13 May 2020 15:30:25 -0000
-Date:   Wed, 13 May 2020 16:30:23 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Jirka Hladky <jhladky@redhat.com>
-Cc:     Phil Auld <pauld@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Douglas Shakshober <dshaks@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Joe Mario <jmario@redhat.com>, Bill Gray <bgray@redhat.com>
-Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
- balancer v6
-Message-ID: <20200513153023.GF3758@techsingularity.net>
-References: <CAE4VaGC09OfU2zXeq2yp_N0zXMbTku5ETz0KEocGi-RSiKXv-w@mail.gmail.com>
- <20200320152251.GC3818@techsingularity.net>
- <CAE4VaGBGbTT8dqNyLWAwuiqL8E+3p1_SqP6XTTV71wNZMjc9Zg@mail.gmail.com>
- <20200320163843.GD3818@techsingularity.net>
- <CAE4VaGCf0P2ht+7nbGFHV8Dd=e4oDEUPNdRUUBokRWgKRxofAA@mail.gmail.com>
- <20200507155422.GD3758@techsingularity.net>
- <CAE4VaGCDTeE16nNmSS8fGzCBvHsO=qkJAW6yDiORAxgsPi-Ziw@mail.gmail.com>
- <20200508092212.GE3758@techsingularity.net>
- <CAE4VaGC_v6On-YvqdTwAWu3Mq4ofiV0pLov-QpV+QHr_SJr+Rw@mail.gmail.com>
- <CAE4VaGDQWPePtmtCZP=ROYW1KPxtPhGDrxqy2QbirHGJdwk4=w@mail.gmail.com>
+        Wed, 13 May 2020 11:31:27 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589383886; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=G4oACTu5Rt+yPeW1zopQEBIpMAR4ZGvXZE0H6V4O+bU=; b=YWIog7V+4GggoXEizU39wHnyEA9rVScz20Nj8Ao0AUux+i+IxajvvY0RIxrqIf2BtUopmzI/
+ 5a/6EK0Z+STMtfmSm+KmlyupLKR6/JNXsGlw+KmI52FUDGIBdA6y4RO2SBplg10QcVrU8ld7
+ sjFXFgn3tJnbn7A70lpQa4zjsRQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebc12cd.7fef615607d8-smtp-out-n04;
+ Wed, 13 May 2020 15:31:25 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 27545C433BA; Wed, 13 May 2020 15:31:24 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 827A9C433D2;
+        Wed, 13 May 2020 15:31:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 827A9C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: gcc-10: kernel stack is corrupted and fails to boot
+References: <20200509120707.188595-1-arnd@arndb.de>
+        <20200509120707.188595-2-arnd@arndb.de>
+        <87v9l24qz6.fsf@kamboji.qca.qualcomm.com>
+        <87r1vq4qev.fsf@kamboji.qca.qualcomm.com>
+        <87d078tjl0.fsf_-_@kamboji.qca.qualcomm.com>
+        <CAK8P3a1dxJAHCZ19=sPUkDi5wLWeJ6KKtD09Wmjqkz27TQN6Xw@mail.gmail.com>
+        <87zhacrokl.fsf@kamboji.qca.qualcomm.com>
+        <CAK8P3a1mMcpVE5kLv-krjL_ZjqfRXDK4e3fChzuom_QFRtTJqw@mail.gmail.com>
+Date:   Wed, 13 May 2020 18:31:19 +0300
+In-Reply-To: <CAK8P3a1mMcpVE5kLv-krjL_ZjqfRXDK4e3fChzuom_QFRtTJqw@mail.gmail.com>
+        (Arnd Bergmann's message of "Wed, 13 May 2020 15:45:47 +0200")
+Message-ID: <87v9kzsvg8.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <CAE4VaGDQWPePtmtCZP=ROYW1KPxtPhGDrxqy2QbirHGJdwk4=w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 04:57:15PM +0200, Jirka Hladky wrote:
-> Hi Mel,
-> 
-> we have tried the kernel with adjust_numa_imbalance() crippled to just
-> return the imbalance it's given.
-> 
-> It has solved all the performance problems I have reported.
-> Performance is the same as with 5.6 kernel (before the patch was
-> applied).
-> 
-> * solved the performance drop upto 20%  with single instance
-> SPECjbb2005 benchmark on 8 NUMA node servers (particularly on AMD EPYC
-> Rome systems) => this performance drop was INCREASING with higher
-> threads counts (10% for 16 threads and 20 % for 32 threads)
-> * solved the performance drop for low load scenarios (SPECjvm2008 and NAS)
-> 
-> Any suggestions on how to proceed? One approach is to turn
-> "imbalance_min" into the kernel tunable. Any other ideas?
-> 
-> https://github.com/torvalds/linux/blob/4f8a3cc1183c442daee6cc65360e3385021131e4/kernel/sched/fair.c#L8914
-> 
+Arnd Bergmann <arnd@arndb.de> writes:
 
-Complete shot in the dark but restore adjust_numa_imbalance() and try
-this
+> On Wed, May 13, 2020 at 2:57 PM Kalle Valo <kvalo@codeaurora.org> wrote:
+>>
+>> Arnd Bergmann <arnd@arndb.de> writes:
+>>
+>> > On Wed, May 13, 2020 at 8:50 AM Kalle Valo <kvalo@codeaurora.org> wrote:
+>> >>
+>> >> Kalle Valo <kvalo@codeaurora.org> writes:
+>> >
+>> > At least if it fails reproducibly, it's probably not too hard to drill
+>> > down further. Some ideas:
+>> >
+>> > * I'd first try to reproduce it in qemu. Since you don't even need
+>> >   any user space or modules, I would simply try
+>> >   $ qemu-system-x86_64 -nographic -monitor none -append
+>> > "console=ttyS0" -serial stdio -smp 4 -kernel arch/x86/boot/bzImage
+>> >   I tried it here with an x86 defconfig linux-next kernel but did not
+>> >   run into the problem you described.
+>>
+>> Thanks, I'll try that but I expect it will take few days before I can do
+>> it.
+>>
+>> > If you share your .config, I can try reproducing with that as well.
+>> > Once there is a reproducer in qemu, it should be trivial to step
+>> > through it using gdb.
+>>
+>> I have attached the .config I used with GCC 10.1. If you are able to
+>> test it please do let me know how it went.
+>
+> Yes, I see the same problem now, but have not investigated
+> any further.
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 1a9983da4408..0b31f4468d5b 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2393,7 +2393,7 @@ static void ttwu_queue(struct task_struct *p, int cpu, int wake_flags)
- 	struct rq_flags rf;
- 
- #if defined(CONFIG_SMP)
--	if (sched_feat(TTWU_QUEUE) && !cpus_share_cache(smp_processor_id(), cpu)) {
-+	if (sched_feat(TTWU_QUEUE)) {
- 		sched_clock_cpu(cpu); /* Sync clocks across CPUs */
- 		ttwu_queue_remote(p, cpu, wake_flags);
- 		return;
+Great, so it's not a problem due to my setup.
+
+>> > * There are still two prerelease compiler versions on kernel.org,
+>> >   from February and from April. You can try each one to see
+>> >   if this was a recent regression. It's also possible that there is
+>> >   a problem with my specific builds of gcc-10.1, and that the
+>> >   compiler is actually fine for others.The gcc-10 packages in
+>> >   Fedora/Debian/Ubuntu are probably better tested.
+>>
+>> I'm still using Ubuntu 16.04 so not sure how easy it is to find a
+>> package for that, but maybe this is a good reason to finally my upgrade
+>> my laptop :)
+>
+> I checked with the gcc-10 package from Ubuntu 20.04, same
+> result as with my version, at least that indicates it's not my fault ;-)
+
+That's good to know as well. And now I can delay my laptop upgrade even
+more ;)
 
 -- 
-Mel Gorman
-SUSE Labs
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
