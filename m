@@ -2,52 +2,52 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3941C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 585B7CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 915EF20753
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35FD620753
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363631;
-	bh=+feFlMH+aRpu3ZqDbPLETijhIkIBmj5Z97hvv1TLdeA=;
+	s=default; t=1589363634;
+	bh=+KCU1v8AF1ldibfn5M/2mbw8+9wD9iUOtgyk2tciFyM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MmqOhYaj52H4fCLIbiTb/uXOrBloAh6Aujepp7XPleGPxMN6nFsE+biQZOUj4D7Yx
-	 Y2D26NlgkOyGY9IbbgDWadKZ54+UoJS2rC2IKHr39mvyLCPB4dUu/CqjotiJwWCknN
-	 zerUUxjtVPF4BQmQ+6PrEznJueogtl2IuHHFh+d4=
+	b=bz5yxbkGVKvSvGEj2C+P9xlZnQLPSeTyVOKoVi3U7extiBCOYLw8a7urMcIgHhyDT
+	 OiP0+09qvTYwwioVb79iF81RL9oFEfVNWpSxsS3kLVHo3SI9/NSLHAqurBBMTXWD8b
+	 XxAeEYtrseom2Mu3fzmopyx00t7VDVVnMUVxHcrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388014AbgEMJxv (ORCPT
+        id S2388023AbgEMJxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:53:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55898 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:53:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733061AbgEMJxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:53:47 -0400
+        id S2388008AbgEMJxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:53:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58056205ED;
-        Wed, 13 May 2020 09:53:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAD0F20753;
+        Wed, 13 May 2020 09:53:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363626;
-        bh=+feFlMH+aRpu3ZqDbPLETijhIkIBmj5Z97hvv1TLdeA=;
+        s=default; t=1589363629;
+        bh=+KCU1v8AF1ldibfn5M/2mbw8+9wD9iUOtgyk2tciFyM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eVLP1ueKtIC3HEtMi+Hj3VH61h/VdZ/qpX5PRcWvj8GJQbwlE9A8yGH0egnuDC6An
-         AQnZAxxlSyQmo0l5HLCapfXuNPpWDN/kp0kY+EKQS+omlTU+Eu3pE/phJ9J+beTnau
-         lJXmvMfOgkwhoE5Vc0uzFjHpkRffC97X5nSExA6A=
+        b=UMcJWkEmOa2W0IfqwAnEaYjHsvOh/UB8YhTL87OpF9Gn9wrb0DOYuid8VdYvaHu60
+         H+/6uv7nW5n2EBkUZXLzvyFpQWac75PJiLbgLc/GLoWamwbmvYO3qGL1DnEPtul4+P
+         LlJ1kqnZnxukOgbZhegN31NdFQgpWQLIWUiJHbjw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>,
-        Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 5.6 059/118] Revert "HID: wacom: generic: read the number of expected touches on a per collection basis"
-Date:   Wed, 13 May 2020 11:44:38 +0200
-Message-Id: <20200513094422.171935594@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Jiri Kosina <jkosina@suse.cz>,
+        syzbot+7bf5a7b0f0a1f9446f4c@syzkaller.appspotmail.com
+Subject: [PATCH 5.6 060/118] HID: usbhid: Fix race between usbhid_close() and usbhid_stop()
+Date:   Wed, 13 May 2020 11:44:39 +0200
+Message-Id: <20200513094422.254813659@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -60,172 +60,168 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gerecke <killertofu@gmail.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit b43f977dd281945960c26b3ef67bba0fa07d39d9 upstream.
+commit 0ed08faded1da03eb3def61502b27f81aef2e615 upstream.
 
-This reverts commit 15893fa40109f5e7c67eeb8da62267d0fdf0be9d.
+The syzbot fuzzer discovered a bad race between in the usbhid driver
+between usbhid_stop() and usbhid_close().  In particular,
+usbhid_stop() does:
 
-The referenced commit broke pen and touch input for a variety of devices
-such as the Cintiq Pro 32. Affected devices may appear to work normally
-for a short amount of time, but eventually loose track of actual touch
-state and can leave touch arbitration enabled which prevents the pen
-from working. The commit is not itself required for any currently-available
-Bluetooth device, and so we revert it to correct the behavior of broken
-devices.
+	usb_free_urb(usbhid->urbin);
+	...
+	usbhid->urbin = NULL; /* don't mess up next start */
 
-This breakage occurs due to a mismatch between the order of collections
-and the order of usages on some devices. This commit tries to read the
-contact count before processing events, but will fail if the contact
-count does not occur prior to the first logical finger collection. This
-is the case for devices like the Cintiq Pro 32 which place the contact
-count at the very end of the report.
+and usbhid_close() does:
 
-Without the contact count set, touches will only be partially processed.
-The `wacom_wac_finger_slot` function will not open any slots since the
-number of contacts seen is greater than the expectation of 0, but we will
-still end up calling `input_mt_sync_frame` for each finger anyway. This
-can cause problems for userspace separate from the issue currently taking
-place in the kernel. Only once all of the individual finger collections
-have been processed do we finally get to the enclosing collection which
-contains the contact count. The value ends up being used for the *next*
-report, however.
+	usb_kill_urb(usbhid->urbin);
 
-This delayed use of the contact count can cause the driver to loose track
-of the actual touch state and believe that there are contacts down when
-there aren't. This leaves touch arbitration enabled and prevents the pen
-from working. It can also cause userspace to incorrectly treat single-
-finger input as gestures.
+with no mutual exclusion.  If the two routines happen to run
+concurrently so that usb_kill_urb() is called in between the
+usb_free_urb() and the NULL assignment, it will access the
+deallocated urb structure -- a use-after-free bug.
 
-Link: https://github.com/linuxwacom/input-wacom/issues/146
-Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
-Reviewed-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
-Fixes: 15893fa40109 ("HID: wacom: generic: read the number of expected touches on a per collection basis")
-Cc: stable@vger.kernel.org # 5.3+
+This patch adds a mutex to the usbhid private structure and uses it to
+enforce mutual exclusion of the usbhid_start(), usbhid_stop(),
+usbhid_open() and usbhid_close() callbacks.
+
+Reported-and-tested-by: syzbot+7bf5a7b0f0a1f9446f4c@syzkaller.appspotmail.com
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
 Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/wacom_wac.c |   79 +++++++++---------------------------------------
- 1 file changed, 16 insertions(+), 63 deletions(-)
+ drivers/hid/usbhid/hid-core.c |   37 +++++++++++++++++++++++++++++--------
+ drivers/hid/usbhid/usbhid.h   |    1 +
+ 2 files changed, 30 insertions(+), 8 deletions(-)
 
---- a/drivers/hid/wacom_wac.c
-+++ b/drivers/hid/wacom_wac.c
-@@ -2637,9 +2637,25 @@ static void wacom_wac_finger_pre_report(
- 			case HID_DG_TIPSWITCH:
- 				hid_data->last_slot_field = equivalent_usage;
- 				break;
-+			case HID_DG_CONTACTCOUNT:
-+				hid_data->cc_report = report->id;
-+				hid_data->cc_index = i;
-+				hid_data->cc_value_index = j;
-+				break;
- 			}
- 		}
+--- a/drivers/hid/usbhid/hid-core.c
++++ b/drivers/hid/usbhid/hid-core.c
+@@ -682,16 +682,21 @@ static int usbhid_open(struct hid_device
+ 	struct usbhid_device *usbhid = hid->driver_data;
+ 	int res;
+ 
++	mutex_lock(&usbhid->mutex);
++
+ 	set_bit(HID_OPENED, &usbhid->iofl);
+ 
+-	if (hid->quirks & HID_QUIRK_ALWAYS_POLL)
+-		return 0;
++	if (hid->quirks & HID_QUIRK_ALWAYS_POLL) {
++		res = 0;
++		goto Done;
++	}
+ 
+ 	res = usb_autopm_get_interface(usbhid->intf);
+ 	/* the device must be awake to reliably request remote wakeup */
+ 	if (res < 0) {
+ 		clear_bit(HID_OPENED, &usbhid->iofl);
+-		return -EIO;
++		res = -EIO;
++		goto Done;
+ 	}
+ 
+ 	usbhid->intf->needs_remote_wakeup = 1;
+@@ -725,6 +730,9 @@ static int usbhid_open(struct hid_device
+ 		msleep(50);
+ 
+ 	clear_bit(HID_RESUME_RUNNING, &usbhid->iofl);
++
++ Done:
++	mutex_unlock(&usbhid->mutex);
+ 	return res;
+ }
+ 
+@@ -732,6 +740,8 @@ static void usbhid_close(struct hid_devi
+ {
+ 	struct usbhid_device *usbhid = hid->driver_data;
+ 
++	mutex_lock(&usbhid->mutex);
++
+ 	/*
+ 	 * Make sure we don't restart data acquisition due to
+ 	 * a resumption we no longer care about by avoiding racing
+@@ -743,12 +753,13 @@ static void usbhid_close(struct hid_devi
+ 		clear_bit(HID_IN_POLLING, &usbhid->iofl);
+ 	spin_unlock_irq(&usbhid->lock);
+ 
+-	if (hid->quirks & HID_QUIRK_ALWAYS_POLL)
+-		return;
++	if (!(hid->quirks & HID_QUIRK_ALWAYS_POLL)) {
++		hid_cancel_delayed_stuff(usbhid);
++		usb_kill_urb(usbhid->urbin);
++		usbhid->intf->needs_remote_wakeup = 0;
++	}
+ 
+-	hid_cancel_delayed_stuff(usbhid);
+-	usb_kill_urb(usbhid->urbin);
+-	usbhid->intf->needs_remote_wakeup = 0;
++	mutex_unlock(&usbhid->mutex);
+ }
+ 
+ /*
+@@ -1057,6 +1068,8 @@ static int usbhid_start(struct hid_devic
+ 	unsigned int n, insize = 0;
+ 	int ret;
+ 
++	mutex_lock(&usbhid->mutex);
++
+ 	clear_bit(HID_DISCONNECTED, &usbhid->iofl);
+ 
+ 	usbhid->bufsize = HID_MIN_BUFFER_SIZE;
+@@ -1177,6 +1190,8 @@ static int usbhid_start(struct hid_devic
+ 		usbhid_set_leds(hid);
+ 		device_set_wakeup_enable(&dev->dev, 1);
  	}
 +
-+	if (hid_data->cc_report != 0 &&
-+	    hid_data->cc_index >= 0) {
-+		struct hid_field *field = report->field[hid_data->cc_index];
-+		int value = field->value[hid_data->cc_value_index];
-+		if (value)
-+			hid_data->num_expected = value;
-+	}
-+	else {
-+		hid_data->num_expected = wacom_wac->features.touch_max;
-+	}
++	mutex_unlock(&usbhid->mutex);
+ 	return 0;
+ 
+ fail:
+@@ -1187,6 +1202,7 @@ fail:
+ 	usbhid->urbout = NULL;
+ 	usbhid->urbctrl = NULL;
+ 	hid_free_buffers(dev, hid);
++	mutex_unlock(&usbhid->mutex);
+ 	return ret;
  }
  
- static void wacom_wac_finger_report(struct hid_device *hdev,
-@@ -2649,7 +2665,6 @@ static void wacom_wac_finger_report(stru
- 	struct wacom_wac *wacom_wac = &wacom->wacom_wac;
- 	struct input_dev *input = wacom_wac->touch_input;
- 	unsigned touch_max = wacom_wac->features.touch_max;
--	struct hid_data *hid_data = &wacom_wac->hid_data;
- 
- 	/* If more packets of data are expected, give us a chance to
- 	 * process them rather than immediately syncing a partial
-@@ -2663,7 +2678,6 @@ static void wacom_wac_finger_report(stru
- 
- 	input_sync(input);
- 	wacom_wac->hid_data.num_received = 0;
--	hid_data->num_expected = 0;
- 
- 	/* keep touch state for pen event */
- 	wacom_wac->shared->touch_down = wacom_wac_finger_count_touches(wacom_wac);
-@@ -2738,73 +2752,12 @@ static void wacom_report_events(struct h
+@@ -1202,6 +1218,8 @@ static void usbhid_stop(struct hid_devic
+ 		usbhid->intf->needs_remote_wakeup = 0;
  	}
+ 
++	mutex_lock(&usbhid->mutex);
++
+ 	clear_bit(HID_STARTED, &usbhid->iofl);
+ 	spin_lock_irq(&usbhid->lock);	/* Sync with error and led handlers */
+ 	set_bit(HID_DISCONNECTED, &usbhid->iofl);
+@@ -1222,6 +1240,8 @@ static void usbhid_stop(struct hid_devic
+ 	usbhid->urbout = NULL;
+ 
+ 	hid_free_buffers(hid_to_usb_dev(hid), hid);
++
++	mutex_unlock(&usbhid->mutex);
  }
  
--static void wacom_set_num_expected(struct hid_device *hdev,
--				   struct hid_report *report,
--				   int collection_index,
--				   struct hid_field *field,
--				   int field_index)
--{
--	struct wacom *wacom = hid_get_drvdata(hdev);
--	struct wacom_wac *wacom_wac = &wacom->wacom_wac;
--	struct hid_data *hid_data = &wacom_wac->hid_data;
--	unsigned int original_collection_level =
--		hdev->collection[collection_index].level;
--	bool end_collection = false;
--	int i;
--
--	if (hid_data->num_expected)
--		return;
--
--	// find the contact count value for this segment
--	for (i = field_index; i < report->maxfield && !end_collection; i++) {
--		struct hid_field *field = report->field[i];
--		unsigned int field_level =
--			hdev->collection[field->usage[0].collection_index].level;
--		unsigned int j;
--
--		if (field_level != original_collection_level)
--			continue;
--
--		for (j = 0; j < field->maxusage; j++) {
--			struct hid_usage *usage = &field->usage[j];
--
--			if (usage->collection_index != collection_index) {
--				end_collection = true;
--				break;
--			}
--			if (wacom_equivalent_usage(usage->hid) == HID_DG_CONTACTCOUNT) {
--				hid_data->cc_report = report->id;
--				hid_data->cc_index = i;
--				hid_data->cc_value_index = j;
--
--				if (hid_data->cc_report != 0 &&
--				    hid_data->cc_index >= 0) {
--
--					struct hid_field *field =
--						report->field[hid_data->cc_index];
--					int value =
--						field->value[hid_data->cc_value_index];
--
--					if (value)
--						hid_data->num_expected = value;
--				}
--			}
--		}
--	}
--
--	if (hid_data->cc_report == 0 || hid_data->cc_index < 0)
--		hid_data->num_expected = wacom_wac->features.touch_max;
--}
--
- static int wacom_wac_collection(struct hid_device *hdev, struct hid_report *report,
- 			 int collection_index, struct hid_field *field,
- 			 int field_index)
- {
- 	struct wacom *wacom = hid_get_drvdata(hdev);
+ static int usbhid_power(struct hid_device *hid, int lvl)
+@@ -1382,6 +1402,7 @@ static int usbhid_probe(struct usb_inter
+ 	INIT_WORK(&usbhid->reset_work, hid_reset);
+ 	timer_setup(&usbhid->io_retry, hid_retry_timeout, 0);
+ 	spin_lock_init(&usbhid->lock);
++	mutex_init(&usbhid->mutex);
  
--	if (WACOM_FINGER_FIELD(field))
--		wacom_set_num_expected(hdev, report, collection_index, field,
--				       field_index);
- 	wacom_report_events(hdev, report, collection_index, field_index);
+ 	ret = hid_add_device(hid);
+ 	if (ret) {
+--- a/drivers/hid/usbhid/usbhid.h
++++ b/drivers/hid/usbhid/usbhid.h
+@@ -80,6 +80,7 @@ struct usbhid_device {
+ 	dma_addr_t outbuf_dma;                                          /* Output buffer dma */
+ 	unsigned long last_out;							/* record of last output for timeouts */
  
- 	/*
++	struct mutex mutex;						/* start/stop/open/close */
+ 	spinlock_t lock;						/* fifo spinlock */
+ 	unsigned long iofl;                                             /* I/O flags (CTRL_RUNNING, OUT_RUNNING) */
+ 	struct timer_list io_retry;                                     /* Retry timer */
 
 
