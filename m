@@ -2,99 +2,91 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DC3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5010AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 700A72053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4890D2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:16:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lmxJ9Utv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UQx3BW0o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732492AbgEMXPA (ORCPT
+        id S1732513AbgEMXQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 19:15:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732136AbgEMXO7 (ORCPT
+        Wed, 13 May 2020 19:16:20 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34718 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732408AbgEMXQT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 19:14:59 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92684C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 16:14:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=1u6OWA9P/4XPQPpiocvHMbun/hKoPpnrqvp3gSVmyQ8=; b=lmxJ9UtvvRhaPMiY5oI60od3Il
-        agMkxNGSf/0e7YDbWjFlHRdz//eqTQ2atagWoatRcj+52mH0229nIqqHqPILt6qyZdswC+MQ+UKuT
-        UxXz7Bs50+yERbPRG2eC7wwbRvdYdKafnvR3Sph6cKsHMSywWA7UBxw68AhhgDcqOGBQzkjXSMFRt
-        PtZGare2LMM97J+IWdx/BxrBpYGGc1x9Us5pmeBndpqiQIKKrGBQbyRDdPYPIzoJ0flzzOmXOp2nv
-        +1niObXYaSQgmQGc857lEeadXRnFtDAszd2i04yJJVLe6Uts58k/JVgAApexu5u69o5vsZTVzbRET
-        +stzlDnw==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZ0aT-0002V0-6v; Wed, 13 May 2020 23:14:53 +0000
-Subject: Re: [PATCH] kobject: Make sure the parent does not get released
- before its children
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        kernel test robot <rong.a.chen@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-References: <20200513151840.36400-1-heikki.krogerus@linux.intel.com>
- <CAFd5g44d+VCSimjboPkf-NF1eCdbq6Uy+pabNftB8p5Lj2yc1A@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <e51d4ce4-42ba-8c89-21b4-082c7158a9a9@infradead.org>
-Date:   Wed, 13 May 2020 16:14:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 13 May 2020 19:16:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589411778;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=T5AJR2WaKjGAcCSypFEIypZ7FO4lpByrCMG2GJChQq0=;
+        b=UQx3BW0oP9w1XKMu9tpT611fvfgXPLVD/8Qd3XbbDoZ2hnqOlvBq1kJbVuiK+Tf/2uWn+d
+        jTzny5dzrA9sPiuLX0Er4BJ/X62a0BnSmIbZ+l93dRw4mdH5bEq+N43h9Pd7RZ1PfsfuCp
+        LXzoRWxdkuQq2DMVDy4JDR+flsRdbu4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-146-E8cGbxnwNDOYTGRpB5xLtA-1; Wed, 13 May 2020 19:16:16 -0400
+X-MC-Unique: E8cGbxnwNDOYTGRpB5xLtA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F20E7461;
+        Wed, 13 May 2020 23:16:14 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-59.rdu2.redhat.com [10.10.112.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5221F600DB;
+        Wed, 13 May 2020 23:16:13 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHC9VhQhYz8xZ6MGv0S9q2D-gReb0Pqqb=2+oX=NVuxb_F5WfA@mail.gmail.com>
+References: <CAHC9VhQhYz8xZ6MGv0S9q2D-gReb0Pqqb=2+oX=NVuxb_F5WfA@mail.gmail.com> <CAEjxPJ6pFdDfm55pv9bT3CV5DTFF9VqzRmG_Xi5bKNxPaGuOLg@mail.gmail.com> <158932282880.2885325.2688622278854566047.stgit@warthog.procyon.org.uk>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     dhowells@redhat.com,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        keyrings@vger.kernel.org, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] keys: Make the KEY_NEED_* perms an enum rather than a mask
 MIME-Version: 1.0
-In-Reply-To: <CAFd5g44d+VCSimjboPkf-NF1eCdbq6Uy+pabNftB8p5Lj2yc1A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3611714.1589411772.1@warthog.procyon.org.uk>
+Date:   Thu, 14 May 2020 00:16:12 +0100
+Message-ID: <3611715.1589411772@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/13/20 2:30 PM, Brendan Higgins wrote:
-> On Wed, May 13, 2020 at 8:18 AM Heikki Krogerus
-> <heikki.krogerus@linux.intel.com> wrote:
->>
->> In the function kobject_cleanup(), kobject_del(kobj) is
->> called before the kobj->release(). That makes it possible to
->> release the parent of the kobject before the kobject itself.
->>
->> To fix that, adding function __kboject_del() that does
->> everything that kobject_del() does except release the parent
->> reference. kobject_cleanup() then calls __kobject_del()
->> instead of kobject_del(), and separately decrements the
->> reference count of the parent kobject after kobj->release()
->> has been called.
->>
->> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
->> Reported-by: kernel test robot <rong.a.chen@intel.com>
->> Fixes: 7589238a8cf3 ("Revert "software node: Simplify software_node_release() function"")
->> Cc: Brendan Higgins <brendanhiggins@google.com>
->> Cc: Randy Dunlap <rdunlap@infradead.org>
->> Suggested-by: "Rafael J. Wysocki" <rafael@kernel.org>
->> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> 
-> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-> Tested-by: Brendan Higgins <brendanhiggins@google.com>
-> 
+Paul Moore <paul@paul-moore.com> wrote:
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
+> > +       case KEY_NEED_VIEW:     perm = KEY__VIEW;       break;
+> > +       case KEY_NEED_READ:     perm = KEY__READ;       break;
+> > +       case KEY_NEED_WRITE:    perm = KEY__WRITE;      break;
+> > +       case KEY_NEED_SEARCH:   perm = KEY__SEARCH;     break;
+> > +       case KEY_NEED_LINK:     perm = KEY__LINK;       break;
+> > +       case KEY_NEED_SETATTR:  perm = KEY__SETATTR;    break;
+> 
+> Please don't put the case statements all on one line, use the more
+> traditional multi-line format.  For example:
+> 
+>   case KEY_NEED_SETATTR:
+>           perm = KEY__SETATTR;
+>           break;
 
-Thanks.
--- 
-~Randy
+Tabulation was invented something like 6000 years ago for just this kind of
+purpose;-)  It's less readable your way, but whatever...
+
+David
+
