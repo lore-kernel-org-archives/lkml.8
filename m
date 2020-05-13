@@ -2,112 +2,140 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBECEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 534BEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C68720659
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:01:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589385689;
-	bh=1DCrwT/NDlw0uuTKsF4bXhoDTKqfm27Uln6KkJ8YNbk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=j6jG2MA+uE+oprihBZUvUcEL6nIC8ixF3ZajztHlHr2mN6bgPjRMY4XjhayfYcaY8
-	 GW8EBknnX6cU+OGUyigtEgsoWVBHcvf1sbLWMn+7Pn1bt23LuIyVQYCL2QeBPjZk9j
-	 OjYuMbfjCSXXnAWc+hEkcZWOPIoCLWTLgptI9lag=
+	by mail.kernel.org (Postfix) with ESMTP id 79CA620659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:01:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IXyjPELc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389555AbgEMQB1 (ORCPT
+        id S2389564AbgEMQBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 12:01:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52498 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389513AbgEMQBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 12:01:18 -0400
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15C3F20812
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 16:01:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589385678;
-        bh=1DCrwT/NDlw0uuTKsF4bXhoDTKqfm27Uln6KkJ8YNbk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=blwwIrJXdRO2MTbHNEVNVdoqPhEZedEXfGgkRG50ypFS5O/gmrdqIV8kJE7xRhWNi
-         82/hhW83RJtvHNWrUt5ogzWhb2evQUXRH167YmgAgO1GMMu50lRVEb7+WCKJGB2nl/
-         rrt3X4VSe3bK2jHIxtpgB589tl4YGk0tTSfnjF8w=
-Received: by mail-wr1-f45.google.com with SMTP id i15so24179wrx.10
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 09:01:17 -0700 (PDT)
-X-Gm-Message-State: AOAM5317hEzwgL/0iFmF0q7v7lKgBlG+9ztAeXLYT1umTjp7tszIIwSJ
-        hcpMnDnbbFho23EXZIjOqgfbgFlQk0f//YgHQ7GTZw==
-X-Google-Smtp-Source: ABdhPJxQhnLFml0LQ5CNx+hd8QPNyz2a2pbd6SvSmnZfjxvRUTYQ5OXx8AY4s1SOG5rFKf9HvCVi09jd8JzDiGbm9SY=
-X-Received: by 2002:adf:a389:: with SMTP id l9mr71447wrb.18.1589385676030;
- Wed, 13 May 2020 09:01:16 -0700 (PDT)
+        Wed, 13 May 2020 12:01:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50860 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389537AbgEMQBY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 12:01:24 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70EE8C061A0C;
+        Wed, 13 May 2020 09:01:23 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id j2so187312qtr.12;
+        Wed, 13 May 2020 09:01:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gDEGyQnYOplCe+b2bduCD1NxRiNW5Fcu+RuIWNa1OVw=;
+        b=IXyjPELcQyD5gdttArcdwU7+1LQqG6/ZBgarATcp7ASUXUIw60bmvRmFlawI8eROc1
+         ID95lZbsfppvCnFJ/whBX/fUV21HjSdb1ffl38pin+rX6Aov45DhRq8DOBOdsEF425p2
+         ms5vUVofiC4bJtuWMTsRQC08fCTxEqTbBUbRR+W84QKvtxP2FMy1Fl0Rqmvf0Pc2YKlC
+         eK5y8Jcj4r969++jesYOjSfDN85ruV/9pFPQZvJs9ipGmpMwyy9jHdIC61Krod6zu/jK
+         pTmZMSYV8hvUfD44+cCKIpIWpV7aMeF3wtNjbGfPHqbV5fgT5AX+TnSSsa/81Si0JulZ
+         lmuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gDEGyQnYOplCe+b2bduCD1NxRiNW5Fcu+RuIWNa1OVw=;
+        b=uLag9w6XijBequS5JTfk3gf/cIxZQhqr9qLXPJE4PvuwZE/aY/LUieE6K9KgGh6Q/F
+         rbs57APFvqIG5kRwY8Ht9rws3NlXQ6+NRSoGGV+FweLhE++pV4J2+Ezeb4VkQF3qKa+Y
+         Dv68x9KtJU3T/XHxeSJf0TYMdzjMXu8w75BjAo2tKoFZNmxW/D/XGbTe7uQpC62oz8BY
+         gTqT22THvEI2PbwvwtK0Rg1c/Sp//IYz/xZbZ4BWZlCkRO7P2bf8D2MU2ibas/iFBCZR
+         D+NQCD/V6GXevEpCIiFMXdQdfTrE45W/BQM+RYddfHVjIIeWZ/pxlDy73pxkW/gw+Mzb
+         wTkQ==
+X-Gm-Message-State: AGi0PubG4hYv8qz6p/7aqXYmQ3MDX41PP3e5MxmH7hXrzb9k5MhQCoDQ
+        lZx0JzlyA142RxiNE+A5rGQ=
+X-Google-Smtp-Source: APiQypLEa5DbO43gtfzf8xyX7id6nt1AixGK016BmPhbJ+nK7lrYw/rkTIrTyRfLg1cXu5uVimMK0w==
+X-Received: by 2002:ac8:5311:: with SMTP id t17mr16856713qtn.42.1589385682534;
+        Wed, 13 May 2020 09:01:22 -0700 (PDT)
+Received: from localhost.localdomain ([2001:1284:f013:f4e9:6bc3:5a0:7baf:1a14])
+        by smtp.gmail.com with ESMTPSA id y140sm156177qkb.127.2020.05.13.09.01.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 09:01:21 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id 6E656C08DA; Wed, 13 May 2020 13:01:16 -0300 (-03)
+Date:   Wed, 13 May 2020 13:01:16 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Jonas Falkevik <jonas.falkevik@gmail.com>
+Cc:     Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-sctp@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xin Long <lucien.xin@gmail.com>
+Subject: Re: [PATCH] sctp: check assoc before SCTP_ADDR_{MADE_PRIM,ADDED}
+ event
+Message-ID: <20200513160116.GA2491@localhost.localdomain>
+References: <CABUN9aCXZBTdYHSK5oSVX-HAA1wTWmyBW_ked_ydsCjsV-Ckaw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200513152137.32426-1-joro@8bytes.org>
-In-Reply-To: <20200513152137.32426-1-joro@8bytes.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 13 May 2020 09:01:04 -0700
-X-Gmail-Original-Message-ID: <CALCETrW1Y2Q7dWwv4X7PHf3yxOGMcDaBG0NK7BWPAR=FiqsoPQ@mail.gmail.com>
-Message-ID: <CALCETrW1Y2Q7dWwv4X7PHf3yxOGMcDaBG0NK7BWPAR=FiqsoPQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/7] mm: Get rid of vmalloc_sync_(un)mappings()
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABUN9aCXZBTdYHSK5oSVX-HAA1wTWmyBW_ked_ydsCjsV-Ckaw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 8:21 AM Joerg Roedel <joro@8bytes.org> wrote:
->
-> Hi,
->
-> here is the next post of this series with these changes to the first
-> version:
->
->         - Rebased to v5.7-rc5
->
->         - As a result of the rebase, also removed the
->           vmalloc_sync_mappings() call from tracing code
->
->         - Added a comment that we rely on the compiler optimizing calls
->           to arch_syn_kernel_mappings() away when
->           ARCH_PAGE_TABLE_SYNC_MASK is 0
->
-> The first version can be found here:
->
->         https://lore.kernel.org/lkml/20200508144043.13893-1-joro@8bytes.org/
->
-> The cover letter of the first post also has more details on the
-> motivation for this patch-set.
->
-> Please review.
->
+On Wed, May 13, 2020 at 04:52:16PM +0200, Jonas Falkevik wrote:
+> Do not generate SCTP_ADDR_{MADE_PRIM,ADDED} events for SCTP_FUTURE_ASSOC assocs.
 
-Assuming the missing cleanup at the end gets done:
+How did you get them?
 
-Acked-by: Andy Lutomirski <luto@kernel.org>
+I'm thinking you're fixing a side-effect of another issue here. For
+example, in sctp_assoc_update(), it first calls sctp_assoc_add_peer()
+to only then call sctp_assoc_set_id(), which would generate the event
+you might have seen. In this case, it should be allocating IDR before,
+so that the event can be sent with the right assoc_id already.
 
-grumpily acked, anyway.
-
-I would love to see a followup patch that preallocates the vmalloc
-region on 64-bit and compiles out pgd_list and all of the associated
-gunk.
+> 
+> These events are described in rfc6458#section-6.1
+> SCTP_PEER_ADDR_CHANGE:
+> This tag indicates that an address that is
+> part of an existing association has experienced a change of
+> state (e.g., a failure or return to service of the reachability
+> of an endpoint via a specific transport address).
+> 
+> Signed-off-by: Jonas Falkevik <jonas.falkevik@gmail.com>
+> ---
+>  net/sctp/associola.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/net/sctp/associola.c b/net/sctp/associola.c
+> index 437079a4883d..0c5dd295f9b8 100644
+> --- a/net/sctp/associola.c
+> +++ b/net/sctp/associola.c
+> @@ -432,8 +432,10 @@ void sctp_assoc_set_primary(struct sctp_association *asoc,
+>          changeover = 1 ;
+> 
+>      asoc->peer.primary_path = transport;
+> -    sctp_ulpevent_nofity_peer_addr_change(transport,
+> -                          SCTP_ADDR_MADE_PRIM, 0);
+> +    if (sctp_assoc2id(asoc) != SCTP_FUTURE_ASSOC)
+> +        sctp_ulpevent_nofity_peer_addr_change(transport,
+> +                              SCTP_ADDR_MADE_PRIM,
+> +                              0);
+> 
+>      /* Set a default msg_name for events. */
+>      memcpy(&asoc->peer.primary_addr, &transport->ipaddr,
+> @@ -714,7 +716,10 @@ struct sctp_transport *sctp_assoc_add_peer(struct
+> sctp_association *asoc,
+>      list_add_tail_rcu(&peer->transports, &asoc->peer.transport_addr_list);
+>      asoc->peer.transport_count++;
+> 
+> -    sctp_ulpevent_nofity_peer_addr_change(peer, SCTP_ADDR_ADDED, 0);
+> +    if (sctp_assoc2id(asoc) != SCTP_FUTURE_ASSOC)
+> +        sctp_ulpevent_nofity_peer_addr_change(peer,
+> +                              SCTP_ADDR_ADDED,
+> +                              0);
+> 
+>      /* If we do not yet have a primary path, set one.  */
+>      if (!asoc->peer.primary_path) {
+> --
+> 2.25.3
