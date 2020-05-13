@@ -6,128 +6,127 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12560C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C941C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 175152053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:13:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a5Qhy201"
+	by mail.kernel.org (Postfix) with ESMTP id 85AB32053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:14:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589411660;
+	bh=HuA/NIar/TEMztosQ4CNtydvowmBO8rdCOsELQ170As=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=2P2h7ryeWn3WOl0QjP5kAGIyVIVS0pkT88Tb9BAxACj/muRHEVX9wEU9XlfTrzFjw
+	 gFF2r2n0m3H0lZLj3582Jgyhf4T7DrqOiv4vXyK2u/gP67YTalyMOO81rY8AEsfKsp
+	 fX733fFmOLyIuWLXOCnvRMTol3aLLt6hYsq80IPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732427AbgEMXNn (ORCPT
+        id S1732467AbgEMXOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 19:13:43 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:38904 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732331AbgEMXNm (ORCPT
+        Wed, 13 May 2020 19:14:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34016 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732331AbgEMXON (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 19:13:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589411619;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZmMD6XDgyrg0kIPXb2cMEKa1A3azrPgvq+3AzZZ9RcQ=;
-        b=a5Qhy201W4tBuL2ZziApVeE9mAYN7wDsBEVEJvDGvgqGaLTO+1GH0doMx2Nkdf2Pf3rsL6
-        GguQDj8TFoyKeO3+RMhM9O31by+F9b5f7iNtcnTF94N8rVTxR473NoSWKDlFruc2gDgOE1
-        sRTOmIqrv0HQuEL6lSHCaJrpd9FFyG0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-394-Q9t9zeVRNwCXxVJMkBsddA-1; Wed, 13 May 2020 19:13:35 -0400
-X-MC-Unique: Q9t9zeVRNwCXxVJMkBsddA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E2DA118FE860;
-        Wed, 13 May 2020 23:13:33 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-59.rdu2.redhat.com [10.10.112.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E6F45C1D3;
-        Wed, 13 May 2020 23:13:32 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAEjxPJ4=ZN_jKP2nX5mrMA3OxC8XLsYEmCPCD-78H4XQw=_hCA@mail.gmail.com>
-References: <CAEjxPJ4=ZN_jKP2nX5mrMA3OxC8XLsYEmCPCD-78H4XQw=_hCA@mail.gmail.com> <CAEjxPJ6pFdDfm55pv9bT3CV5DTFF9VqzRmG_Xi5bKNxPaGuOLg@mail.gmail.com> <158932282880.2885325.2688622278854566047.stgit@warthog.procyon.org.uk>
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     dhowells@redhat.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        keyrings@vger.kernel.org, SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] keys: Make the KEY_NEED_* perms an enum rather than a mask
+        Wed, 13 May 2020 19:14:13 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6237DC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 16:14:13 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id e25so1442023ljg.5
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 16:14:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0j3/OIPLsEoSjumgEsA8PXHbekOcSjeJ/f/Whs1clc8=;
+        b=aWY/W00Vhs08u53IbUOOBmS6kQV0IdXs0gGbI9xldX6dgisVMq/l6vfmkGNI1z7fWx
+         tOJl3WVP9kL5eNCEZgAeoeDhMecMnoXs+tEv8IopMGuY4Z8/YdVmykgjM8brjp9eWPdB
+         rs/NoCXW7VxjHDjL5BXCEJsCICzD98wX2vGhc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0j3/OIPLsEoSjumgEsA8PXHbekOcSjeJ/f/Whs1clc8=;
+        b=nuviA9vZTHawtyOx3QIQ1xCGHcLkJpDNhTiiGui9KdvwOz05qIO8qQqcE2c6wfy3+4
+         Tv1u/FtXg6Y3MikWHQFDsbKCDQ5iUopF7k3WWHW52xlBvRUbSn1sg18qwQLs1C+reD+5
+         yT3srZO/odR1DQV5+cv2pIpF2eRDlD8CFYpfSTy+u+1WBCxhXlXhi9C5w0S9hA0gRdYB
+         iION6DB6g9FNsR5BLHYvfADpfHx9iqAxNg3ZWBi79iR+UwyT/xa7m7LseUR7PpzUB198
+         HuuW5NNlyXRG/5lwVE1/9XHwg/528ZJ2u89pqTUe5ONEd44vYyaDlitwKDGMjSTj236B
+         x/Xg==
+X-Gm-Message-State: AOAM531f8HGrRDFdQYMtavewroyNTFCs8bpfurAu4u3k3jtsnySIrjAD
+        sge574Djr7QYOf6W+aFpCott/MBxWMc=
+X-Google-Smtp-Source: ABdhPJzwrBEj2PZ0S3tH/2LfrmF/bIjJ80uA1NNEgvNH7bXkVSQwme4LRzWvm72bUukoU18ABAVnpQ==
+X-Received: by 2002:a05:651c:50f:: with SMTP id o15mr870326ljp.16.1589411651232;
+        Wed, 13 May 2020 16:14:11 -0700 (PDT)
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
+        by smtp.gmail.com with ESMTPSA id r7sm558324lfc.79.2020.05.13.16.14.09
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 May 2020 16:14:10 -0700 (PDT)
+Received: by mail-lf1-f42.google.com with SMTP id a4so927878lfh.12
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 16:14:09 -0700 (PDT)
+X-Received: by 2002:ac2:58c8:: with SMTP id u8mr1201550lfo.142.1589411649429;
+ Wed, 13 May 2020 16:14:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3611506.1589411611.1@warthog.procyon.org.uk>
-Date:   Thu, 14 May 2020 00:13:31 +0100
-Message-ID: <3611507.1589411611@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200509120707.188595-1-arnd@arndb.de> <20200509120707.188595-2-arnd@arndb.de>
+ <87v9l24qz6.fsf@kamboji.qca.qualcomm.com> <87r1vq4qev.fsf@kamboji.qca.qualcomm.com>
+ <87d078tjl0.fsf_-_@kamboji.qca.qualcomm.com> <20200513154847.GA158356@rani.riverdale.lan>
+ <CAK8P3a3KpM91+jv6+7KSKFRpwLqf38Lz1wbGhkFFyfDb9oahgA@mail.gmail.com>
+ <20200513214128.GB6733@zn.tnic> <CAK8P3a3XPCyNM7s3vbn8JYK6swA3ZpPtTWB+uhmAE3YEX-nmig@mail.gmail.com>
+ <20200513222038.GC6733@zn.tnic>
+In-Reply-To: <20200513222038.GC6733@zn.tnic>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 13 May 2020 16:13:53 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgybuOF+Jp2XYWqM7Xn1CW6szWQw_FgVoFh5jx_4YoCVw@mail.gmail.com>
+Message-ID: <CAHk-=wgybuOF+Jp2XYWqM7Xn1CW6szWQw_FgVoFh5jx_4YoCVw@mail.gmail.com>
+Subject: Re: gcc-10: kernel stack is corrupted and fails to boot
+To:     Borislav Petkov <bp@suse.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Smalley <stephen.smalley.work@gmail.com> wrote:
+On Wed, May 13, 2020 at 3:20 PM Borislav Petkov <bp@suse.de> wrote:
+>
+> Linus, shout if you'd prefer only the last three commits there:
+>
+> 950a37078aa0 x86/build: Use $(CONFIG_SHELL)
+> f670269a42bf x86: Fix early boot crash on gcc-10, next try
+> 73da86741e7f x86/build: Check whether the compiler is sane
 
-> >  (3) An override due to CAP_SYS_ADMIN.
-> 
-> CAP_SYS_ADMIN should never skip SELinux checking.  Even for Smack,
-> there is a separate capability (CAP_MAC_ADMIN) for that purpose.
+Do we really need that sanity check?
 
-The LSM doesn't get consulted at the moment.  With this patch, it will get
-consulted.
+Are there known compilers that fail that check? Because honestly, that
+sounds unlikely to me to begin with, but if it does happen then that
+just means that the prevent_tail_call_optimization() thing is broken.
 
-> >  (4) An override due to an instantiation token being present.
-> 
-> Not sure what this means but again we shouldn't skip SELinux checking
-> based on mere possession of an object capability (not a POSIX
-> capability).
+The check itself doesn't seem worth it. If your worry is that an empty
+asm() can be optimized away, then don't use an empty asm!
 
-The kernel has delegated the instantiation of a key to the calling process and
-has given it a temporary key of type ".request_key_auth" which it has put into
-force with keyctl(KEYCTL_ASSUME_AUTHORITY).
+In other words, the only reason for that check seems to be a worry
+that simply isn't worth having.
 
-This authorisation token grants the caller the ability to (a) perform
-operations on the key it wouldn't otherwise have permission to do, (b) use the
-key instantiation keyctls and (c) temporarily search the keyrings of the
-caller of request_key() using the creds of that caller and to read/use the
-keys found therein if the caller was permitted to do so.
+In fact, I think the check is wrong anyway, since the main thing I can
+see that would do a tailcall despite the empty asm is link-time
+optimizations that that check doesn't even check for!
 
-> It would be better if the permission indicated the actual operation
-> (e.g. KEY_NEED_INVALIDATE_SPECIAL), and the decision whether to permit
-> CAP_SYS_ADMIN processes to override was left to the security modules.
-> SELinux doesn't automatically allow CAP_SYS_ADMIN processes to do
-> everything.
+So everything I see there just screams "the check is bogus" to me. The
+check doesn't work, and if it were to work it only means that the
+prevent_tail_call_optimization() thing is too fragile.
 
-These individual permissions don't exist yet.  I have an ACL patchset that
-allows me to add a greater range - though there's issues with SELinux there
-also.
+Just put a full memory barrier in there, with an actual "mfence"
+instruction or whatever, so that you know that the check is pointless,
+and so that you know that a link-time optimizer can't turn the
+call+return into a tailcall.
 
-Also, the keyrings are specially marked to say that the sysadmin is allowed to
-flush them at the moment - but that can go away with the ACL stuff.
+Don't send me the broken check.
 
-> > +       switch (need_perm) {
-> > +       case KEY_NEED_UNLINK:
-> > +       case KEY_SYSADMIN_OVERRIDE:
-> > +       case KEY_AUTHTOKEN_OVERRIDE:
-> > +       case KEY_DEFER_PERM_CHECK:
-> >                 return 0;
-> 
-> We really shouldn't be skipping any/all checking on CAP_SYS_ADMIN or
-> an AUTHTOKEN; those should still be subject to MAC policy.
-
-I'm not sure how to do that.
-
-Note that KEY_NEED_UNLINK *must not* be overruled by the MAC policy.  The
-value is only there because lookup_user_key() requires something to be put
-into that parameter - it's more of a courtesy thing, I suppose.
-
-Why should AUTHTOKEN be subject to MAC policy?  The kernel has told the
-process to go and instantiate a key.  It shouldn't really then turn around and
-tell the process "oh, but you're not actually allowed to do that".
-
-David
-
+                  Linus
