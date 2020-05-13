@@ -3,205 +3,164 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF92C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 962FBC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BD3C205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0DAB205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:09:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388480AbgEMPJT (ORCPT
+        id S2389072AbgEMPJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:09:19 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46180 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727778AbgEMPJS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:09:18 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DF3hsU157163;
-        Wed, 13 May 2020 11:09:09 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 310g8u6gya-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 11:09:08 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04DF46Of158145;
-        Wed, 13 May 2020 11:09:08 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 310g8u6gww-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 11:09:08 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04DF4vsH009582;
-        Wed, 13 May 2020 15:09:06 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma04fra.de.ibm.com with ESMTP id 3100uc0qyu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 15:09:06 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04DF94Hi63242460
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 May 2020 15:09:04 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 39F73A405C;
-        Wed, 13 May 2020 15:09:04 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 00683A4065;
-        Wed, 13 May 2020 15:09:03 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.144.67])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 13 May 2020 15:09:02 +0000 (GMT)
-Message-ID: <1589382542.5098.136.camel@linux.ibm.com>
-Subject: Re: [RFC][PATCH 1/3] evm: Move hooks outside LSM infrastructure
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        "david.safford@gmail.com" <david.safford@gmail.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "jmorris@namei.org" <jmorris@namei.org>,
-        John Johansen <john.johansen@canonical.com>,
-        "matthewgarrett@google.com" <matthewgarrett@google.com>
-Cc:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Date:   Wed, 13 May 2020 11:09:02 -0400
-In-Reply-To: <4fb6c8457ac44af3b464fab712a10a37@huawei.com>
-References: <20200429073935.11913-1-roberto.sassu@huawei.com>
-         <1588794293.4624.21.camel@linux.ibm.com>
-         <1588799408.4624.28.camel@linux.ibm.com>
-         <ab879f9e66874736a40e9c566cadc272@huawei.com>
-         <1588864628.5685.78.camel@linux.ibm.com>
-         <750ab4e0990f47e4aea10d0e580b1074@huawei.com>
-         <1588884313.5685.110.camel@linux.ibm.com>
-         <84e6acad739a415aa3e2457b5c37979f@huawei.com>
-         <1588957684.5146.70.camel@linux.ibm.com>
-         <414644a0be9e4af880452f4b5079aba1@huawei.com>
-         <1589233010.5091.49.camel@linux.ibm.com>
-         <09ee169cfd70492cb526bcb30f99d693@huawei.com>
-         <1589293025.5098.53.camel@linux.ibm.com>
-         <d3f4a53e386d4bb1b8c608ac8b6bec1f@huawei.com>
-         <1589298622.5098.67.camel@linux.ibm.com>
-         <fcdb168d27214b5e85c3b741f184cde9@huawei.com>
-         <1589312281.5098.91.camel@linux.ibm.com>
-         <4fb6c8457ac44af3b464fab712a10a37@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Wed, 13 May 2020 11:09:53 -0400
+Received: from mga02.intel.com ([134.134.136.20]:61998 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727778AbgEMPJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 11:09:52 -0400
+IronPort-SDR: Vh3ZEWqEMc8MhyMH+3O2clGkvjj3Y7a/vHqR7LFjTorT8aCi0gCBXBCYWgqBrVxz6ZeXg1AjF4
+ YXsN2yS2oo6w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 08:09:52 -0700
+IronPort-SDR: Ue669IgB67/dzfgU4jZaJf1QR3Z9iMh0oZJ7tuDrbILUTFCOm+fBok+1+8SRIGtU7YzElkBO4e
+ h24E0SgN5TWA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,388,1583222400"; 
+   d="scan'208";a="265905695"
+Received: from cwward1-mobl.amr.corp.intel.com (HELO [10.254.205.248]) ([10.254.205.248])
+  by orsmga006.jf.intel.com with ESMTP; 13 May 2020 08:09:42 -0700
+Subject: Re: [PATCH v4 1/3] arch/x86: Update config and kernel doc for MPK
+ feature on AMD
+To:     Babu Moger <babu.moger@amd.com>, corbet@lwn.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        pbonzini@redhat.com, sean.j.christopherson@intel.com
+Cc:     x86@kernel.org, vkuznets@redhat.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.org, mchehab+samsung@kernel.org,
+        changbin.du@intel.com, namit@vmware.com, bigeasy@linutronix.de,
+        yang.shi@linux.alibaba.com, asteinhauser@google.com,
+        anshuman.khandual@arm.com, jan.kiszka@siemens.com,
+        akpm@linux-foundation.org, steven.price@arm.com,
+        rppt@linux.vnet.ibm.com, peterx@redhat.com,
+        dan.j.williams@intel.com, arjunroy@google.com, logang@deltatee.com,
+        thellstrom@vmware.com, aarcange@redhat.com, justin.he@arm.com,
+        robin.murphy@arm.com, ira.weiny@intel.com, keescook@chromium.org,
+        jgross@suse.com, andrew.cooper3@citrix.com,
+        pawan.kumar.gupta@linux.intel.com, fenghua.yu@intel.com,
+        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
+        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <158932780954.44260.4292038705292213548.stgit@naples-babu.amd.com>
+ <158932793646.44260.2629848287332937779.stgit@naples-babu.amd.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
+ oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
+ 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
+ ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
+ VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
+ iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
+ c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
+ pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
+ ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
+ QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzShEYXZpZCBDaHJp
+ c3RvcGhlciBIYW5zZW4gPGRhdmVAc3I3MS5uZXQ+wsF7BBMBAgAlAhsDBgsJCAcDAgYVCAIJ
+ CgsEFgIDAQIeAQIXgAUCTo3k0QIZAQAKCRBoNZUwcMmSsMO2D/421Xg8pimb9mPzM5N7khT0
+ 2MCnaGssU1T59YPE25kYdx2HntwdO0JA27Wn9xx5zYijOe6B21ufrvsyv42auCO85+oFJWfE
+ K2R/IpLle09GDx5tcEmMAHX6KSxpHmGuJmUPibHVbfep2aCh9lKaDqQR07gXXWK5/yU1Dx0r
+ VVFRaHTasp9fZ9AmY4K9/BSA3VkQ8v3OrxNty3OdsrmTTzO91YszpdbjjEFZK53zXy6tUD2d
+ e1i0kBBS6NLAAsqEtneplz88T/v7MpLmpY30N9gQU3QyRC50jJ7LU9RazMjUQY1WohVsR56d
+ ORqFxS8ChhyJs7BI34vQusYHDTp6PnZHUppb9WIzjeWlC7Jc8lSBDlEWodmqQQgp5+6AfhTD
+ kDv1a+W5+ncq+Uo63WHRiCPuyt4di4/0zo28RVcjtzlGBZtmz2EIC3vUfmoZbO/Gn6EKbYAn
+ rzz3iU/JWV8DwQ+sZSGu0HmvYMt6t5SmqWQo/hyHtA7uF5Wxtu1lCgolSQw4t49ZuOyOnQi5
+ f8R3nE7lpVCSF1TT+h8kMvFPv3VG7KunyjHr3sEptYxQs4VRxqeirSuyBv1TyxT+LdTm6j4a
+ mulOWf+YtFRAgIYyyN5YOepDEBv4LUM8Tz98lZiNMlFyRMNrsLV6Pv6SxhrMxbT6TNVS5D+6
+ UorTLotDZKp5+M7BTQRUY85qARAAsgMW71BIXRgxjYNCYQ3Xs8k3TfAvQRbHccky50h99TUY
+ sqdULbsb3KhmY29raw1bgmyM0a4DGS1YKN7qazCDsdQlxIJp9t2YYdBKXVRzPCCsfWe1dK/q
+ 66UVhRPP8EGZ4CmFYuPTxqGY+dGRInxCeap/xzbKdvmPm01Iw3YFjAE4PQ4hTMr/H76KoDbD
+ cq62U50oKC83ca/PRRh2QqEqACvIH4BR7jueAZSPEDnzwxvVgzyeuhwqHY05QRK/wsKuhq7s
+ UuYtmN92Fasbxbw2tbVLZfoidklikvZAmotg0dwcFTjSRGEg0Gr3p/xBzJWNavFZZ95Rj7Et
+ db0lCt0HDSY5q4GMR+SrFbH+jzUY/ZqfGdZCBqo0cdPPp58krVgtIGR+ja2Mkva6ah94/oQN
+ lnCOw3udS+Eb/aRcM6detZr7XOngvxsWolBrhwTQFT9D2NH6ryAuvKd6yyAFt3/e7r+HHtkU
+ kOy27D7IpjngqP+b4EumELI/NxPgIqT69PQmo9IZaI/oRaKorYnDaZrMXViqDrFdD37XELwQ
+ gmLoSm2VfbOYY7fap/AhPOgOYOSqg3/Nxcapv71yoBzRRxOc4FxmZ65mn+q3rEM27yRztBW9
+ AnCKIc66T2i92HqXCw6AgoBJRjBkI3QnEkPgohQkZdAb8o9WGVKpfmZKbYBo4pEAEQEAAcLB
+ XwQYAQIACQUCVGPOagIbDAAKCRBoNZUwcMmSsJeCEACCh7P/aaOLKWQxcnw47p4phIVR6pVL
+ e4IEdR7Jf7ZL00s3vKSNT+nRqdl1ugJx9Ymsp8kXKMk9GSfmZpuMQB9c6io1qZc6nW/3TtvK
+ pNGz7KPPtaDzvKA4S5tfrWPnDr7n15AU5vsIZvgMjU42gkbemkjJwP0B1RkifIK60yQqAAlT
+ YZ14P0dIPdIPIlfEPiAWcg5BtLQU4Wg3cNQdpWrCJ1E3m/RIlXy/2Y3YOVVohfSy+4kvvYU3
+ lXUdPb04UPw4VWwjcVZPg7cgR7Izion61bGHqVqURgSALt2yvHl7cr68NYoFkzbNsGsye9ft
+ M9ozM23JSgMkRylPSXTeh5JIK9pz2+etco3AfLCKtaRVysjvpysukmWMTrx8QnI5Nn5MOlJj
+ 1Ov4/50JY9pXzgIDVSrgy6LYSMc4vKZ3QfCY7ipLRORyalFDF3j5AGCMRENJjHPD6O7bl3Xo
+ 4DzMID+8eucbXxKiNEbs21IqBZbbKdY1GkcEGTE7AnkA3Y6YB7I/j9mQ3hCgm5muJuhM/2Fr
+ OPsw5tV/LmQ5GXH0JQ/TZXWygyRFyyI2FqNTx4WHqUn3yFj8rwTAU1tluRUYyeLy0ayUlKBH
+ ybj0N71vWO936MqP6haFERzuPAIpxj2ezwu0xb1GjTk4ynna6h5GjnKgdfOWoRtoWndMZxbA
+ z5cecg==
+Message-ID: <e8dbb26f-9358-cef7-aae2-14d8b5700245@intel.com>
+Date:   Wed, 13 May 2020 08:09:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <158932793646.44260.2629848287332937779.stgit@naples-babu.amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-13_06:2020-05-13,2020-05-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
- lowpriorityscore=0 impostorscore=0 mlxscore=0 mlxlogscore=999 phishscore=0
- cotscore=-2147483648 spamscore=0 bulkscore=0 adultscore=0 malwarescore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005130131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-05-13 at 07:21 +0000, Roberto Sassu wrote:
-> > From: Mimi Zohar [mailto:zohar@linux.ibm.com]
-> > Sent: Tuesday, May 12, 2020 9:38 PM
-> > On Tue, 2020-05-12 at 16:31 +0000, Roberto Sassu wrote:
-> > > > From: Mimi Zohar [mailto:zohar@linux.ibm.com]
-> > 
-> > > > > > Each time the EVM protected file metadata is updated, the EVM
-> > HMAC
-> > > > is
-> > > > > > updated, assuming the existing EVM HMAC is valid.  Userspace
-> > should
-> > > > > > not have access to the HMAC key, so we only allow writing EVM
-> > > > > > signatures.
-> > > > > >
-> > > > > > The only difference between writing the original EVM signature and
-> > the
-> > > > > > new portable and immutable signature is the security.ima xattr
-> > > > > > requirement.  Since the new EVM signature does not include the
-> > > > > > filesystem specific data, something else needs to bind the file
-> > > > > > metadata to the file data.  Thus the IMA xattr requirement.
-> > > > > >
-> > > > > > Assuming that the new EVM signature is written last, as long as there
-> > > > > > is an IMA xattr, there shouldn't be a problem writing the new EVM
-> > > > > > signature.
-> > > > >
-> > > > >         /* first need to know the sig type */
-> > > > >         rc = vfs_getxattr_alloc(dentry, XATTR_NAME_EVM, (char
-> > > > **)&xattr_data, 0,
-> > > > >                                 GFP_NOFS);
-> > > > >         if (rc <= 0) {
-> > > > >                 evm_status = INTEGRITY_FAIL;
-> > > > >                 if (rc == -ENODATA) {
-> > > > >                         rc = evm_find_protected_xattrs(dentry);
-> > > > >                         if (rc > 0)
-> > > > >                                 evm_status = INTEGRITY_NOLABEL;
-> > > > >                         else if (rc == 0)
-> > > > >                                 evm_status = INTEGRITY_NOXATTRS; /* new file */
-> > > > >
-> > > > > If EVM_ALLOW_METADATA_WRITES is cleared, only the first xattr
-> > > > > can be written (status INTEGRITY_NOXATTRS is ok). After,
-> > > > > evm_find_protected_xattrs() returns rc > 0, so the status is
-> > > > > INTEGRITY_NOLABEL, which is not ignored by evm_protect_xattr().
-> > > >
-> > > > With EVM HMAC enabled, as a result of writing the first protected
-> > > > xattr, an EVM HMAC should be calculated and written in
-> > > > evm_inode_post_setxattr().
-> > >
-> > > To solve the ordering issue, wouldn't allowing setxattr() on a file
-> > > with portable signature that does not yet pass verification be safe?
-> > > evm_update_evmxattr() checks if the signature is portable and
-> > > if yes, does not calculate the HMAC.
-> > 
-> > Before agreeing to allowing the protected xattrs to be written on a
-> > file with a portable signature that does not yet pass verification are
-> > safe, would we be introducing any new types of attacks?
-> 
-> Allowing xattr/attr update means that someone can do:
-> 
-> setxattr(path, "security.evm", ...);	with type=5
-> 
-> all subsequent setxattr()/setattr() succeed until the correct
-> combination is set.
-> 
-> At that point, any xattr/attr operation fails, even if one tries to set
-> an xattr with the same value. If we still deny the operation when the
-> verification succeeds, we have to fix that.
-> 
-> It is common that the signature passes verification before user space
-> tools finish to set xattrs/attrs. For example, if a file is created with
-> mode 644 and this was the mode at the time of signing, any attempt
-> by tar for example to set again the same mode fails.
+On 5/12/20 4:58 PM, Babu Moger wrote:
+> +config X86_MEMORY_PROTECTION_KEYS
+> +	# Both Intel and AMD platforms support "Memory Protection Keys"
+> +	# feature. So add a generic option X86_MEMORY_PROTECTION_KEYS
+> +	# and set the option whenever X86_INTEL_MEMORY_PROTECTION_KEYS
+> +	# is set. This is to avoid the confusion about the feature
+> +	# availability on AMD platforms. Also renaming the old option
+> +	# would cause the user an extra prompt during the kernel
+> +	# configuration. So avoided changing the old config name.
+> +	def_bool X86_INTEL_MEMORY_PROTECTION_KEYS
 
-We have a couple of options: always fail the write, differentiate the
-reason for the failure, or check the value before failing the write.
- The easiest obviously would be to always fail the write once it is
-valid.  Whatever you decide, please keep it simple.
+Hi Babu,
 
-> 
-> If allowing a change of xattrs/attrs for portable signatures is safe or
-> not, I would say yes. Portable signatures cannot be modified even
-> if __vfs_setxattr_noperm() is called directly.
-> 
-> > For example, would we differentiate between portable signatures that
-> > don't pass verification and ones that do?  If we don't differentiate,
-> > could it be used for DoS?  Should it be limited to new files?
-> 
-> I would prefer to lock files when signatures pass the verification to
-> avoid accidental changes.
-> 
-> Unless we find a better way to identify new file, without depending
-> on the appraisal policy, I would allow the operation even for existing
-> files.
+I made a request earlier for an end date (or version) to be included
+here.  I believe that appeared in one of your earlier versions, but it
+was removed in later ones.
 
-The existing code verifies the EVM xattr before allowing the
-xattr/attr change.  It sounds like for EVM_XATTR_PORTABLE_DIGSIG we
-need to do exactly the reverse.
+Was there a reason for that?
 
-Mimi
+I'd really prefer to put some kind of expiration date on the config
+option.  It will outlive us all otherwise.
 
+>  Memory Protection Keys for Userspace (PKU aka PKEYs) is a feature
+>  which is found on Intel's Skylake "Scalable Processor" Server CPUs.
+> -It will be avalable in future non-server parts.
+> +It will be available in future non-server parts. Also, AMD64
+> +Architecture Programmer’s Manual defines PKU feature in AMD processors.
+
+I actually worked pretty hard to make that sentence useful to Linux
+users.  Instead of forcing them to imply that it will be available on
+future AMD CPUs, can we just come out and say it?  Can we give any more
+information to our users?
+
+Naming the AMD manual in which the feature is defined doesn't really
+help our users.  Let's not waste the bytes on it.
+
+How about:
+
+	Memory Protection Keys for Userspace (PKU aka PKEYs) is a
+	feature which is found on Intel's Skylake (and later) "Scalable
+	Processor" Server CPUs.  It will be avalable in future non-
+	server Intel parts and future AMD parts.
+
+Any clarity you can add, such as to say what AMD is doing for server vs.
+client  would be nice.
+
+BTW, when I first submitted pkeys, I didn't have any statement like this
+in the changelog or documentation.  Ingo, I think, asked for it and I
+worked with folks inside Intel to figure out how much we could say
+publicly about our plans.  A similar effort from AMD would be much
+appreciated here.
