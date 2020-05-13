@@ -2,148 +2,104 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C07CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E000C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E810020575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QQRyzIWk"
+	by mail.kernel.org (Postfix) with ESMTP id 336BA205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589363819;
+	bh=SphKFXtyq2bYK1PdVCX7qx6+wpQEnI7wpi1YanHsKVE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=r5NgDjt6XN31LXTtwgyd/9UZKL/O65GIXw58+9BSw4RNiG4KnIg3kv1+ca2y/4wLR
+	 AYpM8V/MjgGR3qm41FK19MKM7ql6mOQPoJHCydcnA7cK0lyl+YTzPrVqpDJw5ltOna
+	 Q+YQgYLrbJF6y0P/gr5gQyvXf0zZYlUSmq7Rlp7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388351AbgEMJz6 (ORCPT
+        id S2388344AbgEMJz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:55:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50186 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388331AbgEMJzy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:55:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59322 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388318AbgEMJzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 13 May 2020 05:55:54 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E336C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 02:55:54 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id c21so8469838lfb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 02:55:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=IDaxDOobVDjFaR+XbUcO1zeYd4szXYR8Tg3ntYn3THQ=;
-        b=QQRyzIWka/20HYMrTmQWhFH1DfWtTrXuxGlAQhDOt0cXDTf9KQ0mYF+tHniAsn1xEt
-         JU0nMrKnJw93m+JkHft40GDLj6p+igYUHR/i9FoFyONn8YOikPCImYkM+zU0OMF0OR8o
-         cFGSuhJiF0w4SymCdyAhPjmo5l/o6XnacAB3qAFGhQuu1G+CEuUiGhcsGvxKqidhM4r9
-         6LNDfHQysewD2YWmKOvyRFutNL1MEbEEih9Ew5RjpxULwqvT0oK3x8r+Ep3KlTTw18yb
-         61GUf+HP9Qhy87hY4X+oxMu2WQWbKq0/3pE9lI9/42QrWEkVQlEKF2zTaE1KATmyfqpS
-         1rzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=IDaxDOobVDjFaR+XbUcO1zeYd4szXYR8Tg3ntYn3THQ=;
-        b=FWbULnHAfBkEkg9Bf8fp8gHpVJc+9M78X0RXF7AM8ZBHRe/DtX6+C1NGNKWnSNEdBC
-         pgiWD5X+KjIH8c09F6GII5Zv6fDr+FHPAekVpdEvgx1jVmed1pZB3GmHZVmrjRl9pMcq
-         Dqn4+a/7lZrlfJh+8thBf4JSQYykPjgPED8Y7PaSwpnt7VoSVzFNu8S5COdCtgFO7bXY
-         eZUQIu3ARDv/gsa4s70OlhzVSVdbftRHaejITBh3ML7iSpsmuDpU4YgPE4uZqH9Ueofj
-         dgACMOZeu2gMJVe+L10jpbfQkIiQmvjIfFih27qQ9y3WyFOATMe/GqvJlo2VubC3TC0j
-         Mm6Q==
-X-Gm-Message-State: AOAM532BpxDq6rMyFuaRBpJqNs+PHKmkMozeTejKdoMfGWm+L1CPd7Uz
-        tnzznxxHYR/QWjrhVZvWmOzRuEs1pbvrHnvNKjjayg==
-X-Google-Smtp-Source: ABdhPJzoZRV8ZtcQ2AxvMArUx6ZSVUb8mXeMCKC6mBurbB8hvbXEt9uo30BgRFMtXrM9/QTlwsYpgaP2jzDkEwZbBVk=
-X-Received: by 2002:a19:4883:: with SMTP id v125mr17261923lfa.95.1589363752383;
- Wed, 13 May 2020 02:55:52 -0700 (PDT)
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DF4120575;
+        Wed, 13 May 2020 09:55:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589363753;
+        bh=SphKFXtyq2bYK1PdVCX7qx6+wpQEnI7wpi1YanHsKVE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=n4OAPbPfJ6b+yIKuH8Hyljid7yQXIJLknW2yFe9Fz+B+hvYuqBpl2BRfVincHUn7q
+         0g5pBCLukz5sQQhE5upseVk6z/eQ6ObZbGx42RA19jY0+W8cbGetJCpdX+YYYGT1DV
+         +9h3Btq5NAh09J8d26yLPp6JpjTRxQYDfwXHOV7A=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Andr=C3=A9=20Przywara?= <andre.przywara@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 5.6 073/118] KVM: arm: vgic: Fix limit condition when writing to GICD_I[CS]ACTIVER
+Date:   Wed, 13 May 2020 11:44:52 +0200
+Message-Id: <20200513094424.094701745@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
+References: <20200513094417.618129545@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 13 May 2020 15:25:39 +0530
-Message-ID: <CA+G9fYtC68oypqUoPbsnCA3CKL9=Os68fR+K1eKaWpFn=nj-Ng@mail.gmail.com>
-Subject: stable-rc 4.19.123-rc1/92ba0b6b33ad: no regressions found in project
- stable v4.19.y
-To:     linux- stable <stable@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Cc:     lkft-triage@lists.linaro.org,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+From: Marc Zyngier <maz@kernel.org>
 
-Summary
-------------------------------------------------------------------------
+commit 1c32ca5dc6d00012f0c964e5fdd7042fcc71efb1 upstream.
 
-kernel: 4.19.123-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: 92ba0b6b33adce776edd773ce07fbf0b6097f9d5
-git describe: v4.19.122-48-g92ba0b6b33ad
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.122-48-g92ba0b6b33ad
+When deciding whether a guest has to be stopped we check whether this
+is a private interrupt or not. Unfortunately, there's an off-by-one bug
+here, and we fail to recognize a whole range of interrupts as being
+global (GICv2 SPIs 32-63).
+
+Fix the condition from > to be >=.
+
+Cc: stable@vger.kernel.org
+Fixes: abd7229626b93 ("KVM: arm/arm64: Simplify active_change_prepare and plug race")
+Reported-by: André Przywara <andre.przywara@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ virt/kvm/arm/vgic/vgic-mmio.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/virt/kvm/arm/vgic/vgic-mmio.c
++++ b/virt/kvm/arm/vgic/vgic-mmio.c
+@@ -368,7 +368,7 @@ static void vgic_mmio_change_active(stru
+ static void vgic_change_active_prepare(struct kvm_vcpu *vcpu, u32 intid)
+ {
+ 	if (vcpu->kvm->arch.vgic.vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3 ||
+-	    intid > VGIC_NR_PRIVATE_IRQS)
++	    intid >= VGIC_NR_PRIVATE_IRQS)
+ 		kvm_arm_halt_guest(vcpu->kvm);
+ }
+ 
+@@ -376,7 +376,7 @@ static void vgic_change_active_prepare(s
+ static void vgic_change_active_finish(struct kvm_vcpu *vcpu, u32 intid)
+ {
+ 	if (vcpu->kvm->arch.vgic.vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3 ||
+-	    intid > VGIC_NR_PRIVATE_IRQS)
++	    intid >= VGIC_NR_PRIVATE_IRQS)
+ 		kvm_arm_resume_guest(vcpu->kvm);
+ }
+ 
 
 
-No regressions (compared to build v4.19.122)
-
-No fixes (compared to build v4.19.122)
-
-Ran 24159 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2800
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-dio-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* libhugetlbfs
-* ltp-containers-tests
-* ltp-cve-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-mm-tests
-* ltp-sched-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* v4l2-compliance
-* ltp-open-posix-tests
-* kvm-unit-tests
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
