@@ -2,211 +2,139 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C63C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E18BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBCFD205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:40:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="XHg0sa53"
+	by mail.kernel.org (Postfix) with ESMTP id AC29220659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:40:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389935AbgEMRkD (ORCPT
+        id S2389965AbgEMRkW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 13:40:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37940 "EHLO
+        Wed, 13 May 2020 13:40:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1733008AbgEMRkC (ORCPT
+        by vger.kernel.org with ESMTP id S1733008AbgEMRkV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 13:40:02 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B48ACC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 10:40:02 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id f23so68402pgj.4
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 10:40:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Jonk7T7t5Ncu8wp11LYJl0hUSoTwdIYfiEvWndcGPBw=;
-        b=XHg0sa53jbkNskOMgrDGoZruvm9YrzCEO2FeGSbsv3gGC/mjpK+/mpFFZc38f9PTA4
-         h0aEfipN2CNpAeyf6ds1dQ/64P0iTL6d8zpKUdSKzO9CYKfdmsIDqYLBJ9fHVOYxPQrA
-         sAU+xS/hHNXro9Y7XeXVDcDnH6zdUSvah4RYY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Jonk7T7t5Ncu8wp11LYJl0hUSoTwdIYfiEvWndcGPBw=;
-        b=SKvuLQ3CI/yMbB/W+ImFwmXn0Mvofg6dYOcBMLZIPRLA6w3OvEiMuBxAr/3qsvhi03
-         is1qOiqJiyxAE5SARPCVjZFaPGfIasGGbBz+5uGJLV7M+Gs4s6IEsxwrkpQ/mo1HmGOC
-         L2fqjKPbmn8E8C52JMWRZJ6exo5rBbZZNkX2Nwzu2RSB2KE1Gu2eihT8sXKbj3M7ygJU
-         1b76P5Y86YVbN8JhH5Wtl8QEXOeu03aKLSfIXJVevQumLBVVw5ZOowGXazXypOQlS2wy
-         4rz809VWnD1AgLt4sQA6ZDSNdWAKLspbA7iqBOq/hcK3nK1kplHJy+1bl2RV3fvA2aCN
-         tnSw==
-X-Gm-Message-State: AOAM532FJGNow1ivON4iJHL2W1AwGfrpfAMhsAPQn5IbRj1BcXmvnj8S
-        GqHBNGMazeRQqJasQsFDHEW2yqbtQn8=
-X-Google-Smtp-Source: ABdhPJzFcbg3OEanOgtpDxOooNhsWUAUbeQMJxNg0hu8kbrM65S8+kyFDuA1FzfS/fIQ1esPYzN8fA==
-X-Received: by 2002:aa7:8042:: with SMTP id y2mr413352pfm.94.1589391602081;
-        Wed, 13 May 2020 10:40:02 -0700 (PDT)
-Received: from rayagonda.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id o11sm251456pgp.62.2020.05.13.10.39.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 10:40:01 -0700 (PDT)
-From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Srinath Mannam <srinath.mannam@broadcom.com>,
-        linux-kernel@vger.kernel.org,
-        Bharat Gooty <bharat.gooty@broadcom.com>
-Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Subject: [PATCH v1 1/1] drivers: phy: sr-usb: do not use internal fsm for USB2 phy init
-Date:   Wed, 13 May 2020 23:09:47 +0530
-Message-Id: <20200513173947.10919-1-rayagonda.kokatanur@broadcom.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 13 May 2020 13:40:21 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC764C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 10:40:21 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jYvMc-0007rx-D4; Wed, 13 May 2020 19:40:14 +0200
+Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jYvMZ-0006Jw-Mq; Wed, 13 May 2020 19:40:11 +0200
+Date:   Wed, 13 May 2020 19:40:11 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Mark Rutland <mark.rutland@arm.com>, Marek Vasut <marex@denx.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        David Jander <david@protonic.nl>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH net-next v1] net: phy: tja11xx: add cable-test support
+Message-ID: <20200513174011.kl6l767cimeo6dpy@pengutronix.de>
+References: <20200513123440.19580-1-o.rempel@pengutronix.de>
+ <20200513133925.GD499265@lunn.ch>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200513133925.GD499265@lunn.ch>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 19:26:43 up 180 days,  8:45, 182 users,  load average: 0.02, 0.02,
+ 0.00
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bharat Gooty <bharat.gooty@broadcom.com>
+On Wed, May 13, 2020 at 03:39:25PM +0200, Andrew Lunn wrote:
+> On Wed, May 13, 2020 at 02:34:40PM +0200, Oleksij Rempel wrote:
+> > Add initial cable testing support.
+> > This PHY needs only 100usec for this test and it is recommended to run it
+> > before the link is up. For now, provide at least ethtool support, so it
+> > can be tested by more developers.
+> > 
+> > This patch was tested with TJA1102 PHY with following results:
+> > - No cable, is detected as open
+> > - 1m cable, with no connected other end and detected as open
+> > - a 40m cable (out of spec, max lenght should be 15m) is detected as OK.
+> > 
+> > Current patch do not provide polarity test support. This test would
+> > indicate not proper wire connection, where "+" wire of main phy is
+> > connected to the "-" wire of the link partner.
+> > 
+> > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > ---
+> >  drivers/net/phy/nxp-tja11xx.c | 106 +++++++++++++++++++++++++++++++++-
+> >  1 file changed, 105 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
+> > index ca5f9d4dc57ed..8b743d25002b9 100644
+> > --- a/drivers/net/phy/nxp-tja11xx.c
+> > +++ b/drivers/net/phy/nxp-tja11xx.c
+> > @@ -5,6 +5,7 @@
+> >   */
+> >  #include <linux/delay.h>
+> >  #include <linux/ethtool.h>
+> > +#include <linux/ethtool_netlink.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/mdio.h>
+> >  #include <linux/mii.h>
+> > @@ -26,6 +27,7 @@
+> >  #define MII_ECTRL_POWER_MODE_NO_CHANGE	(0x0 << 11)
+> >  #define MII_ECTRL_POWER_MODE_NORMAL	(0x3 << 11)
+> >  #define MII_ECTRL_POWER_MODE_STANDBY	(0xc << 11)
+> > +#define MII_ECTRL_CABLE_TEST		BIT(5)
+> >  #define MII_ECTRL_CONFIG_EN		BIT(2)
+> >  #define MII_ECTRL_WAKE_REQUEST		BIT(0)
+> >  
+> > @@ -55,6 +57,11 @@
+> >  #define MII_GENSTAT			24
+> >  #define MII_GENSTAT_PLL_LOCKED		BIT(14)
+> >  
+> > +#define MII_EXTSTAT			25
+> > +#define MII_EXTSTAT_SHORT_DETECT	BIT(8)
+> > +#define MII_EXTSTAT_OPEN_DETECT		BIT(7)
+> > +#define MII_EXTSTAT_POLARITY_DETECT	BIT(6)
+> > +
+> 
+> Do these registers all conform to the standard? Can we pull this code
+> out into a library which all standards conformant PHY drivers can use?
 
-During different reboot cycles, USB PHY PLL may not always lock
-during initialization and therefore can cause USB to be not usable.
+According to opensig, this functionality should be present on all new T1 PHYs.
+But the register/bit layout is no specified as standard. At least I was not able
+to find it. I assume, current layout is TJA11xx specific.
 
-Hence do not use internal FSM programming sequence for the USB
-PHY initialization.
+> The code itself looks O.K.
 
-Fixes: 4dcddbb38b64 ("phy: sr-usb: Add Stingray USB PHY driver")
-Signed-off-by: Bharat Gooty <bharat.gooty@broadcom.com>
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
----
- drivers/phy/broadcom/phy-bcm-sr-usb.c | 55 +--------------------------
- 1 file changed, 2 insertions(+), 53 deletions(-)
+What would be the best place to do a test before the link is getting up?
+Can it be done in the phy core, or it should be done in the PHY driver?
 
-diff --git a/drivers/phy/broadcom/phy-bcm-sr-usb.c b/drivers/phy/broadcom/phy-bcm-sr-usb.c
-index fe6c58910e4c..7c7862b4f41f 100644
---- a/drivers/phy/broadcom/phy-bcm-sr-usb.c
-+++ b/drivers/phy/broadcom/phy-bcm-sr-usb.c
-@@ -16,8 +16,6 @@ enum bcm_usb_phy_version {
- };
- 
- enum bcm_usb_phy_reg {
--	PLL_NDIV_FRAC,
--	PLL_NDIV_INT,
- 	PLL_CTRL,
- 	PHY_CTRL,
- 	PHY_PLL_CTRL,
-@@ -31,18 +29,11 @@ static const u8 bcm_usb_combo_phy_ss[] = {
- };
- 
- static const u8 bcm_usb_combo_phy_hs[] = {
--	[PLL_NDIV_FRAC]	= 0x04,
--	[PLL_NDIV_INT]	= 0x08,
- 	[PLL_CTRL]	= 0x0c,
- 	[PHY_CTRL]	= 0x10,
- };
- 
--#define HSPLL_NDIV_INT_VAL	0x13
--#define HSPLL_NDIV_FRAC_VAL	0x1005
--
- static const u8 bcm_usb_hs_phy[] = {
--	[PLL_NDIV_FRAC]	= 0x0,
--	[PLL_NDIV_INT]	= 0x4,
- 	[PLL_CTRL]	= 0x8,
- 	[PHY_CTRL]	= 0xc,
- };
-@@ -52,7 +43,6 @@ enum pll_ctrl_bits {
- 	SSPLL_SUSPEND_EN,
- 	PLL_SEQ_START,
- 	PLL_LOCK,
--	PLL_PDIV,
- };
- 
- static const u8 u3pll_ctrl[] = {
-@@ -66,29 +56,17 @@ static const u8 u3pll_ctrl[] = {
- #define HSPLL_PDIV_VAL		0x1
- 
- static const u8 u2pll_ctrl[] = {
--	[PLL_PDIV]	= 1,
- 	[PLL_RESETB]	= 5,
- 	[PLL_LOCK]	= 6,
- };
- 
- enum bcm_usb_phy_ctrl_bits {
- 	CORERDY,
--	AFE_LDO_PWRDWNB,
--	AFE_PLL_PWRDWNB,
--	AFE_BG_PWRDWNB,
--	PHY_ISO,
- 	PHY_RESETB,
- 	PHY_PCTL,
- };
- 
- #define PHY_PCTL_MASK	0xffff
--/*
-- * 0x0806 of PCTL_VAL has below bits set
-- * BIT-8 : refclk divider 1
-- * BIT-3:2: device mode; mode is not effect
-- * BIT-1: soft reset active low
-- */
--#define HSPHY_PCTL_VAL	0x0806
- #define SSPHY_PCTL_VAL	0x0006
- 
- static const u8 u3phy_ctrl[] = {
-@@ -98,10 +76,6 @@ static const u8 u3phy_ctrl[] = {
- 
- static const u8 u2phy_ctrl[] = {
- 	[CORERDY]		= 0,
--	[AFE_LDO_PWRDWNB]	= 1,
--	[AFE_PLL_PWRDWNB]	= 2,
--	[AFE_BG_PWRDWNB]	= 3,
--	[PHY_ISO]		= 4,
- 	[PHY_RESETB]		= 5,
- 	[PHY_PCTL]		= 6,
- };
-@@ -186,38 +160,13 @@ static int bcm_usb_hs_phy_init(struct bcm_usb_phy_cfg *phy_cfg)
- 	int ret = 0;
- 	void __iomem *regs = phy_cfg->regs;
- 	const u8 *offset;
--	u32 rd_data;
- 
- 	offset = phy_cfg->offset;
- 
--	writel(HSPLL_NDIV_INT_VAL, regs + offset[PLL_NDIV_INT]);
--	writel(HSPLL_NDIV_FRAC_VAL, regs + offset[PLL_NDIV_FRAC]);
--
--	rd_data = readl(regs + offset[PLL_CTRL]);
--	rd_data &= ~(HSPLL_PDIV_MASK << u2pll_ctrl[PLL_PDIV]);
--	rd_data |= (HSPLL_PDIV_VAL << u2pll_ctrl[PLL_PDIV]);
--	writel(rd_data, regs + offset[PLL_CTRL]);
--
--	/* Set Core Ready high */
--	bcm_usb_reg32_setbits(regs + offset[PHY_CTRL],
--			      BIT(u2phy_ctrl[CORERDY]));
--
--	/* Maximum timeout for Core Ready done */
--	msleep(30);
--
-+	bcm_usb_reg32_clrbits(regs + offset[PLL_CTRL],
-+			      BIT(u2pll_ctrl[PLL_RESETB]));
- 	bcm_usb_reg32_setbits(regs + offset[PLL_CTRL],
- 			      BIT(u2pll_ctrl[PLL_RESETB]));
--	bcm_usb_reg32_setbits(regs + offset[PHY_CTRL],
--			      BIT(u2phy_ctrl[PHY_RESETB]));
--
--
--	rd_data = readl(regs + offset[PHY_CTRL]);
--	rd_data &= ~(PHY_PCTL_MASK << u2phy_ctrl[PHY_PCTL]);
--	rd_data |= (HSPHY_PCTL_VAL << u2phy_ctrl[PHY_PCTL]);
--	writel(rd_data, regs + offset[PHY_CTRL]);
--
--	/* Maximum timeout for PLL reset done */
--	msleep(30);
- 
- 	ret = bcm_usb_pll_lock_check(regs + offset[PLL_CTRL],
- 				     BIT(u2pll_ctrl[PLL_LOCK]));
+So far, no action except of logging these errors is needed. 
+
 -- 
-2.17.1
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
