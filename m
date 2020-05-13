@@ -2,115 +2,86 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF837CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5FDCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC63C206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:56:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="1u1xnpu1"
+	by mail.kernel.org (Postfix) with ESMTP id 35624206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:56:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733108AbgEMM4a (ORCPT
+        id S1733139AbgEMM4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 13 May 2020 08:56:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33650 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733110AbgEMM4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 13 May 2020 08:56:30 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:6837 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732989AbgEMM42 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 08:56:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589374587; x=1620910587;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=WZs4qSGRBrl6o2f2lxXITxeDdZF+Q5jzpsB7ABIsFbU=;
-  b=1u1xnpu1gKMXcyO0X1jpeihSzw0BMZmgsoTfMWuo9IZbVXjAN2eQle3W
-   H5NrAWHzWf71f4MMGXMQNCqynhI6P6/bBe3VA0K9eH6QKa0hSfsszqSIb
-   z/DW5QAFPkrCrmFygccMLc0M77VaI+hOaje8EEO+VXrFrkK8VnK52QQE8
-   RrcnZ9W0Xr0IJRmsc000W7qkRpe7xba7VomCIJUDJcrUdFbTJP+AzPSCp
-   vpZE8VO1IP+GGOhLyeZ2bQyopWpue4XBTeMdTQ78dgtNGt076Jrn1G1YT
-   3ihL68w6fSpQIAZK640b9Glf9YYbCYnw+2zDdVDYKQEnkVe2Y3aOvJ6PX
-   g==;
-IronPort-SDR: 3ikZKAyB22KBrZk1FzU8VvJgBhd9k54O9JjFg6AcKl3y9Du84qZFtlR0mm7ZAHBquLWsOmxT2R
- xnpvkU5ljUwcmRcU0VIqdmxBlHmLDgerCJwSFXxz+8XqAmRUrCA6AYOm0Vx1W0gX6HKE1Umtfp
- wW+iNZ6sTV/7rFMhhZ1LWtri18WBwwgMKdDswvBQl4vPatwlGTrb3PhXSOKItooUNrZcudLsQt
- xX8TgWneIZeWwb8SKPjaGpDbbgsuO85ZfHWrw9egM7BuaczTqN8V0XyD+FZmsByL3sys6mIrpb
- waw=
-X-IronPort-AV: E=Sophos;i="5.73,387,1583218800"; 
-   d="scan'208";a="75132769"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 May 2020 05:56:26 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 13 May 2020 05:56:28 -0700
-Received: from soft-dev15.microsemi.net (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 13 May 2020 05:56:23 -0700
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-To:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Olof Johansson <olof@lixom.net>,
-        "Michael Turquette" <mturquette@baylibre.com>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 03/14] pinctrl: ocelot: Fix GPIO interrupt decoding on Jaguar2
-Date:   Wed, 13 May 2020 14:55:21 +0200
-Message-ID: <20200513125532.24585-4-lars.povlsen@microchip.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513125532.24585-1-lars.povlsen@microchip.com>
-References: <20200513125532.24585-1-lars.povlsen@microchip.com>
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id EB7FAAD08;
+        Wed, 13 May 2020 12:56:31 +0000 (UTC)
+Message-ID: <87d71fa371739486a19f17a6b3ca72d2315220d2.camel@suse.de>
+Subject: Re: [PATCH v3 0/2] usb: xhci: Load Raspberry Pi 4 VL805's firmware
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     mbrugger@suse.com, u-boot@lists.denx.de, bmeng.cn@gmail.com,
+        marex@denx.de, linux-kernel@vger.kernel.org
+Cc:     sjg@chromium.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com,
+        mark.kettenis@xs4all.nl
+Date:   Wed, 13 May 2020 14:56:27 +0200
+In-Reply-To: <20200505162607.334-1-nsaenzjulienne@suse.de>
+References: <20200505162607.334-1-nsaenzjulienne@suse.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-zJ6m1nQczXy6DejoCnBn"
+User-Agent: Evolution 3.36.2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes a problem with using the GPIO as an interrupt on Jaguar2
-(and similar), as the register layout of the platforms with 64 GPIO's
-are pairwise, such that the original offset must be multiplied with
-the platform stride.
 
-Fixes: da801ab56ad8 pinctrl: ocelot: add MSCC Jaguar2 support.
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
----
- drivers/pinctrl/pinctrl-ocelot.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+--=-zJ6m1nQczXy6DejoCnBn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
-index 375f3ea3b80c4..95c225bc7572f 100644
---- a/drivers/pinctrl/pinctrl-ocelot.c
-+++ b/drivers/pinctrl/pinctrl-ocelot.c
-@@ -680,11 +680,12 @@ static void ocelot_irq_handler(struct irq_desc *desc)
- 	struct irq_chip *parent_chip = irq_desc_get_chip(desc);
- 	struct gpio_chip *chip = irq_desc_get_handler_data(desc);
- 	struct ocelot_pinctrl *info = gpiochip_get_data(chip);
-+	unsigned int id_reg = OCELOT_GPIO_INTR_IDENT * info->stride;
- 	unsigned int reg = 0, irq, i;
- 	unsigned long irqs;
- 
- 	for (i = 0; i < info->stride; i++) {
--		regmap_read(info->map, OCELOT_GPIO_INTR_IDENT + 4 * i, &reg);
-+		regmap_read(info->map, id_reg + 4 * i, &reg);
- 		if (!reg)
- 			continue;
- 
--- 
-2.26.2
+On Tue, 2020-05-05 at 18:26 +0200, Nicolas Saenz Julienne wrote:
+> Newer revisions of the RPi4 need their xHCI chip, VL805, firmware to be
+> loaded explicitly. Earlier versions didn't need that as they where using
+> an EEPROM for that purpose. This series takes care of setting up the
+> relevant infrastructure and run the firmware loading routine at the
+> right moment.
+>=20
+> Note that this builds on top of Sylwester Nawrocki's "USB host support
+> for Raspberry Pi 4 board" series.
+>=20
+> ---
+
+Just for the record, here's the version of this in the Linux Kernel:
+https://patchwork.kernel.org/cover/11529585/
+
+Regards,
+Nicolas
+
+
+--=-zJ6m1nQczXy6DejoCnBn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl677nsACgkQlfZmHno8
+x/4lwgf/az8ddaA++TvpX2NQkZGoTV4ECgURLlQzVVNgRpdiDSad2Dq0OMhJoUIS
+DSUgQOnYDBQGMkOPlhEMV/vsNtno+RvAenDdkBrFr5Y5rUtd5cFkcOkaUagw4+jP
+gFQluOKw3MyAhFlgQRZhlSTS9fihdmxlLZEosnS33gcyuS1SJnmyL2YL0NiP9aHG
+9VdyqXirGnrwPJXnBkEoAyHKchhriGj7hvfUZI2Yxp3Z1xEwSttz+KZy5VCFx+nr
+TaFhC35xIxEpkTY8mIxb+UcQfESD+Q1lDDcEiztuOH+PZJLuOO8jFymrTS7BsW6+
+fzTkDmCMuoKPZf1m9rddp1pO+VcMww==
+=1fCZ
+-----END PGP SIGNATURE-----
+
+--=-zJ6m1nQczXy6DejoCnBn--
 
