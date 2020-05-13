@@ -2,136 +2,83 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BEBC2D0FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 950DDC2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:21:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98B4C2078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:21:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589368880;
-	bh=1rM3FpjaWvSlq2GT/NFR1D7yxdKbGJ971Atj6aZc2yo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qxvIEkWqQIOwQ4PfV7f96NT/vgQD9BX667KJJfm8A36eoBhF23xjOVeDBNyybNLPV
-	 ESAyla7lqyuMYu+3cxfFFvVHA1M/oH61Nbk+6ZO+GEo4/YutKILjh5iPXQVAFjCxHn
-	 1lYPdmbRvXTosxgaRRT/ruaEv3uZOiDiTwux3G9w=
+	by mail.kernel.org (Postfix) with ESMTP id 747762078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:21:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732820AbgEMLVU (ORCPT
+        id S1732496AbgEMLVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 07:21:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52160 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 07:21:24 -0400
+Received: from elvis.franken.de ([193.175.24.41]:51993 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732496AbgEMLVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 07:21:19 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3573320753;
-        Wed, 13 May 2020 11:21:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589368878;
-        bh=1rM3FpjaWvSlq2GT/NFR1D7yxdKbGJ971Atj6aZc2yo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VuhH0snCqTgyXK73vkjq4nWdUwTe8fMeut0GdsMCMiahxuPGfwDpOkR1/TB51yCiK
-         8qdbnMgMXleLVbKQosV+7fUXktbSL0TO/GUAbUlI237/y/oyXuQBo4bRuw4V1oLZC8
-         tkIqmZ2H1HwD0Cc2sMqkDuCh+TzFs6eWPt/hoPy8=
-Date:   Wed, 13 May 2020 12:21:16 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/17] spi: dw: Add generic DW DMA controller support
-Message-ID: <20200513112116.GE4803@sirena.org.uk>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200508133336.GK4820@sirena.org.uk>
- <20200512200733.bdbbhkjkwjd5yzqq@mobilestation>
- <20200513102324.GB4803@sirena.org.uk>
- <20200513110407.uaosfxebsgnllsf4@mobilestation>
+        id S1732803AbgEMLVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 07:21:21 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jYpRu-000588-00; Wed, 13 May 2020 13:21:18 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id C38E9C047A; Wed, 13 May 2020 13:18:06 +0200 (CEST)
+Date:   Wed, 13 May 2020 13:18:06 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        linux-kbuild@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        Sedat Dilek <sedat.dilek@gmail.com>
+Subject: Re: [PATCH v5 0/5] Allow ld.lld to link the MIPS VDSO
+Message-ID: <20200513111806.GA7151@alpha.franken.de>
+References: <20200423171807.29713-1-natechancellor@gmail.com>
+ <20200428221419.2530697-1-natechancellor@gmail.com>
+ <20200512080509.GA9433@alpha.franken.de>
+ <20200512082843.GA3815743@ubuntu-s3-xlarge-x86>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qFgkTsE6LiHkLPZw"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513110407.uaosfxebsgnllsf4@mobilestation>
-X-Cookie: Long life is in store for you.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200512082843.GA3815743@ubuntu-s3-xlarge-x86>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 12, 2020 at 01:28:43AM -0700, Nathan Chancellor wrote:
+> On Tue, May 12, 2020 at 10:05:09AM +0200, Thomas Bogendoerfer wrote:
+> > On Tue, Apr 28, 2020 at 03:14:14PM -0700, Nathan Chancellor wrote:
+> > > [..]
+> > > Please let me know if there are any issues!
+> > 
+> > I found no issues in my tests. Is this the final state ? If yes, I'm
+> > going to apply it to mips-next.
+> > 
+> > Thomas.
+> > 
+> > -- 
+> > Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+> > good idea.                                                [ RFC1925, 2.3 ]
+> 
+> Maciej seemed to have some issue with the way I worded the commit
+> message of patch 4 but I have not heard anything back about my
+> suggestion and Fangrui commented that --eh-frame-hdr might not be
+> necessary but if everything works fine for you with this version, I
+> am not inclined to touch it.
+> 
+> If you feel this is good to go, I am happy to let it go in. Thanks for
+> accepting it!
 
---qFgkTsE6LiHkLPZw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+applied to mips-next.
 
-On Wed, May 13, 2020 at 02:04:07PM +0300, Serge Semin wrote:
-> On Wed, May 13, 2020 at 11:23:24AM +0100, Mark Brown wrote:
+Thomas.
 
-> > The conversion to YAML format should be the very last thing in the patch
-> > series,
-
-> Hm, haven't heard about this requirement. Could you point me out to a doc or
-> some discussion concerning this for future reference? It's not a first DT
-> conversion patch I've submitted and non of them were addressed with such
-> request. I do understand that the order of DT concerning patches can be
-> important and agree to fix it by updating the original legacy binding first,
-> then perform a conversion. But placing the conversion in a tail of the series
-> just seems unnecessary. The patch can be dropped from any place of the series
-> if for some reason Rob would be late with review.
-
-This is a practical observation based on the fact that there is a huge
-backlog of reviews of DT binding conversions and that those conversions
-typically go through several review cycles and that not everyone who's
-sending patches to the kernel is fully up to speed on processes or has
-strong English.  By telling people (including other people who find
-instructions on the list) to put the conversion right at the end of the
-series I am avoiding any ambiguity or confusion about ordering with
-regard to any other patches to the DT, including any new patches that
-get added to the series.
-
-> Personally I prefer placing all DT changes in the head of the series, so Rob
-> wouldn't need to search through the whole patchset looking for the DT-related
-> patches.
-
-Ideally the YAML conversions would be done entirely separately to other
-development rather than as part of a bigger series, they're pretty much
-orthogonal anyway.  Sadly there's obvious content collisions with any
-new development that adds DT stuff so that's not always the most
-practical thing.
-
---qFgkTsE6LiHkLPZw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl672CsACgkQJNaLcl1U
-h9CvIgf8CclGE4F4cQcTkCuqaYdGr9ohJ2hjT7jc11cc7QMWD/qMRJp3MiooztOw
-uZbiDEGdSvfLq8OyAIQzKsbwaSp7JB9Fex40Xxw4YQwI0aKS3eGDoAjpbQ9pNaBX
-Lu2P43EHmVbsGqRB+FQ1eyRWK9mHCSMBRD4Vi+4eKgmajrP49rhKKgVEQLEv0TDB
-CUGxIaXw/hzzpcSMnibBRzU+0x7rXzxR/twRQyuRSGWtdWwdXs7StavwUtg/1Vzz
-8PzW69SHXfq51QITjsEsRQBiUwm9e5t1QOfxL6HPbjYPjzPnDNxRWcvJu+m3KITV
-7qkM0+jJ+R/al+sS+pG2410lS7ISTA==
-=n6l5
------END PGP SIGNATURE-----
-
---qFgkTsE6LiHkLPZw--
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
