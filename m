@@ -2,136 +2,78 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53069C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBCEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51073205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:13:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LGDhXSd0"
+	by mail.kernel.org (Postfix) with ESMTP id 28EE0205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:14:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730850AbgEMWNq (ORCPT
+        id S1730867AbgEMWO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 18:13:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52822 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730794AbgEMWNq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 18:13:46 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 054E8C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 15:13:45 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id s69so3395095pjb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 15:13:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=e6RXpgluKwXPp3KRCdiHCqL2rdUeYjnysCP7SSKxBOM=;
-        b=LGDhXSd0LFpWl0o4hxng7L0J/q4lMorH0G9DAzNLEG6GsWcHLUtoAH9bXfmTzMvKRa
-         MisrArcyuTh1Bsi5exkoTVN7yPz3JxQZ7ZmU2nWMe1VMvRBilgdpvx+CZ0zvuHMO0Ff5
-         NFroCGOcnA/3y1zhVVW/FjOG2/QonmXAuEaIRFDjjofin1chGunmrkyLBuz1/KgOVJmP
-         G0JVlbFeyvOhfPfxuEHvNmMd0b7BfVwAlbHyBl2Rqfh8LlvooW/O/KR4lZVNFGOhamDm
-         MSrZef83Fqmuwe5ckDlVz19PjhbP1SGvTVLwScfx/1jq9n4OQ4m0pp94Yi+2AxVEI2sa
-         U/xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=e6RXpgluKwXPp3KRCdiHCqL2rdUeYjnysCP7SSKxBOM=;
-        b=cLY41be99kAvn2kdyVc/9lEElz7v1rqNKpHTdKHczXdyPiZ26WXMEsVNjnPKT/vDJo
-         O/LQAkk0bm5aWa7hd/bCaGquWXNcb7AcmTopxJv7cDClC1awF6K0je/ve5yCrdquhsIC
-         ecOMFIrWeBPcpie//ZaXteRvQZSzxaP/iQi6JeMKin+Vgr3ZNFInYgo/bFKHBac6adX9
-         UmNFRwOxv+wOJ9DQoCd0RCgTv6QJ300C8P+zPobSJUgsyf8meUcAkgINs3LaBJdL31If
-         YEVZCIMCCCHyxOBIiGjzELEurkG60tIW25yitj1+J6Qb7LWIfrmQfXoMqjeU4y+ZPcm5
-         N11Q==
-X-Gm-Message-State: AOAM532fiJzevudUQPPsgImTvQWYMJo3wawCbj05kQoNpoMnive4ZGSI
-        gi2ss5yQYD02GEwdGulklExkTg==
-X-Google-Smtp-Source: ABdhPJyplZyfECUA4JUBp4ymP477fQ0nX0LINWjlkQLJAuqkagunu2xqRi+StBi4BXbgxBkDbzGzgg==
-X-Received: by 2002:a17:902:fe8d:: with SMTP id x13mr1277189plm.198.1589408025407;
-        Wed, 13 May 2020 15:13:45 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id y24sm456127pfn.211.2020.05.13.15.13.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 15:13:44 -0700 (PDT)
-Date:   Wed, 13 May 2020 16:13:42 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Arun Kumar Neelakantam <aneela@codeaurora.org>
-Cc:     ohad@wizery.com, bjorn.andersson@linaro.org, clew@codeaurora.org,
-        sricharan@codeaurora.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>
-Subject: Re: [PATCH V5 5/5] rpmsg: glink: unregister rpmsg device during
- endpoint destroy
-Message-ID: <20200513221342.GC8328@xps15>
-References: <1589346606-15046-1-git-send-email-aneela@codeaurora.org>
- <1589346606-15046-6-git-send-email-aneela@codeaurora.org>
+        Wed, 13 May 2020 18:14:28 -0400
+Received: from mga04.intel.com ([192.55.52.120]:54906 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730532AbgEMWO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 18:14:27 -0400
+IronPort-SDR: vPDP+f/KiFkAlRmVUmJzzoH9cDfbaj/7Qk0bkGHGflX6Vg+rqxEbxW3k+eYv6egJXKT/1TbBv+
+ XbfqzVsBJAKA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 15:14:27 -0700
+IronPort-SDR: GxdBgm6DGszalFODl1dKv7iCkyQpPXtsRxlrg3eHT5cnlqlgajinY7R3MsmipiqAJU8o6TX8yJ
+ +fibgZRJ/uVA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,389,1583222400"; 
+   d="scan'208";a="287185274"
+Received: from rthurerx-mobl.ger.corp.intel.com ([10.249.36.107])
+  by fmsmga004.fm.intel.com with ESMTP; 13 May 2020 15:14:20 -0700
+Message-ID: <0d485f780ac9809229290762931cd591e6f8156a.camel@linux.intel.com>
+Subject: Re: [PATCH v29 00/20] Intel SGX foundations
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Nathaniel McCallum <npmccallum@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        Patrick Uiterwijk <puiterwijk@redhat.com>
+Date:   Thu, 14 May 2020 01:14:19 +0300
+In-Reply-To: <CAOASepPFe_ucuwe7JW_-+VBQ4=+sHqyGXOdA9kUbcYA_9=v0sA@mail.gmail.com>
+References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
+         <CAOASepPFe_ucuwe7JW_-+VBQ4=+sHqyGXOdA9kUbcYA_9=v0sA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589346606-15046-6-git-send-email-aneela@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 10:40:06AM +0530, Arun Kumar Neelakantam wrote:
-> Rpmsg device unregister is not happening if channel close is triggered
-> from local side and causing re-registration of device failures.
+On Wed, 2020-05-06 at 17:42 -0400, Nathaniel McCallum wrote:
+> Tested on Enarx. This requires a patch[0] for v29 support.
 > 
-> Unregister rpmsg device for local close in endpoint destroy path.
-> 
-> Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
-> ---
->  drivers/rpmsg/qcom_glink_native.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
-> index 0e8a28c0..fc8ef66 100644
-> --- a/drivers/rpmsg/qcom_glink_native.c
-> +++ b/drivers/rpmsg/qcom_glink_native.c
-> @@ -1207,6 +1207,7 @@ static void qcom_glink_destroy_ept(struct rpmsg_endpoint *ept)
->  {
->  	struct glink_channel *channel = to_glink_channel(ept);
->  	struct qcom_glink *glink = channel->glink;
-> +	struct rpmsg_channel_info chinfo;
->  	unsigned long flags;
->  
->  	spin_lock_irqsave(&channel->recv_lock, flags);
-> @@ -1214,6 +1215,13 @@ static void qcom_glink_destroy_ept(struct rpmsg_endpoint *ept)
->  	spin_unlock_irqrestore(&channel->recv_lock, flags);
->  
->  	/* Decouple the potential rpdev from the channel */
-> +	if (channel->rpdev) {
+> Tested-by: Nathaniel McCallum <npmccallum@redhat.com>
 
-If we proceed this way no other channel can have an rpdev.  I would hope that
-unregistration of rpdev would be more symetrical to what is done in patch 03.
+Thank you. Update in my tree.
 
-Thanks,
-Mathieu
+Sean, I'll fixed that whitespace issue too in my tree.
 
-> +		strncpy(chinfo.name, channel->name, sizeof(chinfo.name));
-> +		chinfo.src = RPMSG_ADDR_ANY;
-> +		chinfo.dst = RPMSG_ADDR_ANY;
-> +
-> +		rpmsg_unregister_device(glink->dev, &chinfo);
-> +	}
->  	channel->rpdev = NULL;
->  
->  	qcom_glink_send_close_req(glink, channel);
-> @@ -1477,6 +1485,7 @@ static void qcom_glink_rx_close(struct qcom_glink *glink, unsigned int rcid)
->  
->  		rpmsg_unregister_device(glink->dev, &chinfo);
->  	}
-> +	channel->rpdev = NULL;
->  
->  	qcom_glink_send_close_ack(glink, channel->rcid);
->  
-> -- 
-> 2.7.4
+General question: maybe it would be easiest that I issue a pull request
+once everyone feels that the series is ready to be pulled and stop sending
+new versions of the series?
+
+/Jarkko
+
