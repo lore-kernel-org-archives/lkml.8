@@ -2,103 +2,123 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA48C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB0CCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E58120659
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:03:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589378592;
-	bh=Eufhx3dlqqgouxXOOXWIHlrYL0mU5lBnSfOCmIEp3Fc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PYkRYO0QnHDu3Dh4HY/C4GA0pClFJGte7GDAS8FO2kzZZmWinyfrW/qKK6A4M6Aw9
-	 0Q0o316Ja4aTQCOv0c3YDrM4fPHv+eZ8aO07ujLfJt7lQhwOBtzqozasro7N6oTs18
-	 ZDXiaKLzQKsilj1Lm6lIXwaaqlbwjsoOClcRTF6o=
+	by mail.kernel.org (Postfix) with ESMTP id C97ED20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:03:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DpgyaJRg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388876AbgEMODL (ORCPT
+        id S2388885AbgEMODQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 10:03:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55950 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387608AbgEMODL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 10:03:11 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 13 May 2020 10:03:16 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59642 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388877AbgEMODO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 10:03:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589378592;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=H0VwXgXDRwfKbDIjTqIx4tI86RnceSX/HZFFQNPbyc4=;
+        b=DpgyaJRgY74CZEXTQ72PI46AT7Tk3lWAGK3OfPrM1+DdJ/iyF6sEBIsVkuhSRonj3lpXx/
+        vcVZTY1Yt9TeiIcc9ulFD9F4+Hiopuz2fqYe4MPLGC0kpichf5/4oDrjLbfImFULPbgJMe
+        1pCLZl6lRm4NJiFKdzBJsgtFC1a12NA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-225-yczyfFHANK6jOKMPiiiAvQ-1; Wed, 13 May 2020 10:03:08 -0400
+X-MC-Unique: yczyfFHANK6jOKMPiiiAvQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A18692064E;
-        Wed, 13 May 2020 14:03:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589378590;
-        bh=Eufhx3dlqqgouxXOOXWIHlrYL0mU5lBnSfOCmIEp3Fc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0MdU5zsTd7ve9RlyN3XfHy/AJ43Nj4J4J62DwwgSTzTcA8x8VxoDauR/tEsXmcv7q
-         NJ6UyyO4gjb2WaPXu01c6Y8jNGvZwZMdKq7Xhbg3rNxR6otHnF9G5IlB1aQ+fVnwxd
-         tuOOeeuhw+QHhj+kPL4w7M336rEi/oQ8bppMd8Qw=
-Date:   Wed, 13 May 2020 15:03:07 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH 1/5] spi: dt-bindings: sifive: Add missing 2nd register
- region
-Message-ID: <20200513140307.GG4803@sirena.org.uk>
-References: <20200512204543.22090-1-robh@kernel.org>
- <158937185132.39109.17103954100758193517.b4-ty@kernel.org>
- <CAL_Jsq+KfngSTEnP3eh6Zr9H4GUuSbyZCGXs=skbwQK0j4ZJnA@mail.gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 773221841925;
+        Wed, 13 May 2020 14:03:06 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-115-240.rdu2.redhat.com [10.10.115.240])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 287EA12A4D;
+        Wed, 13 May 2020 14:03:05 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id A9553220206; Wed, 13 May 2020 10:03:04 -0400 (EDT)
+Date:   Wed, 13 May 2020 10:03:04 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, x86@kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Gavin Shan <gshan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/8] KVM: x86: interrupt based APF page-ready event
+ delivery
+Message-ID: <20200513140304.GC173965@redhat.com>
+References: <20200511164752.2158645-1-vkuznets@redhat.com>
+ <20200511164752.2158645-5-vkuznets@redhat.com>
+ <20200512142411.GA138129@redhat.com>
+ <87lflxm9sy.fsf@vitty.brq.redhat.com>
+ <20200512180704.GE138129@redhat.com>
+ <877dxgmcjv.fsf@vitty.brq.redhat.com>
+ <20200513135350.GB173965@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ulDeV4rPMk/y39in"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+KfngSTEnP3eh6Zr9H4GUuSbyZCGXs=skbwQK0j4ZJnA@mail.gmail.com>
-X-Cookie: Long life is in store for you.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200513135350.GB173965@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 13, 2020 at 09:53:50AM -0400, Vivek Goyal wrote:
 
---ulDeV4rPMk/y39in
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[..]
+> > > And this notion of same structure being shared across multiple events
+> > > at the same time is just going to create more confusion, IMHO. If we
+> > > can decouple it by serializing it, that definitely feels simpler to
+> > > understand.
+> > 
+> > What if we just add sub-structures to the structure, e.g. 
+> > 
+> > struct kvm_vcpu_pv_apf_data {
+> >         struct {
+> >             __u32 apf_flag;
+> >         } legacy_apf_data;
+> >         struct {
+> >             __u32 token;
+> >         } apf_interrupt_data;
+> >         ....
+> >         __u8 pad[56];                                                                                  |
+> >         __u32 enabled;                                                                                 |
+> > };    
+> > 
+> > would it make it more obvious?
 
-On Wed, May 13, 2020 at 08:02:14AM -0500, Rob Herring wrote:
-> On Wed, May 13, 2020 at 7:10 AM Mark Brown <broonie@kernel.org> wrote:
+On a second thought, given we are not planning to use
+this structure for synchrous events anymore, I think defining
+struct might be overkill. May be a simple comment will do.
 
-> > [1/1] spi: dt-bindings: sifive: Add missing 2nd register region
-> >       commit: b265b5a0ba15b6e00abce9bf162926e84b4323b4
+struct kvm_vcpu_pv_apf_data {
+	/* Used by page fault based page not present notifications. Soon
+	 * it will be legacy
+	 */
+	__u32 apf_flag;
+	/* Used for interrupt based page ready notifications */
+	__u32 token;
+	...
+	...
+}
 
-> You missed my ask for an ack. This is a dependency for patch 5.
+Thanks
+Vivek
 
-Ah, there was no cover letter.=20
-
-Acked-by: Mark Brown <broonie@kernel.org>
-
---ulDeV4rPMk/y39in
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl67/hoACgkQJNaLcl1U
-h9AiNAf/VxSFKe5eGeiXNh8NQ9o1DuI+ryYYh8J5t4bHHaX/ukfZxOjzM1emHxVY
-dK91QCGiu/6HrZOrx7SNr/ZsJaSqIHg7le2mJWvu4g6uJ/SaPTKCGjUfL5gPeG28
-FHa34V2fwOUoRil6nEiHnvrbQTQQmtwMw13zeYi38ltLK6qchlfCmFT7gjiYHmtm
-netlxcnM2YKr/vblKt1hnDTffvAs2THEpNh8lJ0bA7IBEWsdRPH8PVROjIaBQpME
-JzEW1cFXZTEeuuiNkYS1GMk/ShIxSiD19aAhfOzbomVXqMjenusxBN1jAd5VfoA2
-9TnqOxwFFTKo84Gi3jhJlFaTkx5IRQ==
-=KsV3
------END PGP SIGNATURE-----
-
---ulDeV4rPMk/y39in--
