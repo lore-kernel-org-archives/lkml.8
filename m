@@ -2,122 +2,109 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19748C4345F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A793AC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F09121532
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABDDF207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:01:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="RSQKszL0"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="VpSg27vN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389207AbgEMPA1 (ORCPT
+        id S2389374AbgEMPBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:00:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41348 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389176AbgEMPAX (ORCPT
+        Wed, 13 May 2020 11:01:45 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:56864 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389054AbgEMPAA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:00:23 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 140A3C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 08:00:23 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id h26so26835qtu.8
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 08:00:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=B/gHhPk7GJKztNSGPOhSZp7Hv5EC8SrF1OhwpLwo69k=;
-        b=RSQKszL0u/dHGOGWPede1vpnwO2+X7WuJ5XWW9mGDiXbVHso5JIM3+lMkAxswpaxzu
-         nSMI52fPr8vgSoyrlLtiJRX22kPsaBPYN1WKvtOcwq0Y4lc1qAJckq5wsuTU9y3w6xCM
-         q3PfXwQgZfJL0gAdmWLQn+oyF8xGD9qKukhg9eU0+ZebQVkXswyOKLGzTEGQosxlDj3q
-         +UNYBEFgjbOLnxjjGiEoq3t+3GY9pjHV8cz6dokNda72iGYOzaj4j7UBMQ2XVJsqizVb
-         /dy3FYIn4dHBffEHQiIqFnQxSpu6WpzfTbYJQK0emGe8H7QIeU2Qf7wLQMdFrGJMfFcE
-         RceA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=B/gHhPk7GJKztNSGPOhSZp7Hv5EC8SrF1OhwpLwo69k=;
-        b=KuZ1u6AZzmoYbzcJs/axSOTjJn3oaN2xoX/iBiZr9SrPavpXHmSJfLJ8Rm4Rvgba+r
-         w4ttm2HF053KDzPU99jQNass5h48/7seei2FHm48NXQbdwOxyVFBWH4C2TFNK4uZrbHP
-         UnRZf19/LPdb/gabtGG/crHa9687jN3HmGXd4tatq9yDtMsV78X9TBNhXTJbN6Vh/4gP
-         HbI1cNEyZ37mbZpqMOjCOUqPQJ0Qej1kpxH/IxxhUKxzIE23Uk+AXneBa9/S6VxSSRiG
-         mUZ/wb9TRkO2F3gFFeDj+mTJRSFli4YjdkG9Waz58dah/e9KyNOhIYW1Ko6JPS+JTUNu
-         B+MA==
-X-Gm-Message-State: AOAM533/1V9kjeThAh1/FOFUe3wyuaBXMJzVmEXR+rc4e88uyWHk+1s+
-        03KQRKcgg6vysaaCtDLJ9ficiQ==
-X-Google-Smtp-Source: ABdhPJyAxBvGslgC+XCNN5oHAdLdB9zOqQyKvE6KoBSgBejnRkDJzHQVfiE5WV4SijHUMuMBgZoe1Q==
-X-Received: by 2002:ac8:714c:: with SMTP id h12mr2999879qtp.372.1589382022247;
-        Wed, 13 May 2020 08:00:22 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id c41sm16311260qta.96.2020.05.13.08.00.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 13 May 2020 08:00:21 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jYsrt-0002QR-28; Wed, 13 May 2020 12:00:21 -0300
-Date:   Wed, 13 May 2020 12:00:21 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Divya Indi <divya.indi@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Kaike Wan <kaike.wan@intel.com>,
-        Gerd Rausch <gerd.rausch@oracle.com>,
-        =?utf-8?B?SMOla29u?= Bugge <haakon.bugge@oracle.com>,
-        Srinivas Eeda <srinivas.eeda@oracle.com>,
-        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
-        Doug Ledford <dledford@redhat.com>
-Subject: Re: [PATCH 1/2] IB/sa: Resolving use-after-free in ib_nl_send_msg.
-Message-ID: <20200513150021.GD29989@ziepe.ca>
-References: <1588876487-5781-1-git-send-email-divya.indi@oracle.com>
- <1588876487-5781-2-git-send-email-divya.indi@oracle.com>
- <20200508000809.GM26002@ziepe.ca>
- <33fc99e2-e9fc-3c8c-e47f-41535f514c2d@oracle.com>
+        Wed, 13 May 2020 11:00:00 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DEwD45012631;
+        Wed, 13 May 2020 16:59:44 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=025BdDCIbH+soZnGtfFatgeiqUpOJOBVAr2pjtailGs=;
+ b=VpSg27vNaBoUL5DdSod8WIQVrYEcmqnNJD03nTOvBjhmbct4BGA7y4y4VSeNxCBQGlmc
+ vWtXjFQF8Xfv5MJu3ko9bOqQUij1l2bxcA0xBfZxAuxoyr1eEf+JOuB0Vj1Ad0V/LXWF
+ TRm6Rj7VyaPFw6yhDtMhhlI9BFtNQMWvdRCKqKt+F3C+uzM7tbo2I8lJCGhnSq95gm4F
+ kH+hHuD0d20NQS5ttEsavOqnkhOWIDA09tbPpJPWFQ47Q7ZgHkh3k3jNXezgzS3V12XE
+ Z7RfVkPvcNRNXS5KDK8VSZsiqeKNRcohi5gACkKtBsVjrMdNntatvJQKld7Bm40HDQMX VQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 3100vn5e2b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 May 2020 16:59:44 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C83D8100038;
+        Wed, 13 May 2020 16:59:43 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B250B2D3006;
+        Wed, 13 May 2020 16:59:43 +0200 (CEST)
+Received: from localhost (10.75.127.50) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 13 May 2020 16:59:42
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <gregkh@linuxfoundation.org>
+CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH 02/15] ARM: dts: stm32: update pwm pinctrl node names for stm32f4
+Date:   Wed, 13 May 2020 16:59:22 +0200
+Message-ID: <20200513145935.22493-3-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20200513145935.22493-1-benjamin.gaignard@st.com>
+References: <20200513145935.22493-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <33fc99e2-e9fc-3c8c-e47f-41535f514c2d@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG4NODE1.st.com (10.75.127.10) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-13_06:2020-05-13,2020-05-13 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 02:26:30PM -0700, Divya Indi wrote:
-> >> @@ -1123,6 +1156,18 @@ int ib_nl_handle_resolve_resp(struct sk_buff *skb,
-> >>  
-> >>  	send_buf = query->mad_buf;
-> >>  
-> >> +	/*
-> >> +	 * Make sure the IB_SA_NL_QUERY_SENT flag is set before
-> >> +	 * processing this query. If flag is not set, query can be accessed in
-> >> +	 * another context while setting the flag and processing the query will
-> >> +	 * eventually release it causing a possible use-after-free.
-> >> +	 */
-> > This comment doesn't really make sense, flags insige the memory being
-> > freed inherently can't prevent use after free.
-> 
-> I can definitely re-phrase here to make things clearer. But, the idea here is
-> in the unlikely/rare case where a response for a query comes in before the flag has been
-> set in ib_nl_make_request, we want to wait for the flag to be sent before proceeding. 
-> The response handler will eventually release the query so this wait avoids that if the flag has not been set
-> else 
-> 	"query->flags |= IB_SA_NL_QUERY_SENT;" 
-> will be accessing a query which was freed due to the above mentioned race.
-> 
-> It is unlikely since getting a response => We have actually sent out the query to ibacm.
-> 
-> How about this -
-> 
-> "Getting a response is indicative of having sent out the query, but in an unlikely race when 
-> the response comes in before setting IB_SA_NL_QUERY_SENT, we need to wait till the flag is set to
-> avoid accessing a query that has been released."
+Rename pwm pinctrl nodes name to matching with yaml bindings
+requirements.
 
-It still makes no sense, a flag that is set before freeing the memory
-is fundamentally useless to prevent races.
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ arch/arm/boot/dts/stm32f4-pinctrl.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Jason
+diff --git a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
+index 392fa143ce07..031caaf40e89 100644
+--- a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
+@@ -257,7 +257,7 @@
+ 				};
+ 			};
+ 
+-			pwm1_pins: pwm-1 {
++			pwm1_pins: pwm1-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('A', 8, AF1)>, /* TIM1_CH1 */
+ 						 <STM32_PINMUX('B', 13, AF1)>, /* TIM1_CH1N */
+@@ -265,7 +265,7 @@
+ 				};
+ 			};
+ 
+-			pwm3_pins: pwm-3 {
++			pwm3_pins: pwm3-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('B', 4, AF2)>, /* TIM3_CH1 */
+ 						 <STM32_PINMUX('B', 5, AF2)>; /* TIM3_CH2 */
+-- 
+2.15.0
+
