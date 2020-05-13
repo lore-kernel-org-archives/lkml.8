@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B12E4C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DE1C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9091923126
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBDFE23129
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:02:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730131AbgEMIBk (ORCPT
+        id S1730198AbgEMICV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 04:01:40 -0400
-Received: from mga18.intel.com ([134.134.136.126]:47595 "EHLO mga18.intel.com"
+        Wed, 13 May 2020 04:02:21 -0400
+Received: from mga14.intel.com ([192.55.52.115]:23603 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728101AbgEMIBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 04:01:40 -0400
-IronPort-SDR: 0ejbC3xMoK1Cl88D0ug6YVdWdGZ921DOnox6czgHMhYwOIgAopvfWrx2xDmuXBhrxWF/e0K7GM
- Tx+ZTavu+GYg==
+        id S1726092AbgEMICU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 04:02:20 -0400
+IronPort-SDR: JZ0Svd37T+x416omlfFpFH2W0Aj15T8StQ4savGGi3sosiRxdWRLvk3D91ukOG0JSAzX2WbThh
+ SN46lPjPIfhQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 01:01:39 -0700
-IronPort-SDR: NoTDY+AIgDQXQtgG8AzhetVcXPGchDeUYv1K4zDJNpp5WkZw8tw7WwjG4V3Horar2CSZafuHk5
- jTlvURndN+/w==
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 01:02:19 -0700
+IronPort-SDR: wztqazqq9liGBQrgBpLa606ACq7Xwi2JmaNJWCNPSqi4PV9Ao0LVSQUxrI/ZkP1WIci4cOWihB
+ 9OHpeluq5+VA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,387,1583222400"; 
-   d="scan'208";a="463843822"
+   d="scan'208";a="463844038"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 13 May 2020 01:01:39 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 13 May 2020 01:02:19 -0700
 Received: from [10.249.229.18] (abudanko-mobl.ccr.corp.intel.com [10.249.229.18])
-        by linux.intel.com (Postfix) with ESMTP id 0171E5804B6;
-        Wed, 13 May 2020 01:01:36 -0700 (PDT)
-Subject: [PATCH v3 4/9] perf stat: extend -D,--delay option with -1 value
+        by linux.intel.com (Postfix) with ESMTP id 164CC5804B6;
+        Wed, 13 May 2020 01:02:16 -0700 (PDT)
+Subject: [PATCH v3 5/9] perf stat: implement control commands handling
 From:   Alexey Budankov <alexey.budankov@linux.intel.com>
 To:     Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
@@ -46,8 +46,8 @@ Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>
 References: <eb38e9e5-754f-d410-1d9b-e26b702d51b7@linux.intel.com>
 Organization: Intel Corp.
-Message-ID: <86180715-faae-e701-319c-70ce589923a9@linux.intel.com>
-Date:   Wed, 13 May 2020 11:01:35 +0300
+Message-ID: <078a7905-f029-88c4-9bd5-1c6a394d3e82@linux.intel.com>
+Date:   Wed, 13 May 2020 11:02:15 +0300
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
@@ -61,104 +61,86 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Extend -D,--delay option with -1 value to start monitoring with
-events disabled to be enabled later by enable command provided
-via control file descriptor.
+Implement handling of 'enable' and 'disable' control commands
+coming from control file descriptor.
 
 Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- tools/perf/Documentation/perf-stat.txt |  5 +++--
- tools/perf/builtin-stat.c              | 18 ++++++++++++++----
- tools/perf/util/evlist.h               |  4 ++++
- tools/perf/util/stat.h                 |  2 +-
- 4 files changed, 22 insertions(+), 7 deletions(-)
+ tools/perf/builtin-stat.c | 48 +++++++++++++++++++++++++++++----------
+ 1 file changed, 36 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 3fb5028aef08..3b91b30d7672 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -226,8 +226,9 @@ mode, use --per-node in addition to -a. (system-wide).
- 
- -D msecs::
- --delay msecs::
--After starting the program, wait msecs before measuring. This is useful to
--filter out the startup phase of the program, which is often very different.
-+After starting the program, wait msecs before measuring (-1: start with events
-+disabled"). This is useful to filter out the startup phase of the program,
-+which is often very different.
- 
- -T::
- --transaction::
 diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 9775b0905146..73404b723592 100644
+index 73404b723592..abea82a1ba24 100644
 --- a/tools/perf/builtin-stat.c
 +++ b/tools/perf/builtin-stat.c
-@@ -383,16 +383,26 @@ static bool print_interval_and_stop(struct perf_stat_config *config, int *times)
- 
- static void enable_counters(void)
+@@ -460,8 +460,9 @@ static int handle_events(pid_t pid, struct perf_stat_config *config)
  {
--	if (stat_config.initial_delay)
-+	if (stat_config.initial_delay < 0) {
-+		pr_info(EVLIST_DISABLED_MSG);
-+		return;
-+	}
-+
-+	if (stat_config.initial_delay > 0) {
-+		pr_info(EVLIST_DISABLED_MSG);
- 		usleep(stat_config.initial_delay * USEC_PER_MSEC);
-+	}
+ 	pid_t child = 0;
+ 	bool res, stop = false;
+-	struct timespec time_to_sleep;
+-	int sleep_time, status = 0, times = config->times;
++	int time_to_sleep, sleep_time, status = 0, times = config->times;
++	enum evlist_ctl_cmd cmd = EVLIST_CTL_CMD_UNSUPPORTED;
++	struct timespec time_start, time_stop, time_diff;
  
- 	/*
- 	 * We need to enable counters only if:
- 	 * - we don't have tracee (attaching to task or cpu)
- 	 * - we have initial delay configured
- 	 */
--	if (!target__none(&target) || stat_config.initial_delay)
-+	if (!target__none(&target) || stat_config.initial_delay) {
- 		evlist__enable(evsel_list);
-+		if (stat_config.initial_delay > 0)
-+			pr_info(EVLIST_ENABLED_MSG);
-+	}
- }
+ 	if (config->interval)
+ 		sleep_time = config->interval;
+@@ -470,22 +471,45 @@ static int handle_events(pid_t pid, struct perf_stat_config *config)
+ 	else
+ 		sleep_time = 1000;
  
- static void disable_counters(void)
-@@ -929,8 +939,8 @@ static struct option stat_options[] = {
- 		     "aggregate counts per thread", AGGR_THREAD),
- 	OPT_SET_UINT(0, "per-node", &stat_config.aggr_mode,
- 		     "aggregate counts per numa node", AGGR_NODE),
--	OPT_UINTEGER('D', "delay", &stat_config.initial_delay,
--		     "ms to wait before starting measurement after program start"),
-+	OPT_INTEGER('D', "delay", &stat_config.initial_delay,
-+		    "ms to wait before starting measurement after program start (-1: start with events disabled"),
- 	OPT_CALLBACK_NOOPT(0, "metric-only", &stat_config.metric_only, NULL,
- 			"Only print computed metrics. No raw values", enable_metric_only),
- 	OPT_BOOLEAN(0, "topdown", &topdown_run,
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 0554f8d2a65b..8a72612b8b3e 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -375,4 +375,8 @@ int evlist__initialize_ctlfd(struct evlist *evlist, int ctl_fd, int ctl_fd_ack);
- int evlist__finalize_ctlfd(struct evlist *evlist);
- int evlist__ctlfd_process(struct evlist *evlist, enum evlist_ctl_cmd *cmd);
+-	time_to_sleep.tv_sec  = sleep_time / MSEC_PER_SEC;
+-	time_to_sleep.tv_nsec = (sleep_time % MSEC_PER_SEC) * NSEC_PER_MSEC;
++	time_to_sleep = sleep_time;
  
-+#define EVLIST_ENABLED_MSG "Events enabled\n"
-+#define EVLIST_DISABLED_MSG "Events disabled\n"
-+
-+
- #endif /* __PERF_EVLIST_H */
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index b4fdfaa7f2c0..027b9dcd902f 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -113,7 +113,7 @@ struct perf_stat_config {
- 	FILE			*output;
- 	unsigned int		 interval;
- 	unsigned int		 timeout;
--	unsigned int		 initial_delay;
-+	int			 initial_delay;
- 	unsigned int		 unit_width;
- 	unsigned int		 metric_only_len;
- 	int			 times;
+ 	do {
+ 		if (pid != -1)
+ 			child = waitpid(pid, &status, WNOHANG);
+ 		if (child || stop || done)
+ 			break;
+-		nanosleep(&time_to_sleep, NULL);
+-		if (pid == -1)
+-			stop = !is_target_alive(&target, evsel_list->core.threads);
+-		if (config->timeout) {
+-			stop = !stop ? true : stop;
+-		} else {
+-			res = print_interval_and_stop(config, &times);
+-			stop = !stop ? res : stop;
++		clock_gettime(CLOCK_MONOTONIC, &time_start);
++		if (!(evlist__poll(evsel_list, time_to_sleep) > 0)) { /* poll timeout or EINTR */
++			if (pid == -1)
++				stop = !is_target_alive(&target, evsel_list->core.threads);
++			if (config->timeout) {
++				stop = !stop ? true : stop;
++			} else {
++				res = print_interval_and_stop(config, &times);
++				stop = !stop ? res : stop;
++			}
++			time_to_sleep = sleep_time;
++		} else { /* fd revent */
++			if (evlist__ctlfd_process(evsel_list, &cmd) > 0) {
++				switch (cmd) {
++				case EVLIST_CTL_CMD_ENABLE:
++					pr_info(EVLIST_ENABLED_MSG);
++					stop = print_interval_and_stop(config, &times);
++					break;
++				case EVLIST_CTL_CMD_DISABLE:
++					stop = print_interval_and_stop(config, &times);
++					pr_info(EVLIST_DISABLED_MSG);
++					break;
++				case EVLIST_CTL_CMD_ACK:
++				case EVLIST_CTL_CMD_UNSUPPORTED:
++				default:
++					break;
++				}
++			}
++			clock_gettime(CLOCK_MONOTONIC, &time_stop);
++			diff_timespec(&time_diff, &time_stop, &time_start);
++			time_to_sleep -= time_diff.tv_sec * MSEC_PER_SEC +
++					 time_diff.tv_nsec / NSEC_PER_MSEC;
+ 		}
+ 	} while (1);
+ 
 -- 
 2.24.1
 
