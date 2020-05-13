@@ -2,131 +2,67 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 416C9C47077
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B99CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA5820769
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:57:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l5M7DQye"
+	by mail.kernel.org (Postfix) with ESMTP id 8171D20740
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:57:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730775AbgEMI5Z (ORCPT
+        id S1730781AbgEMI5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 04:57:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41064 "EHLO
+        Wed, 13 May 2020 04:57:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730237AbgEMI5Z (ORCPT
+        with ESMTP id S1730237AbgEMI5z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 04:57:25 -0400
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 148E8C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 01:57:25 -0700 (PDT)
-Received: by mail-wm1-x32c.google.com with SMTP id g14so11303353wme.1
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 01:57:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=L3D5wbM4+UOmg5X3zyhaWbHPrhXUjtC7ABKOs6rc9yo=;
-        b=l5M7DQyeLT9ZtP2AGAsL3Bd2tnuVnla/JxC44sQIF4uXl5wHEwSa58d8aQ3P0/LoCt
-         ht/7aaRWkRXdvMqhnLMNz4J9ItKHZIAZEAmQAqtrHbtFWtKP5NPplaIH68AQbpaWIrbP
-         EEOGWgzFy120izmq5SavA0GscGogGocNzDjGwxUED/CCSzMP7GCkzWVeSbQYyJeQOMB7
-         AlU8TvnvoFCk37ygEzK9QfXc2yUkYx44PB0tGROMy088nWvW9VyvYKrDxmeQvrVR/oYY
-         x6JjT0XZAMuLUKF7FauiwGkcsEuE2RAc1r8iVWvx9KOA11BkyIYe9asE+9oNRESEpEGB
-         3xvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=L3D5wbM4+UOmg5X3zyhaWbHPrhXUjtC7ABKOs6rc9yo=;
-        b=CkE26+6iDu76jAHR6VaKVTit+t4dHiyDo/l0nWywfuplW/2Svs9kZzFxbfWXY1fuQ0
-         YVAJEnW1xXVzljOruKj0MAz/gULkQuwiG7znpW5RfvrVBzXQ7FmStydi0SrFbl6mc13G
-         fDsGGYcW9SB2XdJGpPXj1BiA/RGroKZ4hT4SGoi5p+rqF4Y4XsD4Z9d6XVa7kHHO/Nlc
-         mdYEKSyJW9ACJf0SWV6VUgd4JXxJ2L07BNgt886AFYmPVuU1GiE+p54nkWQJSgC9CpBx
-         303M42Fi7whbesckh9FpT7q3WbHT4eE89rz6Gq1SJPjftVlJTvRYg2e06CVWyFS7co/6
-         A0IQ==
-X-Gm-Message-State: AGi0PubEtI4IICHMTCmB+jSvFmN9nzq9mvtLXbgMGhUQh1oE6znlDOAE
-        YsZVeWSYKquR6Og2OzGl+6AoeQ==
-X-Google-Smtp-Source: APiQypIIh+5TVT139VH+1iFKgejig/aRcQfdqcB/1OfJwTRe5B9kfraMOZX3g/i2i2aAqIIpIRB3/w==
-X-Received: by 2002:a1c:2e07:: with SMTP id u7mr41975477wmu.74.1589360243384;
-        Wed, 13 May 2020 01:57:23 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id 89sm26212772wrj.37.2020.05.13.01.57.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 01:57:22 -0700 (PDT)
-Date:   Wed, 13 May 2020 09:57:19 +0100
-From:   Quentin Perret <qperret@google.com>
-To:     Joel Fernandes <joelaf@google.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Benjamin Segall <bsegall@google.com>,
-        Mel Gorman <mgorman@suse.de>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Todd Kjos <tkjos@google.com>,
-        "Cc: Android Kernel" <kernel-team@android.com>
-Subject: Re: [PATCH 00/14] Modularize schedutil
-Message-ID: <20200513085719.GA225140@google.com>
-References: <CAJZ5v0iaa_VCtN608QKTYZ-A6QG_7bwxihxSgoEGv1LcSK-ksA@mail.gmail.com>
- <20200511090049.GA229633@google.com>
- <CAJZ5v0jKMgFsR0dXDt4si5hT9QF2evaoMS-13y-Qde8UpcaARg@mail.gmail.com>
- <20200512092102.GA16151@google.com>
- <CAJZ5v0hm3Tv2yZKLzM9a+kJuB1V5_eFOEKT-uM318dzeKV3_Qw@mail.gmail.com>
- <20200512135813.GA101124@google.com>
- <CAJZ5v0hN708uvurZ-3oo90qUJFw3=Eg0OmtTaOKXQgNPXhCkFg@mail.gmail.com>
- <20200512151120.GB101124@google.com>
- <CAJZ5v0inoge=nWQtv-rU_ReQUMZA5w-PZXuSpHHj1UHn-S7aSA@mail.gmail.com>
- <CAJWu+oqVc16B8nf-317Yyf9befPsjBohfG=GOdoBZyuVz==bmQ@mail.gmail.com>
+        Wed, 13 May 2020 04:57:55 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA100C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 01:57:54 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id A439D379; Wed, 13 May 2020 10:57:53 +0200 (CEST)
+Date:   Wed, 13 May 2020 10:57:52 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH -next] iommu/amd: Remove set but not used variable 'iommu'
+Message-ID: <20200513085752.GF9820@8bytes.org>
+References: <20200508134036.116569-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJWu+oqVc16B8nf-317Yyf9befPsjBohfG=GOdoBZyuVz==bmQ@mail.gmail.com>
+In-Reply-To: <20200508134036.116569-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Joel,
+On Fri, May 08, 2020 at 01:40:36PM +0000, YueHaibing wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
+> 
+> drivers/iommu/amd_iommu.c: In function 'amd_iommu_uninit_device':
+> drivers/iommu/amd_iommu.c:422:20: warning:
+>  variable 'iommu' set but not used [-Wunused-but-set-variable]
+> 
+> commit dce8d6964ebd ("iommu/amd: Convert to probe/release_device() call-backs")
+> involved this, remove it.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/iommu/amd_iommu.c | 3 ---
+>  1 file changed, 3 deletions(-)
 
-On Tuesday 12 May 2020 at 11:49:32 (-0400), Joel Fernandes wrote:
-> Also, does this series make it easier for vendors / oems / whoever to
-> carry out-of-tree schedutil hacks saying that's "Ok" because that's
-> not part of the core GKI? That would definitely be a bad thing to
-> encourage as well. schedutil should pretty much be considered a part
-> of the core GKI if the goal is to encourage everyone to move to it,
-> IMO.
+Thanks for the patch, but I already applied
 
-Sure, but I don't think the series makes it easier to carry out-of-tree
-stuff. Vendors will have the choice to load the governor they want. Some
-will use schedutil, some will use other upstream governors, and some will
-use their out of tree crap. And that is orthogonal to schedutil being a
-module or not.
+	https://lore.kernel.org/r/20200509015645.3236-1-cai@lca.pw
 
-The only thing that will happen is that they will complain about GKI,
-and find examples of things like schedutil that is being forced on
-them. Realistically, having schedutil built-in is unlikely to change
-their mind about the governor they want to use, it is just likely to
-give them reasons not to do the right thing and be GKI compliant.
+Regards,
 
-Thanks,
-Quentin
+	Joerg
+
