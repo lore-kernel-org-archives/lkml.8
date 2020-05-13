@@ -2,51 +2,53 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9D4C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4425DC2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 128D720769
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 182BB20769
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363469;
-	bh=6bqyuSi7qqW5PiXT3G0qoFdiCIsMTRNnGfoFN53ZoS4=;
+	s=default; t=1589363472;
+	bh=KaBdmx0FEom7Oa5L1jSWEFIFXl5TMxoTKMFAD99rzvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aBwVw1mxSHXMLo7ogVvKmg+o/tl6DrBdizufYuP3LlZrLzAV58mc1ba7vSWoTWCRO
-	 vgk3vcGU69SNdA80q4nXk+LLELPxLx5DSVRrvtYSE5OXQ2Pq4t4bSj85lqJELZ8KoD
-	 3zWRsGZV8CLgNz849BAHSjyP6D5w/uC3EdpA5+fg=
+	b=1M00hune8ZFSlUWXifJeOdhpU6eghtCvQx2T9+KHPxOHZW6p2ncmWh8bHxvBTcp8d
+	 Yx5ITfwoCmgFRSdfBo72uqHY23EMwMjKWEJwv477JZLO4Zc/MUAaE3gq17XO7Y/srk
+	 SLljwmGKnUHDlL7PoQmwmPI7IJxIuDx27mWXawW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732798AbgEMJvI (ORCPT
+        id S2387617AbgEMJvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:51:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51434 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:51:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732965AbgEMJvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:51:03 -0400
+        id S2387603AbgEMJvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:51:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AEEE20575;
-        Wed, 13 May 2020 09:51:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AE8E20575;
+        Wed, 13 May 2020 09:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363462;
-        bh=6bqyuSi7qqW5PiXT3G0qoFdiCIsMTRNnGfoFN53ZoS4=;
+        s=default; t=1589363467;
+        bh=KaBdmx0FEom7Oa5L1jSWEFIFXl5TMxoTKMFAD99rzvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t2WyIWkpi4iSobvzdgMwOTwU6DWbLy40paz5TZMFhN2vGdFSA2C8Z1F1Hmw+R86d7
-         Pu90hnvIUgPFUE5wBg+JrGruOuANByrQTpqTvOORTYkUQ1IiyMIGuHVzH3DFLxCTli
-         +8EfEph8w/ISw8D72acskT5JDq1NcqXmUFFc6p4M=
+        b=OAx7GN0SY1Uo24yWRpjLR6JJUU1F6+NDx44Jc4k6K9MqAjAZjkpWqy0TRj8V93GRL
+         VeQm9m59sz1g/5+Ldj/J7gXGMof8nq38pWkh5QIY9eQbmXTvHB6WDClPr+YLcfiee/
+         rIs6jzzNgEZD4uQ0mASKT+Bswo112pwBSPFQBGJo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 5.4 45/90] HID: wacom: Report 2nd-gen Intuos Pro S center button status over BT
-Date:   Wed, 13 May 2020 11:44:41 +0200
-Message-Id: <20200513094413.579703873@linuxfoundation.org>
+        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-usb@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        Bryan ODonoghue <bryan.odonoghue@linaro.org>,
+        Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 5.4 47/90] usb: chipidea: msm: Ensure proper controller reset using role switch API
+Date:   Wed, 13 May 2020 11:44:43 +0200
+Message-Id: <20200513094413.789775786@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -59,54 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gerecke <killertofu@gmail.com>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
-commit dcce8ef8f70a8e38e6c47c1bae8b312376c04420 upstream.
+commit 91edf63d5022bd0464788ffb4acc3d5febbaf81d upstream.
 
-The state of the center button was not reported to userspace for the
-2nd-gen Intuos Pro S when used over Bluetooth due to the pad handling
-code not being updated to support its reduced number of buttons. This
-patch uses the actual number of buttons present on the tablet to
-assemble a button state bitmap.
+Currently we check to make sure there is no error state on the extcon
+handle for VBUS when writing to the HS_PHY_GENCONFIG_2 register. When using
+the USB role-switch API we still need to write to this register absent an
+extcon handle.
 
-Link: https://github.com/linuxwacom/xf86-input-wacom/issues/112
-Fixes: cd47de45b855 ("HID: wacom: Add 2nd gen Intuos Pro Small support")
-Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
-Cc: stable@vger.kernel.org # v5.3+
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+This patch makes the appropriate update to ensure the write happens if
+role-switching is true.
+
+Fixes: 05559f10ed79 ("usb: chipidea: add role switch class support")
+Cc: stable <stable@vger.kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-usb@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Link: https://lore.kernel.org/r/20200507004918.25975-2-peter.chen@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/wacom_wac.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/usb/chipidea/ci_hdrc_msm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/hid/wacom_wac.c
-+++ b/drivers/hid/wacom_wac.c
-@@ -1427,11 +1427,13 @@ static void wacom_intuos_pro2_bt_pad(str
- {
- 	struct input_dev *pad_input = wacom->pad_input;
- 	unsigned char *data = wacom->data;
-+	int nbuttons = wacom->features.numbered_buttons;
+--- a/drivers/usb/chipidea/ci_hdrc_msm.c
++++ b/drivers/usb/chipidea/ci_hdrc_msm.c
+@@ -114,7 +114,7 @@ static int ci_hdrc_msm_notify_event(stru
+ 			hw_write_id_reg(ci, HS_PHY_GENCONFIG_2,
+ 					HS_PHY_ULPI_TX_PKT_EN_CLR_FIX, 0);
  
--	int buttons = data[282] | ((data[281] & 0x40) << 2);
-+	int expresskeys = data[282];
-+	int center = (data[281] & 0x40) >> 6;
- 	int ring = data[285] & 0x7F;
- 	bool ringstatus = data[285] & 0x80;
--	bool prox = buttons || ringstatus;
-+	bool prox = expresskeys || center || ringstatus;
- 
- 	/* Fix touchring data: userspace expects 0 at left and increasing clockwise */
- 	ring = 71 - ring;
-@@ -1439,7 +1441,8 @@ static void wacom_intuos_pro2_bt_pad(str
- 	if (ring > 71)
- 		ring -= 72;
- 
--	wacom_report_numbered_buttons(pad_input, 9, buttons);
-+	wacom_report_numbered_buttons(pad_input, nbuttons,
-+                                      expresskeys | (center << (nbuttons - 1)));
- 
- 	input_report_abs(pad_input, ABS_WHEEL, ringstatus ? ring : 0);
- 
+-		if (!IS_ERR(ci->platdata->vbus_extcon.edev)) {
++		if (!IS_ERR(ci->platdata->vbus_extcon.edev) || ci->role_switch) {
+ 			hw_write_id_reg(ci, HS_PHY_GENCONFIG_2,
+ 					HS_PHY_SESS_VLD_CTRL_EN,
+ 					HS_PHY_SESS_VLD_CTRL_EN);
 
 
