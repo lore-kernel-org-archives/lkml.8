@@ -2,115 +2,94 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5F9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E36EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4282065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:26:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589387168;
-	bh=gWgf3gSq6wvPZ0Lx/X3Ey44dHXev3t7FqVNRMYwxDk8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oZlcLnSOciyUqnCAxLe7oM4rQiEhKIoBWDVuZLiLhkAf1RpVCjmFBxtKRs7m4VvAD
-	 0lADIFWZcHRgPirgFUXT3r+q0vsIRAUKO3NJHZwo0Vr+KLuiVi2t1eJZenVsAiwlqj
-	 3Fp/2kLNQcM9dBfhPokEgKTu7E+d4eoh8kf4+FxE=
+	by mail.kernel.org (Postfix) with ESMTP id 6E1AA2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:26:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="ILxNwfrB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389592AbgEMQ0H (ORCPT
+        id S2389607AbgEMQ0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 12:26:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43268 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730831AbgEMQ0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 12:26:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Wed, 13 May 2020 12:26:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730831AbgEMQ0j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 12:26:39 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 904BCC061A0C;
+        Wed, 13 May 2020 09:26:39 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B0F52054F;
-        Wed, 13 May 2020 16:26:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589387166;
-        bh=gWgf3gSq6wvPZ0Lx/X3Ey44dHXev3t7FqVNRMYwxDk8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Q8U5ovSy/0apFGdAM690iiBY98+A/gBvKlCNOkc6rcR8Fsc+6G75KqMw8eeYppM8H
-         9GXT9jA7DahB6giulShWeV5n16yCa8caS7N311SifogXd7aZC+rKFzPYl1oyqMtqhO
-         iU8uV8K/Uws/tHhJoMyya1ivw2r9zdN/htJmXMDw=
-Date:   Wed, 13 May 2020 18:26:04 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Josh Triplett <josh@joshtriplett.org>, viro@zeniv.linux.org.uk,
-        rafael@kernel.org, jeyu@kernel.org, jmorris@namei.org,
-        keescook@chromium.org, paul@paul-moore.com,
-        stephen.smalley.work@gmail.com, eparis@parisplace.org,
-        nayna@linux.ibm.com, zohar@linux.ibm.com,
-        scott.branden@broadcom.com, dan.carpenter@oracle.com,
-        skhan@linuxfoundation.org, geert@linux-m68k.org,
-        tglx@linutronix.de, bauerman@linux.ibm.com, dhowells@redhat.com,
-        linux-integrity@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] security: add symbol namespace for reading file data
-Message-ID: <20200513162604.GE1362525@kroah.com>
-References: <20200513152108.25669-1-mcgrof@kernel.org>
- <20200513152108.25669-3-mcgrof@kernel.org>
- <87k11fonbk.fsf@x220.int.ebiederm.org>
- <20200513161622.GS11244@42.do-not-panic.com>
+        by ssl.serverraum.org (Postfix) with ESMTPSA id D239322FB6;
+        Wed, 13 May 2020 18:26:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1589387197;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pYLWAIXiTcx/p4X2M35UO82CgyvVqP6649j5CtXrFBA=;
+        b=ILxNwfrBn0AKTJBH4SDIvRyCFExdKuCLrgIYggmK9sl4MBaZQ1s93Jwmy/yzlRL9DUvRO5
+        KNCmiXjY1uRHNgmaZADuXp8h+gXSavPl9mol8V6AP6U1oIrfB2LhTbWEgvKTDyWR42w89i
+        jGtQ/jddtDOpexByKd4FPPMJaDb3cbw=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513161622.GS11244@42.do-not-panic.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 13 May 2020 18:26:37 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        netdev@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v1] net: phy: at803x: add cable test support
+In-Reply-To: <20200513160026.fdls7kpxb6luuwed@pengutronix.de>
+References: <20200513120648.14415-1-o.rempel@pengutronix.de>
+ <0c80397b-58b8-0807-0b98-695db8068e25@gmail.com>
+ <20200513154544.gwcccvbicpvrj6vm@pengutronix.de>
+ <20200513154953.GI499265@lunn.ch>
+ <20200513160026.fdls7kpxb6luuwed@pengutronix.de>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <13b7ade2fee2de3dd160588cc323bdfe@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 04:16:22PM +0000, Luis Chamberlain wrote:
-> On Wed, May 13, 2020 at 10:40:31AM -0500, Eric W. Biederman wrote:
-> > Luis Chamberlain <mcgrof@kernel.org> writes:
-> > 
-> > > Certain symbols are not meant to be used by everybody, the security
-> > > helpers for reading files directly is one such case. Use a symbol
-> > > namespace for them.
-> > >
-> > > This will prevent abuse of use of these symbols in places they were
-> > > not inteded to be used, and provides an easy way to audit where these
-> > > types of operations happen as a whole.
-> > 
-> > Why not just remove the ability for the firmware loader to be a module?
-> > 
-> > Is there some important use case that requires the firmware loader
-> > to be a module?
-> > 
-> > We already compile the code in by default.  So it is probably just
-> > easier to remove the modular support all together.  Which would allow
-> > the export of the security hooks to be removed as well.
+Am 2020-05-13 18:00, schrieb Oleksij Rempel:
+> On Wed, May 13, 2020 at 05:49:53PM +0200, Andrew Lunn wrote:
+>> > Uff.. i missed this. Then I'll need only to add some changes on top of
+>> > his patch.
+>> 
+>> I've been chatting with mwalle on IRC today. There should be a repost
+>> of the patches soon.
 > 
-> Yeah, that's a better solution. The only constaint I am aware of is
-> we *cannot* change the name of the module from firmware_class since the
-> old fallback sysfs loader depends on the module name. So, so long as we
-> take care with that on built-in and document this very well, I think
-> we should be good.
-> 
-> I checked the commit logs and this was tristate since the code was added
-> upstream, so I cannot see any good reason it was enabled as modular.
-> 
-> Speaking with a *backports experience* hat on, we did have a use case
-> to use a module for it in case a new feature was added upstream which
-> was not present on older kernels. However I think that using a separate
-> symbol prefix would help with that.
-> 
-> Would any Android stakeholders / small / embedded folks whave any issue
-> with this?
+> Cool!
+> @Michael, please CC me.
 
-Android has build in the firmware loading logic for a while now.  Well,
-always, they have not had kernel modules for many years.  That is
-changing but this logic is not getting moved to a kernel module as that
-would just be silly :)
+sure no problem.
 
-thanks,
+> you can include support for AR9331 and AR8032 in your patch (if you
+> like)
 
-greg k-h
+I guess merging doesn't take too long for my patch. So better you just 
+post
+a patch on top of that, before I screw something up.
+
+-michael
+
+> http://www.jhongtech.com/DOWN/ATHEROS--AR8032.pdf
+> 
+> They have same register, but only 2 pairs.
