@@ -2,98 +2,102 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8773CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 692CFC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 851CD206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:51:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589367108;
-	bh=FL+28LkNQoD75GVysexp8B1GX+IVYhv26EcjeQpqLJQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=us6blTRZowZcMNowHEB+ouXkFi0F9Mtr2568M7Vu26WOsN4vY7gWnxzW8VyI+Ru3s
-	 d7RdaF4Cl/1KHCQFAygWIf6lh3dPIUfrPKJ7cM6RQYM+sUwF2SvPm2rrbem/uWozs3
-	 EmlXEXY8FDkEGXRdYNIpq2ZtEoIB81ndfdvO97Mo=
+	by mail.kernel.org (Postfix) with ESMTP id 521AD20740
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:04:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732762AbgEMKvr (ORCPT
+        id S1730734AbgEMLEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:51:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33634 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726907AbgEMKvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 06:51:47 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 351AF20675;
-        Wed, 13 May 2020 10:51:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589367106;
-        bh=FL+28LkNQoD75GVysexp8B1GX+IVYhv26EcjeQpqLJQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k+bv5PN8O7fdV9WyaB3O2NkdA5XTQcKoJ1dPJV95CqgXoiC4lch8+CW2PhlDX0GJg
-         P+xgomodWAWLKo566SxMQf3LryNQj27sl5X8fCWDYHe1gMrAKl0qO2CJ57f2AnC2Hs
-         i/Wv4HZmNXs0qreisS/ojZ20AVgYV1r+QDfYM9rk=
-Date:   Wed, 13 May 2020 11:51:44 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Steve Lee <steves.lee.maxim@gmail.com>
-Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        ckeepax@opensource.cirrus.com, geert@linux-m68k.org,
-        rf@opensource.wolfsonmicro.com, shumingf@realtek.com,
-        srinivas.kandagatla@linaro.org, krzk@kernel.org, dmurphy@ti.com,
-        jack.yu@realtek.com, nuno.sa@analog.com,
-        steves.lee@maximintegrated.com, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org, ryan.lee.maxim@gmail.com,
-        ryans.lee@maximintegrated.com
-Subject: Re: [V3 PATCH 2/2] ASoC: max98390: Added Amplifier Driver
-Message-ID: <20200513105144.GC4803@sirena.org.uk>
-References: <20200513074523.21086-1-steves.lee@maximintegrated.com>
+        Wed, 13 May 2020 07:04:12 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57410 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729893AbgEMLEM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 07:04:12 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 64084803087C;
+        Wed, 13 May 2020 11:04:09 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id O1ivolSjJlIp; Wed, 13 May 2020 14:04:08 +0300 (MSK)
+Date:   Wed, 13 May 2020 14:04:07 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/17] spi: dw: Add generic DW DMA controller support
+Message-ID: <20200513110407.uaosfxebsgnllsf4@mobilestation>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508133336.GK4820@sirena.org.uk>
+ <20200512200733.bdbbhkjkwjd5yzqq@mobilestation>
+ <20200513102324.GB4803@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="c3bfwLpm8qysLVxt"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200513074523.21086-1-steves.lee@maximintegrated.com>
-X-Cookie: Long life is in store for you.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200513102324.GB4803@sirena.org.uk>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 13, 2020 at 11:23:24AM +0100, Mark Brown wrote:
+> On Tue, May 12, 2020 at 11:07:33PM +0300, Serge Semin wrote:
+> > On Fri, May 08, 2020 at 02:33:36PM +0100, Mark Brown wrote:
+> 
+> > > Please don't make new feature development dependent on conversion to the
+> > > new schema format, there's quite a backlog of reviews of schema
+> > > conversions so it can slow things down.  It's good to do the conversions
+> > > but please do them after adding any new stuff to the binding rather than
+> > > before.
+> 
+> > So by saying this do you want me to revert an order of the first two patches
+> > in the series, right? So the series would first add the DMA properties support
+> > to the binding, then would convert the binding file to DT schema.
+> 
+> The conversion to YAML format should be the very last thing in the patch
+> series,
 
---c3bfwLpm8qysLVxt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hm, haven't heard about this requirement. Could you point me out to a doc or
+some discussion concerning this for future reference? It's not a first DT
+conversion patch I've submitted and non of them were addressed with such
+request. I do understand that the order of DT concerning patches can be
+important and agree to fix it by updating the original legacy binding first,
+then perform a conversion. But placing the conversion in a tail of the series
+just seems unnecessary. The patch can be dropped from any place of the series
+if for some reason Rob would be late with review.
 
-On Wed, May 13, 2020 at 04:45:23PM +0900, Steve Lee wrote:
+Personally I prefer placing all DT changes in the head of the series, so Rob
+wouldn't need to search through the whole patchset looking for the DT-related
+patches.
 
-> Changes since V2:
-> 	* Removed warn massage in max98390_dsm_calib_get func=20
-> 	  and add comment.
+-Sergey
 
-The problem isn't the warning, the problem is that you have an empty
-operation.  You should either implement the function (eg, by caching the
-value written) or remove it and fix whatever problems you were running
-into further up the stack when it's missing.
+> and as Andy says there's another patch in flight also doing this
+> conversion which you should coordinate with.
 
---c3bfwLpm8qysLVxt
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl670T8ACgkQJNaLcl1U
-h9AjZQf8DB8kAssj3tu4IkLMijV1aFweTzAeMyn08L7i45ykX2//t7+LU7aFgxPF
-AI0vHc3UxL9odhba6fd4B0NjK5tMcNcw8x5HFrpNaOOv12q4qxTdqksEs//iiy6W
-gP0Vpvgd1FlxXkVRyKN5CbbyiVMpM6wml100f7e8pFtxvOCy0m7J/C38iqre+NX1
-rwiqCuQsAlN88+lYzGumpUkWioo4SXLOWkxd5KrtOj6E2X0iJ91x98661CSIZ+1F
-bINPSn2bRMJFg6md27V9DiVf3qzkWimna3uLD+GKaT6lyRi4kCMJ0G0jp7LY8h4t
-GDMtTt4CQ0iORk0Ep+rD17LsJNuAzw==
-=wU/c
------END PGP SIGNATURE-----
-
---c3bfwLpm8qysLVxt--
