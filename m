@@ -2,160 +2,233 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B91ECA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1D8C2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 551BF221FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60F5A221FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:35:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RDEBDtHU"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WMvhvwzN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388642AbgEMNfp (ORCPT
+        id S2388652AbgEMNfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:35:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56248 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387927AbgEMNfb (ORCPT
+        Wed, 13 May 2020 09:35:47 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:58595 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387604AbgEMNdB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:35:31 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7B6CC061A0C;
-        Wed, 13 May 2020 06:35:30 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id u10so6830376pls.8;
-        Wed, 13 May 2020 06:35:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0BGOGNqih27OV/hxwThO6MefRy8fXlj0Bh5UXUHoSvM=;
-        b=RDEBDtHUoB1XiuAgWSyUddc44FRdseR2E78Z2zPCqCd8Z18kCEdZEGX8U2vpI0yzzA
-         u2yPqNpHUZtsoZpZmOjFllF1DBlsIz5XDxmvPXLVmQVKCvvwifTfdv2vhxD1NgzQMmnz
-         N1T/Czl/NCNGfDgTC4rx1m6afLlOJBLwgGkiPiQdaV0BM/6IUr7WpfXp65yBUaCwb2ET
-         dx8UCWSsBCyEVu7hIoYFsdvu7x+zpnp3t7U8kws9RKec49ogUfYr6QiV1kaS9G+CSQjS
-         Ao0jU/DLcKfDuCB9R7JGFBPoV5YU98EC03q4FXf01dcm6m24eDSmLsg95KzXWHPIeGJm
-         jwcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0BGOGNqih27OV/hxwThO6MefRy8fXlj0Bh5UXUHoSvM=;
-        b=IZBC0RCc0eim7ct/DWqhTa4twr5i6pWQheMKg7J/e4fgs1WK9Ws86VrqY3TugHMQA3
-         U+D7PrkbDnKc6emwCRAL3XVYBQhNLEw8x5ikjfKqEZdWcS1+NOLET2g38+Jf3TmpDt40
-         gOVvcFqfEtdWSuu+ggdI4IFXva8qO2uUiyjwEvb9879aOArPO1RkwQODeXcCjxfzHgM7
-         Tnhv+l79grrHGDi1GNQg9CXdn3TVSsgo4g8H0P35EOyKgmLcbHTCHfeNJ2b6gXVcw5aG
-         2/8U5aW7guZyY+0msxXYSr3Yom58uG6i4T6kVzTtWy7nhZy8UpSGwsFybjdDMND+E8kA
-         fHoQ==
-X-Gm-Message-State: AOAM531HWIVdkRcNth2Ab/UZj8ryNo9SxiqR5m+GjQ0FzXZSN3/tiBND
-        i2RfEfqwaeSbAUJXJLnglT8=
-X-Google-Smtp-Source: ABdhPJxHvVgkgDedkqYMSZJj59AIFKH74OH/HffWU0Oj7KNku+s6st0bccLkx8cK0rvdzp2DPZN+dw==
-X-Received: by 2002:a17:90a:7ace:: with SMTP id b14mr2252495pjl.116.1589376930438;
-        Wed, 13 May 2020 06:35:30 -0700 (PDT)
-Received: from ?IPv6:2404:f801:0:6:8000::a31c? ([2404:f801:9000:18:efed::a31c])
-        by smtp.gmail.com with ESMTPSA id g9sm13207294pgj.89.2020.05.13.06.35.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 May 2020 06:35:30 -0700 (PDT)
-Subject: Re: [PATCH] x86/hyperv: Properly suspend/resume reenlightenment
- notifications
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-hyperv@vger.kernel.org
-Cc:     Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>
-References: <20200512160153.134467-1-vkuznets@redhat.com>
-From:   Tianyu Lan <ltykernel@gmail.com>
-Message-ID: <3507d1b3-8d90-8d0e-c20f-a75f9f280230@gmail.com>
-Date:   Wed, 13 May 2020 21:35:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200512160153.134467-1-vkuznets@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 13 May 2020 09:33:01 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200513133258euoutp01dff5e095483b37ae972093c9709285c4~OmcJDFA0l2140621406euoutp017
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 13:32:58 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200513133258euoutp01dff5e095483b37ae972093c9709285c4~OmcJDFA0l2140621406euoutp017
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1589376778;
+        bh=rEuOT0GkB4NH8z/2RQ3JmrQOctEyWUqngf17Z20yogU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WMvhvwzNLVynKgBTBSLuwINUnXtn5tT+6fQycDVV3dYXnLZKm+/LJTYKwq3zPeH7R
+         OIiTu235Nl+A+GMeevjqdxdF9Tz/Eo1Jad5Beqo8LU0vsdSBy+TGUT7jSgDv5cjXYf
+         +GSKKXNKGSfvh+qYzKv17yzkL+imZlh6OMRj1cBY=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200513133257eucas1p15b3d637e0f28f52bdec5bc4159d4c17d~OmcIwD4Lv2351423514eucas1p1q;
+        Wed, 13 May 2020 13:32:57 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 8D.F0.60679.907FBBE5; Wed, 13
+        May 2020 14:32:57 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200513133257eucas1p1613a28a71a6c328c406397f7094534d1~OmcIe02ww2350623506eucas1p1r;
+        Wed, 13 May 2020 13:32:57 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200513133257eusmtrp12c74a145da6bba144d7eaed5acf30040~OmcIckxwT0994509945eusmtrp1Y;
+        Wed, 13 May 2020 13:32:57 +0000 (GMT)
+X-AuditID: cbfec7f4-0e5ff7000001ed07-1b-5ebbf7099305
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 98.0A.08375.907FBBE5; Wed, 13
+        May 2020 14:32:57 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200513133256eusmtip19a0d0eff579afc1683a73c3191405caa~OmcH36lW33222032220eusmtip1y;
+        Wed, 13 May 2020 13:32:56 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH v5 02/38] scatterlist: add generic wrappers for iterating
+ over sgtable objects
+Date:   Wed, 13 May 2020 15:32:09 +0200
+Message-Id: <20200513133245.6408-2-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200513133245.6408-1-m.szyprowski@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGKsWRmVeSWpSXmKPExsWy7djP87qc33fHGRzZrG/Re+4kk8XGGetZ
+        Lf5vm8hsceXrezaLlauPMlks2G9t8eXKQyaLTY+vsVpc3jWHzWLtkbvsFgc/PGF14PZYM28N
+        o8febwtYPLZ/e8Dqcb/7OJPH5iX1Hrf/PWb2mHxjOaPH7psNbB59W1YxenzeJBfAFcVlk5Ka
+        k1mWWqRvl8CV0dH1l7Xgj2rFrDUfmRoYL8t1MXJySAiYSLxe1sbaxcjFISSwglHi7L/JbBDO
+        F0aJxpWf2SGcz4wSNy/vYYJpWblpElRiOaPE61m7WOBaHj2YyQJSxSZgKNH1tosNxBYRaGWU
+        ONHLA2IzC8xgkjj6uhTEFhZIkOib+wWonoODRUBV4swrdZAwr4CNxMdL+9khlslLrN5wgBnE
+        5hSwlXh1Zz8LRHwTu8SDvQoQtovE2XU3oI4Tlnh1fAtUr4zE6ck9YLdJCDQzSjw8t5Ydwulh
+        lLjcNIMRospa4s65X2wgRzALaEqs36UPEXaUuLnkOthtEgJ8EjfeCkKczycxadt0Zogwr0RH
+        mxBEtZrErOPr4NYevHCJGcL2kHj45hw0eA8zSlx79oNxAqP8LIRlCxgZVzGKp5YW56anFhvl
+        pZbrFSfmFpfmpesl5+duYgSmntP/jn/ZwbjrT9IhRgEORiUeXotbu+OEWBPLiitzDzFKcDAr
+        ifD6rQcK8aYkVlalFuXHF5XmpBYfYpTmYFES5zVe9DJWSCA9sSQ1OzW1ILUIJsvEwSnVwBjt
+        t9Nva7zbt/9aZ7KmnupT/ML24tRiv/RHOa1xDFoqvn+Oy3/TW2p1tL1/zcKPgczam0v+ztn/
+        4FOt6q2T5sZP1P68T3AIv/r6/bHck3M+5XTuUmR6xfc/bePNghV/T9zpjf9ZICDMuURUvE/k
+        81s2bg+/S+F7n96Q38D/3if0P4Nm46F7e6OVWIozEg21mIuKEwGJ9dDgOQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupkkeLIzCtJLcpLzFFi42I5/e/4XV3O77vjDHY9lrboPXeSyWLjjPWs
+        Fv+3TWS2uPL1PZvFytVHmSwW7Le2+HLlIZPFpsfXWC0u75rDZrH2yF12i4MfnrA6cHusmbeG
+        0WPvtwUsHtu/PWD1uN99nMlj85J6j9v/HjN7TL6xnNFj980GNo++LasYPT5vkgvgitKzKcov
+        LUlVyMgvLrFVija0MNIztLTQMzKx1DM0No+1MjJV0rezSUnNySxLLdK3S9DL6Oj6y1rwR7Vi
+        1pqPTA2Ml+W6GDk5JARMJFZumsTexcjFISSwlFHi5tP/zBAJGYmT0xpYIWxhiT/Xutggij4x
+        Srx62soIkmATMJToeguREBHoZJSY1v0RbBSzwDwmiUUPD7GDVAkLxEnserUGqIODg0VAVeLM
+        K3WQMK+AjcTHS/vZITbIS6zecABsM6eArcSrO/tZQGwhgXyJvYv3sU1g5FvAyLCKUSS1tDg3
+        PbfYUK84Mbe4NC9dLzk/dxMjMBq2Hfu5eQfjpY3BhxgFOBiVeHgtbu2OE2JNLCuuzD3EKMHB
+        rCTC67ceKMSbklhZlVqUH19UmpNafIjRFOimicxSosn5wEjNK4k3NDU0t7A0NDc2NzazUBLn
+        7RA4GCMkkJ5YkpqdmlqQWgTTx8TBKdXAyDo178LD+0yFXZ1Hy9ZG9PvmW133DO9VKmEvYe/9
+        MP/bwpZ//w99TvSevlQ0e+fhnfHNPALFChJ/nH0iJHzu7T9a3t08qfCY3/22vlJFk9T+CRPj
+        Jokmaz5nu7I2Q2ECD+8H+0BmjZLFIl1R57haXoi9fRcTcurX4+XRMuqxy2qE5NyVgiuUWIoz
+        Eg21mIuKEwGN63+5nAIAAA==
+X-CMS-MailID: 20200513133257eucas1p1613a28a71a6c328c406397f7094534d1
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200513133257eucas1p1613a28a71a6c328c406397f7094534d1
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200513133257eucas1p1613a28a71a6c328c406397f7094534d1
+References: <20200513132114.6046-1-m.szyprowski@samsung.com>
+        <20200513133245.6408-1-m.szyprowski@samsung.com>
+        <CGME20200513133257eucas1p1613a28a71a6c328c406397f7094534d1@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/13/2020 12:01 AM, Vitaly Kuznetsov wrote:
-> Errors during hibernation with reenlightenment notifications enabled were
-> reported:
-> 
->   [   51.730435] PM: hibernation entry
->   [   51.737435] PM: Syncing filesystems ...
->   ...
->   [   54.102216] Disabling non-boot CPUs ...
->   [   54.106633] smpboot: CPU 1 is now offline
->   [   54.110006] unchecked MSR access error: WRMSR to 0x40000106 (tried to
->       write 0x47c72780000100ee) at rIP: 0xffffffff90062f24
->       native_write_msr+0x4/0x20)
->   [   54.110006] Call Trace:
->   [   54.110006]  hv_cpu_die+0xd9/0xf0
->   ...
-> 
-> Normally, hv_cpu_die() just reassigns reenlightenment notifications to some
-> other CPU when the CPU receiving them goes offline. Upon hibernation, there
-> is no other CPU which is still online so cpumask_any_but(cpu_online_mask)
-> returns >= nr_cpu_ids and using it as hv_vp_index index is incorrect.
-> Disable the feature when cpumask_any_but() fails.
-> 
-> Also, as we now disable reenlightenment notifications upon hibernation we
-> need to restore them on resume. Check if hv_reenlightenment_cb was
-> previously set and restore from hv_resume().
-> 
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->   arch/x86/hyperv/hv_init.c | 19 +++++++++++++++++--
->   1 file changed, 17 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> index fd51bac11b46..acf76b466db6 100644
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -226,10 +226,18 @@ static int hv_cpu_die(unsigned int cpu)
->   
->   	rdmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
->   	if (re_ctrl.target_vp == hv_vp_index[cpu]) {
-> -		/* Reassign to some other online CPU */
-> +		/*
-> +		 * Reassign reenlightenment notifications to some other online
-> +		 * CPU or just disable the feature if there are no online CPUs
-> +		 * left (happens on hibernation).
-> +		 */
->   		new_cpu = cpumask_any_but(cpu_online_mask, cpu);
->   
-> -		re_ctrl.target_vp = hv_vp_index[new_cpu];
-> +		if (new_cpu < nr_cpu_ids)
-> +			re_ctrl.target_vp = hv_vp_index[new_cpu];
-> +		else
-> +			re_ctrl.enabled = 0;
-> +
->   		wrmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
->   	}
->   
-> @@ -293,6 +301,13 @@ static void hv_resume(void)
->   
->   	hv_hypercall_pg = hv_hypercall_pg_saved;
->   	hv_hypercall_pg_saved = NULL;
-> +
-> +	/*
-> +	 * Reenlightenment notifications are disabled by hv_cpu_die(0),
-> +	 * reenable them here if hv_reenlightenment_cb was previously set.
-> +	 */
-> +	if (hv_reenlightenment_cb)
-> +		set_hv_tscchange_cb(hv_reenlightenment_cb);
->   }
->   
->   /* Note: when the ops are called, only CPU0 is online and IRQs are disabled. */
-> 
+struct sg_table is a common structure used for describing a memory
+buffer. It consists of a scatterlist with memory pages and DMA addresses
+(sgl entry), as well as the number of scatterlist entries: CPU pages
+(orig_nents entry) and DMA mapped pages (nents entry).
 
-Reviewed-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+It turned out that it was a common mistake to misuse nents and orig_nents
+entries, calling the scatterlist iterating functions with a wrong number
+of the entries.
+
+To avoid such issues, lets introduce a common wrappers operating directly
+on the struct sg_table objects, which take care of the proper use of
+the nents and orig_nents entries.
+
+While touching this, lets clarify some ambiguities in the comments for
+the existing for_each helpers.
+
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com> 
+---
+For more information, see '[PATCH v5 00/38] DRM: fix struct sg_table nents
+vs. orig_nents misuse' thread:
+https://lore.kernel.org/linux-iommu/20200513132114.6046-1-m.szyprowski@samsung.com/T/
+---
+ include/linux/scatterlist.h | 50 ++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 47 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/scatterlist.h b/include/linux/scatterlist.h
+index 6eec50f..4f922af 100644
+--- a/include/linux/scatterlist.h
++++ b/include/linux/scatterlist.h
+@@ -151,6 +151,20 @@ static inline void sg_set_buf(struct scatterlist *sg, const void *buf,
+ #define for_each_sg(sglist, sg, nr, __i)	\
+ 	for (__i = 0, sg = (sglist); __i < (nr); __i++, sg = sg_next(sg))
+ 
++/*
++ * Loop over each sg element in the given sg_table object.
++ */
++#define for_each_sgtable_sg(sgt, sg, i)		\
++	for_each_sg(sgt->sgl, sg, sgt->orig_nents, i)
++
++/*
++ * Loop over each sg element in the given *DMA mapped* sg_table object.
++ * Please use sg_dma_address(sg) and sg_dma_len(sg) to extract DMA addresses
++ * of the each element.
++ */
++#define for_each_sgtable_dma_sg(sgt, sg, i)	\
++	for_each_sg(sgt->sgl, sg, sgt->nents, i)
++
+ /**
+  * sg_chain - Chain two sglists together
+  * @prv:	First scatterlist
+@@ -401,9 +415,10 @@ static inline struct page *sg_page_iter_page(struct sg_page_iter *piter)
+  * @sglist:	sglist to iterate over
+  * @piter:	page iterator to hold current page, sg, sg_pgoffset
+  * @nents:	maximum number of sg entries to iterate over
+- * @pgoffset:	starting page offset
++ * @pgoffset:	starting page offset (in pages)
+  *
+  * Callers may use sg_page_iter_page() to get each page pointer.
++ * In each loop it operates on PAGE_SIZE unit.
+  */
+ #define for_each_sg_page(sglist, piter, nents, pgoffset)		   \
+ 	for (__sg_page_iter_start((piter), (sglist), (nents), (pgoffset)); \
+@@ -412,18 +427,47 @@ static inline struct page *sg_page_iter_page(struct sg_page_iter *piter)
+ /**
+  * for_each_sg_dma_page - iterate over the pages of the given sg list
+  * @sglist:	sglist to iterate over
+- * @dma_iter:	page iterator to hold current page
++ * @dma_iter:	DMA page iterator to hold current page
+  * @dma_nents:	maximum number of sg entries to iterate over, this is the value
+  *              returned from dma_map_sg
+- * @pgoffset:	starting page offset
++ * @pgoffset:	starting page offset (in pages)
+  *
+  * Callers may use sg_page_iter_dma_address() to get each page's DMA address.
++ * In each loop it operates on PAGE_SIZE unit.
+  */
+ #define for_each_sg_dma_page(sglist, dma_iter, dma_nents, pgoffset)            \
+ 	for (__sg_page_iter_start(&(dma_iter)->base, sglist, dma_nents,        \
+ 				  pgoffset);                                   \
+ 	     __sg_page_iter_dma_next(dma_iter);)
+ 
++/**
++ * for_each_sgtable_page - iterate over all pages in the sg_table object
++ * @sgt:	sg_table object to iterate over
++ * @piter:	page iterator to hold current page
++ * @pgoffset:	starting page offset (in pages)
++ *
++ * Iterates over the all memory pages in the buffer described by
++ * a scatterlist stored in the given sg_table object.
++ * See also for_each_sg_page(). In each loop it operates on PAGE_SIZE unit.
++ */
++#define for_each_sgtable_page(sgt, piter, pgoffset)	\
++	for_each_sg_page(sgt->sgl, piter, sgt->orig_nents, pgoffset)
++
++/**
++ * for_each_sgtable_dma_page - iterate over the DMA mapped sg_table object
++ * @sgt:	sg_table object to iterate over
++ * @dma_iter:	DMA page iterator to hold current page
++ * @pgoffset:	starting page offset (in pages)
++ *
++ * Iterates over the all DMA mapped pages in the buffer described by
++ * a scatterlist stored in the given sg_table object.
++ * See also for_each_sg_dma_page(). In each loop it operates on PAGE_SIZE
++ * unit.
++ */
++#define for_each_sgtable_dma_page(sgt, dma_iter, pgoffset)	\
++	for_each_sg_dma_page(sgt->sgl, dma_iter, sgt->nents, pgoffset)
++
++
+ /*
+  * Mapping sg iterator
+  *
+-- 
+1.9.1
+
