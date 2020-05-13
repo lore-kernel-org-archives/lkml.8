@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CC5CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBE1C2D0FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE73020740
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E130520740
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363601;
-	bh=x6W/Pxf4cTQTlMo1ktdLzg2nMjER+L4G8RuHBtd4C3E=;
+	s=default; t=1589363604;
+	bh=1CMv9hFWmICCdrJOEUu6oBzHCYSfNEa4RMkguyk+ykY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eMO5SeaLyMF7Pw08VntheQjcFLdl54t28pq8hoGOdTeO6hTDREU6HwUtWWm58H7Fj
-	 7ZiRBm+ko7HTsceSRdNyhwLNtGWkxMS8lySLe3aCW+w0E6smrmuatqdwImxqRAHHmA
-	 MPIY51/Fb+pV9JyGA4oIfJFkQlcdjWTYPxFFJ8/8=
+	b=dGLpNTMke6ouVRFmhX8tAgGtSKNKdqS2YSsjzgXL6UGCSX+i8jKOZ/TxI7D8+7Wb/
+	 fzb1JWV0MJl5Eyf+/3hQWqGH+HMEQ15eyds2ov05gpIFAoAz3DTElClNt+w5GCO7zm
+	 uHG9lGN/nY8OXer+sf+LrePjh/jN9XGxmeNlWkVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387438AbgEMJxT (ORCPT
+        id S2387940AbgEMJxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:53:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55124 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:53:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387501AbgEMJxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:53:15 -0400
+        id S2387915AbgEMJxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:53:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D55F20740;
-        Wed, 13 May 2020 09:53:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A524A20753;
+        Wed, 13 May 2020 09:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363594;
-        bh=x6W/Pxf4cTQTlMo1ktdLzg2nMjER+L4G8RuHBtd4C3E=;
+        s=default; t=1589363592;
+        bh=1CMv9hFWmICCdrJOEUu6oBzHCYSfNEa4RMkguyk+ykY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BzAcAZzaG3M8vvaWZnjp7yqj8mPs1VTE+sUo3thnuecVMxCKxyIoJQ2DvnuRbixAY
-         Rqa6A1T2H1jQKH6KiS8mWFHxj8Vn5auBRsBQuMQdv+AVXLWIw8OTloRzLOVTY6j+xU
-         lftbGT5YS3Sb9BH/RShhOQ1peQpCL/csvKXw0egw=
+        b=XG0i1lWepxFRtP+8PBshFHjxlnpma01X23IudOpxaOZmLpSf/wkItECag9qUu05U+
+         yYwgNCyn6EsxBXu4dVRMYqqyxCxJ38MDCWzk897mmUH+jm57fwFBAWHXnz27LntePV
+         639Wiky6XjsI0jK6w+AlrIENnrKUIPUezh5JO9NI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
+        stable@vger.kernel.org, Erez Shitrit <erezsh@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Alex Vesker <valex@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.6 047/118] net/mlx5: Fix forced completion access non initialized command entry
-Date:   Wed, 13 May 2020 11:44:26 +0200
-Message-Id: <20200513094421.346220119@linuxfoundation.org>
+Subject: [PATCH 5.6 046/118] net/mlx5: DR, On creation set CQs arm_db member to right value
+Date:   Wed, 13 May 2020 11:44:25 +0200
+Message-Id: <20200513094421.280886211@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -60,46 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Moshe Shemesh <moshe@mellanox.com>
+From: Erez Shitrit <erezsh@mellanox.com>
 
-[ Upstream commit f3cb3cebe26ed4c8036adbd9448b372129d3c371 ]
+[ Upstream commit 8075411d93b6efe143d9f606f6531077795b7fbf ]
 
-mlx5_cmd_flush() will trigger forced completions to all valid command
-entries. Triggered by an asynch event such as fast teardown it can
-happen at any stage of the command, including command initialization.
-It will trigger forced completion and that can lead to completion on an
-uninitialized command entry.
+In polling mode, set arm_db member to a value that will avoid CQ
+event recovery by the HW.
+Otherwise we might get event without completion function.
+In addition,empty completion function to was added to protect from
+unexpected events.
 
-Setting MLX5_CMD_ENT_STATE_PENDING_COMP only after command entry is
-initialized will ensure force completion is treated only if command
-entry is initialized.
-
-Fixes: 73dd3a4839c1 ("net/mlx5: Avoid using pending command interface slots")
-Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
-Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
+Fixes: 297cccebdc5a ("net/mlx5: DR, Expose an internal API to issue RDMA operations")
+Signed-off-by: Erez Shitrit <erezsh@mellanox.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Reviewed-by: Alex Vesker <valex@mellanox.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/cmd.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/steering/dr_send.c |   14 ++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-@@ -888,7 +888,6 @@ static void cmd_work_handler(struct work
- 	}
+--- a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_send.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_send.c
+@@ -689,6 +689,12 @@ static void dr_cq_event(struct mlx5_core
+ 	pr_info("CQ event %u on CQ #%u\n", event, mcq->cqn);
+ }
  
- 	cmd->ent_arr[ent->idx] = ent;
--	set_bit(MLX5_CMD_ENT_STATE_PENDING_COMP, &ent->state);
- 	lay = get_inst(cmd, ent->idx);
- 	ent->lay = lay;
- 	memset(lay, 0, sizeof(*lay));
-@@ -910,6 +909,7 @@ static void cmd_work_handler(struct work
++static void dr_cq_complete(struct mlx5_core_cq *mcq,
++			   struct mlx5_eqe *eqe)
++{
++	pr_err("CQ completion CQ: #%u\n", mcq->cqn);
++}
++
+ static struct mlx5dr_cq *dr_create_cq(struct mlx5_core_dev *mdev,
+ 				      struct mlx5_uars_page *uar,
+ 				      size_t ncqe)
+@@ -750,6 +756,7 @@ static struct mlx5dr_cq *dr_create_cq(st
+ 	mlx5_fill_page_frag_array(&cq->wq_ctrl.buf, pas);
  
- 	if (ent->callback)
- 		schedule_delayed_work(&ent->cb_timeout_work, cb_timeout);
-+	set_bit(MLX5_CMD_ENT_STATE_PENDING_COMP, &ent->state);
+ 	cq->mcq.event = dr_cq_event;
++	cq->mcq.comp  = dr_cq_complete;
  
- 	/* Skip sending command to fw if internal error */
- 	if (pci_channel_offline(dev->pdev) ||
+ 	err = mlx5_core_create_cq(mdev, &cq->mcq, in, inlen, out, sizeof(out));
+ 	kvfree(in);
+@@ -761,7 +768,12 @@ static struct mlx5dr_cq *dr_create_cq(st
+ 	cq->mcq.set_ci_db = cq->wq_ctrl.db.db;
+ 	cq->mcq.arm_db = cq->wq_ctrl.db.db + 1;
+ 	*cq->mcq.set_ci_db = 0;
+-	*cq->mcq.arm_db = 0;
++
++	/* set no-zero value, in order to avoid the HW to run db-recovery on
++	 * CQ that used in polling mode.
++	 */
++	*cq->mcq.arm_db = cpu_to_be32(2 << 28);
++
+ 	cq->mcq.vector = 0;
+ 	cq->mcq.irqn = irqn;
+ 	cq->mcq.uar = uar;
 
 
