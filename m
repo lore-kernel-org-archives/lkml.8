@@ -2,120 +2,90 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7989FC2D0F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2F6C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 486F3206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:49:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bwOEqlvo"
+	by mail.kernel.org (Postfix) with ESMTP id B2DA8206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:51:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729869AbgEMHtk (ORCPT
+        id S1729500AbgEMHv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 03:49:40 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:49168 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726138AbgEMHtk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 03:49:40 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04D7ncGK097655;
-        Wed, 13 May 2020 02:49:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589356178;
-        bh=/N6ncEuKJTmEmVjkKxoOVRrkjQZg7dhNEmECsEcg4q4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=bwOEqlvoZW3rOQ8jYVLD+1F9KJqCaSwBbF2f8RdmF4dfpRtHGg2K9CkSex89IBpMV
-         vvLC+wtcISAgdVr5C2bf64CBxnd6j4LmmkfJdF2QcRa7zbKGfhuZT2y1D1kUZqjdIW
-         Sy5wSU8B9tHzCXntZ/svNTp3aDiOHE8Kn3xrZAe4=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04D7ncgc077922
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 13 May 2020 02:49:38 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 13
- May 2020 02:49:37 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 13 May 2020 02:49:38 -0500
-Received: from [10.250.234.195] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04D7nYbO078570;
-        Wed, 13 May 2020 02:49:35 -0500
-Subject: Re: [PATCH 4/5] dt-bindings: ufs: ti: Add missing
- 'additionalProperties: false'
-To:     Rob Herring <robh@kernel.org>, <devicetree@vger.kernel.org>
-CC:     <linux-clk@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>
-References: <20200512204543.22090-1-robh@kernel.org>
- <20200512204543.22090-4-robh@kernel.org>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <394531de-05cd-3e2e-60f4-a84694208726@ti.com>
-Date:   Wed, 13 May 2020 13:19:34 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 13 May 2020 03:51:59 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4401 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728988AbgEMHv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 03:51:58 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9F4B26A46A9277BEA75A;
+        Wed, 13 May 2020 15:51:56 +0800 (CST)
+Received: from huawei.com (10.175.124.27) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Wed, 13 May 2020
+ 15:51:49 +0800
+From:   Wu Bo <wubo40@huawei.com>
+To:     <kbusch@kernel.org>, <axboe@fb.com>, <hch@lst.de>,
+        <sagi@grimberg.me>
+CC:     <linux-nvme@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <liuzhiqiang26@huawei.com>, <linfeilong@huawei.com>,
+        <wubo40@huawei.com>
+Subject: [PATCH V2] nvme/core:disable streams when get stream params failed
+Date:   Wed, 13 May 2020 16:05:32 +0800
+Message-ID: <1589357132-511443-1-git-send-email-wubo40@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-In-Reply-To: <20200512204543.22090-4-robh@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+After enable nvme streams, then if get stream params failed, 
+We should disable streams before return error in 
+nvme_configure_directives() function.
 
+Signed-off-by: Wu Bo <wubo40@huawei.com>
+---
+ drivers/nvme/host/core.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-On 13/05/20 2:15 am, Rob Herring wrote:
-> The ti,j721e-ufs schema is missing an 'additionalProperties: false'. Add
-> that and and the missing assigned-clock properties.
-> 
-> Cc: Vignesh Raghavendra <vigneshr@ti.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index f3c037f..298e60c 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -552,20 +552,24 @@ static int nvme_configure_directives(struct nvme_ctrl *ctrl)
+ 		return ret;
+ 
+ 	ret = nvme_get_stream_params(ctrl, &s, NVME_NSID_ALL);
+-	if (ret)
+-		return ret;
++	if (ret) {
++		goto out_disable_stream;
++	}
+ 
+ 	ctrl->nssa = le16_to_cpu(s.nssa);
+ 	if (ctrl->nssa < BLK_MAX_WRITE_HINTS - 1) {
+ 		dev_info(ctrl->device, "too few streams (%u) available\n",
+ 					ctrl->nssa);
+-		nvme_disable_streams(ctrl);
+-		return 0;
++		goto out_disable_stream;
+ 	}
+ 
+ 	ctrl->nr_streams = min_t(unsigned, ctrl->nssa, BLK_MAX_WRITE_HINTS - 1);
+ 	dev_info(ctrl->device, "Using %u streams\n", ctrl->nr_streams);
+ 	return 0;
++
++out_disable_stream:
++	nvme_disable_streams(ctrl);
++	return ret;
+ }
+ 
+ /*
+-- 
+1.8.3.1
 
-
-Acked-by: Vignesh Raghavendra <vigneshr@ti.com>
-
-Regards
-Vignesh
-
->  Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml b/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
-> index b503b1a918a5..4d13e6bc1c50 100644
-> --- a/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
-> +++ b/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
-> @@ -25,6 +25,12 @@ properties:
->    power-domains:
->      maxItems: 1
->  
-> +  assigned-clocks:
-> +    maxItems: 1
-> +
-> +  assigned-clock-parents:
-> +    maxItems: 1
-> +
->    "#address-cells":
->      const: 2
->  
-> @@ -47,6 +53,8 @@ patternProperties:
->        Documentation/devicetree/bindings/ufs/cdns,ufshc.txt for binding
->        documentation of child node
->  
-> +additionalProperties: false
-> +
->  examples:
->    - |
->      #include <dt-bindings/interrupt-controller/irq.h>
-> 
