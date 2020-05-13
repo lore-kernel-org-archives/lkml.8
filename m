@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A793AC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2700EC433EB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABDDF207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2253D20812
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:01:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="VpSg27vN"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="zM3B0oDb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389374AbgEMPBp (ORCPT
+        id S2389302AbgEMPBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:01:45 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:56864 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389054AbgEMPAA (ORCPT
+        Wed, 13 May 2020 11:01:11 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:36904 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388954AbgEMPAI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:00:00 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DEwD45012631;
-        Wed, 13 May 2020 16:59:44 +0200
+        Wed, 13 May 2020 11:00:08 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DEv0Gi016533;
+        Wed, 13 May 2020 16:59:55 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=025BdDCIbH+soZnGtfFatgeiqUpOJOBVAr2pjtailGs=;
- b=VpSg27vNaBoUL5DdSod8WIQVrYEcmqnNJD03nTOvBjhmbct4BGA7y4y4VSeNxCBQGlmc
- vWtXjFQF8Xfv5MJu3ko9bOqQUij1l2bxcA0xBfZxAuxoyr1eEf+JOuB0Vj1Ad0V/LXWF
- TRm6Rj7VyaPFw6yhDtMhhlI9BFtNQMWvdRCKqKt+F3C+uzM7tbo2I8lJCGhnSq95gm4F
- kH+hHuD0d20NQS5ttEsavOqnkhOWIDA09tbPpJPWFQ47Q7ZgHkh3k3jNXezgzS3V12XE
- Z7RfVkPvcNRNXS5KDK8VSZsiqeKNRcohi5gACkKtBsVjrMdNntatvJQKld7Bm40HDQMX VQ== 
+ bh=Pit1yGQ8rKbEnItW2XQ3WIj9sJXNVZ5buvtUs435QEA=;
+ b=zM3B0oDb0K/d+ADdlje0vEXF5ADVB/v1xS6cJBMPMFaQ00+tG9IuS6xnhq/7nl4305UQ
+ +tatHYT9YMWkp0cN7rEDvTehwe0ej0g35BVFHbXvtHLDCI6ci2UkPMaiS/r76fkxeVXl
+ TEF67CXzQIz/aGJKjoMGqvtTyVBwWbr6EWUf3gO4AjSl6+cCbHhPky1JI5GJF1ruPwek
+ LSVPjHsK0k8UPQ/bUyQ0Uv4CpfwTggOjMB/HicbOnGu/9Ujr1k+4WvDWfGP3oBbsK1Rx
+ mqKXg9yevD6qdsrS5YOg9Y4mW9VI5X9+50EFsYZVm0SiafA8jDCVZCEwOW/N8878Jl2X WQ== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3100vn5e2b-1
+        by mx07-00178001.pphosted.com with ESMTP id 3100vydgmv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 16:59:44 +0200
+        Wed, 13 May 2020 16:59:55 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C83D8100038;
-        Wed, 13 May 2020 16:59:43 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BED1A10002A;
+        Wed, 13 May 2020 16:59:53 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B250B2D3006;
-        Wed, 13 May 2020 16:59:43 +0200 (CEST)
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B0CE62D3006;
+        Wed, 13 May 2020 16:59:53 +0200 (CEST)
 Received: from localhost (10.75.127.50) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 13 May 2020 16:59:42
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 13 May 2020 16:59:52
  +0200
 From:   Benjamin Gaignard <benjamin.gaignard@st.com>
 To:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
@@ -57,16 +57,16 @@ CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
         Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH 02/15] ARM: dts: stm32: update pwm pinctrl node names for stm32f4
-Date:   Wed, 13 May 2020 16:59:22 +0200
-Message-ID: <20200513145935.22493-3-benjamin.gaignard@st.com>
+Subject: [PATCH 11/15] ARM: dts: stm32: Update nodes names for stm32mp15 pinctrl
+Date:   Wed, 13 May 2020 16:59:31 +0200
+Message-ID: <20200513145935.22493-12-benjamin.gaignard@st.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <20200513145935.22493-1-benjamin.gaignard@st.com>
 References: <20200513145935.22493-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG4NODE1.st.com (10.75.127.10) To SFHDAG3NODE3.st.com
+X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE3.st.com
  (10.75.127.9)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
  definitions=2020-05-13_06:2020-05-13,2020-05-13 signatures=0
@@ -75,36 +75,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename pwm pinctrl nodes name to matching with yaml bindings
-requirements.
+Fix the nodes names to be aligned with yaml description
 
 Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 ---
- arch/arm/boot/dts/stm32f4-pinctrl.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
-index 392fa143ce07..031caaf40e89 100644
---- a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
-@@ -257,7 +257,7 @@
- 				};
- 			};
+diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+index 73c07f0dfad2..e87a59cd9d48 100644
+--- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+@@ -6,7 +6,7 @@
+ #include <dt-bindings/pinctrl/stm32-pinfunc.h>
  
--			pwm1_pins: pwm-1 {
-+			pwm1_pins: pwm1-0 {
- 				pins {
- 					pinmux = <STM32_PINMUX('A', 8, AF1)>, /* TIM1_CH1 */
- 						 <STM32_PINMUX('B', 13, AF1)>, /* TIM1_CH1N */
-@@ -265,7 +265,7 @@
- 				};
- 			};
+ &pinctrl {
+-	adc1_in6_pins_a: adc1-in6 {
++	adc1_in6_pins_a: adc1-in6-0 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('F', 12, ANALOG)>;
+ 		};
+@@ -58,13 +58,13 @@
+ 		};
+ 	};
  
--			pwm3_pins: pwm-3 {
-+			pwm3_pins: pwm3-0 {
- 				pins {
- 					pinmux = <STM32_PINMUX('B', 4, AF2)>, /* TIM3_CH1 */
- 						 <STM32_PINMUX('B', 5, AF2)>; /* TIM3_CH2 */
+-	dac_ch1_pins_a: dac-ch1 {
++	dac_ch1_pins_a: dac-ch1-0 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('A', 4, ANALOG)>;
+ 		};
+ 	};
+ 
+-	dac_ch2_pins_a: dac-ch2 {
++	dac_ch2_pins_a: dac-ch2-0 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('A', 5, ANALOG)>;
+ 		};
 -- 
 2.15.0
 
