@@ -2,154 +2,173 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4A3CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21148CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA782312A
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mEvy7ECN"
+	by mail.kernel.org (Postfix) with ESMTP id F102420575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589363442;
+	bh=efmXkP4nZQuabVonmCLtMzWmGLAsXGPDsTiDa8BZylU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vjPpGr48m5kqF7FQZ30Rvjvxxa9ivrfZcJRi2pdnRPUpdB3x0MQxugUt/3FKOW0d9
+	 fh6Asr3pLJUiUyTaN1gNOmQVYiITwSlW5eNvQ57Jh1V4hmsS4y0eCLoxYsl/0adI4P
+	 Xzlp/kUriQJFfIvSmhnZkfQue7GhM35La0oNTuCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387526AbgEMJuh (ORCPT
+        id S2387533AbgEMJuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 13 May 2020 05:50:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50542 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387521AbgEMJuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 13 May 2020 05:50:37 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:35056 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732803AbgEMJue (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:50:34 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04D9oLng128304;
-        Wed, 13 May 2020 04:50:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589363421;
-        bh=hYJrqFqxOZldiuTXDyZ85es/GhABW0MVidKFOlcmr6o=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=mEvy7ECNG8Vto3uFzSjltSPQwZieKkX2ecTXo/WCk7kzwlC64gITO7ZaPeitZIiDV
-         cnvzXHsEHZpSt11Sa7Xw0yz3uYsznCt4QtrN2EwrWsvOD7RH8U+ZI9ZiR3VAa8av3G
-         sOrBGDx8ybCNH79VqojtM+VMdOuTQ5T6uHk4+sYw=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04D9oLWW072378
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 13 May 2020 04:50:21 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 13
- May 2020 04:50:21 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 13 May 2020 04:50:21 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04D9oHsn096634;
-        Wed, 13 May 2020 04:50:19 -0500
-Subject: Re: [PATCH v3 0/2] Misc. rproc fixes around fixed memory region
- support
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Suman Anna <s-anna@ti.com>
-CC:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Loic Pallardy <loic.pallardy@st.com>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200420160600.10467-1-s-anna@ti.com>
- <181b6c56-420c-f306-f2cf-53380ad1f37b@ti.com>
- <0a2aa179-9a97-003d-d682-283a8c354ea7@ti.com>
- <20200512231022.GC16107@builder.lan>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <cb6f76cb-1188-75e1-5986-718d7609ed7c@ti.com>
-Date:   Wed, 13 May 2020 12:50:16 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C76A620740;
+        Wed, 13 May 2020 09:50:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589363436;
+        bh=efmXkP4nZQuabVonmCLtMzWmGLAsXGPDsTiDa8BZylU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TaitMvx5v6TH97eNT4PPv2k7n6lsywyAV52jzBOYwJ3ZGk3BU/VgquwMrv2m5ENAV
+         IBiRfYMuapTdtRQ28sKVoQdttSBgV7RpxRBtDcml6k10nHejk13tFK0nJBkFkw/g1L
+         RdSD+nD/Pc74i4b1fY9W5tyFMos2ONytrasAU2ko=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
+        Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>
+Subject: [PATCH 5.4 72/90] x86/entry/64: Fix unwind hints in register clearing code
+Date:   Wed, 13 May 2020 11:45:08 +0200
+Message-Id: <20200513094416.832260670@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
+References: <20200513094408.810028856@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200512231022.GC16107@builder.lan>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/05/2020 02:10, Bjorn Andersson wrote:
-> On Fri 08 May 08:14 PDT 2020, Suman Anna wrote:
-> 
->> Hi Bjorn,
->>
->> On 5/2/20 1:29 PM, Suman Anna wrote:
->>> Hi Bjorn,
->>>
->>> On 4/20/20 11:05 AM, Suman Anna wrote:
->>>> Hi Bjorn,
->>>>
->>>> This is another minor revision of the fixes around fixed memory region
->>>> support [1] series. Patch 1 is revised to go back to the logic used in v1
->>>> after a long discussion on the v2 version [2]. The other suggestions can
->>>> be future improvments as they would require corresponding platform driver
->>>> changes. Please look through the discussion there and let us know your
->>>> preference. Patches are based on v5.7-rc1.
->>>>
->>>> I really appreciate it if you can target the series for the current
->>>> 5.7 -rc's.
->>>> The fixes would apply for all 5.1+ kernels.
->>>
->>> Ping on these.
->>
->> The patches have been reviewed and/or acked by both Mathieu and Arnaud.
-> 
-> Thanks for the reviews!
-> 
->> Can you please get these into the current -rc's?
->>
-> 
-> The offending patch appeared in 5.1, so I have a hard time claiming that
-> this is a regression in 5.7-rc. I've added Cc: stable and picked the two
-> patches for 5.8.
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-Thanks Bjorn,
+commit 06a9750edcffa808494d56da939085c35904e618 upstream.
 
-I believe 5.8 should be fine, we can backport this internally if needed.
+The PUSH_AND_CLEAR_REGS macro zeroes each register immediately after
+pushing it.  If an NMI or exception hits after a register is cleared,
+but before the UNWIND_HINT_REGS annotation, the ORC unwinder will
+wrongly think the previous value of the register was zero.  This can
+confuse the unwinding process and cause it to exit early.
 
--Tero
+Because ORC is simpler than DWARF, there are a limited number of unwind
+annotation states, so it's not possible to add an individual unwind hint
+after each push/clear combination.  Instead, the register clearing
+instructions need to be consolidated and moved to after the
+UNWIND_HINT_REGS annotation.
 
-> 
-> Thanks,
-> Bjorn
-> 
->> Thanks,
->> Suman
->>
->>>
->>> regards
->>> Suman
->>>
->>>>
->>>> Please see the v1 cover-letter [1] for the details on the issues.
->>>>
->>>> regards
->>>> Suman
->>>>
->>>> [1] https://patchwork.kernel.org/cover/11422723/
->>>> [2] https://patchwork.kernel.org/comment/23274389/
->>>>
->>>> Suman Anna (1):
->>>>     remoteproc: Fix and restore the parenting hierarchy for vdev
->>>>
->>>> Tero Kristo (1):
->>>>     remoteproc: Fall back to using parent memory pool if no dedicated
->>>>       available
->>>>
->>>>    drivers/remoteproc/remoteproc_core.c   |  2 +-
->>>>    drivers/remoteproc/remoteproc_virtio.c | 12 ++++++++++++
->>>>    2 files changed, 13 insertions(+), 1 deletion(-)
->>>>
->>>
->>
+Fixes: 3f01daecd545 ("x86/entry/64: Introduce the PUSH_AND_CLEAN_REGS macro")
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Dave Jones <dsj@fb.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Link: https://lore.kernel.org/r/68fd3d0bc92ae2d62ff7879d15d3684217d51f08.1587808742.git.jpoimboe@redhat.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+---
+ arch/x86/entry/calling.h |   40 +++++++++++++++++++++-------------------
+ 1 file changed, 21 insertions(+), 19 deletions(-)
+
+--- a/arch/x86/entry/calling.h
++++ b/arch/x86/entry/calling.h
+@@ -98,13 +98,6 @@ For 32-bit we have the following convent
+ #define SIZEOF_PTREGS	21*8
+ 
+ .macro PUSH_AND_CLEAR_REGS rdx=%rdx rax=%rax save_ret=0
+-	/*
+-	 * Push registers and sanitize registers of values that a
+-	 * speculation attack might otherwise want to exploit. The
+-	 * lower registers are likely clobbered well before they
+-	 * could be put to use in a speculative execution gadget.
+-	 * Interleave XOR with PUSH for better uop scheduling:
+-	 */
+ 	.if \save_ret
+ 	pushq	%rsi		/* pt_regs->si */
+ 	movq	8(%rsp), %rsi	/* temporarily store the return address in %rsi */
+@@ -114,34 +107,43 @@ For 32-bit we have the following convent
+ 	pushq   %rsi		/* pt_regs->si */
+ 	.endif
+ 	pushq	\rdx		/* pt_regs->dx */
+-	xorl	%edx, %edx	/* nospec   dx */
+ 	pushq   %rcx		/* pt_regs->cx */
+-	xorl	%ecx, %ecx	/* nospec   cx */
+ 	pushq   \rax		/* pt_regs->ax */
+ 	pushq   %r8		/* pt_regs->r8 */
+-	xorl	%r8d, %r8d	/* nospec   r8 */
+ 	pushq   %r9		/* pt_regs->r9 */
+-	xorl	%r9d, %r9d	/* nospec   r9 */
+ 	pushq   %r10		/* pt_regs->r10 */
+-	xorl	%r10d, %r10d	/* nospec   r10 */
+ 	pushq   %r11		/* pt_regs->r11 */
+-	xorl	%r11d, %r11d	/* nospec   r11*/
+ 	pushq	%rbx		/* pt_regs->rbx */
+-	xorl    %ebx, %ebx	/* nospec   rbx*/
+ 	pushq	%rbp		/* pt_regs->rbp */
+-	xorl    %ebp, %ebp	/* nospec   rbp*/
+ 	pushq	%r12		/* pt_regs->r12 */
+-	xorl	%r12d, %r12d	/* nospec   r12*/
+ 	pushq	%r13		/* pt_regs->r13 */
+-	xorl	%r13d, %r13d	/* nospec   r13*/
+ 	pushq	%r14		/* pt_regs->r14 */
+-	xorl	%r14d, %r14d	/* nospec   r14*/
+ 	pushq	%r15		/* pt_regs->r15 */
+-	xorl	%r15d, %r15d	/* nospec   r15*/
+ 	UNWIND_HINT_REGS
++
+ 	.if \save_ret
+ 	pushq	%rsi		/* return address on top of stack */
+ 	.endif
++
++	/*
++	 * Sanitize registers of values that a speculation attack might
++	 * otherwise want to exploit. The lower registers are likely clobbered
++	 * well before they could be put to use in a speculative execution
++	 * gadget.
++	 */
++	xorl	%edx,  %edx	/* nospec dx  */
++	xorl	%ecx,  %ecx	/* nospec cx  */
++	xorl	%r8d,  %r8d	/* nospec r8  */
++	xorl	%r9d,  %r9d	/* nospec r9  */
++	xorl	%r10d, %r10d	/* nospec r10 */
++	xorl	%r11d, %r11d	/* nospec r11 */
++	xorl	%ebx,  %ebx	/* nospec rbx */
++	xorl	%ebp,  %ebp	/* nospec rbp */
++	xorl	%r12d, %r12d	/* nospec r12 */
++	xorl	%r13d, %r13d	/* nospec r13 */
++	xorl	%r14d, %r14d	/* nospec r14 */
++	xorl	%r15d, %r15d	/* nospec r15 */
++
+ .endm
+ 
+ .macro POP_REGS pop_rdi=1 skip_r11rcx=0
+
+
