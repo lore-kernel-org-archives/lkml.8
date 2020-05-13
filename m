@@ -2,137 +2,101 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68727C2D11C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CEBC2D11D
 	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45F8A2176D
+	by mail.kernel.org (Postfix) with ESMTP id 654EC24966
 	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:07:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OhDiGu68"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589350020;
+	bh=6qZpYcXUD5MiwOqEO1ZY0mCSOUXAEishXLv58UbUkb4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jo1nbFQH/SxOHUzObulcEjJAp+iswBK8KecVRNeEgfJYDSkj70O66aB+R1Ur/qzpL
+	 X4wFPmj3nKpp8GNKKgQQWgWiG5FdzjNbnfhAqwOZ+m5AvXPwhyChNeNZ2EYdNN0T42
+	 yeBT5KW7TK4m6L80DdSdnRPpEQxoV8tkNCaXJDL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729352AbgEMGFU (ORCPT
+        id S1729375AbgEMGG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 02:05:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42410 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728964AbgEMGFU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 02:05:20 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61193C061A0C;
-        Tue, 12 May 2020 23:05:20 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id w18so3803839ilm.13;
-        Tue, 12 May 2020 23:05:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=llq+P2xS9hRnxN7VKa+cKSHtEacxqIGOmNa3rWsykFA=;
-        b=OhDiGu681l8VKu/cUqlcGkDBshf0USyz3q6TF3HiFLF92uoX2JkY8MX+b91AA0P8jg
-         GIXb3UVrxBSWQF5MBDGaVq6I534SKwrh8tO7fDh2xbpy3Ha/uM8MnGDuT4u4NasD0Zqt
-         Fzhy7RFHuAe7uFd8Z89J9lCuxvaUMsOjNWLTkgURTTGa0CA4db7KdmDSG/evutJE81cq
-         hNfzvTN1DsYwrY0QvdtEIBFkvkP2V035Atdd5CC+oqL4T6auSVXGzXK8cC3XWsrghGf5
-         2t3uCsS1PSVAbe4H9fFPUByp1qvj7RspYUSfcsC4Mg08aamZO1fN2dQmspf/rddEVO6F
-         sPtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=llq+P2xS9hRnxN7VKa+cKSHtEacxqIGOmNa3rWsykFA=;
-        b=iBVXbVzxA0ffooCay+SfYr6SQlQFT0unMeqTIRO7U8m4/P5fbWwDk9jq+4EhWSPQVH
-         kHEWpCtvL//ylize3jwBfeBHc0wR9WWpeerFttzMM93ssAKeAL71ZWiA+pS4nkc4LQvH
-         tGMxAwmeDGB/1bs+pz6DrvDtnM7p3u6JFMrh60OdxJlv+sINL+sY0QganAdPaiasZwU3
-         UQ9jwSLWW+UoCGK0yk8HlgOh5US6IzujdW2I6LitMuPuNUc0lMykI/Uq72LbyK4628xo
-         nwbOPyM4VsdH6QIQ31/bV1sf9kLctj5gXYYuD4U6EehlIO6VGXB25AaZFpnamCZsqn7A
-         EX3g==
-X-Gm-Message-State: AGi0PuZEVfhUj2nzjjNn23ybJQCJ53GCTSOZYGPPskQMWEdZkd9xjggf
-        hV6ZGHvWAs7vIUx6V/Pfdm6HhFr6mcGFtd3ZQHk=
-X-Google-Smtp-Source: APiQypJ8LGalrwXglwtoCXMXoWYX/LXkemFz5zDLoFWL2/KGpTe0Vlp4vS4L8XwFx1G8nXVXhXF8bTno/TeKYkepeHQ=
-X-Received: by 2002:a92:d40a:: with SMTP id q10mr1858272ilm.87.1589349919748;
- Tue, 12 May 2020 23:05:19 -0700 (PDT)
+        Wed, 13 May 2020 02:06:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38770 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728784AbgEMGGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 02:06:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCE1820718;
+        Wed, 13 May 2020 06:06:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589350015;
+        bh=6qZpYcXUD5MiwOqEO1ZY0mCSOUXAEishXLv58UbUkb4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PlsesW/IxxtIRgOd2lQP0dqWv9yKqYmK7I0Pdb0PncShDHGqXe38IMwt5hHuJ+kOf
+         dIxqCKtzwJuew0r94G4irCnmejKg94wHhnPbr+UD0EdFji1E6dp9EyMJNp0YL2HMWW
+         Y2dzCbQdg/J8zQuX2IzJRvUBD4JBDdopZsCztJog=
+Date:   Wed, 13 May 2020 07:55:48 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     ashwin-h <ashwinh@vmware.com>
+Cc:     x86@kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        stable@kernel.org, srivatsab@vmware.com, srivatsa@csail.mit.edu,
+        rostedt@goodmis.org, srostedt@vmware.com,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v4.19.x] make 'user_access_begin()' do 'access_ok()'
+Message-ID: <20200513055548.GA743118@kroah.com>
+References: <d29f87f3f3abb4e496866253bd170faad976f687.1589305630.git.ashwinh@vmware.com>
 MIME-Version: 1.0
-References: <8d29eba045ef18c5489e122b3668afc20431f15d.1588043236.git.baolin.wang7@gmail.com>
- <4b224e7bb703e15469e5cd79a54f7bc00a790fc5.1588043236.git.baolin.wang7@gmail.com>
- <CADBw62pDp4NByqNJ+ryUdBUi7GsW3tD8_vSN7iRGekThw0Xo+Q@mail.gmail.com>
- <CABb+yY2Pph4EeQtg9xSaCWHqcXr0mVNkrrFYm-E3x3f5xaxygg@mail.gmail.com>
- <CADBw62rrQ=Po76qpJoUj1za9Hg=T+=eEJf=Yv3UmLFLtRZvwsg@mail.gmail.com> <CADBw62oFTV3MPuFQSL0MWyYQWy9MuhL70w5HGHPPV1EXBd3KEQ@mail.gmail.com>
-In-Reply-To: <CADBw62oFTV3MPuFQSL0MWyYQWy9MuhL70w5HGHPPV1EXBd3KEQ@mail.gmail.com>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Wed, 13 May 2020 01:05:08 -0500
-Message-ID: <CABb+yY1gXxpU=q9xKf14uZtJz51kLJ-k2EeWsjnFRyBzR5bmgA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] mailbox: sprd: Add Spreadtrum mailbox driver
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d29f87f3f3abb4e496866253bd170faad976f687.1589305630.git.ashwinh@vmware.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 11:14 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
->
-> Hi Jassi,
->
-> On Thu, May 7, 2020 at 11:23 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> >
-> > Hi Jassi,
-> >
-> > On Thu, May 7, 2020 at 7:25 AM Jassi Brar <jassisinghbrar@gmail.com> wrote:
-> > >
-> > > On Wed, May 6, 2020 at 8:29 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> > > >
-> > > > Hi Jassi,
-> > > >
-> > > > On Tue, Apr 28, 2020 at 11:10 AM Baolin Wang <baolin.wang7@gmail.com> wrote:
-> > > > >
-> > > > > From: Baolin Wang <baolin.wang@unisoc.com>
-> > > > >
-> > > > > The Spreadtrum mailbox controller supports 8 channels to communicate
-> > > > > with MCUs, and it contains 2 different parts: inbox and outbox, which
-> > > > > are used to send and receive messages by IRQ mode.
-> > > > >
-> > > > > Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
-> > > > > Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> > > > > ---
-> > > > > Changes from v3:
-> > > > >  - Save the id in mbox_chan.con_priv and remove the 'sprd_mbox_chan'
-> > > > >
-> > > > > Changes from v2:
-> > > > >  - None.
-> > > > >
-> > > > > Changes from v1:
-> > > > >  - None
-> > > >
-> > > > Gentle ping, do you have any other comments? Thanks.
-> > > >
-> > > Yea, I am still not sure about the error returned in send_data().  It
-> > > will either never hit or there will be no easy recovery from it. The
-> > > api expects the driver to tell it the last-tx was done only when it
-> > > can send the next message. (There may be case like sending depend on
-> > > remote, which can't be ensured before hand).
-> >
-> > Actually this is an unusual case, suppose the remote target did not
-> > fetch the message as soon as possile, which will cause the FIFO
-> > overflow, so in this case we  can not send messages to the remote
-> > target any more, otherwise messages will be lost. Thus we can return
-> > errors to users to indicate that something wrong with the remote
-> > target need to be checked.
-> >
-> > So this validation in send_data() is mostly for debugging for this
-> > abnormal case and we will not trigger this issue if the remote target
-> > works well. So I think it is useful to keep this validation in
-> > send_data(). Thanks.
->
-> Any comments? Thanks.
->
-Same as my last post.
+On Wed, May 13, 2020 at 07:19:21AM +0530, ashwin-h wrote:
+> From: Linus Torvalds <torvalds@linux-foundation.org>
+> 
+> commit 594cc251fdd0d231d342d88b2fdff4bc42fb0690 upstream.
+> 
+> Originally, the rule used to be that you'd have to do access_ok()
+> separately, and then user_access_begin() before actually doing the
+> direct (optimized) user access.
+> 
+> But experience has shown that people then decide not to do access_ok()
+> at all, and instead rely on it being implied by other operations or
+> similar.  Which makes it very hard to verify that the access has
+> actually been range-checked.
+> 
+> If you use the unsafe direct user accesses, hardware features (either
+> SMAP - Supervisor Mode Access Protection - on x86, or PAN - Privileged
+> Access Never - on ARM) do force you to use user_access_begin().  But
+> nothing really forces the range check.
+> 
+> By putting the range check into user_access_begin(), we actually force
+> people to do the right thing (tm), and the range check vill be visible
+> near the actual accesses.  We have way too long a history of people
+> trying to avoid them.
+> 
+> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Ashwin H <ashwinh@vmware.com>
+> ---
+>  arch/x86/include/asm/uaccess.h             | 11 ++++++++++-
+>  drivers/gpu/drm/i915/i915_gem_execbuffer.c | 15 +++++++++++++--
+>  include/linux/uaccess.h                    |  2 +-
+>  kernel/compat.c                            |  6 ++----
+>  kernel/exit.c                              |  6 ++----
+>  lib/strncpy_from_user.c                    |  9 +++++----
+>  lib/strnlen_user.c                         |  9 +++++----
+>  7 files changed, 38 insertions(+), 20 deletions(-)
 
-thnx
+Are you wanting this merged to a specific stable kernel tree?  If so, why?
+
+thanks,
+
+greg k-h
