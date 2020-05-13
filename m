@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E950C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6A0C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E22F206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB86A20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363912;
-	bh=8nWeuh1x24TWSX1tL7laF5UYkrmye3w6vE49+0gyclc=;
+	s=default; t=1589363916;
+	bh=+HEWT40WAKTvJiede5y7TrPjk/GLzquagjTyr1OHuQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VtPw63ytXh3f/GazmNlohXe+eM/viXRJ/b4EqSVgnYrmwLODBx0Y/2WKMkGZuSsu7
-	 ioTsHdoUwFqdQi2NB7JSC3h5b+pR9TQwcqrRhr+G/ABNT/mhjhN4XeymyE2OCYRhPQ
-	 IgAyeilRTJs74IYw3298KpxWjOoqYg+U+7ByWhdI=
+	b=AJVFlCkrRoflW5spKwffc6JLO1liKyX5n4e4w6uV6WrQXg16YzUeW0B95R2ZV3EPS
+	 GNS7FgmMaWvvSYiM/fBYwbkb+Nd3Z6I19xTXvL7rvoVxDbxKH/rLFcK8YTvu8EY0Zb
+	 k40dHrrfbNy23NPpcUNHtkd6jvOV6TgfrI8VkOGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388533AbgEMJ6b (ORCPT
+        id S2388128AbgEMJyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:58:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57444 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:54:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388156AbgEMJys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:54:48 -0400
+        id S2388102AbgEMJye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:54:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82E4920753;
-        Wed, 13 May 2020 09:54:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 184DB23127;
+        Wed, 13 May 2020 09:54:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363688;
-        bh=8nWeuh1x24TWSX1tL7laF5UYkrmye3w6vE49+0gyclc=;
+        s=default; t=1589363673;
+        bh=+HEWT40WAKTvJiede5y7TrPjk/GLzquagjTyr1OHuQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sw7EG0NABIr/Cy+Rb8ZBAY4175lOw8ZGVivrUU3vVjsua1GTqlsbygWiCHaqaJicu
-         HbuD5ABaMmr5EJnGS9t+D7ONSsGcGte0l1+EdCZjD16F7iROpI8GCDb2Pgd3zuc2XH
-         8LhjNSCGvrfborx08qapPR+EbKN9Jjdzha/fGlQU=
+        b=BEvRgAZAWxCV83MTahJdfp2ZivnchdyzvSH+5FJuQld+0z4tRAlargaUyp5xtunoN
+         ZWA8OgOeic+2BT8kkhvzSTiqoEoG7DGe9QDZV/4TAULn2Cm+poqurjamvH9gWHec+0
+         86u7X6Gdm1Jri4+6Ab+iLFYq1oUT+revcM7ZWS3M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Henry Willard <henry.willard@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.6 085/118] mm: limit boost_watermark on small zones
-Date:   Wed, 13 May 2020 11:45:04 +0200
-Message-Id: <20200513094424.870600250@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Kolesa <daniel@octaforge.org>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.6 080/118] drm/amd/display: work around fp code being emitted outside of DC_FP_START/END
+Date:   Wed, 13 May 2020 11:44:59 +0200
+Message-Id: <20200513094424.537172681@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -63,82 +59,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Henry Willard <henry.willard@oracle.com>
+From: Daniel Kolesa <daniel@octaforge.org>
 
-commit 14f69140ff9c92a0928547ceefb153a842e8492c upstream.
+commit 59dfb0c64d3853d20dc84f4561f28d4f5a2ddc7d upstream.
 
-Commit 1c30844d2dfe ("mm: reclaim small amounts of memory when an
-external fragmentation event occurs") adds a boost_watermark() function
-which increases the min watermark in a zone by at least
-pageblock_nr_pages or the number of pages in a page block.
+The dcn20_validate_bandwidth function would have code touching the
+incorrect registers emitted outside of the boundaries of the
+DC_FP_START/END macros, at least on ppc64le. Work around the
+problem by wrapping the whole function instead.
 
-On Arm64, with 64K pages and 512M huge pages, this is 8192 pages or
-512M.  It does this regardless of the number of managed pages managed in
-the zone or the likelihood of success.
-
-This can put the zone immediately under water in terms of allocating
-pages from the zone, and can cause a small machine to fail immediately
-due to OoM.  Unlike set_recommended_min_free_kbytes(), which
-substantially increases min_free_kbytes and is tied to THP,
-boost_watermark() can be called even if THP is not active.
-
-The problem is most likely to appear on architectures such as Arm64
-where pageblock_nr_pages is very large.
-
-It is desirable to run the kdump capture kernel in as small a space as
-possible to avoid wasting memory.  In some architectures, such as Arm64,
-there are restrictions on where the capture kernel can run, and
-therefore, the space available.  A capture kernel running in 768M can
-fail due to OoM immediately after boost_watermark() sets the min in zone
-DMA32, where most of the memory is, to 512M.  It fails even though there
-is over 500M of free memory.  With boost_watermark() suppressed, the
-capture kernel can run successfully in 448M.
-
-This patch limits boost_watermark() to boosting a zone's min watermark
-only when there are enough pages that the boost will produce positive
-results.  In this case that is estimated to be four times as many pages
-as pageblock_nr_pages.
-
-Mel said:
-
-: There is no harm in marking it stable.  Clearly it does not happen very
-: often but it's not impossible.  32-bit x86 is a lot less common now
-: which would previously have been vulnerable to triggering this easily.
-: ppc64 has a larger base page size but typically only has one zone.
-: arm64 is likely the most vulnerable, particularly when CMA is
-: configured with a small movable zone.
-
-Fixes: 1c30844d2dfe ("mm: reclaim small amounts of memory when an external fragmentation event occurs")
-Signed-off-by: Henry Willard <henry.willard@oracle.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Acked-by: Mel Gorman <mgorman@techsingularity.net>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/1588294148-6586-1-git-send-email-henry.willard@oracle.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Daniel Kolesa <daniel@octaforge.org>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org # 5.6.x
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/page_alloc.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c |   31 +++++++++++++-----
+ 1 file changed, 23 insertions(+), 8 deletions(-)
 
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -2351,6 +2351,14 @@ static inline void boost_watermark(struc
+--- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
+@@ -3034,25 +3034,32 @@ validate_out:
+ 	return out;
+ }
  
- 	if (!watermark_boost_factor)
- 		return;
-+	/*
-+	 * Don't bother in zones that are unlikely to produce results.
-+	 * On small machines, including kdump capture kernels running
-+	 * in a small area, boosting the watermark can cause an out of
-+	 * memory situation immediately.
-+	 */
-+	if ((pageblock_nr_pages * 4) > zone_managed_pages(zone))
-+		return;
+-
+-bool dcn20_validate_bandwidth(struct dc *dc, struct dc_state *context,
+-		bool fast_validate)
++/*
++ * This must be noinline to ensure anything that deals with FP registers
++ * is contained within this call; previously our compiling with hard-float
++ * would result in fp instructions being emitted outside of the boundaries
++ * of the DC_FP_START/END macros, which makes sense as the compiler has no
++ * idea about what is wrapped and what is not
++ *
++ * This is largely just a workaround to avoid breakage introduced with 5.6,
++ * ideally all fp-using code should be moved into its own file, only that
++ * should be compiled with hard-float, and all code exported from there
++ * should be strictly wrapped with DC_FP_START/END
++ */
++static noinline bool dcn20_validate_bandwidth_fp(struct dc *dc,
++		struct dc_state *context, bool fast_validate)
+ {
+ 	bool voltage_supported = false;
+ 	bool full_pstate_supported = false;
+ 	bool dummy_pstate_supported = false;
+ 	double p_state_latency_us;
  
- 	max_boost = mult_frac(zone->_watermark[WMARK_HIGH],
- 			watermark_boost_factor, 10000);
+-	DC_FP_START();
+ 	p_state_latency_us = context->bw_ctx.dml.soc.dram_clock_change_latency_us;
+ 	context->bw_ctx.dml.soc.disable_dram_clock_change_vactive_support =
+ 		dc->debug.disable_dram_clock_change_vactive_support;
+ 
+ 	if (fast_validate) {
+-		voltage_supported = dcn20_validate_bandwidth_internal(dc, context, true);
+-
+-		DC_FP_END();
+-		return voltage_supported;
++		return dcn20_validate_bandwidth_internal(dc, context, true);
+ 	}
+ 
+ 	// Best case, we support full UCLK switch latency
+@@ -3081,7 +3088,15 @@ bool dcn20_validate_bandwidth(struct dc
+ 
+ restore_dml_state:
+ 	context->bw_ctx.dml.soc.dram_clock_change_latency_us = p_state_latency_us;
++	return voltage_supported;
++}
+ 
++bool dcn20_validate_bandwidth(struct dc *dc, struct dc_state *context,
++		bool fast_validate)
++{
++	bool voltage_supported = false;
++	DC_FP_START();
++	voltage_supported = dcn20_validate_bandwidth_fp(dc, context, fast_validate);
+ 	DC_FP_END();
+ 	return voltage_supported;
+ }
 
 
