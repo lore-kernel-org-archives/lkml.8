@@ -2,100 +2,93 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B15C2D0FB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D9EC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A416124927
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E133D24929
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:18:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TQfzImz2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgEMDQj (ORCPT
+        id S1728329AbgEMDS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 23:16:39 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4400 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725898AbgEMDQi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 23:16:38 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2437A48CDD2EC4FFADEA;
-        Wed, 13 May 2020 11:16:36 +0800 (CST)
-Received: from [127.0.0.1] (10.166.213.93) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Wed, 13 May 2020
- 11:16:34 +0800
-Subject: Re: [PATCH v2] ACPI/IORT: Fix PMCG node always look for a single ID
- mapping.
-To:     Tuan Phan <tuanphan@os.amperecomputing.com>
-CC:     <patches@amperecomputing.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, <linux-acpi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1589327760-5464-1-git-send-email-tuanphan@os.amperecomputing.com>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <6f9996d3-18f1-0432-0e59-adc2cf086c9c@huawei.com>
-Date:   Wed, 13 May 2020 11:16:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 12 May 2020 23:18:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44878 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725898AbgEMDSZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 23:18:25 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62D89C061A0C;
+        Tue, 12 May 2020 20:18:24 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id u35so4153282pgk.6;
+        Tue, 12 May 2020 20:18:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=cm9j0GOHhz5fwX/B7Rq6S2PO60WtEzSereULuu02L4c=;
+        b=TQfzImz2Effkfi3tbUcWLOK3eNl9mEBZfCT+cWvWwwpsZVtN5UfDDULWpnhVVMjD7m
+         +l1P7r1geTRM5hA3UG5rRph451DWBDcLGeBJFGIcpewv2uMChQ2ZcfdMuHVLzoBTw0de
+         /Tg96xeCjiu9dqIqkmm3lVu8JdHjcEiEw/7KJXBlakYBOuidtFM1yeqoA1myrYgk5Bu0
+         cYPiI9+ZxAgSI1xZCt7ba0RIMttr7UANItgwWTO9/PefxZx14pP9PNkoo+iP5EM9k76I
+         0Ta/xTDOc7dKh3SCFBUlUZ0Rc51Ejt/SVPChuBzEjaeDkwo5aJPP75fiAEYXs/H9yHPK
+         /blQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cm9j0GOHhz5fwX/B7Rq6S2PO60WtEzSereULuu02L4c=;
+        b=ijZYqyVlDWqNd/XsLTGyjmo6e11Agg+xhHdlRqUGr4qJZVJZhn7KVWIiGrIQbmgMnI
+         i8J4KqboE8KJq7E4swsHAduBWBEfMomq53gX8Sb2huqWFLEVYO5wByv1FeYpy4w12D5Z
+         b7pajJ1Vl+zZkh/Kz1wqeyFeLhJUsuG/F9JMnz74jKwmN2iCId84VbT247azf3Cb0Zi4
+         MkgpeIWcFRx6cHuyghpLboAEPymJsO2T+hb5nrxEMXSmWB4JFh6dyNbL5aJoVEHntkdh
+         wMoogcY0mb6GWPZcio+rBF5j2eOKfFv+KS6urTnK0PVVgo/GZG96C3tSS4Af3mkscg2h
+         IsUA==
+X-Gm-Message-State: AOAM532ZMBOIicEkWUAoTmEHULpHvXQ0E38D9yv1cGdhRtusgpcNqAPe
+        g+FLbK5Z4+QuW8+GOgsZn9A=
+X-Google-Smtp-Source: ABdhPJyqQiTHPCKdiLCdDiI43VNXbWGbJEbSVIHUpmNUzTN/lb+7fdTD4qHKBYF8CsuEj7tFszXISg==
+X-Received: by 2002:aa7:8754:: with SMTP id g20mr3573837pfo.236.1589339903714;
+        Tue, 12 May 2020 20:18:23 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id b67sm12395663pfg.60.2020.05.12.20.18.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 20:18:23 -0700 (PDT)
+Date:   Tue, 12 May 2020 20:18:21 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     robh+dt@kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, sboyd@kernel.org,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 RESEND 1/2] dt-bindings: Input: remove msm-vibrator
+Message-ID: <20200513031821.GG89269@dtor-ws>
+References: <20200513013140.69935-1-masneyb@onstation.org>
+ <20200513013140.69935-2-masneyb@onstation.org>
 MIME-Version: 1.0
-In-Reply-To: <1589327760-5464-1-git-send-email-tuanphan@os.amperecomputing.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.213.93]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513013140.69935-2-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/13 7:56, Tuan Phan wrote:
-> PMCG node can have zero ID mapping if its overflow interrupt
-> is wire based. The code to parse PMCG node can not assume it will
-> have a single ID mapping.
+On Tue, May 12, 2020 at 09:31:39PM -0400, Brian Masney wrote:
+> The address referenced in this binding is within the Qualcomm Clock
+> namespace so let's drop the msm-vibrator bindings so that a more
+> generic solution can be used instead.  No one is currently using these
+> bindings so this won't affect any users.
 > 
-> Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-It's better to add
+Applied, thank you.
 
-Fixes: 24e516049360 ("ACPI/IORT: Add support for PMCG")
-
-> ---
-> Changes in v2:
-> - Used pmcg node to detect wired base overflow interrupt.
->   
->   drivers/acpi/arm64/iort.c | 5 +++++
->   1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> index ed3d2d1..11a4e8e 100644
-> --- a/drivers/acpi/arm64/iort.c
-> +++ b/drivers/acpi/arm64/iort.c
-> @@ -414,6 +414,7 @@ static struct acpi_iort_node *iort_node_get_id(struct acpi_iort_node *node,
->   static int iort_get_id_mapping_index(struct acpi_iort_node *node)
->   {
->   	struct acpi_iort_smmu_v3 *smmu;
-> +	struct acpi_iort_pmcg *pmcg;
->   
->   	switch (node->type) {
->   	case ACPI_IORT_NODE_SMMU_V3:
-> @@ -441,6 +442,10 @@ static int iort_get_id_mapping_index(struct acpi_iort_node *node)
->   
->   		return smmu->id_mapping_index;
->   	case ACPI_IORT_NODE_PMCG:
-> +		pmcg = (struct acpi_iort_pmcg *)node->node_data;
-> +		if (pmcg->overflow_gsiv)
-> +			return -EINVAL;
-> +
->   		return 0;
->   	default:
->   		return -EINVAL;
-
-With my comments addressed,
-
-Reviewed-by: Hanjun Guo <guoahanjun@huawei.com>
-
+-- 
+Dmitry
