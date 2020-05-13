@@ -2,134 +2,125 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 646F0C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8889C205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:42:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589395352;
-	bh=kAXfoNhJQ4Rt3gH00cO4/PLU7dM6uI3o++14BZ+s2UA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Nx9qC6JKZ3pwU/2LwGhLMUkwKyNY8uIaK1lU2wNgAj7TQktafZKcsOh7aWU1Pt0a4
-	 LZxDIpd9Hya3MwjfaOyhVNXtJwOk96odn3aoXqd4XsJUhPVTDKamrkfkvHukr6Q7gm
-	 f2PKxRN731jfLvw/TRe5HrO2fW0OP9L9aCFKmX0g=
+	by mail.kernel.org (Postfix) with ESMTP id 13993205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:43:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EhETGKly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390161AbgEMSmb (ORCPT
+        id S2390203AbgEMSnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 14:42:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387492AbgEMSma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 14:42:30 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2031205CB;
-        Wed, 13 May 2020 18:42:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589395350;
-        bh=kAXfoNhJQ4Rt3gH00cO4/PLU7dM6uI3o++14BZ+s2UA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=aU+X2cSyyOZQLMafXp2I+o70bu3ARsJUDK57o2XOttzxaJeIcMmFd8FvA6YwInylR
-         u/KUf9gMcrVYv3EKCp4MokeXb62gEHgm89XzIsVRPormwo05C1kFPYJRzsR3m4ge6P
-         iHgAGuWKFlnxqz7rBjHTydq70ksfrhU/ptwgvcJI=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id EDE6F352352C; Wed, 13 May 2020 11:42:29 -0700 (PDT)
-Date:   Wed, 13 May 2020 11:42:29 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Wed, 13 May 2020 14:43:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47792 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732218AbgEMSnA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 14:43:00 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F94FC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 11:43:00 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id g14so12513324wme.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 11:43:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NTHZ/EmLIP+E6b63/qkBsQOKznY5Nc0LePxERT+sG40=;
+        b=EhETGKly6kuyqOSqmqSrUao4vz15YN/LBkRa7dUNII/WmdhkEb/s6r9kfliELLboaG
+         Kg5G0o92en0oNDm2mmR67HmHopu33qZ1LjYDncw3QaYG6yOypV8yGkCDqgVljQ4o8gIW
+         toI/aGVZ1rHqe0rLZ8tnom6TyvdHipuTi6C4dauwelmz/VqVYRSkkA7wngaCo4xgg2qZ
+         4/v87QBRTza+Xtjmljf+t2wZQVJbd7ACeLu0ywg+JwevO2HyCndajHhNTHqpWxx6bqwy
+         odfqRePUacTQaKtkoLzfJ6MrNJlT59z9rV84EK1TjSxAZSv1p3M3eNt29OlE2t2TFcwC
+         uM5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NTHZ/EmLIP+E6b63/qkBsQOKznY5Nc0LePxERT+sG40=;
+        b=QkW1lLjIR1a6q3OvCGsqPREPxR4vYECFUiTyv8LDWTCEDDlowESep+F+VHmfzKP64l
+         nSu5wzGy/ZyQyj73bvSrVOogmOwmr66VAiI/lZ29zETXFFphc7qkN3cjTb7G6aJnoLJq
+         BwjXvtCJeWafVGF2gGUNBG8U8mvPUHq+kVzcbV3fLC95jfZIU6/aNeIYVJXVm8UEAJ0V
+         43yYokg0zgdUUkOaLs76G9tDwa9rin3jRTBEvmfU3cOrC8a5S9YceHLdBr2ZNp6PJU1c
+         Lj06+1nwmcaTfTpdnRrQRtXD8uUPO2Juu++GjPQJIBCTKlHVdpk2BcYkWFI3xrjVr19F
+         DJTw==
+X-Gm-Message-State: AGi0PuZsioV7CFWRfVTKHumQXykekCXWP2tY6fJE/ZglggK9KVcKCroL
+        bOA4Pn+Ob3lZRGkVnTXGeGeExDZ/
+X-Google-Smtp-Source: APiQypKCqBNPjb/EH3rVGDgcO/+lWyv83TIJCCFbLYOlPVpY/nOantl4BW0weuT6zGdwvQPfgrkhiQ==
+X-Received: by 2002:a1c:99d3:: with SMTP id b202mr45962354wme.126.1589395379379;
+        Wed, 13 May 2020 11:42:59 -0700 (PDT)
+Received: from ?IPv6:2a00:23c6:9e09:2900:3d38:90c1:858b:902e? ([2a00:23c6:9e09:2900:3d38:90c1:858b:902e])
+        by smtp.gmail.com with ESMTPSA id n13sm507549wrs.2.2020.05.13.11.42.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 May 2020 11:42:58 -0700 (PDT)
+Subject: Re: x86/smp: adding new trace points
+To:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+Cc:     mingo@redhat.com, hpa@zytor.com, x86@kernel.org,
         Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Josh Triplett <josh@joshtriplett.org>
-Subject: Re: [PATCH 10/10] rcu: Nocb (de)activate through sysfs
-Message-ID: <20200513184229.GX2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200513164714.22557-1-frederic@kernel.org>
- <20200513164714.22557-11-frederic@kernel.org>
+        Will Deacon <will@kernel.org>
+References: <4d54953b-f968-63f5-569f-9e09bc0f361c@gmail.com>
+ <b638ef03-04c2-94bf-f026-a01691888624@gmail.com>
+ <87y2pw2fav.fsf@nanos.tec.linutronix.de>
+ <b3e3c317-17e4-081f-0bb6-3e6f291f8b86@gmail.com>
+ <87sgg323bf.fsf@nanos.tec.linutronix.de>
+From:   Wojciech Kudla <wk.kernel@gmail.com>
+Message-ID: <56b36edb-1ff8-a154-d3c5-d2304e3554c0@gmail.com>
+Date:   Wed, 13 May 2020 19:42:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513164714.22557-11-frederic@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <87sgg323bf.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 06:47:14PM +0200, Frederic Weisbecker wrote:
-> Not for merge.
+On 13/05/2020 17:43, Thomas Gleixner wrote:
+> Wojciech Kudla <wk.kernel@gmail.com> writes:
+>> On 13/05/2020 13:24, Thomas Gleixner wrote:
+>>
+>>> Why would the SMP call function single interrupt go through the
+>>> PLATFORM_IPI_VECTOR? It goes as the name says through the
+>>> CALL_FUNCTION_SINGLE_VECTOR.
+>>>
+>>
+>> Wrong vector, my bad.
+>>
+>> However 2) still stands in my opinion. We don't have "ipi raise" trace
+>> point for x86.  RESCHEDULE_VECTOR, CALL_FUNCTION_SINGLE_VECTOR, as
+>> well as TLB invalidation vectors are essentially
+>> inter-processor-interrupts if I'm not mistaken.  Would a patch adding
+>> such trace point be considered here?
 > 
-> Make nocb toggable for a given CPU using:
-> 	/sys/devices/system/cpu/cpu*/hotplug/nocb
+> Maybe.
 > 
-> This is only intended for those who want to test this patchset. The real
-> interfaces will be cpuset/isolation and rcutorture.
-
-Makes sense!
-
-Speaking of rcutorture, what level of testing has this series undergone?
-
-							Thanx, Paul
-
-> Not-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> Cc: Paul E. McKenney <paulmck@kernel.org>
-> Cc: Josh Triplett <josh@joshtriplett.org>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-> Cc: Joel Fernandes <joel@joelfernandes.org>
-> ---
->  kernel/cpu.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
+> Though that IPI tracing is inconsistent across architectures. I'm not
+> really interested to have yet another x86 variant which is slightly
+> different than anything else.
 > 
-> diff --git a/kernel/cpu.c b/kernel/cpu.c
-> index 2371292f30b0..ac6283dcb897 100644
-> --- a/kernel/cpu.c
-> +++ b/kernel/cpu.c
-> @@ -2208,10 +2208,33 @@ static ssize_t show_cpuhp_fail(struct device *dev,
->  
->  static DEVICE_ATTR(fail, 0644, show_cpuhp_fail, write_cpuhp_fail);
->  
-> +static ssize_t write_nocb(struct device *dev,
-> +			  struct device_attribute *attr,
-> +			  const char *buf, size_t count)
-> +{
-> +	int val, ret;
-> +
-> +	ret = kstrtoint(buf, 10, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (val == 0)
-> +		rcu_nocb_cpu_deoffload(dev->id);
-> +	else if (val == 1)
-> +		rcu_nocb_cpu_offload(dev->id);
-> +	else
-> +		return -EINVAL;
-> +
-> +	return count;
-> +}
-> +
-> +static DEVICE_ATTR(nocb, 0644, NULL, write_nocb);
-> +
->  static struct attribute *cpuhp_cpu_attrs[] = {
->  	&dev_attr_state.attr,
->  	&dev_attr_target.attr,
->  	&dev_attr_fail.attr,
-> +	&dev_attr_nocb.attr,
->  	NULL
->  };
->  
-> -- 
-> 2.25.0
+> ARM and ARM64 share generic tracepoints for that, though the actual
+> tracepoint invocation is in the architecture specific code.
 > 
+> If at all we really want to have the common IPIs which are required for
+> SMP support covered by generic tracepoints and have them in the generic
+> code and not sprinkled all over arch/*
+
+How about we add ipi:ipi_raise trace points before:
+- arch_send_call_function_single_ipi(), and 
+- arch_send_call_function_ipi_mask()
+
+Would that be a good starting point to introduce more generic IPI tracing?
+
+Thanks,
+Wojtek
+
