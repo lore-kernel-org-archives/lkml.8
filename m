@@ -2,138 +2,88 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34AEBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BAA5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBDE7205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:45:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NHowZjsp"
+	by mail.kernel.org (Postfix) with ESMTP id E31C0205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:45:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589395542;
+	bh=y3uf4cDEBcGin/ahVjDWwwqBbdeSBPGoaou/iCBc+Ng=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1VHQgN6v/FrCeZvMLB5wuMk/ncBANcKQuYAj4V/CAXo6d2eh+VPUcmCgG10h2RkHH
+	 TnfJGijMZFI8jfdtKbOv11Tdn5HrF57J1gppkiDsMfBAzhvFEUjSiY61MVpJtmPKB2
+	 qBmAGmNgcqB2L//tf2zqVJU4jVyJIdCDWGWLjITw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390226AbgEMSpY (ORCPT
+        id S2390251AbgEMSpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 14:45:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48174 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732817AbgEMSpX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 14:45:23 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54519C061A0C;
-        Wed, 13 May 2020 11:45:23 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id n5so14818674wmd.0;
-        Wed, 13 May 2020 11:45:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PT0h38OrQXBZNljpCzZiDCJfv+srQ4T4K6VCcISjh+o=;
-        b=NHowZjspfC1uKoskgjqurh5XM01XVemx028k1uB5QSSJGeckopvvuRfoP7Ph7C1Bae
-         p6NNvDqJn3yPU7tYzSjUkLinU7xd4nIAluUncZ1HtOoyQfmDjfOpDb4y7rv6fWpGclVS
-         HrEDNiMnSpu42yqpr7IWBM/Ol8YKYKl3rNbn4RzTOBnyDKL98MjdhSPckmZt2Vjsfrnu
-         990+9LIyR9pJ/jhc3hexg9Ep0NfAB4dmIiAmqvyecmdeTWeFnseoMAJbHJvIX5IFxsMS
-         Kztf6GncPinBZz5vvZanuk0XSst5splnVFrOUgHAZIpioL/RpVdGpyKHa4ebSZa5ErZP
-         3SpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PT0h38OrQXBZNljpCzZiDCJfv+srQ4T4K6VCcISjh+o=;
-        b=K6qUd6TB27RGkZu+oV4RW+JCX2tE3CrN/uqoJfuUHwSICPtqPZH0hfK33zO1ezPfT6
-         mia7u3jKIcvKTLfwCV3mHh6LixddwG5M+XRCjhUBHRYp5ORdcM1IO86qraeQKwYUQZnc
-         5q7xSWszWgTrMDHnS4EikhXt6pEqfH3xBF0oERNlHrmCEkHi7Eqvhlh60p4Tza+GVUmm
-         Tj1Obp4BNCeFRDcMtruEc7hsPvmmsA0yzBmuB8YRi/w6+oe1LwsHL7eB3Mxf81JbkZNI
-         1kPGGWUEQ71z1btDPcVwyca+uLVWs7Lq2yBEuJe1k4Fmflq7yIdk8HcDldWCK3kgE2cM
-         Hliw==
-X-Gm-Message-State: AGi0PuacsiakkL573npox4/OI124zlXH3/TQDDGxEifRKN7Dat6W+RF7
-        P0dO+tVyRYKJ+e2am4hgVQjcnbsw
-X-Google-Smtp-Source: APiQypIK8q7L1drcKLYh9sEaASQ4rq35pqJ+J+If2G/yEeThC9w9wm9XnhpfjzopaeqgVblnzpPmLg==
-X-Received: by 2002:a1c:5419:: with SMTP id i25mr40509019wmb.156.1589395521755;
-        Wed, 13 May 2020 11:45:21 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f28:5200:f910:f6a0:7ae2:caf7? (p200300EA8F285200F910F6A07AE2CAF7.dip0.t-ipconnect.de. [2003:ea:8f28:5200:f910:f6a0:7ae2:caf7])
-        by smtp.googlemail.com with ESMTPSA id v124sm37638214wme.45.2020.05.13.11.45.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 May 2020 11:45:21 -0700 (PDT)
-Subject: Re: [PATCH] net: phy: realtek: clear interrupt during init for
- rtl8211f
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200512184601.40b1758a@xhacker.debian>
- <7735a257-21ff-e6c0-acdc-f5ee187b1f57@gmail.com>
- <20200513145151.04a6ee46@xhacker.debian>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <a0aac85d-064f-2672-370b-404fd83e83f3@gmail.com>
-Date:   Wed, 13 May 2020 20:45:13 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 13 May 2020 14:45:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56942 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390103AbgEMSpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 14:45:40 -0400
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7363207D3;
+        Wed, 13 May 2020 18:45:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589395541;
+        bh=y3uf4cDEBcGin/ahVjDWwwqBbdeSBPGoaou/iCBc+Ng=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=RLQfxHVcrn6lWhWEu0DDrnMIHIoZ+37WfrxEpZxqiKdV1WCyAtQwcUcFu2SvS2080
+         VTE5vGbKGPtkrp13IOlhl2+f6sYzR7NeAlwZhvD/+sHUP7ta5YnAY2Vdmt9jo9N04s
+         CEpGnXvJbsQIZi+fuoRT8dDY4nvc1HnFSDyGGc2w=
+Received: by mail-lj1-f178.google.com with SMTP id b6so770046ljj.1;
+        Wed, 13 May 2020 11:45:40 -0700 (PDT)
+X-Gm-Message-State: AOAM531+iZhLTB954FET0kCVxVWSa8Hs2pbAp42TG+jOxmggUAmbBj1y
+        E8U4afU7mhM23CHroVG7HuETX3YdgdLjfQPZbTA=
+X-Google-Smtp-Source: ABdhPJzyHaUiiK2XwtDLa9MHZHs3wyCWyuE6aX0bNKMPXZmRZyv4SYSAs5m7n5jeU7J7JeAy2/ppnnbYCoByE6/YYa8=
+X-Received: by 2002:a2e:9258:: with SMTP id v24mr280263ljg.109.1589395538071;
+ Wed, 13 May 2020 11:45:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200513145151.04a6ee46@xhacker.debian>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200508161517.252308-1-hch@lst.de> <20200508161517.252308-13-hch@lst.de>
+ <CAPhsuW6_Y53_XLFeVxhTDpTi_PKNLqqnrXLn+M2fJW268eE6_w@mail.gmail.com> <20200513183304.GA29895@lst.de>
+In-Reply-To: <20200513183304.GA29895@lst.de>
+From:   Song Liu <song@kernel.org>
+Date:   Wed, 13 May 2020 11:45:26 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6pG+-EAa-FW96r+LEP=j1nWEK0Zqk_fJeaAu2Hn9AqeA@mail.gmail.com>
+Message-ID: <CAPhsuW6pG+-EAa-FW96r+LEP=j1nWEK0Zqk_fJeaAu2Hn9AqeA@mail.gmail.com>
+Subject: Re: [PATCH 12/15] md: stop using ->queuedata
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Jim Paris <jim@jtan.com>,
+        Geoff Levand <geoff@infradead.org>,
+        Joshua Morris <josh.h.morris@us.ibm.com>,
+        Philip Kelleher <pjk1939@linux.ibm.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-m68k@lists.linux-m68k.org,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-bcache@vger.kernel.org,
+        linux-raid <linux-raid@vger.kernel.org>,
+        linux-nvdimm@lists.01.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13.05.2020 08:51, Jisheng Zhang wrote:
-> Hi,
-> 
-> On Tue, 12 May 2020 20:43:40 +0200 Heiner Kallweit wrote:
-> 
->>
->>
->> On 12.05.2020 12:46, Jisheng Zhang wrote:
->>> The PHY Register Accessible Interrupt is enabled by default, so
->>> there's such an interrupt during init. In PHY POLL mode case, the
->>> INTB/PMEB pin is alway active, it is not good. Clear the interrupt by
->>> calling rtl8211f_ack_interrupt().  
->>
->> As you say "it's not good" w/o elaborating a little bit more on it:
->> Do you face any actual issue? Or do you just think that it's not nice?
-> 
-> 
-> The INTB/PMEB pin can be used in two different modes:
-> INTB: used for interrupt
-> PMEB: special mode for Wake-on-LAN
-> 
-> The PHY Register Accessible Interrupt is enabled by
-> default, there's always such an interrupt during the init. In PHY POLL mode
-> case, the pin is always active. If platforms plans to use the INTB/PMEB pin
-> as WOL, then the platform will see WOL active. It's not good.
-> 
-The platform should listen to this pin only once WOL has been configured and
-the pin has been switched to PMEB function. For the latter you first would
-have to implement the set_wol callback in the PHY driver.
-Or where in which code do you plan to switch the pin function to PMEB?
-One more thing to consider when implementing set_wol would be that the PHY
-supports two WOL options:
-1. INT/PMEB configured as PMEB
-2. INT/PMEB configured as INT and WOL interrupt source active
+On Wed, May 13, 2020 at 11:33 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Wed, May 13, 2020 at 11:29:17AM -0700, Song Liu wrote:
+> > On Fri, May 8, 2020 at 9:17 AM Christoph Hellwig <hch@lst.de> wrote:
+> > >
+> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> >
+> > Thanks for the cleanup. IIUC, you want this go through md tree?
+>
+> Yes, please pick it up though the md tree.
 
-> 
->> I'm asking because you don't provide a Fixes tag and you don't
->> annotate your patch as net or net-next.
-> 
-> should be Fixes: 3447cf2e9a11 ("net/phy: Add support for Realtek RTL8211F")
-> 
->> Once you provide more details we would also get an idea whether a
->> change would have to be made to phylib, because what you describe
->> doesn't seem to be specific to this one PHY model.
-> 
-> Nope, we don't need this change in phylib, this is specific to rtl8211f
-> 
-> Thanks,
-> Jisheng
-> 
-Heiner
+Thanks for the clarification. Applied to md-next.
