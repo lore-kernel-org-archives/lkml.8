@@ -2,122 +2,105 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6D6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5377BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 987C6205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:28:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="suLVGZAL"
+	by mail.kernel.org (Postfix) with ESMTP id 4665720693
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:33:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589412806;
+	bh=To9Yoi94bEPQmPx2gVzZTvirL9XpdBbjsGrGmQCA8js=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Wg9snw1nEgRDtdmGSw1C+2ZyIdQBbpI9qfT9JSyS+42v7dHL3RqNrvB3TNoqWLC6G
+	 qAZTnX8qbf/HrwKr9odccTNI/xhKvEZ9P+JO8MSWO893RU2hzwKLwPjaIoYCL1q7ZM
+	 aj0JB3S7Rt4I9m8jTrSD4qk3NPir0M70GN8ZCqy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732694AbgEMX2h (ORCPT
+        id S1732660AbgEMXdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 19:28:37 -0400
-Received: from mail.efficios.com ([167.114.26.124]:37512 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732573AbgEMX2f (ORCPT
+        Wed, 13 May 2020 19:33:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36988 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732523AbgEMXdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 19:28:35 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 08A0C2BFD05;
-        Wed, 13 May 2020 19:28:35 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id q7eHZ_Uh7AUj; Wed, 13 May 2020 19:28:34 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 8146C2BFA78;
-        Wed, 13 May 2020 19:28:34 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 8146C2BFA78
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1589412514;
-        bh=WrNlzCQnwQTJkIfoFCGHXRb1q82eLGvIeiggDQd4tos=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=suLVGZALQoL/eMiGSC4QggspCvllOvDtOIlUteKy66CGRD8s1osxTt5FbiJ0K7hWm
-         GMpaDT1NP9899xmhHXXGdSrO/imP0fq52jweVhUC2xYa5N6GJwUrOTE9gwbN37lM88
-         LnZ22Eijy1/MxO7iqVsqdnDQHKze/fMcMbA1FmEu2wF152vavISm9P6fJlfQzZSInL
-         MQ8avheNYjWRDP5MtBazkvKETT/3ZlWLlbyp/fOq9NYv6JW2ae7G1m63QMbIUX2oU1
-         KXBEnVDjrjl68bMcPFx0a/4YPb88TtBpzjO0TZQqrQdcn8pSQnJTnacM8nBj7L+P3p
-         nURW5MeipiZ6A==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 3cKMG-_yieWw; Wed, 13 May 2020 19:28:34 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 6B9C32BF9E1;
-        Wed, 13 May 2020 19:28:34 -0400 (EDT)
-Date:   Wed, 13 May 2020 19:28:34 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
-        paulmck <paulmck@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>, rostedt <rostedt@goodmis.org>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Message-ID: <427895535.20271.1589412514423.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200505134100.771491291@linutronix.de>
-References: <20200505131602.633487962@linutronix.de> <20200505134100.771491291@linutronix.de>
-Subject: Re: [patch V4 part 1 27/36] arm64: Prepare arch_nmi_enter() for
- recursion
+        Wed, 13 May 2020 19:33:24 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4268DC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 16:33:24 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id j3so1441061ilk.11
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 16:33:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pFfNmewz/mfCHMNh9XV194PnShatk6k9H447JJUGz6c=;
+        b=CWlvd078GIR1ibZh6d8sahfhrI+/49floa8rvRRu809XIw7S/8SbgeF4DBpC7fIQSy
+         0oZ/igGCFgfu7HSisKnk3pUfXmzQbB5wcfcyIpnwL7XjjUwwMfk8AI+JPTNPS2/kbtfY
+         kUyA+XkxSys6iB83dmwD8RALiGFE1YjV+LxKU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pFfNmewz/mfCHMNh9XV194PnShatk6k9H447JJUGz6c=;
+        b=jvPVKlV1FotFcQoy2Xk0GToxiNKHx1ut6w2VZ4DHGUyXcVzk06iiLLaKZt/4A7avXW
+         YxEjYJyeoDF5migCjeQ1kclyH4nYwbOj4UiWDk+cFxi+Fa79yTpmaJVVgaHOISGcraep
+         Su2mtXzvK5VxaHXy1KN2AUxrHwMPeYN5B2f7npPF4b6IfmPEEbNOyHwY3yJgLy1K/DNO
+         KxCYAvDscjnYMWP7HAHMnIserqjVVAICWgu3hOk8rxJohz3qp42biejc0i/cOXE7Rxgv
+         GSczscVOahEmQ7qfNQUoIXR6aNLrTdf6gkGP8t4VFOG0LWBOIiBPujtqhMMCa6xE0ip1
+         cQAA==
+X-Gm-Message-State: AOAM533m8/KxU9K1MczKxrXDpD0kkeMeUfj2Ayhl3E6Jmi/dYEFCiDAG
+        VyubTfiWLJtIoV/JiOIV0JCNOg==
+X-Google-Smtp-Source: ABdhPJxUwwRpGwbnaEJPsLawzpT73ikpudZeKLQy0f/z7118JbmJJ4IwYR6fXfE67wE3QRnF1kkUSA==
+X-Received: by 2002:a05:6e02:4cd:: with SMTP id f13mr2022503ils.300.1589412803580;
+        Wed, 13 May 2020 16:33:23 -0700 (PDT)
+Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id b1sm398072ilr.23.2020.05.13.16.33.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 16:33:23 -0700 (PDT)
+From:   Shuah Khan <skhan@linuxfoundation.org>
+To:     viro@zeniv.linux.org.uk, axboe@kernel.dk, zohar@linux.vnet.ibm.com,
+        mcgrof@kernel.org, keescook@chromium.org
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] fs: avoid fdput() after failed fdget()
+Date:   Wed, 13 May 2020 17:33:19 -0600
+Message-Id: <cover.1589411496.git.skhan@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF76 (Linux)/8.8.15_GA_3928)
-Thread-Topic: arm64: Prepare arch_nmi_enter() for recursion
-Thread-Index: HUFuyxfL8Q0CtiXkR4klPwSH3xjvAg==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On May 5, 2020, at 9:16 AM, Thomas Gleixner tglx@linutronix.de wrote:
+While debugging an unrelated problem, I noticed these two cases fdput()
+is called after failed fdget() while reviewing at all the fdget() and
+fdput() paths in the kernel.
 
-> +#define arch_nmi_enter()						\
-[...]							\
-> +	___hcr = read_sysreg(hcr_el2);					\
-> +	if (!(___hcr & HCR_TGE)) {					\
-> +		write_sysreg(___hcr | HCR_TGE, hcr_el2);		\
-> +		isb();							\
+Changes since v2:
+Patches 1&2 changed to get rid of goto.
 
-Why is there an isb() above ^ ....
+Changes since v1:
+Patch 1:
+  Changed to address review comments to refine the code for improved
+  readability in addition to the change to avoid fdput() on failed
+  fdget()
+Patch 2:
+  No change to v1. Including it in the series to keep the patches
+  together.
 
-> +	}								\
-> +	/*								\
-[...]
-> -#define arch_nmi_exit()								\
-[...]
-> +	/*								\
-> +	 * Make sure ___ctx->cnt release is visible before we		\
-> +	 * restore the sysreg. Otherwise a new NMI occurring		\
-> +	 * right after write_sysreg() can be fooled and think		\
-> +	 * we secured things for it.					\
-> +	 */								\
-> +	barrier();							\
-> +	if (!___ctx->cnt && !(___hcr & HCR_TGE))			\
-> +		write_sysreg(___hcr, hcr_el2);				\
+Shuah Khan (2):
+  fs: avoid fdput() after failed fdget() in ksys_sync_file_range()
+  fs: avoid fdput() after failed fdget() in kernel_read_file_from_fd()
 
-And not here ?
-
-Thanks,
-
-Mathieu
+ fs/exec.c |  6 +++---
+ fs/sync.c | 10 +++++-----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.25.1
+
