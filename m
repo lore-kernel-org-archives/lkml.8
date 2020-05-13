@@ -2,154 +2,111 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8324C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2315C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6501207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:02:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589382148;
-	bh=MUVbOzmo8GzDjE2qVR87T11DM0yQvIi++WZvLydnjDs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ggjoGcVPsAypDMuVIELjWWwj5/VQK5tLJXkidDUwEM7jpOh+CkZJHFSGQBpuJ4Vk/
-	 9eGs4PI/PGBje5jAFktQ57xg96VXorxNZmGDIncswL2JJlaGGNmmA1j7OI3dLvQRvQ
-	 w90/qoBudlciOeLpPQLaXrdiXnzXWkA35dncIW+Y=
+	by mail.kernel.org (Postfix) with ESMTP id 01E8D207CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:03:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hxU6V9R8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389391AbgEMPC0 (ORCPT
+        id S2389085AbgEMPDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:02:26 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37249 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388039AbgEMPC0 (ORCPT
+        Wed, 13 May 2020 11:03:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729121AbgEMPDn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:02:26 -0400
-Received: by mail-pl1-f193.google.com with SMTP id x10so6925109plr.4;
-        Wed, 13 May 2020 08:02:24 -0700 (PDT)
+        Wed, 13 May 2020 11:03:43 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 381FBC061A0C;
+        Wed, 13 May 2020 08:03:43 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id n11so7890542pgl.9;
+        Wed, 13 May 2020 08:03:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cAK/6f4l7khR9D9MeksEsqPLBqxBSGeZguJ9NMxZ/KM=;
+        b=hxU6V9R83V11Jvt+uutKDwAvcJQREw6Y0smqveaz1L2sQdtprbG9yEJI7VibSClGa/
+         jpDG1sAWBa/x+Ltmf8lG2mqYkRC+n/WwYTL1NPa2aO1T2ERDPvEmK3J77hsyDvq+oc4z
+         72IuZkDk+1O+/PEHVG8zs63ke7GjlaU4eCk+b7srvxrxVRAZSMt1tFkBYHVY8jq4CH8M
+         Oa7gljf83XkkxlG02lWINffuFFUMzOC4c3NQ0OdSPKuiynjyMm+Re8abyp2rluoXIvMz
+         HsH7A4PUH+fHlsoFi8+lARbXYkeSDffPJXUc2JICwA/PDklHNDQiFxVzzutmsevIUFFR
+         VrFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MT118aZMRZUFyZNYM/mGEw6BOShbBFfm71Ixm+ag1Wk=;
-        b=cVIFMuVnuPs7PgQTPIo1QazG+t0er1quF9fQ7qhDhobKz8hMN23xAH5+oHk6o5CjtS
-         UDZmbUuXecLs9AnPr0NFKHB4Gcr0klmaAwRfFBkGcOw1tpavFaH0or7jpYJMDnLrfUj9
-         YF7Ltz+KbOLUq7GXkcGhcWOa9ArVCXLwgnQMAp9mOZSQTFKrAsdsEYgKf8CFITzszOTM
-         QmJ2ej+zSFiWCPaiwPqPPrQA3VIxJ1fgWAsHqZrEY0cSLR9wDxEnTy89/OC1V90Y+7OL
-         fNTICzNHLvaDdU4bQmtwCVeuzrjCEqaUr/Ct4LqS127gDX8bozGEW57N0M/Q+0TeM3/v
-         Tzaw==
-X-Gm-Message-State: AGi0Pub2/mRccT3gjZSzv9ByWYcEZGxgS3T9pNCnFNxu3WYyR4Dv1wga
-        FFKS7Hw/dQGg4uyg6lOr/qw=
-X-Google-Smtp-Source: APiQypK/sufcq0cPAVcSuD3w73WdinHwTgnomrdyOeuh+IFkYrhqG3MPdpqAxWm6ywWZBeKsT2aoCA==
-X-Received: by 2002:a17:90a:8c9:: with SMTP id 9mr35596299pjn.183.1589382143917;
-        Wed, 13 May 2020 08:02:23 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id c124sm14605811pfb.187.2020.05.13.08.02.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 08:02:22 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 8E5C34063E; Wed, 13 May 2020 15:02:21 +0000 (UTC)
-Date:   Wed, 13 May 2020 15:02:21 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Al Viro <viro@ZenIV.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Xiaoming Ni <nixiaoming@huawei.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Helge Deller <deller@gmx.de>,
-        Parisc List <linux-parisc@vger.kernel.org>, yzaikin@google.com,
-        linux-fsdevel@vger.kernel.org,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: linux-next: manual merge of the vfs tree with the parisc-hd tree
-Message-ID: <20200513150221.GQ11244@42.do-not-panic.com>
-References: <20200511111123.68ccbaa3@canb.auug.org.au>
- <99095805-8cbe-d140-e2f1-0c5a3e84d7e7@huawei.com>
- <20200512003305.GX11244@42.do-not-panic.com>
- <87y2pxs73w.fsf@x220.int.ebiederm.org>
- <20200512172413.GC11244@42.do-not-panic.com>
- <87k11hrqzc.fsf@x220.int.ebiederm.org>
- <20200512220341.GE11244@42.do-not-panic.com>
- <87d078oss9.fsf@x220.int.ebiederm.org>
- <20200513141421.GP11244@42.do-not-panic.com>
- <87tv0jopwn.fsf@x220.int.ebiederm.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cAK/6f4l7khR9D9MeksEsqPLBqxBSGeZguJ9NMxZ/KM=;
+        b=rQ24lXpXefbc0HD7tA6GRoc7XvRWTJ6jAyNHT9JdW8I+rTb2/7kqcmG9GUKYMGbqa/
+         vQSh8KYoS2SPHA/6wF/P9vPZi47m1TqXzBSOeuwbj17/ydJxXRr1pzrtQWj3Ql9panF8
+         AJZGHU7eCWFLsSlEudGhiMkl/kJrf13p51KdVPLre3/ZSaHsnMA8YpR5EVR+kjT/g7o5
+         j4qYwohgkfKg78rIov2oQDXUqvDeHNq4XAp1zDerHqlDci1raDwkgb65iQ92GDfYcBEF
+         0VIcGnlixXixGl8vM86epIuHa3i4EBn0eY9sqQrFRNQAiL8Cc90DwLlvR1wn9HNgx+rE
+         dvnA==
+X-Gm-Message-State: AGi0PubaJPl5yiJQVN65CX9ejRuaA8FxJ979PCIhqcmzyi/josjCk72F
+        OvaNGcbfwhkDUNVOiiiOyD8ESVp5SYvETh+wGMUcjLxd
+X-Google-Smtp-Source: APiQypIRYsyGfiDl3QKzXSyGYv9eoVbFwDg/I113aXCiUGoanxmPfa92fLc84XJlH3CWW7YX96GpEBknOEiAvRfVsDg=
+X-Received: by 2002:a62:5ec7:: with SMTP id s190mr25501011pfb.130.1589382222681;
+ Wed, 13 May 2020 08:03:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87tv0jopwn.fsf@x220.int.ebiederm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1589370694-14327-1-git-send-email-alencar.fmce@imbel.gov.br>
+In-Reply-To: <1589370694-14327-1-git-send-email-alencar.fmce@imbel.gov.br>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 13 May 2020 18:03:35 +0300
+Message-ID: <CAHp75VfggycwYpsi024MWZYEgOpnst9NR3q-D5n30SDgmSB9Pw@mail.gmail.com>
+Subject: Re: [PATCH] video: fbdev: ssd1307fb: Added support to Column offset
+To:     Rodrigo Rolim Mendes de Alencar <455.rodrigo.alencar@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     linux-fbdev@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        alencar.fmce@imbel.gov.br
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 09:44:40AM -0500, Eric W. Biederman wrote:
-> Luis Chamberlain <mcgrof@kernel.org> writes:
-> 
-> > On Wed, May 13, 2020 at 08:42:30AM -0500, Eric W. Biederman wrote:
-> >> Luis Chamberlain <mcgrof@kernel.org> writes:
-> >> 
-> >> > On Tue, May 12, 2020 at 12:40:55PM -0500, Eric W. Biederman wrote:
-> >> >> Luis Chamberlain <mcgrof@kernel.org> writes:
-> >> >> 
-> >> >> > On Tue, May 12, 2020 at 06:52:35AM -0500, Eric W. Biederman wrote:
-> >> >> >> Luis Chamberlain <mcgrof@kernel.org> writes:
-> >> >> >> 
-> >> >> >> > +static struct ctl_table fs_base_table[] = {
-> >> >> >> > +	{
-> >> >> >> > +		.procname	= "fs",
-> >> >> >> > +		.mode		= 0555,
-> >> >> >> > +		.child		= fs_table,
-> >> >> >> > +	},
-> >> >> >> > +	{ }
-> >> >> >> > +};
-> >> >> >>   ^^^^^^^^^^^^^^^^^^^^^^^^ You don't need this at all.
-> >> >> >> > > +static int __init fs_procsys_init(void)
-> >> >> >> > +{
-> >> >> >> > +	struct ctl_table_header *hdr;
-> >> >> >> > +
-> >> >> >> > +	hdr = register_sysctl_table(fs_base_table);
-> >> >> >>               ^^^^^^^^^^^^^^^^^^^^^ Please use register_sysctl instead.
-> >> >> >> 	AKA
-> >> >> >>         hdr = register_sysctl("fs", fs_table);
-> >> >> >
-> >> >> > Ah, much cleaner thanks!
-> >> >> 
-> >> >> It is my hope you we can get rid of register_sysctl_table one of these
-> >> >> days.  It was the original interface but today it is just a
-> >> >> compatibility wrapper.
-> >> >> 
-> >> >> I unfortunately ran out of steam last time before I finished converting
-> >> >> everything over.
-> >> >
-> >> > Let's give it one more go. I'll start with the fs stuff.
-> >> 
-> >> Just to be clear moving the tables out of kernel/sysctl.c is a related
-> >> but slightly different problem.
-> >
-> > Sure, but also before we go on this crusade, how about we add a few
-> > helpers:
-> >
-> > register_sysctl_kernel()
-> > register_sysctl_vm()
-> > register_sysctl_fs()
-> > register_sysctl_debug()
-> > register_sysctl_dev()
-> 
-> Hmm.
-> 
->   register_sysctl("kernel")
-> 
-> > That should make it easier to look for these, and shorter. We *know*
-> > this is a common path, given the size of the existing table.
-> 
-> I don't really care but one character shorter doesn't look like it
-> really helps.  Not really for grepping and not maintenance as we get a
-> bunch of trivial one line implementations.
+On Wed, May 13, 2020 at 2:51 PM Rodrigo Rolim Mendes de Alencar
+<455.rodrigo.alencar@gmail.com> wrote:
+>
+> This patch provides support for displays like VGM128064B0W10,
+> which requires a column offset of 2, i.e., its segments starts
+> in SEG2 and ends in SEG129.
 
-Alright, let's skip the helpers for now.
+You forgot
+1) version of the patch (series) to be bumped
+2) Cc to fbdev maintainer (I did here FYI)
 
-  Luis
+> -       ret = ssd1307fb_write_cmd(par->client, 0x0);
+> +       ret = ssd1307fb_write_cmd(par->client, par->col_offset);
+>         if (ret < 0)
+>                 return ret;
+>
+> -       ret = ssd1307fb_write_cmd(par->client, par->width - 1);
+> +       ret = ssd1307fb_write_cmd(par->client, par->col_offset + par->width - 1);
+>         if (ret < 0)
+>                 return ret;
+>
+> @@ -626,6 +627,9 @@ static int ssd1307fb_probe(struct i2c_client *client)
+>         if (device_property_read_u32(dev, "solomon,page-offset", &par->page_offset))
+>                 par->page_offset = 1;
+>
+> +       if (of_property_read_u32(node, "solomon,col-offset", &par->col_offset))
+> +               par->col_offset = 0;
+
+This won't work on non-OF systems, but easy to fix: simple see around
+and do in the same way.
+
+>         if (device_property_read_u32(dev, "solomon,com-offset", &par->com_offset))
+>                 par->com_offset = 0;
+
+-- 
+With Best Regards,
+Andy Shevchenko
