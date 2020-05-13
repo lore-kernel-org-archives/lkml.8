@@ -2,92 +2,108 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D46C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A29C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6779020575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAB1020575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:51:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=anholt-net.20150623.gappssmtp.com header.i=@anholt-net.20150623.gappssmtp.com header.b="O8JCadTs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729893AbgEMVuJ (ORCPT
+        id S1729938AbgEMVvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 17:50:09 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:36723 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729487AbgEMVuI (ORCPT
+        Wed, 13 May 2020 17:51:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49276 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729487AbgEMVvP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 17:50:08 -0400
-Received: from mail-qv1-f54.google.com ([209.85.219.54]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MbRbr-1ixzYF26Z7-00bqgH; Wed, 13 May 2020 23:50:06 +0200
-Received: by mail-qv1-f54.google.com with SMTP id ee19so687688qvb.11;
-        Wed, 13 May 2020 14:50:06 -0700 (PDT)
-X-Gm-Message-State: AOAM531JAEN9kSOOT1Y1baGa3r4pXSpQxM3vbmLSiwXKY1sseErZos0/
-        szpHAOjmK/PoYhEmkoU4y5YmUzsnfQ3Db0WCQcU=
-X-Google-Smtp-Source: ABdhPJxu6IOeZhVVTBpAnf6wMcH+LrEESP7lfvaexyVk2mxPcafnnpFLiQtV6YqpD7k1w+UdsGU8e7ppGk9I/merpdo=
-X-Received: by 2002:a0c:eb11:: with SMTP id j17mr1706535qvp.197.1589406605322;
- Wed, 13 May 2020 14:50:05 -0700 (PDT)
+        Wed, 13 May 2020 17:51:15 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 818D1C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 14:51:13 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id b6so1302853ljj.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 14:51:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=anholt-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c4GzEKN4UHscMkRfgK/KmlmDtv9fIM50sPFyVikryKQ=;
+        b=O8JCadTsQl0Tyvlb72GDnj5fWwBBQal84Q4eYowAUSAU0My9xiciKbQ5opOHnfwl9N
+         Qb5nQGHUjnL79yJetrBRfHA673D+DtgS7C/OXM/Jj+mCy4cl51SspGMJvwVFVu8mQw/d
+         E0lrDdlhkaMITXDJ0+azix8pePd4EjeDt5g7yhokYKopEAlRvUP/8w/RAInfA6caXo+K
+         ruac9LVx6zmyBPRvtCJoQCkeekvevefrJdyMNUMDpe0/sCo9HnlDe3w74ikeYyTigQIj
+         aG+tjvBV7Sqetjfnq4VJ/fo8MRHFgz35H6NVpzXrbNEzRfRmIydljGEGOXoJVfCSbwOl
+         4D5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c4GzEKN4UHscMkRfgK/KmlmDtv9fIM50sPFyVikryKQ=;
+        b=ACVyDMAYOLw5qmQaZV7qSNHqGvTFpUhcy8o+vJQ75lqlgZxo1mN/iDtogqK7Nu8CWw
+         Gbr2VcJ01GpO0buq3+7tzt2s5pMSjNwh2V275lYL69pYA1pwchjmn80f+vpIGS4+hT80
+         pvyLzBiv5yvsirfs3dJCnpNwAPl58kWnaaFzcfrEu7PXIDAB53GXwYRsWnHvE/8F3Bzy
+         DqjbsR0yjhZ5obpNBLcsRgr249YoW4+6u3kRHkrlQGrP6hxEadHwaZhrWPdn0YPjHY6v
+         GCY4AFovu6u6FlDR7GVH45mWG0zhTHCUdhZhrXk7z4qgcWl8v7Cz7mD9FI6CU6XXxEOn
+         g9Ew==
+X-Gm-Message-State: AOAM5334xaj9J5o3eoh/VM1uM9rJqbmRLdyEuq6LuxT50ru9+TH82fgg
+        eNhuSGrDKuTKO028AgyPENtMC6niT55ZtlGcmNQcrA==
+X-Google-Smtp-Source: ABdhPJxvVYUU3pLt0Fm0zZnTD0agcvWiYXLQjHfcp4jZKWPnJaLBh2OjEP0dKl4uakuItjfjxNR6jFpY0iO1wNvpqZc=
+X-Received: by 2002:a2e:8047:: with SMTP id p7mr641481ljg.206.1589406671985;
+ Wed, 13 May 2020 14:51:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200509120707.188595-1-arnd@arndb.de> <20200509120707.188595-2-arnd@arndb.de>
- <87v9l24qz6.fsf@kamboji.qca.qualcomm.com> <87r1vq4qev.fsf@kamboji.qca.qualcomm.com>
- <87d078tjl0.fsf_-_@kamboji.qca.qualcomm.com> <20200513154847.GA158356@rani.riverdale.lan>
- <CAK8P3a3KpM91+jv6+7KSKFRpwLqf38Lz1wbGhkFFyfDb9oahgA@mail.gmail.com> <20200513214128.GB6733@zn.tnic>
-In-Reply-To: <20200513214128.GB6733@zn.tnic>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 13 May 2020 23:49:49 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3XPCyNM7s3vbn8JYK6swA3ZpPtTWB+uhmAE3YEX-nmig@mail.gmail.com>
-Message-ID: <CAK8P3a3XPCyNM7s3vbn8JYK6swA3ZpPtTWB+uhmAE3YEX-nmig@mail.gmail.com>
-Subject: Re: gcc-10: kernel stack is corrupted and fails to boot
-To:     Borislav Petkov <bp@suse.de>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>
+References: <20200513132114.6046-1-m.szyprowski@samsung.com>
+ <CGME20200513133314eucas1p1a607b556e32887e7f5ca60eb09a476c6@eucas1p1.samsung.com>
+ <20200513133245.6408-1-m.szyprowski@samsung.com> <20200513133245.6408-24-m.szyprowski@samsung.com>
+In-Reply-To: <20200513133245.6408-24-m.szyprowski@samsung.com>
+From:   Eric Anholt <eric@anholt.net>
+Date:   Wed, 13 May 2020 14:51:00 -0700
+Message-ID: <CADaigPV7sO1pKrspDya+3OLeX0b0mzkZdjb4ox+gQddsmfw0-w@mail.gmail.com>
+Subject: Re: [PATCH v5 24/38] drm: v3d: fix common struct sg_table related issues
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        iommu@lists.linux-foundation.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:ObwVCSlB/YIwv/A8inaMufMiam7thFJq82AUznYSpJ74m2HOXz7
- TcPAdoPZ7qyhsM2nd0SmTXxwQvPlXdZoZTnC7dJekeqFSJ2a7ZD8hVIpnHP2khbHU+8gsK0
- YjZl0nAkqb/Jx8vEs0h8ucVVZlIrfIMBBkcp1fc4MozTwaO66Tkj25v7tZh7+e+J7vPkZjk
- ggoxlgoCpekurLCQI7PYA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:tDehfZeI1xE=:qrAs+11EYEgqXNdleolY3D
- xku0pVmWpaS80lOiusVPe/MyQGiBkiCjhQbqUKlGnweUiCpQ4AQVAzmaxytZhWhrA6sT18A0C
- CVC0FRTMiP+LPFSx3wDDOnReKHd7EVLSUvRDdiRyEUAI2V7etT18DyeeBIq33hh176X/AOKGx
- q4t2DV8xAHNWXk+UES7Qxz7f0dfwyO5tA9N+5UeQPX5pvl1wCNGb8wurOfiPx740RWGXmVKGD
- SaADQUk4MWogCRgz48RYAArbnUhpgDX7pZpmFQvditqVYEveu9l6UIT4/xVMHTI54lLv8R3NT
- Rfyj1lLjPFy1nz3JOyrcdiwmMt47803sarE8HwYN069k5xTVFCq2Bihyoyr3p5uImBmwAqCsx
- 1l4SwRoF3ITvH2TTxvs+nQZ5gEFIP+rXYOqUkt7fbF6zglQyWMtzcrDlgdo/vOczJdPJquMTg
- CxZfMs7SLc0uTfKKbTgSnAJOW2qUj4p0/aof10Gl2hAz28npbEqPKmU3oCMB+dFSvANk7BrLI
- DUz3LksPzkGSg1Z8g7kBOumU9DWtAVZBvjRXz6xi1ZFcRDbnIzUYacv7thXt6Zodro3vthK7y
- z6S3t9qQq80kKnpIIKSqeo7YI85bDZuG2YJg8poDQb7E9lMWiWzRbJ/uaUP4TeOWlfp/Ccy6r
- PT2yZ2tJOvr2OJ2C5BBF+fKvsaCfNdFB3X4PA4Vk5sH7Vkh51z3fxVRuVYIqKGv1dlaUrE/BQ
- TSbKcZzVxTaYIgr5XYVXhW+/6mTCPkhGq5kUN3GzFQF7LnurwM3hD38j2+CjnJpkV3u5Bzli1
- UzGx6I83Rxfu69yh2IyVJyTQWNu4W1lopWJMkG0qxXuSb/YzU0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 11:41 PM Borislav Petkov <bp@suse.de> wrote:
+On Wed, May 13, 2020 at 6:33 AM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
 >
-> On Wed, May 13, 2020 at 11:28:09PM +0200, Arnd Bergmann wrote:
-> > I see the patch in linux-next but not in mainline. I suppose we want
-> > it in v5.7 and backported to stable kernels so they can boot when
-> > built with gcc-10?
+> The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
+> returns the number of the created entries in the DMA address space.
+> However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
+> dma_unmap_sg must be called with the original number of the entries
+> passed to the dma_map_sg().
 >
-> It is queued for 5.8. For a good reason, if you read the whole thread
-> Arvind pointed you to.
+> struct sg_table is a common structure used for describing a non-contiguous
+> memory buffer, used commonly in the DRM and graphics subsystems. It
+> consists of a scatterlist with memory pages and DMA addresses (sgl entry),
+> as well as the number of scatterlist entries: CPU pages (orig_nents entry)
+> and DMA mapped pages (nents entry).
 >
-> Lemme guess: gcc10 got released in the meantime (hohumm, website says
-> so) and so we probably should expedite this and send it to Linus now...?
+> It turned out that it was a common mistake to misuse nents and orig_nents
+> entries, calling DMA-mapping functions with a wrong number of entries or
+> ignoring the number of mapped entries returned by the dma_map_sg()
+> function.
+>
+> To avoid such issues, lets use a common dma-mapping wrappers operating
+> directly on the struct sg_table objects and use scatterlist page
+> iterators where possible. This, almost always, hides references to the
+> nents and orig_nents entries, making the code robust, easier to follow
+> and copy/paste safe.
+>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-Right, in particular since Linus started building with gcc-10 already and
-would likely soon run into that problem if he hasn't already ;-)
-
-      Arnd
+Reviewed-by: Eric Anholt <eric@anholt.net>
