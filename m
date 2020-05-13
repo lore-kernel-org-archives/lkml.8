@@ -2,175 +2,83 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B568C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 726E2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D723A20690
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:41:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lKiD3NVR"
+	by mail.kernel.org (Postfix) with ESMTP id C675920671
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:43:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389306AbgEMQlZ (ORCPT
+        id S2389355AbgEMQnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 12:41:25 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:43270 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728354AbgEMQlZ (ORCPT
+        Wed, 13 May 2020 12:43:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57510 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728354AbgEMQnl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 12:41:25 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04DGXB6H169943;
-        Wed, 13 May 2020 16:41:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
- bh=z3WykGLnspcKA18JV+DbvKUDOIknyu+oP3oUZLL37xI=;
- b=lKiD3NVRXwj4fJSlHkC4mW320iTUs+xAowm4QlP4fyv9YQl2p1NktJrlbI74c9ZxFRfL
- lPWG/OLyV0JyEQeWwMejo6yLBHclVwXZQtDgdOFrtJoxnTVYjEJOvidtcp+YPBTVCejJ
- QBIBWk/SGuW1wJcGr5wBGY/MLrgi7A1NOeX8S5ti+IA5tuPQWAulrBjKJpO89JreuujO
- KdC1C4u9Ujcm5Hez9GCpNKEviF7ohrf7sm4J2tpCaQ4UiKQMkGiIqWNIxwgVpBO3ElPi
- /1gWY0N0k297bVCiSQ39mc3hTMi+uDZRCgCX1r6uwYDdwdlwGiDi3IbH7WaZ1E4gBIXP ww== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 3100xwnbas-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 13 May 2020 16:41:22 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04DGbuVK185648;
-        Wed, 13 May 2020 16:41:22 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 3100yavft7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 May 2020 16:41:22 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04DGfLaL032724;
-        Wed, 13 May 2020 16:41:21 GMT
-Received: from localhost (/10.159.244.214)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 13 May 2020 09:41:20 -0700
-Date:   Wed, 13 May 2020 09:41:19 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     "Xu, Yanfei" <yanfei.xu@windriver.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: BUG:loop:blk_update_request: I/O error, dev loop6, sector 49674
- op 0x9:(WRITE_ZEROES)
-Message-ID: <20200513164119.GD1984748@magnolia>
-References: <dac81506-0065-ee64-fcd1-c9f1d002b4fb@windriver.com>
- <c51460e0-1abb-799d-9ee9-de9c39315eda@windriver.com>
- <8f3eeb22-2e85-aa3f-6287-b3c467d39a8e@kernel.dk>
+        Wed, 13 May 2020 12:43:41 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AA41C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 09:43:41 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jYuTl-0000gE-KR; Wed, 13 May 2020 18:43:33 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 067AE100605; Wed, 13 May 2020 18:43:32 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Wojciech Kudla <wk.kernel@gmail.com>, linux-kernel@vger.kernel.org
+Cc:     mingo@redhat.com, hpa@zytor.com, x86@kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: x86/smp: adding new trace points
+In-Reply-To: <b3e3c317-17e4-081f-0bb6-3e6f291f8b86@gmail.com>
+References: <4d54953b-f968-63f5-569f-9e09bc0f361c@gmail.com> <b638ef03-04c2-94bf-f026-a01691888624@gmail.com> <87y2pw2fav.fsf@nanos.tec.linutronix.de> <b3e3c317-17e4-081f-0bb6-3e6f291f8b86@gmail.com>
+Date:   Wed, 13 May 2020 18:43:32 +0200
+Message-ID: <87sgg323bf.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8f3eeb22-2e85-aa3f-6287-b3c467d39a8e@kernel.dk>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9620 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 phishscore=0
- adultscore=0 suspectscore=1 mlxscore=0 mlxlogscore=999 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005130145
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9620 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 cotscore=-2147483648 bulkscore=0
- phishscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
- impostorscore=0 spamscore=0 malwarescore=0 priorityscore=1501 mlxscore=0
- suspectscore=1 clxscore=1011 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005130144
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[add fsdevel to cc]
+Wojciech Kudla <wk.kernel@gmail.com> writes:
+> On 13/05/2020 13:24, Thomas Gleixner wrote:
+>
+>> Why would the SMP call function single interrupt go through the
+>> PLATFORM_IPI_VECTOR? It goes as the name says through the
+>> CALL_FUNCTION_SINGLE_VECTOR.
+>> 
+>
+> Wrong vector, my bad.
+>
+> However 2) still stands in my opinion. We don't have "ipi raise" trace
+> point for x86.  RESCHEDULE_VECTOR, CALL_FUNCTION_SINGLE_VECTOR, as
+> well as TLB invalidation vectors are essentially
+> inter-processor-interrupts if I'm not mistaken.  Would a patch adding
+> such trace point be considered here?
 
-On Tue, May 12, 2020 at 08:22:08PM -0600, Jens Axboe wrote:
-> On 5/12/20 8:14 PM, Xu, Yanfei wrote:
-> > Hi,
-> > 
-> > After operating the /dev/loop which losetup with an image placed in**tmpfs,
-> > 
-> > I got the following ERROR messages:
-> > 
-> > ----------------[cut here]---------------------
-> > 
-> > [  183.110770] blk_update_request: I/O error, dev loop6, sector 524160 op 0x9:(WRITE_ZEROES) flags 0x1000800 phys_seg 0 prio class 0
-> > [  183.123949] blk_update_request: I/O error, dev loop6, sector 522 op 0x9:(WRITE_ZEROES) flags 0x1000800 phys_seg 0 prio class 0
-> > [  183.137123] blk_update_request: I/O error, dev loop6, sector 16906 op 0x9:(WRITE_ZEROES) flags 0x1000800 phys_seg 0 prio class 0
-> > [  183.150314] blk_update_request: I/O error, dev loop6, sector 32774 op 0x9:(WRITE_ZEROES) flags 0x1000800 phys_seg 0 prio class 0
-> > [  183.163551] blk_update_request: I/O error, dev loop6, sector 49674 op 0x9:(WRITE_ZEROES) flags 0x1000800 phys_seg 0 prio class 0
-> > [  183.176824] blk_update_request: I/O error, dev loop6, sector 65542 op 0x9:(WRITE_ZEROES) flags 0x1000800 phys_seg 0 prio class 0
-> > [  183.190029] blk_update_request: I/O error, dev loop6, sector 82442 op 0x9:(WRITE_ZEROES) flags 0x1000800 phys_seg 0 prio class 0
-> > [  183.203281] blk_update_request: I/O error, dev loop6, sector 98310 op 0x9:(WRITE_ZEROES) flags 0x1000800 phys_seg 0 prio class 0
-> > [  183.216531] blk_update_request: I/O error, dev loop6, sector 115210 op 0x9:(WRITE_ZEROES) flags 0x1000800 phys_seg 0 prio class 0
-> > [  183.229914] blk_update_request: I/O error, dev loop6, sector 131078 op 0x9:(WRITE_ZEROES) flags 0x1000800 phys_seg 0 prio class 0
-> > 
-> > 
-> > I have found the commit which introduce this issue by git bisect :
-> > 
-> >     commit :efcfec57[loop: fix no-unmap write-zeroes request behavior]
-> 
-> Please CC the author of that commit too. Leaving the rest quoted below.
-> 
-> > Kernrel version: Linux version 5.6.0
-> > 
-> > Frequency: everytime
-> > 
-> > steps to reproduce:
-> > 
-> >   1.git clone mainline kernel
-> > 
-> >   2.compile kernel with ARCH=x86_64, and then boot the system with it
-> > 
-> >     (seems other arch also can reproduce it )
-> > 
-> >   3.make an image by "dd of=/tmp/image if=/dev/zero bs=1M count=256"
-> > 
-> >   *4.**place the image in tmpfs directory*
-> > 
-> >   5.losetup /dev/loop6 /PATH/TO/image
-> > 
-> >   6.mkfs.ext2 /dev/loop6
-> > 
-> > 
-> > Any comments will be appreciated.
+Maybe.
 
-Hm, you got IO failures here because shmem_fallocate doesn't support
-FL_ZERO_RANGE range.  That might not be too hard to add, but there's a
-broader problem of detecting fallocate support--
+Though that IPI tracing is inconsistent across architectures. I'm not
+really interested to have yet another x86 variant which is slightly
+different than anything else.
 
-The loop driver assumes that if the file has an fallocate method then
-it's safe to set max_discard_sectors (and now max_write_zeroes_sectors)
-to UINT_MAX>>9.  There's currently no good way to detect which modes are
-supported by a filesystem's ->fallocate function, or to discover the
-required granularity.
+ARM and ARM64 share generic tracepoints for that, though the actual
+tracepoint invocation is in the architecture specific code.
 
-Right now we tell application developers that the way to discover the
-conditions under which fallocate will work is to try it and see if they
-get EOPNOTSUPP.
+If at all we really want to have the common IPIs which are required for
+SMP support covered by generic tracepoints and have them in the generic
+code and not sprinkled all over arch/*
 
-One way to "fix" this would be to fix lo_fallocate to set RQF_QUIET if
-the filesystem returns EOPNOTSUPP, which gets rid of the log messages.
-We probably ought to zero out the appropriate max_*_sectors if we get
-EOPNOTSUPP.
+Thanks,
 
---D
-
-> > 
-> > 
-> > Thanks,
-> > 
-> > Yanfei
-> > 
-> > 
-> > 
-> > 
-> > 
-> 
-> 
-> -- 
-> Jens Axboe
-> 
+        tglx
