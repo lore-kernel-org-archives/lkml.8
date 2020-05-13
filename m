@@ -2,262 +2,117 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6ADC2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5D3C2D0FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E195120575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:06:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364371;
-	bh=n8ibRyccY5zE8PGYkmSz/Wdr+0AV8UG6ty9nZ2zTvco=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tRLJy7VXxyuahwUTFqV1eZ0ZH4B8Szon1q+NhB1ELLp6cPrKyvJBdAZrOX0RNTWpu
-	 mhijd+QrCW1DDdOBGYyCTZ4rYaf5j4sSxjS6z9DQLSc3/z1tCYGd8op3jMr9DZtnQh
-	 DAWIhYCnUetqDBezM8b7gYVmHqR7RtVOcBpg0+so=
+	by mail.kernel.org (Postfix) with ESMTP id 598BE20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:06:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SszF5JPW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388453AbgEMKGL (ORCPT
+        id S1733006AbgEMKGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:06:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41168 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732979AbgEMKGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 06:06:10 -0400
-Received: from localhost.localdomain (unknown [106.200.233.149])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBC9520575;
-        Wed, 13 May 2020 10:06:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589364369;
-        bh=n8ibRyccY5zE8PGYkmSz/Wdr+0AV8UG6ty9nZ2zTvco=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hd9/GFqMHfctSqzB+U00ibTjR3mPqoDRRY2l3pf1Vov3p5vNZ2jqxzuTO4qBxBVlr
-         /5DQefdb6CybxLrCvozrjws3m2Kvea0jjsoN/vzM/fjh5P5/eAbOh/ElZ+HIaHF47V
-         YIVAup3OvpdvfOBi8SxlOPxlSeeO2A+VpcEtFOZE=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Rob Clark <robdclark@gmail.com>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH 2/3] dt-bindings: display: bridge: Add documentation for LT9611
-Date:   Wed, 13 May 2020 15:35:32 +0530
-Message-Id: <20200513100533.42996-3-vkoul@kernel.org>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200513100533.42996-1-vkoul@kernel.org>
-References: <20200513100533.42996-1-vkoul@kernel.org>
+        Wed, 13 May 2020 06:06:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388621AbgEMKGR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 06:06:17 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CA44C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 03:06:17 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id f134so13732463wmf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 03:06:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zU0nB1Ip8ux85FhZzaXr4w0z8K5MqsOQGnZo4jaAbog=;
+        b=SszF5JPW3fDKq2WXZ39nc9lt5EoRcBFOKEf7uZel3MJNBA0J7xDYyepZ0GB8YN2VoX
+         FyQ3Hp7xbElnfZvb8GtdVWbJQPOtnErTX233RRP744Q6VTMBlG5q+eucT4uCUWIVMPj4
+         zFa9/+WUYlcsh/gG1hOn36HQj6yk2mZCB48BqGFRztVd07biYqlPpAnxXb8dZpJCiToO
+         VfemMFAHmSwm4hoUFOxJZj2mDlBuZ9fUAqgFkFsiXIolgtHnzH0A8/jBI0hhedCfa1/f
+         H7CvfWcHTM+6t7cekF9kiPFDTq0eoRIuN0VsDfnsJRdF0WSZkZhmcAMUgr/0ndRe5Jrp
+         eRag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zU0nB1Ip8ux85FhZzaXr4w0z8K5MqsOQGnZo4jaAbog=;
+        b=BIboFLdbWos6mYQ/dXtI2iwvsZDo2aoI6jlmybBqInZCUUjkTkMV4ItvRsRjf90d5r
+         zeBdm5HQ/BopFVcRlaQmUgiHjwwhHa620lxMvWKHOVZKx+TAYrPZ7hyxahlK8XPWnSOX
+         x85+d4DedIG5y+oBsab4fRVteaUTcA8w49Sr+cD+kp5+qNPtV+K/5Wz+CKZjFR0zB1v9
+         407xdJdQd9MAARRabJxk66I3ul31SgU+O9alCV2aD7NWqSkdQHmf5yFt8wrgV7dOmvxm
+         CTPJbRqt2bcN0LoGNGIfKlk7CXzxt95LfCoMnELRb8dYptEjMNlhlwYgmtHPGLBtrBgA
+         Dyew==
+X-Gm-Message-State: AGi0PuYEwU4JHv+1HILXwsDZGdZtE7lHQpSdmPIsBVbYYYJZaHmuplBL
+        CIyYjfKgtendfFXBKsh6e1gX+Q==
+X-Google-Smtp-Source: APiQypK2RUITynpf031+51+fINLm92xUpyiGpfNAzJn9+fcZDpMYpGn6iHsaty4IHIxjBH6P5sq3fA==
+X-Received: by 2002:a05:600c:21c1:: with SMTP id x1mr12590358wmj.173.1589364375719;
+        Wed, 13 May 2020 03:06:15 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id l13sm10335380wrm.55.2020.05.13.03.06.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 03:06:15 -0700 (PDT)
+Date:   Wed, 13 May 2020 11:06:11 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Benjamin Segall <bsegall@google.com>,
+        Mel Gorman <mgorman@suse.de>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Todd Kjos <tkjos@google.com>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+Subject: Re: [PATCH 00/14] Modularize schedutil
+Message-ID: <20200513100611.GA168476@google.com>
+References: <20200512092102.GA16151@google.com>
+ <CAJZ5v0hm3Tv2yZKLzM9a+kJuB1V5_eFOEKT-uM318dzeKV3_Qw@mail.gmail.com>
+ <20200512135813.GA101124@google.com>
+ <CAJZ5v0hN708uvurZ-3oo90qUJFw3=Eg0OmtTaOKXQgNPXhCkFg@mail.gmail.com>
+ <20200512151120.GB101124@google.com>
+ <CAJZ5v0inoge=nWQtv-rU_ReQUMZA5w-PZXuSpHHj1UHn-S7aSA@mail.gmail.com>
+ <20200512162630.GC101124@google.com>
+ <CAJZ5v0ges4=e2HkHpVk4E1yF1VsBm9H5noqMz-MxX9DK_kt6Xg@mail.gmail.com>
+ <20200513094117.GB225140@google.com>
+ <20200513100213.GA868852@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513100213.GA868852@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lontium LT9611 is a DSI to HDMI bridge which supports 2 DSI ports
-and I2S port as input and one HDMI port as output
+On Wednesday 13 May 2020 at 12:02:13 (+0200), Greg KH wrote:
+> It's not significant at all, just always build it in, no one will notice
+> it, it's just a page or two.  Serial port drivers are way bigger :)
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- .../display/bridge/lontium,lt9611.yaml        | 178 ++++++++++++++++++
- 1 file changed, 178 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
+Alright, I give up :)
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml b/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
-new file mode 100644
-index 000000000000..77ee8cc35cd8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
-@@ -0,0 +1,178 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/lontium,lt9611.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Lontium LT9611 2 Port MIPI to HDMI Bridge
-+
-+maintainers:
-+  - Vinod Koul <vkoul@kernel.org>
-+
-+description: |
-+  The LT9611 is a bridge device which converts DSI to HDMI
-+
-+properties:
-+  compatible:
-+    enum:
-+      - lontium,lt9611
-+
-+  reg:
-+    maxItems: 1
-+    description: base I2C address of the device.
-+
-+  "#sound-dai-cells":
-+    const: 1
-+
-+  interrupts:
-+    maxItems: 1
-+    description: interrupt line for the chip
-+
-+  reset-gpios:
-+    maxItems: 1
-+    description: GPIO connected to active high RESET pin.
-+
-+  vdd-supply:
-+    description: Regulator for 1.8V MIPI phy power.
-+
-+  vcc-supply:
-+    description: Regulator for 3.3V IO power.
-+
-+  ports:
-+    type: object
-+
-+    properties:
-+      "#address-cells":
-+        const: 1
-+
-+      "#size-cells":
-+        const: 0
-+
-+      port@0:
-+        type: object
-+        additionalProperties: false
-+
-+        description: |
-+          HDMI port for HDMI output
-+
-+        properties:
-+          reg:
-+            const: 0
-+
-+        patternProperties:
-+          endpoint:
-+            type: object
-+            additionalProperties: false
-+
-+            properties:
-+              remote-endpoint: true
-+
-+        required:
-+          - reg
-+
-+      port@1:
-+        type: object
-+        additionalProperties: false
-+
-+        description: |
-+          MIPI port-1 for MIPI input
-+
-+        properties:
-+          reg:
-+            const: 1
-+
-+        patternProperties:
-+          endpoint:
-+            type: object
-+            additionalProperties: false
-+
-+            properties:
-+              remote-endpoint: true
-+
-+        required:
-+          - reg
-+
-+      port@2:
-+        type: object
-+        additionalProperties: false
-+
-+        description: |
-+          MIPI port-2 for MIPI input
-+
-+        properties:
-+          reg:
-+            const: 2
-+
-+        patternProperties:
-+          endpoint:
-+            type: object
-+            additionalProperties: false
-+
-+            properties:
-+              remote-endpoint: true
-+
-+        required:
-+          - reg
-+
-+    required:
-+      - "#address-cells"
-+      - "#size-cells"
-+      - port@0
-+      - port@1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - vdd-supply
-+  - vcc-supply
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c10 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      lt9611_codec: hdmi-bridge@3b {
-+        compatible = "lontium,lt9611";
-+        reg = <0x3b>;
-+
-+        reset-gpios = <&tlmm 128 GPIO_ACTIVE_HIGH>;
-+        interrupts-extended = <&tlmm 84 IRQ_TYPE_EDGE_FALLING>;
-+
-+        vdd-supply = <&lt9611_1v8>;
-+        vcc-supply = <&lt9611_3v3>;
-+
-+        ports {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          port@0 {
-+            reg = <0>;
-+            lt9611_out: endpoint {
-+              remote-endpoint = <&hdmi_con>;
-+            };
-+          };
-+
-+          port@1 {
-+            reg = <1>;
-+            lt9611_a: endpoint {
-+              remote-endpoint = <&dsi0_out>;
-+            };
-+          };
-+
-+          port@2 {
-+            reg = <2>;
-+            lt9611_b: endpoint {
-+              remote-endpoint = <&dsi1_out>;
-+            };
-+          };
-+        };
-+      };
-+    };
--- 
-2.25.4
+When partners will complain (and I think they will) I'll point them here
+and say we tried ;)
 
+Cheers,
+Quentin
