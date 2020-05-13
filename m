@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 507CAC2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF311CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DF16206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E09220575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363998;
-	bh=SOZ803+YXS9HbFLuIMPYmRKdBHR5d0s6fTcBtxPZYY0=;
+	s=default; t=1589364000;
+	bh=4LdK0UMZKV88NR0FednH6zsZI4bJjPkcrrE6fGKiOuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yLY73jbxd2nGzOK18xm/TNVWqZpzwqkjrToiLG4KCk3X9Ma+cISorEFvk9U35v+Xr
-	 H1NqRrudcOYCDNK19LnvJDkSnIwZ9sBYI4WlZOiHqrFi5Cj0Dxv7rixuXwpNf0gJEa
-	 PopO1Z7QlQ7htRiKmKKXVDlcDfW4IXyGp/hyFEq4=
+	b=YruuBqbgazeZ6VxidUPg0s2/uhh2bHeTZ9rcj3mLd962YJBRzrmuS7snSeIrax81M
+	 4r4zO3d1gThf56korykw1Q4lVKPliw2QROQcu787Whea0Xvyug3Owja56Fxipv433Z
+	 02z35h9s5N1IPu79IwiDHLa9jsv1PLWJYGP2bNag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388568AbgEMJ75 (ORCPT
+        id S2388574AbgEMJ77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:59:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54394 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:59:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733286AbgEMJws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:52:48 -0400
+        id S2387827AbgEMJwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:52:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FB1120753;
-        Wed, 13 May 2020 09:52:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B08C2312A;
+        Wed, 13 May 2020 09:52:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363567;
-        bh=SOZ803+YXS9HbFLuIMPYmRKdBHR5d0s6fTcBtxPZYY0=;
+        s=default; t=1589363562;
+        bh=4LdK0UMZKV88NR0FednH6zsZI4bJjPkcrrE6fGKiOuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HWvJLof4Qtar3wQRwzvojZhY5B9E10snMLjYfkbSg9wDY4VDpkURERuMy3NfWE7zA
-         wz76apV/K77ce3JXVXL/gQ/jLQltI4suIHspROgU6g0sMGh9CSSGk63tugd2UrpKtR
-         LoO7UkHT2S6di8D1v7/1roZTiCNwIZ/88JjltO7Y=
+        b=gzRT6a1PeTNpV9QNnWZz3n/iPReGlppxXQy5kYnwRfp9bV6yDBOO4tTGORxlHAPnl
+         BrlvLK+t0bCWSf1dTwj+7tqiLoNZc6ozvfOjlSy1ArwQXs8xhNalq0zTDZgmC30q5B
+         bURnr6+UntY/I+7v5cYcdk1ojoZLri5ko6YlGm48=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Arjun Roy <arjunroy@google.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 037/118] selftests: net: tcp_mmap: clear whole tcp_zerocopy_receive struct
-Date:   Wed, 13 May 2020 11:44:16 +0200
-Message-Id: <20200513094420.665827553@linuxfoundation.org>
+Subject: [PATCH 5.6 035/118] sch_choke: avoid potential panic in choke_reset()
+Date:   Wed, 13 May 2020 11:44:14 +0200
+Message-Id: <20200513094420.534388849@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -63,40 +63,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit bf5525f3a8e3248be5aa5defe5aaadd60e1c1ba1 ]
+[ Upstream commit 8738c85c72b3108c9b9a369a39868ba5f8e10ae0 ]
 
-We added fields in tcp_zerocopy_receive structure,
-so make sure to clear all fields to not pass garbage to the kernel.
+If choke_init() could not allocate q->tab, we would crash later
+in choke_reset().
 
-We were lucky because recent additions added 'out' parameters,
-still we need to clean our reference implementation, before folks
-copy/paste it.
+BUG: KASAN: null-ptr-deref in memset include/linux/string.h:366 [inline]
+BUG: KASAN: null-ptr-deref in choke_reset+0x208/0x340 net/sched/sch_choke.c:326
+Write of size 8 at addr 0000000000000000 by task syz-executor822/7022
 
-Fixes: c8856c051454 ("tcp-zerocopy: Return inq along with tcp receive zerocopy.")
-Fixes: 33946518d493 ("tcp-zerocopy: Return sk_err (if set) along with tcp receive zerocopy.")
+CPU: 1 PID: 7022 Comm: syz-executor822 Not tainted 5.7.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ __kasan_report.cold+0x5/0x4d mm/kasan/report.c:515
+ kasan_report+0x33/0x50 mm/kasan/common.c:625
+ check_memory_region_inline mm/kasan/generic.c:187 [inline]
+ check_memory_region+0x141/0x190 mm/kasan/generic.c:193
+ memset+0x20/0x40 mm/kasan/common.c:85
+ memset include/linux/string.h:366 [inline]
+ choke_reset+0x208/0x340 net/sched/sch_choke.c:326
+ qdisc_reset+0x6b/0x520 net/sched/sch_generic.c:910
+ dev_deactivate_queue.constprop.0+0x13c/0x240 net/sched/sch_generic.c:1138
+ netdev_for_each_tx_queue include/linux/netdevice.h:2197 [inline]
+ dev_deactivate_many+0xe2/0xba0 net/sched/sch_generic.c:1195
+ dev_deactivate+0xf8/0x1c0 net/sched/sch_generic.c:1233
+ qdisc_graft+0xd25/0x1120 net/sched/sch_api.c:1051
+ tc_modify_qdisc+0xbab/0x1a00 net/sched/sch_api.c:1670
+ rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5454
+ netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2416
+ __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+
+Fixes: 77e62da6e60c ("sch_choke: drop all packets in queue during reset")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Arjun Roy <arjunroy@google.com>
-Cc: Soheil Hassas Yeganeh <soheil@google.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/net/tcp_mmap.c |    3 ++-
+ net/sched/sch_choke.c |    3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/tools/testing/selftests/net/tcp_mmap.c
-+++ b/tools/testing/selftests/net/tcp_mmap.c
-@@ -165,9 +165,10 @@ void *child_thread(void *arg)
- 			socklen_t zc_len = sizeof(zc);
- 			int res;
+--- a/net/sched/sch_choke.c
++++ b/net/sched/sch_choke.c
+@@ -323,7 +323,8 @@ static void choke_reset(struct Qdisc *sc
  
-+			memset(&zc, 0, sizeof(zc));
- 			zc.address = (__u64)((unsigned long)addr);
- 			zc.length = chunk_size;
--			zc.recv_skip_hint = 0;
-+
- 			res = getsockopt(fd, IPPROTO_TCP, TCP_ZEROCOPY_RECEIVE,
- 					 &zc, &zc_len);
- 			if (res == -1)
+ 	sch->q.qlen = 0;
+ 	sch->qstats.backlog = 0;
+-	memset(q->tab, 0, (q->tab_mask + 1) * sizeof(struct sk_buff *));
++	if (q->tab)
++		memset(q->tab, 0, (q->tab_mask + 1) * sizeof(struct sk_buff *));
+ 	q->head = q->tail = 0;
+ 	red_restart(&q->vars);
+ }
 
 
