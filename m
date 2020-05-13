@@ -2,91 +2,191 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9502DC2D0F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F39C2D0F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 699C324927
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:18:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CCm16ZBT"
+	by mail.kernel.org (Postfix) with ESMTP id 17B3E24927
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:19:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589339993;
+	bh=3evM/3WoUY87UjYJg6kocy7JRyvcnZJAhsOd5UgvkMQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=rYuX01KeVJ97wIth0vojmFDBuYFB4Fe9f6mM/a6GdNeHd+vncOskqtRBUhPQsh4zB
+	 e+Afr7NDN0hN+nnNxMybhMj4qnJ62M9y1qtUygv9luGobvwDO4aXUmhOueZVrYG3i7
+	 CSSqMyqSETwcunJLJHqMn4EXlVdzYQdrNIJTbwZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728602AbgEMDSg (ORCPT
+        id S1728773AbgEMDTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 23:18:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725898AbgEMDSe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 23:18:34 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58677C061A0C;
-        Tue, 12 May 2020 20:18:33 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id b8so7128423pgi.11;
-        Tue, 12 May 2020 20:18:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Cm/gLrcNvamQ/ORBmoqkA6rGd8BbqmVca6uk7B4BbCY=;
-        b=CCm16ZBTqRwqYeQfcCF3EXPmKegJwnu5MDeXF0bs/Ry70ZxkRwUCxGhJXY4N/hs0vJ
-         4z2hkKif+oTUugaiYU1Xbr4LhBLbdYLfQe0WUOINr0yFc+8fUylKR3TDKWB0181JhTwN
-         DBj/I+Np414BoSX38Mf1Tuh7CubrkWN1BFfvK3b9YpjGNLqKKGcOQrypGqJi8ieymf8U
-         vk9f3bCktg4h6CpamVJv6X+0zgJ8lLztcVGCps/pfRt0v8ayM/0LW25PW7X2bOmmEMHu
-         isyduvAXvdOscTkIcQ7+b1dgkhGgL8uE6sKXvMQhmGdTJHapI/ntnivdKSdYYbMjqVIu
-         M86w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Cm/gLrcNvamQ/ORBmoqkA6rGd8BbqmVca6uk7B4BbCY=;
-        b=QttRvLHgyzQmsgMK+Ms81vOY5oGozHq7310d57uojjHdp11QP2SxdK12T4Ya51Uds7
-         LgDm2u3T1RN7wOChEuJ0aVdUMhsEME9YdUWWWtExYEl8Nx2DPAzpTHe0eGtMFdkt4t/d
-         skHBTrUCNMzSakoUgKoBJF3CNyIcIMc3fIEmAXrdiRVCb4A/VX+/umGbl0/HR4sMV3YY
-         uCDEfSGJR3MT2emNS6HXNeo9qPgt4MrgfSa5CCbmiAV7qK7DzcVJedfoUvQ1b396H1YY
-         aUDYrvG6Jbt36B4RfC/7l32IpiIonLi7aTpL55whYf1LDajKYeUaIHXdI+/0mixPFvqW
-         15pg==
-X-Gm-Message-State: AGi0PuYNhr95/RdzDwjxkgyQUvEj1F0sKAlCaTNCcr/pKvP6VBaeSOWx
-        nFOhp7RQdR+Mj/Gs99QKoj8=
-X-Google-Smtp-Source: APiQypJ8rBf4hAMhnxkEj0F+y6GDhhYHMRpKIHQNOAOgI35XxWa6jkpORCLj4nE3KIbMGvzP7t8+Nw==
-X-Received: by 2002:a62:3381:: with SMTP id z123mr24705858pfz.274.1589339912779;
-        Tue, 12 May 2020 20:18:32 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id z60sm14459408pjj.14.2020.05.12.20.18.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 20:18:32 -0700 (PDT)
-Date:   Tue, 12 May 2020 20:18:30 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     robh+dt@kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, sboyd@kernel.org
-Subject: Re: [PATCH v2 RESEND 2/2] Input: remove msm-vibrator driver
-Message-ID: <20200513031830.GH89269@dtor-ws>
-References: <20200513013140.69935-1-masneyb@onstation.org>
- <20200513013140.69935-3-masneyb@onstation.org>
+        Tue, 12 May 2020 23:19:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725898AbgEMDTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 23:19:51 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CA0420714;
+        Wed, 13 May 2020 03:19:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589339991;
+        bh=3evM/3WoUY87UjYJg6kocy7JRyvcnZJAhsOd5UgvkMQ=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=kdXcrlFVRId5W4tSKz2O+7bJSB24kuk9EK2RoEBms3JY4jhtAH4wBk2NsC/fRBGq+
+         Y4Vkyn2Yu/0NnQy3N3V0LHNZIbyxfMJdFmAcjqNo9jQqJYpn+TCbdNVRvzlSi43+Uo
+         zbhmsSWI4UQWFdk6BmTRCRPg7o/LaluyBQfj/GVE=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 349373523471; Tue, 12 May 2020 20:19:51 -0700 (PDT)
+Date:   Tue, 12 May 2020 20:19:51 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Walter Wu <walter-zh.wu@mediatek.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v2 1/3] rcu/kasan: record and print call_rcu() call stack
+Message-ID: <20200513031951.GO2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200511023111.15310-1-walter-zh.wu@mediatek.com>
+ <20200511180527.GZ2869@paulmck-ThinkPad-P72>
+ <1589250993.19238.22.camel@mtksdccf07>
+ <CACT4Y+b6ZfmZG3YYC_TkoeGaAQjSEKvF4dZ9vHzTx5iokD4zTQ@mail.gmail.com>
+ <20200512142541.GD2869@paulmck-ThinkPad-P72>
+ <CACT4Y+ZfzLhcG2Wy_iEMB=hJ5k=ib+X-m29jDG2Jcs7S-TPX=w@mail.gmail.com>
+ <20200512161422.GG2869@paulmck-ThinkPad-P72>
+ <CACT4Y+aWNDntO6+Rhn0a-4N1gLOTe5UzYB9m5TnkFxG_L15cXA@mail.gmail.com>
+ <1589335531.19238.52.camel@mtksdccf07>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513013140.69935-3-masneyb@onstation.org>
+In-Reply-To: <1589335531.19238.52.camel@mtksdccf07>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 09:31:40PM -0400, Brian Masney wrote:
-> The address referenced by this driver is within the Qualcomm Clock
-> namespace so let's drop the msm-vibrator bindings so that a more generic
-> solution can be used instead.  No one is currently using driver so this
-> won't affect any users.
+On Wed, May 13, 2020 at 10:05:31AM +0800, Walter Wu wrote:
+> On Tue, 2020-05-12 at 18:22 +0200, Dmitry Vyukov wrote:
+> > On Tue, May 12, 2020 at 6:14 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > > > > > > > This feature will record first and last call_rcu() call stack and
+> > > > > > > > > print two call_rcu() call stack in KASAN report.
+> > > > > > > >
+> > > > > > > > Suppose that a given rcu_head structure is passed to call_rcu(), then
+> > > > > > > > the grace period elapses, the callback is invoked, and the enclosing
+> > > > > > > > data structure is freed.  But then that same region of memory is
+> > > > > > > > immediately reallocated as the same type of structure and again
+> > > > > > > > passed to call_rcu(), and that this cycle repeats several times.
+> > > > > > > >
+> > > > > > > > Would the first call stack forever be associated with the first
+> > > > > > > > call_rcu() in this series?  If so, wouldn't the last two usually
+> > > > > > > > be the most useful?  Or am I unclear on the use case?
+> > > > > >
+> > > > > > 2 points here:
+> > > > > >
+> > > > > > 1. With KASAN the object won't be immediately reallocated. KASAN has
+> > > > > > 'quarantine' to delay reuse of heap objects. It is assumed that the
+> > > > > > object is still in quarantine when we detect a use-after-free. In such
+> > > > > > a case we will have proper call_rcu stacks as well.
+> > > > > > It is possible that the object is not in quarantine already and was
+> > > > > > reused several times (quarantine is not infinite), but then KASAN will
+> > > > > > report non-sense stacks for allocation/free as well. So wrong call_rcu
+> > > > > > stacks are less of a problem in such cases.
+> > > > > >
+> > > > > > 2. We would like to memorize 2 last call_rcu stacks regardless, but we
+> > > > > > just don't have a good place for the index (bit which of the 2 is the
+> > > > > > one to overwrite). Probably could shove it into some existing field,
+> > > > > > but then will require atomic operations, etc.
+> > > > > >
+> > > > > > Nobody knows how well/bad it will work. I think we need to get the
+> > > > > > first version in, deploy on syzbot, accumulate some base of example
+> > > > > > reports and iterate from there.
+> > > > >
+> > > > > If I understood the stack-index point below, why not just move the
+> > > > > previous stackm index to clobber the previous-to-previous stack index,
+> > > > > then put the current stack index into the spot thus opened up?
+> > > >
+> > > > We don't have any index in this change (don't have memory for such index).
+> > > > The pseudo code is"
+> > > >
+> > > > u32 aux_stacks[2]; // = {0,0}
+> > > >
+> > > > if (aux_stacks[0] != 0)
+> > > >     aux_stacks[0] = stack;
+> > > > else
+> > > >    aux_stacks[1] = stack;
+> > >
+> > > I was thinking in terms of something like this:
+> > >
+> > > u32 aux_stacks[2]; // = {0,0}
+> > >
+> > > if (aux_stacks[0] != 0) {
+> > >     aux_stacks[0] = stack;
+> > > } else {
+> > >    if (aux_stacks[1])
+> > >         aux_stacks[0] = aux_stacks[1];
+> > >    aux_stacks[1] = stack;
+> > > }
+> > >
+> > > Whether this actually makes sense in real life, I have no idea.
+> > > The theory is that you want the last two stacks.  However, if these
+> > > elements get cleared at kfree() time, then I could easily believe that
+> > > the approach you already have (first and last) is the way to go.
+> > >
+> > > Just asking the question, not arguing for a change!
+> > 
+> > Oh, this is so obvious... in hindsight! :)
+> > 
+> > Walter, what do you think?
+> > 
 > 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> u32 aux_stacks[2]; // = {0,0}
+> 
+> if (aux_stacks[0] != 0) {
+>      aux_stacks[0] = stack;
+> } else {
+>     if (aux_stacks[1])
+>          aux_stacks[0] = aux_stacks[1];
+>     aux_stacks[1] = stack;
+> }
+> 
+> Hmm...why I think it will always cover aux_stacks[0] after aux_stacks[0]
+> has stack, it should not record last two stacks?
+> 
+> How about this:
+> 
+> u32 aux_stacks[2]; // = {0,0}
+> 
+> if (aux_stacks[1])
+>     aux_stacks[0] = aux_stacks[1];
+> aux_stacks[1] = stack;
 
-Applied, thank you.
+Even better!  ;-)
 
--- 
-Dmitry
+							Thanx, Paul
+
+> > I would do this. I think latter stacks are generally more interesting
+> > wrt shedding light on a bug. The first stack may even be "statically
+> > known" (e.g. if object is always queued into a workqueue for some lazy
+> > initialization during construction).
+> 
+> I think it make more sense to record latter stack, too.
+> 
+> Thanks for your and Paul's suggestion.
+> 
+> 
