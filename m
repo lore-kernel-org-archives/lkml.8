@@ -2,194 +2,204 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B9DC2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B799CC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36EB2206A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BBEF206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:32:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="a2OmO8ud"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sj3i7OsU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732241AbgEMGcP (ORCPT
+        id S1732273AbgEMGcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 02:32:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46032 "EHLO
+        Wed, 13 May 2020 02:32:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729880AbgEMG2O (ORCPT
+        with ESMTP id S1729880AbgEMGc2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 02:28:14 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F4A2C061A0C;
-        Tue, 12 May 2020 23:28:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=eyAruZdqZ/GqReCoW2dlggnX7vcsXfgyfym1psK0Qy4=; b=a2OmO8ud3Y4vygBhHR40fF0YjS
-        8mkgDk7og1F5E3P3drhZCOzPZHbda6MmDSPrJL5HeaQHGzLvVFo8+H35posIZtH+PT4iY03rHic03
-        BFV7pe2lKPcgLCucmv4E9ZLHEG3Oid/a7VT/xh3Mj+YvtfEohgQhOPQamWFYhD7IV4bAnuyhvLgLr
-        4c32T3A/Svju9rvMlZ6b+3Q/MW6UoYHnn/QCAw42J0zBr5U2+1txx9nUtNbUdu6Rf5pk4OFdIjQTa
-        wvS+9lHzoQd8BgueBVfCa8V4V4fUQZOSi/VIyL0P0P4qOhc9SFNpWJkRmDDNeaboacwY7tCPSXzh9
-        ZPgMG0ig==;
-Received: from [2001:4bb8:180:9d3f:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jYkrg-0004QD-3a; Wed, 13 May 2020 06:27:36 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org,
-        target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-cifs@vger.kernel.org, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, netdev@vger.kernel.org,
-        linux-sctp@vger.kernel.org, ceph-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org
-Subject: [PATCH 15/33] tcp: add tcp_sock_set_keepidle
-Date:   Wed, 13 May 2020 08:26:30 +0200
-Message-Id: <20200513062649.2100053-16-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513062649.2100053-1-hch@lst.de>
-References: <20200513062649.2100053-1-hch@lst.de>
+        Wed, 13 May 2020 02:32:28 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE05AC061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 23:32:27 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id a10so4029753ybc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 23:32:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BZBXcKq2rzqYGz9+5XGGqcnLBFUiUXkvaqb2HSO7NlI=;
+        b=sj3i7OsUUItI5qMkwPlnLSqUEGr+DB7vwSBPH9SsM/0/fe76VCn7oGve5JfRoBYlaL
+         hoR7nVvKPEcg7lDq0tccz1KLxGBG7T3iXskdlyfnRhbjdPo1ydeyuTOmk4xNIop0571u
+         TCBHcQ6789Tr263gECNzDEp2fZ8KstnodUO2csOz+Jxng9AaraMeow6rlHCRD9tOCnc5
+         IhgigVlIzOmVtw0fukHyKPMS14e6JnZ407y+SJO7NLTNKltCxOYD5HQEyDY8TLJlx669
+         Yu7iwn9HFe0gCOfkUdrRwabpCO/eam48cCVpZpmrWkg9v0MkYiSpUc5cyGQLq0iqUZPP
+         gRMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BZBXcKq2rzqYGz9+5XGGqcnLBFUiUXkvaqb2HSO7NlI=;
+        b=DvoBTMZ+H1jIQGKNXYC7fjgm/zA/vOdLyxPQHOUZqBxOidZ17gsuId8/bCDD30h+Ri
+         n6HID+jh3B0pNouipE9QcY1gJYqokQz57KFd6wB2p9kbmw148/BwYYStzt3ZN+cf3l9O
+         fSRAH9Bn8maNDRy5F352Ktt57/lrjHoOYR2fOhKYcGV7BUWPHI4stgcOnOeX+fEdkgqV
+         Fmmpfs5ENWXxUFUwZWquT29tN8TP7hWD3/VTmsXFiWnd7PXHkW5hV4bRh30lLVGWS1gI
+         pCkBKz6+Wfn+N76Q8ZWYyGubDg+vlI/enANqn3+EuuqhT+xUtDkP/mSjZi63Zvea9cj+
+         6sZg==
+X-Gm-Message-State: AGi0Pub8SwyFc4PsiREpby6HX0/MNMrPZdxuoBo2GxSNNi2Ds6Hlm3Fs
+        wSOt8yBfBANBohyok+VrHviVJPNumsnKRW44nyfbzA==
+X-Google-Smtp-Source: APiQypK8buJkMEOunSPFpP7YZ+lzJiBxDfKQK5dRnS3DGY5oY/xXpimGLQ+naHo5pZnrh1rojeG54IJMqXTxyeggdLY=
+X-Received: by 2002:a05:6902:4ee:: with SMTP id w14mr37374230ybs.383.1589351546920;
+ Tue, 12 May 2020 23:32:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20200501173333.227162-1-irogers@google.com> <20200507084445.GA2447905@krava>
+ <20200511153207.GD28888@kernel.org> <CAP-5=fUEz6iBYfiwHgyGCuVNuPGAQN+Fgbcd4ZSn5cV_VAsFvw@mail.gmail.com>
+In-Reply-To: <CAP-5=fUEz6iBYfiwHgyGCuVNuPGAQN+Fgbcd4ZSn5cV_VAsFvw@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 12 May 2020 23:32:15 -0700
+Message-ID: <CAP-5=fUj_htQNqqMkhqM6Az0iEh1ekU5AbLRPh_x4jRoagqzZA@mail.gmail.com>
+Subject: Re: [PATCH v4 00/12] perf metric fixes and test
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Haiyan Song <haiyanx.song@intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Paul Clarke <pc@us.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kajoljain <kjain@linux.ibm.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper to directly set the TCP_KEEP_IDLE sockopt from kernel
-space without going through a fake uaccess.
+On Mon, May 11, 2020 at 9:12 AM Ian Rogers <irogers@google.com> wrote:
+>
+> On Mon, May 11, 2020 at 8:32 AM Arnaldo Carvalho de Melo
+> <arnaldo.melo@gmail.com> wrote:
+> >
+> > Em Thu, May 07, 2020 at 10:44:45AM +0200, Jiri Olsa escreveu:
+> > > On Fri, May 01, 2020 at 10:33:21AM -0700, Ian Rogers wrote:
+> > > > Add a test that all perf metrics (for your architecture) are parsable
+> > > > with the simple expression parser. Attempt to parse all events in
+> > > > metrics but only fail if the metric is for the current CPU. Fix bugs
+> > > > in the expr parser, x86 and powerpc metrics. Improve debug messages
+> > > > around add PMU config term failures.
+> > > >
+> > > > v4 rebases after Kajol Jain's patches and fixes an asprintf warning.
+> > > > v3 adds parse event testing of ids and improves debug messages for add
+> > > >   PMU. These messages are paticular visible with 'perf test 10
+> > > >   -vvv'. It moves the testing logic from tests/expr.c to
+> > > >   tests/pmu-events.c as suggested by John Garry
+> > > >   <john.garry@huawei.com>.
+> > > > v2 adds Fixes tags to commit messages for when broken metrics were
+> > > >   first added. Adds a debug warning for division by zero in expr, and
+> > > >   adds a workaround for id values in the expr test necessary for
+> > > >   powerpc. It also fixes broken power8 and power9 metrics.
+> > > >
+> > > > Ian Rogers (12):
+> > > >   perf expr: unlimited escaped characters in a symbol
+> > > >   perf metrics: fix parse errors in cascade lake metrics
+> > > >   perf metrics: fix parse errors in skylake metrics
+> > > >   perf expr: allow ',' to be an other token
+> > > >   perf expr: increase max other
+> > > >   perf expr: parse numbers as doubles
+> > > >   perf expr: debug lex if debugging yacc
+> > > >   perf metrics: fix parse errors in power8 metrics
+> > > >   perf metrics: fix parse errors in power9 metrics
+> > > >   perf expr: print a debug message for division by zero
+> > >
+> > > heya,
+> > > could we please get the 1st 10 patches in? they are important,
+> > > and let's not block them with new versions for patches 11/12
+> > >
+> > > Acked-by: Jiri Olsa <jolsa@redhat.com>
+> >
+> > The first ten patches are in, can we go with what Ian suggested for the
+> > last two patches?
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- include/linux/tcp.h   |  1 +
- net/ipv4/tcp.c        | 49 ++++++++++++++++++++++++++++++-------------
- net/rds/tcp_listen.c  |  5 +----
- net/sunrpc/xprtsock.c |  3 +--
- 4 files changed, 37 insertions(+), 21 deletions(-)
+To follow up, I've resent the last two patches here:
+https://lore.kernel.org/lkml/20200513001729.21155-1-irogers@google.com/
+https://lore.kernel.org/lkml/20200513062752.3681-1-irogers@google.com/T/#t
+The event parsing errors don't cause the test to fail in the latter.
 
-diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-index 69c988f84a184..4d3a3e959e45b 100644
---- a/include/linux/tcp.h
-+++ b/include/linux/tcp.h
-@@ -499,5 +499,6 @@ void tcp_sock_set_nodelay(struct sock *sk, bool on);
- void tcp_sock_set_quickack(struct sock *sk, int val);
- int tcp_sock_set_syncnt(struct sock *sk, int val);
- void tcp_sock_set_user_timeout(struct sock *sk, u32 val);
-+int tcp_sock_set_keepidle(struct sock *sk, int val);
- 
- #endif	/* _LINUX_TCP_H */
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 9a8d062b17a48..22eb9159c7d05 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -2890,6 +2890,39 @@ void tcp_sock_set_user_timeout(struct sock *sk, u32 val)
- }
- EXPORT_SYMBOL(tcp_sock_set_user_timeout);
- 
-+static int __tcp_sock_set_keepidle(struct sock *sk, int val)
-+{
-+	struct tcp_sock *tp = tcp_sk(sk);
-+
-+	if (val < 1 || val > MAX_TCP_KEEPIDLE)
-+		return -EINVAL;
-+
-+	tp->keepalive_time = val * HZ;
-+	if (sock_flag(sk, SOCK_KEEPOPEN) &&
-+	    !((1 << sk->sk_state) & (TCPF_CLOSE | TCPF_LISTEN))) {
-+		u32 elapsed = keepalive_time_elapsed(tp);
-+
-+		if (tp->keepalive_time > elapsed)
-+			elapsed = tp->keepalive_time - elapsed;
-+		else
-+			elapsed = 0;
-+		inet_csk_reset_keepalive_timer(sk, elapsed);
-+	}
-+
-+	return 0;
-+}
-+
-+int tcp_sock_set_keepidle(struct sock *sk, int val)
-+{
-+	int err;
-+
-+	lock_sock(sk);
-+	err = __tcp_sock_set_keepidle(sk, val);
-+	release_sock(sk);
-+	return err;
-+}
-+EXPORT_SYMBOL(tcp_sock_set_keepidle);
-+
- /*
-  *	Socket option code for TCP.
-  */
-@@ -3059,21 +3092,7 @@ static int do_tcp_setsockopt(struct sock *sk, int level,
- 		break;
- 
- 	case TCP_KEEPIDLE:
--		if (val < 1 || val > MAX_TCP_KEEPIDLE)
--			err = -EINVAL;
--		else {
--			tp->keepalive_time = val * HZ;
--			if (sock_flag(sk, SOCK_KEEPOPEN) &&
--			    !((1 << sk->sk_state) &
--			      (TCPF_CLOSE | TCPF_LISTEN))) {
--				u32 elapsed = keepalive_time_elapsed(tp);
--				if (tp->keepalive_time > elapsed)
--					elapsed = tp->keepalive_time - elapsed;
--				else
--					elapsed = 0;
--				inet_csk_reset_keepalive_timer(sk, elapsed);
--			}
--		}
-+		err = __tcp_sock_set_keepidle(sk, val);
- 		break;
- 	case TCP_KEEPINTVL:
- 		if (val < 1 || val > MAX_TCP_KEEPINTVL)
-diff --git a/net/rds/tcp_listen.c b/net/rds/tcp_listen.c
-index e76ec64b43fe7..8c76969d8c878 100644
---- a/net/rds/tcp_listen.c
-+++ b/net/rds/tcp_listen.c
-@@ -52,10 +52,7 @@ int rds_tcp_keepalive(struct socket *sock)
- 	if (ret < 0)
- 		goto bail;
- 
--	ret = kernel_setsockopt(sock, IPPROTO_TCP, TCP_KEEPIDLE,
--				(char *)&keepidle, sizeof(keepidle));
--	if (ret < 0)
--		goto bail;
-+	tcp_sock_set_keepidle(sock->sk, keepidle);
- 
- 	/* KEEPINTVL is the interval between successive probes. We follow
- 	 * the model in xs_tcp_finish_connecting() and re-use keepidle.
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 30d4c4fcd3e38..ea79446789c69 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -2107,8 +2107,7 @@ static void xs_tcp_set_socket_timeouts(struct rpc_xprt *xprt,
- 
- 	/* TCP Keepalive options */
- 	sock_set_keepalive(sock->sk, 1);
--	kernel_setsockopt(sock, SOL_TCP, TCP_KEEPIDLE,
--			(char *)&keepidle, sizeof(keepidle));
-+	tcp_sock_set_keepidle(sock->sk, keepidle);
- 	kernel_setsockopt(sock, SOL_TCP, TCP_KEEPINTVL,
- 			(char *)&keepidle, sizeof(keepidle));
- 	kernel_setsockopt(sock, SOL_TCP, TCP_KEEPCNT,
--- 
-2.26.2
+Thanks,
+Ian
 
+> It seems sad not to make this test fail for broken event encodings, as
+> perf test does a good job of swallowing the test's debug output
+> (fork...). I was thinking that I'll split out the test and various
+> fixes in:
+> https://lore.kernel.org/lkml/20200508053629.210324-1-irogers@google.com/
+> The test will only do something if there is a MetricExpr for an
+> architecture. There are currently only MetricExpr for x86 and powerpc.
+> I've tested power 9 with the test, which tests the expressions for
+> power 8 but not the events, and everything passes. The area the test
+> can fail is x86 and I should be able to get reasonable coverage there
+> by grabbing cloud machines. When an x86 test fails it is hard to know
+> what to do. In Jiri's Skylake case naively 'fixing' the expression to
+> remove 'thresh=1' yields an expression that will only give the value
+> 1. Perhaps a better 'fix' is just to remove the expressions in those
+> cases and wait for someone like Intel to refresh them? If that
+> expression will only work on a newer kernel then we need to identify a
+> constraint, etc. However, we couldn't see thresh as an event parameter
+> in a recent tree. Removing the expression seems like the most
+> expedient fix to get the test in, so that new expressions don't break
+> things :-)
+>
+> Thanks Arnaldo for following up on this!
+>
+> Ian
+>
+> > - Arnaldo
+> >
+> > > thanks,
+> > > jirka
+> > >
+> > > >   perf parse-events: expand add PMU error/verbose messages
+> > > >   perf test: improve pmu event metric testing
+> > > >
+> > > >  tools/perf/arch/x86/util/intel-pt.c           |  32 ++--
+> > > >  .../arch/powerpc/power8/metrics.json          |   2 +-
+> > > >  .../arch/powerpc/power9/metrics.json          |   2 +-
+> > > >  .../arch/x86/cascadelakex/clx-metrics.json    |  10 +-
+> > > >  .../arch/x86/skylakex/skx-metrics.json        |   4 +-
+> > > >  tools/perf/tests/builtin-test.c               |   5 +
+> > > >  tools/perf/tests/expr.c                       |   1 +
+> > > >  tools/perf/tests/pmu-events.c                 | 156 +++++++++++++++++-
+> > > >  tools/perf/tests/pmu.c                        |   4 +-
+> > > >  tools/perf/tests/tests.h                      |   2 +
+> > > >  tools/perf/util/expr.c                        |   1 +
+> > > >  tools/perf/util/expr.h                        |   2 +-
+> > > >  tools/perf/util/expr.l                        |  16 +-
+> > > >  tools/perf/util/expr.y                        |  16 +-
+> > > >  tools/perf/util/parse-events.c                |  29 +++-
+> > > >  tools/perf/util/pmu.c                         |  33 ++--
+> > > >  tools/perf/util/pmu.h                         |   2 +-
+> > > >  17 files changed, 262 insertions(+), 55 deletions(-)
+> > > >
+> > > > --
+> > > > 2.26.2.526.g744177e7f7-goog
+> > > >
+> > >
+> >
+> > --
+> >
+> > - Arnaldo
