@@ -2,341 +2,145 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DB5C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F40CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82B9722384
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E42E5223C7
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:38:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=unikie-com.20150623.gappssmtp.com header.i=@unikie-com.20150623.gappssmtp.com header.b="pkmq12p2"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="MgDrbim7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388178AbgEMNiU (ORCPT
+        id S2388184AbgEMNix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:38:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56698 "EHLO
+        Wed, 13 May 2020 09:38:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388013AbgEMNiT (ORCPT
+        with ESMTP id S2387466AbgEMNiw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:38:19 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42ECFC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:38:19 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id a2so14243048ejx.5
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:38:19 -0700 (PDT)
+        Wed, 13 May 2020 09:38:52 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D368C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:38:51 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id z72so18927544wmc.2
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:38:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=unikie-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3DFsZEfvrw3BH+2ixM4YHIIUn7edj79F5KLbeWrYfw0=;
-        b=pkmq12p2AYwS1xbnL/ss80ANAURwtSoMCzZ+2vr2HAHDZptA0yjVIZ3MKAEG9XXtTs
-         a5D1pomLLK/qWGN7AcTVA+e+6fEvZeNSyL1fNFiP3sDz3hqBGZerl2gd2fJFaQD5m4c3
-         8Dl4IUnexnmyhoQKZgfjURs62bA8rAGiwdEKADBKKmw1YhVmtfsNvbGM4Mz0zhc7uDFs
-         izilinfbpdmSUoDkA2vlHg41Gm/X9kL+iEtmfuLv0fJfOfKFO/LOeNMuiFXMhZ5Hogyg
-         N/PnSftngBE519EcBeVS5BIW/7CqUtZRZG1AOMYPh0eeusyhfVdDVhj0hXDcQJPB2Anj
-         j7Qg==
+        d=android.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rXE9rpaAYNGyo7kteRNEK9nsX6cJ1gYcNqMSG8WX6wk=;
+        b=MgDrbim7CM6R4xeK9W2/yzVHdlKQ7By1fayAYg4Tjplyzij/l1w8ycXfzuD4XMQoof
+         HrSYwZuMYFJKYqwyyicQ4PAf6cBCnjAhxsZnmdRF5Hs5oJrbjQAk7zFWpQh0PdOmP1D9
+         EpOo9dVIxxwsH7HHdQZzPBdM/UY7bsdp/4olyHwKRLvaqclpB/nECbIU2mjGLk6E9M9R
+         mRDTVWlbIvbA5F/4rYksuGF9E2xdO1ro+PlRmYxqI4RS1G0lIZNXueTpIOf1bVA+qeLG
+         hugL5nFaWk8Ru09h22hDnfKoJ8L3tHKIh3QmH4Ssp8vS33HXgemEp2Mi3DT7KR9yNDI5
+         q7XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3DFsZEfvrw3BH+2ixM4YHIIUn7edj79F5KLbeWrYfw0=;
-        b=s6fhOjsWWTf8UM4LM12xbwCSugMj7Pa9mBr8MikPE2mgTSXRu3od+QNaVov9SPF8kP
-         uDFtX5alN3AXQILSjXtLXVpGbdBO/KqDHQgoOVXmod8h6vYpyq4i1XZSHOAe06vPWzT3
-         NacGJzr/lDntaolq/EzzJp7qmxETz4O085HPqVjOo1F86qdewReAmN/FV+vJ9AhozA+o
-         jQYnLQmsUsYw3THWhlGIjTRt4PyNROZnfK3+vCDIhBqbY8BKcDxf2VMlo3ruR0eSxo5u
-         maCZkxPekbT1XZvk5mShmh5jPg5MGSaf9G49EsuwUnSo7hkRpZVwikYcgHW9OXH5CgrB
-         anlg==
-X-Gm-Message-State: AGi0PuYEkdNhR7PDOHuQMj3GbWcdTQbIFM1H4AW9hObXc4yHAgASyeY/
-        r6Ol+w2JACR96Zo0sa/1AOMxcVmt1QcmdvE2KBO36g==
-X-Google-Smtp-Source: APiQypLNSNDd50H9T0CdFNNJKtQtXUYU+BUvk5DcczoVOBeRqJupVUm8/8uj4MDU66QWR24kpsdX5aPg+Bf1AuzizwY=
-X-Received: by 2002:a17:906:4e8a:: with SMTP id v10mr21772736eju.63.1589377097865;
- Wed, 13 May 2020 06:38:17 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rXE9rpaAYNGyo7kteRNEK9nsX6cJ1gYcNqMSG8WX6wk=;
+        b=qO3mLrvVXoAgaWZiO/dcGSDzOsR7z1IJWKf4U09uWxbq2aee+mF4teC80BIG36p65y
+         glB1uFPBMtOqjQdDEu8ICsAFN1x8+O5I2vfqzq7XgZSatFOxI21y1tJSz70pLI6YOV09
+         beJBJpx+UM0Kpb0YvQC7D9sXHdr/ZdW2TP28OZgozYt1iu9T9xDnqs52aftMV5ZgUq5/
+         GLtwSADcZ3vPOdko6mysfYGMbcriOoNlhUso07TjmEx+t9CxFBPK3biKtqbPaDgHJe4o
+         pLbGqNA/WHloIVtudKeuVq5P/Kvc5cZKZFjNDybeyngVp3cC1lr3gWTxVZ7L7Ob1+UKY
+         thdg==
+X-Gm-Message-State: AGi0PuZaZmRoekInWHC7T3TmMfojSErbkYCZHGpCAPO6Vxnn4ybjTSzv
+        iw+AQJP5EV9mKunN9niUxzp3Sg==
+X-Google-Smtp-Source: APiQypIbO66csc21lLUPivkOBEyTcbRhAnbBF6C69jLHsEKF5KxepmAyLp8gysIsaU4ePUQVLJ1JDg==
+X-Received: by 2002:a7b:cb53:: with SMTP id v19mr41936201wmj.166.1589377129846;
+        Wed, 13 May 2020 06:38:49 -0700 (PDT)
+Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
+        by smtp.gmail.com with ESMTPSA id m6sm26202653wrq.5.2020.05.13.06.38.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 06:38:49 -0700 (PDT)
+From:   Martijn Coenen <maco@android.com>
+To:     axboe@kernel.dk, hch@lst.de, ming.lei@redhat.com
+Cc:     narayan@google.com, zezeozue@google.com, maco@google.com,
+        kernel-team@android.com, bvanassche@acm.org,
+        Chaitanya.Kulkarni@wdc.com, jaegeuk@kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Martijn Coenen <maco@android.com>
+Subject: [PATCH v5 00/11] Add a new LOOP_CONFIGURE ioctl
+Date:   Wed, 13 May 2020 15:38:34 +0200
+Message-Id: <20200513133845.244903-1-maco@android.com>
+X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
 MIME-Version: 1.0
-References: <20200507180553.9993-1-john.mathew@unikie.com> <20200507180553.9993-3-john.mathew@unikie.com>
- <9a41369c-8617-e80e-61e5-c659c51d631b@arm.com>
-In-Reply-To: <9a41369c-8617-e80e-61e5-c659c51d631b@arm.com>
-From:   John Mathew <john.mathew@unikie.com>
-Date:   Wed, 13 May 2020 16:38:06 +0300
-Message-ID: <CAJz2qX=qpN4-7fgCPC0KWFSZHDwi+0Z16RHQsRp6x4GjTZCTxA@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 2/3] docs: scheduler: Add scheduler overview documentation
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        corbet@lwn.net, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        rostedt@goodmis.org, Benjamin Segall <bsegall@google.com>,
-        mgorman@suse.de, bristot@redhat.com, tsbogend@alpha.franken.de,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>, x86@kernel.org,
-        linux-mips@vger.kernel.org, tglx@linutronix.de,
-        Mostafa Chamanara <mostafa.chamanara@basemark.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Oleg Tsymbal <oleg.tsymbal@unikie.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 1:19 PM Dietmar Eggemann
-<dietmar.eggemann@arm.com> wrote:
->
-> On 07/05/2020 20:05, John Mathew wrote:
->
-> [...]
->
-> > diff --git a/Documentation/scheduler/cfs-overview.rst b/Documentation/s=
-cheduler/cfs-overview.rst
-> > new file mode 100644
-> > index 000000000000..b717f2d3e340
-> > --- /dev/null
-> > +++ b/Documentation/scheduler/cfs-overview.rst
-> > @@ -0,0 +1,113 @@
-> > +.. SPDX-License-Identifier: GPL-2.0+
-> > +
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +CFS Overview
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +Linux 2.6.23 introduced a modular scheduler core and a Completely Fair
-> > +Scheduler (CFS) implemented as a scheduling module. A brief overview o=
-f the
-> > +CFS design is provided in :doc:`sched-design-CFS`
-> > +
-> > +In addition there have been many improvements to the CFS, a few of whi=
-ch are
-> > +
-> > +**Thermal Pressure**:
-> > +cpu_capacity initially reflects the maximum possible capacity of a CPU=
-.
-> > +Thermal pressure on a CPU means this maximum possible capacity is
-> > +unavailable due to thermal events. Average thermal pressure for a CPU
-> > +is now subtracted from its maximum possible capacity so that cpu_capac=
-ity
-> > +reflects the remaining maximum capacity.
-> > +
->
-> I agree with what Valentin mentioned already. Instead of describing
-> recent patch-sets, the functionality which was added (or enhanced) by
-> them) should be depicted instead.
->
-> E.g. in case of 'Thermal Pressure' this would be the "scale CPU
-> capacity" mechanism for CFS so it knows how much CPU capacity is left
-> for its use after higher priority sched classes (RT, DL), IRQs and
-> 'Thermal Pressure' have reduced the 'original' CPU capacity.
-Changed in v4 patch version.
-> [...]
->
-> > +**Load balancing algorithm Reworked**:
-> > +The load balancing algorithm contained some heuristics which became
-> > +meaningless since the rework of the scheduler's metrics like the
-> > +introduction of PELT. The new load balancing algorithm fixes several
-> > +pending wrong tasks placement
-> > +
-> > + * the 1 task per CPU case with asymmetric system
-> > + * the case of CFS task preempted by other class
-> > + * the case of tasks not evenly spread on groups with spare capacity
-> > +
-> > +Also the load balance decisions have been consolidated in the 3 separa=
-te
-> > +functions.
->
-> What are those 3 separate functions? I guess you refer to the 3
-> (actually 4) migration types (migrate_task, migrate_util, migrate_load,
-> (migrate_misfit)).
+This series introduces a new ioctl that makes it possible to atomically
+configure a loop device. Previously, if you wanted to set parameters
+such as the offset on a loop device, this required calling LOOP_SET_FD
+to set the backing file, and then LOOP_SET_STATUS to set the offset.
+However, in between these two calls, the loop device is available and
+would accept requests, which is generally not desirable. Similar issues
+exist around setting the block size (LOOP_SET_BLOCK_SIZE) and requesting
+direct I/O mode (LOOP_SET_DIRECT_IO).
 
-The three functions are
-* update_sd_pick_busiest() select the busiest sched_group.
-* find_busiest_group() checks if there is an imbalance between local and
-busiest group.
-* calculate_imbalance() decides what have to be moved.
-Added them in v4 of patchset.
->
-> [...]
->
-> > diff --git a/Documentation/scheduler/overview.rst b/Documentation/sched=
-uler/overview.rst
-> > index aee16feefc61..f2cb0c901208 100644
-> > --- a/Documentation/scheduler/overview.rst
-> > +++ b/Documentation/scheduler/overview.rst
-> > @@ -3,3 +3,269 @@
-> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >  Scheduler overview
-> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +Linux kernel implements priority-based scheduling. More than one proce=
-ss are
-> > +allowed to run at any given time and each process is allowed to run as=
- if it
-> > +were the only process on the system. The process scheduler coordinates=
- which
-> > +process runs when. In that context, it has the following tasks:
-> > +
-> > +* share CPU cores equally among all currently running processes.
-> > +* pick appropriate process to run next if required, considering schedu=
-ling
-> > +  class/policy and process priorities.
-> > +* balance processes between multiple cores in SMP systems.
-> > +
-> > +The scheduler attempts to be responsive for I/O bound processes and ef=
-ficient
-> > +for CPU bound processes. The scheduler also applies different scheduli=
-ng
-> > +policies for real time and normal processes based on their respective
-> > +priorities. Higher priorities in the kernel have a numerical smaller
-> > +value. Real time priorities range from 1 (highest) =E2=80=93 99 wherea=
-s normal
-> > +priorities range from 100 =E2=80=93 139 (lowest). SCHED_DEADLINE tasks=
- have negative
-> > +priorities, reflecting the fact that any of them has higher priority t=
-han
-> > +RT and NORMAL/BATCH tasks.
->
-> s/RT/SCHED_FIFO, SCHED_RR
-> s/NORMAL/SCHED_NORMAL
-> s/BATCH/SCHED_BATCH
->
-Changed in patchset v4.
+There are also performance benefits with combining these ioctls into
+one, which are described in more detail in the last change in the
+series.
 
-> SCHED_IDLE tasks can be set in the 100 =E2=80=93 139 range too but IMHO a=
-re
-> treated as 139 (nice 20). Their priority doesn't matter since they get
-> minimal weight WEIGHT_IDLEPRI=3D3 anyway.
->
-> And then there are the maintenance sched classes, idle sched class and
-> its idle tasks 'swapper/X' with priority 120 (was MAX_PRIO) as well as
-> the stop sched class and its stopper tasks 'migration/X' who disguise as
-> SCHED_FIFO with priority 139.
-> Might be that people might find this too detailed though but it helps
-> when you try to understand how it all works.
->
-Added in patchset v4.
-> [...]
->
-> > diff --git a/Documentation/scheduler/index.rst b/Documentation/schedule=
-r/index.rst
-> > index ede1a30a6894..f311abe5b711 100644
-> > --- a/Documentation/scheduler/index.rst
-> > +++ b/Documentation/scheduler/index.rst
-> > @@ -17,10 +17,13 @@ specific implementation differences.
-> >      :maxdepth: 2
-> >
-> >      overview
-> > +    sched-data-structs
-> > +    cfs-overview
-> >      sched-design-CFS
-> >      sched-features
-> > -    arch-specific.rst
-> > -    sched-debugging.rst
-> > +    arch-specific
-> > +    sched-debugging
-> > +    scheduler-api
-> >
-> >  .. only::  subproject and html
-> >
-> > +                     +------------------------------------+
-> > +                     |            TASK_RUNNING            |
-> > +   +---------------> |           (Ready to run)           | <--+
-> > +   |                 +------------------------------------+    |
-> > +   |                   |                                       |
-> > +   |                   | schedule() calls context_switch()     | task =
-is preempted
-> > +   |                   v                                       |
-> > +   |                 +------------------------------------+    |
-> > +   |                 |            TASK_RUNNING            |    |
-> > +   |                 |             (Running)              | ---+
-> > +   | event occurred  +------------------------------------+
-> > +   |                   |
-> > +   |                   | task needs to wait for event
-> > +   |                   v
-> > +   |                 +------------------------------------+
-> > +   |                 |         TASK_INTERRUPTIBLE         |
-> > +   |                 |        TASK_UNINTERRUPTIBLE        |
-> > +   +-----------------|           TASK_WAKEKILL            |
-> > +                     +------------------------------------+
-> > +                                       |
-> > +                                       | task exits via do_exit()
-> > +                                       v
-> > +                        +------------------------------+
-> > +                        |          TASK_DEAD           |
-> > +                        |         EXIT_ZOMBIE          |
-> > +                        +------------------------------+
-> > +
-> > +
-> > +Scheduler provides tracepoints tracing all major events of the schedul=
-er.
-> > +The tracepoints are defined in ::
-> > +
-> > +  include/trace/events/sched.h
-> > +
-> > +Using these tracepoints it is possible to model the scheduler state tr=
-ansition
->
-> I would refer to them as trace events.
-Changed in patchset v4.
->
-> The scheduler started to export (bare) trace points for PELT and
-> overutilization (e.g. pelt_cfs_tp) (commit ba19f51fcb54 "sched/debug:
-> Add new tracepoints to track PELT at rq level"). They are not bound to a
-> trace event and so they don't expose any internal data structures.
->
-> [...]
->
-> > +Virtual Runtime
-> > +~~~~~~~~~~~~~~~~~
-> > +Virtual Run Time or vruntime is the amount of time a task has spent ru=
-nning
-> > +on the CPU. It is updated periodically by scheduler_tick(). Tasks are =
-stored
-> > +in the CFS scheduling class rbtree sorted by vruntime. scheduler_tick(=
-) calls
-> > +corresponding hook of CFS which first updates the runtime statistics o=
-f the
-> > +currently running task and checks if the current task needs to be pree=
-mpted.
-> > +vruntime of the task based on the formula ::
-> > +
-> > +    vruntime +=3D delta_exec * (NICE_0_LOAD/curr->load.weight);
-> > +
-> > +where:
-> > +
-> > +* delta_exec is the time in nanoseconds spent by the task since the la=
-st time
-> > +  vruntime was updated.
-> > +* NICE_0_LOAD is the load of a task with normal priority.
-> > +* curr is the shed_entity instance of the cfs_rq struct of the current=
-ly
-> > +  running task.
-> > +* load.weight: sched_entity load_weight. load_weight is the encoding o=
-f
-> > +  the tasks priority and vruntime. The load of a task is the metric
-> > +  indicating the number of CPUs needed to make satisfactory progress o=
-n its
-> > +  job. Load of a task influences the time a task spends on the CPU and=
- also
-> > +  helps to estimate the overall CPU load which is needed for load bala=
-ncing.
->
-> load.weight is replaced by PELT in load balancing.
-Removed this section as it is already described in sched-design-CFS
->
-> > +  Priority of the task is not enough for the scheduler to estimate the
-> > +  vruntime of a process. So priority value must be mapped to the capac=
-ity of
-> > +  the standard CPU which is done in the array :c:type:`sched_prio_to_w=
-eight[]`.
-> > +  The array contains mappings for the nice values from -20 to 19. Nice=
- value
-> > +  0 is mapped to 1024. Each entry advances by approximately 1.25 which=
- means
-> > +  for every increment in nice value the task gets 10% less CPU and vic=
-e versa.
->
-> SCHED_IDLE get minimal weight (WEIGHT_IDLEPRIO=3D3)
+---
+v5:
+  - Added "loop: Call loop_config_discard() ..." as a first patch to
+    this series, as the rest of the refactoring done depends on it.
+  - Removed sector_t truncation checks, as suggested by Ming Lei.
 
-Thanks for your review.
->
-> [...]
+v4:
+  - Addressed review comments from Christoph Hellwig:
+    -- Minor code cleanups
+    -- Clarified what lo_flags LOOP_SET_STATUS can set and clear, and
+       made that more explicit in the code (see [10/11])
+    -- LOOP_CONFIGURE can now also be used to configure the block size
+       and to explicitly request Direct I/O and read-only mode.
+    -- Explicitly reject lo_flags we don't know about in LOOP_CONFIGURE
+    -- Renamed LOOP_SET_FD_AND_STATUS to LOOP_CONFIGURE, since the ioctl
+       can now do things LOOP_SET_STATUS couldn't do.
+v3:
+  - Addressed review comments from Christoph Hellwig:
+    -- Factored out loop_validate_size()
+    -- Split up the largish first patch in a few smaller ones
+    -- Use set_capacity_revalidate_and_notify()
+  - Fixed a variable wrongly using size_t instead of loff_t
+v2:
+  - Addressed review comments from Bart van Assche:
+    -- Use SECTOR_SHIFT constant
+    -- Renamed loop_set_from_status() to loop_set_status_from_info()
+    -- Added kerneldoc for loop_set_status_from_info()
+    -- Removed dots in patch subject lines
+  - Addressed review comments from Christoph Hellwig:
+    -- Added missing padding in struct loop_fd_and_status
+    -- Cleaned up some __user pointer handling in lo_ioctl
+    -- Pass in a stack-initialized loop_info64 for the legacy
+       LOOP_SET_FD case
+
+Martijn Coenen (11):
+  loop: Call loop_config_discard() only after new config is applied
+  loop: Remove sector_t truncation checks
+  loop: Factor out setting loop device size
+  loop: Switch to set_capacity_revalidate_and_notify()
+  loop: Refactor loop_set_status() size calculation
+  loop: Remove figure_loop_size()
+  loop: Factor out configuring loop from status
+  loop: Move loop_set_status_from_info() and friends up
+  loop: Rework lo_ioctl() __user argument casting
+  loop: Clean up LOOP_SET_STATUS lo_flags handling
+  loop: Add LOOP_CONFIGURE ioctl
+
+ drivers/block/loop.c      | 381 ++++++++++++++++++++++----------------
+ include/uapi/linux/loop.h |  31 +++-
+ 2 files changed, 255 insertions(+), 157 deletions(-)
+
+-- 
+2.26.2.645.ge9eca65c58-goog
+
