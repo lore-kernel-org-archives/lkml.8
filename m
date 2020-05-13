@@ -2,180 +2,98 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FD6C2D0FB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C02C47076
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0176D23129
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBDE023126
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:23:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="apgUCNxf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731861AbgEMAVL (ORCPT
+        id S1731674AbgEMAXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 20:21:11 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:36966 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731786AbgEMAVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 20:21:02 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 76A7E20117F;
-        Wed, 13 May 2020 02:20:59 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6839B201190;
-        Wed, 13 May 2020 02:20:54 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id F391E402BC;
-        Wed, 13 May 2020 08:20:47 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V5 4/5] dt-bindings: clock: Convert i.MX6SLL clock to json-schema
-Date:   Wed, 13 May 2020 08:11:23 +0800
-Message-Id: <1589328684-1397-5-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1589328684-1397-1-git-send-email-Anson.Huang@nxp.com>
-References: <1589328684-1397-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 12 May 2020 20:23:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731107AbgEMAXw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 20:23:52 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0CF0C061A0C;
+        Tue, 12 May 2020 17:23:52 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49MFlT0x5Hz9sSW;
+        Wed, 13 May 2020 10:23:48 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589329429;
+        bh=jN1QN1TG9rUlC/cO5tkTA5RV3QkYWS8DMK0A1jUUtXs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=apgUCNxf5B7DNXZlyH6xSTZLE1XvQN8cWfGAkLjos0QWjYOXZ/ZrrKgBRSRx8dZgC
+         d6/+Wl5pT5LqZ4RvNVuIyvT+tIH4Mphpq5SmVPjXDPewVBJit0Je25U2U+hDaCHM+D
+         nWKAZ5e8xfITcSMsjPS2x77tTm+GBJLdiCkbKtIZ6NQBTwH9l1OOm4Sy/Rtm1h4FAi
+         HD3uFXVi6wpV4yDOt2UZSGh0UFF8VSTp6B1CYakGHwyRKLmcPyRx2t2PG7qV7534K0
+         nNi74vMByvq3Evgf1d5j1zPvODi/hC/HR6iTnVqkmbqpim9owGrYOzs2VRHWjDVaX7
+         leutDunzCXsAQ==
+Date:   Wed, 13 May 2020 10:23:46 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: linux-next: Fixes tag needs some work in the overlayfs tree
+Message-ID: <20200513102346.6c04d912@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/B5ZF1246aJ3hxFxR5uCPJue";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the i.MX6SLL clock binding to DT schema format using json-schema.
+--Sig_/B5ZF1246aJ3hxFxR5uCPJue
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
----
-Changes since V4:
-	- add descriptions for interrupts and each item of it.
----
- .../devicetree/bindings/clock/imx6sll-clock.txt    | 36 ------------
- .../devicetree/bindings/clock/imx6sll-clock.yaml   | 66 ++++++++++++++++++++++
- 2 files changed, 66 insertions(+), 36 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/imx6sll-clock.txt
- create mode 100644 Documentation/devicetree/bindings/clock/imx6sll-clock.yaml
+Hi all,
 
-diff --git a/Documentation/devicetree/bindings/clock/imx6sll-clock.txt b/Documentation/devicetree/bindings/clock/imx6sll-clock.txt
-deleted file mode 100644
-index fee849d..0000000
---- a/Documentation/devicetree/bindings/clock/imx6sll-clock.txt
-+++ /dev/null
-@@ -1,36 +0,0 @@
--* Clock bindings for Freescale i.MX6 SLL
--
--Required properties:
--- compatible: Should be "fsl,imx6sll-ccm"
--- reg: Address and length of the register set
--- #clock-cells: Should be <1>
--- clocks: list of clock specifiers, must contain an entry for each required
--  entry in clock-names
--- clock-names: should include entries "ckil", "osc", "ipp_di0" and "ipp_di1"
--
--The clock consumer should specify the desired clock by having the clock
--ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6sll-clock.h
--for the full list of i.MX6 SLL clock IDs.
--
--Examples:
--
--#include <dt-bindings/clock/imx6sll-clock.h>
--
--clks: clock-controller@20c4000 {
--		compatible = "fsl,imx6sll-ccm";
--		reg = <0x020c4000 0x4000>;
--		interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
--		#clock-cells = <1>;
--		clocks = <&ckil>, <&osc>, <&ipp_di0>, <&ipp_di1>;
--		clock-names = "ckil", "osc", "ipp_di0", "ipp_di1";
--};
--
--uart1: serial@2020000 {
--		compatible = "fsl,imx6sl-uart", "fsl,imx6q-uart", "fsl,imx21-uart";
--		reg = <0x02020000 0x4000>;
--		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&clks IMX6SLL_CLK_UART1_IPG>,
--			 <&clks IMX6SLL_CLK_UART1_SERIAL>;
--		clock-names = "ipg", "per";
--};
-diff --git a/Documentation/devicetree/bindings/clock/imx6sll-clock.yaml b/Documentation/devicetree/bindings/clock/imx6sll-clock.yaml
-new file mode 100644
-index 0000000..fa55f1c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/imx6sll-clock.yaml
-@@ -0,0 +1,66 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/imx6sll-clock.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Clock bindings for Freescale i.MX6 SLL
-+
-+maintainers:
-+  - Anson Huang <Anson.Huang@nxp.com>
-+
-+properties:
-+  compatible:
-+    const: fsl,imx6sll-ccm
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description: CCM provides 2 interrupt requests, request 1 is to generate
-+      interrupt for frequency or mux change, request 2 is to generate
-+      interrupt for oscillator read or PLL lock.
-+    items:
-+      - description: CCM interrupt request 1
-+      - description: CCM interrupt request 2
-+    maxItems: 2
-+
-+  '#clock-cells':
-+    const: 1
-+
-+  clocks:
-+    items:
-+      - description: 32k osc
-+      - description: 24m osc
-+      - description: ipp_di0 clock input
-+      - description: ipp_di1 clock input
-+
-+  clock-names:
-+    items:
-+      - const: ckil
-+      - const: osc
-+      - const: ipp_di0
-+      - const: ipp_di1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - '#clock-cells'
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  # Clock Control Module node:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    clock-controller@20c4000 {
-+        compatible = "fsl,imx6sll-ccm";
-+        reg = <0x020c4000 0x4000>;
-+        interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
-+        #clock-cells = <1>;
-+        clocks = <&ckil>, <&osc>, <&ipp_di0>, <&ipp_di1>;
-+        clock-names = "ckil", "osc", "ipp_di0", "ipp_di1";
-+    };
--- 
-2.7.4
+In commit
 
+  8d628847a2f8 ("ovl: potential crash in ovl_fid_to_fh()")
+
+Fixes tag
+
+  Fixes: cbe7fba8edfc: ("ovl: make sure that real fid is 32bit aligned in m=
+emory")
+
+has these problem(s):
+
+  - unexpected colon after SHA1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/B5ZF1246aJ3hxFxR5uCPJue
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl67PhIACgkQAVBC80lX
+0Gw2dQf7BclmJ6Sbq8FhiEg971vS8aI4xrL7BOllAN6h2dX2JPmR3AepyCCuFk2f
+Q5p9QVFlJM9ZHIqVAKIObw0YdwwIR50hR3z5hzeZ2qFHN+VUV1Au/4DYCJLeO/ZX
+9qLGA6A6nTnyShvf8sB21Sq3VHhcVEjl9ES0IfKPB152m8ZhAUmbWPK8AAIQ9pto
+mIX2KIQhqyXMFo+ZWwMDMySD8AYvwAC5b6hanFsYIan/w8lSU+HoPIPZq2i4K9XZ
+VeSN6DlK6lsc5Hn+BDeYz50CRv15L+iQmFh1YJwzbR14fkPBn9y7/6XFBRPC34k0
+Xp49NoAhv0D6WTsD5iyZ1xtXNQzo4A==
+=9Q/V
+-----END PGP SIGNATURE-----
+
+--Sig_/B5ZF1246aJ3hxFxR5uCPJue--
