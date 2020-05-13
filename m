@@ -2,182 +2,136 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D66CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E81A5C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83005206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C25F2206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:06:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="XeUplpuT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730444AbgEMIFN (ORCPT
+        id S1730240AbgEMIGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 04:05:13 -0400
-Received: from mga18.intel.com ([134.134.136.126]:47878 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726092AbgEMIFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 04:05:13 -0400
-IronPort-SDR: dArOE5tQzlMXojOEkM4rChb2qcpInfQt55/E0RGNAxn0fCkntb8HEC9A6rT04jw5lJSswaAFvF
- wWG1ZM+NdbHQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 01:05:12 -0700
-IronPort-SDR: 4/7pKY99DlU3pSjtwhTEwwt9c1QuGna3MuL6hQWzAdZiGzAKjy9gmMBfG9Ad1vW45uux7cc082
- 38zJLQveE8zQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,387,1583222400"; 
-   d="scan'208";a="297587222"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 13 May 2020 01:05:12 -0700
-Received: from [10.249.229.18] (abudanko-mobl.ccr.corp.intel.com [10.249.229.18])
-        by linux.intel.com (Postfix) with ESMTP id 07A475804B6;
-        Wed, 13 May 2020 01:05:09 -0700 (PDT)
-Subject: [PATCH v3 9/9] perf record: introduce --ctl-fd[-ack] options
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <eb38e9e5-754f-d410-1d9b-e26b702d51b7@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <8df14d46-42c6-2f14-8842-5d0f40a78fbb@linux.intel.com>
-Date:   Wed, 13 May 2020 11:05:08 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <eb38e9e5-754f-d410-1d9b-e26b702d51b7@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
+        Wed, 13 May 2020 04:06:37 -0400
+Received: from mail-vi1eur05on2073.outbound.protection.outlook.com ([40.107.21.73]:6060
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726092AbgEMIGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 04:06:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Wg7bF+gx0FCpW9wU1rX4Bb6jMS7uUu/K8h2vnzrQquFs/qtyZ0yzC8PGVckvMiLGLJK2NRu+D70N27RTRR+c4tAzgc/l9L0/KSPgJ2DtBPmz2PdqWNbxCvf8Mq/qlEnnz/82T8sLSrJW6xVS8niU1V3iAdcoDBaUqO22OmtVdTZIIWoVbhwKM35y/Y5dtyouup/5JeUXSby+/poNA6Y/IK+X5dxYCtiEvvzwjHWP6qRzVH8deO9qNFPYafaz9Fve/7iX0b/rtpYFi38qx+VH9k3eoZLHSPPF1rZIyD9A4K7ma1InWglv0qrg4yng00RQw/lnrlgiYHvhHAbo3aXvgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CG/5eRAkPL0M8IFsNRjZ70jvC1+Kn6ZtS/f8mUCOUEY=;
+ b=I9pA0REMaYu8/KuNvIDIV0JdHv13bkbBNO/aKOrr700sGeH+2xb7/4d6BM5lL6jWLQKSilbVlFmQ1I+AqFF+q9X3oAu1XG1n2kiFPkISNwi+95WxWl/d69JJX2ZXZ6BSsN3jl8vopaQGZZlM9RavMkGCnSzn5LVcEettkQeRzLczdFJUW3MWNPABOr+EQZSKhSqSISORDbIVHVQN4jdiGTXqvnwo662VkUls7StpNRBWDGm4Zt8uuGAQblsQ8Y8uaqhOEehf8PcKd+TXUNuvUO6RjqjLLOJzuWs67s6uaTs0QW3w1ZDH6N7epRFKfxk8rrkenr1a97oShtsl4TSmVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CG/5eRAkPL0M8IFsNRjZ70jvC1+Kn6ZtS/f8mUCOUEY=;
+ b=XeUplpuTi2REF84g8dYfzk8tQLmEu/pIeATeVeHmDyboDnDQ6kD3ANVCbOoFBly5oAmyWu3lOyDwBg87vaehkOyJiz9vndkUD/KutsvltNfwWaao2Ww8qzblY59nWsjN3ODoIG8P3B6sQzcA4oFp8eXCqPpvpn7gWNY+HcR75Cg=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VE1PR04MB6592.eurprd04.prod.outlook.com (2603:10a6:803:124::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28; Wed, 13 May
+ 2020 08:06:31 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::d5f0:c948:6ab0:c2aa]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::d5f0:c948:6ab0:c2aa%4]) with mapi id 15.20.3000.016; Wed, 13 May 2020
+ 08:06:31 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     "Fuzzey, Martin" <martin.fuzzey@flowbird.group>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+CC:     "vkoul@kernel.org" <vkoul@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH v7 RESEND 03/13] Revert "dmaengine: imx-sdma: fix context
+ cache"
+Thread-Topic: [PATCH v7 RESEND 03/13] Revert "dmaengine: imx-sdma: fix context
+ cache"
+Thread-Index: AQHWJ3caK60pir53Nk+ogIMcp5w3wKilig6AgAASqoCAAA6qQA==
+Date:   Wed, 13 May 2020 08:06:31 +0000
+Message-ID: <VE1PR04MB66381C7FAC6EA04658C3176389BF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <1589218356-17475-1-git-send-email-yibin.gong@nxp.com>
+ <1589218356-17475-4-git-send-email-yibin.gong@nxp.com>
+ <20200513060525.GJ5877@pengutronix.de>
+ <CANh8QzxJg05nXasHfN2kC-G7TOKZ8trJkOP_v0KXvcy6S4df4Q@mail.gmail.com>
+In-Reply-To: <CANh8QzxJg05nXasHfN2kC-G7TOKZ8trJkOP_v0KXvcy6S4df4Q@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: flowbird.group; dkim=none (message not signed)
+ header.d=none;flowbird.group; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 09161746-f2ea-48e0-b444-08d7f7148bc9
+x-ms-traffictypediagnostic: VE1PR04MB6592:|VE1PR04MB6592:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB6592EA6BA1F97D96928FD1A589BF0@VE1PR04MB6592.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1468;
+x-forefront-prvs: 0402872DA1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ApPW9OKxUwxbX9Tz5vIfQitGI7jRCQRMX9jM3OmFwOZaxH5PSdZvcGwF4I42FHGrv5svdtXiokSeGnOcTdLUPUt57wjugVd2Q/GXuqec/EaWz/Yv3i6XXd/obxGNtd5Xld9ENbCtTdIc1mwWKU9jUBVlibnHbtIPI2kd3JMYyd7L/QNPEnIsS+cHnQuAq36u81iV/lh010obXJ1AMyHzrZQzSH/lRfvfxgdkLVby3M4iwuhL8uDVaX3nOY3Fpm8U3Qz2P3Vwt2zxyquP50X14JF8nyoZqyUXtXtsIImUckjiGNbbPAZiknsNGrXWTDpi+h7OTcEaHae8CL2UJ45XCKEo5FFNtZClNcU63RHlgbqWX/M0XzFUiDJyu7SobrSZ8VJvWkVIdjAnWPl1SsRY2aQVe7o/XUbrficqSGvvf8NKL0xmlsL47OqyxGsvfMvlYod4bp1Z4ahLPnHslg+jjtwQQFzJK1MK40IF4y1So6j+HK1DT2rdLJjluxcmsV5p0KKjDMdBNRpRvdzYukFTow==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(366004)(396003)(136003)(39860400002)(33430700001)(64756008)(66556008)(66446008)(86362001)(54906003)(4326008)(7696005)(7416002)(5660300002)(33656002)(478600001)(8936002)(110136005)(4744005)(26005)(76116006)(71200400001)(33440700001)(8676002)(52536014)(66946007)(55016002)(66476007)(9686003)(2906002)(316002)(186003)(6506007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: rVnGgRtCpZXQwHyquhdA6CCfT40SD1YjDH/Ms+3xT43ucDkcB7UFefbxmxwE2QzIiavvKaMnUANRNB8JDGPeFwzet0QdaDgS1y/f4Fo0JNinSPWuT4XGMR6v3GBf2SnUZgWJ1f4ltChB9xWMvXjeamoIidHktoB5RZem4Es3NU7naPgMLCehchnSKYTYjrH5v0+Yf4Ax7YO9+uZFR0vPKkqpq+iCELuVChpwlw/0zYnXipWWfelVDfMYV666gmj1clpSs6NDBp5LRgu2aOnSVfHpvqx+O6vgeFx42/N6NuOFw16GhI2WpRNY2xsHVYop+hw5Bt3wa0gH+BuMT2FvIHkVDZwrKn8e6kE82Dhsz1T2fq85nmRbJomikqnFk1hA5C7XZa6N1ElXXEZ8Cl9PsLKGSFchL+DHFDEQ1WgfGIOdMr0J2Q+kDQkKAw4L/XnqMHfXT3OOyakDbpq16cq8jvSuHCceDRWurqifDhQlRy8=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 09161746-f2ea-48e0-b444-08d7f7148bc9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2020 08:06:31.0954
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kMAp/rrSxe+NNwq4gPmEXt2YCS7O5cC0bMyrqCPT8zJJbXxpleIeTSESm8quSXUJwtQCfbkd4+l1eyAIFT0epQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6592
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Introduce --ctl-fd[-ack] options to pass open file descriptors numbers
-from command line. Extend perf-record.txt file with --ctl-fd[-ack]
-options description. Document possible usage model introduced by
---ctl-fd[-ack] options by providing example bash shell script.
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/Documentation/perf-record.txt | 39 ++++++++++++++++++++++++
- tools/perf/builtin-record.c              |  9 ++++++
- tools/perf/util/record.h                 |  2 ++
- 3 files changed, 50 insertions(+)
-
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index c2c4ce7ccee2..5c012cfe68a4 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -614,6 +614,45 @@ appended unit character - B/K/M/G
- 	The number of threads to run when synthesizing events for existing processes.
- 	By default, the number of threads equals 1.
- 
-+--ctl-fd::
-+--ctl-fd-ack::
-+Listen on ctl-fd descriptor for command to control measurement ('enable': enable events,
-+'disable': disable events. Optionally send control command completion ('ack') to fd-ack
-+descriptor to synchronize with the controlling process. Example of bash shell script
-+to enable and disable events during measurements:
-+
-+#!/bin/bash
-+
-+ctl_dir=/tmp/
-+
-+ctl_fifo=${ctl_dir}perf_ctl.fifo
-+test -p ${ctl_fifo} && unlink ${ctl_fifo}
-+mkfifo ${ctl_fifo}
-+exec {ctl_fd}<>${ctl_fifo}
-+
-+ctl_ack_fifo=${ctl_dir}perf_ctl_ack.fifo
-+test -p ${ctl_ack_fifo} && unlink ${ctl_ack_fifo}
-+mkfifo ${ctl_ack_fifo}
-+exec {ctl_fd_ack}<>${ctl_ack_fifo}
-+
-+perf record -D -1 -e cpu-cycles -a                        \
-+            --ctl-fd ${ctl_fd} --ctl-fd-ack ${ctl_fd_ack} \
-+            -- sleep 30 &
-+perf_pid=$!
-+
-+sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e1 && echo "enabled(${e1})"
-+sleep 10 && echo 'disable' >&${ctl_fd} && read -u ${ctl_fd_ack} d1 && echo "disabled(${d1})"
-+
-+exec {ctl_fd_ack}>&-
-+unlink ${ctl_ack_fifo}
-+
-+exec {ctl_fd}>&-
-+unlink ${ctl_fifo}
-+
-+wait -n ${perf_pid}
-+exit $?
-+
-+
- SEE ALSO
- --------
- linkperf:perf-stat[1], linkperf:perf-list[1], linkperf:perf-intel-pt[1]
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 72f388623364..218cfaafaf10 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1713,6 +1713,8 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		perf_evlist__start_workload(rec->evlist);
- 	}
- 
-+	evlist__initialize_ctlfd(rec->evlist, opts->ctl_fd, opts->ctl_fd_ack);
-+
- 	if (opts->initial_delay) {
- 		pr_info(EVLIST_DISABLED_MSG);
- 		if (opts->initial_delay > 0) {
-@@ -1859,6 +1861,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		record__synthesize_workload(rec, true);
- 
- out_child:
-+	evlist__finalize_ctlfd(rec->evlist);
- 	record__mmap_read_all(rec, true);
- 	record__aio_mmap_read_sync(rec);
- 
-@@ -2340,6 +2343,8 @@ static struct record record = {
- 		},
- 		.mmap_flush          = MMAP_FLUSH_DEFAULT,
- 		.nr_threads_synthesize = 1,
-+		.ctl_fd              = -1,
-+		.ctl_fd_ack          = -1,
- 	},
- 	.tool = {
- 		.sample		= process_sample_event,
-@@ -2535,6 +2540,10 @@ static struct option __record_options[] = {
- 	OPT_UINTEGER(0, "num-thread-synthesize",
- 		     &record.opts.nr_threads_synthesize,
- 		     "number of threads to run for event synthesis"),
-+	OPT_INTEGER(0, "ctl-fd", &record.opts.ctl_fd,
-+		    "Listen on fd descriptor for command to control measurement ('enable': enable events, 'disable': disable events)"),
-+	OPT_INTEGER(0, "ctl-fd-ack", &record.opts.ctl_fd_ack,
-+		    "Send control command completion ('ack') to fd ack descriptor"),
- 	OPT_END()
- };
- 
-diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
-index 96a73bbd8cd4..da18aeca3623 100644
---- a/tools/perf/util/record.h
-+++ b/tools/perf/util/record.h
-@@ -69,6 +69,8 @@ struct record_opts {
- 	int	      mmap_flush;
- 	unsigned int  comp_level;
- 	unsigned int  nr_threads_synthesize;
-+	int	      ctl_fd;
-+	int	      ctl_fd_ack;
- };
- 
- extern const char * const *record_usage;
--- 
-2.24.1
-
-
+T24gMjAyMC8wNS8xMyBGdXp6ZXksIE1hcnRpbiA8bWFydGluLmZ1enpleUBmbG93YmlyZC5ncm91
+cD4gd3JvdGU6DQo+IE9uIFdlZCwgMTMgTWF5IDIwMjAgYXQgMDg6MDcsIFNhc2NoYSBIYXVlciA8
+cy5oYXVlckBwZW5ndXRyb25peC5kZT4NCj4gd3JvdGU6DQo+ID4NCj4gPiBPbiBUdWUsIE1heSAx
+MiwgMjAyMCBhdCAwMTozMjoyNkFNICswODAwLCBSb2JpbiBHb25nIHdyb3RlOg0KPiA+ID4gVGhp
+cyByZXZlcnRzIGNvbW1pdCBkMjg4YmRkZDgzNzRlMGEwNDNhYzlkZGU2NGExYWU2YTA5NDExZDc0
+LCBzaW5jZQ0KPiA+ID4gJ2NvbnRleHRfbG9hZGVkJyBmaW5hbGx5IHJlbW92ZWQuDQo+ID4gPg0K
+PiA+ID4gU2lnbmVkLW9mZi1ieTogUm9iaW4gR29uZyA8eWliaW4uZ29uZ0BueHAuY29tPg0KPiA+
+ID4gLS0tDQo+ID4NCj4gPiBJIHRoaW5rIHRoaXMgY2FuIHNhZmVseSBiZSBmb2xkZWQgaW50byB0
+aGUgbmV4dCBwYXRjaCB3aGljaCBtYWtlcyBpdA0KPiA+IG1vcmUgY2xlYXIgd2hhdCBpcyBoYXBw
+ZW5pbmcuDQo+ID4NCj4gDQo+IEFncmVlZCwNCj4gbm90IG9ubHkgdGhhdCBidXQgaGF2aW5nIDIg
+c2VwYXJhdGUgcGF0Y2hlcyBhbHNvIG1lYW5zIHRoYXQgdGhlIGJ1ZyB0aGF0IHdhcw0KPiBmaXhl
+ZCBieSB0aGUgY29tbWl0IGJlaW5nIHJldmVydGVkIGNvdWxkIHJlYXBwZWFyIGR1cmluZyBiaXNl
+Y3Rpb24uDQo+IA0KPiBNb3JlIGdlbmVyYWxseSBJIHRoaW5rIHJldmVydHMgc2hvdWxkIGJlIHJl
+c2VydmVkIGZvciBjb21taXRzIHRoYXQgbGF0ZXIgdHVybg0KPiBvdXQgdG8gYmUgd3Jvbmcgb3Ig
+dW5uZWVkZWQgKGllIHNob3VsZCBuZXZlciByZWFsbHkgaGF2ZSBiZWVuIGFwcGxpZWQpLg0KPiBJ
+ZiB0aGV5IHdlcmUgT0sgYXQgdGhlIHRpbWUgYnV0IGxhdGVyIGJlY29tZSB1bm5lY2Vzc2FyeSBk
+dWUgdG8gb3RoZXIgY29kZQ0KPiBjaGFuZ2VzIEkgdGhpbmsgYWxsIHRoZSByZWxhdGVkIG1vZGlm
+aWNhdGlvbnMgc2hvdWxkIGJlIGRvbmUgaW4gYSBzaW5nbGUgbm9ybWFsDQo+IG5vbiByZXZlcnQg
+cGF0Y2guDQpPa2F5LCB3aWxsIHJlbW92ZSBpdCBpbiB2OC4NCg==
