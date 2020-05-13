@@ -2,98 +2,83 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BC2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A1AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3492120659
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:24:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DpjJjWPS"
+	by mail.kernel.org (Postfix) with ESMTP id 2B1C920575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:28:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390847AbgEMUYY (ORCPT
+        id S1726097AbgEMU20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 16:24:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35638 "EHLO
+        Wed, 13 May 2020 16:28:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732650AbgEMUYX (ORCPT
+        with ESMTP id S1725977AbgEMU20 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 16:24:23 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AB52C061A0C;
-        Wed, 13 May 2020 13:24:22 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id b71so1028722ilg.8;
-        Wed, 13 May 2020 13:24:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/0PPB26EjKCEK4FysNGX/JGmScpUolfSHa5EDihTllg=;
-        b=DpjJjWPSkGc4uBWZSWOu3a8gE6D6kgBELTVAJpfcmJe1rw9c6mQsnxzKwM1zWR0/ep
-         P5fMP0DWk7itrunwNIy89fS79ZFHjAytH+q8pUfPM9MhERs1zJOWV7zlLf7OOSsvAF19
-         DtiOpo1mT/B0SkrptWiIV+aE8JC8gnj880EUrOE0MfzlUy38V89twiW3UMD84y0VR0hX
-         dyOZuCVuwgoZ12QiEUTSS8IBOi40/2l3zvwbFqJ3y2DmIRGRSGXXFnZbmI+P5pnpxvl3
-         kJHFFx1Zys8+ZbxEPxXWEgBBO9GIMc3agGS3DdgKeZFeppAcemofiiHSfdCoO3gGLeqk
-         ynjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/0PPB26EjKCEK4FysNGX/JGmScpUolfSHa5EDihTllg=;
-        b=PNj/PM/Hyok/+3kDFIpMreIuOf8otYIyQ4SHSbk3Ay8BAQ7zlxBAdJxLWd23gDIXkH
-         HstACWlY4NNjGz2++d1Msg2elZaE8XdRvyf4ItXZp8jZJJWKAVxpFmiGziscASE+amdi
-         ids1aXmHQiyjLSsLvQWIuVoO74Riqe7V2rVBNp7BKFnWkzdVodZYDc4no4eJpxns23BB
-         Swh4FCLD+ZOquguMk8srf+0z+A7sUdxxXMwoubKOzpFzJtDzJhieMjm5rdcFCynbmy0K
-         Jb7cGCcDNTsWjxcnQ+2zwEef0ooCNCCtDhkOPK7uKIPbjym3LzU5XkthNjKdOT+k0K/g
-         ckaA==
-X-Gm-Message-State: AOAM531dsFiIrk3JXs6EeGYpLv4OGPvzpGgp2/9tfzQHexr8wq237aqk
-        8zZ8XaHM5dUtVz/9Kk37DIPsH0fSRHucDV3efqQ=
-X-Google-Smtp-Source: ABdhPJxbUfrjvMOE70gMloZvlIhKbhNjJILxo1CxWouTHXmQImiYKQ7qMPsPb6ZN1UHsnym1/2QR7EQ6Tgsn6w7xjDI=
-X-Received: by 2002:a92:4b11:: with SMTP id m17mr1298260ilg.42.1589401461922;
- Wed, 13 May 2020 13:24:21 -0700 (PDT)
+        Wed, 13 May 2020 16:28:26 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 476D2C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 13:28:26 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jYxzJ-0003vJ-1H; Wed, 13 May 2020 22:28:21 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 2E545100605; Wed, 13 May 2020 22:28:20 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     psodagud@codeaurora.org
+Cc:     john.stultz@linaro.org, sboyd@kernel.org, tj@kernel.org,
+        linux-kernel@vger.kernel.org, saravanak@google.com,
+        pkondeti@codeaurora.org, Joonwoo Park <joonwoop@codeaurora.org>
+Subject: Re: [PATCH v3 1/2] timer: make deferrable cpu unbound timers really not bound to a cpu
+In-Reply-To: <dbc01cd27346bb465744b93ece2b6362@codeaurora.org>
+References: <1588444137-18651-1-git-send-email-psodagud@codeaurora.org> <1588444137-18651-2-git-send-email-psodagud@codeaurora.org> <87a72lkx9t.fsf@nanos.tec.linutronix.de> <dbc01cd27346bb465744b93ece2b6362@codeaurora.org>
+Date:   Wed, 13 May 2020 22:28:20 +0200
+Message-ID: <87d0771swr.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200513184735.30104-1-michael.srba@seznam.cz>
-In-Reply-To: <20200513184735.30104-1-michael.srba@seznam.cz>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Wed, 13 May 2020 14:24:10 -0600
-Message-ID: <CAOCk7No9mnXwsmCZF14Hsx=oikCRe=PVcjoRsFsR5ZjftHPndw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: msm8916: Disable coresight by default
-To:     michael.srba@seznam.cz
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        ~postmarketos/upstreaming@lists.sr.ht
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 12:50 PM <michael.srba@seznam.cz> wrote:
+psodagud@codeaurora.org writes:
+> On 2020-05-06 06:28, Thomas Gleixner wrote:
+>>>  #ifdef CONFIG_SMP
+>>> +struct timer_base timer_base_deferrable;
+>>>  unsigned int sysctl_timer_migration = 1;
+>>> 
+>>>  DEFINE_STATIC_KEY_FALSE(timers_migration_enabled);
+>>> @@ -841,8 +842,14 @@ static inline struct timer_base 
+>>> *get_timer_cpu_base(u32 tflags, u32 cpu)
+>>>  	 * If the timer is deferrable and NO_HZ_COMMON is set then we need
+>>>  	 * to use the deferrable base.
+>>>  	 */
+>>> -	if (IS_ENABLED(CONFIG_NO_HZ_COMMON) && (tflags & TIMER_DEFERRABLE))
+>>> -		base = per_cpu_ptr(&timer_bases[BASE_DEF], cpu);
+>>> +	if (IS_ENABLED(CONFIG_NO_HZ_COMMON) && (tflags & TIMER_DEFERRABLE)) 
+>>> {
+>>> +#ifdef CONFIG_SMP
+>>> +		base = &timer_base_deferrable;
+>>> +#endif
+>> 
+>> There are definitely smarter ways of solving this than sprinkling
+>> #ifdef's around the code.
 >
-> From: Michael Srba <michael.srba@seznam.cz>
->
-> On some msm8916 devices, attempts at initializing coresight cause the boot to
-> fail. This was fixed by disabling the coresight-related nodes in the board dts
-> files. However, a cleaner approach was chosen for fixing the same issue on
-> msm8998: disabling coresight by default, and enabling it in board dts files
-> where desired.
->
-> This patch implements the same solution for msm8916, removes now redundant
-> overwrites in board specific dts files and and enables coresight in db410c's
-> board dts in order to keep the current behavior.
->
-> Fixes: b1fcc5702a41 ("arm64: dts: qcom: msm8916: Add CTI options")
-> Signed-off-by: Michael Srba <michael.srba@seznam.cz>
+> I am able to understand all other comments and I will address all those 
+> comments in the next patch set.
+> It is not clear to me how to avoid #ifdef's in this case. Could you 
+> please share an example here?
 
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+The answer is further down already:
+ 
+>> Stub functions exist to avoid this unreadable #ifdef garbage.
+
