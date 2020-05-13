@@ -2,255 +2,130 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49121CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B581C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB6120575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ue8hMjdp"
+	by mail.kernel.org (Postfix) with ESMTP id 6AE9020575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589363908;
+	bh=h8SEZHcxjevCrV+7KP1HulgHGIYU8bJnnCg8YvMO62M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=m2Mu+j3I9HGNcCFZaxj99liBGU9aOtcRUW91SQEz2szttb1/JB0QFTawC+YPJREAu
+	 cnLd4HiOpczXRAmr36NYG86PDvWUurW/3m7oVJA2+8kDC8ovA17DtM3F8VaE1s6LF2
+	 XWafzNT8CfLPvulHCPPLqiX4W35Y1yAKuBBBtEUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388530AbgEMJ6V (ORCPT
+        id S2388161AbgEMJyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:58:21 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:36271 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387860AbgEMJ6R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:58:17 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id B93B55C013B;
-        Wed, 13 May 2020 05:58:15 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 13 May 2020 05:58:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=OaeA8w
-        vL6EZuvopKe7Yu4eCZ8ipuCPQar2EUyF/PnCs=; b=Ue8hMjdpY6PxotlfsfJlDM
-        /mNvmgxiUFVwZP8yn5XK5GrsZNQDjCTIVxsx97SRsv35nK6f8+sv862CUf2Vwf4P
-        XHwdhpq3fqEGty1DCEaL78YyvUS0D7rNd4tfiqxcIy7aBAZq7JQftm9JR60OGoew
-        bwNdwU0m+0y+VPCQuOHO5aWcsuIYL3QvEPa413obOD5bxhzZQidlqf5R6SInMPby
-        3sMtlPpLtXb6L0uBB9o52mL2JxLqniEiZvR8sSBDjXvmwdYB1yNSRcMerRgdbjUz
-        0nvdBVoYJUdjJToFRK746idTqtVTiMqpCIu91mB4pDLIKtAyUBNpmLE93kjZeReQ
-        ==
-X-ME-Sender: <xms:tsS7XmLEOprM7S_ZEzAH1gCxHmRgIAVlxANDMORjNMNUaJoNm9IOqA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrleeggddvvdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepkfguohcuufgt
-    hhhimhhmvghluceoihguohhstghhsehiughoshgthhdrohhrgheqnecuggftrfgrthhtvg
-    hrnheptdffkeekfeduffevgeeujeffjefhtefgueeugfevtdeiheduueeukefhudehleet
-    necukfhppeejledrudejiedrvdegrddutdejnecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepihguohhstghhsehiughoshgthhdrohhrgh
-X-ME-Proxy: <xmx:tsS7XuLFw8WvkbMoOhU8khdBbug055W_z3m5tlJLUY_mvk2hqy2Fvw>
-    <xmx:tsS7Xmul3Hck40Tw4z4ICSra1MAgB0z11Qtngf3KAA3nvQFfvgpI8A>
-    <xmx:tsS7Xrb8F9N2jKyGBnlThIF0Srcvx4U5HmdXo1lq8aDiPBJBeB0EzA>
-    <xmx:t8S7XuDk8gMOxoQ1hcf_aFCbuVs-nLd4MPY9WEbFVsIzUft7I8XgeQ>
-Received: from localhost (bzq-79-176-24-107.red.bezeqint.net [79.176.24.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 8339E30662F8;
-        Wed, 13 May 2020 05:58:14 -0400 (EDT)
-Date:   Wed, 13 May 2020 12:58:11 +0300
-From:   Ido Schimmel <idosch@idosch.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] net/scm: cleanup scm_detach_fds
-Message-ID: <20200513095811.GA598161@splinter>
-References: <20200511115913.1420836-1-hch@lst.de>
- <20200511115913.1420836-3-hch@lst.de>
- <20200513092918.GA596863@splinter>
- <20200513094908.GA31756@lst.de>
+        Wed, 13 May 2020 05:54:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57376 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733274AbgEMJyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:54:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19BF22176D;
+        Wed, 13 May 2020 09:54:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589363685;
+        bh=h8SEZHcxjevCrV+7KP1HulgHGIYU8bJnnCg8YvMO62M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZDxc3J3Ea+O0fLvuKY04N/YwJGB5zzWH/ZrmoH1xUTB/qkoHQQN2h0spiFoAaU4zM
+         ggSJRKL86HsHRsjlHFNhfX+igUsFdWfCtBWdHBnzH9SsZWqVI5ld5KT7kDCVUK18cE
+         8z1TiMGV/bQ3XvDzhAmuOzikcp6O67gd/ixbUgHo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Baoquan He <bhe@redhat.com>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.6 084/118] mm/page_alloc: fix watchdog soft lockups during set_zone_contiguous()
+Date:   Wed, 13 May 2020 11:45:03 +0200
+Message-Id: <20200513094424.804010952@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
+References: <20200513094417.618129545@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513094908.GA31756@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 11:49:08AM +0200, Christoph Hellwig wrote:
-> On Wed, May 13, 2020 at 12:29:18PM +0300, Ido Schimmel wrote:
-> > On Mon, May 11, 2020 at 01:59:12PM +0200, Christoph Hellwig wrote:
-> > > Factor out two helpes to keep the code tidy.
-> > > 
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > 
-> > Christoph,
-> > 
-> > After installing net-next (fb9f2e92864f) on a Fedora 32 machine I cannot
-> > ssh to it. Bisected it to this commit [1].
-> > 
-> > When trying to connect I see these error messages in journal:
-> > 
-> > sshd[1029]: error: mm_receive_fd: no message header
-> > sshd[1029]: fatal: mm_pty_allocate: receive fds failed
-> > sshd[1029]: fatal: mm_request_receive_expect: buffer error: incomplete message
-> > sshd[1018]: fatal: mm_request_receive: read: Connection reset by peer
-> > 
-> > Please let me know if more info is required. I can easily test a patch
-> > if you need me to try something.
-> 
-> To start we can try reverting just this commit, which requires a
-> little manual work.  Patch below:
+From: David Hildenbrand <david@redhat.com>
 
-Thanks for the quick reply. With the below patch ssh is working again.
+commit e84fe99b68ce353c37ceeecc95dce9696c976556 upstream.
 
-> 
-> ---
-> From fe4f53219b42aeded3c1464dbe2bbc9365f6a853 Mon Sep 17 00:00:00 2001
-> From: Christoph Hellwig <hch@lst.de>
-> Date: Wed, 13 May 2020 11:48:33 +0200
-> Subject: Revert "net/scm: cleanup scm_detach_fds"
-> 
-> This reverts commit 2618d530dd8b7ac0fdcb83f4c95b88f7b0d37ce6.
-> ---
->  net/core/scm.c | 94 +++++++++++++++++++++++---------------------------
->  1 file changed, 43 insertions(+), 51 deletions(-)
-> 
-> diff --git a/net/core/scm.c b/net/core/scm.c
-> index a75cd637a71ff..2d9aa5682bed2 100644
-> --- a/net/core/scm.c
-> +++ b/net/core/scm.c
-> @@ -280,53 +280,18 @@ void put_cmsg_scm_timestamping(struct msghdr *msg, struct scm_timestamping_inter
->  }
->  EXPORT_SYMBOL(put_cmsg_scm_timestamping);
->  
-> -static int __scm_install_fd(struct file *file, int __user *ufd, int o_flags)
-> -{
-> -	struct socket *sock;
-> -	int new_fd;
-> -	int error;
-> -
-> -	error = security_file_receive(file);
-> -	if (error)
-> -		return error;
-> -
-> -	new_fd = get_unused_fd_flags(o_flags);
-> -	if (new_fd < 0)
-> -		return new_fd;
-> -
-> -	error = put_user(new_fd, ufd);
-> -	if (error) {
-> -		put_unused_fd(new_fd);
-> -		return error;
-> -	}
-> -
-> -	/* Bump the usage count and install the file. */
-> -	sock = sock_from_file(file, &error);
-> -	if (sock) {
-> -		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
-> -		sock_update_classid(&sock->sk->sk_cgrp_data);
-> -	}
-> -	fd_install(new_fd, get_file(file));
-> -	return error;
-> -}
-> -
-> -static int scm_max_fds(struct msghdr *msg)
-> -{
-> -	if (msg->msg_controllen <= sizeof(struct cmsghdr))
-> -		return 0;
-> -	return (msg->msg_controllen - sizeof(struct cmsghdr)) / sizeof(int);
-> -}
-> -
->  void scm_detach_fds(struct msghdr *msg, struct scm_cookie *scm)
->  {
->  	struct cmsghdr __user *cm
->  		= (__force struct cmsghdr __user*)msg->msg_control;
-> -	int o_flags = (msg->msg_flags & MSG_CMSG_CLOEXEC) ? O_CLOEXEC : 0;
-> -	int fdmax = min_t(int, scm_max_fds(msg), scm->fp->count);
-> -	int __user *cmsg_data = CMSG_USER_DATA(cm);
-> +
-> +	int fdmax = 0;
-> +	int fdnum = scm->fp->count;
-> +	struct file **fp = scm->fp->fp;
-> +	int __user *cmfptr;
->  	int err = 0, i;
->  
-> -	if (msg->msg_flags & MSG_CMSG_COMPAT) {
-> +	if (MSG_CMSG_COMPAT & msg->msg_flags) {
->  		scm_detach_fds_compat(msg, scm);
->  		return;
->  	}
-> @@ -335,35 +300,62 @@ void scm_detach_fds(struct msghdr *msg, struct scm_cookie *scm)
->  	if (WARN_ON_ONCE(!msg->msg_control_is_user))
->  		return;
->  
-> -	for (i = 0; i < fdmax; i++) {
-> -		err = __scm_install_fd(scm->fp->fp[i], cmsg_data + i, o_flags);
-> +	if (msg->msg_controllen > sizeof(struct cmsghdr))
-> +		fdmax = ((msg->msg_controllen - sizeof(struct cmsghdr))
-> +			 / sizeof(int));
-> +
-> +	if (fdnum < fdmax)
-> +		fdmax = fdnum;
-> +
-> +	for (i=0, cmfptr =(int __user *)CMSG_USER_DATA(cm); i<fdmax;
-> +	     i++, cmfptr++)
-> +	{
-> +		struct socket *sock;
-> +		int new_fd;
-> +		err = security_file_receive(fp[i]);
->  		if (err)
->  			break;
-> +		err = get_unused_fd_flags(MSG_CMSG_CLOEXEC & msg->msg_flags
-> +					  ? O_CLOEXEC : 0);
-> +		if (err < 0)
-> +			break;
-> +		new_fd = err;
-> +		err = put_user(new_fd, cmfptr);
-> +		if (err) {
-> +			put_unused_fd(new_fd);
-> +			break;
-> +		}
-> +		/* Bump the usage count and install the file. */
-> +		sock = sock_from_file(fp[i], &err);
-> +		if (sock) {
-> +			sock_update_netprioidx(&sock->sk->sk_cgrp_data);
-> +			sock_update_classid(&sock->sk->sk_cgrp_data);
-> +		}
-> +		fd_install(new_fd, get_file(fp[i]));
->  	}
->  
-> -	if (i > 0)  {
-> -		int cmlen = CMSG_LEN(i * sizeof(int));
-> -
-> +	if (i > 0)
-> +	{
-> +		int cmlen = CMSG_LEN(i*sizeof(int));
->  		err = put_user(SOL_SOCKET, &cm->cmsg_level);
->  		if (!err)
->  			err = put_user(SCM_RIGHTS, &cm->cmsg_type);
->  		if (!err)
->  			err = put_user(cmlen, &cm->cmsg_len);
->  		if (!err) {
-> -			cmlen = CMSG_SPACE(i * sizeof(int));
-> +			cmlen = CMSG_SPACE(i*sizeof(int));
->  			if (msg->msg_controllen < cmlen)
->  				cmlen = msg->msg_controllen;
->  			msg->msg_control += cmlen;
->  			msg->msg_controllen -= cmlen;
->  		}
->  	}
-> -
-> -	if (i < scm->fp->count || (scm->fp->count && fdmax <= 0))
-> +	if (i < fdnum || (fdnum && fdmax <= 0))
->  		msg->msg_flags |= MSG_CTRUNC;
->  
->  	/*
-> -	 * All of the files that fit in the message have had their usage counts
-> -	 * incremented, so we just free the list.
-> +	 * All of the files that fit in the message have had their
-> +	 * usage counts incremented, so we just free the list.
->  	 */
->  	__scm_destroy(scm);
->  }
-> -- 
-> 2.26.2
-> 
+Without CONFIG_PREEMPT, it can happen that we get soft lockups detected,
+e.g., while booting up.
+
+  watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [swapper/0:1]
+  CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.6.0-next-20200331+ #4
+  Hardware name: Red Hat KVM, BIOS 1.11.1-4.module+el8.1.0+4066+0f1aadab 04/01/2014
+  RIP: __pageblock_pfn_to_page+0x134/0x1c0
+  Call Trace:
+   set_zone_contiguous+0x56/0x70
+   page_alloc_init_late+0x166/0x176
+   kernel_init_freeable+0xfa/0x255
+   kernel_init+0xa/0x106
+   ret_from_fork+0x35/0x40
+
+The issue becomes visible when having a lot of memory (e.g., 4TB)
+assigned to a single NUMA node - a system that can easily be created
+using QEMU.  Inside VMs on a hypervisor with quite some memory
+overcommit, this is fairly easy to trigger.
+
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Reviewed-by: Baoquan He <bhe@redhat.com>
+Reviewed-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: Shile Zhang <shile.zhang@linux.alibaba.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Alexander Duyck <alexander.duyck@gmail.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200416073417.5003-1-david@redhat.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ mm/page_alloc.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1555,6 +1555,7 @@ void set_zone_contiguous(struct zone *zo
+ 		if (!__pageblock_pfn_to_page(block_start_pfn,
+ 					     block_end_pfn, zone))
+ 			return;
++		cond_resched();
+ 	}
+ 
+ 	/* We confirm that there is no hole */
+
+
