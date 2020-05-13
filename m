@@ -2,112 +2,194 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2299DC2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CACCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A71A320659
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AFC5204EF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:05:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388836AbgEMOEE (ORCPT
+        id S2388841AbgEMOFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 10:04:04 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:55136 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388325AbgEMOED (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 10:04:03 -0400
-Received: from fsav302.sakura.ne.jp (fsav302.sakura.ne.jp [153.120.85.133])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 04DE3MOo098927;
-        Wed, 13 May 2020 23:03:22 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav302.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav302.sakura.ne.jp);
- Wed, 13 May 2020 23:03:22 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav302.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 04DE3LDg098920
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Wed, 13 May 2020 23:03:21 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] printk: Add loglevel for "do not print to consoles".
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <dima@arista.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-References: <20200427062117.GC486@jagdpanzerIV.localdomain>
- <4dae86af-1d9a-f5a8-cff6-aa91ec038a79@i-love.sakura.ne.jp>
- <20200428121828.GP28637@dhcp22.suse.cz>
- <b4d74234-8009-9ffd-011f-bd5d1a4b85f6@i-love.sakura.ne.jp>
- <20200428154532.GU28637@dhcp22.suse.cz>
- <b1d507b1-dae7-f526-c74a-d465ddecea6a@i-love.sakura.ne.jp>
- <20200429142106.GG28637@dhcp22.suse.cz>
- <a59271f1-b3fc-26d1-f0a2-5ec351d0095e@i-love.sakura.ne.jp>
- <20200513062652.GM413@jagdpanzerIV.localdomain>
- <a75d6560-ad99-5b02-3648-247c27c3a398@i-love.sakura.ne.jp>
- <20200513100413.GH17734@linux-b0ei>
- <20564555-7b84-f716-5dcd-978f76ad459a@i-love.sakura.ne.jp>
- <20200513094642.56bf50f7@gandalf.local.home>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <355d1700-4d33-4604-4187-27fd994bf473@i-love.sakura.ne.jp>
-Date:   Wed, 13 May 2020 23:03:19 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 13 May 2020 10:05:11 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4838 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388325AbgEMOFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 10:05:11 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D722EC9559855ECE06E3;
+        Wed, 13 May 2020 22:05:00 +0800 (CST)
+Received: from host-suse12sp4.huawei.com (10.67.133.23) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 13 May 2020 22:04:50 +0800
+From:   Shijie Hu <hushijie3@huawei.com>
+To:     <mike.kravetz@oracle.com>
+CC:     <will@kernel.org>, <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <nixiaoming@huawei.com>, <wangxu72@huawei.com>,
+        <wangkefeng.wang@huawei.com>, <yangerkun@huawei.com>,
+        <wangle6@huawei.com>, <cg.chen@huawei.com>, <chenjie6@huawei.com>,
+        <alex.huangjianhui@huawei.com>
+Subject: [PATCH v4] hugetlbfs: Get unmapped area below TASK_UNMAPPED_BASE for hugetlbfs
+Date:   Wed, 13 May 2020 21:57:42 +0800
+Message-ID: <20200513135742.102064-1-hushijie3@huawei.com>
+X-Mailer: git-send-email 2.12.3
 MIME-Version: 1.0
-In-Reply-To: <20200513094642.56bf50f7@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.67.133.23]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/05/13 22:46, Steven Rostedt wrote:
-> On Wed, 13 May 2020 20:03:53 +0900
-> Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> wrote:
-> 
->> I think that basically only oops (e.g. WARN()/BUG()/panic()) messages worth
->> printing to consoles and the rest messages do not worth printing to consoles.
->> Existing KERN_$LOGLEVEL is too rough-grained.
-> 
-> And this statement is exactly why I believe you are wrong.
-> 
-> Because *I* think messages to the console is more important than messages
-> to the logs. Several of my servers are only monitored by the console. I
-> seldom look at the logs on those machines.
+Here is a final patch to solve that hugetlb_get_unmapped_area() can't
+get unmapped area below mmap base for huge pages based on a few previous
+discussions and patches from me.
 
-As a technical staff at a support center, I can never monitor the consoles of
-customer's servers. I can examine only syslog messages saved as /var/log/messages .
+I'm so sorry. When sending v2 and v3 patches, I forget to cc:
+linux-mm@kvack.org and linux-kernel@vger.kernel.org. No records of these
+two patches found on the https://lkml.org/lkml/.
 
-> 
-> This is a policy decision, and must be made by user space. Your use case is
-> not applicable to everyone else's use case. And should not be set in stone
-> by the kernel.
+Patch V1: https://lkml.org/lkml/2020/4/27/440
 
-My proposal does not set in stone by the kernel.
-My proposal is gives users a chance to control whether to print to consoles.
+Changes in V2:
+* Follow Mike's suggestions, move hugetlb_get_unmapped_area() routines
+from "fs/hugetlbfs/inode.c" to "arch/arm64/mm/hugetlbpage.c", without
+changing core code.
+* Add mmap_is_legacy() function, and only fall back to the bottom-up
+function on no-legacy mode.
 
-On 2020/05/13 22:55, Steven Rostedt wrote:
-> On Wed, 13 May 2020 20:03:53 +0900
-> Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> wrote:
-> 
->> I think that basically only oops (e.g. WARN()/BUG()/panic()) messages worth
->> printing to consoles and the rest messages do not worth printing to consoles.
->> Existing KERN_$LOGLEVEL is too rough-grained.
-> 
-> Why don't you look into having a "noconsole" command line option that will
-> not print anything to the consoles but oops messages.
+Changes in V3:
+* Add *bottomup() and *topdown() two function, and check if
+mm->get_unmapped_area is equal to arch_get_unmapped_area() instead of
+checking mmap_is_legacy() to determine which function should be used.
 
-I can't force customers to use "noconsole" command line option. That's a
-too rough-grained boolean.
+Changes in V4:
+* Follow the suggestions of Will and Mike, move back this patch to core
+code.
 
-> 
-> Sounds more like what you would like, and something that perhaps would be
-> acceptable by the larger community.
+------
+
+In a 32-bit program, running on arm64 architecture. When the address
+space below mmap base is completely exhausted, shmat() for huge pages
+will return ENOMEM, but shmat() for normal pages can still success on
+no-legacy mode. This seems not fair.
+
+For normal pages, get_unmapped_area() calling flows are:
+    => mm->get_unmapped_area()
+	if on legacy mode,
+	    => arch_get_unmapped_area()
+			=> vm_unmapped_area()
+	if on no-legacy mode,
+	    => arch_get_unmapped_area_topdown()
+			=> vm_unmapped_area()
+
+For huge pages, get_unmapped_area() calling flows are:
+    => file->f_op->get_unmapped_area()
+		=> hugetlb_get_unmapped_area()
+			=> vm_unmapped_area()
+
+To solve this issue, we only need to make hugetlb_get_unmapped_area() take
+the same way as mm->get_unmapped_area(). Add *bottomup() and *topdown()
+two functions, and check current mm->get_unmapped_area() to decide which 
+one to use. If mm->get_unmapped_area is equal to arch_get_unmapped_area(),
+hugetlb_get_unmapped_area() calls bottomup routine, otherwise calls topdown
+routine.
+
+Signed-off-by: Shijie Hu <hushijie3@huawei.com>
+---
+ fs/hugetlbfs/inode.c | 61 +++++++++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 53 insertions(+), 8 deletions(-)
+
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index 991c60c7ffe0..bbee893e88da 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -191,13 +191,60 @@ static int hugetlbfs_file_mmap(struct file *file, struct vm_area_struct *vma)
+ 
+ #ifndef HAVE_ARCH_HUGETLB_UNMAPPED_AREA
+ static unsigned long
++hugetlb_get_unmapped_area_bottomup(struct file *file, unsigned long addr,
++		unsigned long len, unsigned long pgoff, unsigned long flags)
++{
++	struct hstate *h = hstate_file(file);
++	struct vm_unmapped_area_info info;
++
++	info.flags = 0;
++	info.length = len;
++	info.low_limit = current->mm->mmap_base;
++	info.high_limit = TASK_SIZE;
++	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
++	info.align_offset = 0;
++	return vm_unmapped_area(&info);
++}
++
++static unsigned long
++hugetlb_get_unmapped_area_topdown(struct file *file, unsigned long addr,
++		unsigned long len, unsigned long pgoff, unsigned long flags)
++{
++	struct hstate *h = hstate_file(file);
++	struct vm_unmapped_area_info info;
++
++	info.flags = VM_UNMAPPED_AREA_TOPDOWN;
++	info.length = len;
++	info.low_limit = max(PAGE_SIZE, mmap_min_addr);
++	info.high_limit = current->mm->mmap_base;
++	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
++	info.align_offset = 0;
++	addr = vm_unmapped_area(&info);
++
++	/*
++	 * A failed mmap() very likely causes application failure,
++	 * so fall back to the bottom-up function here. This scenario
++	 * can happen with large stack limits and large mmap()
++	 * allocations.
++	 */
++	if (unlikely(offset_in_page(addr))) {
++		VM_BUG_ON(addr != -ENOMEM);
++		info.flags = 0;
++		info.low_limit = current->mm->mmap_base;
++		info.high_limit = TASK_SIZE;
++		addr = vm_unmapped_area(&info);
++	}
++
++	return addr;
++}
++
++static unsigned long
+ hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
+ 		unsigned long len, unsigned long pgoff, unsigned long flags)
+ {
+ 	struct mm_struct *mm = current->mm;
+ 	struct vm_area_struct *vma;
+ 	struct hstate *h = hstate_file(file);
+-	struct vm_unmapped_area_info info;
+ 
+ 	if (len & ~huge_page_mask(h))
+ 		return -EINVAL;
+@@ -218,13 +265,11 @@ hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
+ 			return addr;
+ 	}
+ 
+-	info.flags = 0;
+-	info.length = len;
+-	info.low_limit = TASK_UNMAPPED_BASE;
+-	info.high_limit = TASK_SIZE;
+-	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
+-	info.align_offset = 0;
+-	return vm_unmapped_area(&info);
++	if (mm->get_unmapped_area == arch_get_unmapped_area)
++		return hugetlb_get_unmapped_area_bottomup(file, addr, len,
++				pgoff, flags);
++	return hugetlb_get_unmapped_area_topdown(file, addr, len,
++			pgoff, flags);
+ }
+ #endif
+ 
+-- 
+2.12.3
+
