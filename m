@@ -2,54 +2,53 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84495C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDEEC2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A9FF20740
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA26820740
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:48:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363335;
-	bh=R8iEln+dLJ0CdeHWgp0V3gFCfQATCdjG5I2aG0UjMbw=;
+	s=default; t=1589363337;
+	bh=6Nj0ivymC0ECNsWFCc3YPYlbmxZtWC1YnpOr92BuU0g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZiJsIovm6UsZ/c93QSWsceqYXg8l2r828pZ7YWKkPNb/PMpi13CaLVvAyI3ufyFwV
-	 84RX8QGXmMMDzWVCud7MLDmXlkmyLRdlu16LU0gKEdQ1PaqTa3p2nwUZSIWdDy3myk
-	 Sh6tJjnYlPpqwOOVFEPIPc2yyLqNUN15a686FrHw=
+	b=kX//3MJJzpeMZ6MZRWjaUvOQ91FPhqHpbmqVOOE3HS32BsoEGs8t2NMWYwkBjA2yH
+	 4pjlXUnuc3kwVDZuRb7fi+XoQjknFgIihn+LOUNA4zCSot5H4bNed1aNAxoSobitJM
+	 I660B6ejHapRwZSNfZuxzTR1tcafdmgZnEqt0KZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732635AbgEMJsy (ORCPT
+        id S1733153AbgEMJs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:48:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47472 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:48:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733121AbgEMJsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:48:50 -0400
+        id S1733126AbgEMJst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:48:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DE5320575;
-        Wed, 13 May 2020 09:48:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9F1320753;
+        Wed, 13 May 2020 09:48:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363330;
-        bh=R8iEln+dLJ0CdeHWgp0V3gFCfQATCdjG5I2aG0UjMbw=;
+        s=default; t=1589363328;
+        bh=6Nj0ivymC0ECNsWFCc3YPYlbmxZtWC1YnpOr92BuU0g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CSBL4UlRP84/z2vKG8nb8C9zw2sYbN+x7Ihy0KPWCEhB4KwfeHLJ0bSRVhMPpsbkH
-         N/zkMN9olxsnm2rFU05r8WHA2D+erOesuEsji8u6KFoytE7oFuOmG5+8SoZZc4LM0f
-         +KK3GAjX4/piH0xAaSp0B0dzFkcZhuQqsU4XGdv4=
+        b=a/mUl48VaZ91nIMJvJoW7V85Lzvjoi3xcevLEbAXwQLMhc8709iKZZjAcvNiIMDD3
+         AA2z2aUeNRDqlHhHKkYQkH2f0AWX/sh59B6ujLSh1Nflm9JYDGfzUEzr7k/ynpbKQ9
+         8KSfNJa/l+Br+4fqAZBKRGAMgtStgzH/mMb5gxmk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anton Eidelman <anton@lightbitslabs.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 03/90] nvme: fix possible hang when ns scanning fails during error recovery
-Date:   Wed, 13 May 2020 11:43:59 +0200
-Message-Id: <20200513094409.467768594@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Maloy <jmaloy@redhat.com>,
+        Ying Xue <ying.xue@windriver.com>,
+        Tuong Lien <tuong.t.lien@dektech.com.au>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 29/90] tipc: fix partial topology connection closure
+Date:   Wed, 13 May 2020 11:44:25 +0200
+Message-Id: <20200513094411.572153309@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -62,48 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+From: Tuong Lien <tuong.t.lien@dektech.com.au>
 
-[ Upstream commit 59c7c3caaaf8750df4ec3255082f15eb4e371514 ]
+[ Upstream commit 980d69276f3048af43a045be2925dacfb898a7be ]
 
-When the controller is reconnecting, the host fails I/O and admin
-commands as the host cannot reach the controller. ns scanning may
-revalidate namespaces during that period and it is wrong to remove
-namespaces due to these failures as we may hang (see 205da2434301).
+When an application connects to the TIPC topology server and subscribes
+to some services, a new connection is created along with some objects -
+'tipc_subscription' to store related data correspondingly...
+However, there is one omission in the connection handling that when the
+connection or application is orderly shutdown (e.g. via SIGQUIT, etc.),
+the connection is not closed in kernel, the 'tipc_subscription' objects
+are not freed too.
+This results in:
+- The maximum number of subscriptions (65535) will be reached soon, new
+subscriptions will be rejected;
+- TIPC module cannot be removed (unless the objects  are somehow forced
+to release first);
 
-One command that may fail is nvme_identify_ns_descs. Since we return
-success due to having ns identify descriptor list optional, we continue
-to compare ns identifiers in nvme_revalidate_disk, obviously fail and
-return -ENODEV to nvme_validate_ns, which will remove the namespace.
+The commit fixes the issue by closing the connection if the 'recvmsg()'
+returns '0' i.e. when the peer is shutdown gracefully. It also includes
+the other unexpected cases.
 
-Exactly what we don't want to happen.
-
-Fixes: 22802bf742c2 ("nvme: Namepace identification descriptor list is optional")
-Tested-by: Anton Eidelman <anton@lightbitslabs.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Acked-by: Jon Maloy <jmaloy@redhat.com>
+Acked-by: Ying Xue <ying.xue@windriver.com>
+Signed-off-by: Tuong Lien <tuong.t.lien@dektech.com.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/nvme/host/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/tipc/topsrv.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 66147df86d883..f0e0af3aa714e 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1078,7 +1078,7 @@ static int nvme_identify_ns_descs(struct nvme_ctrl *ctrl, unsigned nsid,
- 		  * Don't treat an error as fatal, as we potentially already
- 		  * have a NGUID or EUI-64.
- 		  */
--		if (status > 0)
-+		if (status > 0 && !(status & NVME_SC_DNR))
- 			status = 0;
- 		goto free_data;
+--- a/net/tipc/topsrv.c
++++ b/net/tipc/topsrv.c
+@@ -402,10 +402,11 @@ static int tipc_conn_rcv_from_sock(struc
+ 		read_lock_bh(&sk->sk_callback_lock);
+ 		ret = tipc_conn_rcv_sub(srv, con, &s);
+ 		read_unlock_bh(&sk->sk_callback_lock);
++		if (!ret)
++			return 0;
  	}
--- 
-2.20.1
-
+-	if (ret < 0)
+-		tipc_conn_close(con);
+ 
++	tipc_conn_close(con);
+ 	return ret;
+ }
+ 
 
 
