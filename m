@@ -2,67 +2,119 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B99CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95315C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8171D20740
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DB6020740
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:58:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730781AbgEMI5z (ORCPT
+        id S1730968AbgEMI6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 04:57:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730237AbgEMI5z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 04:57:55 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA100C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 01:57:54 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id A439D379; Wed, 13 May 2020 10:57:53 +0200 (CEST)
-Date:   Wed, 13 May 2020 10:57:52 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH -next] iommu/amd: Remove set but not used variable 'iommu'
-Message-ID: <20200513085752.GF9820@8bytes.org>
-References: <20200508134036.116569-1-yuehaibing@huawei.com>
+        Wed, 13 May 2020 04:58:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42118 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730346AbgEMI6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 04:58:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id DA7AAB03A;
+        Wed, 13 May 2020 08:58:20 +0000 (UTC)
+Subject: Re: [PATCH v3 5/5] lib/test_sysctl: support testing of sysctl. boot
+ parameter
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+References: <20200427180433.7029-1-vbabka@suse.cz>
+ <20200427180433.7029-6-vbabka@suse.cz>
+ <20200427183913.GH11244@42.do-not-panic.com>
+ <028d1996-9f4c-20c6-fb2a-706baa919dde@suse.cz>
+ <20200511183155.GT11244@42.do-not-panic.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <d07e1dc9-cc2d-d471-2882-8ec563878fe7@suse.cz>
+Date:   Wed, 13 May 2020 10:58:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508134036.116569-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200511183155.GT11244@42.do-not-panic.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 01:40:36PM +0000, YueHaibing wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
+On 5/11/20 8:31 PM, Luis Chamberlain wrote:
+> On Mon, May 11, 2020 at 01:05:22PM +0200, Vlastimil Babka wrote:
+>> ----8<----
+>> From a999e993a89e521b152bbd4b1466f69e62879c30 Mon Sep 17 00:00:00 2001
+>> From: Vlastimil Babka <vbabka@suse.cz>
+>> Date: Mon, 11 May 2020 12:59:49 +0200
+>> Subject: [PATCH] lib/test_sysctl: support testing of sysctl. boot parameter -
+>>  fix
+>> 
+>> Skip the new test if boot_int sysctl is not present, otherwise, per Luis,
+>> "This would fail if someone uses this script to test an older kernel, and
+>> the scripts in selftests are supposed to work with older kernels."
+>> 
+>> Suggested-by: Luis Chamberlain <mcgrof@kernel.org>
+>> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+>> ---
+>>  tools/testing/selftests/sysctl/sysctl.sh | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>> 
+>> diff --git a/tools/testing/selftests/sysctl/sysctl.sh b/tools/testing/selftests/sysctl/sysctl.sh
+>> index ef6417b8067b..148704f465b5 100755
+>> --- a/tools/testing/selftests/sysctl/sysctl.sh
+>> +++ b/tools/testing/selftests/sysctl/sysctl.sh
+>> @@ -756,6 +756,11 @@ sysctl_test_0006()
 > 
-> drivers/iommu/amd_iommu.c: In function 'amd_iommu_uninit_device':
-> drivers/iommu/amd_iommu.c:422:20: warning:
->  variable 'iommu' set but not used [-Wunused-but-set-variable]
+> You want to:
 > 
-> commit dce8d6964ebd ("iommu/amd: Convert to probe/release_device() call-backs")
-> involved this, remove it.
+>                                                                                 
+> # Kselftest framework requirement - SKIP code is 4.                             
+> ksft_skip=4 
 > 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/iommu/amd_iommu.c | 3 ---
->  1 file changed, 3 deletions(-)
+>>  sysctl_test_0007()
+>>  {
+>>  	TARGET="${SYSCTL}/boot_int"
+>> +	if [ ! -f $TARGET ]; then
+>> +		echo "Skipping test for $TARGET as it is not present ..."
+>> +		return 0
+>> +	fi
+> 
+> And return 4 instead.
 
-Thanks for the patch, but I already applied
+If I return it from the function, nobody will care, AFAICS. If I 'exit
+$ksft_skip', is that correct if it's just a single test out of 7? What's the
+proper way?
 
-	https://lore.kernel.org/r/20200509015645.3236-1-cai@lca.pw
+Thanks
 
-Regards,
-
-	Joerg
+>   Luis
+>> +
+>>  	if [ -d $DIR ]; then
+>>  		echo "Boot param test only possible sysctl_test is built-in, not module:"
+>>  		cat $TEST_DIR/config >&2
+>> -- 
+>> 2.26.2
+>> 
+> 
 
