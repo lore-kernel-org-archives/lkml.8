@@ -2,131 +2,122 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEBEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9329BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7057E20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:59:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iaIq54Ld"
+	by mail.kernel.org (Postfix) with ESMTP id A34C22054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:00:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgEMU7U (ORCPT
+        id S1727981AbgEMVAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 16:59:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbgEMU7T (ORCPT
+        Wed, 13 May 2020 17:00:51 -0400
+Received: from smtprelay0154.hostedemail.com ([216.40.44.154]:51208 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725977AbgEMVAu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 16:59:19 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73D1AC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 13:59:19 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id f23so286297pgj.4
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 13:59:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uaj9L7wTibe3Srb7QlLrRgpbwAw3iewpnn7RnSIv5I8=;
-        b=iaIq54LdYnfPTNfS44OsJ+ciGZe6w3yPt6q6lA1tXrAsYK9YE3h+ZMZ2MShZcqd1WF
-         0yg0sCdohed5MqX/R4az4SG9BeXS/cOarDzLr0T2pBx+eZi4H83eTchxqrAimPQJy6ol
-         d38765yeX+WRXcFd/xLsQJgmRKB7W3AYs2VX4pdEbeU9qXjLysjwL8iXyCy4nBPnWQYg
-         CcQdTmN5omQ+B3G91l8U0++jnVGbyGAQO2NP5YGRMVVFG7iN9GIQkVi98K0eI2OxlxMV
-         56qWjpQjEPoaiZROFEsmtUdGJmda4a+mgBHaK67gMAealXCnzQpPBP34CmKM1PX57GQ4
-         perg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uaj9L7wTibe3Srb7QlLrRgpbwAw3iewpnn7RnSIv5I8=;
-        b=tKV8u1Yy3vw1dkXkG4zzrsk6fkET3aLbsyhjIu0Jvl4acIx+4PJlFYOlwQpabkzTwX
-         SqZgH7+D7KUl4zV0F7qUFkshvOtpu3cs/0iP+p9PnyqxZ8wIHF64EiAcUKzufzsoaQZR
-         kG3n+eWhFQmA3nzVdT9DcFlRvHP43aHbKxxS9JqigQnCbNEFAhYzrH+tmUhthHLO/prE
-         d8ezwr3KNLdrliM7hHsbUxGCP4dlIn6+mh+XaDH85sJKDDo9IynNVJeFNuEtI/ElH4Zn
-         GD5el84WXu7RSaxcm3hetO4IQAvENh9Fc7krAPQXS/76jN1lpeh6MoS8++BJMN2+5Dvl
-         Sy5w==
-X-Gm-Message-State: AOAM532xI4eEVa7EjwA/xUIZVnuCVSGOYEFM9fKnUFeyZFfpQrV/M45J
-        50BDyW+MclqolUP1vgLM1s/Brg==
-X-Google-Smtp-Source: ABdhPJxHSTEOa5EHFLJiF8h8WzUgD8o6B/nx5qEh/Al8PX7Jdx3ub10Y6XacwkN56goCHSv+A+Jt7A==
-X-Received: by 2002:a62:1d48:: with SMTP id d69mr1102657pfd.102.1589403558913;
-        Wed, 13 May 2020 13:59:18 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id e21sm501052pga.71.2020.05.13.13.59.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 13:59:18 -0700 (PDT)
-Date:   Wed, 13 May 2020 14:59:15 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Arun Kumar Neelakantam <aneela@codeaurora.org>
-Cc:     ohad@wizery.com, bjorn.andersson@linaro.org, clew@codeaurora.org,
-        sricharan@codeaurora.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>
-Subject: Re: [PATCH V5 1/5] rpmsg: glink: Use complete_all for open states
-Message-ID: <20200513205915.GA8328@xps15>
-References: <1589346606-15046-1-git-send-email-aneela@codeaurora.org>
- <1589346606-15046-2-git-send-email-aneela@codeaurora.org>
+        Wed, 13 May 2020 17:00:50 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id CA6F0182CED34;
+        Wed, 13 May 2020 21:00:48 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: mist41_5dde648048f06
+X-Filterd-Recvd-Size: 3554
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf01.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 13 May 2020 21:00:44 +0000 (UTC)
+Message-ID: <0ee5acfaca4cf32d4efad162046b858981a4dae3.camel@perches.com>
+Subject: Re: [PATCH 20/33] ipv4: add ip_sock_set_recverr
+From:   Joe Perches <joe@perches.com>
+To:     Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Jon Maloy <jmaloy@redhat.com>,
+        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org,
+        target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
+        linux-cifs@vger.kernel.org, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, netdev@vger.kernel.org,
+        linux-sctp@vger.kernel.org, ceph-devel@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org
+Date:   Wed, 13 May 2020 14:00:43 -0700
+In-Reply-To: <20200513062649.2100053-21-hch@lst.de>
+References: <20200513062649.2100053-1-hch@lst.de>
+         <20200513062649.2100053-21-hch@lst.de>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589346606-15046-2-git-send-email-aneela@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arun,
+On Wed, 2020-05-13 at 08:26 +0200, Christoph Hellwig wrote:
+> Add a helper to directly set the IP_RECVERR sockopt from kernel space
+> without going through a fake uaccess.
 
-On Wed, May 13, 2020 at 10:40:02AM +0530, Arun Kumar Neelakantam wrote:
-> From: Chris Lew <clew@codeaurora.org>
-> 
-> The open_req and open_ack completion variables are the state variables
-> to represet a remote channel as open. Use complete_all so there are no
+This seems used only with true as the second arg.
+Is there reason to have that argument at all?
 
-s/represet/represent
-
-> races with waiters and using completion_done.
-> 
-> Signed-off-by: Chris Lew <clew@codeaurora.org>
-> Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
-> ---
->  drivers/rpmsg/qcom_glink_native.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
-> index 1995f5b..604f11f 100644
-> --- a/drivers/rpmsg/qcom_glink_native.c
-> +++ b/drivers/rpmsg/qcom_glink_native.c
-> @@ -970,7 +970,7 @@ static int qcom_glink_rx_open_ack(struct qcom_glink *glink, unsigned int lcid)
->  		return -EINVAL;
->  	}
+> diff --git a/include/net/ip.h b/include/net/ip.h
+[]
+> @@ -767,5 +767,6 @@ static inline bool inetdev_valid_mtu(unsigned int mtu)
 >  
-> -	complete(&channel->open_ack);
-> +	complete_all(&channel->open_ack);
-
-If you do this and as per the note in the comment section above
-completion_done(), there shouldn't be a need to call completion_done() in
-qcom_glink_announce_create().
-
-Thanks,
-Mathieu 
-
+>  void ip_sock_set_tos(struct sock *sk, int val);
+>  void ip_sock_set_freebind(struct sock *sk, bool val);
+> +void ip_sock_set_recverr(struct sock *sk, bool val);
 >  
->  	return 0;
+>  #endif	/* _IP_H */
+> diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
+> index 0c40887a817f8..9abecc3195520 100644
+> --- a/net/ipv4/ip_sockglue.c
+> +++ b/net/ipv4/ip_sockglue.c
+> @@ -589,6 +589,16 @@ void ip_sock_set_freebind(struct sock *sk, bool val)
 >  }
-> @@ -1413,7 +1413,7 @@ static int qcom_glink_rx_open(struct qcom_glink *glink, unsigned int rcid,
->  	channel->rcid = ret;
->  	spin_unlock_irqrestore(&glink->idr_lock, flags);
+>  EXPORT_SYMBOL(ip_sock_set_freebind);
 >  
-> -	complete(&channel->open_req);
-> +	complete_all(&channel->open_req);
+> +void ip_sock_set_recverr(struct sock *sk, bool val)
+> +{
+> +	lock_sock(sk);
+> +	inet_sk(sk)->recverr = val;
+> +	if (!val)
+> +		skb_queue_purge(&sk->sk_error_queue);
+> +	release_sock(sk);
+> +}
+> +EXPORT_SYMBOL(ip_sock_set_recverr);
+> +
+>  /*
+>   *	Socket option code for IP. This is the end of the line after any
+>   *	TCP,UDP etc options on an IP socket.
+> diff --git a/net/rxrpc/local_object.c b/net/rxrpc/local_object.c
+> index 562ea36c96b0f..1b87b8a9ff725 100644
+> --- a/net/rxrpc/local_object.c
+> +++ b/net/rxrpc/local_object.c
+> @@ -171,13 +171,7 @@ static int rxrpc_open_socket(struct rxrpc_local *local, struct net *net)
+>  		/* Fall through */
+>  	case AF_INET:
+>  		/* we want to receive ICMP errors */
+> -		opt = 1;
+> -		ret = kernel_setsockopt(local->socket, SOL_IP, IP_RECVERR,
+> -					(char *) &opt, sizeof(opt));
+> -		if (ret < 0) {
+> -			_debug("setsockopt failed");
+> -			goto error;
+> -		}
+> +		ip_sock_set_recverr(local->socket->sk, true);
 >  
->  	if (create_device) {
->  		rpdev = kzalloc(sizeof(*rpdev), GFP_KERNEL);
-> -- 
-> 2.7.4
+>  		/* we want to set the don't fragment bit */
+>  		opt = IP_PMTUDISC_DO;
+
