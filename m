@@ -2,132 +2,128 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 427BAC2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8F6CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE96F204EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6562C20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:08:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="uKlmcMdr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sdEwm2cI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388911AbgEMOFc (ORCPT
+        id S2388767AbgEMOIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 10:05:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32828 "EHLO
+        Wed, 13 May 2020 10:08:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388325AbgEMOFc (ORCPT
+        with ESMTP id S2387608AbgEMOIr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 10:05:32 -0400
-Received: from forwardcorp1p.mail.yandex.net (forwardcorp1p.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b6:217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D491C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 07:05:31 -0700 (PDT)
-Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
-        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 8DD192E1574;
-        Wed, 13 May 2020 17:05:26 +0300 (MSK)
-Received: from vla5-58875c36c028.qloud-c.yandex.net (vla5-58875c36c028.qloud-c.yandex.net [2a02:6b8:c18:340b:0:640:5887:5c36])
-        by mxbackcorp1o.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id lDNVHsY2qe-5PpWqbZP;
-        Wed, 13 May 2020 17:05:26 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1589378726; bh=YcgwTTe1UbCJlZpmvqFenHMREDNQ+pyRS2BjsAD24bI=;
-        h=Message-ID:Date:To:From:Subject;
-        b=uKlmcMdrccVnLpz/QJl9j1Ey7nEKddWJIRk1JUu4m/QIveLUfUYAWEKqDIYGbb800
-         mBsTcVVjP+JjseIGcjGGTkrpT3E3d4T0ecgMmvFQfM3RphHi1iibKy1oumAEn23d58
-         aQV6jUfXskRAFLYwhM72Uw8k7ErDA1NYw3Z1JXeg=
-Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-vpn.dhcp.yndx.net (dynamic-vpn.dhcp.yndx.net [2a02:6b8:b080:8207::1:2])
-        by vla5-58875c36c028.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id MK10jIJZJE-5PXuZchK;
-        Wed, 13 May 2020 17:05:25 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: [PATCH] mm/compaction: avoid VM_BUG_ON(PageSlab()) in page_mapcount()
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Date:   Wed, 13 May 2020 17:05:25 +0300
-Message-ID: <158937872515.474360.5066096871639561424.stgit@buzz>
-User-Agent: StGit/0.22-39-gd257
+        Wed, 13 May 2020 10:08:47 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A044C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 07:08:47 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id b1so13442115qtt.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 07:08:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vKMxLrMImHpihipagkeEtVhqmNLGnx4qu2/FD8xcA6o=;
+        b=sdEwm2cIdqOD3iWIoQS36r309tWKQGDjXMzsI45DrA1kBFEijMoCq0pzDXKebBvrrr
+         uq+2t4DDsZRUmbKJWeb86uOmadZf0klvmmwtnYP5sk5cVJcPbfUh5F2wGnIfBs9Fv3Qr
+         SXuWn+xSDTphAnQ3F1GiQZeJ4Inpy/NsXWJUgm9u+FK3TQvQwwJyiTzXv9uWTD3QOP03
+         7C8jzcaMv8xH5EDGbPn5Cg26VRcMyEwv7mEvQmXCLW91oa5G3Tcwy8EdhVmAzQ6Zzt37
+         qXiZZwQERfa7CRTBfSZEfGyLDWZ03qq8hGbXBei8ML6le7DXrRu3ftrr15syMOh+S2BQ
+         oabg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vKMxLrMImHpihipagkeEtVhqmNLGnx4qu2/FD8xcA6o=;
+        b=lUJD0FL2WIJgmMpj1ZnjRcsRPo111HZztkmEx8+V0MsTfwQzgQN7w8Gkqf2rJiPVk9
+         Hmxs7F8nEiAP7Zmx/V3chjUbG6TpNKR7V3ZYxZteh9DqvJix6pnIArCETG/4yWYcFSv7
+         2PSOL7dCzCmByIZ9FUlDAeXnHR5sxglIN1+kjrYwhw6DlPsCPzeV+980FgPXjjYf6UEX
+         DvGF6c091RyU39lNTJ+TAtIoE9Q1iFqqHKvpF3UVLZ4KcIbMLWn6OD7qeg8kTMwRD+NK
+         ClsjSOMfMlQHrZHC9xpzmW6H8LzcTKPbY9QtRmgCxSP72WIh2eKcSHN1JYE0U88+KJzx
+         sgIg==
+X-Gm-Message-State: AOAM532liTP5sYfZex9ATVdqFZhsNDTwu3TP8hTXnZkGVtGIOpd1g25m
+        rxHsFRCJbhwM3m/8wz3dPYg=
+X-Google-Smtp-Source: ABdhPJxlNbjMFQymgJkPyFZKqH7HW1GZjGi67EVn77gxCgfGM07PaE6R9GLqKAoaeGFoHvzEWc6mrQ==
+X-Received: by 2002:ac8:1af3:: with SMTP id h48mr2081144qtk.371.1589378926205;
+        Wed, 13 May 2020 07:08:46 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id 28sm14048460qkr.96.2020.05.13.07.08.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 07:08:27 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 8596E40AFD; Wed, 13 May 2020 11:08:25 -0300 (-03)
+Date:   Wed, 13 May 2020 11:08:25 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Joe Mario <jmario@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH 4/4] perf expr: Report line number with error
+Message-ID: <20200513140825.GG5583@kernel.org>
+References: <20200511205307.3107775-1-jolsa@kernel.org>
+ <20200511205307.3107775-5-jolsa@kernel.org>
+ <CAP-5=fVa+=4cQzw47qSGFQZfqw7Bvx85ZBTJwkHReuJbi4ZGiA@mail.gmail.com>
+ <20200513113424.GJ3158213@krava>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513113424.GJ3158213@krava>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function isolate_migratepages_block() runs some checks out of lru_lock
-when choose pages for migration. After checking PageLRU() it checks extra
-page references by comparing page_count() and page_mapcount(). Between
-these two checks page could be removed from lru, freed and taken by slab.
+Em Wed, May 13, 2020 at 01:34:24PM +0200, Jiri Olsa escreveu:
+> On Wed, May 13, 2020 at 12:09:30AM -0700, Ian Rogers wrote:
+> > On Mon, May 11, 2020 at 1:54 PM Jiri Olsa <jolsa@kernel.org> wrote:
+> > >
+> > > Display line number on when parsing custom metrics file, like:
+> > >
+> > >   $ cat metrics
+> > >   // IPC
+> > >   mine1 = inst_retired.any / cpu_clk_unhalted.thread;
+> > >
+> > >   krava
+> > >   $ sudo perf stat --metrics-file ./metrics -M mine1 -a -I 1000 --metric-only
+> > >   failed to parse metrics file: ./metrics:4
+> > >
+> > > Please note that because the grammar is flexible on new lines,
+> > > the syntax could be broken on the next 'not fitting' item and
+> > > not the first wrong word, like:
+> > >
+> > >   $ cat metrics
+> > >   // IPC
+> > >   krava
+> > >   mine1 = inst_retired.any / cpu_clk_unhalted.thread;
+> > >   $ sudo perf stat --metrics-file ./metrics -M mine1 -a -I 1000 --metric-only
+> > >   failed to parse metrics file: ./metrics:3
+> > 
+> > A line number is better than nothing :-) It'd be nice to be told about
+> > broken events and more information about what's broken in the line. A
+> > common failure is @ vs / encoding and also no-use or misuse of \\.
+> > Perhaps expand the test coverage.
+> 
+> yep, error reporting needs more changes.. but the line is crucial ;-)
 
-As a result this race triggers VM_BUG_ON(PageSlab()) in page_mapcount().
-Race window is tiny. For certain workload this happens around once a year.
+So I had started processing this patchkit, I assume you will send a v2
+and I should drop what I had processed, is that ok?
 
-
- page:ffffea0105ca9380 count:1 mapcount:0 mapping:ffff88ff7712c180 index:0x0 compound_mapcount: 0
- flags: 0x500000000008100(slab|head)
- raw: 0500000000008100 dead000000000100 dead000000000200 ffff88ff7712c180
- raw: 0000000000000000 0000000080200020 00000001ffffffff 0000000000000000
- page dumped because: VM_BUG_ON_PAGE(PageSlab(page))
- ------------[ cut here ]------------
- kernel BUG at ./include/linux/mm.h:628!
- invalid opcode: 0000 [#1] SMP NOPTI
- CPU: 77 PID: 504 Comm: kcompactd1 Tainted: G        W         4.19.109-27 #1
- Hardware name: Yandex T175-N41-Y3N/MY81-EX0-Y3N, BIOS R05 06/20/2019
- RIP: 0010:isolate_migratepages_block+0x986/0x9b0
-
-
-To fix just opencode page_mapcount() in racy check for 0-order case and
-recheck carefully under lru_lock when page cannot escape from lru.
-
-Also add checking extra references for file pages and swap cache.
-
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Fixes: 119d6d59dcc0 ("mm, compaction: avoid isolating pinned pages")
-Fixes: 1d148e218a0d ("mm: add VM_BUG_ON_PAGE() to page_mapcount()")
----
- mm/compaction.c |   17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
-
-diff --git a/mm/compaction.c b/mm/compaction.c
-index 46f0fcc93081..91bb87fd9420 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -935,12 +935,16 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
- 		}
- 
- 		/*
--		 * Migration will fail if an anonymous page is pinned in memory,
-+		 * Migration will fail if an page is pinned in memory,
- 		 * so avoid taking lru_lock and isolating it unnecessarily in an
--		 * admittedly racy check.
-+		 * admittedly racy check simplest case for 0-order pages.
-+		 *
-+		 * Open code page_mapcount() to avoid VM_BUG_ON(PageSlab(page)).
-+		 * Page could have extra reference from mapping or swap cache.
- 		 */
--		if (!page_mapping(page) &&
--		    page_count(page) > page_mapcount(page))
-+		if (!PageCompound(page) &&
-+		    page_count(page) > atomic_read(&page->_mapcount) + 1 +
-+				(!PageAnon(page) || PageSwapCache(page)))
- 			goto isolate_fail;
- 
- 		/*
-@@ -975,6 +979,11 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
- 				low_pfn += compound_nr(page) - 1;
- 				goto isolate_fail;
- 			}
-+
-+			/* Recheck page extra references under lock */
-+			if (page_count(page) > page_mapcount(page) +
-+				    (!PageAnon(page) || PageSwapCache(page)))
-+				goto isolate_fail;
- 		}
- 
- 		lruvec = mem_cgroup_page_lruvec(page, pgdat);
-
+- Arnaldo
