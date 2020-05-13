@@ -2,68 +2,86 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 932EBC2D0F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8911CC2D0F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B4E020722
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 616CE206CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:13:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731014AbgEMCKX (ORCPT
+        id S1728420AbgEMCNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 22:10:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52176 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728514AbgEMCKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 22:10:23 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41906206CC;
-        Wed, 13 May 2020 02:10:21 +0000 (UTC)
-Date:   Tue, 12 May 2020 22:10:19 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [patch V4 part 3 08/29] x86/entry/64: Provide sane error
- entry/exit
-Message-ID: <20200512221019.5527f92f@oasis.local.home>
-In-Reply-To: <20200505134904.058904490@linutronix.de>
-References: <20200505134354.774943181@linutronix.de>
-        <20200505134904.058904490@linutronix.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 12 May 2020 22:13:16 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55562 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727792AbgEMCNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 22:13:16 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9D0CB1D573112B1D5684;
+        Wed, 13 May 2020 10:13:14 +0800 (CST)
+Received: from [10.133.206.78] (10.133.206.78) by smtp.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 13 May
+ 2020 10:13:12 +0800
+To:     Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>
+CC:     Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+From:   Zefan Li <lizefan@huawei.com>
+Subject: [PATCH] cgroup: Remove stale comments
+Message-ID: <0ce73f20-6b19-38c7-81c5-b0b71013fcb7@huawei.com>
+Date:   Wed, 13 May 2020 10:13:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="gbk"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.206.78]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 05 May 2020 15:44:02 +0200
-Thomas Gleixner <tglx@linutronix.de> wrote:
+- The default root is where we can create v2 cgroups.
+- The __DEVEL__sane_behavior mount option has been removed long long ago.
 
-> +	.if \sane == 0
->  	TRACE_IRQS_OFF
+Signed-off-by: Li Zefan <lizefan@huawei.com>
+---
 
-Are you implying that TRACE_IRQS_OFF is insane?
+found these when fixing the netprio cgroup bug.
 
--- Steve
+---
+ kernel/cgroup/cgroup.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
+
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 06b5ea9..7a01674 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -153,11 +153,7 @@ static struct static_key_true *cgroup_subsys_on_dfl_key[] = {
+ 
+ static DEFINE_PER_CPU(struct cgroup_rstat_cpu, cgrp_dfl_root_rstat_cpu);
+ 
+-/*
+- * The default hierarchy, reserved for the subsystems that are otherwise
+- * unattached - it never has more than a single cgroup, and all tasks are
+- * part of that cgroup.
+- */
++/* the default hierarchy */
+ struct cgroup_root cgrp_dfl_root = { .cgrp.rstat_cpu = &cgrp_dfl_root_rstat_cpu };
+ EXPORT_SYMBOL_GPL(cgrp_dfl_root);
+ 
+@@ -251,9 +247,6 @@ bool cgroup_ssid_enabled(int ssid)
+  * cases where a subsystem should behave differnetly depending on the
+  * interface version.
+  *
+- * The set of behaviors which change on the default hierarchy are still
+- * being determined and the mount option is prefixed with __DEVEL__.
+- *
+  * List of changed behaviors:
+  *
+  * - Mount options "noprefix", "xattr", "clone_children", "release_agent"
+-- 
+2.7.4
