@@ -2,123 +2,206 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7476C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF92C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C76BE20690
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:08:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fxyVei8o"
+	by mail.kernel.org (Postfix) with ESMTP id 5BD3C205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:09:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387523AbgEMPIO (ORCPT
+        id S2388480AbgEMPJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:08:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42574 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727778AbgEMPIN (ORCPT
+        Wed, 13 May 2020 11:09:19 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46180 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727778AbgEMPJS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:08:13 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B522C061A0C;
-        Wed, 13 May 2020 08:08:13 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id h17so12427376wrc.8;
-        Wed, 13 May 2020 08:08:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VWRAGlUE58pZzy9cngU2gBHWI6hRPV4qJAq7Js3hLQM=;
-        b=fxyVei8o92xYp2W45MEq20WpAtKItN0ZVI7QCX5zuer5dPU9RXHubrZZy5Sqpbg0RA
-         SWodfxZ6paK8plPL7t0ef8pbtVKpGxKuJKI3oZEPbYmWWQkgxszW7o/lwSxBDqbu4chh
-         5HciRUbHnUs8+x8jkF02JjdKMU7cE+A4OLw9b5cEp3SnhFGZ3RcyzmVKlNRhEHIEB3Hq
-         aRzanvuLRkllUfK1HVQrm+lhdOFvi+VXzAKdanzgfbmuIWlE2qjV3D/cwXMHk90B9N69
-         QmL+s5rlN6oNJzPqR8bDCB8fY4FsYP0j3RS9hLA57cP/SGmF7aGJ7VjwAc32wtt22tt1
-         yrmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VWRAGlUE58pZzy9cngU2gBHWI6hRPV4qJAq7Js3hLQM=;
-        b=TLy18P05UJbQ1/JoGYJPil4YolWG+2MDhXXU+OiFEsYtbDHkMuSxbD5/rOfNW6Fyas
-         GMuRkesmw+vvP/eSVlNtmf1MndQ3gKvST/JQmoiC5M0cEm7ueyeW2GAlcX+YarGbs+wh
-         qmOqm0+R6pHJJ+lGPgladUa/KizaUvsjPnOp1GVlLgENyvzixHyb056U1lWY0lCqXQGL
-         EqzkfiPQ/tiSLMUCRMpoRzmtqSCU+nd42BfgudAJXukzYFHnlVRzM3MR6vAkYKs/Pkdr
-         +iKM93Vd1R4skHnJyqD0CIFhabyVvd5zmpOJCVBa+BKG8kvBciAMFe6vyrnmXW1QwSpS
-         8mhw==
-X-Gm-Message-State: AGi0PuYf0XzdfVyyQFjacGNWZx7FZFt16UlEQd3NtP2PPcF0H2p97hbO
-        ACExQyR8OmHywDea0cUNUQs=
-X-Google-Smtp-Source: APiQypLXg8ASZd+iA6265bHQHLtl29lOt/lFKSif4O+rOT+hi1gYBRKHdy6OxMxG+9OmQlKS1XYZtw==
-X-Received: by 2002:adf:b301:: with SMTP id j1mr30897749wrd.221.1589382491668;
-        Wed, 13 May 2020 08:08:11 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id r9sm19085526wmg.47.2020.05.13.08.08.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 May 2020 08:08:10 -0700 (PDT)
-Subject: Re: [PATCH v10 1/5] usb: xhci: Change the XHCI link order in the
- Makefile
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Cooper <alcooperx@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <20200512150019.25903-1-alcooperx@gmail.com>
- <20200512150019.25903-2-alcooperx@gmail.com>
- <20200513122613.GA1023594@kroah.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <7acc2a4c-caab-11e7-7b3f-4176f19c58cf@gmail.com>
-Date:   Wed, 13 May 2020 08:08:07 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200513122613.GA1023594@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 13 May 2020 11:09:18 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DF3hsU157163;
+        Wed, 13 May 2020 11:09:09 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 310g8u6gya-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 May 2020 11:09:08 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04DF46Of158145;
+        Wed, 13 May 2020 11:09:08 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 310g8u6gww-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 May 2020 11:09:08 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04DF4vsH009582;
+        Wed, 13 May 2020 15:09:06 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04fra.de.ibm.com with ESMTP id 3100uc0qyu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 May 2020 15:09:06 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04DF94Hi63242460
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 May 2020 15:09:04 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 39F73A405C;
+        Wed, 13 May 2020 15:09:04 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 00683A4065;
+        Wed, 13 May 2020 15:09:03 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.144.67])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 13 May 2020 15:09:02 +0000 (GMT)
+Message-ID: <1589382542.5098.136.camel@linux.ibm.com>
+Subject: Re: [RFC][PATCH 1/3] evm: Move hooks outside LSM infrastructure
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        "david.safford@gmail.com" <david.safford@gmail.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "jmorris@namei.org" <jmorris@namei.org>,
+        John Johansen <john.johansen@canonical.com>,
+        "matthewgarrett@google.com" <matthewgarrett@google.com>
+Cc:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Date:   Wed, 13 May 2020 11:09:02 -0400
+In-Reply-To: <4fb6c8457ac44af3b464fab712a10a37@huawei.com>
+References: <20200429073935.11913-1-roberto.sassu@huawei.com>
+         <1588794293.4624.21.camel@linux.ibm.com>
+         <1588799408.4624.28.camel@linux.ibm.com>
+         <ab879f9e66874736a40e9c566cadc272@huawei.com>
+         <1588864628.5685.78.camel@linux.ibm.com>
+         <750ab4e0990f47e4aea10d0e580b1074@huawei.com>
+         <1588884313.5685.110.camel@linux.ibm.com>
+         <84e6acad739a415aa3e2457b5c37979f@huawei.com>
+         <1588957684.5146.70.camel@linux.ibm.com>
+         <414644a0be9e4af880452f4b5079aba1@huawei.com>
+         <1589233010.5091.49.camel@linux.ibm.com>
+         <09ee169cfd70492cb526bcb30f99d693@huawei.com>
+         <1589293025.5098.53.camel@linux.ibm.com>
+         <d3f4a53e386d4bb1b8c608ac8b6bec1f@huawei.com>
+         <1589298622.5098.67.camel@linux.ibm.com>
+         <fcdb168d27214b5e85c3b741f184cde9@huawei.com>
+         <1589312281.5098.91.camel@linux.ibm.com>
+         <4fb6c8457ac44af3b464fab712a10a37@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-13_06:2020-05-13,2020-05-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
+ lowpriorityscore=0 impostorscore=0 mlxscore=0 mlxlogscore=999 phishscore=0
+ cotscore=-2147483648 spamscore=0 bulkscore=0 adultscore=0 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005130131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/13/2020 5:26 AM, Greg Kroah-Hartman wrote:
-> On Tue, May 12, 2020 at 11:00:15AM -0400, Al Cooper wrote:
->> Some BRCMSTB USB chips have an XHCI, EHCI and OHCI controller
->> on the same port where XHCI handles 3.0 devices, EHCI handles 2.0
->> devices and OHCI handles <2.0 devices. Currently the Makefile
->> has XHCI linking at the bottom which will result in the XHIC driver
->> initalizing after the EHCI and OHCI drivers and any installed 3.0
->> device will be seen as a 2.0 device. Moving the XHCI linking
->> above the EHCI and OHCI linking fixes the issue.
+On Wed, 2020-05-13 at 07:21 +0000, Roberto Sassu wrote:
+> > From: Mimi Zohar [mailto:zohar@linux.ibm.com]
+> > Sent: Tuesday, May 12, 2020 9:38 PM
+> > On Tue, 2020-05-12 at 16:31 +0000, Roberto Sassu wrote:
+> > > > From: Mimi Zohar [mailto:zohar@linux.ibm.com]
+> > 
+> > > > > > Each time the EVM protected file metadata is updated, the EVM
+> > HMAC
+> > > > is
+> > > > > > updated, assuming the existing EVM HMAC is valid.  Userspace
+> > should
+> > > > > > not have access to the HMAC key, so we only allow writing EVM
+> > > > > > signatures.
+> > > > > >
+> > > > > > The only difference between writing the original EVM signature and
+> > the
+> > > > > > new portable and immutable signature is the security.ima xattr
+> > > > > > requirement.  Since the new EVM signature does not include the
+> > > > > > filesystem specific data, something else needs to bind the file
+> > > > > > metadata to the file data.  Thus the IMA xattr requirement.
+> > > > > >
+> > > > > > Assuming that the new EVM signature is written last, as long as there
+> > > > > > is an IMA xattr, there shouldn't be a problem writing the new EVM
+> > > > > > signature.
+> > > > >
+> > > > >         /* first need to know the sig type */
+> > > > >         rc = vfs_getxattr_alloc(dentry, XATTR_NAME_EVM, (char
+> > > > **)&xattr_data, 0,
+> > > > >                                 GFP_NOFS);
+> > > > >         if (rc <= 0) {
+> > > > >                 evm_status = INTEGRITY_FAIL;
+> > > > >                 if (rc == -ENODATA) {
+> > > > >                         rc = evm_find_protected_xattrs(dentry);
+> > > > >                         if (rc > 0)
+> > > > >                                 evm_status = INTEGRITY_NOLABEL;
+> > > > >                         else if (rc == 0)
+> > > > >                                 evm_status = INTEGRITY_NOXATTRS; /* new file */
+> > > > >
+> > > > > If EVM_ALLOW_METADATA_WRITES is cleared, only the first xattr
+> > > > > can be written (status INTEGRITY_NOXATTRS is ok). After,
+> > > > > evm_find_protected_xattrs() returns rc > 0, so the status is
+> > > > > INTEGRITY_NOLABEL, which is not ignored by evm_protect_xattr().
+> > > >
+> > > > With EVM HMAC enabled, as a result of writing the first protected
+> > > > xattr, an EVM HMAC should be calculated and written in
+> > > > evm_inode_post_setxattr().
+> > >
+> > > To solve the ordering issue, wouldn't allowing setxattr() on a file
+> > > with portable signature that does not yet pass verification be safe?
+> > > evm_update_evmxattr() checks if the signature is portable and
+> > > if yes, does not calculate the HMAC.
+> > 
+> > Before agreeing to allowing the protected xattrs to be written on a
+> > file with a portable signature that does not yet pass verification are
+> > safe, would we be introducing any new types of attacks?
 > 
-> What happens if all of these are modules and they are loaded in a
-> different order?  This makefile change will not help with that, you need
-> to have logic in the code in order to properly coordinate this type of
-> mess, sorry.
+> Allowing xattr/attr update means that someone can do:
+> 
+> setxattr(path, "security.evm", ...);	with type=5
+> 
+> all subsequent setxattr()/setattr() succeed until the correct
+> combination is set.
+> 
+> At that point, any xattr/attr operation fails, even if one tries to set
+> an xattr with the same value. If we still deny the operation when the
+> verification succeeds, we have to fix that.
+> 
+> It is common that the signature passes verification before user space
+> tools finish to set xattrs/attrs. For example, if a file is created with
+> mode 644 and this was the mode at the time of signing, any attempt
+> by tar for example to set again the same mode fails.
 
-I believe we should be using module soft dependencies to instruct the
-module loaders to load the modules in the correct order, so something
-like this would do (not tested) for xhci-plat-hcd.c:
+We have a couple of options: always fail the write, differentiate the
+reason for the failure, or check the value before failing the write.
+ The easiest obviously would be to always fail the write once it is
+valid.  Whatever you decide, please keep it simple.
 
-MODULE_SOFTDEP("post: ehci-hcd ohci-hcd");
+> 
+> If allowing a change of xattrs/attrs for portable signatures is safe or
+> not, I would say yes. Portable signatures cannot be modified even
+> if __vfs_setxattr_noperm() is called directly.
+> 
+> > For example, would we differentiate between portable signatures that
+> > don't pass verification and ones that do?  If we don't differentiate,
+> > could it be used for DoS?  Should it be limited to new files?
+> 
+> I would prefer to lock files when signatures pass the verification to
+> avoid accidental changes.
+> 
+> Unless we find a better way to identify new file, without depending
+> on the appraisal policy, I would allow the operation even for existing
+> files.
 
-and I am not sure whether we need to add the opposite for ehci-hcd and
-ohci-hcd:
+The existing code verifies the EVM xattr before allowing the
+xattr/attr change.  It sounds like for EVM_XATTR_PORTABLE_DIGSIG we
+need to do exactly the reverse.
 
-MODULE_SOFTDEP("pre: xhci-plat-hcd");
+Mimi
 
-Al, do you want to test that?
--- 
-Florian
