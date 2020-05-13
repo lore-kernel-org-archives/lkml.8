@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 262CAC2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB021CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 010702492C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A204F20753
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363686;
-	bh=VohfBx1B9bKurY+fxdXrTun14QDveKXy5AHETM8G7Mg=;
+	s=default; t=1589363691;
+	bh=D/OHGjWG5iBia2GQ7cUm3S82dMNWM303D0Udw57Ir4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vXYEqlhjxG+wPXWs9/w0HOuK8OcaPmQD9AK0YITrsN2rwwcuj9tYGIuPfqv1KG96d
-	 NTYQGu4bGPNRbjL5mS38l4TZRWzR+hC47hx7XGvND3CPJKGTTZTOSzSewg2fsx94CU
-	 mXeqpR05wBgaJKpzr/VEFiGJdNvhYNEFjke3NLPE=
+	b=jqpuA/18NR8h1h78RSHsdz/hYCifRQmn/3Q0iDmWSl7LXPvD2wAYcrX4wAlr5xr6X
+	 Q8FosdY0u9rcl+O9Q7JLeAVk+t7HPTjrVjaVOj56T9nyVDyJqJCHUkysnXhNb++ueD
+	 V5CLtAEuFKotV+m3yqUGIcSZkj0ulPSj/aaHsSCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388153AbgEMJyo (ORCPT
+        id S1732918AbgEMJyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:54:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57264 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:54:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733274AbgEMJyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:54:41 -0400
+        id S2388145AbgEMJyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:54:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5789223128;
-        Wed, 13 May 2020 09:54:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5AE120575;
+        Wed, 13 May 2020 09:54:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363680;
-        bh=VohfBx1B9bKurY+fxdXrTun14QDveKXy5AHETM8G7Mg=;
+        s=default; t=1589363683;
+        bh=D/OHGjWG5iBia2GQ7cUm3S82dMNWM303D0Udw57Ir4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2nlXhYMdu8zCsCMG4Tgv34B4JbuLYT5tS3xe4+TyTsRZQ5ldo16XcjMaz+vngfbMn
-         lKVZfAOWvG8sAP5wTa633dj+uumefG0aT46oapI717RBX7OCIO3uz110OMPeKY86xH
-         pfCeXCJdfKHi3qFZVB6H5I0KAbZXgj+6SNoiu1S0=
+        b=d6YqttVILTRXLUyb5dpvpaCjLwJ/yD4k+EieWIZNjMs+XSesZhorg8z0PhqqaSr4v
+         wFvOid1zvfbJdQElbyOIePZmr0Qo6KSsf0A+NUds/A3CSz5suMFlq6+V+NhYStO4Vr
+         bgmf8bJCjNSpNCjKpgzf1aXEjRPOhjrpbkBuuXL8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Khazhismel Kumykov <khazhy@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Penyaev <rpenyaev@suse.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>, Heiher <r@hev.cc>,
-        Jason Baron <jbaron@akamai.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.6 083/118] eventpoll: fix missing wakeup for ovflist in ep_poll_callback
-Date:   Wed, 13 May 2020 11:45:02 +0200
-Message-Id: <20200513094424.736469975@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Zanussi <zanussi@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.6 066/118] tracing/kprobes: Reject new event if loc is NULL
+Date:   Wed, 13 May 2020 11:44:45 +0200
+Message-Id: <20200513094423.696834738@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -63,77 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Khazhismel Kumykov <khazhy@google.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit 0c54a6a44bf3d41e76ce3f583a6ece267618df2e upstream.
+commit 5b4dcd2d201a395ad4054067bfae4a07554fbd65 upstream.
 
-In the event that we add to ovflist, before commit 339ddb53d373
-("fs/epoll: remove unnecessary wakeups of nested epoll") we would be
-woken up by ep_scan_ready_list, and did no wakeup in ep_poll_callback.
+Reject the new event which has NULL location for kprobes.
+For kprobes, user must specify at least the location.
 
-With that wakeup removed, if we add to ovflist here, we may never wake
-up.  Rather than adding back the ep_scan_ready_list wakeup - which was
-resulting in unnecessary wakeups, trigger a wake-up in ep_poll_callback.
+Link: http://lkml.kernel.org/r/158779376597.6082.1411212055469099461.stgit@devnote2
 
-We noticed that one of our workloads was missing wakeups starting with
-339ddb53d373 and upon manual inspection, this wakeup seemed missing to me.
-With this patch added, we no longer see missing wakeups.  I haven't yet
-tried to make a small reproducer, but the existing kselftests in
-filesystem/epoll passed for me with this patch.
-
-[khazhy@google.com: use if/elif instead of goto + cleanup suggested by Roman]
-  Link: http://lkml.kernel.org/r/20200424190039.192373-1-khazhy@google.com
-Fixes: 339ddb53d373 ("fs/epoll: remove unnecessary wakeups of nested epoll")
-Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Roman Penyaev <rpenyaev@suse.de>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Roman Penyaev <rpenyaev@suse.de>
-Cc: Heiher <r@hev.cc>
-Cc: Jason Baron <jbaron@akamai.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200424025057.118641-1-khazhy@google.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Tom Zanussi <zanussi@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: 2a588dd1d5d6 ("tracing: Add kprobe event command generation functions")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/eventpoll.c |   18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ kernel/trace/trace_kprobe.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -1149,6 +1149,10 @@ static inline bool chain_epi_lockless(st
- {
- 	struct eventpoll *ep = epi->ep;
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -940,6 +940,9 @@ EXPORT_SYMBOL_GPL(kprobe_event_cmd_init)
+  * complete command or only the first part of it; in the latter case,
+  * kprobe_event_add_fields() can be used to add more fields following this.
+  *
++ * Unlikely the synth_event_gen_cmd_start(), @loc must be specified. This
++ * returns -EINVAL if @loc == NULL.
++ *
+  * Return: 0 if successful, error otherwise.
+  */
+ int __kprobe_event_gen_cmd_start(struct dynevent_cmd *cmd, bool kretprobe,
+@@ -953,6 +956,9 @@ int __kprobe_event_gen_cmd_start(struct
+ 	if (cmd->type != DYNEVENT_TYPE_KPROBE)
+ 		return -EINVAL;
  
-+	/* Fast preliminary check */
-+	if (epi->next != EP_UNACTIVE_PTR)
-+		return false;
++	if (!loc)
++		return -EINVAL;
 +
- 	/* Check that the same epi has not been just chained from another CPU */
- 	if (cmpxchg(&epi->next, EP_UNACTIVE_PTR, NULL) != EP_UNACTIVE_PTR)
- 		return false;
-@@ -1215,16 +1219,12 @@ static int ep_poll_callback(wait_queue_e
- 	 * chained in ep->ovflist and requeued later on.
- 	 */
- 	if (READ_ONCE(ep->ovflist) != EP_UNACTIVE_PTR) {
--		if (epi->next == EP_UNACTIVE_PTR &&
--		    chain_epi_lockless(epi))
-+		if (chain_epi_lockless(epi))
-+			ep_pm_stay_awake_rcu(epi);
-+	} else if (!ep_is_linked(epi)) {
-+		/* In the usual case, add event to ready list. */
-+		if (list_add_tail_lockless(&epi->rdllink, &ep->rdllist))
- 			ep_pm_stay_awake_rcu(epi);
--		goto out_unlock;
--	}
--
--	/* If this file is already in the ready list we exit soon */
--	if (!ep_is_linked(epi) &&
--	    list_add_tail_lockless(&epi->rdllink, &ep->rdllist)) {
--		ep_pm_stay_awake_rcu(epi);
- 	}
- 
- 	/*
+ 	if (kretprobe)
+ 		snprintf(buf, MAX_EVENT_NAME_LEN, "r:kprobes/%s", name);
+ 	else
 
 
