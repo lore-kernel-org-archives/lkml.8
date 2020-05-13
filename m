@@ -2,95 +2,115 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF664C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD528C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 238FE205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:04:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hsyUIgSV"
+	by mail.kernel.org (Postfix) with ESMTP id 3C34E205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:05:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589389509;
+	bh=CjEfXpPIH7XRzomP1iu377biV+QAATQ4yh1cf6voOCo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pD/JbXj1nuXa1NXTbKEl59+8jlR3Il9dcz5wnjmYyEVmkdk1dre8O2Pg14dyOgUDw
+	 X/DkO9BVbO3IvVGx5rqi/VtEtRcTv2ppExfaX0GFoKkEMjYyQxVEMvf6fDtIn1thnf
+	 n+MNPIMNkhgH6JPDXiHBH1e4qxpn5nQpOnLKPEPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389845AbgEMREQ (ORCPT
+        id S2389852AbgEMRFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 13:04:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60668 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728068AbgEMREO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 13:04:14 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A9BFC061A0C;
-        Wed, 13 May 2020 10:04:14 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id f23so23908pgj.4;
-        Wed, 13 May 2020 10:04:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fT6HyV/h1wCZ25VWqp80kgjA4HTLZqSUdDpVlFinpGU=;
-        b=hsyUIgSVbYq0g+akorqUEZ2JwJb8hwv6xt/6sj+7clfu4Un0I0wcls2dhcpd7L+WyZ
-         f8XUzJCB5KqWw63lLQwBISeSdaiUqNk9/cTkAEWfLHdqCKl+Ne9SjQn4oZMeG5sgQbgc
-         nqtXQXuJyVbvNY5vHw1fUYQq2MUeC5DiTYWwwYqn0p5H2JGhF2Vjv64ZXJQoWQ3haRrZ
-         Qz1XI13dHEQd5BTJ1v7yrl1b7mYiSuZ0pjcr7OwblvxQDgsCffD0MucIl+uG7hInteLO
-         j/d0qPHcuxL/TczLcSEaS5vsPY4IENrKOkuoCsXrvHzRM1dYBRO34SMSAwpQdYMfSWfy
-         09iQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fT6HyV/h1wCZ25VWqp80kgjA4HTLZqSUdDpVlFinpGU=;
-        b=AA/YyPTqr6VwaP8jzVY30WFoPViSS4ftOzwhAFCtUuUbFWZc1m2x+mdIjxC5pKOMGS
-         Vcnjb06YpRNfSGtn08SSGFlxRUCE9M9tV412O6DTXcfePeo8tb/lBq5Uz1MzT+Sjx/cQ
-         rEl9nRL9vfKW4LBEawtP0gEVtx3v9HghRCp0fTRL1Yi1E2JZEDcth+p4jdL/GkLOp1H8
-         7+Mu/0ZtoiJWAXPlvGX/E44HwvdfcxyYmphQ+OEtq409B2tRS4wreUjxvG9Q6ta9ad4s
-         zGx+4cYTBVzy8wFGV9oKtuEf+UMyaZ1dA1BBzu/77FjZr3G+BJjFFzrI7zJ3hINjCZbc
-         LjxQ==
-X-Gm-Message-State: AOAM5338qzEcToexhuZkAZ7t7/vckqElWF1Sgg9nM9fjLgQofQzIN1ve
-        5MQGKb0RYEOCVu3FENk1bMs=
-X-Google-Smtp-Source: ABdhPJznMQHOd0mXc62iuRknY93cdjrjtkwjSgU0KXb5UZ35zpCpqfpVtJPBz6RS2Hotm8rtEpApwA==
-X-Received: by 2002:a62:1a49:: with SMTP id a70mr250920pfa.63.1589389453905;
-        Wed, 13 May 2020 10:04:13 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 14sm99017pfj.90.2020.05.13.10.04.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 13 May 2020 10:04:13 -0700 (PDT)
-Date:   Wed, 13 May 2020 10:04:12 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.6 000/118] 5.6.13-rc1 review
-Message-ID: <20200513170412.GC224971@roeck-us.net>
-References: <20200513094417.618129545@linuxfoundation.org>
+        Wed, 13 May 2020 13:05:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728068AbgEMRFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 13:05:07 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30843205CB;
+        Wed, 13 May 2020 17:05:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589389507;
+        bh=CjEfXpPIH7XRzomP1iu377biV+QAATQ4yh1cf6voOCo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nr4PpmZDc4mu0yzGbKsiz8SoJD/n2BPo2hncfqdP84nMAjaD6O427NP9viYwFL8AC
+         he8MEW3BBis8pDwqC3Ifa2pw63G2cHvak4kzKZwlW0TxjcZ1bIr13yS8nxVtp6FLs1
+         6QAzGRQkMMIaShw+z/DOUqizo/fGGg4nB9ypQCM4=
+Date:   Wed, 13 May 2020 19:05:05 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v10 1/5] usb: xhci: Change the XHCI link order in the
+ Makefile
+Message-ID: <20200513170505.GB1369204@kroah.com>
+References: <20200512150019.25903-1-alcooperx@gmail.com>
+ <20200512150019.25903-2-alcooperx@gmail.com>
+ <20200513122613.GA1023594@kroah.com>
+ <7acc2a4c-caab-11e7-7b3f-4176f19c58cf@gmail.com>
+ <20200513162723.GF1362525@kroah.com>
+ <38ff034d-a84c-2309-a8d5-f344930d9a31@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <38ff034d-a84c-2309-a8d5-f344930d9a31@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 11:43:39AM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.6.13 release.
-> There are 118 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, May 13, 2020 at 09:31:11AM -0700, Florian Fainelli wrote:
 > 
-> Responses should be made by Fri, 15 May 2020 09:41:20 +0000.
-> Anything received after that time might be too late.
 > 
+> On 5/13/2020 9:27 AM, Greg Kroah-Hartman wrote:
+> > On Wed, May 13, 2020 at 08:08:07AM -0700, Florian Fainelli wrote:
+> >>
+> >>
+> >> On 5/13/2020 5:26 AM, Greg Kroah-Hartman wrote:
+> >>> On Tue, May 12, 2020 at 11:00:15AM -0400, Al Cooper wrote:
+> >>>> Some BRCMSTB USB chips have an XHCI, EHCI and OHCI controller
+> >>>> on the same port where XHCI handles 3.0 devices, EHCI handles 2.0
+> >>>> devices and OHCI handles <2.0 devices. Currently the Makefile
+> >>>> has XHCI linking at the bottom which will result in the XHIC driver
+> >>>> initalizing after the EHCI and OHCI drivers and any installed 3.0
+> >>>> device will be seen as a 2.0 device. Moving the XHCI linking
+> >>>> above the EHCI and OHCI linking fixes the issue.
+> >>>
+> >>> What happens if all of these are modules and they are loaded in a
+> >>> different order?  This makefile change will not help with that, you need
+> >>> to have logic in the code in order to properly coordinate this type of
+> >>> mess, sorry.
+> >>
+> >> I believe we should be using module soft dependencies to instruct the
+> >> module loaders to load the modules in the correct order, so something
+> >> like this would do (not tested) for xhci-plat-hcd.c:
+> >>
+> >> MODULE_SOFTDEP("post: ehci-hcd ohci-hcd");
+> >>
+> >> and I am not sure whether we need to add the opposite for ehci-hcd and
+> >> ohci-hcd:
+> >>
+> >> MODULE_SOFTDEP("pre: xhci-plat-hcd");
+> > 
+> > That's a nice start, but what happens if that isn't honored?  This
+> > really needs to work properly for any order as you never can guarantee
+> > module/driver loading order in a system of modules.
+> 
+> I also suggested that device links may help, though I am not sure. What
+> do you suggest to be done?
 
-Build results:
-	total: 155 pass: 155 fail: 0
-Qemu test results:
-	total: 431 pass: 431 fail: 0
+No idea.  device links will help if you defer the probe properly until
+you see the proper drivers binding correctly.
 
-Guenter
+good luck!
+
+greg k-h
