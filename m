@@ -2,72 +2,115 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC6FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 538922064E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E4282065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:26:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589387168;
+	bh=gWgf3gSq6wvPZ0Lx/X3Ey44dHXev3t7FqVNRMYwxDk8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oZlcLnSOciyUqnCAxLe7oM4rQiEhKIoBWDVuZLiLhkAf1RpVCjmFBxtKRs7m4VvAD
+	 0lADIFWZcHRgPirgFUXT3r+q0vsIRAUKO3NJHZwo0Vr+KLuiVi2t1eJZenVsAiwlqj
+	 3Fp/2kLNQcM9dBfhPokEgKTu7E+d4eoh8kf4+FxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389578AbgEMQZ1 (ORCPT
+        id S2389592AbgEMQ0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 12:25:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42932 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 12:26:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730831AbgEMQZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 12:25:26 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1730831AbgEMQ0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 12:26:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FB972064E;
-        Wed, 13 May 2020 16:25:26 +0000 (UTC)
-Date:   Wed, 13 May 2020 12:25:24 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Sven Schnelle <svens@linux.ibm.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-Subject: Re: [tracing] 06e0a548ba:
- WARNING:at_kernel/trace/ring_buffer.c:#ring_buffer_iter_peek
-Message-ID: <20200513122524.2352c105@gandalf.local.home>
-In-Reply-To: <20200513161557.GA73453@tuxmaker.boeblingen.de.ibm.com>
-References: <20200429090508.GG5770@shao2-debian>
-        <20200513091906.GA12720@tuxmaker.boeblingen.de.ibm.com>
-        <20200513092922.6d79f6ee@gandalf.local.home>
-        <20200513161557.GA73453@tuxmaker.boeblingen.de.ibm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B0F52054F;
+        Wed, 13 May 2020 16:26:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589387166;
+        bh=gWgf3gSq6wvPZ0Lx/X3Ey44dHXev3t7FqVNRMYwxDk8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Q8U5ovSy/0apFGdAM690iiBY98+A/gBvKlCNOkc6rcR8Fsc+6G75KqMw8eeYppM8H
+         9GXT9jA7DahB6giulShWeV5n16yCa8caS7N311SifogXd7aZC+rKFzPYl1oyqMtqhO
+         iU8uV8K/Uws/tHhJoMyya1ivw2r9zdN/htJmXMDw=
+Date:   Wed, 13 May 2020 18:26:04 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Josh Triplett <josh@joshtriplett.org>, viro@zeniv.linux.org.uk,
+        rafael@kernel.org, jeyu@kernel.org, jmorris@namei.org,
+        keescook@chromium.org, paul@paul-moore.com,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        nayna@linux.ibm.com, zohar@linux.ibm.com,
+        scott.branden@broadcom.com, dan.carpenter@oracle.com,
+        skhan@linuxfoundation.org, geert@linux-m68k.org,
+        tglx@linutronix.de, bauerman@linux.ibm.com, dhowells@redhat.com,
+        linux-integrity@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+        selinux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] security: add symbol namespace for reading file data
+Message-ID: <20200513162604.GE1362525@kroah.com>
+References: <20200513152108.25669-1-mcgrof@kernel.org>
+ <20200513152108.25669-3-mcgrof@kernel.org>
+ <87k11fonbk.fsf@x220.int.ebiederm.org>
+ <20200513161622.GS11244@42.do-not-panic.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513161622.GS11244@42.do-not-panic.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020 18:15:57 +0200
-Sven Schnelle <svens@linux.ibm.com> wrote:
-
-> Thanks for looking into this. I've attached my /proc/config.gz to this Mail.
-> The x86 system is my Laptop which is a Thinkpad X280 with 4 HT CPUs (so 8 cpus
-> in total). I've tried disabling preemption, but this didn't help.
+On Wed, May 13, 2020 at 04:16:22PM +0000, Luis Chamberlain wrote:
+> On Wed, May 13, 2020 at 10:40:31AM -0500, Eric W. Biederman wrote:
+> > Luis Chamberlain <mcgrof@kernel.org> writes:
+> > 
+> > > Certain symbols are not meant to be used by everybody, the security
+> > > helpers for reading files directly is one such case. Use a symbol
+> > > namespace for them.
+> > >
+> > > This will prevent abuse of use of these symbols in places they were
+> > > not inteded to be used, and provides an easy way to audit where these
+> > > types of operations happen as a whole.
+> > 
+> > Why not just remove the ability for the firmware loader to be a module?
+> > 
+> > Is there some important use case that requires the firmware loader
+> > to be a module?
+> > 
+> > We already compile the code in by default.  So it is probably just
+> > easier to remove the modular support all together.  Which would allow
+> > the export of the security hooks to be removed as well.
 > 
-> It's always this check that causes the loop:
+> Yeah, that's a better solution. The only constaint I am aware of is
+> we *cannot* change the name of the module from firmware_class since the
+> old fallback sysfs loader depends on the module name. So, so long as we
+> take care with that on built-in and document this very well, I think
+> we should be good.
 > 
-> if (iter->head >= rb_page_size(iter->head_page)) {
-> 	rb_inc_iter(iter);
-> 	goto again;
-> }
+> I checked the commit logs and this was tristate since the code was added
+> upstream, so I cannot see any good reason it was enabled as modular.
 > 
-> On the first loop iter->head is some value > 0 and rb_page_size returns
-> 0, afterwards it gets twice to this check with both values 0. The third
-> time the warning is triggered. Maybe that information helps.
+> Speaking with a *backports experience* hat on, we did have a use case
+> to use a module for it in case a new feature was added upstream which
+> was not present on older kernels. However I think that using a separate
+> symbol prefix would help with that.
+> 
+> Would any Android stakeholders / small / embedded folks whave any issue
+> with this?
 
-Letting it run long enough, I was able to trigger it.
+Android has build in the firmware loading logic for a while now.  Well,
+always, they have not had kernel modules for many years.  That is
+changing but this logic is not getting moved to a kernel module as that
+would just be silly :)
 
-I think I know what's wrong with it. I'll put in some debugging to see if
-my thoughts are accurate.
+thanks,
 
-Thanks for bringing this back to my attention.
-
--- Steve
+greg k-h
