@@ -2,100 +2,127 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 947B9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E15BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7F09207F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:23:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ktSXpuEI"
+	by mail.kernel.org (Postfix) with ESMTP id 426F120829
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:24:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389135AbgEMPXs (ORCPT
+        id S2389142AbgEMPYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:23:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44978 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731638AbgEMPXs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:23:48 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6F4BC061A0C;
-        Wed, 13 May 2020 08:23:47 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id d207so9188839wmd.0;
-        Wed, 13 May 2020 08:23:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aP5RqJaHjw0SSvS8jFa4SufpVRHV3wMOfmjoi5Yc1f4=;
-        b=ktSXpuEIWmOyZetJtmtSOLnT96UirVaLdRpcXWTE/gYQC1WX1lHtfWkkUtx3Kfvp0S
-         RL0FBNdf5vCW2FR41NIuumOgKvTuRUjtFFS/fA2Yphvfhpc4c6vHIuyy054G1B67Clz/
-         Zqf0aNveo38QkOin7+9hk1I9AxhhNxfybUbb8CtvSQSXOxu/0KmHavMD3kiZlx04xwB8
-         F3DhQX60hJ4YWPRdI5cmLK+U/WrFzCsOPHO1z4jKgROLch25aU4EiGazMvSmRKXEcrff
-         TSWqovL29eEUyHBp8T5smBLlqePqhRdgFfW/1yoXCgvZI5PAkLcK6wQRY6EqqsLt7LOe
-         3MPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aP5RqJaHjw0SSvS8jFa4SufpVRHV3wMOfmjoi5Yc1f4=;
-        b=WDif4wpAROpbSq77A1ZLhqUhT3xtOjOn09zmqcCjwHih8x9KuHaq/UcteyYDzBGdXA
-         30lIjjsFHkLuiDghK//IUC2G5daMstFwLiMwz2BBsvjEXyheuHOkG9D+0P6Ryriwg28/
-         67KtAC918es6ppqA6Q+wZPBCqBYL09AZzT0r0hsXU1Mj+1iNDEWv8EeLjavI9aHuSBcp
-         2dXu/371LkdFnskzzTFlDTlQDLPpPpVhYkR1MyK4a45SwtxgVfVOOV0Y2Ul6qJu6g4cW
-         ja1usf8DxVsAFTrjCQtKYGfhoDZjVsLRs3J6EO08jYS97A31o7UoOD9NoDW8VB+mtTad
-         Vb5Q==
-X-Gm-Message-State: AGi0PubjhkEl1AOJ2yPMc4oYcPGdR02lxHmzLd5MyHbCgwBR6v7hqIfN
-        GQuc+ad94muwzq7oNu2Ezq4=
-X-Google-Smtp-Source: APiQypIa+86lv9x3CvtVmHtTwH5kxANcv58nv4VNDEBhX9EOGhGzbMBwX6Z3SwoBXqiXgPA8mEKURA==
-X-Received: by 2002:a7b:c5d4:: with SMTP id n20mr45268150wmk.92.1589383426466;
-        Wed, 13 May 2020 08:23:46 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id b2sm25421028wrm.30.2020.05.13.08.23.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 May 2020 08:23:45 -0700 (PDT)
-Subject: Re: [PATCH v1] net: phy: at803x: add cable test support
-To:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Michael Walle <michael@walle.cc>
-Cc:     "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>
-References: <20200513120648.14415-1-o.rempel@pengutronix.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <0c80397b-58b8-0807-0b98-695db8068e25@gmail.com>
-Date:   Wed, 13 May 2020 08:23:42 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.0
+        Wed, 13 May 2020 11:24:18 -0400
+Received: from mga02.intel.com ([134.134.136.20]:63313 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729153AbgEMPYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 11:24:16 -0400
+IronPort-SDR: ihX3aOfMkDRyoSI3BXeQDwlHzLsfm4qh59ktvA7M5GXsYGPFaezzB8OsiqZVJvnynpYmFxFOP5
+ jqhfsr+xUh1w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 08:24:15 -0700
+IronPort-SDR: LEYmL0D8h4/MJPzQww7+nG6ZMTyIUMdrpW620uivs8d1RMOvGn0hsKExHGUYjZoUgEhe4Gmdup
+ YKNkAXzriOTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,388,1583222400"; 
+   d="scan'208";a="251288456"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 13 May 2020 08:24:10 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jYtEz-006Rr3-Pi; Wed, 13 May 2020 18:24:13 +0300
+Date:   Wed, 13 May 2020 18:24:13 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Tali Perry <tali.perry1@gmail.com>
+Cc:     ofery@google.com, Brendan Higgins <brendanhiggins@google.com>,
+        avifishman70@gmail.com, Tomer Maimon <tmaimon77@gmail.com>,
+        kfting@nuvoton.com, Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v10 2/3] i2c: npcm7xx: Add Nuvoton NPCM I2C controller
+ driver
+Message-ID: <20200513152413.GQ185537@smile.fi.intel.com>
+References: <20200510102330.66715-1-tali.perry1@gmail.com>
+ <20200510102330.66715-3-tali.perry1@gmail.com>
+ <20200511091759.GE185537@smile.fi.intel.com>
+ <CAHb3i=tERsM+gwmQN1+vjnML9o5NxRK=uBokEUsd-Ljyje4s3A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200513120648.14415-1-o.rempel@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHb3i=tERsM+gwmQN1+vjnML9o5NxRK=uBokEUsd-Ljyje4s3A@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, May 11, 2020 at 02:28:50PM +0300, Tali Perry wrote:
+> On Mon, May 11, 2020 at 12:18 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Sun, May 10, 2020 at 01:23:29PM +0300, Tali Perry wrote:
+
+...
+
+> > > +#if IS_ENABLED(CONFIG_DEBUG_FS)
+> >
+> > Why?
+> 
+> We wanted to add an optional feature to track i2c slave status.
+> the NPCM has 16 channels handling multiple devices each. Some of the devices
+> are polled periodically, and might power down.
+> The user wanted to implement a health monitoring option
+> to occasionally check the status of the buses (how many timeouts, recovery etc.)
+> This feature is optional and depends on CONFIG_DEBUG_FS The counters are exposed
+> to user through the file system.
+
+What I meant is why do you need an #ifdef?
 
 
-On 5/13/2020 5:06 AM, Oleksij Rempel wrote:
-> The cable test seems to be support by all of currently support Atherso
-> PHYs, so add support for all of them. This patch was tested only on
-> AR9331 PHY with following results:
-> - No cable is detected as short
-> - A 15m long cable connected only on one side is detected as 9m open.
-> - A cable test with active link partner will provide no usable results.
+...
 
-How does this relate to Michael's recent work here:
+> > > +#define I2C_NUM_OF_ADDR 10
+> >
+> > Is it 10-bit address support or what?
+> >
+> 
+> No, the NPCM has an option to respond to multiple slave addresses
+> (10 own slave addresses)
 
-https://www.spinics.net/lists/kernel/msg3509304.html
+Perhaps more descriptive name then?
+
+...
+
+> > > +     // Repeat the following sequence until SDA is released
+> > > +     do {
+> > > +             // Issue a single SCL toggle
+> > > +             iowrite8(NPCM_I2CCST_TGSCL, bus->reg + NPCM_I2CCST);
+> > > +             udelay(20);
+> > > +             // If SDA line is inactive (high), stop
+> > > +             if (npcm_i2c_get_SDA(_adap)) {
+> > > +                     done = true;
+> > > +                     status = 0;
+> > > +             }
+> > > +     } while (!done && iter--);
+> >
+> > readx_poll_timeout() ?
+> 
+> Not exactly, readx_poll_timeout includes only a read operation, here there is a
+> write in the middle. (iowrite8)
+
+Ah, indeed. Perhaps time to add writex_poll_timeout() ?
+
 -- 
-Florian
+With Best Regards,
+Andy Shevchenko
+
+
