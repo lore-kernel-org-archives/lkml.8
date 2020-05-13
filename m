@@ -2,292 +2,104 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCFDC2D0FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF583C2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 378E6206CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B55A1206CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:36:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uQuO6RtH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XjfoER6q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730517AbgEMKeS (ORCPT
+        id S1731069AbgEMKgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:34:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56180 "EHLO
+        Wed, 13 May 2020 06:36:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728258AbgEMKeR (ORCPT
+        with ESMTP id S1728258AbgEMKgI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 06:34:17 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAFEDC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 03:34:16 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id g12so27879308wmh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 03:34:16 -0700 (PDT)
+        Wed, 13 May 2020 06:36:08 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 852BFC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 03:36:07 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id t9so10935366pjw.0
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 03:36:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RAYZx92zrU+XEe1c66bMex9zzQrfW8p1ZDJSPXKhkxg=;
-        b=uQuO6RtH84Sdte9oQ6z12C173539QDB3JFLHZvwnWliYctpNhh7U3d3BWSmnM3PQcW
-         2TihzvWsRZT+drxcJBKvCJhGlYnMVB+1Vea4v+CCdpnO08hlkBK5gR5iHl6wLluHIkWs
-         aiJcjamaQDMNCKx/TRLEdfgdq6uga+a6GGIRhP0XeTMdk80d1sTjO8rc5DepupocSZdD
-         z1sIANLCNepEeRKZKLNTVpC28i/xhU+CAFKHWOQMgUzDXP93oyxlo6Glp8/5KMFmIkoP
-         5hd2RDMyZKBWjXaVnk0wfYOBObymhyhNWM3uYTHfsxmW1LdI8Kof2hifz6ZrGzn2kd+d
-         SMZg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bHAK9rmg4ihryn7dWy8ERefZSMD9WKN9yuq0hlEY9T0=;
+        b=XjfoER6qp1iV1JqqLmfkTcI3Z7RDnvj/2ICf1lwSpxxHDE5FddSKtVM17vQO18ZZaN
+         jnRbjSVlMNLVPTMuaIbpvO2MOp+Aq+wkqwMxJe5JSBicRPZ4dqx7sfodGdE8zHNVqAVz
+         qGKaqSLtkKfJijyD5uPmde3oOXy/of90NOpokyBJbH1+8gfB1pVMRMPvAXepCPPhSni7
+         M7subFU0CaX2HRWZT40mTwE5iXPwEWzeZupNafcYvP7tuN3xZnccEHpZDRUOu5V90uLo
+         rRuqTZMAJzX4ToxZwFCJecpPJZhh0ULlTEigXSoYO23N/rMpuxAvu9XsePAUZQmtLLwd
+         d81w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RAYZx92zrU+XEe1c66bMex9zzQrfW8p1ZDJSPXKhkxg=;
-        b=J17UHkdxEriFLggoCdJfmtwQrojuJVBOEUEwzSy1bpNs9eGqzb+tHjDUvc/n6nvyUV
-         DX7bVEi674EnL2cD7+5czk39nfn3TctiPUIhbcOR76o+lENKcOnJEhGLCTHvo3nDFFnT
-         1cn/vLwTlZbpoTVx6mY8PevmXhWSOtLiVeqNou0kga+Dr7A21HIkJY/5whwAXqYthYud
-         rIAZ9Ock0Efg8ngSnZFh5covZFXZVhPLDJYQQX5rGVReQzMerD89PO+2ui0EnGnRH55s
-         a1Nt4uGLVfId/LOo8f5wX33Uf0OHv5VzOi3hsfJAAy49+TSO2KxqTxbHz0P+xFj1aWy5
-         6LIw==
-X-Gm-Message-State: AGi0PuZ82m3d/C1RrNSi/8B/K8KvDdHJttBVNBFb1x1ZnwRZsYsrPOU7
-        q1ZBrXb/zf+yli2G5H7b0AYQZGE42gQ=
-X-Google-Smtp-Source: APiQypIlcy8RztoPWUmYbI5majIan1aFDKxbles48VYEQI8EF1HsfXlJxm++TtxU/GwXCgcMsZCf7A==
-X-Received: by 2002:a1c:2ed3:: with SMTP id u202mr40266117wmu.77.1589366054922;
-        Wed, 13 May 2020 03:34:14 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id c25sm34270101wmb.44.2020.05.13.03.34.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 May 2020 03:34:14 -0700 (PDT)
-Subject: Re: [PATCH v2 4/6] nvmem: add support for the Khadas MCU Programmable
- User Memory
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200512132613.31507-1-narmstrong@baylibre.com>
- <20200512132613.31507-5-narmstrong@baylibre.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <09026bde-0ae7-b1a4-835f-bf2481199398@linaro.org>
-Date:   Wed, 13 May 2020 11:34:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bHAK9rmg4ihryn7dWy8ERefZSMD9WKN9yuq0hlEY9T0=;
+        b=boVPGVcy/9XV6Jw2EwAw07iPttXw8Z7PT7bQBzeXoRdv7LaaPrQiWxPTnfjE4ZZNT1
+         ZIIegZKttDF3i+9RMEZVReYcEXd1hMdL5UE6urc9e1V/rc71GDXDnpc68LMekwwW4gNH
+         HZaMiqutb68xl3Zo21WExd612Dds0KkTc3ehkv4UMHJAlKvCec6Nd8dtBQEl5MJ/iKe4
+         7nP/ssz1wvoJy4lc81zmnFvMc2l2UsmQq25ZXSKeS3ZuBzsPag6sEt4EwYcgB2jNp//s
+         xlFm8zuqlZjDdQ8jpIy6bC65xI8Z6nclfW31DWr74XFpz7JSpKtMWSHd7kVvI/6uj7Kj
+         voEQ==
+X-Gm-Message-State: AGi0Pub/RGzEVcs7bE4Wri46VTlGB2R+JofUkgzLqJDS2tJbvFRV1NwU
+        UJbJDgBvMckiyiE8pu1RSjfIOQ2REF3o
+X-Google-Smtp-Source: APiQypK3ZXYzJtX6IQyIn7TmvsTPLK4dq5VNn8Vas2uExOsTkKPen59d4IMG1DlB4FFPZW8xoS1NEQ==
+X-Received: by 2002:a17:902:eb43:: with SMTP id i3mr22140341pli.299.1589366166527;
+        Wed, 13 May 2020 03:36:06 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6e1c:3d5a:d8ce:4edd:4c38:4a1b])
+        by smtp.gmail.com with ESMTPSA id q21sm14208349pfg.131.2020.05.13.03.36.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 13 May 2020 03:36:05 -0700 (PDT)
+Date:   Wed, 13 May 2020 16:05:59 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Hemant Kumar <hemantk@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jhugo@codeaurora.org, bbhatt@codeaurora.org
+Subject: Re: [PATCH v1 0/5] MHI Misc Fixes
+Message-ID: <20200513103559.GB26866@Mani-XPS-13-9360>
+References: <1589248989-23824-1-git-send-email-hemantk@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200512132613.31507-5-narmstrong@baylibre.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589248989-23824-1-git-send-email-hemantk@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 12/05/2020 14:26, Neil Armstrong wrote:
-> The new Khadas VIM2, VIM3 and Edge boards embeds an on-board microcontroller
-> offering a 56bytes User Programmable NVMEM array.
+On Mon, May 11, 2020 at 07:03:04PM -0700, Hemant Kumar wrote:
+> Patches are addressing MHI core driver bug fixes. Patches tested on
+> arm64 and x86 platforms.
 > 
-> This array needs a password to be writable, thus a password sysfs file
-> has been added on the device node to unlock the NVMEM.
 
-Is this one time programmable? Or does it need to be unlocked for every 
-read/write?
+Applied to mhi-next!
 
-How can you make sure that the memory is unlocked before making attempt 
-to read/write?
+Thanks,
+Mani
 
+> Hemant Kumar (5):
+>   bus: mhi: core: Remove the system error worker thread
+>   bus: mhi: core: Handle disable transitions in state worker
+>   bus: mhi: core: Skip handling BHI irq if MHI reg access is not allowed
+>   bus: mhi: core: Do not process SYS_ERROR if RDDM is supported
+>   bus: mhi: core: Handle write lock properly in mhi_pm_m0_transition
 > 
-> The default 6bytes password id: "Khadas"
+>  drivers/bus/mhi/core/init.c     |  3 ++-
+>  drivers/bus/mhi/core/internal.h |  4 +++-
+>  drivers/bus/mhi/core/main.c     | 38 +++++++++++++++++++----------
+>  drivers/bus/mhi/core/pm.c       | 53 ++++++++++++++++++++++++-----------------
+>  include/linux/mhi.h             |  2 --
+>  5 files changed, 61 insertions(+), 39 deletions(-)
 > 
-> This implements the user NVMEM devices as cell of the Khadas MCU MFD driver.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->   drivers/nvmem/Kconfig               |   8 ++
->   drivers/nvmem/Makefile              |   2 +
->   drivers/nvmem/khadas-mcu-user-mem.c | 128 ++++++++++++++++++++++++++++
->   3 files changed, 138 insertions(+)
->   create mode 100644 drivers/nvmem/khadas-mcu-user-mem.c
-> 
-> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-> index d7b7f6d688e7..92cd4f6aa931 100644
-> --- a/drivers/nvmem/Kconfig
-> +++ b/drivers/nvmem/Kconfig
-> @@ -67,6 +67,14 @@ config JZ4780_EFUSE
->   	  To compile this driver as a module, choose M here: the module
->   	  will be called nvmem_jz4780_efuse.
->   
-> +config NVMEM_KHADAS_MCU_USER_MEM
-> +	tristate "Khadas MCU User programmable memory support"
-> +	depends on MFD_KHADAS_MCU
-> +	depends on REGMAP
-> +	help
-> +	  This is a driver for the MCU User programmable memory
-> +	  available on the Khadas VIM and Edge boards.
-> +
->   config NVMEM_LPC18XX_EEPROM
->   	tristate "NXP LPC18XX EEPROM Memory Support"
->   	depends on ARCH_LPC18XX || COMPILE_TEST
-> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-> index a7c377218341..0516a309542d 100644
-> --- a/drivers/nvmem/Makefile
-> +++ b/drivers/nvmem/Makefile
-> @@ -17,6 +17,8 @@ obj-$(CONFIG_NVMEM_IMX_OCOTP_SCU)	+= nvmem-imx-ocotp-scu.o
->   nvmem-imx-ocotp-scu-y		:= imx-ocotp-scu.o
->   obj-$(CONFIG_JZ4780_EFUSE)		+= nvmem_jz4780_efuse.o
->   nvmem_jz4780_efuse-y		:= jz4780-efuse.o
-> +obj-$(CONFIG_NVMEM_KHADAS_MCU_USER_MEM)	+= nvmem-khadas-mcu-user-mem.o
-> +nvmem-khadas-mcu-user-mem-y	:= khadas-mcu-user-mem.o
->   obj-$(CONFIG_NVMEM_LPC18XX_EEPROM)	+= nvmem_lpc18xx_eeprom.o
->   nvmem_lpc18xx_eeprom-y	:= lpc18xx_eeprom.o
->   obj-$(CONFIG_NVMEM_LPC18XX_OTP)	+= nvmem_lpc18xx_otp.o
-> diff --git a/drivers/nvmem/khadas-mcu-user-mem.c b/drivers/nvmem/khadas-mcu-user-mem.c
-> new file mode 100644
-> index 000000000000..a1d5ae9a030c
-> --- /dev/null
-> +++ b/drivers/nvmem/khadas-mcu-user-mem.c
-> @@ -0,0 +1,128 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Driver for Khadas MCU User programmable Memory
-> + *
-> + * Copyright (C) 2020 BayLibre SAS
-> + * Author(s): Neil Armstrong <narmstrong@baylibre.com>
-> + */
-> +
-> +#include <linux/clk.h>
-
-Why do we need this header?
-
-> +#include <linux/module.h>
-> +#include <linux/nvmem-provider.h>
-> +#include <linux/mfd/khadas-mcu.h>
-> +#include <linux/regmap.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +
-> +static int khadas_mcu_user_mem_read(void *context, unsigned int offset,
-> +			    void *val, size_t bytes)
-> +{
-> +	struct khadas_mcu *khadas_mcu = context;
-> +
-> +	return regmap_bulk_read(khadas_mcu->map,
-> +				KHADAS_MCU_USER_DATA_0_REG + offset,
-> +				val, bytes);
-> +}
-> +
-> +static int khadas_mcu_user_mem_write(void *context, unsigned int offset,
-> +			     void *val, size_t bytes)
-> +{
-> +	struct khadas_mcu *khadas_mcu = context;
-> +
-> +	return regmap_bulk_write(khadas_mcu->map,
-> +				KHADAS_MCU_USER_DATA_0_REG + offset,
-> +				val, bytes);
-> +}
-> +
-> +static ssize_t password_store(struct device *dev, struct device_attribute *attr,
-> +			     const char *buf, size_t count)
-> +{
-> +	struct khadas_mcu *khadas_mcu = dev_get_drvdata(dev);
-> +	int i, ret;
-> +
-> +	if (count < 6)
-> +		return -EINVAL;
-
-Possibly this magic 6 value needs proper define. An additional check 
-here for > 6 would be better as well.
-
-> +
-> +	ret = regmap_write(khadas_mcu->map, KHADAS_MCU_PASSWD_START_REG, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	for (i = 0 ; i < 6 ; ++i) {
-> +		ret = regmap_write(khadas_mcu->map,
-> +				   KHADAS_MCU_CHECK_USER_PASSWD_REG,
-> +				   buf[i]);
-> +		if (ret)
-> +			goto out;
-> +	}
-> +
-> +	ret = regmap_write(khadas_mcu->map, KHADAS_MCU_PASSWD_START_REG, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return count;
-> +out:
-> +	regmap_write(khadas_mcu->map, KHADAS_MCU_PASSWD_START_REG, 0);
-> +
-> +	return ret;
-> +}
-> +
-> +static DEVICE_ATTR_WO(password);
-> +
-> +static struct attribute *khadas_mcu_user_mem_sysfs_attributes[] = {
-> +	&dev_attr_password.attr,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group khadas_mcu_user_mem_sysfs_attr_group = {
-> +	.attrs = khadas_mcu_user_mem_sysfs_attributes,
-> +};
-> +
-> +static int khadas_mcu_user_mem_probe(struct platform_device *pdev)
-> +{
-> +	struct khadas_mcu *khadas_mcu = dev_get_drvdata(pdev->dev.parent);
-
-You could probably get away with dependency of this structure and the 
-header itself by directly getting hold of regmap from parent device.
-
-
-> +	struct device *dev = &pdev->dev;
-> +	struct nvmem_device *nvmem;
-> +	struct nvmem_config *econfig;
-> +
-> +	econfig = devm_kzalloc(dev, sizeof(*econfig), GFP_KERNEL);
-> +	if (!econfig)
-> +		return -ENOMEM;
-> +
-> +	econfig->dev = pdev->dev.parent;
-> +	econfig->name = dev_name(pdev->dev.parent);
-> +	econfig->stride = 1;
-> +	econfig->word_size = 1;
-> +	econfig->reg_read = khadas_mcu_user_mem_read;
-> +	econfig->reg_write = khadas_mcu_user_mem_write;
-> +	econfig->size = 56;
-define 56 to make it more readable!
-
-> +	econfig->priv = khadas_mcu;
-> +
-> +	platform_set_drvdata(pdev, khadas_mcu);
-> +
-> +	nvmem = devm_nvmem_register(&pdev->dev, econfig);
-> +	if (IS_ERR(nvmem))
-> +		return PTR_ERR(nvmem);
-> +
-> +	return sysfs_create_group(&pdev->dev.kobj,
-> +				  &khadas_mcu_user_mem_sysfs_attr_group);
-> +}
-> +
-> +static const struct platform_device_id khadas_mcu_user_mem_id_table[] = {
-> +	{ .name = "khadas-mcu-user-mem", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(platform, khadas_mcu_user_mem_id_table);
-> +
-> +static struct platform_driver khadas_mcu_user_mem_driver = {
-> +	.probe = khadas_mcu_user_mem_probe,
-> +	.driver = {
-> +		.name = "khadas-mcu-user-mem",
-> +	},
-> +	.id_table = khadas_mcu_user_mem_id_table,
-> +};
-> +
-> +module_platform_driver(khadas_mcu_user_mem_driver);
-> +
-> +MODULE_AUTHOR("Neil Armstrong <narmstrong@baylibre.com>");
-> +MODULE_DESCRIPTION("Khadas MCU User MEM driver");
-> +MODULE_LICENSE("GPL v2");
-> 
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
