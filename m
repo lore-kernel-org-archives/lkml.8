@@ -2,139 +2,271 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6213FC2D0FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E9EC2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF34206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C629206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:51:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589374262;
+	bh=GiNQtUvlI/QA8uxSucbsN5b7N7V9jpkoyi9xE/A8IdU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=d1AiCTXcSlVXB6KJtkrIHDf/zq+yq09yp+dXKdPBZ1scBexbXnUrtcnwnChX70j4e
+	 LiSth79kOoyqkjLe8J4lQakcW8UQNK6r5FwwFzRPNWvUFILdAlyuUByLLWutJ6dQT9
+	 PfgUYgKVP86US4flDQiA0qN4L54r/sx/s7wBv3Ug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731715AbgEMMsk (ORCPT
+        id S1729534AbgEMMvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 08:48:40 -0400
-Received: from mga14.intel.com ([192.55.52.115]:43620 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728419AbgEMMsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 08:48:40 -0400
-IronPort-SDR: Xg5TPWBXGZZ8pM8jgdKKsD6k1/+LMVnlPeorTJi21oRzP+Z8xJAEiyNhm+lEAyDcMEMGATkJZv
- 32leoktdnLzA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 05:48:39 -0700
-IronPort-SDR: /i6OlrM8tpk+GssK205iKcn+W9jhYCIX1KUt4CmaX8fhj21i3bfwkrj1G3xrmT724rq+94y4ma
- IRwaNSXL6ygw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,387,1583222400"; 
-   d="scan'208";a="298355052"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
-  by orsmga008.jf.intel.com with ESMTP; 13 May 2020 05:48:36 -0700
-Subject: Re: [PATCH v13 0/5] usb: xhci: Add support for Renesas USB
- controllers
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        =?UTF-8?Q?Andreas_B=c3=b6hler?= <dev@aboehler.at>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200506060025.1535960-1-vkoul@kernel.org>
- <edb2df23-6193-fdb1-d9f9-ffc33a40c05e@linux.intel.com>
- <20200513124007.GA1082134@kroah.com>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
- 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 fiD/
-Message-ID: <f15262e7-3f46-5574-59cc-d98488f299fc@linux.intel.com>
-Date:   Wed, 13 May 2020 15:51:28 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 13 May 2020 08:51:01 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:34125 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728413AbgEMMvB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 08:51:01 -0400
+Received: by mail-pj1-f66.google.com with SMTP id l73so1683023pjb.1;
+        Wed, 13 May 2020 05:51:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6BvwL5VtTpPQh7+ZmwOEfJsJh+MpmaSNjEDc7fe17Cg=;
+        b=Fkek79DlDffswWdHSOgeeE7JK4Q/5BG/IxxYMALliBPZ5WbyphGOLhXmhVkebRAvTg
+         v8IlOEBvzLj1d5koNKZgt6vdKy3SgAJzUzUgmWJ1uKs/ratWFUf0nUbH1krQhlN+luFG
+         Y3LCmkKeCjnbeYihblv/ijWZf2m/SN7qvNjF8oZFLSB0Y45lDHwH8MtTmqNqGZpi6X0b
+         6RUCFy8g6HpymFDmsFoCTFrcINoMi4zvxh82M5k4e4i2y0Ai/NVxsNyXopU1W4Y5tR0Q
+         wtv/XEqJaM9+XZzQQSY7s6rIov/8jXJnxGVsBVr6IzPPCRPjuMsC1Z4NDhenIxJNwHLJ
+         ZVNw==
+X-Gm-Message-State: AOAM5335OwijoB4CYaSFOS7/hg/AfmvlEqwPa0zucC5I4YhCTub+opW1
+        xMqzGVtr4Zo8dWP+UiSEsVs=
+X-Google-Smtp-Source: ABdhPJxU6OZTFJl9CuEar2G//kflpf1HvLC9sMqCBGP9NVlaiP14CRGt8VPr7k+V9EoPThlFqVPOjg==
+X-Received: by 2002:a17:90a:2051:: with SMTP id n75mr9566197pjc.112.1589374259957;
+        Wed, 13 May 2020 05:50:59 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id z5sm14825173pfz.109.2020.05.13.05.50.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 05:50:58 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id C87234063E; Wed, 13 May 2020 12:50:57 +0000 (UTC)
+Date:   Wed, 13 May 2020 12:50:57 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Xiaoming Ni <nixiaoming@huawei.com>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Helge Deller <deller@gmx.de>,
+        Parisc List <linux-parisc@vger.kernel.org>, yzaikin@google.com,
+        linux-fsdevel@vger.kernel.org,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>, gregkh@linuxfoundation.org
+Subject: Re: linux-next: manual merge of the vfs tree with the parisc-hd tree
+Message-ID: <20200513125057.GM11244@42.do-not-panic.com>
+References: <20200511111123.68ccbaa3@canb.auug.org.au>
+ <99095805-8cbe-d140-e2f1-0c5a3e84d7e7@huawei.com>
+ <20200512003305.GX11244@42.do-not-panic.com>
+ <87y2pxs73w.fsf@x220.int.ebiederm.org>
+ <20200512172413.GC11244@42.do-not-panic.com>
+ <87k11hrqzc.fsf@x220.int.ebiederm.org>
+ <20200512220341.GE11244@42.do-not-panic.com>
+ <3ccd08a5-cac6-3ca1-ed33-3cb62c982443@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200513124007.GA1082134@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3ccd08a5-cac6-3ca1-ed33-3cb62c982443@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13.5.2020 15.40, Greg Kroah-Hartman wrote:
-> On Wed, May 13, 2020 at 03:19:29PM +0300, Mathias Nyman wrote:
->> On 6.5.2020 9.00, Vinod Koul wrote:
->>> This series add support for Renesas USB controllers uPD720201 and uPD720202.
->>> These require firmware to be loaded and in case devices have ROM those can
->>> also be programmed if empty. If ROM is programmed, it runs from ROM as well.
->>>
->>> This includes patches from Christian which supported these controllers w/o
->>> ROM and later my patches for ROM support and debugfs hook for rom erase and
->>> export of xhci-pci functions.
->>>
->>
->> First four patches look ok to me, but 5/5 that adds rom erase debugfs support
->> still needs some work.
->>
->> If you prefer I can take the first four, maybe we can get them to 5.8, and then
->> later add that debugs rom erase support.
->>
->> Let me know what you prefer
+On Wed, May 13, 2020 at 12:04:02PM +0800, Xiaoming Ni wrote:
+> On 2020/5/13 6:03, Luis Chamberlain wrote:
+> > On Tue, May 12, 2020 at 12:40:55PM -0500, Eric W. Biederman wrote:
+> > > Luis Chamberlain <mcgrof@kernel.org> writes:
+> > > 
+> > > > On Tue, May 12, 2020 at 06:52:35AM -0500, Eric W. Biederman wrote:
+> > > > > Luis Chamberlain <mcgrof@kernel.org> writes:
+> > > > > 
+> > > > > > +static struct ctl_table fs_base_table[] = {
+> > > > > > +	{
+> > > > > > +		.procname	= "fs",
+> > > > > > +		.mode		= 0555,
+> > > > > > +		.child		= fs_table,
+> > > > > > +	},
+> > > > > > +	{ }
+> > > > > > +};
+> > > > >    ^^^^^^^^^^^^^^^^^^^^^^^^ You don't need this at all.
+> > > > > > > +static int __init fs_procsys_init(void)
+> > > > > > +{
+> > > > > > +	struct ctl_table_header *hdr;
+> > > > > > +
+> > > > > > +	hdr = register_sysctl_table(fs_base_table);
+> > > > >                ^^^^^^^^^^^^^^^^^^^^^ Please use register_sysctl instead.
+> > > > > 	AKA
+> > > > >          hdr = register_sysctl("fs", fs_table);
+> > > > 
+> > > > Ah, much cleaner thanks!
+> > > 
+> > > It is my hope you we can get rid of register_sysctl_table one of these
+> > > days.  It was the original interface but today it is just a
+> > > compatibility wrapper.
+> > > 
+> > > I unfortunately ran out of steam last time before I finished converting
+> > > everything over.
+> > 
+> > Let's give it one more go. I'll start with the fs stuff.
+> > 
+> >    Luis
+> > 
+> > .
+> > 
 > 
-> Oops, I just added all of these to my testing tree :)
+> If we register each feature in its own feature code file using register() to
+> register the sysctl interface. To avoid merge conflicts when different
+> features modify sysctl.c at the same time.
+> that is, try to Avoid mixing code with multiple features in the same code
+> file.
 > 
-> What's wrong with the debugfs patch?  I can drop it, but it seemed
-> simple enough to me.
+> For example, the multiple file interfaces defined in sysctl.c by the
+> hung_task feature can  be moved to hung_task.c.
+> 
+> Perhaps later, without centralized sysctl.c ?
+> Is this better?
+> 
+> Thanks
+> Xiaoming Ni
+> 
+> ---
+>  include/linux/sched/sysctl.h |  8 +----
+>  kernel/hung_task.c           | 78
+> +++++++++++++++++++++++++++++++++++++++++++-
+>  kernel/sysctl.c              | 50 ----------------------------
+>  3 files changed, 78 insertions(+), 58 deletions(-)
+> 
+> diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
+> index d4f6215..bb4e0d3 100644
+> --- a/include/linux/sched/sysctl.h
+> +++ b/include/linux/sched/sysctl.h
+> @@ -7,14 +7,8 @@
+>  struct ctl_table;
+> 
+>  #ifdef CONFIG_DETECT_HUNG_TASK
+> -extern int	     sysctl_hung_task_check_count;
+> -extern unsigned int  sysctl_hung_task_panic;
+> +/* used for block/ */
+>  extern unsigned long sysctl_hung_task_timeout_secs;
+> -extern unsigned long sysctl_hung_task_check_interval_secs;
+> -extern int sysctl_hung_task_warnings;
+> -extern int proc_dohung_task_timeout_secs(struct ctl_table *table, int
+> write,
+> -					 void __user *buffer,
+> -					 size_t *lenp, loff_t *ppos);
+>  #else
+>  /* Avoid need for ifdefs elsewhere in the code */
+>  enum { sysctl_hung_task_timeout_secs = 0 };
+> diff --git a/kernel/hung_task.c b/kernel/hung_task.c
+> index 14a625c..53589f2 100644
+> --- a/kernel/hung_task.c
+> +++ b/kernel/hung_task.c
+> @@ -20,10 +20,10 @@
+>  #include <linux/utsname.h>
+>  #include <linux/sched/signal.h>
+>  #include <linux/sched/debug.h>
+> +#include <linux/kmemleak.h>
+>  #include <linux/sched/sysctl.h>
+> 
+>  #include <trace/events/sched.h>
+> -
+>  /*
+>   * The number of tasks checked:
+>   */
+> @@ -296,8 +296,84 @@ static int watchdog(void *dummy)
+>  	return 0;
+>  }
+> 
+> +/*
+> + * This is needed for proc_doulongvec_minmax of
+> sysctl_hung_task_timeout_secs
+> + * and hung_task_check_interval_secs
+> + */
+> +static unsigned long hung_task_timeout_max = (LONG_MAX / HZ);
 
-Added "usb_renesas" directory under debugfs root when we have easily accessible
-debugfs/usb/xhci directory to use as parent. 
+This is not generic so it can stay in this file.
 
-Also not checking if adding directory failed (if debufs not supported)
- 
--Mathias
+> +static int __maybe_unused neg_one = -1;
 
+This is generic so we can share it, I suggest we just rename this
+for now to sysctl_neg_one, export it to a symbol namespace,
+EXPORT_SYMBOL_NS_GPL(sysctl_neg_one, SYSCTL) and then import it with
+MODULE_IMPORT_NS(SYSCTL)
+
+
+> +static struct ctl_table hung_task_sysctls[] = {
+
+We want to wrap this around with CONFIG_SYSCTL, so a cleaner solution
+is something like this:
+
+diff --git a/kernel/Makefile b/kernel/Makefile
+index a42ac3a58994..689718351754 100644
+--- a/kernel/Makefile
++++ b/kernel/Makefile
+@@ -88,7 +88,9 @@ obj-$(CONFIG_KCOV) += kcov.o
+ obj-$(CONFIG_KPROBES) += kprobes.o
+ obj-$(CONFIG_FAIL_FUNCTION) += fail_function.o
+ obj-$(CONFIG_KGDB) += debug/
+-obj-$(CONFIG_DETECT_HUNG_TASK) += hung_task.o
++obj-$(CONFIG_DETECT_HUNG_TASK) += hung_tasks.o
++hung_tasks-y := hung_task.o
++hung_tasks-$(CONFIG_SYSCTL) += hung_task_sysctl.o
+ obj-$(CONFIG_LOCKUP_DETECTOR) += watchdog.o
+ obj-$(CONFIG_HARDLOCKUP_DETECTOR_PERF) += watchdog_hld.o
+ obj-$(CONFIG_SECCOMP) += seccomp.o
+
+> +/* get /proc/sys/kernel root */
+> +static struct ctl_table sysctls_root[] = {
+> +	{
+> +		.procname       = "kernel",
+> +		.mode           = 0555,
+> +		.child          = hung_task_sysctls,
+> +	},
+> +	{}
+> +};
+> +
+
+And as per Eric, this is not needed, we can simplify this more, as noted
+below.
+
+> +static int __init hung_task_sysctl_init(void)
+> +{
+> +	struct ctl_table_header *srt = register_sysctl_table(sysctls_root);
+
+You want instead something like::
+
+        struct ctl_table_header *srt;
+
+	srt = register_sysctl("kernel", hung_task_sysctls);
+> +
+> +	if (!srt)
+> +		return -ENOMEM;
+> +	kmemleak_not_leak(srt);
+> +	return 0;
+> +}
+> +
+
+>  static int __init hung_task_init(void)
+>  {
+> +	int ret = hung_task_sysctl_init();
+> +
+> +	if (ret != 0)
+> +		return ret;
+> +
+
+And just #ifdef this around CONFIG_SYSCTL.
+
+  Luis
