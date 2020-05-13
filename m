@@ -7,60 +7,51 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA17DCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 103DACA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B980F205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1A2B205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363792;
-	bh=KIbshgR2Hr2P0QjIcLIWNF8IE/9xpGbzNGoIKxojQxE=;
+	s=default; t=1589363798;
+	bh=srG9i/xIR2nz4+pXygtkAgDXU6JyRfly2ErsQkCjXA4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lj0rg3Boen6ojQ0564lQ8YAwiqE9CO2euIc//XpSTgyTmmE9N8xTmTbeYcEg6hYuO
-	 4uTVTqgAkBOSMfODcoc/laS0dVUOzLuey3EXCFVNtonxUavC1SLlVny0qtUcOWAg2t
-	 Oe675Ih0MLlLA2Xf7D4jojUK64IuH+jZIgGAuhys=
+	b=TUTFhmviyz0NQxVkxP4zzTAbtNHaz7e/JYdY5DdkViaZwb8PVNQcwrj/3YRrBkHbS
+	 zXk6Xi/0ulSJ3tXrdpsGeMifBtmpHhvCUwKQ9t5272ejl1y+FMousvYeb9M3jaUD/s
+	 g9VZ75H9Y9avDyhkIVX7vb55vmLYmyKtZ0mMcS+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388435AbgEMJ4b (ORCPT
+        id S2388447AbgEMJ4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:56:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60194 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:56:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388426AbgEMJ42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:56:28 -0400
+        id S2388411AbgEMJ4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:56:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F0202176D;
-        Wed, 13 May 2020 09:56:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFD61206D6;
+        Wed, 13 May 2020 09:56:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363788;
-        bh=KIbshgR2Hr2P0QjIcLIWNF8IE/9xpGbzNGoIKxojQxE=;
+        s=default; t=1589363780;
+        bh=srG9i/xIR2nz4+pXygtkAgDXU6JyRfly2ErsQkCjXA4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aEZVpwgmKsipiE+PGtZ7OQB4LTUYSaHGK4xq/8OFo4aeoNVARjer1oa6CF9VDw9ME
-         tjL8vlJk9zoCpLycUXqvwJoG3ly9ZPqQanlwjjeiSx84T8N9gvZctyhKdCeeINYvcX
-         GqUrmm8MZkGhn9ULfs5W/3rQ+Hf7NcnCL+I+DJ/A=
+        b=oppq4PLd8x+WWGakg0Hgne0hHXtbcrfMZgP9v0ykw0TEHhmQKISbrHdqh7VJZk1et
+         43xGacMimUkY/HVs6z0VA3wfnoLYikEh8UbKMExMpV8BLS5zC6nKhg3DIw6mVI4FRR
+         xJ8Drc0fLQWPL4i6Lb16XdMfI3REy+V5L3fnzB8Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
+        stable@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
+        Yafang Shao <laoar.shao@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Brijesh Singh <brijesh.singh@amd.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.6 106/118] arch/x86/kvm/svm/sev.c: change flag passed to GUP fast in sev_pin_memory()
-Date:   Wed, 13 May 2020 11:45:25 +0200
-Message-Id: <20200513094427.166204184@linuxfoundation.org>
+Subject: [PATCH 5.6 113/118] mm, memcg: fix error return value of mem_cgroup_css_alloc()
+Date:   Wed, 13 May 2020 11:45:32 +0200
+Message-Id: <20200513094427.878405561@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -73,53 +64,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+From: Yafang Shao <laoar.shao@gmail.com>
 
-commit 996ed22c7a5251d76dcdfe5026ef8230e90066d9 upstream.
+commit 11d6761218d19ca06ae5387f4e3692c4fa9e7493 upstream.
 
-When trying to lock read-only pages, sev_pin_memory() fails because
-FOLL_WRITE is used as the flag for get_user_pages_fast().
+When I run my memcg testcase which creates lots of memcgs, I found
+there're unexpected out of memory logs while there're still enough
+available free memory.  The error log is
 
-Commit 73b0140bf0fe ("mm/gup: change GUP fast to use flags rather than a
-write 'bool'") updated the get_user_pages_fast() call sites to use
-flags, but incorrectly updated the call in sev_pin_memory().  As the
-original coding of this call was correct, revert the change made by that
-commit.
+  mkdir: cannot create directory 'foo.65533': Cannot allocate memory
 
-Fixes: 73b0140bf0fe ("mm/gup: change GUP fast to use flags rather than a write 'bool'")
-Signed-off-by: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+The reason is when we try to create more than MEM_CGROUP_ID_MAX memcgs,
+an -ENOMEM errno will be set by mem_cgroup_css_alloc(), but the right
+errno should be -ENOSPC "No space left on device", which is an
+appropriate errno for userspace's failed mkdir.
+
+As the errno really misled me, we should make it right.  After this
+patch, the error log will be
+
+  mkdir: cannot create directory 'foo.65533': No space left on device
+
+[akpm@linux-foundation.org: s/EBUSY/ENOSPC/, per Michal]
+[akpm@linux-foundation.org: s/EBUSY/ENOSPC/, per Michal]
+Fixes: 73f576c04b94 ("mm: memcontrol: fix cgroup creation failure after many small jobs")
+Suggested-by: Matthew Wilcox <willy@infradead.org>
+Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H . Peter Anvin" <hpa@zytor.com>
-Cc: Mike Marshall <hubcap@omnibond.com>
-Cc: Brijesh Singh <brijesh.singh@amd.com>
-Link: http://lkml.kernel.org/r/20200423152419.87202-1-Janakarajan.Natarajan@amd.com
+Acked-by: Michal Hocko <mhocko@kernel.org>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Link: http://lkml.kernel.org/r/20200407063621.GA18914@dhcp22.suse.cz
+Link: http://lkml.kernel.org/r/1586192163-20099-1-git-send-email-laoar.shao@gmail.com
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/svm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/memcontrol.c |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -1886,7 +1886,7 @@ static struct page **sev_pin_memory(stru
- 		return NULL;
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -4977,19 +4977,22 @@ static struct mem_cgroup *mem_cgroup_all
+ 	unsigned int size;
+ 	int node;
+ 	int __maybe_unused i;
++	long error = -ENOMEM;
  
- 	/* Pin the user virtual address. */
--	npinned = get_user_pages_fast(uaddr, npages, FOLL_WRITE, pages);
-+	npinned = get_user_pages_fast(uaddr, npages, write ? FOLL_WRITE : 0, pages);
- 	if (npinned != npages) {
- 		pr_err("SEV: Failure locking %lu pages.\n", npages);
- 		goto err;
+ 	size = sizeof(struct mem_cgroup);
+ 	size += nr_node_ids * sizeof(struct mem_cgroup_per_node *);
+ 
+ 	memcg = kzalloc(size, GFP_KERNEL);
+ 	if (!memcg)
+-		return NULL;
++		return ERR_PTR(error);
+ 
+ 	memcg->id.id = idr_alloc(&mem_cgroup_idr, NULL,
+ 				 1, MEM_CGROUP_ID_MAX,
+ 				 GFP_KERNEL);
+-	if (memcg->id.id < 0)
++	if (memcg->id.id < 0) {
++		error = memcg->id.id;
+ 		goto fail;
++	}
+ 
+ 	memcg->vmstats_local = alloc_percpu(struct memcg_vmstats_percpu);
+ 	if (!memcg->vmstats_local)
+@@ -5033,7 +5036,7 @@ static struct mem_cgroup *mem_cgroup_all
+ fail:
+ 	mem_cgroup_id_remove(memcg);
+ 	__mem_cgroup_free(memcg);
+-	return NULL;
++	return ERR_PTR(error);
+ }
+ 
+ static struct cgroup_subsys_state * __ref
+@@ -5044,8 +5047,8 @@ mem_cgroup_css_alloc(struct cgroup_subsy
+ 	long error = -ENOMEM;
+ 
+ 	memcg = mem_cgroup_alloc();
+-	if (!memcg)
+-		return ERR_PTR(error);
++	if (IS_ERR(memcg))
++		return ERR_CAST(memcg);
+ 
+ 	memcg->high = PAGE_COUNTER_MAX;
+ 	memcg->soft_limit = PAGE_COUNTER_MAX;
+@@ -5095,7 +5098,7 @@ mem_cgroup_css_alloc(struct cgroup_subsy
+ fail:
+ 	mem_cgroup_id_remove(memcg);
+ 	mem_cgroup_free(memcg);
+-	return ERR_PTR(-ENOMEM);
++	return ERR_PTR(error);
+ }
+ 
+ static int mem_cgroup_css_online(struct cgroup_subsys_state *css)
 
 
