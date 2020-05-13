@@ -2,114 +2,97 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC9DC2D0F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0EFC2D0F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3559D207BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA950206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:33:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="a3x2n47K"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="1m1PFJ2B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728634AbgEMCdQ (ORCPT
+        id S1728767AbgEMCd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 22:33:16 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:43488 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbgEMCdQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 22:33:16 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04D2X6cD020439;
-        Tue, 12 May 2020 21:33:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589337186;
-        bh=yTteBEh6Xwn4I3BnvI6/DQ8ygYomYcOGArsSXBO0R/M=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=a3x2n47K9GBaLLhitS5heuPagTcYKacY4q19cXTJ5s9Ud49C9v30kOX1chVBQwCkd
-         d35wSH+IYw4EPw4LFQM8mJNbFUYmFAFrkSSwty/t/I6IhgGWjazhGWWFWijX1EhNKp
-         SdmmHj+oyMjKs9gddleUaZW+I/JQyl24uNN1+1Es=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04D2X6pQ012778
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 May 2020 21:33:06 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 12
- May 2020 21:33:05 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 12 May 2020 21:33:05 -0500
-Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04D2X3tF053605;
-        Tue, 12 May 2020 21:33:04 -0500
-Subject: Re: [RESEND PATCH v2 1/3] dt-bindings: phy: Drop reset-gpios from
- marvell,mmp3-hsic-phy
-To:     Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200509081754.474787-1-lkundrak@v3.sk>
- <20200509081754.474787-2-lkundrak@v3.sk>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <3fbe923d-6b38-bec5-c623-7640c6affbae@ti.com>
-Date:   Wed, 13 May 2020 08:03:03 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 12 May 2020 22:33:27 -0400
+Received: from mail.zx2c4.com ([192.95.5.64]:54549 "EHLO mail.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726078AbgEMCd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 22:33:26 -0400
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id c4040115;
+        Wed, 13 May 2020 02:19:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=9cAMlLbYwy7YxFnVgonuDYVCQ7Y=; b=1m1PFJ
+        2B+8CtLPfFKydV2Eqa4Iou4wbcYCYArA8utEK56pKUtvPY8GyQDYxSflLjzyeySc
+        XVCoTB3ryeoFAOK1PJgt/GKg8T6VWi/SKiUUg0VCvhPTtgNLyLAj9J8arRB1Q/jK
+        XVs4nbCnzQnmzE5bflXX58+mr5wfZOcesWXaNWPoL9j+KdeFfh/F0C2G6ZhRc+At
+        NaXpXlxgGtS77ZgZEedUSyOTwbZaLGXqZ3VnL82nV9T3lZFyoysQEatZ3+gdT208
+        I65k13q3L3wDSLzTiAUOW+4kOCBLaqMleGTlAEQ3NzD3v9BDrzB3FdZaoywd+vOr
+        kNo19N145XvIZ5pg==
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id ba827fd7 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Wed, 13 May 2020 02:19:52 +0000 (UTC)
+Received: by mail-il1-f171.google.com with SMTP id n11so14472540ilj.4;
+        Tue, 12 May 2020 19:33:23 -0700 (PDT)
+X-Gm-Message-State: AGi0PubuQIJiEkmUBthIeKfwhA5OV4ke/LgdMGbmqUnV3sk16AOOZtHw
+        72zVfiv+lc7gzdxW/E0a9+3H0JbN3nJmC6tAjjo=
+X-Google-Smtp-Source: APiQypJgh8pw02tJhFhZVYZHUeMe4CkR7vQq3ZoiDzB43+wYjuX9PsMkHQ584E/CvIIJSREZQMxGHmOWxbe4h+OTD5M=
+X-Received: by 2002:a92:5c82:: with SMTP id d2mr25252998ilg.231.1589337202376;
+ Tue, 12 May 2020 19:33:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200509081754.474787-2-lkundrak@v3.sk>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <CAHmME9oXiTmVuOYmG=K3ijWK+zP2yB9a2CFjbLx_5fkDiH30Tg@mail.gmail.com>
+ <20200511215101.302530-1-Jason@zx2c4.com> <2620780.1589289425@warthog.procyon.org.uk>
+ <CAHmME9q-TxHo5o63rxHzKwV_kWV9u+MoxBQM5Yz3hODGCj7RhQ@mail.gmail.com> <2858489.1589321003@warthog.procyon.org.uk>
+In-Reply-To: <2858489.1589321003@warthog.procyon.org.uk>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Tue, 12 May 2020 20:33:11 -0600
+X-Gmail-Original-Message-ID: <CAHmME9r4Pag4ML-GVaKHFTZ_T_unhWg1LxVuEk6wKp006ZAFXg@mail.gmail.com>
+Message-ID: <CAHmME9r4Pag4ML-GVaKHFTZ_T_unhWg1LxVuEk6wKp006ZAFXg@mail.gmail.com>
+Subject: Re: [PATCH v3] security/keys: rewrite big_key crypto to use library interface
+To:     David Howells <dhowells@redhat.com>
+Cc:     keyrings@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        kernel-hardening@lists.openwall.com,
+        Eric Biggers <ebiggers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Rob
+On Tue, May 12, 2020 at 4:03 PM David Howells <dhowells@redhat.com> wrote:
+>
+> Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+>
+> > So long as that ->update function:
+> > 1. Deletes the old on-disk data.
+> > 2. Deletes the old key from the inode.
+> > 3. Generates a new key using get_random_bytes.
+> > 4. Stores that new key in the inode.
+> > 5. Encrypts the updated data afresh with the new key.
+> > 6. Puts the updated data onto disk,
+> >
+> > then this is fine with me, and feel free to have my Acked-by if you
+> > want. But if it doesn't do that -- i.e. if it tries to reuse the old
+> > key or similar -- then this isn't fine. But it sounds like from what
+> > you've described that things are actually fine, in which case, I guess
+> > it makes sense to apply your patch ontop of mine and commit these.
+>
+> Yep.  It calls big_key_destroy(), which clears away the old stuff just as when
+> a key is being destroyed, then generic_key_instantiate() just as when a key is
+> being set up.
+>
+> The key ID and the key metadata (ownership, perms, expiry) are maintained, but
+> the payload is just completely replaced.
 
-On 5/9/2020 1:47 PM, Lubomir Rintel wrote:
-> This has been added in error -- the PHY block doesn't have a reset pin.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> ---
->  .../devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml     | 7 -------
->  1 file changed, 7 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml b/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml
-> index 00609ace677c..30e290c57930 100644
-> --- a/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml
-> +++ b/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml
-> @@ -18,27 +18,20 @@ properties:
->      maxItems: 1
->      description: base address of the device
->  
-> -  reset-gpios:
-> -    maxItems: 1
-> -    description: GPIO connected to reset
-> -
->    "#phy-cells":
->      const: 0
->  
->  required:
->    - compatible
->    - reg
-> -  - reset-gpios
->    - "#phy-cells"
->  
->  additionalProperties: false
->  
->  examples:
->    - |
-> -    #include <dt-bindings/gpio/gpio.h>
->      hsic-phy@f0001800 {
->              compatible = "marvell,mmp3-hsic-phy";
->              reg = <0xf0001800 0x40>;
-> -            reset-gpios = <&gpio 63 GPIO_ACTIVE_HIGH>;
->              #phy-cells = <0>;
->      };
-> 
+Okay, in that case, take my:
+
+    Acked-by: Jason A. Donenfeld <Jason@zx2c4.com>
+
+And then perhaps you can take both my patch and your addendum into keys-next.
+
+Jason
