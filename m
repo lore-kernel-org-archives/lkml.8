@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5C8C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D699C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5EFA2078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D5CE23129
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363231;
-	bh=8WGXdX0TnAX86/ckTL3jkixuy+9Tp1nesLQ+hXMtkso=;
+	s=default; t=1589363235;
+	bh=efmXkP4nZQuabVonmCLtMzWmGLAsXGPDsTiDa8BZylU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DV06bcfWxnItpqCusPBuSemoQOYyEcgHHmz+VgMPMTun6LYXaeK1pcUnvqSto7ZGE
-	 ZGjt3jyotDGHnWWUAzFgbaq+WNeY+MgYA1eQuHejl9BJ27RmlSZNCdo4vOLjpTr6M2
-	 FU7Y3bMMYZkjrEFvSICgVAUzX3Wt1QVTpzki5SQw=
+	b=0hUsl/KNtJ5P3kDlssmWsnKDLHqTNOsvhkujyq3h8f0/YeEBpmDlLX9sAgNB15jIT
+	 7yDb4Em6zoVl+2LEwU7ybKfn7z/fd/ewfiUcbkPW9XXQFNsrXGrYGHlpU/GrCyhOC6
+	 cBt208jP4oq9w3tg+i4pTBi7zruue+OSjD+SLH8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732802AbgEMJrK (ORCPT
+        id S1732813AbgEMJrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:47:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44700 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:47:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732784AbgEMJrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:47:06 -0400
+        id S1732773AbgEMJrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:47:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CEFE20769;
-        Wed, 13 May 2020 09:47:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA99E20753;
+        Wed, 13 May 2020 09:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363225;
-        bh=8WGXdX0TnAX86/ckTL3jkixuy+9Tp1nesLQ+hXMtkso=;
+        s=default; t=1589363228;
+        bh=efmXkP4nZQuabVonmCLtMzWmGLAsXGPDsTiDa8BZylU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nieX7bXyyzfsGK1SHLV1xeOHToVzo98Nt0t7CLkI0XiyZ0a+J5riTGOs/Glr8FAhR
-         SA3j0xykqSy8pd3yW3wFrMDFAjaAvK4DU2x/9hgl08uTLk4nQ4vQPJHlQ+87HtE2eX
-         IM6hDDJ+xkWkmRHscBXM1eZNTySAsWg5+2KVIjkg=
+        b=HOFsMt33O6kfQhCpSzi7Uoz/Gk7ETeGhmdKnvCoemgGZO/+bRCHGiA5R9tG11Eqp3
+         xoTAQaaGuFgKGLgs2yS35foFwtdRHk+uWmkLzPaOWqh3fSiCLmZrbdV5vsmHvaMOY5
+         gGN3akSzYUP4DzmPpiV5vdxxlXbsRt7Q59sZlKBo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 4.19 36/48] batman-adv: Fix refcnt leak in batadv_v_ogm_process
-Date:   Wed, 13 May 2020 11:45:02 +0200
-Message-Id: <20200513094401.060898423@linuxfoundation.org>
+        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
+        Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>
+Subject: [PATCH 4.19 37/48] x86/entry/64: Fix unwind hints in register clearing code
+Date:   Wed, 13 May 2020 11:45:03 +0200
+Message-Id: <20200513094401.325580400@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
 References: <20200513094351.100352960@linuxfoundation.org>
@@ -61,46 +65,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-commit 6f91a3f7af4186099dd10fa530dd7e0d9c29747d upstream.
+commit 06a9750edcffa808494d56da939085c35904e618 upstream.
 
-batadv_v_ogm_process() invokes batadv_hardif_neigh_get(), which returns
-a reference of the neighbor object to "hardif_neigh" with increased
-refcount.
+The PUSH_AND_CLEAR_REGS macro zeroes each register immediately after
+pushing it.  If an NMI or exception hits after a register is cleared,
+but before the UNWIND_HINT_REGS annotation, the ORC unwinder will
+wrongly think the previous value of the register was zero.  This can
+confuse the unwinding process and cause it to exit early.
 
-When batadv_v_ogm_process() returns, "hardif_neigh" becomes invalid, so
-the refcount should be decreased to keep refcount balanced.
+Because ORC is simpler than DWARF, there are a limited number of unwind
+annotation states, so it's not possible to add an individual unwind hint
+after each push/clear combination.  Instead, the register clearing
+instructions need to be consolidated and moved to after the
+UNWIND_HINT_REGS annotation.
 
-The reference counting issue happens in one exception handling paths of
-batadv_v_ogm_process(). When batadv_v_ogm_orig_get() fails to get the
-orig node and returns NULL, the refcnt increased by
-batadv_hardif_neigh_get() is not decreased, causing a refcnt leak.
-
-Fix this issue by jumping to "out" label when batadv_v_ogm_orig_get()
-fails to get the orig node.
-
-Fixes: 9323158ef9f4 ("batman-adv: OGMv2 - implement originators logic")
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Fixes: 3f01daecd545 ("x86/entry/64: Introduce the PUSH_AND_CLEAN_REGS macro")
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Dave Jones <dsj@fb.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Link: https://lore.kernel.org/r/68fd3d0bc92ae2d62ff7879d15d3684217d51f08.1587808742.git.jpoimboe@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/batman-adv/bat_v_ogm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/entry/calling.h |   40 +++++++++++++++++++++-------------------
+ 1 file changed, 21 insertions(+), 19 deletions(-)
 
---- a/net/batman-adv/bat_v_ogm.c
-+++ b/net/batman-adv/bat_v_ogm.c
-@@ -735,7 +735,7 @@ static void batadv_v_ogm_process(const s
+--- a/arch/x86/entry/calling.h
++++ b/arch/x86/entry/calling.h
+@@ -98,13 +98,6 @@ For 32-bit we have the following convent
+ #define SIZEOF_PTREGS	21*8
  
- 	orig_node = batadv_v_ogm_orig_get(bat_priv, ogm_packet->orig);
- 	if (!orig_node)
--		return;
-+		goto out;
+ .macro PUSH_AND_CLEAR_REGS rdx=%rdx rax=%rax save_ret=0
+-	/*
+-	 * Push registers and sanitize registers of values that a
+-	 * speculation attack might otherwise want to exploit. The
+-	 * lower registers are likely clobbered well before they
+-	 * could be put to use in a speculative execution gadget.
+-	 * Interleave XOR with PUSH for better uop scheduling:
+-	 */
+ 	.if \save_ret
+ 	pushq	%rsi		/* pt_regs->si */
+ 	movq	8(%rsp), %rsi	/* temporarily store the return address in %rsi */
+@@ -114,34 +107,43 @@ For 32-bit we have the following convent
+ 	pushq   %rsi		/* pt_regs->si */
+ 	.endif
+ 	pushq	\rdx		/* pt_regs->dx */
+-	xorl	%edx, %edx	/* nospec   dx */
+ 	pushq   %rcx		/* pt_regs->cx */
+-	xorl	%ecx, %ecx	/* nospec   cx */
+ 	pushq   \rax		/* pt_regs->ax */
+ 	pushq   %r8		/* pt_regs->r8 */
+-	xorl	%r8d, %r8d	/* nospec   r8 */
+ 	pushq   %r9		/* pt_regs->r9 */
+-	xorl	%r9d, %r9d	/* nospec   r9 */
+ 	pushq   %r10		/* pt_regs->r10 */
+-	xorl	%r10d, %r10d	/* nospec   r10 */
+ 	pushq   %r11		/* pt_regs->r11 */
+-	xorl	%r11d, %r11d	/* nospec   r11*/
+ 	pushq	%rbx		/* pt_regs->rbx */
+-	xorl    %ebx, %ebx	/* nospec   rbx*/
+ 	pushq	%rbp		/* pt_regs->rbp */
+-	xorl    %ebp, %ebp	/* nospec   rbp*/
+ 	pushq	%r12		/* pt_regs->r12 */
+-	xorl	%r12d, %r12d	/* nospec   r12*/
+ 	pushq	%r13		/* pt_regs->r13 */
+-	xorl	%r13d, %r13d	/* nospec   r13*/
+ 	pushq	%r14		/* pt_regs->r14 */
+-	xorl	%r14d, %r14d	/* nospec   r14*/
+ 	pushq	%r15		/* pt_regs->r15 */
+-	xorl	%r15d, %r15d	/* nospec   r15*/
+ 	UNWIND_HINT_REGS
++
+ 	.if \save_ret
+ 	pushq	%rsi		/* return address on top of stack */
+ 	.endif
++
++	/*
++	 * Sanitize registers of values that a speculation attack might
++	 * otherwise want to exploit. The lower registers are likely clobbered
++	 * well before they could be put to use in a speculative execution
++	 * gadget.
++	 */
++	xorl	%edx,  %edx	/* nospec dx  */
++	xorl	%ecx,  %ecx	/* nospec cx  */
++	xorl	%r8d,  %r8d	/* nospec r8  */
++	xorl	%r9d,  %r9d	/* nospec r9  */
++	xorl	%r10d, %r10d	/* nospec r10 */
++	xorl	%r11d, %r11d	/* nospec r11 */
++	xorl	%ebx,  %ebx	/* nospec rbx */
++	xorl	%ebp,  %ebp	/* nospec rbp */
++	xorl	%r12d, %r12d	/* nospec r12 */
++	xorl	%r13d, %r13d	/* nospec r13 */
++	xorl	%r14d, %r14d	/* nospec r14 */
++	xorl	%r15d, %r15d	/* nospec r15 */
++
+ .endm
  
- 	neigh_node = batadv_neigh_node_get_or_create(orig_node, if_incoming,
- 						     ethhdr->h_source);
+ .macro POP_REGS pop_rdi=1 skip_r11rcx=0
 
 
