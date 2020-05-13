@@ -2,148 +2,86 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7D6CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9740C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8873F206CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABD7720753
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:24:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NSaX/vRO"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="xE/MdHK7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732173AbgEMIYO (ORCPT
+        id S1732209AbgEMIYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 04:24:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729189AbgEMIYM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 04:24:12 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38BDFC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 01:24:12 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id a9so12857251lfb.8
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 01:24:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BCnyp8DCf8CZS+zvYVx3/wo57tr3YdAZ4e/hQh/qGcs=;
-        b=NSaX/vRORpmKcgHTGXqFERaoMDjDF+QKGnIBBeEfxXLunp5oOjByaFxkxCqB1bOLUz
-         ziDPzYeWjw2LzzZX6LTgXFF5VT7C8rxeEN4zYz+2Ngv+DLz76YD9hLjgHhinTWdYKfEc
-         8huLU09Xc0QYvyfmeAGvAuSz938gw+pGIfOMX9wM7fZlKkDjylhLiYNxnaQud5fkpA0i
-         tK+dqg+vB/UGtEfAAJg8NBBqwI72H8aet+FTUlR+TpOTg8fMvMxL0W8VC1HVy+19pcii
-         uUKV+RFm40CJ8/QBotiXF5XThr/zaUoE0njy5JKsDnJry+4kF8vfoOVa4wHBNf3xRBU8
-         Lppw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BCnyp8DCf8CZS+zvYVx3/wo57tr3YdAZ4e/hQh/qGcs=;
-        b=FoKYh3T1LQTh82zNGvPdctGVBgfjW1if6/o6QGt/J0FN1Nb0SY/gnTlvO46POOhoAB
-         pDoaGUVb1wSPkLx6RcVSlw6zf2HGQFl/p8jKHxvBhPjpXBdWpjUxp0i5yZLDoaslPo5h
-         IEUPJRP7+kcVMxY/6iBWsPhbb6Tr+N0tS4kd/yPfw9HJjELBiOa5RH4SjrKBnyQ+/f56
-         0c08RxKErFLO3yS0UtQOZFR7hj/oKRtMmYC4MVQWmfvapTXKu2KTy2oWfSkcnJ3qSIcF
-         YczywU3hNrkNVn6MXtpL63o8RNWX3ORBtBxOg3I6DsZot3nYlbb2H8aPE4Ztd4U9ovrQ
-         k6fw==
-X-Gm-Message-State: AOAM5310UDrK5XgVSDDgUONLWxOo/7qEo2ofEUvQzePO8vJkNmU8wU+4
-        b4rUT8OwYOBZD0hdputolcThhGE7qDZT0dxb3LU1n8bJ8UU=
-X-Google-Smtp-Source: ABdhPJyhtD47Sp6q4yJaOB3jGxHH1xzgbhIpHzYkUjSKYlDknt3/k2WCjTsNXvKZmwZXOyX8XFpGN8/geq/9HNk9HJU=
-X-Received: by 2002:ac2:4945:: with SMTP id o5mr17202258lfi.21.1589358250625;
- Wed, 13 May 2020 01:24:10 -0700 (PDT)
+        Wed, 13 May 2020 04:24:39 -0400
+Received: from www.zeus03.de ([194.117.254.33]:36988 "EHLO mail.zeus03.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730358AbgEMIYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 04:24:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=TuuMRaC6ph+2soX/VtZ+XJ7juSkj
+        B9c3VyHsHvBaQxE=; b=xE/MdHK7z/Wn74c0o8OnDPeLSj2yPM1dE4i9T34Tfxoa
+        R01Ontr2TqdtPeP8tdGNKsQoHDGugL1gatwMRnQALOrD2pq6e8Kiy+krZ3rbOHwO
+        kuPUV+vVCB2VpkYmRYuWUwubIUL2TVbbMySkqZ04KLw93pgvIh2MrkOtclRSA4g=
+Received: (qmail 3264941 invoked from network); 13 May 2020 10:24:36 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 May 2020 10:24:36 +0200
+X-UD-Smtp-Session: l3s3148p1@3JWDT4Ol8NcgAwDPXwcWAIZZjypw6UMc
+Date:   Wed, 13 May 2020 10:24:36 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] mfd: htc-i2cpld: convert to use
+ i2c_new_client_device()
+Message-ID: <20200513082436.GB1043@ninjato>
+References: <20200326211009.13411-1-wsa+renesas@sang-engineering.com>
+ <20200326211009.13411-2-wsa+renesas@sang-engineering.com>
+ <20200415110442.GK2167633@dell>
+ <20200512162602.GH13516@ninjato>
+ <20200513075659.GC3548@dell>
 MIME-Version: 1.0
-References: <20200513003430.651232-1-vlad.babchuk@gmail.com>
- <20200513003625.651340-1-vlad.babchuk@gmail.com> <CAHUa44E968nR1toCGn0_k6ABw_By7Z8EqB2rGSgiTmseo8oL-Q@mail.gmail.com>
-In-Reply-To: <CAHUa44E968nR1toCGn0_k6ABw_By7Z8EqB2rGSgiTmseo8oL-Q@mail.gmail.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Wed, 13 May 2020 13:53:59 +0530
-Message-ID: <CAFA6WYNOAwSaaaCCf0qoQ=gGBEsCkbdrWUzabkn3XnM7hndsow@mail.gmail.com>
-Subject: Re: [PATCH] optee: don't fail on unsuccessful device enumeration
-To:     Volodymyr Babchuk <vlad.babchuk@gmail.com>
-Cc:     Jens Wiklander <jens.wiklander@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        Jerome Forissier <jerome@forissier.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hQiwHBbRI9kgIhsi"
+Content-Disposition: inline
+In-Reply-To: <20200513075659.GC3548@dell>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Volodymyr,
 
-On Wed, 13 May 2020 at 13:30, Jens Wiklander <jens.wiklander@linaro.org> wrote:
->
-> Hi Volodymyr,
->
-> On Wed, May 13, 2020 at 2:36 AM Volodymyr Babchuk
-> <vlad.babchuk@gmail.com> wrote:
-> >
-> > optee_enumerate_devices() can fail for multiple of reasons. For
-> > example, I encountered issue when Xen OP-TEE mediator NACKed
-> > PTA_CMD_GET_DEVICES call.
+--hQiwHBbRI9kgIhsi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Could you share a detailed description of the issue which you are
-facing? optee_enumerate_devices() is a simple invocation of pseudo TA
-and cases where OP-TEE doesn't provide corresponding pseudo TA are
-handled very well.
 
-> > This should not result in driver
-> > initialization error because this is an optional feature.
+> Haven't pushed for a while.  Should be there when -next is rebuilt.
 
-I wouldn't call it an optional feature as there might be real kernel
-drivers dependent on this enumeration. Also, it is a simple example to
-self test OP-TEE functionality too. So I am not sure how much
-functional OP-TEE would be if this basic TA invocation fails.
+Thanks, Lee!
 
--Sumit
 
-> >
-> > Thus, it is better to print warning, instead of termination driver
-> > initialization.
-> >
-> > Signed-off-by: Volodymyr Babchuk <vlad.babchuk@gmail.com>
-> > ---
->
-> Looks good. Didn't apply directly at latest, but the conflict was easy
-> enough to resolve.
->
-> I'll pick up this in a day unless someone objects.
->
-> I'll add a
->     Fixes: c3fa24af9244 ("tee: optee: add TEE bus device enumeration support")
-> Line.
->
-> Thanks,
-> Jens
->
-> >
-> > resend: fixed email in s-o-b tag. Sorry for the noise
-> >
-> > drivers/tee/optee/core.c | 6 ++----
-> >  1 file changed, 2 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
-> > index 34409c916882..a053930032f2 100644
-> > --- a/drivers/tee/optee/core.c
-> > +++ b/drivers/tee/optee/core.c
-> > @@ -728,10 +728,8 @@ static int __init optee_driver_init(void)
-> >                 return PTR_ERR(optee);
-> >
-> >         rc = optee_enumerate_devices();
-> > -       if (rc) {
-> > -               optee_remove(optee);
-> > -               return rc;
-> > -       }
-> > +       if (rc)
-> > +               pr_warn("can't enumerate optee devices: %d\n", rc);
-> >
-> >         pr_info("initialized driver\n");
-> >
-> > --
-> > 2.26.2
-> >
+--hQiwHBbRI9kgIhsi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl67rsAACgkQFA3kzBSg
+KbY69BAAgPjqtYCxF1XOt6GPAhgEpYDhwT9r/MnRCdA7j3+Za6738hgijNOlKDCB
+Ya8c/7sjowc+a4VwG+TEj8wOEakHeIu/0eZZsL8iIjXjE+yfFDDct8UzDZ6Q8p74
+Iv+oXGaE2nlEM/1QzXaA9FmkFnxvdKijT2gQhjj4s1ydTWqZZ/kj+JyOCK4NZ16r
+UqK/agkj9C07+j0zAqFqRsmGNbJrjBezG5Gnk/lNUFc29cSmaLtLi3skT9/l6KHX
+uEvhSnTfLs/zDYA+R7cJULqINuuCK3yzKrCdNhEQV0rhCv+9so6uYM2MzT4NkR/v
+5HNA3LdZKaXPXWapR5yNh+OGPTp8XHac5QUnm0YhtZtrBjZcatqM3zCLwxZwvCxU
+0lsYuWuVvSeg5CR8D8uOSvKIxbyD/lYRUMdmIpt7AIALbQcVZmdutFwLVUSvo2eJ
+zQUthbm2D0ZJJ1RExYYOQ9BxI3JcBEx+e2C990ziMOYs2FlCR9UN80h0TCgjm4GP
+PXgjb7WPu+Yc18NIy6PIdkRGTp6LXs04uXnVgyT3EkRvoDChql4N69vXZZynNvfa
+YNCy9kEs5d+n7kFZpnCLVDXgvgezUi2faJsWVfZJgZORitd1rGzjDhWxBuvCDoPG
+9sQbLD07pAkrjwaONR0OsEqOjiYIgTm36FPoN7iMnkss90NmC9U=
+=LXTR
+-----END PGP SIGNATURE-----
+
+--hQiwHBbRI9kgIhsi--
