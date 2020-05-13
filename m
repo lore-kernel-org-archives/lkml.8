@@ -2,156 +2,138 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B38C47076
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7600C2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B19A2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AE5D2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:57:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="ezglxHUK"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="Rberk0n0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388730AbgEMN51 (ORCPT
+        id S2388755AbgEMN5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:57:27 -0400
+        Wed, 13 May 2020 09:57:31 -0400
 Received: from mail-bn8nam12on2082.outbound.protection.outlook.com ([40.107.237.82]:6221
         "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727792AbgEMN50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:57:26 -0400
+        id S1728981AbgEMN53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 09:57:29 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VZU5kr2e4ucWfn9Gyo+9dZqyVxErtNfv/kqZVPdjeR+EcMGJvAmTMBhkDH/guvXjjaGF0JykDAXmAr1w5s99Co/JloAnoU2TO0PdrJwiblkeF8VdbZW0m2JL3bkPAuoIAwriZpQRUSRoy43QUrZ+9fscE1rIBrSTIO4/tOgGj5Checjxrrvc9uUmfqR2+wxyTq7z2UoN7ETamrvhA3EMEiHVlEjMwKj5Z0shGRCVWRSH8E+SSexX+WFPT99A9ArfKEXT8/jVGMHjfvGoqat/pEHNnZdA3v+sKtF0J8J1jM59pmg/m0/M5KfkDiAugUHgKaWqJt/YEPqGlDsnrgLigw==
+ b=S358/DB/ZOUBusqauJ3U0wjWj1sIRrWYlpTahrs4aU975R4O1ksdf09JkWIhhrHuy0Nq6HmNkzxxXRBzPwWl8Tk9WbtcaqmU6TcFv8p9R8G4A1QzcibfE6B1WGqqbLOUJithkXXI8svfBF2ZiXMhArYbSxQTrRJEHWZVetZtcsJrRynS2FedYVl8PXsMQFmr+Z5V2B6xkdTDNIdyt5laywCca1ljJXrxVhjJqF+1uyV6s48Ho+UwEBuF6SNCm6GgCBEfBmMVKFUv8nO6NRDSV3WVzym3f025ODiXEQgpuXjLMNmUTIPCxdyp8QseVzhwa+N8ZFDuLEjytu2lDj9dhw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z/CissEnr03/jFIrciKL+3QUEybGszDHRakSyGze/Mk=;
- b=hG/FIHfew1ZNCNF9L7l2HEWXXZtsJnCOjYYs+J0gugoqQOUrOdMJP0NLO0tvcfWciar6UqF0Dj3VW8j5p4dBUqdCrRpGrCfoTSO0HD4K038QM3GwFNmf4rtpYWEPspt95Ey9z4MKZfxQbAtwrvwIOhqFIbr4zaPlZITYxUCJ4IG8aEjdml68xE+BFnk4kFjv3w4+FDSSp1Uw29Um2+ztBxCOYfpb00UsW4WOZ8pD5uiO8XyC9tFA1UZdYi7Ep8wjdHoFHJOP1uyxfC9DrvU2Gp3Ym/H73pXc83KhYNqpcACgyJRA3K/pE5UPRYcBX7BfQTZAkWRyH2eUdX1Cy/dTIA==
+ bh=auhdIpVykeScLQHtqjvP+FzHVlmWZFx4SFd13kL/vhY=;
+ b=anNNytamQ60Uyourwmz2tYoLFhxxiHnANFC5G/0mJsTyupat8hkWPwkOvgaATzA7dKmmndiHcgvwOhLrlCqTpdyAmm5QG0Z9njjpOa/g1F+LXuoMGbxldh+SvuzDJm4LyTPs8JIdJCbKWhN4eNj09xGcAY28y2d8ENU5dRzcDxMbhFXasQpeoClHf16xsVzAxXZuvYJlcso7g8vb3LB418wl/eBhVguCxn9VHvC0P9mNKjVyJzJv9dhqaMACugOUfRvG8QcuGLxKBqWSlVSlyhEGp4xTTmYCJMO+U0QEMql3jyvNCtb+o0thIEfd9WavelCAeBLf5b9no0kM0Ny+5Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
  dkim=pass header.d=sifive.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z/CissEnr03/jFIrciKL+3QUEybGszDHRakSyGze/Mk=;
- b=ezglxHUKNiabv5gtPqAS5GBwc0Pjm6d8tQnGwxqsYPvVZhfYUhuWwrs2GKF8KKW8Yte4aKN/dEqPjTSV1/vF5KD5La15FdxkL8TzfBZ1CFXWCSeVXG+xQOLX1phdga6ulCaq4XVXXThdAY2skgAQhoR5JlCUaGt4eb06/mEAl+Q=
+ bh=auhdIpVykeScLQHtqjvP+FzHVlmWZFx4SFd13kL/vhY=;
+ b=Rberk0n07JJ7Tls0rOrU6bo2IBo/6ruBbEp9aLS7gG+CFAYzDykMzIxiwxjBHBAxkuawucpWXTvEA3g/Q0DLVu8133Ngq//04pRzUwBg5/Zy6mQ/gi7JIVK5ep/vpxvP6YQfRif8J7ySt38GyRhDQGWZQzAXPNVwR/aSU4Qi5dk=
 Authentication-Results: vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=none action=none header.from=sifive.com;
 Received: from BYAPR13MB2614.namprd13.prod.outlook.com (2603:10b6:a03:b4::12)
  by BYAPR13MB2279.namprd13.prod.outlook.com (2603:10b6:a02:bd::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.6; Wed, 13 May
- 2020 13:57:21 +0000
+ 2020 13:57:24 +0000
 Received: from BYAPR13MB2614.namprd13.prod.outlook.com
  ([fe80::c0fc:30a3:5e5f:c2b6]) by BYAPR13MB2614.namprd13.prod.outlook.com
  ([fe80::c0fc:30a3:5e5f:c2b6%7]) with mapi id 15.20.3000.013; Wed, 13 May 2020
- 13:57:21 +0000
+ 13:57:24 +0000
 From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
 To:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
         devicetree@vger.kernel.org, robh+dt@kernel.org
 Cc:     palmer@dabbelt.com, paul.walmsley@sifive.com, atish.patra@wdc.com,
         Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Subject: [PATCH v1 0/3] fix macb phy probe failure if phy-reset is not handled
-Date:   Wed, 13 May 2020 06:56:58 -0700
-Message-Id: <1589378222-15238-1-git-send-email-sagar.kadam@sifive.com>
+Subject: [PATCH v1 1/3] dts: phy: fix missing mdio device and probe failure of vsc8541-01 device
+Date:   Wed, 13 May 2020 06:56:59 -0700
+Message-Id: <1589378222-15238-2-git-send-email-sagar.kadam@sifive.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1589378222-15238-1-git-send-email-sagar.kadam@sifive.com>
+References: <1589378222-15238-1-git-send-email-sagar.kadam@sifive.com>
 Content-Type: text/plain
 X-ClientProxiedBy: BY5PR16CA0005.namprd16.prod.outlook.com
  (2603:10b6:a03:1a0::18) To BYAPR13MB2614.namprd13.prod.outlook.com
  (2603:10b6:a03:b4::12)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from gamma07.internal.sifive.com (64.62.193.194) by BY5PR16CA0005.namprd16.prod.outlook.com (2603:10b6:a03:1a0::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3000.20 via Frontend Transport; Wed, 13 May 2020 13:57:21 +0000
+Received: from gamma07.internal.sifive.com (64.62.193.194) by BY5PR16CA0005.namprd16.prod.outlook.com (2603:10b6:a03:1a0::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3000.20 via Frontend Transport; Wed, 13 May 2020 13:57:23 +0000
 X-Mailer: git-send-email 2.7.4
 X-Originating-IP: [64.62.193.194]
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 291f2f1e-14db-4bfc-0640-08d7f7458e9b
+X-MS-Office365-Filtering-Correlation-Id: 10621c8e-882c-4f36-66b3-08d7f745901c
 X-MS-TrafficTypeDiagnostic: BYAPR13MB2279:
 X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR13MB2279CF6379D1536DBD8B5D7C99BF0@BYAPR13MB2279.namprd13.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Microsoft-Antispam-PRVS: <BYAPR13MB2279C8097328C2A96CC9194099BF0@BYAPR13MB2279.namprd13.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
 X-Forefront-PRVS: 0402872DA1
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR13MB2614.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(346002)(376002)(136003)(396003)(39830400003)(33430700001)(2906002)(8676002)(956004)(6486002)(316002)(7696005)(8936002)(86362001)(36756003)(26005)(107886003)(66946007)(66476007)(2616005)(6666004)(52116002)(16526019)(66556008)(33440700001)(966005)(478600001)(5660300002)(186003)(4326008);DIR:OUT;SFP:1101;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: N5mu5YLoMctltfIK2SnVkQ6ElKpqdMvD50DBH+8Kl3yphisBBL2+mrO2A1byK4P9B6v6LYl5dfAKB1Y71dc1Dg/cqb5eZFJnVZXrBMwO89Raq5/p+Ivf6CpytMOIoA9Vb/tRhKHQ3fqrrRNQUClkmfWohhmBN9iMJoiBrP277F9IiPHvhF+6Ul1dpsDhioT7Pd4x+OSSsGvNXKwtZikRGxqwubsWist4uwYu43jjS+V1z5TAMtjPP2fpOIZIKeEjJVxQ2u97IewV8VjvvVL8F/4apEUP3fU00h3YGl+gQtKEjVTrHZvLAB+u+PSQML+8uCWLbQiGYCGzbLhWjy7AQQPJXyc8R3KtF6+ZO1f+m7SafbmHoYoONT1FzDn5msvLN0u0/YQaIEvOzCWlKB4DZqneKUfD42AurwwTp2ZsMApLEasmuFHf4NWBC6giZoHZnk+zutF9bneBDcUCCfGhSUUFEBMDVFYvB4FbyF/beDpeOyssRXBPTCC0ZpMi8wyMDvtLfUKiWhhQu9/1uyGYQk/U/LYplJn8ItHh4Dao4uHyvJSnvcng5d2rDp2gWATIx7wwlAwCF/W4h69B+d4N1bwQEBGfozW2ufMww+TPpSk=
-X-MS-Exchange-AntiSpam-MessageData: NwvgaxkkE+vM1IZhTPVMFQTWFLLOfCd6hM6YsAymydyqHHn/nA9pFwQXPa4v97PB4LsMovmZrdLaIgj8Nh0XDClPgdukIrhOVN8cZf1frn+z/DVy1G3l/2NPTj2vcD+fsirjqETitOYD1BP0+WfVMYkOZgYiiRPkxl86YwAGN0L78kiRICZR5m5sxMXeesW8Ebh7X6idPggzpw6yRNyj5zxJFyZM1GlcuGGcKGWu+wfnJVxCnN/Bt14Wn19HXuP6x3gV4QfzK5IjFFtKZGnUwhujp0zrqNsGEpD2lJq1hyQV4BjGxpJGOBBWRwdYTZYVPTiVbAi1Z9x3Hhdagg+6N+ntvzi0UBqRlxgpP5Rwdv8R/QpioFbNaei4fjh1GO8krOIjwG+mjlAYiYKhzJLtEImYvjjDiO5tlslKZexemWVIL+xqobHQzjnX/ZV/IcPZx4G5AKAh7aHQXqGlhppMyiLw8xCDD/nftwxad29v+Vw=
+X-Microsoft-Antispam-Message-Info: 5CqMnqRHBZPe8+361+eSBT9CeWpibrVLysY6oLA0mu1mWtO8p1ruwWwWTfoc1MfTE+5/2wQTGlQASSYtlQ7hyqfFG/UZmenj4/swlchca9zZ/52mUP+e17pe/8o4ljBKLNG7coP75TpPVpTos1Bpl3E0Gaw7UJtMDxINDs/FVZ5Zw0IVLP/U2BGiMbwqg2hZZ6mUfUvRJXlNR2QowpuKswLZWFdCvUs5zdLgNUGKvExYj54aSfkf69rQ1YccfK22jBZgNjBDH8vPVgyfTPW3C1q98xxuOhz/Zc2GO6LY6N2K0PTzVD8WTKW7XIpNYIAU2c2uPxhHa9sEdDb0UNU1SpLH0s4UwNaeOlQdN80ZAYdxe49qEWh9zRNt7QNMxvkemxzyrkghjlg+Eq+fYkPEaO0c9FCqlRcJ3CG2OjWzYv6wWuhkfSm+iA/PV7CP9C2B/LL5j4qBCrDa60sSAtTz+qvRb/aY/6nQEhf0avdXroDF4IjRuloPIUmQTZ5SiypP0GT1zSKoTiDQkUoyznYVD2D9Y9tn0U/v+muu40UCgOQxbrArOVz36kbPZy5Vwbfanydreho/KPK2cit4oAX66XntRRUTgjNsCzwOAXOid5A=
+X-MS-Exchange-AntiSpam-MessageData: WiFppinhghC+0LVcPT9NZe0q+ktt+lYtvBOnYdlnMuGFRCjjWbgPiMm29LMv1J1gQPxev5o/gAu6AS4SJNKxtIMGfIKMd5ISXEkZ6E9JYbwmmT8beWVo47FPtqnC9JFHDHUF97DFBWr/dcApobwLVFIAnRantPlnTQ4yYKDYVD5Yu5lYJ+tSvwEh3rQIY2zZR29KupDyWUCuwUBUso5Xqushm6uosr9FmY+iGGonCHY0ApLwvmGlWvUtkyC77/QYVIAAbpgb0n65JPR5KF6/aywX+mVDGV3AwKMVHGUIr18g4T7StlcXRYSbuor8b4BIOQ3Ak4lFB8geyv2HHA8BllZGtsJIlUG9amYEH2JGAge2Ah7WlHu9SPPp5doAG6gGa3n5zBN3e8U9yx6QrXPw873+2aayo3BWD+I7VtSCR5s1poXX+cNqUmFn8/S1PpCTELJD/MAGZ+tgJTH42uQa1zZt+o7QIjBY4X0oq0e3GFo=
 X-OriginatorOrg: sifive.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 291f2f1e-14db-4bfc-0640-08d7f7458e9b
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2020 13:57:21.6161
+X-MS-Exchange-CrossTenant-Network-Message-Id: 10621c8e-882c-4f36-66b3-08d7f745901c
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2020 13:57:24.0608
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 09m65hpxR63ujFVJdMUBLQyTyLgzGi3wPUBerTn4VnrOT/Odk9k3syMV9E64dKcQbXMGSysdYlSSdDttRFtygA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: mLh3CDPYDRQPnuJY3qTPoIPYTWU7Sk2vCDQDw/F9aC9v4xPXYCKRd3q6+xhDWfIUAzpCxgYV7doXwNpsWpaMRg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR13MB2279
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HiFive Unleashed is having VSC8541-01 ethernet phy device and requires a
-specific reset sequence of 0-1-0-1 in order to use it in unmanaged mode.
-This series addresses a corner case where phy reset is not handled by boot
-stages prior to linux.
-Somewhat similar unreliable phy probe failure was reported and discussed
-here [1].
-The macb driver fails to detect the ethernet phy device if the bootloader
-doesn't provide a proper reset sequence to the phy device or the phy itself
-is in some invalid state. Currently, the FSBL is resetting the phy device,
-and so there is no issue observed in the linux network setup.
+HiFive unleashed A00 board has VSC8541-01 ethernet phy, this device is
+identified as a Revision B device as described in device identification
+registers. In order to use this phy in the unmanaged mode, it requires
+a specific reset sequence of logical 0-1-0-1 transition on the NRESET pin
+as documented here [1].
 
-The series is based on linux-5.7-rc5.
-Patch 1: Add the OUI to the phy dt node to fix issue of missing mdio device
-Patch 2 and 3:
-	Resetting phy needs GPIO support so add to dt and defconfig.
+Currently, the bootloader (fsbl) takes care of the phy reset. If due to
+some reason the phy device hasn't received the reset by the prior stages
+before the linux macb driver comes into the picture, the MACB mii bus gets
+probed but the mdio scan fails and is not even able to read the phy ID
+registers. It gives an error message:
 
-[1] https://lkml.org/lkml/2018/11/29/154
+"libphy: MACB_mii_bus: probed
+mdio_bus 10090000.ethernet-ffffffff: MDIO device at address 0 is missing."
 
-To reproduce the issue: 
-1. Comment out VSC8541 reset sequence in fsbl/main.c
-   from within the freedom-u540-c000-bootloader.
-2. Build and flash fsbl.bin to micro sdcard.
+Thus adding the device OUI (Organizationally Unique Identifier) to the phy
+device node helps to probe the phy device.
 
-Boot the board and bootlog will show network setup failure messages as:
+[1]: VSC8541-01 datasheet:
+https://www.mouser.com/ds/2/523/Microsemi_VSC8541-01_Datasheet_10496_V40-1148034.pdf
 
-[  1.069474] libphy: MACB_mii_bus: probed
-[  1.073092] mdio_bus 10090000.ethernet-ffffffff: MDIO device at address 0
-	       is missing 
-.....
-[  1.979252] macb 10090000.ethernet eth0: Could not attach PHY (-19)
+Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+---
+ arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-3. Now apply the series build, and boot kernel.
-4. MACB and VSC8541 driver get successfully probed and the network is set
-   without any failure.
-
-
-So irrespective of whether the prior stages handle the phy reset sequence,
-the probing is successful in both the cases of cold boot and warm boot.
-
-Change History:
-===============================
-V1:
--Ignore 4th patch as suggested and so removed it from the series.
--Verified this series on 5.7-rc5.
-
-V0: Base RFC patch. Verified on 5.7-rc2
-
-
-Sagar Shrikant Kadam (3):
-  dts: phy: fix missing mdio device and probe failure of vsc8541-01
-    device
-  dts: phy: add GPIO number and active state used for phy reset
-  riscv: defconfig: enable gpio support for HiFive Unleashed
-
- arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts | 2 ++
- arch/riscv/configs/defconfig                        | 2 ++
- 2 files changed, 4 insertions(+)
-
+diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+index 4a2729f..60846e8 100644
+--- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
++++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+@@ -88,6 +88,7 @@
+ 	phy-mode = "gmii";
+ 	phy-handle = <&phy0>;
+ 	phy0: ethernet-phy@0 {
++		compatible = "ethernet-phy-id0007.0771";
+ 		reg = <0>;
+ 	};
+ };
 -- 
 2.7.4
 
