@@ -2,177 +2,215 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 267EDCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29388CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E515320659
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:32:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jYfhdyXM"
+	by mail.kernel.org (Postfix) with ESMTP id 0B5C12064E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:35:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389004AbgEMOcN (ORCPT
+        id S2389008AbgEMOf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 10:32:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37012 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728345AbgEMOcM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 10:32:12 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E6B2C061A0C;
-        Wed, 13 May 2020 07:32:12 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id l11so15250501wru.0;
-        Wed, 13 May 2020 07:32:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=e5l1ivHxvrs1cxo8s+YGVNADN8Rkef6bb/X9HBvnEUo=;
-        b=jYfhdyXMvfikdAmp4t94kn7Oqc+gcUglu6kotXtK7pCKoEZcxVf+D/gfJXZgnlA3tY
-         VcjpeS5YBLgOvzR5lH8nd8xcxAdRH5J/1H+Rx0YuTlUz/0uGIY6A8YBpL08huizZsKAk
-         pQTiCU//78OYtJbklytYh8aNf58msaMeP+CHrBi+IMPVFrxmNPRXvWfqUONnqkYrCTX6
-         gvaFx+iNa4Fpv9gfJJ9qbT4HuW1APNIdtSjeNhLXuUCQ+UFiSiHNQBRrDklcXRcQBRGJ
-         /WFHn0p2Cbgl8iZvetZyCwySHcma/dxORA0r5kTxv83q873p1+IsAj4VwSbTtPefwDf3
-         YB4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=e5l1ivHxvrs1cxo8s+YGVNADN8Rkef6bb/X9HBvnEUo=;
-        b=NSmjupiqijJ80+6a8Ea4qMLwQbBq7WYzG9Dz5oqKAq+4LKyq/rsM2+AOP0XMRbMTqF
-         Rz/LCrQGpLIzqpAFnf4JlR0F06F20T4IshIzSpbsZuaiECZJJz+I2qXWwIfEZshNusWh
-         1DR9+G/UpomfwnByFoMX8vZOWbVQpputrV28JiSiSlS+35/dDR/KFHsSgIgKrxQzgWC+
-         FQf0NHO2IYb/lpZNN5+Zt+xWxxvp5t/PjP1xuta881AVuLZdXYP9nL+yEreXzLQkk8EY
-         YBGL4I+FKxFSwwEBbn5EhT3kNUhw6hYO7ZC8y6Bmm3jKPUj5BqySmmdsh0ZaOLpoW97D
-         IQcA==
-X-Gm-Message-State: AGi0PuYRzq65n0Ttg6JigwUqsEu9fUV+4BmZZDlVz0Y6QfBO4xoqoPDO
-        AsU8gVwaRWS4nugXo/VimeI=
-X-Google-Smtp-Source: APiQypLALuA0r2EITrx0jgdNwC0QL/EE50fO/i1b1frjQJxz76h8l1YXSRVhSmv9cyqfKw97a8V3XQ==
-X-Received: by 2002:adf:ee03:: with SMTP id y3mr29782517wrn.190.1589380330471;
-        Wed, 13 May 2020 07:32:10 -0700 (PDT)
-Received: from localhost (ipv6-fd0e7292a9d5c758.ost.clients.hamburg.freifunk.net. [2a03:2267:4:0:fd0e:7292:a9d5:c758])
-        by smtp.gmail.com with ESMTPSA id b2sm25212812wrm.30.2020.05.13.07.32.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 May 2020 07:32:09 -0700 (PDT)
-From:   Oliver Graute <oliver.graute@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     dan.carpenter@oracle.com, oliver.graute@gmail.com,
-        Oliver Graute <oliver.graute@kococonnector.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] staging: fbtft: fb_st7789v: Initialize the Display
-Date:   Wed, 13 May 2020 16:30:46 +0200
-Message-Id: <1589380299-21871-1-git-send-email-oliver.graute@gmail.com>
-X-Mailer: git-send-email 2.7.4
-X-Patchwork-Bot: notify
+        Wed, 13 May 2020 10:35:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55680 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388800AbgEMOf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 10:35:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id EBB36AEE2;
+        Wed, 13 May 2020 14:35:29 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 4E99B1E12AE; Wed, 13 May 2020 16:35:26 +0200 (CEST)
+Date:   Wed, 13 May 2020 16:35:26 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     ira.weiny@intel.com
+Cc:     linux-ext4@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 7/9] fs/ext4: Make DAX mount option a tri-state
+Message-ID: <20200513143526.GG27709@quack2.suse.cz>
+References: <20200513054324.2138483-1-ira.weiny@intel.com>
+ <20200513054324.2138483-8-ira.weiny@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513054324.2138483-8-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Graute <oliver.graute@kococonnector.com>
+On Tue 12-05-20 22:43:22, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> We add 'always', 'never', and 'inode' (default).  '-o dax' continue to
+> operate the same.
+> 
+> Specifically we introduce a 2nd DAX mount flag EXT4_MOUNT2_DAX_NEVER and set
+> it and EXT4_MOUNT_DAX_ALWAYS appropriately.
+> 
+> We also force EXT4_MOUNT2_DAX_NEVER if !CONFIG_FS_DAX.
+> 
+> https://lore.kernel.org/lkml/20200405061945.GA94792@iweiny-DESK2.sc.intel.com/
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+> ---
+> Changes from RFC:
+> 	Combine remount check for DAX_NEVER with DAX_ALWAYS
+> 	Update ext4_should_enable_dax()
+> ---
+>  fs/ext4/ext4.h  |  1 +
+>  fs/ext4/inode.c |  2 ++
+>  fs/ext4/super.c | 43 +++++++++++++++++++++++++++++++++++++------
+>  3 files changed, 40 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> index 86a0994332ce..01d1de838896 100644
+> --- a/fs/ext4/ext4.h
+> +++ b/fs/ext4/ext4.h
+> @@ -1168,6 +1168,7 @@ struct ext4_inode_info {
+>  						      blocks */
+>  #define EXT4_MOUNT2_HURD_COMPAT		0x00000004 /* Support HURD-castrated
+>  						      file systems */
+> +#define EXT4_MOUNT2_DAX_NEVER		0x00000008 /* Do not allow Direct Access */
+>  
+>  #define EXT4_MOUNT2_EXPLICIT_JOURNAL_CHECKSUM	0x00000008 /* User explicitly
+>  						specified journal checksum */
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 23e42a223235..140b1930e2f4 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -4400,6 +4400,8 @@ int ext4_get_inode_loc(struct inode *inode, struct ext4_iloc *iloc)
+>  
+>  static bool ext4_should_enable_dax(struct inode *inode)
+>  {
+> +	if (test_opt2(inode->i_sb, DAX_NEVER))
+> +		return false;
+>  	if (!S_ISREG(inode->i_mode))
+>  		return false;
+>  	if (ext4_should_journal_data(inode))
+> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> index 5ec900fdf73c..e01a040a58a9 100644
+> --- a/fs/ext4/super.c
+> +++ b/fs/ext4/super.c
+> @@ -1505,6 +1505,7 @@ enum {
+>  	Opt_jqfmt_vfsold, Opt_jqfmt_vfsv0, Opt_jqfmt_vfsv1, Opt_quota,
+>  	Opt_noquota, Opt_barrier, Opt_nobarrier, Opt_err,
+>  	Opt_usrquota, Opt_grpquota, Opt_prjquota, Opt_i_version, Opt_dax,
+> +	Opt_dax_str,
+>  	Opt_stripe, Opt_delalloc, Opt_nodelalloc, Opt_warn_on_error,
+>  	Opt_nowarn_on_error, Opt_mblk_io_submit,
+>  	Opt_lazytime, Opt_nolazytime, Opt_debug_want_extra_isize,
+> @@ -1570,6 +1571,7 @@ static const match_table_t tokens = {
+>  	{Opt_barrier, "barrier"},
+>  	{Opt_nobarrier, "nobarrier"},
+>  	{Opt_i_version, "i_version"},
+> +	{Opt_dax_str, "dax=%s"},
 
-Set Gamma Values and Register Values for the HSD20_IPS Panel
+Hum, maybe it would be easier to handle this like we do with e.g. 'data='
+mount option? I.e. like:
 
-Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
----
+	{Opt_dax_always, "dax=always"},
+	{Opt_dax_never, "dax=never"},
+	{Opt_dax_inode, "dax=inode"),
 
-need information howto set HSD20_IPS Panel at run time and not at compile time
+and then handle these three tokens... Not that it would be a big difference
+but that's why we usually handle mount options with small "enums" in ext4.
 
-Changes for v2:
- - added define for HSD20_IPS_GAMMA values
- - check for HSD20_IPS define
- - enabled MIPI_DCS_ENTER_INVERT_MODE
+								Honza
 
- drivers/staging/fbtft/fb_st7789v.c | 32 +++++++++++++++++++++++++-----
- 1 file changed, 27 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/staging/fbtft/fb_st7789v.c b/drivers/staging/fbtft/fb_st7789v.c
-index 3c3f387936e8..ebc17e05ecd0 100644
---- a/drivers/staging/fbtft/fb_st7789v.c
-+++ b/drivers/staging/fbtft/fb_st7789v.c
-@@ -20,6 +20,12 @@
- 	"70 2C 2E 15 10 09 48 33 53 0B 19 18 20 25\n" \
- 	"70 2C 2E 15 10 09 48 33 53 0B 19 18 20 25"
- 
-+#define HSD20_IPS_GAMMA \
-+	"D0 05 0A 09 08 05 2E 44 45 0F 17 16 2B 33\n" \
-+	"D0 05 0A 09 08 05 2E 43 45 0F 16 16 2B 33"
-+
-+#define HSD20_IPS "true"
-+
- /**
-  * enum st7789v_command - ST7789V display controller commands
-  *
-@@ -82,14 +88,20 @@ static int init_display(struct fbtft_par *par)
- 
- 	/* set pixel format to RGB-565 */
- 	write_reg(par, MIPI_DCS_SET_PIXEL_FORMAT, MIPI_DCS_PIXEL_FMT_16BIT);
-+	if (HSD20_IPS)
-+		write_reg(par, PORCTRL, 0x05, 0x05, 0x00, 0x33, 0x33);
- 
--	write_reg(par, PORCTRL, 0x08, 0x08, 0x00, 0x22, 0x22);
-+	else
-+		write_reg(par, PORCTRL, 0x08, 0x08, 0x00, 0x22, 0x22);
- 
- 	/*
- 	 * VGH = 13.26V
- 	 * VGL = -10.43V
- 	 */
--	write_reg(par, GCTRL, 0x35);
-+	if (HSD20_IPS)
-+		write_reg(par, GCTRL, 0x75);
-+	else
-+		write_reg(par, GCTRL, 0x35);
- 
- 	/*
- 	 * VDV and VRH register values come from command write
-@@ -101,13 +113,19 @@ static int init_display(struct fbtft_par *par)
- 	 * VAP =  4.1V + (VCOM + VCOM offset + 0.5 * VDV)
- 	 * VAN = -4.1V + (VCOM + VCOM offset + 0.5 * VDV)
- 	 */
--	write_reg(par, VRHS, 0x0B);
-+	if (HSD20_IPS)
-+		write_reg(par, VRHS, 0x13);
-+	else
-+		write_reg(par, VRHS, 0x0B);
- 
- 	/* VDV = 0V */
- 	write_reg(par, VDVS, 0x20);
- 
- 	/* VCOM = 0.9V */
--	write_reg(par, VCOMS, 0x20);
-+	if (HSD20_IPS)
-+		write_reg(par, VCOMS, 0x22);
-+	else
-+		write_reg(par, VCOMS, 0x20);
- 
- 	/* VCOM offset = 0V */
- 	write_reg(par, VCMOFSET, 0x20);
-@@ -120,6 +138,10 @@ static int init_display(struct fbtft_par *par)
- 	write_reg(par, PWCTRL1, 0xA4, 0xA1);
- 
- 	write_reg(par, MIPI_DCS_SET_DISPLAY_ON);
-+
-+	if (HSD20_IPS)
-+		write_reg(par, MIPI_DCS_ENTER_INVERT_MODE);
-+
- 	return 0;
- }
- 
-@@ -234,7 +256,7 @@ static struct fbtft_display display = {
- 	.height = 320,
- 	.gamma_num = 2,
- 	.gamma_len = 14,
--	.gamma = DEFAULT_GAMMA,
-+	.gamma = HSD20_IPS_GAMMA,
- 	.fbtftops = {
- 		.init_display = init_display,
- 		.set_var = set_var,
+>  	{Opt_dax, "dax"},
+>  	{Opt_stripe, "stripe=%u"},
+>  	{Opt_delalloc, "delalloc"},
+> @@ -1767,6 +1769,7 @@ static const struct mount_opts {
+>  	{Opt_min_batch_time, 0, MOPT_GTE0},
+>  	{Opt_inode_readahead_blks, 0, MOPT_GTE0},
+>  	{Opt_init_itable, 0, MOPT_GTE0},
+> +	{Opt_dax_str, 0, MOPT_STRING},
+>  	{Opt_dax, EXT4_MOUNT_DAX_ALWAYS, MOPT_SET},
+>  	{Opt_stripe, 0, MOPT_GTE0},
+>  	{Opt_resuid, 0, MOPT_GTE0},
+> @@ -2076,13 +2079,32 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
+>  		}
+>  		sbi->s_jquota_fmt = m->mount_opt;
+>  #endif
+> -	} else if (token == Opt_dax) {
+> +	} else if (token == Opt_dax || token == Opt_dax_str) {
+>  #ifdef CONFIG_FS_DAX
+> -		ext4_msg(sb, KERN_WARNING,
+> -		"DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
+> -		sbi->s_mount_opt |= m->mount_opt;
+> +		char *tmp = match_strdup(&args[0]);
+> +
+> +		if (!tmp || !strcmp(tmp, "always")) {
+> +			ext4_msg(sb, KERN_WARNING,
+> +				"DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
+> +			sbi->s_mount_opt |= EXT4_MOUNT_DAX_ALWAYS;
+> +			sbi->s_mount_opt2 &= ~EXT4_MOUNT2_DAX_NEVER;
+> +		} else if (!strcmp(tmp, "never")) {
+> +			sbi->s_mount_opt2 |= EXT4_MOUNT2_DAX_NEVER;
+> +			sbi->s_mount_opt &= ~EXT4_MOUNT_DAX_ALWAYS;
+> +		} else if (!strcmp(tmp, "inode")) {
+> +			sbi->s_mount_opt &= ~EXT4_MOUNT_DAX_ALWAYS;
+> +			sbi->s_mount_opt2 &= ~EXT4_MOUNT2_DAX_NEVER;
+> +		} else {
+> +			ext4_msg(sb, KERN_WARNING, "DAX invalid option.");
+> +			kfree(tmp);
+> +			return -1;
+> +		}
+> +
+> +		kfree(tmp);
+>  #else
+>  		ext4_msg(sb, KERN_INFO, "dax option not supported");
+> +		sbi->s_mount_opt2 |= EXT4_MOUNT2_DAX_NEVER;
+> +		sbi->s_mount_opt &= ~EXT4_MOUNT_DAX_ALWAYS;
+>  		return -1;
+>  #endif
+>  	} else if (token == Opt_data_err_abort) {
+> @@ -2306,6 +2328,13 @@ static int _ext4_show_options(struct seq_file *seq, struct super_block *sb,
+>  	if (DUMMY_ENCRYPTION_ENABLED(sbi))
+>  		SEQ_OPTS_PUTS("test_dummy_encryption");
+>  
+> +	if (test_opt2(sb, DAX_NEVER))
+> +		SEQ_OPTS_PUTS("dax=never");
+> +	else if (test_opt(sb, DAX_ALWAYS))
+> +		SEQ_OPTS_PUTS("dax=always");
+> +	else
+> +		SEQ_OPTS_PUTS("dax=inode");
+> +
+>  	ext4_show_quota_options(seq, sb);
+>  	return 0;
+>  }
+> @@ -5425,10 +5454,12 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
+>  		goto restore_opts;
+>  	}
+>  
+> -	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_DAX_ALWAYS) {
+> +	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_DAX_ALWAYS ||
+> +	    (sbi->s_mount_opt2 ^ old_opts.s_mount_opt2) & EXT4_MOUNT2_DAX_NEVER) {
+>  		ext4_msg(sb, KERN_WARNING, "warning: refusing change of "
+> -			"dax flag with busy inodes while remounting");
+> +			"dax mount option with busy inodes while remounting");
+>  		sbi->s_mount_opt ^= EXT4_MOUNT_DAX_ALWAYS;
+> +		sbi->s_mount_opt2 ^= EXT4_MOUNT2_DAX_NEVER;
+>  	}
+>  
+>  	if (sbi->s_mount_flags & EXT4_MF_FS_ABORTED)
+> -- 
+> 2.25.1
+> 
 -- 
-2.17.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
