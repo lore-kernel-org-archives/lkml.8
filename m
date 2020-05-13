@@ -2,800 +2,165 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4335C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 758E22054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4A5D2064E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:31:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HwKVvG3+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389679AbgEMQ2Z (ORCPT
+        id S2389621AbgEMQbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 12:28:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55108 "EHLO
+        Wed, 13 May 2020 12:31:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389665AbgEMQ2U (ORCPT
+        with ESMTP id S1730731AbgEMQbT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 12:28:20 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D5FBC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 09:28:20 -0700 (PDT)
-Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jYuF0-0000ME-Bq; Wed, 13 May 2020 18:28:18 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 3/3] workqueue: Convert the pool::lock and wq_mayday_lock to raw_spinlock_t
-Date:   Wed, 13 May 2020 18:27:32 +0200
-Message-Id: <20200513162732.977489-4-bigeasy@linutronix.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513162732.977489-1-bigeasy@linutronix.de>
-References: <20200513162732.977489-1-bigeasy@linutronix.de>
+        Wed, 13 May 2020 12:31:19 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1F50C061A0C;
+        Wed, 13 May 2020 09:31:18 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id e26so27220011wmk.5;
+        Wed, 13 May 2020 09:31:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+4cqElCbVxVOwsktnpwvTscv6syAeTYzIlwIp1I4PR8=;
+        b=HwKVvG3+V3nsUoA+C514RXa2JsMkBVV+ttmcu6z/zmaS8k/hInNpN0MbECn+/Pq+2m
+         9GoTQpNxgyngx8xtHqS7OuI5K++LOxzs4Ieekl8mxzr39UvtzqYTmJevDshQkj+BS8m2
+         BXV/8MylquPzUtZmLiAK913crp4WNO7rQGXG0x3HeLTkEwMPvtTnMVNmaxkahxrT+79Y
+         YY0EsE9Hnh++HrgjQavBBOLKHEOv080zBx8w3odf5SwJc0SvgnQgp7uT0ijo3BzwwDHP
+         cl09rPOtZffqIRGduDV1TEzJnQ4NLM+XfoXY0zTjK5kayPiYYYYJqKONEmNyKc1VhhXr
+         Ho9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=+4cqElCbVxVOwsktnpwvTscv6syAeTYzIlwIp1I4PR8=;
+        b=uUlNtfsiUa22EBO2T6qP8f/yCOz2x0Bg0+fWTSXJtU7fAmyO0LSgvjlA0693n1k38a
+         gHtHDGjgs9aXhv0QZw5Mvu9Ao4RuEmkCBjFj0MKeWXsp7CLr2vZCXUxDAIA66hg2jSdb
+         4KHmgsRreDXIobE/H2WpkCwlQkhwv8XdxfRFGHxm21r1++OM0NnR2JL8xeU8nq5cunSo
+         8n9gjl+vk1XwfG059xqmz0PaCpzIaIhJL5Cf1c5RKLbKLoQy16m+PGtOTEqhpXInCTZg
+         v46Zc/Tm5SVQEVvvWwTvMggFbeQVlCw2ITWByDuGS5yRBlz8WXArWufWmIaek4dgYTcy
+         2S4g==
+X-Gm-Message-State: AGi0PuaeTsEeY+HnW0+J9efoQ9KXtralwaQpeeArW/fupkUpBTFBap/W
+        ZnEqtEBOfIi3Vp5/uJjDAlY=
+X-Google-Smtp-Source: APiQypLhkUtP3/abzvwn3X1UsA7n1FZdHriqQn7pqyM4c+FU86i60PeM1G0eKzL7R6d+LsTInxKmUQ==
+X-Received: by 2002:a7b:c5c7:: with SMTP id n7mr33693122wmk.18.1589387477428;
+        Wed, 13 May 2020 09:31:17 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 18sm23593119wmj.19.2020.05.13.09.31.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 May 2020 09:31:16 -0700 (PDT)
+Subject: Re: [PATCH v10 1/5] usb: xhci: Change the XHCI link order in the
+ Makefile
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20200512150019.25903-1-alcooperx@gmail.com>
+ <20200512150019.25903-2-alcooperx@gmail.com>
+ <20200513122613.GA1023594@kroah.com>
+ <7acc2a4c-caab-11e7-7b3f-4176f19c58cf@gmail.com>
+ <20200513162723.GF1362525@kroah.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ mQENBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAG0MEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPokB
+ xAQQAQgArgUCXnQoOxcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFrZXktdXNh
+ Z2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2RpbmdAcGdw
+ LmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29tLmNvbQUb
+ AwAAAAMWAgEFHgEAAAAEFQgJCgAKCRCBMbXEKbxmoHaNB/4p5GXw2Xlk4r2J0MsUAZE4Gnfc
+ C4DtilufOGVR1K0/WhROYemyCAP+xuBj8bnQDBtZwB5ED37q4/p8DSmCnkEBjM5Cz12EZQzs
+ utQgCV1UIgzryoiDZSF2XLslzF9LOSaOiNzpBvwEYNTZ+koEW+AOHEAgS6SbV2Hob8Zc32xF
+ oQdKGwbSwcV8hS2YLL37VxKr2h8ZTtuTmhDNqxuKPzZuoAL61/4i8+BTyVZC4gUL/EUu7pG2
+ rbwhg/s8TyQWWeBz18Xiw5K148TXT0LeErmTsJSPQFMqZ6AR/nuJDQzhIUiLeq/hvBs1BIQf
+ REqNMShEnnMJfHjd8RFnGpdPk+hKuQENBFPAG8EBCACsa+9aKnvtPjGAnO1mn1hHKUBxVML2
+ C3HQaDp5iT8Q8A0ab1OS4akj75P8iXYfZOMVA0Lt65taiFtiPT7pOZ/yc/5WbKhsPE9dwysr
+ vHjHL2gP4q5vZV/RJduwzx8v9KrMZsVZlKbvcvUvgZmjG9gjPSLssTFhJfa7lhUtowFof0fA
+ q3Zy+vsy5OtEe1xs5kiahdPb2DZSegXW7DFg15GFlj+VG9WSRjSUOKk+4PCDdKl8cy0LJs+r
+ W4CzBB2ARsfNGwRfAJHU4Xeki4a3gje1ISEf+TVxqqLQGWqNsZQ6SS7jjELaB/VlTbrsUEGR
+ 1XfIn/sqeskSeQwJiFLeQgj3ABEBAAGJAkEEGAECASsFAlPAG8IFGwwAAADAXSAEGQEIAAYF
+ AlPAG8EACgkQk2AGqJgvD1UNFQgAlpN5/qGxQARKeUYOkL7KYvZFl3MAnH2VeNTiGFoVzKHO
+ e7LIwmp3eZ6GYvGyoNG8cOKrIPvXDYGdzzfwxVnDSnAE92dv+H05yanSUv/2HBIZa/LhrPmV
+ hXKgD27XhQjOHRg0a7qOvSKx38skBsderAnBZazfLw9OukSnrxXqW/5pe3mBHTeUkQC8hHUD
+ Cngkn95nnLXaBAhKnRfzFqX1iGENYRH3Zgtis7ZvodzZLfWUC6nN8LDyWZmw/U9HPUaYX8qY
+ MP0n039vwh6GFZCqsFCMyOfYrZeS83vkecAwcoVh8dlHdke0rnZk/VytXtMe1u2uc9dUOr68
+ 7hA+Z0L5IQAKCRCBMbXEKbxmoLoHCACXeRGHuijOmOkbyOk7x6fkIG1OXcb46kokr2ptDLN0
+ Ky4nQrWp7XBk9ls/9j5W2apKCcTEHONK2312uMUEryWI9BlqWnawyVL1LtyxLLpwwsXVq5m5
+ sBkSqma2ldqBu2BHXZg6jntF5vzcXkqG3DCJZ2hOldFPH+czRwe2OOsiY42E/w7NUyaN6b8H
+ rw1j77+q3QXldOw/bON361EusWHdbhcRwu3WWFiY2ZslH+Xr69VtYAoMC1xtDxIvZ96ps9ZX
+ pUPJUqHJr8QSrTG1/zioQH7j/4iMJ07MMPeQNkmj4kGQOdTcsFfDhYLDdCE5dj5WeE6fYRxE
+ Q3up0ArDSP1L
+Message-ID: <38ff034d-a84c-2309-a8d5-f344930d9a31@gmail.com>
+Date:   Wed, 13 May 2020 09:31:11 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200513162723.GF1362525@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The workqueue code has it's internal spinlocks (pool::lock), which
-are acquired on most workqueue operations. These spinlocks are
-converted to 'sleeping' spinlocks on a RT-kernel.
 
-Workqueue functions can be invoked from contexts which are truly atomic
-even on a PREEMPT_RT enabled kernel. Taking sleeping locks from such
-contexts is forbidden.
 
-The pool::lock hold times are bound and the code sections are
-relatively short, which allows to convert pool::lock and as a
-consequence wq_mayday_lock to raw spinlocks which are truly spinning
-locks even on a PREEMPT_RT kernel.
+On 5/13/2020 9:27 AM, Greg Kroah-Hartman wrote:
+> On Wed, May 13, 2020 at 08:08:07AM -0700, Florian Fainelli wrote:
+>>
+>>
+>> On 5/13/2020 5:26 AM, Greg Kroah-Hartman wrote:
+>>> On Tue, May 12, 2020 at 11:00:15AM -0400, Al Cooper wrote:
+>>>> Some BRCMSTB USB chips have an XHCI, EHCI and OHCI controller
+>>>> on the same port where XHCI handles 3.0 devices, EHCI handles 2.0
+>>>> devices and OHCI handles <2.0 devices. Currently the Makefile
+>>>> has XHCI linking at the bottom which will result in the XHIC driver
+>>>> initalizing after the EHCI and OHCI drivers and any installed 3.0
+>>>> device will be seen as a 2.0 device. Moving the XHCI linking
+>>>> above the EHCI and OHCI linking fixes the issue.
+>>>
+>>> What happens if all of these are modules and they are loaded in a
+>>> different order?  This makefile change will not help with that, you need
+>>> to have logic in the code in order to properly coordinate this type of
+>>> mess, sorry.
+>>
+>> I believe we should be using module soft dependencies to instruct the
+>> module loaders to load the modules in the correct order, so something
+>> like this would do (not tested) for xhci-plat-hcd.c:
+>>
+>> MODULE_SOFTDEP("post: ehci-hcd ohci-hcd");
+>>
+>> and I am not sure whether we need to add the opposite for ehci-hcd and
+>> ohci-hcd:
+>>
+>> MODULE_SOFTDEP("pre: xhci-plat-hcd");
+> 
+> That's a nice start, but what happens if that isn't honored?  This
+> really needs to work properly for any order as you never can guarantee
+> module/driver loading order in a system of modules.
 
-With the previous conversion of the manager waitqueue to a simple
-waitqueue workqueues are now fully RT compliant.
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- kernel/workqueue.c | 174 ++++++++++++++++++++++-----------------------
- 1 file changed, 87 insertions(+), 87 deletions(-)
-
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index c2ead0577f02b..950e356449cfe 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -146,7 +146,7 @@ enum {
- /* struct worker is defined in workqueue_internal.h */
-=20
- struct worker_pool {
--	spinlock_t		lock;		/* the pool lock */
-+	raw_spinlock_t		lock;		/* the pool lock */
- 	int			cpu;		/* I: the associated cpu */
- 	int			node;		/* I: the associated node ID */
- 	int			id;		/* I: pool ID */
-@@ -301,7 +301,7 @@ static struct workqueue_attrs *wq_update_unbound_numa_a=
-ttrs_buf;
-=20
- static DEFINE_MUTEX(wq_pool_mutex);	/* protects pools and workqueues list =
-*/
- static DEFINE_MUTEX(wq_pool_attach_mutex); /* protects worker attach/detac=
-h */
--static DEFINE_SPINLOCK(wq_mayday_lock);	/* protects wq->maydays list */
-+static DEFINE_RAW_SPINLOCK(wq_mayday_lock);	/* protects wq->maydays list */
- static DECLARE_SWAIT_QUEUE_HEAD(wq_manager_wait); /* wait for manager to g=
-o away */
-=20
- static LIST_HEAD(workqueues);		/* PR: list of all workqueues */
-@@ -827,7 +827,7 @@ static struct worker *first_idle_worker(struct worker_p=
-ool *pool)
-  * Wake up the first idle worker of @pool.
-  *
-  * CONTEXT:
-- * spin_lock_irq(pool->lock).
-+ * raw_spin_lock_irq(pool->lock).
-  */
- static void wake_up_worker(struct worker_pool *pool)
- {
-@@ -882,7 +882,7 @@ void wq_worker_sleeping(struct task_struct *task)
- 		return;
-=20
- 	worker->sleeping =3D 1;
--	spin_lock_irq(&pool->lock);
-+	raw_spin_lock_irq(&pool->lock);
-=20
- 	/*
- 	 * The counterpart of the following dec_and_test, implied mb,
-@@ -901,7 +901,7 @@ void wq_worker_sleeping(struct task_struct *task)
- 		if (next)
- 			wake_up_process(next->task);
- 	}
--	spin_unlock_irq(&pool->lock);
-+	raw_spin_unlock_irq(&pool->lock);
- }
-=20
- /**
-@@ -912,7 +912,7 @@ void wq_worker_sleeping(struct task_struct *task)
-  * the scheduler to get a worker's last known identity.
-  *
-  * CONTEXT:
-- * spin_lock_irq(rq->lock)
-+ * raw_spin_lock_irq(rq->lock)
-  *
-  * This function is called during schedule() when a kworker is going
-  * to sleep. It's used by psi to identify aggregation workers during
-@@ -943,7 +943,7 @@ work_func_t wq_worker_last_func(struct task_struct *tas=
-k)
-  * Set @flags in @worker->flags and adjust nr_running accordingly.
-  *
-  * CONTEXT:
-- * spin_lock_irq(pool->lock)
-+ * raw_spin_lock_irq(pool->lock)
-  */
- static inline void worker_set_flags(struct worker *worker, unsigned int fl=
-ags)
- {
-@@ -968,7 +968,7 @@ static inline void worker_set_flags(struct worker *work=
-er, unsigned int flags)
-  * Clear @flags in @worker->flags and adjust nr_running accordingly.
-  *
-  * CONTEXT:
-- * spin_lock_irq(pool->lock)
-+ * raw_spin_lock_irq(pool->lock)
-  */
- static inline void worker_clr_flags(struct worker *worker, unsigned int fl=
-ags)
- {
-@@ -1016,7 +1016,7 @@ static inline void worker_clr_flags(struct worker *wo=
-rker, unsigned int flags)
-  * actually occurs, it should be easy to locate the culprit work function.
-  *
-  * CONTEXT:
-- * spin_lock_irq(pool->lock).
-+ * raw_spin_lock_irq(pool->lock).
-  *
-  * Return:
-  * Pointer to worker which is executing @work if found, %NULL
-@@ -1051,7 +1051,7 @@ static struct worker *find_worker_executing_work(stru=
-ct worker_pool *pool,
-  * nested inside outer list_for_each_entry_safe().
-  *
-  * CONTEXT:
-- * spin_lock_irq(pool->lock).
-+ * raw_spin_lock_irq(pool->lock).
-  */
- static void move_linked_works(struct work_struct *work, struct list_head *=
-head,
- 			      struct work_struct **nextp)
-@@ -1129,9 +1129,9 @@ static void put_pwq_unlocked(struct pool_workqueue *p=
-wq)
- 		 * As both pwqs and pools are RCU protected, the
- 		 * following lock operations are safe.
- 		 */
--		spin_lock_irq(&pwq->pool->lock);
-+		raw_spin_lock_irq(&pwq->pool->lock);
- 		put_pwq(pwq);
--		spin_unlock_irq(&pwq->pool->lock);
-+		raw_spin_unlock_irq(&pwq->pool->lock);
- 	}
- }
-=20
-@@ -1164,7 +1164,7 @@ static void pwq_activate_first_delayed(struct pool_wo=
-rkqueue *pwq)
-  * decrement nr_in_flight of its pwq and handle workqueue flushing.
-  *
-  * CONTEXT:
-- * spin_lock_irq(pool->lock).
-+ * raw_spin_lock_irq(pool->lock).
-  */
- static void pwq_dec_nr_in_flight(struct pool_workqueue *pwq, int color)
- {
-@@ -1263,7 +1263,7 @@ static int try_to_grab_pending(struct work_struct *wo=
-rk, bool is_dwork,
- 	if (!pool)
- 		goto fail;
-=20
--	spin_lock(&pool->lock);
-+	raw_spin_lock(&pool->lock);
- 	/*
- 	 * work->data is guaranteed to point to pwq only while the work
- 	 * item is queued on pwq->wq, and both updating work->data to point
-@@ -1292,11 +1292,11 @@ static int try_to_grab_pending(struct work_struct *=
-work, bool is_dwork,
- 		/* work->data points to pwq iff queued, point to pool */
- 		set_work_pool_and_keep_pending(work, pool->id);
-=20
--		spin_unlock(&pool->lock);
-+		raw_spin_unlock(&pool->lock);
- 		rcu_read_unlock();
- 		return 1;
- 	}
--	spin_unlock(&pool->lock);
-+	raw_spin_unlock(&pool->lock);
- fail:
- 	rcu_read_unlock();
- 	local_irq_restore(*flags);
-@@ -1317,7 +1317,7 @@ static int try_to_grab_pending(struct work_struct *wo=
-rk, bool is_dwork,
-  * work_struct flags.
-  *
-  * CONTEXT:
-- * spin_lock_irq(pool->lock).
-+ * raw_spin_lock_irq(pool->lock).
-  */
- static void insert_work(struct pool_workqueue *pwq, struct work_struct *wo=
-rk,
- 			struct list_head *head, unsigned int extra_flags)
-@@ -1434,7 +1434,7 @@ static void __queue_work(int cpu, struct workqueue_st=
-ruct *wq,
- 	if (last_pool && last_pool !=3D pwq->pool) {
- 		struct worker *worker;
-=20
--		spin_lock(&last_pool->lock);
-+		raw_spin_lock(&last_pool->lock);
-=20
- 		worker =3D find_worker_executing_work(last_pool, work);
-=20
-@@ -1442,11 +1442,11 @@ static void __queue_work(int cpu, struct workqueue_=
-struct *wq,
- 			pwq =3D worker->current_pwq;
- 		} else {
- 			/* meh... not running there, queue here */
--			spin_unlock(&last_pool->lock);
--			spin_lock(&pwq->pool->lock);
-+			raw_spin_unlock(&last_pool->lock);
-+			raw_spin_lock(&pwq->pool->lock);
- 		}
- 	} else {
--		spin_lock(&pwq->pool->lock);
-+		raw_spin_lock(&pwq->pool->lock);
- 	}
-=20
- 	/*
-@@ -1459,7 +1459,7 @@ static void __queue_work(int cpu, struct workqueue_st=
-ruct *wq,
- 	 */
- 	if (unlikely(!pwq->refcnt)) {
- 		if (wq->flags & WQ_UNBOUND) {
--			spin_unlock(&pwq->pool->lock);
-+			raw_spin_unlock(&pwq->pool->lock);
- 			cpu_relax();
- 			goto retry;
- 		}
-@@ -1491,7 +1491,7 @@ static void __queue_work(int cpu, struct workqueue_st=
-ruct *wq,
- 	insert_work(pwq, work, worklist, work_flags);
-=20
- out:
--	spin_unlock(&pwq->pool->lock);
-+	raw_spin_unlock(&pwq->pool->lock);
- 	rcu_read_unlock();
- }
-=20
-@@ -1760,7 +1760,7 @@ EXPORT_SYMBOL(queue_rcu_work);
-  * necessary.
-  *
-  * LOCKING:
-- * spin_lock_irq(pool->lock).
-+ * raw_spin_lock_irq(pool->lock).
-  */
- static void worker_enter_idle(struct worker *worker)
- {
-@@ -1800,7 +1800,7 @@ static void worker_enter_idle(struct worker *worker)
-  * @worker is leaving idle state.  Update stats.
-  *
-  * LOCKING:
-- * spin_lock_irq(pool->lock).
-+ * raw_spin_lock_irq(pool->lock).
-  */
- static void worker_leave_idle(struct worker *worker)
- {
-@@ -1938,11 +1938,11 @@ static struct worker *create_worker(struct worker_p=
-ool *pool)
- 	worker_attach_to_pool(worker, pool);
-=20
- 	/* start the newly created worker */
--	spin_lock_irq(&pool->lock);
-+	raw_spin_lock_irq(&pool->lock);
- 	worker->pool->nr_workers++;
- 	worker_enter_idle(worker);
- 	wake_up_process(worker->task);
--	spin_unlock_irq(&pool->lock);
-+	raw_spin_unlock_irq(&pool->lock);
-=20
- 	return worker;
-=20
-@@ -1961,7 +1961,7 @@ static struct worker *create_worker(struct worker_poo=
-l *pool)
-  * be idle.
-  *
-  * CONTEXT:
-- * spin_lock_irq(pool->lock).
-+ * raw_spin_lock_irq(pool->lock).
-  */
- static void destroy_worker(struct worker *worker)
- {
-@@ -1987,7 +1987,7 @@ static void idle_worker_timeout(struct timer_list *t)
- {
- 	struct worker_pool *pool =3D from_timer(pool, t, idle_timer);
-=20
--	spin_lock_irq(&pool->lock);
-+	raw_spin_lock_irq(&pool->lock);
-=20
- 	while (too_many_workers(pool)) {
- 		struct worker *worker;
-@@ -2005,7 +2005,7 @@ static void idle_worker_timeout(struct timer_list *t)
- 		destroy_worker(worker);
- 	}
-=20
--	spin_unlock_irq(&pool->lock);
-+	raw_spin_unlock_irq(&pool->lock);
- }
-=20
- static void send_mayday(struct work_struct *work)
-@@ -2036,8 +2036,8 @@ static void pool_mayday_timeout(struct timer_list *t)
- 	struct worker_pool *pool =3D from_timer(pool, t, mayday_timer);
- 	struct work_struct *work;
-=20
--	spin_lock_irq(&pool->lock);
--	spin_lock(&wq_mayday_lock);		/* for wq->maydays */
-+	raw_spin_lock_irq(&pool->lock);
-+	raw_spin_lock(&wq_mayday_lock);		/* for wq->maydays */
-=20
- 	if (need_to_create_worker(pool)) {
- 		/*
-@@ -2050,8 +2050,8 @@ static void pool_mayday_timeout(struct timer_list *t)
- 			send_mayday(work);
- 	}
-=20
--	spin_unlock(&wq_mayday_lock);
--	spin_unlock_irq(&pool->lock);
-+	raw_spin_unlock(&wq_mayday_lock);
-+	raw_spin_unlock_irq(&pool->lock);
-=20
- 	mod_timer(&pool->mayday_timer, jiffies + MAYDAY_INTERVAL);
- }
-@@ -2070,7 +2070,7 @@ static void pool_mayday_timeout(struct timer_list *t)
-  * may_start_working() %true.
-  *
-  * LOCKING:
-- * spin_lock_irq(pool->lock) which may be released and regrabbed
-+ * raw_spin_lock_irq(pool->lock) which may be released and regrabbed
-  * multiple times.  Does GFP_KERNEL allocations.  Called only from
-  * manager.
-  */
-@@ -2079,7 +2079,7 @@ __releases(&pool->lock)
- __acquires(&pool->lock)
- {
- restart:
--	spin_unlock_irq(&pool->lock);
-+	raw_spin_unlock_irq(&pool->lock);
-=20
- 	/* if we don't make progress in MAYDAY_INITIAL_TIMEOUT, call for help */
- 	mod_timer(&pool->mayday_timer, jiffies + MAYDAY_INITIAL_TIMEOUT);
-@@ -2095,7 +2095,7 @@ __acquires(&pool->lock)
- 	}
-=20
- 	del_timer_sync(&pool->mayday_timer);
--	spin_lock_irq(&pool->lock);
-+	raw_spin_lock_irq(&pool->lock);
- 	/*
- 	 * This is necessary even after a new worker was just successfully
- 	 * created as @pool->lock was dropped and the new worker might have
-@@ -2118,7 +2118,7 @@ __acquires(&pool->lock)
-  * and may_start_working() is true.
-  *
-  * CONTEXT:
-- * spin_lock_irq(pool->lock) which may be released and regrabbed
-+ * raw_spin_lock_irq(pool->lock) which may be released and regrabbed
-  * multiple times.  Does GFP_KERNEL allocations.
-  *
-  * Return:
-@@ -2157,7 +2157,7 @@ static bool manage_workers(struct worker *worker)
-  * call this function to process a work.
-  *
-  * CONTEXT:
-- * spin_lock_irq(pool->lock) which is released and regrabbed.
-+ * raw_spin_lock_irq(pool->lock) which is released and regrabbed.
-  */
- static void process_one_work(struct worker *worker, struct work_struct *wo=
-rk)
- __releases(&pool->lock)
-@@ -2239,7 +2239,7 @@ __acquires(&pool->lock)
- 	 */
- 	set_work_pool_and_clear_pending(work, pool->id);
-=20
--	spin_unlock_irq(&pool->lock);
-+	raw_spin_unlock_irq(&pool->lock);
-=20
- 	lock_map_acquire(&pwq->wq->lockdep_map);
- 	lock_map_acquire(&lockdep_map);
-@@ -2294,7 +2294,7 @@ __acquires(&pool->lock)
- 	 */
- 	cond_resched();
-=20
--	spin_lock_irq(&pool->lock);
-+	raw_spin_lock_irq(&pool->lock);
-=20
- 	/* clear cpu intensive status */
- 	if (unlikely(cpu_intensive))
-@@ -2320,7 +2320,7 @@ __acquires(&pool->lock)
-  * fetches a work from the top and executes it.
-  *
-  * CONTEXT:
-- * spin_lock_irq(pool->lock) which may be released and regrabbed
-+ * raw_spin_lock_irq(pool->lock) which may be released and regrabbed
-  * multiple times.
-  */
- static void process_scheduled_works(struct worker *worker)
-@@ -2362,11 +2362,11 @@ static int worker_thread(void *__worker)
- 	/* tell the scheduler that this is a workqueue worker */
- 	set_pf_worker(true);
- woke_up:
--	spin_lock_irq(&pool->lock);
-+	raw_spin_lock_irq(&pool->lock);
-=20
- 	/* am I supposed to die? */
- 	if (unlikely(worker->flags & WORKER_DIE)) {
--		spin_unlock_irq(&pool->lock);
-+		raw_spin_unlock_irq(&pool->lock);
- 		WARN_ON_ONCE(!list_empty(&worker->entry));
- 		set_pf_worker(false);
-=20
-@@ -2432,7 +2432,7 @@ static int worker_thread(void *__worker)
- 	 */
- 	worker_enter_idle(worker);
- 	__set_current_state(TASK_IDLE);
--	spin_unlock_irq(&pool->lock);
-+	raw_spin_unlock_irq(&pool->lock);
- 	schedule();
- 	goto woke_up;
- }
-@@ -2486,7 +2486,7 @@ static int rescuer_thread(void *__rescuer)
- 	should_stop =3D kthread_should_stop();
-=20
- 	/* see whether any pwq is asking for help */
--	spin_lock_irq(&wq_mayday_lock);
-+	raw_spin_lock_irq(&wq_mayday_lock);
-=20
- 	while (!list_empty(&wq->maydays)) {
- 		struct pool_workqueue *pwq =3D list_first_entry(&wq->maydays,
-@@ -2498,11 +2498,11 @@ static int rescuer_thread(void *__rescuer)
- 		__set_current_state(TASK_RUNNING);
- 		list_del_init(&pwq->mayday_node);
-=20
--		spin_unlock_irq(&wq_mayday_lock);
-+		raw_spin_unlock_irq(&wq_mayday_lock);
-=20
- 		worker_attach_to_pool(rescuer, pool);
-=20
--		spin_lock_irq(&pool->lock);
-+		raw_spin_lock_irq(&pool->lock);
-=20
- 		/*
- 		 * Slurp in all works issued via this workqueue and
-@@ -2531,7 +2531,7 @@ static int rescuer_thread(void *__rescuer)
- 			 * incur MAYDAY_INTERVAL delay inbetween.
- 			 */
- 			if (need_to_create_worker(pool)) {
--				spin_lock(&wq_mayday_lock);
-+				raw_spin_lock(&wq_mayday_lock);
- 				/*
- 				 * Queue iff we aren't racing destruction
- 				 * and somebody else hasn't queued it already.
-@@ -2540,7 +2540,7 @@ static int rescuer_thread(void *__rescuer)
- 					get_pwq(pwq);
- 					list_add_tail(&pwq->mayday_node, &wq->maydays);
- 				}
--				spin_unlock(&wq_mayday_lock);
-+				raw_spin_unlock(&wq_mayday_lock);
- 			}
- 		}
-=20
-@@ -2558,14 +2558,14 @@ static int rescuer_thread(void *__rescuer)
- 		if (need_more_worker(pool))
- 			wake_up_worker(pool);
-=20
--		spin_unlock_irq(&pool->lock);
-+		raw_spin_unlock_irq(&pool->lock);
-=20
- 		worker_detach_from_pool(rescuer);
-=20
--		spin_lock_irq(&wq_mayday_lock);
-+		raw_spin_lock_irq(&wq_mayday_lock);
- 	}
-=20
--	spin_unlock_irq(&wq_mayday_lock);
-+	raw_spin_unlock_irq(&wq_mayday_lock);
-=20
- 	if (should_stop) {
- 		__set_current_state(TASK_RUNNING);
-@@ -2645,7 +2645,7 @@ static void wq_barrier_func(struct work_struct *work)
-  * underneath us, so we can't reliably determine pwq from @target.
-  *
-  * CONTEXT:
-- * spin_lock_irq(pool->lock).
-+ * raw_spin_lock_irq(pool->lock).
-  */
- static void insert_wq_barrier(struct pool_workqueue *pwq,
- 			      struct wq_barrier *barr,
-@@ -2732,7 +2732,7 @@ static bool flush_workqueue_prep_pwqs(struct workqueu=
-e_struct *wq,
- 	for_each_pwq(pwq, wq) {
- 		struct worker_pool *pool =3D pwq->pool;
-=20
--		spin_lock_irq(&pool->lock);
-+		raw_spin_lock_irq(&pool->lock);
-=20
- 		if (flush_color >=3D 0) {
- 			WARN_ON_ONCE(pwq->flush_color !=3D -1);
-@@ -2749,7 +2749,7 @@ static bool flush_workqueue_prep_pwqs(struct workqueu=
-e_struct *wq,
- 			pwq->work_color =3D work_color;
- 		}
-=20
--		spin_unlock_irq(&pool->lock);
-+		raw_spin_unlock_irq(&pool->lock);
- 	}
-=20
- 	if (flush_color >=3D 0 && atomic_dec_and_test(&wq->nr_pwqs_to_flush))
-@@ -2949,9 +2949,9 @@ void drain_workqueue(struct workqueue_struct *wq)
- 	for_each_pwq(pwq, wq) {
- 		bool drained;
-=20
--		spin_lock_irq(&pwq->pool->lock);
-+		raw_spin_lock_irq(&pwq->pool->lock);
- 		drained =3D !pwq->nr_active && list_empty(&pwq->delayed_works);
--		spin_unlock_irq(&pwq->pool->lock);
-+		raw_spin_unlock_irq(&pwq->pool->lock);
-=20
- 		if (drained)
- 			continue;
-@@ -2987,7 +2987,7 @@ static bool start_flush_work(struct work_struct *work=
-, struct wq_barrier *barr,
- 		return false;
- 	}
-=20
--	spin_lock_irq(&pool->lock);
-+	raw_spin_lock_irq(&pool->lock);
- 	/* see the comment in try_to_grab_pending() with the same code */
- 	pwq =3D get_work_pwq(work);
- 	if (pwq) {
-@@ -3003,7 +3003,7 @@ static bool start_flush_work(struct work_struct *work=
-, struct wq_barrier *barr,
- 	check_flush_dependency(pwq->wq, work);
-=20
- 	insert_wq_barrier(pwq, barr, work, worker);
--	spin_unlock_irq(&pool->lock);
-+	raw_spin_unlock_irq(&pool->lock);
-=20
- 	/*
- 	 * Force a lock recursion deadlock when using flush_work() inside a
-@@ -3022,7 +3022,7 @@ static bool start_flush_work(struct work_struct *work=
-, struct wq_barrier *barr,
- 	rcu_read_unlock();
- 	return true;
- already_gone:
--	spin_unlock_irq(&pool->lock);
-+	raw_spin_unlock_irq(&pool->lock);
- 	rcu_read_unlock();
- 	return false;
- }
-@@ -3415,7 +3415,7 @@ static bool wqattrs_equal(const struct workqueue_attr=
-s *a,
-  */
- static int init_worker_pool(struct worker_pool *pool)
- {
--	spin_lock_init(&pool->lock);
-+	raw_spin_lock_init(&pool->lock);
- 	pool->id =3D -1;
- 	pool->cpu =3D -1;
- 	pool->node =3D NUMA_NO_NODE;
-@@ -3541,7 +3541,7 @@ static void put_unbound_pool(struct worker_pool *pool)
- 	 * @pool's workers from blocking on attach_mutex.  We're the last
- 	 * manager and @pool gets freed with the flag set.
- 	 */
--	spin_lock_irq(&pool->lock);
-+	raw_spin_lock_irq(&pool->lock);
- 	swait_event_lock_irq(wq_manager_wait,
- 			    !(pool->flags & POOL_MANAGER_ACTIVE), pool->lock);
- 	pool->flags |=3D POOL_MANAGER_ACTIVE;
-@@ -3549,7 +3549,7 @@ static void put_unbound_pool(struct worker_pool *pool)
- 	while ((worker =3D first_idle_worker(pool)))
- 		destroy_worker(worker);
- 	WARN_ON(pool->nr_workers || pool->nr_idle);
--	spin_unlock_irq(&pool->lock);
-+	raw_spin_unlock_irq(&pool->lock);
-=20
- 	mutex_lock(&wq_pool_attach_mutex);
- 	if (!list_empty(&pool->workers))
-@@ -3705,7 +3705,7 @@ static void pwq_adjust_max_active(struct pool_workque=
-ue *pwq)
- 		return;
-=20
- 	/* this function can be called during early boot w/ irq disabled */
--	spin_lock_irqsave(&pwq->pool->lock, flags);
-+	raw_spin_lock_irqsave(&pwq->pool->lock, flags);
-=20
- 	/*
- 	 * During [un]freezing, the caller is responsible for ensuring that
-@@ -3728,7 +3728,7 @@ static void pwq_adjust_max_active(struct pool_workque=
-ue *pwq)
- 		pwq->max_active =3D 0;
- 	}
-=20
--	spin_unlock_irqrestore(&pwq->pool->lock, flags);
-+	raw_spin_unlock_irqrestore(&pwq->pool->lock, flags);
- }
-=20
- /* initialize newly alloced @pwq which is associated with @wq and @pool */
-@@ -4130,9 +4130,9 @@ static void wq_update_unbound_numa(struct workqueue_s=
-truct *wq, int cpu,
-=20
- use_dfl_pwq:
- 	mutex_lock(&wq->mutex);
--	spin_lock_irq(&wq->dfl_pwq->pool->lock);
-+	raw_spin_lock_irq(&wq->dfl_pwq->pool->lock);
- 	get_pwq(wq->dfl_pwq);
--	spin_unlock_irq(&wq->dfl_pwq->pool->lock);
-+	raw_spin_unlock_irq(&wq->dfl_pwq->pool->lock);
- 	old_pwq =3D numa_pwq_tbl_install(wq, node, wq->dfl_pwq);
- out_unlock:
- 	mutex_unlock(&wq->mutex);
-@@ -4361,9 +4361,9 @@ void destroy_workqueue(struct workqueue_struct *wq)
- 		struct worker *rescuer =3D wq->rescuer;
-=20
- 		/* this prevents new queueing */
--		spin_lock_irq(&wq_mayday_lock);
-+		raw_spin_lock_irq(&wq_mayday_lock);
- 		wq->rescuer =3D NULL;
--		spin_unlock_irq(&wq_mayday_lock);
-+		raw_spin_unlock_irq(&wq_mayday_lock);
-=20
- 		/* rescuer will empty maydays list before exiting */
- 		kthread_stop(rescuer->task);
-@@ -4377,18 +4377,18 @@ void destroy_workqueue(struct workqueue_struct *wq)
- 	mutex_lock(&wq_pool_mutex);
- 	mutex_lock(&wq->mutex);
- 	for_each_pwq(pwq, wq) {
--		spin_lock_irq(&pwq->pool->lock);
-+		raw_spin_lock_irq(&pwq->pool->lock);
- 		if (WARN_ON(pwq_busy(pwq))) {
- 			pr_warn("%s: %s has the following busy pwq\n",
- 				__func__, wq->name);
- 			show_pwq(pwq);
--			spin_unlock_irq(&pwq->pool->lock);
-+			raw_spin_unlock_irq(&pwq->pool->lock);
- 			mutex_unlock(&wq->mutex);
- 			mutex_unlock(&wq_pool_mutex);
- 			show_workqueue_state();
- 			return;
- 		}
--		spin_unlock_irq(&pwq->pool->lock);
-+		raw_spin_unlock_irq(&pwq->pool->lock);
- 	}
- 	mutex_unlock(&wq->mutex);
- 	mutex_unlock(&wq_pool_mutex);
-@@ -4559,10 +4559,10 @@ unsigned int work_busy(struct work_struct *work)
- 	rcu_read_lock();
- 	pool =3D get_work_pool(work);
- 	if (pool) {
--		spin_lock_irqsave(&pool->lock, flags);
-+		raw_spin_lock_irqsave(&pool->lock, flags);
- 		if (find_worker_executing_work(pool, work))
- 			ret |=3D WORK_BUSY_RUNNING;
--		spin_unlock_irqrestore(&pool->lock, flags);
-+		raw_spin_unlock_irqrestore(&pool->lock, flags);
- 	}
- 	rcu_read_unlock();
-=20
-@@ -4769,10 +4769,10 @@ void show_workqueue_state(void)
- 		pr_info("workqueue %s: flags=3D0x%x\n", wq->name, wq->flags);
-=20
- 		for_each_pwq(pwq, wq) {
--			spin_lock_irqsave(&pwq->pool->lock, flags);
-+			raw_spin_lock_irqsave(&pwq->pool->lock, flags);
- 			if (pwq->nr_active || !list_empty(&pwq->delayed_works))
- 				show_pwq(pwq);
--			spin_unlock_irqrestore(&pwq->pool->lock, flags);
-+			raw_spin_unlock_irqrestore(&pwq->pool->lock, flags);
- 			/*
- 			 * We could be printing a lot from atomic context, e.g.
- 			 * sysrq-t -> show_workqueue_state(). Avoid triggering
-@@ -4786,7 +4786,7 @@ void show_workqueue_state(void)
- 		struct worker *worker;
- 		bool first =3D true;
-=20
--		spin_lock_irqsave(&pool->lock, flags);
-+		raw_spin_lock_irqsave(&pool->lock, flags);
- 		if (pool->nr_workers =3D=3D pool->nr_idle)
- 			goto next_pool;
-=20
-@@ -4805,7 +4805,7 @@ void show_workqueue_state(void)
- 		}
- 		pr_cont("\n");
- 	next_pool:
--		spin_unlock_irqrestore(&pool->lock, flags);
-+		raw_spin_unlock_irqrestore(&pool->lock, flags);
- 		/*
- 		 * We could be printing a lot from atomic context, e.g.
- 		 * sysrq-t -> show_workqueue_state(). Avoid triggering
-@@ -4835,7 +4835,7 @@ void wq_worker_comm(char *buf, size_t size, struct ta=
-sk_struct *task)
- 		struct worker_pool *pool =3D worker->pool;
-=20
- 		if (pool) {
--			spin_lock_irq(&pool->lock);
-+			raw_spin_lock_irq(&pool->lock);
- 			/*
- 			 * ->desc tracks information (wq name or
- 			 * set_worker_desc()) for the latest execution.  If
-@@ -4849,7 +4849,7 @@ void wq_worker_comm(char *buf, size_t size, struct ta=
-sk_struct *task)
- 					scnprintf(buf + off, size - off, "-%s",
- 						  worker->desc);
- 			}
--			spin_unlock_irq(&pool->lock);
-+			raw_spin_unlock_irq(&pool->lock);
- 		}
- 	}
-=20
-@@ -4880,7 +4880,7 @@ static void unbind_workers(int cpu)
-=20
- 	for_each_cpu_worker_pool(pool, cpu) {
- 		mutex_lock(&wq_pool_attach_mutex);
--		spin_lock_irq(&pool->lock);
-+		raw_spin_lock_irq(&pool->lock);
-=20
- 		/*
- 		 * We've blocked all attach/detach operations. Make all workers
-@@ -4894,7 +4894,7 @@ static void unbind_workers(int cpu)
-=20
- 		pool->flags |=3D POOL_DISASSOCIATED;
-=20
--		spin_unlock_irq(&pool->lock);
-+		raw_spin_unlock_irq(&pool->lock);
- 		mutex_unlock(&wq_pool_attach_mutex);
-=20
- 		/*
-@@ -4920,9 +4920,9 @@ static void unbind_workers(int cpu)
- 		 * worker blocking could lead to lengthy stalls.  Kick off
- 		 * unbound chain execution of currently pending work items.
- 		 */
--		spin_lock_irq(&pool->lock);
-+		raw_spin_lock_irq(&pool->lock);
- 		wake_up_worker(pool);
--		spin_unlock_irq(&pool->lock);
-+		raw_spin_unlock_irq(&pool->lock);
- 	}
- }
-=20
-@@ -4949,7 +4949,7 @@ static void rebind_workers(struct worker_pool *pool)
- 		WARN_ON_ONCE(set_cpus_allowed_ptr(worker->task,
- 						  pool->attrs->cpumask) < 0);
-=20
--	spin_lock_irq(&pool->lock);
-+	raw_spin_lock_irq(&pool->lock);
-=20
- 	pool->flags &=3D ~POOL_DISASSOCIATED;
-=20
-@@ -4988,7 +4988,7 @@ static void rebind_workers(struct worker_pool *pool)
- 		WRITE_ONCE(worker->flags, worker_flags);
- 	}
-=20
--	spin_unlock_irq(&pool->lock);
-+	raw_spin_unlock_irq(&pool->lock);
- }
-=20
- /**
---=20
-2.26.2
-
+I also suggested that device links may help, though I am not sure. What
+do you suggest to be done?
+-- 
+Florian
