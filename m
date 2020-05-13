@@ -2,138 +2,205 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 125FDC2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA56CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E00AA21186
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:15:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589375736;
-	bh=RwXmktlBJgTbjqW1NZhuxiAmacRVEO4i4hTFi648CKg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SE02j3+z/ksc7g25UggwYGDxr7AL5v8IRkddiVC7sF4EW5LGLCieGU5t8npQqUTaW
-	 OL+tfpNfzkrcDiqU4LtNHCRVR5xJynk6URSzO/iNX6lK6JnlPjoKgTJnhNWZEJxBcU
-	 lEjnxUoUMRn0CgumRaRTrpg9ctLHU1C20yxncVCs=
+	by mail.kernel.org (Postfix) with ESMTP id 345382064E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:16:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ki21gHxM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733297AbgEMNPg (ORCPT
+        id S1733145AbgEMNQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:15:36 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37965 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725925AbgEMNPg (ORCPT
+        Wed, 13 May 2020 09:16:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53248 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbgEMNQJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:15:36 -0400
-Received: by mail-pg1-f196.google.com with SMTP id u5so5157277pgn.5;
-        Wed, 13 May 2020 06:15:34 -0700 (PDT)
+        Wed, 13 May 2020 09:16:09 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AF4AC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:16:07 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id d21so10035540ljg.9
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:16:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u3XslSA1/HmduXd9FQLdTYpbuOaEzN1IUj288Lu/Wdo=;
+        b=Ki21gHxMSPIOXhJcPzwdt/QMk6sbI/zUtmnsLN/DmLIBZ7NEnI4x7N3DgI0Nig2Cm3
+         /IUTQMxDCFWY2toidoe8NtWpqFLRatqkoKNzGAnOg3f/b6fKM3A4iDDmgFvZz2sLD9nG
+         mYobdMJXON1iX+qSZMHPQHzIuDMzAruOCQB20ue0axdlLya0gx8xmYaLjosNXXQhxpvB
+         vu8jhEtky+iTPXqJNI5TyIlcDy3EPCgSd4gk3ag57ZNg9pRz//TLUZN7GPrfxABQWpvm
+         4YjmRIv3qSRyFBquzx+ryIAiLYMzmutdTScly5nUBML+jcmVSz0FQjmJoaHoAZAZNYNe
+         Te2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VEBUE/dt95vl+GkpIooPeRD206RTMRg0kBeuKHBdFMY=;
-        b=SSHvpXGz8Vb2jhT+RhKOzBYF2UQMNVQzu2KvYEDX/uYNyRQ5txx6gs1OnhzKaLKfm/
-         XCiMzCU/OPQn2fXy7uKdMUfg5QUVXsM5rMgvW/6igrs+7s3acziP5BVOleuna2wh9tt4
-         hQxwdV1zDXQxrYRQwYzkEnjS6Pj1RhExBouDOyq4l+xgRySfK7wwnzAJT6uFO2z0UFqG
-         nfBc1V5oRlQCH8JicQgpC8Q0Bzpu5RnE/TJoSNT7HMRnqOtCmTqSTsV/3liFiBDP/bqV
-         nxJqnN0OaKz2Hj64JrbfVTa0JsLxLmDHnoiHXJWQW0pESK8YMuT6Lp5yElasm8Pzy2N9
-         J1GQ==
-X-Gm-Message-State: AGi0Pubooessgvj8B5zmOc6LfhmUXWicppgit3OcGuRgfuIgrFyJZRPs
-        WRpUE3zx2g1ze4gXDTdttSk=
-X-Google-Smtp-Source: APiQypJAq8SfvBNksU6hYHSrxfbgqlfrrNYtZxOc+SvIoDj8gVf3OcL5dVz0pBjX95ZNI7nn5szd2A==
-X-Received: by 2002:a63:e242:: with SMTP id y2mr23815627pgj.205.1589375734552;
-        Wed, 13 May 2020 06:15:34 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id w73sm1970992pfd.113.2020.05.13.06.15.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 06:15:33 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id B2A064063E; Wed, 13 May 2020 13:15:32 +0000 (UTC)
-Date:   Wed, 13 May 2020 13:15:32 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v3 5/5] lib/test_sysctl: support testing of sysctl. boot
- parameter
-Message-ID: <20200513131532.GO11244@42.do-not-panic.com>
-References: <20200427180433.7029-1-vbabka@suse.cz>
- <20200427180433.7029-6-vbabka@suse.cz>
- <20200427183913.GH11244@42.do-not-panic.com>
- <028d1996-9f4c-20c6-fb2a-706baa919dde@suse.cz>
- <20200511183155.GT11244@42.do-not-panic.com>
- <d07e1dc9-cc2d-d471-2882-8ec563878fe7@suse.cz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u3XslSA1/HmduXd9FQLdTYpbuOaEzN1IUj288Lu/Wdo=;
+        b=AV8XfVyb9EwekvYAl7gxyLmAUDccGNbR221EoZvdU93CrKlADu/cYw5cBhFNghdgDx
+         GufhaEsDxp/cUzrw/t0nB+pMaDlsHzlRCA5MEfhZizGpwYNavDSeKNUuEB3vY2mcQYwv
+         cZiBZS6HYYcC7UmlH8S+keixBysKYGkaSad41Jib0A4aJ3zvVs2AZbfyA0d35Y6SRvz+
+         Km7uDU+F9EoVA2ohxeTKkK2qrwXLsiwTVhLVTkUW7Kx2WvD77P5y78k2f/WcJbO1IyiL
+         QLtWb9mpYxk2+SYd2cSwmSJO02VPHp/CrmG5Bf1qnHPpcyS9jboJzkPV+dbBKyHyBSTV
+         HvbQ==
+X-Gm-Message-State: AOAM530BPudv7vF73535Cd+Oxlc/GfTjKM2/1FFSRXyhPUzXJ1eolb/I
+        bg+I+de7HOeE20uLLc2wqyh5pLReCcVaE4pRwE3jQg==
+X-Google-Smtp-Source: ABdhPJzyMkSCFONCNoPU5gLU3CznZIAwrg1SVtr08LROYOtDeyUdBAAf0rVWI9kOe8yFbNhj3t5PjYN69CZxbzPz8hM=
+X-Received: by 2002:a2e:9e43:: with SMTP id g3mr17927751ljk.4.1589375765684;
+ Wed, 13 May 2020 06:16:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d07e1dc9-cc2d-d471-2882-8ec563878fe7@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200513123335.28122-1-vincent.guittot@linaro.org>
+ <20200513124540.GB12425@lorien.usersys.redhat.com> <CAKfTPtBFP5eAV-u02x42U2cQnWA56RP+wbj78rWpzj560OS+-g@mail.gmail.com>
+ <20200513131337.GF12425@lorien.usersys.redhat.com>
+In-Reply-To: <20200513131337.GF12425@lorien.usersys.redhat.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 13 May 2020 15:15:53 +0200
+Message-ID: <CAKfTPtDYmi9wz3r1G8baG2cM3wh6004CDT11HaAu8L7-wWv=Gw@mail.gmail.com>
+Subject: Re: [PATCH v2] sched/fair: enqueue_task_fair optimization
+To:     Phil Auld <pauld@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Tao Zhou <ouwen210@hotmail.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 10:58:16AM +0200, Vlastimil Babka wrote:
-> On 5/11/20 8:31 PM, Luis Chamberlain wrote:
-> > On Mon, May 11, 2020 at 01:05:22PM +0200, Vlastimil Babka wrote:
-> >> ----8<----
-> >> From a999e993a89e521b152bbd4b1466f69e62879c30 Mon Sep 17 00:00:00 2001
-> >> From: Vlastimil Babka <vbabka@suse.cz>
-> >> Date: Mon, 11 May 2020 12:59:49 +0200
-> >> Subject: [PATCH] lib/test_sysctl: support testing of sysctl. boot parameter -
-> >>  fix
-> >> 
-> >> Skip the new test if boot_int sysctl is not present, otherwise, per Luis,
-> >> "This would fail if someone uses this script to test an older kernel, and
-> >> the scripts in selftests are supposed to work with older kernels."
-> >> 
-> >> Suggested-by: Luis Chamberlain <mcgrof@kernel.org>
-> >> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> >> ---
-> >>  tools/testing/selftests/sysctl/sysctl.sh | 5 +++++
-> >>  1 file changed, 5 insertions(+)
-> >> 
-> >> diff --git a/tools/testing/selftests/sysctl/sysctl.sh b/tools/testing/selftests/sysctl/sysctl.sh
-> >> index ef6417b8067b..148704f465b5 100755
-> >> --- a/tools/testing/selftests/sysctl/sysctl.sh
-> >> +++ b/tools/testing/selftests/sysctl/sysctl.sh
-> >> @@ -756,6 +756,11 @@ sysctl_test_0006()
-> > 
-> > You want to:
-> > 
-> >                                                                                 
-> > # Kselftest framework requirement - SKIP code is 4.                             
-> > ksft_skip=4 
-> > 
-> >>  sysctl_test_0007()
-> >>  {
-> >>  	TARGET="${SYSCTL}/boot_int"
-> >> +	if [ ! -f $TARGET ]; then
-> >> +		echo "Skipping test for $TARGET as it is not present ..."
-> >> +		return 0
-> >> +	fi
-> > 
-> > And return 4 instead.
-> 
-> If I return it from the function, nobody will care, AFAICS. If I 'exit
-> $ksft_skip', is that correct if it's just a single test out of 7?
+On Wed, 13 May 2020 at 15:13, Phil Auld <pauld@redhat.com> wrote:
+>
+> On Wed, May 13, 2020 at 03:10:28PM +0200 Vincent Guittot wrote:
+> > On Wed, 13 May 2020 at 14:45, Phil Auld <pauld@redhat.com> wrote:
+> > >
+> > > Hi Vincent,
+> > >
+> > > On Wed, May 13, 2020 at 02:33:35PM +0200 Vincent Guittot wrote:
+> > > > enqueue_task_fair jumps to enqueue_throttle label when cfs_rq_of(se) is
+> > > > throttled which means that se can't be NULL and we can skip the test.
+> > > >
+> > >
+> > > s/be NULL/be non-NULL/
+> > >
+> > > I think.
+> >
+> > This sentence refers to the move of enqueue_throttle and the fact that
+> > se can't be null when goto enqueue_throttle and we can jump directly
+> > after the if statement, which is now removed in v2 because se is
+> > always NULL if we don't use goto enqueue_throttle.
+> >
+> > I haven't change the commit message for the remove of if statement
+> >
+>
+> Fair enough, it just seems backwards from the intent of the patch now.
+>
+> There is also an extra }  after the update_overutilized_status.
 
-yes please do that.
+don't know what I did but it's crap.  sorry about that
 
-  Luis
+Let me prepare a v3
+
+>
+>
+> Cheers,
+> Phil
+>
+>
+>
+> > >
+> > > It's more like if it doesn't jump to the label then se must be NULL for
+> > > the loop to terminate.  The final loop is a NOP if se is NULL. The check
+> > > wasn't protecting that.
+> > >
+> > > Otherwise still
+> > >
+> > > > Reviewed-by: Phil Auld <pauld@redhat.com>
+> > >
+> > > Cheers,
+> > > Phil
+> > >
+> > >
+> > > > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> > > > ---
+> > > >
+> > > > v2 changes:
+> > > > - Remove useless if statement
+> > > >
+> > > >  kernel/sched/fair.c | 39 ++++++++++++++++++++-------------------
+> > > >  1 file changed, 20 insertions(+), 19 deletions(-)
+> > > >
+> > > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > > > index a0c690d57430..b51b12d63c39 100644
+> > > > --- a/kernel/sched/fair.c
+> > > > +++ b/kernel/sched/fair.c
+> > > > @@ -5513,28 +5513,29 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+> > > >                         list_add_leaf_cfs_rq(cfs_rq);
+> > > >       }
+> > > >
+> > > > -enqueue_throttle:
+> > > > -     if (!se) {
+> > > > -             add_nr_running(rq, 1);
+> > > > -             /*
+> > > > -              * Since new tasks are assigned an initial util_avg equal to
+> > > > -              * half of the spare capacity of their CPU, tiny tasks have the
+> > > > -              * ability to cross the overutilized threshold, which will
+> > > > -              * result in the load balancer ruining all the task placement
+> > > > -              * done by EAS. As a way to mitigate that effect, do not account
+> > > > -              * for the first enqueue operation of new tasks during the
+> > > > -              * overutilized flag detection.
+> > > > -              *
+> > > > -              * A better way of solving this problem would be to wait for
+> > > > -              * the PELT signals of tasks to converge before taking them
+> > > > -              * into account, but that is not straightforward to implement,
+> > > > -              * and the following generally works well enough in practice.
+> > > > -              */
+> > > > -             if (flags & ENQUEUE_WAKEUP)
+> > > > -                     update_overutilized_status(rq);
+> > > > +     /* At this point se is NULL and we are at root level*/
+> > > > +     add_nr_running(rq, 1);
+> > > > +
+> > > > +     /*
+> > > > +      * Since new tasks are assigned an initial util_avg equal to
+> > > > +      * half of the spare capacity of their CPU, tiny tasks have the
+> > > > +      * ability to cross the overutilized threshold, which will
+> > > > +      * result in the load balancer ruining all the task placement
+> > > > +      * done by EAS. As a way to mitigate that effect, do not account
+> > > > +      * for the first enqueue operation of new tasks during the
+> > > > +      * overutilized flag detection.
+> > > > +      *
+> > > > +      * A better way of solving this problem would be to wait for
+> > > > +      * the PELT signals of tasks to converge before taking them
+> > > > +      * into account, but that is not straightforward to implement,
+> > > > +      * and the following generally works well enough in practice.
+> > > > +      */
+> > > > +     if (flags & ENQUEUE_WAKEUP)
+> > > > +             update_overutilized_status(rq);
+> > > >
+> > > >       }
+> > > >
+> > > > +enqueue_throttle:
+> > > >       if (cfs_bandwidth_used()) {
+> > > >               /*
+> > > >                * When bandwidth control is enabled; the cfs_rq_throttled()
+> > > > --
+> > > > 2.17.1
+> > > >
+> > >
+> > > --
+> > >
+> >
+>
+> --
+>
