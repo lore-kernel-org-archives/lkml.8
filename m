@@ -2,54 +2,58 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3405CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AB2C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2928206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21EAD206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:04:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364274;
-	bh=twbmB15laeg2s2WH+3sd8ZjdGuGH39wXrzDitwnqjzE=;
+	s=default; t=1589364282;
+	bh=GUIpK23XvnwYuYschf4nAkND8B9/PhPFyFh4GqVIbfE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eG9gddYAWDjuDIBwrYEhl1m69efNo+A0drTWWjYaQUj6rIcy6BRwsRuPRtyN6Lq84
-	 auuGCoE5NMK/0M5a39rCJgmG9TofrABjtoqf7ZM733jzP3rFOTw/Q5kZFiuSXvi4N5
-	 Zto0FYqkOGWn9GPIHlUo6N4mudYP49ukI51dGj6k=
+	b=0Ol0v9pH5TD59GYjsK25Cf5cLzF4kKCsW4UiZiua5eS0AvWJCgTJ3ysoz9b0iKBBa
+	 cx1QXKRm6BfhDVCrofmh2k0Za15tbt+8KdG45tMzMTHiFqaUu448acqrcaBrSvzBHp
+	 Vpl7i42wGvoeFYZsulpT4EyVPC/40NdUb3cLUwzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388688AbgEMKEe (ORCPT
+        id S2388105AbgEMKEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:04:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45708 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 06:04:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732894AbgEMJrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:47:39 -0400
+        id S1732887AbgEMJrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:47:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5B232078C;
-        Wed, 13 May 2020 09:47:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4156C20769;
+        Wed, 13 May 2020 09:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363259;
-        bh=twbmB15laeg2s2WH+3sd8ZjdGuGH39wXrzDitwnqjzE=;
+        s=default; t=1589363256;
+        bh=GUIpK23XvnwYuYschf4nAkND8B9/PhPFyFh4GqVIbfE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tvG0HgazuGrS19EpKZ2v8LDby7cQaPqeuKvHjtxZkWsDIcC9P3TtAcUB1o/Ms7gKH
-         c5+CA/6CJPDtw/qEv/ppFSU3i44aOBBbM5QscRvIYd3oVX8WR30gwXU4qfn0Z4h9rH
-         +Fy7HJobc3LjECGNgdkabQ+qZYT1giTd4lhv50R4=
+        b=1Sh+U0v/4ZxzF8Mkay1fCJ2S7DdRXhBjdgPciApNmDL92DzpHi7d8vsv0tIyb+80h
+         rjOv8sgK7ORzkZLWqj5hW4f8QgDtc+UA24QjieqWEHQuMRcIkM3lVmed7TvGYEjgK3
+         0LpLAWkNyuDfY7ULWb6RtTPe34lLShyFG/8WnCG4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Jere=20Lepp=C3=A4nen?= <jere.leppanen@nokia.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.19 20/48] sctp: Fix bundling of SHUTDOWN with COOKIE-ACK
-Date:   Wed, 13 May 2020 11:44:46 +0200
-Message-Id: <20200513094356.037688991@linuxfoundation.org>
+        stable@vger.kernel.org, Yoji <yoji.fujihar.min@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Markus Elfring <elfring@users.sourceforge.net>, 1vier1@web.de,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 48/48] ipc/mqueue.c: change __do_notify() to bypass check_kill_permission()
+Date:   Wed, 13 May 2020 11:45:14 +0200
+Message-Id: <20200513094405.122260162@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
 References: <20200513094351.100352960@linuxfoundation.org>
@@ -62,66 +66,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jere Leppänen <jere.leppanen@nokia.com>
+From: Oleg Nesterov <oleg@redhat.com>
 
-commit 145cb2f7177d94bc54563ed26027e952ee0ae03c upstream.
+[ Upstream commit b5f2006144c6ae941726037120fa1001ddede784 ]
 
-When we start shutdown in sctp_sf_do_dupcook_a(), we want to bundle
-the SHUTDOWN with the COOKIE-ACK to ensure that the peer receives them
-at the same time and in the correct order. This bundling was broken by
-commit 4ff40b86262b ("sctp: set chunk transport correctly when it's a
-new asoc"), which assigns a transport for the COOKIE-ACK, but not for
-the SHUTDOWN.
+Commit cc731525f26a ("signal: Remove kernel interal si_code magic")
+changed the value of SI_FROMUSER(SI_MESGQ), this means that mq_notify() no
+longer works if the sender doesn't have rights to send a signal.
 
-Fix this by passing a reference to the COOKIE-ACK chunk as an argument
-to sctp_sf_do_9_2_start_shutdown() and onward to
-sctp_make_shutdown(). This way the SHUTDOWN chunk is assigned the same
-transport as the COOKIE-ACK chunk, which allows them to be bundled.
+Change __do_notify() to use do_send_sig_info() instead of kill_pid_info()
+to avoid check_kill_permission().
 
-In sctp_sf_do_9_2_start_shutdown(), the void *arg parameter was
-previously unused. Now that we're taking it into use, it must be a
-valid pointer to a chunk, or NULL. There is only one call site where
-it's not, in sctp_sf_autoclose_timer_expire(). Fix that too.
+This needs the additional notify.sigev_signo != 0 check, shouldn't we
+change do_mq_notify() to deny sigev_signo == 0 ?
 
-Fixes: 4ff40b86262b ("sctp: set chunk transport correctly when it's a new asoc")
-Signed-off-by: Jere Leppänen <jere.leppanen@nokia.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Test-case:
 
+	#include <signal.h>
+	#include <mqueue.h>
+	#include <unistd.h>
+	#include <sys/wait.h>
+	#include <assert.h>
+
+	static int notified;
+
+	static void sigh(int sig)
+	{
+		notified = 1;
+	}
+
+	int main(void)
+	{
+		signal(SIGIO, sigh);
+
+		int fd = mq_open("/mq", O_RDWR|O_CREAT, 0666, NULL);
+		assert(fd >= 0);
+
+		struct sigevent se = {
+			.sigev_notify	= SIGEV_SIGNAL,
+			.sigev_signo	= SIGIO,
+		};
+		assert(mq_notify(fd, &se) == 0);
+
+		if (!fork()) {
+			assert(setuid(1) == 0);
+			mq_send(fd, "",1,0);
+			return 0;
+		}
+
+		wait(NULL);
+		mq_unlink("/mq");
+		assert(notified);
+		return 0;
+	}
+
+[manfred@colorfullife.com: 1) Add self_exec_id evaluation so that the implementation matches do_notify_parent 2) use PIDTYPE_TGID everywhere]
+Fixes: cc731525f26a ("signal: Remove kernel interal si_code magic")
+Reported-by: Yoji <yoji.fujihar.min@gmail.com>
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Manfred Spraul <manfred@colorfullife.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Markus Elfring <elfring@users.sourceforge.net>
+Cc: <1vier1@web.de>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/e2a782e4-eab9-4f5c-c749-c07a8f7a4e66@colorfullife.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sctp/sm_statefuns.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ ipc/mqueue.c | 34 ++++++++++++++++++++++++++--------
+ 1 file changed, 26 insertions(+), 8 deletions(-)
 
---- a/net/sctp/sm_statefuns.c
-+++ b/net/sctp/sm_statefuns.c
-@@ -1880,7 +1880,7 @@ static enum sctp_disposition sctp_sf_do_
- 		 */
- 		sctp_add_cmd_sf(commands, SCTP_CMD_REPLY, SCTP_CHUNK(repl));
- 		return sctp_sf_do_9_2_start_shutdown(net, ep, asoc,
--						     SCTP_ST_CHUNK(0), NULL,
-+						     SCTP_ST_CHUNK(0), repl,
- 						     commands);
- 	} else {
- 		sctp_add_cmd_sf(commands, SCTP_CMD_NEW_STATE,
-@@ -5483,7 +5483,7 @@ enum sctp_disposition sctp_sf_do_9_2_sta
- 	 * in the Cumulative TSN Ack field the last sequential TSN it
- 	 * has received from the peer.
- 	 */
--	reply = sctp_make_shutdown(asoc, NULL);
-+	reply = sctp_make_shutdown(asoc, arg);
- 	if (!reply)
- 		goto nomem;
+diff --git a/ipc/mqueue.c b/ipc/mqueue.c
+index de4070d5472f2..46d0265423f5b 100644
+--- a/ipc/mqueue.c
++++ b/ipc/mqueue.c
+@@ -76,6 +76,7 @@ struct mqueue_inode_info {
  
-@@ -6081,7 +6081,7 @@ enum sctp_disposition sctp_sf_autoclose_
- 	disposition = SCTP_DISPOSITION_CONSUME;
- 	if (sctp_outq_is_empty(&asoc->outqueue)) {
- 		disposition = sctp_sf_do_9_2_start_shutdown(net, ep, asoc, type,
--							    arg, commands);
-+							    NULL, commands);
- 	}
+ 	struct sigevent notify;
+ 	struct pid *notify_owner;
++	u32 notify_self_exec_id;
+ 	struct user_namespace *notify_user_ns;
+ 	struct user_struct *user;	/* user who created, for accounting */
+ 	struct sock *notify_sock;
+@@ -662,28 +663,44 @@ static void __do_notify(struct mqueue_inode_info *info)
+ 	 * synchronously. */
+ 	if (info->notify_owner &&
+ 	    info->attr.mq_curmsgs == 1) {
+-		struct siginfo sig_i;
+ 		switch (info->notify.sigev_notify) {
+ 		case SIGEV_NONE:
+ 			break;
+-		case SIGEV_SIGNAL:
+-			/* sends signal */
++		case SIGEV_SIGNAL: {
++			struct siginfo sig_i;
++			struct task_struct *task;
++
++			/* do_mq_notify() accepts sigev_signo == 0, why?? */
++			if (!info->notify.sigev_signo)
++				break;
  
- 	return disposition;
+ 			clear_siginfo(&sig_i);
+ 			sig_i.si_signo = info->notify.sigev_signo;
+ 			sig_i.si_errno = 0;
+ 			sig_i.si_code = SI_MESGQ;
+ 			sig_i.si_value = info->notify.sigev_value;
+-			/* map current pid/uid into info->owner's namespaces */
+ 			rcu_read_lock();
++			/* map current pid/uid into info->owner's namespaces */
+ 			sig_i.si_pid = task_tgid_nr_ns(current,
+ 						ns_of_pid(info->notify_owner));
+-			sig_i.si_uid = from_kuid_munged(info->notify_user_ns, current_uid());
++			sig_i.si_uid = from_kuid_munged(info->notify_user_ns,
++						current_uid());
++			/*
++			 * We can't use kill_pid_info(), this signal should
++			 * bypass check_kill_permission(). It is from kernel
++			 * but si_fromuser() can't know this.
++			 * We do check the self_exec_id, to avoid sending
++			 * signals to programs that don't expect them.
++			 */
++			task = pid_task(info->notify_owner, PIDTYPE_TGID);
++			if (task && task->self_exec_id ==
++						info->notify_self_exec_id) {
++				do_send_sig_info(info->notify.sigev_signo,
++						&sig_i, task, PIDTYPE_TGID);
++			}
+ 			rcu_read_unlock();
+-
+-			kill_pid_info(info->notify.sigev_signo,
+-				      &sig_i, info->notify_owner);
+ 			break;
++		}
+ 		case SIGEV_THREAD:
+ 			set_cookie(info->notify_cookie, NOTIFY_WOKENUP);
+ 			netlink_sendskb(info->notify_sock, info->notify_cookie);
+@@ -1273,6 +1290,7 @@ retry:
+ 			info->notify.sigev_signo = notification->sigev_signo;
+ 			info->notify.sigev_value = notification->sigev_value;
+ 			info->notify.sigev_notify = SIGEV_SIGNAL;
++			info->notify_self_exec_id = current->self_exec_id;
+ 			break;
+ 		}
+ 
+-- 
+2.20.1
+
 
 
