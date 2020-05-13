@@ -2,53 +2,53 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF311CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCCBCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E09220575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5872E20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364000;
-	bh=4LdK0UMZKV88NR0FednH6zsZI4bJjPkcrrE6fGKiOuo=;
+	s=default; t=1589364011;
+	bh=8BrPbkyC/yqgOYLEP9Es204DPM/VFXPE8zBaObCClVI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YruuBqbgazeZ6VxidUPg0s2/uhh2bHeTZ9rcj3mLd962YJBRzrmuS7snSeIrax81M
-	 4r4zO3d1gThf56korykw1Q4lVKPliw2QROQcu787Whea0Xvyug3Owja56Fxipv433Z
-	 02z35h9s5N1IPu79IwiDHLa9jsv1PLWJYGP2bNag=
+	b=ALC7zZxOUmlvEVXk+HutLlcI+cZy13yTeODSeotrppeMfo2iBNWig/k5TXQTZ8cFo
+	 5TebGe0+dj3H46WosDfjfpCwfpk/Huh7St9Q5aN108w9/sDFiqgbJpJW3DMPsE5V/d
+	 5DwPxqmf+dMsu5FuwKh9cWnN6v7fBJ90Z4UmxRkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388574AbgEMJ77 (ORCPT
+        id S2388575AbgEMKAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:59:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54294 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 06:00:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387827AbgEMJwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:52:43 -0400
+        id S2387798AbgEMJw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:52:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B08C2312A;
-        Wed, 13 May 2020 09:52:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5E9B20740;
+        Wed, 13 May 2020 09:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363562;
-        bh=4LdK0UMZKV88NR0FednH6zsZI4bJjPkcrrE6fGKiOuo=;
+        s=default; t=1589363548;
+        bh=8BrPbkyC/yqgOYLEP9Es204DPM/VFXPE8zBaObCClVI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gzRT6a1PeTNpV9QNnWZz3n/iPReGlppxXQy5kYnwRfp9bV6yDBOO4tTGORxlHAPnl
-         BrlvLK+t0bCWSf1dTwj+7tqiLoNZc6ozvfOjlSy1ArwQXs8xhNalq0zTDZgmC30q5B
-         bURnr6+UntY/I+7v5cYcdk1ojoZLri5ko6YlGm48=
+        b=FqU8ZfnzMUgVJuXZOn0SDnVaJ3nV129cK7gGYrpOeJf6PebCVGXpnboTHPofYs5bk
+         aoxVHROuwENgFWWNga9W7NKfTupS7byJXGE+7fOrou342YydxnRw02kzFX9U9ccs2I
+         62boPoERjsNQsqHtWH/DkqVEgo1N7TB4xNo8t0+g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 035/118] sch_choke: avoid potential panic in choke_reset()
-Date:   Wed, 13 May 2020 11:44:14 +0200
-Message-Id: <20200513094420.534388849@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.6 007/118] ext4: dont set dioread_nolock by default for blocksize < pagesize
+Date:   Wed, 13 May 2020 11:43:46 +0200
+Message-Id: <20200513094418.289827916@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -61,69 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Ritesh Harjani <riteshh@linux.ibm.com>
 
-[ Upstream commit 8738c85c72b3108c9b9a369a39868ba5f8e10ae0 ]
+commit 626b035b816b61a7a7b4d2205a6807e2f11a18c1 upstream.
 
-If choke_init() could not allocate q->tab, we would crash later
-in choke_reset().
+Currently on calling echo 3 > drop_caches on host machine, we see
+FS corruption in the guest. This happens on Power machine where
+blocksize < pagesize.
 
-BUG: KASAN: null-ptr-deref in memset include/linux/string.h:366 [inline]
-BUG: KASAN: null-ptr-deref in choke_reset+0x208/0x340 net/sched/sch_choke.c:326
-Write of size 8 at addr 0000000000000000 by task syz-executor822/7022
+So as a temporary workaound don't enable dioread_nolock by default
+for blocksize < pagesize until we identify the root cause.
 
-CPU: 1 PID: 7022 Comm: syz-executor822 Not tainted 5.7.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- __kasan_report.cold+0x5/0x4d mm/kasan/report.c:515
- kasan_report+0x33/0x50 mm/kasan/common.c:625
- check_memory_region_inline mm/kasan/generic.c:187 [inline]
- check_memory_region+0x141/0x190 mm/kasan/generic.c:193
- memset+0x20/0x40 mm/kasan/common.c:85
- memset include/linux/string.h:366 [inline]
- choke_reset+0x208/0x340 net/sched/sch_choke.c:326
- qdisc_reset+0x6b/0x520 net/sched/sch_generic.c:910
- dev_deactivate_queue.constprop.0+0x13c/0x240 net/sched/sch_generic.c:1138
- netdev_for_each_tx_queue include/linux/netdevice.h:2197 [inline]
- dev_deactivate_many+0xe2/0xba0 net/sched/sch_generic.c:1195
- dev_deactivate+0xf8/0x1c0 net/sched/sch_generic.c:1233
- qdisc_graft+0xd25/0x1120 net/sched/sch_api.c:1051
- tc_modify_qdisc+0xbab/0x1a00 net/sched/sch_api.c:1670
- rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5454
- netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
- ___sys_sendmsg+0x100/0x170 net/socket.c:2416
- __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+Also emit a warning msg in case if this mount option is manually
+enabled for blocksize < pagesize.
 
-Fixes: 77e62da6e60c ("sch_choke: drop all packets in queue during reset")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
+Link: https://lore.kernel.org/r/20200327200744.12473-1-riteshh@linux.ibm.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_choke.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/ext4/super.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
---- a/net/sched/sch_choke.c
-+++ b/net/sched/sch_choke.c
-@@ -323,7 +323,8 @@ static void choke_reset(struct Qdisc *sc
- 
- 	sch->q.qlen = 0;
- 	sch->qstats.backlog = 0;
--	memset(q->tab, 0, (q->tab_mask + 1) * sizeof(struct sk_buff *));
-+	if (q->tab)
-+		memset(q->tab, 0, (q->tab_mask + 1) * sizeof(struct sk_buff *));
- 	q->head = q->tail = 0;
- 	red_restart(&q->vars);
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 446158ab507dd..70796de7c4682 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -2181,6 +2181,14 @@ static int parse_options(char *options, struct super_block *sb,
+ 		}
+ 	}
+ #endif
++	if (test_opt(sb, DIOREAD_NOLOCK)) {
++		int blocksize =
++			BLOCK_SIZE << le32_to_cpu(sbi->s_es->s_log_block_size);
++		if (blocksize < PAGE_SIZE)
++			ext4_msg(sb, KERN_WARNING, "Warning: mounting with an "
++				 "experimental mount option 'dioread_nolock' "
++				 "for blocksize < PAGE_SIZE");
++	}
+ 	return 1;
  }
+ 
+@@ -3787,7 +3795,6 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 		set_opt(sb, NO_UID32);
+ 	/* xattr user namespace & acls are now defaulted on */
+ 	set_opt(sb, XATTR_USER);
+-	set_opt(sb, DIOREAD_NOLOCK);
+ #ifdef CONFIG_EXT4_FS_POSIX_ACL
+ 	set_opt(sb, POSIX_ACL);
+ #endif
+@@ -3837,6 +3844,10 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 	sbi->s_li_wait_mult = EXT4_DEF_LI_WAIT_MULT;
+ 
+ 	blocksize = BLOCK_SIZE << le32_to_cpu(es->s_log_block_size);
++
++	if (blocksize == PAGE_SIZE)
++		set_opt(sb, DIOREAD_NOLOCK);
++
+ 	if (blocksize < EXT4_MIN_BLOCK_SIZE ||
+ 	    blocksize > EXT4_MAX_BLOCK_SIZE) {
+ 		ext4_msg(sb, KERN_ERR,
+-- 
+2.20.1
+
 
 
