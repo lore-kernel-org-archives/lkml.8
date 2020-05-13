@@ -2,117 +2,155 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7362CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A25CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65ED6204EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:13:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LC9Vpj5a"
+	by mail.kernel.org (Postfix) with ESMTP id 18D34204EF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:14:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589379266;
+	bh=CL3qdlYx3o2owJn/u66K+t43CY2/eKSyOILBzBLml6c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0Rnro43iUQYG6M4fJAx+VRY9uSp8dpcXkYpCFxkINv+IVVuFFphAk8PKJI8zJpzTH
+	 MKYNPQipM6//TgU0tW6Y6kDSXapqTtcKr9czhKg9mFC+9ltJnisrzeauXtwkVRdJXh
+	 A57s61LfWgJ+jUQGkY1mjohDYNZ0lvi0+/xwr3eo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388871AbgEMONm (ORCPT
+        id S2388881AbgEMOOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 10:13:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733142AbgEMONm (ORCPT
+        Wed, 13 May 2020 10:14:25 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:53750 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733142AbgEMOOY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 10:13:42 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3750EC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 07:13:42 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id e10so10116960vsp.12
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 07:13:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bCRPmBf+bIjv/gHr5AWk1RbyQw6taBIM/9TqKHo+x6E=;
-        b=LC9Vpj5aGvdbFDALXhMdOIffXIYZMOViIbG8buo3eE2kTLhqobBlVArL4MjS1BaDl2
-         tb4rVQZIZXXorGlfKKmOKYPcouXTjKMPBTrkB9BYmfaGP0f0wIO08O/i7ZH5pE1zF0Q8
-         lMxY2Beahh2WRSBmW5CxCP9GSHdc+ZxGU/j6MLzvFuNJ4zr/EGtYjkTwc+CvXGADZ+n1
-         faoCkcpDbZ7o/f9xQFdDLLIg6ms+H6xHKIgLs0U8hr2n67qnMTDv4k4hk6pRUMysBgfZ
-         1FfWy7me2GLJvholeW2hkll4VaZqD8JgjhZ2pz5Rs474s59hAAIwuihwx0RuSzAkN+Si
-         xyZQ==
+        Wed, 13 May 2020 10:14:24 -0400
+Received: by mail-pj1-f66.google.com with SMTP id hi11so11154424pjb.3;
+        Wed, 13 May 2020 07:14:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bCRPmBf+bIjv/gHr5AWk1RbyQw6taBIM/9TqKHo+x6E=;
-        b=IFItUO0u0mN/v7opKuqbM7PGbuuaUCZu7LDDPRnJpBtDhII38yjB+Qma8HHEgq17HM
-         aWhD+eq/R/k5kKMoprKwGn0n2ViB7bZllT+rILhmMJT7EFqYRFgYlESBk8xLUSD4b/Kk
-         0Im8kQkvjCXsAanPEws3Ybu5K7ZWBwj3riJPgB70teVEAbhBqr2nWyiPFqiPiZ4zoGmK
-         A9/rF8nPlfyWC0v/0Wsopopp/EmTzHQPY2jU0xXD9EEdvU9ttJfO924z/yIMskFMzawa
-         qyQ87I/X2AwkHn92Y2/nDaDaO6SSisIhxp5TBLv20GPUjAAGT1g0EiMvidymeb2WVEjq
-         wc6Q==
-X-Gm-Message-State: AGi0PubXUViQAAeNAEjAZzSM6ksFktOSHVXUhgtsFMebZMAArDvxoiCD
-        AjwgROKK2bdNM7MzMMWD/H3NERFjNmpCuyg7Q/8=
-X-Google-Smtp-Source: APiQypK9PkckYUve5Fg/x7q8ws6y5o++n4e5ZTL0yAeOlVub3u/qpyw0N169OJJ8fNITTRZ0bO00qR2kL/85wz6J/Qs=
-X-Received: by 2002:a67:ffcf:: with SMTP id w15mr19434925vsq.213.1589379219878;
- Wed, 13 May 2020 07:13:39 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MlF3xsxNQ24kh83NEFYAuZGvsZbUSwZ90HPe+BTs3NI=;
+        b=Nsc1bQEwmGVebP2I4yLsJVoQIaa48Svo6wj9nr9QU7jO0dpcWDgkGfuoJD8EzYjI7a
+         0ETmDRI8R/Q4wLWIWBsXn1nwtbcH6lv8hv4cPx6b8ZqcuKq5GfsABkVPX3epQgGPXj3P
+         1iuTgaNr6cFYKsiS2i8hgCC2oU0IUf4aAAa5+ZfUf3Ci+SO1q8e9vZcFbT0V5uhRxlwU
+         Mzf0qpuQ1k3wR9RAkSVKAGT9STS8WMrt+fBkaKqzccdXXWk8nV5X9a9Rx8t8R1v6ZFIP
+         y2I9jCPGEZI2H4U5naI2FZWKsBTcUPWNXo/AVUtyXst/lEPbi8WmV6A2Cf7pphEsqn43
+         YW9w==
+X-Gm-Message-State: AOAM530tN+aM/O3B5Yg6YEe2mNSf8XreqtYcyhaUSzzardqb1jCLrlDi
+        Ph+D2i0WZm8dYkHP65bMedY=
+X-Google-Smtp-Source: ABdhPJzE4tMBjOobxccjL+b09F5IPma+z3oaYdHU4RpWwNZ3a+l1KF5etN81bsitZm9zC2Gl4S2KZw==
+X-Received: by 2002:a17:90a:be09:: with SMTP id a9mr1634824pjs.165.1589379263954;
+        Wed, 13 May 2020 07:14:23 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id ft14sm15515877pjb.46.2020.05.13.07.14.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 07:14:22 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 12A244063E; Wed, 13 May 2020 14:14:22 +0000 (UTC)
+Date:   Wed, 13 May 2020 14:14:22 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Xiaoming Ni <nixiaoming@huawei.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Helge Deller <deller@gmx.de>,
+        Parisc List <linux-parisc@vger.kernel.org>, yzaikin@google.com,
+        linux-fsdevel@vger.kernel.org,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: linux-next: manual merge of the vfs tree with the parisc-hd tree
+Message-ID: <20200513141421.GP11244@42.do-not-panic.com>
+References: <20200511111123.68ccbaa3@canb.auug.org.au>
+ <99095805-8cbe-d140-e2f1-0c5a3e84d7e7@huawei.com>
+ <20200512003305.GX11244@42.do-not-panic.com>
+ <87y2pxs73w.fsf@x220.int.ebiederm.org>
+ <20200512172413.GC11244@42.do-not-panic.com>
+ <87k11hrqzc.fsf@x220.int.ebiederm.org>
+ <20200512220341.GE11244@42.do-not-panic.com>
+ <87d078oss9.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-References: <125a8c31e106dc68e6d3e3395cecc766db7fb897.camel@gmail.com>
- <20200513070847.GM2571@lahna.fi.intel.com> <CAD2FfiHsUjLC1K=HvF74LbRaKoc_zz6bOmGLQrQbW4CywWCP9A@mail.gmail.com>
- <20200513091100.GY2571@lahna.fi.intel.com>
-In-Reply-To: <20200513091100.GY2571@lahna.fi.intel.com>
-From:   Richard Hughes <hughsient@gmail.com>
-Date:   Wed, 13 May 2020 15:13:28 +0100
-Message-ID: <CAD2FfiGNErUhz=7DH6Z37X573hSkJkzbOEXbb++X+Ey5WLc9=Q@mail.gmail.com>
-Subject: Re: [PATCH] mfd: Export LPC attributes for the system SPI chip
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     ptyser@xes-inc.com, Lee Jones <lee.jones@linaro.org>,
-        tudor.ambarus@microchip.com,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        allison@lohutok.net, tglx@linutronix.de, jethro@fortanix.com,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87d078oss9.fsf@x220.int.ebiederm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020 at 10:11, Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
-> > I can fix up all those, but out of interest how did you "know" the
-> > right three digit identifier to use?
-> I work for Intel ;-)
+On Wed, May 13, 2020 at 08:42:30AM -0500, Eric W. Biederman wrote:
+> Luis Chamberlain <mcgrof@kernel.org> writes:
+> 
+> > On Tue, May 12, 2020 at 12:40:55PM -0500, Eric W. Biederman wrote:
+> >> Luis Chamberlain <mcgrof@kernel.org> writes:
+> >> 
+> >> > On Tue, May 12, 2020 at 06:52:35AM -0500, Eric W. Biederman wrote:
+> >> >> Luis Chamberlain <mcgrof@kernel.org> writes:
+> >> >> 
+> >> >> > +static struct ctl_table fs_base_table[] = {
+> >> >> > +	{
+> >> >> > +		.procname	= "fs",
+> >> >> > +		.mode		= 0555,
+> >> >> > +		.child		= fs_table,
+> >> >> > +	},
+> >> >> > +	{ }
+> >> >> > +};
+> >> >>   ^^^^^^^^^^^^^^^^^^^^^^^^ You don't need this at all.
+> >> >> > > +static int __init fs_procsys_init(void)
+> >> >> > +{
+> >> >> > +	struct ctl_table_header *hdr;
+> >> >> > +
+> >> >> > +	hdr = register_sysctl_table(fs_base_table);
+> >> >>               ^^^^^^^^^^^^^^^^^^^^^ Please use register_sysctl instead.
+> >> >> 	AKA
+> >> >>         hdr = register_sysctl("fs", fs_table);
+> >> >
+> >> > Ah, much cleaner thanks!
+> >> 
+> >> It is my hope you we can get rid of register_sysctl_table one of these
+> >> days.  It was the original interface but today it is just a
+> >> compatibility wrapper.
+> >> 
+> >> I unfortunately ran out of steam last time before I finished converting
+> >> everything over.
+> >
+> > Let's give it one more go. I'll start with the fs stuff.
+> 
+> Just to be clear moving the tables out of kernel/sysctl.c is a related
+> but slightly different problem.
 
-Hah, okay, thanks :)
+Sure, but also before we go on this crusade, how about we add a few
+helpers:
 
-> > I'm really wondering if drivers/mfd/lpc_ich.c is the right place for
-> > this kind of "just expose one byte of PCI config space" functionality.
-> Ideally there is one driver per device.
+register_sysctl_kernel()
+register_sysctl_vm()
+register_sysctl_fs()
+register_sysctl_debug()
+register_sysctl_dev()
 
-My idea in https://github.com/hughsie/spi_lpc was to not actually
-register a pci_driver.
+That should make it easier to look for these, and shorter. We *know*
+this is a common path, given the size of the existing table.
 
-> If this is touching the 00:1f.5 PCI device (SPI-NOR controller) then the
-> right place is the intel-spi-pci.c as that's the driver for this
-> controller.
+> Today it looks like there are 35 calls of register_sysctl_table
+> and 9 calls of register_sysctl_paths.
+> 
+> Among them is lib/sysctl_test.c and check-sysctl-docs.
+> 
+> Meanwhile I can only find 5 calls to register_sysctl in the tree
+> so it looks like I didn't get very far converting things over.
 
-So Cannon Lake, Cannon Point and Ice Lake would go into
-drivers/mtd/spi-nor/controllers/intel-spi-pci.c and the systems like
-Sunrise Point using an ISA bridge would use drivers/mfd/lpc_ich.c?
+While we're on the spring cleaning topic, I've tried to put what I can
+think of for TODO items here, anything else? Feel free to edit, its a
+wiki after all.
 
-> We can put this there so that it does not enable the SPI-NOR
-> functionality itself and the mark the SPI-NOR functionality only as
-> being dangerous or something like that.
+https://kernelnewbies.org/KernelProjects/proc
 
-I think getting the distros to enable SPI_INTEL_SPI_PCI might be a
-tough sell. Could we perhaps remove the DANGEROUS label as it's not
-writeable without a module option?
+Feel free to add wishlist items.
 
-> > > > +     char tmp[2];
-> > > Wouldn't this need to account the '\0' as well?
-> You sprint() there "%d\n", so that includes a number, '\n' and '\0' unless
-> I'm missing something.
-
-Doh, of course you're right. Will fix, thanks.
-
-Richard
+  Luis
