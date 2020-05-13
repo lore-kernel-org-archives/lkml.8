@@ -2,181 +2,206 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03826C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34589C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1591D20671
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:21:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589383292;
-	bh=eg9vZ7f7NuJB6AS3Wdsc/E+1PHMXZ4bcGffRHa3IpsA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1PFa/95LIJB9LeRsFa/ovEeLVD6zIkMEJGUa2E5pHcs6XZZWytnFM6SMgtzp+6Sb/
-	 InRurWZmkTqTe62OX1B6i6N/G+tP+ZWnUXSMe5S8eApSmyIwQooKr9Qc/WeyC2mi3E
-	 oBMVQQPSOXRycKFanZV9qNQPxPGi6Mqup08UJjWg=
+	by mail.kernel.org (Postfix) with ESMTP id 55E4820794
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:21:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389278AbgEMPVb (ORCPT
+        id S2389194AbgEMPVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:21:31 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41043 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389194AbgEMPVQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:21:16 -0400
-Received: by mail-pl1-f195.google.com with SMTP id u10so6947472pls.8;
-        Wed, 13 May 2020 08:21:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Y6Z349elIdKKVeaQxYemASvgjctlEyt1SGMVKJhxPXM=;
-        b=gyR+naj/grs9FYkqd0BkqB6VJREmlDi5xnmwlWJ0HMj/hEAyfEDzpDaZEPzrM567lE
-         coJ2wm4EQesZEpo6u/YEBmn6WkA/mad2A+WxXlvd2yaY6LClM+chjxPfd0t7dCJvbNeU
-         +omp2hYgR/qfssq/ZtmnJ4x5wV3cEGCyL+nXGl5TSDuod0bfA6gQxIDG/mbTYdZTXKV5
-         N7hvqbBjr2SdOSLZPeUYXyOGJJppAPaMRCVkhsyqlU6V0Z6Dyg1wpIOoKQ8IXGYlneGT
-         JGAjZOaGlrWy21UoTMnYQIuB/6Ux4wkfOydJZOXbh9CcRdra/83ceHAF8B4JrWkSAs7f
-         ouCw==
-X-Gm-Message-State: AGi0PuaLQ2JkixjwOt6RTueI+PTBA48aLT1PMJ2rlQWreGUIcYggV2So
-        gVx+4BGpLhmloLEWO6R6SE4=
-X-Google-Smtp-Source: APiQypJ0RK+oeB+zoVh6X+gWZ3eFKKxCmbjeHLRNnXh89syCW3qa7AF2ZqhxpjaGZLht8Q8+XSsMkg==
-X-Received: by 2002:a17:90a:1743:: with SMTP id 3mr33555393pjm.106.1589383275911;
-        Wed, 13 May 2020 08:21:15 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id i3sm6842005pfe.44.2020.05.13.08.21.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 08:21:13 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 5D22941D00; Wed, 13 May 2020 15:21:12 +0000 (UTC)
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
-        rafael@kernel.org, ebiederm@xmission.com, jeyu@kernel.org,
-        jmorris@namei.org, keescook@chromium.org, paul@paul-moore.com,
-        stephen.smalley.work@gmail.com, eparis@parisplace.org,
-        nayna@linux.ibm.com, zohar@linux.ibm.com
-Cc:     scott.branden@broadcom.com, dan.carpenter@oracle.com,
-        skhan@linuxfoundation.org, geert@linux-m68k.org,
-        tglx@linutronix.de, bauerman@linux.ibm.com, dhowells@redhat.com,
-        linux-integrity@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 2/3] security: add symbol namespace for reading file data
-Date:   Wed, 13 May 2020 15:21:07 +0000
-Message-Id: <20200513152108.25669-3-mcgrof@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20200513152108.25669-1-mcgrof@kernel.org>
-References: <20200513152108.25669-1-mcgrof@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 13 May 2020 11:21:45 -0400
+Received: from 8bytes.org ([81.169.241.247]:42572 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729327AbgEMPVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 11:21:43 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 2A3326A7; Wed, 13 May 2020 17:21:41 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     hpa@zytor.com, Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, rjw@rjwysocki.net,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Joerg Roedel <jroedel@suse.de>, joro@8bytes.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org
+Subject: [PATCH v2 3/7] mm/ioremap: Track which page-table levels were modified
+Date:   Wed, 13 May 2020 17:21:33 +0200
+Message-Id: <20200513152137.32426-4-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200513152137.32426-1-joro@8bytes.org>
+References: <20200513152137.32426-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Certain symbols are not meant to be used by everybody, the security
-helpers for reading files directly is one such case. Use a symbol
-namespace for them.
+From: Joerg Roedel <jroedel@suse.de>
 
-This will prevent abuse of use of these symbols in places they were
-not inteded to be used, and provides an easy way to audit where these
-types of operations happen as a whole.
+Track at which levels in the page-table entries were modified by
+ioremap_page_range(). After the page-table has been modified, use that
+information do decide whether the new arch_sync_kernel_mappings()
+needs to be called. The iounmap path re-uses vunmap(), which has
+already been taken care of.
 
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/base/firmware_loader/fallback.c | 1 +
- fs/exec.c                               | 2 ++
- kernel/kexec.c                          | 2 ++
- kernel/module.c                         | 2 ++
- security/security.c                     | 6 +++---
- 5 files changed, 10 insertions(+), 3 deletions(-)
+ lib/ioremap.c | 46 +++++++++++++++++++++++++++++++---------------
+ 1 file changed, 31 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
-index d9ac7296205e..b088886dafda 100644
---- a/drivers/base/firmware_loader/fallback.c
-+++ b/drivers/base/firmware_loader/fallback.c
-@@ -19,6 +19,7 @@
-  */
+diff --git a/lib/ioremap.c b/lib/ioremap.c
+index 3f0e18543de8..ad485f08173b 100644
+--- a/lib/ioremap.c
++++ b/lib/ioremap.c
+@@ -61,13 +61,14 @@ static inline int ioremap_pmd_enabled(void) { return 0; }
+ #endif	/* CONFIG_HAVE_ARCH_HUGE_VMAP */
  
- MODULE_IMPORT_NS(FIRMWARE_LOADER_PRIVATE);
-+MODULE_IMPORT_NS(SECURITY_READ);
- 
- extern struct firmware_fallback_config fw_fallback_config;
- 
-diff --git a/fs/exec.c b/fs/exec.c
-index 9791b9eef9ce..30bd800ab1d6 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -72,6 +72,8 @@
- 
- #include <trace/events/sched.h>
- 
-+MODULE_IMPORT_NS(SECURITY_READ);
-+
- int suid_dumpable = 0;
- 
- static LIST_HEAD(formats);
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index f977786fe498..8d572b41a157 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -19,6 +19,8 @@
- 
- #include "kexec_internal.h"
- 
-+MODULE_IMPORT_NS(SECURITY_READ);
-+
- static int copy_user_segment_list(struct kimage *image,
- 				  unsigned long nr_segments,
- 				  struct kexec_segment __user *segments)
-diff --git a/kernel/module.c b/kernel/module.c
-index 80faaf2116dd..8973a463712e 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -59,6 +59,8 @@
- #include <uapi/linux/module.h>
- #include "module-internal.h"
- 
-+MODULE_IMPORT_NS(SECURITY_READ);
-+
- #define CREATE_TRACE_POINTS
- #include <trace/events/module.h>
- 
-diff --git a/security/security.c b/security/security.c
-index 8ae66e4c370f..bdbd1fc5105a 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -1654,7 +1654,7 @@ int security_kernel_read_file(struct file *file, enum kernel_read_file_id id)
- 		return ret;
- 	return ima_read_file(file, id);
- }
--EXPORT_SYMBOL_GPL(security_kernel_read_file);
-+EXPORT_SYMBOL_NS_GPL(security_kernel_read_file, SECURITY_READ);
- 
- int security_kernel_post_read_file(struct file *file, char *buf, loff_t size,
- 				   enum kernel_read_file_id id)
-@@ -1666,7 +1666,7 @@ int security_kernel_post_read_file(struct file *file, char *buf, loff_t size,
- 		return ret;
- 	return ima_post_read_file(file, buf, size, id);
- }
--EXPORT_SYMBOL_GPL(security_kernel_post_read_file);
-+EXPORT_SYMBOL_NS_GPL(security_kernel_post_read_file, SECURITY_READ);
- 
- int security_kernel_load_data(enum kernel_load_data_id id)
+ static int ioremap_pte_range(pmd_t *pmd, unsigned long addr,
+-		unsigned long end, phys_addr_t phys_addr, pgprot_t prot)
++		unsigned long end, phys_addr_t phys_addr, pgprot_t prot,
++		pgtbl_mod_mask *mask)
  {
-@@ -1677,7 +1677,7 @@ int security_kernel_load_data(enum kernel_load_data_id id)
- 		return ret;
- 	return ima_load_data(id);
- }
--EXPORT_SYMBOL_GPL(security_kernel_load_data);
-+EXPORT_SYMBOL_NS_GPL(security_kernel_load_data, SECURITY_READ);
+ 	pte_t *pte;
+ 	u64 pfn;
  
- int security_task_fix_setuid(struct cred *new, const struct cred *old,
- 			     int flags)
+ 	pfn = phys_addr >> PAGE_SHIFT;
+-	pte = pte_alloc_kernel(pmd, addr);
++	pte = pte_alloc_kernel_track(pmd, addr, mask);
+ 	if (!pte)
+ 		return -ENOMEM;
+ 	do {
+@@ -75,6 +76,7 @@ static int ioremap_pte_range(pmd_t *pmd, unsigned long addr,
+ 		set_pte_at(&init_mm, addr, pte, pfn_pte(pfn, prot));
+ 		pfn++;
+ 	} while (pte++, addr += PAGE_SIZE, addr != end);
++	*mask |= PGTBL_PTE_MODIFIED;
+ 	return 0;
+ }
+ 
+@@ -101,21 +103,24 @@ static int ioremap_try_huge_pmd(pmd_t *pmd, unsigned long addr,
+ }
+ 
+ static inline int ioremap_pmd_range(pud_t *pud, unsigned long addr,
+-		unsigned long end, phys_addr_t phys_addr, pgprot_t prot)
++		unsigned long end, phys_addr_t phys_addr, pgprot_t prot,
++		pgtbl_mod_mask *mask)
+ {
+ 	pmd_t *pmd;
+ 	unsigned long next;
+ 
+-	pmd = pmd_alloc(&init_mm, pud, addr);
++	pmd = pmd_alloc_track(&init_mm, pud, addr, mask);
+ 	if (!pmd)
+ 		return -ENOMEM;
+ 	do {
+ 		next = pmd_addr_end(addr, end);
+ 
+-		if (ioremap_try_huge_pmd(pmd, addr, next, phys_addr, prot))
++		if (ioremap_try_huge_pmd(pmd, addr, next, phys_addr, prot)) {
++			*mask |= PGTBL_PMD_MODIFIED;
+ 			continue;
++		}
+ 
+-		if (ioremap_pte_range(pmd, addr, next, phys_addr, prot))
++		if (ioremap_pte_range(pmd, addr, next, phys_addr, prot, mask))
+ 			return -ENOMEM;
+ 	} while (pmd++, phys_addr += (next - addr), addr = next, addr != end);
+ 	return 0;
+@@ -144,21 +149,24 @@ static int ioremap_try_huge_pud(pud_t *pud, unsigned long addr,
+ }
+ 
+ static inline int ioremap_pud_range(p4d_t *p4d, unsigned long addr,
+-		unsigned long end, phys_addr_t phys_addr, pgprot_t prot)
++		unsigned long end, phys_addr_t phys_addr, pgprot_t prot,
++		pgtbl_mod_mask *mask)
+ {
+ 	pud_t *pud;
+ 	unsigned long next;
+ 
+-	pud = pud_alloc(&init_mm, p4d, addr);
++	pud = pud_alloc_track(&init_mm, p4d, addr, mask);
+ 	if (!pud)
+ 		return -ENOMEM;
+ 	do {
+ 		next = pud_addr_end(addr, end);
+ 
+-		if (ioremap_try_huge_pud(pud, addr, next, phys_addr, prot))
++		if (ioremap_try_huge_pud(pud, addr, next, phys_addr, prot)) {
++			*mask |= PGTBL_PUD_MODIFIED;
+ 			continue;
++		}
+ 
+-		if (ioremap_pmd_range(pud, addr, next, phys_addr, prot))
++		if (ioremap_pmd_range(pud, addr, next, phys_addr, prot, mask))
+ 			return -ENOMEM;
+ 	} while (pud++, phys_addr += (next - addr), addr = next, addr != end);
+ 	return 0;
+@@ -187,21 +195,24 @@ static int ioremap_try_huge_p4d(p4d_t *p4d, unsigned long addr,
+ }
+ 
+ static inline int ioremap_p4d_range(pgd_t *pgd, unsigned long addr,
+-		unsigned long end, phys_addr_t phys_addr, pgprot_t prot)
++		unsigned long end, phys_addr_t phys_addr, pgprot_t prot,
++		pgtbl_mod_mask *mask)
+ {
+ 	p4d_t *p4d;
+ 	unsigned long next;
+ 
+-	p4d = p4d_alloc(&init_mm, pgd, addr);
++	p4d = p4d_alloc_track(&init_mm, pgd, addr, mask);
+ 	if (!p4d)
+ 		return -ENOMEM;
+ 	do {
+ 		next = p4d_addr_end(addr, end);
+ 
+-		if (ioremap_try_huge_p4d(p4d, addr, next, phys_addr, prot))
++		if (ioremap_try_huge_p4d(p4d, addr, next, phys_addr, prot)) {
++			*mask |= PGTBL_P4D_MODIFIED;
+ 			continue;
++		}
+ 
+-		if (ioremap_pud_range(p4d, addr, next, phys_addr, prot))
++		if (ioremap_pud_range(p4d, addr, next, phys_addr, prot, mask))
+ 			return -ENOMEM;
+ 	} while (p4d++, phys_addr += (next - addr), addr = next, addr != end);
+ 	return 0;
+@@ -214,6 +225,7 @@ int ioremap_page_range(unsigned long addr,
+ 	unsigned long start;
+ 	unsigned long next;
+ 	int err;
++	pgtbl_mod_mask mask = 0;
+ 
+ 	might_sleep();
+ 	BUG_ON(addr >= end);
+@@ -222,13 +234,17 @@ int ioremap_page_range(unsigned long addr,
+ 	pgd = pgd_offset_k(addr);
+ 	do {
+ 		next = pgd_addr_end(addr, end);
+-		err = ioremap_p4d_range(pgd, addr, next, phys_addr, prot);
++		err = ioremap_p4d_range(pgd, addr, next, phys_addr, prot,
++					&mask);
+ 		if (err)
+ 			break;
+ 	} while (pgd++, phys_addr += (next - addr), addr = next, addr != end);
+ 
+ 	flush_cache_vmap(start, end);
+ 
++	if (mask & ARCH_PAGE_TABLE_SYNC_MASK)
++		arch_sync_kernel_mappings(start, end);
++
+ 	return err;
+ }
+ 
 -- 
-2.26.2
+2.17.1
 
