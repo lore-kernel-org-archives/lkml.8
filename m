@@ -2,81 +2,95 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A5EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB5EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 399672054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:24:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Ir0crLbY"
+	by mail.kernel.org (Postfix) with ESMTP id B23962054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:24:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589387045;
+	bh=GMIEwlaUuMOKi5AkDYUqDh+tZ9JXGeSF/BENEVLdelE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=j/94T8kgVVqe1xuo8Zvx/4urrbE9iGE2GeXEA6uOnKc7HXnwhCavNPs3Vif/WdPbH
+	 AMfHRIV+MOjXwuZXC2OVCDYRQXdtEPj0LGMVedObbCr5xiNM2xF2ztzf26EY6Q39y0
+	 wJm7tMJ0M8hMbFWMfeDcfj68puI+6FstSxsKDjro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389513AbgEMQX6 (ORCPT
+        id S2389568AbgEMQYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 12:23:58 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:58346 "EHLO vps0.lunn.ch"
+        Wed, 13 May 2020 12:24:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732380AbgEMQX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 12:23:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=C8VfVf/OuqyzLQjxfFBPY+9cZd8t31ZnOKlYly4ZIjA=; b=Ir0crLbYpBHkGMoZMC+PBfixUk
-        eRtmYGBg48HCnVrUKMH9J1PJLSr4K7Vz1rsZ9K/QAJCGplxhuFE/89UAswzOUYb5zGM0oNW1xVfaS
-        P0m8fkPIcSG8kfrnUfBdMjC6aVaGUINFApfcKeTHdQ3RAgTlWVbB7q20JXhn3EDIv0qU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jYuAl-002BN0-In; Wed, 13 May 2020 18:23:55 +0200
-Date:   Wed, 13 May 2020 18:23:55 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, Michael Walle <michael@walle.cc>,
-        kernel@pengutronix.de, "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v1] net: phy: at803x: add cable test support
-Message-ID: <20200513162355.GJ499265@lunn.ch>
-References: <20200513120648.14415-1-o.rempel@pengutronix.de>
- <0c80397b-58b8-0807-0b98-695db8068e25@gmail.com>
- <20200513154544.gwcccvbicpvrj6vm@pengutronix.de>
- <20200513154953.GI499265@lunn.ch>
- <20200513160026.fdls7kpxb6luuwed@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513160026.fdls7kpxb6luuwed@pengutronix.de>
+        id S1732380AbgEMQYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 12:24:03 -0400
+Received: from localhost.localdomain (pool-96-246-152-186.nycmny.fios.verizon.net [96.246.152.186])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00E8D20659;
+        Wed, 13 May 2020 16:24:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589387042;
+        bh=GMIEwlaUuMOKi5AkDYUqDh+tZ9JXGeSF/BENEVLdelE=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=O2CCNQtPLWuis6Iyzz3t9LE9/0N1orztrF73b2GHGrbexfrSZMT8U1JojVtMomoti
+         4IWbO2zbjaT+y5cJm/QTf5h8Q0wwikUv/jNNnCpLz84UNFT4gDGcQZaIiYJsKfrFCx
+         p/BF5chqdi5380TQ6UASs7NhMo537xeK2eTcgF54=
+Message-ID: <1589387039.5098.147.camel@kernel.org>
+Subject: Re: [PATCH v5 0/7] firmware: add partial read support in
+ request_firmware_into_buf
+From:   Mimi Zohar <zohar@kernel.org>
+To:     Scott Branden <scott.branden@broadcom.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>
+Date:   Wed, 13 May 2020 12:23:59 -0400
+In-Reply-To: <20200508002739.19360-1-scott.branden@broadcom.com>
+References: <20200508002739.19360-1-scott.branden@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 06:00:26PM +0200, Oleksij Rempel wrote:
-> On Wed, May 13, 2020 at 05:49:53PM +0200, Andrew Lunn wrote:
-> > > Uff.. i missed this. Then I'll need only to add some changes on top of
-> > > his patch.
-> > 
-> > I've been chatting with mwalle on IRC today. There should be a repost
-> > of the patches soon.
-> 
-> Cool!
-> @Michael, please CC me.
-> 
-> you can include support for AR9331 and AR8032 in your patch (if you
-> like)
-> http://www.jhongtech.com/DOWN/ATHEROS--AR8032.pdf
-> 
-> They have same register, but only 2 pairs.
+Hi Scott,
 
-Hi Oleksij 
+On Thu, 2020-05-07 at 17:27 -0700, Scott Branden wrote:
+> Please consider this version series ready for upstream acceptance.
+> 
+> This patch series adds partial read support in request_firmware_into_buf.
+> In order to accept the enhanced API it has been requested that kernel
+> selftests and upstreamed driver utilize the API enhancement and so
+> are included in this patch series.
+> 
+> Also in this patch series is the addition of a new Broadcom VK driver
+> utilizing the new request_firmware_into_buf enhanced API.
 
-Michael just reposted. Please send a follow up patch adding these two
-PHYs.
+Up to now, the firmware blob was read into memory allowing IMA to
+verify the file signature.  With this change, ima_post_read_file()
+will not be able to verify the file signature.
 
-       Andrew
+(I don't think any of the other LSMs are on this hook, but you might
+want to Cc the LSM or integrity mailing list.)
+
+Mimi
