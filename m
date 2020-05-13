@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F7FC2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C77C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8110323128
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69D2923127
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363424;
-	bh=XqLpaBs6gOV3NeFStYNmFciupOw+sZY4klD0tUH5OUE=;
+	s=default; t=1589363428;
+	bh=w+jFkQaVDdl4qhCvMrCzX1P0zXla7bqFZdiLNyQgpf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1skuU/1diwPWU8hZhm3dyufYw71Vmq3fFEuuiRf991bS9GVh08SNoSs94ePr2NZ49
-	 QddmFJf8BCoRp/qzFGy2wwYFvaSJhUK+AGEU+tUeowa1c+vuEYxqOkxDh9J1Oy8rKM
-	 P7boA+6bo8rkjJKuLHyr8yS4E3QMFw3pbptF39OM=
+	b=Q6ITyX99ck3+RpyBvMWFKHO+SvuoM/IQAT0Bad7XogQ8PMYhDtLomvgRVZJ0oHI1g
+	 9fea0W07LnWH0tFZ1Xs/HwtSUZf0yOjFE7iu5ptRvCSM41TCIPXx/3FUXNeogqhc0z
+	 tMAxfNyjtXy08wuziop7/K3y0zt+JbWpKKk3RQu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387484AbgEMJuX (ORCPT
+        id S2387495AbgEMJu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:50:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50006 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:50:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387470AbgEMJuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:50:17 -0400
+        id S1732874AbgEMJuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:50:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D030206D6;
-        Wed, 13 May 2020 09:50:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7244120740;
+        Wed, 13 May 2020 09:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363417;
-        bh=XqLpaBs6gOV3NeFStYNmFciupOw+sZY4klD0tUH5OUE=;
+        s=default; t=1589363421;
+        bh=w+jFkQaVDdl4qhCvMrCzX1P0zXla7bqFZdiLNyQgpf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TLeG7iGrWCwv2HHyKwXPeFLTUTwl1hrzmYn5Dla0RigJE8ZDwAjdb5vbFohod4Snc
-         V2LjirIeFqq7CGuzSPky5Ou7ttu6PP+Eb1YyBHs2c/6gjVOTA8cbt3f2U2o9E1uEkU
-         ohFAFgNUQoTEdsOQyprVUcTwJ+xl7160HHcbO9EE=
+        b=jTCZyscApU/wqwUrvGt57+rnffeiuKE8ySUNh7b0jOZDs7mV5jW8pJwUAer19PbSm
+         64XtASTjOmuAoC/hQJkp8WIV+OLETkh83PduKU8TImVxDPrq6NYtAEK0QLbKOHj/y2
+         /2j/lW2WalzcdxQRr6F6q9RYI7eyb1bRLMwkPK/g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Vroon <chainsaw@gentoo.org>,
-        Sergey Kvachonok <ravenexp@gmail.com>,
-        Sergei Trofimovich <slyfox@gentoo.org>,
-        Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 5.4 65/90] coredump: fix crash when umh is disabled
-Date:   Wed, 13 May 2020 11:45:01 +0200
-Message-Id: <20200513094416.284461688@linuxfoundation.org>
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Vlad Dmitriev <vvd@fb.com>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.4 67/90] iocost: protect iocg->abs_vdebt with iocg->waitq.lock
+Date:   Wed, 13 May 2020 11:45:03 +0200
+Message-Id: <20200513094416.415699535@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -61,123 +59,300 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Chamberlain <mcgrof@kernel.org>
+From: Tejun Heo <tj@kernel.org>
 
-commit 3740d93e37902b31159a82da2d5c8812ed825404 upstream.
+commit 0b80f9866e6bbfb905140ed8787ff2af03652c0c upstream.
 
-Commit 64e90a8acb859 ("Introduce STATIC_USERMODEHELPER to mediate
-call_usermodehelper()") added the optiont to disable all
-call_usermodehelper() calls by setting STATIC_USERMODEHELPER_PATH to
-an empty string. When this is done, and crashdump is triggered, it
-will crash on null pointer dereference, since we make assumptions
-over what call_usermodehelper_exec() did.
+abs_vdebt is an atomic_64 which tracks how much over budget a given cgroup
+is and controls the activation of use_delay mechanism. Once a cgroup goes
+over budget from forced IOs, it has to pay it back with its future budget.
+The progress guarantee on debt paying comes from the iocg being active -
+active iocgs are processed by the periodic timer, which ensures that as time
+passes the debts dissipate and the iocg returns to normal operation.
 
-This has been reported by Sergey when one triggers a a coredump
-with the following configuration:
+However, both iocg activation and vdebt handling are asynchronous and a
+sequence like the following may happen.
 
-```
-CONFIG_STATIC_USERMODEHELPER=y
-CONFIG_STATIC_USERMODEHELPER_PATH=""
-kernel.core_pattern = |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h %e
-```
+1. The iocg is in the process of being deactivated by the periodic timer.
 
-The way disabling the umh was designed was that call_usermodehelper_exec()
-would just return early, without an error. But coredump assumes
-certain variables are set up for us when this happens, and calls
-ile_start_write(cprm.file) with a NULL file.
+2. A bio enters ioc_rqos_throttle(), calls iocg_activate() which returns
+   without anything because it still sees that the iocg is already active.
 
-[    2.819676] BUG: kernel NULL pointer dereference, address: 0000000000000020
-[    2.819859] #PF: supervisor read access in kernel mode
-[    2.820035] #PF: error_code(0x0000) - not-present page
-[    2.820188] PGD 0 P4D 0
-[    2.820305] Oops: 0000 [#1] SMP PTI
-[    2.820436] CPU: 2 PID: 89 Comm: a Not tainted 5.7.0-rc1+ #7
-[    2.820680] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20190711_202441-buildvm-armv7-10.arm.fedoraproject.org-2.fc31 04/01/2014
-[    2.821150] RIP: 0010:do_coredump+0xd80/0x1060
-[    2.821385] Code: e8 95 11 ed ff 48 c7 c6 cc a7 b4 81 48 8d bd 28 ff
-ff ff 89 c2 e8 70 f1 ff ff 41 89 c2 85 c0 0f 84 72 f7 ff ff e9 b4 fe ff
-ff <48> 8b 57 20 0f b7 02 66 25 00 f0 66 3d 00 8
-0 0f 84 9c 01 00 00 44
-[    2.822014] RSP: 0000:ffffc9000029bcb8 EFLAGS: 00010246
-[    2.822339] RAX: 0000000000000000 RBX: ffff88803f860000 RCX: 000000000000000a
-[    2.822746] RDX: 0000000000000009 RSI: 0000000000000282 RDI: 0000000000000000
-[    2.823141] RBP: ffffc9000029bde8 R08: 0000000000000000 R09: ffffc9000029bc00
-[    2.823508] R10: 0000000000000001 R11: ffff88803dec90be R12: ffffffff81c39da0
-[    2.823902] R13: ffff88803de84400 R14: 0000000000000000 R15: 0000000000000000
-[    2.824285] FS:  00007fee08183540(0000) GS:ffff88803e480000(0000) knlGS:0000000000000000
-[    2.824767] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    2.825111] CR2: 0000000000000020 CR3: 000000003f856005 CR4: 0000000000060ea0
-[    2.825479] Call Trace:
-[    2.825790]  get_signal+0x11e/0x720
-[    2.826087]  do_signal+0x1d/0x670
-[    2.826361]  ? force_sig_info_to_task+0xc1/0xf0
-[    2.826691]  ? force_sig_fault+0x3c/0x40
-[    2.826996]  ? do_trap+0xc9/0x100
-[    2.827179]  exit_to_usermode_loop+0x49/0x90
-[    2.827359]  prepare_exit_to_usermode+0x77/0xb0
-[    2.827559]  ? invalid_op+0xa/0x30
-[    2.827747]  ret_from_intr+0x20/0x20
-[    2.827921] RIP: 0033:0x55e2c76d2129
-[    2.828107] Code: 2d ff ff ff e8 68 ff ff ff 5d c6 05 18 2f 00 00 01
-c3 0f 1f 80 00 00 00 00 c3 0f 1f 80 00 00 00 00 e9 7b ff ff ff 55 48 89
-e5 <0f> 0b b8 00 00 00 00 5d c3 66 2e 0f 1f 84 0
-0 00 00 00 00 0f 1f 40
-[    2.828603] RSP: 002b:00007fffeba5e080 EFLAGS: 00010246
-[    2.828801] RAX: 000055e2c76d2125 RBX: 0000000000000000 RCX: 00007fee0817c718
-[    2.829034] RDX: 00007fffeba5e188 RSI: 00007fffeba5e178 RDI: 0000000000000001
-[    2.829257] RBP: 00007fffeba5e080 R08: 0000000000000000 R09: 00007fee08193c00
-[    2.829482] R10: 0000000000000009 R11: 0000000000000000 R12: 000055e2c76d2040
-[    2.829727] R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-[    2.829964] CR2: 0000000000000020
-[    2.830149] ---[ end trace ceed83d8c68a1bf1 ]---
-```
+3. The iocg is deactivated.
 
-Cc: <stable@vger.kernel.org> # v4.11+
-Fixes: 64e90a8acb85 ("Introduce STATIC_USERMODEHELPER to mediate call_usermodehelper()")
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=199795
-Reported-by: Tony Vroon <chainsaw@gentoo.org>
-Reported-by: Sergey Kvachonok <ravenexp@gmail.com>
-Tested-by: Sergei Trofimovich <slyfox@gentoo.org>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-Link: https://lore.kernel.org/r/20200416162859.26518-1-mcgrof@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+4. The bio from #2 is over budget but needs to be forced. It increases
+   abs_vdebt and goes over the threshold and enables use_delay.
+
+5. IO control is enabled for the iocg's subtree and now IOs are attributed
+   to the descendant cgroups and the iocg itself no longer issues IOs.
+
+This leaves the iocg with stuck abs_vdebt - it has debt but inactive and no
+further IOs which can activate it. This can end up unduly punishing all the
+descendants cgroups.
+
+The usual throttling path has the same issue - the iocg must be active while
+throttled to ensure that future event will wake it up - and solves the
+problem by synchronizing the throttling path with a spinlock. abs_vdebt
+handling is another form of overage handling and shares a lot of
+characteristics including the fact that it isn't in the hottest path.
+
+This patch fixes the above and other possible races by strictly
+synchronizing abs_vdebt and use_delay handling with iocg->waitq.lock.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Reported-by: Vlad Dmitriev <vvd@fb.com>
+Cc: stable@vger.kernel.org # v5.4+
+Fixes: e1518f63f246 ("blk-iocost: Don't let merges push vtime into the future")
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/coredump.c |    8 ++++++++
- kernel/umh.c  |    5 +++++
- 2 files changed, 13 insertions(+)
+ block/blk-iocost.c             |  117 ++++++++++++++++++++++++-----------------
+ tools/cgroup/iocost_monitor.py |    7 ++
+ 2 files changed, 77 insertions(+), 47 deletions(-)
 
---- a/fs/coredump.c
-+++ b/fs/coredump.c
-@@ -788,6 +788,14 @@ void do_coredump(const kernel_siginfo_t
- 	if (displaced)
- 		put_files_struct(displaced);
- 	if (!dump_interrupted()) {
-+		/*
-+		 * umh disabled with CONFIG_STATIC_USERMODEHELPER_PATH="" would
-+		 * have this set to NULL.
-+		 */
-+		if (!cprm.file) {
-+			pr_info("Core dump to |%s disabled\n", cn.corename);
-+			goto close_fail;
-+		}
- 		file_start_write(cprm.file);
- 		core_dumped = binfmt->core_dump(&cprm);
- 		file_end_write(cprm.file);
---- a/kernel/umh.c
-+++ b/kernel/umh.c
-@@ -544,6 +544,11 @@ EXPORT_SYMBOL_GPL(fork_usermode_blob);
-  * Runs a user-space application.  The application is started
-  * asynchronously if wait is not set, and runs as a child of system workqueues.
-  * (ie. it runs with full root capabilities and optimized affinity).
-+ *
-+ * Note: successful return value does not guarantee the helper was called at
-+ * all. You can't rely on sub_info->{init,cleanup} being called even for
-+ * UMH_WAIT_* wait modes as STATIC_USERMODEHELPER_PATH="" turns all helpers
-+ * into a successful no-op.
-  */
- int call_usermodehelper_exec(struct subprocess_info *sub_info, int wait)
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -469,7 +469,7 @@ struct ioc_gq {
+ 	 */
+ 	atomic64_t			vtime;
+ 	atomic64_t			done_vtime;
+-	atomic64_t			abs_vdebt;
++	u64				abs_vdebt;
+ 	u64				last_vtime;
+ 
+ 	/*
+@@ -1145,7 +1145,7 @@ static void iocg_kick_waitq(struct ioc_g
+ 	struct iocg_wake_ctx ctx = { .iocg = iocg };
+ 	u64 margin_ns = (u64)(ioc->period_us *
+ 			      WAITQ_TIMER_MARGIN_PCT / 100) * NSEC_PER_USEC;
+-	u64 abs_vdebt, vdebt, vshortage, expires, oexpires;
++	u64 vdebt, vshortage, expires, oexpires;
+ 	s64 vbudget;
+ 	u32 hw_inuse;
+ 
+@@ -1155,18 +1155,15 @@ static void iocg_kick_waitq(struct ioc_g
+ 	vbudget = now->vnow - atomic64_read(&iocg->vtime);
+ 
+ 	/* pay off debt */
+-	abs_vdebt = atomic64_read(&iocg->abs_vdebt);
+-	vdebt = abs_cost_to_cost(abs_vdebt, hw_inuse);
++	vdebt = abs_cost_to_cost(iocg->abs_vdebt, hw_inuse);
+ 	if (vdebt && vbudget > 0) {
+ 		u64 delta = min_t(u64, vbudget, vdebt);
+ 		u64 abs_delta = min(cost_to_abs_cost(delta, hw_inuse),
+-				    abs_vdebt);
++				    iocg->abs_vdebt);
+ 
+ 		atomic64_add(delta, &iocg->vtime);
+ 		atomic64_add(delta, &iocg->done_vtime);
+-		atomic64_sub(abs_delta, &iocg->abs_vdebt);
+-		if (WARN_ON_ONCE(atomic64_read(&iocg->abs_vdebt) < 0))
+-			atomic64_set(&iocg->abs_vdebt, 0);
++		iocg->abs_vdebt -= abs_delta;
+ 	}
+ 
+ 	/*
+@@ -1222,12 +1219,18 @@ static bool iocg_kick_delay(struct ioc_g
+ 	u64 expires, oexpires;
+ 	u32 hw_inuse;
+ 
++	lockdep_assert_held(&iocg->waitq.lock);
++
+ 	/* debt-adjust vtime */
+ 	current_hweight(iocg, NULL, &hw_inuse);
+-	vtime += abs_cost_to_cost(atomic64_read(&iocg->abs_vdebt), hw_inuse);
++	vtime += abs_cost_to_cost(iocg->abs_vdebt, hw_inuse);
+ 
+-	/* clear or maintain depending on the overage */
+-	if (time_before_eq64(vtime, now->vnow)) {
++	/*
++	 * Clear or maintain depending on the overage. Non-zero vdebt is what
++	 * guarantees that @iocg is online and future iocg_kick_delay() will
++	 * clear use_delay. Don't leave it on when there's no vdebt.
++	 */
++	if (!iocg->abs_vdebt || time_before_eq64(vtime, now->vnow)) {
+ 		blkcg_clear_delay(blkg);
+ 		return false;
+ 	}
+@@ -1261,9 +1264,12 @@ static enum hrtimer_restart iocg_delay_t
  {
+ 	struct ioc_gq *iocg = container_of(timer, struct ioc_gq, delay_timer);
+ 	struct ioc_now now;
++	unsigned long flags;
+ 
++	spin_lock_irqsave(&iocg->waitq.lock, flags);
+ 	ioc_now(iocg->ioc, &now);
+ 	iocg_kick_delay(iocg, &now, 0);
++	spin_unlock_irqrestore(&iocg->waitq.lock, flags);
+ 
+ 	return HRTIMER_NORESTART;
+ }
+@@ -1371,14 +1377,13 @@ static void ioc_timer_fn(struct timer_li
+ 	 * should have woken up in the last period and expire idle iocgs.
+ 	 */
+ 	list_for_each_entry_safe(iocg, tiocg, &ioc->active_iocgs, active_list) {
+-		if (!waitqueue_active(&iocg->waitq) &&
+-		    !atomic64_read(&iocg->abs_vdebt) && !iocg_is_idle(iocg))
++		if (!waitqueue_active(&iocg->waitq) && iocg->abs_vdebt &&
++		    !iocg_is_idle(iocg))
+ 			continue;
+ 
+ 		spin_lock(&iocg->waitq.lock);
+ 
+-		if (waitqueue_active(&iocg->waitq) ||
+-		    atomic64_read(&iocg->abs_vdebt)) {
++		if (waitqueue_active(&iocg->waitq) || iocg->abs_vdebt) {
+ 			/* might be oversleeping vtime / hweight changes, kick */
+ 			iocg_kick_waitq(iocg, &now);
+ 			iocg_kick_delay(iocg, &now, 0);
+@@ -1721,28 +1726,49 @@ static void ioc_rqos_throttle(struct rq_
+ 	 * tests are racy but the races aren't systemic - we only miss once
+ 	 * in a while which is fine.
+ 	 */
+-	if (!waitqueue_active(&iocg->waitq) &&
+-	    !atomic64_read(&iocg->abs_vdebt) &&
++	if (!waitqueue_active(&iocg->waitq) && !iocg->abs_vdebt &&
+ 	    time_before_eq64(vtime + cost, now.vnow)) {
+ 		iocg_commit_bio(iocg, bio, cost);
+ 		return;
+ 	}
+ 
+ 	/*
+-	 * We're over budget.  If @bio has to be issued regardless,
+-	 * remember the abs_cost instead of advancing vtime.
+-	 * iocg_kick_waitq() will pay off the debt before waking more IOs.
++	 * We activated above but w/o any synchronization. Deactivation is
++	 * synchronized with waitq.lock and we won't get deactivated as long
++	 * as we're waiting or has debt, so we're good if we're activated
++	 * here. In the unlikely case that we aren't, just issue the IO.
++	 */
++	spin_lock_irq(&iocg->waitq.lock);
++
++	if (unlikely(list_empty(&iocg->active_list))) {
++		spin_unlock_irq(&iocg->waitq.lock);
++		iocg_commit_bio(iocg, bio, cost);
++		return;
++	}
++
++	/*
++	 * We're over budget. If @bio has to be issued regardless, remember
++	 * the abs_cost instead of advancing vtime. iocg_kick_waitq() will pay
++	 * off the debt before waking more IOs.
++	 *
+ 	 * This way, the debt is continuously paid off each period with the
+-	 * actual budget available to the cgroup.  If we just wound vtime,
+-	 * we would incorrectly use the current hw_inuse for the entire
+-	 * amount which, for example, can lead to the cgroup staying
+-	 * blocked for a long time even with substantially raised hw_inuse.
++	 * actual budget available to the cgroup. If we just wound vtime, we
++	 * would incorrectly use the current hw_inuse for the entire amount
++	 * which, for example, can lead to the cgroup staying blocked for a
++	 * long time even with substantially raised hw_inuse.
++	 *
++	 * An iocg with vdebt should stay online so that the timer can keep
++	 * deducting its vdebt and [de]activate use_delay mechanism
++	 * accordingly. We don't want to race against the timer trying to
++	 * clear them and leave @iocg inactive w/ dangling use_delay heavily
++	 * penalizing the cgroup and its descendants.
+ 	 */
+ 	if (bio_issue_as_root_blkg(bio) || fatal_signal_pending(current)) {
+-		atomic64_add(abs_cost, &iocg->abs_vdebt);
++		iocg->abs_vdebt += abs_cost;
+ 		if (iocg_kick_delay(iocg, &now, cost))
+ 			blkcg_schedule_throttle(rqos->q,
+ 					(bio->bi_opf & REQ_SWAP) == REQ_SWAP);
++		spin_unlock_irq(&iocg->waitq.lock);
+ 		return;
+ 	}
+ 
+@@ -1759,20 +1785,6 @@ static void ioc_rqos_throttle(struct rq_
+ 	 * All waiters are on iocg->waitq and the wait states are
+ 	 * synchronized using waitq.lock.
+ 	 */
+-	spin_lock_irq(&iocg->waitq.lock);
+-
+-	/*
+-	 * We activated above but w/o any synchronization.  Deactivation is
+-	 * synchronized with waitq.lock and we won't get deactivated as
+-	 * long as we're waiting, so we're good if we're activated here.
+-	 * In the unlikely case that we are deactivated, just issue the IO.
+-	 */
+-	if (unlikely(list_empty(&iocg->active_list))) {
+-		spin_unlock_irq(&iocg->waitq.lock);
+-		iocg_commit_bio(iocg, bio, cost);
+-		return;
+-	}
+-
+ 	init_waitqueue_func_entry(&wait.wait, iocg_wake_fn);
+ 	wait.wait.private = current;
+ 	wait.bio = bio;
+@@ -1804,6 +1816,7 @@ static void ioc_rqos_merge(struct rq_qos
+ 	struct ioc_now now;
+ 	u32 hw_inuse;
+ 	u64 abs_cost, cost;
++	unsigned long flags;
+ 
+ 	/* bypass if disabled or for root cgroup */
+ 	if (!ioc->enabled || !iocg->level)
+@@ -1823,15 +1836,28 @@ static void ioc_rqos_merge(struct rq_qos
+ 		iocg->cursor = bio_end;
+ 
+ 	/*
+-	 * Charge if there's enough vtime budget and the existing request
+-	 * has cost assigned.  Otherwise, account it as debt.  See debt
+-	 * handling in ioc_rqos_throttle() for details.
++	 * Charge if there's enough vtime budget and the existing request has
++	 * cost assigned.
+ 	 */
+ 	if (rq->bio && rq->bio->bi_iocost_cost &&
+-	    time_before_eq64(atomic64_read(&iocg->vtime) + cost, now.vnow))
++	    time_before_eq64(atomic64_read(&iocg->vtime) + cost, now.vnow)) {
+ 		iocg_commit_bio(iocg, bio, cost);
+-	else
+-		atomic64_add(abs_cost, &iocg->abs_vdebt);
++		return;
++	}
++
++	/*
++	 * Otherwise, account it as debt if @iocg is online, which it should
++	 * be for the vast majority of cases. See debt handling in
++	 * ioc_rqos_throttle() for details.
++	 */
++	spin_lock_irqsave(&iocg->waitq.lock, flags);
++	if (likely(!list_empty(&iocg->active_list))) {
++		iocg->abs_vdebt += abs_cost;
++		iocg_kick_delay(iocg, &now, cost);
++	} else {
++		iocg_commit_bio(iocg, bio, cost);
++	}
++	spin_unlock_irqrestore(&iocg->waitq.lock, flags);
+ }
+ 
+ static void ioc_rqos_done_bio(struct rq_qos *rqos, struct bio *bio)
+@@ -2001,7 +2027,6 @@ static void ioc_pd_init(struct blkg_poli
+ 	iocg->ioc = ioc;
+ 	atomic64_set(&iocg->vtime, now.vnow);
+ 	atomic64_set(&iocg->done_vtime, now.vnow);
+-	atomic64_set(&iocg->abs_vdebt, 0);
+ 	atomic64_set(&iocg->active_period, atomic64_read(&ioc->cur_period));
+ 	INIT_LIST_HEAD(&iocg->active_list);
+ 	iocg->hweight_active = HWEIGHT_WHOLE;
+--- a/tools/cgroup/iocost_monitor.py
++++ b/tools/cgroup/iocost_monitor.py
+@@ -159,7 +159,12 @@ class IocgStat:
+         else:
+             self.inflight_pct = 0
+ 
+-        self.debt_ms = iocg.abs_vdebt.counter.value_() / VTIME_PER_USEC / 1000
++        # vdebt used to be an atomic64_t and is now u64, support both
++        try:
++            self.debt_ms = iocg.abs_vdebt.counter.value_() / VTIME_PER_USEC / 1000
++        except:
++            self.debt_ms = iocg.abs_vdebt.value_() / VTIME_PER_USEC / 1000
++
+         self.use_delay = blkg.use_delay.counter.value_()
+         self.delay_ms = blkg.delay_nsec.counter.value_() / 1_000_000
+ 
 
 
