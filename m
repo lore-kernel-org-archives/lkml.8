@@ -2,526 +2,135 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF8AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C0CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D56CB205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:39:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F3A1205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:39:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eyguWrhl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gmxuHP6A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390222AbgEMSjp (ORCPT
+        id S2390229AbgEMSju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 14:39:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47286 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390211AbgEMSjo (ORCPT
+        Wed, 13 May 2020 14:39:50 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:51531 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389724AbgEMSjt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 14:39:44 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFAE1C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 11:39:43 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id m7so174584plt.5
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 11:39:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+ss3yh7hJ2ydmeslNxiEwN8NhlX0JHiWcEv94zeqy9A=;
-        b=eyguWrhl1VYiOkasUz0dlkIGJf/afzx4zZbd41S1Ajmzd8CcybPYqn4p64BVzwxezp
-         qztmjzs09BMuBNLwRObf/78Kw4E7zR6JEgBlEs1CU8D0xVSNc73fk8GI+hbsH1CHDFJu
-         Wc+UmIW4i3aA16i8eRQZ+vR4hOc78EerYigNk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+ss3yh7hJ2ydmeslNxiEwN8NhlX0JHiWcEv94zeqy9A=;
-        b=oEmWAytwvvwptxUEvURqtCuv2rCprN9GCDODjVYVRAj/GsVVouu//fF+Z2W33u9LEu
-         1RO28kv+61cfHqau1W4JVptGU/QQXCOoQyg1hbQ88LQj5QArt+w1jwyIwsKF3UkQ/J0a
-         xjs9OZuL2IyM6a0bdTVEoLQ0mQTpFy3aCGwv/jVuDDzFnQptGyS6Tsk4wOzaN9OXQxB8
-         pXcVgkmUV1Thf8CR5OOUIDXzz0IJrC3vzec7uLWJUlJi3mrbBggpsT4Q1VvZphbMUA8b
-         1LQ5aY+NscBShuB7T0zVVZ5x92rcDxTillOldJfmxd1uve/zIqnwQChiXXMrrHpyrpT1
-         L0KQ==
-X-Gm-Message-State: AOAM531RN6lAch0LMps7u8APHDEpng3qW5FBNtjEUdu9ZZhx7/ZjK2hT
-        O9ACn/QTGe5EfnxPObfIwhT/tg==
-X-Google-Smtp-Source: ABdhPJxa7qcEvvKmg01TkPY+ocKYEnjc6xVOjEcI9TOYKphLUayu1if1/FLsYKV/59FnljqHZqsArQ==
-X-Received: by 2002:a17:902:a586:: with SMTP id az6mr466437plb.201.1589395183106;
-        Wed, 13 May 2020 11:39:43 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q6sm211981pfh.193.2020.05.13.11.39.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 11:39:42 -0700 (PDT)
-Date:   Wed, 13 May 2020 11:39:41 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     linux- stable <stable@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, John Stultz <john.stultz@linaro.org>,
-        Todd Kjos <tkjos@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>, ardb@kernel.org,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Eric Dumazet <edumazet@google.com>
-Subject: Re: stable-rc 4.19: WARNING: at lib/refcount.c:187
- refcount_sub_and_test_checked
-Message-ID: <202005131133.C15035F90@keescook>
-References: <CA+G9fYvo2yUVicoZ7fOYf8=QxTtS8nW-Z2JGD4iLtU61E6xNdw@mail.gmail.com>
+        Wed, 13 May 2020 14:39:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589395188;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=BavTkUCkU5lOlqm34/OAaeadhok337Em0LQ0JqmIrBo=;
+        b=gmxuHP6ADh1Bv9k+0KdJJJ6AL5OZUCGwnJO3ebUbm/seNh0xa2Ecg+dNCcufj6x7rDhLQ6
+        AuKWGxcLT+KIk1wzOM7mhnBkT2cmz6MkZsNZTpblpp1786M0L6SZinNjAXBVDN7cg6vdGX
+        C5Gza7tQ9sd4/i0MaWvpYm2ZZ+b3PT8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-369-7m8wSnxJNiOuKndsraMyMg-1; Wed, 13 May 2020 14:39:42 -0400
+X-MC-Unique: 7m8wSnxJNiOuKndsraMyMg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2B184873065;
+        Wed, 13 May 2020 18:39:40 +0000 (UTC)
+Received: from krava (unknown [10.40.195.109])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 107A75D9C5;
+        Wed, 13 May 2020 18:39:34 +0000 (UTC)
+Date:   Wed, 13 May 2020 20:39:32 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf parse-events: Make add PMU verbose output clearer
+Message-ID: <20200513183932.GC3343750@krava>
+References: <20200513001729.21155-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+G9fYvo2yUVicoZ7fOYf8=QxTtS8nW-Z2JGD4iLtU61E6xNdw@mail.gmail.com>
+In-Reply-To: <20200513001729.21155-1-irogers@google.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 11:41:14PM +0530, Naresh Kamboju wrote:
-> While running LTP sched on stable-rc 4.19 branch kernel on arm64 hikey device.
-> Thermal alarm triggered and followed by kernel warnings and Internal
-> error: Oops:
+On Tue, May 12, 2020 at 05:17:29PM -0700, Ian Rogers wrote:
 
-Hi!
+SNIP
 
-I just happened to see this on lkml. It looks a lot like this:
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 92bd7fafcce6..71d0290b616a 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -1056,7 +1056,8 @@ static char *pmu_formats_string(struct list_head *formats)
+>   * Setup one of config[12] attr members based on the
+>   * user input data - term parameter.
+>   */
+> -static int pmu_config_term(struct list_head *formats,
+> +static int pmu_config_term(const char *pmu_name,
+> +			   struct list_head *formats,
+>  			   struct perf_event_attr *attr,
+>  			   struct parse_events_term *term,
+>  			   struct list_head *head_terms,
+> @@ -1082,16 +1083,24 @@ static int pmu_config_term(struct list_head *formats,
+>  
+>  	format = pmu_find_format(formats, term->config);
+>  	if (!format) {
+> -		if (verbose > 0)
+> -			printf("Invalid event/parameter '%s'\n", term->config);
+> +		char *pmu_term = pmu_formats_string(formats);
+> +		char *unknown_term;
+> +		char *help_msg;
+> +
+> +		if (asprintf(&unknown_term,
+> +				"unknown term '%s' for pmu '%s'",
+> +				term->config, pmu_name) < 0)
+> +			unknown_term = strdup("unknown term");
 
-https://lore.kernel.org/lkml/0ba7cb74-507e-7fb5-6147-1d5fee34155f@kernel.dk/
+is that really necessary? is asprintf fails, strdup will probably too,
+and parse_events__handle_error checks on the !str, so we should be fine
 
-(though obviously not in io_uring)
+other than that it looks ok to me
 
-If this is reliable can you bisect to find what broke? There have been a
-lot of bugs found by refcount_t that have been fixed in upstream, just
-from fuzzing:
-https://syzkaller.appspot.com/upstream/fixed
+thanks,
+jirka
 
--Kees
+> +		help_msg = parse_events_formats_error_string(pmu_term);
+>  		if (err) {
+> -			char *pmu_term = pmu_formats_string(formats);
+> -
+>  			parse_events__handle_error(err, term->err_term,
+> -				strdup("unknown term"),
+> -				parse_events_formats_error_string(pmu_term));
+> -			free(pmu_term);
+> +						   unknown_term,
+> +						   help_msg);
+> +		} else {
+> +			pr_debug("%s (%s)\n", unknown_term, help_msg);
+> +			free(unknown_term);
+>  		}
+> +		free(pmu_term);
 
-> 
-> steps to reproduce:
-> cd /opt/ltp
-> ./runltp -f sched
-> 
-> Test running hackbench test case from LTP sched
-> 
-> Test case: hackbench 50 process 1000
-> 
-> Running with 50*40 (== 2000) tasks.
-> [   33.758553] LDO2_2V8: disabling
-> [   33.761846] LDO13_1V8: disabling
-> [   33.767592] LDO14_2V8: disabling
-> [   33.771918] LDO17_2V5: disabling
-> [   34.182704] hisi_thermal f7030700.tsensor: THERMAL ALARM: 66385 > 65000
-> [   39.518923] ------------[ cut here ]------------
-> [   39.525600] refcount_t: underflow; use-after-free.
-> [   39.532816] WARNING: CPU: 1 PID: 5624 at lib/refcount.c:187
-> refcount_sub_and_test_checked+0xa0/0xa8
-> [   39.542099] Modules linked in: wl18xx wlcore mac80211 cfg80211
-> hci_uart adv7511 snd_soc_audio_graph_card crc32_ce btbcm
-> snd_soc_simple_card_utils crct10dif_ce cec kirin_drm bluetooth
-> drm_kms_helper dw_drm_dsi drm wlcore_sdio rfkill
-> drm_panel_orientation_quirks fuse
-> [   39.566135] CPU: 1 PID: 5624 Comm: hackbench Not tainted
-> 4.19.123-rc1-00049-g6d5c161fb73d #1
-> [   39.574768] Hardware name: HiKey Development Board (DT)
-> [   39.580122] pstate: 40000005 (nZcv daif -PAN -UAO)
-> [   39.585043] pc : refcount_sub_and_test_checked+0xa0/0xa8
-> [   39.590491] lr : refcount_sub_and_test_checked+0xa0/0xa8
-> [   39.595933] sp : ffff0000142bba60
-> [   39.599331] x29: ffff0000142bba60 x28: ffff80004e20d4c8
-> [   39.604771] x27: ffff800048273f28 x26: 0000000000000064
-> [   39.610213] x25: ffff800048273f00 x24: 0000000000000000
-> [   39.615657] x23: 0000000000000064 x22: ffff80004e20d740
-> [   39.621097] x21: 0000000000000000 x20: ffff800058991944
-> [   39.626538] x19: 0000000000000000 x18: 0000000000000000
-> [   39.631980] x17: 0000000000000000 x16: 0000000000000000
-> [   39.637418] x15: 0000000000000400 x14: 0000000000000333
-> [   39.642857] x13: 0000000000000001 x12: 0000000000000000
-> [   39.648295] x11: 0000000000000002 x10: 0000000000000960
-> [   39.653734] x9 : ffff0000142bb7a0 x8 : ffff80004e2573c0
-> [   39.659174] x7 : ffff8000757a6c00 x6 : 0000000000000010
-> [   39.664612] x5 : ffff800077f1a790 x4 : ffff800077f1b0d0
-> [   39.670053] x3 : ffff800077f21eb0 x2 : ffff800077f1b0d0
-> [   39.675493] x1 : d13523b333b73d00 x0 : 0000000000000000
-> [   39.680930] Call trace:
-> [   39.683455]  refcount_sub_and_test_checked+0xa0/0xa8
-> [   39.688550]  sock_wfree+0x4c/0xa0
-> [   39.691957]  unix_destruct_scm+0x70/0x90
-> [   39.695986]  skb_release_head_state+0x5c/0xf0
-> [   39.700460]  skb_release_all+0x14/0x30
-> [   39.704306]  consume_skb+0x2c/0x58
-> [   39.707801]  unix_stream_read_generic+0x680/0x750
-> [   39.712623]  unix_stream_recvmsg+0x4c/0x70
-> [   39.716829]  sock_read_iter+0x94/0xe8
-> [   39.720589]  __vfs_read+0xf8/0x148
-> [   39.724084]  vfs_read+0xa8/0x160
-> [   39.727400]  ksys_read+0x64/0xd8
-> [   39.730714]  __arm64_sys_read+0x18/0x20
-> [   39.734655]  el0_svc_common+0x70/0x168
-> [   39.738509]  el0_svc_handler+0x2c/0x80
-> [   39.742360]  el0_svc+0x8/0xc
-> [   39.745321] ---[ end trace 6e44f0c23e5d9fb1 ]---
-> [   44.241524] ------------[ cut here ]------------
-> [   44.248838] WARNING: CPU: 0 PID: 5624 at net/unix/af_unix.c:498
-> unix_sock_destructor+0xf4/0x100
-> [   44.257760] Modules linked in: wl18xx wlcore mac80211 cfg80211
-> hci_uart adv7511 snd_soc_audio_graph_card crc32_ce btbcm
-> snd_soc_simple_card_utils crct10dif_ce cec kirin_drm bluetooth
-> drm_kms_helper dw_drm_dsi drm wlcore_sdio rfkill
-> drm_panel_orientation_quirks fuse
-> [   44.281801] CPU: 0 PID: 5624 Comm: hackbench Tainted: G        W
->      4.19.123-rc1-00049-g6d5c161fb73d #1
-> [   44.291854] Hardware name: HiKey Development Board (DT)
-> [   44.297209] pstate: 40000005 (nZcv daif -PAN -UAO)
-> [   44.302126] pc : unix_sock_destructor+0xf4/0x100
-> [   44.306863] lr : unix_sock_destructor+0xf4/0x100
-> [   44.311593] sp : ffff0000142bb9f0
-> [   44.314990] x29: ffff0000142bb9f0 x28: ffff80004e20d4c8
-> [   44.320429] x27: ffff800048273f28 x26: 0000000000000064
-> [   44.325869] x25: ffff800048273f00 x24: 0000000000000000
-> [   44.331308] x23: 0000000000000064 x22: ffff80004e20d740
-> [   44.336747] x21: ffff800058991800 x20: ffff8000589916b8
-> [   44.342186] x19: ffff800058991800 x18: 0000000000000000
-> [   44.347625] x17: 0000000000000000 x16: 0000000000000000
-> [   44.353066] x15: 0000000000000400 x14: 0000000000000333
-> [   44.358508] x13: 0000000000000001 x12: 0000000000000000
-> [   44.370733] x11: 0000000000000002 x10: 0000000000000960
-> [   44.382900] x9 : ffff0000142bb760 x8 : ffff80004e2573c0
-> [   44.395054] x7 : ffff8000757a6a00 x6 : 0000000000000010
-> [   44.406985] x5 : ffff800077f04790 x4 : ffff800077f050d0
-> [   44.418678] x3 : ffff800077f0beb0 x2 : d13523b333b73d00
-> [   44.430478] x1 : 0000000000000000 x0 : 0000000000000024
-> [   44.442258] Call trace:
-> [   44.451166]  unix_sock_destructor+0xf4/0x100
-> [   44.461909]  __sk_destruct+0x2c/0x150
-> [   44.471973]  sk_destruct+0x48/0x60
-> [   44.481725]  __sk_free+0x38/0xd0
-> [   44.491237]  sock_wfree+0x7c/0xa0
-> [   44.500416]  unix_destruct_scm+0x70/0x90
-> [   44.509821]  skb_release_head_state+0x5c/0xf0
-> [   44.519571]  skb_release_all+0x14/0x30
-> [   44.528610]  consume_skb+0x2c/0x58
-> [   44.537257]  unix_stream_read_generic+0x680/0x750
-> [   44.547227]  unix_stream_recvmsg+0x4c/0x70
-> [   44.556616]  sock_read_iter+0x94/0xe8
-> [   44.565510]  __vfs_read+0xf8/0x148
-> [   44.574124]  vfs_read+0xa8/0x160
-> [   44.582578]  ksys_read+0x64/0xd8
-> [   44.591057]  __arm64_sys_read+0x18/0x20
-> [   44.600160]  el0_svc_common+0x70/0x168
-> [   44.609177]  el0_svc_handler+0x2c/0x80
-> [   44.618194]  el0_svc+0x8/0xc
-> [   44.626370] ---[ end trace 6e44f0c23e5d9fb2 ]---
-> [   44.804127] ------------[ cut here ]------------
-> [   44.851402] refcount_t: addition on 0; use-after-free.
-> [   45.083709] ------------[ cut here ]------------
-> [   45.095872] WARNING: CPU: 1 PID: 5624 at net/unix/af_unix.c:499
-> unix_sock_destructor+0xe0/0x100
-> [   45.110316] Modules linked in: wl18xx wlcore mac80211 cfg80211
-> hci_uart adv7511 snd_soc_audio_graph_card crc32_ce btbcm
-> snd_soc_simple_card_utils crct10dif_ce cec kirin_drm bluetooth
-> drm_kms_helper dw_drm_dsi drm wlcore_sdio rfkill
-> drm_panel_orientation_quirks fuse
-> [   45.146603] CPU: 1 PID: 5624 Comm: hackbench Tainted: G        W
->      4.19.123-rc1-00049-g6d5c161fb73d #1
-> [   45.163052] Hardware name: HiKey Development Board (DT)
-> [   45.174863] pstate: 40000005 (nZcv daif -PAN -UAO)
-> [   45.186303] pc : unix_sock_destructor+0xe0/0x100
-> [   45.197560] lr : unix_sock_destructor+0xe0/0x100
-> [   45.208757] sp : ffff0000142bb9f0
-> [   45.218636] x29: ffff0000142bb9f0 x28: ffff80004e20d4c8
-> [   45.230537] x27: ffff800048273f28 x26: 0000000000000064
-> [   45.242423] x25: ffff800048273f00 x24: 0000000000000000
-> [   45.254317] x23: 0000000000000064 x22: ffff80004e20d740
-> [   45.266248] x21: ffff800058991800 x20: ffff8000589916b8
-> [   45.278128] x19: ffff800058991800 x18: 0000000000000000
-> [   45.289964] x17: 0000000000000000 x16: 0000000000000000
-> [   45.301854] x15: 0000000000000400 x14: 0000000000000333
-> [   45.313691] x13: 0000000000000001 x12: 0000000000000000
-> [   45.325466] x11: 0000000000000002 x10: 0000000000000960
-> [   45.337205] x9 : ffff0000142bb760 x8 : ffff80004e2573c0
-> [   45.349011] x7 : ffff8000757a6c00 x6 : 0000000000000010
-> [   45.360826] x5 : ffff800077f1a790 x4 : ffff800077f1b0d0
-> [   45.372682] x3 : ffff800077f21eb0 x2 : d13523b333b73d00
-> [   45.384432] x1 : 0000000000000000 x0 : 0000000000000024
-> [   45.396161] Call trace:
-> [   45.404576]  unix_sock_destructor+0xe0/0x100
-> [   45.414505]  __sk_destruct+0x2c/0x150
-> [   45.423673]  sk_destruct+0x48/0x60
-> [   45.432482]  __sk_free+0x38/0xd0
-> [   45.441123]  sock_wfree+0x7c/0xa0
-> [   45.449751]  unix_destruct_scm+0x70/0x90
-> [   45.459098]  skb_release_head_state+0x5c/0xf0
-> [   45.468851]  skb_release_all+0x14/0x30
-> [   45.477977]  consume_skb+0x2c/0x58
-> [   45.486728]  unix_stream_read_generic+0x680/0x750
-> [   45.496892]  unix_stream_recvmsg+0x4c/0x70
-> [   45.506383]  sock_read_iter+0x94/0xe8
-> [   45.515494]  __vfs_read+0xf8/0x148
-> [   45.524328]  vfs_read+0xa8/0x160
-> [   45.532979]  ksys_read+0x64/0xd8
-> [   45.541711]  __arm64_sys_read+0x18/0x20
-> [   45.551056]  el0_svc_common+0x70/0x168
-> [   45.560334]  el0_svc_handler+0x2c/0x80
-> [   45.569595]  el0_svc+0x8/0xc
-> [   45.577983] ---[ end trace 6e44f0c23e5d9fb3 ]---
-> [   46.230081] unix: Attempt to release alive unix socket: 00000000c16f8bab
-> [   46.581410] WARNING: CPU: 7 PID: 4201 at lib/refcount.c:102
-> refcount_add_checked+0x40/0x48
-> [   46.595469] Modules linked in: wl18xx wlcore mac80211 cfg80211
-> hci_uart adv7511 snd_soc_audio_graph_card crc32_ce btbcm
-> snd_soc_simple_card_utils crct10dif_ce cec kirin_drm bluetooth
-> drm_kms_helper dw_drm_dsi drm wlcore_sdio rfkill
-> drm_panel_orientation_quirks fuse
-> [   46.631752] CPU: 7 PID: 4201 Comm: hackbench Tainted: G        W
->      4.19.123-rc1-00049-g6d5c161fb73d #1
-> [   46.648192] Hardware name: HiKey Development Board (DT)
-> [   46.660070] pstate: 40000005 (nZcv daif -PAN -UAO)
-> [   46.671520] pc : refcount_add_checked+0x40/0x48
-> [   46.682787] lr : refcount_add_checked+0x40/0x48
-> [   46.693921] sp : ffff000011653b10
-> [   46.703835] x29: ffff000011653b10 x28: 0000000000000000
-> [   46.715810] x27: 0000000000000003 x26: 0000000000000000
-> [   46.727832] x25: 7fffffffffffffff x24: ffff000011653c74
-> [   46.739766] x23: ffff0000092198c8 x22: ffff0000081187c8
-> [   46.751748] x21: ffff800058991400 x20: ffff800058991800
-> [   46.763739] x19: ffff80004bcad300 x18: 0000000000000000
-> [   46.775673] x17: 0000000000000000 x16: 0000000000000000
-> [   46.787641] x15: 0000000000000400 x14: 0000000000000333
-> [   46.799574] x13: 0000000000000001 x12: 0000000000000000
-> [   46.811479] x11: 0000000000000070 x10: 0000000000000960
-> [   46.823383] x9 : ffff000011653850 x8 : ffff800058b43180
-> [   46.835276] x7 : ffff8000757a7800 x6 : 0000000000000010
-> [   46.847198] x5 : ffff800077f9e790 x4 : ffff800077f9f0d0
-> [   46.859090] x3 : ffff800077fa5eb0 x2 : ffff800077f9f0d0
-> [   46.870964] x1 : d13523b333b73d00 x0 : 0000000000000000
-> [   46.882829] Call trace:
-> [   46.891741]  refcount_add_checked+0x40/0x48
-> [   46.902369]  skb_set_owner_w+0x60/0xa8
-> [   46.912144]  sock_alloc_send_pskb+0x200/0x210
-> [   46.922202]  unix_stream_sendmsg+0x1d0/0x340
-> [   46.931999]  sock_sendmsg+0x18/0x30
-> [   46.940976]  sock_write_iter+0x8c/0xe0
-> [   46.950159]  __vfs_write+0xf8/0x160
-> [   46.959014]  vfs_write+0xa4/0x1b0
-> [   46.967712]  ksys_write+0x64/0xd8
-> [   46.976420]  __arm64_sys_write+0x18/0x20
-> [   46.985743]  el0_svc_common+0x70/0x168
-> [   46.994915]  el0_svc_handler+0x2c/0x80
-> [   47.004074]  el0_svc+0x8/0xc
-> [   47.012329] ---[ end trace 6e44f0c23e5d9fb4 ]---
-> [   51.942160] Unable to handle kernel NULL pointer dereference at
-> virtual address 0000000000000008
-> [   51.956600] Mem abort info:
-> [   51.964994]   ESR = 0x96000046
-> [   51.973658]   Exception class = DABT (current EL), IL = 32 bits
-> [   51.985323]   SET = 0, FnV = 0
-> [   51.994116]   EA = 0, S1PTW = 0
-> [   52.002991] Data abort info:
-> [   52.011559]   ISV = 0, ISS = 0x00000046
-> [   52.021139]   CM = 0, WnR = 1
-> [   52.029826] user pgtable: 4k pages, 48-bit VAs, pgdp = 00000000cd136acc
-> [   52.042281] [0000000000000008] pgd=000000004e23d003,
-> pud=000000004e23e003, pmd=0000000000000000
-> [   52.056947] Internal error: Oops: 96000046 [#1] PREEMPT SMP
-> [   52.068511] Modules linked in: wl18xx wlcore mac80211 cfg80211
-> hci_uart adv7511 snd_soc_audio_graph_card crc32_ce btbcm
-> snd_soc_simple_card_utils crct10dif_ce cec kirin_drm bluetooth
-> drm_kms_helper dw_drm_dsi drm wlcore_sdio rfkill
-> drm_panel_orientation_quirks fuse
-> [   52.105341] Process hackbench (pid: 5616, stack limit = 0x00000000a84269cf)
-> [   52.119153] CPU: 2 PID: 5616 Comm: hackbench Tainted: G        W
->      4.19.123-rc1-00049-g6d5c161fb73d #1
-> [   52.136027] Hardware name: HiKey Development Board (DT)
-> [   52.148385] pstate: 60000085 (nZCv daIf -PAN -UAO)
-> [   52.160272] pc : skb_unlink+0x40/0x60
-> [   52.171005] lr : skb_unlink+0x24/0x60
-> [   52.181698] sp : ffff00001427bb20
-> [   52.191997] x29: ffff00001427bb20 x28: ffff80004e2094c8
-> [   52.204398] x27: ffff800048273528 x26: 0000000000000064
-> [   52.216760] x25: ffff800048273500 x24: 0000000000000000
-> [   52.229121] x23: 0000000000000064 x22: ffff80004e209740
-> [   52.241486] x21: ffff80004e2094dc x20: ffff80004e2094c8
-> [   52.253822] x19: ffff800048273500 x18: 0000000000000000
-> [   52.266159] x17: 0000000000000000 x16: 0000000000000000
-> [   52.278498] x15: 0000000000000000 x14: 00000000226300a0
-> [   52.290796] x13: 00000000226300a0 x12: 00000000004012f8
-> [   52.303077] x11: 00000000004014b4 x10: 0000fffff7fe03b0
-> [   52.315350] x9 : 00000000226300a0 x8 : 0000000000000008
-> [   52.327541] x7 : 0000000000000007 x6 : 0000000000000001
-> [   52.339623] x5 : 0000000000000001 x4 : 0000000000000002
-> [   52.351279] x3 : 0000000000000000 x2 : 0000000000000000
-> [   52.362553] x1 : 0000000000000000 x0 : ffff80004e2094dc
-> [   52.373690] Call trace:
-> [   52.381864]  skb_unlink+0x40/0x60
-> [   52.390837]  unix_stream_read_generic+0x678/0x750
-> [   52.401221]  unix_stream_recvmsg+0x4c/0x70
-> [   52.411043]  sock_read_iter+0x94/0xe8
-> [   52.420417]  __vfs_read+0xf8/0x148
-> [   52.429510]  vfs_read+0xa8/0x160
-> [   52.438457]  ksys_read+0x64/0xd8
-> [   52.447370]  __arm64_sys_read+0x18/0x20
-> [   52.456911]  el0_svc_common+0x70/0x168
-> [   52.466376]  el0_svc_handler+0x2c/0x80
-> [   52.475801]  el0_svc+0x8/0xc
-> [   52.484345] Code: 51000442 b9001282 a9400a63 a9007e7f (f9000462)
-> [   52.496245] ---[ end trace 6e44f0c23e5d9fb5 ]---
-> [   52.506922] note: hackbench[5616] exited with preempt_count 1
-> 
-> Broadcast message from systemd-journald@hikey (Sun 2019-03-24 19:24:41 UTC):
-> 
-> kernel[3032]: [   52.056947] Internal error: Oops: 96000046 [#1] PREEMPT SMP
-> 
-> 
-> Broadcast message from systemd-journald@hikey (Sun 2019-03-24 19:24:41 UTC):
-> 
-> kernel[3032]: [   52.105341] Process hackbench (pid: 5616, stack limit
-> = 0x00000000a84269cf)
-> 
-> 
-> Broadcast message from systemd-journald@hikey (Sun 2019-03-24 19:24:41 UTC):
-> 
-> kernel[3032]: [   52.484345] Code: 51000442 b9001282 a9400a63 a9007e7f
-> (f9000462)
-> 
-> SERVER: read (error: Bad address)
-> Running with 20*40 (== 800) tasks.
-> [   53.050369] Unable to handle kernel NULL pointer dereference at
-> virtual address 0000000000000000
-> [   53.065286] Mem abort info:
-> [   53.074084]   ESR = 0x96000044
-> [   53.083135]   Exception class = DABT (current EL), IL = 32 bits
-> [   53.095174]   SET = 0, FnV = 0
-> [   53.104314]   EA = 0, S1PTW = 0
-> [   53.113497] Data abort info:
-> [   53.122392]   ISV = 0, ISS = 0x00000044
-> [   53.132261]   CM = 0, WnR = 1
-> [   53.141238] user pgtable: 4k pages, 48-bit VAs, pgdp = 000000005aa0b283
-> [   53.153996] [0000000000000000] pgd=0000000000000000
-> [   53.165047] Internal error: Oops: 96000044 [#2] PREEMPT SMP
-> [   53.176817] Modules linked in: wl18xx wlcore mac80211 cfg80211
-> hci_uart adv7511 snd_soc_audio_graph_card crc32_ce btbcm
-> snd_soc_simple_card_utils crct10dif_ce cec kirin_drm bluetooth
-> drm_kms_helper dw_drm_dsi drm wlcore_sdio rfkill
-> drm_panel_orientation_quirks fuse
-> [   53.214090] Process hackbench (pid: 5624, stack limit = 0x0000000092e9188f)
-> [   53.228138] CPU: 7 PID: 5624 Comm: hackbench Tainted: G      D W
->      4.19.123-rc1-00049-g6d5c161fb73d #1
-> [   53.245231] Hardware name: HiKey Development Board (DT)
-> [   53.257701] pstate: 80000085 (Nzcv daIf -PAN -UAO)
-> [   53.269773] pc : skb_dequeue+0x4c/0x90
-> [   53.280804] lr : skb_dequeue+0x20/0x90
-> [   53.291782] sp : ffff0000142bbae0
-> [   53.302190] x29: ffff0000142bbae0 x28: ffff80004e256a00
-> [   53.314558] x27: 0000000000000000 x26: ffff80004e20db40
-> [   53.326910] x25: 0000000000000003 x24: 0000000000000001
-> [   53.339232] x23: ffff0000092198c8 x22: ffff80004e20d4c8
-> [   53.351527] x21: ffff80004e20d4dc x20: ffff800048273500
-> [   53.363836] x19: ffff80004e20d4c8 x18: 0000000000000333
-> [   53.376137] x17: 0000000000000000 x16: 0000000000000000
-> [   53.388449] x15: 0000000000000400 x14: 0000000000000333
-> [   53.400697] x13: 0000000000000001 x12: 0000000000000000
-> [   53.412874] x11: 0000000000000002 x10: ffff800005f0a800
-> [   53.424943] x9 : 0000000000000010 x8 : ffff800077fac8e8
-> [   53.436880] x7 : 0000000044040000 x6 : 0000000000000002
-> [   53.448446] x5 : 0000000000000001 x4 : 0000000000000003
-> [   53.459613] x3 : ffff80004e20d4dc x2 : ffff800048273c00
-> [   53.470707] x1 : 0000000000000000 x0 : 0000000000000000
-> [   53.481673] Call trace:
-> [   53.489657]  skb_dequeue+0x4c/0x90
-> [   53.498571]  unix_release_sock+0x138/0x268
-> [   53.508190]  unix_release+0x20/0x38
-> [   53.517203]  __sock_release+0x40/0xb8
-> [   53.526390]  sock_close+0x14/0x20
-> [   53.535243]  __fput+0x88/0x1b0
-> [   53.543818]  ____fput+0xc/0x18
-> [   53.552379]  task_work_run+0x90/0xb0
-> [   53.561486]  do_exit+0x350/0x9a8
-> [   53.570250]  do_group_exit+0x34/0x98
-> [   53.579335]  get_signal+0xac/0x618
-> [   53.588266]  do_signal+0x8c/0x2a0
-> [   53.597122]  do_notify_resume+0xd0/0x110
-> [   53.606623]  work_pending+0x8/0x10
-> [   53.615588] Code: b9001260 a9400282 a9007e9f f9000440 (f9000002)
-> [   53.627346] ---[ end trace 6e44f0c23e5d9fb6 ]---
-> [   53.637660] Fixing recursive fault but reboot is needed!
-> 
-> Broadcast message from systemd-journald@hikey (Sun 2019-03-24 19:24:42 UTC):
-> 
-> kernel[3032]: [   53.165047] Internal error: Oops: 96000044 [#2] PREEMPT SMP
-> 
-> 
-> Broadcast message from systemd-journald@hikey (Sun 2019-03-24 19:24:42 UTC):
-> 
-> kernel[3032]: [   53.214090] Process hackbench (pid: 5624, stack limit
-> = 0x0000000092e9188f)
-> 
-> 
-> Broadcast message from systemd-journald@hikey (Sun 2019-03-24 19:24:42 UTC):
-> 
-> kernel[3032]: [   53.615588] Code: b9001260 a9400282 a9007e9f f9000440
-> (f9000002)
-> 
-> [   54.489871] hisi_thermal f7030700.tsensor: THERMAL ALARM stopped:
-> 61675 < 65000
-> [   74.654864] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-> [   74.666836] rcu: 2-...0: (1 GPs behind)
-> idle=daa/1/0x4000000000000000 softirq=3834/3912 fqs=2623
-> [   74.681934] rcu: (detected by 5, t=5252 jiffies, g=2345, q=677)
-> [   74.694094] Task dump for CPU 2:
-> [   74.703435] hackbench       R  running task        0  5616      1 0x0000022e
-> [   74.716735] Call trace:
-> [   74.725367]  __switch_to+0xe8/0x148
-> [   74.735044]            (null)
-> [   74.744269] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-> [   74.756718] rcu: 2-...0: (1 GPs behind)
-> idle=daa/1/0x4000000000000000 softirq=3836/3912 fqs=2623
-> [   74.772141] rcu: (detected by 5, t=5273 jiffies, g=2645, q=16353)
-> [   74.784812] Task dump for CPU 2:
-> [   74.794529] hackbench       R  running task        0  5616      1 0x0000022e
-> [   74.808210] Call trace:
-> [   74.817173]  __switch_to+0xe8/0x148
-> [   74.827156]            (null)
-> [  137.674820] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-> [  137.687231] rcu: 2-...0: (1 GPs behind)
-> idle=daa/1/0x4000000000000000 softirq=3834/3912 fqs=10479
-> [  137.702783] rcu: (detected by 5, t=21007 jiffies, g=2345, q=677)
-> [  137.715437] Task dump for CPU 2:
-> [  137.725159] hackbench       R  running task        0  5616      1 0x0000022e
-> [  137.738781] Call trace:
-> [  137.747752]  __switch_to+0xe8/0x148
-> [  137.757797]            (null)
-> [  137.767359] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-> [  137.780138] rcu: 2-...0: (1 GPs behind)
-> idle=daa/1/0x4000000000000000 softirq=3836/3912 fqs=10464
-> [  137.795939] rcu: (detected by 5, t=21029 jiffies, g=2645, q=16636)
-> [  137.808940] Task dump for CPU 2:
-> [  137.818844] hackbench       R  running task        0  5616      1 0x0000022e
-> [  137.832327] Call trace:
-> [  137.840756]  __switch_to+0xe8/0x148
-> [  137.850166]            (null)
-> [  185.305855] audit: type=1701 audit(1553455613.779:3):
-> auid=4294967295 uid=993 gid=990 ses=4294967295 pid=2943
-> comm=\"systemd-network\" exe=\"/lib/systemd/systemd-networkd\" sig=6
-> res=1
-> [  185.326450] dwmmc_k3 f723d000.dwmmc0: Unexpected interrupt latency
-> [  200.694868] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-> 
-> Ref:
-> https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/build/v4.19.122-49-g6d5c161fb73d/testrun/1429265/log
-> https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/build/v4.19.122-49-g6d5c161fb73d/testrun/1429265
-> 
-> kernel config:
-> https://builds.tuxbuild.com/CiEjvux-yM6p2wRSLY2A0Q/kernel.config
-> 
-> -- 
-> Linaro LKFT
-> https://lkft.linaro.org
+SNIP
 
--- 
-Kees Cook
