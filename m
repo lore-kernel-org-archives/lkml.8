@@ -2,116 +2,102 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6965DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AB1C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5801F20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:20:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589404819;
-	bh=xWHjq8JYrcnKLKaLhAt/3Qu+CGeCVNq+g1GySEuPYRc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=Mk9ziTwBhH6+S2Rvc4bdussh8zgjTPE2SlyeZ+x62gwwzMVHZKha/a7qIC6CzdHk+
-	 E+69O7u1zmErHiUjwE89z+mk9nrmvd9gfqntJXNYkfsupYG/MbJGGKejJEpGPEGIzm
-	 jNb3w7Ksvg3Xy282rQPnXuTtCNarWXD52dIzJ6LE=
+	by mail.kernel.org (Postfix) with ESMTP id 74B88205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:22:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="hOZtlEBO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbgEMVUS (ORCPT
+        id S1728707AbgEMVWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 17:20:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38506 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726550AbgEMVUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 17:20:18 -0400
-Received: from localhost.localdomain (pool-96-246-152-186.nycmny.fios.verizon.net [96.246.152.186])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38336205ED;
-        Wed, 13 May 2020 21:20:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589404817;
-        bh=xWHjq8JYrcnKLKaLhAt/3Qu+CGeCVNq+g1GySEuPYRc=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=PwJfPtEX6tp0QTHNEjB9QjrHmEOqN4ySwN4pxgVhjjg3ETeUb0TY4DXaxevUnby8+
-         EokyG0p+/y45QWzXzEKs2sgYFqd+tkFTTlPWzX0xov+GrSpiQ9A29xKfyJOHTMmiL3
-         i/n7KTWK2eIQJQSIq4Y9w8AfkxzotlkTFt2FmPX8=
-Message-ID: <1589404814.5098.185.camel@kernel.org>
-Subject: Re: [PATCH v5 1/7] fs: introduce kernel_pread_file* support
-From:   Mimi Zohar <zohar@kernel.org>
-To:     Scott Branden <scott.branden@broadcom.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
+        Wed, 13 May 2020 17:22:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728421AbgEMVWI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 17:22:08 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 895D0C05BD09
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 14:22:08 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id k18so184801ion.0
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 14:22:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=tGOgO3DH7KY7eGZj+l93dH69/CZG3Xhtwrztz8Xi5EY=;
+        b=hOZtlEBO2LKyP8bHzFDDLBLE+AyP3GW51R2Bgu0+e70rfUZ9rIiczo3pB8s/u3VM70
+         K0T9RD7NVB7brgPgne9G7Y9DKSqMwc34kmUSNaN1+tKmQKMyi7b2a/DSMwe/zY5/KEhq
+         fQSq0XIBJbkr+PAekXcISSvdYkIgp1CyKT8+VJYoZrJ8KYzz0lTZCE6/MFJ87T2KQroR
+         EtSZS930x4uhhtysV1nP2Ob/eQgc7gMe8HsNnHtxeeVeS/yekgc2kD61tz8HifWs7qcn
+         aDv4sBzqEuxANANls7LL4SbixAH4tEKQkZN+1IFCsDhaPLM0Ftld10Il4H8V74Y2oTRm
+         cjMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=tGOgO3DH7KY7eGZj+l93dH69/CZG3Xhtwrztz8Xi5EY=;
+        b=Qwa02XasLOSoXTOnTRsPdGUs3L1wvBWkZOlh/dp0QWo1ow3ZQDS78d2yNuSsA2GZyg
+         AuoTT2CBLpw3stDTulO4W8o4EEl1tweN0SRz4O1+gVdrfhmujdpt4gdiuGgxbcSWTSXX
+         i/eZNMwMDDh8er+ZKBAG2zg+o9ViCZXyR5XthEpqRZvWhxRe7Zyyg1hl+5iptTE5i1Bh
+         +1EhzXKUYgnNsB1nBIEVefQljvmrrQPE2nkrsCo0uft7v6dZUg2zbNRMg8GFMuvB/exV
+         wJX/brph31fwCZeIJ9RW1ahuSL9M8BUqaJQGsdrbFl9/ddk/PuOivYpaUTa7Npy7v5xO
+         m+gQ==
+X-Gm-Message-State: AGi0PuaI5O4cvLT0yDRU5ec0OQVdcGBH2SZHQFwNbdTaLjSeyrmQhwTO
+        zYDsqsJpsACdgB4oepYGVchJPQ==
+X-Google-Smtp-Source: ABdhPJxZH8ktcsDq2DKyrfz9mzAZuFt485i9jtYbwe1JvROnYtyNj3dkM5M5qWN962L5ecYak/nF8Q==
+X-Received: by 2002:a05:6638:277:: with SMTP id x23mr1463557jaq.122.1589404927597;
+        Wed, 13 May 2020 14:22:07 -0700 (PDT)
+Received: from localhost ([2601:8c4:0:32f::7b7])
+        by smtp.gmail.com with ESMTPSA id j90sm272733ilg.70.2020.05.13.14.22.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 14:22:06 -0700 (PDT)
+Date:   Wed, 13 May 2020 14:22:01 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Rob Herring <robh@kernel.org>
+cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>
-Date:   Wed, 13 May 2020 17:20:14 -0400
-In-Reply-To: <a228ae0f-d551-e0e8-446e-5ae63462c520@broadcom.com>
-References: <20200508002739.19360-1-scott.branden@broadcom.com>
-         <20200508002739.19360-2-scott.branden@broadcom.com>
-         <1589395153.5098.158.camel@kernel.org>
-         <0e6b5f65-8c61-b02e-7d35-b4ae52aebcf3@broadcom.com>
-         <1589396593.5098.166.camel@kernel.org>
-         <e1b92047-7003-0615-3d58-1388ec27c78a@broadcom.com>
-         <1589398747.5098.178.camel@kernel.org>
-         <a228ae0f-d551-e0e8-446e-5ae63462c520@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mark Brown <broonie@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 1/5] spi: dt-bindings: sifive: Add missing 2nd register
+ region
+In-Reply-To: <20200512204543.22090-1-robh@kernel.org>
+Message-ID: <alpine.DEB.2.21.9999.2005131421010.18879@viisi.sifive.com>
+References: <20200512204543.22090-1-robh@kernel.org>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-05-13 at 12:41 -0700, Scott Branden wrote:
+On Tue, 12 May 2020, Rob Herring wrote:
+
+> The 'reg' description and example have a 2nd register region for memory
+> mapped flash, but the schema says there is only 1 region. Fix this.
 > 
-> On 2020-05-13 12:39 p.m., Mimi Zohar wrote:
-> > On Wed, 2020-05-13 at 12:18 -0700, Scott Branden wrote:
-> >> On 2020-05-13 12:03 p.m., Mimi Zohar wrote:
-> >>> On Wed, 2020-05-13 at 11:53 -0700, Scott Branden wrote:
-> >> Even if the kernel successfully verified the firmware file signature it
-> >> would just be wasting its time.  The kernel in these use cases is not always
-> >> trusted.  The device needs to authenticate the firmware image itself.
-> > There are also environments where the kernel is trusted and limits the
-> > firmware being provided to the device to one which they signed.
-> >
-> >>> The device firmware is being downloaded piecemeal from somewhere and
-> >>> won't be measured?
-> >> It doesn't need to be measured for current driver needs.
-> > Sure the device doesn't need the kernel measuring the firmware, but
-> > hardened environments do measure firmware.
-> >
-> >> If someone has such need the infrastructure could be added to the kernel
-> >> at a later date.  Existing functionality is not broken in any way by
-> >> this patch series.
-> > Wow!  You're saying that your patch set takes precedence over the
-> > existing expectations and can break them.
-> Huh? I said existing functionality is NOT broken by this patch series.
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Palmer Dabbelt <palmer@dabbelt.com>
+> Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: linux-spi@vger.kernel.org
+> Cc: linux-riscv@lists.infradead.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Please ack, dependency for patch 5.
 
-Assuming a system is configured to measure and appraise firmware
-(rules below), with this change the firmware file will not be properly
-measured and will fail signature verification.
+Acked-by: Paul Walmsley <paul.walmsley@sifive.com> 
 
-Sample IMA policy rules:
-measure func=FIRMWARE_CHECK
-appraise func=FIRMWARE_CHECK appraise_type=imasig
 
-Mimi
+- Paul
