@@ -2,153 +2,149 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FC6C2D0FB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3E6C2D0FB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E677206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:49:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fjo2f4jj"
+	by mail.kernel.org (Postfix) with ESMTP id 9943E20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:50:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732004AbgEMBte (ORCPT
+        id S1728797AbgEMBuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 21:49:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728228AbgEMBte (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 21:49:34 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E6F9C061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 18:49:33 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id g11so2955869plp.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 18:49:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=U2hp63rB3CAsIMl65Ej4coylrrRKqe2rh9YYq0s3+D4=;
-        b=fjo2f4jjwjlGrZLW0umi8KQVQ/SpOTRvxPCxg7/SXNWvLZ8NY0bQjILkLvMijENLAL
-         DaYjYVCogiZ8Mzq9wc4I6XvuoU8bwwJCm9lP2cm7idra2RkODAuxrLQ+BybX+BSfJFcj
-         1WGHR86kiV0W51KHc8dOh31+3kiii6qmc4nQo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=U2hp63rB3CAsIMl65Ej4coylrrRKqe2rh9YYq0s3+D4=;
-        b=D9PdizY4ZIVbBHVagoEphUUQry2g0ci8yLwdgWb54fuqdbgsEWRDWeIeXc8w5FbKAn
-         53YuaVlRKdaWsktxWBtF57UnFHEEQ/82JQvUi0U0fhVp8K8dM/3xeQOYubVvGh9XYBGR
-         mzUMOdq0koNAqRMonmpzjls0kroZDGsTD0U7S4J0JYbdfMtDrcJ8dV1NiOzhKK95FE2N
-         SIh+L63CnNhC244s6hvB6CAqbYQwr5bq8FbgZLdNYPZbRrMzSWbRZrinNO8xK6ZQD2ER
-         Nq1Pnd35D72zlsf5f7Om9hQlpmN6hsJPo6Jhq4SwugcyI8MKj35Q+J26/S/PCJoo+OWW
-         urGg==
-X-Gm-Message-State: AOAM530Tt6K3i0Vn3BQx8qXxA+64YKDK/PW3KgmK/Ru9wqVrMXi0mDMM
-        dg3ss4Znf/8Tf/Bzt/7u3Fd6CA==
-X-Google-Smtp-Source: ABdhPJyTgU82y5UQvggP1k+g6dpTekcpClcW+m31+DiTuU/jeT9Hw0cvKUFxkM4ZDZI8daX7aleqAg==
-X-Received: by 2002:a17:90b:357:: with SMTP id fh23mr7538321pjb.225.1589334572331;
-        Tue, 12 May 2020 18:49:32 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id f136sm12739777pfa.59.2020.05.12.18.49.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 18:49:31 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 12 May 2020 21:50:11 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4398 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726028AbgEMBuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 21:50:10 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 73FC533283DC5F6787D9;
+        Wed, 13 May 2020 09:50:08 +0800 (CST)
+Received: from [10.65.58.147] (10.65.58.147) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Wed, 13 May 2020
+ 09:50:00 +0800
+Subject: Re: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for
+ non-hotplug capable devices
+To:     Jay Vosburgh <jay.vosburgh@canonical.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <18609.1588812972@famine>
+ <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <9908.1589311230@famine>
+CC:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <ashok.raj@intel.com>,
+        liudongdong 00290354 <liudongdong3@huawei.com>,
+        Linuxarm <linuxarm@huawei.com>
+From:   Yicong Yang <yangyicong@hisilicon.com>
+Message-ID: <1216d38b-bc0a-b4d5-967f-f5a86d96287c@hisilicon.com>
+Date:   Wed, 13 May 2020 09:50:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAJ9a7VjAoUmMG9pLEzE_rMSpOjwVOi-ZCinF87n9H0JgfMDsiQ@mail.gmail.com>
-References: <20200426143725.18116-1-saiprakash.ranjan@codeaurora.org> <b8c1cc35846d425a1677c73fddf5874d@codeaurora.org> <eee1b9a90266eed9a9c75401f0679777@codeaurora.org> <CAJ9a7Vjd0XG+rAvHptAAjGtE6xRhYsPaOSC_Bf9B-w-FZFu_Qw@mail.gmail.com> <47f6d51bfad0a0bf1553e101e6a2c8c9@codeaurora.org> <37b3749e-2363-0877-c318-9c334a5d1881@arm.com> <d47271ee6a2a6f0f30da7e140b6f196c@codeaurora.org> <CAJ9a7Vg95tcgMXgQKLAZc=TpV6FnPZ7wdF=Kwbuy7d2kRCjYQw@mail.gmail.com> <364049a30dc9d242ec611bf27a16a6c9@codeaurora.org> <CAJ9a7VjAoUmMG9pLEzE_rMSpOjwVOi-ZCinF87n9H0JgfMDsiQ@mail.gmail.com>
-Subject: Re: [PATCH] coresight: dynamic-replicator: Fix handling of multiple connections
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Russell King <linux@armlinux.org.uk>
-To:     Mike Leach <mike.leach@linaro.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Date:   Tue, 12 May 2020 18:49:30 -0700
-Message-ID: <158933457051.215346.13515171569230202840@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+In-Reply-To: <9908.1589311230@famine>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.58.147]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Mike Leach (2020-05-12 14:52:33)
-> HI Sai,
->=20
-> On Tue, 12 May 2020 at 18:46, Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
-> >
-> > Hi Mike,
-> >
-> > On 2020-05-12 17:19, Mike Leach wrote:
-> > [...]
-> >
-> > >> >>
-> > >> >> Sorry for hurrying up and sending the patch -
-> > >> >> https://lore.kernel.org/patchwork/patch/1239923/.
-> > >> >> I will send v2 based on further feedbacks here or there.
-> > >> >>
-> > >> >>>
-> > >> >>> 1) does this replicator part have a unique ID that differs from =
-the
-> > >> >>> standard ARM designed replicators?
-> > >> >>> If so perhaps link the modification into this. (even if the part=
- no
-> > >> >>> in
-> > >> >>> PIDR0/1 is the same the UCI should be different for a different
-> > >> >>> implementation)
-> > >> >>>
-> > > I have reviewed the replicator driver, and compared to all the other =
-CS
-> > > drivers.
-> > > This driver appears to be the only one that sets hardware values in
-> > > probe() and expects them to remain in place on enable, and uses that
-> > > state for programming decisions later, despite telling the PM
-> > > infrastructure that it is clear to suspend the device.
-> > >
-> > > Now we have a system where the replicator hardware is behaving
-> > > differently under the driver, but is it behaving unreasonably?
-> >
-> > Thanks for taking your time to review this. For new replicator behaving
-> > unreasonably, I think the assumption that the context is not lost on
-> > disabling clock is flawed since its implementation defined. Is such
-> > assumption documented in any TRM?
-> >
->=20
-> Looking at the AMBA driver there is a comment there that AMBA does not
-> lose state when clocks are removed. This is consistent with the AMBA
-> protocol spec which states that AMBA slaves can only be accessed /
-> read / write on various strobe signals,  or state reset on PRESET
-> signal, all timed by the rising edge of the bus clock. state changes
-> are not permitted on clock events alone. Given this static nature of
-> AMBA slaves then removing the clock should not have any effect.
+On 2020/5/13 3:20, Jay Vosburgh wrote:
+> sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>
+>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>
+>> If there are non-hotplug capable devices connected to a given
+>> port, then during the fatal error recovery(triggered by DPC or
+>> AER), after calling reset_link() function, we cannot rely on
+>> hotplug handler to detach and re-enumerate the device drivers
+>> in the affected bus. Instead, we will have to let the error
+>> recovery handler call report_slot_reset() for all devices in
+>> the bus to notify about the reset operation. Although this is
+>> only required for non hot-plug capable devices, doing it for
+>> hotplug capable devices should not affect the functionality.
+> 	Yicong,
+>
+> 	Does the patch below also resolve the issue for you, as with
+> your changed version of my original patch?
 
-I believe the "clock" that is being used here is actually a software
-message to the power manager hardware that the debug subsystem isn't
-being used anymore. When nothing is requesting that it be enabled the
-power manager turns off the power to the debug subsystem and then the
-register context is lost. It shouldn't be a clock in the clk subsystem.
-It should be a power domain and be attached to the amba devices in the
-usual ways. Then the normal runtime PM semantics would follow. If amba
-devices require a clk then we'll have to provide a dummy one that
-doesn't do anything on this platform.
+Yes. It works.
 
->=20
-> The AMBA driver only /drivers/amba/bus.c  gives permission to
-> remove/restore the clocks from the devices (pm_suspend pm_resume
-> callbacks) - this reduces the power consumption of these devices if
-> the clock is not running, but state must be retained.
->=20
 
-Ideally the drivers can have enough knowledge about this situation to do
-the proper save/restore steps so that if the coresight hardware isn't
-being used we don't keep it powered forever and so that across system
-wide suspend/resume we can properly power it off.
+>
+> 	-J
+>
+>> Along with above issue, this fix also applicable to following
+>> issue.
+>>
+>> Commit 6d2c89441571 ("PCI/ERR: Update error status after
+>> reset_link()") added support to store status of reset_link()
+>> call. Although this fixed the error recovery issue observed if
+>> the initial value of error status is PCI_ERS_RESULT_DISCONNECT
+>> or PCI_ERS_RESULT_NO_AER_DRIVER, it also discarded the status
+>> result from report_frozen_detected. This can cause a failure to
+>> recover if _NEED_RESET is returned by report_frozen_detected and
+>> report_slot_reset is not invoked.
+>>
+>> Such an event can be induced for testing purposes by reducing the
+>> Max_Payload_Size of a PCIe bridge to less than that of a device
+>> downstream from the bridge, and then initiating I/O through the
+>> device, resulting in oversize transactions.  In the presence of DPC,
+>> this results in a containment event and attempted reset and recovery
+>> via pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not
+>> invoked, and the device does not recover.
+>>
+>> [original patch is from jay.vosburgh@canonical.com]
+>> [original patch link https://lore.kernel.org/linux-pci/18609.1588812972@famine/]
+>> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+>> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>> ---
+>> drivers/pci/pcie/err.c | 19 +++++++++++++++----
+>> 1 file changed, 15 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+>> index 14bb8f54723e..db80e1ecb2dc 100644
+>> --- a/drivers/pci/pcie/err.c
+>> +++ b/drivers/pci/pcie/err.c
+>> @@ -165,13 +165,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>> 	pci_dbg(dev, "broadcast error_detected message\n");
+>> 	if (state == pci_channel_io_frozen) {
+>> 		pci_walk_bus(bus, report_frozen_detected, &status);
+>> -		status = reset_link(dev);
+>> -		if (status != PCI_ERS_RESULT_RECOVERED) {
+>> +		status = PCI_ERS_RESULT_NEED_RESET;
+>> +	} else {
+>> +		pci_walk_bus(bus, report_normal_detected, &status);
+>> +	}
+>> +
+>> +	if (status == PCI_ERS_RESULT_NEED_RESET) {
+>> +		if (reset_link) {
+>> +			if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
+>> +				status = PCI_ERS_RESULT_DISCONNECT;
+>> +		} else {
+>> +			if (pci_bus_error_reset(dev))
+>> +				status = PCI_ERS_RESULT_DISCONNECT;
+>> +		}
+>> +
+>> +		if (status == PCI_ERS_RESULT_DISCONNECT) {
+>> 			pci_warn(dev, "link reset failed\n");
+>> 			goto failed;
+>> 		}
+>> -	} else {
+>> -		pci_walk_bus(bus, report_normal_detected, &status);
+>> 	}
+>>
+>> 	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+>> -- 
+>> 2.17.1
+>>
+> ---
+> 	-Jay Vosburgh, jay.vosburgh@canonical.com
+> .
+>
+
