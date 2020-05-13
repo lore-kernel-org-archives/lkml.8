@@ -2,83 +2,150 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5322CCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0B0C2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 246A7206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A890D20769
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:30:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hfgNGCst"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730044AbgEMLaQ (ORCPT
+        id S1730410AbgEMLak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 07:30:16 -0400
-Received: from 8bytes.org ([81.169.241.247]:42394 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726081AbgEMLaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 07:30:16 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 38D9522E; Wed, 13 May 2020 13:30:13 +0200 (CEST)
-Date:   Wed, 13 May 2020 13:30:11 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 24/75] x86/boot/compressed/64: Unmap GHCB page before
- booting the kernel
-Message-ID: <20200513113011.GG18353@8bytes.org>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-25-joro@8bytes.org>
- <20200513111340.GD4025@zn.tnic>
+        Wed, 13 May 2020 07:30:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730064AbgEMLaj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 07:30:39 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45019C061A0C;
+        Wed, 13 May 2020 04:30:38 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id b8so6698784plm.11;
+        Wed, 13 May 2020 04:30:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=2Ktd5bounBb85k+GhDJYQBKwGNjtE8xOQJSWOO0qVps=;
+        b=hfgNGCstCMJHb8IVTFUEeL+3JGilD81+7rwOcqzOpwjQoMrYv2Z5LeMUCzJ8pzCf9p
+         8oqSZVzVevLUBq3aqDYXpA5ZPorxTlk4GyVcCXcXtDCgg7rf32OqplGewGX/Tq71KaH0
+         6x4rjEaB8R/x8vYndWFQEzIeiZi6qCG+t/GUzp8QQzYxcta8Da+BQ1XqadEpTVA62rkk
+         zElKLJwK03h9CYhA0lS21Apb7+3W2n0SDgmVpoyRqDKhiNiSbPAdNABETh7/377aNjfT
+         BOlkWnf4jhBvUOSUv52te1U6tfHKfFNhSm+45+yDmrE3aEbTj6mQI4lzTBQIqGH/hj/R
+         mnSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=2Ktd5bounBb85k+GhDJYQBKwGNjtE8xOQJSWOO0qVps=;
+        b=I1+vCEVO5Pg5hAEqN8bnRYeCRrROiGneYFgDRP54vRPD4uVRFepSZGlJPh3sYBqCYW
+         cU39QdvFoTnVVW1q1585a4Em9s1Yt0a+LDvVvpdenFj0DAb+1CaXF6qWyKhtGPMbYips
+         3vdNl9hcNyP8udR99qswGf60SPllojWtJkysvD9zRJrZrJYH6ayzSjnA9NYambXina7B
+         NkvQ8j0f9Zy+t9xOYmsaianZVrvNS5eXmU71FSeshG7zziYPNkzhTIQV0TiFZRzJGnBU
+         4id4KtBp551TPEC1kUeVo7CZh48Vc8eEMVNhUcIUkgy1brarLNu9Xvmhofh97tR2wXnO
+         xbQQ==
+X-Gm-Message-State: AOAM533pPboNTe/oDuyY30IXOo2h06GKe53AKXaI2Sra31KZIUaoxkfE
+        pTpSKTTo2FaAQRm7w68c8jo=
+X-Google-Smtp-Source: ABdhPJwyEeANLs5At6bpev/PUGNX/0KyW6asJ6F8bCCh8n5pcpj+q8jCPczezPPMJcLx7U8T8U5KPA==
+X-Received: by 2002:a17:90b:608:: with SMTP id gb8mr11211316pjb.178.1589369437653;
+        Wed, 13 May 2020 04:30:37 -0700 (PDT)
+Received: from dev-dsk-sblbir-1c-a524888b.ap-northeast-1.amazon.com ([27.0.3.145])
+        by smtp.gmail.com with ESMTPSA id h14sm14406751pfq.46.2020.05.13.04.30.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 May 2020 04:30:36 -0700 (PDT)
+From:   Balbir Singh <bsingharora@gmail.com>
+X-Google-Original-From: Balbir Singh <sblbir@dev-dsk-sblbir-1c-a524888b.ap-northeast-1.amazon.com>
+Date:   Wed, 13 May 2020 11:30:32 +0000
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Joonsoo Kim <js1304@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 00/19 V2] mm: memcontrol: charge swapin pages on
+ instantiation
+Message-ID: <20200513113032.GA93568@dev-dsk-sblbir-1c-a524888b.ap-northeast-1.amazon.com>
+References: <20200508183105.225460-1-hannes@cmpxchg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513111340.GD4025@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200508183105.225460-1-hannes@cmpxchg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 01:13:40PM +0200, Borislav Petkov wrote:
-> On Tue, Apr 28, 2020 at 05:16:34PM +0200, Joerg Roedel wrote:
-> > @@ -302,9 +313,13 @@ void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
-> >  	 *	- User faults
-> >  	 *	- Reserved bits set
-> >  	 */
-> > -	if (error_code & (X86_PF_PROT | X86_PF_USER | X86_PF_RSVD)) {
-> > +	if (ghcb_fault ||
-> > +	    error_code & (X86_PF_PROT | X86_PF_USER | X86_PF_RSVD)) {
-> >  		/* Print some information for debugging */
-> > -		error_putstr("Unexpected page-fault:");
-> > +		if (ghcb_fault)
-> > +			error_putstr("Page-fault on GHCB page:");
-> > +		else
-> > +			error_putstr("Unexpected page-fault:");
+On Fri, May 08, 2020 at 02:30:47PM -0400, Johannes Weiner wrote:
+> This patch series reworks memcg to charge swapin pages directly at
+> swapin time, rather than at fault time, which may be much later, or
+> not happen at all.
 > 
-> You could carve out the info dumping into a separate function to
-> unclutter this if-statement (diff ontop):
+> Changes in version 2:
+> - prevent double charges on pre-allocated hugepages in khugepaged
+> - leave shmem swapcache when charging fails to avoid double IO (Joonsoo)
+> - fix temporary accounting bug by switching rmap<->commit (Joonsoo)
+> - fix double swap charge bug in cgroup1/cgroup2 code gating
+> - simplify swapin error checking (Joonsoo)
+> - mm: memcontrol: document the new swap control behavior (Alex)
+> - review tags
+> 
+> The delayed swapin charging scheme we have right now causes problems:
+> 
+> - Alex's per-cgroup lru_lock patches rely on pages that have been
+>   isolated from the LRU to have a stable page->mem_cgroup; otherwise
+>   the lock may change underneath him. Swapcache pages are charged only
+>   after they are added to the LRU, and charging doesn't follow the LRU
+>   isolation protocol.
+> 
+> - Joonsoo's anon workingset patches need a suitable LRU at the time
+>   the page enters the swap cache and displaces the non-resident
+>   info. But the correct LRU is only available after charging.
+> 
+> - It's a containment hole / DoS vector. Users can trigger arbitrarily
+>   large swap readahead using MADV_WILLNEED. The memory is never
+>   charged unless somebody actually touches it.
+> 
+> - It complicates the page->mem_cgroup stabilization rules
+> 
+> In order to charge pages directly at swapin time, the memcg code base
+> needs to be prepared, and several overdue cleanups become a necessity:
+> 
+> To charge pages at swapin time, we need to always have cgroup
+> ownership tracking of swap records. We also cannot rely on
+> page->mapping to tell apart page types at charge time, because that's
+> only set up during a page fault.
+> 
+> To eliminate the page->mapping dependency, memcg needs to ditch its
+> private page type counters (MEMCG_CACHE, MEMCG_RSS, NR_SHMEM) in favor
+> of the generic vmstat counters and accounting sites, such as
+> NR_FILE_PAGES, NR_ANON_MAPPED etc.
 
-Yeah, I had this this way in v2, but changed it upon you request[1] :)
+Could you elaborate on what this means and the implications of this on
+user space programs?
 
+> 
+> To switch to generic vmstat counters, the charge sequence must be
+> adjusted such that page->mem_cgroup is set up by the time these
+> counters are modified.
+> 
+> The series is structured as follows:
+> 
+> 1. Bug fixes
+> 2. Decoupling charging from rmap
+> 3. Swap controller integration into memcg
+> 4. Direct swapin charging
+>
 
-	Joerg
-
-[1] https://lore.kernel.org/lkml/20200402114941.GA9352@zn.tnic/
-	
+Thanks,
+Balbir Singh. 
