@@ -2,190 +2,430 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C25C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C418C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B86512053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:57:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="bs2Ntbfh"
+	by mail.kernel.org (Postfix) with ESMTP id 1C1892053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:57:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732217AbgEMW51 (ORCPT
+        id S1732232AbgEMW5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 18:57:27 -0400
-Received: from mail.efficios.com ([167.114.26.124]:50248 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731686AbgEMW51 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 18:57:27 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 377A42BF609;
-        Wed, 13 May 2020 18:57:26 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id TuwXLXH0gSnV; Wed, 13 May 2020 18:57:25 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id BD98B2BF608;
-        Wed, 13 May 2020 18:57:25 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com BD98B2BF608
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1589410645;
-        bh=Cluae6xS+NJacs2cfgSwtFkKlrinLEd02WsEcRPO9vc=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=bs2NtbfhsXD5nwysRoERi6YdqNtvryQ3SDXeUAZUaiuRTxxIloorpB3fsu2uWnboC
-         wpBiU65p6Hq458XNtPoE0AbkBSwfRe31w2UxmkIDv/qP/3vCqqDbPWyJ6svcXD4Tlf
-         MRyJeDXAcC+9lP64xFUV75aif3PbLuD43QoSua53vlqyAFMAe5S58iuWbbea/z90bf
-         lAN0zgasYbWvKprImw2T2V1HIkralNiLjTAPNAiBwwadrb8eznRZxX6PoR+aZIRKJR
-         bc1JEcgWr54fj0T7v/gtzjgUVbMeFYlqxZWX26va18iwaDu0xres4cyrdWMgcXlHl1
-         oJtGoV9slyxUQ==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id o2CgufNFSekh; Wed, 13 May 2020 18:57:25 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id ABC1A2BF279;
-        Wed, 13 May 2020 18:57:25 -0400 (EDT)
-Date:   Wed, 13 May 2020 18:57:25 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
-        paulmck <paulmck@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>, rostedt <rostedt@goodmis.org>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Message-ID: <1777514130.20137.1589410645669.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200505134059.462640294@linutronix.de>
-References: <20200505131602.633487962@linutronix.de> <20200505134059.462640294@linutronix.de>
-Subject: Re: [patch V4 part 1 14/36] x86/entry: Get rid of
- ist_begin/end_non_atomic()
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF76 (Linux)/8.8.15_GA_3928)
-Thread-Topic: x86/entry: Get rid of ist_begin/end_non_atomic()
-Thread-Index: emYf3uO7ok2UHht9lN2XyjVuj2zs5Q==
+        Wed, 13 May 2020 18:57:48 -0400
+Received: from mga17.intel.com ([192.55.52.151]:27077 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731860AbgEMW5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 18:57:47 -0400
+IronPort-SDR: RgtxQEpRVYrSLwcwOlTYYfh4FBZ9avO/jj/Hj8efCyOz/0NAeCEqdrlWVH7OE2ObVcZ3rvYorh
+ hxO+WE4S/z/w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 15:55:40 -0700
+IronPort-SDR: eO3Qkd1VPThfyvQYYld1mzTTvwfQ3VbHBdfI2rV6A/tLonr3LnUVADBu3OVu8XRQmF3NF7WgCg
+ xhOLyIEGbcGw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,389,1583222400"; 
+   d="scan'208";a="437682655"
+Received: from jacob-builder.jf.intel.com ([10.7.199.155])
+  by orsmga005.jf.intel.com with ESMTP; 13 May 2020 15:55:40 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     "Lu Baolu" <baolu.lu@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Eric Auger <eric.auger@redhat.com>
+Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v13 3/8] iommu/vt-d: Add nested translation helper function
+Date:   Wed, 13 May 2020 16:01:44 -0700
+Message-Id: <1589410909-38925-4-git-send-email-jacob.jun.pan@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1589410909-38925-1-git-send-email-jacob.jun.pan@linux.intel.com>
+References: <1589410909-38925-1-git-send-email-jacob.jun.pan@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On May 5, 2020, at 9:16 AM, Thomas Gleixner tglx@linutronix.de wrote:
+Nested translation mode is supported in VT-d 3.0 Spec.CH 3.8.
+With PASID granular translation type set to 0x11b, translation
+result from the first level(FL) also subject to a second level(SL)
+page table translation. This mode is used for SVA virtualization,
+where FL performs guest virtual to guest physical translation and
+SL performs guest physical to host physical translation.
 
-> This is completely overengineered and definitely not an interface which
-> should be made available to anything else than this particular MCE case.
+This patch adds a helper function for setting up nested translation
+where second level comes from a domain and first level comes from
+a guest PGD.
 
-This patch introduces a significant change under the radar (not explained
-in the changelog): it turns preempt_enable_no_resched() into preempt_enable().
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-Why, and why was it a no_resched() in the first place ? Was it for performance
-or correctness reasons ?
+---
+v13 Dropped MTS support
+---
+---
+ drivers/iommu/intel-iommu.c |  25 -------
+ drivers/iommu/intel-pasid.c | 173 +++++++++++++++++++++++++++++++++++++++++++-
+ drivers/iommu/intel-pasid.h |  10 +++
+ include/linux/intel-iommu.h |  28 +++++++
+ include/uapi/linux/iommu.h  |   5 ++
+ 5 files changed, 213 insertions(+), 28 deletions(-)
 
-Thanks,
-
-Mathieu
-
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
-> arch/x86/include/asm/traps.h   |    2 --
-> arch/x86/kernel/cpu/mce/core.c |    6 ++++--
-> arch/x86/kernel/traps.c        |   37 -------------------------------------
-> 3 files changed, 4 insertions(+), 41 deletions(-)
-> 
-> --- a/arch/x86/include/asm/traps.h
-> +++ b/arch/x86/include/asm/traps.h
-> @@ -120,8 +120,6 @@ asmlinkage void smp_irq_move_cleanup_int
-> 
-> extern void ist_enter(struct pt_regs *regs);
-> extern void ist_exit(struct pt_regs *regs);
-> -extern void ist_begin_non_atomic(struct pt_regs *regs);
-> -extern void ist_end_non_atomic(void);
-> 
-> #ifdef CONFIG_VMAP_STACK
-> void __noreturn handle_stack_overflow(const char *message,
-> --- a/arch/x86/kernel/cpu/mce/core.c
-> +++ b/arch/x86/kernel/cpu/mce/core.c
-> @@ -1352,13 +1352,15 @@ void notrace do_machine_check(struct pt_
-> 
-> 	/* Fault was in user mode and we need to take some action */
-> 	if ((m.cs & 3) == 3) {
-> -		ist_begin_non_atomic(regs);
-> +		/* If this triggers there is no way to recover. Die hard. */
-> +		BUG_ON(!on_thread_stack() || !user_mode(regs));
-> 		local_irq_enable();
-> +		preempt_enable();
-> 
-> 		if (kill_it || do_memory_failure(&m))
-> 			force_sig(SIGBUS);
-> +		preempt_disable();
-> 		local_irq_disable();
-> -		ist_end_non_atomic();
-> 	} else {
-> 		if (!fixup_exception(regs, X86_TRAP_MC, error_code, 0))
-> 			mce_panic("Failed kernel mode recovery", &m, msg);
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -117,43 +117,6 @@ void ist_exit(struct pt_regs *regs)
-> 		rcu_nmi_exit();
-> }
-> 
-> -/**
-> - * ist_begin_non_atomic() - begin a non-atomic section in an IST exception
-> - * @regs:	regs passed to the IST exception handler
-> - *
-> - * IST exception handlers normally cannot schedule.  As a special
-> - * exception, if the exception interrupted userspace code (i.e.
-> - * user_mode(regs) would return true) and the exception was not
-> - * a double fault, it can be safe to schedule.  ist_begin_non_atomic()
-> - * begins a non-atomic section within an ist_enter()/ist_exit() region.
-> - * Callers are responsible for enabling interrupts themselves inside
-> - * the non-atomic section, and callers must call ist_end_non_atomic()
-> - * before ist_exit().
-> - */
-> -void ist_begin_non_atomic(struct pt_regs *regs)
-> -{
-> -	BUG_ON(!user_mode(regs));
-> -
-> -	/*
-> -	 * Sanity check: we need to be on the normal thread stack.  This
-> -	 * will catch asm bugs and any attempt to use ist_preempt_enable
-> -	 * from double_fault.
-> -	 */
-> -	BUG_ON(!on_thread_stack());
-> -
-> -	preempt_enable_no_resched();
-> -}
-> -
-> -/**
-> - * ist_end_non_atomic() - begin a non-atomic section in an IST exception
-> - *
-> - * Ends a non-atomic section started with ist_begin_non_atomic().
-> - */
-> -void ist_end_non_atomic(void)
-> -{
-> -	preempt_disable();
-> -}
-> -
-> int is_valid_bugaddr(unsigned long addr)
-> {
->  	unsigned short ud;
-
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 60c31db9ee93..9c01e391a931 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -296,31 +296,6 @@ static inline void context_clear_entry(struct context_entry *context)
+ static struct dmar_domain *si_domain;
+ static int hw_pass_through = 1;
+ 
+-/* si_domain contains mulitple devices */
+-#define DOMAIN_FLAG_STATIC_IDENTITY		BIT(0)
+-
+-/*
+- * This is a DMA domain allocated through the iommu domain allocation
+- * interface. But one or more devices belonging to this domain have
+- * been chosen to use a private domain. We should avoid to use the
+- * map/unmap/iova_to_phys APIs on it.
+- */
+-#define DOMAIN_FLAG_LOSE_CHILDREN		BIT(1)
+-
+-/*
+- * When VT-d works in the scalable mode, it allows DMA translation to
+- * happen through either first level or second level page table. This
+- * bit marks that the DMA translation for the domain goes through the
+- * first level page table, otherwise, it goes through the second level.
+- */
+-#define DOMAIN_FLAG_USE_FIRST_LEVEL		BIT(2)
+-
+-/*
+- * Domain represents a virtual machine which demands iommu nested
+- * translation mode support.
+- */
+-#define DOMAIN_FLAG_NESTING_MODE		BIT(3)
+-
+ #define for_each_domain_iommu(idx, domain)			\
+ 	for (idx = 0; idx < g_num_of_iommus; idx++)		\
+ 		if (domain->iommu_refcnt[idx])
+diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
+index d9cea3011b58..725ca80910f2 100644
+--- a/drivers/iommu/intel-pasid.c
++++ b/drivers/iommu/intel-pasid.c
+@@ -359,6 +359,16 @@ pasid_set_flpm(struct pasid_entry *pe, u64 value)
+ 	pasid_set_bits(&pe->val[2], GENMASK_ULL(3, 2), value << 2);
+ }
+ 
++/*
++ * Setup the Extended Access Flag Enable (EAFE) field (Bit 135)
++ * of a scalable mode PASID entry.
++ */
++static inline void
++pasid_set_eafe(struct pasid_entry *pe)
++{
++	pasid_set_bits(&pe->val[2], 1 << 7, 1 << 7);
++}
++
+ static void
+ pasid_cache_invalidation_with_pasid(struct intel_iommu *iommu,
+ 				    u16 did, int pasid)
+@@ -492,7 +502,7 @@ int intel_pasid_setup_first_level(struct intel_iommu *iommu,
+ 	pasid_set_page_snoop(pte, !!ecap_smpwc(iommu->ecap));
+ 
+ 	/* Setup Present and PASID Granular Transfer Type: */
+-	pasid_set_translation_type(pte, 1);
++	pasid_set_translation_type(pte, PASID_ENTRY_PGTT_FL_ONLY);
+ 	pasid_set_present(pte);
+ 	pasid_flush_caches(iommu, pte, pasid, did);
+ 
+@@ -561,7 +571,7 @@ int intel_pasid_setup_second_level(struct intel_iommu *iommu,
+ 	pasid_set_domain_id(pte, did);
+ 	pasid_set_slptr(pte, pgd_val);
+ 	pasid_set_address_width(pte, agaw);
+-	pasid_set_translation_type(pte, 2);
++	pasid_set_translation_type(pte, PASID_ENTRY_PGTT_SL_ONLY);
+ 	pasid_set_fault_enable(pte);
+ 	pasid_set_page_snoop(pte, !!ecap_smpwc(iommu->ecap));
+ 
+@@ -595,7 +605,7 @@ int intel_pasid_setup_pass_through(struct intel_iommu *iommu,
+ 	pasid_clear_entry(pte);
+ 	pasid_set_domain_id(pte, did);
+ 	pasid_set_address_width(pte, iommu->agaw);
+-	pasid_set_translation_type(pte, 4);
++	pasid_set_translation_type(pte, PASID_ENTRY_PGTT_PT);
+ 	pasid_set_fault_enable(pte);
+ 	pasid_set_page_snoop(pte, !!ecap_smpwc(iommu->ecap));
+ 
+@@ -609,3 +619,160 @@ int intel_pasid_setup_pass_through(struct intel_iommu *iommu,
+ 
+ 	return 0;
+ }
++
++static int
++intel_pasid_setup_bind_data(struct intel_iommu *iommu, struct pasid_entry *pte,
++			    struct iommu_gpasid_bind_data_vtd *pasid_data)
++{
++	/*
++	 * Not all guest PASID table entry fields are passed down during bind,
++	 * here we only set up the ones that are dependent on guest settings.
++	 * Execution related bits such as NXE, SMEP are not supported.
++	 * Other fields, such as snoop related, are set based on host needs
++	 * regardless of guest settings.
++	 */
++	if (pasid_data->flags & IOMMU_SVA_VTD_GPASID_SRE) {
++		if (!ecap_srs(iommu->ecap)) {
++			pr_err_ratelimited("No supervisor request support on %s\n",
++					   iommu->name);
++			return -EINVAL;
++		}
++		pasid_set_sre(pte);
++	}
++
++	if (pasid_data->flags & IOMMU_SVA_VTD_GPASID_EAFE) {
++		if (!ecap_eafs(iommu->ecap)) {
++			pr_err_ratelimited("No extended access flag support on %s\n",
++					   iommu->name);
++			return -EINVAL;
++		}
++		pasid_set_eafe(pte);
++	}
++
++	/*
++	 * Memory type is only applicable to devices inside processor coherent
++	 * domain. Will add MTS support once coherent devices are available.
++	 */
++	if (pasid_data->flags & IOMMU_SVA_VTD_GPASID_MTS_MASK) {
++		pr_warn_ratelimited("No memory type support %s\n",
++				    iommu->name);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++/**
++ * intel_pasid_setup_nested() - Set up PASID entry for nested translation.
++ * This could be used for guest shared virtual address. In this case, the
++ * first level page tables are used for GVA-GPA translation in the guest,
++ * second level page tables are used for GPA-HPA translation.
++ *
++ * @iommu:      IOMMU which the device belong to
++ * @dev:        Device to be set up for translation
++ * @gpgd:       FLPTPTR: First Level Page translation pointer in GPA
++ * @pasid:      PASID to be programmed in the device PASID table
++ * @pasid_data: Additional PASID info from the guest bind request
++ * @domain:     Domain info for setting up second level page tables
++ * @addr_width: Address width of the first level (guest)
++ */
++int intel_pasid_setup_nested(struct intel_iommu *iommu, struct device *dev,
++			     pgd_t *gpgd, int pasid,
++			     struct iommu_gpasid_bind_data_vtd *pasid_data,
++			     struct dmar_domain *domain, int addr_width)
++{
++	struct pasid_entry *pte;
++	struct dma_pte *pgd;
++	int ret = 0;
++	u64 pgd_val;
++	int agaw;
++	u16 did;
++
++	if (!ecap_nest(iommu->ecap)) {
++		pr_err_ratelimited("IOMMU: %s: No nested translation support\n",
++				   iommu->name);
++		return -EINVAL;
++	}
++
++	if (!(domain->flags & DOMAIN_FLAG_NESTING_MODE)) {
++		pr_err_ratelimited("Domain is not in nesting mode, %x\n",
++				   domain->flags);
++		return -EINVAL;
++	}
++
++	pte = intel_pasid_get_entry(dev, pasid);
++	if (WARN_ON(!pte))
++		return -EINVAL;
++
++	/*
++	 * Caller must ensure PASID entry is not in use, i.e. not bind the
++	 * same PASID to the same device twice.
++	 */
++	if (pasid_pte_is_present(pte))
++		return -EBUSY;
++
++	pasid_clear_entry(pte);
++
++	/* Sanity checking performed by caller to make sure address
++	 * width matching in two dimensions:
++	 * 1. CPU vs. IOMMU
++	 * 2. Guest vs. Host.
++	 */
++	switch (addr_width) {
++#ifdef CONFIG_X86
++	case ADDR_WIDTH_5LEVEL:
++		if (cpu_feature_enabled(X86_FEATURE_LA57) &&
++		    cap_5lp_support(iommu->cap)) {
++			pasid_set_flpm(pte, 1);
++		} else {
++			dev_err_ratelimited(dev, "5-level paging not supported\n");
++			return -EINVAL;
++		}
++		break;
++#endif
++	case ADDR_WIDTH_4LEVEL:
++		pasid_set_flpm(pte, 0);
++		break;
++	default:
++		dev_err_ratelimited(dev, "Invalid guest address width %d\n",
++				    addr_width);
++		return -EINVAL;
++	}
++
++	/* First level PGD is in GPA, must be supported by the second level */
++	if ((unsigned long long)gpgd > domain->max_addr) {
++		dev_err_ratelimited(dev,
++				    "Guest PGD %llx not supported, max %llx\n",
++				    (unsigned long long)gpgd, domain->max_addr);
++		return -EINVAL;
++	}
++	pasid_set_flptr(pte, (u64)gpgd);
++
++	ret = intel_pasid_setup_bind_data(iommu, pte, pasid_data);
++	if (ret)
++		return ret;
++
++	/* Setup the second level based on the given domain */
++	pgd = domain->pgd;
++
++	agaw = iommu_skip_agaw(domain, iommu, &pgd);
++	if (agaw < 0) {
++		dev_err_ratelimited(dev, "Invalid domain page table\n");
++		return -EINVAL;
++	}
++	pgd_val = virt_to_phys(pgd);
++	pasid_set_slptr(pte, pgd_val);
++	pasid_set_fault_enable(pte);
++
++	did = domain->iommu_did[iommu->seq_id];
++	pasid_set_domain_id(pte, did);
++
++	pasid_set_address_width(pte, agaw);
++	pasid_set_page_snoop(pte, !!ecap_smpwc(iommu->ecap));
++
++	pasid_set_translation_type(pte, PASID_ENTRY_PGTT_NESTED);
++	pasid_set_present(pte);
++	pasid_flush_caches(iommu, pte, pasid, did);
++
++	return ret;
++}
+diff --git a/drivers/iommu/intel-pasid.h b/drivers/iommu/intel-pasid.h
+index 92de6df24ccb..ccd50c2ae75c 100644
+--- a/drivers/iommu/intel-pasid.h
++++ b/drivers/iommu/intel-pasid.h
+@@ -36,6 +36,7 @@
+  * to vmalloc or even module mappings.
+  */
+ #define PASID_FLAG_SUPERVISOR_MODE	BIT(0)
++#define PASID_FLAG_NESTED		BIT(1)
+ 
+ /*
+  * The PASID_FLAG_FL5LP flag Indicates using 5-level paging for first-
+@@ -51,6 +52,11 @@ struct pasid_entry {
+ 	u64 val[8];
+ };
+ 
++#define PASID_ENTRY_PGTT_FL_ONLY	(1)
++#define PASID_ENTRY_PGTT_SL_ONLY	(2)
++#define PASID_ENTRY_PGTT_NESTED		(3)
++#define PASID_ENTRY_PGTT_PT		(4)
++
+ /* The representative of a PASID table */
+ struct pasid_table {
+ 	void			*table;		/* pasid table pointer */
+@@ -99,6 +105,10 @@ int intel_pasid_setup_second_level(struct intel_iommu *iommu,
+ int intel_pasid_setup_pass_through(struct intel_iommu *iommu,
+ 				   struct dmar_domain *domain,
+ 				   struct device *dev, int pasid);
++int intel_pasid_setup_nested(struct intel_iommu *iommu,
++			     struct device *dev, pgd_t *pgd, int pasid,
++			     struct iommu_gpasid_bind_data_vtd *pasid_data,
++			     struct dmar_domain *domain, int addr_width);
+ void intel_pasid_tear_down_entry(struct intel_iommu *iommu,
+ 				 struct device *dev, int pasid);
+ 
+diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+index ed7171d2ae1f..6da03f627ba3 100644
+--- a/include/linux/intel-iommu.h
++++ b/include/linux/intel-iommu.h
+@@ -42,6 +42,9 @@
+ #define DMA_FL_PTE_PRESENT	BIT_ULL(0)
+ #define DMA_FL_PTE_XD		BIT_ULL(63)
+ 
++#define ADDR_WIDTH_5LEVEL	(57)
++#define ADDR_WIDTH_4LEVEL	(48)
++
+ #define CONTEXT_TT_MULTI_LEVEL	0
+ #define CONTEXT_TT_DEV_IOTLB	1
+ #define CONTEXT_TT_PASS_THROUGH 2
+@@ -480,6 +483,31 @@ struct context_entry {
+ 	u64 hi;
+ };
+ 
++/* si_domain contains mulitple devices */
++#define DOMAIN_FLAG_STATIC_IDENTITY		BIT(0)
++
++/*
++ * This is a DMA domain allocated through the iommu domain allocation
++ * interface. But one or more devices belonging to this domain have
++ * been chosen to use a private domain. We should avoid to use the
++ * map/unmap/iova_to_phys APIs on it.
++ */
++#define DOMAIN_FLAG_LOSE_CHILDREN		BIT(1)
++
++/*
++ * When VT-d works in the scalable mode, it allows DMA translation to
++ * happen through either first level or second level page table. This
++ * bit marks that the DMA translation for the domain goes through the
++ * first level page table, otherwise, it goes through the second level.
++ */
++#define DOMAIN_FLAG_USE_FIRST_LEVEL		BIT(2)
++
++/*
++ * Domain represents a virtual machine which demands iommu nested
++ * translation mode support.
++ */
++#define DOMAIN_FLAG_NESTING_MODE		BIT(3)
++
+ struct dmar_domain {
+ 	int	nid;			/* node id */
+ 
+diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
+index 4ad3496e5c43..e907b7091a46 100644
+--- a/include/uapi/linux/iommu.h
++++ b/include/uapi/linux/iommu.h
+@@ -285,6 +285,11 @@ struct iommu_gpasid_bind_data_vtd {
+ 	__u32 emt;
+ };
+ 
++#define IOMMU_SVA_VTD_GPASID_MTS_MASK	(IOMMU_SVA_VTD_GPASID_CD | \
++					 IOMMU_SVA_VTD_GPASID_EMTE | \
++					 IOMMU_SVA_VTD_GPASID_PCD |  \
++					 IOMMU_SVA_VTD_GPASID_PWT)
++
+ /**
+  * struct iommu_gpasid_bind_data - Information about device and guest PASID binding
+  * @version:	Version of this data structure
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.7.4
+
