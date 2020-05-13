@@ -2,205 +2,147 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA56CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32843C2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 345382064E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 104E92063B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:16:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ki21gHxM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t/LHvFU/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733145AbgEMNQK (ORCPT
+        id S1728191AbgEMNQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:16:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53248 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726001AbgEMNQJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 13 May 2020 09:16:09 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AF4AC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:16:07 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id d21so10035540ljg.9
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:16:07 -0700 (PDT)
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53254 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725925AbgEMNQI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 09:16:08 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98B4CC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:16:08 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id 63so5967510oto.8
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:16:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=u3XslSA1/HmduXd9FQLdTYpbuOaEzN1IUj288Lu/Wdo=;
-        b=Ki21gHxMSPIOXhJcPzwdt/QMk6sbI/zUtmnsLN/DmLIBZ7NEnI4x7N3DgI0Nig2Cm3
-         /IUTQMxDCFWY2toidoe8NtWpqFLRatqkoKNzGAnOg3f/b6fKM3A4iDDmgFvZz2sLD9nG
-         mYobdMJXON1iX+qSZMHPQHzIuDMzAruOCQB20ue0axdlLya0gx8xmYaLjosNXXQhxpvB
-         vu8jhEtky+iTPXqJNI5TyIlcDy3EPCgSd4gk3ag57ZNg9pRz//TLUZN7GPrfxABQWpvm
-         4YjmRIv3qSRyFBquzx+ryIAiLYMzmutdTScly5nUBML+jcmVSz0FQjmJoaHoAZAZNYNe
-         Te2Q==
+        bh=ccPCDIGO/E8Bs4gAGfnutXW1wbp7wpweTm7DNmF97Nw=;
+        b=t/LHvFU/22qCKVdWh9xY8l9LFSJBwOw/eZn/HBv6h4Qe2s4rNjQLY2ENX8Jo+NsECz
+         r1LThDjUDgu+VJXlpDwLUWuBvhVsMnfYwWkJkGtnkFcF4iDa5CPj0RQCVUSXQ6yIGPWb
+         76i5G37gPIlhqXpFEvAOsY5bf86SFFObY3u4phokCQ4bVO4JCg+W0ARwxFug2zG+OH4N
+         Ktq8uyXEWvfQFova71p+/rDoK9hzllf+i1DjMkrb7/e4UIuIu91xxz5wAu68OoIZU7Nr
+         n8dtiUFuHBnuxx71p9bT52roE/oZTXbX20xKY4NJh6e+NTr1qbXZMlXOCuDYVIAKG2Lf
+         RY5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=u3XslSA1/HmduXd9FQLdTYpbuOaEzN1IUj288Lu/Wdo=;
-        b=AV8XfVyb9EwekvYAl7gxyLmAUDccGNbR221EoZvdU93CrKlADu/cYw5cBhFNghdgDx
-         GufhaEsDxp/cUzrw/t0nB+pMaDlsHzlRCA5MEfhZizGpwYNavDSeKNUuEB3vY2mcQYwv
-         cZiBZS6HYYcC7UmlH8S+keixBysKYGkaSad41Jib0A4aJ3zvVs2AZbfyA0d35Y6SRvz+
-         Km7uDU+F9EoVA2ohxeTKkK2qrwXLsiwTVhLVTkUW7Kx2WvD77P5y78k2f/WcJbO1IyiL
-         QLtWb9mpYxk2+SYd2cSwmSJO02VPHp/CrmG5Bf1qnHPpcyS9jboJzkPV+dbBKyHyBSTV
-         HvbQ==
-X-Gm-Message-State: AOAM530BPudv7vF73535Cd+Oxlc/GfTjKM2/1FFSRXyhPUzXJ1eolb/I
-        bg+I+de7HOeE20uLLc2wqyh5pLReCcVaE4pRwE3jQg==
-X-Google-Smtp-Source: ABdhPJzyMkSCFONCNoPU5gLU3CznZIAwrg1SVtr08LROYOtDeyUdBAAf0rVWI9kOe8yFbNhj3t5PjYN69CZxbzPz8hM=
-X-Received: by 2002:a2e:9e43:: with SMTP id g3mr17927751ljk.4.1589375765684;
- Wed, 13 May 2020 06:16:05 -0700 (PDT)
+        bh=ccPCDIGO/E8Bs4gAGfnutXW1wbp7wpweTm7DNmF97Nw=;
+        b=UKpV5JmeS2BwsbVbv2s0d7RkpgLflyBPlykxZnU0RRZWwNo0ZuwpfP2aMWSbBDZLXE
+         uGWbuEf/Ut0Ve88pstDIFbTAMSha3UWrHuojmL3bL54M48OBWEhOcmBRDDyy/N5kXuGW
+         jYWkeFXqw5To34zzgotPvMLjVkQ87sKkO5tVB66T1ovSVdyF7pIbKC1HOkuRWMqhiChW
+         tXifb80mcNKzWp/EKafAfUvteI7K+qLTcv1MAVX6IVneka9c6zq9Zdfudxa+6Je7ecPm
+         SICEX4I9RMaC87Kv7bob8Zoe6nza81u6pZtuw1vL+pJT536iIFTVxqx7r1X0H3XTbPjM
+         762Q==
+X-Gm-Message-State: AGi0PuYQdafx2/kKRfLOkawSWKW0aW+GjmZagY0YIAyUQUZCo+5Bfzg4
+        egsuAeA4sWeYY28MZ29Y4bDNVaf8bh1oEXcxR8hh0g==
+X-Google-Smtp-Source: APiQypIMkoCciwZAOXcVOojQKF+oiavenoPo/xqs+F9WhUjaeoopzMjXUIpyUoN9jNkKnBAzfK+a9fIveMXmGFuQemE=
+X-Received: by 2002:a9d:4a:: with SMTP id 68mr8825172ota.17.1589375767383;
+ Wed, 13 May 2020 06:16:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200513123335.28122-1-vincent.guittot@linaro.org>
- <20200513124540.GB12425@lorien.usersys.redhat.com> <CAKfTPtBFP5eAV-u02x42U2cQnWA56RP+wbj78rWpzj560OS+-g@mail.gmail.com>
- <20200513131337.GF12425@lorien.usersys.redhat.com>
-In-Reply-To: <20200513131337.GF12425@lorien.usersys.redhat.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 13 May 2020 15:15:53 +0200
-Message-ID: <CAKfTPtDYmi9wz3r1G8baG2cM3wh6004CDT11HaAu8L7-wWv=Gw@mail.gmail.com>
-Subject: Re: [PATCH v2] sched/fair: enqueue_task_fair optimization
-To:     Phil Auld <pauld@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Tao Zhou <ouwen210@hotmail.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>
+References: <20200511204150.27858-1-will@kernel.org> <20200512081826.GE2978@hirez.programming.kicks-ass.net>
+ <CANpmjNNo3rhwqG=xEbpP9JiSd8-Faw8fkoUhYJjesHK5S5_KQQ@mail.gmail.com>
+ <20200512190755.GL2957@hirez.programming.kicks-ass.net> <CANpmjNNeSnrAgfkskE5Y0NNu3-DS6hk+SwjkBunrr8FRxwwT-Q@mail.gmail.com>
+ <20200513111057.GN2957@hirez.programming.kicks-ass.net> <CANpmjNMariz3-keqwUsLHVrpk2r7ThLSKtkhHxTDa3SEGeznhA@mail.gmail.com>
+ <20200513123243.GO2957@hirez.programming.kicks-ass.net> <20200513124021.GB20278@willie-the-truck>
+In-Reply-To: <20200513124021.GB20278@willie-the-truck>
+From:   Marco Elver <elver@google.com>
+Date:   Wed, 13 May 2020 15:15:55 +0200
+Message-ID: <CANpmjNM5XW+ufJ6Mw2Tn7aShRCZaUPGcH=u=4Sk5kqLKyf3v5A@mail.gmail.com>
+Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
+To:     Will Deacon <will@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020 at 15:13, Phil Auld <pauld@redhat.com> wrote:
+On Wed, 13 May 2020 at 14:40, Will Deacon <will@kernel.org> wrote:
 >
-> On Wed, May 13, 2020 at 03:10:28PM +0200 Vincent Guittot wrote:
-> > On Wed, 13 May 2020 at 14:45, Phil Auld <pauld@redhat.com> wrote:
-> > >
-> > > Hi Vincent,
-> > >
-> > > On Wed, May 13, 2020 at 02:33:35PM +0200 Vincent Guittot wrote:
-> > > > enqueue_task_fair jumps to enqueue_throttle label when cfs_rq_of(se) is
-> > > > throttled which means that se can't be NULL and we can skip the test.
-> > > >
-> > >
-> > > s/be NULL/be non-NULL/
-> > >
-> > > I think.
+> On Wed, May 13, 2020 at 02:32:43PM +0200, Peter Zijlstra wrote:
+> > On Wed, May 13, 2020 at 01:48:41PM +0200, Marco Elver wrote:
 > >
-> > This sentence refers to the move of enqueue_throttle and the fact that
-> > se can't be null when goto enqueue_throttle and we can jump directly
-> > after the if statement, which is now removed in v2 because se is
-> > always NULL if we don't use goto enqueue_throttle.
-> >
-> > I haven't change the commit message for the remove of if statement
-> >
+> > > Disabling most instrumentation for arch/x86 is reasonable. Also fine
+> > > with the __READ_ONCE/__WRITE_ONCE changes (your improved
+> > > compiler-friendlier version).
+> > >
+> > > We likely can't have both: still instrument __READ_ONCE/__WRITE_ONCE
+> > > (as Will suggested) *and* avoid double-instrumentation in arch_atomic.
+> > > If most use-cases of __READ_ONCE/__WRITE_ONCE are likely to use
+> > > data_race() or KCSAN_SANITIZE := n anyway, I'd say it's reasonable for
+> > > now.
 >
-> Fair enough, it just seems backwards from the intent of the patch now.
+> I agree that Peter's patch is the right thing to do for now. I was hoping we
+> could instrument __{READ,WRITE}_ONCE(), but that we before I realised that
+> __no_sanitize_or_inline doesn't seem to do anything.
 >
-> There is also an extra }  after the update_overutilized_status.
+> > Right, if/when people want sanitize crud enabled for x86 I need
+> > something that:
+> >
+> >  - can mark a function 'no_sanitize' and all code that gets inlined into
+> >    that function must automagically also not get sanitized. ie. make
+> >    inline work like macros (again).
+> >
+> > And optionally:
+> >
+> >  - can mark a function explicitly 'sanitize', and only when an explicit
+> >    sanitize and no_sanitize mix in inlining give the current
+> >    incompatible attribute splat.
+> >
+> > That way we can have the noinstr function attribute imply no_sanitize
+> > and frob the DEFINE_IDTENTRY*() macros to use (a new) sanitize_or_inline
+> > helper instead of __always_inline for __##func().
+>
+> Sounds like a good plan to me, assuming the compiler folks are onboard.
+> In the meantime, can we kill __no_sanitize_or_inline and put it back to
+> the old __no_kasan_or_inline, which I think simplifies compiler.h and
+> doesn't mislead people into using the function annotation to avoid KCSAN?
+>
+> READ_ONCE_NOCHECK should also probably be READ_ONCE_NOKASAN, but I
+> appreciate that's a noisier change.
 
-don't know what I did but it's crap.  sorry about that
+So far so good, except: both __no_sanitize_or_inline and
+__no_kcsan_or_inline *do* avoid KCSAN instrumenting plain accesses, it
+just doesn't avoid explicit kcsan_check calls, like those in
+READ/WRITE_ONCE if KCSAN is enabled for the compilation unit. That's
+just because macros won't be redefined just for __no_sanitize
+functions. Similarly, READ_ONCE_NOCHECK does work as expected, and its
+access is unchecked.
 
-Let me prepare a v3
+This will have the expected result:
+__no_sanitize_or_inline void foo(void) { x++; } // no data races reported
 
->
->
-> Cheers,
-> Phil
->
->
->
-> > >
-> > > It's more like if it doesn't jump to the label then se must be NULL for
-> > > the loop to terminate.  The final loop is a NOP if se is NULL. The check
-> > > wasn't protecting that.
-> > >
-> > > Otherwise still
-> > >
-> > > > Reviewed-by: Phil Auld <pauld@redhat.com>
-> > >
-> > > Cheers,
-> > > Phil
-> > >
-> > >
-> > > > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> > > > ---
-> > > >
-> > > > v2 changes:
-> > > > - Remove useless if statement
-> > > >
-> > > >  kernel/sched/fair.c | 39 ++++++++++++++++++++-------------------
-> > > >  1 file changed, 20 insertions(+), 19 deletions(-)
-> > > >
-> > > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > > > index a0c690d57430..b51b12d63c39 100644
-> > > > --- a/kernel/sched/fair.c
-> > > > +++ b/kernel/sched/fair.c
-> > > > @@ -5513,28 +5513,29 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
-> > > >                         list_add_leaf_cfs_rq(cfs_rq);
-> > > >       }
-> > > >
-> > > > -enqueue_throttle:
-> > > > -     if (!se) {
-> > > > -             add_nr_running(rq, 1);
-> > > > -             /*
-> > > > -              * Since new tasks are assigned an initial util_avg equal to
-> > > > -              * half of the spare capacity of their CPU, tiny tasks have the
-> > > > -              * ability to cross the overutilized threshold, which will
-> > > > -              * result in the load balancer ruining all the task placement
-> > > > -              * done by EAS. As a way to mitigate that effect, do not account
-> > > > -              * for the first enqueue operation of new tasks during the
-> > > > -              * overutilized flag detection.
-> > > > -              *
-> > > > -              * A better way of solving this problem would be to wait for
-> > > > -              * the PELT signals of tasks to converge before taking them
-> > > > -              * into account, but that is not straightforward to implement,
-> > > > -              * and the following generally works well enough in practice.
-> > > > -              */
-> > > > -             if (flags & ENQUEUE_WAKEUP)
-> > > > -                     update_overutilized_status(rq);
-> > > > +     /* At this point se is NULL and we are at root level*/
-> > > > +     add_nr_running(rq, 1);
-> > > > +
-> > > > +     /*
-> > > > +      * Since new tasks are assigned an initial util_avg equal to
-> > > > +      * half of the spare capacity of their CPU, tiny tasks have the
-> > > > +      * ability to cross the overutilized threshold, which will
-> > > > +      * result in the load balancer ruining all the task placement
-> > > > +      * done by EAS. As a way to mitigate that effect, do not account
-> > > > +      * for the first enqueue operation of new tasks during the
-> > > > +      * overutilized flag detection.
-> > > > +      *
-> > > > +      * A better way of solving this problem would be to wait for
-> > > > +      * the PELT signals of tasks to converge before taking them
-> > > > +      * into account, but that is not straightforward to implement,
-> > > > +      * and the following generally works well enough in practice.
-> > > > +      */
-> > > > +     if (flags & ENQUEUE_WAKEUP)
-> > > > +             update_overutilized_status(rq);
-> > > >
-> > > >       }
-> > > >
-> > > > +enqueue_throttle:
-> > > >       if (cfs_bandwidth_used()) {
-> > > >               /*
-> > > >                * When bandwidth control is enabled; the cfs_rq_throttled()
-> > > > --
-> > > > 2.17.1
-> > > >
-> > >
-> > > --
-> > >
-> >
->
-> --
->
+This will not work as expected:
+__no_sanitize_or_inline void foo(void) { READ_ONCE(x); }  // data
+races are reported
+
+All this could be fixed if GCC devs would finally take my patch to
+make -fsanitize=thread distinguish volatile [1], but then we have to
+wait ~years for the new compilers to reach us. So please don't hold
+your breath for this one any time soon.
+[1] https://gcc.gnu.org/pipermail/gcc-patches/2020-April/544452.html
+
+Thanks,
+-- Marco
