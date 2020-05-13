@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D084C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFF4C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D85BC23126
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D68520575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363315;
-	bh=exXkvc1Pk18jelMY6JM7GsbunGm4/kMfPFEySFm36xU=;
+	s=default; t=1589363322;
+	bh=POszdWqf52iHnSEcZ1/M2tizmB0GPGEJzJOE5linjRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wvt6f15EEnJk63pKe3S78piOQHAUGntcPWLrXsZemt/LBmYXE/sUR06E5KLJzvYBA
-	 /VicLU5PZyXXLBBoua/zuYAhQCls9wc0heKGNJ2vavaHyN4hB3DS6S08PpDV2Xs1mR
-	 Lu0fKdiPqeBjW1xhtTPwB7AzUesRMkZNPSTTV824=
+	b=ke96uQwRi+RDl1Vzq3wnyItnySHpN3v7wXFp5dnjgT7GaK2MMknzJ/Pr5/lM5QPiW
+	 /qntBkmd2ETgU+yaCD+s/h+i4KaSuxbjb3As9s/iJFoTXWGjnbePy+JA3PNpUWpeU3
+	 hHKOgRhbvYYGd3kN8hLfWQ9VVXGv+Nw+KDnWfxFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733090AbgEMJsf (ORCPT
+        id S1733107AbgEMJsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:48:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46952 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:48:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733077AbgEMJsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:48:31 -0400
+        id S1733092AbgEMJsg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:48:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20C6620753;
-        Wed, 13 May 2020 09:48:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6246320575;
+        Wed, 13 May 2020 09:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363310;
-        bh=exXkvc1Pk18jelMY6JM7GsbunGm4/kMfPFEySFm36xU=;
+        s=default; t=1589363315;
+        bh=POszdWqf52iHnSEcZ1/M2tizmB0GPGEJzJOE5linjRs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wJ+GR9KSroUxlDBZSEaSvWhta4hCoPIHZbjDHKPAzv83yaFqPOWPC4tY3Gz+qkqiT
-         ildaNETV8C6o7XMTFDU2GJAPjhqAixC2Rx/bcY6qcfuFWSy06aAIu8XwLUXE83IA8j
-         cWpDesj9JEXUOOjb3ocxHAmF7fEoJb2R3JlUjynU=
+        b=FScN+siwSAIoX0gXyOtTBQeuHLjLSM93baQy/GHKIGeANfqD4+X+tqPVXNmw+mIld
+         jltWY8cJjTS7niM52Za8Ew8O47pxH94TNZPrzc3wCHk5Gi0uveH5u5emwyJtAgXnEY
+         FrrGtNOwiKqoxEi5JFbDnGHnciJTq/MU9O7SHAts=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anthony Felice <tony.felice@timesys.com>,
-        Akshay Bhat <akshay.bhat@timesys.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 22/90] net: tc35815: Fix phydev supported/advertising mask
-Date:   Wed, 13 May 2020 11:44:18 +0200
-Message-Id: <20200513094411.029573562@linuxfoundation.org>
+Subject: [PATCH 5.4 24/90] net/tls: Fix sk_psock refcnt leak when in tls_data_ready()
+Date:   Wed, 13 May 2020 11:44:20 +0200
+Message-Id: <20200513094411.176123869@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -62,40 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anthony Felice <tony.felice@timesys.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 4b5b71f770e2edefbfe74203777264bfe6a9927c ]
+[ Upstream commit 62b4011fa7bef9fa00a6aeec26e69685dc1cc21e ]
 
-Commit 3c1bcc8614db ("net: ethernet: Convert phydev advertize and
-supported from u32 to link mode") updated ethernet drivers to use a
-linkmode bitmap. It mistakenly dropped a bitwise negation in the
-tc35815 ethernet driver on a bitmask to set the supported/advertising
-flags.
+tls_data_ready() invokes sk_psock_get(), which returns a reference of
+the specified sk_psock object to "psock" with increased refcnt.
 
-Found by Anthony via code inspection, not tested as I do not have the
-required hardware.
+When tls_data_ready() returns, local variable "psock" becomes invalid,
+so the refcount should be decreased to keep refcount balanced.
 
-Fixes: 3c1bcc8614db ("net: ethernet: Convert phydev advertize and supported from u32 to link mode")
-Signed-off-by: Anthony Felice <tony.felice@timesys.com>
-Reviewed-by: Akshay Bhat <akshay.bhat@timesys.com>
-Reviewed-by: Heiner Kallweit <hkallweit1@gmail.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+The reference counting issue happens in one exception handling path of
+tls_data_ready(). When "psock->ingress_msg" is empty but "psock" is not
+NULL, the function forgets to decrease the refcnt increased by
+sk_psock_get(), causing a refcnt leak.
+
+Fix this issue by calling sk_psock_put() on all paths when "psock" is
+not NULL.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/toshiba/tc35815.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/tls/tls_sw.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/toshiba/tc35815.c
-+++ b/drivers/net/ethernet/toshiba/tc35815.c
-@@ -644,7 +644,7 @@ static int tc_mii_probe(struct net_devic
- 		linkmode_set_bit(ETHTOOL_LINK_MODE_10baseT_Half_BIT, mask);
- 		linkmode_set_bit(ETHTOOL_LINK_MODE_100baseT_Half_BIT, mask);
- 	}
--	linkmode_and(phydev->supported, phydev->supported, mask);
-+	linkmode_andnot(phydev->supported, phydev->supported, mask);
- 	linkmode_copy(phydev->advertising, phydev->supported);
+--- a/net/tls/tls_sw.c
++++ b/net/tls/tls_sw.c
+@@ -2078,8 +2078,9 @@ static void tls_data_ready(struct sock *
+ 	strp_data_ready(&ctx->strp);
  
- 	lp->link = 0;
+ 	psock = sk_psock_get(sk);
+-	if (psock && !list_empty(&psock->ingress_msg)) {
+-		ctx->saved_data_ready(sk);
++	if (psock) {
++		if (!list_empty(&psock->ingress_msg))
++			ctx->saved_data_ready(sk);
+ 		sk_psock_put(sk, psock);
+ 	}
+ }
 
 
