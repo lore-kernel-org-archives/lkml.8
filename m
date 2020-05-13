@@ -2,62 +2,63 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB68C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA41C2D0FB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD2620753
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 210E820753
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:55:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ITZ6s8nf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wDywye9W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732117AbgEMAzh (ORCPT
+        id S1732126AbgEMAzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 20:55:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51004 "EHLO
+        Tue, 12 May 2020 20:55:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732069AbgEMAza (ORCPT
+        with ESMTP id S1732099AbgEMAze (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 20:55:30 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F005DC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 17:55:29 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id hi11so10355474pjb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 17:55:29 -0700 (PDT)
+        Tue, 12 May 2020 20:55:34 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4F2AC05BD0D
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 17:55:32 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id 18so7227209pfv.8
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 17:55:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+aVsTRV0Vd7AjARuX1FSoP3j3p4vMbsUynYNIWG2zcg=;
-        b=ITZ6s8nfqeBtfn0oVoLGCgrnjOV1Xy0pZ3QdECW67KsV/hkeylPh/9bZ5pY1ytrDEv
-         MYdwBAJh+8DHuXK6VaGPgTKlQozijma7VAZhrA2jziS2Wlfl2Aj0GO+oGXYBdvOHYkNI
-         1zyQX/hfzOnC2niIDuG1u0ohwO0xg+hWVawxT9+Pn0+2OOKKwn0xZv2Qvv+BXw3KPfaT
-         Ba0QGr4CYQTEmMg3MUxArtF/PEekKi386oRGyi9pXGwCAQiIgxbtoqYViHsSJgREiy1K
-         Y7ilsmDsR0Th/RdJdnf+j5yqKLOCA3bz1sKYYSDzKdxvqgerEGPd3qk7PmVJDXYSzYoI
-         zGxg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=RUnboi85SF121UrpH3bFZwKuXXQdWqb1eY3bgMeZfq0=;
+        b=wDywye9WHHKlG4Dfqc21+Ymi2c2GhfCM0ndcG4w9gBx7gisAbn4XX9/yj7tDGO115V
+         abVKOSJEUOvd6HoJP5oJpCXpWvka1K32OidCK+B8/6Jx40lL0mr4aXfEYJSTnCTl1LUI
+         kgXiaIugTpwmRc/fuTUgNjtbo5iC7uftSfZM7cd81+K/Z4qfDiTgQUN/UoeRsAeabvEv
+         ejL1Hehbz54YHGyo82eRm4yjvmrwTHHr981Dp+29CVSDPEt4AjHetPeMYtEJfRBtxIDQ
+         1dyTYk1mY7y8sQr/uRKYp4w2rlVlQXl0f3wPGSwuk13zlP59aq/7d41SYBYCw2u7qWI3
+         QKeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+aVsTRV0Vd7AjARuX1FSoP3j3p4vMbsUynYNIWG2zcg=;
-        b=Qmq0Q0I22YYjZUPX/8OsZNO2+/t3mIqCHRiuIefpeA2D1qkyNz6tObO5oXyAOxrp9I
-         rabqhnQNnGAe0gjC2+2W+Fq9z5ton2gYLYBvTEXz4PaD9De9OjhLAQIEzAQ7LGz4lYVo
-         q/gyUdX/Tygtr7XO0+fQ5O/ZUDwGSSqAsBBcHhyd1hB1YhzmE1akdzBNZs5VOSlws+p6
-         K/CPs+KvzJsP1flBMZ5FgXb04/wTcykEzpclAgF+mV2S4lzMThdC7WUv5u3eLGdQIpcc
-         v793yEVS1/WOc3S+mXuEvSSrTE++pICGVUSpyOnqKUNEm1UH6ylFtX5IG2HHx1ZBMj6f
-         k43w==
-X-Gm-Message-State: AGi0PuZapQz/Nuju2OpD62w2zV7dKTyMJlGZ1176+eOjQSRabpH4puk7
-        Yyo0dvFRQw6GEbKDeMGb0IlmLg==
-X-Google-Smtp-Source: APiQypI3O4oBkDtpKaBNHwg5f+8AZEbJC5eKmdrym5Hi5g9Mw7N4wvHIlkhR/lrQNiEANYIJvRADLA==
-X-Received: by 2002:a17:90a:da05:: with SMTP id e5mr32780994pjv.140.1589331329287;
-        Tue, 12 May 2020 17:55:29 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=RUnboi85SF121UrpH3bFZwKuXXQdWqb1eY3bgMeZfq0=;
+        b=FYRtj1r3YgfRt9fqpXI/0DrK374oVDRVhpoWZSRmx0LTBNtaKRhUKIJwtSHSvvVjmV
+         P+z8ba254+DqwSdp2TuwWdPAsUyVLURtEnmVWQYmpvyR0xK6JEpQsU9+zT3ILIsQhB16
+         BY+5DuUyhhMWXThvpmwUebR2qXXQj4XTz7f4xPmeWM6laK+aErjRXjbEJUHCDU6INcho
+         pJYAq0h/CROvMdSC+3w5J0AJg5Eqf/LoNQnsJxvqe/bx/rRoS9WmY03BVR1nJRnjp2T0
+         ESwEod+qoyNok1KeoEh56dX2DbOotL5/GfG6+EaOjv7R02xpE2/6wIvci7byevHbIxrX
+         vkOA==
+X-Gm-Message-State: AOAM530/xcG6MfWqMjnnD+7396TKfOGr0PwSQ43iXlm3IHAVQ0UzzcGN
+        o78PaI3zHDOGz4yH81uNAN6j8A==
+X-Google-Smtp-Source: ABdhPJwIlsG5NiDBXR0Xm2F0/KvNmdfVmcPTDcQEKb3c9MavHvcvGtJXMUS6fhDsJSWryUxHKLA6BQ==
+X-Received: by 2002:a62:8c0b:: with SMTP id m11mr3886830pfd.105.1589331332342;
+        Tue, 12 May 2020 17:55:32 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id p2sm11057428pgh.25.2020.05.12.17.55.27
+        by smtp.gmail.com with ESMTPSA id p2sm11057428pgh.25.2020.05.12.17.55.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 17:55:28 -0700 (PDT)
+        Tue, 12 May 2020 17:55:31 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -66,10 +67,12 @@ To:     Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>
 Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/4] hwspinlock: qcom: Allow dropping the intermediate TCSR mutex syscon
-Date:   Tue, 12 May 2020 17:54:37 -0700
-Message-Id: <20200513005441.1102586-1-bjorn.andersson@linaro.org>
+Subject: [PATCH 2/4] dt-bindings: hwlock: qcom: Allow device on mmio bus
+Date:   Tue, 12 May 2020 17:54:39 -0700
+Message-Id: <20200513005441.1102586-3-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200513005441.1102586-1-bjorn.andersson@linaro.org>
+References: <20200513005441.1102586-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,18 +86,52 @@ Update the binding to allow the hardware block to be described directly
 on the mmio bus, in addition to allowing the existing syscon based
 definition.
 
-Bjorn Andersson (4):
-  dt-bindings: hwlock: qcom: Migrate binding to YAML
-  dt-bindings: hwlock: qcom: Allow device on mmio bus
-  hwspinlock: qcom: Allow mmio usage in addition to syscon
-  arm64: dts: qcom: sm8250: Drop tcsr_mutex syscon
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ .../bindings/hwlock/qcom-hwspinlock.yaml         | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
- .../bindings/hwlock/qcom-hwspinlock.yaml      | 65 +++++++++++++++++
- arch/arm64/boot/dts/qcom/sm8250.dtsi          | 11 +--
- drivers/hwspinlock/qcom_hwspinlock.c          | 72 ++++++++++++++-----
- 3 files changed, 124 insertions(+), 24 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
-
+diff --git a/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
+index 71e63b52edd5..88f975837588 100644
+--- a/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
++++ b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.yaml
+@@ -19,6 +19,9 @@ properties:
+       - qcom,sfpb-mutex
+       - qcom,tcsr-mutex
+ 
++  reg:
++    maxItems: 1
++
+   '#hwlock-cells':
+     const: 1
+ 
+@@ -31,7 +34,12 @@ properties:
+ required:
+   - compatible
+   - '#hwlock-cells'
+-  - syscon
++
++oneOf:
++  - required:
++    - reg
++  - required:
++    - syscon
+ 
+ additionalProperties: false
+ 
+@@ -46,6 +54,12 @@ examples:
+                 compatible = "qcom,tcsr-mutex";
+                 syscon = <&tcsr_mutex_block 0 0x80>;
+ 
++                #hwlock-cells = <1>;
++        };
++  - |
++        tcsr_mutex: hwlock@1f40000 {
++                compatible = "qcom,tcsr-mutex";
++                reg = <0x01f40000 0x40000>;
+                 #hwlock-cells = <1>;
+         };
+ ...
 -- 
 2.26.2
 
