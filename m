@@ -2,132 +2,217 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CD3CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60512CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA602206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364191;
-	bh=Fj3VzgxU/YecRjG8k70EozfZJX8Zs6fcFj/gnZ5pIpw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WFoMidPD1DiYjAro6qN3SCdfn2u0yQ+HHobPseg5zNb/aiEjcb331TQKKVBGZkNiU
-	 N86OH6wgdSAJJrsU17Qhfo6q1MdALrSJrBSmvdSc0xa4WS8gBjf0/80OP+81uBGDcT
-	 tqnLJgjyiSO4GD2DtCxKTxmpe5H3++RcEyR2dwDs=
+	by mail.kernel.org (Postfix) with ESMTP id 465B5206E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732595AbgEMJtV (ORCPT
+        id S2388544AbgEMKDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:49:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48146 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 06:03:16 -0400
+Received: from verein.lst.de ([213.95.11.211]:45385 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733205AbgEMJtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:49:16 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E1AB20740;
-        Wed, 13 May 2020 09:49:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363355;
-        bh=Fj3VzgxU/YecRjG8k70EozfZJX8Zs6fcFj/gnZ5pIpw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X4xG7sMEG1NqNXY9i+7dfyAo5BsBF0mlasvLKlFD3ujlRoI3G9gSPuRbzA091lVHF
-         uuAoW9YyruKYZWsl1qIrdtKuU2meagVLFXyqsSyqTeaaBc4UoJ0AlRTupf1sonwko4
-         XjZYJeJdbHK58hQDwHSAB9XMEdwCYYeDNcdCYfNk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        id S1733187AbgEMJtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:49:12 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id C02CF68C65; Wed, 13 May 2020 11:49:08 +0200 (CEST)
+Date:   Wed, 13 May 2020 11:49:08 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Ido Schimmel <idosch@idosch.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
         "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 05/90] net: macb: Fix runtime PM refcounting
-Date:   Wed, 13 May 2020 11:44:01 +0200
-Message-Id: <20200513094409.652936438@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
-References: <20200513094408.810028856@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] net/scm: cleanup scm_detach_fds
+Message-ID: <20200513094908.GA31756@lst.de>
+References: <20200511115913.1420836-1-hch@lst.de> <20200511115913.1420836-3-hch@lst.de> <20200513092918.GA596863@splinter>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513092918.GA596863@splinter>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Wed, May 13, 2020 at 12:29:18PM +0300, Ido Schimmel wrote:
+> On Mon, May 11, 2020 at 01:59:12PM +0200, Christoph Hellwig wrote:
+> > Factor out two helpes to keep the code tidy.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> 
+> Christoph,
+> 
+> After installing net-next (fb9f2e92864f) on a Fedora 32 machine I cannot
+> ssh to it. Bisected it to this commit [1].
+> 
+> When trying to connect I see these error messages in journal:
+> 
+> sshd[1029]: error: mm_receive_fd: no message header
+> sshd[1029]: fatal: mm_pty_allocate: receive fds failed
+> sshd[1029]: fatal: mm_request_receive_expect: buffer error: incomplete message
+> sshd[1018]: fatal: mm_request_receive: read: Connection reset by peer
+> 
+> Please let me know if more info is required. I can easily test a patch
+> if you need me to try something.
 
-[ Upstream commit 0ce205d4660c312cdeb4a81066616dcc6f3799c4 ]
+To start we can try reverting just this commit, which requires a
+little manual work.  Patch below:
 
-The commit e6a41c23df0d, while trying to fix an issue,
-
-    ("net: macb: ensure interface is not suspended on at91rm9200")
-
-introduced a refcounting regression, because in error case refcounter
-must be balanced. Fix it by calling pm_runtime_put_noidle() in error case.
-
-While here, fix the same mistake in other couple of places.
-
-Fixes: e6a41c23df0d ("net: macb: ensure interface is not suspended on at91rm9200")
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Claudiu Beznea <claudiu.beznea@microchip.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cadence/macb_main.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+From fe4f53219b42aeded3c1464dbe2bbc9365f6a853 Mon Sep 17 00:00:00 2001
+From: Christoph Hellwig <hch@lst.de>
+Date: Wed, 13 May 2020 11:48:33 +0200
+Subject: Revert "net/scm: cleanup scm_detach_fds"
 
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index 234c13ebbc41b..dd2a605c5c2ed 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -334,8 +334,10 @@ static int macb_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
- 	int status;
+This reverts commit 2618d530dd8b7ac0fdcb83f4c95b88f7b0d37ce6.
+---
+ net/core/scm.c | 94 +++++++++++++++++++++++---------------------------
+ 1 file changed, 43 insertions(+), 51 deletions(-)
+
+diff --git a/net/core/scm.c b/net/core/scm.c
+index a75cd637a71ff..2d9aa5682bed2 100644
+--- a/net/core/scm.c
++++ b/net/core/scm.c
+@@ -280,53 +280,18 @@ void put_cmsg_scm_timestamping(struct msghdr *msg, struct scm_timestamping_inter
+ }
+ EXPORT_SYMBOL(put_cmsg_scm_timestamping);
  
- 	status = pm_runtime_get_sync(&bp->pdev->dev);
--	if (status < 0)
-+	if (status < 0) {
-+		pm_runtime_put_noidle(&bp->pdev->dev);
- 		goto mdio_pm_exit;
-+	}
+-static int __scm_install_fd(struct file *file, int __user *ufd, int o_flags)
+-{
+-	struct socket *sock;
+-	int new_fd;
+-	int error;
+-
+-	error = security_file_receive(file);
+-	if (error)
+-		return error;
+-
+-	new_fd = get_unused_fd_flags(o_flags);
+-	if (new_fd < 0)
+-		return new_fd;
+-
+-	error = put_user(new_fd, ufd);
+-	if (error) {
+-		put_unused_fd(new_fd);
+-		return error;
+-	}
+-
+-	/* Bump the usage count and install the file. */
+-	sock = sock_from_file(file, &error);
+-	if (sock) {
+-		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
+-		sock_update_classid(&sock->sk->sk_cgrp_data);
+-	}
+-	fd_install(new_fd, get_file(file));
+-	return error;
+-}
+-
+-static int scm_max_fds(struct msghdr *msg)
+-{
+-	if (msg->msg_controllen <= sizeof(struct cmsghdr))
+-		return 0;
+-	return (msg->msg_controllen - sizeof(struct cmsghdr)) / sizeof(int);
+-}
+-
+ void scm_detach_fds(struct msghdr *msg, struct scm_cookie *scm)
+ {
+ 	struct cmsghdr __user *cm
+ 		= (__force struct cmsghdr __user*)msg->msg_control;
+-	int o_flags = (msg->msg_flags & MSG_CMSG_CLOEXEC) ? O_CLOEXEC : 0;
+-	int fdmax = min_t(int, scm_max_fds(msg), scm->fp->count);
+-	int __user *cmsg_data = CMSG_USER_DATA(cm);
++
++	int fdmax = 0;
++	int fdnum = scm->fp->count;
++	struct file **fp = scm->fp->fp;
++	int __user *cmfptr;
+ 	int err = 0, i;
  
- 	status = macb_mdio_wait_for_idle(bp);
- 	if (status < 0)
-@@ -367,8 +369,10 @@ static int macb_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
- 	int status;
+-	if (msg->msg_flags & MSG_CMSG_COMPAT) {
++	if (MSG_CMSG_COMPAT & msg->msg_flags) {
+ 		scm_detach_fds_compat(msg, scm);
+ 		return;
+ 	}
+@@ -335,35 +300,62 @@ void scm_detach_fds(struct msghdr *msg, struct scm_cookie *scm)
+ 	if (WARN_ON_ONCE(!msg->msg_control_is_user))
+ 		return;
  
- 	status = pm_runtime_get_sync(&bp->pdev->dev);
--	if (status < 0)
-+	if (status < 0) {
-+		pm_runtime_put_noidle(&bp->pdev->dev);
- 		goto mdio_pm_exit;
-+	}
+-	for (i = 0; i < fdmax; i++) {
+-		err = __scm_install_fd(scm->fp->fp[i], cmsg_data + i, o_flags);
++	if (msg->msg_controllen > sizeof(struct cmsghdr))
++		fdmax = ((msg->msg_controllen - sizeof(struct cmsghdr))
++			 / sizeof(int));
++
++	if (fdnum < fdmax)
++		fdmax = fdnum;
++
++	for (i=0, cmfptr =(int __user *)CMSG_USER_DATA(cm); i<fdmax;
++	     i++, cmfptr++)
++	{
++		struct socket *sock;
++		int new_fd;
++		err = security_file_receive(fp[i]);
+ 		if (err)
+ 			break;
++		err = get_unused_fd_flags(MSG_CMSG_CLOEXEC & msg->msg_flags
++					  ? O_CLOEXEC : 0);
++		if (err < 0)
++			break;
++		new_fd = err;
++		err = put_user(new_fd, cmfptr);
++		if (err) {
++			put_unused_fd(new_fd);
++			break;
++		}
++		/* Bump the usage count and install the file. */
++		sock = sock_from_file(fp[i], &err);
++		if (sock) {
++			sock_update_netprioidx(&sock->sk->sk_cgrp_data);
++			sock_update_classid(&sock->sk->sk_cgrp_data);
++		}
++		fd_install(new_fd, get_file(fp[i]));
+ 	}
  
- 	status = macb_mdio_wait_for_idle(bp);
- 	if (status < 0)
-@@ -3691,8 +3695,10 @@ static int at91ether_open(struct net_device *dev)
- 	int ret;
+-	if (i > 0)  {
+-		int cmlen = CMSG_LEN(i * sizeof(int));
+-
++	if (i > 0)
++	{
++		int cmlen = CMSG_LEN(i*sizeof(int));
+ 		err = put_user(SOL_SOCKET, &cm->cmsg_level);
+ 		if (!err)
+ 			err = put_user(SCM_RIGHTS, &cm->cmsg_type);
+ 		if (!err)
+ 			err = put_user(cmlen, &cm->cmsg_len);
+ 		if (!err) {
+-			cmlen = CMSG_SPACE(i * sizeof(int));
++			cmlen = CMSG_SPACE(i*sizeof(int));
+ 			if (msg->msg_controllen < cmlen)
+ 				cmlen = msg->msg_controllen;
+ 			msg->msg_control += cmlen;
+ 			msg->msg_controllen -= cmlen;
+ 		}
+ 	}
+-
+-	if (i < scm->fp->count || (scm->fp->count && fdmax <= 0))
++	if (i < fdnum || (fdnum && fdmax <= 0))
+ 		msg->msg_flags |= MSG_CTRUNC;
  
- 	ret = pm_runtime_get_sync(&lp->pdev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(&lp->pdev->dev);
- 		return ret;
-+	}
- 
- 	/* Clear internal statistics */
- 	ctl = macb_readl(lp, NCR);
+ 	/*
+-	 * All of the files that fit in the message have had their usage counts
+-	 * incremented, so we just free the list.
++	 * All of the files that fit in the message have had their
++	 * usage counts incremented, so we just free the list.
+ 	 */
+ 	__scm_destroy(scm);
+ }
 -- 
-2.20.1
-
-
+2.26.2
 
