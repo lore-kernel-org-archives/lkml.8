@@ -2,131 +2,196 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A282FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E70C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4B3D204EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B59952065C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:44:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589409894;
+	bh=SaXEtxehBPXNgHzxv6SxCYt0qjGeXgQurv3G6wTPpAU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=SQfqoFjpUFZSb+aQPCdpIVrK0GfNjyfTK2S3neBX2YN0B1fCS9lORKdoTMDmKyjrF
+	 FwAlVbgsmGWspiOh0WxmNp8JvMg0MfoJZw9LHLek/o9Pczy/wfWMOSyNaMcsQ3BPU0
+	 BxOSgTzKLAGGcfzLn1VRj9wd3ZBITCYVukZ/1TBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731599AbgEMWon (ORCPT
+        id S1731644AbgEMWoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 18:44:43 -0400
-Received: from mga02.intel.com ([134.134.136.20]:33959 "EHLO mga02.intel.com"
+        Wed, 13 May 2020 18:44:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726383AbgEMWon (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 18:44:43 -0400
-IronPort-SDR: NA3XLF+amzUZbJK32dm1deaHAZJOL5uSGf+W1FTmSro/fOZoPHnMlI9Q3T7pk1ZRKqwmsQTWTN
- 0ihmTtpF45sw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 15:44:42 -0700
-IronPort-SDR: 75n+clq3trnDGuYXadCYxuJGexTpomyQemp5V3sL9ffnUSGV7nOhB5jzvlWTyzIGYeWlj7n4pb
- AkMIJkg4ysRQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,389,1583222400"; 
-   d="scan'208";a="266036069"
-Received: from cwward1-mobl.amr.corp.intel.com (HELO [10.254.205.248]) ([10.254.205.248])
-  by orsmga006.jf.intel.com with ESMTP; 13 May 2020 15:44:32 -0700
-Subject: Re: [PATCH v5] arch/x86: Update config and kernel doc for MPK feature
- on AMD
-To:     Babu Moger <babu.moger@amd.com>, corbet@lwn.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        pbonzini@redhat.com, sean.j.christopherson@intel.com
-Cc:     x86@kernel.org, vkuznets@redhat.com, wanpengli@tencent.com,
-        jmattson@google.com, joro@8bytes.org, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, mchehab+samsung@kernel.org,
-        changbin.du@intel.com, namit@vmware.com, bigeasy@linutronix.de,
-        yang.shi@linux.alibaba.com, asteinhauser@google.com,
-        anshuman.khandual@arm.com, jan.kiszka@siemens.com,
-        akpm@linux-foundation.org, steven.price@arm.com,
-        rppt@linux.vnet.ibm.com, peterx@redhat.com,
-        dan.j.williams@intel.com, arjunroy@google.com, logang@deltatee.com,
-        thellstrom@vmware.com, aarcange@redhat.com, justin.he@arm.com,
-        robin.murphy@arm.com, ira.weiny@intel.com, keescook@chromium.org,
-        jgross@suse.com, andrew.cooper3@citrix.com,
-        pawan.kumar.gupta@linux.intel.com, fenghua.yu@intel.com,
-        vineela.tummalapalli@intel.com, yamada.masahiro@socionext.com,
-        sam@ravnborg.org, acme@redhat.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <158940940570.47998.17107695356894054769.stgit@naples-babu.amd.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <e6e7388b-1e53-aa0f-5e38-eaa1a033b221@intel.com>
-Date:   Wed, 13 May 2020 15:44:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1731497AbgEMWox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 18:44:53 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6F6F204EF;
+        Wed, 13 May 2020 22:44:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589409892;
+        bh=SaXEtxehBPXNgHzxv6SxCYt0qjGeXgQurv3G6wTPpAU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=jbkIbctTPcxjp+MFlS9oh6QvN2AiF2pz772yweD79fJfp5R4pmoh8sihgRDr31Lav
+         IUfFd49RzCmsgnizlgF9BHMgD1CVdlWZ63DRybM2zpY2nqzKreSWGjcvaTuKDI61Gi
+         +BsgJBAV2aV7sHg9VFkYnYGeM+cY7IfZIEKAqlao=
+Date:   Wed, 13 May 2020 17:44:49 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     bhelgaas@google.com, jay.vosburgh@canonical.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+Subject: Re: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for
+ non-hotplug capable devices
+Message-ID: <20200513224449.GA347443@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <158940940570.47998.17107695356894054769.stgit@naples-babu.amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/13/20 3:39 PM, Babu Moger wrote:
-> AMD's next generation of EPYC processors support the MPK (Memory
-> Protection Keys) feature.
+On Wed, May 06, 2020 at 08:32:59PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > 
-> Add a generic X86_MEMORY_PROTECTION_KEYS config shadowing
-> X86_INTEL_MEMORY_PROTECTION_KEYS and update the kernel
-> documentation.
+> If there are non-hotplug capable devices connected to a given
+> port, then during the fatal error recovery(triggered by DPC or
+> AER), after calling reset_link() function, we cannot rely on
+> hotplug handler to detach and re-enumerate the device drivers
+> in the affected bus. Instead, we will have to let the error
+> recovery handler call report_slot_reset() for all devices in
+> the bus to notify about the reset operation. Although this is
+> only required for non hot-plug capable devices, doing it for
+> hotplug capable devices should not affect the functionality.
+
+Apparently this fixes a bug.  Can you include a link to a problem
+report?  The above is a description of a *solution*, but it's hard to
+understand without starting with the problem itself.
+
+The above talks about reset_link(), which is only used in the
+io_frozen case.  In that case, I think the only thing this patch
+changes is that when reset_link() fails, we'll return with
+PCI_ERS_RESULT_DISCONNECT instead of whatever reset_link()
+returned.
+
+What this patch *does* change is that in the normal_detected case, we
+previously never called reset_link() but now we will if an
+.error_detected() callback requested it.
+
+> Along with above issue, this fix also applicable to following
+> issue.
 > 
-> No functional changes.
+> Commit 6d2c89441571 ("PCI/ERR: Update error status after
+> reset_link()") added support to store status of reset_link()
+> call. Although this fixed the error recovery issue observed if
+> the initial value of error status is PCI_ERS_RESULT_DISCONNECT
+> or PCI_ERS_RESULT_NO_AER_DRIVER, it also discarded the status
+> result from report_frozen_detected. This can cause a failure to
+> recover if _NEED_RESET is returned by report_frozen_detected and
+> report_slot_reset is not invoked.
 
-Thanks for making all those changes:
+Sorry, I'm not following this explanation.  IIUC this fixes a bug when
+the channel is frozen and .error_detected() returns NEED_RESET.
 
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+In that case, the current code does:
 
-BTW, I'd certainly classify the dependency change as a functional
-change.  I usually save the "No functional changes" blurb for where
-literally no effect should be noticeable.  The folks that don't set
-CPU_SUP_INTEL will obviously see a functional change here!
+  * state == io_frozen
+  * .error_detected() returns status == NEED_RESET
+  * status = reset_link()
+  * if status != RECOVERED, we return status
+  * otherwise status == RECOVERED
+  * we do not call report_slot_reset()
+  * we return RECOVERED
+
+It does seem like we *should* call the .slot_reset() callbacks, but
+the only time we return recovery failure is if reset_link() failed.
+
+I can certainly understand if drivers don't recover when we reset
+their device but don't call their .slot_reset() callback.  Is that
+what this fixes?
+
+After the patch,
+
+  * state == io_frozen
+  * .error_detected() returns status == NEED_RESET
+  * we set status = NEED_RESET (doesn't change anything in this case)
+  * we call reset_link()
+  * if reset_link() failed, we return DISCONNECT
+  * otherwise continue with status == NEED_RESET
+  * we *do* call report_slot_reset()
+  * we return whatever .slot_reset() returned
+
+I think the change to call .slot_reset() makes sense, but that's not
+at all clear from the commit log.  Am I understanding the behavior
+correctly?
+
+> Such an event can be induced for testing purposes by reducing the
+> Max_Payload_Size of a PCIe bridge to less than that of a device
+> downstream from the bridge, and then initiating I/O through the
+> device, resulting in oversize transactions.  In the presence of DPC,
+> this results in a containment event and attempted reset and recovery
+> via pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not
+> invoked, and the device does not recover.
+
+Use "pcie_do_recovery()" and "report_slot_reset()" (including the
+parentheses) to follow convention.  Also fix other occurrences above.
+
+> [original patch is from jay.vosburgh@canonical.com]
+> [original patch link https://lore.kernel.org/linux-pci/18609.1588812972@famine/]
+> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>  drivers/pci/pcie/err.c | 19 +++++++++++++++----
+>  1 file changed, 15 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index 14bb8f54723e..db80e1ecb2dc 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -165,13 +165,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>  	pci_dbg(dev, "broadcast error_detected message\n");
+>  	if (state == pci_channel_io_frozen) {
+>  		pci_walk_bus(bus, report_frozen_detected, &status);
+> -		status = reset_link(dev);
+> -		if (status != PCI_ERS_RESULT_RECOVERED) {
+> +		status = PCI_ERS_RESULT_NEED_RESET;
+> +	} else {
+> +		pci_walk_bus(bus, report_normal_detected, &status);
+> +	}
+> +
+> +	if (status == PCI_ERS_RESULT_NEED_RESET) {
+> +		if (reset_link) {
+> +			if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
+> +				status = PCI_ERS_RESULT_DISCONNECT;
+> +		} else {
+> +			if (pci_bus_error_reset(dev))
+> +				status = PCI_ERS_RESULT_DISCONNECT;
+
+As far as I can tell, there is no caller of pcie_do_recovery() where
+reset_link is NULL, so this call of pci_bus_error_reset() looks like
+dead code.
+
+We did not previously check whether reset_link was NULL, and this
+patch changes nothing that could result in it being NULL.
+
+> +		}
+> +
+> +		if (status == PCI_ERS_RESULT_DISCONNECT) {
+>  			pci_warn(dev, "link reset failed\n");
+>  			goto failed;
+>  		}
+> -	} else {
+> -		pci_walk_bus(bus, report_normal_detected, &status);
+>  	}
+>  
+>  	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+> -- 
+> 2.17.1
+> 
