@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 778E1CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B83C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C2B1206B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09372206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:03:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364218;
-	bh=w4FmW7XPb/C8TwDdYwkik3mJPi8H8DYgNLABeNK/Ju4=;
+	s=default; t=1589364222;
+	bh=LUb+bO3zK4qWq5zgFW0JLezZ7BG2T63AmtuwtwMe7NM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jJBOXZ92trhOWugbuAW+NEmwyT4Tyfd+Fz7mMbPMIq1M30E3Et4qn80WDSoodq3VP
-	 Edjqoj7VEFpoBICGrhqPf7hQCa2t4iKPX/nIKyDwxLW8rk5trj3sUEteF/vPfbFLvQ
-	 IiyR6LkrEB3kHnjfl67Ka5GaYf3MzNb0nmn8KffM=
+	b=lyLcj6Q5Go7ZNMp1cIqQLiNLYu6RcuNBy5zJ0O4sChAS7NbeeFDJe+qb0fRHxRMCI
+	 JIDlOTs7C2ETmGr+zcwN3UcLpbzmFthJTUezchOrHi0ts3cCRrZ5lZ7THoc/Xp8PMU
+	 Pxwh3rJf9Q+tekhh9oEmyMwLjRQkxnc2fVZ+gPrQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732599AbgEMJsj (ORCPT
+        id S2388345AbgEMKDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:48:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47026 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 06:03:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733083AbgEMJsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:48:33 -0400
+        id S1733098AbgEMJsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:48:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5BDF20753;
-        Wed, 13 May 2020 09:48:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD9CD20753;
+        Wed, 13 May 2020 09:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363313;
-        bh=w4FmW7XPb/C8TwDdYwkik3mJPi8H8DYgNLABeNK/Ju4=;
+        s=default; t=1589363318;
+        bh=LUb+bO3zK4qWq5zgFW0JLezZ7BG2T63AmtuwtwMe7NM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sj89AwRavwKbF8iEIfd8g3rMEw3Cmxl1HPAcZSaX+vnm5Wo7JAMa5tSqWl1/4jS9l
-         Vxun/BRUj2yubFaJcWNfJS9QEsm+rdvzBmI9mYG+x5p5nzaoFpfC68im4Fy3L5QBfj
-         SsBWRjuh7KvX3Gzh2GxDRbfsJgFh9dbxybVtptVI=
+        b=HIoHn3EiREKRX6wdl2CylHd1LhUYGplRrEvoTANgEdub/SXlTmT0k6a5dsg3ttvly
+         ilMvwUiRazF5hjZdlMKRU2sM8EyLdCK50DgVBcAa1rQn3IV9zYy6DpFSO7JKZD40mD
+         S7dUUZbd0Sm6CeOoMuqxCCfYcY7WLNByjwjNzk5M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
+        stable@vger.kernel.org, Matt Jolly <Kangie@footclan.ninja>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 23/90] net/tls: Fix sk_psock refcnt leak in bpf_exec_tx_verdict()
-Date:   Wed, 13 May 2020 11:44:19 +0200
-Message-Id: <20200513094411.100591611@linuxfoundation.org>
+Subject: [PATCH 5.4 25/90] net: usb: qmi_wwan: add support for DW5816e
+Date:   Wed, 13 May 2020 11:44:21 +0200
+Message-Id: <20200513094411.251621056@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -60,42 +60,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Matt Jolly <Kangie@footclan.ninja>
 
-[ Upstream commit 095f5614bfe16e5b3e191b34ea41b10d6fdd4ced ]
+[ Upstream commit 57c7f2bd758eed867295c81d3527fff4fab1ed74 ]
 
-bpf_exec_tx_verdict() invokes sk_psock_get(), which returns a reference
-of the specified sk_psock object to "psock" with increased refcnt.
+Add support for Dell Wireless 5816e to drivers/net/usb/qmi_wwan.c
 
-When bpf_exec_tx_verdict() returns, local variable "psock" becomes
-invalid, so the refcount should be decreased to keep refcount balanced.
-
-The reference counting issue happens in one exception handling path of
-bpf_exec_tx_verdict(). When "policy" equals to NULL but "psock" is not
-NULL, the function forgets to decrease the refcnt increased by
-sk_psock_get(), causing a refcnt leak.
-
-Fix this issue by calling sk_psock_put() on this error path before
-bpf_exec_tx_verdict() returns.
-
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: Matt Jolly <Kangie@footclan.ninja>
+Acked-by: Bjørn Mork <bjorn@mork.no>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tls/tls_sw.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/usb/qmi_wwan.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/tls/tls_sw.c
-+++ b/net/tls/tls_sw.c
-@@ -797,6 +797,8 @@ static int bpf_exec_tx_verdict(struct sk
- 			*copied -= sk_msg_free(sk, msg);
- 			tls_free_open_rec(sk);
- 		}
-+		if (psock)
-+			sk_psock_put(sk, psock);
- 		return err;
- 	}
- more_data:
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -1359,6 +1359,7 @@ static const struct usb_device_id produc
+ 	{QMI_FIXED_INTF(0x413c, 0x81b3, 8)},	/* Dell Wireless 5809e Gobi(TM) 4G LTE Mobile Broadband Card (rev3) */
+ 	{QMI_FIXED_INTF(0x413c, 0x81b6, 8)},	/* Dell Wireless 5811e */
+ 	{QMI_FIXED_INTF(0x413c, 0x81b6, 10)},	/* Dell Wireless 5811e */
++	{QMI_FIXED_INTF(0x413c, 0x81cc, 8)},	/* Dell Wireless 5816e */
+ 	{QMI_FIXED_INTF(0x413c, 0x81d7, 0)},	/* Dell Wireless 5821e */
+ 	{QMI_FIXED_INTF(0x413c, 0x81d7, 1)},	/* Dell Wireless 5821e preproduction config */
+ 	{QMI_FIXED_INTF(0x413c, 0x81e0, 0)},	/* Dell Wireless 5821e with eSIM support*/
 
 
