@@ -2,131 +2,64 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B699EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E4AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE9C720659
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F35F20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:50:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nsrZe/81"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="QgBfCmP3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389372AbgEMPsv (ORCPT
+        id S1732034AbgEMPuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:48:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48856 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730745AbgEMPsu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:48:50 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD760C061A0C;
-        Wed, 13 May 2020 08:48:50 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id p12so145695qtn.13;
-        Wed, 13 May 2020 08:48:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=a4M2yE/LvZzKzcdH/Vo/rs9OEGWzJq6qycWPQYwHrqc=;
-        b=nsrZe/81FgA86nEtwq4HUuET2fgc4F0lgzeft+Vo0sFy2ULv5AnbdSf1l0U7mPmmt+
-         Zoh8R6KZbRFsq8II4Gzgg415hdtj70YW7rogr8Bb1OF/FG89HcWVqAkY49y5NhEZ0hkW
-         Qo3lTtemuQ4K5V6e7iPD63PPDgLpvunp+LEiarwew7fowa6hUkuGUB9QJgO+MjHrmefv
-         z7GtyW3JcT+q2pQE1rHww0h/FHbnTjK5CC086hRV+7I7zKbA3TvFZnXbVNqq3+0eYOuL
-         xTAZV0LSYJTvqaYA85YJ2ClpwRUrklrzAiZFYe07hMYhq8eDZDYs4q3FCDgJFX9fS1md
-         TIqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=a4M2yE/LvZzKzcdH/Vo/rs9OEGWzJq6qycWPQYwHrqc=;
-        b=f7oU2lfJHFzZIj9R3ivamyZxlPE3/j4WsX3M0dSQi3UUgXkeKKX/5M0Q+oAIaUncF1
-         5G9wjlYxmtdjnopgcRy9qO+OoHySIid+jMuM3jaa6HohvXKMS8RvdlZwd3wRjF3oxRyA
-         XzgaIpC+tQHziokL1p45CoYQ5PRuM1D6F63EpftGhT32cN1kuXdgXvXjocCAG6Um/AAU
-         g7ir2CwAzFXdMOCzDkqJ20cUvaDTu3G/T9WPHemOH/uQxHuqFJXjcQ1YZNTe8Cah4r+5
-         +xWoV2rYf8CHdCBWxQGvkxc78zQQ0tLzn+M/BdqU2/NDSMNWaDRcMj7gOKZrj7a1JQRP
-         BbEQ==
-X-Gm-Message-State: AGi0PuZ4EdbbPz5H3PWGTGPWRyhlxRHVkYWBET7LjIdtrVda+/KtgL1Y
-        3WGqSLMpPL4Yo8DMQGnb3OyQkS05uQA=
-X-Google-Smtp-Source: APiQypIsMUb5rg7kG03tZ/dd/Uii9pE6b9tqrAxaZZQbFYehQxT9OqSxQQSOin0jFmmu+h/4TaILeA==
-X-Received: by 2002:aed:30ad:: with SMTP id 42mr27709261qtf.88.1589384929906;
-        Wed, 13 May 2020 08:48:49 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id n123sm175213qkf.23.2020.05.13.08.48.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 08:48:49 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Wed, 13 May 2020 11:48:47 -0400
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-wireless@vger.kernel.org,
+        Wed, 13 May 2020 11:50:00 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:58248 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728490AbgEMPuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 11:50:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=CAERETo3HmCt4cbe7skcUAdSIJs8TS922Vv3SvzLnWo=; b=QgBfCmP3WmKmpu6AFL6yVYiciq
+        tlhwOShfjy+y8zbLvLsZLYnwvCB1KcWONL3FUxrPaFR3vIeC+gQ4pi0I4Mc6H6AJlZlllJnesOh5J
+        ae7LL5bwGY6eLSJVHQrzBaHrWegML8A7ADQWcrJRRxhLwEF82ck04tel3r4y0b1IkzAk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jYtdp-002B9b-U1; Wed, 13 May 2020 17:49:53 +0200
+Date:   Wed, 13 May 2020 17:49:53 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Michael Walle <michael@walle.cc>,
+        Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
         linux-kernel@vger.kernel.org
-Subject: Re: gcc-10: kernel stack is corrupted and fails to boot
-Message-ID: <20200513154847.GA158356@rani.riverdale.lan>
-References: <20200509120707.188595-1-arnd@arndb.de>
- <20200509120707.188595-2-arnd@arndb.de>
- <87v9l24qz6.fsf@kamboji.qca.qualcomm.com>
- <87r1vq4qev.fsf@kamboji.qca.qualcomm.com>
- <87d078tjl0.fsf_-_@kamboji.qca.qualcomm.com>
+Subject: Re: [PATCH v1] net: phy: at803x: add cable test support
+Message-ID: <20200513154953.GI499265@lunn.ch>
+References: <20200513120648.14415-1-o.rempel@pengutronix.de>
+ <0c80397b-58b8-0807-0b98-695db8068e25@gmail.com>
+ <20200513154544.gwcccvbicpvrj6vm@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87d078tjl0.fsf_-_@kamboji.qca.qualcomm.com>
+In-Reply-To: <20200513154544.gwcccvbicpvrj6vm@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 09:50:03AM +0300, Kalle Valo wrote:
-> (trimming CC, changing title)
-> 
-> Kalle Valo <kvalo@codeaurora.org> writes:
-> 
-> > Kalle Valo <kvalo@codeaurora.org> writes:
-> >
-> >> Arnd Bergmann <arnd@arndb.de> writes:
-> >>
-> >>> gcc-10 correctly points out a bug with a zero-length array in
-> >>> struct ath10k_pci:
-> >>>
-> >>> drivers/net/wireless/ath/ath10k/ahb.c: In function 'ath10k_ahb_remove':
-> >>> drivers/net/wireless/ath/ath10k/ahb.c:30:9: error: array subscript 0
-> >>> is outside the bounds of an interior zero-length array 'struct
-> >>> ath10k_ahb[0]' [-Werror=zero-length-bounds]
-> >>>    30 |  return &((struct ath10k_pci *)ar->drv_priv)->ahb[0];
-> >>>       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >>> In file included from drivers/net/wireless/ath/ath10k/ahb.c:13:
-> >>> drivers/net/wireless/ath/ath10k/pci.h:185:20: note: while referencing 'ahb'
-> >>>   185 |  struct ath10k_ahb ahb[0];
-> >>>       |                    ^~~
-> >>>
-> >>> The last addition to the struct ignored the comments and added
-> >>> new members behind the array that must remain last.
-> >>>
-> >>> Change it to a flexible-array member and move it last again to
-> >>> make it work correctly, prevent the same thing from happening
-> >>> again (all compilers warn about flexible-array members in the
-> >>> middle of a struct) and get it to build without warnings.
-> >>
-> >> Very good find, thanks! This bug would cause all sort of strange memory
-> >> corruption issues.
-> >
-> > This motivated me to switch to using GCC 10.x and I noticed that you had
-> > already upgraded crosstool so it was a trivial thing to do, awesome :)
-> >
-> > https://mirrors.edge.kernel.org/pub/tools/crosstool/
-> 
-> And now I have a problem :) I first noticed that my x86 testbox is not
-> booting when I compile the kernel with GCC 10.1.0 from crosstool. I
-> didn't get any error messages so I just downgraded the compiler and the
-> kernel was booting fine again. Next I decided to try GCC 10.1 with my
-> x86 laptop and it also failed to boot, but this time I got kernel logs
-> and saw this:
-> 
-> Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: start_secodary+0x178/0x180
-> 
+> Uff.. i missed this. Then I'll need only to add some changes on top of
+> his patch.
 
-See https://lore.kernel.org/lkml/20200423161126.GD26021@zn.tnic/
+I've been chatting with mwalle on IRC today. There should be a repost
+of the patches soon.
+
+   Andrew
