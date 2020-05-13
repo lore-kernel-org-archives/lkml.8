@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD78CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3249CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE2A0205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8FA620575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363618;
-	bh=3RblSuSHb5U89WwAV59h/TSflXzIDVmXUYRrc3Iy2ug=;
+	s=default; t=1589363623;
+	bh=9Id/3gUvE69ng67jci/Ipgi+B0JOa0NZwiI0Aii5NOI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OLycaU+8IPkoN9fu31qd6i0TWDC0Y18IwvyuaYR8UsdLhuJpzuxF+psik7lT6fAP8
-	 P55yu5qx4l+6pXiDSzsryrc3POfnLlK+oCMGX3zhcVbEw+xMNDeMWPFYCdPUnyK6U6
-	 31cmTHkPa3koJyK63tfKMyQeupSk4ExgIqWXO9CM=
+	b=Mzv8YRIpp+QO4+2G71K3yLzw8l8AO3mzLbmO3fwcAMw7XOUed67xDxIg6Bn2d4XJr
+	 BqZZ35NvwW2O7ycEtFJBvnLWodkH7JP2fdtZe0Ls5O4kV/WQzAV8M5ZH0uP6f6X1rQ
+	 nqK1TzxhXs7UItnuPZovRei9ZzyrKErKhoseLbzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387987AbgEMJxi (ORCPT
+        id S2387997AbgEMJxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:53:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55630 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:53:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387972AbgEMJxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:53:34 -0400
+        id S1732603AbgEMJxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:53:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C751C205ED;
-        Wed, 13 May 2020 09:53:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C896820575;
+        Wed, 13 May 2020 09:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363614;
-        bh=3RblSuSHb5U89WwAV59h/TSflXzIDVmXUYRrc3Iy2ug=;
+        s=default; t=1589363619;
+        bh=9Id/3gUvE69ng67jci/Ipgi+B0JOa0NZwiI0Aii5NOI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bwHO9y/kUno75JX5SjIW4gJGjhwOVsZT2Yqwrp3HojWQecxzIAfSXDiiTvMUqVmyS
-         TQ+ZQIDBK7iqy64asIsrHTkwyuNm7g1bzBfdOIGqlUAYpxDlTer7D31d+LgUMmDSWk
-         V1u0G7SQYBMPZu6Ol/ew4lKnKw5IkdAMyfdNbC4U=
+        b=2QHmKl3qoPjwyAzTFQ4SI5rdK8277nhYvaNw6iQ2l+WQAc5PqmFdztZZSVxBT6iQU
+         mYqbAqwziYN60fgPBviZNT4LAmwEH1ZgmxuyP3rIDpoASZMdNGsuWVDO5Ir7CgvUaW
+         odLPjMsNUixIzn3gv4vHpDqfBT5/NVXMFTsD3dxQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Dejin Zheng <zhengdejin5@gmail.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        stable@vger.kernel.org, Sultan Alsawaf <sultan@kerneltoast.com>,
+        Wang Jian <larkwang@gmail.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 054/118] net: enetc: fix an issue about leak system resources
-Date:   Wed, 13 May 2020 11:44:33 +0200
-Message-Id: <20200513094421.808935767@linuxfoundation.org>
+Subject: [PATCH 5.6 056/118] wireguard: send/receive: cond_resched() when processing worker ringbuffers
+Date:   Wed, 13 May 2020 11:44:35 +0200
+Message-Id: <20200513094421.948432116@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -62,35 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dejin Zheng <zhengdejin5@gmail.com>
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
 
-[ Upstream commit d975cb7ea915e64a3ebcfef8a33051f3e6bf22a8 ]
+[ Upstream commit 4005f5c3c9d006157ba716594e0d70c88a235c5e ]
 
-the related system resources were not released when enetc_hw_alloc()
-return error in the enetc_pci_mdio_probe(), add iounmap() for error
-handling label "err_hw_alloc" to fix it.
+Users with pathological hardware reported CPU stalls on CONFIG_
+PREEMPT_VOLUNTARY=y, because the ringbuffers would stay full, meaning
+these workers would never terminate. That turned out not to be okay on
+systems without forced preemption, which Sultan observed. This commit
+adds a cond_resched() to the bottom of each loop iteration, so that
+these workers don't hog the core. Note that we don't need this on the
+napi poll worker, since that terminates after its budget is expended.
 
-Fixes: 6517798dd3432a ("enetc: Make MDIO accessors more generic and export to include/linux/fsl")
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Suggested-by: Sultan Alsawaf <sultan@kerneltoast.com>
+Reported-by: Wang Jian <larkwang@gmail.com>
+Fixes: e7096c131e51 ("net: WireGuard secure network tunnel")
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/freescale/enetc/enetc_pci_mdio.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireguard/receive.c |    2 ++
+ drivers/net/wireguard/send.c    |    4 ++++
+ 2 files changed, 6 insertions(+)
 
---- a/drivers/net/ethernet/freescale/enetc/enetc_pci_mdio.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc_pci_mdio.c
-@@ -74,8 +74,8 @@ err_pci_mem_reg:
- 	pci_disable_device(pdev);
- err_pci_enable:
- err_mdiobus_alloc:
--	iounmap(port_regs);
- err_hw_alloc:
-+	iounmap(port_regs);
- err_ioremap:
- 	return err;
+--- a/drivers/net/wireguard/receive.c
++++ b/drivers/net/wireguard/receive.c
+@@ -516,6 +516,8 @@ void wg_packet_decrypt_worker(struct wor
+ 				&PACKET_CB(skb)->keypair->receiving)) ?
+ 				PACKET_STATE_CRYPTED : PACKET_STATE_DEAD;
+ 		wg_queue_enqueue_per_peer_napi(skb, state);
++		if (need_resched())
++			cond_resched();
+ 	}
  }
+ 
+--- a/drivers/net/wireguard/send.c
++++ b/drivers/net/wireguard/send.c
+@@ -281,6 +281,8 @@ void wg_packet_tx_worker(struct work_str
+ 
+ 		wg_noise_keypair_put(keypair, false);
+ 		wg_peer_put(peer);
++		if (need_resched())
++			cond_resched();
+ 	}
+ }
+ 
+@@ -305,6 +307,8 @@ void wg_packet_encrypt_worker(struct wor
+ 		wg_queue_enqueue_per_peer(&PACKET_PEER(first)->tx_queue, first,
+ 					  state);
+ 
++		if (need_resched())
++			cond_resched();
+ 	}
+ }
+ 
 
 
