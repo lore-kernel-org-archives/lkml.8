@@ -2,218 +2,104 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5ABCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19043C2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33D94204EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93B8F204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:24:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ppQ+AT6/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387545AbgEMNXP (ORCPT
+        id S1733058AbgEMNYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:23:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:45852 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726001AbgEMNXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:23:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2877A30E;
-        Wed, 13 May 2020 06:23:14 -0700 (PDT)
-Received: from [10.57.36.85] (unknown [10.57.36.85])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F5103F71E;
-        Wed, 13 May 2020 06:23:12 -0700 (PDT)
-Subject: Re: [PATCH v4 01/38] dma-mapping: add generic helpers for mapping
- sgtable objects
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-References: <20200512085710.14688-1-m.szyprowski@samsung.com>
- <CGME20200512090107eucas1p13a38ce5ce4c15cd0033acaea7b26c9b0@eucas1p1.samsung.com>
- <20200512090058.14910-1-m.szyprowski@samsung.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <400501ec-c56b-edb7-7def-36ad43264123@arm.com>
-Date:   Wed, 13 May 2020 14:23:10 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 13 May 2020 09:24:01 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:11881 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbgEMNYA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 09:24:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1589376240; x=1620912240;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=jl2hrDxyAORa+XFiEFSn0ilXng4tlUFhSS/e2Ad3yGc=;
+  b=ppQ+AT6/eN0pBV1TuwTUq1vgMDPTebCqumvWpiaJWJ4TbxscFaxNjDqa
+   47iy2L7fXgLx8MJatG56OgYY4RBFIjtOfcSzJvXcsmVzOviOXvns6xTLh
+   kIR/Wfkmj9uZ80OYbGdTNP0VZjDZKj8BP5k59uXFr6rgUAYrs4Ng42Dyx
+   xuokhdX2KuTY2dfmfI0kWJcF06jFNV2U0xHeX3Pemes/tHhE92nkpyLXZ
+   cuiLH5CkfM+sGztFOnYIOrkgJs7D+hYLPS6rrDuIsSQls0Lu+Qdi8y5/2
+   ryei8Q/aPkIdSX5noL2nrmNi3ndl7VCGGHlryYGt4aNW3f5opciGt+63c
+   w==;
+IronPort-SDR: mWkyqza1Rv+cCTgFnUoPX4RnVh76MFtwDVLZag22z+BsGLH402v6qEdw/EPQ+1WY78cxRHC7wC
+ BXyOyKXZ+sVYLzSfSHXY7+D1g69TnH0AJfhOV0cwjslsw0fGsohTs4jBdMipRkTb5YlPwsrZJK
+ lyEiE0r7R62BSkGGDPh1ZLEF5Z9ACda438fRu8LEvFN9Sn0FQqQCfC2ui4g4CAjEyiLdml216m
+ XQFf0amG6JlU7kCXqwAeHrRsYDMdsSNUWwPjihY8Gyn3zxIFZg7wsS1JCLFq0Qk/X+KfhvkHZQ
+ c4A=
+X-IronPort-AV: E=Sophos;i="5.73,387,1583218800"; 
+   d="scan'208";a="73309689"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 May 2020 06:23:59 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 13 May 2020 06:23:58 -0700
+Received: from soft-dev15.microsemi.net (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Wed, 13 May 2020 06:23:57 -0700
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Alexandre Belloni" <alexandre.belloni@bootlin.com>
+Subject: [PATCH] MIPS: dts: mscc: Updated changed name for miim pinctrl function
+Date:   Wed, 13 May 2020 15:23:47 +0200
+Message-ID: <20200513132347.24975-1-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200512090058.14910-1-m.szyprowski@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-12 10:00 am, Marek Szyprowski wrote:
-> struct sg_table is a common structure used for describing a memory
-> buffer. It consists of a scatterlist with memory pages and DMA addresses
-> (sgl entry), as well as the number of scatterlist entries: CPU pages
-> (orig_nents entry) and DMA mapped pages (nents entry).
-> 
-> It turned out that it was a common mistake to misuse nents and orig_nents
-> entries, calling DMA-mapping functions with a wrong number of entries or
-> ignoring the number of mapped entries returned by the dma_map_sg
-> function.
-> 
-> To avoid such issues, lets introduce a common wrappers operating directly
+This is an add-on patch to the main SoC Sparx5 series
+(Message-ID: <20200513125532.24585-1-lars.povlsen@microchip.com>).
 
-Nit: "let's"
+This changes the miim pinctrl function name from "miim1" to "miim" due
+to refactoring in the driver, obsoleting the instance number.
 
-> on the struct sg_table objects, which take care of the proper use of
-> the nents and orig_nents entries.
+The change in the driver was to better fit new platforms, as the
+instance number is redundant information. Specifically, support for
+the Microchip Sparx5 SoC is being submitted, where this change became
+necessary.
 
-A few more documentation nitpicks below, but either way the 
-implementation itself (modulo Christoph's fixup) looks good;
+Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+---
+ arch/mips/boot/dts/mscc/ocelot.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+diff --git a/arch/mips/boot/dts/mscc/ocelot.dtsi b/arch/mips/boot/dts/mscc/ocelot.dtsi
+index 797d336db54d3..f94e8a02ed06b 100644
+--- a/arch/mips/boot/dts/mscc/ocelot.dtsi
++++ b/arch/mips/boot/dts/mscc/ocelot.dtsi
+@@ -214,7 +214,7 @@ uart2_pins: uart2-pins {
 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
-> For more information, see '[PATCH v4 00/38] DRM: fix struct sg_table nents
-> vs. orig_nents misuse' thread:
-> https://lore.kernel.org/dri-devel/20200512085710.14688-1-m.szyprowski@samsung.com/T/
-> ---
->   include/linux/dma-mapping.h | 79 +++++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 79 insertions(+)
-> 
-> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-> index b43116a..88f01cc 100644
-> --- a/include/linux/dma-mapping.h
-> +++ b/include/linux/dma-mapping.h
-> @@ -609,6 +609,85 @@ static inline void dma_sync_single_range_for_device(struct device *dev,
->   	return dma_sync_single_for_device(dev, addr + offset, size, dir);
->   }
->   
-> +/**
-> + * dma_map_sgtable - Map the given buffer for the DMA operations
+ 			miim1: miim1 {
+ 				pins = "GPIO_14", "GPIO_15";
+-				function = "miim1";
++				function = "miim";
+ 			};
 
-Either "for DMA operations", "for the DMA operation", or "for a DMA 
-operation", depending on the exact context. Or at that point, perhaps 
-just "for DMA".
-
-> + * @dev:	The device to perform a DMA operation
-
-That doesn't quite parse, maybe "the device performing the DMA 
-operation", or "the device for which to perform the DMA operation", 
-depending on whether "DMA operation" means the mapping or the actual 
-hardware access?
-
-> + * @sgt:	The sg_table object describing the buffer
-> + * @dir:	DMA direction
-> + * @attrs:	Optional DMA attributes for the map operation
-> + *
-> + * Maps a buffer described by a scatterlist stored in the given sg_table
-> + * object for the @dir DMA operation by the @dev device. After success
-> + * the ownership for the buffer is transferred to the DMA domain. One has
-> + * to call dma_sync_sgtable_for_cpu() or dma_unmap_sgtable() to move the
-> + * ownership of the buffer back to the CPU domain before touching the
-> + * buffer by the CPU.
-> + * Returns 0 on success or -EINVAL on error during mapping the buffer.
-
-Maybe make that a proper "Return:" section?
-
-> + */
-> +static inline int dma_map_sgtable(struct device *dev, struct sg_table *sgt,
-> +		enum dma_data_direction dir, unsigned long attrs)
-> +{
-> +	int n = dma_map_sg_attrs(dev, sgt->sgl, sgt->orig_nents, dir, attrs);
-> +
-> +	if (n > 0) {
-> +		sgt->nents = n;
-> +		return 0;
-> +	}
-> +	return -EINVAL;
-> +}
-> +
-> +/**
-> + * dma_unmap_sgtable - Unmap the given buffer for the DMA operations
-> + * @dev:	The device to perform a DMA operation
-
-Same two points as before.
-
-> + * @sgt:	The sg_table object describing the buffer
-> + * @dir:	DMA direction
-> + * @attrs:	Optional DMA attributes for the map operation
-
-Presumably "the unmap operation", although it *is* true that some 
-attributes are expected to match those originally passed to 
-dma_map_sgtable()... not sure if kerneldoc can can stretch to that level 
-of detail concisely ;)
-
-> + *
-> + * Unmaps a buffer described by a scatterlist stored in the given sg_table
-> + * object for the @dir DMA operation by the @dev device. After this function
-> + * the ownership of the buffer is transferred back to the CPU domain.
-> + */
-> +static inline void dma_unmap_sgtable(struct device *dev, struct sg_table *sgt,
-> +		enum dma_data_direction dir, unsigned long attrs)
-> +{
-> +	dma_unmap_sg_attrs(dev, sgt->sgl, sgt->orig_nents, dir, attrs);
-> +}
-> +
-> +/**
-> + * dma_sync_sgtable_for_cpu - Synchronize the given buffer for the CPU access
-
-s/the CPU/CPU/
-
-> + * @dev:	The device to perform a DMA operation
-
-As before.
-
-> + * @sgt:	The sg_table object describing the buffer
-> + * @dir:	DMA direction
-> + *
-> + * Performs the needed cache synchronization and moves the ownership of the
-> + * buffer back to the CPU domain, so it is safe to perform any access to it
-> + * by the CPU. Before doing any further DMA operations, one has to transfer
-> + * the ownership of the buffer back to the DMA domain by calling the
-> + * dma_sync_sgtable_for_device().
-> + */
-> +static inline void dma_sync_sgtable_for_cpu(struct device *dev,
-> +		struct sg_table *sgt, enum dma_data_direction dir)
-> +{
-> +	dma_sync_sg_for_cpu(dev, sgt->sgl, sgt->orig_nents, dir);
-> +}
-> +
-> +/**
-> + * dma_sync_sgtable_for_device - Synchronize the given buffer for the DMA
-
-That one doesn't even
-
-> + * @dev:	The device to perform a DMA operation
-
-As before.
-
-But of course, many thanks for taking the effort to add such complete 
-documentation in the first place :)
-
-Cheers,
-Robin.
-
-> + * @sgt:	The sg_table object describing the buffer
-> + * @dir:	DMA direction
-> + *
-> + * Performs the needed cache synchronization and moves the ownership of the
-> + * buffer back to the DMA domain, so it is safe to perform the DMA operation.
-> + * Once finished, one has to call dma_sync_sgtable_for_cpu() or
-> + * dma_unmap_sgtable().
-> + */
-> +static inline void dma_sync_sgtable_for_device(struct device *dev,
-> +		struct sg_table *sgt, enum dma_data_direction dir)
-> +{
-> +	dma_sync_sg_for_device(dev, sgt->sgl, sgt->orig_nents, dir);
-> +}
-> +
->   #define dma_map_single(d, a, s, r) dma_map_single_attrs(d, a, s, r, 0)
->   #define dma_unmap_single(d, a, s, r) dma_unmap_single_attrs(d, a, s, r, 0)
->   #define dma_map_sg(d, s, n, r) dma_map_sg_attrs(d, s, n, r, 0)
-> 
+ 		};
+--
+2.26.2
