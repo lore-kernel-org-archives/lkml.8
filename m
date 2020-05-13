@@ -2,159 +2,243 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C562C2D0F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD49C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC5A207BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 780D2206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:45:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZgKEGRwY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgEMDd6 (ORCPT
+        id S1728633AbgEMDph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 23:33:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47320 "EHLO
+        Tue, 12 May 2020 23:45:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725929AbgEMDd6 (ORCPT
+        by vger.kernel.org with ESMTP id S1726550AbgEMDph (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 23:33:58 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2BECC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 20:33:57 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jYi9V-007ApT-Mq; Wed, 13 May 2020 03:33:49 +0000
-Date:   Wed, 13 May 2020 04:33:49 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Alexander Potapenko <glider@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, sunhaoyl@outlook.com
-Subject: Re: [PATCH] fs/binfmt_elf.c: allocate initialized memory in
- fill_thread_core_info()
-Message-ID: <20200513033349.GR23230@ZenIV.linux.org.uk>
-References: <20200419100848.63472-1-glider@google.com>
- <20200420153352.6682533e794f591dae7aafbc@linux-foundation.org>
- <202004201540.01C8F82B@keescook>
- <20200421034249.GB23230@ZenIV.linux.org.uk>
- <CAG_fn=VZZ7yUxtOGzuTLkr7wmfXWtKK9BHHYawj=rt9XWnCYvg@mail.gmail.com>
- <20200512010901.GQ23230@ZenIV.linux.org.uk>
- <20200512034400.GA1537486@ZenIV.linux.org.uk>
- <CAG_fn=Xopqwu8qpdH2xDHmGSy1utp7uyPn7s6btm0hdaV7JVRg@mail.gmail.com>
+        Tue, 12 May 2020 23:45:37 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B067C061A0C;
+        Tue, 12 May 2020 20:45:35 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t16so6283362plo.7;
+        Tue, 12 May 2020 20:45:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WzZ9PimUcVd5nGTFpvtQ2vT2+fHIwsD6fys2CBMtqq4=;
+        b=ZgKEGRwYyPAM8YMf9ajyjrw7aVOG5BqyaVVgGJls6WOuP1ecDTzZz1wKY1UQkFXJ25
+         E2JUp4t9a3DDJo9R/o/dqV+X+RkBta3H1Iy7KgmMh6R8hw1Pn8bp9NogQ+yGlb032Jz1
+         +iAfAc1LuC8LtE7V3sTUc+op6hrBpFbM20qyW19f0iTNoGAVry34Mks3PqJhIt4EkOh/
+         Vyep7czy2BucDM9VQZLc/rtE28T9S7CQ5hpM8fyJVWJApHauPRs5Z6ZX6f9OPV3Fo4T2
+         KpD/qwI3ui24CNlrHi/LfncFKO5CEodfx0Vzv7dX8ZFV8HdNvvouHhC+qIVxq3XuKsz2
+         5yWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WzZ9PimUcVd5nGTFpvtQ2vT2+fHIwsD6fys2CBMtqq4=;
+        b=RYZWl/7EQmG3FwnQuxv+oIhrcFARMxVYODARD6KcZHbsaMQHfOMTMnbsDjmXtGKo4Z
+         9nLz+/s/I7Dp+xJo10YYlHGYd996lv6mvqKazP2jDdIlA4BD9HBixhu/BZjVHqClM4uk
+         rk1wkZrShlz4e9IgHPmu/7JG/5IXPmtoIQ7UE/BhW7MToIzB6wTZfvCqFJklPTPUmxgR
+         A8gza6c6oqiuv5d2wStCXMGwfThJxjQwiVWRvKIRlnVS+XGF7EOIjS2uUPAIuR4pGsnf
+         EUFyfcU8lTb8d4YS7VMbx2FTg/f5/EoApiDP3DdZSzwJxxnegv+Yxs/uyrKLEfz1An5Q
+         4ipw==
+X-Gm-Message-State: AOAM531xY2uYv5Oowh2bNGTlCojp+Xx8gG4Kw/UeLPYZPMJaH0Pmu8A+
+        ge9k81ag6sm0IiTuZWhRhEbigbcF
+X-Google-Smtp-Source: ABdhPJwxouNOdx/sBkWjAxaxUal/IA3gjfZKyj/T1PfcebnsGNwhDFUzAjVD2f7m2GD2drQWDGwOxA==
+X-Received: by 2002:a17:90a:4d4a:: with SMTP id l10mr6664088pjh.0.1589341534480;
+        Tue, 12 May 2020 20:45:34 -0700 (PDT)
+Received: from [10.230.191.242] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id w73sm490933pfd.113.2020.05.12.20.45.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 May 2020 20:45:33 -0700 (PDT)
+Subject: Re: [PATCH net-next 1/4] net: ethernet: validate pause autoneg
+ setting
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1589243050-18217-1-git-send-email-opendmb@gmail.com>
+ <1589243050-18217-2-git-send-email-opendmb@gmail.com>
+ <20200512004714.GD409897@lunn.ch>
+ <ae63b295-b6e3-6c34-c69d-9e3e33bf7119@gmail.com>
+ <20200512185503.GD1551@shell.armlinux.org.uk>
+From:   Doug Berger <opendmb@gmail.com>
+Message-ID: <0cf740ed-bd13-89d5-0f36-1e5305210e97@gmail.com>
+Date:   Tue, 12 May 2020 20:48:22 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG_fn=Xopqwu8qpdH2xDHmGSy1utp7uyPn7s6btm0hdaV7JVRg@mail.gmail.com>
+In-Reply-To: <20200512185503.GD1551@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 10:20:21AM +0200, Alexander Potapenko wrote:
-> On Tue, May 12, 2020 at 5:44 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >
-> > On Tue, May 12, 2020 at 02:09:01AM +0100, Al Viro wrote:
-> > > On Tue, Apr 21, 2020 at 10:14:25AM +0200, Alexander Potapenko wrote:
-> > > > > Not lately and I would also like to hear the details; which regset it is?
-> > > > > Should be reasonably easy to find - just memset() the damn thing to something
-> > > > > recognizable, do whatever triggers that KMSAN report and look at that
-> > > > > resulting coredump.
-> > > >
-> > > > The bug is easily triggerable by the following program:
-> > > >
-> > > > ================================================
-> > > > int main() {
-> > > >   volatile char *c = 0;
-> > > >   (void)*c;
-> > > >   return 0;
-> > > > }
-> > > > ================================================
-> > > >
-> > > > in my QEMU after I do `ulimit -c 10000`.
-> > >
-> > > .config, please - I hadn't been able to reproduce that on mine.
-> > > Coredump obviously does happen, but not a trace of the poison
-> > > is there - with your memset(data, 0xae, size) added, that is.
-> >
-> > Actually, more interesting question would be your /proc/cpuinfo...
+On 5/12/2020 11:55 AM, Russell King - ARM Linux admin wrote:
+> On Tue, May 12, 2020 at 11:31:39AM -0700, Doug Berger wrote:
+>> This was intended as a fix, but I thought it would be better to keep it
+>> as part of this set for context and since net-next is currently open.
+>>
+>> The context is trying to improve the phylib support for offloading
+>> ethtool pause configuration and this is something that could be checked
+>> in a single location rather than by individual drivers.
+>>
+>> I included it here to get feedback about its appropriateness as a common
+>> behavior. I should have been more explicit about that.
+>>
+>> Personally, I'm actually not that fond of this change since it can
+>> easily be a source of confusion with the ethtool interface because the
+>> link autonegotiation and the pause autonegotiation are controlled by
+>> different commands.
+>>
+>> Since the ethtool -A command performs a read/modify/write of pause
+>> parameters, you can get strange results like these:
+>> # ethtool -s eth0 speed 100 duplex full autoneg off
+>> # ethtool -A eth0 tx off
+>> Cannot set device pause parameters: Invalid argument
+>> #
+>> Because, the get read pause autoneg as enabled and only the tx_pause
+>> member of the structure was updated.
 > 
-> See both attached.
-> I was also able to reproduce the bug on my desktop using the attached
-> dump.sh script.
+> This looks like the same argument I've been having with Heiner over
+> the EEE interface, except there's a difference here.
+> 
+> # ethtool -A eth0 autoneg on
+> # ethtool -s eth0 autoneg off speed 100 duplex full
+> 
+> After those two commands, what is the state of pause mode?  The answer
+> is, it's disabled.
+> 
+> # ethtool -A eth0 autoneg off rx on tx on
+> 
+> is perfectly acceptable, as we are forcing pause modes at the local
+> end of the link.
+> 
+> # ethtool -A eth0 autoneg on
+> 
+> Now, the question is whether that should be allowed or not - but this
+> is merely restoring the "pause" settings that were in effect prior
+> to the previous command.  It does not enable pause negotiation,
+> because autoneg as a whole is disabled, but it _allows_ pause
+> negotiation to occur when autoneg is enabled at some point in the
+> future.
+> 
+> Also, allowing "ethtool -A eth0 autoneg on" when "ethtool -s eth0
+> autoneg off" means you can configure the negotiation parameters
+> _before_ triggering a negotiation cycle on the link.  In other words,
+> it would avoid:
+> 
+> # ethtool -s eth0 autoneg on
+> # # Link renegotiates
+> # ethtool -A eth0 autoneg on
+> # # Link renegotiates a second time
+> 
+> and it also means that if stuff has already been scripted to avoid
+> this, nothing breaks.
+> 
+> If we start rejecting ethtool -A because autoneg is disabled, then
+> things get difficult to configure - we would need ethtool documentation
+> to state that autoneg must be enabled before configuration of pause
+> and EEE can be done.  IMHO, that hurts usability, and adds confusion.
+> 
+Thanks for your input and I agree with what you have said here. I will
+remove this commit from the set when I resubmit and I assume that, like
+Michal, you would like to see the comment in ethtool.h revised.
 
-xsaves is the critical part here.  FWIW, the breakage first appeared in
+I think the crux of the matter is that the meaning of the autoneg pause
+parameter is not well specified, and that is fundamentally what I am
+trying to clarify in a common implementation that might help unify a
+consistent behavior across network drivers.
 
-commit 91c3dba7dbc199191272f4a9863f86ea3bfd679f
-Author: Yu-cheng Yu <yu-cheng.yu@intel.com>
-Date:   Fri Jun 17 13:07:17 2016 -0700
+My interpretation is that the link autonegotiation and the pause
+autonegotiation can be meaningfully set independently from each other
+and that the interplay between the two has easily overlooked subtleties.
 
-    x86/fpu/xstate: Fix PTRACE frames for XSAVES
-    
-    XSAVES uses compacted format and is a kernel instruction. The kernel
-    should use standard-format, non-supervisor state data for PTRACE.
+My opinion (which is at least in part drawn from my interpretation of
+your opinion) is as follows with regard to pause behaviors:
 
-The b0rken part is
-+       for (i = 0; i < XFEATURE_MAX; i++) {
-+               /*
-+                * Copy only in-use xstates:
-+                */
-+               if ((header.xfeatures >> i) & 1) {
-+                       void *src = __raw_xsave_addr(xsave, 1 << i);
-+
-+                       offset = xstate_offsets[i];
-+                       size = xstate_sizes[i];
-+
-+                       ret = xstate_copyout(offset, size, kbuf, ubuf, src, 0, count);
-+
-+                       if (ret)
-+                               return ret;
-+
-+                       if (offset + size >= count)
-+                               break;
-+               }
-+
-+       }
+The link autonegotiation parameter concerns itself with whether the
+Pause capabilities are advertised as part of autonegotiation of link
+parameters.
 
-The skipped parts are left uninitialized.  I'm not sure what's the best
-way to deal with that.  Sure, we can zero the buffer passed to ->get().
-However, most of the instances (and I'd looked through quite a few)
-do _not_ leave uninitialized chunks.  So I would rather have
-xstateregs_get() zero the gaps explicitly.  I'll try to put together
-a sane fix when I get some sleep.
+The pause autonegotiation parameter concerns itself with whether the
+local node is willing to accept the advertised capabilities of its peer
+as input into its pause configuration.
 
-FWIW, what I'm going to do is
-	* make all callers of copy_regset_to_user() pass 0 as pos
-(there are very few exceptions - one on arm64, three on sparc32
-and five on sparc64; I hadn't dealt with arm64 one yet, but all
-cases on sparc are handled)
-	* switch copy_regset_to_user() to doing all copyout at
-once - allocate a buffer, pass it to ->get(), then copy_to_user()
-the entire thing, same as coredump does
-	* introduce
-struct membuf {
-	void *p;
-	size_t left;
-};
-static inline int membuf_zero(struct membuf *s, size_t size)
-static inline void membuf_align(struct membuf *s, int n)
-static inline int membuf_write(struct membuf *s, const void *v, size_t size)
-and membuf_store(s, v) (basically, write the value of v to the damn thing,
-with sizeof(v) for size).
-	* introduce
-typedef int user_regset_get2_fn(struct task_struct *target,
-				const struct user_regset *regset,
-				struct membuf to);
-and
-	user_regset_get2_fn             *get2;
-in user_regset, replacing ->get().  Instances would be using the
-membuf_...() primitives for actual copying.
-	* convert the instances.  I've done that for several architectures,
-and it's _much_ cleaner than the current mess with ->get().
-	* get rid of user_regset_copyout() et.al. once there's no
-callers left.
+The Tx_Pause and Rx_Pause parameters indicate in which directions pause
+frames should be supported.
 
-This bug clearly needs to be fixed in a way that would be easy
-to backport, so it has go in front of that queue.  I'll try to
-come up with a clean fix and post it (hopefully tomorrow)...
+If the pause autonegotiation is off, the MAC is allowed to act
+exclusively according to the Tx_Pause and Rx_Pause parameters. If
+Tx_Pause is on the MAC should send pause control frames whenever it
+needs to assert back pressure to ease the load on its receiver. If
+Tx_Pause is off the MAC should not transmit any pause control frames. If
+Rx_Pause is on the MAC should delay its transmissions in response to any
+pause control frames it receives. If Rx_Pause is off received pause
+control frames should be ignored. If link autonegotiation is on the
+Tx_Pause and Rx_Pause values should be advertised in the PHY Pause and
+AsymPause bits for informational purposes according to the following
+mapping:
+    tx rx  Pause AsymPause
+    0  0   0     0
+    0  1   1     1
+    1  0   0     1
+    1  1   1     0
+
+If the pause autonegotiation is on, and the link autonegotiation is also
+on then the Tx_Pause and Rx_Pause values should be advertised in the PHY
+Pause and AsymPause bits according to the IEEE 802.3 spec according to
+the following mapping:
+    tx rx  Pause AsymPause
+    0  0   0     0
+    0  1   1     1
+    1  0   0     1
+    1  1   1     1
+If link autonegotiation succeeds the peer's advertised Pause and
+AsymPause bits should be used in combination with the local Pause and
+Pause Asym bits to determine in which directions pause frames are
+supported. However, regardless of the negotiated result, if the Tx_Pause
+is off no pause frames should be sent and if the Rx_Pause is off
+received pause frames should be ignored. If Tx_Pause is on and the
+negotiated result allows pause frames to be sent then pause frames may
+be sent by the local node to apply back pressure to reduce the load on
+its receive path. If Rx_Pause is on and the negotiated result allows
+pause frames to be received then the local node should delay its
+transmission in response to received pause frames. In this way the local
+settings can only override the negotiated settings to disable the use of
+pause frames.
+
+If the pause autonegotiation is on, and the link autonegotiation is off
+then the values of the peer's Pause and AsymPause bits are forced to 0
+(because they can't be exchanged without link autonegotiation) which
+always produces the negotiated result of pause frame use being disabled
+in both directions. Since the local Tx_Pause and Rx_Pause parameters can
+only override the negotiation when they are off, pause frames should not
+be sent or received.
+
+This is the behavior I have attempted to implement by this patch set for
+the bcmgenet driver, but I see now that I made an error in this last
+case since I made the negotiation also dependent on the link
+autonegotiation being enabled. I will correct that in a re-submission.
+
+I would appreciate if you can confirm that you agree that this is a good
+general behavior for all network devices before I resubmit, or please
+help me understand what could be done better.
+
+Many thanks,
+    Doug
