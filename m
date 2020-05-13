@@ -2,101 +2,103 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 112F0C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFDCCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5CA020753
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9362020753
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:25:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732883AbgEMLV1 (ORCPT
+        id S1728258AbgEMLZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 07:21:27 -0400
-Received: from elvis.franken.de ([193.175.24.41]:52007 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732841AbgEMLVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 07:21:25 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jYpRu-000588-01; Wed, 13 May 2020 13:21:18 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 67175C0482; Wed, 13 May 2020 13:19:07 +0200 (CEST)
-Date:   Wed, 13 May 2020 13:19:07 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Hauke Mehrtens <hauke@hauke-m.de>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        John Crispin <john@phrozen.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Keguang Zhang <keguang.zhang@gmail.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        James Hartley <james.hartley@sondrel.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] MIPS: Only include the platform file needed
-Message-ID: <20200513111907.GB7151@alpha.franken.de>
-References: <20200509230150.24466-1-tsbogend@alpha.franken.de>
+        Wed, 13 May 2020 07:25:05 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:57550 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbgEMLZD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 07:25:03 -0400
+Received: from fsav105.sakura.ne.jp (fsav105.sakura.ne.jp [27.133.134.232])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 04DBOOjo033442;
+        Wed, 13 May 2020 20:24:24 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav105.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav105.sakura.ne.jp);
+ Wed, 13 May 2020 20:24:24 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav105.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 04DBOOjV033412
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Wed, 13 May 2020 20:24:24 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] printk: Add loglevel for "do not print to consoles".
+To:     Michal Hocko <mhocko@kernel.org>, Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+References: <4dae86af-1d9a-f5a8-cff6-aa91ec038a79@i-love.sakura.ne.jp>
+ <20200428121828.GP28637@dhcp22.suse.cz>
+ <b4d74234-8009-9ffd-011f-bd5d1a4b85f6@i-love.sakura.ne.jp>
+ <20200428154532.GU28637@dhcp22.suse.cz>
+ <b1d507b1-dae7-f526-c74a-d465ddecea6a@i-love.sakura.ne.jp>
+ <20200429142106.GG28637@dhcp22.suse.cz>
+ <a59271f1-b3fc-26d1-f0a2-5ec351d0095e@i-love.sakura.ne.jp>
+ <20200513062652.GM413@jagdpanzerIV.localdomain>
+ <a75d6560-ad99-5b02-3648-247c27c3a398@i-love.sakura.ne.jp>
+ <20200513100413.GH17734@linux-b0ei> <20200513104938.GW29153@dhcp22.suse.cz>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <d66c38d9-dd97-072d-e1a7-949e9573b38d@i-love.sakura.ne.jp>
+Date:   Wed, 13 May 2020 20:24:24 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200509230150.24466-1-tsbogend@alpha.franken.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200513104938.GW29153@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 10, 2020 at 01:01:47AM +0200, Thomas Bogendoerfer wrote:
-> Instead of including all Platform files, we simply include the
-> needed one and avoid clashes with makefile variables.
+On 2020/05/13 19:49, Michal Hocko wrote:
+> On Wed 13-05-20 12:04:13, Petr Mladek wrote:
+>> What is so special about  OOM dump task so that it would deserve such
+>> complications?
 > 
-> Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> ---
->  arch/mips/Kbuild.platforms       | 73 +++++++++++++++++++++-------------------
->  arch/mips/alchemy/Platform       |  3 --
->  arch/mips/ar7/Platform           |  1 -
->  arch/mips/ath25/Platform         |  1 -
->  arch/mips/ath79/Platform         |  1 -
->  arch/mips/bcm47xx/Platform       |  1 -
->  arch/mips/bcm63xx/Platform       |  1 -
->  arch/mips/bmips/Platform         |  1 -
->  arch/mips/cavium-octeon/Platform |  1 -
->  arch/mips/cobalt/Platform        |  1 -
->  arch/mips/dec/Platform           |  1 -
->  arch/mips/generic/Platform       |  1 -
->  arch/mips/jazz/Platform          |  1 -
->  arch/mips/jz4740/Platform        |  1 -
->  arch/mips/lantiq/Platform        |  1 -
->  arch/mips/loongson2ef/Platform   |  1 -
->  arch/mips/loongson32/Platform    |  1 -
->  arch/mips/loongson64/Platform    |  1 -
->  arch/mips/mti-malta/Platform     |  1 -
->  arch/mips/netlogic/Platform      |  1 -
->  arch/mips/paravirt/Platform      |  1 -
->  arch/mips/pic32/Platform         |  1 -
->  arch/mips/pistachio/Platform     |  1 -
->  arch/mips/pnx833x/Platform       |  1 -
->  arch/mips/rb532/Platform         |  1 -
->  arch/mips/sgi-ip22/Platform      |  2 --
->  arch/mips/sgi-ip27/Platform      |  3 --
->  arch/mips/sgi-ip30/Platform      |  3 --
->  arch/mips/sgi-ip32/Platform      |  1 -
->  arch/mips/sibyte/Platform        |  4 ---
->  arch/mips/sni/Platform           |  1 -
->  arch/mips/txx9/Platform          |  3 --
->  32 files changed, 39 insertions(+), 77 deletions(-)
+> Nothing really. Except for the potential amount of the output.
 
-applied to mips-next.
+"echo t > /proc/sysrq-trigger" from userspace program is another example.
 
-Thomas.
+> But as
+> you've said there are two ways around that. Disable this output if you
+> do not need it or make it a lower loglevel. 
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+Disable this output for syslog is not acceptable for me, but disable this
+output for consoles is preferable for me.
+
+> I simply cannot tell whether somebody considers
+> dump_tasks an important information to be printed on consoles.
+
+I don't think dump_tasks() is important information to be printed on consoles.
+But since somebody might think dump_tasks() is important information to be
+printed on consoles, I suggest switching KERN_NO_CONSOLES using e.g. sysctl.
+
+> 
+> If there is any need to control which messages should be routed to which
+> backend then the proper solution would be to filter messages per log
+> level per backend.
+
+Possible backends will be "zero or more than zero" consoles + "zero or one"
+syslog, and KERN_NO_CONSOLES is a method for force selecting "zero" console
+backend.
+
+>                    But I have no idea how feasible this is for the
+> existing infrastructure - or maybe it already exists...
+
+There is per-console loglevel proposal (which allows selecting "some" console
+backends). But it is based on KERN_$LOGLEVEL which is too rough-grained.
