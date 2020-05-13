@@ -2,97 +2,87 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 931B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19409C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE388204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:07:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589386074;
-	bh=A5HewM5jEMYQc0YI3s2HBSVxUk9g5weQjwr9X9XlfJQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MmfBJdY2kAd4AnWbGwgcLNUUnQTXNGy5EKLcgpcDC0e+dP59Gbx/y7c5U3A1KIBNS
-	 SqlSl9Pnr7RxbwC8yV3TjLmvg4X/ufaqEuLd5q8lpnjDaq00ns9GXKbhSu5SkvXYhs
-	 URFle3WQuE/kNqODxaqVM/irxbrOFSKwtny85yHQ=
+	by mail.kernel.org (Postfix) with ESMTP id 4EAF020690
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:08:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389354AbgEMQHx (ORCPT
+        id S2389407AbgEMQIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 12:07:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58142 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729589AbgEMQHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 12:07:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A815B204EC;
-        Wed, 13 May 2020 16:07:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589386073;
-        bh=A5HewM5jEMYQc0YI3s2HBSVxUk9g5weQjwr9X9XlfJQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xWckjGMvVk1t2vke8bm2d67UURIIuvH0wJ3r7mjbwut2ne90zvTkJyVb1pQ8TTTAR
-         byvpJMaHrdeTStPYSNUyJ7wFSSzIFOaIcL8KthpI919GFl56YtoPutGyvRHQzQSAYY
-         He8s6YPwcxITZaYlbG8WyVgiV4so3+POFtQf7XBE=
-Date:   Wed, 13 May 2020 18:07:50 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Alex Elder <elder@kernel.org>, greybus-dev@lists.linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: greybus: Replace zero-length array with
- flexible-array
-Message-ID: <20200513160750.GA1362525@kroah.com>
-References: <20200507185318.GA14393@embeddedor>
- <20200513150343.GZ25962@localhost>
- <20200513153918.GA1360420@kroah.com>
- <20200513154807.GA25962@localhost>
+        Wed, 13 May 2020 12:08:02 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:21400 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387541AbgEMQIB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 12:08:01 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-164-ZG3c9vU-NVypks5Qb5EXZQ-1; Wed, 13 May 2020 17:07:58 +0100
+X-MC-Unique: ZG3c9vU-NVypks5Qb5EXZQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 13 May 2020 17:07:57 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 13 May 2020 17:07:57 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Arnd Bergmann' <arnd@arndb.de>, Kalle Valo <kvalo@codeaurora.org>
+CC:     linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: gcc-10: kernel stack is corrupted and fails to boot
+Thread-Topic: gcc-10: kernel stack is corrupted and fails to boot
+Thread-Index: AQHWKT/xY215XsBMzU2jywoKX8cjPqimLnCA
+Date:   Wed, 13 May 2020 16:07:57 +0000
+Message-ID: <88aae01f75584c2ea8df3f59a43dcddd@AcuMS.aculab.com>
+References: <20200509120707.188595-1-arnd@arndb.de>
+ <20200509120707.188595-2-arnd@arndb.de>
+ <87v9l24qz6.fsf@kamboji.qca.qualcomm.com>
+ <87r1vq4qev.fsf@kamboji.qca.qualcomm.com>
+ <87d078tjl0.fsf_-_@kamboji.qca.qualcomm.com>
+ <CAK8P3a1dxJAHCZ19=sPUkDi5wLWeJ6KKtD09Wmjqkz27TQN6Xw@mail.gmail.com>
+ <87zhacrokl.fsf@kamboji.qca.qualcomm.com>
+ <CAK8P3a1mMcpVE5kLv-krjL_ZjqfRXDK4e3fChzuom_QFRtTJqw@mail.gmail.com>
+ <87v9kzsvg8.fsf@kamboji.qca.qualcomm.com>
+ <CAK8P3a2eKoOL0KF4CmyEtk-3309f2_D+daQbe=Bj5vCkvD_khA@mail.gmail.com>
+In-Reply-To: <CAK8P3a2eKoOL0KF4CmyEtk-3309f2_D+daQbe=Bj5vCkvD_khA@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513154807.GA25962@localhost>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 05:48:07PM +0200, Johan Hovold wrote:
-> On Wed, May 13, 2020 at 05:39:18PM +0200, Greg Kroah-Hartman wrote:
-> > On Wed, May 13, 2020 at 05:03:43PM +0200, Johan Hovold wrote:
-> > > On Thu, May 07, 2020 at 01:53:18PM -0500, Gustavo A. R. Silva wrote:
-> > > > The current codebase makes use of the zero-length array language
-> > > > extension to the C90 standard, but the preferred mechanism to declare
-> > > > variable-length types such as these ones is a flexible array member[1][2],
-> > > > introduced in C99:
-> > > > 
-> > > > struct foo {
-> > > >         int stuff;
-> > > >         struct boo array[];
-> > > > };
-> 
-> > > >  drivers/greybus/arpc.h                    |    2 -
-> > > >  include/linux/greybus/greybus_protocols.h |   44 +++++++++++++++---------------
-> > > 
-> > > I noticed Greg just applied this one to his -testing branch, but do we
-> > > really want this in greybus_protocols.h, which is meant to be shared
-> > > with the firmware side? Perhaps not an issue, just figured I'd point
-> > > this out.
-> > 
-> > Why not, it should be the same thing, right?  No logic has changed that
-> > I see.
-> 
-> Yes, the structure's the same, but the firmware toolchain may not
-> expect flexible arrays. I believe we're holding back on these changes
-> for uapi headers as well for that reason?
-> 
-> Again, perhaps not an issue. We can just mandate fw toolchains that
-> support C99 if you want to use an unmodified header, I guess.
+RnJvbTogQXJuZCBCZXJnbWFubg0KPiBTZW50OiAxMyBNYXkgMjAyMCAxNzowMA0KPiBPbiBXZWQs
+IE1heSAxMywgMjAyMCBhdCA1OjMxIFBNIEthbGxlIFZhbG8gPGt2YWxvQGNvZGVhdXJvcmEub3Jn
+PiB3cm90ZToNCi4uLg0KPiBJIGludmVzdGlnYXRlZCBhIGxpdHRsZSBtb3JlOiBUaGlzIGRvZXMg
+aGFwcGVuIHdpdGggJ2RlZmNvbmZpZycNCj4gYWZ0ZXIgYWxsLCBpbiBteSBmaXJzdCB0cnkgSSBt
+dXN0IGhhdmUgbWlzc2VkIHRoZSAnLXNtcCAyJyBhcmd1bWVudA0KPiB0byBxZW11LCBhbmQgaXQg
+ZW5kZWQgdXAgd29ya2luZyBjb3JyZWN0bHkgd2l0aCBqdXN0IG9uZSBDUFUNCj4gYnV0IGZhaWxz
+IG5vdy4NCj4gDQo+IFN0ZXBwaW5nIHRocm91Z2ggdGhlIGJvb3QgcHJvY2VzcywgSSBzZWUgd2hl
+cmUgaXQgY3Jhc2hlcw0KPiBpbiBzdGFydF9zZWNvbmRhcnk6DQo+IA0KPiB8ICAgICAgICAvKiB0
+byBwcmV2ZW50IGZha2Ugc3RhY2sgY2hlY2sgZmFpbHVyZSBpbiBjbG9jayBzZXR1cCAqLw0KPiB8
+ICAgICAgICBib290X2luaXRfc3RhY2tfY2FuYXJ5KCk7DQo+IHwNCj4gfCAgICAgICAgeDg2X2Nw
+dWluaXQuc2V0dXBfcGVyY3B1X2Nsb2NrZXYoKTsNCj4gfA0KPiB8ICAgICAgICB3bWIoKTsNCj4g
+fCAgICAgICAgY3B1X3N0YXJ0dXBfZW50cnkoQ1BVSFBfQVBfT05MSU5FX0lETEUpOw0KPiANCj4g
+VGhlIGNhbGwgdG8gY3B1X3N0YXJ0dXBfZW50cnkoKSBkb2VzIG5vdCBzdWNjZWVkLCBpbnN0ZWFk
+DQo+IGl0IGp1bXBzIHRvIF9fc3RhY2tfY2hrX2ZhaWwoKSBmcm9tIHRoZXJlLg0KDQpIYXNuJ3Qg
+dGhpcyBhbHJlYWR5IGJlZW4gZml4ZWQ/DQpBZGQ6DQoJCWFzbSgiIik7DQphZnRlciBjcHVfc3Rh
+cnR1cF9lbnRyeSgpIHRvIHN0b3AgaXQgYmVpbmcgdGFpbC1jYWxsZWQuDQoNCglEYXZpZA0KDQot
+DQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwg
+TWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2Fs
+ZXMpDQo=
 
-I think we can mandate that for now, let's see if anyone actually builds
-firmware against this header file anymore :)
-
-greg k-h
