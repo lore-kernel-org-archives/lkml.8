@@ -2,66 +2,154 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA51C2D0FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 498D1C2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 605AF20753
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:37:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589369866;
-	bh=Amv7ClRMH2P+UI3l2B5270/ACCIOxjyfdce/BpqOoTg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Fg+dZOwRBphdml9IEUHXsbrkCGZ6gIhI4XGGeV12wu/MV9gXTs8IMJFu+Om4CV7l2
-	 WK7i8z4xRKer9uUpABvYaCpX26yD4vcXmeITk9U550msapHbF/oLfLRTCXG7UQxzNL
-	 tmMKbcucvnVW/1d7h3rXEkxEG0uvVBSTrO85qacE=
+	by mail.kernel.org (Postfix) with ESMTP id 22B9E2078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:37:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="X+Pnoou2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731092AbgEMLhp (ORCPT
+        id S1731353AbgEMLhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 07:37:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34556 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 07:37:54 -0400
+Received: from ns.mm-sol.com ([37.157.136.199]:32816 "EHLO extserv.mm-sol.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726743AbgEMLhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 07:37:45 -0400
-Received: from localhost (unknown [106.200.233.149])
+        id S1726743AbgEMLhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 07:37:54 -0400
+Received: from [192.168.1.2] (212-5-158-106.ip.btc-net.bg [212.5.158.106])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33EF7206D6;
-        Wed, 13 May 2020 11:37:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589369865;
-        bh=Amv7ClRMH2P+UI3l2B5270/ACCIOxjyfdce/BpqOoTg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Mfre/YeCy6QGwcr1Joz5kiu6wC7c9bN0saDvow8+/oqfy5oYhM7+lYCakrlu0p6f+
-         GuEIUYwThHzDzmwTRdutNYrqWaRKyn5f4Go1mLbAheINq1UyThfjbnheN+l+s+Uo0i
-         0CWuIQde9tkxBvs2iFZw3a44LaQecEgQcrbOX1VU=
-Date:   Wed, 13 May 2020 17:07:41 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     green.wan@sifive.com, dan.j.williams@intel.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: sf-pdma: Simplify the error handling path in
- 'sf_pdma_probe()'
-Message-ID: <20200513113741.GG14092@vkoul-mobl>
-References: <20200501100824.126534-1-christophe.jaillet@wanadoo.fr>
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id 19027CF91;
+        Wed, 13 May 2020 14:37:50 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1589369870; bh=vfFd3tN8fY41qxqKZE3PIorbD8ml40L+TC5l6z6T08A=;
+        h=Subject:To:Cc:From:Date:From;
+        b=X+Pnoou2SLbu2sfzGWfpORVx0ejVJcRL1Ccdkk79uMY5aj/8dH0+xpNxZwWHre9F9
+         GvJEOwmVeD+TdA47tdvGLLbRGXmJb22sP8QqJzZnw/285r6mOUkOfAt7AOndp5rIVZ
+         t9z3RnKA5ivk1zCTrdaImt/d3X0EE8p/PDkI5NJevcj6zxGOuZi79rn2l72YtFRxMK
+         SB3t0avid9xpTMUvzCiROGDUvZ+Vq8iTgmKlNsom7hT3ZIg2CdfbItn9nZCNVS8E/o
+         JI8NiyIoXxg9HSG8dicAALSACDSx+hKGbkUaA0LzzlMhvjQHZ3o19+WMtCoLQVjxIG
+         l7qXpZJvEYf5w==
+Subject: Re: [PATCH v3 09/11] PCI: qcom: add ipq8064 rev2 variant and set tx
+ term offset
+To:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Sham Muthayyan <smuthayy@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200430220619.3169-1-ansuelsmth@gmail.com>
+ <20200430220619.3169-10-ansuelsmth@gmail.com>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Message-ID: <3dc89ec6-d550-9402-1a4a-ca0c6f1e1fb9@mm-sol.com>
+Date:   Wed, 13 May 2020 14:37:43 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200501100824.126534-1-christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20200430220619.3169-10-ansuelsmth@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01-05-20, 12:08, Christophe JAILLET wrote:
-> There is no need to explicitly free memory that have been 'devm_kzalloc'ed.
-> Simplify the probe function accordingly.
+Hi Ansuel,
 
-Applied, thanks
+On 5/1/20 1:06 AM, Ansuel Smith wrote:
+> From: Sham Muthayyan <smuthayy@codeaurora.org>
+> 
+> Add tx term offset support to pcie qcom driver need in some revision of
+> the ipq806x SoC.
+> Ipq8064 have tx term offset set to 7.
+> Ipq8064-v2 revision and ipq8065 have the tx term offset set to 0.
+> 
+> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index da8058fd1925..372d2c8508b5 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -45,6 +45,9 @@
+>  #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
+>  
+>  #define PCIE20_PARF_PHY_CTRL			0x40
+> +#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(12, 16)
+
+The mask definition is not correct. Should be GENMASK(20, 16)
+
+> +#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
+> +
+>  #define PCIE20_PARF_PHY_REFCLK			0x4C
+>  #define PHY_REFCLK_SSP_EN			BIT(16)
+>  #define PHY_REFCLK_USE_PAD			BIT(12)
+> @@ -118,6 +121,7 @@ struct qcom_pcie_resources_2_1_0 {
+>  	u32 tx_swing_full;
+>  	u32 tx_swing_low;
+>  	u32 rx0_eq;
+> +	u8 phy_tx0_term_offset;
+>  };
+>  
+>  struct qcom_pcie_resources_1_0_0 {
+> @@ -318,6 +322,11 @@ static int qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
+>  	if (IS_ERR(res->ext_reset))
+>  		return PTR_ERR(res->ext_reset);
+>  
+> +	if (of_device_is_compatible(dev->of_node, "qcom,pcie-ipq8064"))
+> +		res->phy_tx0_term_offset = 7;
+
+Before your change the phy_tx0_term_offser was 0 for apq8064, but here
+you change it to 7, why?
+
+> +	else
+> +		res->phy_tx0_term_offset = 0;
+> +
+>  	res->phy_reset = devm_reset_control_get_exclusive(dev, "phy");
+>  	return PTR_ERR_OR_ZERO(res->phy_reset);
+>  }
+> @@ -402,6 +411,11 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+>  	/* enable PCIe clocks and resets */
+>  	qcom_clear_and_set_dword(pcie->parf + PCIE20_PARF_PHY_CTRL, BIT(0), 0);
+>  
+> +	/* set TX termination offset */
+> +	qcom_clear_and_set_dword(pcie->parf + PCIE20_PARF_PHY_CTRL,
+> +			PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK,
+
+As the mask definition is incorrect you actually clear 12 to 16 bit in
+the register where is another PHY parameter. Is that was intentional?
+
+> +			PHY_CTRL_PHY_TX0_TERM_OFFSET(res->phy_tx0_term_offset));
+> +
+>  	writel(PCS_DEEMPH_TX_DEEMPH_GEN1(res->tx_deemph_gen1) |
+>  	       PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(res->tx_deemph_gen2_3p5db) |
+>  	       PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(res->tx_deemph_gen2_6db),
+> @@ -1485,6 +1499,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  static const struct of_device_id qcom_pcie_match[] = {
+>  	{ .compatible = "qcom,pcie-apq8084", .data = &ops_1_0_0 },
+>  	{ .compatible = "qcom,pcie-ipq8064", .data = &ops_2_1_0 },
+> +	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &ops_2_1_0 },
+>  	{ .compatible = "qcom,pcie-apq8064", .data = &ops_2_1_0 },
+>  	{ .compatible = "qcom,pcie-msm8996", .data = &ops_2_3_2 },
+>  	{ .compatible = "qcom,pcie-ipq8074", .data = &ops_2_3_3 },
+> 
 
 -- 
-~Vinod
+regards,
+Stan
