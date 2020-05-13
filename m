@@ -2,272 +2,278 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB2BC2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B450C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D89ED20769
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="Earu827L"
+	by mail.kernel.org (Postfix) with ESMTP id F09C224927
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589363260;
+	bh=RrYNDVF9HXul2vNPsToXe3YIBU4nNCaxQyFAzTw5/zQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=uAITzNXPyhQKdUB42WUinLzm3K9rtz2SEUQU6oKkKZdbM9D9NPRtjCfLKXhNVcw4j
+	 rm9uZinZxZT5AU3Tfyq9BXh5tgwN4KOeW50hGtHW3I8kBJ5tI0+hyXXKY2ITsS/+qj
+	 4Jno9J/87DSpUupAqPAgJN+NyQhKf//66FaZ6LcA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732882AbgEMJre (ORCPT
+        id S1732893AbgEMJri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:47:34 -0400
-Received: from mail-dm6nam11on2071.outbound.protection.outlook.com ([40.107.223.71]:63410
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732838AbgEMJrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:47:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=L+LmGRdZOlWFl+oTIkE0edEeJrAS6yFOuMR+ZYsA+qPWH9at6GAiI2pS9tB6vkNKY/0iedUIhvBW+11xmhMtaAvWYzER70c9b3y2SL9VztTT0kJ48HtEQQP7El0kyZUX5DSGdpVL8Yf1LSbeZkx9U0VFklDKDDHcKePg+ytF0a3GmeQckDFG18MeQxcZggSHOgBlYl9NTfw6BGcwYuIqQN4JdPHPiY3L5yA4KhEQaoSvZgZdNoUW4eX67YAWlejy2rqzxengxnsNrMeti0a8XlnlzvOs5mrq6+Sk55LXaiJ1zuylwK0LG58uRG4V6OeIJJ3TkRmfW/usyR48tzPGeg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L2qJ3gmIeDXse/6D+15+kFY18wxftv82JxJZT/2E+JQ=;
- b=ex9eizHh1RsEvUwQvPs87mK8DIDupfzVQySQG5M/URmsNqvcXRuwoABYrYCm+rutX6h/jT5JCeFexFg35K8QzNB4gCWfwwIEfqcKr6J3PulxAYXxzFZ8JSZ7uaU28/VV1hr2k37NkjDXk0A4oLmcQA+ZRiwsyrMPrLTzh+aaEMAsQEfFQqsQxKYGbFDTZb0CjUZO0SOoDA//O41twMjQJd8wxvwVmAxbD8xUQff3N0kyjsaxMI4+VpBZbCe58XrSiwYY7AYUnYyhSPAlUmEE/adt0Kk1qnBdaKSfxmdj4zY41vFAPoenKGhiUuJh4PuzfRWtVlmIN8MvmZypRViiOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L2qJ3gmIeDXse/6D+15+kFY18wxftv82JxJZT/2E+JQ=;
- b=Earu827Lf0q3MLaQ0oq4+6yHdo6XNqhfJyyaVfAWIMWv30GoQhMuzAbSifEMemLvtRGz51jQPdeRanLgRE5SD7rDGNOasDgcUpgeUSafGQdCtwPjVpAZT8/MzNld5D+nfFSQ8OFSwXRT8+l4D3wp6HPfv69+QeMpbFEjQCLu/V4=
-Authentication-Results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=synaptics.com;
-Received: from BYAPR03MB3573.namprd03.prod.outlook.com (2603:10b6:a02:ae::15)
- by BYAPR03MB3703.namprd03.prod.outlook.com (2603:10b6:a02:ad::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.33; Wed, 13 May
- 2020 09:47:19 +0000
-Received: from BYAPR03MB3573.namprd03.prod.outlook.com
- ([fe80::d8fb:de22:43b7:fcb7]) by BYAPR03MB3573.namprd03.prod.outlook.com
- ([fe80::d8fb:de22:43b7:fcb7%7]) with mapi id 15.20.2979.033; Wed, 13 May 2020
- 09:47:19 +0000
-Date:   Wed, 13 May 2020 17:47:06 +0800
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Revert "mmc: sdhci-xenon: add runtime pm support and
- reimplement standby"
-Message-ID: <20200513174706.3eeddb2b@xhacker.debian>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TYCPR01CA0041.jpnprd01.prod.outlook.com
- (2603:1096:405:1::29) To BYAPR03MB3573.namprd03.prod.outlook.com
- (2603:10b6:a02:ae::15)
+        Wed, 13 May 2020 05:47:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45282 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732844AbgEMJrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:47:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 037CF2078C;
+        Wed, 13 May 2020 09:47:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589363242;
+        bh=RrYNDVF9HXul2vNPsToXe3YIBU4nNCaxQyFAzTw5/zQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Od+COt4W3NfFV/8L7ORGjZONFW7mAfJh6f6UPr7wCs4sLSfl5pIwMZloPsuLV+443
+         JsHiVGOb/+kb6fDRoJVRKXrKfpAdOkuO+rsOBMpkglBVenH11ssW0BHqdQUF77ryyg
+         xACoV6BFzvLASwmb8EhCWKlfml9G/QF1XZnO6j6s=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
+        Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>
+Subject: [PATCH 4.19 43/48] x86/unwind/orc: Fix premature unwind stoppage due to IRET frames
+Date:   Wed, 13 May 2020 11:45:09 +0200
+Message-Id: <20200513094403.458754310@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
+References: <20200513094351.100352960@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xhacker.debian (124.74.246.114) by TYCPR01CA0041.jpnprd01.prod.outlook.com (2603:1096:405:1::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.29 via Frontend Transport; Wed, 13 May 2020 09:47:18 +0000
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-X-Originating-IP: [124.74.246.114]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 40412952-eb90-4582-9c77-08d7f722a098
-X-MS-TrafficTypeDiagnostic: BYAPR03MB3703:
-X-Microsoft-Antispam-PRVS: <BYAPR03MB37036641B96E1A09F889F0C2EDBF0@BYAPR03MB3703.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:785;
-X-Forefront-PRVS: 0402872DA1
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yRIVHu+FG7eWxd8lmlAE93+kqTyaotZyht0hl2t+uZO9p7osLYiDShczpJVidz/iWjnkFW/0O1YbGTpL0XOcoS9UqlOK2CUTqzwGbLoun/aX44jWrCNUlLvKeHBRWWIKN/smkio1BuqeMi+DmCvt3eHzhyZ2awgJz8Tk3XntbqAo4bpZQsZvofxiNetRQ2z7a3EV2gLnT9MFXW1WAVJiyN2ZvIgz5Dc1b48HwJ0PLO6mHcCNnrfyqe1zZ8JvcZbPAvbbI0ogMZ98NXhCeRcXq5Rb1PnK6irMq8YWOo76vijc75z5veb5eAG3GDEp3u0HV54sH1SN/UoUUljFBy06kzuAGcIAxqtrbRVJi2Ap9/6cEeR61dVYFhdJu2Nmf2DqRqUU24jCGcfRWiAIYMq8yoDpLLKTCgZAIdpZSVZ4RnIqr7ltPCTDY713A8dAf/WyBuIEufiHRJik0UGakbBaoV2wARRsIpgpTksZxhQycSuCgXwoB8wk4+iT1cRb/8PfnA69gAHqt+mPvCVM2EYtAg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3573.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(376002)(346002)(396003)(366004)(39850400004)(33430700001)(7696005)(1076003)(16526019)(26005)(956004)(186003)(6666004)(6506007)(2906002)(9686003)(5660300002)(52116002)(55016002)(478600001)(8676002)(4326008)(66556008)(8936002)(110136005)(316002)(66476007)(66946007)(33440700001)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: VMyrdi0eai0pVJoDJJGnwQORtcxJXWhh8IavLDGQoFnDwzWY/fqVgU2XYU05Gi0PXL0D9qRyE5IYbbpyJn74wXSPiya3oNwJyVmF50JsNNsCqjGIxn0oZinm6DtAl/H0eREErvkGC6CJAs5UY9nEWlT6nrwDODj1torJk9X5cgTNAHYm/a5RoxeW1L8dtUvcLoZ7bfi8JbvwCLxHZQzWrOd+iRORhGK/5z6jIyTjjFCy8Zfh0N44S371traIMx48TpXsLyuQlip5q2wkh028DdUvMIOlsc2CM1KwkhbNDObhWyntjvjchsb2cdZgtuPW+yphNs1sh4ZE9t8be5Ossie1xkINUqCDqgkzUMWprK/lpXxWJgEsT8yKOqytL792eMQlfKBh81uM7LgPGxTC8gmiMO6N3A2Ep1D9KozK0QqTGctQ0iYg2OOVXjwUGdM1BKYT58E+Qm1TvrgLsInH4OqymISy6WEE9DBSpb9k4mlpsM9t98/nKLNr/n2vUJiz
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40412952-eb90-4582-9c77-08d7f722a098
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2020 09:47:19.3818
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5QcPO5XL6OknrXkzILP8UXH/MRpKEV4b58or7gxG4QHQreyUguSLgzjnk4raU/ytMQDR2+TfYjsogpE1Eg4DVw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3703
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit a027b2c5fed78851e69fab395b02d127a7759fc7.
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-The HW supports auto clock gating, so it's useless to do runtime pm
-in software.
+commit 81b67439d147677d844d492fcbd03712ea438f42 upstream.
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+The following execution path is possible:
+
+  fsnotify()
+    [ realign the stack and store previous SP in R10 ]
+    <IRQ>
+      [ only IRET regs saved ]
+      common_interrupt()
+        interrupt_entry()
+	  <NMI>
+	    [ full pt_regs saved ]
+	    ...
+	    [ unwind stack ]
+
+When the unwinder goes through the NMI and the IRQ on the stack, and
+then sees fsnotify(), it doesn't have access to the value of R10,
+because it only has the five IRET registers.  So the unwind stops
+prematurely.
+
+However, because the interrupt_entry() code is careful not to clobber
+R10 before saving the full regs, the unwinder should be able to read R10
+from the previously saved full pt_regs associated with the NMI.
+
+Handle this case properly.  When encountering an IRET regs frame
+immediately after a full pt_regs frame, use the pt_regs as a backup
+which can be used to get the C register values.
+
+Also, note that a call frame resets the 'prev_regs' value, because a
+function is free to clobber the registers.  For this fix to work, the
+IRET and full regs frames must be adjacent, with no FUNC frames in
+between.  So replace the FUNC hint in interrupt_entry() with an
+IRET_REGS hint.
+
+Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Dave Jones <dsj@fb.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Link: https://lore.kernel.org/r/97a408167cc09f1cfa0de31a7b70dd88868d743f.1587808742.git.jpoimboe@redhat.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/mmc/host/sdhci-xenon.c | 87 +++++++---------------------------
- drivers/mmc/host/sdhci-xenon.h |  1 -
- 2 files changed, 16 insertions(+), 72 deletions(-)
+ arch/x86/entry/entry_64.S     |    4 +--
+ arch/x86/include/asm/unwind.h |    2 -
+ arch/x86/kernel/unwind_orc.c  |   51 ++++++++++++++++++++++++++++++++----------
+ 3 files changed, 43 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-xenon.c b/drivers/mmc/host/sdhci-xenon.c
-index 4703cd540c7f..85414e13e7ea 100644
---- a/drivers/mmc/host/sdhci-xenon.c
-+++ b/drivers/mmc/host/sdhci-xenon.c
-@@ -15,8 +15,6 @@
- #include <linux/ktime.h>
- #include <linux/module.h>
- #include <linux/of.h>
--#include <linux/pm.h>
--#include <linux/pm_runtime.h>
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -575,7 +575,7 @@ END(spurious_entries_start)
+  * +----------------------------------------------------+
+  */
+ ENTRY(interrupt_entry)
+-	UNWIND_HINT_FUNC
++	UNWIND_HINT_IRET_REGS offset=16
+ 	ASM_CLAC
+ 	cld
  
- #include "sdhci-pltfm.h"
- #include "sdhci-xenon.h"
-@@ -539,24 +537,13 @@ static int xenon_probe(struct platform_device *pdev)
- 	if (err)
- 		goto err_clk_axi;
+@@ -607,9 +607,9 @@ ENTRY(interrupt_entry)
+ 	pushq	5*8(%rdi)		/* regs->eflags */
+ 	pushq	4*8(%rdi)		/* regs->cs */
+ 	pushq	3*8(%rdi)		/* regs->ip */
++	UNWIND_HINT_IRET_REGS
+ 	pushq	2*8(%rdi)		/* regs->orig_ax */
+ 	pushq	8(%rdi)			/* return address */
+-	UNWIND_HINT_FUNC
  
--	pm_runtime_get_noresume(&pdev->dev);
--	pm_runtime_set_active(&pdev->dev);
--	pm_runtime_set_autosuspend_delay(&pdev->dev, 50);
--	pm_runtime_use_autosuspend(&pdev->dev);
--	pm_runtime_enable(&pdev->dev);
--	pm_suspend_ignore_children(&pdev->dev, 1);
--
- 	err = sdhci_add_host(host);
- 	if (err)
- 		goto remove_sdhc;
- 
--	pm_runtime_put_autosuspend(&pdev->dev);
--
- 	return 0;
- 
- remove_sdhc:
--	pm_runtime_disable(&pdev->dev);
--	pm_runtime_put_noidle(&pdev->dev);
- 	xenon_sdhc_unprepare(host);
- err_clk_axi:
- 	clk_disable_unprepare(priv->axi_clk);
-@@ -573,10 +560,6 @@ static int xenon_remove(struct platform_device *pdev)
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
- 	struct xenon_priv *priv = sdhci_pltfm_priv(pltfm_host);
- 
--	pm_runtime_get_sync(&pdev->dev);
--	pm_runtime_disable(&pdev->dev);
--	pm_runtime_put_noidle(&pdev->dev);
--
- 	sdhci_remove_host(host, 0);
- 
- 	xenon_sdhc_unprepare(host);
-@@ -593,78 +576,40 @@ static int xenon_suspend(struct device *dev)
- {
- 	struct sdhci_host *host = dev_get_drvdata(dev);
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
--	struct xenon_priv *priv = sdhci_pltfm_priv(pltfm_host);
- 	int ret;
- 
--	ret = pm_runtime_force_suspend(dev);
-+	ret = sdhci_suspend_host(host);
-+	if (ret)
-+		return ret;
- 
--	priv->restore_needed = true;
-+	clk_disable_unprepare(pltfm_host->clk);
- 	return ret;
+ 	movq	(%rdi), %rdi
+ 	jmp	2f
+--- a/arch/x86/include/asm/unwind.h
++++ b/arch/x86/include/asm/unwind.h
+@@ -19,7 +19,7 @@ struct unwind_state {
+ #if defined(CONFIG_UNWINDER_ORC)
+ 	bool signal, full_regs;
+ 	unsigned long sp, bp, ip;
+-	struct pt_regs *regs;
++	struct pt_regs *regs, *prev_regs;
+ #elif defined(CONFIG_UNWINDER_FRAME_POINTER)
+ 	bool got_irq;
+ 	unsigned long *bp, *orig_sp, ip;
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -364,9 +364,38 @@ static bool deref_stack_iret_regs(struct
+ 	return true;
  }
--#endif
  
--#ifdef CONFIG_PM
--static int xenon_runtime_suspend(struct device *dev)
-+static int xenon_resume(struct device *dev)
- {
- 	struct sdhci_host *host = dev_get_drvdata(dev);
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
--	struct xenon_priv *priv = sdhci_pltfm_priv(pltfm_host);
- 	int ret;
- 
--	ret = sdhci_runtime_suspend_host(host);
-+	ret = clk_prepare_enable(pltfm_host->clk);
- 	if (ret)
- 		return ret;
- 
--	if (host->tuning_mode != SDHCI_TUNING_MODE_3)
--		mmc_retune_needed(host->mmc);
--
--	clk_disable_unprepare(pltfm_host->clk);
- 	/*
--	 * Need to update the priv->clock here, or when runtime resume
--	 * back, phy don't aware the clock change and won't adjust phy
--	 * which will cause cmd err
-+	 * If SoCs power off the entire Xenon, registers setting will
-+	 * be lost.
-+	 * Re-configure Xenon specific register to enable current SDHC
- 	 */
--	priv->clock = 0;
--	return 0;
--}
--
--static int xenon_runtime_resume(struct device *dev)
--{
--	struct sdhci_host *host = dev_get_drvdata(dev);
--	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
--	struct xenon_priv *priv = sdhci_pltfm_priv(pltfm_host);
--	int ret;
--
--	ret = clk_prepare_enable(pltfm_host->clk);
--	if (ret) {
--		dev_err(dev, "can't enable mainck\n");
-+	ret = xenon_sdhc_prepare(host);
-+	if (ret)
- 		return ret;
--	}
--
--	if (priv->restore_needed) {
--		ret = xenon_sdhc_prepare(host);
--		if (ret)
--			goto out;
--		priv->restore_needed = false;
--	}
- 
--	ret = sdhci_runtime_resume_host(host, 0);
--	if (ret)
--		goto out;
--	return 0;
--out:
--	clk_disable_unprepare(pltfm_host->clk);
--	return ret;
-+	return sdhci_resume_host(host);
- }
--#endif /* CONFIG_PM */
--
--static const struct dev_pm_ops sdhci_xenon_dev_pm_ops = {
--	SET_SYSTEM_SLEEP_PM_OPS(xenon_suspend,
--				pm_runtime_force_resume)
--	SET_RUNTIME_PM_OPS(xenon_runtime_suspend,
--			   xenon_runtime_resume,
--			   NULL)
--};
-+#endif
++/*
++ * If state->regs is non-NULL, and points to a full pt_regs, just get the reg
++ * value from state->regs.
++ *
++ * Otherwise, if state->regs just points to IRET regs, and the previous frame
++ * had full regs, it's safe to get the value from the previous regs.  This can
++ * happen when early/late IRQ entry code gets interrupted by an NMI.
++ */
++static bool get_reg(struct unwind_state *state, unsigned int reg_off,
++		    unsigned long *val)
++{
++	unsigned int reg = reg_off/8;
 +
-+static SIMPLE_DEV_PM_OPS(xenon_pmops, xenon_suspend, xenon_resume);
++	if (!state->regs)
++		return false;
++
++	if (state->full_regs) {
++		*val = ((unsigned long *)state->regs)[reg];
++		return true;
++	}
++
++	if (state->prev_regs) {
++		*val = ((unsigned long *)state->prev_regs)[reg];
++		return true;
++	}
++
++	return false;
++}
++
+ bool unwind_next_frame(struct unwind_state *state)
+ {
+-	unsigned long ip_p, sp, orig_ip = state->ip, prev_sp = state->sp;
++	unsigned long ip_p, sp, tmp, orig_ip = state->ip, prev_sp = state->sp;
+ 	enum stack_type prev_type = state->stack_info.type;
+ 	struct orc_entry *orc;
+ 	bool indirect = false;
+@@ -420,39 +449,35 @@ bool unwind_next_frame(struct unwind_sta
+ 		break;
  
- static const struct of_device_id sdhci_xenon_dt_ids[] = {
- 	{ .compatible = "marvell,armada-ap806-sdhci",},
-@@ -678,7 +623,7 @@ static struct platform_driver sdhci_xenon_driver = {
- 	.driver	= {
- 		.name	= "xenon-sdhci",
- 		.of_match_table = sdhci_xenon_dt_ids,
--		.pm = &sdhci_xenon_dev_pm_ops,
-+		.pm = &xenon_pmops,
- 	},
- 	.probe	= xenon_probe,
- 	.remove	= xenon_remove,
-diff --git a/drivers/mmc/host/sdhci-xenon.h b/drivers/mmc/host/sdhci-xenon.h
-index 593b82d7b68a..2b9b96e51261 100644
---- a/drivers/mmc/host/sdhci-xenon.h
-+++ b/drivers/mmc/host/sdhci-xenon.h
-@@ -89,7 +89,6 @@ struct xenon_priv {
- 	 */
- 	void		*phy_params;
- 	struct xenon_emmc_phy_regs *emmc_phy_regs;
--	bool restore_needed;
- };
+ 	case ORC_REG_R10:
+-		if (!state->regs || !state->full_regs) {
++		if (!get_reg(state, offsetof(struct pt_regs, r10), &sp)) {
+ 			orc_warn("missing regs for base reg R10 at ip %pB\n",
+ 				 (void *)state->ip);
+ 			goto err;
+ 		}
+-		sp = state->regs->r10;
+ 		break;
  
- int xenon_phy_adj(struct sdhci_host *host, struct mmc_ios *ios);
--- 
-2.26.2
+ 	case ORC_REG_R13:
+-		if (!state->regs || !state->full_regs) {
++		if (!get_reg(state, offsetof(struct pt_regs, r13), &sp)) {
+ 			orc_warn("missing regs for base reg R13 at ip %pB\n",
+ 				 (void *)state->ip);
+ 			goto err;
+ 		}
+-		sp = state->regs->r13;
+ 		break;
+ 
+ 	case ORC_REG_DI:
+-		if (!state->regs || !state->full_regs) {
++		if (!get_reg(state, offsetof(struct pt_regs, di), &sp)) {
+ 			orc_warn("missing regs for base reg DI at ip %pB\n",
+ 				 (void *)state->ip);
+ 			goto err;
+ 		}
+-		sp = state->regs->di;
+ 		break;
+ 
+ 	case ORC_REG_DX:
+-		if (!state->regs || !state->full_regs) {
++		if (!get_reg(state, offsetof(struct pt_regs, dx), &sp)) {
+ 			orc_warn("missing regs for base reg DX at ip %pB\n",
+ 				 (void *)state->ip);
+ 			goto err;
+ 		}
+-		sp = state->regs->dx;
+ 		break;
+ 
+ 	default:
+@@ -479,6 +504,7 @@ bool unwind_next_frame(struct unwind_sta
+ 
+ 		state->sp = sp;
+ 		state->regs = NULL;
++		state->prev_regs = NULL;
+ 		state->signal = false;
+ 		break;
+ 
+@@ -490,6 +516,7 @@ bool unwind_next_frame(struct unwind_sta
+ 		}
+ 
+ 		state->regs = (struct pt_regs *)sp;
++		state->prev_regs = NULL;
+ 		state->full_regs = true;
+ 		state->signal = true;
+ 		break;
+@@ -501,6 +528,8 @@ bool unwind_next_frame(struct unwind_sta
+ 			goto err;
+ 		}
+ 
++		if (state->full_regs)
++			state->prev_regs = state->regs;
+ 		state->regs = (void *)sp - IRET_FRAME_OFFSET;
+ 		state->full_regs = false;
+ 		state->signal = true;
+@@ -515,8 +544,8 @@ bool unwind_next_frame(struct unwind_sta
+ 	/* Find BP: */
+ 	switch (orc->bp_reg) {
+ 	case ORC_REG_UNDEFINED:
+-		if (state->regs && state->full_regs)
+-			state->bp = state->regs->bp;
++		if (get_reg(state, offsetof(struct pt_regs, bp), &tmp))
++			state->bp = tmp;
+ 		break;
+ 
+ 	case ORC_REG_PREV_SP:
+
 
