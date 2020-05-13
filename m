@@ -2,89 +2,91 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1810FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD9AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36E81205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:05:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PLKqSYSN"
+	by mail.kernel.org (Postfix) with ESMTP id 650BF205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:06:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389309AbgEMQFz (ORCPT
+        id S2388857AbgEMQGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 12:05:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51578 "EHLO
+        Wed, 13 May 2020 12:06:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728692AbgEMQFy (ORCPT
+        with ESMTP id S1728692AbgEMQGv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 12:05:54 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 179AAC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 09:05:54 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id z22so14144992lfd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 09:05:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/yS65XV/YtISiDaptac0FJiXD3Tn4ArFGdgQXRHd/aM=;
-        b=PLKqSYSNicC0BUQNdjEBXIczUU2Ubmi9uxrakyohfeKedUu5pEjNXH3weTM/WNFlZM
-         J0X0KiO9Umy3eAbZ6TSsOuO7vFxuUSITJmODaZj5uHx1byuQUI1JEpqZPhSadkgdJarR
-         G82gO3AHOnSB1JJqvwQCpqXLG0u2HJHiRbmKYZ4qIqOmuO5YD4fM7cbjOKZifuhJ6kgB
-         hBNPxWc05yFQjfYr36j97EXsX3A/3qHd/kwTB0qw4RjH/x09QeLmHlexCET4l5UZ3Hdq
-         t9P2Ttw4nmH7TsI/0i0jzkM7qHcffz0O8Xh8NoHN8f9eamzTWS80bAo82wIrvz2gcFJm
-         rhSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/yS65XV/YtISiDaptac0FJiXD3Tn4ArFGdgQXRHd/aM=;
-        b=JgWNtgTH5P7Z16Y6AfckCxAUcihYohgYiHr75G1iFVvvlpZ6QqRXsI/VWX6FEn3KqN
-         h1eCbp+fRNyfDvwFg6SYx6keJSNaxkjhbMntb2LxAqdTb3PRaH4lmCN7z9pVPZM7s/qZ
-         86ln84D0tGzL5l6i7aLr/Oj0RtK1y8WE8SmSHE3cdFU8lyDr+ynjfhEd4XLA12HvgFF1
-         4EwQkIrs314ZHZw4qQBGnIHVy3Rxm0KyXGeyL6qhzJG67WaGq9subGymH7Nrih5P9zxp
-         rCql5vi27842i9b0HUWdYJpR5OtDWI3Bpj36tPR+/hLg88jHrf5spQS6GkijjgaKRfMz
-         jV3w==
-X-Gm-Message-State: AOAM530unKeHLWDRFxzMRsQ4XDU6KNCm74RGn+i17kx0KAGEW4pdpKYs
-        6D4ci4JyA5Ldd3zUI4qdE4ZzpdgGyhq9efMH7N4=
-X-Google-Smtp-Source: ABdhPJy16wWQDPJNS54OlcDRfVMpoO17uW3oqhASyCtXCLRYCkdn+EsWQCegAtv+YMXArpzHEQO/EEfoyLKS/V25tiw=
-X-Received: by 2002:a19:4a97:: with SMTP id x145mr169435lfa.66.1589385952502;
- Wed, 13 May 2020 09:05:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200513150007.1315395-1-lkundrak@v3.sk> <20200513150007.1315395-3-lkundrak@v3.sk>
-In-Reply-To: <20200513150007.1315395-3-lkundrak@v3.sk>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 13 May 2020 13:07:06 -0300
-Message-ID: <CAOMZO5CfPC_awoo4RRgOabWYk8WaAKJUypG8A=XeuThuCZHqDQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] drm/etnaviv: Don't ignore errors on getting clocks
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        The etnaviv authors <etnaviv@lists.freedesktop.org>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Russell King <linux+etnaviv@armlinux.org.uk>
+        Wed, 13 May 2020 12:06:51 -0400
+Received: from eggs.gnu.org (eggs.gnu.org [IPv6:2001:470:142:3::10])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A524EC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 09:06:51 -0700 (PDT)
+Received: from fencepost.gnu.org ([2001:470:142:3::e]:40319)
+        by eggs.gnu.org with esmtp (Exim 4.90_1)
+        (envelope-from <psmith@gnu.org>)
+        id 1jYtuA-0003KJ-R9; Wed, 13 May 2020 12:06:46 -0400
+Received: from pool-98-118-0-140.bstnma.fios.verizon.net ([98.118.0.140]:52058 helo=pdslaptop.home)
+        by fencepost.gnu.org with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.82)
+        (envelope-from <psmith@gnu.org>)
+        id 1jYtuA-0003My-JO; Wed, 13 May 2020 12:06:46 -0400
+Message-ID: <5cb62c1a8ca38a3eceb37f7d236828761cad07ce.camel@gnu.org>
+Subject: Re: I disabled more compiler warnings..
+From:   Paul Smith <psmith@gnu.org>
+Reply-To: psmith@gnu.org
+To:     David Laight <David.Laight@ACULAB.COM>,
+        'Linus Torvalds' <torvalds@linux-foundation.org>
+Cc:     'Arnd Bergmann' <arnd@arndb.de>,
+        'Masahiro Yamada' <yamada.masahiro@socionext.com>,
+        'Linux Kernel Mailing List' <linux-kernel@vger.kernel.org>
+Date:   Wed, 13 May 2020 12:06:45 -0400
+In-Reply-To: <b206fa1343b94f768ce0d57f0234c8e7@AcuMS.aculab.com>
+References: <CAHk-=wjah-fkfzMdmCNN8v7uriJsGeYjHh18wkXDZa2sxuAXzA@mail.gmail.com>
+         <8320f29ca61146fc985083621685ac95@AcuMS.aculab.com>
+         <CAHk-=whLY8dXE6qMuPNE+Tjc6uXy+W2jACyWLxtRUH6GU2=PAA@mail.gmail.com>
+         <0ff4860b4202a6ef3bb3b29912d083d471e1cc1d.camel@gnu.org>
+         <90909f30775744b89d1a0c40265779d9@AcuMS.aculab.com>
+         <5564c992dfeb40adbc3e6f6a29e43d2e@AcuMS.aculab.com>
+         <73dace5aca21bee09ce12aa8dcfd50daa2cd6051.camel@gnu.org>
+         <464ab7c2d9e144718e4a3135a41f3056@AcuMS.aculab.com>
+         <d743bd7bec25c939d7419a3512239b43b990af5a.camel@gnu.org>
+         <4a540a5d341c468bae131934b413e4ce@AcuMS.aculab.com>
+         <6a5a75043f697a130422fbc3a3f8464dc6d03e2f.camel@gnu.org>
+         <b206fa1343b94f768ce0d57f0234c8e7@AcuMS.aculab.com>
+Organization: GNU's Not UNIX!
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lubomir,
+On Wed, 2020-05-13 at 15:53 +0000, David Laight wrote:
+> > If we don't have pselect() we use the close() in the signal
+> > handler. In that case we're just waiting in the read(), we're not
+> > using select() or poll() or whatever.  It's definitely the case
+> > that if we're waiting in read() and someone closes the FD, we'll
+> > wake up! :)
+> 
+> Ugg, that is relying on getting either EINTR or EBADFD.
 
-On Wed, May 13, 2020 at 12:08 PM Lubomir Rintel <lkundrak@v3.sk> wrote:
+Yes, exactly.
 
->         /* Get Clocks: */
-> -       gpu->clk_reg = devm_clk_get(&pdev->dev, "reg");
-> +       gpu->clk_reg = devm_clk_get_optional(&pdev->dev, "reg");
->         DBG("clk_reg: %p", gpu->clk_reg);
->         if (IS_ERR(gpu->clk_reg))
-> -               gpu->clk_reg = NULL;
-> +               return err;
+> I can't remember if Posix allows SIGCHLD to be delivered
+> in a different thread.
 
-You should return PTR_ERR(gpu->clk_reg) instead.
+It does: all you have to do is ensure that all threads other than the
+one you want block the signal.
+
+However, GNU make is not multithreaded so this is moot.
+
+> Windows definitely likes delivering signals that way :-)
+
+In Windows IIRC GNU make doesn't use this method at all; Windows has
+some kind of process shared semaphore that is used instead.  I didn't
+write that code so I can't really describe it in detail :)
+
