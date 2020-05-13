@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21148CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 133DFCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F102420575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE86B24931
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363442;
-	bh=efmXkP4nZQuabVonmCLtMzWmGLAsXGPDsTiDa8BZylU=;
+	s=default; t=1589363446;
+	bh=yYXBp62M2ktB01uEgm4HAG6uzYwpAekJhxi25yXoN4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vjPpGr48m5kqF7FQZ30Rvjvxxa9ivrfZcJRi2pdnRPUpdB3x0MQxugUt/3FKOW0d9
-	 fh6Asr3pLJUiUyTaN1gNOmQVYiITwSlW5eNvQ57Jh1V4hmsS4y0eCLoxYsl/0adI4P
-	 Xzlp/kUriQJFfIvSmhnZkfQue7GhM35La0oNTuCE=
+	b=Le41LWH+qYOAVCr0symjBNKB8ovycIL9LKuo64bM+uNKgy0REThiEUCz1Fd06qqqU
+	 8ZpyzQwpAXla4CA/AYPCuLdSF/umwwV3QnytUC5C1E+HIZCVMsF1v7gKMITu0daYhT
+	 peHiCzcKQA56fzSRUSVa2BYSm75ey/iz3fsA8r7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387533AbgEMJuk (ORCPT
+        id S1732955AbgEMJup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:50:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50542 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:50:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387521AbgEMJuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:50:37 -0400
+        id S2387521AbgEMJul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:50:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C76A620740;
-        Wed, 13 May 2020 09:50:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F45C2312A;
+        Wed, 13 May 2020 09:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363436;
-        bh=efmXkP4nZQuabVonmCLtMzWmGLAsXGPDsTiDa8BZylU=;
+        s=default; t=1589363440;
+        bh=yYXBp62M2ktB01uEgm4HAG6uzYwpAekJhxi25yXoN4w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TaitMvx5v6TH97eNT4PPv2k7n6lsywyAV52jzBOYwJ3ZGk3BU/VgquwMrv2m5ENAV
-         IBiRfYMuapTdtRQ28sKVoQdttSBgV7RpxRBtDcml6k10nHejk13tFK0nJBkFkw/g1L
-         RdSD+nD/Pc74i4b1fY9W5tyFMos2ONytrasAU2ko=
+        b=cRYjv4V0pHaDhB4cGstEXwKA2jTCazZCMkzo8gOEorSaPyWki7z+ArbZLmt6tx6Wq
+         +/ZrE+6rNvIZYTXDDoLEc3rPd7UyTjFIA9BdAhTcgwqBRDhSP/IrMyJsiKz9eTIkr8
+         7sXa9lvGhrlAN4EUNtEjIKsBmzPJtQGQKhpKkX0M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
+        Jann Horn <jannh@google.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Ingo Molnar <mingo@kernel.org>,
         Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
-        Jann Horn <jannh@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Vince Weaver <vincent.weaver@maine.edu>
-Subject: [PATCH 5.4 72/90] x86/entry/64: Fix unwind hints in register clearing code
-Date:   Wed, 13 May 2020 11:45:08 +0200
-Message-Id: <20200513094416.832260670@linuxfoundation.org>
+Subject: [PATCH 5.4 74/90] x86/entry/64: Fix unwind hints in rewind_stack_do_exit()
+Date:   Wed, 13 May 2020 11:45:10 +0200
+Message-Id: <20200513094417.018065219@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -65,110 +65,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Jann Horn <jannh@google.com>
 
-commit 06a9750edcffa808494d56da939085c35904e618 upstream.
+commit f977df7b7ca45a4ac4b66d30a8931d0434c394b1 upstream.
 
-The PUSH_AND_CLEAR_REGS macro zeroes each register immediately after
-pushing it.  If an NMI or exception hits after a register is cleared,
-but before the UNWIND_HINT_REGS annotation, the ORC unwinder will
-wrongly think the previous value of the register was zero.  This can
-confuse the unwinding process and cause it to exit early.
+The LEAQ instruction in rewind_stack_do_exit() moves the stack pointer
+directly below the pt_regs at the top of the task stack before calling
+do_exit(). Tell the unwinder to expect pt_regs.
 
-Because ORC is simpler than DWARF, there are a limited number of unwind
-annotation states, so it's not possible to add an individual unwind hint
-after each push/clear combination.  Instead, the register clearing
-instructions need to be consolidated and moved to after the
-UNWIND_HINT_REGS annotation.
-
-Fixes: 3f01daecd545 ("x86/entry/64: Introduce the PUSH_AND_CLEAN_REGS macro")
+Fixes: 8c1f75587a18 ("x86/entry/64: Add unwind hint annotations")
 Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Jann Horn <jannh@google.com>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Dave Jones <dsj@fb.com>
-Cc: Jann Horn <jannh@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lore.kernel.org/r/68fd3d0bc92ae2d62ff7879d15d3684217d51f08.1587808742.git.jpoimboe@redhat.com
+Link: https://lore.kernel.org/r/68c33e17ae5963854916a46f522624f8e1d264f2.1587808742.git.jpoimboe@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/entry/calling.h |   40 +++++++++++++++++++++-------------------
- 1 file changed, 21 insertions(+), 19 deletions(-)
+ arch/x86/entry/entry_64.S |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/entry/calling.h
-+++ b/arch/x86/entry/calling.h
-@@ -98,13 +98,6 @@ For 32-bit we have the following convent
- #define SIZEOF_PTREGS	21*8
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -1740,7 +1740,7 @@ ENTRY(rewind_stack_do_exit)
  
- .macro PUSH_AND_CLEAR_REGS rdx=%rdx rax=%rax save_ret=0
--	/*
--	 * Push registers and sanitize registers of values that a
--	 * speculation attack might otherwise want to exploit. The
--	 * lower registers are likely clobbered well before they
--	 * could be put to use in a speculative execution gadget.
--	 * Interleave XOR with PUSH for better uop scheduling:
--	 */
- 	.if \save_ret
- 	pushq	%rsi		/* pt_regs->si */
- 	movq	8(%rsp), %rsi	/* temporarily store the return address in %rsi */
-@@ -114,34 +107,43 @@ For 32-bit we have the following convent
- 	pushq   %rsi		/* pt_regs->si */
- 	.endif
- 	pushq	\rdx		/* pt_regs->dx */
--	xorl	%edx, %edx	/* nospec   dx */
- 	pushq   %rcx		/* pt_regs->cx */
--	xorl	%ecx, %ecx	/* nospec   cx */
- 	pushq   \rax		/* pt_regs->ax */
- 	pushq   %r8		/* pt_regs->r8 */
--	xorl	%r8d, %r8d	/* nospec   r8 */
- 	pushq   %r9		/* pt_regs->r9 */
--	xorl	%r9d, %r9d	/* nospec   r9 */
- 	pushq   %r10		/* pt_regs->r10 */
--	xorl	%r10d, %r10d	/* nospec   r10 */
- 	pushq   %r11		/* pt_regs->r11 */
--	xorl	%r11d, %r11d	/* nospec   r11*/
- 	pushq	%rbx		/* pt_regs->rbx */
--	xorl    %ebx, %ebx	/* nospec   rbx*/
- 	pushq	%rbp		/* pt_regs->rbp */
--	xorl    %ebp, %ebp	/* nospec   rbp*/
- 	pushq	%r12		/* pt_regs->r12 */
--	xorl	%r12d, %r12d	/* nospec   r12*/
- 	pushq	%r13		/* pt_regs->r13 */
--	xorl	%r13d, %r13d	/* nospec   r13*/
- 	pushq	%r14		/* pt_regs->r14 */
--	xorl	%r14d, %r14d	/* nospec   r14*/
- 	pushq	%r15		/* pt_regs->r15 */
--	xorl	%r15d, %r15d	/* nospec   r15*/
- 	UNWIND_HINT_REGS
-+
- 	.if \save_ret
- 	pushq	%rsi		/* return address on top of stack */
- 	.endif
-+
-+	/*
-+	 * Sanitize registers of values that a speculation attack might
-+	 * otherwise want to exploit. The lower registers are likely clobbered
-+	 * well before they could be put to use in a speculative execution
-+	 * gadget.
-+	 */
-+	xorl	%edx,  %edx	/* nospec dx  */
-+	xorl	%ecx,  %ecx	/* nospec cx  */
-+	xorl	%r8d,  %r8d	/* nospec r8  */
-+	xorl	%r9d,  %r9d	/* nospec r9  */
-+	xorl	%r10d, %r10d	/* nospec r10 */
-+	xorl	%r11d, %r11d	/* nospec r11 */
-+	xorl	%ebx,  %ebx	/* nospec rbx */
-+	xorl	%ebp,  %ebp	/* nospec rbp */
-+	xorl	%r12d, %r12d	/* nospec r12 */
-+	xorl	%r13d, %r13d	/* nospec r13 */
-+	xorl	%r14d, %r14d	/* nospec r14 */
-+	xorl	%r15d, %r15d	/* nospec r15 */
-+
- .endm
+ 	movq	PER_CPU_VAR(cpu_current_top_of_stack), %rax
+ 	leaq	-PTREGS_SIZE(%rax), %rsp
+-	UNWIND_HINT_FUNC sp_offset=PTREGS_SIZE
++	UNWIND_HINT_REGS
  
- .macro POP_REGS pop_rdi=1 skip_r11rcx=0
+ 	call	do_exit
+ END(rewind_stack_do_exit)
 
 
