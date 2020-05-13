@@ -2,195 +2,292 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FCFC2D0FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCFDC2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BAD1206CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 378E6206CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:34:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="lJx7sXGJ";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="lJx7sXGJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uQuO6RtH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732919AbgEMKdd (ORCPT
+        id S1730517AbgEMKeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:33:33 -0400
-Received: from mail-eopbgr140077.outbound.protection.outlook.com ([40.107.14.77]:55165
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732204AbgEMKdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 06:33:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gFHUIGRwBaiw/+OYaUfFpl0xfYu+FKyka+343f5hLc0=;
- b=lJx7sXGJNsxN2Uq5gtIoBn+8LkOfWn9eDOM/J3sAjwRaKzjX4G8qtNh2vkrUV2t+bKm2zpY7YkTEUKMLVGgPnI1LzuVdlDOl8+Nv6+dwRXLvRMwHgqkDFCapsyBx9+5crzqdoDlVagunwT+HHmdC9CA1Xk7eRCeh4S75L1G0lRQ=
-Received: from DB3PR06CA0022.eurprd06.prod.outlook.com (2603:10a6:8:1::35) by
- AM5PR0802MB2594.eurprd08.prod.outlook.com (2603:10a6:203:99::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.33; Wed, 13 May
- 2020 10:33:28 +0000
-Received: from DB5EUR03FT027.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:8:1:cafe::a9) by DB3PR06CA0022.outlook.office365.com
- (2603:10a6:8:1::35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20 via Frontend
- Transport; Wed, 13 May 2020 10:33:28 +0000
-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT027.mail.protection.outlook.com (10.152.20.121) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3000.19 via Frontend Transport; Wed, 13 May 2020 10:33:28 +0000
-Received: ("Tessian outbound 567b75aed2b9:v54"); Wed, 13 May 2020 10:33:28 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: b9697ace434919c7
-X-CR-MTA-TID: 64aa7808
-Received: from 509c49209916.1
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id CEFE2D29-B94A-4535-8601-CFB4A4CA1D91.1;
-        Wed, 13 May 2020 10:33:23 +0000
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 509c49209916.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Wed, 13 May 2020 10:33:23 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SyRAj8INYKfi7EM5UrXxlfd+pr61Ud0zllAwbwklXh+cPsuCIawW7h+/SbQG5MuA1ixNlgPol+Wdc5+hv9UxFpFyoraRSK9rmzqehIsqsFURi7GUT2vwsA3hfQKOspnOypeya+RLjIIcUqr3fYk2LzhpFfi3A1CyP92aj5z3vpdx6m4FuWJpyjrSMlvJDGhAbB+Kcypa/Dj6WR+YzDmQ4ATC706Oop3ImseLJyvgifqNyF8s88wSqfIWYWeUp41fleoxS+iDqDdhF9mQLBEIlLAWRhJpfIGngAg4+rNgr2JjYk8joMu70vhtTwzZXqcrAF2K8sAm3jYTQafWeupR0Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gFHUIGRwBaiw/+OYaUfFpl0xfYu+FKyka+343f5hLc0=;
- b=karisgpGdmGhy0Cgd/yURwNqx4mdq4n4ycyZkBTq/E0V4LHEhdvSmj4RrCht8dsqzkE5p7ADS9BH7y+WIe3SAk7BOkL/O77QSbuG8o79K94LjTVgqIS3Xi2+e83g92wLy7UEnXp0JJQ6bSHuvTg6cPQ7yWTNxIEK7zQWAFi6xlzlNTeDFCMS1kMldN14oXr803Zsf15BORDzB6NvrlC+/arOnPE5hRF/B74GsihcqYr3PhvRAR0K/GKgLZeLYa/SXOfpxhv8xjni/zBwz62BphMUrQo/wungbPVhy5HOj6+vUBWUyigH+qw8fZBItAVw1dsM5mPrhwZQDvkB0nkjqg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gFHUIGRwBaiw/+OYaUfFpl0xfYu+FKyka+343f5hLc0=;
- b=lJx7sXGJNsxN2Uq5gtIoBn+8LkOfWn9eDOM/J3sAjwRaKzjX4G8qtNh2vkrUV2t+bKm2zpY7YkTEUKMLVGgPnI1LzuVdlDOl8+Nv6+dwRXLvRMwHgqkDFCapsyBx9+5crzqdoDlVagunwT+HHmdC9CA1Xk7eRCeh4S75L1G0lRQ=
-Authentication-Results-Original: linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=none action=none header.from=arm.com;
-Received: from HE1PR08MB2890.eurprd08.prod.outlook.com (2603:10a6:7:36::11) by
- HE1PR08MB2763.eurprd08.prod.outlook.com (2603:10a6:7:36::31) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2979.29; Wed, 13 May 2020 10:33:11 +0000
-Received: from HE1PR08MB2890.eurprd08.prod.outlook.com
- ([fe80::21af:7992:3558:1a80]) by HE1PR08MB2890.eurprd08.prod.outlook.com
- ([fe80::21af:7992:3558:1a80%2]) with mapi id 15.20.2958.035; Wed, 13 May 2020
- 10:33:11 +0000
-Date:   Wed, 13 May 2020 11:33:09 +0100
-From:   Brian Starkey <brian.starkey@arm.com>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Laura Abbott <labbott@redhat.com>,
-        "Andrew F. Davis" <afd@ti.com>, linux-kselftest@vger.kernel.org,
-        nd@arm.com
-Subject: Re: [PATCH] kselftests: dmabuf-heaps: Fix confused return value on
- expected error testing
-Message-ID: <20200513103309.b3zbyuftto6yjidc@DESKTOP-E1NTVVP.localdomain>
-References: <20200508045610.80522-1-john.stultz@linaro.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508045610.80522-1-john.stultz@linaro.org>
-User-Agent: NeoMutt/20180716-849-147d51-dirty
-X-ClientProxiedBy: LO2P123CA0003.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:a6::15) To HE1PR08MB2890.eurprd08.prod.outlook.com
- (2603:10a6:7:36::11)
+        Wed, 13 May 2020 06:34:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728258AbgEMKeR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 06:34:17 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAFEDC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 03:34:16 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id g12so27879308wmh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 03:34:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RAYZx92zrU+XEe1c66bMex9zzQrfW8p1ZDJSPXKhkxg=;
+        b=uQuO6RtH84Sdte9oQ6z12C173539QDB3JFLHZvwnWliYctpNhh7U3d3BWSmnM3PQcW
+         2TihzvWsRZT+drxcJBKvCJhGlYnMVB+1Vea4v+CCdpnO08hlkBK5gR5iHl6wLluHIkWs
+         aiJcjamaQDMNCKx/TRLEdfgdq6uga+a6GGIRhP0XeTMdk80d1sTjO8rc5DepupocSZdD
+         z1sIANLCNepEeRKZKLNTVpC28i/xhU+CAFKHWOQMgUzDXP93oyxlo6Glp8/5KMFmIkoP
+         5hd2RDMyZKBWjXaVnk0wfYOBObymhyhNWM3uYTHfsxmW1LdI8Kof2hifz6ZrGzn2kd+d
+         SMZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RAYZx92zrU+XEe1c66bMex9zzQrfW8p1ZDJSPXKhkxg=;
+        b=J17UHkdxEriFLggoCdJfmtwQrojuJVBOEUEwzSy1bpNs9eGqzb+tHjDUvc/n6nvyUV
+         DX7bVEi674EnL2cD7+5czk39nfn3TctiPUIhbcOR76o+lENKcOnJEhGLCTHvo3nDFFnT
+         1cn/vLwTlZbpoTVx6mY8PevmXhWSOtLiVeqNou0kga+Dr7A21HIkJY/5whwAXqYthYud
+         rIAZ9Ock0Efg8ngSnZFh5covZFXZVhPLDJYQQX5rGVReQzMerD89PO+2ui0EnGnRH55s
+         a1Nt4uGLVfId/LOo8f5wX33Uf0OHv5VzOi3hsfJAAy49+TSO2KxqTxbHz0P+xFj1aWy5
+         6LIw==
+X-Gm-Message-State: AGi0PuZ82m3d/C1RrNSi/8B/K8KvDdHJttBVNBFb1x1ZnwRZsYsrPOU7
+        q1ZBrXb/zf+yli2G5H7b0AYQZGE42gQ=
+X-Google-Smtp-Source: APiQypIlcy8RztoPWUmYbI5majIan1aFDKxbles48VYEQI8EF1HsfXlJxm++TtxU/GwXCgcMsZCf7A==
+X-Received: by 2002:a1c:2ed3:: with SMTP id u202mr40266117wmu.77.1589366054922;
+        Wed, 13 May 2020 03:34:14 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id c25sm34270101wmb.44.2020.05.13.03.34.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 May 2020 03:34:14 -0700 (PDT)
+Subject: Re: [PATCH v2 4/6] nvmem: add support for the Khadas MCU Programmable
+ User Memory
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200512132613.31507-1-narmstrong@baylibre.com>
+ <20200512132613.31507-5-narmstrong@baylibre.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <09026bde-0ae7-b1a4-835f-bf2481199398@linaro.org>
+Date:   Wed, 13 May 2020 11:34:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from DESKTOP-E1NTVVP.localdomain (217.140.99.251) by LO2P123CA0003.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:a6::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20 via Frontend Transport; Wed, 13 May 2020 10:33:10 +0000
-X-Originating-IP: [217.140.99.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 4fa1ceb5-ea88-40e0-cba7-08d7f7291331
-X-MS-TrafficTypeDiagnostic: HE1PR08MB2763:|AM5PR0802MB2594:
-X-Microsoft-Antispam-PRVS: <AM5PR0802MB2594FB7DB0AB13C0242C1DB3F0BF0@AM5PR0802MB2594.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:1728;OLM:1728;
-X-Forefront-PRVS: 0402872DA1
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: yVsmh6EiTh3mpEdgWvBo2XHTwrEea16HSup6YxE/r9ScLpoK48ZmZ3SjdbJqu2hOdJSESwHtmLR5SJ96+NSgRUuxnaNkpKUVCxP5U6eIZcPWRUNDs0FfzHbAddCvWzXHI2/HyDgD84Sta4njGCCD3mnqGiGt8D+/EtQ2hT5ur7kyjR7VYn1ePe+f6O+NK/GDu7OI1PbKBPyca0Ue/5wJX0xBwTYdgLLux7gefPS/7oMem02E5rz4VMWHzG+tlrglJvV+NZCuqn7fhNLROcNbcPZfQ6Ulatrso9TkvWQClQx18bsSJvMT6xQUPuf0NKO4ESpL6yad39m99cWHE5dugy6KxamYor6o6VvQ43IDOwQKJNdKGJZ6LJIH8LzZSc9NhwDSx7kKw4oQlqIcUwTqjs5sb/rUL6JdCGGiPAZRvs4rOHE7iPFt9mlWLbNaH0PlOPT5aw986HxFzaa5nskRA2CRYIa4aZ0ksDnFu/4e2EyqXvLU9rTa4F7e5Wh5zsBs+BVm+g/hovWMfTwDo/Picw==
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR08MB2890.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39850400004)(346002)(396003)(136003)(376002)(366004)(33430700001)(33440700001)(6916009)(7696005)(2906002)(54906003)(9686003)(478600001)(5660300002)(8676002)(6506007)(1076003)(316002)(8936002)(52116002)(26005)(66556008)(55016002)(186003)(16526019)(956004)(86362001)(66476007)(66946007)(44832011)(4326008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 2GA2nF6NfWUUMY4v4k+Ew6H0k0iFmNPf5rORy7Bb54TFB2jSxTAiEDAk3nGaSgF4RMlbqtiXSCYKSYGkzN4BSibujOtKruf8puNGrRIn2aaCG/S85b+AwhL7C2qfoRHIp+ylq0FheXMyjpqLjrxdJF0ERgJQXJtJLeCP9esZYbhe1+FMH2cebhwrhnPX8tQiiqA+CloDQDQw2zm28m460lwNpndRCugkTVWduLTSJ4hvReF7ofaodi1MBp5Drz9by6sSLITeXCkuL9MNNlgm8mCDesiKuH9vk9G3za5KzUDhZ3z90xlawRcRX/dRtks9YEUBT3W76s0k9gXVkM0aW6RijavAEB7ECyKnHEOZkr59LfwR3L6HB1AQo8PwpAMIlKpKV48adimXYlWgBMRJUxxrMIHcenOXbjCUhJS62pfsapBzPx/Wg2PHpYjSpX1AJ8qERtZl88ouiSQ1ixQjbhxYTEUf3xoQol85cGVjKJeoX+nwNezGAaTx28dsrgYd
-X-MS-Exchange-Transport-Forked: True
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR08MB2763
-Original-Authentication-Results: linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=none action=none header.from=arm.com;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT027.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39850400004)(396003)(136003)(376002)(46966005)(33430700001)(450100002)(6506007)(70586007)(54906003)(82740400003)(81166007)(86362001)(44832011)(55016002)(9686003)(7696005)(336012)(16526019)(6862004)(47076004)(186003)(956004)(4326008)(26005)(5660300002)(8676002)(70206006)(478600001)(1076003)(316002)(8936002)(356005)(2906002)(33440700001)(82310400002);DIR:OUT;SFP:1101;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 09fd0816-7857-49ee-ed35-08d7f72908b3
-X-Forefront-PRVS: 0402872DA1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ouQJXyjw5LjFafiifuf6DERqlDFBQc0zhkMEoYBCZlNtT2OfRaiCngncGX2QcRmIrw9b2RQfFyjy67fdlfgI+XR99+Dzu1qeRdZ7wb8B4uqbVzZ2/VDmMeHZ6+FiwPVTtyZ09xegHbt1A2aB5khqHDsfNOiqYNLLQp2z/JUJsVt3gs3zrSV8lQbAIlZFttZgUaEXAytuaK16rU64ZayyjEjmqiE+vtldvou1qr+iuXE9b1XJNmXXZWw0MwyhCi/rL9Ri9UGxQQEROscExqwiR70qP9W8BGvRmZGEC8K9T8Dn/oVEcKZU6XECr0VWMWl8yc+5BQTW1LZoulPSXOULM+AviJdL+/guzGkA4DquEHR12lWcOmod0JJZHMrj6LhqzfpWJyjgxVMSuth+W2I+PwQMcWf36GGMoymCXG3EDZtkXUOkNw42Pk4CNph0yucbhDs1631CDIh48Eu9JfkFRia6gO9P1J7ALNUbw3tcY7MwIkjtflNHgjEQra0jBosV+ZzsZ2Cb96USbVL7N6/EXVWhggIYkXo8U3TTIM/paMKvxx2tHUF8tBb8mw4X54gS7L57+/lQSo7X05eJ5dmlvQ==
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2020 10:33:28.3864
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4fa1ceb5-ea88-40e0-cba7-08d7f7291331
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0802MB2594
+In-Reply-To: <20200512132613.31507-5-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
 
-On Fri, May 08, 2020 at 04:56:10AM +0000, John Stultz wrote:
-> When I added the expected error testing, I forgot I need to set
-> the return to zero when we successfully see an error.
+
+On 12/05/2020 14:26, Neil Armstrong wrote:
+> The new Khadas VIM2, VIM3 and Edge boards embeds an on-board microcontroller
+> offering a 56bytes User Programmable NVMEM array.
 > 
-> Without this change we only end up testing a single heap
-> before the test quits.
+> This array needs a password to be writable, thus a password sysfs file
+> has been added on the device node to unlock the NVMEM.
+
+Is this one time programmable? Or does it need to be unlocked for every 
+read/write?
+
+How can you make sure that the memory is unlocked before making attempt 
+to read/write?
+
 > 
-
-The fix looks fine - feel free to add my r-b.
-
-However taking a new look at the tests, what do you think about
-conceptually replacing the 'break's with 'continue's? Is there a
-reason to skip all the other heaps if one of them fails a test?
-
-Thanks,
--Brian
-
-> Cc: Shuah Khan <shuah@kernel.org>
-> Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> Cc: Brian Starkey <brian.starkey@arm.com>
-> Cc: Laura Abbott <labbott@redhat.com>
-> Cc: "Andrew F. Davis" <afd@ti.com>
-> Cc: linux-kselftest@vger.kernel.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> The default 6bytes password id: "Khadas"
+> 
+> This implements the user NVMEM devices as cell of the Khadas MCU MFD driver.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
->  tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c | 1 +
->  1 file changed, 1 insertion(+)
+>   drivers/nvmem/Kconfig               |   8 ++
+>   drivers/nvmem/Makefile              |   2 +
+>   drivers/nvmem/khadas-mcu-user-mem.c | 128 ++++++++++++++++++++++++++++
+>   3 files changed, 138 insertions(+)
+>   create mode 100644 drivers/nvmem/khadas-mcu-user-mem.c
 > 
-> diff --git a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-> index cd5e1f602ac9..909da9cdda97 100644
-> --- a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-> +++ b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-> @@ -351,6 +351,7 @@ static int test_alloc_errors(char *heap_name)
->  	}
->  
->  	printf("Expected error checking passed\n");
-> +	ret = 0;
->  out:
->  	if (dmabuf_fd >= 0)
->  		close(dmabuf_fd);
-> -- 
-> 2.17.1
+> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
+> index d7b7f6d688e7..92cd4f6aa931 100644
+> --- a/drivers/nvmem/Kconfig
+> +++ b/drivers/nvmem/Kconfig
+> @@ -67,6 +67,14 @@ config JZ4780_EFUSE
+>   	  To compile this driver as a module, choose M here: the module
+>   	  will be called nvmem_jz4780_efuse.
+>   
+> +config NVMEM_KHADAS_MCU_USER_MEM
+> +	tristate "Khadas MCU User programmable memory support"
+> +	depends on MFD_KHADAS_MCU
+> +	depends on REGMAP
+> +	help
+> +	  This is a driver for the MCU User programmable memory
+> +	  available on the Khadas VIM and Edge boards.
+> +
+>   config NVMEM_LPC18XX_EEPROM
+>   	tristate "NXP LPC18XX EEPROM Memory Support"
+>   	depends on ARCH_LPC18XX || COMPILE_TEST
+> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
+> index a7c377218341..0516a309542d 100644
+> --- a/drivers/nvmem/Makefile
+> +++ b/drivers/nvmem/Makefile
+> @@ -17,6 +17,8 @@ obj-$(CONFIG_NVMEM_IMX_OCOTP_SCU)	+= nvmem-imx-ocotp-scu.o
+>   nvmem-imx-ocotp-scu-y		:= imx-ocotp-scu.o
+>   obj-$(CONFIG_JZ4780_EFUSE)		+= nvmem_jz4780_efuse.o
+>   nvmem_jz4780_efuse-y		:= jz4780-efuse.o
+> +obj-$(CONFIG_NVMEM_KHADAS_MCU_USER_MEM)	+= nvmem-khadas-mcu-user-mem.o
+> +nvmem-khadas-mcu-user-mem-y	:= khadas-mcu-user-mem.o
+>   obj-$(CONFIG_NVMEM_LPC18XX_EEPROM)	+= nvmem_lpc18xx_eeprom.o
+>   nvmem_lpc18xx_eeprom-y	:= lpc18xx_eeprom.o
+>   obj-$(CONFIG_NVMEM_LPC18XX_OTP)	+= nvmem_lpc18xx_otp.o
+> diff --git a/drivers/nvmem/khadas-mcu-user-mem.c b/drivers/nvmem/khadas-mcu-user-mem.c
+> new file mode 100644
+> index 000000000000..a1d5ae9a030c
+> --- /dev/null
+> +++ b/drivers/nvmem/khadas-mcu-user-mem.c
+> @@ -0,0 +1,128 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Driver for Khadas MCU User programmable Memory
+> + *
+> + * Copyright (C) 2020 BayLibre SAS
+> + * Author(s): Neil Armstrong <narmstrong@baylibre.com>
+> + */
+> +
+> +#include <linux/clk.h>
+
+Why do we need this header?
+
+> +#include <linux/module.h>
+> +#include <linux/nvmem-provider.h>
+> +#include <linux/mfd/khadas-mcu.h>
+> +#include <linux/regmap.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +
+> +static int khadas_mcu_user_mem_read(void *context, unsigned int offset,
+> +			    void *val, size_t bytes)
+> +{
+> +	struct khadas_mcu *khadas_mcu = context;
+> +
+> +	return regmap_bulk_read(khadas_mcu->map,
+> +				KHADAS_MCU_USER_DATA_0_REG + offset,
+> +				val, bytes);
+> +}
+> +
+> +static int khadas_mcu_user_mem_write(void *context, unsigned int offset,
+> +			     void *val, size_t bytes)
+> +{
+> +	struct khadas_mcu *khadas_mcu = context;
+> +
+> +	return regmap_bulk_write(khadas_mcu->map,
+> +				KHADAS_MCU_USER_DATA_0_REG + offset,
+> +				val, bytes);
+> +}
+> +
+> +static ssize_t password_store(struct device *dev, struct device_attribute *attr,
+> +			     const char *buf, size_t count)
+> +{
+> +	struct khadas_mcu *khadas_mcu = dev_get_drvdata(dev);
+> +	int i, ret;
+> +
+> +	if (count < 6)
+> +		return -EINVAL;
+
+Possibly this magic 6 value needs proper define. An additional check 
+here for > 6 would be better as well.
+
+> +
+> +	ret = regmap_write(khadas_mcu->map, KHADAS_MCU_PASSWD_START_REG, 1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0 ; i < 6 ; ++i) {
+> +		ret = regmap_write(khadas_mcu->map,
+> +				   KHADAS_MCU_CHECK_USER_PASSWD_REG,
+> +				   buf[i]);
+> +		if (ret)
+> +			goto out;
+> +	}
+> +
+> +	ret = regmap_write(khadas_mcu->map, KHADAS_MCU_PASSWD_START_REG, 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return count;
+> +out:
+> +	regmap_write(khadas_mcu->map, KHADAS_MCU_PASSWD_START_REG, 0);
+> +
+> +	return ret;
+> +}
+> +
+> +static DEVICE_ATTR_WO(password);
+> +
+> +static struct attribute *khadas_mcu_user_mem_sysfs_attributes[] = {
+> +	&dev_attr_password.attr,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group khadas_mcu_user_mem_sysfs_attr_group = {
+> +	.attrs = khadas_mcu_user_mem_sysfs_attributes,
+> +};
+> +
+> +static int khadas_mcu_user_mem_probe(struct platform_device *pdev)
+> +{
+> +	struct khadas_mcu *khadas_mcu = dev_get_drvdata(pdev->dev.parent);
+
+You could probably get away with dependency of this structure and the 
+header itself by directly getting hold of regmap from parent device.
+
+
+> +	struct device *dev = &pdev->dev;
+> +	struct nvmem_device *nvmem;
+> +	struct nvmem_config *econfig;
+> +
+> +	econfig = devm_kzalloc(dev, sizeof(*econfig), GFP_KERNEL);
+> +	if (!econfig)
+> +		return -ENOMEM;
+> +
+> +	econfig->dev = pdev->dev.parent;
+> +	econfig->name = dev_name(pdev->dev.parent);
+> +	econfig->stride = 1;
+> +	econfig->word_size = 1;
+> +	econfig->reg_read = khadas_mcu_user_mem_read;
+> +	econfig->reg_write = khadas_mcu_user_mem_write;
+> +	econfig->size = 56;
+define 56 to make it more readable!
+
+> +	econfig->priv = khadas_mcu;
+> +
+> +	platform_set_drvdata(pdev, khadas_mcu);
+> +
+> +	nvmem = devm_nvmem_register(&pdev->dev, econfig);
+> +	if (IS_ERR(nvmem))
+> +		return PTR_ERR(nvmem);
+> +
+> +	return sysfs_create_group(&pdev->dev.kobj,
+> +				  &khadas_mcu_user_mem_sysfs_attr_group);
+> +}
+> +
+> +static const struct platform_device_id khadas_mcu_user_mem_id_table[] = {
+> +	{ .name = "khadas-mcu-user-mem", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(platform, khadas_mcu_user_mem_id_table);
+> +
+> +static struct platform_driver khadas_mcu_user_mem_driver = {
+> +	.probe = khadas_mcu_user_mem_probe,
+> +	.driver = {
+> +		.name = "khadas-mcu-user-mem",
+> +	},
+> +	.id_table = khadas_mcu_user_mem_id_table,
+> +};
+> +
+> +module_platform_driver(khadas_mcu_user_mem_driver);
+> +
+> +MODULE_AUTHOR("Neil Armstrong <narmstrong@baylibre.com>");
+> +MODULE_DESCRIPTION("Khadas MCU User MEM driver");
+> +MODULE_LICENSE("GPL v2");
 > 
