@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F364C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB7ECA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 759CE20575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD57320575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364033;
-	bh=Mkl9niGM7Jk9EsYF7+nYIEVraYIF7kyKrRHQwBUWUUY=;
+	s=default; t=1589364038;
+	bh=I2jwnxVXM12FKVcYuCcTAMuuoCTdocvVrL5yu3rWjI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XFoqpEcyr5Ar+iWXqzt7bHaqBqmY6jAa973/2bsr4z3zyOzuoeAuv3YKzNfydGnD+
-	 QvPtS7heThrKjUhu+aLlAoPIYUKmrZrutclvjysuDsenPRlrXqVFelCwPJQnE8OT7F
-	 N73RadO0OX2FDfbkrxtHAe8CTb0vOUMEDqAQubzY=
+	b=d0HG/8hN9DzJOVkhN6xfGsEfNwxcv4Zdbug5SUBCnPtq9JuLXPzyin+LKRo/h9txK
+	 eIGLiP36KDNlbCZ8eLLdIv+tvg0Zf5Lw9f9kiI6JamibO1IVcONBHlvc7FON71ZkLR
+	 l7uj8N0HH1XLcUTEwQE9Z8UUpt1FmyDWB9ek54Cw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388585AbgEMKAc (ORCPT
+        id S2388590AbgEMKAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:00:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52986 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 06:00:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387712AbgEMJvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:51:51 -0400
+        id S2387682AbgEMJvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:51:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B47E820753;
-        Wed, 13 May 2020 09:51:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37D4520769;
+        Wed, 13 May 2020 09:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363511;
-        bh=Mkl9niGM7Jk9EsYF7+nYIEVraYIF7kyKrRHQwBUWUUY=;
+        s=default; t=1589363508;
+        bh=I2jwnxVXM12FKVcYuCcTAMuuoCTdocvVrL5yu3rWjI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SsMddIzcf6lBnZvJv5AML/lwC1f8M42nQSqIm6RuatGi2kvTm2nlbdeBHH+r2boQR
-         dayAvPWw9YMWanjolILhZbEvs+p7YpIZpfEPDqDbdALdFwk/mnsb+wLUc2Gjq8whKY
-         eYUeSLcOOBgY64TdmC0y0PStNmnH/Mp9Vsllwh0M=
+        b=0XA7pMBAV46Tvdq+trzNetGPAaTY55J4XWC87iJSMQpSLbu9veSDBFfp0KCPM51fT
+         QDPxl0g/w4UQ5oIeEQF+GM8WUWxUdKU9K/B1s878LyxOBerO5OywWRXB/IDedWxmYv
+         ViuxEvH7rWIIDxca40meDZLqmsEzjpONTM/+EGUU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aya Levin <ayal@mellanox.com>,
-        Moshe Shemesh <moshe@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
+        stable@vger.kernel.org,
+        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 014/118] devlink: Fix reporters recovery condition
-Date:   Wed, 13 May 2020 11:43:53 +0200
-Message-Id: <20200513094418.956848092@linuxfoundation.org>
+Subject: [PATCH 5.6 013/118] cxgb4: fix EOTID leak when disabling TC-MQPRIO offload
+Date:   Wed, 13 May 2020 11:43:52 +0200
+Message-Id: <20200513094418.847414141@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -61,49 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aya Levin <ayal@mellanox.com>
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
 
-[ Upstream commit bea0c5c942d3b4e9fb6ed45f6a7de74c6b112437 ]
+[ Upstream commit 69422a7e5d578aab277091f4ebb7c1b387f3e355 ]
 
-Devlink health core conditions the reporter's recovery with the
-expiration of the grace period. This is not relevant for the first
-recovery. Explicitly demand that the grace period will only apply to
-recoveries other than the first.
+Under heavy load, the EOTID termination FLOWC request fails to get
+enqueued to the end of the Tx ring due to lack of credits. This
+results in EOTID leak.
 
-Fixes: c8e1da0bf923 ("devlink: Add health report functionality")
-Signed-off-by: Aya Levin <ayal@mellanox.com>
-Reviewed-by: Moshe Shemesh <moshe@mellanox.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+When disabling TC-MQPRIO offload, the link is already brought down
+to cleanup EOTIDs. So, flush any pending enqueued skbs that can't be
+sent outside the wire, to make room for FLOWC request. Also, move the
+FLOWC descriptor consumption logic closer to when the FLOWC request is
+actually posted to hardware.
+
+Fixes: 0e395b3cb1fb ("cxgb4: add FLOWC based QoS offload")
+Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/devlink.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/sge.c |   39 ++++++++++++++++++++++++++++---
+ 1 file changed, 36 insertions(+), 3 deletions(-)
 
---- a/net/core/devlink.c
-+++ b/net/core/devlink.c
-@@ -5029,6 +5029,7 @@ int devlink_health_report(struct devlink
- {
- 	enum devlink_health_reporter_state prev_health_state;
- 	struct devlink *devlink = reporter->devlink;
-+	unsigned long recover_ts_threshold;
+--- a/drivers/net/ethernet/chelsio/cxgb4/sge.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/sge.c
+@@ -2202,6 +2202,9 @@ static void ethofld_hard_xmit(struct net
+ 	if (unlikely(skip_eotx_wr)) {
+ 		start = (u64 *)wr;
+ 		eosw_txq->state = next_state;
++		eosw_txq->cred -= wrlen16;
++		eosw_txq->ncompl++;
++		eosw_txq->last_compl = 0;
+ 		goto write_wr_headers;
+ 	}
  
- 	/* write a log message of the current error */
- 	WARN_ON(!msg);
-@@ -5039,10 +5040,12 @@ int devlink_health_report(struct devlink
- 	devlink_recover_notify(reporter, DEVLINK_CMD_HEALTH_REPORTER_RECOVER);
+@@ -2360,6 +2363,34 @@ netdev_tx_t t4_start_xmit(struct sk_buff
+ 	return cxgb4_eth_xmit(skb, dev);
+ }
  
- 	/* abort if the previous error wasn't recovered */
-+	recover_ts_threshold = reporter->last_recovery_ts +
-+			       msecs_to_jiffies(reporter->graceful_period);
- 	if (reporter->auto_recover &&
- 	    (prev_health_state != DEVLINK_HEALTH_REPORTER_STATE_HEALTHY ||
--	     jiffies - reporter->last_recovery_ts <
--	     msecs_to_jiffies(reporter->graceful_period))) {
-+	     (reporter->last_recovery_ts && reporter->recovery_count &&
-+	      time_is_after_jiffies(recover_ts_threshold)))) {
- 		trace_devlink_health_recover_aborted(devlink,
- 						     reporter->ops->name,
- 						     reporter->health_state,
++static void eosw_txq_flush_pending_skbs(struct sge_eosw_txq *eosw_txq)
++{
++	int pktcount = eosw_txq->pidx - eosw_txq->last_pidx;
++	int pidx = eosw_txq->pidx;
++	struct sk_buff *skb;
++
++	if (!pktcount)
++		return;
++
++	if (pktcount < 0)
++		pktcount += eosw_txq->ndesc;
++
++	while (pktcount--) {
++		pidx--;
++		if (pidx < 0)
++			pidx += eosw_txq->ndesc;
++
++		skb = eosw_txq->desc[pidx].skb;
++		if (skb) {
++			dev_consume_skb_any(skb);
++			eosw_txq->desc[pidx].skb = NULL;
++			eosw_txq->inuse--;
++		}
++	}
++
++	eosw_txq->pidx = eosw_txq->last_pidx + 1;
++}
++
+ /**
+  * cxgb4_ethofld_send_flowc - Send ETHOFLD flowc request to bind eotid to tc.
+  * @dev - netdevice
+@@ -2435,9 +2466,11 @@ int cxgb4_ethofld_send_flowc(struct net_
+ 					    FW_FLOWC_MNEM_EOSTATE_CLOSING :
+ 					    FW_FLOWC_MNEM_EOSTATE_ESTABLISHED);
+ 
+-	eosw_txq->cred -= len16;
+-	eosw_txq->ncompl++;
+-	eosw_txq->last_compl = 0;
++	/* Free up any pending skbs to ensure there's room for
++	 * termination FLOWC.
++	 */
++	if (tc == FW_SCHED_CLS_NONE)
++		eosw_txq_flush_pending_skbs(eosw_txq);
+ 
+ 	ret = eosw_txq_enqueue(eosw_txq, skb);
+ 	if (ret) {
 
 
