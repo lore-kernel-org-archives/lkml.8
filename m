@@ -8,69 +8,68 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB778C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E45C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2FDF2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:46:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A7462054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:46:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J9f+VXD3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bdantqXw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729919AbgEMVqr (ORCPT
+        id S1730057AbgEMVqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 17:46:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48572 "EHLO
+        Wed, 13 May 2020 17:46:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729793AbgEMVqo (ORCPT
+        by vger.kernel.org with ESMTP id S1729994AbgEMVqv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 17:46:44 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0294FC061A0C;
-        Wed, 13 May 2020 14:46:43 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id g14so12828072wme.1;
-        Wed, 13 May 2020 14:46:42 -0700 (PDT)
+        Wed, 13 May 2020 17:46:51 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EBFCC061A0E;
+        Wed, 13 May 2020 14:46:49 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l18so1319283wrn.6;
+        Wed, 13 May 2020 14:46:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1ZhpfY5SsXwRMXVq8oG2SQckFQ1KlcXnx8okrJoqKCA=;
-        b=J9f+VXD35N9xl7mX+0T+f83yVVR/BgYM8RMEZCYaz1RSjI+MkVij2f44TNmQ9iGE86
-         6etFqrZUffKYP1M1wze/ps4CpisiMrwWTnMSr2L2m5nhNa5DdRhGtiWzYXGCcH4SCHOR
-         6bCmg4p+pF7wkc1n7vujJNPXgs88iP/adct8b8CQYCOEt+lQFy8tdVg3kvLTiy1MZ6jP
-         f3tO1rfpK8afd0A1SGtKTrY4qsre9OxjLK3sQ7TXtxEP9Sff2EyVlkXtvXZteu5nRCWR
-         lo+fGAss0/qYhP8AefeSr+vcsIXkj77mG7qPVT6Roqq2qA6M+07ju8yV/+hXTmOmBSQa
-         zFnQ==
+        bh=GJdGXsHD0zUd2QbzbW/I0cKeP4IeBGCB2rpC+2MAeZI=;
+        b=bdantqXwbJZtRf8K1mYSwY3s0rsnkVOn4KOdiGMmYTUs2SRGH3Jv8v3lfKjmVpKb0D
+         dq+FPq86JI3gIcoKzUP72wPP275IDQqCyyRzzT29Cg8g61hXhvCo+Wu3kAFP2fv5wWre
+         V7KVHZzm1R9X4+9eZLkyH86XAgi+HzvJ8nf1b050sHdvLfNZWcBZw96lLSpiVhW7MLae
+         ts42GPrel78Xz6ct/586YopmRohDVkg+pQlWMfmWz067xJv8WxBGOk66DgtySkRuUEga
+         xxjCqmxTf59JQK+NYgzHnegqg+aUHIA/7WfBrp9NoHOfdUKH8hsydlFTyWhHiZOIEdEg
+         DoXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1ZhpfY5SsXwRMXVq8oG2SQckFQ1KlcXnx8okrJoqKCA=;
-        b=iwlpSnesA003heahe3TXNA8WHJ+5hef3ZvDERHXgeW78TVsvwW3uitjTfIc+Dt1vbg
-         P270oCZKA18rV5W0UAFNpgZrUWAu5XtwRYASj+O4AOVjkKeNtRndA+wJpx0Ldes4g/D7
-         WL3Ucylb6368LOMI09UifLKnBFjRWcR0s7ljLX9uhc9ZxV8aul5eZGr8W7Rier4J2Itv
-         P4Q7gHabLQkGDy9vNwQYb5ufrzHvefTQA/18bbcEDR6UgjiIX7waX/XI7ukixuG/aydF
-         4NQqn4x521tKaVqJLqVnE1o1NGEdxcAc9gPKia/19/+8twazSYjuuDKnl+zPvgM7UNlm
-         qdrg==
-X-Gm-Message-State: AGi0PubGby046EE7y0YbCDUJasz82FRdQtFgHTX2D9WLeyU/DHxV/pZu
-        6o8OahCeuJnfPMy57oIeV54=
-X-Google-Smtp-Source: APiQypIZ4r5SZkRDB6NXjJjmJhzn7tVrsiIl9AH/93M3gz7vnmZP+aNiDzxAEY/+SIIWvDX/w43OYQ==
-X-Received: by 2002:a1c:f012:: with SMTP id a18mr43223777wmb.116.1589406401788;
-        Wed, 13 May 2020 14:46:41 -0700 (PDT)
+        bh=GJdGXsHD0zUd2QbzbW/I0cKeP4IeBGCB2rpC+2MAeZI=;
+        b=fxLFN0DdUcUXyauGVIU6z58qU4Tuvgkyv7jiXhNDHevhqjiWMEHK7lUyO2Vbqvfy+Z
+         l3r2BE4jxMWD6iOLpINFaAm3HARBhVHubtVAtjadWbPfx4rYhpKSAafXv/2bMtdC7bO4
+         WgVsYZ98lNKUqRjhHxRcKvJKg2WFJlQwN2Lw5yig95UN9CIjWF0YMWi+KA49C9WKn93X
+         xwq/rH1wPFgYa/GcFuar2yUUPfHLbBXeefsg/UPyNkOGRyYrSku2x27BGsIBsHMBg3rO
+         BU4H2DUjTA32658W55FITgaCntCAU2oynm4wnSq7FeDSzO+RXLBexVSkBHeDaChUSG/T
+         kTwQ==
+X-Gm-Message-State: AOAM533w2fjaibEcFhWRAG21y9D2qgSfuuyF0d7gz3DG9KjZmw40jjyP
+        uPE7viWd17M50MTt7zr3ijc=
+X-Google-Smtp-Source: ABdhPJwOW0a96inUowDYevyxA5bBc6FGdx6sWbOmF82NP31eWee/F6lJtgBgJewXU8AVUAr+23bjgg==
+X-Received: by 2002:a5d:684f:: with SMTP id o15mr1481873wrw.89.1589406408323;
+        Wed, 13 May 2020 14:46:48 -0700 (PDT)
 Received: from localhost.localdomain (cpc91192-cmbg18-2-0-cust374.5-4.cable.virginm.net. [80.6.113.119])
-        by smtp.gmail.com with ESMTPSA id m23sm1699734wmg.45.2020.05.13.14.46.40
+        by smtp.gmail.com with ESMTPSA id m23sm1699734wmg.45.2020.05.13.14.46.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 14:46:41 -0700 (PDT)
+        Wed, 13 May 2020 14:46:47 -0700 (PDT)
 From:   Emil Velikov <emil.l.velikov@gmail.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     emil.l.velikov@gmail.com,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>, linux-alpha@vger.kernel.org
-Subject: [PATCH 04/11] alpha: constify sysrq_key_op
-Date:   Wed, 13 May 2020 22:43:44 +0100
-Message-Id: <20200513214351.2138580-4-emil.l.velikov@gmail.com>
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org
+Subject: [PATCH 10/11] kernel/power: constify sysrq_key_op
+Date:   Wed, 13 May 2020 22:43:50 +0100
+Message-Id: <20200513214351.2138580-10-emil.l.velikov@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200513214351.2138580-1-emil.l.velikov@gmail.com>
 References: <20200513214351.2138580-1-emil.l.velikov@gmail.com>
@@ -87,32 +86,31 @@ sysrq_key_op. As such we can add the notation.
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Jiri Slaby <jslaby@suse.com>
 Cc: linux-kernel@vger.kernel.org
-Cc: Richard Henderson <rth@twiddle.net>
-Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
-Cc: Matt Turner <mattst88@gmail.com>
-Cc: linux-alpha@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Len Brown <len.brown@intel.com>
+Cc: linux-pm@vger.kernel.org
 Signed-off-by: Emil Velikov <emil.l.velikov@gmail.com>
 ---
 Please keep me in the CC list, as I'm not subscribed to the list.
 
 IMHO it would be better if this gets merged this via the tty tree.
 ---
- arch/alpha/kernel/setup.c | 2 +-
+ kernel/power/poweroff.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/alpha/kernel/setup.c b/arch/alpha/kernel/setup.c
-index dd7f770f23cf..6fa802c495b4 100644
---- a/arch/alpha/kernel/setup.c
-+++ b/arch/alpha/kernel/setup.c
-@@ -431,7 +431,7 @@ register_cpus(void)
- arch_initcall(register_cpus);
+diff --git a/kernel/power/poweroff.c b/kernel/power/poweroff.c
+index 6d475281c730..562aa0e450ed 100644
+--- a/kernel/power/poweroff.c
++++ b/kernel/power/poweroff.c
+@@ -29,7 +29,7 @@ static void handle_poweroff(int key)
+ 	schedule_work_on(cpumask_first(cpu_online_mask), &poweroff_work);
+ }
  
- #ifdef CONFIG_MAGIC_SYSRQ
--static struct sysrq_key_op srm_sysrq_reboot_op = {
-+static const struct sysrq_key_op srm_sysrq_reboot_op = {
- 	.handler	= machine_halt,
- 	.help_msg       = "reboot(b)",
- 	.action_msg     = "Resetting",
+-static struct sysrq_key_op	sysrq_poweroff_op = {
++static const struct sysrq_key_op	sysrq_poweroff_op = {
+ 	.handler        = handle_poweroff,
+ 	.help_msg       = "poweroff(o)",
+ 	.action_msg     = "Power Off",
 -- 
 2.25.1
 
