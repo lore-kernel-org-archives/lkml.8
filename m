@@ -2,132 +2,165 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E969CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F70CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A3E820575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363513;
-	bh=2IoNdM2KI03Yv6nw6vfK4lxfPu+CTcXzy9HO+5uuJW4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t2jeVqsz++r45UpwrxQAaCergoyNuBuBkqD83hEFjORYb0liGAmoQgG3sWHyeoMAq
-	 hZ+DBsa4Ah0SDh2Qg7KHY9LrYuxGRuhdvoOUl3wxcvxtZyWRKp21jHRqgsXj+vuSIL
-	 tyK6F+Z/Sk+nAdEjlpBbu9tMo7WoEJNyASrk/T60=
+	by mail.kernel.org (Postfix) with ESMTP id 06A9020769
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZPMM/B9P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733271AbgEMJvv (ORCPT
+        id S2387720AbgEMJvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:51:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52888 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387702AbgEMJvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:51:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C934A20753;
-        Wed, 13 May 2020 09:51:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363506;
-        bh=2IoNdM2KI03Yv6nw6vfK4lxfPu+CTcXzy9HO+5uuJW4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sBz7/Io4pArDZ5iLA1XcQMXWE4r5x8Xkzy8XvoJsyvulKEYynVi0S6PXOL/+mLsL2
-         Egd/O7tBPpmswyZPrI/FZEQP4ssa30Tm+iLor6gJheFczw3AerAggACxrQqiVQbS2g
-         mBqt/RJ1icYmDjlVAYKQO8eh/MsNnuAT44jLuBJU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 012/118] net: macb: Fix runtime PM refcounting
-Date:   Wed, 13 May 2020 11:43:51 +0200
-Message-Id: <20200513094418.750886835@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
-References: <20200513094417.618129545@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 13 May 2020 05:51:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49546 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387706AbgEMJvu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:51:50 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EBAEC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 02:51:49 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id e25so17054651ljg.5
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 02:51:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=v/hRPGSq+bxa+Q+TzEJUb+dUDnWb/ydhRiXMT/AcNOI=;
+        b=ZPMM/B9P+Bpf5SVLNYqfokquDQ91Z7N0GqGGNtacBG9sboiJf5EK1RcrQE2zjI7jMx
+         wAbbBABXF7d/MAcwwu2p5n0O1KFSKu2TdZMhHdlbsFXJhgxtuZQeOk5Ofs3OQqpxwbwp
+         Q517krnAmo2upraZVyViwfCCFBfKiZw/7ZE0UEb/KnKzg7dFfF1XD7AfI+YHOIJbgAI7
+         kCXZhKxrtcBakCjmL7OX6bfy3vhqtPUrArDdxNMsyQ9+W/6JbZ72/UaulNkVltCsvUWq
+         E6jverH4zidhLMbGVvkwXyt17tYVmG8bO4TEaYxfleqjXe8e8FJYAZ/l4giHMpoP1r1L
+         ixww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=v/hRPGSq+bxa+Q+TzEJUb+dUDnWb/ydhRiXMT/AcNOI=;
+        b=dkQjA6xWWUrpgBxdKUJ6f7PgpWHjLiKCeEQpQr2LvW7c1MI6lYDMlJ9w37ePfjLYTg
+         40hl5H8+XGXDcUni33wzNRABsSKskVUUJdwUoqhSvrtG3CRl5Gn/d3joIGVrDSQ6K7VE
+         5gsy904ovE2X6aTNNzfII7n+DzYhaKbcaMRqSP4FX4H6GxCECnb8J9wK2rKXU42MT6X2
+         lWrSiICc8vryxmE5ZXaQHcA3a1vxgJuesLcqOz8zGjwB/NQgGS7m3Dygedyt6lJHNGkL
+         CnM+T0ABkRBFqOZu033KILzaJZlE3nwEzvZactGtLsUqFxUbE5Q3cQkuCHrJ7sIcsq2e
+         wDpQ==
+X-Gm-Message-State: AOAM530sZTcs3uP5p+1zfNZC6KfHuBCquhVdcoflshA85zOiVY301fhS
+        rlqy2s1Jj9CwFk+Kpjy23wHEOQeqRjU+2oF+t3pnuw==
+X-Google-Smtp-Source: ABdhPJy2iGPRarsjL/HWpQUuP4ZZnl1ZwwZeQCzlZes0Yw/u3lUrW7PCZlQvehA7Blx4fUiTqNbnTAZsAJ6m62s8rLQ=
+X-Received: by 2002:a05:651c:1a5:: with SMTP id c5mr5504337ljn.217.1589363507341;
+ Wed, 13 May 2020 02:51:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 13 May 2020 15:21:35 +0530
+Message-ID: <CA+G9fYuXFdWc_dm1iLvS1zkCQS216xgL7oY7D=9QXwQxVefHNw@mail.gmail.com>
+Subject: stable-rc 4.14.181-rc1/ad4fc99d1989: no regressions found in project
+ stable v4.14.y
+To:     linux- stable <stable@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Cc:     lkft-triage@lists.linaro.org,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-[ Upstream commit 0ce205d4660c312cdeb4a81066616dcc6f3799c4 ]
+Summary
+------------------------------------------------------------------------
 
-The commit e6a41c23df0d, while trying to fix an issue,
+kernel: 4.14.181-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.14.y
+git commit: ad4fc99d19898b966c3fa74c7adaaee8d12da3a9
+git describe: v4.14.180-37-gad4fc99d1989
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
+ild/v4.14.180-37-gad4fc99d1989
 
-    ("net: macb: ensure interface is not suspended on at91rm9200")
+No regressions (compared to build v4.14.180)
 
-introduced a refcounting regression, because in error case refcounter
-must be balanced. Fix it by calling pm_runtime_put_noidle() in error case.
+No fixes (compared to build v4.14.180)
 
-While here, fix the same mistake in other couple of places.
+Ran 30937 total tests in the following environments and test suites.
 
-Fixes: e6a41c23df0d ("net: macb: ensure interface is not suspended on at91rm9200")
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Claudiu Beznea <claudiu.beznea@microchip.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/cadence/macb_main.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
 
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index b3a51935e8e0b..1fc83cd31cf28 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -334,8 +334,10 @@ static int macb_mdio_read(struct mii_bus *bus, int mii_id, int regnum)
- 	int status;
- 
- 	status = pm_runtime_get_sync(&bp->pdev->dev);
--	if (status < 0)
-+	if (status < 0) {
-+		pm_runtime_put_noidle(&bp->pdev->dev);
- 		goto mdio_pm_exit;
-+	}
- 
- 	status = macb_mdio_wait_for_idle(bp);
- 	if (status < 0)
-@@ -386,8 +388,10 @@ static int macb_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
- 	int status;
- 
- 	status = pm_runtime_get_sync(&bp->pdev->dev);
--	if (status < 0)
-+	if (status < 0) {
-+		pm_runtime_put_noidle(&bp->pdev->dev);
- 		goto mdio_pm_exit;
-+	}
- 
- 	status = macb_mdio_wait_for_idle(bp);
- 	if (status < 0)
-@@ -3803,8 +3807,10 @@ static int at91ether_open(struct net_device *dev)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(&lp->pdev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(&lp->pdev->dev);
- 		return ret;
-+	}
- 
- 	/* Clear internal statistics */
- 	ctl = macb_readl(lp, NCR);
--- 
-2.20.1
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* kselftest/networking
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* v4l2-compliance
+* kvm-unit-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-native/networking
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+* kselftest-vsyscall-mode-none/networking
 
-
-
+--=20
+Linaro LKFT
+https://lkft.linaro.org
