@@ -2,104 +2,101 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C9AC2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB84C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A1D520753
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:37:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589362675;
-	bh=eWF7IegAvbnc7BD/BjzKhKKxtW8zOOtnyprMNpapXPQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D1I8VcvU8Yv1ViadG+k1u9eVSx/j4AYABSmhRlIaJLsfjY/mt5iqUXlp3nblC2Xa7
-	 gHnFAAWBUMc1J435tQ2q5h8sy0lbiLiCqBhZ0FGwAwh8KVmlZuekU8qs9AovF83btO
-	 jqBD/vYHZ5HQ7zFWiOs6BeSVO/scu5CX9nFfr2xQ=
+	by mail.kernel.org (Postfix) with ESMTP id 4F4CC206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:38:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MxYtgadZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730213AbgEMJhy (ORCPT
+        id S1730953AbgEMJib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:37:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38732 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726922AbgEMJhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:37:54 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E4CC206B8;
-        Wed, 13 May 2020 09:37:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589362673;
-        bh=eWF7IegAvbnc7BD/BjzKhKKxtW8zOOtnyprMNpapXPQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UNFbSMtOGX93R6ewcI5F/ToALRkUBVkWO19G2ZMoApWAl6UbA+J6WRtuQRlngE+AS
-         ZzXc6nQuw+eQChZPs1naCofDbEd23H1zCog/dWk6fjCYZVIIwBdsdVbGgJVtST3tEu
-         3jiJpUe4gEkkPL/ODZhL9eagbJ7DlrrbAoT125SQ=
-Date:   Wed, 13 May 2020 11:37:51 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     Sasha Levin <sashal@kernel.org>, adrian.hunter@intel.com,
-        ulf.hansson@linaro.org, baolin.wang@linaro.org,
-        kstewart@linuxfoundation.org, tglx@linutronix.de,
-        bradleybolen@gmail.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, anrao@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.4.33 0/2] Fix for long operation cmds busy detection
-Message-ID: <20200513093751.GA831267@kroah.com>
-References: <1587758766-3274-1-git-send-email-skomatineni@nvidia.com>
- <20200425014556.GD13035@sasha-vm>
- <81be9ca0-5c61-6e94-8398-85354764b429@nvidia.com>
- <20200425070408.GB2042217@kroah.com>
+        Wed, 13 May 2020 05:38:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47476 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726532AbgEMJib (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:38:31 -0400
+Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A2D7C061A0C;
+        Wed, 13 May 2020 02:38:31 -0700 (PDT)
+Received: by mail-vk1-xa42.google.com with SMTP id v23so4080736vke.13;
+        Wed, 13 May 2020 02:38:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wBsI8/q9tCGEEr55DJmDyAoQAE0dfC+ZmLFYnoZKRCY=;
+        b=MxYtgadZIuiNwe154KOVvjuls/0cwiolNG2D9UH9scIN/ePCk8mhg33byFHHVmf9Lo
+         5791+hCe5kOsHfd6lXsklQ29x9dARBVEQbQw0YFuNxd33xvKOHa7gJwNSPy1Jy5EejHS
+         ZFIIXzSsh2EXBM3S0HNPbUxKCntLv0s6rn7+oNVTxCKOSl96yrhvm95FdSMfJbQOLQor
+         byRRgFAILKpv4Xpms63nR0Qs7sL2syoxP3R1+VdzWUUFzS6aWc/2yC06x0YO3WPLlEQk
+         PVfLyEBljZ/VHiiSZw9omyHNLvAjGok1IICKKgT2A6KdNWPEmxXBJHlr/n85hlcTuzbv
+         vlLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wBsI8/q9tCGEEr55DJmDyAoQAE0dfC+ZmLFYnoZKRCY=;
+        b=aboneyqEef7AjCzlUdUFN5EjIKqiyR4735bc8mal+ggsuQ22Hrfyu5tP9/YTtKvnbf
+         LtQriJVfzUu7fqfbkU6IInkq3cwgF+0aVjD266Xf34/cd3GVIgB7fbbSH8hQuJpxsNX6
+         HWNqB+TiiKjJr88OmS/1ocxfTwD6aD8VF4djxFcxz8TuOjzKzY6aXRtXxQ5DhJwrwQ3m
+         DDn52QpiN0oGKi62wb4ZCdey5U7ip5NNiEq6d9mouEWXqnMdklyE17tHQh0QB4kqUI36
+         IRoApq+QnW29ph2BqweNq3LTzf5dA6e7JS17milfN3qgLdJ2de6O+BGJHUafgRRWQ3k/
+         swAA==
+X-Gm-Message-State: AGi0PuZumfmhwyx1DjfkHoipmn7QBxRJEpl+2E6Tzexsey3JjwAfI4mc
+        FxVIpiIfjJyXAM04ZCLRxux8/SFfkV2AvJZi3H4rkg==
+X-Google-Smtp-Source: APiQypKmaaAa47QovnAzyFDTLeQNTPb9fvrKbCBsSUUUr20M3otbNDJLYwk5l9cb4/1Lsw0VMkkPYL0pPw04l6brm5E=
+X-Received: by 2002:a1f:a454:: with SMTP id n81mr20221401vke.6.1589362710294;
+ Wed, 13 May 2020 02:38:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200425070408.GB2042217@kroah.com>
+References: <20200316163907.13709-1-wsa+renesas@sang-engineering.com> <20200512162837.GJ13516@ninjato>
+In-Reply-To: <20200512162837.GJ13516@ninjato>
+From:   Emil Velikov <emil.l.velikov@gmail.com>
+Date:   Wed, 13 May 2020 10:35:49 +0100
+Message-ID: <CACvgo526Ut+rpi9TXP4jZKPZmRUbnh8U-ETj7VTAz9ykut5Uig@mail.gmail.com>
+Subject: Re: [PATCH 0/2] drm: encoder_slave: some updates
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-renesas-soc@vger.kernel.org,
+        Dave Airlie <airlied@redhat.com>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 25, 2020 at 09:04:08AM +0200, Greg KH wrote:
-> On Fri, Apr 24, 2020 at 07:42:16PM -0700, Sowjanya Komatineni wrote:
-> > 
-> > On 4/24/20 6:45 PM, Sasha Levin wrote:
-> > > External email: Use caution opening links or attachments
-> > > 
-> > > 
-> > > On Fri, Apr 24, 2020 at 01:06:04PM -0700, Sowjanya Komatineni wrote:
-> > > > This series is to backport the upstream patches that fixes busy
-> > > > detection
-> > > > for long operation mmc commands by implementing Tegra specific timeout
-> > > > callback to switch between finite and infinite HW busy detection wait
-> > > > modes.
-> > > > 
-> > > > 
-> > > > Sowjanya Komatineni (2):
-> > > >  sdhci: tegra: Implement Tegra specific set_timeout callback
-> > > >  sdhci: tegra: Enable MMC_CAP_WAIT_WHILE_BUSY host capability
-> > > 
-> > > What regression do these patches fix?
-> > > 
-> > This isn't a regression as we don't have any known failures as of today with
-> > the specific mmc devices we are using on our platforms.
-> 
-> Have you read:
->     https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-> ?
-> 
-> > But this patch fixes a long outstanding bug for sdhci-tegra to handle long
-> > busy wait for mmc command operations that may take longer than host max busy
-> > timeout. So, this is something that's missing from the beginning and good to
-> > have.
-> 
-> So it's a new feature?
-> 
+Hi Wolfram,
 
-Dropped from my queues due to lack of response.
+On Wed, 13 May 2020 at 10:10, Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+>
+> On Mon, Mar 16, 2020 at 05:39:05PM +0100, Wolfram Sang wrote:
+> > While converting I2C users to new APIs, I found a refcounting problem in
+> > the encoder_slave implementation. This series fixes it and converts to
+> > the new API.
+> >
+> > Based on linux-next and only build tested.
+> >
+> > Wolfram Sang (2):
+> >   drm: encoder_slave: fix refcouting error for modules
+> >   drm: encoder_slave: use new I2C API
+> >
+> >  drivers/gpu/drm/drm_encoder_slave.c | 15 +++++----------
+> >  1 file changed, 5 insertions(+), 10 deletions(-)
+>
+> Is there someone I should add to the CC list maybe?
+>
+The series is:
+Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
 
-greg k-h
+Unless someone beats me to it, I'll commit them to drm-misc later today.
+
+-Emil
