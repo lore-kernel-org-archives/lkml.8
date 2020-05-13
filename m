@@ -2,43 +2,43 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB034C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46037C2D0FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 905DF205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D158205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:57:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="ABUsFCNI"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="pptCRZv+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388500AbgEMJ5n (ORCPT
+        id S2388508AbgEMJ5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:57:43 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:47538 "EHLO
+        Wed, 13 May 2020 05:57:51 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:42646 "EHLO
         mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387522AbgEMJ5b (ORCPT
+        by vger.kernel.org with ESMTP id S2388471AbgEMJ5b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 13 May 2020 05:57:31 -0400
 Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04D9u0Lm020735;
+        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04D9u0Ll020735;
         Wed, 13 May 2020 04:57:24 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-type; s=PODMain02222019;
- bh=1kL+XycNbaxPSdl1OKM+2HovK+930ExLvyruMF6IGAQ=;
- b=ABUsFCNIa5XQ6KDel8GM/YHhsyWfL2J2yRvH0b43MR4HBE0jCSs1c3YrPm9Ai9IWohUv
- lQEeGecbSwPTv8JTMcUwXJk8ZSdos3GnNfvzoEVJ00mp3Kz0KChbvJaXJ5bG7wKEVR7y
- mu6nSLCbEwu40IHw08DYADAANvcqiXGKLvBAqj0yHwoVJAAG6XyydSuH1SuVJ25lwtLJ
- ldlrJShU71ubF1tin/tszE73Pweq4MdCkFCdo2+65TE6uz/8AgWj7HpHvGkJESazbuWp
- MR/T+tVn9Y2mRoSaStcd4xco4ZWlCsBqE1KM8gvH6sSbWaWMNFJMtgWt90czT8I5Cbtt Ow== 
+ bh=Bk0GwiMHspuyRz+HOHXWk8CH/gzba5SI2mDVtCsdpzA=;
+ b=pptCRZv+DhPYK7dt6lJgiI5Fx1VJtpif6I+kIrqIdM44SmlHN55VkNbVQqll8aWuToUR
+ 5QFfVYx7Xuz1VYR/27wt5HNsTqM4+u6r3aUqviaWkvH+frqsK8pWtHTUT4y+9DDnEw4E
+ JqsRh/Uv91yNo4d99oaT4MhWprfDUXO04WuZxu8uUdRKNrRq3x3ZJgZJFl9mzPOHXU4p
+ 0oV4pzeyBMBssm4MmWAtHmiivZaV+wmEr5kT2yIaE0DfDgz3+I+9Pji+J/miy9g3B1fH
+ sPQGoYJAixQcfmMNFO/tN5p/Sf5Ey33v4osCYleEDuiE0t3ucwi7/0wtsgIv4FwHm4u0 sg== 
 Authentication-Results: ppops.net;
         spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
 Received: from ediex02.ad.cirrus.com ([87.246.76.36])
-        by mx0b-001ae601.pphosted.com with ESMTP id 3100xes5n2-4
+        by mx0b-001ae601.pphosted.com with ESMTP id 3100xes5n2-3
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
         Wed, 13 May 2020 04:57:24 -0500
 Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
@@ -49,7 +49,7 @@ Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
  (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
  Transport; Wed, 13 May 2020 10:57:21 +0100
 Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 705202C5;
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 4B7B245A;
         Wed, 13 May 2020 09:57:21 +0000 (UTC)
 From:   Charles Keepax <ckeepax@opensource.cirrus.com>
 To:     <cw00.choi@samsung.com>, <robh+dt@kernel.org>,
@@ -58,9 +58,9 @@ To:     <cw00.choi@samsung.com>, <robh+dt@kernel.org>,
 CC:     <myungjoo.ham@samsung.com>, <lgirdwood@gmail.com>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <patches@opensource.cirrus.com>
-Subject: [PATCH v3 6/7] pinctrl: madera: Move binding over to dtschema
-Date:   Wed, 13 May 2020 10:57:19 +0100
-Message-ID: <20200513095720.8867-6-ckeepax@opensource.cirrus.com>
+Subject: [PATCH v3 4/7] mfd: arizona: Move binding over to dtschema
+Date:   Wed, 13 May 2020 10:57:17 +0100
+Message-ID: <20200513095720.8867-4-ckeepax@opensource.cirrus.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20200513095720.8867-1-ckeepax@opensource.cirrus.com>
 References: <20200513095720.8867-1-ckeepax@opensource.cirrus.com>
@@ -83,252 +83,440 @@ Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
 
 Changes since v2:
- - Remove some more redundant descriptions
- - Force pinctrl node to be called "pin-settings"
- - Force suffix on individual config nodes to -pins
+ - Removed a couple more redundant descriptions
 
 Thanks,
 Charles
 
- .../bindings/pinctrl/cirrus,madera-pinctrl.txt     |  99 -----------------
- .../devicetree/bindings/pinctrl/cirrus,madera.yaml | 122 +++++++++++++++++++++
- 2 files changed, 122 insertions(+), 99 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/cirrus,madera-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
+ Documentation/devicetree/bindings/mfd/arizona.txt  | 101 -------
+ .../devicetree/bindings/mfd/wlf,arizona.yaml       | 289 +++++++++++++++++++++
+ MAINTAINERS                                        |   8 +-
+ 3 files changed, 293 insertions(+), 105 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mfd/arizona.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/wlf,arizona.yaml
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/cirrus,madera-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/cirrus,madera-pinctrl.txt
+diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
 deleted file mode 100644
-index b0e36cf0d289e..0000000000000
---- a/Documentation/devicetree/bindings/pinctrl/cirrus,madera-pinctrl.txt
+index 148ef621a5e5d..0000000000000
+--- a/Documentation/devicetree/bindings/mfd/arizona.txt
 +++ /dev/null
-@@ -1,99 +0,0 @@
--Cirrus Logic Madera class audio codecs pinctrl driver
+@@ -1,101 +0,0 @@
+-Cirrus Logic/Wolfson Microelectronics Arizona class audio SoCs
 -
--The Cirrus Logic Madera codecs provide a number of GPIO functions for
--interfacing to external hardware and to provide logic outputs to other devices.
--Certain groups of GPIO pins also have an alternate function, normally as an
--audio interface.
+-These devices are audio SoCs with extensive digital capabilities and a range
+-of analogue I/O.
 -
--The set of available GPIOs, functions and alternate function groups differs
--between codecs so refer to the datasheet for the codec for further information
--on what is supported on that device.
+-Required properties:
 -
--The properties for this driver exist within the parent MFD driver node.
+-  - compatible : One of the following chip-specific strings:
+-        "cirrus,cs47l24"
+-        "wlf,wm5102"
+-        "wlf,wm5110"
+-        "wlf,wm8280"
+-        "wlf,wm8997"
+-        "wlf,wm8998"
+-        "wlf,wm1814"
+-        "wlf,wm1831"
 -
--See also
--  the core bindings for the parent MFD driver:
--    Documentation/devicetree/bindings/mfd/madera.txt
+-  - reg : I2C slave address when connected using I2C, chip select number when
+-    using SPI.
 -
--  the generic pinmix bindings:
--    Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+-  - interrupts : The interrupt line the /IRQ signal for the device is
+-    connected to.
+-  - interrupt-controller : Arizona class devices contain interrupt controllers
+-    and may provide interrupt services to other devices.
+-  - #interrupt-cells: the number of cells to describe an IRQ, this should be 2.
+-    The first cell is the IRQ number.
+-    The second cell is the flags, encoded as the trigger masks from
+-    Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
 -
--Required properties of parent mfd node:
--  - pinctrl-names : must be "default"
--  - pinctrl-0 : a phandle to the node containing the subnodes containing default
--      configurations
+-  - gpio-controller : Indicates this device is a GPIO controller.
+-  - #gpio-cells : Must be 2. The first cell is the pin number and the
+-    second cell is used to specify optional parameters, see ../gpio/gpio.txt
+-    for details.
 -
--Required subnodes:
--  One subnode is required to contain the default settings. It contains an
--  arbitrary number of configuration subnodes, one for each group or pin
--  configuration you want to apply as a default.
+-  - AVDD-supply, DBVDD1-supply, CPVDD-supply : Power supplies for the device,
+-    as covered in Documentation/devicetree/bindings/regulator/regulator.txt
 -
--Required properties of configuration subnodes:
--  - groups : name of one pin group to configure. One of:
--	aif1, aif2, aif3, aif4, mif1, mif2, mif3, pdmspk1, pdmspk2,
--	dmic4, dmic5, dmic6,
--	gpio1, gpio2, ..., gpio40
--    The gpioN groups select the single pin of this name for configuration
+-  - DBVDD2-supply, DBVDD3-supply : Additional databus power supplies (wm5102,
+-    wm5110, wm8280, wm8998, wm1814)
 -
--Optional properties of configuration subnodes:
--  Any configuration option not explicitly listed in the dts will be left at
--  chip default setting.
+-  - SPKVDDL-supply, SPKVDDR-supply : Speaker driver power supplies (wm5102,
+-    wm5110, wm8280, wm8998, wm1814)
 -
--  - function : name of function to assign to this group. One of:
--	aif1, aif2, aif3, aif4, mif1, mif2, mif3, pdmspk1, pdmspk2,
--	dmic3, dmic4, dmic5, dmic6,
--	io, dsp-gpio, irq1, irq2,
--	fll1-clk, fll1-lock, fll2-clk, fll2-lock, fll3-clk, fll3-lock,
--	fllao-clk, fllao-lock,
--	opclk, opclk-async, pwm1, pwm2, spdif,
--	asrc1-in1-lock, asrc1-in2-lock, asrc2-in1-lock, asrc2-in2-lock,
--	spkl-short-circuit, spkr-short-circuit, spk-shutdown,
--	spk-overheat-shutdown, spk-overheat-warn,
--	timer1-sts, timer2-sts, timer3-sts, timer4-sts, timer5-sts, timer6-sts,
--	timer7-sts, timer8-sts,
--	log1-fifo-ne, log2-fifo-ne, log3-fifo-ne, log4-fifo-ne, log5-fifo-ne,
--	log6-fifo-ne, log7-fifo-ne, log8-fifo-ne,
+-  - SPKVDD-supply : Speaker driver power supply (wm8997)
 -
--  - bias-disable : disable pull-up and pull-down
--  - bias-bus-hold : enable buskeeper
--  - bias-pull-up : output is pulled-up
--  - bias-pull-down : output is pulled-down
--  - drive-push-pull : CMOS output
--  - drive-open-drain : open-drain output
--  - drive-strength : drive strength in mA. Valid values are 4 or 8
--  - input-schmitt-enable : enable schmitt-trigger mode
--  - input-schmitt-disable : disable schmitt-trigger mode
--  - input-debounce : A value of 0 disables debounce, a value !=0 enables
--	debounce
--  - output-low : set the pin to output mode with low level
--  - output-high : set the pin to output mode with high level
+-  - DCVDD-supply : Main power supply (cs47l24, wm1831)
+-
+-  - MICVDD-supply : Microphone power supply (cs47l24, wm1831)
+-
+-Optional properties:
+-
+-  - reset-gpios : GPIO specifier for the GPIO controlling /RESET
+-
+-  - clocks: Should reference the clocks supplied on MCLK1 and MCLK2
+-  - clock-names: Should contains two strings:
+-      "mclk1" for the clock supplied on MCLK1, recommended to be a high
+-      quality audio reference clock
+-      "mclk2" for the clock supplied on MCLK2, recommended to be an always on
+-      32k clock
+-
+-  - wlf,gpio-defaults : A list of GPIO configuration register values. Defines
+-    for the appropriate values can found in <dt-bindings/mfd/arizona.txt>. If
+-    absent, no configuration of these registers is performed. If any entry has
+-    a value that is out of range for a 16 bit register then the chip default
+-    will be used. If present exactly five values must be specified.
+-
+-  - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
+-    they are being externally supplied. As covered in
+-    Documentation/devicetree/bindings/regulator/regulator.txt
+-    (wm5102, wm5110, wm8280, wm8997, wm8998, wm1814)
+-
+-Deprecated properties:
+-
+-  - wlf,reset : GPIO specifier for the GPIO controlling /RESET
+-
+-Also see child specific device properties:
+-  Regulator - ../regulator/arizona-regulator.txt
+-  Extcon    - ../extcon/extcon-arizona.txt
+-  Sound     - ../sound/wlf,arizona.txt
 -
 -Example:
 -
--cs47l85@0 {
--	compatible = "cirrus,cs47l85";
+-codec: wm5102@1a {
+-	compatible = "wlf,wm5102";
+-	reg = <0x1a>;
+-	interrupts = <347>;
+-	interrupt-controller;
+-	#interrupt-cells = <2>;
+-        interrupt-parent = <&gic>;
 -
--	pinctrl-names = "default";
--	pinctrl-0 = <&cs47l85_defaults>;
+-	gpio-controller;
+-	#gpio-cells = <2>;
 -
--	cs47l85_defaults: cs47l85-gpio-defaults {
--		aif1 {
--			groups = "aif1";
--			function = "aif1";
--			bias-bus-hold;
--		};
--
--		aif2 {
--			groups = "aif2";
--			function = "aif2";
--			bias-bus-hold;
--		};
--
--		opclk {
--			groups = "gpio1";
--			function = "opclk";
--			bias-pull-up;
--			drive-strength = <8>;
--		};
--	};
+-	wlf,gpio-defaults = <
+-		ARIZONA_GP_FN_TXLRCLK
+-		ARIZONA_GP_DEFAULT
+-		ARIZONA_GP_DEFAULT
+-		ARIZONA_GP_DEFAULT
+-		ARIZONA_GP_DEFAULT
+-	>;
 -};
-diff --git a/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml b/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
+diff --git a/Documentation/devicetree/bindings/mfd/wlf,arizona.yaml b/Documentation/devicetree/bindings/mfd/wlf,arizona.yaml
 new file mode 100644
-index 0000000000000..6bfc25d0e1b33
+index 0000000000000..14b6aac64a7e0
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
-@@ -0,0 +1,122 @@
++++ b/Documentation/devicetree/bindings/mfd/wlf,arizona.yaml
+@@ -0,0 +1,289 @@
 +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/pinctrl/cirrus,madera.yaml#
++$id: http://devicetree.org/schemas/mfd/wlf,arizona.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Cirrus Logic Madera class audio CODECs pinctrl driver
++title: Cirrus Logic/Wolfson Microelectronics Arizona class audio SoCs
 +
 +maintainers:
 +  - patches@opensource.cirrus.com
 +
 +description: |
-+  The Cirrus Logic Madera codecs provide a number of GPIO functions for
-+  interfacing to external hardware and to provide logic outputs to other devices.
-+  Certain groups of GPIO pins also have an alternate function, normally as an
-+  audio interface.
++  These devices are audio SoCs with extensive digital capabilities and a
++  range of analogue I/O.
 +
-+  The set of available GPIOs, functions and alternate function groups differs
-+  between CODECs so refer to the datasheet for the CODEC for further information
-+  on what is supported on that device.
++allOf:
++  - $ref: /schemas/sound/wlf,arizona.yaml#
++  - $ref: /schemas/regulator/wlf,arizona.yaml#
++  - $ref: /schemas/extcon/wlf,arizona.yaml#
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - cirrus,cs47l24
++              - wlf,wm1831
++    then:
++      required:
++        - DCVDD-supply
++        - MICVDD-supply
++    else:
++      properties:
++        LDOVDD-supply:
++          description:
++            Digital power supply, used internally to generate DCVDD when
++            internally supplied.
++          $ref: /schemas/types.yaml#/definitions/phandle
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - wlf,wm1814
++              - wlf,wm5102
++              - wlf,wm5110
++              - wlf,wm8280
++              - wlf,wm8997
++              - wlf,wm8998
++    then:
++      properties:
++        DBVDD2-supply:
++          description:
++            Databus power supply.
++          $ref: /schemas/types.yaml#/definitions/phandle
 +
-+  The properties for this driver exist within the parent MFD driver node.
++      required:
++        - DBVDD2-supply
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - wlf,wm1814
++              - wlf,wm5102
++              - wlf,wm5110
++              - wlf,wm8280
++              - wlf,wm8998
++    then:
++      properties:
++        DBVDD3-supply:
++          description:
++            Databus power supply.
++          $ref: /schemas/types.yaml#/definitions/phandle
 +
-+  See also the core bindings for the parent MFD driver:
++      required:
++        - DBVDD3-supply
++  - if:
++     properties:
++       compatible:
++         contains:
++           enum:
++             - cirrus,cs47l24
++             - wlf,wm1831
++             - wlf,wm8997
++    then:
++      properties:
++        SPKVDD-supply:
++          description:
++            Mono speaker driver power supply.
++          $ref: /schemas/types.yaml#/definitions/phandle
 +
-+    Documentation/devicetree/bindings/mfd/cirrus,madera.yaml
++      required:
++        - SPKVDD-supply
++    else:
++      properties:
++        SPKVDDL-supply:
++          description:
++            Left speaker driver power supply.
++          $ref: /schemas/types.yaml#/definitions/phandle
 +
-+  And the generic pinmix bindings:
++        SPKVDDR-supply:
++          description:
++            Right speaker driver power supply.
++          $ref: /schemas/types.yaml#/definitions/phandle
 +
-+    Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
++      required:
++        - SPKVDDL-supply
++        - SPKVDDR-supply
 +
 +properties:
-+  pinctrl-0:
++  compatible:
++    enum:
++      - cirrus,cs47l24
++      - wlf,wm1814
++      - wlf,wm1831
++      - wlf,wm5102
++      - wlf,wm5110
++      - wlf,wm8280
++      - wlf,wm8997
++      - wlf,wm8998
++
++  reg:
++    maxItems: 1
++
++  AVDD-supply:
 +    description:
-+      A phandle to the node containing the subnodes containing default
-+      configurations.
++      Analogue power supply.
++    $ref: /schemas/types.yaml#/definitions/phandle
 +
-+  pinctrl-names:
++  CPVDD-supply:
 +    description:
-+      A pinctrl state named "default" must be defined.
-+    const: default
++      Charge pump power supply.
++    $ref: /schemas/types.yaml#/definitions/phandle
 +
-+  pin-settings:
++  DBVDD1-supply:
 +    description:
-+      One subnode is required to contain the default settings. It
-+      contains an arbitrary number of configuration subnodes, one for
-+      each group or pin configuration you want to apply as a default.
-+    type: object
-+    patternProperties:
-+      '-pins$':
-+        type: object
-+        allOf:
-+          - $ref: "pincfg-node.yaml#"
-+          - $ref: "pinmux-node.yaml#"
-+        properties:
-+          groups:
-+            description:
-+              Name of one pin group to configure.
-+            enum: [ aif1, aif2, aif3, aif4, mif1, mif2, mif3, pdmspk1,
-+                    pdmspk2, dmic4, dmic5, dmic6, gpio1, gpio2, gpio3,
-+                    gpio4, gpio5, gpio6, gpio7, gpio7, gpio8, gpio9,
-+                    gpio10, gpio11, gpio12, gpio13, gpio14, gpio15,
-+                    gpio16, gpio17, gpio17, gpio18, gpio19, gpio20,
-+                    gpio21, gpio22, gpio23, gpio24, gpio25, gpio26,
-+                    gpio27, gpio27, gpio28, gpio29, gpio30, gpio31,
-+                    gpio32, gpio33, gpio34, gpio35, gpio36, gpio37,
-+                    gpio37, gpio38, gpio39 ]
++      Databus power supply.
++    $ref: /schemas/types.yaml#/definitions/phandle
 +
-+          function:
-+            description:
-+              Name of function to assign to this group.
-+            enum: [ aif1, aif2, aif3, aif4, mif1, mif2, mif3,
-+                    pdmspk1, pdmspk2, dmic3, dmic4, dmic5,
-+                    dmic6, io, dsp-gpio, irq1, irq2, fll1-clk,
-+                    fll1-lock, fll2-clk, fll2-lock, fll3-clk,
-+                    fll3-lock, fllao-clk, fllao-lock, opclk,
-+                    opclk-async, pwm1, pwm2, spdif, asrc1-in1-lock,
-+                    asrc1-in2-lock, asrc2-in1-lock, asrc2-in2-lock,
-+                    spkl-short-circuit, spkr-short-circuit,
-+                    spk-shutdown, spk-overheat-shutdown,
-+                    spk-overheat-warn, timer1-sts, timer2-sts,
-+                    timer3-sts, timer4-sts, timer5-sts, timer6-sts,
-+                    timer7-sts, timer8-sts, log1-fifo-ne,
-+                    log2-fifo-ne, log3-fifo-ne, log4-fifo-ne,
-+                    log5-fifo-ne, log6-fifo-ne, log7-fifo-ne,
-+                    log8-fifo-ne ]
++  DCVDD-supply:
++    description:
++      Digital power supply, normally supplied internally except on cs47l24,
++      wm1831 where it is mandatory.
++    $ref: /schemas/types.yaml#/definitions/phandle
 +
-+          bias-disable: true
++  MICVDD-supply:
++    description:
++      Microphone power supply, normally supplied internally except on
++      cs47l24, wm1831 where it is mandatory.
++    $ref: /schemas/types.yaml#/definitions/phandle
 +
-+          bias-bus-hold: true
++  gpio-controller: true
 +
-+          bias-pull-up: true
++  '#gpio-cells':
++    description:
++      The first cell is the pin number and the second cell is used to
++      specify optional parameters.
++    const: 2
 +
-+          bias-pull-down: true
++  wlf,gpio-defaults:
++    description:
++      A list of GPIO configuration register values. Defines for the
++      appropriate values can found in dt-bindings/mfd/arizona.h. If
++      absent, no configuration of these registers is performed. If any
++      entry has a value that is out of range for a 16 bit register then the
++      chip default will be used. If present exactly five values must be
++      specified.
++    $ref: "/schemas/types.yaml#/definitions/uint32-array"
++    minItems: 1
++    maxItems: 5
 +
-+          drive-push-pull: true
++  interrupt-controller: true
 +
-+          drive-open-drain: true
++  '#interrupt-cells':
++    description:
++      The first cell is the IRQ number.  The second cell is the flags,
++      encoded as trigger masks.
++    const: 2
 +
-+          drive-strength:
-+            enum: [ 4, 8 ]
++  interrupts: true
 +
-+          input-schmitt-enable: true
++  clocks:
++    description:
++      Should reference the clocks supplied on MCLK1 and MCLK2.
++    minItems: 1
++    maxItems: 2
 +
-+          input-schmitt-disable: true
++  clock-names:
++    description:
++      Should contains two strings mclk1 for the clock supplied on MCLK1,
++      recommended to be a high quality audio reference clock mclk2 for the
++      clock supplied on MCLK2, recommended to be an always on 32k clock.
++    oneOf:
++      - items:
++        - const: mclk1
++      - items:
++        - const: mclk2
++      - items:
++        - const: mclk1
++        - const: mclk2
 +
-+          input-debounce: true
++  reset-gpios:
++    maxItems: 1
 +
-+          output-low: true
-+
-+          output-high: true
-+
-+        additionalProperties: false
-+
-+        required:
-+          - groups
-+
-+    additionalProperties: false
++  wlf,reset:
++    description:
++      GPIO specifier for the GPIO controlling RESET
++    deprecated: true
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    maxItems: 1
 +
 +required:
-+  - pinctrl-0
-+  - pinctrl-names
++  - compatible
++  - AVDD-supply
++  - CPVDD-supply
++  - DBVDD1-supply
++  - gpio-controller
++  - '#gpio-cells'
++  - interrupt-controller
++  - '#interrupt-cells'
++  - interrupts
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/mfd/arizona.h>
++    i2c@e0004000 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        reg = <0xe0004000 0x1000>;
++
++        wm5102: codec@1a {
++            compatible = "wlf,wm5102";
++            reg = <0x1a>;
++
++            reset-gpios = <&gpio 0>;
++            wlf,ldoena = <&gpio 1>;
++
++            AVDD-supply = <&vdd1v8>;
++            DBVDD1-supply = <&vdd1v8>;
++            DBVDD2-supply = <&vdd1v8>;
++            DBVDD3-supply = <&vdd1v8>;
++            CPVDD-supply = <&vdd1v8>;
++            LDOVDD-supply = <&vdd1v8>;
++            SPKVDDL-supply = <&vdd5v>;
++            SPKVDDR-supply = <&vdd5v>;
++
++            interrupts = <347>;
++            interrupt-controller;
++            #interrupt-cells = <2>;
++            interrupt-parent = <&gic>;
++
++            gpio-controller;
++            #gpio-cells = <2>;
++
++            #sound-dai-cells = <1>;
++
++            wlf,gpio-defaults = <
++                ARIZONA_GP_FN_TXLRCLK
++                ARIZONA_GP_DEFAULT
++                ARIZONA_GP_DEFAULT
++                ARIZONA_GP_DEFAULT
++                ARIZONA_GP_DEFAULT
++            >;
++
++            clocks = <&clks 0>, <&clks 1>;
++            clock-names = "mclk1", "mclk2";
++
++            wlf,inmode = <ARIZONA_INMODE_DIFF ARIZONA_INMODE_DMIC>;
++            wlf,dmic-ref = <ARIZONA_DMIC_MICBIAS1 ARIZONA_DMIC_MICBIAS3>;
++
++            wlf,use-jd2;
++            wlf,use-jd2-nopull;
++            wlf,jd-invert;
++
++            wlf,micd-software-compare;
++            wlf,micd-detect-debounce = <0>;
++            wlf,micd-pol-gpio = <&codec 2 0>;
++            wlf,micd-rate = <ARIZONA_MICD_TIME_8MS>;
++            wlf,micd-dbtime = <4>;
++            wlf,micd-timeout-ms = <100>;
++            wlf,micd-force-micbias;
++            wlf,micd-configs = <0 ARIZONA_DMIC_MICBIAS1 0>,
++                               <0x2000 ARIZONA_DMIC_MICBIAS2 1>;
++
++            wlf,gpsw = <ARIZONA_GPSW_OPEN>;
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 91bf1fbe98c8e..92a96cc0ea734 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -18257,11 +18257,11 @@ L:	patches@opensource.cirrus.com
+ S:	Supported
+ W:	https://github.com/CirrusLogic/linux-drivers/wiki
+ T:	git https://github.com/CirrusLogic/linux-drivers.git
+-F:	Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+-F:	Documentation/devicetree/bindings/mfd/arizona.txt
++F:	Documentation/devicetree/bindings/extcon/wlf,arizona.yaml
++F:	Documentation/devicetree/bindings/mfd/wlf,arizona.yaml
+ F:	Documentation/devicetree/bindings/mfd/wm831x.txt
+-F:	Documentation/devicetree/bindings/regulator/arizona-regulator.txt
+-F:	Documentation/devicetree/bindings/sound/wlf,arizona.txt
++F:	Documentation/devicetree/bindings/regulator/wlf,arizona.yaml
++F:	Documentation/devicetree/bindings/sound/wlf,arizona.yaml
+ F:	Documentation/hwmon/wm83??.rst
+ F:	arch/arm/mach-s3c64xx/mach-crag6410*
+ F:	drivers/clk/clk-wm83*.c
 -- 
 2.11.0
 
