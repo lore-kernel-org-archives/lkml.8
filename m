@@ -2,53 +2,53 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 579A5CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC3FCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 387E5206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D30420740
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363431;
-	bh=cI0BwQC4ApYzVqysMzmdDssAVDo50Q5Yw2k+j67F9Og=;
+	s=default; t=1589363434;
+	bh=17QPbeEKarOTesGJ57OM/RN6hhUjRNgopEosfdRyfkQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xXAG8wvJKNb2MsnQEo+nVT3Vtpi/bWSFigBBJlLvpD4RNTK8XOYshaOjTCrpz1tkc
-	 ydkcgBrrqFceRqz8G53qpPvaDNeLRDsbPiI9hRTScCrskUfcyUPllFAOZVyDCOIXei
-	 KyBA98dFUi9I0938DHTsx6HZ6BC/ua09GXhRa/7E=
+	b=k2IkEQ6AU/HYUha3obstOYqkHnWrvhN6ENk2zroemTOo+DTGhKtqBa6bz6+h8XPYO
+	 YjFHXgTz8bGVjoxWutI57JwScgl081OK1HNDFe8W2Az3D100HdF/rX27upY/BYaDT3
+	 9Jcr8gMwfsRbmLrWaY7wep7YTmMiekD5UIsN1wjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732831AbgEMJua (ORCPT
+        id S2387508AbgEMJuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:50:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50194 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:50:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387486AbgEMJuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:50:24 -0400
+        id S1732803AbgEMJu3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:50:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D28E620575;
-        Wed, 13 May 2020 09:50:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD94B2492D;
+        Wed, 13 May 2020 09:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363424;
-        bh=cI0BwQC4ApYzVqysMzmdDssAVDo50Q5Yw2k+j67F9Og=;
+        s=default; t=1589363429;
+        bh=17QPbeEKarOTesGJ57OM/RN6hhUjRNgopEosfdRyfkQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZD4pCSN2r3sdhuR+aEE//MayjtgFH/vg3TSft6Grl1yvldpByjJnt2eISqgzKcFmr
-         9nv4JjWr43BKmPtuggZCPx5j2AQ3JsbS1U/8J3Z6pkPfr0DT8oDyNZq48bCxC48zMI
-         wLYsYtIHimCLQEFc9NHqZU20y75tM5gzfgIcGW44=
+        b=njrtDY1qRrcQiPqq65JeD4THozSc+cgUX4BltTsl5cM63+BOexF4RYyg38MerWuh0
+         Xcu66nkM3dfYAIs0eGiqyuVNj6q9eu7HO2PwI/vdqox9NPmn8KqIUIU8q7sF/qpoKr
+         /VgGspn9Fr5p1yXTKz5YiIv9IIWxIPaopMOHsbZY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>,
-        Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.4 41/90] HID: wacom: Read HID_DG_CONTACTMAX directly for non-generic devices
-Date:   Wed, 13 May 2020 11:44:37 +0200
-Message-Id: <20200513094413.039538639@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 5.4 69/90] batman-adv: Fix refcnt leak in batadv_show_throughput_override
+Date:   Wed, 13 May 2020 11:45:05 +0200
+Message-Id: <20200513094416.558997429@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -61,48 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gerecke <jason.gerecke@wacom.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-commit 778fbf4179991e7652e97d7f1ca1f657ef828422 upstream.
+commit f872de8185acf1b48b954ba5bd8f9bc0a0d14016 upstream.
 
-We've recently switched from extracting the value of HID_DG_CONTACTMAX
-at a fixed offset (which may not be correct for all tablets) to
-injecting the report into the driver for the generic codepath to handle.
-Unfortunately, this change was made for *all* tablets, even those which
-aren't generic. Because `wacom_wac_report` ignores reports from non-
-generic devices, the contact count never gets initialized. Ultimately
-this results in the touch device itself failing to probe, and thus the
-loss of touch input.
+batadv_show_throughput_override() invokes batadv_hardif_get_by_netdev(),
+which gets a batadv_hard_iface object from net_dev with increased refcnt
+and its reference is assigned to a local pointer 'hard_iface'.
 
-This commit adds back the fixed-offset extraction for non-generic devices.
+When batadv_show_throughput_override() returns, "hard_iface" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
 
-Link: https://github.com/linuxwacom/input-wacom/issues/155
-Fixes: 184eccd40389 ("HID: wacom: generic: read HID_DG_CONTACTMAX from any feature report")
-Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
-Reviewed-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
-CC: stable@vger.kernel.org # 5.3+
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
+The issue happens in the normal path of
+batadv_show_throughput_override(), which forgets to decrease the refcnt
+increased by batadv_hardif_get_by_netdev() before the function returns,
+causing a refcnt leak.
+
+Fix this issue by calling batadv_hardif_put() before the
+batadv_show_throughput_override() returns in the normal path.
+
+Fixes: 0b5ecc6811bd ("batman-adv: add throughput override attribute to hard_ifaces")
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/wacom_sys.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/batman-adv/sysfs.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/hid/wacom_sys.c
-+++ b/drivers/hid/wacom_sys.c
-@@ -319,9 +319,11 @@ static void wacom_feature_mapping(struct
- 			data[0] = field->report->id;
- 			ret = wacom_get_report(hdev, HID_FEATURE_REPORT,
- 					       data, n, WAC_CMD_RETRIES);
--			if (ret == n) {
-+			if (ret == n && features->type == HID_GENERIC) {
- 				ret = hid_report_raw_event(hdev,
- 					HID_FEATURE_REPORT, data, n, 0);
-+			} else if (ret == 2 && features->type != HID_GENERIC) {
-+				features->touch_max = data[1];
- 			} else {
- 				features->touch_max = 16;
- 				hid_warn(hdev, "wacom_feature_mapping: "
+--- a/net/batman-adv/sysfs.c
++++ b/net/batman-adv/sysfs.c
+@@ -1190,6 +1190,7 @@ static ssize_t batadv_show_throughput_ov
+ 
+ 	tp_override = atomic_read(&hard_iface->bat_v.throughput_override);
+ 
++	batadv_hardif_put(hard_iface);
+ 	return sprintf(buff, "%u.%u MBit\n", tp_override / 10,
+ 		       tp_override % 10);
+ }
 
 
