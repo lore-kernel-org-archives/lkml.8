@@ -2,98 +2,185 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C02C47076
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 263DAC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBDE023126
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:23:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="apgUCNxf"
+	by mail.kernel.org (Postfix) with ESMTP id 0AD34206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:23:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731674AbgEMAXx (ORCPT
+        id S1731713AbgEMAXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 12 May 2020 20:23:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46140 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731107AbgEMAXw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 20:23:52 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0CF0C061A0C;
-        Tue, 12 May 2020 17:23:52 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49MFlT0x5Hz9sSW;
-        Wed, 13 May 2020 10:23:48 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589329429;
-        bh=jN1QN1TG9rUlC/cO5tkTA5RV3QkYWS8DMK0A1jUUtXs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=apgUCNxf5B7DNXZlyH6xSTZLE1XvQN8cWfGAkLjos0QWjYOXZ/ZrrKgBRSRx8dZgC
-         d6/+Wl5pT5LqZ4RvNVuIyvT+tIH4Mphpq5SmVPjXDPewVBJit0Je25U2U+hDaCHM+D
-         nWKAZ5e8xfITcSMsjPS2x77tTm+GBJLdiCkbKtIZ6NQBTwH9l1OOm4Sy/Rtm1h4FAi
-         HD3uFXVi6wpV4yDOt2UZSGh0UFF8VSTp6B1CYakGHwyRKLmcPyRx2t2PG7qV7534K0
-         nNi74vMByvq3Evgf1d5j1zPvODi/hC/HR6iTnVqkmbqpim9owGrYOzs2VRHWjDVaX7
-         leutDunzCXsAQ==
-Date:   Wed, 13 May 2020 10:23:46 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: linux-next: Fixes tag needs some work in the overlayfs tree
-Message-ID: <20200513102346.6c04d912@canb.auug.org.au>
+Received: from mga12.intel.com ([192.55.52.136]:50791 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731298AbgEMAXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 20:23:53 -0400
+IronPort-SDR: Im/1UfOBBOlX5El7pvI/jA1ty1oy8Yg9iGMk8WUH8PTAARjv5/W9ZSUOCbtvD1NSuAVPF5UqM6
+ h/dUguUrQ5xg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 17:23:52 -0700
+IronPort-SDR: 9bEPdCyrGVJFc89/CF4vocHxwEfi4WU8U1+BuFY/vxkA5yS8mrKy/nPVLgFE9itiOh1/9QmiRc
+ oCLoyy3DFDVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,385,1583222400"; 
+   d="scan'208";a="251614270"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 12 May 2020 17:23:51 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jYfBf-0009e6-57; Wed, 13 May 2020 08:23:51 +0800
+Date:   Wed, 13 May 2020 08:23:39 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:locking/kcsan] BUILD SUCCESS
+ 6bcc8f459fe790f35dfd8e3bb0f43e530d44ee9a
+Message-ID: <5ebb3e0b.1ZdIPsYIO6fmqYQO%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/B5ZF1246aJ3hxFxR5uCPJue";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/B5ZF1246aJ3hxFxR5uCPJue
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  locking/kcsan
+branch HEAD: 6bcc8f459fe790f35dfd8e3bb0f43e530d44ee9a  locking/atomics: Flip fallbacks and instrumentation
 
-Hi all,
+elapsed time: 586m
 
-In commit
+configs tested: 118
+configs skipped: 6
 
-  8d628847a2f8 ("ovl: potential crash in ovl_fid_to_fh()")
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Fixes tag
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+sparc                            allyesconfig
+m68k                             allyesconfig
+arm                  colibri_pxa300_defconfig
+c6x                        evmc6457_defconfig
+powerpc                     powernv_defconfig
+mips                 decstation_r4k_defconfig
+h8300                            allyesconfig
+arm                       aspeed_g4_defconfig
+sh                      rts7751r2d1_defconfig
+powerpc                     ep8248e_defconfig
+openrisc                    or1ksim_defconfig
+h8300                     edosk2674_defconfig
+sh                           se7751_defconfig
+arm                           tegra_defconfig
+sh                            hp6xx_defconfig
+i386                                defconfig
+arm64                            alldefconfig
+arm                        vexpress_defconfig
+m68k                        m5272c3_defconfig
+xtensa                         virt_defconfig
+arm                         axm55xx_defconfig
+arm                          prima2_defconfig
+sh                             sh03_defconfig
+riscv                            allyesconfig
+arm                         lpc32xx_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a006-20200512
+i386                 randconfig-a005-20200512
+i386                 randconfig-a003-20200512
+i386                 randconfig-a001-20200512
+i386                 randconfig-a004-20200512
+i386                 randconfig-a002-20200512
+x86_64               randconfig-a016-20200512
+x86_64               randconfig-a012-20200512
+x86_64               randconfig-a015-20200512
+x86_64               randconfig-a013-20200512
+x86_64               randconfig-a014-20200512
+x86_64               randconfig-a011-20200512
+i386                 randconfig-a012-20200512
+i386                 randconfig-a016-20200512
+i386                 randconfig-a014-20200512
+i386                 randconfig-a011-20200512
+i386                 randconfig-a013-20200512
+i386                 randconfig-a015-20200512
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+x86_64                              defconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
 
-  Fixes: cbe7fba8edfc: ("ovl: make sure that real fid is 32bit aligned in m=
-emory")
-
-has these problem(s):
-
-  - unexpected colon after SHA1
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/B5ZF1246aJ3hxFxR5uCPJue
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl67PhIACgkQAVBC80lX
-0Gw2dQf7BclmJ6Sbq8FhiEg971vS8aI4xrL7BOllAN6h2dX2JPmR3AepyCCuFk2f
-Q5p9QVFlJM9ZHIqVAKIObw0YdwwIR50hR3z5hzeZ2qFHN+VUV1Au/4DYCJLeO/ZX
-9qLGA6A6nTnyShvf8sB21Sq3VHhcVEjl9ES0IfKPB152m8ZhAUmbWPK8AAIQ9pto
-mIX2KIQhqyXMFo+ZWwMDMySD8AYvwAC5b6hanFsYIan/w8lSU+HoPIPZq2i4K9XZ
-VeSN6DlK6lsc5Hn+BDeYz50CRv15L+iQmFh1YJwzbR14fkPBn9y7/6XFBRPC34k0
-Xp49NoAhv0D6WTsD5iyZ1xtXNQzo4A==
-=9Q/V
------END PGP SIGNATURE-----
-
---Sig_/B5ZF1246aJ3hxFxR5uCPJue--
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
