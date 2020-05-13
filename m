@@ -2,85 +2,100 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31325C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EB8C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12A8B20753
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4D1820675
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:55:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LH3F3jR9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731107AbgEMAka (ORCPT
+        id S1731721AbgEMAzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 20:40:30 -0400
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:47113 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726031AbgEMAjt (ORCPT
+        Tue, 12 May 2020 20:55:24 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52497 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731909AbgEMAyw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 20:39:49 -0400
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 12 May 2020 17:39:48 -0700
-Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg03-sd.qualcomm.com with ESMTP; 12 May 2020 17:39:47 -0700
-Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 670E64D8E; Tue, 12 May 2020 17:39:47 -0700 (PDT)
-From:   Guru Das Srinagesh <gurus@codeaurora.org>
-To:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [RESEND PATCH v14 01/11] drm/i915: Use 64-bit division macro
-Date:   Tue, 12 May 2020 17:39:35 -0700
-Message-Id: <4b56ba06f4f1e63cf50858d3e45c88057dc443e4.1589330178.git.gurus@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1589330178.git.gurus@codeaurora.org>
-References: <cover.1589330178.git.gurus@codeaurora.org>
-In-Reply-To: <cover.1589330178.git.gurus@codeaurora.org>
-References: <cover.1589330178.git.gurus@codeaurora.org>
+        Tue, 12 May 2020 20:54:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589331291;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=NJeD/aOrfIoQ//ti865M5edH2b+NJXDkUCbs0+81Jmo=;
+        b=LH3F3jR9otWKyCi2N1ANooQG/6JjDCv97cLOMmQBqAS9yV5nf4jIbRQEkmTsHuF3xEUAWv
+        m2wjIKf94Ww/oHicSC3VPZkJq5rqYXubTMIQTIhwKRaDicJeHgqylrSXrsOMG/2wNEqsEb
+        Na+AM8XdF+L3vKkX5BqCFslicSGJFoI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-356-VlDqez_TPr2jz7vpNF2Jwg-1; Tue, 12 May 2020 20:54:47 -0400
+X-MC-Unique: VlDqez_TPr2jz7vpNF2Jwg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 133FA835B40;
+        Wed, 13 May 2020 00:54:46 +0000 (UTC)
+Received: from optiplex-lnx (unknown [10.3.128.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 223CC1000079;
+        Wed, 13 May 2020 00:54:43 +0000 (UTC)
+Date:   Tue, 12 May 2020 20:54:40 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        keescook@chromium.org, akpm@linux-foundation.org,
+        yzaikin@google.com, tytso@mit.edu
+Subject: Re: [PATCH v2] kernel: sysctl: ignore out-of-range taint bits
+ introduced via kernel.tainted
+Message-ID: <20200513005440.GK367616@optiplex-lnx>
+References: <20200512223946.888020-1-aquini@redhat.com>
+ <20200513003953.GK11244@42.do-not-panic.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513003953.GK11244@42.do-not-panic.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the PWM framework is switching struct pwm_state.duty_cycle's
-datatype to u64, prepare for this transition by using DIV_ROUND_UP_ULL
-to handle a 64-bit dividend.
+On Wed, May 13, 2020 at 12:39:53AM +0000, Luis Chamberlain wrote:
+> On Tue, May 12, 2020 at 06:39:46PM -0400, Rafael Aquini wrote:
+> > Users with SYS_ADMIN capability can add arbitrary taint flags
+> > to the running kernel by writing to /proc/sys/kernel/tainted
+> > or issuing the command 'sysctl -w kernel.tainted=...'.
 
-Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
-Acked-by: Jani Nikula <jani.nikula@intel.com>
----
- drivers/gpu/drm/i915/display/intel_panel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I just notice 2 minor 'screw ups' on my part in the commit log:
 
-diff --git a/drivers/gpu/drm/i915/display/intel_panel.c b/drivers/gpu/drm/i915/display/intel_panel.c
-index 276f438..81547a0 100644
---- a/drivers/gpu/drm/i915/display/intel_panel.c
-+++ b/drivers/gpu/drm/i915/display/intel_panel.c
-@@ -1920,7 +1920,7 @@ static int pwm_setup_backlight(struct intel_connector *connector,
- 		return retval;
- 	}
- 
--	level = DIV_ROUND_UP(pwm_get_duty_cycle(panel->backlight.pwm) * 100,
-+	level = DIV_ROUND_UP_ULL(pwm_get_duty_cycle(panel->backlight.pwm) * 100,
- 			     CRC_PMIC_PWM_PERIOD_NS);
- 	panel->backlight.level =
- 		intel_panel_compute_brightness(connector, level);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> > These interface, however, are open for any integer value
+This one probably needs to be reprhased as:
+ "The interface, however, is ... "
+
+
+> > and this might an invalid set of flags being committed to
+and I'm missing a verb here, as it should read:
+ "and this might cause an invalid ... "
+
+
+I hope these are easy fixes, in the pre-merge step. (Sorry!)
+
+> > the tainted_mask bitset.
+> > 
+> > This patch introduces a simple way for proc_taint() to ignore
+> > any eventual invalid bit coming from the user input before
+> > committing those bits to the kernel tainted_mask.
+> > 
+> > Signed-off-by: Rafael Aquini <aquini@redhat.com>
+> 
+> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+> 
+
+Thanks!
+-- Rafael
 
