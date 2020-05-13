@@ -2,89 +2,100 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 080CEC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 947B9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ADFE2065C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7F09207F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:23:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ktSXpuEI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389358AbgEMPWJ (ORCPT
+        id S2389135AbgEMPXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:22:09 -0400
-Received: from 8bytes.org ([81.169.241.247]:42596 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729502AbgEMPVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:21:44 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 4C0966BB; Wed, 13 May 2020 17:21:41 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     hpa@zytor.com, Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, rjw@rjwysocki.net,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>, joro@8bytes.org,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org
-Subject: [PATCH v2 4/7] x86/mm/64: Implement arch_sync_kernel_mappings()
-Date:   Wed, 13 May 2020 17:21:34 +0200
-Message-Id: <20200513152137.32426-5-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200513152137.32426-1-joro@8bytes.org>
-References: <20200513152137.32426-1-joro@8bytes.org>
+        Wed, 13 May 2020 11:23:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44978 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731638AbgEMPXs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 11:23:48 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6F4BC061A0C;
+        Wed, 13 May 2020 08:23:47 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id d207so9188839wmd.0;
+        Wed, 13 May 2020 08:23:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=aP5RqJaHjw0SSvS8jFa4SufpVRHV3wMOfmjoi5Yc1f4=;
+        b=ktSXpuEIWmOyZetJtmtSOLnT96UirVaLdRpcXWTE/gYQC1WX1lHtfWkkUtx3Kfvp0S
+         RL0FBNdf5vCW2FR41NIuumOgKvTuRUjtFFS/fA2Yphvfhpc4c6vHIuyy054G1B67Clz/
+         Zqf0aNveo38QkOin7+9hk1I9AxhhNxfybUbb8CtvSQSXOxu/0KmHavMD3kiZlx04xwB8
+         F3DhQX60hJ4YWPRdI5cmLK+U/WrFzCsOPHO1z4jKgROLch25aU4EiGazMvSmRKXEcrff
+         TSWqovL29eEUyHBp8T5smBLlqePqhRdgFfW/1yoXCgvZI5PAkLcK6wQRY6EqqsLt7LOe
+         3MPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aP5RqJaHjw0SSvS8jFa4SufpVRHV3wMOfmjoi5Yc1f4=;
+        b=WDif4wpAROpbSq77A1ZLhqUhT3xtOjOn09zmqcCjwHih8x9KuHaq/UcteyYDzBGdXA
+         30lIjjsFHkLuiDghK//IUC2G5daMstFwLiMwz2BBsvjEXyheuHOkG9D+0P6Ryriwg28/
+         67KtAC918es6ppqA6Q+wZPBCqBYL09AZzT0r0hsXU1Mj+1iNDEWv8EeLjavI9aHuSBcp
+         2dXu/371LkdFnskzzTFlDTlQDLPpPpVhYkR1MyK4a45SwtxgVfVOOV0Y2Ul6qJu6g4cW
+         ja1usf8DxVsAFTrjCQtKYGfhoDZjVsLRs3J6EO08jYS97A31o7UoOD9NoDW8VB+mtTad
+         Vb5Q==
+X-Gm-Message-State: AGi0PubjhkEl1AOJ2yPMc4oYcPGdR02lxHmzLd5MyHbCgwBR6v7hqIfN
+        GQuc+ad94muwzq7oNu2Ezq4=
+X-Google-Smtp-Source: APiQypIa+86lv9x3CvtVmHtTwH5kxANcv58nv4VNDEBhX9EOGhGzbMBwX6Z3SwoBXqiXgPA8mEKURA==
+X-Received: by 2002:a7b:c5d4:: with SMTP id n20mr45268150wmk.92.1589383426466;
+        Wed, 13 May 2020 08:23:46 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id b2sm25421028wrm.30.2020.05.13.08.23.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 May 2020 08:23:45 -0700 (PDT)
+Subject: Re: [PATCH v1] net: phy: at803x: add cable test support
+To:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Michael Walle <michael@walle.cc>
+Cc:     "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>
+References: <20200513120648.14415-1-o.rempel@pengutronix.de>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <0c80397b-58b8-0807-0b98-695db8068e25@gmail.com>
+Date:   Wed, 13 May 2020 08:23:42 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200513120648.14415-1-o.rempel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
 
-Implement the function to sync changes in vmalloc and ioremap ranges
-to all page-tables.
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- arch/x86/include/asm/pgtable_64_types.h | 2 ++
- arch/x86/mm/init_64.c                   | 5 +++++
- 2 files changed, 7 insertions(+)
+On 5/13/2020 5:06 AM, Oleksij Rempel wrote:
+> The cable test seems to be support by all of currently support Atherso
+> PHYs, so add support for all of them. This patch was tested only on
+> AR9331 PHY with following results:
+> - No cable is detected as short
+> - A 15m long cable connected only on one side is detected as 9m open.
+> - A cable test with active link partner will provide no usable results.
 
-diff --git a/arch/x86/include/asm/pgtable_64_types.h b/arch/x86/include/asm/pgtable_64_types.h
-index 52e5f5f2240d..8f63efb2a2cc 100644
---- a/arch/x86/include/asm/pgtable_64_types.h
-+++ b/arch/x86/include/asm/pgtable_64_types.h
-@@ -159,4 +159,6 @@ extern unsigned int ptrs_per_p4d;
- 
- #define PGD_KERNEL_START	((PAGE_SIZE / 2) / sizeof(pgd_t))
- 
-+#define ARCH_PAGE_TABLE_SYNC_MASK	(pgtable_l5_enabled() ?	PGTBL_PGD_MODIFIED : PGTBL_P4D_MODIFIED)
-+
- #endif /* _ASM_X86_PGTABLE_64_DEFS_H */
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index 3b289c2f75cd..541af8e5bcd4 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -217,6 +217,11 @@ void sync_global_pgds(unsigned long start, unsigned long end)
- 		sync_global_pgds_l4(start, end);
- }
- 
-+void arch_sync_kernel_mappings(unsigned long start, unsigned long end)
-+{
-+	sync_global_pgds(start, end);
-+}
-+
- /*
-  * NOTE: This function is marked __ref because it calls __init function
-  * (alloc_bootmem_pages). It's safe to do it ONLY when after_bootmem == 0.
+How does this relate to Michael's recent work here:
+
+https://www.spinics.net/lists/kernel/msg3509304.html
 -- 
-2.17.1
-
+Florian
