@@ -2,33 +2,32 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FC1C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B28C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBA602065C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA0120671
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390378AbgEMS4e (ORCPT
+        id S2390324AbgEMS4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 14:56:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49932 "EHLO
+        Wed, 13 May 2020 14:56:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390361AbgEMS4d (ORCPT
+        by vger.kernel.org with ESMTP id S2390362AbgEMS4d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 13 May 2020 14:56:33 -0400
 Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38190C061A0C;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62B77C061A0E;
         Wed, 13 May 2020 11:56:33 -0700 (PDT)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: sre)
-        with ESMTPSA id D71732A251E
+        with ESMTPSA id DAE132A2521
 Received: by jupiter.universe (Postfix, from userid 1000)
-        id 6A140480100; Wed, 13 May 2020 20:56:29 +0200 (CEST)
+        id 63EF24800F8; Wed, 13 May 2020 20:56:29 +0200 (CEST)
 From:   Sebastian Reichel <sebastian.reichel@collabora.com>
 To:     Sebastian Reichel <sre@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -37,12 +36,10 @@ To:     Sebastian Reichel <sre@kernel.org>,
 Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, kernel@collabora.com,
         Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCHv1 02/19] power: supply: core: add capacity error margin property
-Date:   Wed, 13 May 2020 20:55:58 +0200
-Message-Id: <20200513185615.508236-3-sebastian.reichel@collabora.com>
+Subject: [PATCHv1 00/19] Improve SBS battery support
+Date:   Wed, 13 May 2020 20:55:56 +0200
+Message-Id: <20200513185615.508236-1-sebastian.reichel@collabora.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513185615.508236-1-sebastian.reichel@collabora.com>
-References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -50,66 +47,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a property for reporting the error margin expected
-by fuel gauge chips.
+This patchset improves support for SBS compliant batteries. Due to
+the changes, the battery now exposes 32 power supply properties and
+(un)plugging it generates a backtrace containing the following message
+without the first patch in this series:
 
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
----
- Documentation/ABI/testing/sysfs-class-power | 15 +++++++++++++++
- drivers/power/supply/power_supply_sysfs.c   |  1 +
- include/linux/power_supply.h                |  1 +
- 3 files changed, 17 insertions(+)
+---------------------------
+WARNING: CPU: 0 PID: 20 at lib/kobject_uevent.c:659 add_uevent_var+0xd4/0x104
+add_uevent_var: too many keys
+---------------------------
 
-diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-index bf3b48f022dc..2f896555ae23 100644
---- a/Documentation/ABI/testing/sysfs-class-power
-+++ b/Documentation/ABI/testing/sysfs-class-power
-@@ -74,6 +74,21 @@ Description:
- 		Access: Read, Write
- 		Valid values: 0 - 100 (percent)
- 
-+What:		/sys/class/power_supply/<supply_name>/capacity_error_margin
-+Date:		April 2019
-+Contact:	linux-pm@vger.kernel.org
-+Description:
-+		Battery capacity measurement becomes unreliable without
-+		recalibration. This values provides the maximum error
-+		margin expected to exist by the fuel gauge in percent.
-+		Values close to 0% will be returned after (re-)calibration
-+		has happened. Over time the error margin will increase.
-+		100% means, that the capacity related values are basically
-+		completely useless.
-+
-+		Access: Read
-+		Valid values: 0 - 100 (percent)
-+
- What:		/sys/class/power_supply/<supply_name>/capacity_level
- Date:		June 2009
- Contact:	linux-pm@vger.kernel.org
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index d21b4e0edf38..e664774a2d1e 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -178,6 +178,7 @@ static struct power_supply_attr power_supply_attrs[] = {
- 	POWER_SUPPLY_ATTR(CAPACITY),
- 	POWER_SUPPLY_ATTR(CAPACITY_ALERT_MIN),
- 	POWER_SUPPLY_ATTR(CAPACITY_ALERT_MAX),
-+	POWER_SUPPLY_ATTR(CAPACITY_ERROR_MARGIN),
- 	POWER_SUPPLY_ENUM_ATTR(CAPACITY_LEVEL),
- 	POWER_SUPPLY_ATTR(TEMP),
- 	POWER_SUPPLY_ATTR(TEMP_MAX),
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index 1f60731ec7fe..453a85f25635 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -139,6 +139,7 @@ enum power_supply_property {
- 	POWER_SUPPLY_PROP_CAPACITY, /* in percents! */
- 	POWER_SUPPLY_PROP_CAPACITY_ALERT_MIN, /* in percents! */
- 	POWER_SUPPLY_PROP_CAPACITY_ALERT_MAX, /* in percents! */
-+	POWER_SUPPLY_PROP_CAPACITY_ERROR_MARGIN, /* in percents! */
- 	POWER_SUPPLY_PROP_CAPACITY_LEVEL,
- 	POWER_SUPPLY_PROP_TEMP,
- 	POWER_SUPPLY_PROP_TEMP_MAX,
+For references this is what an SBS battery status looks like after
+the patch series has been applied:
+
+cat /sys/class/power_supply/sbs-0-000b/uevent 
+POWER_SUPPLY_NAME=sbs-0-000b
+POWER_SUPPLY_TYPE=Battery
+POWER_SUPPLY_STATUS=Discharging
+POWER_SUPPLY_CAPACITY_LEVEL=Normal
+POWER_SUPPLY_HEALTH=Good
+POWER_SUPPLY_PRESENT=1
+POWER_SUPPLY_TECHNOLOGY=Li-ion
+POWER_SUPPLY_CYCLE_COUNT=12
+POWER_SUPPLY_VOLTAGE_NOW=11441000
+POWER_SUPPLY_CURRENT_NOW=-26000
+POWER_SUPPLY_CURRENT_AVG=-24000
+POWER_SUPPLY_CAPACITY=76
+POWER_SUPPLY_CAPACITY_ERROR_MARGIN=1
+POWER_SUPPLY_TEMP=198
+POWER_SUPPLY_TIME_TO_EMPTY_AVG=438600
+POWER_SUPPLY_TIME_TO_FULL_AVG=3932100
+POWER_SUPPLY_SERIAL_NUMBER=0000
+POWER_SUPPLY_VOLTAGE_MIN_DESIGN=10800000
+POWER_SUPPLY_VOLTAGE_MAX_DESIGN=10800000
+POWER_SUPPLY_ENERGY_NOW=31090000
+POWER_SUPPLY_ENERGY_FULL=42450000
+POWER_SUPPLY_ENERGY_FULL_DESIGN=41040000
+POWER_SUPPLY_CHARGE_NOW=2924000
+POWER_SUPPLY_CHARGE_FULL=3898000
+POWER_SUPPLY_CHARGE_FULL_DESIGN=3800000
+POWER_SUPPLY_CONSTANT_CHARGE_CURRENT_MAX=3000000
+POWER_SUPPLY_CONSTANT_CHARGE_VOLTAGE_MAX=12300000
+POWER_SUPPLY_MANUFACTURE_YEAR=2017
+POWER_SUPPLY_MANUFACTURE_MONTH=7
+POWER_SUPPLY_MANUFACTURE_DAY=3
+POWER_SUPPLY_MANUFACTURER=UR18650A
+POWER_SUPPLY_MODEL_NAME=GEHC
+
+-- Sebastian
+
+Jean-Francois Dagenais (1):
+  power: supply: sbs-battery: add ability to disable charger broadcasts
+
+Sebastian Reichel (18):
+  kobject: increase allowed number of uevent variables
+  power: supply: core: add capacity error margin property
+  power: supply: core: add manufacture date properties
+  power: supply: core: add POWER_SUPPLY_HEALTH_CALIBRATION_REQUIRED
+  power: supply: sbs-battery: Add TI BQ20Z65 support
+  power: supply: sbs-battery: add
+    POWER_SUPPLY_PROP_CAPACITY_ERROR_MARGIN support
+  power: supply: sbs-battery: simplify read_read_string_data
+  power: supply: sbs-battery: add PEC support
+  power: supply: sbs-battery: add POWER_SUPPLY_PROP_CURRENT_AVG support
+  power: supply: sbs-battery: Improve POWER_SUPPLY_PROP_TECHNOLOGY
+    support
+  power: supply: sbs-battery: add
+    POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT/VOLTAGE_MAX support
+  power: supply: sbs-battery: add MANUFACTURE_DATE support
+  power: supply: sbs-battery: add
+    POWER_SUPPLY_HEALTH_CALIBRATION_REQUIRED support
+  power: supply: sbs-battery: fix idle battery status
+  power: supply: sbs-battery: switch from of_property_* to
+    device_property_*
+  power: supply: sbs-battery: switch to i2c's probe_new
+  power: supply: sbs-battery: constify power-supply property array
+  dt-bindings: power: sbs-battery: Convert to yaml
+
+ Documentation/ABI/testing/sysfs-class-power   |  45 ++-
+ .../power/supply/sbs,sbs-battery.yaml         |  83 +++++
+ .../bindings/power/supply/sbs_sbs-battery.txt |  27 --
+ drivers/power/supply/power_supply_sysfs.c     |   5 +
+ drivers/power/supply/sbs-battery.c            | 348 +++++++++++++-----
+ include/linux/kobject.h                       |   2 +-
+ include/linux/power_supply.h                  |   5 +
+ 7 files changed, 404 insertions(+), 111 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/sbs,sbs-battery.yaml
+ delete mode 100644 Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
+
 -- 
 2.26.2
 
