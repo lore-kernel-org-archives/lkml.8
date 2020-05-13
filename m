@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DBACA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6407ECA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB04D206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4311520575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363416;
-	bh=YoXHFMlvuBDLbaC0h6kGRTwYbgdqwB7bsZo21oJfg20=;
+	s=default; t=1589363418;
+	bh=59zeFVD0BiQV6wVNQvdmW3dX3E0raA5rPJYbte2mkoE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NDdNaOF4oHSs4QEvrmGTlKVTlH8YlRJvIC7u8/RHZ/rWNBx/l41mPgcXDUeWjbf0E
-	 r2+uSZWBtsSbtukrG6NhbAiPy5dSg4waTRRLIylHMLS2pDln/RB2jxnTf5Zh0WU8lM
-	 UUJChp6VCvJEvXY7oLJhA6bmiJXKvZuIv3wVcPA0=
+	b=km7RUS6kyMDPDP0WSr0iKy6vsxpmBPHFmDFnyZiYv59XaGGzCHel37H2neRE+cQMx
+	 LR6Tjg078oUwOajK9sSPaLqPxqoT/cN7WnzCCIatyl/XkiP0BPCR6jI3yPOADtqZjW
+	 ZeH9qQnw9cQQzhKYYbx3LAtnaomLT5b/4fXeBoFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387465AbgEMJuO (ORCPT
+        id S2387471AbgEMJuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:50:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49826 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:50:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387448AbgEMJuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:50:09 -0400
+        id S2387459AbgEMJuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:50:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED8A9206D6;
-        Wed, 13 May 2020 09:50:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6781320740;
+        Wed, 13 May 2020 09:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363409;
-        bh=YoXHFMlvuBDLbaC0h6kGRTwYbgdqwB7bsZo21oJfg20=;
+        s=default; t=1589363411;
+        bh=59zeFVD0BiQV6wVNQvdmW3dX3E0raA5rPJYbte2mkoE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U/d3MjjDIldbEH7tyEeMzbDw8CNYJzunGGQBFQ3/NmOdFIp7zi8ZcKW0UwMx49ldW
-         0SIvYKdZLNWlDwOs35xLOyVSuZNaSfbqDxhhurB4+B2Tj+DOBrMODBCoNMdo+RnEvy
-         ++XopfF0mvS1JgcrEWxh8WFHaXN+tpoh2qWCEaww=
+        b=P91uPjZY0Gk3QA6XCMCBNDlXcaUqMzVIFGR4t77XB8e/7yNO3OpNzjfaDDWQcxoJ1
+         gGjVdR2pULpAnPpfZGTTddLGdK6UFgvnKJf+hbYMplksMbSTNyHcXoU090OgbpASkl
+         fVp5amnn21V9FhQKrbvUcLsKi+9K7hGvbDehxn64=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        Eduard Shishkin <edward6@linux.ibm.com>
-Subject: [PATCH 5.4 62/90] ceph: fix endianness bug when handling MDS session feature bits
-Date:   Wed, 13 May 2020 11:44:58 +0200
-Message-Id: <20200513094416.106484588@linuxfoundation.org>
+        stable@vger.kernel.org, Luis Henriques <lhenriques@suse.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>
+Subject: [PATCH 5.4 63/90] ceph: demote quotarealm lookup warning to a debug message
+Date:   Wed, 13 May 2020 11:44:59 +0200
+Message-Id: <20200513094416.160679537@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -60,48 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Layton <jlayton@kernel.org>
+From: Luis Henriques <lhenriques@suse.com>
 
-commit 0fa8263367db9287aa0632f96c1a5f93cc478150 upstream.
+commit 12ae44a40a1be891bdc6463f8c7072b4ede746ef upstream.
 
-Eduard reported a problem mounting cephfs on s390 arch. The feature
-mask sent by the MDS is little-endian, so we need to convert it
-before storing and testing against it.
+A misconfigured cephx can easily result in having the kernel client
+flooding the logs with:
+
+  ceph: Can't lookup inode 1 (err: -13)
+
+Change this message to debug level.
 
 Cc: stable@vger.kernel.org
-Reported-and-Tested-by: Eduard Shishkin <edward6@linux.ibm.com>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+URL: https://tracker.ceph.com/issues/44546
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ceph/mds_client.c |    8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ fs/ceph/quota.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -3072,8 +3072,7 @@ static void handle_session(struct ceph_m
- 	void *end = p + msg->front.iov_len;
- 	struct ceph_mds_session_head *h;
- 	u32 op;
--	u64 seq;
--	unsigned long features = 0;
-+	u64 seq, features = 0;
- 	int wake = 0;
- 	bool blacklisted = false;
- 
-@@ -3092,9 +3091,8 @@ static void handle_session(struct ceph_m
- 			goto bad;
- 		/* version >= 3, feature bits */
- 		ceph_decode_32_safe(&p, end, len, bad);
--		ceph_decode_need(&p, end, len, bad);
--		memcpy(&features, p, min_t(size_t, len, sizeof(features)));
--		p += len;
-+		ceph_decode_64_safe(&p, end, features, bad);
-+		p += len - sizeof(features);
+--- a/fs/ceph/quota.c
++++ b/fs/ceph/quota.c
+@@ -159,8 +159,8 @@ static struct inode *lookup_quotarealm_i
  	}
  
- 	mutex_lock(&mdsc->mutex);
+ 	if (IS_ERR(in)) {
+-		pr_warn("Can't lookup inode %llx (err: %ld)\n",
+-			realm->ino, PTR_ERR(in));
++		dout("Can't lookup inode %llx (err: %ld)\n",
++		     realm->ino, PTR_ERR(in));
+ 		qri->timeout = jiffies + msecs_to_jiffies(60 * 1000); /* XXX */
+ 	} else {
+ 		qri->timeout = 0;
 
 
