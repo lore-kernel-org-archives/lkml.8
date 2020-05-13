@@ -2,88 +2,144 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CFBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A53EAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 168D020659
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A30A320659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589410806;
-	bh=yhgOy+HBIqe+YTLD0EU9sasHa8OQ4wIY+R54vtxpDU4=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=K6oWkHUfraJ8Acy30Nodres2FP5lpUUH8wYkBfTXgxlBGPjK9GHMuo2bQARONFhXA
-	 l0TRbfx0m2mjLuvThntxeWFpPvaYhNiRC6VXCONYhPduIHtzAyYKXC8dawPRYLxC/A
-	 QhW8VnNAKnaRZb7B0lYHFPyK3rSPMBUJdYHLyrb8=
+	s=default; t=1589410848;
+	bh=VVjNDeeIgYoZFS50soF+P5zbE1stcrvByt0YiN6Be34=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=XRIm51tzIuGrSodHfjM/SXKpEpF4umWwe9cEuZx6J9rrxO/I8ZQWK2h4EvFN5Xk3c
+	 tBYyHIMl2yAp9e7xQX/lFbmkY9XMO07oacT8L81kJiQtcjl3gs6Doz4NEQFOB4CA6M
+	 +hAuLqdXagGvHGjWYxy/aaNdHKNezKgHrf+NBv58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732071AbgEMXAF (ORCPT
+        id S1732187AbgEMXAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 19:00:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37820 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 19:00:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731815AbgEMXAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 19:00:04 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731815AbgEMXAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 19:00:47 -0400
+Received: from localhost.localdomain (pool-96-246-152-186.nycmny.fios.verizon.net [96.246.152.186])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 351972053B;
-        Wed, 13 May 2020 23:00:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF5FF2053B;
+        Wed, 13 May 2020 23:00:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589410804;
-        bh=yhgOy+HBIqe+YTLD0EU9sasHa8OQ4wIY+R54vtxpDU4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=c3Umq4IsUaRU+CdCE3tq1ph8DqMqpHh3Zo4v6ZjUetNZZ8j2bJ/QCpTfWYDcvi+Hu
-         cFRvfDqZczu0qgb4dQeXbmcnUKWmIELwWPBBkruCDX12VFkrGKCiCY7Mjib+e9ni1C
-         dE+UI9NB/TMtFeg4KuXoCO0R5HDgwpi/A7N0/CVA=
-Subject: Re: [PATCH 5.6 000/118] 5.6.13-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200513094417.618129545@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <6ef26ca0-ebb2-9f9a-c9a8-32365667a7a9@kernel.org>
-Date:   Wed, 13 May 2020 16:59:52 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        s=default; t=1589410846;
+        bh=VVjNDeeIgYoZFS50soF+P5zbE1stcrvByt0YiN6Be34=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=iyf3QafJgjWbHnErgMyhd1vfA3wniNq2U4Qt3zp+q7cWJuqp24NxT1b5N/pMCeR+L
+         GQmpCyucvUhwMdZbUsIxGAp+8ttCTKSWpqtwxvb9jVPWwDOTg7bBg51Do/syJkRlOW
+         cb+Iv/JK3W8I9m+N+N9VhcffQLDEuI4BuckjWZq8=
+Message-ID: <1589410843.5098.220.camel@kernel.org>
+Subject: Re: [PATCH v5 1/7] fs: introduce kernel_pread_file* support
+From:   Mimi Zohar <zohar@kernel.org>
+To:     Scott Branden <scott.branden@broadcom.com>,
+        Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>
+Date:   Wed, 13 May 2020 19:00:43 -0400
+In-Reply-To: <f8de785c-60df-3fec-c2c6-b1dd2c77db17@broadcom.com>
+References: <20200508002739.19360-1-scott.branden@broadcom.com>
+         <20200508002739.19360-2-scott.branden@broadcom.com>
+         <1589395153.5098.158.camel@kernel.org>
+         <0e6b5f65-8c61-b02e-7d35-b4ae52aebcf3@broadcom.com>
+         <1589396593.5098.166.camel@kernel.org>
+         <e1b92047-7003-0615-3d58-1388ec27c78a@broadcom.com>
+         <1589398747.5098.178.camel@kernel.org>
+         <a228ae0f-d551-e0e8-446e-5ae63462c520@broadcom.com>
+         <1589404814.5098.185.camel@kernel.org>
+         <20200513212847.GT11244@42.do-not-panic.com>
+         <1589407924.5098.208.camel@kernel.org>
+         <f8de785c-60df-3fec-c2c6-b1dd2c77db17@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/13/20 3:43 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.6.13 release.
-> There are 118 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, 2020-05-13 at 15:48 -0700, Scott Branden wrote:
 > 
-> Responses should be made by Fri, 15 May 2020 09:41:20 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.13-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+> On 2020-05-13 3:12 p.m., Mimi Zohar wrote:
+> > On Wed, 2020-05-13 at 21:28 +0000, Luis Chamberlain wrote:
+> >> On Wed, May 13, 2020 at 05:20:14PM -0400, Mimi Zohar wrote:
+> >>> On Wed, 2020-05-13 at 12:41 -0700, Scott Branden wrote:
+> >>>> On 2020-05-13 12:39 p.m., Mimi Zohar wrote:
+> >>>>> On Wed, 2020-05-13 at 12:18 -0700, Scott Branden wrote:
+> >>>>>> On 2020-05-13 12:03 p.m., Mimi Zohar wrote:
+> >>>>>>> On Wed, 2020-05-13 at 11:53 -0700, Scott Branden wrote:
+> >>>>>> Even if the kernel successfully verified the firmware file signature it
+> >>>>>> would just be wasting its time.  The kernel in these use cases is not always
+> >>>>>> trusted.  The device needs to authenticate the firmware image itself.
+> >>>>> There are also environments where the kernel is trusted and limits the
+> >>>>> firmware being provided to the device to one which they signed.
+> >>>>>
+> >>>>>>> The device firmware is being downloaded piecemeal from somewhere and
+> >>>>>>> won't be measured?
+> >>>>>> It doesn't need to be measured for current driver needs.
+> >>>>> Sure the device doesn't need the kernel measuring the firmware, but
+> >>>>> hardened environments do measure firmware.
+> >>>>>
+> >>>>>> If someone has such need the infrastructure could be added to the kernel
+> >>>>>> at a later date.  Existing functionality is not broken in any way by
+> >>>>>> this patch series.
+> >>>>> Wow!  You're saying that your patch set takes precedence over the
+> >>>>> existing expectations and can break them.
+> >>>> Huh? I said existing functionality is NOT broken by this patch series.
+> >>> Assuming a system is configured to measure and appraise firmware
+> >>> (rules below), with this change the firmware file will not be properly
+> >>> measured and will fail signature verification.
+> So no existing functionality has been broken.
+> >>>
+> >>> Sample IMA policy rules:
+> >>> measure func=FIRMWARE_CHECK
+> >>> appraise func=FIRMWARE_CHECK appraise_type=imasig
+> >> Would a pre and post lsm hook for pread do it?
+> > IMA currently measures and verifies the firmware file signature on the
+> > post hook.  The file is read once into a buffer.  With this change,
+> > IMA would need to be on the pre hook, to read the entire file,
+> > calculating the file hash and verifying the file signature.  Basically
+> > the firmware would be read once for IMA and again for the device.
+> The entire file may not fit into available memory to measure and 
+> verify.  Hence the reason for a partial read.
 
-Compiled and booted on my test system. No dmesg regressions.
+Previously, IMA pre-read the file in page size chunks in order to
+calculate the file hash.  To avoid reading the file twice, the file is
+now read into a buffer.
 
-thanks,
--- Shuah
+> 
+> Is there some way we could add a flag when calling the 
+> request_firmware_into_buf to indicate it is ok that the data requested 
+> does not need to be measured?
 
+The decision as to what needs to be measured is a policy decision left
+up to the system owner, which they express by loading an IMA policy.
+
+Mimi
