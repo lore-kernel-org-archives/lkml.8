@@ -2,128 +2,362 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8F6CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8DACA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6562C20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:08:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sdEwm2cI"
+	by mail.kernel.org (Postfix) with ESMTP id 13F21204EF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:11:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388767AbgEMOIr (ORCPT
+        id S2388412AbgEMOLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 10:08:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33330 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387608AbgEMOIr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 10:08:47 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A044C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 07:08:47 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id b1so13442115qtt.1
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 07:08:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vKMxLrMImHpihipagkeEtVhqmNLGnx4qu2/FD8xcA6o=;
-        b=sdEwm2cIdqOD3iWIoQS36r309tWKQGDjXMzsI45DrA1kBFEijMoCq0pzDXKebBvrrr
-         uq+2t4DDsZRUmbKJWeb86uOmadZf0klvmmwtnYP5sk5cVJcPbfUh5F2wGnIfBs9Fv3Qr
-         SXuWn+xSDTphAnQ3F1GiQZeJ4Inpy/NsXWJUgm9u+FK3TQvQwwJyiTzXv9uWTD3QOP03
-         7C8jzcaMv8xH5EDGbPn5Cg26VRcMyEwv7mEvQmXCLW91oa5G3Tcwy8EdhVmAzQ6Zzt37
-         qXiZZwQERfa7CRTBfSZEfGyLDWZ03qq8hGbXBei8ML6le7DXrRu3ftrr15syMOh+S2BQ
-         oabg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vKMxLrMImHpihipagkeEtVhqmNLGnx4qu2/FD8xcA6o=;
-        b=lUJD0FL2WIJgmMpj1ZnjRcsRPo111HZztkmEx8+V0MsTfwQzgQN7w8Gkqf2rJiPVk9
-         Hmxs7F8nEiAP7Zmx/V3chjUbG6TpNKR7V3ZYxZteh9DqvJix6pnIArCETG/4yWYcFSv7
-         2PSOL7dCzCmByIZ9FUlDAeXnHR5sxglIN1+kjrYwhw6DlPsCPzeV+980FgPXjjYf6UEX
-         DvGF6c091RyU39lNTJ+TAtIoE9Q1iFqqHKvpF3UVLZ4KcIbMLWn6OD7qeg8kTMwRD+NK
-         ClsjSOMfMlQHrZHC9xpzmW6H8LzcTKPbY9QtRmgCxSP72WIh2eKcSHN1JYE0U88+KJzx
-         sgIg==
-X-Gm-Message-State: AOAM532liTP5sYfZex9ATVdqFZhsNDTwu3TP8hTXnZkGVtGIOpd1g25m
-        rxHsFRCJbhwM3m/8wz3dPYg=
-X-Google-Smtp-Source: ABdhPJxlNbjMFQymgJkPyFZKqH7HW1GZjGi67EVn77gxCgfGM07PaE6R9GLqKAoaeGFoHvzEWc6mrQ==
-X-Received: by 2002:ac8:1af3:: with SMTP id h48mr2081144qtk.371.1589378926205;
-        Wed, 13 May 2020 07:08:46 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id 28sm14048460qkr.96.2020.05.13.07.08.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 07:08:27 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 8596E40AFD; Wed, 13 May 2020 11:08:25 -0300 (-03)
-Date:   Wed, 13 May 2020 11:08:25 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Joe Mario <jmario@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH 4/4] perf expr: Report line number with error
-Message-ID: <20200513140825.GG5583@kernel.org>
-References: <20200511205307.3107775-1-jolsa@kernel.org>
- <20200511205307.3107775-5-jolsa@kernel.org>
- <CAP-5=fVa+=4cQzw47qSGFQZfqw7Bvx85ZBTJwkHReuJbi4ZGiA@mail.gmail.com>
- <20200513113424.GJ3158213@krava>
+        Wed, 13 May 2020 10:11:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36832 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731192AbgEMOLD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 10:11:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7ECA1AE89;
+        Wed, 13 May 2020 14:11:03 +0000 (UTC)
+Subject: Re: [RFC PATCH 1/3] drm/debugfs: create debugfs files during
+ drm_dev_register().
+To:     Wambui Karuga <wambui.karugax@gmail.com>,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        airlied@linux.ie, daniel@ffwll.ch
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20200513114130.28641-1-wambui.karugax@gmail.com>
+ <20200513114130.28641-2-wambui.karugax@gmail.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <47bbbb51-7e53-7c87-6058-5848f9ccecfe@suse.de>
+Date:   Wed, 13 May 2020 16:10:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513113424.GJ3158213@krava>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200513114130.28641-2-wambui.karugax@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="6m8qxQOCx5L5GhL1YRiyRnpywERnagkup"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, May 13, 2020 at 01:34:24PM +0200, Jiri Olsa escreveu:
-> On Wed, May 13, 2020 at 12:09:30AM -0700, Ian Rogers wrote:
-> > On Mon, May 11, 2020 at 1:54 PM Jiri Olsa <jolsa@kernel.org> wrote:
-> > >
-> > > Display line number on when parsing custom metrics file, like:
-> > >
-> > >   $ cat metrics
-> > >   // IPC
-> > >   mine1 = inst_retired.any / cpu_clk_unhalted.thread;
-> > >
-> > >   krava
-> > >   $ sudo perf stat --metrics-file ./metrics -M mine1 -a -I 1000 --metric-only
-> > >   failed to parse metrics file: ./metrics:4
-> > >
-> > > Please note that because the grammar is flexible on new lines,
-> > > the syntax could be broken on the next 'not fitting' item and
-> > > not the first wrong word, like:
-> > >
-> > >   $ cat metrics
-> > >   // IPC
-> > >   krava
-> > >   mine1 = inst_retired.any / cpu_clk_unhalted.thread;
-> > >   $ sudo perf stat --metrics-file ./metrics -M mine1 -a -I 1000 --metric-only
-> > >   failed to parse metrics file: ./metrics:3
-> > 
-> > A line number is better than nothing :-) It'd be nice to be told about
-> > broken events and more information about what's broken in the line. A
-> > common failure is @ vs / encoding and also no-use or misuse of \\.
-> > Perhaps expand the test coverage.
-> 
-> yep, error reporting needs more changes.. but the line is crucial ;-)
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--6m8qxQOCx5L5GhL1YRiyRnpywERnagkup
+Content-Type: multipart/mixed; boundary="9lG1s31uaMDRSrCYyYsQDttN856fGpr3N";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Wambui Karuga <wambui.karugax@gmail.com>,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, airlied@linux.ie,
+ daniel@ffwll.ch
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Message-ID: <47bbbb51-7e53-7c87-6058-5848f9ccecfe@suse.de>
+Subject: Re: [RFC PATCH 1/3] drm/debugfs: create debugfs files during
+ drm_dev_register().
+References: <20200513114130.28641-1-wambui.karugax@gmail.com>
+ <20200513114130.28641-2-wambui.karugax@gmail.com>
+In-Reply-To: <20200513114130.28641-2-wambui.karugax@gmail.com>
 
-So I had started processing this patchkit, I assume you will send a v2
-and I should drop what I had processed, is that ok?
+--9lG1s31uaMDRSrCYyYsQDttN856fGpr3N
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-- Arnaldo
+Hi
+
+Am 13.05.20 um 13:41 schrieb Wambui Karuga:
+> Introduce the ability to track requests for the addition of drm debugfs=
+
+> files at any time and have them added all at once during
+> drm_dev_register().
+>=20
+> Drivers can add drm debugfs file requests to a new list tied to drm_dev=
+ice.
+> During drm_dev_register(), the new function drm_debugfs_create_file()
+> will iterate over the list of added files on a given minor to create
+> them.
+>=20
+> Two new structs are introduced in this change: struct drm_simple_info
+> which represents a drm debugfs file entry and struct
+> drm_simple_info_entry which is used to track file requests and is the
+> main parameter of choice passed by functions. Each drm_simple_info_entr=
+y is
+> added to the new struct drm_device->debugfs_list for file requests.
+>=20
+> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+> ---
+>  drivers/gpu/drm/drm_debugfs.c | 59 ++++++++++++++++++++++++++++++++---=
+
+>  drivers/gpu/drm/drm_drv.c     |  2 ++
+>  include/drm/drm_debugfs.h     | 38 ++++++++++++++++++++++
+>  include/drm/drm_device.h      | 12 +++++++
+>  4 files changed, 107 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/drm_debugfs.c b/drivers/gpu/drm/drm_debugf=
+s.c
+> index 2bea22130703..03b0588ede68 100644
+> --- a/drivers/gpu/drm/drm_debugfs.c
+> +++ b/drivers/gpu/drm/drm_debugfs.c
+> @@ -145,9 +145,10 @@ static const struct drm_info_list drm_debugfs_list=
+[] =3D {
+> =20
+>  static int drm_debugfs_open(struct inode *inode, struct file *file)
+>  {
+> -	struct drm_info_node *node =3D inode->i_private;
+> +	struct drm_simple_info_entry *entry =3D inode->i_private;
+> +	struct drm_simple_info *node =3D &entry->file;
+> =20
+> -	return single_open(file, node->info_ent->show, node);
+> +	return single_open(file, node->show_fn, entry);
+>  }
+> =20
+> =20
+> @@ -159,6 +160,25 @@ static const struct file_operations drm_debugfs_fo=
+ps =3D {
+>  	.release =3D single_release,
+>  };
+> =20
+> +/**
+> + * drm_debugfs_create_file - create DRM debugfs file.
+> + * @dev: drm_device that the file belongs to
+> + *
+> + * Create a DRM debugfs file from the list of files to be created
+> + * from dev->debugfs_list.
+> + */
+> +static void drm_debugfs_create_file(struct drm_minor *minor)
+
+This function creates several files. I'd rather call it
+drm_debugfs_create_added_files().
+
+> +{
+> +	struct drm_device *dev =3D minor->dev;
+> +	struct drm_simple_info_entry *entry;
+> +
+> +	list_for_each_entry(entry, &dev->debugfs_list, list) {
+> +		debugfs_create_file(entry->file.name,
+> +				    S_IFREG | S_IRUGO, minor->debugfs_root,
+> +				    entry,
+> +				    &drm_debugfs_fops);
+> +	}
+
+I think the created items should be removed from the list. That way,
+drivers can call the function multiple times without recreating the same
+files again.
+
+> +}
+> =20
+>  /**
+>   * drm_debugfs_create_files - Initialize a given set of debugfs files =
+for DRM
+> @@ -213,8 +233,7 @@ int drm_debugfs_init(struct drm_minor *minor, int m=
+inor_id,
+>  	sprintf(name, "%d", minor_id);
+>  	minor->debugfs_root =3D debugfs_create_dir(name, root);
+> =20
+> -	drm_debugfs_create_files(drm_debugfs_list, DRM_DEBUGFS_ENTRIES,
+> -				 minor->debugfs_root, minor);
+
+By removing these two lines, aren't you losing the files listed in
+DRM_DEBUGFS_ENTRIES?
+
+> +	drm_debugfs_create_file(minor);
+> =20
+>  	if (drm_drv_uses_atomic_modeset(dev)) {
+>  		drm_atomic_debugfs_init(minor);
+> @@ -449,4 +468,36 @@ void drm_debugfs_crtc_remove(struct drm_crtc *crtc=
+)
+>  	crtc->debugfs_entry =3D NULL;
+>  }
+> =20
+> +void drm_debugfs_add_file(struct drm_device *dev, const char *name,
+> +			  drm_simple_show_t show_fn, void *data)
+> +{
+> +	struct drm_simple_info_entry *entry =3D
+> +		kzalloc(sizeof(*entry), GFP_KERNEL);
+> +
+> +	if (!entry)
+> +		return;
+> +
+> +	entry->file.name =3D name;
+> +	entry->file.show_fn =3D show_fn;
+> +	entry->file.data =3D data;
+> +	entry->dev =3D dev;
+> +
+> +	mutex_lock(&dev->debugfs_mutex);
+> +	list_add(&entry->list, &dev->debugfs_list);
+> +	mutex_unlock(&dev->debugfs_mutex);
+> +}
+> +EXPORT_SYMBOL(drm_debugfs_add_file);
+> +
+> +void drm_debugfs_add_files(struct drm_device *dev,
+> +			   const struct drm_simple_info *files, int count)
+> +{
+> +	int i;
+> +
+> +	for (i =3D 0; i < count; i++) {
+> +		drm_debugfs_add_file(dev, files[i].name, files[i].show_fn,
+> +				     files[i].data);
+> +	}
+> +}
+> +EXPORT_SYMBOL(drm_debugfs_add_files);
+> +
+>  #endif /* CONFIG_DEBUG_FS */
+> diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
+> index bc38322f306e..c68df4e31aa0 100644
+> --- a/drivers/gpu/drm/drm_drv.c
+> +++ b/drivers/gpu/drm/drm_drv.c
+> @@ -646,12 +646,14 @@ int drm_dev_init(struct drm_device *dev,
+>  	INIT_LIST_HEAD(&dev->filelist_internal);
+>  	INIT_LIST_HEAD(&dev->clientlist);
+>  	INIT_LIST_HEAD(&dev->vblank_event_list);
+> +	INIT_LIST_HEAD(&dev->debugfs_list);
+> =20
+>  	spin_lock_init(&dev->event_lock);
+>  	mutex_init(&dev->struct_mutex);
+>  	mutex_init(&dev->filelist_mutex);
+>  	mutex_init(&dev->clientlist_mutex);
+>  	mutex_init(&dev->master_mutex);
+> +	mutex_init(&dev->debugfs_mutex);
+> =20
+>  	ret =3D drmm_add_action(dev, drm_dev_init_release, NULL);
+>  	if (ret)
+> diff --git a/include/drm/drm_debugfs.h b/include/drm/drm_debugfs.h
+> index 2188dc83957f..bbce580c3b38 100644
+> --- a/include/drm/drm_debugfs.h
+> +++ b/include/drm/drm_debugfs.h
+> @@ -34,6 +34,44 @@
+> =20
+>  #include <linux/types.h>
+>  #include <linux/seq_file.h>
+> +
+> +struct drm_device;
+> +
+> +typedef int (*drm_simple_show_t)(struct seq_file *, void *);
+> +
+> +/**
+> + * struct drm_simple_info - debugfs file entry
+> + *
+> + * This struct represents a debugfs file to be created.
+> + */
+> +struct drm_simple_info {
+
+drm_simple_info and drm_simple_info_entry seem to be misnomers. They
+should probably have some reference to debugfs in their name.
+
+Best regards
+Thomas
+
+
+> +	const char *name;
+> +	drm_simple_show_t show_fn;
+> +	u32 driver_features;
+> +	void *data;
+> +};
+> +
+> +/**
+> + * struct drm_simple_info_entry - debugfs list entry
+> + *
+> + * This struct is used in tracking requests for new debugfs files
+> + * to be created.
+> + */
+> +struct drm_simple_info_entry {
+> +	struct drm_device *dev;
+> +	struct drm_simple_info file;
+> +	struct list_head list;
+> +};
+> +
+> +void drm_debugfs_add_file(struct drm_device *dev,
+> +			  const char *name,
+> +			  drm_simple_show_t show_fn,
+> +			  void *data);
+> +
+> +void drm_debugfs_add_files(struct drm_device *dev,
+> +			   const struct drm_simple_info *files,
+> +			   int count);
+> +
+>  /**
+>   * struct drm_info_list - debugfs info list entry
+>   *
+> diff --git a/include/drm/drm_device.h b/include/drm/drm_device.h
+> index a55874db9dd4..b84dfdac27b7 100644
+> --- a/include/drm/drm_device.h
+> +++ b/include/drm/drm_device.h
+> @@ -326,6 +326,18 @@ struct drm_device {
+>  	 */
+>  	struct drm_fb_helper *fb_helper;
+> =20
+> +	/**
+> +	 * @debugfs_mutex:
+> +	 * Protects debugfs_list access.
+> +	 */
+> +	struct mutex debugfs_mutex;
+> +
+> +	/** @debugfs_list:
+> +	 * List of debugfs files to add.
+> +	 * Files are added during drm_dev_register().
+> +	 */
+> +	struct list_head debugfs_list;
+> +
+>  	/* Everything below here is for legacy driver, never use! */
+>  	/* private: */
+>  #if IS_ENABLED(CONFIG_DRM_LEGACY)
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--9lG1s31uaMDRSrCYyYsQDttN856fGpr3N--
+
+--6m8qxQOCx5L5GhL1YRiyRnpywERnagkup
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl67//EACgkQaA3BHVML
+eiMnvwgAv2RMsl2bHeEcg6FLjPW4g10U/ewwdAv2X3rt2W0Nz9IQfOFjjySyRKlw
+ARKFG36rj+hhixOPVWJwm6pPAOLNf42pcbvw3wY6JOxoxnzxBjBGfTnn1+gcu6Bc
+W7m8FIuCcBqMtvnfDS37X4cf7uxHMyjDQiHBD65VHzoxx61SjjJwklLjWF3K034n
+HoNtt/iIf9bk1HCJvhtKeUGpldo7AP8rnY5f/Ld4ym3wN+Yr3bi4hc6QDYJKdITi
+N5w8/zUVsUZJIRVMRDK10TDd5sICeU3Vau4IxC9DCL5kJtT3b2rPH2Zds1JZb+dI
+MvrEzgugoS9ufpsGVtaQLMl/U+Mcow==
+=d0Px
+-----END PGP SIGNATURE-----
+
+--6m8qxQOCx5L5GhL1YRiyRnpywERnagkup--
