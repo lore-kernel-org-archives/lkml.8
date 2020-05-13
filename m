@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B259C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1453CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D4D023128
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE62324927
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363644;
-	bh=2//70JfgGrfyqpGrlGdGZMeHpKH1PrGxXfJ48VpBiDI=;
+	s=default; t=1589363646;
+	bh=M5p3zLfAleWDXPsPPHQNNSsr2W4h5MyjY1VDgTNd4Y0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AbNFlhZWil9r0460qI9FxhQoksbEs0AyCJ9doCzyK56exFfyDiRC5eRuGhzBKPkN8
-	 q3WLqY0Q8frEasoqtctcjSRrCrEVt5+oM+Vm/S2PKg7C98YegIQjcJS5h1JwSLla9I
-	 0BRDDVpOgvAu9jj+8Pbi0L+rEH4NbMj+VOqtN4gg=
+	b=MRIkjttIMaD4bpWX0xARYTmUiN8iVgxrWIzjDk6LBOIhzpkh3G14Mkkwjf1cVhFrc
+	 DM0d/nwtx7wyUAaKPXCoMJ2bcqnEz/w2cvPm4f2CGSA3ZZ64gLcpm6lYCVXvcLGyyP
+	 cmuuHpenozFGWKApjIt57XtIMD49IM2fDXxEXEmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388040AbgEMJyD (ORCPT
+        id S2388049AbgEMJyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:54:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56190 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:54:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388034AbgEMJx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:53:59 -0400
+        id S1732826AbgEMJyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:54:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F1C320740;
-        Wed, 13 May 2020 09:53:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8E38205ED;
+        Wed, 13 May 2020 09:54:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363639;
-        bh=2//70JfgGrfyqpGrlGdGZMeHpKH1PrGxXfJ48VpBiDI=;
+        s=default; t=1589363641;
+        bh=M5p3zLfAleWDXPsPPHQNNSsr2W4h5MyjY1VDgTNd4Y0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MVha7ldfcWQuzWuLMJIQqieFkAeZDfnvrtGoqNNLe6LkkEKBUKy5D1sjC1RJTHJ6O
-         ErFl7DZ/zUOpZ7Cv7lzQUwkSXhveVPiM3XW8Quvriy3CDsGMFzxVx/XdnuG4z6gLV+
-         nLXg2VBWUXs8fjiEhS/aejsKX/KQiXO6QPtLU00E=
+        b=Wkgwf1AYX/Rsdn28SfDvfEkyXuY72BcYm0piFeFpxLBdQK5k4vh4CLer6/tdkZAub
+         kzO5gm6eyitg5RjF1PFDg/v6EDRub+HBFZ+eotRwn7m1oJD7lFfMK9Eon9NnrQctLU
+         fQuVjr2M32hCtsJpgd7eRHhesGHYxoGl/yAizSd4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
+        Willem de Bruijn <willemb@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 028/118] net_sched: sch_skbprio: add message validation to skbprio_change()
-Date:   Wed, 13 May 2020 11:44:07 +0200
-Message-Id: <20200513094420.067636995@linuxfoundation.org>
+Subject: [PATCH 5.6 029/118] net: stricter validation of untrusted gso packets
+Date:   Wed, 13 May 2020 11:44:08 +0200
+Message-Id: <20200513094420.134868117@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -60,32 +60,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Willem de Bruijn <willemb@google.com>
 
-[ Upstream commit 2761121af87de45951989a0adada917837d8fa82 ]
+[ Upstream commit 9274124f023b5c56dc4326637d4f787968b03607 ]
 
-Do not assume the attribute has the right size.
+Syzkaller again found a path to a kernel crash through bad gso input:
+a packet with transport header extending beyond skb_headlen(skb).
 
-Fixes: aea5f654e6b7 ("net/sched: add skbprio scheduler")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+Tighten validation at kernel entry:
+
+- Verify that the transport header lies within the linear section.
+
+    To avoid pulling linux/tcp.h, verify just sizeof tcphdr.
+    tcp_gso_segment will call pskb_may_pull (th->doff * 4) before use.
+
+- Match the gso_type against the ip_proto found by the flow dissector.
+
+Fixes: bfd5f4a3d605 ("packet: Add GSO/csum offload support.")
 Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Willem de Bruijn <willemb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_skbprio.c |    3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/virtio_net.h |   26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
---- a/net/sched/sch_skbprio.c
-+++ b/net/sched/sch_skbprio.c
-@@ -169,6 +169,9 @@ static int skbprio_change(struct Qdisc *
- {
- 	struct tc_skbprio_qopt *ctl = nla_data(opt);
+--- a/include/linux/virtio_net.h
++++ b/include/linux/virtio_net.h
+@@ -3,6 +3,8 @@
+ #define _LINUX_VIRTIO_NET_H
  
-+	if (opt->nla_len != nla_attr_size(sizeof(*ctl)))
-+		return -EINVAL;
+ #include <linux/if_vlan.h>
++#include <uapi/linux/tcp.h>
++#include <uapi/linux/udp.h>
+ #include <uapi/linux/virtio_net.h>
+ 
+ static inline int virtio_net_hdr_set_proto(struct sk_buff *skb,
+@@ -28,17 +30,25 @@ static inline int virtio_net_hdr_to_skb(
+ 					bool little_endian)
+ {
+ 	unsigned int gso_type = 0;
++	unsigned int thlen = 0;
++	unsigned int ip_proto;
+ 
+ 	if (hdr->gso_type != VIRTIO_NET_HDR_GSO_NONE) {
+ 		switch (hdr->gso_type & ~VIRTIO_NET_HDR_GSO_ECN) {
+ 		case VIRTIO_NET_HDR_GSO_TCPV4:
+ 			gso_type = SKB_GSO_TCPV4;
++			ip_proto = IPPROTO_TCP;
++			thlen = sizeof(struct tcphdr);
+ 			break;
+ 		case VIRTIO_NET_HDR_GSO_TCPV6:
+ 			gso_type = SKB_GSO_TCPV6;
++			ip_proto = IPPROTO_TCP;
++			thlen = sizeof(struct tcphdr);
+ 			break;
+ 		case VIRTIO_NET_HDR_GSO_UDP:
+ 			gso_type = SKB_GSO_UDP;
++			ip_proto = IPPROTO_UDP;
++			thlen = sizeof(struct udphdr);
+ 			break;
+ 		default:
+ 			return -EINVAL;
+@@ -57,16 +67,22 @@ static inline int virtio_net_hdr_to_skb(
+ 
+ 		if (!skb_partial_csum_set(skb, start, off))
+ 			return -EINVAL;
 +
- 	sch->limit = ctl->limit;
- 	return 0;
- }
++		if (skb_transport_offset(skb) + thlen > skb_headlen(skb))
++			return -EINVAL;
+ 	} else {
+ 		/* gso packets without NEEDS_CSUM do not set transport_offset.
+ 		 * probe and drop if does not match one of the above types.
+ 		 */
+ 		if (gso_type && skb->network_header) {
++			struct flow_keys_basic keys;
++
+ 			if (!skb->protocol)
+ 				virtio_net_hdr_set_proto(skb, hdr);
+ retry:
+-			skb_probe_transport_header(skb);
+-			if (!skb_transport_header_was_set(skb)) {
++			if (!skb_flow_dissect_flow_keys_basic(NULL, skb, &keys,
++							      NULL, 0, 0, 0,
++							      0)) {
+ 				/* UFO does not specify ipv4 or 6: try both */
+ 				if (gso_type & SKB_GSO_UDP &&
+ 				    skb->protocol == htons(ETH_P_IP)) {
+@@ -75,6 +91,12 @@ retry:
+ 				}
+ 				return -EINVAL;
+ 			}
++
++			if (keys.control.thoff + thlen > skb_headlen(skb) ||
++			    keys.basic.ip_proto != ip_proto)
++				return -EINVAL;
++
++			skb_set_transport_header(skb, keys.control.thoff);
+ 		}
+ 	}
+ 
 
 
