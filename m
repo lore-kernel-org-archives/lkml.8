@@ -2,256 +2,202 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AEACA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFD3C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18CDA206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:29:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="3a3lD1sG"
+	by mail.kernel.org (Postfix) with ESMTP id 174BA20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:31:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbgEMJ3Y (ORCPT
+        id S1729378AbgEMJbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:29:24 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:41097 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728188AbgEMJ3X (ORCPT
+        Wed, 13 May 2020 05:31:40 -0400
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:57562 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726492AbgEMJbk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:29:23 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id E9B6B5C0197;
-        Wed, 13 May 2020 05:29:21 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 13 May 2020 05:29:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Nnc1pW
-        TjTkjNb3onNAwQ3HdERtWsXu3adkfVGOqL1Bo=; b=3a3lD1sGRnX98/Yi4pS05P
-        IKMIZvFVpXhUShZ3Y0+R8ElGxwJDJf0G59etYbD+TDkdTlAIY0cXLh5zoRV/1F6v
-        NJXYwJHKugBfUONnBMJ2XcmXDz4DBYuTlmO6hbCCg61zIfY2N7Pg3O6T/98Ofudi
-        Ua8Hrdml4xNJPVZf0VBFh27Zw3loW1ZqHmNDs/Rfd5W+lEJrf42gygdscTPXU2cc
-        HobWOqWW9ZLRTq9ORdCwzW3Ve6EmC6LXEHXKkqGkkigk5t0jrlZYac0HJ0LbPa9y
-        WNJi1eEGvzlxB4Kx6a/vfuz5CyjLhcJYDeyMCRXitrtBdvu9ar1aXNeeLdrZIT4A
-        ==
-X-ME-Sender: <xms:8b27XuhtFmvdvuai0MnW6T2GtIhd340XCeHGlLZjiCfmIY1iVUjF5w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrleeggdduiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepkfguohcuufgt
-    hhhimhhmvghluceoihguohhstghhsehiughoshgthhdrohhrgheqnecuggftrfgrthhtvg
-    hrnheptdffkeekfeduffevgeeujeffjefhtefgueeugfevtdeiheduueeukefhudehleet
-    necukfhppeejledrudejiedrvdegrddutdejnecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepihguohhstghhsehiughoshgthhdrohhrgh
-X-ME-Proxy: <xmx:8b27XvBXIYnHgSHOnb7vawGVYHlGMGKKgJJVRklbayKeUu7JTY8JlA>
-    <xmx:8b27XmFp1IA0atja0OCjdYR1dwzPNqNsenb0Cspk9nHn_Zn3Dz1WiQ>
-    <xmx:8b27XnRwbTmJu8B95O2FLWV7At9I98NUBU8jgphcL3TxAffQT7bIIQ>
-    <xmx:8b27XpbxJiuWYETFScJ4oBNcw71HguTbevOT7XWEaQUxu8BZ8DAVxw>
-Received: from localhost (bzq-79-176-24-107.red.bezeqint.net [79.176.24.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 2AE7530662F8;
-        Wed, 13 May 2020 05:29:21 -0400 (EDT)
-Date:   Wed, 13 May 2020 12:29:18 +0300
-From:   Ido Schimmel <idosch@idosch.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] net/scm: cleanup scm_detach_fds
-Message-ID: <20200513092918.GA596863@splinter>
-References: <20200511115913.1420836-1-hch@lst.de>
- <20200511115913.1420836-3-hch@lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511115913.1420836-3-hch@lst.de>
+        Wed, 13 May 2020 05:31:40 -0400
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 13 May 2020 15:01:35 +0530
+Received: from gokulsri-linux.qualcomm.com ([10.201.2.207])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 13 May 2020 15:01:07 +0530
+Received: by gokulsri-linux.qualcomm.com (Postfix, from userid 432570)
+        id 361C021257; Wed, 13 May 2020 15:01:05 +0530 (IST)
+From:   Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+To:     gokulsri@codeaurora.org, sboyd@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, david.brown@linaro.org,
+        devicetree@vger.kernel.org, jassisinghbrar@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com,
+        robh+dt@kernel.org, sricharan@codeaurora.org,
+        nprakash@codeaurora.org
+Subject: [PATCH V5 01/10] remoteproc: qcom: Add PRNG proxy clock
+Date:   Wed, 13 May 2020 15:00:56 +0530
+Message-Id: <1589362265-22702-2-git-send-email-gokulsri@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1589362265-22702-1-git-send-email-gokulsri@codeaurora.org>
+References: <1589362265-22702-1-git-send-email-gokulsri@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 01:59:12PM +0200, Christoph Hellwig wrote:
-> Factor out two helpes to keep the code tidy.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+PRNG clock is needed by the secure PIL, support for the same
+is added in subsequent patches.
 
-Christoph,
+Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+Signed-off-by: Nikhil Prakash V <nprakash@codeaurora.org>
+---
+ drivers/remoteproc/qcom_q6v5_wcss.c | 65 +++++++++++++++++++++++++++----------
+ 1 file changed, 47 insertions(+), 18 deletions(-)
 
-After installing net-next (fb9f2e92864f) on a Fedora 32 machine I cannot
-ssh to it. Bisected it to this commit [1].
+diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
+index fff681a..0700d68 100644
+--- a/drivers/remoteproc/qcom_q6v5_wcss.c
++++ b/drivers/remoteproc/qcom_q6v5_wcss.c
+@@ -91,19 +91,6 @@ enum {
+ 	WCSS_QCS404,
+ };
+ 
+-struct wcss_data {
+-	const char *firmware_name;
+-	int crash_reason_smem;
+-	u32 version;
+-	bool aon_reset_required;
+-	bool wcss_q6_reset_required;
+-	const char *ssr_name;
+-	const char *sysmon_name;
+-	int ssctl_id;
+-	const struct rproc_ops *ops;
+-	bool requires_force_stop;
+-};
+-
+ struct q6v5_wcss {
+ 	struct device *dev;
+ 
+@@ -128,6 +115,7 @@ struct q6v5_wcss {
+ 	struct clk *qdsp6ss_xo_cbcr;
+ 	struct clk *qdsp6ss_core_gfmux;
+ 	struct clk *lcc_bcr_sleep;
++	struct clk *prng_clk;
+ 	struct regulator *cx_supply;
+ 
+ 	struct qcom_rproc_glink glink_subdev;
+@@ -151,6 +139,21 @@ struct q6v5_wcss {
+ 	bool requires_force_stop;
+ };
+ 
++struct wcss_data {
++	int (*init_clock)(struct q6v5_wcss *wcss);
++	int (*init_regulator)(struct q6v5_wcss *wcss);
++	const char *firmware_name;
++	int crash_reason_smem;
++	u32 version;
++	bool aon_reset_required;
++	bool wcss_q6_reset_required;
++	const char *ssr_name;
++	const char *sysmon_name;
++	int ssctl_id;
++	const struct rproc_ops *ops;
++	bool requires_force_stop;
++};
++
+ static int q6v5_wcss_reset(struct q6v5_wcss *wcss)
+ {
+ 	int ret;
+@@ -240,6 +243,12 @@ static int q6v5_wcss_start(struct rproc *rproc)
+ 	struct q6v5_wcss *wcss = rproc->priv;
+ 	int ret;
+ 
++	ret = clk_prepare_enable(wcss->prng_clk);
++	if (ret) {
++		dev_err(wcss->dev, "prng clock enable failed\n");
++		return ret;
++	}
++
+ 	qcom_q6v5_prepare(&wcss->q6v5);
+ 
+ 	/* Release Q6 and WCSS reset */
+@@ -732,6 +741,7 @@ static int q6v5_wcss_stop(struct rproc *rproc)
+ 			return ret;
+ 	}
+ 
++	clk_disable_unprepare(wcss->prng_clk);
+ 	qcom_q6v5_unprepare(&wcss->q6v5);
+ 
+ 	return 0;
+@@ -889,7 +899,21 @@ static int q6v5_alloc_memory_region(struct q6v5_wcss *wcss)
+ 	return 0;
+ }
+ 
+-static int q6v5_wcss_init_clock(struct q6v5_wcss *wcss)
++static int ipq8074_init_clock(struct q6v5_wcss *wcss)
++{
++	int ret;
++
++	wcss->prng_clk = devm_clk_get(wcss->dev, "prng");
++	if (IS_ERR(wcss->prng_clk)) {
++		ret = PTR_ERR(wcss->prng_clk);
++		if (ret != -EPROBE_DEFER)
++			dev_err(wcss->dev, "Failed to get prng clock\n");
++		return ret;
++	}
++	return 0;
++}
++
++static int qcs404_init_clock(struct q6v5_wcss *wcss)
+ {
+ 	int ret;
+ 
+@@ -979,7 +1003,7 @@ static int q6v5_wcss_init_clock(struct q6v5_wcss *wcss)
+ 	return 0;
+ }
+ 
+-static int q6v5_wcss_init_regulator(struct q6v5_wcss *wcss)
++static int qcs404_init_regulator(struct q6v5_wcss *wcss)
+ {
+ 	wcss->cx_supply = devm_regulator_get(wcss->dev, "cx");
+ 	if (IS_ERR(wcss->cx_supply))
+@@ -1023,12 +1047,14 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto free_rproc;
+ 
+-	if (wcss->version == WCSS_QCS404) {
+-		ret = q6v5_wcss_init_clock(wcss);
++	if (desc->init_clock) {
++		ret = desc->init_clock(wcss);
+ 		if (ret)
+ 			goto free_rproc;
++	}
+ 
+-		ret = q6v5_wcss_init_regulator(wcss);
++	if (desc->init_regulator) {
++		ret = desc->init_regulator(wcss);
+ 		if (ret)
+ 			goto free_rproc;
+ 	}
+@@ -1073,6 +1099,7 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
+ }
+ 
+ static const struct wcss_data wcss_ipq8074_res_init = {
++	.init_clock = ipq8074_init_clock,
+ 	.firmware_name = "IPQ8074/q6_fw.mdt",
+ 	.crash_reason_smem = WCSS_CRASH_REASON,
+ 	.aon_reset_required = true,
+@@ -1082,6 +1109,8 @@ static const struct wcss_data wcss_ipq8074_res_init = {
+ };
+ 
+ static const struct wcss_data wcss_qcs404_res_init = {
++	.init_clock = qcs404_init_clock,
++	.init_regulator = qcs404_init_regulator,
+ 	.crash_reason_smem = WCSS_CRASH_REASON,
+ 	.firmware_name = "wcnss.mdt",
+ 	.version = WCSS_QCS404,
+-- 
+2.7.4
 
-When trying to connect I see these error messages in journal:
-
-sshd[1029]: error: mm_receive_fd: no message header
-sshd[1029]: fatal: mm_pty_allocate: receive fds failed
-sshd[1029]: fatal: mm_request_receive_expect: buffer error: incomplete message
-sshd[1018]: fatal: mm_request_receive: read: Connection reset by peer
-
-Please let me know if more info is required. I can easily test a patch
-if you need me to try something.
-
-Thanks
-
-[1]
-git bisect start
-# bad: [fb9f2e92864f51d25e790947cca2ac4426a12f9c] net: dsa: tag_sja1105: appease sparse checks for ethertype accessors
-git bisect bad fb9f2e92864f51d25e790947cca2ac4426a12f9c
-# good: [3242956bd610af40e884b530b6c6f76f5bf85f3b] Merge branch 'net-dsa-Constify-two-tagger-ops'
-git bisect good 3242956bd610af40e884b530b6c6f76f5bf85f3b
-# bad: [1b0cde4091877cd7fe4b29f67645cc391b86c9ca] sfc: siena_check_caps() can be static
-git bisect bad 1b0cde4091877cd7fe4b29f67645cc391b86c9ca
-# bad: [cba155d591aa28689332bc568632d2f868690be1] ionic: add support for more xcvr types
-git bisect bad cba155d591aa28689332bc568632d2f868690be1
-# bad: [97cf0ef9305bba857f04b914fd59e83813f1eae2] Merge branch 'improve-msg_control-kernel-vs-user-pointer-handling'
-git bisect bad 97cf0ef9305bba857f04b914fd59e83813f1eae2
-# bad: [2618d530dd8b7ac0fdcb83f4c95b88f7b0d37ce6] net/scm: cleanup scm_detach_fds
-git bisect bad 2618d530dd8b7ac0fdcb83f4c95b88f7b0d37ce6
-# good: [0462b6bdb6445b887b8896f28be92e0d94c92e7b] net: add a CMSG_USER_DATA macro
-git bisect good 0462b6bdb6445b887b8896f28be92e0d94c92e7b
-# first bad commit: [2618d530dd8b7ac0fdcb83f4c95b88f7b0d37ce6] net/scm: cleanup scm_detach_fds
-
-> ---
->  net/core/scm.c | 94 +++++++++++++++++++++++++++-----------------------
->  1 file changed, 51 insertions(+), 43 deletions(-)
-> 
-> diff --git a/net/core/scm.c b/net/core/scm.c
-> index abfdc85a64c1b..168b006a52ff9 100644
-> --- a/net/core/scm.c
-> +++ b/net/core/scm.c
-> @@ -277,78 +277,86 @@ void put_cmsg_scm_timestamping(struct msghdr *msg, struct scm_timestamping_inter
->  }
->  EXPORT_SYMBOL(put_cmsg_scm_timestamping);
->  
-> +static int __scm_install_fd(struct file *file, int __user *ufd, int o_flags)
-> +{
-> +	struct socket *sock;
-> +	int new_fd;
-> +	int error;
-> +
-> +	error = security_file_receive(file);
-> +	if (error)
-> +		return error;
-> +
-> +	new_fd = get_unused_fd_flags(o_flags);
-> +	if (new_fd < 0)
-> +		return new_fd;
-> +
-> +	error = put_user(new_fd, ufd);
-> +	if (error) {
-> +		put_unused_fd(new_fd);
-> +		return error;
-> +	}
-> +
-> +	/* Bump the usage count and install the file. */
-> +	sock = sock_from_file(file, &error);
-> +	if (sock) {
-> +		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
-> +		sock_update_classid(&sock->sk->sk_cgrp_data);
-> +	}
-> +	fd_install(new_fd, get_file(file));
-> +	return error;
-> +}
-> +
-> +static int scm_max_fds(struct msghdr *msg)
-> +{
-> +	if (msg->msg_controllen <= sizeof(struct cmsghdr))
-> +		return 0;
-> +	return (msg->msg_controllen - sizeof(struct cmsghdr)) / sizeof(int);
-> +}
-> +
->  void scm_detach_fds(struct msghdr *msg, struct scm_cookie *scm)
->  {
->  	struct cmsghdr __user *cm
->  		= (__force struct cmsghdr __user*)msg->msg_control;
-> -
-> -	int fdmax = 0;
-> -	int fdnum = scm->fp->count;
-> -	struct file **fp = scm->fp->fp;
-> -	int __user *cmfptr;
-> +	int o_flags = (msg->msg_flags & MSG_CMSG_CLOEXEC) ? O_CLOEXEC : 0;
-> +	int fdmax = min_t(int, scm_max_fds(msg), scm->fp->count);
-> +	int __user *cmsg_data = CMSG_USER_DATA(cm);
->  	int err = 0, i;
->  
-> -	if (MSG_CMSG_COMPAT & msg->msg_flags) {
-> +	if (msg->msg_flags & MSG_CMSG_COMPAT) {
->  		scm_detach_fds_compat(msg, scm);
->  		return;
->  	}
->  
-> -	if (msg->msg_controllen > sizeof(struct cmsghdr))
-> -		fdmax = ((msg->msg_controllen - sizeof(struct cmsghdr))
-> -			 / sizeof(int));
-> -
-> -	if (fdnum < fdmax)
-> -		fdmax = fdnum;
-> -
-> -	for (i=0, cmfptr =(int __user *)CMSG_USER_DATA(cm); i<fdmax;
-> -	     i++, cmfptr++)
-> -	{
-> -		struct socket *sock;
-> -		int new_fd;
-> -		err = security_file_receive(fp[i]);
-> +	for (i = 0; i < fdmax; i++) {
-> +		err = __scm_install_fd(scm->fp->fp[i], cmsg_data + i, o_flags);
->  		if (err)
->  			break;
-> -		err = get_unused_fd_flags(MSG_CMSG_CLOEXEC & msg->msg_flags
-> -					  ? O_CLOEXEC : 0);
-> -		if (err < 0)
-> -			break;
-> -		new_fd = err;
-> -		err = put_user(new_fd, cmfptr);
-> -		if (err) {
-> -			put_unused_fd(new_fd);
-> -			break;
-> -		}
-> -		/* Bump the usage count and install the file. */
-> -		sock = sock_from_file(fp[i], &err);
-> -		if (sock) {
-> -			sock_update_netprioidx(&sock->sk->sk_cgrp_data);
-> -			sock_update_classid(&sock->sk->sk_cgrp_data);
-> -		}
-> -		fd_install(new_fd, get_file(fp[i]));
->  	}
->  
-> -	if (i > 0)
-> -	{
-> -		int cmlen = CMSG_LEN(i*sizeof(int));
-> +	if (i > 0)  {
-> +		int cmlen = CMSG_LEN(i * sizeof(int));
-> +
->  		err = put_user(SOL_SOCKET, &cm->cmsg_level);
->  		if (!err)
->  			err = put_user(SCM_RIGHTS, &cm->cmsg_type);
->  		if (!err)
->  			err = put_user(cmlen, &cm->cmsg_len);
->  		if (!err) {
-> -			cmlen = CMSG_SPACE(i*sizeof(int));
-> +			cmlen = CMSG_SPACE(i * sizeof(int));
->  			if (msg->msg_controllen < cmlen)
->  				cmlen = msg->msg_controllen;
->  			msg->msg_control += cmlen;
->  			msg->msg_controllen -= cmlen;
->  		}
->  	}
-> -	if (i < fdnum || (fdnum && fdmax <= 0))
-> +
-> +	if (i < scm->fp->count || (scm->fp->count && fdmax <= 0))
->  		msg->msg_flags |= MSG_CTRUNC;
->  
->  	/*
-> -	 * All of the files that fit in the message have had their
-> -	 * usage counts incremented, so we just free the list.
-> +	 * All of the files that fit in the message have had their usage counts
-> +	 * incremented, so we just free the list.
->  	 */
->  	__scm_destroy(scm);
->  }
-> -- 
-> 2.26.2
-> 
