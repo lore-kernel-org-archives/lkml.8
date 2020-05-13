@@ -2,178 +2,132 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA02AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12560C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF8B02054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 175152053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:13:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Jb8rfLuM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a5Qhy201"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732261AbgEMXMU (ORCPT
+        id S1732427AbgEMXNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 19:12:20 -0400
-Received: from mail.efficios.com ([167.114.26.124]:57662 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728315AbgEMXMS (ORCPT
+        Wed, 13 May 2020 19:13:43 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:38904 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732331AbgEMXNm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 19:12:18 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 753182BF375;
-        Wed, 13 May 2020 19:12:17 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id UiHRjGkxNO5V; Wed, 13 May 2020 19:12:17 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 05F232BF374;
-        Wed, 13 May 2020 19:12:17 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 05F232BF374
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1589411537;
-        bh=vT+BKs1PsOs1DwnO35m9CtzYZM/crhc3i3CUt4TuVIg=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=Jb8rfLuMigDJ/hlp8JnP9hGrf6As+5OrL0P7keRxLVPunppX8uwNLVUt3CZ+UUt0S
-         1/oknTWyiXpXRS8HJIkg06pkNyBikhpFFsLeS665/BmdVEJc3KIzeBj3enr6QLbkv3
-         iAPD3iQKW0prygVqTJhFsNanxtb1eAa9/LXRAvdc9cN5N58cY9PYUnHy4LZ1EfVxkn
-         Inm6/jla2utARwzJS1YctB+lqIXCH9780UYCkVICJz8dH/OpmMdhDqUJ1vCXimDV0B
-         6yLw/vUYEg9btfndeIQ/DkxTy8kJPUZXJyo1dPwL5uvurNxuMiYk5GFBo6iXGNe4jg
-         FJ2twfzLy3aBA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 1Z4VmZZL1zJO; Wed, 13 May 2020 19:12:16 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id E7E912BF5D1;
-        Wed, 13 May 2020 19:12:16 -0400 (EDT)
-Date:   Wed, 13 May 2020 19:12:16 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
-        paulmck <paulmck@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>, rostedt <rostedt@goodmis.org>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Message-ID: <2135402885.20156.1589411536924.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200505134100.376598577@linutronix.de>
-References: <20200505131602.633487962@linutronix.de> <20200505134100.376598577@linutronix.de>
-Subject: Re: [patch V4 part 1 23/36] bug: Annotate WARN/BUG/stackfail as
- noinstr safe
+        Wed, 13 May 2020 19:13:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589411619;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZmMD6XDgyrg0kIPXb2cMEKa1A3azrPgvq+3AzZZ9RcQ=;
+        b=a5Qhy201W4tBuL2ZziApVeE9mAYN7wDsBEVEJvDGvgqGaLTO+1GH0doMx2Nkdf2Pf3rsL6
+        GguQDj8TFoyKeO3+RMhM9O31by+F9b5f7iNtcnTF94N8rVTxR473NoSWKDlFruc2gDgOE1
+        sRTOmIqrv0HQuEL6lSHCaJrpd9FFyG0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-394-Q9t9zeVRNwCXxVJMkBsddA-1; Wed, 13 May 2020 19:13:35 -0400
+X-MC-Unique: Q9t9zeVRNwCXxVJMkBsddA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E2DA118FE860;
+        Wed, 13 May 2020 23:13:33 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-59.rdu2.redhat.com [10.10.112.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E6F45C1D3;
+        Wed, 13 May 2020 23:13:32 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAEjxPJ4=ZN_jKP2nX5mrMA3OxC8XLsYEmCPCD-78H4XQw=_hCA@mail.gmail.com>
+References: <CAEjxPJ4=ZN_jKP2nX5mrMA3OxC8XLsYEmCPCD-78H4XQw=_hCA@mail.gmail.com> <CAEjxPJ6pFdDfm55pv9bT3CV5DTFF9VqzRmG_Xi5bKNxPaGuOLg@mail.gmail.com> <158932282880.2885325.2688622278854566047.stgit@warthog.procyon.org.uk>
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     dhowells@redhat.com,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        keyrings@vger.kernel.org, SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] keys: Make the KEY_NEED_* perms an enum rather than a mask
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF76 (Linux)/8.8.15_GA_3928)
-Thread-Topic: Annotate WARN/BUG/stackfail as noinstr safe
-Thread-Index: VxeXEf8ul4BHrsH8C9lKALhiviNJKA==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3611506.1589411611.1@warthog.procyon.org.uk>
+Date:   Thu, 14 May 2020 00:13:31 +0100
+Message-ID: <3611507.1589411611@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On May 5, 2020, at 9:16 AM, Thomas Gleixner tglx@linutronix.de wrote:
+Stephen Smalley <stephen.smalley.work@gmail.com> wrote:
 
-> Warnings, bugs and stack protection fails from noinstr sections, e.g. low
-> level and early entry code, are likely to be fatal.
+> >  (3) An override due to CAP_SYS_ADMIN.
 > 
-> Mark them as "safe" to be invoked from noinstr protected code to avoid
-> annotating all usage sites. Getting the information out is important.
+> CAP_SYS_ADMIN should never skip SELinux checking.  Even for Smack,
+> there is a separate capability (CAP_MAC_ADMIN) for that purpose.
 
-Why instrument at the x86 level (and miss other architectures) when this
-could perhaps be done directly in the macro WARN_ON_ONCE(condition) in
-generic code ?
+The LSM doesn't get consulted at the moment.  With this patch, it will get
+consulted.
 
+> >  (4) An override due to an instantiation token being present.
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
-> arch/x86/include/asm/bug.h |    3 +++
-> include/asm-generic/bug.h  |    9 +++++++--
-> kernel/panic.c             |    4 +++-
-> 3 files changed, 13 insertions(+), 3 deletions(-)
+> Not sure what this means but again we shouldn't skip SELinux checking
+> based on mere possession of an object capability (not a POSIX
+> capability).
+
+The kernel has delegated the instantiation of a key to the calling process and
+has given it a temporary key of type ".request_key_auth" which it has put into
+force with keyctl(KEYCTL_ASSUME_AUTHORITY).
+
+This authorisation token grants the caller the ability to (a) perform
+operations on the key it wouldn't otherwise have permission to do, (b) use the
+key instantiation keyctls and (c) temporarily search the keyrings of the
+caller of request_key() using the creds of that caller and to read/use the
+keys found therein if the caller was permitted to do so.
+
+> It would be better if the permission indicated the actual operation
+> (e.g. KEY_NEED_INVALIDATE_SPECIAL), and the decision whether to permit
+> CAP_SYS_ADMIN processes to override was left to the security modules.
+> SELinux doesn't automatically allow CAP_SYS_ADMIN processes to do
+> everything.
+
+These individual permissions don't exist yet.  I have an ACL patchset that
+allows me to add a greater range - though there's issues with SELinux there
+also.
+
+Also, the keyrings are specially marked to say that the sysadmin is allowed to
+flush them at the moment - but that can go away with the ACL stuff.
+
+> > +       switch (need_perm) {
+> > +       case KEY_NEED_UNLINK:
+> > +       case KEY_SYSADMIN_OVERRIDE:
+> > +       case KEY_AUTHTOKEN_OVERRIDE:
+> > +       case KEY_DEFER_PERM_CHECK:
+> >                 return 0;
 > 
-> --- a/arch/x86/include/asm/bug.h
-> +++ b/arch/x86/include/asm/bug.h
-> @@ -70,13 +70,16 @@ do {									\
-> #define HAVE_ARCH_BUG
-> #define BUG()							\
-> do {								\
-> +	instr_begin();						\
-> 	_BUG_FLAGS(ASM_UD2, 0);					\
-> 	unreachable();						\
-> } while (0)
-> 
-> #define __WARN_FLAGS(flags)					\
-> do {								\
-> +	instr_begin();						\
-> 	_BUG_FLAGS(ASM_UD2, BUGFLAG_WARNING|(flags));		\
-> +	instr_end();						\
-> 	annotate_reachable();					\
-> } while (0)
+> We really shouldn't be skipping any/all checking on CAP_SYS_ADMIN or
+> an AUTHTOKEN; those should still be subject to MAC policy.
 
-riscv, arm64, s390, powerpc, parisc and sh also have __WARN_FLAGS.
+I'm not sure how to do that.
 
-> 
-> --- a/include/asm-generic/bug.h
-> +++ b/include/asm-generic/bug.h
-> @@ -83,14 +83,19 @@ extern __printf(4, 5)
-> void warn_slowpath_fmt(const char *file, const int line, unsigned taint,
-> 		       const char *fmt, ...);
-> #define __WARN()		__WARN_printf(TAINT_WARN, NULL)
-> -#define __WARN_printf(taint, arg...)					\
-> -	warn_slowpath_fmt(__FILE__, __LINE__, taint, arg)
-> +#define __WARN_printf(taint, arg...) do {				\
-> +		instr_begin();						\
-> +		warn_slowpath_fmt(__FILE__, __LINE__, taint, arg);	\
-> +		instr_end();						\
-> +	} while (0)
-> #else
-> extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
-> #define __WARN()		__WARN_FLAGS(BUGFLAG_TAINT(TAINT_WARN))
-> #define __WARN_printf(taint, arg...) do {				\
-> +		instr_begin();						\
-> 		__warn_printk(arg);					\
-> 		__WARN_FLAGS(BUGFLAG_NO_CUT_HERE | BUGFLAG_TAINT(taint));\
-> +		instr_end();						\
-> 	} while (0)
-> #define WARN_ON_ONCE(condition) ({				\
+Note that KEY_NEED_UNLINK *must not* be overruled by the MAC policy.  The
+value is only there because lookup_user_key() requires something to be put
+into that parameter - it's more of a courtesy thing, I suppose.
 
-Moving the instr_begin/end here should fix it ?
+Why should AUTHTOKEN be subject to MAC policy?  The kernel has told the
+process to go and instantiate a key.  It shouldn't really then turn around and
+tell the process "oh, but you're not actually allowed to do that".
 
-Thanks,
+David
 
-Mathieu
-
-> 	int __ret_warn_on = !!(condition);			\
-> --- a/kernel/panic.c
-> +++ b/kernel/panic.c
-> @@ -662,10 +662,12 @@ device_initcall(register_warn_debugfs);
->  * Called when gcc's -fstack-protector feature is used, and
->  * gcc detects corruption of the on-stack canary value
->  */
-> -__visible void __stack_chk_fail(void)
-> +__visible noinstr void __stack_chk_fail(void)
-> {
-> +	instr_begin();
-> 	panic("stack-protector: Kernel stack is corrupted in: %pB",
-> 		__builtin_return_address(0));
-> +	instr_end();
-> }
->  EXPORT_SYMBOL(__stack_chk_fail);
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
