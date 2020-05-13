@@ -2,155 +2,77 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A844C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADE5C2D0FB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A9DB23126
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:20:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="bcpCCd4I"
+	by mail.kernel.org (Postfix) with ESMTP id 19972206D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:20:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731951AbgEMBUr (ORCPT
+        id S1732081AbgEMBUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 21:20:47 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17766 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731604AbgEMBUr (ORCPT
+        Tue, 12 May 2020 21:20:52 -0400
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:48866 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731604AbgEMBUv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 21:20:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1589332815; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=cjRqHgQoFQcF9dXuptd75t76dh9Ox5nQ6TBCswsAIE4vmMvZMewIFAKPRRPZe/PJS2bY6Znhx+4w0WAA5Mc10//xuHcGOXibicDt0DNxz/yqmBq9jqQYI0HOJKQZLeRu97PeXH0+eg7Wh7IEp7qIfK2cgzhh49fR11LSI9OmNkM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1589332815; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
-        bh=UUH9TBEsGZClV0UvQJYkiGlyJwxsXutgInjbHM/99OA=; 
-        b=UeVNz+dMSImscqxWTjoQW6hcrDNWN8PeWNk2/x2Z7sWF8rnNDKBCow+UF1rwxfp6prWwIgTltl1mXREQhk3JzzzL9uRc8V36S/nmjqTuPp8mHYV/KUcZasCsX1zXsKb+mm4yvqUoOl5SfBFRA/dS2EfEd67YRPZXmbW7VWWx9bw=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=flygoat.com;
-        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
-        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1589332815;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=UUH9TBEsGZClV0UvQJYkiGlyJwxsXutgInjbHM/99OA=;
-        b=bcpCCd4IolU5WLkjKiiyehRsPV+/qDkYcYvv6kgawo3IpvNaL0dpUfqw1G/bJJ3B
-        hTpUDBXWRJAWXQfNpXFhEmkx6v6tDlprHuJHAJtFK56CoaoP5V9/naZuiG0Yo92b7Hd
-        2ymduufrqGSTuebNjO6jnOS0hJEjt+PQJZIAEou0=
-Received: from [127.0.0.1] (223.104.5.223 [223.104.5.223]) by mx.zoho.com.cn
-        with SMTPS id 1589332811518609.5936666834109; Wed, 13 May 2020 09:20:11 +0800 (CST)
-Date:   Wed, 13 May 2020 09:20:08 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Burton <paulburton@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: Re: [PATCH v9 2/5] PCI: Add Loongson PCI Controller support
-User-Agent: K-9 Mail for Android
-Reply-to: jiaxun.yang@flygoat.com
-In-Reply-To: <20200512180602.GA273658@bjorn-Precision-5520>
-References: <20200512180602.GA273658@bjorn-Precision-5520>
-Message-ID: <08C2301A-7349-4044-80F4-0B0520780DB9@flygoat.com>
+        Tue, 12 May 2020 21:20:51 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id F311729CEA;
+        Tue, 12 May 2020 21:14:48 -0400 (EDT)
+Date:   Wed, 13 May 2020 11:14:56 +1000 (AEST)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Christophe Jaillet <christophe.jaillet@wanadoo.fr>
+Subject: Re: net/sonic: Fix some resource leaks in error handling paths
+In-Reply-To: <3fabce05-7da9-7daa-d92c-411369f35b4a@web.de>
+Message-ID: <alpine.LNX.2.22.394.2005131028450.20@nippy.intranet>
+References: <b7651b26-ac1e-6281-efb2-7eff0018b158@web.de> <alpine.LNX.2.22.394.2005100922240.11@nippy.intranet> <9d279f21-6172-5318-4e29-061277e82157@web.de> <alpine.LNX.2.22.394.2005101738510.11@nippy.intranet> <bc70e24c-dd31-75b7-6ece-2ad31982641e@web.de>
+ <alpine.LNX.2.22.394.2005110845060.8@nippy.intranet> <9994a7de-0399-fb34-237a-a3c71b3cf568@web.de> <alpine.LNX.2.22.394.2005120905410.8@nippy.intranet> <3fabce05-7da9-7daa-d92c-411369f35b4a@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 12 May 2020, Markus Elfring wrote:
 
+> > Markus, if you were to write a patch to improve upon coding-style.rst, 
+> > who should review it?
+> 
+> All involved contributors have got chances to provide constructive 
+> comments.
 
-=E4=BA=8E 2020=E5=B9=B45=E6=9C=8813=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=882=
-:06:02, Bjorn Helgaas <helgaas@kernel=2Eorg> =E5=86=99=E5=88=B0:
->On Tue, May 12, 2020 at 03:43:56PM +0800, Jiaxun Yang wrote:
->> This controller can be found on Loongson-2K SoC, Loongson-3
->> systems with RS780E/LS7A PCH=2E
->>=20
->> The RS780E part of code was previously located at
->> arch/mips/pci/ops-loongson3=2Ec and now it can use generic PCI
->> driver implementation=2E
->>=20
->> Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
->> Reviewed-by: Rob Herring <robh@kernel=2Eorg>
->
->> +static void system_bus_quirk(struct pci_dev *pdev)
->> +{
->> +	u16 tmp;
->> +
->> +	/*=20
->> +	 * These devices are not sharing resouces with rest of devices
->> +	 * on host bus and firmware will ensure their BARs are placed
->> +	 * in safe ranges=2E Also there might be some config registers
->> +	 * in their config space so kernel shouldn't ignore them=2E
->
->"Firmware ensuring BARs are placed in 'safe' ranges" is not a
->sufficient answer=2E  As I said before, Linux needs to know both the
->ADDRESS and the SIZE of whatever non-standard BARs these are=2E
->Otherwise, we're liable to assign that space to a different device=2E
+But how could someone be elevated to "involved contributor" if their 
+patches were to be blocked by arbitrary application of the rules?
 
-The address assigned to these devices will never be a part of resources
-belongs to the host bridge=2E That's enforced by hardware and firmware,
-so address conflict would never happen=2E
+> I would be curious who will actually dare to contribute further ideas 
+> for this area.
+> 
 
-I'm doing like this to ensure kernel will discover this device but do noth=
-ing
-about assignment of resources to it=2E
+You seem to be uniquely positioned to do that, if only because you cited 
+rules which don't appear to support your objection.
 
->
->If you have to hard-code the size, so be it=2E  That would mean the
->hardware is completely broken, but at least we could make Linux deal
->with it=2E  If the hardware consumes address space we don't know about,
->we can't deal with that=2E
->
->> +	 */
->> +	pdev->mmio_always_on =3D 1;
->> +	pdev->non_compliant_bars =3D 1;
->> +}
->
->> +void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int d=
-evfn,
->> +			       int where)
->> +{
->> +	unsigned char busnum =3D bus->number;
->> +	struct pci_host_bridge *bridge =3D pci_find_host_bridge(bus);
->> +	struct loongson_pci *priv =3D  pci_host_bridge_priv(bridge);
->> +
->> +	/*
->> +	 * Do not read more than one device on the bus other than
->> +	 * the host bus 0=2E
->> +	 */
->
->If the hardware is restricted such that the root bus number must be
->zero, pleae say that explicitly here=2E  Otherwise, it just looks like
->a bug=2E
->
->> +	if (priv->flags & FLAG_DEV_FIX && busnum !=3D 0 &&
->> +		PCI_SLOT(devfn) > 0)
->> +		return NULL;
->> +
->> +	/* CFG0 can only access standard space */
->> +	if (where < PCI_CFG_SPACE_SIZE && priv->cfg0_base)
->> +		return cfg0_map(priv, busnum, devfn, where);
->> +
->> +	/* CFG1 can access extended space */
->> +	if (where < PCI_CFG_SPACE_EXP_SIZE && priv->cfg1_base)
->> +		return cfg1_map(priv, busnum, devfn, where);
->> +
->> +	return NULL;
->> +}
+> 
+> > If you are unable to write or review such a patch, how can you hope to 
+> > adjudicate compliance?
+> 
+> I can also try to achieve more improvements here to see how the 
+> available software documentation will evolve.
+> 
 
---=20
-Jiaxun Yang
+When the people who write and review the coding standards are the same 
+people who write and review the code, the standards devolve (given the 
+prevailing incentives).
+
+> Regards, 
+> Markus
+> 
