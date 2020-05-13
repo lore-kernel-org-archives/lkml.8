@@ -2,98 +2,148 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D88D2CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7D6CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B06ED205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8873F206CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:24:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="SiMG6Ja9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NSaX/vRO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732195AbgEMIWf (ORCPT
+        id S1732173AbgEMIYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 04:22:35 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:52342 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726092AbgEMIWf (ORCPT
+        Wed, 13 May 2020 04:24:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729189AbgEMIYM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 04:22:35 -0400
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04D8G4hp007414;
-        Wed, 13 May 2020 03:21:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=SN0lZANT/vbXKgnyWwzZnLfQTVL/ShY4GaSPpGpVBkA=;
- b=SiMG6Ja9eXiMz6KeoWCSkLcdZXiCb+S/pnWR9tGUM38jdOksN8I8YnnZehotk5woAzrY
- 0NN4hSkhrWxXMWUF0xbxXKXVuMUiABognHDvtwk/+nh3HzLC3/C6MplbY/LiVyUxM8FF
- zHbnoS/u91w1HtYF8aHoyeEaS8BQF0n6CQhtVACjL/vkAKJgI8cWHCAMo88IzGSK82o1
- B8lQ72rx+ij/0zrht1oUXJli5kaHcofTF+rAIK6R6GdN3MJAnX2EEZH1553pLFBFBzvi
- sys7s8FxoQ5qsC6G77iSPYfA2I8F9cYUbgvTQVIYWQf6nhp5z0Ta3sPGZAQpcJXyZxNB ZA== 
-Authentication-Results: ppops.net;
-        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex02.ad.cirrus.com ([87.246.76.36])
-        by mx0b-001ae601.pphosted.com with ESMTP id 3100xes1ge-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 13 May 2020 03:21:38 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 13 May
- 2020 09:21:35 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
- Transport; Wed, 13 May 2020 09:21:35 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 6CA562C5;
-        Wed, 13 May 2020 08:21:35 +0000 (UTC)
-Date:   Wed, 13 May 2020 08:21:35 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-CC:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <tglx@linutronix.de>, <allison@lohutok.net>,
-        <info@metux.net>, <patches@opensource.cirrus.com>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ASoC: wm8962: Use force clear for WM8962_SYSCLK_ENA
- after reset
-Message-ID: <20200513082135.GF71940@ediswmail.ad.cirrus.com>
-References: <1589347835-20554-1-git-send-email-shengjiu.wang@nxp.com>
+        Wed, 13 May 2020 04:24:12 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38BDFC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 01:24:12 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id a9so12857251lfb.8
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 01:24:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BCnyp8DCf8CZS+zvYVx3/wo57tr3YdAZ4e/hQh/qGcs=;
+        b=NSaX/vRORpmKcgHTGXqFERaoMDjDF+QKGnIBBeEfxXLunp5oOjByaFxkxCqB1bOLUz
+         ziDPzYeWjw2LzzZX6LTgXFF5VT7C8rxeEN4zYz+2Ngv+DLz76YD9hLjgHhinTWdYKfEc
+         8huLU09Xc0QYvyfmeAGvAuSz938gw+pGIfOMX9wM7fZlKkDjylhLiYNxnaQud5fkpA0i
+         tK+dqg+vB/UGtEfAAJg8NBBqwI72H8aet+FTUlR+TpOTg8fMvMxL0W8VC1HVy+19pcii
+         uUKV+RFm40CJ8/QBotiXF5XThr/zaUoE0njy5JKsDnJry+4kF8vfoOVa4wHBNf3xRBU8
+         Lppw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BCnyp8DCf8CZS+zvYVx3/wo57tr3YdAZ4e/hQh/qGcs=;
+        b=FoKYh3T1LQTh82zNGvPdctGVBgfjW1if6/o6QGt/J0FN1Nb0SY/gnTlvO46POOhoAB
+         pDoaGUVb1wSPkLx6RcVSlw6zf2HGQFl/p8jKHxvBhPjpXBdWpjUxp0i5yZLDoaslPo5h
+         IEUPJRP7+kcVMxY/6iBWsPhbb6Tr+N0tS4kd/yPfw9HJjELBiOa5RH4SjrKBnyQ+/f56
+         0c08RxKErFLO3yS0UtQOZFR7hj/oKRtMmYC4MVQWmfvapTXKu2KTy2oWfSkcnJ3qSIcF
+         YczywU3hNrkNVn6MXtpL63o8RNWX3ORBtBxOg3I6DsZot3nYlbb2H8aPE4Ztd4U9ovrQ
+         k6fw==
+X-Gm-Message-State: AOAM5310UDrK5XgVSDDgUONLWxOo/7qEo2ofEUvQzePO8vJkNmU8wU+4
+        b4rUT8OwYOBZD0hdputolcThhGE7qDZT0dxb3LU1n8bJ8UU=
+X-Google-Smtp-Source: ABdhPJyhtD47Sp6q4yJaOB3jGxHH1xzgbhIpHzYkUjSKYlDknt3/k2WCjTsNXvKZmwZXOyX8XFpGN8/geq/9HNk9HJU=
+X-Received: by 2002:ac2:4945:: with SMTP id o5mr17202258lfi.21.1589358250625;
+ Wed, 13 May 2020 01:24:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1589347835-20554-1-git-send-email-shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: fail
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=581
- bulkscore=0 spamscore=0 clxscore=1015 cotscore=-2147483648 suspectscore=0
- lowpriorityscore=0 phishscore=0 priorityscore=1501 mlxscore=0 adultscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005130076
+References: <20200513003430.651232-1-vlad.babchuk@gmail.com>
+ <20200513003625.651340-1-vlad.babchuk@gmail.com> <CAHUa44E968nR1toCGn0_k6ABw_By7Z8EqB2rGSgiTmseo8oL-Q@mail.gmail.com>
+In-Reply-To: <CAHUa44E968nR1toCGn0_k6ABw_By7Z8EqB2rGSgiTmseo8oL-Q@mail.gmail.com>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Wed, 13 May 2020 13:53:59 +0530
+Message-ID: <CAFA6WYNOAwSaaaCCf0qoQ=gGBEsCkbdrWUzabkn3XnM7hndsow@mail.gmail.com>
+Subject: Re: [PATCH] optee: don't fail on unsuccessful device enumeration
+To:     Volodymyr Babchuk <vlad.babchuk@gmail.com>
+Cc:     Jens Wiklander <jens.wiklander@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Jerome Forissier <jerome@forissier.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 01:30:35PM +0800, Shengjiu Wang wrote:
-> When CLOCKING2 is non-volatile register, we need force clear
-> the WM8962_SYSCLK_ENA bit after reset, for the value in cache
-> maybe 0 but in hardware it is 1. Otherwise there will issue
-> as below statement in driver.
-> 
-> /* SYSCLK defaults to on; make sure it is off so we can safely
->  * write to registers if the device is declocked.
-> 
-> Fixes: c38b608504aa ("ASoC: wm8962: set CLOCKING2 as non-volatile register")
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> ---
+Hi Volodymyr,
 
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+On Wed, 13 May 2020 at 13:30, Jens Wiklander <jens.wiklander@linaro.org> wrote:
+>
+> Hi Volodymyr,
+>
+> On Wed, May 13, 2020 at 2:36 AM Volodymyr Babchuk
+> <vlad.babchuk@gmail.com> wrote:
+> >
+> > optee_enumerate_devices() can fail for multiple of reasons. For
+> > example, I encountered issue when Xen OP-TEE mediator NACKed
+> > PTA_CMD_GET_DEVICES call.
 
-Thanks,
-Charles
+Could you share a detailed description of the issue which you are
+facing? optee_enumerate_devices() is a simple invocation of pseudo TA
+and cases where OP-TEE doesn't provide corresponding pseudo TA are
+handled very well.
+
+> > This should not result in driver
+> > initialization error because this is an optional feature.
+
+I wouldn't call it an optional feature as there might be real kernel
+drivers dependent on this enumeration. Also, it is a simple example to
+self test OP-TEE functionality too. So I am not sure how much
+functional OP-TEE would be if this basic TA invocation fails.
+
+-Sumit
+
+> >
+> > Thus, it is better to print warning, instead of termination driver
+> > initialization.
+> >
+> > Signed-off-by: Volodymyr Babchuk <vlad.babchuk@gmail.com>
+> > ---
+>
+> Looks good. Didn't apply directly at latest, but the conflict was easy
+> enough to resolve.
+>
+> I'll pick up this in a day unless someone objects.
+>
+> I'll add a
+>     Fixes: c3fa24af9244 ("tee: optee: add TEE bus device enumeration support")
+> Line.
+>
+> Thanks,
+> Jens
+>
+> >
+> > resend: fixed email in s-o-b tag. Sorry for the noise
+> >
+> > drivers/tee/optee/core.c | 6 ++----
+> >  1 file changed, 2 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
+> > index 34409c916882..a053930032f2 100644
+> > --- a/drivers/tee/optee/core.c
+> > +++ b/drivers/tee/optee/core.c
+> > @@ -728,10 +728,8 @@ static int __init optee_driver_init(void)
+> >                 return PTR_ERR(optee);
+> >
+> >         rc = optee_enumerate_devices();
+> > -       if (rc) {
+> > -               optee_remove(optee);
+> > -               return rc;
+> > -       }
+> > +       if (rc)
+> > +               pr_warn("can't enumerate optee devices: %d\n", rc);
+> >
+> >         pr_info("initialized driver\n");
+> >
+> > --
+> > 2.26.2
+> >
