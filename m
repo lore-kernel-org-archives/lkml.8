@@ -7,64 +7,53 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE58CC2D0FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89558CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C054123128
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 609C9206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363501;
-	bh=2n8fBjwjCMEJSvwjUHQWsyI5bUNO+8JrEMmndJxWLcQ=;
+	s=default; t=1589363505;
+	bh=lbc0ZkuPyvr62w63DEgAjqvxm+QSLWvjl3b/t0QNdjk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cv9MhLAzqjp3/4flgncboUmMIuv5PtFzRuQpqfopTs4oOQkvjUZqLLO4ugceqMIJS
-	 0VEy4r/Ag+9AL6/Bq92t8vT1cuTuzsSSK8A9kTpZ/i3mTCB6pREx0duiZvRjHX9Hza
-	 XVWUPPBb6NdzNpsA7JMbfg+YWAoz2E6i5zdccnbA=
+	b=Ej5wT2G777oxz1SjVmZzomqm0UCu6vereUhluBJAz+hbbIroh/+2l8sWToc5jZnDp
+	 Xu7YmZHF6VFj7YelCt4DMPl0E+Qc2A/v/SxHaHvXdvREZpoFIgRd6uicdIYBFWB3YZ
+	 Z2Vnh1oVLfIx/JFiyVDHAZyZGpjfXqSnp41V4MkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387688AbgEMJvl (ORCPT
+        id S2387694AbgEMJvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:51:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52564 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:51:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387674AbgEMJvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:51:37 -0400
+        id S2387682AbgEMJvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:51:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BD3120575;
-        Wed, 13 May 2020 09:51:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8927B206D6;
+        Wed, 13 May 2020 09:51:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363496;
-        bh=2n8fBjwjCMEJSvwjUHQWsyI5bUNO+8JrEMmndJxWLcQ=;
+        s=default; t=1589363499;
+        bh=lbc0ZkuPyvr62w63DEgAjqvxm+QSLWvjl3b/t0QNdjk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xx0UUxdnLzL3GhgetbY1wjliKebGDffptaSieYtTiQlLU290eLcKuTw0JMxBI4Xh4
-         GncxIokwfPUXXc7FNvFhQ/Ai3qWK7HIjeQRb+h8fRP6P6+++Y1cLKMslpcF8P7P+Ap
-         WxHIhCZdwXmKc5cFsTyz3YF2dYTwCqNdB2dlIseQ=
+        b=PqmB9nB8Aa5us0IZXAXVjSvB4lls5JKhUjh5qPqIFsa+TXw5qm3M+sYCCNTUCi91w
+         gVnF6qgzg1xR6t8pDMlwHhZMaAI1YLYsFXNTMXY6TdKalHjNED7rpqsakxLrnrnexD
+         r9FilP+jnZ0dLvUvrmH8DtOFTQCuL8e7ST0XNgTE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 80/90] arch/x86/kvm/svm/sev.c: change flag passed to GUP fast in sev_pin_memory()
-Date:   Wed, 13 May 2020 11:45:16 +0200
-Message-Id: <20200513094417.557237952@linuxfoundation.org>
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <yehezkelshb@gmail.com>
+Subject: [PATCH 5.6 001/118] thunderbolt: Check return value of tb_sw_read() in usb4_switch_op()
+Date:   Wed, 13 May 2020 11:43:40 +0200
+Message-Id: <20200513094417.748040775@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
-References: <20200513094408.810028856@linuxfoundation.org>
+In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
+References: <20200513094417.618129545@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -73,53 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-commit 996ed22c7a5251d76dcdfe5026ef8230e90066d9 upstream.
+commit c3bf9930921b33edb31909006607e478751a6f5e upstream.
 
-When trying to lock read-only pages, sev_pin_memory() fails because
-FOLL_WRITE is used as the flag for get_user_pages_fast().
+The function misses checking return value of tb_sw_read() before it
+accesses the value that was read. Fix this by checking the return value
+first.
 
-Commit 73b0140bf0fe ("mm/gup: change GUP fast to use flags rather than a
-write 'bool'") updated the get_user_pages_fast() call sites to use
-flags, but incorrectly updated the call in sev_pin_memory().  As the
-original coding of this call was correct, revert the change made by that
-commit.
-
-Fixes: 73b0140bf0fe ("mm/gup: change GUP fast to use flags rather than a write 'bool'")
-Signed-off-by: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H . Peter Anvin" <hpa@zytor.com>
-Cc: Mike Marshall <hubcap@omnibond.com>
-Cc: Brijesh Singh <brijesh.singh@amd.com>
-Link: http://lkml.kernel.org/r/20200423152419.87202-1-Janakarajan.Natarajan@amd.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: b04079837b20 ("thunderbolt: Add initial support for USB4")
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Yehezkel Bernat <yehezkelshb@gmail.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/svm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/thunderbolt/usb4.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -1861,7 +1861,7 @@ static struct page **sev_pin_memory(stru
- 		return NULL;
+--- a/drivers/thunderbolt/usb4.c
++++ b/drivers/thunderbolt/usb4.c
+@@ -182,6 +182,9 @@ static int usb4_switch_op(struct tb_swit
+ 		return ret;
  
- 	/* Pin the user virtual address. */
--	npinned = get_user_pages_fast(uaddr, npages, FOLL_WRITE, pages);
-+	npinned = get_user_pages_fast(uaddr, npages, write ? FOLL_WRITE : 0, pages);
- 	if (npinned != npages) {
- 		pr_err("SEV: Failure locking %lu pages.\n", npages);
- 		goto err;
+ 	ret = tb_sw_read(sw, &val, TB_CFG_SWITCH, ROUTER_CS_26, 1);
++	if (ret)
++		return ret;
++
+ 	if (val & ROUTER_CS_26_ONS)
+ 		return -EOPNOTSUPP;
+ 
 
 
