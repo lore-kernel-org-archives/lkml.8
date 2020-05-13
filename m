@@ -2,53 +2,140 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F09C43457
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB6EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0B84205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E166720659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:18:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gb6ABaw7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389265AbgEMPAw (ORCPT
+        id S1731111AbgEMPSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:00:52 -0400
-Received: from v6.sk ([167.172.42.174]:54032 "EHLO v6.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389247AbgEMPAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:00:42 -0400
-Received: from localhost (v6.sk [IPv6:::1])
-        by v6.sk (Postfix) with ESMTP id BEE3D610A5;
-        Wed, 13 May 2020 15:00:11 +0000 (UTC)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: 
-Date:   Wed, 13 May 2020 17:00:04 +0200
-Message-Id: <20200513150007.1315395-1-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <[PATCH 0/3] drm/etnaviv: Clock fixes>
-References: <[PATCH 0/3] drm/etnaviv: Clock fixes>
+        Wed, 13 May 2020 11:18:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728692AbgEMPSW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 11:18:22 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7653CC061A0C;
+        Wed, 13 May 2020 08:18:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
+        bh=1tZgH8MNeghSPyWNWnOBlGuYAdG9LL5O6RnEdePT1vE=; b=gb6ABaw7RHKKCr1HU766fZDB8U
+        SB3h6fppxsH05Z02CrRcbdER5PcWclAq30iLWhi9toAcrYx2gDTi2f6Ygq2i3bRxwrtVW7K2alru7
+        a+2SkgnNRPyVTAjzPq9QrRPgZ7yeMbl2gC2E2b3QQ6seYdYrig544U3QgoVJPrQB+7RDAvAdQJ/Ts
+        rgvKSg3kEfaXw9mw1je4fbu3TRJcZ2Q1tpcfypeCRLm5C/8RRahy35PNCo2iPB5R/H6RIa+gUJkkA
+        hH9pzFXBD+vbbm+BjX1GgxPVCk5WVYTD1l6LYY8oGm33ACtlpFIvBju6/vnq9aBVH05Hr06pZP8zD
+        9sSHwAHw==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jYt9J-0005kF-21; Wed, 13 May 2020 15:18:21 +0000
+Subject: Re: mmotm 2020-05-11-15-43 uploaded (ethernet/ti/ti_cpsw)
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        linux-omap@vger.kernel.org
+References: <20200511224430.HDJjRC68z%akpm@linux-foundation.org>
+ <9ba4bac8-d4ec-c2d2-373f-3a631523cb2f@infradead.org>
+ <a6e2a4ff-1ec5-4d86-4d00-ce62fbf1813f@ti.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <86830472-e970-cf07-49ae-2970fd99c25e@infradead.org>
+Date:   Wed, 13 May 2020 08:18:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <a6e2a4ff-1ec5-4d86-4d00-ce62fbf1813f@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 5/13/20 2:20 AM, Grygorii Strashko wrote:
+> 
+> 
+> On 12/05/2020 05:12, Randy Dunlap wrote:
+>> On 5/11/20 3:44 PM, Andrew Morton wrote:
+>>> The mm-of-the-moment snapshot 2020-05-11-15-43 has been uploaded to
+>>>
+>>>     http://www.ozlabs.org/~akpm/mmotm/
+>>>
+>>> mmotm-readme.txt says
+>>>
+>>> README for mm-of-the-moment:
+>>>
+>>> http://www.ozlabs.org/~akpm/mmotm/
+>>>
+>>> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+>>> more than once a week.
+>>>
+>>> You will need quilt to apply these patches to the latest Linus release (5.x
+>>> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+>>> http://ozlabs.org/~akpm/mmotm/series
+>>>
+>>> The file broken-out.tar.gz contains two datestamp files: .DATE and
+>>> .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+>>> followed by the base kernel version against which this patch series is to
+>>> be applied.
+>>>
+>>> This tree is partially included in linux-next.  To see which patches are
+>>> included in linux-next, consult the `series' file.  Only the patches
+>>> within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
+>>> linux-next.
+>>>
+>>>
+>>> A full copy of the full kernel tree with the linux-next and mmotm patches
+>>> already applied is available through git within an hour of the mmotm
+>>> release.  Individual mmotm releases are tagged.  The master branch always
+>>> points to the latest release, so it's constantly rebasing.
+>>>
+>>>     https://github.com/hnaz/linux-mm
+>>>
+>>> The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
+>>> contains daily snapshots of the -mm tree.  It is updated more frequently
+>>> than mmotm, and is untested.
+>>>
+>>> A git copy of this tree is also available at
+>>>
+>>>     https://github.com/hnaz/linux-mm
+>>
+>> on i386:
+>>
+>> ERROR: modpost: "cpts_register" [drivers/net/ethernet/ti/ti_cpsw_new.ko] undefined!
+>> ERROR: modpost: "cpts_unregister" [drivers/net/ethernet/ti/ti_cpsw_new.ko] undefined!
+>> ERROR: modpost: "cpts_tx_timestamp" [drivers/net/ethernet/ti/ti_cpsw_new.ko] undefined!
+>> ERROR: modpost: "cpts_create" [drivers/net/ethernet/ti/ti_cpsw_new.ko] undefined!
+>> ERROR: modpost: "cpts_misc_interrupt" [drivers/net/ethernet/ti/ti_cpsw_new.ko] undefined!
+>> ERROR: modpost: "cpts_release" [drivers/net/ethernet/ti/ti_cpsw_new.ko] undefined!
+>> ERROR: modpost: "cpts_tx_timestamp" [drivers/net/ethernet/ti/ti_cpsw.ko] undefined!
+>> ERROR: modpost: "cpts_create" [drivers/net/ethernet/ti/ti_cpsw.ko] undefined!
+>> ERROR: modpost: "cpts_misc_interrupt" [drivers/net/ethernet/ti/ti_cpsw.ko] undefined!
+>> ERROR: modpost: "cpts_release" [drivers/net/ethernet/ti/ti_cpsw.ko] undefined!
+>>
+>>
+>> Full randconfig file is attached.
+>>
+> 
+> It's expected to be fixed by
+> https://lkml.org/lkml/2020/5/12/333
 
-please consider applying patches that are chained to this message.
+Works for me. Thanks.
 
-They make getting/enabling the clocks in the etnaviv driver slightly nicer,
-first two also fix potential problems.
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 
-Thanks
-Lubo
-
-
+-- 
+~Randy
