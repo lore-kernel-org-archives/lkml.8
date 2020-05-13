@@ -2,55 +2,55 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B57CECA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00094CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95B8320575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D25EE20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:02:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364142;
-	bh=8nWeuh1x24TWSX1tL7laF5UYkrmye3w6vE49+0gyclc=;
+	s=default; t=1589364150;
+	bh=OTJv1G1EvSM2281z6zR4SjicsyoHdJm6SF5MRtyv4Ls=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rtQ2ao9d/Ax3nO5Up5IMYMe6J2hdGDon/N/6LuxkJdJIIpDwQI6nacIzjnHqAtgzk
-	 LSeImc8+AJ6GWpRDaU/RJWed8lf9PDD9TizUyO/uRt/lO0NXHLGDSX5D3X0XqkwV0A
-	 s5ZU5tJc+KmQopycJYzjcIO6p98AAtNkRfgvCfJI=
+	b=HiXe9IscPdDo7NSGw0QOSA5h25FHHnRmLHIzFlqAJj0mEFVf5A7r7XeNFAnehafDY
+	 ceXtsD5AsCeix9NXLkU2SVM9qiMl70fZyRlrJHiFtQCG3WUoWmrLuF3EnwNWt+T8PZ
+	 eTLR82mFNK9F2QkH9ljQrF2Px8SP1whYXm2Zt/6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732828AbgEMJuL (ORCPT
+        id S2388009AbgEMKCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:50:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49766 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 06:02:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732636AbgEMJuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:50:07 -0400
+        id S2387424AbgEMJuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:50:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80A3420740;
-        Wed, 13 May 2020 09:50:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D8B923126;
+        Wed, 13 May 2020 09:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363407;
-        bh=8nWeuh1x24TWSX1tL7laF5UYkrmye3w6vE49+0gyclc=;
+        s=default; t=1589363399;
+        bh=OTJv1G1EvSM2281z6zR4SjicsyoHdJm6SF5MRtyv4Ls=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IQXZ4JT7qEV26cyj5LQ1xaoxT8RtbUpNrStVBfkgbQ7Rh/J+53a/qITnsiduNx9fl
-         fWJgMbPFLYvPu5tQHJUEETvZh6yTAJUc+rJdxp4dsnoDrc5BZh2N2X7FLDzu2BRUEf
-         F/bgTctTfpghbse8N2GTTjcpS1LmRThoz3gLrl9k=
+        b=WuSm0jQeqNtyhaV4o9x49rh89xvBDCeYp1qc4wF+9BzFh6V+H1X9HIvDU3tBBHmiF
+         St8K9mun6cw3PcgXgPmu32OWpUv4cMDMTOqK7tQAU8sL25odXwGvOgX5bTgR9959E3
+         YTWo5H+VSa5ZsgMwLjuWh/RfEOz5aXAe6GeHHOu8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Henry Willard <henry.willard@oracle.com>,
+        stable@vger.kernel.org, Roman Penyaev <rpenyaev@suse.de>,
         Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Vlastimil Babka <vbabka@suse.cz>,
+        Jason Baron <jbaron@akamai.com>,
+        Khazhismel Kumykov <khazhy@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>, Heiher <r@hev.cc>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 61/90] mm: limit boost_watermark on small zones
-Date:   Wed, 13 May 2020 11:44:57 +0200
-Message-Id: <20200513094416.052745207@linuxfoundation.org>
+Subject: [PATCH 5.4 58/90] epoll: atomically remove wait entry on wake up
+Date:   Wed, 13 May 2020 11:44:54 +0200
+Message-Id: <20200513094415.888707435@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -63,82 +63,178 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Henry Willard <henry.willard@oracle.com>
+From: Roman Penyaev <rpenyaev@suse.de>
 
-commit 14f69140ff9c92a0928547ceefb153a842e8492c upstream.
+commit 412895f03cbf9633298111cb4dfde13b7720e2c5 upstream.
 
-Commit 1c30844d2dfe ("mm: reclaim small amounts of memory when an
-external fragmentation event occurs") adds a boost_watermark() function
-which increases the min watermark in a zone by at least
-pageblock_nr_pages or the number of pages in a page block.
+This patch does two things:
 
-On Arm64, with 64K pages and 512M huge pages, this is 8192 pages or
-512M.  It does this regardless of the number of managed pages managed in
-the zone or the likelihood of success.
+ - fixes a lost wakeup introduced by commit 339ddb53d373 ("fs/epoll:
+   remove unnecessary wakeups of nested epoll")
 
-This can put the zone immediately under water in terms of allocating
-pages from the zone, and can cause a small machine to fail immediately
-due to OoM.  Unlike set_recommended_min_free_kbytes(), which
-substantially increases min_free_kbytes and is tied to THP,
-boost_watermark() can be called even if THP is not active.
+ - improves performance for events delivery.
 
-The problem is most likely to appear on architectures such as Arm64
-where pageblock_nr_pages is very large.
+The description of the problem is the following: if N (>1) threads are
+waiting on ep->wq for new events and M (>1) events come, it is quite
+likely that >1 wakeups hit the same wait queue entry, because there is
+quite a big window between __add_wait_queue_exclusive() and the
+following __remove_wait_queue() calls in ep_poll() function.
 
-It is desirable to run the kdump capture kernel in as small a space as
-possible to avoid wasting memory.  In some architectures, such as Arm64,
-there are restrictions on where the capture kernel can run, and
-therefore, the space available.  A capture kernel running in 768M can
-fail due to OoM immediately after boost_watermark() sets the min in zone
-DMA32, where most of the memory is, to 512M.  It fails even though there
-is over 500M of free memory.  With boost_watermark() suppressed, the
-capture kernel can run successfully in 448M.
+This can lead to lost wakeups, because thread, which was woken up, can
+handle not all the events in ->rdllist.  (in better words the problem is
+described here: https://lkml.org/lkml/2019/10/7/905)
 
-This patch limits boost_watermark() to boosting a zone's min watermark
-only when there are enough pages that the boost will produce positive
-results.  In this case that is estimated to be four times as many pages
-as pageblock_nr_pages.
+The idea of the current patch is to use init_wait() instead of
+init_waitqueue_entry().
 
-Mel said:
+Internally init_wait() sets autoremove_wake_function as a callback,
+which removes the wait entry atomically (under the wq locks) from the
+list, thus the next coming wakeup hits the next wait entry in the wait
+queue, thus preventing lost wakeups.
 
-: There is no harm in marking it stable.  Clearly it does not happen very
-: often but it's not impossible.  32-bit x86 is a lot less common now
-: which would previously have been vulnerable to triggering this easily.
-: ppc64 has a larger base page size but typically only has one zone.
-: arm64 is likely the most vulnerable, particularly when CMA is
-: configured with a small movable zone.
+Problem is very well reproduced by the epoll60 test case [1].
 
-Fixes: 1c30844d2dfe ("mm: reclaim small amounts of memory when an external fragmentation event occurs")
-Signed-off-by: Henry Willard <henry.willard@oracle.com>
+Wait entry removal on wakeup has also performance benefits, because
+there is no need to take a ep->lock and remove wait entry from the queue
+after the successful wakeup.  Here is the timing output of the epoll60
+test case:
+
+  With explicit wakeup from ep_scan_ready_list() (the state of the
+  code prior 339ddb53d373):
+
+    real    0m6.970s
+    user    0m49.786s
+    sys     0m0.113s
+
+ After this patch:
+
+   real    0m5.220s
+   user    0m36.879s
+   sys     0m0.019s
+
+The other testcase is the stress-epoll [2], where one thread consumes
+all the events and other threads produce many events:
+
+  With explicit wakeup from ep_scan_ready_list() (the state of the
+  code prior 339ddb53d373):
+
+    threads  events/ms  run-time ms
+          8       5427         1474
+         16       6163         2596
+         32       6824         4689
+         64       7060         9064
+        128       6991        18309
+
+ After this patch:
+
+    threads  events/ms  run-time ms
+          8       5598         1429
+         16       7073         2262
+         32       7502         4265
+         64       7640         8376
+        128       7634        16767
+
+ (number of "events/ms" represents event bandwidth, thus higher is
+  better; number of "run-time ms" represents overall time spent
+  doing the benchmark, thus lower is better)
+
+[1] tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c
+[2] https://github.com/rouming/test-tools/blob/master/stress-epoll.c
+
+Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Acked-by: Mel Gorman <mgorman@techsingularity.net>
-Cc: Vlastimil Babka <vbabka@suse.cz>
+Reviewed-by: Jason Baron <jbaron@akamai.com>
+Cc: Khazhismel Kumykov <khazhy@google.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Heiher <r@hev.cc>
 Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/1588294148-6586-1-git-send-email-henry.willard@oracle.com
+Link: http://lkml.kernel.org/r/20200430130326.1368509-2-rpenyaev@suse.de
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/page_alloc.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/eventpoll.c |   43 ++++++++++++++++++++++++-------------------
+ 1 file changed, 24 insertions(+), 19 deletions(-)
 
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -2351,6 +2351,14 @@ static inline void boost_watermark(struc
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -1827,7 +1827,6 @@ static int ep_poll(struct eventpoll *ep,
+ {
+ 	int res = 0, eavail, timed_out = 0;
+ 	u64 slack = 0;
+-	bool waiter = false;
+ 	wait_queue_entry_t wait;
+ 	ktime_t expires, *to = NULL;
  
- 	if (!watermark_boost_factor)
- 		return;
-+	/*
-+	 * Don't bother in zones that are unlikely to produce results.
-+	 * On small machines, including kdump capture kernels running
-+	 * in a small area, boosting the watermark can cause an out of
-+	 * memory situation immediately.
-+	 */
-+	if ((pageblock_nr_pages * 4) > zone_managed_pages(zone))
-+		return;
+@@ -1872,21 +1871,23 @@ fetch_events:
+ 	 */
+ 	ep_reset_busy_poll_napi_id(ep);
  
- 	max_boost = mult_frac(zone->_watermark[WMARK_HIGH],
- 			watermark_boost_factor, 10000);
+-	/*
+-	 * We don't have any available event to return to the caller.  We need
+-	 * to sleep here, and we will be woken by ep_poll_callback() when events
+-	 * become available.
+-	 */
+-	if (!waiter) {
+-		waiter = true;
+-		init_waitqueue_entry(&wait, current);
+-
++	do {
++		/*
++		 * Internally init_wait() uses autoremove_wake_function(),
++		 * thus wait entry is removed from the wait queue on each
++		 * wakeup. Why it is important? In case of several waiters
++		 * each new wakeup will hit the next waiter, giving it the
++		 * chance to harvest new event. Otherwise wakeup can be
++		 * lost. This is also good performance-wise, because on
++		 * normal wakeup path no need to call __remove_wait_queue()
++		 * explicitly, thus ep->lock is not taken, which halts the
++		 * event delivery.
++		 */
++		init_wait(&wait);
+ 		write_lock_irq(&ep->lock);
+ 		__add_wait_queue_exclusive(&ep->wq, &wait);
+ 		write_unlock_irq(&ep->lock);
+-	}
+ 
+-	for (;;) {
+ 		/*
+ 		 * We don't want to sleep if the ep_poll_callback() sends us
+ 		 * a wakeup in between. That's why we set the task state
+@@ -1916,10 +1917,20 @@ fetch_events:
+ 			timed_out = 1;
+ 			break;
+ 		}
+-	}
++
++		/* We were woken up, thus go and try to harvest some events */
++		eavail = 1;
++
++	} while (0);
+ 
+ 	__set_current_state(TASK_RUNNING);
+ 
++	if (!list_empty_careful(&wait.entry)) {
++		write_lock_irq(&ep->lock);
++		__remove_wait_queue(&ep->wq, &wait);
++		write_unlock_irq(&ep->lock);
++	}
++
+ send_events:
+ 	/*
+ 	 * Try to transfer events to user space. In case we get 0 events and
+@@ -1930,12 +1941,6 @@ send_events:
+ 	    !(res = ep_send_events(ep, events, maxevents)) && !timed_out)
+ 		goto fetch_events;
+ 
+-	if (waiter) {
+-		write_lock_irq(&ep->lock);
+-		__remove_wait_queue(&ep->wq, &wait);
+-		write_unlock_irq(&ep->lock);
+-	}
+-
+ 	return res;
+ }
+ 
 
 
