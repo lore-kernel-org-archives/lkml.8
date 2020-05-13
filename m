@@ -2,87 +2,143 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FC3C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E8AC433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07764207D4
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C564F20853
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:47:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbgEMPFJ (ORCPT
+        id S2389038AbgEMOrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:05:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42110 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728881AbgEMPFJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:05:09 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 694DFC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 08:05:09 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jYswJ-0006J4-Pg; Wed, 13 May 2020 17:04:55 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 15344100605; Wed, 13 May 2020 17:04:55 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Balbir Singh <sblbir@amazon.com>, linux-kernel@vger.kernel.org
-Cc:     jpoimboe@redhat.com, tony.luck@intel.com, keescook@chromium.org,
-        benh@kernel.crashing.org, x86@kernel.org, dave.hansen@intel.com,
-        thomas.lendacky@amd.com, Balbir Singh <sblbir@amazon.com>
-Subject: Re: [PATCH v6 5/6] Optionally flush L1D on context switch
-In-Reply-To: <20200510014803.12190-6-sblbir@amazon.com>
-References: <20200510014803.12190-1-sblbir@amazon.com> <20200510014803.12190-6-sblbir@amazon.com>
-Date:   Wed, 13 May 2020 17:04:55 +0200
-Message-ID: <87d0773mg8.fsf@nanos.tec.linutronix.de>
+        Wed, 13 May 2020 10:47:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40868 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389013AbgEMOrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 10:47:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 2EC9DB0BA;
+        Wed, 13 May 2020 14:47:11 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id D98B41E12AE; Wed, 13 May 2020 16:47:06 +0200 (CEST)
+Date:   Wed, 13 May 2020 16:47:06 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     ira.weiny@intel.com
+Cc:     linux-ext4@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 8/9] fs/ext4: Introduce DAX inode flag
+Message-ID: <20200513144706.GH27709@quack2.suse.cz>
+References: <20200513054324.2138483-1-ira.weiny@intel.com>
+ <20200513054324.2138483-9-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513054324.2138483-9-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Balbir Singh <sblbir@amazon.com> writes:
+On Tue 12-05-20 22:43:23, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> Add a flag to preserve FS_XFLAG_DAX in the ext4 inode.
+> 
+> Set the flag to be user visible and changeable.  Set the flag to be
+> inherited.  Allow applications to change the flag at any time.
+> 
+> Finally, on regular files, flag the inode to not be cached to facilitate
+> changing S_DAX on the next creation of the inode.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> 
+> ---
+> Change from RFC:
+> 	use new d_mark_dontcache()
+> 	Allow caching if ALWAYS/NEVER is set
+> 	Rebased to latest Linus master
+> 	Change flag to unused 0x01000000
+> 	update ext4_should_enable_dax()
+> ---
+>  fs/ext4/ext4.h  | 13 +++++++++----
+>  fs/ext4/inode.c |  4 +++-
+>  fs/ext4/ioctl.c | 25 ++++++++++++++++++++++++-
+>  3 files changed, 36 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> index 01d1de838896..715f8f2029b2 100644
+> --- a/fs/ext4/ext4.h
+> +++ b/fs/ext4/ext4.h
+> @@ -415,13 +415,16 @@ struct flex_groups {
+>  #define EXT4_VERITY_FL			0x00100000 /* Verity protected inode */
+>  #define EXT4_EA_INODE_FL	        0x00200000 /* Inode used for large EA */
+>  /* 0x00400000 was formerly EXT4_EOFBLOCKS_FL */
+> +
+> +#define EXT4_DAX_FL			0x01000000 /* Inode is DAX */
+> +
+>  #define EXT4_INLINE_DATA_FL		0x10000000 /* Inode has inline data. */
+>  #define EXT4_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
+>  #define EXT4_CASEFOLD_FL		0x40000000 /* Casefolded file */
+>  #define EXT4_RESERVED_FL		0x80000000 /* reserved for ext4 lib */
 >  
-> +	if (prev_mm & LAST_USER_MM_L1D_FLUSH)
-> +		arch_l1d_flush(0); /* Just flush, don't populate the TLB */
+> -#define EXT4_FL_USER_VISIBLE		0x705BDFFF /* User visible flags */
+> -#define EXT4_FL_USER_MODIFIABLE		0x604BC0FF /* User modifiable flags */
+> +#define EXT4_FL_USER_VISIBLE		0x715BDFFF /* User visible flags */
+> +#define EXT4_FL_USER_MODIFIABLE		0x614BC0FF /* User modifiable flags */
 
-Bah. I fundamentally hate tail comments. They are just disturbing the
-reading flow. Aside of that, this states the WHAT but not the WHY. And
-if you add that explanation then you need more than 20 characters and
-end up with
+Hum, I think this was already mentioned but there are also definitions in
+include/uapi/linux/fs.h which should be kept in sync... Also if DAX flag
+gets modified through FS_IOC_SETFLAGS, we should call ext4_doncache() as
+well, shouldn't we?
 
-	if (prev_mm & LAST_USER_MM_L1D_FLUSH) {
-        	/*
-                 * Proper comment explaining why this is flushing
-        	 * without prepopulating the TLB.
-                 */
- 		arch_l1d_flush(0);
-        }
+> @@ -802,6 +807,21 @@ static int ext4_ioctl_get_es_cache(struct file *filp, unsigned long arg)
+>  	return error;
+>  }
+>  
+> +static void ext4_dax_dontcache(struct inode *inode, unsigned int flags)
+> +{
+> +	struct ext4_inode_info *ei = EXT4_I(inode);
+> +
+> +	if (S_ISDIR(inode->i_mode))
+> +		return;
+> +
+> +	if (test_opt2(inode->i_sb, DAX_NEVER) ||
+> +	    test_opt(inode->i_sb, DAX_ALWAYS))
+> +		return;
+> +
+> +	if (((ei->i_flags ^ flags) & EXT4_DAX_FL) == EXT4_DAX_FL)
+> +		d_mark_dontcache(inode);
+> +}
+> +
+>  long ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>  {
+>  	struct inode *inode = file_inode(filp);
+> @@ -1267,6 +1287,9 @@ long ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>  			return err;
+>  
+>  		inode_lock(inode);
+> +
+> +		ext4_dax_dontcache(inode, flags);
+> +
 
-anyway. And even for a short comment which fits after the function call
-it's way better to have:
+I don't think we should set dontcache flag when setting of DAX flag fails -
+it could event be a security issue). So I think you'll have to check
+whether DAX flag is being changed, call vfs_ioc_fssetxattr_check(), and
+only if it succeeded and DAX flags was changing call ext4_dax_dontcache().
 
-	if (prev_mm & LAST_USER_MM_L1D_FLUSH) {
-        	/* Short explanation */
- 		arch_l1d_flush(0);
-        }
-
-Hmm?
-
-> +	/*
-> +	 * Leave last_user_mm_spec at LAST_USER_MM_IBPB, we don't
-> +	 * want to set LAST_USER_MM_L1D_FLUSH and force a flush before
-> +	 * we've allocated the flush pages.
-
-Ah here is the comment. I still like the explicit define for the (re)
-init.
-
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
