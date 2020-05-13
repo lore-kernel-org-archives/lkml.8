@@ -2,226 +2,71 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 410DAC2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD3FCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAF8B20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:29:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bktn0BtX"
+	by mail.kernel.org (Postfix) with ESMTP id D24FE20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:29:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387611AbgEMN3F (ORCPT
+        id S2387783AbgEMN3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:29:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45577 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726087AbgEMN3E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:29:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589376542;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KoV5Wqms5AH46esJ6zYoKxLFFe0Vww3N0l8ERghmRN4=;
-        b=bktn0BtX+60/E/PCsf6EUj3PeNMIsIYiGNNU63IrfDd5OBgcW9qVJlL0rmyg/uv6Dnz1AN
-        4AX1u3xL80zKar3IiCjImwY3IB1Pajd26vQmKgp1x9L5xj6zQRi9NhZwdUX5blx6t/uPDR
-        JreJDNxx2ub1SEvPmljM5HO3kB99xB0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-367-HnptDom5NM2MsQHnVL9a5Q-1; Wed, 13 May 2020 09:28:58 -0400
-X-MC-Unique: HnptDom5NM2MsQHnVL9a5Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 13 May 2020 09:29:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47878 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729309AbgEMN3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 09:29:25 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0DEED80183C;
-        Wed, 13 May 2020 13:28:56 +0000 (UTC)
-Received: from [10.36.112.22] (ovpn-112-22.ams2.redhat.com [10.36.112.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 94BE910013BD;
-        Wed, 13 May 2020 13:28:45 +0000 (UTC)
-Subject: Re: [PATCH v11 00/13] SMMUv3 Nested Stage Setup (IOMMU part)
-To:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
-        Zhangfei Gao <zhangfei.gao@linaro.org>,
-        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "will@kernel.org" <will@kernel.org>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>
-Cc:     "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "yi.l.liu@intel.com" <yi.l.liu@intel.com>,
-        "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
-        "tn@semihalf.com" <tn@semihalf.com>,
-        "bbhushan2@marvell.com" <bbhushan2@marvell.com>
-References: <20200414150607.28488-1-eric.auger@redhat.com>
- <eb27f625-ad7a-fcb5-2185-5471e4666f09@linaro.org>
- <06fe02f7-2556-8986-2f1e-dcdf59773b8c@redhat.com>
- <c7786a2a314e4c4ab37ef157ddfa23af@huawei.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <3858dd8c-ee55-b0d7-96cc-3c047ba8f652@redhat.com>
-Date:   Wed, 13 May 2020 15:28:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C87D20657;
+        Wed, 13 May 2020 13:29:23 +0000 (UTC)
+Date:   Wed, 13 May 2020 09:29:22 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Sven Schnelle <svens@linux.ibm.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+Subject: Re: [tracing] 06e0a548ba:
+ WARNING:at_kernel/trace/ring_buffer.c:#ring_buffer_iter_peek
+Message-ID: <20200513092922.6d79f6ee@gandalf.local.home>
+In-Reply-To: <20200513091906.GA12720@tuxmaker.boeblingen.de.ibm.com>
+References: <20200429090508.GG5770@shao2-debian>
+        <20200513091906.GA12720@tuxmaker.boeblingen.de.ibm.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <c7786a2a314e4c4ab37ef157ddfa23af@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shameer,
+On Wed, 13 May 2020 11:19:06 +0200
+Sven Schnelle <svens@linux.ibm.com> wrote:
 
-On 5/7/20 8:59 AM, Shameerali Kolothum Thodi wrote:
-> Hi Eric,
+> Did you had a chance to look into this? I can easily reproduce this both on x86
+> and s390 by doing:
 > 
->> -----Original Message-----
->> From: Shameerali Kolothum Thodi
->> Sent: 30 April 2020 10:38
->> To: 'Auger Eric' <eric.auger@redhat.com>; Zhangfei Gao
->> <zhangfei.gao@linaro.org>; eric.auger.pro@gmail.com;
->> iommu@lists.linux-foundation.org; linux-kernel@vger.kernel.org;
->> kvm@vger.kernel.org; kvmarm@lists.cs.columbia.edu; will@kernel.org;
->> joro@8bytes.org; maz@kernel.org; robin.murphy@arm.com
->> Cc: jean-philippe@linaro.org; alex.williamson@redhat.com;
->> jacob.jun.pan@linux.intel.com; yi.l.liu@intel.com; peter.maydell@linaro.org;
->> tn@semihalf.com; bbhushan2@marvell.com
->> Subject: RE: [PATCH v11 00/13] SMMUv3 Nested Stage Setup (IOMMU part)
->>
->> Hi Eric,
->>
->>> -----Original Message-----
->>> From: Auger Eric [mailto:eric.auger@redhat.com]
->>> Sent: 16 April 2020 08:45
->>> To: Zhangfei Gao <zhangfei.gao@linaro.org>; eric.auger.pro@gmail.com;
->>> iommu@lists.linux-foundation.org; linux-kernel@vger.kernel.org;
->>> kvm@vger.kernel.org; kvmarm@lists.cs.columbia.edu; will@kernel.org;
->>> joro@8bytes.org; maz@kernel.org; robin.murphy@arm.com
->>> Cc: jean-philippe@linaro.org; Shameerali Kolothum Thodi
->>> <shameerali.kolothum.thodi@huawei.com>; alex.williamson@redhat.com;
->>> jacob.jun.pan@linux.intel.com; yi.l.liu@intel.com; peter.maydell@linaro.org;
->>> tn@semihalf.com; bbhushan2@marvell.com
->>> Subject: Re: [PATCH v11 00/13] SMMUv3 Nested Stage Setup (IOMMU part)
->>>
->>> Hi Zhangfei,
->>>
->>> On 4/16/20 6:25 AM, Zhangfei Gao wrote:
->>>>
->>>>
->>>> On 2020/4/14 下午11:05, Eric Auger wrote:
->>>>> This version fixes an issue observed by Shameer on an SMMU 3.2,
->>>>> when moving from dual stage config to stage 1 only config.
->>>>> The 2 high 64b of the STE now get reset. Otherwise, leaving the
->>>>> S2TTB set may cause a C_BAD_STE error.
->>>>>
->>>>> This series can be found at:
->>>>> https://github.com/eauger/linux/tree/v5.6-2stage-v11_10.1
->>>>> (including the VFIO part)
->>>>> The QEMU fellow series still can be found at:
->>>>> https://github.com/eauger/qemu/tree/v4.2.0-2stage-rfcv6
->>>>>
->>>>> Users have expressed interest in that work and tested v9/v10:
->>>>> - https://patchwork.kernel.org/cover/11039995/#23012381
->>>>> - https://patchwork.kernel.org/cover/11039995/#23197235
->>>>>
->>>>> Background:
->>>>>
->>>>> This series brings the IOMMU part of HW nested paging support
->>>>> in the SMMUv3. The VFIO part is submitted separately.
->>>>>
->>>>> The IOMMU API is extended to support 2 new API functionalities:
->>>>> 1) pass the guest stage 1 configuration
->>>>> 2) pass stage 1 MSI bindings
->>>>>
->>>>> Then those capabilities gets implemented in the SMMUv3 driver.
->>>>>
->>>>> The virtualizer passes information through the VFIO user API
->>>>> which cascades them to the iommu subsystem. This allows the guest
->>>>> to own stage 1 tables and context descriptors (so-called PASID
->>>>> table) while the host owns stage 2 tables and main configuration
->>>>> structures (STE).
->>>>>
->>>>>
->>>>
->>>> Thanks Eric
->>>>
->>>> Tested v11 on Hisilicon kunpeng920 board via hardware zip accelerator.
->>>> 1. no-sva works, where guest app directly use physical address via ioctl.
->>> Thank you for the testing. Glad it works for you.
->>>> 2. vSVA still not work, same as v10,
->>> Yes that's normal this series is not meant to support vSVM at this stage.
->>>
->>> I intend to add the missing pieces during the next weeks.
->>
->> Thanks for that. I have made an attempt to add the vSVA based on
->> your v10 + JPBs sva patches. The host kernel and Qemu changes can
->> be found here[1][2].
->>
->> This basically adds multiple pasid support on top of your changes.
->> I have done some basic sanity testing and we have some initial success
->> with the zip vf dev on our D06 platform. Please note that the STALL event is
->> not yet supported though, but works fine if we mlock() guest usr mem.
+> cd /sys/kernel/tracing
+> cat /dev/zero >/dev/null & # generate some load
+> echo function >current_tracer
+> # wait a few seconds to fill the buffer
+> cat trace
 > 
-> I have added STALL support for our vSVA prototype and it seems to be
-> working(on our hardware). I have updated the kernel and qemu branches with
-> the same[1][2]. I should warn you though that these are prototype code and I am pretty
-> much re-using the VFIO_IOMMU_SET_PASID_TABLE interface for almost everything.
-> But thought of sharing, in case if it is useful somehow!.
-
-Thank you again for sharing the POC. I looked at the kernel and QEMU
-branches.
-
-Here are some preliminary comments:
-- "arm-smmu-v3: Reset S2TTB while switching back from nested stage":  as
-you mentionned S2TTB reset now is featured in v11
-- "arm-smmu-v3: Add support for multiple pasid in nested mode": I could
-easily integrate this into my series. Update the iommu api first and
-pass multiple CD info in a separate patch
-- "arm-smmu-v3: Add support to Invalidate CD": CD invalidation should be
-cascaded to host through the PASID cache invalidation uapi (no pb you
-warned us for the POC you simply used VFIO_IOMMU_SET_PASID_TABLE). I
-think I should add this support in my original series although it does
-not seem to trigger any issue up to now.
-- "arm-smmu-v3: Remove duplication of fault propagation". I understand
-the transcode is done somewhere else with SVA but we still need to do it
-if a single CD is used, right? I will review the SVA code to better
-understand.
-- for the STALL response injection I would tend to use a new VFIO region
-for responses. At the moment there is a single VFIO region for reporting
-the fault.
-
-On QEMU side:
-- I am currently working on 3.2 range invalidation support which is
-needed for DPDK/VFIO
-- While at it I will look at how to incrementally introduce some of the
-features you need in this series.
-
-Thanks
-
-Eric
-
-
-
+> Usually it will print the warn after a few seconds.
 > 
-> Thanks,
-> Shameer
-> 
-> [1]https://github.com/hisilicon/kernel-dev/commits/vsva-prototype-host-v1
-> 
-> [2]https://github.com/hisilicon/qemu/tree/v4.2.0-2stage-rfcv6-vsva-prototype-v1
-> 
+> I haven't digged through all the ring buffer code yet, so i thought i might ask
+> whether you have an idea what's going on.
 
+Can you send me the config for where you can reproduce it on x86?
+
+The iterator now doesn't stop the ring buffer when it iterates, and is
+doing so over a live buffer (but should be able to handle it). It's
+triggering something I thought wasn't suppose to happen (which must be
+happening).
+
+Perhaps with your config I'd be able to reproduce it.
+
+-- Steve
