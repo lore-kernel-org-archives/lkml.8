@@ -2,119 +2,119 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B582C2D0FB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE3BC2D0F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84AA8206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:37:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57519206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:37:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ivT0SzG3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgEMChB (ORCPT
+        id S1728466AbgEMChn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 22:37:01 -0400
-Received: from mo-csw1516.securemx.jp ([210.130.202.155]:56258 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725898AbgEMChA (ORCPT
+        Tue, 12 May 2020 22:37:43 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:57574 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725898AbgEMChn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 22:37:00 -0400
-Received: by mo-csw.securemx.jp (mx-mo-csw1516) id 04D2ae54007140; Wed, 13 May 2020 11:36:40 +0900
-X-Iguazu-Qid: 34trDAmeIu11rkEjys
-X-Iguazu-QSIG: v=2; s=0; t=1589337400; q=34trDAmeIu11rkEjys; m=pK2KXljWZTLcH9XwqUT1Sc58njnMsc8wOqfGuj2Bpqo=
-Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
-        by relay.securemx.jp (mx-mr1513) id 04D2acok007719;
-        Wed, 13 May 2020 11:36:39 +0900
-Received: from enc01.localdomain ([106.186.93.100])
-        by imx2.toshiba.co.jp  with ESMTP id 04D2acj8000332;
-        Wed, 13 May 2020 11:36:38 +0900 (JST)
-Received: from hop001.toshiba.co.jp ([133.199.164.63])
-        by enc01.localdomain  with ESMTP id 04D2acCb026192;
-        Wed, 13 May 2020 11:36:38 +0900
-From:   Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Borislav Petkov <bp@alien8.de>,
-        James Morse <james.morse@arm.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>
-Subject: Re: [Patch v2] efi: cper: Add support for printing Firmware Error Record Reference
-References: <20200512045502.3810339-1-punit1.agrawal@toshiba.co.jp>
-        <CAMj1kXGNWptRShYVtDwoB7jL1_2M1ioroFV=veFt0MB=n6_-OQ@mail.gmail.com>
-Date:   Wed, 13 May 2020 11:36:37 +0900
-In-Reply-To: <CAMj1kXGNWptRShYVtDwoB7jL1_2M1ioroFV=veFt0MB=n6_-OQ@mail.gmail.com>
-        (Ard Biesheuvel's message of "Tue, 12 May 2020 12:47:59 +0200")
-X-TSB-HOP: ON
-Message-ID: <87v9l0o91m.fsf@kokedama.swc.toshiba.co.jp>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 12 May 2020 22:37:43 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04D2badb092448;
+        Tue, 12 May 2020 21:37:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589337456;
+        bh=/W0losaKE+OtadQbq8BpFkOvawfv3WrRa9LJr4eZlKs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ivT0SzG3dwpvMLQHOz5Jyvx7SF7cqz8jRsZhTVvuOsscD0f9tWMILSJ6joy76NVDy
+         5ojK7usvdwcSyZy2S8isAFuBXAzomTYxkTW1Ga9zX9BxOzIcSs9395688T7xIfVuCY
+         n4MTWPuFsdxygXSjMgAVIWpmzuLm0nD0iMIjnob4=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04D2ba7K026237
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 May 2020 21:37:36 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 12
+ May 2020 21:37:36 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 12 May 2020 21:37:35 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04D2bWDX060736;
+        Tue, 12 May 2020 21:37:33 -0500
+Subject: Re: [PATCH v1 2/2] phy: phy-cadence-torrent: Use PHY kernel APIs to
+ set PHY attributes
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Swapnil Kashinath Jakhade <sjakhade@cadence.com>
+CC:     Yuti Suresh Amonkar <yamonkar@cadence.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jsarha@ti.com" <jsarha@ti.com>,
+        "praneeth@ti.com" <praneeth@ti.com>,
+        Milind Parab <mparab@cadence.com>,
+        Vinod Koul <vkoul@kernel.org>
+References: <1588057804-29161-1-git-send-email-yamonkar@cadence.com>
+ <1588057804-29161-3-git-send-email-yamonkar@cadence.com>
+ <20200429122750.hup7vbmz3xnpfwa5@gilmour.lan>
+ <BY5PR07MB69827A1E2136455BFDD6090BC5AA0@BY5PR07MB6982.namprd07.prod.outlook.com>
+ <20200507171738.atzyfpueo6bjbwpb@gilmour.lan>
+ <f6e0566a-8e15-5c55-3167-6a1526c37be7@ti.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <c96c3fa8-a66f-7eca-8d23-8dd2a8f044aa@ti.com>
+Date:   Wed, 13 May 2020 08:07:32 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <f6e0566a-8e15-5c55-3167-6a1526c37be7@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ard Biesheuvel <ardb@kernel.org> writes:
+Hi,
 
-> On Tue, 12 May 2020 at 06:55, Punit Agrawal
-> <punit1.agrawal@toshiba.co.jp> wrote:
+On 5/8/2020 1:20 PM, Tomi Valkeinen wrote:
+> On 07/05/2020 20:17, Maxime Ripard wrote:
+> 
+>>> Actually, for this particular case, consumer driver will be the Cadence MHDP
+>>> bridge driver for DisplayPort which is also under review process for
+>>> upstreaming [1]. So this DRM bridge driver will make use of the PHY APIs
+>>> phy_get_bus_width() and phy_get_max_link_rate() during execution of probe
+>>> function to get the number of lanes and maximum link rate supported by Cadence
+>>> Torrent PHY. This information is required to set the host capabilities in the
+>>> DRM bridge driver, based on which initial values for DisplayPort link training
+>>> will be determined.
+>>>
+>>> The changes in this PHY patch series are based on suggestions in the review
+>>> comments in [1] which asks to use kernel PHY APIs to read these properties
+>>> instead of directly accessing PHY device node. The complete driver and actual
+>>> use of these APIs can be found in [2]. This is how we are planning to use
+>>> these APIs.
 >>
->> While debugging a boot failure, the following unknown error record was
->> seen in the boot logs.
->>
->>     <...>
->>     BERT: Error records from previous boot:
->>     [Hardware Error]: event severity: fatal
->>     [Hardware Error]:  Error 0, type: fatal
->>     [Hardware Error]:   section type: unknown, 81212a96-09ed-4996-9471-8d729c8e69ed
->>     [Hardware Error]:   section length: 0x290
->>     [Hardware Error]:   00000000: 00000001 00000000 00000000 00020002  ................
->>     [Hardware Error]:   00000010: 00020002 0000001f 00000320 00000000  ........ .......
->>     [Hardware Error]:   00000020: 00000000 00000000 00000000 00000000  ................
->>     [Hardware Error]:   00000030: 00000000 00000000 00000000 00000000  ................
->>     <...>
->>
->> On further investigation, it was found that the error record with
->> UUID (81212a96-09ed-4996-9471-8d729c8e69ed) has been defined in the
->> UEFI Specification at least since v2.4 and has recently had additional
->> fields defined in v2.7 Section N.2.10 Firmware Error Record Reference.
->>
->> Add support for parsing and printing the defined fields to give users
->> a chance to figure out what went wrong.
->>
->> Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
->> Cc: Ard Biesheuvel <ardb@kernel.org>
->> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
->> Cc: Borislav Petkov <bp@alien8.de>
->> Cc: James Morse <james.morse@arm.com>
->> Cc: linux-acpi@vger.kernel.org
->> Cc: linux-efi@vger.kernel.org
->> ---
->> Hi Ard,
->>
->> I've updated the patch based on your feedback.
->>
->> As you noted, some aspects of the spec make it a bit tricky to support
->> all revisions in a nice way (e.g., size check) but this version should
->> fix existing issues.
->>
->> Thanks,
->> Punit
->>
->> v1[0] -> v2:
->> * Simplified error record structure definition
->> * Fixed size check
->> * Added comment to clarify offset calculation for dumped data
->> * Style fixes for multiline if blocks
->
-> Thanks. I will queue this as a fix.
+>> I haven't really looked into the displayport spec, but I'd assume that there's a
+>> lot more parameters that would need to be negociated between the phy and the DP
+>> block? If so, then it would make more sense to follow the path we did for
+>> MIPI-DSI where the parameters can be negociated through the phy_configure /
+>> phy_validate interface.
+> 
+> I don't think this is negotiation, but just exposing the (max) capabilities of
+> PHY, inside which the configure can work. Maybe all the capabilities could
+> handled with a struct (struct phy_attrs), instead of adding separate functions
+> for each, though.
 
-Thanks!
+yeah, that makes sense. Just that users should take care not to over-write all
+the phy attributes with partial information.
 
-Just for my understanding - are you planning to send this for v5.7 or
-v5.8? There's no rush, so I am fine either ways.
-
-[...]
-
+Thanks
+Kishon
