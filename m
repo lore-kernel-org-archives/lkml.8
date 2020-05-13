@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 272FDC2D0F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D35CC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0010E206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B271206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:31:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cyzDx1uo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BVxhtXet"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730377AbgEMGbO (ORCPT
+        id S1730238AbgEMG20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 02:31:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46108 "EHLO
+        Wed, 13 May 2020 02:28:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730396AbgEMG2f (ORCPT
+        with ESMTP id S1729990AbgEMG2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 02:28:35 -0400
+        Wed, 13 May 2020 02:28:19 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7B6DC061A0C;
-        Tue, 12 May 2020 23:28:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60ABEC061A0C;
+        Tue, 12 May 2020 23:28:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=Q3f8maTF2WhcJdVNH6rzm87GRT50d4BxACqMxTxJ4BY=; b=cyzDx1uoh8IiQfgqAVcSotVmh6
-        uYNpmIDX8eRx1zTp13fHCHimwYLgcArJiLCZgmhnVK9WDg8dXaW6SyzTThxwpKcA3K6fQDAdzMImx
-        +3MykN3jaMNTPmD6tdS0//BJDxKVi8Hgtd0lXVPm5HMudbnLuBSnnLKeCf/gO9CHQiMif+stgJjDK
-        p1HmNw+EHVn+8Enoh5JEafDugHKOb0+M4kJ/PfQMggv/wfXKkunOR7WL3g2z/Tfo8oIQ61TYVkjA5
-        ouDak8sJvnYkyCZ8ATf7S7Dq7i/0BFEd0q/gcxvMbFNvKljzc+GOqukpMF9pp/HS5RB/fDtmU740T
-        87t0LOEA==;
+        bh=DVMz5pB6c6gt8TdLDeMNa5MOMC3jyX6j6KNND5HLJxM=; b=BVxhtXet0JBoLuff2cAHrZJkpN
+        44PtLHRXPjuWics2q78BH5NXmq+TKDO+utpYlovLO72x4r95rxXDyOq3McWItVQRQSBefneFrbIB7
+        zdqxG2Ey2qKufjfEnN/PatuRpFDtN5x/q1JRI53sbjJiEY64liTPFypvDYbAlpHAhKAp1iYsentLV
+        UlLuxmX0UEpdtGTMgy6JxtYqJHxOx/J1bYRFbXqTYnSCRQWJxaMsyntRsi450Y8bZysni7oJJQLng
+        9yzwV2PsMfNdtTEZEP5R0D9lS+ypxRyPStvCPectd71ycPhh9TSwBy/cRf4eXU8+OR5TR08c9oJfW
+        E17b+Nuw==;
 Received: from [2001:4bb8:180:9d3f:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jYkrO-0004A8-Gx; Wed, 13 May 2020 06:27:19 +0000
+        id 1jYkrl-0004Vk-QO; Wed, 13 May 2020 06:27:42 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
@@ -57,9 +57,9 @@ Cc:     Eric Dumazet <edumazet@google.com>,
         ocfs2-devel@oss.oracle.com, netdev@vger.kernel.org,
         linux-sctp@vger.kernel.org, ceph-devel@vger.kernel.org,
         rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org
-Subject: [PATCH 09/33] net: add sock_set_reuseport
-Date:   Wed, 13 May 2020 08:26:24 +0200
-Message-Id: <20200513062649.2100053-10-hch@lst.de>
+Subject: [PATCH 17/33] tcp: add tcp_sock_set_keepcnt
+Date:   Wed, 13 May 2020 08:26:32 +0200
+Message-Id: <20200513062649.2100053-18-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513062649.2100053-1-hch@lst.de>
 References: <20200513062649.2100053-1-hch@lst.de>
@@ -71,82 +71,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper to directly set the SO_REUSEPORT sockopt from kernel space
+Add a helper to directly set the TCP_KEEPCNT sockopt from kernel space
 without going through a fake uaccess.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- include/net/sock.h    |  1 +
- net/core/sock.c       |  8 ++++++++
- net/sunrpc/xprtsock.c | 17 +----------------
- 3 files changed, 10 insertions(+), 16 deletions(-)
+ include/linux/tcp.h   |  1 +
+ net/ipv4/tcp.c        | 12 ++++++++++++
+ net/rds/tcp.h         |  2 +-
+ net/rds/tcp_listen.c  | 17 +++--------------
+ net/sunrpc/xprtsock.c |  3 +--
+ 5 files changed, 18 insertions(+), 17 deletions(-)
 
-diff --git a/include/net/sock.h b/include/net/sock.h
-index e1ed40ff01312..6b8e06947b243 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -2688,6 +2688,7 @@ static inline bool sk_dev_equal_l3scope(struct sock *sk, int dif)
+diff --git a/include/linux/tcp.h b/include/linux/tcp.h
+index dad18ca361c01..ff2aa165b5c02 100644
+--- a/include/linux/tcp.h
++++ b/include/linux/tcp.h
+@@ -501,5 +501,6 @@ int tcp_sock_set_syncnt(struct sock *sk, int val);
+ void tcp_sock_set_user_timeout(struct sock *sk, u32 val);
+ int tcp_sock_set_keepidle(struct sock *sk, int val);
+ int tcp_sock_set_keepintvl(struct sock *sk, int val);
++int tcp_sock_set_keepcnt(struct sock *sk, int val);
  
- void sock_def_readable(struct sock *sk);
- void sock_set_reuseaddr(struct sock *sk, unsigned char reuse);
-+void sock_set_reuseport(struct sock *sk, bool reuseport);
- void sock_set_linger(struct sock *sk, bool onoff, unsigned int linger);
- void sock_set_priority(struct sock *sk, u32 priority);
- void sock_set_sndtimeo(struct sock *sk, unsigned int secs);
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 6af01b757cf24..7f0baf1ccde17 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -729,6 +729,14 @@ void sock_set_reuseaddr(struct sock *sk, unsigned char reuse)
+ #endif	/* _LINUX_TCP_H */
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index b714f2b2fa54e..a0406df42ef39 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -2935,6 +2935,18 @@ int tcp_sock_set_keepintvl(struct sock *sk, int val)
  }
- EXPORT_SYMBOL(sock_set_reuseaddr);
+ EXPORT_SYMBOL(tcp_sock_set_keepintvl);
  
-+void sock_set_reuseport(struct sock *sk, bool reuseport)
++int tcp_sock_set_keepcnt(struct sock *sk, int val)
 +{
-+	lock_sock(sk);
-+	sk->sk_reuseport = reuseport;
-+	release_sock(sk);
-+}
-+EXPORT_SYMBOL(sock_set_reuseport);
++	if (val < 1 || val > MAX_TCP_KEEPCNT)
++		return -EINVAL;
 +
- static void __sock_set_linger(struct sock *sk, bool onoff, unsigned int linger)
++	lock_sock(sk);
++	tcp_sk(sk)->keepalive_probes = val;
++	release_sock(sk);
++	return 0;
++}
++EXPORT_SYMBOL(tcp_sock_set_keepcnt);
++
+ /*
+  *	Socket option code for TCP.
+  */
+diff --git a/net/rds/tcp.h b/net/rds/tcp.h
+index 39ac666d09c6c..ae18568bce233 100644
+--- a/net/rds/tcp.h
++++ b/net/rds/tcp.h
+@@ -70,7 +70,7 @@ struct socket *rds_tcp_listen_init(struct net *net, bool isv6);
+ void rds_tcp_listen_stop(struct socket *sock, struct work_struct *acceptor);
+ void rds_tcp_listen_data_ready(struct sock *sk);
+ int rds_tcp_accept_one(struct socket *sock);
+-int rds_tcp_keepalive(struct socket *sock);
++void rds_tcp_keepalive(struct socket *sock);
+ void *rds_tcp_listen_sock_def_readable(struct net *net);
+ void rds_tcp_set_linger(struct socket *sock);
+ 
+diff --git a/net/rds/tcp_listen.c b/net/rds/tcp_listen.c
+index a5db2f8bb7339..f6d2b4c9f445a 100644
+--- a/net/rds/tcp_listen.c
++++ b/net/rds/tcp_listen.c
+@@ -38,27 +38,19 @@
+ #include "rds.h"
+ #include "tcp.h"
+ 
+-int rds_tcp_keepalive(struct socket *sock)
++void rds_tcp_keepalive(struct socket *sock)
  {
- 	if (!onoff) {
+ 	/* values below based on xs_udp_default_timeout */
+ 	int keepidle = 5; /* send a probe 'keepidle' secs after last data */
+ 	int keepcnt = 5; /* number of unack'ed probes before declaring dead */
+-	int ret = 0;
+ 
+ 	sock_set_keepalive(sock->sk, true);
+-
+-	ret = kernel_setsockopt(sock, IPPROTO_TCP, TCP_KEEPCNT,
+-				(char *)&keepcnt, sizeof(keepcnt));
+-	if (ret < 0)
+-		goto bail;
+-
++	tcp_sock_set_keepcnt(sock->sk, keepcnt);
+ 	tcp_sock_set_keepidle(sock->sk, keepidle);
+ 	/* KEEPINTVL is the interval between successive probes. We follow
+ 	 * the model in xs_tcp_finish_connecting() and re-use keepidle.
+ 	 */
+ 	tcp_sock_set_keepintvl(sock->sk, keepidle);
+-bail:
+-	return ret;
+ }
+ 
+ /* rds_tcp_accept_one_path(): if accepting on cp_index > 0, make sure the
+@@ -145,10 +137,7 @@ int rds_tcp_accept_one(struct socket *sock)
+ 	new_sock->ops = sock->ops;
+ 	__module_get(new_sock->ops->owner);
+ 
+-	ret = rds_tcp_keepalive(new_sock);
+-	if (ret < 0)
+-		goto out;
+-
++	rds_tcp_keepalive(new_sock);
+ 	rds_tcp_tune(new_sock);
+ 
+ 	inet = inet_sk(new_sock->sk);
 diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index bb61d3758be2b..3dc2d52371a0e 100644
+index e20de4a52edb7..88aa198456858 100644
 --- a/net/sunrpc/xprtsock.c
 +++ b/net/sunrpc/xprtsock.c
-@@ -1594,21 +1594,6 @@ static int xs_get_random_port(void)
- 	return rand + min;
- }
+@@ -2109,8 +2109,7 @@ static void xs_tcp_set_socket_timeouts(struct rpc_xprt *xprt,
+ 	sock_set_keepalive(sock->sk, 1);
+ 	tcp_sock_set_keepidle(sock->sk, keepidle);
+ 	tcp_sock_set_keepintvl(sock->sk, keepidle);
+-	kernel_setsockopt(sock, SOL_TCP, TCP_KEEPCNT,
+-			(char *)&keepcnt, sizeof(keepcnt));
++	tcp_sock_set_keepcnt(sock->sk, keepcnt);
  
--/**
-- * xs_set_reuseaddr_port - set the socket's port and address reuse options
-- * @sock: socket
-- *
-- * Note that this function has to be called on all sockets that share the
-- * same port, and it must be called before binding.
-- */
--static void xs_sock_set_reuseport(struct socket *sock)
--{
--	int opt = 1;
--
--	kernel_setsockopt(sock, SOL_SOCKET, SO_REUSEPORT,
--			(char *)&opt, sizeof(opt));
--}
--
- static unsigned short xs_sock_getport(struct socket *sock)
- {
- 	struct sockaddr_storage buf;
-@@ -1801,7 +1786,7 @@ static struct socket *xs_create_sock(struct rpc_xprt *xprt,
- 	xs_reclassify_socket(family, sock);
- 
- 	if (reuseport)
--		xs_sock_set_reuseport(sock);
-+		sock_set_reuseport(sock->sk, true);
- 
- 	err = xs_bind(transport, sock);
- 	if (err) {
+ 	/* TCP user timeout (see RFC5482) */
+ 	tcp_sock_set_user_timeout(sock->sk, timeo);
 -- 
 2.26.2
 
