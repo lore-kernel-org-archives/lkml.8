@@ -2,111 +2,114 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62524C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB7DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57DA222258
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:59:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589381948;
-	bh=da042dvjFglEnCYdXrHWi/dIwv4s5t63dZUnxpJqlls=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kosDDWMRAGYeEMkmRUkMcqT11+8o9gj6gbEDtJ+weuIgL2vbDWlzeXNjihipZokNp
-	 9ZZxIikzwLJmtkelMi8cH/ehs4dtZpri1T1sqXf0AU18ro7cywey9wcTQHhzPzjNAe
-	 jp3bubsji3kuxumSPi+N+/1dUT7GihU84gpX5j5A=
+	by mail.kernel.org (Postfix) with ESMTP id 153D1207D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:41:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387759AbgEMO7H (ORCPT
+        id S2389031AbgEMOlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 10:59:07 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40382 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728692AbgEMO7H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 10:59:07 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u4so13886415lfm.7
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 07:59:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iL+iME11hO6bGtb3yyMWmbiNkWR3O4AnVvbrhS/BUw8=;
-        b=fEioLHIPSEFCADAcqq+QK8lnbYD2MU91sb54smy2/h4xGn2Wx0GTwAppbh5DcKwFoP
-         2T7YFoNqlq5oaa3w2Vn5fXKCKQoZpwcnO88ea0OHyVQJxIBEcdmQ0HENTznJpDVP2wIv
-         f6oJo8TZdgk5hDImgGDR5+evGuxCFaHRl/z5zxAyhlIFs/7+RuVt/JVMbzhSpgFjQW9R
-         yci7hDxGNUFt3EKQCy5YwcV7fbNFzokn2GB92758JGIfl6M3KGIMwR0d2oL2d0U3hu9Z
-         kFxKxc9E/rEMHNvv7lPJ6a6YgYukZtCdc3DYVWxjpZrUc86hxwxrxg2VBKbzR41BFLJI
-         XDuw==
-X-Gm-Message-State: AOAM530YJRyrDRDwXJq8c2i8wRRMNYebbBAno81G9YU5E2XTLhi6fttc
-        yczM1bxCvEOvmOGwlobilbkVkfpE
-X-Google-Smtp-Source: ABdhPJx+wapqIBPAYXfzXq5MdVRRVcYVn4AZlfytE1OpK8dYd0wsYu0B8eTaYQNIS9mUAE0CFPRuuw==
-X-Received: by 2002:a05:6512:3ea:: with SMTP id n10mr18425363lfq.127.1589381943574;
-        Wed, 13 May 2020 07:59:03 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id t16sm17549985lff.72.2020.05.13.07.59.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 07:59:02 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1jYsqf-0003GH-6N; Wed, 13 May 2020 16:59:05 +0200
-Date:   Wed, 13 May 2020 16:59:05 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Johan Hovold <johan@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] treewide: Replace zero-length array with flexible-array
-Message-ID: <20200513145905.GY25962@localhost>
-References: <20200507185313.GA14373@embeddedor>
+        Wed, 13 May 2020 10:41:40 -0400
+Received: from mga05.intel.com ([192.55.52.43]:14940 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388395AbgEMOlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 10:41:39 -0400
+IronPort-SDR: fMcQmLgdCp9QN0PT92LMvDpFxtMC1+thL3c5pb7SQx8oWTDIzh0mTiaywaa57clcE/RtjMoEyS
+ UT0H8OvFCfLA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 07:41:39 -0700
+IronPort-SDR: z/LwwDOuZhSyS3rvaD9yFkLshHEjGog5cmKgX+mVSZttANYRsDanxeHRqykqKaOzpXjY2HC7j0
+ n95DSdK68+Mw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,388,1583222400"; 
+   d="scan'208";a="251271896"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 13 May 2020 07:41:33 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jYsZj-006RTr-Aw; Wed, 13 May 2020 17:41:35 +0300
+Date:   Wed, 13 May 2020 17:41:35 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, fengsheng <fengsheng5@huawei.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Aditya Pakki <pakki001@umn.edu>,
+        "wuxu.wu" <wuxu.wu@huawei.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 17/17] spi: dw: Use regset32 DebugFS method to create a
+ registers file
+Message-ID: <20200513144135.GO185537@smile.fi.intel.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508132943.9826-18-Sergey.Semin@baikalelectronics.ru>
+ <20200508193027.GW185537@smile.fi.intel.com>
+ <20200513124422.z6ctlmvipwer45q4@mobilestation>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200507185313.GA14373@embeddedor>
+In-Reply-To: <20200513124422.z6ctlmvipwer45q4@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 01:53:13PM -0500, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
-> 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> sizeof(flexible-array-member) triggers a warning because flexible array
-> members have incomplete type[1]. There are some instances of code in
-> which the sizeof operator is being incorrectly/erroneously applied to
-> zero-length arrays and the result is zero. Such instances may be hiding
-> some bugs. So, this work (flexible-array member conversions) will also
-> help to get completely rid of those sorts of issues.
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+On Wed, May 13, 2020 at 03:44:22PM +0300, Serge Semin wrote:
+> On Fri, May 08, 2020 at 10:30:27PM +0300, Andy Shevchenko wrote:
+> > On Fri, May 08, 2020 at 04:29:42PM +0300, Serge Semin wrote:
+> > > DebugFS kernel interface provides a dedicated method to create the
+> > > registers dump file. Use it instead of creating a generic DebugFS
+> > > file with manually written read callback function.
 
-Applied for -next, thanks.
+> > > +#define DW_SPI_DBGFS_REG(_name, _off)	\
+> > > +{					\
+> > > +	.name = _name,			\
+> > > +	.offset = _off			\
+> > 
+> > Leave comma here.
+> 
+> don't see a point.
 
-Johan
+It will help in case if this getting extended. Also slightly better to
+distinguish between terminator type of members vs. data structures.
+
+> > >  }
+
+> > > +	struct debugfs_regset32 regset;
+> > 
+> > I'm wondering why we need it here and not simple on the stack?
+> 
+> Please see the way the DebugFS regset work. A prompt: how does the DebugFS
+> core get to know what is a base address of the registers? =)
+
+If they have a member in the struct which passed thru private pointer of inode.
+But I see your point.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
