@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BF4CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22566CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85AB2206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB0D4206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363761;
-	bh=FhvBPJNLASY6lwiZHMtDLrA+Rzd1BcGIVp+X4GlC4p0=;
+	s=default; t=1589363764;
+	bh=uOn2jVsOAi8MJ1k+gKPrzUStYyLbvoFTVJirpKIjyCc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HSgsbovYs5Gg1MZbmbgquH3iYep9rgXIAUiVDx9CZs6dE1354iglRuThIJtxC2hea
-	 xKluWTQR0ttrEs4bSS3FZ01L7kWhP/QYcRyarhOgrshGAUavxPtCfBmY2rOUd5aiLU
-	 iBLMo6dQMTTG2M2As2BZSCkdL6FBsKCBcHWul1IE=
+	b=0rgNlSE74AQCIkbeeRNRegwTfjUyTpv9ckBHpRVwTIY+I+BjN/7t1uf58A7wDJ6cF
+	 utbo5lUT+vEyEXko1+fGQ0YXbBrIsleB+iYoasBQWG4Fj5EitCFyvLZXlSvJvlJszo
+	 FMLNanAPUGV4LdlkNbSFXYz8MWGizOnNRH3bR9eM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388363AbgEMJ4A (ORCPT
+        id S2388356AbgEMJz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:56:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59404 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:55:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388343AbgEMJz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:55:56 -0400
+        id S2388325AbgEMJzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:55:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF243205ED;
-        Wed, 13 May 2020 09:55:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C485123127;
+        Wed, 13 May 2020 09:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363756;
-        bh=FhvBPJNLASY6lwiZHMtDLrA+Rzd1BcGIVp+X4GlC4p0=;
+        s=default; t=1589363751;
+        bh=uOn2jVsOAi8MJ1k+gKPrzUStYyLbvoFTVJirpKIjyCc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HVle0bTapHvvkFJmx1HOSahziqu5AQMXZ9PJ1eXbeFJZsDGzGuf4+/26JMl+Bus1C
-         4whrfepFglxcn3iT9rTM5QCLc6NDnH0R3BP+gpj5BE33S5MnNnXt+bdzEb368Qvssb
-         TBVhqtrIR8I+Lsv/7hXnWDlsCVRksaEtlh1rN5FU=
+        b=aMGdokVavKmd0WwG9Kc+8/Wccobo+BMTQkz7ABXC5TOOtGPhekDKCSNhXmwKnZjMT
+         Th0ZjGqAjrAxejoCsJYywg2PwvmYKqkgpvt6bgZTX7BqnrYEY+ZfhW38Nei2Rz7Jwu
+         Xf7iE3aGe4uguWnm4ImULsD2QiVp+uWn3gRuWgIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        Johan Hovold <johan@kernel.org>,
-        syzbot+d29e9263e13ce0b9f4fd@syzkaller.appspotmail.com
-Subject: [PATCH 5.6 064/118] USB: serial: garmin_gps: add sanity checking for data length
-Date:   Wed, 13 May 2020 11:44:43 +0200
-Message-Id: <20200513094423.582702457@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.6 072/118] KVM: VMX: Explicitly clear RFLAGS.CF and RFLAGS.ZF in VM-Exit RSB path
+Date:   Wed, 13 May 2020 11:44:51 +0200
+Message-Id: <20200513094424.032138370@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -60,35 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit e9b3c610a05c1cdf8e959a6d89c38807ff758ee6 upstream.
+commit c7cb2d650c9e78c03bd2d1c0db89891825f8c0f4 upstream.
 
-We must not process packets shorter than a packet ID
+Clear CF and ZF in the VM-Exit path after doing __FILL_RETURN_BUFFER so
+that KVM doesn't interpret clobbered RFLAGS as a VM-Fail.  Filling the
+RSB has always clobbered RFLAGS, its current incarnation just happens
+clear CF and ZF in the processs.  Relying on the macro to clear CF and
+ZF is extremely fragile, e.g. commit 089dd8e53126e ("x86/speculation:
+Change FILL_RETURN_BUFFER to work with objtool") tweaks the loop such
+that the ZF flag is always set.
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Reported-and-tested-by: syzbot+d29e9263e13ce0b9f4fd@syzkaller.appspotmail.com
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Reported-by: Qian Cai <cai@lca.pw>
+Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: f2fde6a5bcfcf ("KVM: VMX: Move RSB stuffing to before the first RET after VM-Exit")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Message-Id: <20200506035355.2242-1-sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/garmin_gps.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kvm/vmx/vmenter.S |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/serial/garmin_gps.c
-+++ b/drivers/usb/serial/garmin_gps.c
-@@ -1138,8 +1138,8 @@ static void garmin_read_process(struct g
- 		   send it directly to the tty port */
- 		if (garmin_data_p->flags & FLAGS_QUEUING) {
- 			pkt_add(garmin_data_p, data, data_length);
--		} else if (bulk_data ||
--			   getLayerId(data) == GARMIN_LAYERID_APPL) {
-+		} else if (bulk_data || (data_length >= sizeof(u32) &&
-+				getLayerId(data) == GARMIN_LAYERID_APPL)) {
+--- a/arch/x86/kvm/vmx/vmenter.S
++++ b/arch/x86/kvm/vmx/vmenter.S
+@@ -86,6 +86,9 @@ SYM_FUNC_START(vmx_vmexit)
+ 	/* IMPORTANT: Stuff the RSB immediately after VM-Exit, before RET! */
+ 	FILL_RETURN_BUFFER %_ASM_AX, RSB_CLEAR_LOOPS, X86_FEATURE_RETPOLINE
  
- 			spin_lock_irqsave(&garmin_data_p->lock, flags);
- 			garmin_data_p->flags |= APP_RESP_SEEN;
++	/* Clear RFLAGS.CF and RFLAGS.ZF to preserve VM-Exit, i.e. !VM-Fail. */
++	or $1, %_ASM_AX
++
+ 	pop %_ASM_AX
+ .Lvmexit_skip_rsb:
+ #endif
 
 
