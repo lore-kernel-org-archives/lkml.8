@@ -2,106 +2,175 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 752D8C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9FCC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5763320718
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0773206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:28:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tdh31nLy"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NiP22OnF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729692AbgEMG2A (ORCPT
+        id S1729780AbgEMG2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 02:28:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45980 "EHLO
+        Wed, 13 May 2020 02:28:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729602AbgEMG15 (ORCPT
+        with ESMTP id S1729679AbgEMG2I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 02:27:57 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA305C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 23:27:57 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id s8so18528762ybj.9
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 23:27:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=CcMpTPZtggrH4tdyeVIIN7j0y8jhk+wku/Lim8bW6KI=;
-        b=tdh31nLyzVQq1kLOE0FQ12W7/zIg1okQELIkAXCPvY1p2yLSbqE3SNfH0lMhLC0BIW
-         upV24cNi1jvHm4OThcT24WRXQvqVDP+crDGPZVJfkUGxxPTDCuJoHKGdMuTd7/B15gkk
-         LrMWn2A0qKdHYEGWnYBFpe2TnS/pHTLr5m5fJ1x2NPFxWa8bfJgfD09S3aiTooicLGys
-         nKWSb7eudcraKiqc0lCna4T7H3G469BUqqOxSykL2fLI4aRrED1802k+0YW1geS3s5jm
-         fy6SojBNo1l56jPrAYoxyIDc9sBRSifttZJKdN8Qkyd0MNDtxZxsaaVYP9k/O3i/bXVW
-         hVwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=CcMpTPZtggrH4tdyeVIIN7j0y8jhk+wku/Lim8bW6KI=;
-        b=jzsrStpoJTcVkdvAPab1y7+yK7kSROXfnxi+X8GT6mQ+lcEakpcQldoHxsfPf5Zom2
-         50s0x3h2ObrOGr25OVD+qUzm/6HBPVUirsixrNvTz/rpYqPGcBa0lbqqY5dl8boLgt6X
-         0LjGRCco04y+SVfNcOslvzj1tCr+Ti3jTkIgkq/PVba0y2n1Tyes/8zwSHYKTYqegg/+
-         JPOBFnf06Ndj4OZOItvFUPjHCQD7fF9UVjvev00DPWIGmyJ8EMLoCWDb6UYunHTCA4yz
-         EtKn2/zLDSBFmfynsatThTKyDkX/moVa+WvZ/nTkTFbPkFsvcOacKnsamPrIEnyEU5iK
-         FtCw==
-X-Gm-Message-State: AGi0PubspMKVvrG+3+gRDBiniYusyNep2ehEt/1yNdf6rM2+J1R9VDGF
-        cOwaO7kLD5+KkwSZRk3Ct6HZ5/khC75D
-X-Google-Smtp-Source: APiQypJ49xsSZCxasORUAGf3qnEXiLG29xkqytkgSb4bejHzbIbWH8sKjCYIy1fe+h8WSZ2Ts92UlngzeyQS
-X-Received: by 2002:a25:3855:: with SMTP id f82mr39804007yba.212.1589351276975;
- Tue, 12 May 2020 23:27:56 -0700 (PDT)
-Date:   Tue, 12 May 2020 23:27:51 -0700
-Message-Id: <20200513062752.3681-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
-Subject: [PATCH v2 1/2] perf expr: Test parsing of floating point numbers
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Paul Clarke <pc@us.ibm.com>, linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 13 May 2020 02:28:08 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 874F2C061A0C;
+        Tue, 12 May 2020 23:28:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=gMsO+mOWC0AxWgj5iPjiPJ81lg9fJ3e20NkoSKlWXl4=; b=NiP22OnFLtRhlIV98j3x7R65pm
+        Tuopik23/ANKB+k+q5wVYIUiGYhftnUTH3P8z23/kSkia4unoHBvll51eNnTcI7v1WUB7/XTBS4cl
+        UR5LjwYM9JEmlesGjj6I+I3urypCPSIM3NSv7EetW5GuuVmpNcVc1B1IEu/5n+RLsQUgMOsPUfagd
+        6bRL8SVwaeRf1fsxFl9JeTBAs4xmL5Kubmw/9DAaYASZTaB7cQKZjK0Fp0ZEryYGHCYKQfM3IFTU/
+        IokYGDr79vkQViV6wEOuQzO4vmHqIUvTC5DSSQZaL29/wA8faYMD600iV9TjJzv2j+E9QrEUjLQo1
+        GZhLgCGg==;
+Received: from [2001:4bb8:180:9d3f:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jYkr5-0003nY-Na; Wed, 13 May 2020 06:27:00 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Jon Maloy <jmaloy@redhat.com>,
+        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org,
+        target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
+        linux-cifs@vger.kernel.org, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, netdev@vger.kernel.org,
+        linux-sctp@vger.kernel.org, ceph-devel@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org
+Subject: [PATCH 03/33] net: add sock_set_priority
+Date:   Wed, 13 May 2020 08:26:18 +0200
+Message-Id: <20200513062649.2100053-4-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200513062649.2100053-1-hch@lst.de>
+References: <20200513062649.2100053-1-hch@lst.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add test for fix in:
-commit 5741da3dee4c ("perf expr: Parse numbers as doubles")
+Add a helper to directly set the SO_PRIORITY sockopt from kernel space
+without going through a fake uaccess.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- tools/perf/tests/expr.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/nvme/host/tcp.c   | 12 ++----------
+ drivers/nvme/target/tcp.c | 18 ++++--------------
+ include/net/sock.h        |  1 +
+ net/core/sock.c           |  8 ++++++++
+ 4 files changed, 15 insertions(+), 24 deletions(-)
 
-diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-index f9e8e5628836..3f742612776a 100644
---- a/tools/perf/tests/expr.c
-+++ b/tools/perf/tests/expr.c
-@@ -39,6 +39,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
- 	ret |= test(&ctx, "min(1,2) + 1", 2);
- 	ret |= test(&ctx, "max(1,2) + 1", 3);
- 	ret |= test(&ctx, "1+1 if 3*4 else 0", 2);
-+	ret |= test(&ctx, "1.1 + 2.1", 3.2);
+diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+index 5cacb61c73229..cd6a8fc14a139 100644
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -1362,16 +1362,8 @@ static int nvme_tcp_alloc_queue(struct nvme_ctrl *nctrl,
+ 	 */
+ 	sock_set_linger(queue->sock->sk, true, 0);
  
- 	if (ret)
- 		return ret;
+-	if (so_priority > 0) {
+-		ret = kernel_setsockopt(queue->sock, SOL_SOCKET, SO_PRIORITY,
+-				(char *)&so_priority, sizeof(so_priority));
+-		if (ret) {
+-			dev_err(ctrl->ctrl.device,
+-				"failed to set SO_PRIORITY sock opt, ret %d\n",
+-				ret);
+-			goto err_sock;
+-		}
+-	}
++	if (so_priority > 0)
++		sock_set_priority(queue->sock->sk, so_priority);
+ 
+ 	/* Set socket type of service */
+ 	if (nctrl->opts->tos >= 0) {
+diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
+index 87aba417189d2..778c1ce3137b7 100644
+--- a/drivers/nvme/target/tcp.c
++++ b/drivers/nvme/target/tcp.c
+@@ -1448,12 +1448,8 @@ static int nvmet_tcp_set_queue_sock(struct nvmet_tcp_queue *queue)
+ 	 */
+ 	sock_set_linger(sock->sk, true, 0);
+ 
+-	if (so_priority > 0) {
+-		ret = kernel_setsockopt(sock, SOL_SOCKET, SO_PRIORITY,
+-				(char *)&so_priority, sizeof(so_priority));
+-		if (ret)
+-			return ret;
+-	}
++	if (so_priority > 0)
++		sock_set_priority(sock->sk, so_priority);
+ 
+ 	/* Set socket type of service */
+ 	if (inet->rcv_tos > 0) {
+@@ -1638,14 +1634,8 @@ static int nvmet_tcp_add_port(struct nvmet_port *nport)
+ 		goto err_sock;
+ 	}
+ 
+-	if (so_priority > 0) {
+-		ret = kernel_setsockopt(port->sock, SOL_SOCKET, SO_PRIORITY,
+-				(char *)&so_priority, sizeof(so_priority));
+-		if (ret) {
+-			pr_err("failed to set SO_PRIORITY sock opt %d\n", ret);
+-			goto err_sock;
+-		}
+-	}
++	if (so_priority > 0)
++		sock_set_priority(port->sock->sk, so_priority);
+ 
+ 	ret = kernel_bind(port->sock, (struct sockaddr *)&port->addr,
+ 			sizeof(port->addr));
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 60890fb47fbc0..cce11782dc295 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -2689,5 +2689,6 @@ static inline bool sk_dev_equal_l3scope(struct sock *sk, int dif)
+ void sock_def_readable(struct sock *sk);
+ void sock_set_reuseaddr(struct sock *sk, unsigned char reuse);
+ void sock_set_linger(struct sock *sk, bool onoff, unsigned int linger);
++void sock_set_priority(struct sock *sk, u32 priority);
+ 
+ #endif	/* _SOCK_H */
+diff --git a/net/core/sock.c b/net/core/sock.c
+index cbc5104ca3515..e9f1e2247b004 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -744,6 +744,14 @@ void sock_set_linger(struct sock *sk, bool onoff, unsigned int linger)
+ }
+ EXPORT_SYMBOL(sock_set_linger);
+ 
++void sock_set_priority(struct sock *sk, u32 priority)
++{
++	lock_sock(sk);
++	sk->sk_priority = priority;
++	release_sock(sk);
++}
++EXPORT_SYMBOL(sock_set_priority);
++
+ /*
+  *	This is meant for all protocols to use and covers goings on
+  *	at the socket level. Everything here is generic.
 -- 
-2.26.2.645.ge9eca65c58-goog
+2.26.2
 
