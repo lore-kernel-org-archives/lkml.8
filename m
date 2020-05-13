@@ -2,159 +2,108 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E27BFC2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E39BEC2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C347023126
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCF0A20769
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:28:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pHOShA8X"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="onvfodWQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731753AbgEMM1g (ORCPT
+        id S1731268AbgEMM2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 08:27:36 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:33584 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbgEMM1f (ORCPT
+        Wed, 13 May 2020 08:28:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbgEMM2y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 08:27:35 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04DCRWkU103423;
-        Wed, 13 May 2020 07:27:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589372852;
-        bh=2ig5tIOWD6nykKQyzTlz+iNpTfFh1kkyICxOu/c7i8k=;
-        h=Subject:From:To:References:Date:In-Reply-To;
-        b=pHOShA8XrlH0z9VnTsMMhG0TCxGqUaQQZh5EkqdK3zAw6FrJhR8WSGezRos4wXMZ+
-         7drCae5t971PI+VTkrDGW3OEhh1qNYgzPIQDA7YRW+Fr1HflCmdYolVywYs/zSKhVv
-         rF7xPVrJEHF3WrKPl/qbkFcCO7SRpvxtOrWuQrE0=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04DCRWdc077159
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 13 May 2020 07:27:32 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 13
- May 2020 07:27:31 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 13 May 2020 07:27:31 -0500
-Received: from [10.250.74.234] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04DCRVs0131026;
-        Wed, 13 May 2020 07:27:31 -0500
-Subject: Re: [net-next RFC PATCH 00/13] net: hsr: Add PRP driver
-From:   Murali Karicheri <m-karicheri2@ti.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
-        <nsekhar@ti.com>, <grygorii.strashko@ti.com>
-References: <20200506163033.3843-1-m-karicheri2@ti.com>
-Message-ID: <a947b604-4016-ff02-380f-f3788eea4ed9@ti.com>
-Date:   Wed, 13 May 2020 08:27:31 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 13 May 2020 08:28:54 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97C06C061A0C;
+        Wed, 13 May 2020 05:28:54 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id i22so4637218oik.10;
+        Wed, 13 May 2020 05:28:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X+YMEnNGHIRHv5i2pgJP6CvjowaQ7wp0v7KSyBmjqZg=;
+        b=onvfodWQlZcqrfWAvLT92NRwFi3+YT5iv65aStLrJZR0Z37RjR+kb0qQas8E5QafYc
+         XSm/Rd5SQDM905szt1AV++k41Dq1HgwfL3Io61Wri0mQ4jCSzeNLtloDzS8j+FF/ZvLc
+         63N4WeS6GR438bITwrAP9oT/9rHp0Fvxoa2tzCZoQ68EZren+X5TBZ8O9y+q2UNgghh+
+         tngvpieVNVdinoma2EEVAs6pGK2minA0Rnvhto36+DpjM82Ns7ypC3d78xbOvKrLNTo2
+         RsbmrNOQ8IaA9Eo91CRoD5TZT5YzbaFVatapevo7V7ENt7aX7icmphVe1SGEFHXmS/XC
+         tooA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition:in-reply-to
+         :user-agent;
+        bh=X+YMEnNGHIRHv5i2pgJP6CvjowaQ7wp0v7KSyBmjqZg=;
+        b=dN66iWcb1x+9pUccBoi/T7TbVIBsQ014Pi1vuFkqaXOxfp5tAA7RraxAzWNr/buM6V
+         xFha8R4tnYvLFmPIYCUPSzvOnbAfqPgjk/YQJNFoEOTSkH7+EWNB6n+K4rQPMDLlNzyh
+         vKlZKbC6WBgwepE/l9c1mFOF4vjQnzGjMz2Cgci0q2FdPacPRQk62YfcmTSNYuyEKSb4
+         8UUCBx/vjkHZtZKF4KM3B2A3/lmTVKFYiwrsA1X5FJD/CsiT1NmZO8J4jumtTmfKh+Nb
+         KimS6o2NWN1TuxZzJE2/3DpiCHGsus2lInSlkWn9ianaHiBAsJaXL2i6A6iO8kQYQBix
+         xMtQ==
+X-Gm-Message-State: AGi0PuawNlx++odVUU0wLmfYsB2eWdkEteDBazdsgmCN/EF7hUe18+df
+        VmSsOzra+ld8xfkDNZ18XGM4R50=
+X-Google-Smtp-Source: APiQypJrccrVkQAAcpRmapFbtFU/9vMh8lVpj0epLTDOYnKFYgpoevntivaAzvcs6IzA0P5gwNawjw==
+X-Received: by 2002:aca:dc82:: with SMTP id t124mr11220213oig.160.1589372933933;
+        Wed, 13 May 2020 05:28:53 -0700 (PDT)
+Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
+        by smtp.gmail.com with ESMTPSA id v3sm4200611ote.39.2020.05.13.05.28.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 05:28:53 -0700 (PDT)
+Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:8b39:c3f3:f502:5c4e])
+        by serve.minyard.net (Postfix) with ESMTPSA id ECF3A180042;
+        Wed, 13 May 2020 12:28:51 +0000 (UTC)
+Date:   Wed, 13 May 2020 07:28:50 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        openipmi-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] char: ipmi: convert to use i2c_new_client_device()
+Message-ID: <20200513122850.GT9902@minyard.net>
+Reply-To: minyard@acm.org
+References: <20200326210958.13051-1-wsa+renesas@sang-engineering.com>
+ <20200326210958.13051-2-wsa+renesas@sang-engineering.com>
+ <20200512211425.GQ9902@minyard.net>
+ <20200513071004.GA1043@ninjato>
 MIME-Version: 1.0
-In-Reply-To: <20200506163033.3843-1-m-karicheri2@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513071004.GA1043@ninjato>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello netdev experts,
+On Wed, May 13, 2020 at 09:10:04AM +0200, Wolfram Sang wrote:
+> 
+> > > -	addr_info->added_client = i2c_new_device(to_i2c_adapter(adev),
+> > > -						 &addr_info->binfo);
+> > > +	addr_info->added_client = i2c_new_client_device(to_i2c_adapter(adev),
+> > > +							&addr_info->binfo);
+> > 
+> > i2c_new_client_device returns an ERR_PTR, not NULL on error.  So this
+> 
+> Yes, this is the main motivation for the new API.
+> 
+> > needs some more work.  I'll send something out soon.
+> 
+> Why does it need that work? 'added_client' is only used with
+> i2c_unregister_device() which has been fixed to handle ERR_PTR as well.
+> Or am I missing something?
+> 
 
-On 5/6/20 12:30 PM, Murali Karicheri wrote:
-> This RFC series add support for Parallel Redundancy Protocol (PRP)
-> as defined in IEC-62439-3 in the kernel networking subsystem. PRP
-> Uses a Redundancy Control Trailer (RCT) the format of which is
-> similar to HSR Tag. This is used for implementing redundancy.
-> RCT consists of 6 bytes similar to HSR tag and contain following
-> fields:-
-> 
-> - 16-bit sequence number (SeqNr);
-> - 4-bit LAN identifier (LanId);
-> - 12 bit frame size (LSDUsize);
-> - 16-bit suffix (PRPsuffix).
-> 
-> The PRPsuffix identifies PRP frames and distinguishes PRP frames
-> from other protocols that also append a trailer to their useful
-> data. The LSDUsize field allows the receiver to distinguish PRP
-> frames from random, nonredundant frames as an additional check.
-> LSDUsize is the size of the Ethernet payload inclusive of the
-> RCT. Sequence number along with LanId is used for duplicate
-> detection and discard.
-> 
-> PRP node is also known as Dual Attached Node (DAN-P) since it
-> is typically attached to two different LAN for redundancy.
-> DAN-P duplicates each of L2 frames and send it over the two
-> Ethernet links. Each outgoing frame is appended with RCT.
-> Unlike HSR, these are added to the end of L2 frame and may be
-> treated as padding by bridges and therefore would be work with
-> traditional bridges or switches, where as HSR wouldn't as Tag
-> is prefixed to the Ethenet frame. At the remote end, these are
-> received and the duplicate frame is discarded before the stripped
-> frame is send up the networking stack. Like HSR, PRP also sends
-> periodic Supervision frames to the network. These frames are
-> received and MAC address from the SV frames are populated in a
-> database called Node Table. The above functions are grouped into
-> a block called Link Redundancy Entity (LRE) in the IEC spec.
-> 
-> As there are many similarities between HSR and PRP protocols,
-> this patch re-use the code from HSR driver to implement PRP
-> driver. As many part of the code can be re-used, this patch
-> introduces a new common API definitions for both protocols and
-> propose to obsolete the existing HSR defines in
-> include/uapi/linux/if_link.h. New definitions are prefixed
-> with a HSR_PRP prefix. Similarly include/uapi/linux/hsr_netlink.h
-> is proposed to be replaced with include/uapi/linux/hsr_prp_netlink.h
-> which also uses the HSR_PRP prefix. The netlink socket interface
-> code is migrated (as well as the iproute2 being sent as a follow up
-> patch) to use the new API definitions. To re-use the code,
-> following are done as a preparatory patch before adding the PRP
-> functionality:-
-> 
->    - prefix all common code with hsr_prp
->    - net/hsr -> renamed to net/hsr-prp
->    - All common struct types, constants, functions renamed with
->      hsr{HSR}_prp{PRP} prefix.
-> 
-> Please review this and provide me feedback so that I can work to
-> incorporate them and send a formal patch series for this. As this
-> series impacts user space, I am not sure if this is the right
-> approach to introduce a new definitions and obsolete the old
-> API definitions for HSR. The current approach is choosen
-> to avoid redundant code in iproute2 and in the netlink driver
-> code (hsr_netlink.c). Other approach we discussed internally was
-> to Keep the HSR prefix in the user space and kernel code, but
-> live with the redundant code in the iproute2 and hsr netlink
-> code. Would like to hear from you what is the best way to add
-> this feature to networking core. If there is any other
-> alternative approach possible, I would like to hear about the
-> same.
-> 
-> The patch was tested using two TI AM57x IDK boards which are
-> connected back to back over two CPSW ports.
-> 
-> Script used for creating the hsr/prp interface is given below
-> and uses the ip link command. Also provided logs from the tests
-> I have executed for your reference.
-> 
-> iproute2 related patches will follow soon....
-Could someone please review this and provide some feedback to take
-this forward?
+No, I didn't look to see if i2c_unregister_device could handle that.
 
-Thanks and regards,
-> 
-> Murali Karicheri
-> Texas Instruments
-
-
--Cut-------------------------
+-corey
