@@ -2,242 +2,86 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 239E0C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE73C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE1462176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:11:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Ml0HAuPl"
+	by mail.kernel.org (Postfix) with ESMTP id E9C4C206CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:14:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731997AbgEMMLF (ORCPT
+        id S1731826AbgEMMOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 08:11:05 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:59005 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731792AbgEMMLE (ORCPT
+        Wed, 13 May 2020 08:14:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbgEMMOC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 08:11:04 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589371862; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=LHQGqU4NAittweNmmebxB6GmxQZjf/uw2yt+R0pasps=; b=Ml0HAuPl3r7vmfoyYe6seSC8h9jxap4mquT8rSgmLqzbes7r/6BbppPSHD196bxyHcxuN+nz
- qHL2N4SfobKzl1KoC3fLIvNmSPq3Qce1+oM6Y+O/uwaslelRkfRNfMJfz2M42ZMT1XSFqVKS
- 9+aR+tOaV1NpSg22Ti3e7LGql6s=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ebbe3ba.7f0123b53fb8-smtp-out-n01;
- Wed, 13 May 2020 12:10:34 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E845BC44788; Wed, 13 May 2020 12:10:32 +0000 (UTC)
-Received: from [192.168.0.102] (unknown [183.83.139.238])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: charante)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C25CEC433D2;
-        Wed, 13 May 2020 12:10:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C25CEC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
-Subject: Re: [PATCH v2] dma-buf: fix use-after-free in dmabuffs_dname
-To:     Greg KH <greg@kroah.com>
-Cc:     sumit.semwal@linaro.org, ghackmann@google.com, fengc@google.com,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, vinmenon@codeaurora.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <1588920063-17624-1-git-send-email-charante@codeaurora.org>
- <20200512085221.GB3557007@kroah.com>
-From:   Charan Teja Kalla <charante@codeaurora.org>
-Message-ID: <a3cbf675-becc-1713-bcdc-664ddfe4a544@codeaurora.org>
-Date:   Wed, 13 May 2020 17:40:26 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 13 May 2020 08:14:02 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5EA0C061A0C;
+        Wed, 13 May 2020 05:14:01 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jYqGo-0001x3-GX; Wed, 13 May 2020 14:13:54 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id BBC0F100605; Wed, 13 May 2020 14:13:53 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, maz@kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: Re: [PATCH v2 5/6] irqchip: Add Loongson PCH MSI controller
+In-Reply-To: <20200428063247.2223499-5-jiaxun.yang@flygoat.com>
+References: <20200422142428.1249684-1-jiaxun.yang@flygoat.com> <20200428063247.2223499-1-jiaxun.yang@flygoat.com> <20200428063247.2223499-5-jiaxun.yang@flygoat.com>
+Date:   Wed, 13 May 2020 14:13:53 +0200
+Message-ID: <874ksk3uda.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200512085221.GB3557007@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Jiaxun Yang <jiaxun.yang@flygoat.com> writes:
+> +
+> +struct pch_msi_data {
+> +	spinlock_t		msi_map_lock;
+> +	phys_addr_t		doorbell;
+> +	u32			irq_first;	/* The vector number that MSIs starts */
+> +	u32			num_irqs;	/* The number of vectors for MSIs */
+> +	unsigned long		*msi_map;
+> +};
+> +
+> +static void pch_msi_mask_msi_irq(struct irq_data *d)
+> +{
+> +	pci_msi_mask_irq(d);
+> +	irq_chip_mask_parent(d);
+> +}
+> +
+> +static void pch_msi_unmask_msi_irq(struct irq_data *d)
+> +{
+> +	pci_msi_unmask_irq(d);
+> +	irq_chip_unmask_parent(d);
 
-Thank you Greg for the comments.
-On 5/12/2020 2:22 PM, Greg KH wrote:
-> On Fri, May 08, 2020 at 12:11:03PM +0530, Charan Teja Reddy wrote:
->> The following race occurs while accessing the dmabuf object exported as
->> file:
->> P1				P2
->> dma_buf_release()          dmabuffs_dname()
->> 			   [say lsof reading /proc/<P1 pid>/fd/<num>]
->>
->> 			   read dmabuf stored in dentry->d_fsdata
->> Free the dmabuf object
->> 			   Start accessing the dmabuf structure
->>
->> In the above description, the dmabuf object freed in P1 is being
->> accessed from P2 which is resulting into the use-after-free. Below is
->> the dump stack reported.
->>
->> We are reading the dmabuf object stored in the dentry->d_fsdata but
->> there is no binding between the dentry and the dmabuf which means that
->> the dmabuf can be freed while it is being read from ->d_fsdata and
->> inuse. Reviews on the patch V1 says that protecting the dmabuf inuse
->> with an extra refcount is not a viable solution as the exported dmabuf
->> is already under file's refcount and keeping the multiple refcounts on
->> the same object coordinated is not possible.
->>
->> As we are reading the dmabuf in ->d_fsdata just to get the user passed
->> name, we can directly store the name in d_fsdata thus can avoid the
->> reading of dmabuf altogether.
->>
->> Call Trace:
->>  kasan_report+0x12/0x20
->>  __asan_report_load8_noabort+0x14/0x20
->>  dmabuffs_dname+0x4f4/0x560
->>  tomoyo_realpath_from_path+0x165/0x660
->>  tomoyo_get_realpath
->>  tomoyo_check_open_permission+0x2a3/0x3e0
->>  tomoyo_file_open
->>  tomoyo_file_open+0xa9/0xd0
->>  security_file_open+0x71/0x300
->>  do_dentry_open+0x37a/0x1380
->>  vfs_open+0xa0/0xd0
->>  path_openat+0x12ee/0x3490
->>  do_filp_open+0x192/0x260
->>  do_sys_openat2+0x5eb/0x7e0
->>  do_sys_open+0xf2/0x180
->>
->> Fixes: bb2bb9030425 ("dma-buf: add DMA_BUF_SET_NAME ioctls")
->> Reported-by: syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com
->> Cc: <stable@vger.kernel.org> [5.3+]
->> Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
->> ---
->>
->> Changes in v2: 
->>
->> - Pass the user passed name in ->d_fsdata instead of dmabuf
->> - Improve the commit message
->>
->> Changes in v1: (https://patchwork.kernel.org/patch/11514063/)
->>
->>  drivers/dma-buf/dma-buf.c | 17 ++++++++++-------
->>  1 file changed, 10 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
->> index 01ce125..0071f7d 100644
->> --- a/drivers/dma-buf/dma-buf.c
->> +++ b/drivers/dma-buf/dma-buf.c
->> @@ -25,6 +25,7 @@
->>  #include <linux/mm.h>
->>  #include <linux/mount.h>
->>  #include <linux/pseudo_fs.h>
->> +#include <linux/dcache.h>
->>  
->>  #include <uapi/linux/dma-buf.h>
->>  #include <uapi/linux/magic.h>
->> @@ -40,15 +41,13 @@ struct dma_buf_list {
->>  
->>  static char *dmabuffs_dname(struct dentry *dentry, char *buffer, int buflen)
->>  {
->> -	struct dma_buf *dmabuf;
->>  	char name[DMA_BUF_NAME_LEN];
->>  	size_t ret = 0;
->>  
->> -	dmabuf = dentry->d_fsdata;
->> -	dma_resv_lock(dmabuf->resv, NULL);
->> -	if (dmabuf->name)
->> -		ret = strlcpy(name, dmabuf->name, DMA_BUF_NAME_LEN);
->> -	dma_resv_unlock(dmabuf->resv);
->> +	spin_lock(&dentry->d_lock);
-> 
-> Are you sure this lock always protects d_fsdata?
+The ordering of mask and unmask is assymetric. That does not make sense.
 
-I think yes. In the dma-buf.c, I have to make sure that d_fsdata should
-always be under d_lock thus it will be protected. (In this posted patch
-there is one place(in dma_buf_set_name) that is missed, will update this
-in V3).
+> +static struct msi_domain_info pch_msi_domain_info = {
+> +	.flags		= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
+> +			  MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
+> +	.chip	= &pch_msi_irq_chip,
 
-> 
->> +	if (dentry->d_fsdata)
->> +		ret = strlcpy(name, dentry->d_fsdata, DMA_BUF_NAME_LEN);
->> +	spin_unlock(&dentry->d_lock);
->>  
->>  	return dynamic_dname(dentry, buffer, buflen, "/%s:%s",
->>  			     dentry->d_name.name, ret > 0 ? name : "");
-> 
-> If the above check fails the name will be what?  How could d_name.name
-> be valid but d_fsdata not be valid?
+Please maintain tabular layout.
 
-In case of check fails, empty string "" is appended to the name by the
-code, ret > 0 ? name : "", ret is initialized to zero. Thus the name
-string will be like "/dmabuf:".
+Thanks,
 
-Regarding the validity of d_fsdata, we are setting the dmabuf's
-dentry->d_fsdata to NULL in the dma_buf_release() thus can go invalid if
-that dmabuf is in the free path.
-
-
-> 
-> 
->> @@ -80,12 +79,16 @@ static int dma_buf_fs_init_context(struct fs_context *fc)
->>  static int dma_buf_release(struct inode *inode, struct file *file)
->>  {
->>  	struct dma_buf *dmabuf;
->> +	struct dentry *dentry = file->f_path.dentry;
->>  
->>  	if (!is_dma_buf_file(file))
->>  		return -EINVAL;
->>  
->>  	dmabuf = file->private_data;
->>  
->> +	spin_lock(&dentry->d_lock);
->> +	dentry->d_fsdata = NULL;
->> +	spin_unlock(&dentry->d_lock);
->>  	BUG_ON(dmabuf->vmapping_counter);
->>  
->>  	/*
->> @@ -343,6 +346,7 @@ static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
->>  	}
->>  	kfree(dmabuf->name);
->>  	dmabuf->name = name;
->> +	dmabuf->file->f_path.dentry->d_fsdata = name;
-> 
-> You are just changing the use of d_fsdata from being a pointer to the
-> dmabuf to being a pointer to the name string?  What's to keep that name
-> string around and not have the same reference counting issues that the
-> dmabuf structure itself has?  Who frees that string memory?
-> 
-
-Yes, I am just storing the name string in the d_fsdata in place of
-dmabuf and this helps to get rid of any extra refcount requirement.
-Because the user passed name carried in the d_fsdata is copied to the
-local buffer in dmabuffs_dname under spin_lock(d_lock) and the same
-d_fsdata is set to NULL(under the d_lock only) when that dmabuf is in
-the release path. So, when d_fsdata is NULL, name string is not accessed
-from the dmabuffs_dname thus extra count is not required.
-
-String memory, stored in the dmabuf->name, is released from the
-dma_buf_release(). Flow will be like, It fist sets d_fsdata=NULL and
-then free the dmabuf->name.
-
-However from your comments I have realized that there is a race in this
-patch when using the name string between dma_buf_set_name() and
-dmabuffs_dname(). But, If the idea of passing the name string inplace of
-dmabuf in d_fsdata looks fine, I can update this next patch.
-
-> thanks,
-> 
-> greg k-h
-> 
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
-Forum, a Linux Foundation Collaborative Project
+        tglx
