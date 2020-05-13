@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6059FCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D90ECA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6ECE20671
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A1120690
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:33:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VKrLxF3K"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tw8DR1Cx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387954AbgEMNc7 (ORCPT
+        id S2387971AbgEMNdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:32:59 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:37898 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733281AbgEMNc7 (ORCPT
+        Wed, 13 May 2020 09:33:02 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:58612 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387607AbgEMNdA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:32:59 -0400
+        Wed, 13 May 2020 09:33:00 -0400
 Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200513133257euoutp02715e93ed127aa0ce7a42729d0fc3322c~OmcIoUOfL3223232232euoutp02a
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 13:32:57 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200513133257euoutp02715e93ed127aa0ce7a42729d0fc3322c~OmcIoUOfL3223232232euoutp02a
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200513133259euoutp0117f24c32a2db87d4513cb0c360a5b11d~OmcJ7MvsN2146121461euoutp010
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 13:32:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200513133259euoutp0117f24c32a2db87d4513cb0c360a5b11d~OmcJ7MvsN2146121461euoutp010
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1589376777;
-        bh=SMTxZNZpTSAf+VjaRdwIa7Y+Y92ELOA8MjwAFVO+Mus=;
+        s=mail20170921; t=1589376779;
+        bh=go833WUtGUeqjr8CAsYYWkYRfn1VEMrgJZsdzy8T3MA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VKrLxF3KEiWmVZ1axlhSlzty0rd2nUqXsHuI7B7LU28r5TvCvsp+0bgDe4vtq9QOY
-         WiKZcd124gvPVjK5otBDPFZ8OFs4Ng94v6RMIBwxoj8zDX9Eu+NKd2eBdrnLRwwAaZ
-         2zo3AcPWxR1hl6t0/nrmIY5WXFjlcZ6Vzn2OE+7A=
+        b=tw8DR1CxzmmioRVEjwMGsmPWEczJRDYl/V2JEis9/oEpnSu49riaq4pZ6yxVGCLxr
+         Fn3T6J/oeWJrr29Z9Tt7t0xXggiiJO3YmSfCxaYG6CacJhTFLDW96HINEqOcfjSOQY
+         cXPjHFesq3BOSrb0iYZ+xg5h/SpDG3rTcSE6uLZI=
 Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200513133257eucas1p1ab88f1465f6ce76a0c7f470a63001ea2~OmcIUwDTB0876608766eucas1p1h;
-        Wed, 13 May 2020 13:32:57 +0000 (GMT)
+        20200513133258eucas1p17e5a2056843358c9468b6e2009d7d017~OmcJWZvTN2633226332eucas1p1S;
+        Wed, 13 May 2020 13:32:58 +0000 (GMT)
 Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id FD.B5.61286.907FBBE5; Wed, 13
-        May 2020 14:32:57 +0100 (BST)
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 2F.B5.61286.A07FBBE5; Wed, 13
+        May 2020 14:32:58 +0100 (BST)
 Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200513133256eucas1p273110d0c8f67e52fc7385acef776efaa~OmcH5dMRP0359403594eucas1p2L;
-        Wed, 13 May 2020 13:32:56 +0000 (GMT)
+        20200513133258eucas1p2e8ffb90e5553c12419a5af5261b48f5e~OmcJDlZlr2029120291eucas1p2K;
+        Wed, 13 May 2020 13:32:58 +0000 (GMT)
 Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
         eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200513133256eusmtrp11bf699394ab06f7b9d70d588c796f3dc~OmcH4xvA20994509945eusmtrp1W;
-        Wed, 13 May 2020 13:32:56 +0000 (GMT)
-X-AuditID: cbfec7f2-ef1ff7000001ef66-28-5ebbf709f135
+        20200513133258eusmtrp121b121d239c04a654273b78d6838b65e~OmcJCQ68X0994509945eusmtrp1b;
+        Wed, 13 May 2020 13:32:58 +0000 (GMT)
+X-AuditID: cbfec7f2-ef1ff7000001ef66-2c-5ebbf70a69aa
 Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id B7.0A.08375.807FBBE5; Wed, 13
-        May 2020 14:32:56 +0100 (BST)
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 79.0A.08375.A07FBBE5; Wed, 13
+        May 2020 14:32:58 +0100 (BST)
 Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
         eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200513133256eusmtip10a029b12870de4156e2e5b8913fad120~OmcHTRPCk2465024650eusmtip1_;
-        Wed, 13 May 2020 13:32:56 +0000 (GMT)
+        20200513133257eusmtip155e8eb76c7cbe871b510eca19afc02e9~OmcIcHLlI2465024650eusmtip1-;
+        Wed, 13 May 2020 13:32:57 +0000 (GMT)
 From:   Marek Szyprowski <m.szyprowski@samsung.com>
 To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
         linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
@@ -66,49 +66,51 @@ Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         linux-arm-kernel@lists.infradead.org,
         David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v5 01/38] dma-mapping: add generic helpers for mapping
- sgtable objects
-Date:   Wed, 13 May 2020 15:32:08 +0200
-Message-Id: <20200513133245.6408-1-m.szyprowski@samsung.com>
+        Daniel Vetter <daniel@ffwll.ch>, Joerg Roedel <joro@8bytes.org>
+Subject: [PATCH v5 03/38] iommu: add generic helper for mapping sgtable
+ objects
+Date:   Wed, 13 May 2020 15:32:10 +0200
+Message-Id: <20200513133245.6408-3-m.szyprowski@samsung.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200513132114.6046-1-m.szyprowski@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0VSa0hTYRju29nZzqbT45R80UyYJGSpSf04MLPCfpz+RAVZCpkrD2ptajte
-        +6Moai0NL5XDUsS8OzUvaUzFHNkUaZSaTPOaFZbZwltYoG0erX/P7X2f7/v4CExajbsRMbEJ
-        jDpWoZQJxPyO1xsmX9GvrvAjwzPOVJ5pkEe1aJtxaqujAKNG1ywCqq6hn0eV98qp1dE5HtU6
-        P4ZTI/onAqrx1ZSQ6vv5CT9pR+vKdIjuWS/n053rszg9c8/Io9sq0+gPm/MYXWSuQXTXeLqA
-        vt9ej+iV1v3nxGHiwEhGGZPEqP2DIsTRedn1KL7JO+VBZjWejno8NUhEAHkMzMZapEFiQkrW
-        IuhbsAhthpRcRTC4xeOMFQTlOj3anfg+t8znjBoEj+pKd4h1ouJ9Js+WEpABoFnSCGzYhcxC
-        MJBnb8MYqeVB/2KiDTuTl6HMMLq9lU8egIovOsyGJWQgGAe0ONfmCQ3PXm7rIvI4LD/fwG1l
-        QDYJ4anFaC0jrOQ0zLyhuLwzfDO2Czm8D4aKcvlcPhPBnKlRyJFcBCMZ2p37yGHS9FtgW4SR
-        B6FZ78/Jp8BUqMe5/Q5gXnLizu8AhR3FGCdL4E62lEt7Q4mx6V9t39thjMM0tC+27bxiPoJ2
-        8yDKR54l/8vKEapHrkwiq4pi2IBYJtmPVajYxNgov+txqlZk/T1Dm8blF2ht+JoBkQSS2Uuo
-        ia5wKa5IYlNVBgQEJnORnG22SpJIReptRh13VZ2oZFgDcif4MlfJ0YqvV6RklCKBuckw8Yx6
-        1+URIrd0hO9Jsp8oyDhx2P9jWkujV+g7cw3sveDhkdDL5FQ5uKvOB1eG6lLsSkM0d32TJmYV
-        cWeSu8URh5zAyzF1hk3rnizOueW5EPRHqZ2XpGT/yCzqlVvknXaPLzo+ZNDspc35YGHVWOf0
-        Z33bjfGpwKy4kNaSaQsVUqca8MnNlYcVyfhstCLAB1Ozir/3t71COQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupikeLIzCtJLcpLzFFi42I5/e/4XV2O77vjDCb9MbLoPXeSyWLjjPWs
-        Fv+3TWS2uPL1PZvFytVHmSwW7Le2+HLlIZPFpsfXWC0u75rDZrH2yF12i4MfnrA6cHusmbeG
-        0WPvtwUsHtu/PWD1uN99nMlj85J6j9v/HjN7TL6xnNFj980GNo++LasYPT5vkgvgitKzKcov
-        LUlVyMgvLrFVija0MNIztLTQMzKx1DM0No+1MjJV0rezSUnNySxLLdK3S9DL6G1bxViwTq1i
-        SvMy1gbGvfJdjJwcEgImEm8efmLpYuTiEBJYyijxasFTVoiEjMTJaQ1QtrDEn2tdbBBFnxgl
-        3h14DpZgEzCU6HoLkRAR6GSUmNb9kR3EYRaYxySx6OEhdpAqYYEwiZ0ftoHZLAKqEouerWEG
-        sXkFbCSOn5gBtUJeYvWGA2BxTgFbiU9bf4LFhYBq1rbOYZvAyLeAkWEVo0hqaXFuem6xoV5x
-        Ym5xaV66XnJ+7iZGYDxsO/Zz8w7GSxuDDzEKcDAq8fBa3NodJ8SaWFZcmXuIUYKDWUmE1289
-        UIg3JbGyKrUoP76oNCe1+BCjKdBRE5mlRJPzgbGaVxJvaGpobmFpaG5sbmxmoSTO2yFwMEZI
-        ID2xJDU7NbUgtQimj4mDU6qBMaSi692hcinJ34t2HWxjfe1+2VN/o1/Uu6n6q+MfJNzYYd+y
-        f00hzz4Z6V1fjF4fPrAveW7xvIJpB6LWr0/nf+uv6ye37IqIcPXl83lKdwIYk5RO7boQpFHR
-        sXx1oEHYzjvRWp+dGJ8EuNV/jedZ3idy947AAeGUS0fPXd6cFXHQk3/htv97piuxFGckGmox
-        FxUnAgDvD09CnQIAAA==
-X-CMS-MailID: 20200513133256eucas1p273110d0c8f67e52fc7385acef776efaa
+In-Reply-To: <20200513133245.6408-1-m.szyprowski@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSe0hTYRjG+XZ2OS5np2n5YpI1MtPISwYd8kKByPnDQiO6kdbKg0re2JyX
+        IvKCVvNCukSbJkNy3u+yxJWbszI1RNRE0zJvVIYoXjFM2zxq//2+530envf7+HBMWMexwcMi
+        Y2hJpDhcxOWzNR/Wek7yV7VBrvIkIDN7OllkfX4th9zUZGPkwPIclyyvfM8iVToP8mlBHY9c
+        GhhnkQ2Tgxyyv6WQS1a/+8oj2+anOOfMqam2IhZVVVSFqLcrKjb1euU7hxpL72BRja8eUSMb
+        kxilGCpFlHY4kUtlNVUgarHhkP+eG3zPYDo8LJaWuHjf5ofKU7tRdJIwvvNlFysRZe2VIzMc
+        iNMwXZKJmVhIlCHInbgsR3wjLyFILZ/iMYNFBBlKt51Aq26Ix5hKEWheqNFuok2djkwuLuEG
+        8lk518RWRCqCj5nmJsaIFhYoU8QmtiQCoGRkcMvPJuxhorJ+q01AeMLzxGwu02YHlXX6rfXM
+        CC+YGdWxTWVAGHiQUzyNGJMP1KinMIYtYaajicewLXQrMrYDKQjGe6p5zCEDQX9y/nbaA0Z7
+        /hjrcON6jlDb4sLI52FQ85htkoGwgKHZfcwFLCBHk4cxsgCepAkZ9zFQdtTs1rb19m2vQ0GZ
+        ooHDPFA7gmFFI/cZslP+L1MhVIGsaZk0IoSWukXScc5ScYRUFhnifDcqogEZ/1H3RsdCM1ru
+        u2NABI5E5gLyizZIyBHHShMiDAhwTGQluFhrlATB4oT7tCTqlkQWTksN6CDOFlkL3It/BQqJ
+        EHEMfY+mo2nJzpSFm9kkoqPDY2HtTrahtmbXL/hf6Z39YW8+rc8OcFC4H35T+jnwgDZe7Yj7
+        n1F66yU+quObAvX66kWe70rzULJvWquH66l1699HWisDO6/q/XIe2O1HMd8w3azfJ4trf2Vr
+        jgv8ed9C3aXOLtubc5LcOM8CPd9Fe0L108HF8PBsvKFA7pUnYktDxW5OmEQq/gd4pfHwQwMA
+        AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMIsWRmVeSWpSXmKPExsVy+t/xu7pc33fHGey/z2rRe+4kk8XGGetZ
+        Lf5vm8hsceXrezaLlauPMlks2G9t0Tl7A7vFlysPmSw2Pb7GanF51xw2i7VH7rJbHPzwhNWB
+        x+PJwXlMHmvmrWH02PttAYvH9m8PWD3udx9n8ti8pN7j9r/HzB6Tbyxn9Nh9s4HNo2/LKkaP
+        z5vkArij9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX07WxSUnMyy1KL9O0S
+        9DK6Wk8zFjQKVZyce4qpgbGPv4uRk0NCwERi3/4b7F2MXBxCAksZJZrWdTFCJGQkTk5rYIWw
+        hSX+XOtigyj6xCixbfd0JpAEm4ChRNdbiISIQCejxLTuj2CjmAUOMEm8atsONIqDQ1jAX+L5
+        TleQBhYBVYlHqzeyg9i8AjYSUxomskFskJdYveEAM4jNKWAr8erOfhYQW0ggX2Lv4n1sExj5
+        FjAyrGIUSS0tzk3PLTbUK07MLS7NS9dLzs/dxAiMkG3Hfm7ewXhpY/AhRgEORiUeXotbu+OE
+        WBPLiitzDzFKcDArifD6rQcK8aYkVlalFuXHF5XmpBYfYjQFOmois5Rocj4wevNK4g1NDc0t
+        LA3Njc2NzSyUxHk7BA7GCAmkJ5akZqemFqQWwfQxcXBKNTCKvL/34oqn4lyT63EZR1R+bf+6
+        eJ7wdVFVC8nnfe5Hn60y1vcwYK2bz/lgyaQVqnM7j1/48lj5eFL7sgUFQbsEv3NY+DULz7Bx
+        iWja5rsz+kb4tqoFzNI3YjT/VH6dpnRv56Jtn6Njvy55ItZbapFieUr85JYDBowvNWpZp7Q9
+        YUisfqcd5v9ViaU4I9FQi7moOBEAy3gjmqYCAAA=
+X-CMS-MailID: 20200513133258eucas1p2e8ffb90e5553c12419a5af5261b48f5e
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200513133256eucas1p273110d0c8f67e52fc7385acef776efaa
+X-RootMTR: 20200513133258eucas1p2e8ffb90e5553c12419a5af5261b48f5e
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200513133256eucas1p273110d0c8f67e52fc7385acef776efaa
+X-CMS-RootMailID: 20200513133258eucas1p2e8ffb90e5553c12419a5af5261b48f5e
 References: <20200513132114.6046-1-m.szyprowski@samsung.com>
-        <CGME20200513133256eucas1p273110d0c8f67e52fc7385acef776efaa@eucas1p2.samsung.com>
+        <20200513133245.6408-1-m.szyprowski@samsung.com>
+        <CGME20200513133258eucas1p2e8ffb90e5553c12419a5af5261b48f5e@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -120,114 +122,51 @@ buffer. It consists of a scatterlist with memory pages and DMA addresses
 (orig_nents entry) and DMA mapped pages (nents entry).
 
 It turned out that it was a common mistake to misuse nents and orig_nents
-entries, calling DMA-mapping functions with a wrong number of entries or
-ignoring the number of mapped entries returned by the dma_map_sg
-function.
+entries, calling mapping functions with a wrong number of entries.
 
-To avoid such issues, let's introduce a common wrappers operating directly
+To avoid such issues, lets introduce a common wrapper operating directly
 on the struct sg_table objects, which take care of the proper use of
 the nents and orig_nents entries.
 
 Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Joerg Roedel <jroedel@suse.de>
 Reviewed-by: Robin Murphy <robin.murphy@arm.com> 
 ---
 For more information, see '[PATCH v5 00/38] DRM: fix struct sg_table nents
 vs. orig_nents misuse' thread:
 https://lore.kernel.org/linux-iommu/20200513132114.6046-1-m.szyprowski@samsung.com/T/
 ---
- include/linux/dma-mapping.h | 78 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
+ include/linux/iommu.h | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index b43116a..b50fe36 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -609,6 +609,84 @@ static inline void dma_sync_single_range_for_device(struct device *dev,
- 	return dma_sync_single_for_device(dev, addr + offset, size, dir);
- }
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 7cfd2dd..5bed18a 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -478,6 +478,22 @@ extern size_t iommu_map_sg_atomic(struct iommu_domain *domain,
+ extern void iommu_set_fault_handler(struct iommu_domain *domain,
+ 			iommu_fault_handler_t handler, void *token);
  
 +/**
-+ * dma_map_sgtable - Map the given buffer for DMA
-+ * @dev:	The device for which to perform the DMA operation
++ * iommu_map_sgtable - Map the given buffer to the IOMMU domain
++ * @domain:	The IOMMU domain to perform the mapping
++ * @iova:	The start address to map the buffer
 + * @sgt:	The sg_table object describing the buffer
-+ * @dir:	DMA direction
-+ * @attrs:	Optional DMA attributes for the map operation
++ * @prot:	IOMMU protection bits
 + *
-+ * Maps a buffer described by a scatterlist stored in the given sg_table
-+ * object for the @dir DMA operation by the @dev device. After success
-+ * the ownership for the buffer is transferred to the DMA domain. One has
-+ * to call dma_sync_sgtable_for_cpu() or dma_unmap_sgtable() to move the
-+ * ownership of the buffer back to the CPU domain before touching the
-+ * buffer by the CPU.
-+ * Returns 0 on success or -EINVAL on error during mapping the buffer.
++ * Creates a mapping at @iova for the buffer described by a scatterlist
++ * stored in the given sg_table object in the provided IOMMU domain.
 + */
-+static inline int dma_map_sgtable(struct device *dev, struct sg_table *sgt,
-+		enum dma_data_direction dir, unsigned long attrs)
++static inline size_t iommu_map_sgtable(struct iommu_domain *domain,
++			unsigned long iova, struct sg_table *sgt, int prot)
 +{
-+	int n = dma_map_sg_attrs(dev, sgt->sgl, sgt->orig_nents, dir, attrs);
-+
-+	if (n <= 0)
-+		return -EINVAL;
-+	sgt->nents = n;
-+	return 0;
++	return iommu_map_sg(domain, iova, sgt->sgl, sgt->orig_nents, prot);
 +}
 +
-+/**
-+ * dma_unmap_sgtable - Unmap the given buffer for DMA
-+ * @dev:	The device for which to perform the DMA operation
-+ * @sgt:	The sg_table object describing the buffer
-+ * @dir:	DMA direction
-+ * @attrs:	Optional DMA attributes for the unmap operation
-+ *
-+ * Unmaps a buffer described by a scatterlist stored in the given sg_table
-+ * object for the @dir DMA operation by the @dev device. After this function
-+ * the ownership of the buffer is transferred back to the CPU domain.
-+ */
-+static inline void dma_unmap_sgtable(struct device *dev, struct sg_table *sgt,
-+		enum dma_data_direction dir, unsigned long attrs)
-+{
-+	dma_unmap_sg_attrs(dev, sgt->sgl, sgt->orig_nents, dir, attrs);
-+}
-+
-+/**
-+ * dma_sync_sgtable_for_cpu - Synchronize the given buffer for CPU access
-+ * @dev:	The device for which to perform the DMA operation
-+ * @sgt:	The sg_table object describing the buffer
-+ * @dir:	DMA direction
-+ *
-+ * Performs the needed cache synchronization and moves the ownership of the
-+ * buffer back to the CPU domain, so it is safe to perform any access to it
-+ * by the CPU. Before doing any further DMA operations, one has to transfer
-+ * the ownership of the buffer back to the DMA domain by calling the
-+ * dma_sync_sgtable_for_device().
-+ */
-+static inline void dma_sync_sgtable_for_cpu(struct device *dev,
-+		struct sg_table *sgt, enum dma_data_direction dir)
-+{
-+	dma_sync_sg_for_cpu(dev, sgt->sgl, sgt->orig_nents, dir);
-+}
-+
-+/**
-+ * dma_sync_sgtable_for_device - Synchronize the given buffer for DMA
-+ * @dev:	The device for which to perform the DMA operation
-+ * @sgt:	The sg_table object describing the buffer
-+ * @dir:	DMA direction
-+ *
-+ * Performs the needed cache synchronization and moves the ownership of the
-+ * buffer back to the DMA domain, so it is safe to perform the DMA operation.
-+ * Once finished, one has to call dma_sync_sgtable_for_cpu() or
-+ * dma_unmap_sgtable().
-+ */
-+static inline void dma_sync_sgtable_for_device(struct device *dev,
-+		struct sg_table *sgt, enum dma_data_direction dir)
-+{
-+	dma_sync_sg_for_device(dev, sgt->sgl, sgt->orig_nents, dir);
-+}
-+
- #define dma_map_single(d, a, s, r) dma_map_single_attrs(d, a, s, r, 0)
- #define dma_unmap_single(d, a, s, r) dma_unmap_single_attrs(d, a, s, r, 0)
- #define dma_map_sg(d, s, n, r) dma_map_sg_attrs(d, s, n, r, 0)
+ extern void iommu_get_resv_regions(struct device *dev, struct list_head *list);
+ extern void iommu_put_resv_regions(struct device *dev, struct list_head *list);
+ extern void generic_iommu_put_resv_regions(struct device *dev,
 -- 
 1.9.1
 
