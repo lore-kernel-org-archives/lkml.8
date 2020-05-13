@@ -2,108 +2,145 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E39BEC2D0FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18850CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCF0A20769
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:28:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="onvfodWQ"
+	by mail.kernel.org (Postfix) with ESMTP id E1A74206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:30:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589373038;
+	bh=tbgdDFLwBCOHxxu8vhVGfGwoUxD81QPyOCzi1LnrSNs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KNVXzg7axIamHGuByJNkNrCqCA4sBkbEJCGxLRZ0rUVElLLrx8eCkibyAkLMb0Zvr
+	 uEcYrri15XOHwfoZb1O90CAQ9jNidh9ccHvwd430tkVlV++o19ccufBJEaN0RHUlIq
+	 6odf1eSjE2w2ZKypze5cE4VCOHpBsq/Kmjtj2Bd8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731268AbgEMM2z (ORCPT
+        id S1731791AbgEMMai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 08:28:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45808 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbgEMM2y (ORCPT
+        Wed, 13 May 2020 08:30:38 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39872 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729975AbgEMMag (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 08:28:54 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97C06C061A0C;
-        Wed, 13 May 2020 05:28:54 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id i22so4637218oik.10;
-        Wed, 13 May 2020 05:28:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X+YMEnNGHIRHv5i2pgJP6CvjowaQ7wp0v7KSyBmjqZg=;
-        b=onvfodWQlZcqrfWAvLT92NRwFi3+YT5iv65aStLrJZR0Z37RjR+kb0qQas8E5QafYc
-         XSm/Rd5SQDM905szt1AV++k41Dq1HgwfL3Io61Wri0mQ4jCSzeNLtloDzS8j+FF/ZvLc
-         63N4WeS6GR438bITwrAP9oT/9rHp0Fvxoa2tzCZoQ68EZren+X5TBZ8O9y+q2UNgghh+
-         tngvpieVNVdinoma2EEVAs6pGK2minA0Rnvhto36+DpjM82Ns7ypC3d78xbOvKrLNTo2
-         RsbmrNOQ8IaA9Eo91CRoD5TZT5YzbaFVatapevo7V7ENt7aX7icmphVe1SGEFHXmS/XC
-         tooA==
+        Wed, 13 May 2020 08:30:36 -0400
+Received: by mail-pf1-f196.google.com with SMTP id b190so2184148pfg.6;
+        Wed, 13 May 2020 05:30:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=X+YMEnNGHIRHv5i2pgJP6CvjowaQ7wp0v7KSyBmjqZg=;
-        b=dN66iWcb1x+9pUccBoi/T7TbVIBsQ014Pi1vuFkqaXOxfp5tAA7RraxAzWNr/buM6V
-         xFha8R4tnYvLFmPIYCUPSzvOnbAfqPgjk/YQJNFoEOTSkH7+EWNB6n+K4rQPMDLlNzyh
-         vKlZKbC6WBgwepE/l9c1mFOF4vjQnzGjMz2Cgci0q2FdPacPRQk62YfcmTSNYuyEKSb4
-         8UUCBx/vjkHZtZKF4KM3B2A3/lmTVKFYiwrsA1X5FJD/CsiT1NmZO8J4jumtTmfKh+Nb
-         KimS6o2NWN1TuxZzJE2/3DpiCHGsus2lInSlkWn9ianaHiBAsJaXL2i6A6iO8kQYQBix
-         xMtQ==
-X-Gm-Message-State: AGi0PuawNlx++odVUU0wLmfYsB2eWdkEteDBazdsgmCN/EF7hUe18+df
-        VmSsOzra+ld8xfkDNZ18XGM4R50=
-X-Google-Smtp-Source: APiQypJrccrVkQAAcpRmapFbtFU/9vMh8lVpj0epLTDOYnKFYgpoevntivaAzvcs6IzA0P5gwNawjw==
-X-Received: by 2002:aca:dc82:: with SMTP id t124mr11220213oig.160.1589372933933;
-        Wed, 13 May 2020 05:28:53 -0700 (PDT)
-Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
-        by smtp.gmail.com with ESMTPSA id v3sm4200611ote.39.2020.05.13.05.28.53
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=s6UKwXNDP9/u6KtJrcoesDc1tFaVGyXaG/2QuDgOJR0=;
+        b=co8jHKFL+Mb5LtsFAWfz0YLxscLUWImEz3JVJoLLy+1eHoHJIi4hF4uTrWG9HJgDTn
+         ZToyMAiUq6QvCHrPeAWZ96cCXKk1eFQ/02XJMBb7qo7wKKIgXWQo2zBe963txR4Yxatw
+         fM86kAWoRt5Ax8A9Dc/mB9pWO/Qe3NT1tPnlX35HxDVRTrHx5lExXQDfoccQ5ZxkuoZY
+         L0qzOJl8vPHZbVbzNRstQuNAVB0hGC95jvV3g8vhhEjLTra9wm35eq6z/GnTFZvkgrf8
+         f1G3PmOqwXgW8xnMq6/+jhQpCy2zei1NulWChf0s0X/mTzSyPXjRWqB5rUS/Apjv3VRo
+         5mCg==
+X-Gm-Message-State: AGi0Pub+uZ7owmH5WLkKMnUpFV8w076KIJ0R0rdMsPp6eDZs7JyarhB+
+        PQuDbcVwAUaOq9i1PRja/FE=
+X-Google-Smtp-Source: APiQypJgfhEo9WP6IGCoJH2PF3oIVLchRnTrr8jLp5QQMzfIh8kliCILIbT2GCnajLPHNpJWyqBd/w==
+X-Received: by 2002:a63:f809:: with SMTP id n9mr24815453pgh.355.1589373036088;
+        Wed, 13 May 2020 05:30:36 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id x23sm12936041pgf.32.2020.05.13.05.30.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 05:28:53 -0700 (PDT)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:8b39:c3f3:f502:5c4e])
-        by serve.minyard.net (Postfix) with ESMTPSA id ECF3A180042;
-        Wed, 13 May 2020 12:28:51 +0000 (UTC)
-Date:   Wed, 13 May 2020 07:28:50 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] char: ipmi: convert to use i2c_new_client_device()
-Message-ID: <20200513122850.GT9902@minyard.net>
-Reply-To: minyard@acm.org
-References: <20200326210958.13051-1-wsa+renesas@sang-engineering.com>
- <20200326210958.13051-2-wsa+renesas@sang-engineering.com>
- <20200512211425.GQ9902@minyard.net>
- <20200513071004.GA1043@ninjato>
+        Wed, 13 May 2020 05:30:34 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id A33864063E; Wed, 13 May 2020 12:30:33 +0000 (UTC)
+Date:   Wed, 13 May 2020 12:30:33 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Scott Branden <scott.branden@broadcom.com>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Desmond Yan <desmond.yan@broadcom.com>,
+        James Hu <james.hu@broadcom.com>
+Subject: Re: [PATCH v5 6/7] misc: bcm-vk: add Broadcom VK driver
+Message-ID: <20200513123033.GL11244@42.do-not-panic.com>
+References: <20200508002739.19360-1-scott.branden@broadcom.com>
+ <20200508002739.19360-7-scott.branden@broadcom.com>
+ <20200513003830.GJ11244@42.do-not-panic.com>
+ <60372b2f-c03d-6384-43a7-8b97413b6672@broadcom.com>
+ <20200513065046.GA764247@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200513071004.GA1043@ninjato>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200513065046.GA764247@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 09:10:04AM +0200, Wolfram Sang wrote:
-> 
-> > > -	addr_info->added_client = i2c_new_device(to_i2c_adapter(adev),
-> > > -						 &addr_info->binfo);
-> > > +	addr_info->added_client = i2c_new_client_device(to_i2c_adapter(adev),
-> > > +							&addr_info->binfo);
+On Wed, May 13, 2020 at 08:50:46AM +0200, Greg Kroah-Hartman wrote:
+> On Tue, May 12, 2020 at 11:31:28PM -0700, Scott Branden wrote:
+> > Hi Luis,
 > > 
-> > i2c_new_client_device returns an ERR_PTR, not NULL on error.  So this
+> > On 2020-05-12 5:38 p.m., Luis Chamberlain wrote:
+> > > On Thu, May 07, 2020 at 05:27:38PM -0700, Scott Branden wrote:
+> > > > +#if defined(CONFIG_REQ_FW_INTO_BUF_PRIV)
+> > > > +
+> > > > +#define KERNEL_PREAD_FLAG_PART	0x0001 /* Allow reading part of file */
+> > > > +#define REQUEST_FIRMWARE_INTO_BUF request_firmware_into_buf_priv
+> > > > +int request_firmware_into_buf_priv(const struct firmware **firmware_p,
+> > > > +				   const char *name, struct device *device,
+> > > > +				   void *buf, size_t size,
+> > > > +				   size_t offset, unsigned int pread_flags);
+> > > > +
+> > > > +#else
+> > > > +
+> > > > +#define REQUEST_FIRMWARE_INTO_BUF request_firmware_into_buf
+> > > > +
+> > > > +#endif
+> > > > +
+> > > > +#endif
+> > > Please clean this up, the code must reflect only the code upstream. No
+> > > config stuff like this should be used on the driver. I had to stop my
+> > > review here.
+> > The CONFIG_ prefix shouldn't have been there as there is no Kconfig option
+> > to select this.
+> > Would like to just change it to a normal define without CONFIG_ prefix
+> > instead?
+> > This code is here to allow a limited version of the driver to run on older
+> > kernels which do not have the necessary partial file read support.
+> > By having it in the upstream codebase we don't need to maintain an internal
+> > version of the driver.  User can take the upstream kernel module and compile
+> > it against an old version of the kernel by via the define.
 > 
-> Yes, this is the main motivation for the new API.
+> That's not how kernel drivers in the tree work, sorry.  They do not
+> contain "older kernel support" in them, they work as a whole with the
+> rest of the kernel they ship with only.
 > 
-> > needs some more work.  I'll send something out soon.
-> 
-> Why does it need that work? 'added_client' is only used with
-> i2c_unregister_device() which has been fixed to handle ERR_PTR as well.
-> Or am I missing something?
-> 
+> Otherwise all drivers would be a total mess over time, can you imagine
+> doing this for the next 20+ years?  Not maintainable.
 
-No, I didn't look to see if i2c_unregister_device could handle that.
+Scott, now imagine the amount of cleanup you'd need to do to your driver
+to get it to a state where it doesn't depend on any old kernel. That's
+the exact shape of the driver we want.
 
--corey
+To backport, you can look into the backports project which strives to
+backport drivers automatically [0] to older kernels.
+
+[0] https://backports.wiki.kernel.org/index.php/Main_Page
+
+  Luis
