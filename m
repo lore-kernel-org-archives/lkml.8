@@ -2,117 +2,107 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D33CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB09AC2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 109A320671
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:19:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ZJO7lWSA";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XZDh0kLB"
+	by mail.kernel.org (Postfix) with ESMTP id 8338F204EF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:19:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589379581;
+	bh=XCp5F/lYiyuFT5h0NEXzypxvSnrMq5SZYIt8WXe6LVw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=szXKs0w541jtdX6+xKd+FoI8nrvvKAP/Iv7v9emARu/VIDgmLWGxbIcfPENXLZDF+
+	 r0v92fkKqMoFVxh+mznJol9lj5Ro4SjPURH9tH2msNFE6wKAypzEqUeRQko6Xy1Rt2
+	 dw6LUwCBS1IZYmJ/qYQCQA6Phyuv0pAd3cDBqcKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388930AbgEMOT3 (ORCPT
+        id S2388942AbgEMOTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 10:19:29 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:38379 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733142AbgEMOT2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 10:19:28 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id A7DB55C01D6;
-        Wed, 13 May 2020 10:19:27 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 13 May 2020 10:19:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=6fjHlyOTOqWxHSt4RPRb8GVZ91Z
-        qD9TrDEJsn//PCGI=; b=ZJO7lWSA1pGZWi77jHrq32z7Kh+jSm15JVHlGSRHKvV
-        O8MQzeqo6gFi4DzkkOXBXHxXEkqP9u79WIBJNeDQYstbGM4IF/DZB2GD79jDc+KM
-        k+Qi05829aHju0opokmObn9us4YjjRWajf7z71yrjSpqsAPaj9BSceGGuz6CV1AM
-        7vWCksQe0Z9CD55EJ2OjatiODXhZ58TM76WhqjwzfJDNw4yxWRtJgWeCsAmygv2L
-        sajikkBNZn3mNWSGzrlQcG8rfXPiUm2g3VmPSA/Ar1cejeOAtgwsu0JjKN9XHoy3
-        9OqSOehjuOQ9MhSwa8vpjn8xj9FUkF7GZ3oDlQae98g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=6fjHly
-        OTOqWxHSt4RPRb8GVZ91ZqD9TrDEJsn//PCGI=; b=XZDh0kLBcHH9Yt+8i992CH
-        MpLJEFE1lYT8xfl94OHJ880u0bFQ0lJ+IVl3ckcXz3q1TeNVfLQv1vOjU/dE2a9n
-        FdrZrk+II/hDrdIElcYWzrq/8xXVaTW694NbBA+q8FKDr/mVmp9gSnNSqU7jOJLu
-        VCdjn/RW2jtmRl7fkemUcv/y7CWqTWk9KNJpk7exYVVugZCyLQ2ukYwtohiQMTdY
-        vwjdwPr7/7Lx1JSQHeJjtY39rKODDR/9eP5nccwH3vIgsaZrMYTSkZwC5SyH+Jj9
-        4hIMK5omIlFttPIRo+NRdCiDuI6Is7IqIA+RFJguZsMPed3Y/L1lgJBAAeogGr1Q
-        ==
-X-ME-Sender: <xms:7gG8Xjc1-jAmWs4zidapqSMWKH7xX_IUOGlynmyyAVa6ZOPYFNSfKQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrleeggdejgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjsehgtderre
-    dttddvnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgihimhgvsegtvghr
-    nhhordhtvggthheqnecuggftrfgrthhtvghrnhepleekgeehhfdutdeljefgleejffehff
-    fgieejhffgueefhfdtveetgeehieehgedunecukfhppeeltddrkeelrdeikedrjeeinecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimh
-    gvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:7gG8XpMuAq-TjdugyqsUGqR86HcwnlTEnvMEal0lOwP8NEC0ypq19A>
-    <xmx:7gG8Xsg-qtpBZoJgCZt1nuy1Azyv0dDsAE5l_xgTKelL_hcNw4tgoA>
-    <xmx:7gG8Xk_XJ6S60gRhpBm2Onla_uzS5xavcTtCGVdUkod7E3DEP8ZYzw>
-    <xmx:7wG8XlXXbyVi5ickxuVV-yGc1SgXk66YGaZ5WLjily-gjjZMet4rRA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id DD500328005D;
-        Wed, 13 May 2020 10:19:25 -0400 (EDT)
-Date:   Wed, 13 May 2020 16:19:23 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Samuel Zou <zou_wei@huawei.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, wens@csie.org, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] ASoC: sun4i-i2s: Use PTR_ERR_OR_ZERO() to simplify
- code
-Message-ID: <20200513141923.klp2omelhawzxy4d@gilmour.lan>
-References: <1588752912-37596-1-git-send-email-zou_wei@huawei.com>
+        Wed, 13 May 2020 10:19:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733142AbgEMOTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 10:19:39 -0400
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F25A220708;
+        Wed, 13 May 2020 14:19:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589379579;
+        bh=XCp5F/lYiyuFT5h0NEXzypxvSnrMq5SZYIt8WXe6LVw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=uOJGUSp5I2Fhby38cG8aJB5ujSNOpddNlZHsiqZbn37fuENgE22NYAwW53wpZU6TE
+         MhNxw4iMQFX9TOzBv4/GTYMM6NmU8ZRogVMufoD8nEujm43LPGYyH6WdGhjmZ89W8B
+         Ah8qptaWTjtm601fRZr25nbACz19TyBVIol8MdoE=
+Received: by mail-ua1-f44.google.com with SMTP id r2so6105393uam.7;
+        Wed, 13 May 2020 07:19:39 -0700 (PDT)
+X-Gm-Message-State: AGi0PubOpjyrhBhJsp1c1HERHhWm7SsLiUirirkzOMfsBRG9RMVf5DiJ
+        TCXr7YcAJmZUIQtLKENo4bVpw0tkAxMrmfF+dSg=
+X-Google-Smtp-Source: APiQypK0Z3eeJRCbcDNHMvprSx0ZZ2CAJhP4go8hTJZBChpwnx4JHb3r9jdcrxmUSeo5vLo9P/JwjJDtE5yuwipHIKs=
+X-Received: by 2002:a9f:2c96:: with SMTP id w22mr21303032uaj.14.1589379578140;
+ Wed, 13 May 2020 07:19:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6ttmhlo4bwfcw7it"
-Content-Disposition: inline
-In-Reply-To: <1588752912-37596-1-git-send-email-zou_wei@huawei.com>
+References: <cover.1589311577.git.skhan@linuxfoundation.org>
+ <1159d74f88d100521c568037327ebc8ec7ffc6ef.1589311577.git.skhan@linuxfoundation.org>
+ <20200513054950.GT23230@ZenIV.linux.org.uk> <20200513131335.GN11244@42.do-not-panic.com>
+In-Reply-To: <20200513131335.GN11244@42.do-not-panic.com>
+From:   Luis Chamberlain <mcgrof@kernel.org>
+Date:   Wed, 13 May 2020 08:19:25 -0600
+X-Gmail-Original-Message-ID: <CAB=NE6WdYcURTxNLngMk3+JQfNHG2MX1oE_Mv08G5zcw=mPOyw@mail.gmail.com>
+Message-ID: <CAB=NE6WdYcURTxNLngMk3+JQfNHG2MX1oE_Mv08G5zcw=mPOyw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] fs: avoid fdput() after failed fdget() in kernel_read_file_from_fd()
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Mimi Zohar <zohar@linux.vnet.ibm.com>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 13, 2020 at 7:13 AM Luis Chamberlain <mcgrof@kernel.org> wrote:
+>
+> On Wed, May 13, 2020 at 06:49:50AM +0100, Al Viro wrote:
+> > On Tue, May 12, 2020 at 01:43:05PM -0600, Shuah Khan wrote:
+> > > diff --git a/fs/exec.c b/fs/exec.c
+> > > index 06b4c550af5d..ea24bdce939d 100644
+> > > --- a/fs/exec.c
+> > > +++ b/fs/exec.c
+> > > @@ -1021,8 +1021,8 @@ int kernel_read_file_from_fd(int fd, void **buf, loff_t *size, loff_t max_size,
+> > >             goto out;
+> > >
+> > >     ret = kernel_read_file(f.file, buf, size, max_size, id);
+> > > -out:
+> > >     fdput(f);
+> > > +out:
+> > >     return ret;
+> >
+> > Incidentally, why is that thing exported?
+>
+> Both kernel_read_file_from_fd() and kernel_read_file() are exported
+> because they have users, however kernel_read_file() only has security
+> stuff as a user. Do we want to get rid of the lsm hook for it?
 
---6ttmhlo4bwfcw7it
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Alright, yeah just the export needs to be removed. I have a patch
+series dealing with these callers so will add it to my queue.
 
-
-
-On Wed, May 06, 2020 at 04:15:12PM +0800, Samuel Zou wrote:
-> Fixes coccicheck warning:
->=20
-> sound/soc/sunxi/sun4i-i2s.c:1177:1-3: WARNING: PTR_ERR_OR_ZERO can be used
->=20
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Samuel Zou <zou_wei@huawei.com>
-
-Didn't we remove that coccicheck test?
-
-Maxime
-
---6ttmhlo4bwfcw7it
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXrwB6wAKCRDj7w1vZxhR
-xbWmAP0Wl+mfUFUgVS86noXlYchEz4RTpXjy5YY+CO73b7vL5wEA4PceZeiROH26
-wMKoHBBgjpNbCBfMKyOwfraY1MTy1AM=
-=crja
------END PGP SIGNATURE-----
-
---6ttmhlo4bwfcw7it--
+  Luis
