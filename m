@@ -2,54 +2,52 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1AA5C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74758CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D268820575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EA0720769
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:51:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363458;
-	bh=pGMOmfgZYD4hG2YOmoxa8HOQPBwC8mhC3RTXFJgBhFU=;
+	s=default; t=1589363463;
+	bh=+feFlMH+aRpu3ZqDbPLETijhIkIBmj5Z97hvv1TLdeA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Wr1iGvtfR/KITYkhqMFHaPXDAqu2LJVBGXdkGCfy3SJGT+lQC9fK2ovuCT6svI/M
-	 yk2yoNr7V7STlB7IWGFzibB37yvcbQQOgLJYQCyUNpOC4mwuPL0ZFw2ftOhtUka6iP
-	 11bD/elKTI7PQ1zXPmQ2AcDfe2Isqa5wIrsajrU4=
+	b=QzqExefnujeEr2yjrLJpC9IEOVvPGBM4L1pelNUTGOZFeovdZ4jQAgbMkCAHVOuuf
+	 r2va9BoNuEpzERmu5bcHpgvQ6lXMrLYyg3vLXt5jkRuzVBop6ZHuXtbA2hSXnHp8m0
+	 q0hCarqc2cSYJ5yEYM6laM/SFdy9UynJ2MZXFI2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733112AbgEMJu5 (ORCPT
+        id S2387588AbgEMJvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:50:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51058 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:51:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732965AbgEMJuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:50:50 -0400
+        id S1732965AbgEMJu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:50:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D96D22312A;
-        Wed, 13 May 2020 09:50:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3153C23126;
+        Wed, 13 May 2020 09:50:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363450;
-        bh=pGMOmfgZYD4hG2YOmoxa8HOQPBwC8mhC3RTXFJgBhFU=;
+        s=default; t=1589363457;
+        bh=+feFlMH+aRpu3ZqDbPLETijhIkIBmj5Z97hvv1TLdeA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JZbnAGnjujml0isSLvdXj5WRpG9+uyT+Piy9f9m4llYcWR7s68ihs490/uR5QTCJG
-         kRPsm0iBwDajAqVmvYEnDC0Iz4Ve8facstS7cnWejPEEIwFqfQjc1L7vfbeDAkFBnW
-         F1L7JDqN7zrAevTv2QI8Tm9mxN5v+pDisq8zjXjg=
+        b=kr3pCUSLl9YmsOY1vRICl7Wkt5Ltdr0/ZTAUV8Eoktasf7m9TrDlHF3bu0OfXjbT6
+         HJKbvkdWU6KwFddseYgLolIoVNAPfW68hE9ZviHXn5xjijC/lOnnRikn9NkDWfBkns
+         Bg4oeAaEDJDytb4mD9nsac9DUVBeBel3rG7K9EI4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Jere=20Lepp=C3=A4nen?= <jere.leppanen@nokia.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.4 42/90] sctp: Fix bundling of SHUTDOWN with COOKIE-ACK
-Date:   Wed, 13 May 2020 11:44:38 +0200
-Message-Id: <20200513094413.208427698@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>,
+        Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 5.4 43/90] Revert "HID: wacom: generic: read the number of expected touches on a per collection basis"
+Date:   Wed, 13 May 2020 11:44:39 +0200
+Message-Id: <20200513094413.327648897@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -62,66 +60,172 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jere Leppänen <jere.leppanen@nokia.com>
+From: Jason Gerecke <killertofu@gmail.com>
 
-commit 145cb2f7177d94bc54563ed26027e952ee0ae03c upstream.
+commit b43f977dd281945960c26b3ef67bba0fa07d39d9 upstream.
 
-When we start shutdown in sctp_sf_do_dupcook_a(), we want to bundle
-the SHUTDOWN with the COOKIE-ACK to ensure that the peer receives them
-at the same time and in the correct order. This bundling was broken by
-commit 4ff40b86262b ("sctp: set chunk transport correctly when it's a
-new asoc"), which assigns a transport for the COOKIE-ACK, but not for
-the SHUTDOWN.
+This reverts commit 15893fa40109f5e7c67eeb8da62267d0fdf0be9d.
 
-Fix this by passing a reference to the COOKIE-ACK chunk as an argument
-to sctp_sf_do_9_2_start_shutdown() and onward to
-sctp_make_shutdown(). This way the SHUTDOWN chunk is assigned the same
-transport as the COOKIE-ACK chunk, which allows them to be bundled.
+The referenced commit broke pen and touch input for a variety of devices
+such as the Cintiq Pro 32. Affected devices may appear to work normally
+for a short amount of time, but eventually loose track of actual touch
+state and can leave touch arbitration enabled which prevents the pen
+from working. The commit is not itself required for any currently-available
+Bluetooth device, and so we revert it to correct the behavior of broken
+devices.
 
-In sctp_sf_do_9_2_start_shutdown(), the void *arg parameter was
-previously unused. Now that we're taking it into use, it must be a
-valid pointer to a chunk, or NULL. There is only one call site where
-it's not, in sctp_sf_autoclose_timer_expire(). Fix that too.
+This breakage occurs due to a mismatch between the order of collections
+and the order of usages on some devices. This commit tries to read the
+contact count before processing events, but will fail if the contact
+count does not occur prior to the first logical finger collection. This
+is the case for devices like the Cintiq Pro 32 which place the contact
+count at the very end of the report.
 
-Fixes: 4ff40b86262b ("sctp: set chunk transport correctly when it's a new asoc")
-Signed-off-by: Jere Leppänen <jere.leppanen@nokia.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Cc: Guenter Roeck <linux@roeck-us.net>
+Without the contact count set, touches will only be partially processed.
+The `wacom_wac_finger_slot` function will not open any slots since the
+number of contacts seen is greater than the expectation of 0, but we will
+still end up calling `input_mt_sync_frame` for each finger anyway. This
+can cause problems for userspace separate from the issue currently taking
+place in the kernel. Only once all of the individual finger collections
+have been processed do we finally get to the enclosing collection which
+contains the contact count. The value ends up being used for the *next*
+report, however.
+
+This delayed use of the contact count can cause the driver to loose track
+of the actual touch state and believe that there are contacts down when
+there aren't. This leaves touch arbitration enabled and prevents the pen
+from working. It can also cause userspace to incorrectly treat single-
+finger input as gestures.
+
+Link: https://github.com/linuxwacom/input-wacom/issues/146
+Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+Reviewed-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
+Fixes: 15893fa40109 ("HID: wacom: generic: read the number of expected touches on a per collection basis")
+Cc: stable@vger.kernel.org # 5.3+
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sctp/sm_statefuns.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/hid/wacom_wac.c |   79 +++++++++---------------------------------------
+ 1 file changed, 16 insertions(+), 63 deletions(-)
 
---- a/net/sctp/sm_statefuns.c
-+++ b/net/sctp/sm_statefuns.c
-@@ -1865,7 +1865,7 @@ static enum sctp_disposition sctp_sf_do_
- 		 */
- 		sctp_add_cmd_sf(commands, SCTP_CMD_REPLY, SCTP_CHUNK(repl));
- 		return sctp_sf_do_9_2_start_shutdown(net, ep, asoc,
--						     SCTP_ST_CHUNK(0), NULL,
-+						     SCTP_ST_CHUNK(0), repl,
- 						     commands);
- 	} else {
- 		sctp_add_cmd_sf(commands, SCTP_CMD_NEW_STATE,
-@@ -5470,7 +5470,7 @@ enum sctp_disposition sctp_sf_do_9_2_sta
- 	 * in the Cumulative TSN Ack field the last sequential TSN it
- 	 * has received from the peer.
- 	 */
--	reply = sctp_make_shutdown(asoc, NULL);
-+	reply = sctp_make_shutdown(asoc, arg);
- 	if (!reply)
- 		goto nomem;
- 
-@@ -6068,7 +6068,7 @@ enum sctp_disposition sctp_sf_autoclose_
- 	disposition = SCTP_DISPOSITION_CONSUME;
- 	if (sctp_outq_is_empty(&asoc->outqueue)) {
- 		disposition = sctp_sf_do_9_2_start_shutdown(net, ep, asoc, type,
--							    arg, commands);
-+							    NULL, commands);
+--- a/drivers/hid/wacom_wac.c
++++ b/drivers/hid/wacom_wac.c
+@@ -2637,9 +2637,25 @@ static void wacom_wac_finger_pre_report(
+ 			case HID_DG_TIPSWITCH:
+ 				hid_data->last_slot_field = equivalent_usage;
+ 				break;
++			case HID_DG_CONTACTCOUNT:
++				hid_data->cc_report = report->id;
++				hid_data->cc_index = i;
++				hid_data->cc_value_index = j;
++				break;
+ 			}
+ 		}
  	}
++
++	if (hid_data->cc_report != 0 &&
++	    hid_data->cc_index >= 0) {
++		struct hid_field *field = report->field[hid_data->cc_index];
++		int value = field->value[hid_data->cc_value_index];
++		if (value)
++			hid_data->num_expected = value;
++	}
++	else {
++		hid_data->num_expected = wacom_wac->features.touch_max;
++	}
+ }
  
- 	return disposition;
+ static void wacom_wac_finger_report(struct hid_device *hdev,
+@@ -2649,7 +2665,6 @@ static void wacom_wac_finger_report(stru
+ 	struct wacom_wac *wacom_wac = &wacom->wacom_wac;
+ 	struct input_dev *input = wacom_wac->touch_input;
+ 	unsigned touch_max = wacom_wac->features.touch_max;
+-	struct hid_data *hid_data = &wacom_wac->hid_data;
+ 
+ 	/* If more packets of data are expected, give us a chance to
+ 	 * process them rather than immediately syncing a partial
+@@ -2663,7 +2678,6 @@ static void wacom_wac_finger_report(stru
+ 
+ 	input_sync(input);
+ 	wacom_wac->hid_data.num_received = 0;
+-	hid_data->num_expected = 0;
+ 
+ 	/* keep touch state for pen event */
+ 	wacom_wac->shared->touch_down = wacom_wac_finger_count_touches(wacom_wac);
+@@ -2738,73 +2752,12 @@ static void wacom_report_events(struct h
+ 	}
+ }
+ 
+-static void wacom_set_num_expected(struct hid_device *hdev,
+-				   struct hid_report *report,
+-				   int collection_index,
+-				   struct hid_field *field,
+-				   int field_index)
+-{
+-	struct wacom *wacom = hid_get_drvdata(hdev);
+-	struct wacom_wac *wacom_wac = &wacom->wacom_wac;
+-	struct hid_data *hid_data = &wacom_wac->hid_data;
+-	unsigned int original_collection_level =
+-		hdev->collection[collection_index].level;
+-	bool end_collection = false;
+-	int i;
+-
+-	if (hid_data->num_expected)
+-		return;
+-
+-	// find the contact count value for this segment
+-	for (i = field_index; i < report->maxfield && !end_collection; i++) {
+-		struct hid_field *field = report->field[i];
+-		unsigned int field_level =
+-			hdev->collection[field->usage[0].collection_index].level;
+-		unsigned int j;
+-
+-		if (field_level != original_collection_level)
+-			continue;
+-
+-		for (j = 0; j < field->maxusage; j++) {
+-			struct hid_usage *usage = &field->usage[j];
+-
+-			if (usage->collection_index != collection_index) {
+-				end_collection = true;
+-				break;
+-			}
+-			if (wacom_equivalent_usage(usage->hid) == HID_DG_CONTACTCOUNT) {
+-				hid_data->cc_report = report->id;
+-				hid_data->cc_index = i;
+-				hid_data->cc_value_index = j;
+-
+-				if (hid_data->cc_report != 0 &&
+-				    hid_data->cc_index >= 0) {
+-
+-					struct hid_field *field =
+-						report->field[hid_data->cc_index];
+-					int value =
+-						field->value[hid_data->cc_value_index];
+-
+-					if (value)
+-						hid_data->num_expected = value;
+-				}
+-			}
+-		}
+-	}
+-
+-	if (hid_data->cc_report == 0 || hid_data->cc_index < 0)
+-		hid_data->num_expected = wacom_wac->features.touch_max;
+-}
+-
+ static int wacom_wac_collection(struct hid_device *hdev, struct hid_report *report,
+ 			 int collection_index, struct hid_field *field,
+ 			 int field_index)
+ {
+ 	struct wacom *wacom = hid_get_drvdata(hdev);
+ 
+-	if (WACOM_FINGER_FIELD(field))
+-		wacom_set_num_expected(hdev, report, collection_index, field,
+-				       field_index);
+ 	wacom_report_events(hdev, report, collection_index, field_index);
+ 
+ 	/*
 
 
