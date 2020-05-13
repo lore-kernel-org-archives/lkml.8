@@ -2,111 +2,173 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1075DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8409C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A0E6205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:07:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U5YpserX"
+	by mail.kernel.org (Postfix) with ESMTP id C9932205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:11:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730712AbgEMWHQ (ORCPT
+        id S1730723AbgEMWLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 18:07:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51806 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729775AbgEMWHO (ORCPT
+        Wed, 13 May 2020 18:11:51 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:60360 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730130AbgEMWLu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 18:07:14 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1B81C061A0C;
-        Wed, 13 May 2020 15:07:14 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f134so15994473wmf.1;
-        Wed, 13 May 2020 15:07:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uIfGmlsWsv2Wb6K5SaLI3qMgfMija21e9CZ9F/PBTQw=;
-        b=U5YpserXKPS77Z1Gq3jFSa+91D02KZWmq8lLBynLq0SRsKcQQmtFvqZ0Sk2wM6WacF
-         lrN/jEfxHlWS2HXm9ymEQoS9yQxJC57j2oBDqtSe9nBi7k/4b6qnX9++3e5Bwr4adgR6
-         U+Goz3ocmjizxvWxzW5w0bbwxhERgxO1RL2MgCobaWcR6q5VWnQJ0xviCWTpe9cX8Xct
-         R3a49QAEZE7hPBTb22ye1lgyL7aC2JLlGM/Xkn5EHox5ebeR1oFwURSATzqmBqDX6muY
-         71IDsQdGtZueJLIPQBHz5lT9oZH5isJujwjXyC6LbAa6b8CTypgyta7WMwT9a4K/iaIK
-         +D5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uIfGmlsWsv2Wb6K5SaLI3qMgfMija21e9CZ9F/PBTQw=;
-        b=eFlLtCD1FBtqA0Oja7+V7XQBHYAEE9RXKcesiaWHxZAjxFHLKJhyU6vTLHKsD9qbTw
-         PY9TePC4W4a0mGa5XcqC75wKuYt1/fqeqP7SYOR8PHMo1k1V42R8BA+kctFACufz+CYR
-         anXPNPBmPh1GQLhk4zOjTILPCN12GKZa++tqHhv9El4U4phwx7sJuFiJoErN3qTSWWO+
-         EB+QYn57GiU8PPFadApoQ6Z/ljt8uFG2hK4GpT5n/hS4IyLp1bKDhRhcLz/pJNJ0Gl9a
-         xMfn7R36fj10fux+wz4Tqimho52uBs4V3cFm28dBCtpLS4iZUufkS1XCzsBkiSvlOkTz
-         NhRw==
-X-Gm-Message-State: AGi0Pub90yMqc/811UZRJoa0TWduh9J3nKhO6amaOOr6jA3DZBlGh70O
-        tyHTfWNC6VE54pXlU2YZij8dtV7D
-X-Google-Smtp-Source: APiQypJXnx6BlmHK7jVCOtk1nzV6kOPAUnhYYZV5BNr+gQ9tnc6/WaM1Ed4GNF3RKRIwNlktTRjTtg==
-X-Received: by 2002:a05:600c:290d:: with SMTP id i13mr29667029wmd.81.1589407633188;
-        Wed, 13 May 2020 15:07:13 -0700 (PDT)
-Received: from [10.230.191.242] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id o2sm29972862wmc.21.2020.05.13.15.07.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 May 2020 15:07:12 -0700 (PDT)
-Subject: Re: [PATCH net-next 1/4] net: ethernet: validate pause autoneg
- setting
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1589243050-18217-1-git-send-email-opendmb@gmail.com>
- <1589243050-18217-2-git-send-email-opendmb@gmail.com>
- <20200512004714.GD409897@lunn.ch>
- <ae63b295-b6e3-6c34-c69d-9e3e33bf7119@gmail.com>
- <20200512185503.GD1551@shell.armlinux.org.uk>
- <0cf740ed-bd13-89d5-0f36-1e5305210e97@gmail.com>
- <20200513053405.GE1551@shell.armlinux.org.uk>
- <20200513092050.GB1605@shell.armlinux.org.uk>
- <20200513134925.GE499265@lunn.ch>
-From:   Doug Berger <opendmb@gmail.com>
-Message-ID: <08316b1f-a88f-1eb5-5ab2-06c23900cae7@gmail.com>
-Date:   Wed, 13 May 2020 15:09:59 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 13 May 2020 18:11:50 -0400
+Received: from pps.filterd (m0148663.ppops.net [127.0.0.1])
+        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DLx935007225;
+        Wed, 13 May 2020 22:11:26 GMT
+Received: from g4t3427.houston.hpe.com (g4t3427.houston.hpe.com [15.241.140.73])
+        by mx0a-002e3701.pphosted.com with ESMTP id 3100yw20df-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 May 2020 22:11:26 +0000
+Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
+        by g4t3427.houston.hpe.com (Postfix) with ESMTP id 9CDB066;
+        Wed, 13 May 2020 22:11:25 +0000 (UTC)
+Received: from raspberrypi (unknown [16.214.83.120])
+        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id F1E6D45;
+        Wed, 13 May 2020 22:11:23 +0000 (UTC)
+Date:   Wed, 13 May 2020 17:11:23 -0500
+From:   Steve Wahl <steve.wahl@hpe.com>
+To:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Mike Travis <mike.travis@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] x86/api/uv: Remove code for unused distributed GRU mode
+Message-ID: <20200513221123.GJ3240@raspberrypi>
 MIME-Version: 1.0
-In-Reply-To: <20200513134925.GE499265@lunn.ch>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-13_09:2020-05-13,2020-05-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 mlxscore=0 suspectscore=1 spamscore=0 impostorscore=0
+ bulkscore=0 adultscore=0 mlxlogscore=999 malwarescore=0 clxscore=1011
+ cotscore=-2147483648 priorityscore=1501 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005130188
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/13/2020 6:49 AM, Andrew Lunn wrote:
->> So, I think consistency of implementation is more important than fixing
->> this; the current behaviour has been established for many years now.
-> 
-> Hi Russell, Doug
-> 
-> With netlink ethtool we have the possibility of adding a new API to
-> control this. And we can leave the IOCTL API alone, and the current
-> ethtool commands. We can add a new command to ethtool which uses the new API.
-> 
-> Question is, do we want to do this? Would we be introducing yet more
-> confusion, rather than making the situation better?
-> 
-> 	Andrew
-> 
-I think it is likely to introduce more confusion.
--Doug
+Distributed GRU mode appeared in only one generation of UV hardware,
+and no version of the BIOS has shipped with this feature enabled, and
+we have no plans to ever change that.  The gru.s3.mode check has
+always been and will continue to be false.  So remove this dead code.
+
+Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
+Acked-by: Dimitri Sivanich <sivanich@hpe.com>
+---
+ arch/x86/kernel/apic/x2apic_uv_x.c | 59 +-------------------------------------
+ 1 file changed, 1 insertion(+), 58 deletions(-)
+
+diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
+index ad53b2abc859..76971c8ea2d6 100644
+--- a/arch/x86/kernel/apic/x2apic_uv_x.c
++++ b/arch/x86/kernel/apic/x2apic_uv_x.c
+@@ -30,8 +30,6 @@ static enum uv_system_type	uv_system_type;
+ static int			uv_hubbed_system;
+ static int			uv_hubless_system;
+ static u64			gru_start_paddr, gru_end_paddr;
+-static u64			gru_dist_base, gru_first_node_paddr = -1LL, gru_last_node_paddr;
+-static u64			gru_dist_lmask, gru_dist_umask;
+ static union uvh_apicid		uvh_apicid;
+ 
+ /* Unpack OEM/TABLE ID's to be NULL terminated strings */
+@@ -85,20 +83,7 @@ static unsigned long __init uv_early_read_mmr(unsigned long addr)
+ 
+ static inline bool is_GRU_range(u64 start, u64 end)
+ {
+-	if (gru_dist_base) {
+-		u64 su = start & gru_dist_umask; /* Upper (incl pnode) bits */
+-		u64 sl = start & gru_dist_lmask; /* Base offset bits */
+-		u64 eu = end & gru_dist_umask;
+-		u64 el = end & gru_dist_lmask;
+-
+-		/* Must reside completely within a single GRU range: */
+-		return (sl == gru_dist_base && el == gru_dist_base &&
+-			su >= gru_first_node_paddr &&
+-			su <= gru_last_node_paddr &&
+-			eu == su);
+-	} else {
+-		return start >= gru_start_paddr && end <= gru_end_paddr;
+-	}
++	return start >= gru_start_paddr && end <= gru_end_paddr;
+ }
+ 
+ static bool uv_is_untracked_pat_range(u64 start, u64 end)
+@@ -797,42 +782,6 @@ static __init void map_high(char *id, unsigned long base, int pshift, int bshift
+ 		init_extra_mapping_wb(paddr, bytes);
+ }
+ 
+-static __init void map_gru_distributed(unsigned long c)
+-{
+-	union uvh_rh_gam_gru_overlay_config_mmr_u gru;
+-	u64 paddr;
+-	unsigned long bytes;
+-	int nid;
+-
+-	gru.v = c;
+-
+-	/* Only base bits 42:28 relevant in dist mode */
+-	gru_dist_base = gru.v & 0x000007fff0000000UL;
+-	if (!gru_dist_base) {
+-		pr_info("UV: Map GRU_DIST base address NULL\n");
+-		return;
+-	}
+-
+-	bytes = 1UL << UVH_RH_GAM_GRU_OVERLAY_CONFIG_MMR_BASE_SHFT;
+-	gru_dist_lmask = ((1UL << uv_hub_info->m_val) - 1) & ~(bytes - 1);
+-	gru_dist_umask = ~((1UL << uv_hub_info->m_val) - 1);
+-	gru_dist_base &= gru_dist_lmask; /* Clear bits above M */
+-
+-	for_each_online_node(nid) {
+-		paddr = ((u64)uv_node_to_pnode(nid) << uv_hub_info->m_val) |
+-				gru_dist_base;
+-		init_extra_mapping_wb(paddr, bytes);
+-		gru_first_node_paddr = min(paddr, gru_first_node_paddr);
+-		gru_last_node_paddr = max(paddr, gru_last_node_paddr);
+-	}
+-
+-	/* Save upper (63:M) bits of address only for is_GRU_range */
+-	gru_first_node_paddr &= gru_dist_umask;
+-	gru_last_node_paddr &= gru_dist_umask;
+-
+-	pr_debug("UV: Map GRU_DIST base 0x%016llx  0x%016llx - 0x%016llx\n", gru_dist_base, gru_first_node_paddr, gru_last_node_paddr);
+-}
+-
+ static __init void map_gru_high(int max_pnode)
+ {
+ 	union uvh_rh_gam_gru_overlay_config_mmr_u gru;
+@@ -846,12 +795,6 @@ static __init void map_gru_high(int max_pnode)
+ 		return;
+ 	}
+ 
+-	/* Only UV3 has distributed GRU mode */
+-	if (is_uv3_hub() && gru.s3.mode) {
+-		map_gru_distributed(gru.v);
+-		return;
+-	}
+-
+ 	base = (gru.v & mask) >> shift;
+ 	map_high("GRU", base, shift, shift, max_pnode, map_wb);
+ 	gru_start_paddr = ((u64)base << shift);
+-- 
+2.12.3
+
+From: Steve Wahl <steve.wahl@hpe.com>
+To: 
+Cc: 
+Bcc: 
+Subject: 
+Reply-To: 
+
