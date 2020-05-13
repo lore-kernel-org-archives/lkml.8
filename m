@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A98F0CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C181CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F67D206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:04:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4300120575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:04:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364249;
-	bh=A3Y2v+4SlLEutyfNVUrIBwwpsZ4l2T67ReBBophFU2k=;
+	s=default; t=1589364254;
+	bh=uJqOvzrQ2AZit/0w/6I9IAewZMfoYrywEgn8eRWxL+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mhC7eQGSsnqyvdn/p064bGj0rYQ9ggYhHuHy0gZvRvkCr8a9DiJqyr39+ROD/+4wh
-	 xutu5KA9rXfj6X7QNfsgl7NS4adQxbBjKNovkPLNokGI5bVtas5NqfHXeox9bol4xa
-	 SFv+DZaQSA4vaDtGvRs7ARiZ9T108Q8Un/6h+Ycs=
+	b=Clz/s6NsOcG8Vv3l9g47kiu3YR8MZJwfPp39cx+z1qM+lYweaoTIPffgajrk5qqfi
+	 1swqsDXnu30KC2KX1Z/r79wUpFqkMKpKi0a3XECnYJeBgxrXSCjYEN0DaUNCcBu6Pj
+	 bD2EPPKqLNGty1M28dZ409C5aF4kW7PbB6rJB22Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388541AbgEMKEI (ORCPT
+        id S1732941AbgEMJru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:04:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46092 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:47:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732966AbgEMJr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:47:57 -0400
+        id S1732838AbgEMJrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:47:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED3AD20769;
-        Wed, 13 May 2020 09:47:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02584206F5;
+        Wed, 13 May 2020 09:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363276;
-        bh=A3Y2v+4SlLEutyfNVUrIBwwpsZ4l2T67ReBBophFU2k=;
+        s=default; t=1589363254;
+        bh=uJqOvzrQ2AZit/0w/6I9IAewZMfoYrywEgn8eRWxL+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WeZyICvj/uo+5EWhUPzPugiOZ/FU+4G/vQGV/1Ft4cAvsM5wBlQK468Q4FlOaqLTM
-         Hl9tjtGm64rL5kkiuHHGBE4vLO4lbzAWAe0aYHDDGrFXxdhpQgVLp4EbLSpQPenaxA
-         m19H9zqDN3KnTSSE8sxwIwacmKOddNjh2iy5ll3U=
+        b=VICwhuW+MC3oMUdfbqt2m8wa8Wsduzo8d0JAW6cVYrjXlcxEiNwdm8nODEI4uhgWX
+         oUqsZL8D9zQrr2Dw1IGV4K3C6sgb8GmtR3dWz5TrYdKhaqLvMHpFCaqDngP401xdee
+         u+lACVJ2cSQo3KXr79VeaRI7aH3gt3QcZIyhyeaI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matt Jolly <Kangie@footclan.ninja>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.4 01/90] USB: serial: qcserial: Add DW5816e support
-Date:   Wed, 13 May 2020 11:43:57 +0200
-Message-Id: <20200513094409.054705845@linuxfoundation.org>
+        stable@vger.kernel.org, Ivan Delalande <colona@arista.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 47/48] scripts/decodecode: fix trapping instruction formatting
+Date:   Wed, 13 May 2020 11:45:13 +0200
+Message-Id: <20200513094404.831387763@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
-References: <20200513094408.810028856@linuxfoundation.org>
+In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
+References: <20200513094351.100352960@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,30 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Jolly <Kangie@footclan.ninja>
+From: Ivan Delalande <colona@arista.com>
 
-commit 78d6de3cfbd342918d31cf68d0d2eda401338aef upstream.
+commit e08df079b23e2e982df15aa340bfbaf50f297504 upstream.
 
-Add support for Dell Wireless 5816e to drivers/usb/serial/qcserial.c
+If the trapping instruction contains a ':', for a memory access through
+segment registers for example, the sed substitution will insert the '*'
+marker in the middle of the instruction instead of the line address:
 
-Signed-off-by: Matt Jolly <Kangie@footclan.ninja>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+	2b:   65 48 0f c7 0f          cmpxchg16b %gs:*(%rdi)          <-- trapping instruction
+
+I started to think I had forgotten some quirk of the assembly syntax
+before noticing that it was actually coming from the script.  Fix it to
+add the address marker at the right place for these instructions:
+
+	28:   49 8b 06                mov    (%r14),%rax
+	2b:*  65 48 0f c7 0f          cmpxchg16b %gs:(%rdi)           <-- trapping instruction
+	30:   0f 94 c0                sete   %al
+
+Fixes: 18ff44b189e2 ("scripts/decodecode: make faulting insn ptr more robust")
+Signed-off-by: Ivan Delalande <colona@arista.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Borislav Petkov <bp@suse.de>
+Link: http://lkml.kernel.org/r/20200419223653.GA31248@visor
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/qcserial.c |    1 +
- 1 file changed, 1 insertion(+)
+ scripts/decodecode |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/serial/qcserial.c
-+++ b/drivers/usb/serial/qcserial.c
-@@ -173,6 +173,7 @@ static const struct usb_device_id id_tab
- 	{DEVICE_SWI(0x413c, 0x81b3)},	/* Dell Wireless 5809e Gobi(TM) 4G LTE Mobile Broadband Card (rev3) */
- 	{DEVICE_SWI(0x413c, 0x81b5)},	/* Dell Wireless 5811e QDL */
- 	{DEVICE_SWI(0x413c, 0x81b6)},	/* Dell Wireless 5811e QDL */
-+	{DEVICE_SWI(0x413c, 0x81cc)},	/* Dell Wireless 5816e */
- 	{DEVICE_SWI(0x413c, 0x81cf)},   /* Dell Wireless 5819 */
- 	{DEVICE_SWI(0x413c, 0x81d0)},   /* Dell Wireless 5819 */
- 	{DEVICE_SWI(0x413c, 0x81d1)},   /* Dell Wireless 5818 */
+--- a/scripts/decodecode
++++ b/scripts/decodecode
+@@ -119,7 +119,7 @@ faultlinenum=$(( $(wc -l $T.oo  | cut -d
+ faultline=`cat $T.dis | head -1 | cut -d":" -f2-`
+ faultline=`echo "$faultline" | sed -e 's/\[/\\\[/g; s/\]/\\\]/g'`
+ 
+-cat $T.oo | sed -e "${faultlinenum}s/^\(.*:\)\(.*\)/\1\*\2\t\t<-- trapping instruction/"
++cat $T.oo | sed -e "${faultlinenum}s/^\([^:]*:\)\(.*\)/\1\*\2\t\t<-- trapping instruction/"
+ echo
+ cat $T.aa
+ cleanup
 
 
