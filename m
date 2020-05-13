@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D0EC2D0F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA14C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA60B2492A
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9548D20753
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:39:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731803AbgEMAjs (ORCPT
+        id S1731917AbgEMAjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 20:39:48 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:62897 "EHLO
+        Tue, 12 May 2020 20:39:52 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:62913 "EHLO
         alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726031AbgEMAjs (ORCPT
+        by vger.kernel.org with ESMTP id S1731859AbgEMAju (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 20:39:48 -0400
-Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 12 May 2020 17:39:47 -0700
+        Tue, 12 May 2020 20:39:50 -0400
+Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 12 May 2020 17:39:48 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg02-sd.qualcomm.com with ESMTP; 12 May 2020 17:39:47 -0700
+  by ironmsg05-sd.qualcomm.com with ESMTP; 12 May 2020 17:39:47 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 73B494D9E; Tue, 12 May 2020 17:39:47 -0700 (PDT)
+        id A374149C2; Tue, 12 May 2020 17:39:47 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -42,10 +42,15 @@ Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         Daniel Thompson <daniel.thompson@linaro.org>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         linux-arm-kernel@lists.infradead.org,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [RESEND PATCH v14 02/11] hwmon: pwm-fan: Use 64-bit division macro
-Date:   Tue, 12 May 2020 17:39:36 -0700
-Message-Id: <cc56a6017ecd1a8e8abba9ededf18d9e2311a4c2.1589330178.git.gurus@codeaurora.org>
+        Guru Das Srinagesh <gurus@codeaurora.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Subject: [RESEND PATCH v14 05/11] pwm: pwm-imx-tpm: Use 64-bit division macro
+Date:   Tue, 12 May 2020 17:39:39 -0700
+Message-Id: <97e3a807ce9422294d8f05049ea76e9f583f0772.1589330178.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1589330178.git.gurus@codeaurora.org>
 References: <cover.1589330178.git.gurus@codeaurora.org>
@@ -56,29 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the PWM framework is switching struct pwm_args.period's datatype
-to u64, prepare for this transition by using DIV_ROUND_UP_ULL to handle
-a 64-bit dividend.
+Since the PWM framework is switching struct pwm_state.period's datatype
+to u64, prepare for this transition by using DIV64_U64_ROUND_CLOSEST to
+handle a 64-bit divisor.
 
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
 Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-Acked-by: Guenter Roeck <linux@roeck-us.net>
 ---
- drivers/hwmon/pwm-fan.c | 2 +-
+ drivers/pwm/pwm-imx-tpm.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/pwm-fan.c b/drivers/hwmon/pwm-fan.c
-index 30b7b3e..17bb642 100644
---- a/drivers/hwmon/pwm-fan.c
-+++ b/drivers/hwmon/pwm-fan.c
-@@ -447,7 +447,7 @@ static int pwm_fan_resume(struct device *dev)
- 		return 0;
+diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
+index 5f3d7f7..fcdf6be 100644
+--- a/drivers/pwm/pwm-imx-tpm.c
++++ b/drivers/pwm/pwm-imx-tpm.c
+@@ -124,7 +124,7 @@ static int pwm_imx_tpm_round_state(struct pwm_chip *chip,
+ 		real_state->duty_cycle = state->duty_cycle;
  
- 	pwm_get_args(ctx->pwm, &pargs);
--	duty = DIV_ROUND_UP(ctx->pwm_value * (pargs.period - 1), MAX_PWM);
-+	duty = DIV_ROUND_UP_ULL(ctx->pwm_value * (pargs.period - 1), MAX_PWM);
- 	ret = pwm_config(ctx->pwm, duty, pargs.period);
- 	if (ret)
- 		return ret;
+ 	tmp = (u64)p->mod * real_state->duty_cycle;
+-	p->val = DIV_ROUND_CLOSEST_ULL(tmp, real_state->period);
++	p->val = DIV64_U64_ROUND_CLOSEST(tmp, real_state->period);
+ 
+ 	real_state->polarity = state->polarity;
+ 	real_state->enabled = state->enabled;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
