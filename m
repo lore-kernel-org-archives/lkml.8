@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF65FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 520D7C433E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4657207DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB4B3207D0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:01:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="GLLfwc4J"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="02JQy10i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389324AbgEMPBQ (ORCPT
+        id S2389347AbgEMPBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:01:16 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:36892 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389144AbgEMPAE (ORCPT
+        Wed, 13 May 2020 11:01:25 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:49047 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389141AbgEMPAD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:00:04 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DEv03b016527;
-        Wed, 13 May 2020 16:59:53 +0200
+        Wed, 13 May 2020 11:00:03 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DEwJut008668;
+        Wed, 13 May 2020 16:59:47 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=mwyeERxk2B3fi4OoJUIvRQEZ7pcDFkiAPomoxGvPt0U=;
- b=GLLfwc4J0Jvwd0moB7yT47ZWedecVE36DC1qcp8jh4WJLXfSi6l64VpaESlrq/8kwdYM
- mWY9qD5iZ2KDHcrivNxOWECZzMfFpl5IMs2SIDCumF8ZRwYalj/5dum6oQuwDBpFfg0D
- vHj1GlIzppfP/5rD568GPcxihohxPmSDKBOEL+K75LxwhirjygfgbfkW73MtgbqOaT2g
- ZOrGXlYRBV42QaE2+FVWWP3NzD8/OUNnzqskiB/yvofLHyjFehgyY7UOlE9MDuEf8ES6
- 8OKpMqZvmiQTmFfh7SqIarS7yb/xQupc34Pp1iCjrTFC5KVzmUhXrwP1kcOo7If+KjhX 9Q== 
+ bh=S05pCgK8uWODd8RKtzygV/WicL2iwG1ylDDr0DNrkBw=;
+ b=02JQy10iogJpp2aYijzyKo5v4HiJUHo14501F4YVI2mEpSaEQeBr/fQ3/uC5a4Rjyrs6
+ 4nwViSiYAc5p9Oi02FSMvszXqhXkgc/DcsykWbICjMkk+NHjT1ZAPUFUnZMFZbOy3u33
+ Yw1Y2VhWKuwTKW5uNOKg0oXZYzx1167cXQ65dLrx2JXQs2XAKo9IvmXtBlqu3eRG5zxM
+ xjlDm6gblRwL52U8YLyPj7i0E0iP2zh40G3nfHnM1is1ROJl/OYASA02s54qRRWYf19/
+ 1a2thPoAr89Abn9AonYJAab8GIBgaiQ7Q+N33htGkmEnCeiBt7JLUO/3Xa3Y13JPrc2i 1A== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3100vydgmp-1
+        by mx07-00178001.pphosted.com with ESMTP id 3100vqde9a-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 16:59:53 +0200
+        Wed, 13 May 2020 16:59:47 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A336210002A;
-        Wed, 13 May 2020 16:59:52 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2540310002A;
+        Wed, 13 May 2020 16:59:47 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 948962D3006;
-        Wed, 13 May 2020 16:59:52 +0200 (CEST)
-Received: from localhost (10.75.127.50) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 13 May 2020 16:59:51
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 16CBC2D3006;
+        Wed, 13 May 2020 16:59:47 +0200 (CEST)
+Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 13 May 2020 16:59:46
  +0200
 From:   Benjamin Gaignard <benjamin.gaignard@st.com>
 To:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
@@ -57,16 +57,16 @@ CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
         Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH 10/15] ARM: dts: stm32: Update nodes names for stm32h743 pinctrl
-Date:   Wed, 13 May 2020 16:59:30 +0200
-Message-ID: <20200513145935.22493-11-benjamin.gaignard@st.com>
+Subject: [PATCH 05/15] ARM: dts: stm32: remove useless interrupt-names property on stm32f746
+Date:   Wed, 13 May 2020 16:59:25 +0200
+Message-ID: <20200513145935.22493-6-benjamin.gaignard@st.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <20200513145935.22493-1-benjamin.gaignard@st.com>
 References: <20200513145935.22493-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG3NODE3.st.com
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG3NODE3.st.com
  (10.75.127.9)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
  definitions=2020-05-13_06:2020-05-13,2020-05-13 signatures=0
@@ -75,62 +75,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the nodes names to be aligned with yaml description
+Driver doesn't use interrupt's name to get it so remove it from
+the node.
 
 Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 ---
- arch/arm/boot/dts/stm32h743-pinctrl.dtsi | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/stm32f746.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/stm32h743-pinctrl.dtsi b/arch/arm/boot/dts/stm32h743-pinctrl.dtsi
-index e44e7baa3f17..fa5dcb6a5fdd 100644
---- a/arch/arm/boot/dts/stm32h743-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32h743-pinctrl.dtsi
-@@ -163,7 +163,7 @@
- 				#interrupt-cells = <2>;
- 			};
- 
--			i2c1_pins_a: i2c1@0 {
-+			i2c1_pins_a: i2c1-0 {
- 				pins {
- 					pinmux = <STM32_PINMUX('B', 6, AF4)>, /* I2C1_SCL */
- 						 <STM32_PINMUX('B', 7, AF4)>; /* I2C1_SDA */
-@@ -173,7 +173,7 @@
- 				};
- 			};
- 
--			ethernet_rmii: rmii@0 {
-+			ethernet_rmii: rmii-0 {
- 				pins {
- 					pinmux = <STM32_PINMUX('G', 11, AF11)>,
- 						 <STM32_PINMUX('G', 13, AF11)>,
-@@ -256,7 +256,7 @@
- 				};
- 			};
- 
--			usart1_pins: usart1@0 {
-+			usart1_pins: usart1-0 {
- 				pins1 {
- 					pinmux = <STM32_PINMUX('B', 14, AF4)>; /* USART1_TX */
- 					bias-disable;
-@@ -269,7 +269,7 @@
- 				};
- 			};
- 
--			usart2_pins: usart2@0 {
-+			usart2_pins: usart2-0 {
- 				pins1 {
- 					pinmux = <STM32_PINMUX('D', 5, AF7)>; /* USART2_TX */
- 					bias-disable;
-@@ -282,7 +282,7 @@
- 				};
- 			};
- 
--			usbotg_hs_pins_a: usbotg-hs@0 {
-+			usbotg_hs_pins_a: usbotg-hs-0 {
- 				pins {
- 					pinmux = <STM32_PINMUX('H', 4, AF10)>,	/* ULPI_NXT */
- 							 <STM32_PINMUX('I', 11, AF10)>, /* ULPI_DIR> */
+diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f746.dtsi
+index 93c063796780..5d69a0c653eb 100644
+--- a/arch/arm/boot/dts/stm32f746.dtsi
++++ b/arch/arm/boot/dts/stm32f746.dtsi
+@@ -304,7 +304,6 @@
+ 			assigned-clock-parents = <&rcc 1 CLK_LSE>;
+ 			interrupt-parent = <&exti>;
+ 			interrupts = <17 1>;
+-			interrupt-names = "alarm";
+ 			st,syscfg = <&pwrcfg 0x00 0x100>;
+ 			status = "disabled";
+ 		};
 -- 
 2.15.0
 
