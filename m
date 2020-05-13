@@ -4,58 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1CECA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6708CC2D0FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 970DC206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BA322078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363238;
-	bh=5FbjvvE4YYzC2D6LEejeXrQVJx3de3jv9KNq2V6otDI=;
+	s=default; t=1589363241;
+	bh=Nl8K5b252Z3oTCQfej+1iIqWvtOKZyzW/iHp0Q4TVj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hzLOEi6G0pe6WQIYjj3jWbgiRkxeQckSRGhtcxfv71oaUYd0UfNq4Q9i3I12B7TbF
-	 8kFQ/KOg7R8WqxPImUA4WwLnqTAyu5mWCuHq6PU7GoYbK2UbEFJkcgIF+6tpPgjxcr
-	 SL2sMio5/nbAShy8wwgh+xNuyQXEv+OdNxf9ji1Q=
+	b=D8PUTpFobiyOy3Lebl7B49lTs4NPT/CRZ/Q1AGhqWMdBFjMU3qBFnX/NZ/+SWUfQZ
+	 IOToCA31NVkB2GyISIydyQF3ir1UkUpOJ5aIvdpi4KoczhRe+ohb3a5nfmRrIk+0Jc
+	 2mGPM3KZxcnXFU4jfMqBS71tmOykAgL5as5FKqio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732824AbgEMJrQ (ORCPT
+        id S1732835AbgEMJrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:47:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44838 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:47:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732803AbgEMJrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:47:11 -0400
+        id S1732810AbgEMJrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:47:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B49A206F5;
-        Wed, 13 May 2020 09:47:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 693622078C;
+        Wed, 13 May 2020 09:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363230;
-        bh=5FbjvvE4YYzC2D6LEejeXrQVJx3de3jv9KNq2V6otDI=;
+        s=default; t=1589363232;
+        bh=Nl8K5b252Z3oTCQfej+1iIqWvtOKZyzW/iHp0Q4TVj8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iTDmOzh3DwF7M1tuJD25WPRvp0c6wmjlBZBmgwcg+uRoy7DmgOSS2OxQCQmqTc0Rb
-         YvGzXf2fUjdVFjwxwvSwBk6+jldzMdk6WMJ4/WRd1mTUYbmlLDdu7g9e4hgIKFhs6h
-         Fa+h0zJJJsM7TvFQJExNXYs0rD3q8cyxyMP7BuaA=
+        b=sU8xNiGBd82EfCAzoCX5X/p9Q6RQ/wPEg7yjGnmjygJPf1GYIAccvdt9HmC+O5H02
+         soZnvpKJGEWQ4qGOUVnUKEre7gOOhsVrIc/2DH+kMXthi4cBGONmB0HdBbnkERT4g8
+         DhbRl+7rGV97DCVmprjJWi/v7eEgaSW26wDl6kCk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vince Weaver <vincent.weaver@maine.edu>,
-        Dave Jones <dsj@fb.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Joe Mario <jmario@redhat.com>, Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miroslav Benes <mbenes@suse.cz>,
+        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
+        Jann Horn <jannh@google.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.19 38/48] x86/entry/64: Fix unwind hints in kernel exit path
-Date:   Wed, 13 May 2020 11:45:04 +0200
-Message-Id: <20200513094401.426409226@linuxfoundation.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>
+Subject: [PATCH 4.19 39/48] x86/entry/64: Fix unwind hints in rewind_stack_do_exit()
+Date:   Wed, 13 May 2020 11:45:05 +0200
+Message-Id: <20200513094401.664753125@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
 References: <20200513094351.100352960@linuxfoundation.org>
@@ -68,69 +65,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Jann Horn <jannh@google.com>
 
-commit 1fb143634a38095b641a3a21220774799772dc4c upstream.
+commit f977df7b7ca45a4ac4b66d30a8931d0434c394b1 upstream.
 
-In swapgs_restore_regs_and_return_to_usermode, after the stack is
-switched to the trampoline stack, the existing UNWIND_HINT_REGS hint is
-no longer valid, which can result in the following ORC unwinder warning:
+The LEAQ instruction in rewind_stack_do_exit() moves the stack pointer
+directly below the pt_regs at the top of the task stack before calling
+do_exit(). Tell the unwinder to expect pt_regs.
 
-  WARNING: can't dereference registers at 000000003aeb0cdd for ip swapgs_restore_regs_and_return_to_usermode+0x93/0xa0
-
-For full correctness, we could try to add complicated unwind hints so
-the unwinder could continue to find the registers, but when when it's
-this close to kernel exit, unwind hints aren't really needed anymore and
-it's fine to just use an empty hint which tells the unwinder to stop.
-
-For consistency, also move the UNWIND_HINT_EMPTY in
-entry_SYSCALL_64_after_hwframe to a similar location.
-
-Fixes: 3e3b9293d392 ("x86/entry/64: Return to userspace from the trampoline stack")
-Reported-by: Vince Weaver <vincent.weaver@maine.edu>
-Reported-by: Dave Jones <dsj@fb.com>
-Reported-by: Dr. David Alan Gilbert <dgilbert@redhat.com>
-Reported-by: Joe Mario <jmario@redhat.com>
-Reported-by: Jann Horn <jannh@google.com>
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 8c1f75587a18 ("x86/entry/64: Add unwind hint annotations")
 Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Jann Horn <jannh@google.com>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Dave Jones <dsj@fb.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/60ea8f562987ed2d9ace2977502fe481c0d7c9a0.1587808742.git.jpoimboe@redhat.com
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Link: https://lore.kernel.org/r/68c33e17ae5963854916a46f522624f8e1d264f2.1587808742.git.jpoimboe@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/entry/entry_64.S |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/entry/entry_64.S |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 --- a/arch/x86/entry/entry_64.S
 +++ b/arch/x86/entry/entry_64.S
-@@ -312,7 +312,6 @@ GLOBAL(entry_SYSCALL_64_after_hwframe)
- 	 */
- syscall_return_via_sysret:
- 	/* rcx and r11 are already restored (see code above) */
--	UNWIND_HINT_EMPTY
- 	POP_REGS pop_rdi=0 skip_r11rcx=1
+@@ -1745,7 +1745,7 @@ ENTRY(rewind_stack_do_exit)
  
- 	/*
-@@ -321,6 +320,7 @@ syscall_return_via_sysret:
- 	 */
- 	movq	%rsp, %rdi
- 	movq	PER_CPU_VAR(cpu_tss_rw + TSS_sp0), %rsp
-+	UNWIND_HINT_EMPTY
+ 	movq	PER_CPU_VAR(cpu_current_top_of_stack), %rax
+ 	leaq	-PTREGS_SIZE(%rax), %rsp
+-	UNWIND_HINT_FUNC sp_offset=PTREGS_SIZE
++	UNWIND_HINT_REGS
  
- 	pushq	RSP-RDI(%rdi)	/* RSP */
- 	pushq	(%rdi)		/* RDI */
-@@ -700,6 +700,7 @@ GLOBAL(swapgs_restore_regs_and_return_to
- 	 */
- 	movq	%rsp, %rdi
- 	movq	PER_CPU_VAR(cpu_tss_rw + TSS_sp0), %rsp
-+	UNWIND_HINT_EMPTY
- 
- 	/* Copy the IRET frame to the trampoline stack. */
- 	pushq	6*8(%rdi)	/* SS */
+ 	call	do_exit
+ END(rewind_stack_do_exit)
 
 
