@@ -2,85 +2,193 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B74C2D0FB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C5AC2D0F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F5F72176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:16:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589336219;
-	bh=LHbveZk/oFTWUENr+xxHClWMPPe+U8XFYXPq7TGFf84=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MvRy2qWnEinmh2fJiVMobkxB+q0eBD5JkpHhhNWMHV5Wtv8t83sYZGQeeCy0pewaj
-	 jKIbUtnmsXPtN31c9eyq/jMQREpYHbXo6C71JPfywF9gqilqVeV9ejzrSKh6HuvYcT
-	 NTT5tjng2TtmC0lEM9kkTIqSzQeLrad6YWw8CunA=
+	by mail.kernel.org (Postfix) with ESMTP id EE8E220714
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:17:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c0D3m4VV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbgEMCQ6 (ORCPT
+        id S1728508AbgEMCRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 22:16:58 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36084 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbgEMCQ6 (ORCPT
+        Tue, 12 May 2020 22:17:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35454 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728441AbgEMCRQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 22:16:58 -0400
-Received: by mail-ot1-f66.google.com with SMTP id t3so12234100otp.3;
-        Tue, 12 May 2020 19:16:57 -0700 (PDT)
+        Tue, 12 May 2020 22:17:16 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 882B6C061A0C;
+        Tue, 12 May 2020 19:17:16 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id r10so6589235pgv.8;
+        Tue, 12 May 2020 19:17:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-transfer-encoding:content-language;
+        bh=JRWxfr+EW40kX4Agu+1l82z17qUHjFXPdayrxGvmJ+Q=;
+        b=c0D3m4VVXZrgug2OYKWOfk6sdj784+BdvMaa3veIqAwxEvv6R1Jxyk4q7F0MdlRnZA
+         3RE4VPi5G2Z2vrtjCsp8WLSqR90Otd4B/DxdtVKWp1070JS4TzWf+lRogF8jXJS9WLan
+         UamLr2ar5vfrDgDcO47Sap72TeOx94LRhgsTmyVQxeQzsgTWhvTs5Ps22rcZLjj6fxF7
+         uem5I12T10Va013vCwAka1DT0EDgQ+4X3103jz46V8uRbvjYszxYNonOm1+GHCpZeguh
+         4q/zFbmG1jz6HvSHi0kcg7WUW8vzbGwJE4G7byP48eU0YA9Cw7/t8xs3NCakGIUqj2Wi
+         yQeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a2wqEiR2YO61/IM28RCF3k1La3GOe9RC7Vyta+XxUIs=;
-        b=G3byAfV6OKO/eomHZKMG1s+l+Y9nS/419iAg+zq+C9co0zqosDk3pOG5cuHemuQV/x
-         oLd9l+mpC5/urRI9Nj2qw3X0U/qnBOHaZT2MfIMl7ESsNdPVSNoibMTCog0cZGD57CCr
-         Y3zNHffpvQrYAnmc+afDXNIUWx3id8I5oRWX6chl6UkvBAarEbV06PYRO+gLoN9Bu8Pl
-         vDAoUXi2djm+l941J/cUDn0bNG8mvjP9eNncqpIInKqWLLf9/EhFwUfSOf6rQEanVAvb
-         8bVgDb+i/WAqkBiBe91l06TC4NHrNcCQG9uDiNPQkYkWvD36M2BzYSshzoDnOeO5dnAA
-         Ux6A==
-X-Gm-Message-State: AGi0PubmxjWU7nT/pIR5jc5xaZEYnFJxk1rrqJsTJ0EjRJUl7+JoXjPe
-        /ZXUEJOgmDtrutoXqsuoBQ==
-X-Google-Smtp-Source: APiQypKRTpQwgp+rBKDYfr3vpom+3FfInuZDYIisAS2nc0jQdulhFvoyzkUjMKXdHprWZ80vJXQQuA==
-X-Received: by 2002:a9d:7a8a:: with SMTP id l10mr18385009otn.302.1589336217276;
-        Tue, 12 May 2020 19:16:57 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q68sm1400827ooa.29.2020.05.12.19.16.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 19:16:56 -0700 (PDT)
-Received: (nullmailer pid 9003 invoked by uid 1000);
-        Wed, 13 May 2020 02:16:55 -0000
-Date:   Tue, 12 May 2020 21:16:55 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        sre@kernel.org, linux-pm@vger.kernel.org, robh+dt@kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: power: supply: Document
- maxim,rcomp-value for max17040
-Message-ID: <20200513021655.GA8915@bogus>
-References: <20200504221300.3153-1-xc-racer2@live.ca>
- <BN6PR04MB0660F4D09451AE8F1DB284D3A3A60@BN6PR04MB0660.namprd04.prod.outlook.com>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=JRWxfr+EW40kX4Agu+1l82z17qUHjFXPdayrxGvmJ+Q=;
+        b=ZbK2mSxQ/opK0koqfj8faLxmF9D542INEFZrsjZ4JsXWocKZ1H47AmtG2wNpCF4s1I
+         rR5sPaMoJNXhG+9K3doJDuWdtRp/UYt6vumlUVaQmCMyaLCpFyTPrMAb287MbPHnyWmQ
+         C/Xkt7o8/kNG90hnm0wEBidvpkn78nSXfSewtL+ZZHbvG/Knm464ABrG6eV5UHx5EWAA
+         5RpXwb97dgg4o9m+sFkm4dPS15NxPsCwRyDgXxXm6dXvCIy2opSqW0Zer4w/gWAt6ABT
+         HSFgQ+iBb8gaOW5HEiI0C7ARAKNvn4VWJ7Xl2V1/qq4oofaBkVDvZoy/Ks+p1aFGkI5j
+         6wMg==
+X-Gm-Message-State: AGi0PubobGhALhx599HmA6KLtcihDx239fc3dzNWGEEfLrb9y9YB6TNc
+        lnDTabzO5K3nV9gybzXOZMMMMiGx/k0=
+X-Google-Smtp-Source: APiQypL2MERQvSippzGtbxcVPDbip1nv3WCoVEG2sGmI1f5RdXollB+tLi0j9QCDynQdSD8XcDd9wQ==
+X-Received: by 2002:a65:6208:: with SMTP id d8mr21872658pgv.225.1589336235380;
+        Tue, 12 May 2020 19:17:15 -0700 (PDT)
+Received: from [166.111.139.104] ([166.111.139.104])
+        by smtp.gmail.com with ESMTPSA id t14sm11696117pgr.61.2020.05.12.19.17.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 May 2020 19:17:14 -0700 (PDT)
+Subject: Re: [PATCH 2/4] fs: btrfs: fix data races in
+ extent_write_cache_pages()
+To:     dsterba@suse.cz, clm@fb.com, josef@toxicpanda.com,
+        dsterba@suse.com, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200509052701.3156-1-baijiaju1990@gmail.com>
+ <20200512215625.GE18421@twin.jikos.cz>
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+Message-ID: <06d64482-a263-668d-7ab1-9f411eb1c794@gmail.com>
+Date:   Wed, 13 May 2020 10:17:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BN6PR04MB0660F4D09451AE8F1DB284D3A3A60@BN6PR04MB0660.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200512215625.GE18421@twin.jikos.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  4 May 2020 15:12:59 -0700, Jonathan Bakker wrote:
-> The rcomp value is a device-specific value for configuration based
-> on specific chemistries.  There is no public documentation on how
-> to tune it.
-> 
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> ---
->  .../devicetree/bindings/power/supply/max17040_battery.txt      | 3 +++
->  1 file changed, 3 insertions(+)
-> 
 
-Acked-by: Rob Herring <robh@kernel.org>
+
+On 2020/5/13 5:56, David Sterba wrote:
+> On Sat, May 09, 2020 at 01:27:01PM +0800, Jia-Ju Bai wrote:
+>> The function extent_write_cache_pages is concurrently executed with
+>> itself at runtime in the following call contexts:
+>>
+>> Thread 1:
+>>    btrfs_sync_file()
+>>      start_ordered_ops()
+>>        btrfs_fdatawrite_range()
+>>          btrfs_writepages() [via function pointer]
+>>            extent_writepages()
+>>              extent_write_cache_pages()
+>>
+>> Thread 2:
+>>    btrfs_writepages()
+>>      extent_writepages()
+>>        extent_write_cache_pages()
+>>
+>> In extent_write_cache_pages():
+>>    index = mapping->writeback_index;
+>>    ...
+>>    mapping->writeback_index = done_index;
+>>
+>> The accesses to mapping->writeback_index are not synchronized, and thus
+>> data races for this value can occur.
+>> These data races were found and actually reproduced by our concurrency
+>> fuzzer.
+>>
+>> To fix these races, the spinlock mapping->private_lock is used to
+>> protect the accesses to mapping->writeback_index.
+>>
+>> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+>> ---
+>>   fs/btrfs/extent_io.c | 7 ++++++-
+>>   1 file changed, 6 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+>> index 39e45b8a5031..8c33a60bde1d 100644
+>> --- a/fs/btrfs/extent_io.c
+>> +++ b/fs/btrfs/extent_io.c
+>> @@ -4160,7 +4160,9 @@ static int extent_write_cache_pages(struct address_space *mapping,
+>>   
+>>   	pagevec_init(&pvec);
+>>   	if (wbc->range_cyclic) {
+>> +		spin_lock(&mapping->private_lock);
+>>   		index = mapping->writeback_index; /* Start from prev offset */
+>> +		spin_unlock(&mapping->private_lock);
+>>   		end = -1;
+>>   		/*
+>>   		 * Start from the beginning does not need to cycle over the
+>> @@ -4271,8 +4273,11 @@ static int extent_write_cache_pages(struct address_space *mapping,
+>>   			goto retry;
+>>   	}
+>>   
+>> -	if (wbc->range_cyclic || (wbc->nr_to_write > 0 && range_whole))
+>> +	if (wbc->range_cyclic || (wbc->nr_to_write > 0 && range_whole)) {
+>> +		spin_lock(&mapping->private_lock);
+>>   		mapping->writeback_index = done_index;
+>> +		spin_unlock(&mapping->private_lock);
+> I'm more and more curious what exactly is your fuzzer tool actualy
+> reporting. Because adding the locks around the writeback index does not
+> make any sense.
+>
+> The variable is of type unsigned long, this is written atomically so the
+> only theoretical problem is on an achritecture that is not capable of
+> storing that in one go, which means a lot more problems eg. because
+> pointers are assumed to be the same width as unsigned long.
+>
+> So torn write is not possible and the lock leads to the same result as
+> if it wasn't there and the read and write would happen not serialized by
+> the spinlock but somewhere on the way from CPU caches to memory.
+>
+> CPU1                                   CPU2
+>
+> lock
+> index = mapping->writeback_index
+> unlock
+>                                         lock
+> 				       m->writeback_index = index;
+> 				       unlock
+>
+> Is the same as
+>
+> CPU1                                   CPU2
+>
+>
+> index = mapping->writeback_index
+> 				       m->writeback_index = index;
+>
+> So maybe this makes your tool happy but there's no change from the
+> correctness point of view, only added overhead from the lock/unlock
+> calls.
+>
+> Lockless synchronization is a thing, using memory barriers etc., this
+> was the case of some other patch, I think your tool needs to take that
+> into account to give sensible results.
+
+Thanks for the reply and explanation :)
+I agree that only adding locks here makes no sense, because "index = 
+mapping->writeback_index" can be still executed before or after 
+"m->writeback_index = index" is executed.
+So what is the expected order of the two statements? Read after write or 
+write after read?
+
+
+Best wishes,
+Jia-Ju Bai
