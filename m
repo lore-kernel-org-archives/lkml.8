@@ -2,135 +2,374 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F2CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28485C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 313F2205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:28:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589405334;
-	bh=ybncIr2vVqcmmP5oq4C6O/pNdH0XyKtMhRfmp+X94IM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kaCH33g1KPnvTH6jL9X5Zd4xK1tbIzs7PRex8I9/GCuCn7n4+LPVmLoOcqIyjaL9U
-	 cTHi5YARRlZaL/pIDqezkqZcHuZpgDJSYFrfEFqXTXq/D1b/MOX936qBIdVt4PHap+
-	 N/0K3wGWo7Ho3FQdJZqgFbzR98786XRPNV3nb1sE=
+	by mail.kernel.org (Postfix) with ESMTP id 0EE7F205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:29:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="swWsDvDy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbgEMV2x (ORCPT
+        id S1729216AbgEMV3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 17:28:53 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:50457 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728879AbgEMV2u (ORCPT
+        Wed, 13 May 2020 17:29:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728718AbgEMV3h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 17:28:50 -0400
-Received: by mail-pj1-f65.google.com with SMTP id t9so11666936pjw.0;
-        Wed, 13 May 2020 14:28:50 -0700 (PDT)
+        Wed, 13 May 2020 17:29:37 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98FB8C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 14:29:37 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id n200so1230219ybg.0
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 14:29:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=RvgPZsPKVaqB2h6hlO7zxVd8Nfau1UA1CDFS//hZd+s=;
+        b=swWsDvDyuOPGoC7MzPNdCWVRKGNzDYifRxi7GCxURN22PQLBb1cSuvzi3l/iMsOHdn
+         JTROG9GnHo6Uql5dMFeSCttPZHMBUpPwcorr/jep5rM65tNxtWbRPW0fEcEZwVXP2msg
+         /jPt5Ck0+vEIOB3NPWtuWOOzmg3EmtTFgn6xy3HzzmjGd/jkD+h1zBCXtA+hac6N1b0P
+         n+ZMesdgkhEsQ+9j5Q5/AxdkTnltxE2D0bn1isadfmriR60Sx138zALnrcAQNhA3xBMo
+         hl30NcoFt49OjB/B6H8jZGSCzfwrknO6//sMhbIREUZM6JpwozoBa9oV6iefQAsVjynb
+         AzOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=jFpZxJjBWza/kWR3tD171A9RdRcfWTU4Z4g63bnqZJQ=;
-        b=MXCkU6xI6IpcuACtIHMntxwRWcX5rt9K4YNzkCn+FF6wXtHQSwhfb84wUHf8iSNe4J
-         +KmNJgVPnwCnIdC9PujSz50jeePyRF4FfjbkCbtU9s3Ph+OzvS5q1nEQMSu10koDvjjC
-         bU3B53dxr9P/pF856iTKjhEyRi7j5BeWoSVks68BEDRCUfQ+zNs2zQwygxZ27dilh+L1
-         iutpZRFnjZTHs5PIwGUzeBdUZMjB9YRMrGlFeFFalyorWVRym2bFqM847OOjaEkF35/u
-         14h7gaxzyBEp0VCpdz8ZGdoQ4plJJzosX4wo5j+SzydlgtOXz1v+MzPDDDM1Bq3VUBrH
-         fTDA==
-X-Gm-Message-State: AGi0Pua5Q5h8OqRvZ/Lnh2+pXKFC/ecP3QSamFmB54DeI5khulfXSr64
-        byHbXx66Z7hapTqZV3ADv0N7sh449Mlmlg==
-X-Google-Smtp-Source: APiQypIK+uC5UrzbKxzZc1CCBNVsrdbUnp3vZEUQzYdaSLvxgjqSKS3rrrSs5sXQv9l3ptXF/JHruw==
-X-Received: by 2002:a17:90a:9311:: with SMTP id p17mr36891312pjo.145.1589405329840;
-        Wed, 13 May 2020 14:28:49 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id 82sm414078pfv.214.2020.05.13.14.28.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 14:28:48 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id D5FDC4063E; Wed, 13 May 2020 21:28:47 +0000 (UTC)
-Date:   Wed, 13 May 2020 21:28:47 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Mimi Zohar <zohar@kernel.org>
-Cc:     Scott Branden <scott.branden@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>
-Subject: Re: [PATCH v5 1/7] fs: introduce kernel_pread_file* support
-Message-ID: <20200513212847.GT11244@42.do-not-panic.com>
-References: <20200508002739.19360-1-scott.branden@broadcom.com>
- <20200508002739.19360-2-scott.branden@broadcom.com>
- <1589395153.5098.158.camel@kernel.org>
- <0e6b5f65-8c61-b02e-7d35-b4ae52aebcf3@broadcom.com>
- <1589396593.5098.166.camel@kernel.org>
- <e1b92047-7003-0615-3d58-1388ec27c78a@broadcom.com>
- <1589398747.5098.178.camel@kernel.org>
- <a228ae0f-d551-e0e8-446e-5ae63462c520@broadcom.com>
- <1589404814.5098.185.camel@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1589404814.5098.185.camel@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=RvgPZsPKVaqB2h6hlO7zxVd8Nfau1UA1CDFS//hZd+s=;
+        b=OLfvxukXIhl0OpZioyidfKA8VKH4o2zwX+xltjPnu3WzhDzCbc3FRXIfv1ZwzzPYjH
+         aPF943ph5gubas9+Wb7xBWQUpwolJvRlf90HIlVsUjZLBZjZVeIaedA8zSFSpd9+9BEU
+         WB9cvVqqfJHX70OQZtdHgsE1aYuqSwjUsD4cpMQdQrLBPF7mQZeEmMG9LXlNLThr6zds
+         lrtSpSXh9CKOs1Hf1u3aHckduOF+9C12IXw1w7+TElc3U5sNou6CT61vlApnQk6k4BT7
+         z1udao7fCQ8Fd4uRDnYFBBHf66GwXHQzH93YUZCnN9ccFQItPFxYHBDrrFq8XNAkWh6W
+         Rong==
+X-Gm-Message-State: AOAM5300pea+86QstWHhmvnQwDeWZV++hKFfpoAHOu+BEB1uDKyPLSGs
+        oTO7BUww/56VcX43KUpHyTXWTLodyo4H
+X-Google-Smtp-Source: ABdhPJyJN0vp4AH2ZpuVmTmXQvY4vXzZAdcfFb4vCg8t9aCdGpPKXI15Js+BOTowuYXPSx1xvmpqaUL/fojx
+X-Received: by 2002:a25:b74a:: with SMTP id e10mr1683717ybm.126.1589405376805;
+ Wed, 13 May 2020 14:29:36 -0700 (PDT)
+Date:   Wed, 13 May 2020 14:29:33 -0700
+Message-Id: <20200513212933.41273-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
+Subject: [PATCH v3] perf test: Improve pmu event metric testing
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Paul Clarke <pc@us.ibm.com>, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 05:20:14PM -0400, Mimi Zohar wrote:
-> On Wed, 2020-05-13 at 12:41 -0700, Scott Branden wrote:
-> > 
-> > On 2020-05-13 12:39 p.m., Mimi Zohar wrote:
-> > > On Wed, 2020-05-13 at 12:18 -0700, Scott Branden wrote:
-> > >> On 2020-05-13 12:03 p.m., Mimi Zohar wrote:
-> > >>> On Wed, 2020-05-13 at 11:53 -0700, Scott Branden wrote:
-> > >> Even if the kernel successfully verified the firmware file signature it
-> > >> would just be wasting its time.  The kernel in these use cases is not always
-> > >> trusted.  The device needs to authenticate the firmware image itself.
-> > > There are also environments where the kernel is trusted and limits the
-> > > firmware being provided to the device to one which they signed.
-> > >
-> > >>> The device firmware is being downloaded piecemeal from somewhere and
-> > >>> won't be measured?
-> > >> It doesn't need to be measured for current driver needs.
-> > > Sure the device doesn't need the kernel measuring the firmware, but
-> > > hardened environments do measure firmware.
-> > >
-> > >> If someone has such need the infrastructure could be added to the kernel
-> > >> at a later date.  Existing functionality is not broken in any way by
-> > >> this patch series.
-> > > Wow!  You're saying that your patch set takes precedence over the
-> > > existing expectations and can break them.
-> > Huh? I said existing functionality is NOT broken by this patch series.
-> 
-> Assuming a system is configured to measure and appraise firmware
-> (rules below), with this change the firmware file will not be properly
-> measured and will fail signature verification.
-> 
-> Sample IMA policy rules:
-> measure func=FIRMWARE_CHECK
-> appraise func=FIRMWARE_CHECK appraise_type=imasig
+Break pmu-events test into 2 and add a test to verify that all pmu metric
+expressions simply parse. Try to parse all metric ids/events, skip/warn if
+metrics for the current architecture fail to parse. To support warning
+for a skip, and an ability for a subtest to describe why it skips.
 
-Would a pre and post lsm hook for pread do it?
+Tested on power9, skylakex, haswell, broadwell, westmere, sandybridge and
+ivybridge.
+May skip/warn on other architectures if metrics are invalid. In particular
+s390 is untested, but its expressions are trivial. The untested
+architectures with expressions are power8, cascadelakex, tremontx, skylake,
+jaketown, ivytown and variants of haswell and broadwell.
 
-  Luis
+v3. addresses review comments from John Garry <john.garry@huawei.com>,
+Jiri Olsa <jolsa@redhat.com> and Arnaldo Carvalho de Melo
+<acme@kernel.org>.
+v2. changes the commit message as event parsing errors no longer cause
+the test to fail.
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/builtin-test.c |  16 ++-
+ tools/perf/tests/pmu-events.c   | 168 ++++++++++++++++++++++++++++++--
+ tools/perf/tests/tests.h        |   4 +
+ 3 files changed, 181 insertions(+), 7 deletions(-)
+
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 3471ec52ea11..21552e965545 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -75,6 +75,13 @@ static struct test generic_tests[] = {
+ 	{
+ 		.desc = "PMU events",
+ 		.func = test__pmu_events,
++		.subtest = {
++			.skip_if_fail	= false,
++			.get_nr		= test__pmu_events_subtest_get_nr,
++			.get_desc	= test__pmu_events_subtest_get_desc,
++			.skip_reason	= test__pmu_events_subtest_skip_reason,
++		},
++
+ 	},
+ 	{
+ 		.desc = "DSO data read",
+@@ -409,6 +416,7 @@ static int run_test(struct test *test, int subtest)
+ 
+ static int test_and_print(struct test *t, bool force_skip, int subtest)
+ {
++	const char *skip_reason = NULL;
+ 	int err;
+ 
+ 	if (!force_skip) {
+@@ -430,7 +438,13 @@ static int test_and_print(struct test *t, bool force_skip, int subtest)
+ 		pr_info(" Ok\n");
+ 		break;
+ 	case TEST_SKIP:
+-		color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip\n");
++		if (t->subtest.skip_reason)
++			skip_reason = t->subtest.skip_reason(subtest);
++		if (skip_reason) {
++			color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip (%s)\n",
++				      skip_reason);
++		} else
++			color_fprintf(stderr, PERF_COLOR_YELLOW, " Skip\n");
+ 		break;
+ 	case TEST_FAIL:
+ 	default:
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index d64261da8bf7..e21f0addcfbb 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -8,6 +8,9 @@
+ #include <linux/zalloc.h>
+ #include "debug.h"
+ #include "../pmu-events/pmu-events.h"
++#include "util/evlist.h"
++#include "util/expr.h"
++#include "util/parse-events.h"
+ 
+ struct perf_pmu_test_event {
+ 	struct pmu_event event;
+@@ -144,7 +147,7 @@ static struct pmu_events_map *__test_pmu_get_events_map(void)
+ }
+ 
+ /* Verify generated events from pmu-events.c is as expected */
+-static int __test_pmu_event_table(void)
++static int test_pmu_event_table(void)
+ {
+ 	struct pmu_events_map *map = __test_pmu_get_events_map();
+ 	struct pmu_event *table;
+@@ -347,14 +350,11 @@ static int __test__pmu_event_aliases(char *pmu_name, int *count)
+ 	return res;
+ }
+ 
+-int test__pmu_events(struct test *test __maybe_unused,
+-		     int subtest __maybe_unused)
++
++static int test_aliases(void)
+ {
+ 	struct perf_pmu *pmu = NULL;
+ 
+-	if (__test_pmu_event_table())
+-		return -1;
+-
+ 	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
+ 		int count = 0;
+ 
+@@ -377,3 +377,159 @@ int test__pmu_events(struct test *test __maybe_unused,
+ 
+ 	return 0;
+ }
++
++static bool is_number(const char *str)
++{
++	char *end_ptr;
++
++	strtod(str, &end_ptr);
++	return end_ptr != str;
++}
++
++static int check_parse_id(const char *id, bool same_cpu, struct pmu_event *pe)
++{
++	struct parse_events_error error;
++	struct evlist *evlist;
++	int ret;
++
++	/* Numbers are always valid. */
++	if (is_number(id))
++		return 0;
++
++	evlist = evlist__new();
++	memset(&error, 0, sizeof(error));
++	ret = parse_events(evlist, id, &error);
++	if (ret && same_cpu) {
++		pr_warning("Parse event failed metric '%s' id '%s' expr '%s'\n",
++			pe->metric_name, id, pe->metric_expr);
++		pr_warning("Error string '%s' help '%s'\n", error.str,
++			error.help);
++	} else if (ret) {
++		pr_debug3("Parse event failed, but for an event that may not be supported by this CPU.\nid '%s' metric '%s' expr '%s'\n",
++			  id, pe->metric_name, pe->metric_expr);
++		ret = 0;
++	}
++	evlist__delete(evlist);
++	free(error.str);
++	free(error.help);
++	free(error.first_str);
++	free(error.first_help);
++	return ret;
++}
++
++static void expr_failure(const char *msg,
++			 const struct pmu_events_map *map,
++			 const struct pmu_event *pe)
++{
++	pr_debug("%s for map %s %s %s\n",
++		msg, map->cpuid, map->version, map->type);
++	pr_debug("On metric %s\n", pe->metric_name);
++	pr_debug("On expression %s\n", pe->metric_expr);
++}
++
++static int test_parsing(void)
++{
++	struct pmu_events_map *cpus_map = perf_pmu__find_map(NULL);
++	struct pmu_events_map *map;
++	struct pmu_event *pe;
++	int i, j, k;
++	const char **ids;
++	int idnum;
++	int ret = 0;
++	struct expr_parse_ctx ctx;
++	double result;
++
++	i = 0;
++	for (;;) {
++		map = &pmu_events_map[i++];
++		if (!map->table)
++			break;
++		j = 0;
++		for (;;) {
++			pe = &map->table[j++];
++			if (!pe->name && !pe->metric_group && !pe->metric_name)
++				break;
++			if (!pe->metric_expr)
++				continue;
++			if (expr__find_other(pe->metric_expr, NULL,
++						&ids, &idnum, 0) < 0) {
++				expr_failure("Parse other failed", map, pe);
++				ret++;
++				continue;
++			}
++			expr__ctx_init(&ctx);
++
++			/*
++			 * Add all ids with a made up value. The value may
++			 * trigger divide by zero when subtracted and so try to
++			 * make them unique.
++			 */
++			for (k = 0; k < idnum; k++)
++				expr__add_id(&ctx, ids[k], k + 1);
++
++			for (k = 0; k < idnum; k++) {
++				if (check_parse_id(ids[k], map == cpus_map, pe))
++					ret++;
++			}
++
++			if (expr__parse(&result, &ctx, pe->metric_expr, 0)) {
++				expr_failure("Parse failed", map, pe);
++				ret++;
++			}
++			for (k = 0; k < idnum; k++)
++				zfree(&ids[k]);
++			free(ids);
++		}
++	}
++	/* TODO: fail when not ok */
++	return ret == 0 ? TEST_OK : TEST_SKIP;
++}
++
++static const struct {
++	int (*func)(void);
++	const char *desc;
++} pmu_events_testcase_table[] = {
++	{
++		.func = test_pmu_event_table,
++		.desc = "PMU event table sanity",
++	},
++	{
++		.func = test_aliases,
++		.desc = "PMU event map aliases",
++	},
++	{
++		.func = test_parsing,
++		.desc = "Parsing of PMU event table metrics",
++	},
++};
++
++const char *test__pmu_events_subtest_get_desc(int subtest)
++{
++	if (subtest < 0 ||
++	    subtest >= (int)ARRAY_SIZE(pmu_events_testcase_table))
++		return NULL;
++	return pmu_events_testcase_table[subtest].desc;
++}
++
++const char *test__pmu_events_subtest_skip_reason(int subtest)
++{
++	if (subtest < 0 ||
++	    subtest >= (int)ARRAY_SIZE(pmu_events_testcase_table))
++		return NULL;
++	if (pmu_events_testcase_table[subtest].func != test_parsing)
++		return NULL;
++	return "some metrics failed";
++}
++
++int test__pmu_events_subtest_get_nr(void)
++{
++	return (int)ARRAY_SIZE(pmu_events_testcase_table);
++}
++
++int test__pmu_events(struct test *test __maybe_unused, int subtest)
++{
++	if (subtest < 0 ||
++	    subtest >= (int)ARRAY_SIZE(pmu_events_testcase_table))
++		return TEST_FAIL;
++	return pmu_events_testcase_table[subtest].func();
++}
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index d6d4ac34eeb7..6c6c4b6a4796 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -34,6 +34,7 @@ struct test {
+ 		bool skip_if_fail;
+ 		int (*get_nr)(void);
+ 		const char *(*get_desc)(int subtest);
++		const char *(*skip_reason)(int subtest);
+ 	} subtest;
+ 	bool (*is_supported)(void);
+ 	void *priv;
+@@ -50,6 +51,9 @@ int test__perf_evsel__tp_sched_test(struct test *test, int subtest);
+ int test__syscall_openat_tp_fields(struct test *test, int subtest);
+ int test__pmu(struct test *test, int subtest);
+ int test__pmu_events(struct test *test, int subtest);
++const char *test__pmu_events_subtest_get_desc(int subtest);
++const char *test__pmu_events_subtest_skip_reason(int subtest);
++int test__pmu_events_subtest_get_nr(void);
+ int test__attr(struct test *test, int subtest);
+ int test__dso_data(struct test *test, int subtest);
+ int test__dso_data_cache(struct test *test, int subtest);
+-- 
+2.26.2.645.ge9eca65c58-goog
+
