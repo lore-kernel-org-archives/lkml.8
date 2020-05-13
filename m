@@ -2,180 +2,198 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2FDC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D25C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6DFF2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B8A520690
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:52:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lBG/Qgo+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O7gEDDzh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390167AbgEMSwl (ORCPT
+        id S2390267AbgEMSws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 14:52:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387462AbgEMSwk (ORCPT
+        Wed, 13 May 2020 14:52:48 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:38872 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2390174AbgEMSwq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 14:52:40 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1DDBC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 11:52:40 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id n11so140111pgl.9
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 11:52:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=55S1W6TTYrq5jCy+aRb1ISBrR0y1QRvglHPRUtnEv6Q=;
-        b=lBG/Qgo+Ax78eFvqJn8FT+S4IBj5w+CI9qc+N9JxBUxtA1Xt49ES/ypdnWKpnR770Q
-         rM0w2m122Ns0meblJH0cAT/hGObZd+38md03rX9plidRUovVVW0FZ9zn+IaRh7XJH3pC
-         Yzi7xpwX8KmJWoGU4veJe2a2uJDOG/yUHapRo=
+        Wed, 13 May 2020 14:52:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589395964;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=klz1aIlltTyMvpQo6wp2CnVfN50qcHTeSgtHjx0WeI8=;
+        b=O7gEDDzhd+Ediw2lolIyIWukU00BctGrUTwF1sJufx5l9z+iKVIkIoo7GS16V920kh+iXB
+        xqA/116Fl73lyIAdhcijM/aeWFtJko+oL4L5wYQfUKikf4coKuaVLfcJUkniaVOsPvdpS7
+        O8PPu3hM9NKV+MjItNCjlrT7/2LR67I=
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
+ [209.85.210.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-46-YhkYWQwQOa64APFU1gPAgA-1; Wed, 13 May 2020 14:52:43 -0400
+X-MC-Unique: YhkYWQwQOa64APFU1gPAgA-1
+Received: by mail-pf1-f200.google.com with SMTP id t22so505633pfe.3
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 11:52:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=55S1W6TTYrq5jCy+aRb1ISBrR0y1QRvglHPRUtnEv6Q=;
-        b=Houe6IUkJ5H8kEvfkOG5wgExLKyWt/pdPYHrnvrH0r7mfQTSWnVqpI3RjS8NgVzWnw
-         m80n5vzAF1jvakEJ+87VgVGQElBfVLTNXgnNp9Kg3Xge6n+0dHgkod+ymCNXEdA14pRh
-         KgqkbWpUBWthbIeHRNFePvXS3JTIniMIAcphlOLxJSExN3Odd3D3gUN/2v+HPO37srAT
-         HgcK2Xr2rF4DudFRBKJAbiEteC8ytlyCiFF3UOrDRF+wT0JO29MOkhakknnDi+qAt4Tp
-         qCzpNqkccxR4kYgXdBxnx3Ar3aL9IjrcBJPLYRdCQ3jfQaqiBwscwa7r2fVxOLBBvurf
-         UnGg==
-X-Gm-Message-State: AOAM530c/IPceoxJsCODo9U83+l747pgnUaVUAzsNWEAxrte+0AoVs9n
-        RCm+mL3Vx5gqgOUwYDlgh8u+1A==
-X-Google-Smtp-Source: ABdhPJzsV6PSMzFfikXn8WgT71tJ22aXWOMIaDLRL+l3D+CRH92hL3qhqme/nvEMAKaBL4tSGo1sFw==
-X-Received: by 2002:aa7:939c:: with SMTP id t28mr670237pfe.38.1589395960135;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=klz1aIlltTyMvpQo6wp2CnVfN50qcHTeSgtHjx0WeI8=;
+        b=mYR21rbSwPtrtLQLaVqF1za1jnTp3BqskTBNwbgJ6NjaKRxWeWhRqBmU2dMFBsf20P
+         1cqaaxzGpm6Ch4Sbpx7WGcw9b+/LZ8EwgHRqYhW/e7Fc/K2VwaiyTgYWD7tXYfCYK/vz
+         mII4KscTNE07023/KvPeAJQpYIxjLil10Yx8mKbSu/UHXTVDUMBRH8KRvHfsSEibozAK
+         mrdX5jguB0B4Dj0WpAI789k8FyQYzg3niT9K4HLSppnPR8pfU8IFcB+Eq4seMIX44tVO
+         RMUo+CCe8ju5ArzPZaifyY8rWn/wYYLBYe0O9IebusiirY3bTtB+rr4teQns+N8bqnua
+         Wb/g==
+X-Gm-Message-State: AGi0PuazCvmzSuxXaR9D+H0dQ3P7uJ4heuYnD8QkJvbJYDYcdBqVSUed
+        3L2oNf4uJ2OFBI+9aOV25yM/xLSPJXP7zBZFsAcC519fj6BjFM+N07sPJ6lKwbQrJA/yw36JRWo
+        9zCULrnMNZzuCL6TLHwaK7+xM
+X-Received: by 2002:a17:90a:bc4a:: with SMTP id t10mr35609769pjv.104.1589395961816;
+        Wed, 13 May 2020 11:52:41 -0700 (PDT)
+X-Google-Smtp-Source: APiQypIuLKmGrGFPHM791kHZAFCmnHIYlCo9XywvYUHAqAM5Bb2fZsRB2lyt+YcuSxBVSz35z/ovow==
+X-Received: by 2002:a17:90a:bc4a:: with SMTP id t10mr35609740pjv.104.1589395961483;
+        Wed, 13 May 2020 11:52:41 -0700 (PDT)
+Received: from localhost ([122.177.166.225])
+        by smtp.gmail.com with ESMTPSA id m18sm16270331pjl.14.2020.05.13.11.52.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
         Wed, 13 May 2020 11:52:40 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id d126sm248338pfc.81.2020.05.13.11.52.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 May 2020 11:52:39 -0700 (PDT)
-Date:   Wed, 13 May 2020 11:52:38 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Alok Chauhan <alokc@codeaurora.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        linux-spi@vger.kernel.org
-Subject: Re: [PATCH v5 6/6] spi: spi-qcom-qspi: Use OPP API to set clk/perf
- state
-Message-ID: <20200513185238.GN4525@google.com>
-References: <1589368382-19607-1-git-send-email-rnayak@codeaurora.org>
- <1589368382-19607-7-git-send-email-rnayak@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1589368382-19607-7-git-send-email-rnayak@codeaurora.org>
+From:   Bhupesh Sharma <bhsharma@redhat.com>
+To:     linux-arm-kernel@lists.infradead.org, x86@kernel.org
+Cc:     bhsharma@redhat.com, bhupesh.linux@gmail.com,
+        Boris Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Steve Capper <steve.capper@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Dave Anderson <anderson@redhat.com>,
+        Kazuhito Hagio <k-hagio@ab.jp.nec.com>,
+        John Donnelly <john.p.donnelly@oracle.com>,
+        scott.branden@broadcom.com, Amit Kachhap <amit.kachhap@arm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, kexec@lists.infradead.org
+Subject: [PATCH v6 0/2] Append new variables to vmcoreinfo (TCR_EL1.T1SZ for arm64 and MAX_PHYSMEM_BITS for all archs)
+Date:   Thu, 14 May 2020 00:22:35 +0530
+Message-Id: <1589395957-24628-1-git-send-email-bhsharma@redhat.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 04:43:02PM +0530, Rajendra Nayak wrote:
-> QSPI needs to vote on a performance state of a power domain depending on
-> the clock rate. Add support for it by specifying the perf state/clock rate
-> as an OPP table in device tree.
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Alok Chauhan <alokc@codeaurora.org>
-> Cc: Akash Asthana <akashast@codeaurora.org>
-> Cc: linux-spi@vger.kernel.org
-> ---
-> Change in v5: OPP cleanup done as the last thing in qcom_qspi_remove()
-> 
->  drivers/spi/spi-qcom-qspi.c | 29 ++++++++++++++++++++++++++++-
->  1 file changed, 28 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/spi/spi-qcom-qspi.c b/drivers/spi/spi-qcom-qspi.c
-> index 3c4f83b..c853eba 100644
-> --- a/drivers/spi/spi-qcom-qspi.c
-> +++ b/drivers/spi/spi-qcom-qspi.c
-> @@ -8,6 +8,7 @@
->  #include <linux/of.h>
->  #include <linux/of_platform.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/pm_opp.h>
->  #include <linux/spi/spi.h>
->  #include <linux/spi/spi-mem.h>
->  
-> @@ -139,6 +140,8 @@ struct qcom_qspi {
->  	struct device *dev;
->  	struct clk_bulk_data *clks;
->  	struct qspi_xfer xfer;
-> +	struct opp_table *opp_table;
-> +	bool has_opp_table;
->  	/* Lock to protect xfer and IRQ accessed registers */
->  	spinlock_t lock;
->  };
-> @@ -235,7 +238,7 @@ static int qcom_qspi_transfer_one(struct spi_master *master,
->  		speed_hz = xfer->speed_hz;
->  
->  	/* In regular operation (SBL_EN=1) core must be 4x transfer clock */
-> -	ret = clk_set_rate(ctrl->clks[QSPI_CLK_CORE].clk, speed_hz * 4);
-> +	ret = dev_pm_opp_set_rate(ctrl->dev, speed_hz * 4);
->  	if (ret) {
->  		dev_err(ctrl->dev, "Failed to set core clk %d\n", ret);
->  		return ret;
-> @@ -481,6 +484,20 @@ static int qcom_qspi_probe(struct platform_device *pdev)
->  	master->handle_err = qcom_qspi_handle_err;
->  	master->auto_runtime_pm = true;
->  
-> +	ctrl->opp_table = dev_pm_opp_set_clkname(&pdev->dev, "core");
-> +	if (IS_ERR(ctrl->opp_table)) {
-> +		ret = PTR_ERR(ctrl->opp_table);
-> +		goto exit_probe_master_put;
-> +	}
-> +	/* OPP table is optional */
-> +	ret = dev_pm_opp_of_add_table(&pdev->dev);
-> +	if (!ret) {
-> +		ctrl->has_opp_table = true;
-> +	} else if (ret != -ENODEV) {
-> +		dev_err(&pdev->dev, "invalid OPP table in device tree\n");
-> +		goto exit_probe_master_put;
-> +	}
-> +
->  	pm_runtime_enable(dev);
->  
->  	ret = spi_register_master(master);
-> @@ -488,6 +505,9 @@ static int qcom_qspi_probe(struct platform_device *pdev)
->  		return 0;
->  
->  	pm_runtime_disable(dev);
-> +	if (ctrl->has_opp_table)
-> +		dev_pm_opp_of_remove_table(&pdev->dev);
-> +	dev_pm_opp_put_clkname(ctrl->opp_table);
->  
->  exit_probe_master_put:
->  	spi_master_put(master);
-> @@ -498,11 +518,16 @@ static int qcom_qspi_probe(struct platform_device *pdev)
->  static int qcom_qspi_remove(struct platform_device *pdev)
->  {
->  	struct spi_master *master = platform_get_drvdata(pdev);
-> +	struct qcom_qspi *ctrl = spi_master_get_devdata(master);
->  
->  	/* Unregister _before_ disabling pm_runtime() so we stop transfers */
->  	spi_unregister_master(master);
->  
->  	pm_runtime_disable(&pdev->dev);
-> +	if (ctrl->has_opp_table)
-> +		dev_pm_opp_of_remove_table(&pdev->dev);
-> +	dev_pm_opp_put_clkname(ctrl->opp_table);
-> +
->
+Apologies for the delayed update. Its been quite some time since I
+posted the last version (v5), but I have been really caught up in some
+other critical issues.
 
-remove 2nd empty line.
+Changes since v5:
+----------------
+- v5 can be viewed here:
+  http://lists.infradead.org/pipermail/kexec/2019-November/024055.html
+- Addressed review comments from James Morse and Boris.
+- Added Tested-by received from John on v5 patchset.
+- Rebased against arm64 (for-next/ptr-auth) branch which has Amit's
+  patchset for ARMv8.3-A Pointer Authentication feature vmcoreinfo
+  applied.
 
-Maybe this can be done when the patch is applied if there are no other reasons
-to respin the series?
+Changes since v4:
+----------------
+- v4 can be seen here:
+  http://lists.infradead.org/pipermail/kexec/2019-November/023961.html
+- Addressed comments from Dave and added patches for documenting
+  new variables appended to vmcoreinfo documentation.
+- Added testing report shared by Akashi for PATCH 2/5.
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Changes since v3:
+----------------
+- v3 can be seen here:
+  http://lists.infradead.org/pipermail/kexec/2019-March/022590.html
+- Addressed comments from James and exported TCR_EL1.T1SZ in vmcoreinfo
+  instead of PTRS_PER_PGD.
+- Added a new patch (via [PATCH 3/3]), which fixes a simple typo in
+  'Documentation/arm64/memory.rst'
+
+Changes since v2:
+----------------
+- v2 can be seen here:
+  http://lists.infradead.org/pipermail/kexec/2019-March/022531.html
+- Protected 'MAX_PHYSMEM_BITS' vmcoreinfo variable under CONFIG_SPARSEMEM
+  ifdef sections, as suggested by Kazu.
+- Updated vmcoreinfo documentation to add description about
+  'MAX_PHYSMEM_BITS' variable (via [PATCH 3/3]).
+
+Changes since v1:
+----------------
+- v1 was sent out as a single patch which can be seen here:
+  http://lists.infradead.org/pipermail/kexec/2019-February/022411.html
+
+- v2 breaks the single patch into two independent patches:
+  [PATCH 1/2] appends 'PTRS_PER_PGD' to vmcoreinfo for arm64 arch, whereas
+  [PATCH 2/2] appends 'MAX_PHYSMEM_BITS' to vmcoreinfo in core kernel code (all archs)
+
+This patchset primarily fixes the regression reported in user-space
+utilities like 'makedumpfile' and 'crash-utility' on arm64 architecture
+with the availability of 52-bit address space feature in underlying
+kernel. These regressions have been reported both on CPUs which don't
+support ARMv8.2 extensions (i.e. LVA, LPA) and are running newer kernels
+and also on prototype platforms (like ARMv8 FVP simulator model) which
+support ARMv8.2 extensions and are running newer kernels.
+
+The reason for these regressions is that right now user-space tools
+have no direct access to these values (since these are not exported
+from the kernel) and hence need to rely on a best-guess method of
+determining value of 'vabits_actual' and 'MAX_PHYSMEM_BITS' supported
+by underlying kernel.
+
+Exporting these values via vmcoreinfo will help user-land in such cases.
+In addition, as per suggestion from makedumpfile maintainer (Kazu),
+it makes more sense to append 'MAX_PHYSMEM_BITS' to
+vmcoreinfo in the core code itself rather than in arm64 arch-specific
+code, so that the user-space code for other archs can also benefit from
+this addition to the vmcoreinfo and use it as a standard way of
+determining 'SECTIONS_SHIFT' value in user-land.
+
+Cc: Boris Petkov <bp@alien8.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Steve Capper <steve.capper@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Dave Anderson <anderson@redhat.com>
+Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Cc: John Donnelly <john.p.donnelly@oracle.com>
+Cc: scott.branden@broadcom.com
+Cc: Amit Kachhap <amit.kachhap@arm.com>
+Cc: x86@kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: kexec@lists.infradead.org
+
+Bhupesh Sharma (2):
+  crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo
+  arm64/crash_core: Export TCR_EL1.T1SZ in vmcoreinfo
+
+ Documentation/admin-guide/kdump/vmcoreinfo.rst | 16 ++++++++++++++++
+ arch/arm64/include/asm/pgtable-hwdef.h         |  1 +
+ arch/arm64/kernel/crash_core.c                 | 10 ++++++++++
+ kernel/crash_core.c                            |  1 +
+ 4 files changed, 28 insertions(+)
+
+-- 
+2.7.4
+
