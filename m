@@ -2,211 +2,145 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85228CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0C9CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6911B206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0202A206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:33:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZAYVD7ve"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731159AbgEMLda (ORCPT
+        id S1731240AbgEMLdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 07:33:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43274 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728049AbgEMLda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 07:33:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 56838AD2A;
-        Wed, 13 May 2020 11:33:31 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 3BA731E12AE; Wed, 13 May 2020 13:33:28 +0200 (CEST)
-Date:   Wed, 13 May 2020 13:33:28 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     ira.weiny@intel.com
-Cc:     linux-ext4@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/9] fs/ext4: Only change S_DAX on inode load
-Message-ID: <20200513113328.GF27709@quack2.suse.cz>
-References: <20200513054324.2138483-1-ira.weiny@intel.com>
- <20200513054324.2138483-7-ira.weiny@intel.com>
+        Wed, 13 May 2020 07:33:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47180 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728930AbgEMLdy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 07:33:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589369632;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LRUoCKtlXHJ46xoUgnC/etCJOTrU/b9ynoKVd4gTyFc=;
+        b=ZAYVD7veetJacorI73OsR/IyhdgpVhYDLpU2A+OHpaiVbhAnOlFHBehSB34ioH85XkZPic
+        Oa0HAk+vvFQ82zpx2BYnbZ77yFgkxwcpKy8tGzHlSdvf4gNaR7D/IoDAUcYl9gp4pRhYpB
+        bKq+r5rnh4Sc1rCzzM0XBvY9QWdbfLg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-508-lEQl-fVjN_2UtkpBD_nS2A-1; Wed, 13 May 2020 07:33:50 -0400
+X-MC-Unique: lEQl-fVjN_2UtkpBD_nS2A-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C7480460;
+        Wed, 13 May 2020 11:33:48 +0000 (UTC)
+Received: from krava (unknown [10.40.195.109])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 219BB5C1BB;
+        Wed, 13 May 2020 11:33:45 +0000 (UTC)
+Date:   Wed, 13 May 2020 13:33:45 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Joe Mario <jmario@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH 3/4] perf stat: Add --metrics-file option
+Message-ID: <20200513113345.GI3158213@krava>
+References: <20200511205307.3107775-1-jolsa@kernel.org>
+ <20200511205307.3107775-4-jolsa@kernel.org>
+ <CAP-5=fU5bbWWyWXDMoMvsMY4BbUsRUqgrOtGUrdiYjSsJZ+t-A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513054324.2138483-7-ira.weiny@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAP-5=fU5bbWWyWXDMoMvsMY4BbUsRUqgrOtGUrdiYjSsJZ+t-A@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 12-05-20 22:43:21, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> To prevent complications with in memory inodes we only set S_DAX on
-> inode load.  FS_XFLAG_DAX can be changed at any time and S_DAX will
-> change after inode eviction and reload.
-> 
-> Add init bool to ext4_set_inode_flags() to indicate if the inode is
-> being newly initialized.
-> 
-> Assert that S_DAX is not set on an inode which is just being loaded.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+On Wed, May 13, 2020 at 12:04:55AM -0700, Ian Rogers wrote:
 
-The patch looks good to me. You can add:
+SNIP
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+> > +METRICS FILE
+> > +------------
+> > +The file with metrics has following syntax:
+> > +
+> > +  NAME = EXPRESSION ;
+> > +  NAME = EXPRESSION ;
+> > +  ...
+> > +
+> > +where NAME is unique identifier of the metric, which is later used in
+> > +perf stat as -M option argument (see below).
+> > +
+> > +The EXPRESSION is the metric's formula with following grammar:
+> > +
+> > +  EXPR: EVENT
+> > +  EXPR: EXPR if EXPR else EXPR
+> 
+> Not introduced by this patch, but this patch is exposing it as an API.
 
-								Honza
+yea, I was thinking about this and I think we will put a disclaimer in
+here that this is not an API and the interface can change.. it's really
+mostly intended to help out with running a custom metric which is not
+compiled in ... I don't want to be commited to support old API
+
+> This notion of if-else is really weird. For one thing there are no
+> comparison operators. The unit test doesn't really help:
+>         ret |= test(&ctx, "1+1 if 3*4 else 0", 2);
+> What kind of comparison is "3*4"? If 0.0 causes the else clause then will -0.0?
+> A typical expression I see written in C is to give a ratio such:
+>   value = denom == 0 ? 0 : nom / denom;
+> I've worked around encoding this by extending expr.y locally.
+
+AFAICS it's used only with #SMT_on in the condition, aybe we could limit
+the condition only for #SMT_on term?
 
 
 > 
-> ---
-> Changes from RFC:
-> 	Change J_ASSERT() to WARN_ON_ONCE()
-> 	Fix bug which would clear S_DAX incorrectly
-> ---
->  fs/ext4/ext4.h   |  2 +-
->  fs/ext4/ialloc.c |  2 +-
->  fs/ext4/inode.c  | 13 ++++++++++---
->  fs/ext4/ioctl.c  |  3 ++-
->  fs/ext4/super.c  |  4 ++--
->  fs/ext4/verity.c |  2 +-
->  6 files changed, 17 insertions(+), 9 deletions(-)
+> > +  EXPR: NUMBER
+> > +  EXPR: EXPR | EXPR
+> > +  EXPR: EXPR & EXPR
+> > +  EXPR: EXPR ^ EXPR
 > 
-> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> index 1a3daf2d18ef..86a0994332ce 100644
-> --- a/fs/ext4/ext4.h
-> +++ b/fs/ext4/ext4.h
-> @@ -2692,7 +2692,7 @@ extern int ext4_can_truncate(struct inode *inode);
->  extern int ext4_truncate(struct inode *);
->  extern int ext4_break_layouts(struct inode *);
->  extern int ext4_punch_hole(struct inode *inode, loff_t offset, loff_t length);
-> -extern void ext4_set_inode_flags(struct inode *);
-> +extern void ext4_set_inode_flags(struct inode *, bool init);
->  extern int ext4_alloc_da_blocks(struct inode *inode);
->  extern void ext4_set_aops(struct inode *inode);
->  extern int ext4_writepage_trans_blocks(struct inode *);
-> diff --git a/fs/ext4/ialloc.c b/fs/ext4/ialloc.c
-> index 4b8c9a9bdf0c..7941c140723f 100644
-> --- a/fs/ext4/ialloc.c
-> +++ b/fs/ext4/ialloc.c
-> @@ -1116,7 +1116,7 @@ struct inode *__ext4_new_inode(handle_t *handle, struct inode *dir,
->  	ei->i_block_group = group;
->  	ei->i_last_alloc_group = ~0;
->  
-> -	ext4_set_inode_flags(inode);
-> +	ext4_set_inode_flags(inode, true);
->  	if (IS_DIRSYNC(inode))
->  		ext4_handle_sync(handle);
->  	if (insert_inode_locked(inode) < 0) {
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index d3a4c2ed7a1c..23e42a223235 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -4419,11 +4419,13 @@ static bool ext4_should_enable_dax(struct inode *inode)
->  	return false;
->  }
->  
-> -void ext4_set_inode_flags(struct inode *inode)
-> +void ext4_set_inode_flags(struct inode *inode, bool init)
->  {
->  	unsigned int flags = EXT4_I(inode)->i_flags;
->  	unsigned int new_fl = 0;
->  
-> +	WARN_ON_ONCE(IS_DAX(inode) && init);
-> +
->  	if (flags & EXT4_SYNC_FL)
->  		new_fl |= S_SYNC;
->  	if (flags & EXT4_APPEND_FL)
-> @@ -4434,8 +4436,13 @@ void ext4_set_inode_flags(struct inode *inode)
->  		new_fl |= S_NOATIME;
->  	if (flags & EXT4_DIRSYNC_FL)
->  		new_fl |= S_DIRSYNC;
-> -	if (ext4_should_enable_dax(inode))
-> +
-> +	/* Because of the way inode_set_flags() works we must preserve S_DAX
-> +	 * here if already set. */
-> +	new_fl |= (inode->i_flags & S_DAX);
-> +	if (init && ext4_should_enable_dax(inode))
->  		new_fl |= S_DAX;
-> +
->  	if (flags & EXT4_ENCRYPT_FL)
->  		new_fl |= S_ENCRYPTED;
->  	if (flags & EXT4_CASEFOLD_FL)
-> @@ -4649,7 +4656,7 @@ struct inode *__ext4_iget(struct super_block *sb, unsigned long ino,
->  		 * not initialized on a new filesystem. */
->  	}
->  	ei->i_flags = le32_to_cpu(raw_inode->i_flags);
-> -	ext4_set_inode_flags(inode);
-> +	ext4_set_inode_flags(inode, true);
->  	inode->i_blocks = ext4_inode_blocks(raw_inode, ei);
->  	ei->i_file_acl = le32_to_cpu(raw_inode->i_file_acl_lo);
->  	if (ext4_has_feature_64bit(sb))
-> diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
-> index 5813e5e73eab..145083e8cd1e 100644
-> --- a/fs/ext4/ioctl.c
-> +++ b/fs/ext4/ioctl.c
-> @@ -381,7 +381,8 @@ static int ext4_ioctl_setflags(struct inode *inode,
->  			ext4_clear_inode_flag(inode, i);
->  	}
->  
-> -	ext4_set_inode_flags(inode);
-> +	ext4_set_inode_flags(inode, false);
-> +
->  	inode->i_ctime = current_time(inode);
->  
->  	err = ext4_mark_iloc_dirty(handle, inode, &iloc);
-> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> index d0434b513919..5ec900fdf73c 100644
-> --- a/fs/ext4/super.c
-> +++ b/fs/ext4/super.c
-> @@ -1344,7 +1344,7 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
->  			ext4_set_inode_flag(inode, EXT4_INODE_ENCRYPT);
->  			ext4_clear_inode_state(inode,
->  					EXT4_STATE_MAY_INLINE_DATA);
-> -			ext4_set_inode_flags(inode);
-> +			ext4_set_inode_flags(inode, false);
->  		}
->  		return res;
->  	}
-> @@ -1367,7 +1367,7 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
->  				    ctx, len, 0);
->  	if (!res) {
->  		ext4_set_inode_flag(inode, EXT4_INODE_ENCRYPT);
-> -		ext4_set_inode_flags(inode);
-> +		ext4_set_inode_flags(inode, false);
->  		res = ext4_mark_inode_dirty(handle, inode);
->  		if (res)
->  			EXT4_ERROR_INODE(inode, "Failed to mark inode dirty");
-> diff --git a/fs/ext4/verity.c b/fs/ext4/verity.c
-> index f05a09fb2ae4..89a155ece323 100644
-> --- a/fs/ext4/verity.c
-> +++ b/fs/ext4/verity.c
-> @@ -244,7 +244,7 @@ static int ext4_end_enable_verity(struct file *filp, const void *desc,
->  		if (err)
->  			goto out_stop;
->  		ext4_set_inode_flag(inode, EXT4_INODE_VERITY);
-> -		ext4_set_inode_flags(inode);
-> +		ext4_set_inode_flags(inode, false);
->  		err = ext4_mark_iloc_dirty(handle, inode, &iloc);
->  	}
->  out_stop:
-> -- 
-> 2.25.1
+> Again, it's odd that these cast the double to a long and then assign
+> the result back to a double.
+
+is this even used anywhere? perhaps it was added just to be complete
+
+SNIP
+
+> > +       2.002460174                 0.86                23.37                 0.86
+> > +       3.003969795                 1.03                23.93                 1.03
+> > +  ...
 > 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> A feature request would be to allow metrics in terms of other metrics,
+> not just events :-) For example, it is common to sum all cache
+> hit/miss events. It is laborious to copy that expression for hit rate,
+> miss rate, etc.
+> 
+> Perhaps the expression parsing code should be folded into the event
+> parsing code.
+
+nice idea, but let's finish straighten up what we have first ;-)
+
+I'll try to go through all the fixes/tests you posted and let's
+get it in first
+
+thanks,
+jirka
+
