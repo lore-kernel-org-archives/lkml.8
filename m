@@ -2,135 +2,99 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 013DDC433F8
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DFAC433FC
 	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD172088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CD14221FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:56:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589381792;
+	bh=8SmbnrZ5qW6mVaqqlcGDrJ3tZhpY+ZYEC2ysujal7jE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fUB942IXfPXojEgrCN40MnLzzn5mSuO0DXF+HO1PWHgKQfqY6v5W4jYYCfNoDeJ12
+	 4Bdm+Vr+0f+5M83sKQxj94xi5s33NUkd+vumWB30ZMuhib49bQygLeqNvH6GwMcRBi
+	 PIbHkYgP7T7XZ/Ra0aQbCgLLZ2a7olVV2ktld+qg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389046AbgEMOsc (ORCPT
+        id S2389104AbgEMO4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 10:48:32 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:43190 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732972AbgEMOsa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 10:48:30 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jYsgK-0000yu-51; Wed, 13 May 2020 08:48:24 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jYsg9-0006lM-P3; Wed, 13 May 2020 08:48:23 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Al Viro <viro@ZenIV.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Xiaoming Ni <nixiaoming@huawei.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Helge Deller <deller@gmx.de>,
-        Parisc List <linux-parisc@vger.kernel.org>, yzaikin@google.com,
-        linux-fsdevel@vger.kernel.org,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-References: <20200511111123.68ccbaa3@canb.auug.org.au>
-        <99095805-8cbe-d140-e2f1-0c5a3e84d7e7@huawei.com>
-        <20200512003305.GX11244@42.do-not-panic.com>
-        <87y2pxs73w.fsf@x220.int.ebiederm.org>
-        <20200512172413.GC11244@42.do-not-panic.com>
-        <87k11hrqzc.fsf@x220.int.ebiederm.org>
-        <20200512220341.GE11244@42.do-not-panic.com>
-        <87d078oss9.fsf@x220.int.ebiederm.org>
-        <20200513141421.GP11244@42.do-not-panic.com>
-Date:   Wed, 13 May 2020 09:44:40 -0500
-In-Reply-To: <20200513141421.GP11244@42.do-not-panic.com> (Luis Chamberlain's
-        message of "Wed, 13 May 2020 14:14:22 +0000")
-Message-ID: <87tv0jopwn.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 13 May 2020 10:56:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49498 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728568AbgEMO42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 10:56:28 -0400
+Received: from localhost (unknown [106.200.233.149])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B1EE221E6;
+        Wed, 13 May 2020 14:56:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589381788;
+        bh=8SmbnrZ5qW6mVaqqlcGDrJ3tZhpY+ZYEC2ysujal7jE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=l4mRGFNZDs1RO7j/ngnkH16aePO1WvI/3rJkpo0/bOqGBn+zq90/znJcuC3NGZKTu
+         qNSI7KkiyyzXV4E6Yg1UrgZMXzyeIrvdG/iStQWx+x7Wz+aQnWosrPzMIp73qeck4f
+         eRdMLpxjBQ3RWdNMW0mCsJ6Abq7tMpCUQi1rnv5U=
+Date:   Wed, 13 May 2020 20:26:24 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: at_xdmac: Replace zero-length array with
+ flexible-array
+Message-ID: <20200513145624.GM14092@vkoul-mobl>
+References: <20200507190046.GA15298@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jYsg9-0006lM-P3;;;mid=<87tv0jopwn.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19FNoLfkTBHcu+1wfubNVYoTzAxcIgHFsA=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: linux-next: manual merge of the vfs tree with the parisc-hd tree
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200507190046.GA15298@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Luis Chamberlain <mcgrof@kernel.org> writes:
+On 07-05-20, 14:00, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> sizeof(flexible-array-member) triggers a warning because flexible array
+> members have incomplete type[1]. There are some instances of code in
+> which the sizeof operator is being incorrectly/erroneously applied to
+> zero-length arrays and the result is zero. Such instances may be hiding
+> some bugs. So, this work (flexible-array member conversions) will also
+> help to get completely rid of those sorts of issues.
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 
-> On Wed, May 13, 2020 at 08:42:30AM -0500, Eric W. Biederman wrote:
->> Luis Chamberlain <mcgrof@kernel.org> writes:
->> 
->> > On Tue, May 12, 2020 at 12:40:55PM -0500, Eric W. Biederman wrote:
->> >> Luis Chamberlain <mcgrof@kernel.org> writes:
->> >> 
->> >> > On Tue, May 12, 2020 at 06:52:35AM -0500, Eric W. Biederman wrote:
->> >> >> Luis Chamberlain <mcgrof@kernel.org> writes:
->> >> >> 
->> >> >> > +static struct ctl_table fs_base_table[] = {
->> >> >> > +	{
->> >> >> > +		.procname	= "fs",
->> >> >> > +		.mode		= 0555,
->> >> >> > +		.child		= fs_table,
->> >> >> > +	},
->> >> >> > +	{ }
->> >> >> > +};
->> >> >>   ^^^^^^^^^^^^^^^^^^^^^^^^ You don't need this at all.
->> >> >> > > +static int __init fs_procsys_init(void)
->> >> >> > +{
->> >> >> > +	struct ctl_table_header *hdr;
->> >> >> > +
->> >> >> > +	hdr = register_sysctl_table(fs_base_table);
->> >> >>               ^^^^^^^^^^^^^^^^^^^^^ Please use register_sysctl instead.
->> >> >> 	AKA
->> >> >>         hdr = register_sysctl("fs", fs_table);
->> >> >
->> >> > Ah, much cleaner thanks!
->> >> 
->> >> It is my hope you we can get rid of register_sysctl_table one of these
->> >> days.  It was the original interface but today it is just a
->> >> compatibility wrapper.
->> >> 
->> >> I unfortunately ran out of steam last time before I finished converting
->> >> everything over.
->> >
->> > Let's give it one more go. I'll start with the fs stuff.
->> 
->> Just to be clear moving the tables out of kernel/sysctl.c is a related
->> but slightly different problem.
->
-> Sure, but also before we go on this crusade, how about we add a few
-> helpers:
->
-> register_sysctl_kernel()
-> register_sysctl_vm()
-> register_sysctl_fs()
-> register_sysctl_debug()
-> register_sysctl_dev()
+Applied, thanks
 
-Hmm.
-
-  register_sysctl("kernel")
-
-> That should make it easier to look for these, and shorter. We *know*
-> this is a common path, given the size of the existing table.
-
-I don't really care but one character shorter doesn't look like it
-really helps.  Not really for grepping and not maintenance as we get a
-bunch of trivial one line implementations.
-
-Eric
+-- 
+~Vinod
