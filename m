@@ -2,194 +2,158 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 634D9C2D0F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30645C2D0FB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28A512176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:41:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589337674;
-	bh=rDLeaH+ysOe0eibHhFmvQzwi1JTxEafT2KIaRN8YrPQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KSIFp6Bo+qPLCvRggT6tiFCooVLQOnqbPPCjyNt9pImrrbJfjRhoa6EUR5tul2aGd
-	 yFIB3IkCHQdHhpO1nNMIV63QC+f++fcIzgik6M7ZwbYES5AVGyI3hsdhKrFkJqsCC9
-	 2ShDn1bPjCqiaEqQvyV+8dCsI+zRrPRKNDbw0ZcI=
+	by mail.kernel.org (Postfix) with ESMTP id 128F9207BC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:42:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="hgVDjH4/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbgEMClN (ORCPT
+        id S1728677AbgEMCmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 22:41:13 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33972 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725898AbgEMClM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 22:41:12 -0400
-Received: by mail-oi1-f193.google.com with SMTP id c12so19164531oic.1;
-        Tue, 12 May 2020 19:41:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Vk/gH8NIib/i4WfO/BNqo7XG45YgRMuUKBCFCVNn9K4=;
-        b=SG+0zf87qoK95kbJl8aVrnAdDs8QxEe94vNGKHZo3mbpugux4pcOoiOjF3VAKpYyAN
-         /8U7J50azqbbAkCe+tAEuC3ncELx7eM49r1PtbqWkckvF2mpxv7/Eopc50mx1lkivKTu
-         0iAG9nIwR71DZoUuEKktBKiNhExqHZyimISpMEiCdQjX/5ETii0zokVVq5a4/DTCjJop
-         HYPl8IKtmpxTw6UtwUMFCquA1SDB46mX5qTFniZPD3VCqr9XG08MeYDPDUwlMG1TVNDj
-         WDZFuJflr07IyLXg9BkX8DAiZGk6FFZByjXoDI23+CRudRBT0MLFVqMn9EvcSVPuNVfD
-         6QEQ==
-X-Gm-Message-State: AGi0PuZiaNTKNChL89FqYYR+JEaWt1gNRbAz2iSZeiDHtGsr2HkUSMEw
-        1V7xjj6F5QAmCCi7lfudcQ==
-X-Google-Smtp-Source: APiQypLSWgq5+Oay+HnD2z30chqUL/969npxbmRPrn1Thwb26z2ngIk97YEqxzAvB6hlSpP74HHRRQ==
-X-Received: by 2002:aca:2209:: with SMTP id b9mr15742070oic.117.1589337671421;
-        Tue, 12 May 2020 19:41:11 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id j23sm58681otl.64.2020.05.12.19.41.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 19:41:10 -0700 (PDT)
-Received: (nullmailer pid 2185 invoked by uid 1000);
-        Wed, 13 May 2020 02:41:09 -0000
-Date:   Tue, 12 May 2020 21:41:09 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Felix Fietkau <nbd@openwrt.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fabien Parent <fparent@baylibre.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 02/11] dt-bindings: new: add yaml bindings for MediaTek
- Ethernet MAC
-Message-ID: <20200513024109.GA29703@bogus>
-References: <20200505140231.16600-1-brgl@bgdev.pl>
- <20200505140231.16600-3-brgl@bgdev.pl>
+        Tue, 12 May 2020 22:42:18 -0400
+Received: from mail-co1nam11on2071.outbound.protection.outlook.com ([40.107.220.71]:6044
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725898AbgEMCmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 22:42:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AAP4bKfM7c78178VLESafdZkP8rKKiuL7g+OooRGhAdoKRk01m1NhrqZJik6x9QyxCkfWHBnaQ79TOwHxbGW5+U5LOEDHZ/90KnCAvnEVdouCIgZlEOV1tmrhD04RUCkVlpZ/o5VwtM9kPkBuw1qPMkejg3fFc/f3rOOb8Ig7aDtJfjZA5dOJ8nFoUOL5K0rUOMOXn26zIGW5AxwLQFoptfXCcRwKHoqatt4oBcbPVUcmm4l7k1Dpo4kH8pKRSickoWNg+BZXDFgLlUdFq2sTmVvIPjjWN+x/WbgNKdF8XfIG4v8A1djnI2eqGe6sanKIKWvo3l7Tayl3IXm7z4V8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LKh6GJ4hX7qEOZAij/iGFCcbh4HlEgXnaObz5tB8Beo=;
+ b=AGCntAP9gkORucdDdzoool0g0kJBG+TtC1RYkooCZJLKH85PqJ1dnLkFdB7VqnLwRO/aJSaKah2nME/zgoos5DqjMg+sjzR5WgjDNDsecQPaz6zhOx9vldSDfmATIxyU35FqQPlS6P81OWHMVepkRCUMNS1hRZIVB3ZDBP7/HsF2uZo4VUxVv10hCjFbjCuAibVwVgSgb1GhJ8rc8xNQhAb3ifyuuo2MxxVHMNvh+4/NN96VBLoCqqJHjneEWJQqP+cl0DPQVVxvWToEWSVuYK3sZvzxzgKizqhXflz2zC2xpadh/xIg5taLwZdybwrIaXyz5q4hYNlDzkeXgIMhmw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=windriversystems.onmicrosoft.com;
+ s=selector2-windriversystems-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LKh6GJ4hX7qEOZAij/iGFCcbh4HlEgXnaObz5tB8Beo=;
+ b=hgVDjH4/aGjwryEXjkUIKNGpLkHiNjPm7zvyAEcViYpgi5q2LuhkLlp0OZs73pB+2bYZjZe6BLagbLAauA7gUh2I0UCRo/Ovj2XoySQbAwGH3dlp4iYYNUZyf8SJEpxZkbKas5OFE4q0TuXEadr45867e3NLq0F1Aieudlrmhvo=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=windriver.com;
+Received: from BY5PR11MB4241.namprd11.prod.outlook.com (2603:10b6:a03:1ca::13)
+ by BY5PR11MB3909.namprd11.prod.outlook.com (2603:10b6:a03:191::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.34; Wed, 13 May
+ 2020 02:42:14 +0000
+Received: from BY5PR11MB4241.namprd11.prod.outlook.com
+ ([fe80::21d0:98fe:1248:b562]) by BY5PR11MB4241.namprd11.prod.outlook.com
+ ([fe80::21d0:98fe:1248:b562%7]) with mapi id 15.20.3000.016; Wed, 13 May 2020
+ 02:42:14 +0000
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org
+From:   "Xu, Yanfei" <yanfei.xu@windriver.com>
+Subject: [loop]efcfec579: BUG:blk_update_request: I/O error, dev loop6, sector
+ 49674 op 0x9:(WRITE_ZEROES)
+Message-ID: <3df7e30a-2495-544e-1ac2-3b0afd3e7324@windriver.com>
+Date:   Wed, 13 May 2020 10:42:07 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: HK2PR02CA0208.apcprd02.prod.outlook.com
+ (2603:1096:201:20::20) To BY5PR11MB4241.namprd11.prod.outlook.com
+ (2603:10b6:a03:1ca::13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505140231.16600-3-brgl@bgdev.pl>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [128.224.162.160] (60.247.85.82) by HK2PR02CA0208.apcprd02.prod.outlook.com (2603:1096:201:20::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20 via Frontend Transport; Wed, 13 May 2020 02:42:13 +0000
+X-Originating-IP: [60.247.85.82]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d5487637-59a0-4d73-6490-08d7f6e73e80
+X-MS-TrafficTypeDiagnostic: BY5PR11MB3909:
+X-Microsoft-Antispam-PRVS: <BY5PR11MB39099EED05D127064ACF2243E4BF0@BY5PR11MB3909.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2512;
+X-Forefront-PRVS: 0402872DA1
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: iHFI7AJ/R5WTaDexGIQs0qWOPhYk4/yffhg4FZG55xebQtumScy7PTHY1JSjiygL/7IhgYvknNrTRBOuRAc17iygGnYGxAkTCnkQvpsL3L1h3pCWoiMm32w8OJh3Fi4y2VauYLQZYKcwapGnFpbRhxm3oZrSO+bnDawwnQQLBtzPBHj36Apg3XYT4LsVK91ZKXOHWX2+Ch+PVK0oar867FoxAQKZkVataA/asGDSNHQOIZBfpWCQh/9aISPnPtJzvGqMVxQvt5kqqDIcwRKE00QV+/Mk3hLLvB2DZ+T4LVmRPSt0UXL+oP0QcPPWQzOgGH7W+kW2eNlPeofQ8G5MSgiNH6bFRBCSszDW2UlMmKLqaPmVcmYNnwvGkY4h8lOCnupv5Nyb/ssHqkD6Y+Rb+R9CRnQs0KHjJhwnFhuKN/32tgfkK4o1ZXuZEeXYyeleIT9CgWFUEvIuMv2y6pwNhue/zBP9p910hW9jMv5Z3irm2GKdhJ5fPGQrMI6g487mfncZDjKwo5BY95WKJAAJWqcojhgA+uZKSyvASpxF//anzYUiRbOWJtdRM3h7JzxHEUabeDuHJwsft3xMNh7CevLbVBRGVidX9oJRN+Y+0wFJSgBC3ZiTj1yUk2pyZI/v
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4241.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(346002)(136003)(396003)(376002)(39850400004)(33430700001)(956004)(16526019)(2906002)(8936002)(66556008)(2616005)(8676002)(31686004)(6706004)(66946007)(316002)(186003)(16576012)(26005)(66476007)(31696002)(478600001)(36756003)(6916009)(52116002)(86362001)(5660300002)(33440700001)(4326008)(6486002)(6666004)(78286006)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: uPpKKYaz5TMQ9uoxxYj1ev72HkasS/BuUDfvC8vgsiMO2RVNpeSWyyGCcLcOBdTRipD7xCAeo6l54CzWR+ctE9t5inZ1cVmfG9+xQXPI1G3YuQ/SagdSThNBehh2OXIhUSh+lFSx5fSQnKEl4UOTYlXqE4WCbxAnKXmMnN0KST4n+AXdYW5UelHLQAE/JcFNo29CFjJxInCf2nqgrhu6y4K6qIW7pAHlacF1jcXgQx7OtOeBDeLcUiO2vocInne4RzzKWUs0OWWycEZdmVJKFACTjg7gQm6TY73zaqu1nH5SVZNIAjxTMt9stUgPSnCX3jYLGPJ8NqiyrUGBSp4jNALYWdgH1+jKyAGkomPn4ku2kpIKl1FMb8jsfmBEAx7BUk34T2DnZug03Q9pSNHb9AhGXOUMePrUjOl183NGivrwN7JNdCmKXlV4aKBd+W3o0WFfn42M6DSN7CgS+TQY2zzqJn6q//1CBoFU0HBT970=
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d5487637-59a0-4d73-6490-08d7f6e73e80
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2020 02:42:14.3913
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /4VYmLc8/zWPHq0208Po+6DkiH7Xk+u9Qlcx/X8wBe+V4+XPBjk15vuXW+B6A2EMc18bDZXv70cDr22KV2sw7Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB3909
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 05, 2020 at 04:02:22PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> This adds yaml DT bindings for the MediaTek Ethernet MAC present on the
-> mt8* family of SoCs.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  .../bindings/net/mediatek,eth-mac.yaml        | 80 +++++++++++++++++++
->  1 file changed, 80 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml b/Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml
-> new file mode 100644
-> index 000000000000..7682fe9d8109
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml
-> @@ -0,0 +1,80 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/mediatek,eth-mac.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MediaTek Ethernet MAC Controller
-> +
-> +maintainers:
-> +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> +
-> +description:
-> +  This Ethernet MAC is used on the MT8* family of SoCs from MediaTek.
-> +  It's compliant with 802.3 standards and supports half- and full-duplex
-> +  modes with flow-control as well as CRC offloading and VLAN tags.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - mediatek,mt8516-eth
-> +      - mediatek,mt8518-eth
-> +      - mediatek,mt8175-eth
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 3
-> +    maxItems: 3
-> +
-> +  clock-names:
-> +    additionalItems: false
-> +    items:
-> +      - const: core
-> +      - const: reg
-> +      - const: trans
-> +
-> +  mediatek,pericfg:
-> +    $ref: /schemas/types.yaml#definitions/phandle
-> +    description:
-> +      Phandle to the device containing the PERICFG register range.
+Hi,
 
-Perhaps say what it is used for?
+After operating the /dev/loop which losetup with an image placed in tmpfs,
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - mediatek,pericfg
-> +  - phy-handle
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/mt8516-clk.h>
-> +
-> +    ethernet: ethernet@11180000 {
-> +        compatible = "mediatek,mt8516-eth";
-> +        reg = <0 0x11180000 0 0x1000>;
+I got the following ERROR messages:
 
-Default addr and size is 1 cell.
+----------------[cut here]---------------------
 
-> +        mediatek,pericfg = <&pericfg>;
-> +        interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_LOW>;
-> +        clocks = <&topckgen CLK_TOP_RG_ETH>,
-> +                 <&topckgen CLK_TOP_66M_ETH>,
-> +                 <&topckgen CLK_TOP_133M_ETH>;
-> +        clock-names = "core", "reg", "trans";
-> +        phy-handle = <&eth_phy>;
-> +        phy-mode = "rmii";
-> +
-> +        mdio {
+[  183.110770] blk_update_request: I/O error, dev loop6, sector 524160 
+op 0x9:(WRITE_ZEROES) flags 0x1000800 phys_seg 0 prio class 0
+[  183.123949] blk_update_request: I/O error, dev loop6, sector 522 op 
+0x9:(WRITE_ZEROES) flags 0x1000800 phys_seg 0 prio class 0
+[  183.137123] blk_update_request: I/O error, dev loop6, sector 16906 op 
+0x9:(WRITE_ZEROES) flags 0x1000800 phys_seg 0 prio class 0
+[  183.150314] blk_update_request: I/O error, dev loop6, sector 32774 op 
+0x9:(WRITE_ZEROES) flags 0x1000800 phys_seg 0 prio class 0
+[  183.163551] blk_update_request: I/O error, dev loop6, sector 49674 op 
+0x9:(WRITE_ZEROES) flags 0x1000800 phys_seg 0 prio class 0
+[  183.176824] blk_update_request: I/O error, dev loop6, sector 65542 op 
+0x9:(WRITE_ZEROES) flags 0x1000800 phys_seg 0 prio class 0
+[  183.190029] blk_update_request: I/O error, dev loop6, sector 82442 op 
+0x9:(WRITE_ZEROES) flags 0x1000800 phys_seg 0 prio class 0
+[  183.203281] blk_update_request: I/O error, dev loop6, sector 98310 op 
+0x9:(WRITE_ZEROES) flags 0x1000800 phys_seg 0 prio class 0
+[  183.216531] blk_update_request: I/O error, dev loop6, sector 115210 
+op 0x9:(WRITE_ZEROES) flags 0x1000800 phys_seg 0 prio class 0
+[  183.229914] blk_update_request: I/O error, dev loop6, sector 131078 
+op 0x9:(WRITE_ZEROES) flags 0x1000800 phys_seg 0 prio class 0
 
-Not documented.
 
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            eth_phy: ethernet-phy@0 {
-> +                reg = <0>;
-> +            };
-> +        };
-> +    };
-> -- 
-> 2.25.0
-> 
+I have found the commit which introduce this issue by git bisect :
+
+     commit :efcfec57[loop: fix no-unmap write-zeroes request behavior]
+
+
+Kernrel version: Linux version 5.6.0
+
+Frequency: every time
+
+steps to reproduce:
+
+   1.git clone mainline kernel
+
+   2.compile kernel with ARCH=x86_64, and then boot the system with it
+
+     (seems other arch also can reproduce it )
+
+   3.make an image by "dd of=/tmp/image if=/dev/zero bs=1M count=256"
+
+   4.place the image in tmpfs directory
+
+   5.losetup /dev/loop6 /PATH/image
+
+   6.mkfs.ext2 /dev/loop6
+
+
+Any comments will be appreciated.
+
+
+Thanks,
+
+Yanfei
