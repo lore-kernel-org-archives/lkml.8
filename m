@@ -2,206 +2,89 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F7FCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B67EC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC53A24AD1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 215BB21425
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:13:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NZpMTNSC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FVn3KiDB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387463AbgEMNNM (ORCPT
+        id S2387514AbgEMNN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:13:12 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49462 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733282AbgEMNNJ (ORCPT
+        Wed, 13 May 2020 09:13:27 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59355 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1733282AbgEMNN0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:13:09 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04DDD7JG044270
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 08:13:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589375587;
-        bh=jbWEqBFjeKp3BVaopojDNa8AUqqo/0PJjO2dFwUfoBU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=NZpMTNSC5jmBDF1YrdI5beZKlef87C7flYXtFfn8z6mDDZUxo6QN8yJWdlk4tEGUL
-         MN2aAZfXv0x11PVqxrE6APMsYy7OnzGJTWH1b+HlupLbuBS0Fh1mLex6HcXOrnlSOH
-         JFd5Ck1WaxCw+euZTMNWhkEHyysnSIcNLOKkw1eg=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04DDD7tB093933
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 08:13:07 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 13
- May 2020 08:13:06 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 13 May 2020 08:13:06 -0500
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04DDD16e043420;
-        Wed, 13 May 2020 08:13:05 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <kishon@ti.com>
-CC:     <vigneshr@ti.com>, <nsekhar@ti.com>,
-        <linux-kernel@vger.kernel.org>, Roger Quadros <rogerq@ti.com>
-Subject: [PATCH 2/2] phy: ti: am654: add support for USB super-speed
-Date:   Wed, 13 May 2020 16:12:54 +0300
-Message-ID: <20200513131254.10497-3-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200513131254.10497-1-rogerq@ti.com>
-References: <20200513131254.10497-1-rogerq@ti.com>
+        Wed, 13 May 2020 09:13:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589375605;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kC/Pwa8f1gD3R5LYjYmzPSPuGCXjungEBXbTdD/3zMQ=;
+        b=FVn3KiDBR/Z87zcMojaI5R/KMMowZscceiaybmH1VDDh8rDDZimCXbLjmZlbp6yC7/R29H
+        wg2QMvITvtzKooXg3JV1Ng4JbH0utrkFpB5SKE9IM7hNsn/yOtJb6wWpus1UwUZ/prJIgo
+        iZUfxBGDCveooTjX5mpkt47QOmGfMio=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-339-j5Rv_ovSOqaPeCLkWE73pQ-1; Wed, 13 May 2020 09:13:21 -0400
+X-MC-Unique: j5Rv_ovSOqaPeCLkWE73pQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AED3780183C;
+        Wed, 13 May 2020 13:13:17 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-59.rdu2.redhat.com [10.10.112.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 800786A960;
+        Wed, 13 May 2020 13:13:08 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200513062649.2100053-30-hch@lst.de>
+References: <20200513062649.2100053-30-hch@lst.de> <20200513062649.2100053-1-hch@lst.de>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     dhowells@redhat.com, "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        linux-nvme@lists.infradead.org, linux-sctp@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
+        drbd-dev@lists.linbit.com, linux-cifs@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-rdma@vger.kernel.org,
+        cluster-devel@redhat.com, Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, Neil Horman <nhorman@tuxdriver.com>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev@vger.kernel.org, Vlad Yasevich <vyasevich@gmail.com>,
+        linux-kernel@vger.kernel.org, Jon Maloy <jmaloy@redhat.com>,
+        Ying Xue <ying.xue@windriver.com>, ocfs2-devel@oss.oracle.com
+Subject: Re: [PATCH 29/33] rxrpc_sock_set_min_security_level
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3123533.1589375587.1@warthog.procyon.org.uk>
+Date:   Wed, 13 May 2020 14:13:07 +0100
+Message-ID: <3123534.1589375587@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SERDES PHY can support USB super-speed lane.
-Add support for that.
+Christoph Hellwig <hch@lst.de> wrote:
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- drivers/phy/ti/phy-am654-serdes.c | 103 +++++++++++++++++++++++++++++-
- 1 file changed, 101 insertions(+), 2 deletions(-)
+> +int rxrpc_sock_set_min_security_level(struct sock *sk, unsigned int val);
+> +
 
-diff --git a/drivers/phy/ti/phy-am654-serdes.c b/drivers/phy/ti/phy-am654-serdes.c
-index 29e34d29895a..0a166d5a6414 100644
---- a/drivers/phy/ti/phy-am654-serdes.c
-+++ b/drivers/phy/ti/phy-am654-serdes.c
-@@ -201,9 +201,91 @@ static int serdes_am654_power_off(struct phy *x)
- 	return 0;
- }
- 
--static int serdes_am654_init(struct phy *x)
-+#define SERDES_AM654_CFG(offset, a, b, val) \
-+	regmap_update_bits(phy->regmap, (offset),\
-+			   GENMASK((a), (b)), (val) << (b))
-+
-+static int serdes_am654_usb3_init(struct serdes_am654 *phy)
-+{
-+	SERDES_AM654_CFG(0x0000, 31, 24, 0x17);
-+	SERDES_AM654_CFG(0x0004, 15, 8, 0x02);
-+	SERDES_AM654_CFG(0x0004, 7, 0, 0x0e);
-+	SERDES_AM654_CFG(0x0008, 23, 16, 0x2e);
-+	SERDES_AM654_CFG(0x0008, 31, 24, 0x2e);
-+	SERDES_AM654_CFG(0x0060, 7, 0, 0x4b);
-+	SERDES_AM654_CFG(0x0060, 15, 8, 0x98);
-+	SERDES_AM654_CFG(0x0060, 23, 16, 0x60);
-+	SERDES_AM654_CFG(0x00d0, 31, 24, 0x45);
-+	SERDES_AM654_CFG(0x00e8, 15, 8, 0x0e);
-+	SERDES_AM654_CFG(0x0220, 7, 0, 0x34);
-+	SERDES_AM654_CFG(0x0220, 15, 8, 0x34);
-+	SERDES_AM654_CFG(0x0220, 31, 24, 0x37);
-+	SERDES_AM654_CFG(0x0224, 7, 0, 0x37);
-+	SERDES_AM654_CFG(0x0224, 15, 8, 0x37);
-+	SERDES_AM654_CFG(0x0228, 23, 16, 0x37);
-+	SERDES_AM654_CFG(0x0228, 31, 24, 0x37);
-+	SERDES_AM654_CFG(0x022c, 7, 0, 0x37);
-+	SERDES_AM654_CFG(0x022c, 15, 8, 0x37);
-+	SERDES_AM654_CFG(0x0230, 15, 8, 0x2a);
-+	SERDES_AM654_CFG(0x0230, 23, 16, 0x2a);
-+	SERDES_AM654_CFG(0x0240, 23, 16, 0x10);
-+	SERDES_AM654_CFG(0x0240, 31, 24, 0x34);
-+	SERDES_AM654_CFG(0x0244, 7, 0, 0x40);
-+	SERDES_AM654_CFG(0x0244, 23, 16, 0x34);
-+	SERDES_AM654_CFG(0x0248, 15, 8, 0x0d);
-+	SERDES_AM654_CFG(0x0258, 15, 8, 0x16);
-+	SERDES_AM654_CFG(0x0258, 23, 16, 0x84);
-+	SERDES_AM654_CFG(0x0258, 31, 24, 0xf2);
-+	SERDES_AM654_CFG(0x025c, 7, 0, 0x21);
-+	SERDES_AM654_CFG(0x0260, 7, 0, 0x27);
-+	SERDES_AM654_CFG(0x0260, 15, 8, 0x04);
-+	SERDES_AM654_CFG(0x0268, 15, 8, 0x04);
-+	SERDES_AM654_CFG(0x0288, 15, 8, 0x2c);
-+	SERDES_AM654_CFG(0x0330, 31, 24, 0xa0);
-+	SERDES_AM654_CFG(0x0338, 23, 16, 0x03);
-+	SERDES_AM654_CFG(0x0338, 31, 24, 0x00);
-+	SERDES_AM654_CFG(0x033c, 7, 0, 0x00);
-+	SERDES_AM654_CFG(0x0344, 31, 24, 0x18);
-+	SERDES_AM654_CFG(0x034c, 7, 0, 0x18);
-+	SERDES_AM654_CFG(0x039c, 23, 16, 0x3b);
-+	SERDES_AM654_CFG(0x0a04, 7, 0, 0x03);
-+	SERDES_AM654_CFG(0x0a14, 31, 24, 0x3c);
-+	SERDES_AM654_CFG(0x0a18, 15, 8, 0x3c);
-+	SERDES_AM654_CFG(0x0a38, 7, 0, 0x3e);
-+	SERDES_AM654_CFG(0x0a38, 15, 8, 0x3e);
-+	SERDES_AM654_CFG(0x0ae0, 7, 0, 0x07);
-+	SERDES_AM654_CFG(0x0b6c, 23, 16, 0xcd);
-+	SERDES_AM654_CFG(0x0b6c, 31, 24, 0x04);
-+	SERDES_AM654_CFG(0x0b98, 23, 16, 0x03);
-+	SERDES_AM654_CFG(0x1400, 7, 0, 0x3f);
-+	SERDES_AM654_CFG(0x1404, 23, 16, 0x6f);
-+	SERDES_AM654_CFG(0x1404, 31, 24, 0x6f);
-+	SERDES_AM654_CFG(0x140c, 7, 0, 0x6f);
-+	SERDES_AM654_CFG(0x140c, 15, 8, 0x6f);
-+	SERDES_AM654_CFG(0x1410, 15, 8, 0x27);
-+	SERDES_AM654_CFG(0x1414, 7, 0, 0x0c);
-+	SERDES_AM654_CFG(0x1414, 23, 16, 0x07);
-+	SERDES_AM654_CFG(0x1418, 23, 16, 0x40);
-+	SERDES_AM654_CFG(0x141c, 7, 0, 0x00);
-+	SERDES_AM654_CFG(0x141c, 15, 8, 0x1f);
-+	SERDES_AM654_CFG(0x1428, 31, 24, 0x08);
-+	SERDES_AM654_CFG(0x1434, 31, 24, 0x00);
-+	SERDES_AM654_CFG(0x1444, 7, 0, 0x94);
-+	SERDES_AM654_CFG(0x1460, 31, 24, 0x7f);
-+	SERDES_AM654_CFG(0x1464, 7, 0, 0x43);
-+	SERDES_AM654_CFG(0x1464, 23, 16, 0x6f);
-+	SERDES_AM654_CFG(0x1464, 31, 24, 0x43);
-+	SERDES_AM654_CFG(0x1484, 23, 16, 0x8f);
-+	SERDES_AM654_CFG(0x1498, 7, 0, 0x4f);
-+	SERDES_AM654_CFG(0x1498, 23, 16, 0x4f);
-+	SERDES_AM654_CFG(0x007c, 31, 24, 0x0d);
-+	SERDES_AM654_CFG(0x0b90, 15, 8, 0x0f);
-+
-+	return 0;
-+}
-+
-+static int serdes_am654_pcie_init(struct serdes_am654 *phy)
- {
--	struct serdes_am654 *phy = phy_get_drvdata(x);
- 	int ret;
- 
- 	ret = regmap_field_write(phy->config_version, VERSION);
-@@ -221,11 +303,28 @@ static int serdes_am654_init(struct phy *x)
- 	return 0;
- }
- 
-+static int serdes_am654_init(struct phy *x)
-+{
-+	struct serdes_am654 *phy = phy_get_drvdata(x);
-+
-+	switch (phy->type) {
-+	case PHY_TYPE_PCIE:
-+		return serdes_am654_pcie_init(phy);
-+	case PHY_TYPE_USB3:
-+		return serdes_am654_usb3_init(phy);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
- static int serdes_am654_reset(struct phy *x)
- {
- 	struct serdes_am654 *phy = phy_get_drvdata(x);
- 	int ret;
- 
-+	serdes_am654_disable_pll(phy);
-+	serdes_am654_disable_txrx(phy);
-+
- 	ret = regmap_field_write(phy->por_en, 0x1);
- 	if (ret)
- 		return ret;
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Looks good - but you do need to add this to Documentation/networking/rxrpc.txt
+also, thanks.
+
+David
 
