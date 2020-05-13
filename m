@@ -2,97 +2,138 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3676FCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E0FCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11EFF206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cI5NR0Fm"
+	by mail.kernel.org (Postfix) with ESMTP id 5AC5C206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589363406;
+	bh=H6RK4Fn9JCQrahNvg7ybV844UB/P0cnu7StCAIBei8I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=j4w1S+gYwrVWNXMnmyc1NdxGW6wjAl7cLiZe+AhEffiG2jpAtQBPHAY2zlW/G84Em
+	 z2IjW0d+L3GcS88IXieTxzA9nYjfL0mzW8gp1+TeqdtyXRpNT08HPtjIFNGhRcftXO
+	 dY9kkxkPKwxT6s08dQ0aAdAiyn7JqgycNjRP13wE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387435AbgEMJuC (ORCPT
+        id S2387443AbgEMJuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 13 May 2020 05:50:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49590 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387433AbgEMJuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 13 May 2020 05:50:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387418AbgEMJt6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:49:58 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0B76C061A0C;
-        Wed, 13 May 2020 02:49:58 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id u10so6618558pls.8;
-        Wed, 13 May 2020 02:49:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vI1HSpo7JSbwTRD9lhLBPGbReloovre1TONkkWI4K8s=;
-        b=cI5NR0Fmf0b3v4RmzfC93mlJjUuGrnz+wojY6kn0wMKI0CqhzbAaR68zlAPTfc8dlv
-         nEo440GlsOwFtHLvmIwgjuS3b21nqoISVskSnOTWHvxRLJrdNWFj6QMTmLmtSrHcvII1
-         f21gkgvPL17ChZSaMzaeZarWmyda5FX9Kr5ukmdzmNBgSSse2lehTc0Ks5vhNtVA0/mE
-         9rpVuAwhTwRu4icbbs7byMez/Yo1v+A11a88VyXl7uI1WJZAZarE356ybl82sEjjXRZ5
-         8G2lnX/haRNYHv8EmMYC+JvmoyXtaKWUhedE/OBMwOR4zYnDyClehHQNyZI5AqEinVaV
-         sbng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vI1HSpo7JSbwTRD9lhLBPGbReloovre1TONkkWI4K8s=;
-        b=abcJAl2ciZe1+rQEyAm0KavHP1h120wmdnahsKjDU0VQBCwljrm1YKMih15GGmO2+a
-         c7R0Kf83OWxOinsJ9d5XKvy6Lk71Q0gh/vkFn0l/AAgCoGuBBBQaYzmwEwUq35jyEkX+
-         A/K1hqw9CYUdf/qzC6qyb99FzXbUoZOcUI/S+7YDqJc9OlPO0r5VBZa5qAohxE0C/4zq
-         siNy7fNGlXCV97TBLUy8p78m7QX34FXVn1LcepyvpF2iyiONLIOJE2U8267SUxooOyQ3
-         N49vO+Cobfgxc/h+36PZ1m3IiNhsmxXtjS8A5mPmRyZNkqA6ToillKlRjzmIwLeFJSv2
-         Dicw==
-X-Gm-Message-State: AGi0PuY445Iqi3v54nG6GlPWwD83cdT77UbY982OxGpObje+WDxxM48Z
-        +rFP3uvnUOvmTtc1Kf6fZRg292nUgMyxPkTWFAo=
-X-Google-Smtp-Source: APiQypKJ0EhcKN4EMwA2AMwX12EH/qNwRgFeDBPkHlJLKVpoAB7ilzcQdSoNb7EilT7ycg/niDjp4WWhY8w/d/sAxM4=
-X-Received: by 2002:a17:90b:3717:: with SMTP id mg23mr34645016pjb.129.1589363398238;
- Wed, 13 May 2020 02:49:58 -0700 (PDT)
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5D5C23128;
+        Wed, 13 May 2020 09:50:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589363402;
+        bh=H6RK4Fn9JCQrahNvg7ybV844UB/P0cnu7StCAIBei8I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NIABCVsMFeUEcsIOh0l7E83e8/AJBwu6FIxD9JFjf5wzYgfwJOzn85/kf5TbSfyB+
+         YufsjvSRjyXbtYqOqJfyTOBsHqF0OoTFBTsauxFCkKVbeOrDPEhFnKrVC/2Rg3jmlQ
+         n8dqLzLDb7mDStmfqrYPexHvmoIYq2dmGK75f1Qo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Khazhismel Kumykov <khazhy@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Penyaev <rpenyaev@suse.de>,
+        Alexander Viro <viro@zeniv.linux.org.uk>, Heiher <r@hev.cc>,
+        Jason Baron <jbaron@akamai.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 59/90] eventpoll: fix missing wakeup for ovflist in ep_poll_callback
+Date:   Wed, 13 May 2020 11:44:55 +0200
+Message-Id: <20200513094415.943881845@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
+References: <20200513094408.810028856@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <1589361736-816-1-git-send-email-jprakash@codeaurora.org> <1589361736-816-5-git-send-email-jprakash@codeaurora.org>
-In-Reply-To: <1589361736-816-5-git-send-email-jprakash@codeaurora.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 13 May 2020 12:49:51 +0300
-Message-ID: <CAHp75Vex+hm2pVat_VVH5gAqPDbm-VQMes56wC=RUcQeM=z7vA@mail.gmail.com>
-Subject: Re: [PATCH V4 4/5] iio: adc: Update error checks and debug prints
-To:     Jishnu Prakash <jprakash@codeaurora.org>
-Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        smohanad@codeaurora.org, kgunda@codeaurora.org,
-        aghayal@codeaurora.org, Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-arm-msm@vger.kernel.org,
-        linux-iio <linux-iio@vger.kernel.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 12:23 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
->
-> Change pr_err/pr_debug statements to dev_err/dev_dbg for
-> increased clarity. Also clean up some return value checks.
+From: Khazhismel Kumykov <khazhy@google.com>
 
-'Also' on the commit message == 'split this to two'.
-But here is a ping pong style of patches (you introduce a problem in
-one patch and fix it in the following).
+commit 0c54a6a44bf3d41e76ce3f583a6ece267618df2e upstream.
 
--- 
-With Best Regards,
-Andy Shevchenko
+In the event that we add to ovflist, before commit 339ddb53d373
+("fs/epoll: remove unnecessary wakeups of nested epoll") we would be
+woken up by ep_scan_ready_list, and did no wakeup in ep_poll_callback.
+
+With that wakeup removed, if we add to ovflist here, we may never wake
+up.  Rather than adding back the ep_scan_ready_list wakeup - which was
+resulting in unnecessary wakeups, trigger a wake-up in ep_poll_callback.
+
+We noticed that one of our workloads was missing wakeups starting with
+339ddb53d373 and upon manual inspection, this wakeup seemed missing to me.
+With this patch added, we no longer see missing wakeups.  I haven't yet
+tried to make a small reproducer, but the existing kselftests in
+filesystem/epoll passed for me with this patch.
+
+[khazhy@google.com: use if/elif instead of goto + cleanup suggested by Roman]
+  Link: http://lkml.kernel.org/r/20200424190039.192373-1-khazhy@google.com
+Fixes: 339ddb53d373 ("fs/epoll: remove unnecessary wakeups of nested epoll")
+Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Roman Penyaev <rpenyaev@suse.de>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Roman Penyaev <rpenyaev@suse.de>
+Cc: Heiher <r@hev.cc>
+Cc: Jason Baron <jbaron@akamai.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200424025057.118641-1-khazhy@google.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/eventpoll.c |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -1176,6 +1176,10 @@ static inline bool chain_epi_lockless(st
+ {
+ 	struct eventpoll *ep = epi->ep;
+ 
++	/* Fast preliminary check */
++	if (epi->next != EP_UNACTIVE_PTR)
++		return false;
++
+ 	/* Check that the same epi has not been just chained from another CPU */
+ 	if (cmpxchg(&epi->next, EP_UNACTIVE_PTR, NULL) != EP_UNACTIVE_PTR)
+ 		return false;
+@@ -1242,16 +1246,12 @@ static int ep_poll_callback(wait_queue_e
+ 	 * chained in ep->ovflist and requeued later on.
+ 	 */
+ 	if (READ_ONCE(ep->ovflist) != EP_UNACTIVE_PTR) {
+-		if (epi->next == EP_UNACTIVE_PTR &&
+-		    chain_epi_lockless(epi))
++		if (chain_epi_lockless(epi))
++			ep_pm_stay_awake_rcu(epi);
++	} else if (!ep_is_linked(epi)) {
++		/* In the usual case, add event to ready list. */
++		if (list_add_tail_lockless(&epi->rdllink, &ep->rdllist))
+ 			ep_pm_stay_awake_rcu(epi);
+-		goto out_unlock;
+-	}
+-
+-	/* If this file is already in the ready list we exit soon */
+-	if (!ep_is_linked(epi) &&
+-	    list_add_tail_lockless(&epi->rdllink, &ep->rdllist)) {
+-		ep_pm_stay_awake_rcu(epi);
+ 	}
+ 
+ 	/*
+
+
