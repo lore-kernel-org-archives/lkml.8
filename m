@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB021CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 132DDCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A204F20753
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE699205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363691;
-	bh=D/OHGjWG5iBia2GQ7cUm3S82dMNWM303D0Udw57Ir4M=;
+	s=default; t=1589363693;
+	bh=cbdqSpXBVFYvpZijqGbmvEmlaz/Njx0MPsJhNP3shPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jqpuA/18NR8h1h78RSHsdz/hYCifRQmn/3Q0iDmWSl7LXPvD2wAYcrX4wAlr5xr6X
-	 Q8FosdY0u9rcl+O9Q7JLeAVk+t7HPTjrVjaVOj56T9nyVDyJqJCHUkysnXhNb++ueD
-	 V5CLtAEuFKotV+m3yqUGIcSZkj0ulPSj/aaHsSCg=
+	b=UnmWoS0ixaiLQDkAIr7KaWM8QcexYV8QoyD24poiCFTJ9c/f5Z0EQWhOmQdX88Eq7
+	 jXdGqWqVwYAzoAbOpoy2QVRW4q4x+PhU5ThdbMiYr71CQEOWMJd1BP8uFSK8Bnbs6w
+	 sq3stfDzkFMUsniyfmgpmbRo2wg2Qf45SuHZtj0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732918AbgEMJyv (ORCPT
+        id S2388177AbgEMJyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:54:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57334 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:54:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388145AbgEMJyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:54:43 -0400
+        id S2388168AbgEMJyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:54:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5AE120575;
-        Wed, 13 May 2020 09:54:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E2C52176D;
+        Wed, 13 May 2020 09:54:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363683;
-        bh=D/OHGjWG5iBia2GQ7cUm3S82dMNWM303D0Udw57Ir4M=;
+        s=default; t=1589363690;
+        bh=cbdqSpXBVFYvpZijqGbmvEmlaz/Njx0MPsJhNP3shPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d6YqttVILTRXLUyb5dpvpaCjLwJ/yD4k+EieWIZNjMs+XSesZhorg8z0PhqqaSr4v
-         wFvOid1zvfbJdQElbyOIePZmr0Qo6KSsf0A+NUds/A3CSz5suMFlq6+V+NhYStO4Vr
-         bgmf8bJCjNSpNCjKpgzf1aXEjRPOhjrpbkBuuXL8=
+        b=xXbu35wbEFFY4pJrAbD2fOTDVOsGOTuwMD91y26VLlpKol70GIJ8EHE47hnxW0dv4
+         3SvkBHm8HtAbCvElWHv55PjBjin4HYvMWeeSDQ8WXpCn+qLkXJlNlP/YvsJv6KDbUT
+         ydFIRdTh9L8LUIi52967HQPTj61lrqmnztCUp598=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Zanussi <zanussi@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.6 066/118] tracing/kprobes: Reject new event if loc is NULL
-Date:   Wed, 13 May 2020 11:44:45 +0200
-Message-Id: <20200513094423.696834738@linuxfoundation.org>
+        stable@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        Eduard Shishkin <edward6@linux.ibm.com>
+Subject: [PATCH 5.6 086/118] ceph: fix endianness bug when handling MDS session feature bits
+Date:   Wed, 13 May 2020 11:45:05 +0200
+Message-Id: <20200513094424.940137263@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -61,48 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Jeff Layton <jlayton@kernel.org>
 
-commit 5b4dcd2d201a395ad4054067bfae4a07554fbd65 upstream.
+commit 0fa8263367db9287aa0632f96c1a5f93cc478150 upstream.
 
-Reject the new event which has NULL location for kprobes.
-For kprobes, user must specify at least the location.
+Eduard reported a problem mounting cephfs on s390 arch. The feature
+mask sent by the MDS is little-endian, so we need to convert it
+before storing and testing against it.
 
-Link: http://lkml.kernel.org/r/158779376597.6082.1411212055469099461.stgit@devnote2
-
-Cc: Tom Zanussi <zanussi@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>
 Cc: stable@vger.kernel.org
-Fixes: 2a588dd1d5d6 ("tracing: Add kprobe event command generation functions")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Reported-and-Tested-by: Eduard Shishkin <edward6@linux.ibm.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_kprobe.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/ceph/mds_client.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -940,6 +940,9 @@ EXPORT_SYMBOL_GPL(kprobe_event_cmd_init)
-  * complete command or only the first part of it; in the latter case,
-  * kprobe_event_add_fields() can be used to add more fields following this.
-  *
-+ * Unlikely the synth_event_gen_cmd_start(), @loc must be specified. This
-+ * returns -EINVAL if @loc == NULL.
-+ *
-  * Return: 0 if successful, error otherwise.
-  */
- int __kprobe_event_gen_cmd_start(struct dynevent_cmd *cmd, bool kretprobe,
-@@ -953,6 +956,9 @@ int __kprobe_event_gen_cmd_start(struct
- 	if (cmd->type != DYNEVENT_TYPE_KPROBE)
- 		return -EINVAL;
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -3116,8 +3116,7 @@ static void handle_session(struct ceph_m
+ 	void *end = p + msg->front.iov_len;
+ 	struct ceph_mds_session_head *h;
+ 	u32 op;
+-	u64 seq;
+-	unsigned long features = 0;
++	u64 seq, features = 0;
+ 	int wake = 0;
+ 	bool blacklisted = false;
  
-+	if (!loc)
-+		return -EINVAL;
-+
- 	if (kretprobe)
- 		snprintf(buf, MAX_EVENT_NAME_LEN, "r:kprobes/%s", name);
- 	else
+@@ -3136,9 +3135,8 @@ static void handle_session(struct ceph_m
+ 			goto bad;
+ 		/* version >= 3, feature bits */
+ 		ceph_decode_32_safe(&p, end, len, bad);
+-		ceph_decode_need(&p, end, len, bad);
+-		memcpy(&features, p, min_t(size_t, len, sizeof(features)));
+-		p += len;
++		ceph_decode_64_safe(&p, end, features, bad);
++		p += len - sizeof(features);
+ 	}
+ 
+ 	mutex_lock(&mdsc->mutex);
 
 
