@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 911C7CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE962CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7199323128
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B549B20753
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363359;
-	bh=Yu4TcK9D+DpQamB7b26U8i2tsNUfEJ3iL6TdNQu6NYM=;
+	s=default; t=1589363366;
+	bh=Akg9xLHTZHHWY/epxL7GMjYFLSg63eUOf9Ut5sYs75s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C5jnVUTMC7Z48vDFh9pZ6IPv/uWhhKWv2zIJp9p08DqBN4t/HaHc8QiEPqI/xu//R
-	 isYErOYLSHAJB/oiKzYh74fCxtRzizeubHtjMk//3oxT567J9/GiFwvOE0sPgfxjok
-	 K0nhPZcEEly0sss6dycOrifUeoT3GujL21d8DM1o=
+	b=VyP6VuIxd677/noMJSeQoyWsusKW90ciwwIPk0f8r+Eu7SoxG5JpJTY/OXc4N3Gqk
+	 k7kyRF6Q20ZLfhS1+M0eNYIKPWjrXYTjZScVfn+SKIpOqIHwEtJQFWNLeGL6MFJ6tE
+	 kRq3ncABzc5bcwRsNc7PQ7nJhGGberrqViGNoHio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733211AbgEMJtR (ORCPT
+        id S1733237AbgEMJtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:49:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48066 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:49:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732597AbgEMJtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:49:13 -0400
+        id S1733215AbgEMJtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:49:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C483520575;
-        Wed, 13 May 2020 09:49:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECCCD2492D;
+        Wed, 13 May 2020 09:49:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363353;
-        bh=Yu4TcK9D+DpQamB7b26U8i2tsNUfEJ3iL6TdNQu6NYM=;
+        s=default; t=1589363360;
+        bh=Akg9xLHTZHHWY/epxL7GMjYFLSg63eUOf9Ut5sYs75s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iz6etKBzXD6Z2Du7Sao6gSZrDRxXtjI/ip2r/0UNIcNzdDPk4UpU4Ng7Bw5cUx7qg
-         rFgGlYUENVgxGscMjG/JIY1Q5sTQGOd+2i1XLDW6x55He/tTvEuQZLkUeV4OK4V/Xi
-         Hd0w5AiWWpsHJmdT/7jyPB7yBbSAUOxAeu1FYLhg=
+        b=Kpl1pzDvcAQnbeMURLT2g3A5d4VBf6zyIEC13eRKXZp7r8OtLy9CRJFYnLoY+NUC6
+         bVtdBLG5W5FhLtnoEvGKuDNAM0byhd23ZDuFZ15tO6lwoXty/5iWQyAFaIovzGHEVq
+         ukfZmOqdiYgBa0b4B0zygNknOVyHG3lzSOKNTi4E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Zanussi <zanussi@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 04/90] tracing/kprobes: Fix a double initialization typo
-Date:   Wed, 13 May 2020 11:44:00 +0200
-Message-Id: <20200513094409.531117166@linuxfoundation.org>
+Subject: [PATCH 5.4 07/90] drm/amdgpu: drop redundant cg/pg ungate on runpm enter
+Date:   Wed, 13 May 2020 11:44:03 +0200
+Message-Id: <20200513094409.822993461@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -62,39 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Evan Quan <evan.quan@amd.com>
 
-[ Upstream commit dcbd21c9fca5e954fd4e3d91884907eb6d47187e ]
+[ Upstream commit f7b52890daba570bc8162d43c96b5583bbdd4edd ]
 
-Fix a typo that resulted in an unnecessary double
-initialization to addr.
+CG/PG ungate is already performed in ip_suspend_phase1. Otherwise,
+the CG/PG ungate will be performed twice. That will cause gfxoff
+disablement is performed twice also on runpm enter while gfxoff
+enablemnt once on rump exit. That will put gfxoff into disabled
+state.
 
-Link: http://lkml.kernel.org/r/158779374968.6082.2337484008464939919.stgit@devnote2
-
-Cc: Tom Zanussi <zanussi@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>
+Fixes: b2a7e9735ab286 ("drm/amdgpu: fix the hw hang during perform system reboot and reset")
+Signed-off-by: Evan Quan <evan.quan@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
-Fixes: c7411a1a126f ("tracing/kprobe: Check whether the non-suffixed symbol is notrace")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_kprobe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 2f0f7fcee73e6..fba4b48451f6c 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -454,7 +454,7 @@ static bool __within_notrace_func(unsigned long addr)
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index ca2a0770aad2e..5e1dce4241547 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -3070,9 +3070,6 @@ int amdgpu_device_suspend(struct drm_device *dev, bool suspend, bool fbcon)
+ 		}
+ 	}
  
- static bool within_notrace_func(struct trace_kprobe *tk)
- {
--	unsigned long addr = addr = trace_kprobe_address(tk);
-+	unsigned long addr = trace_kprobe_address(tk);
- 	char symname[KSYM_NAME_LEN], *p;
+-	amdgpu_device_set_pg_state(adev, AMD_PG_STATE_UNGATE);
+-	amdgpu_device_set_cg_state(adev, AMD_CG_STATE_UNGATE);
+-
+ 	amdgpu_ras_suspend(adev);
  
- 	if (!__within_notrace_func(addr))
+ 	r = amdgpu_device_ip_suspend_phase1(adev);
 -- 
 2.20.1
 
