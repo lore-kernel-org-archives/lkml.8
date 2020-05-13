@@ -2,203 +2,171 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA49C2D0FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9566FC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC73205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:58:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y9XbgXJj"
+	by mail.kernel.org (Postfix) with ESMTP id 7B544205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 03:58:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728636AbgEMD6A (ORCPT
+        id S1728669AbgEMD6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 23:58:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51004 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727107AbgEMD6A (ORCPT
+        Tue, 12 May 2020 23:58:51 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:1470 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726659AbgEMD6v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 23:58:00 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C2BEC061A0C;
-        Tue, 12 May 2020 20:57:58 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id w10so5402418ljo.0;
-        Tue, 12 May 2020 20:57:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6jF36zZV4YkOjjEEZcxlJOpsCDyfDyyD6Cte3hhe7uI=;
-        b=Y9XbgXJjX+6b/Our6/e59lW7rMJCRfJO6yDzwJR1u5a+RhYXDVOjWj/MbixpXAlrui
-         tpctqJeC0xlc287Dtv0RlCI9Uv3LvCKCDQXDdmqtodxedvelQUWwAUVoxR6kLxDRPBIw
-         nnlXH487hTvFkMAeK0XmN2uMADfBTpXbEGCqUQGJTLs+JgJVU8YQdc+gqaczKCjXk/ww
-         dLIJykfm8bjmnLHP0QANywpt1aM1jPQBkTI2QIZlSz01me1G9dgncXGPbNmvdgzbDn0n
-         //rocSpNRMykFJEJry29KXF0+QRYEnhnH9lQeHG/nK33ixD2idsoyYRUOyXRCyNyY5bP
-         eGfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6jF36zZV4YkOjjEEZcxlJOpsCDyfDyyD6Cte3hhe7uI=;
-        b=VCNKvjEATSZPebT/uMWXPV+aiuagMob3Tt1iB7EcG7jewtj56cnFMjN5bs1b9WjOxB
-         ptl56bTA7Gvi39MNjBjV7Z0Qalv+GWqZq+mv/GHfD99gvlhG6D90Yo6akDRV4cOd95q8
-         fUDcMV2pykWwBOwc0JZcCXphLySwNYeFRaohvewJiZHZaPuxWu+IbAQwQ9BPWpstV/jC
-         +YXuHn2WnqnthCdP/hD4H3kbBNjTRR04Zt1zGxNW7WgLgrYJLW23yQ9h58I0D/uFFjUT
-         weYBy2P9C/VyO+S5U5Vmm8opsF1tP86HWehZ90NVq831ZWprbmIT3YGapmLa5VAbEg3L
-         TlEg==
-X-Gm-Message-State: AOAM533uKDX8Xhqatz8+O2rNWsb9r7+25n2poKInd8Qp4rh6UO7d8/4W
-        cKGloUYyLQldsBSmSsNEU8/4HvKkLmr4A/sFl0d8L/6m
-X-Google-Smtp-Source: ABdhPJxfEIMDcND6bucfnbiaUf/kKcp6Jv+7+dq6HYchFLm1kBE0LRNTGoe8f4XeHYTkPvaQm5pT9GMkoE/Myrf+lFY=
-X-Received: by 2002:a2e:9490:: with SMTP id c16mr15831301ljh.110.1589342276826;
- Tue, 12 May 2020 20:57:56 -0700 (PDT)
+        Tue, 12 May 2020 23:58:51 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04D3X5Wc176373;
+        Tue, 12 May 2020 23:58:34 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31016kc7m2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 May 2020 23:58:34 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04D3c6bc001878;
+        Tue, 12 May 2020 23:58:33 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31016kc7kq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 12 May 2020 23:58:33 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04D3oXsm022961;
+        Wed, 13 May 2020 03:58:31 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma05wdc.us.ibm.com with ESMTP id 3100ubufx1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 May 2020 03:58:31 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04D3wUsU26083764
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 May 2020 03:58:30 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D40F4136051;
+        Wed, 13 May 2020 03:58:30 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7AD37136053;
+        Wed, 13 May 2020 03:58:30 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.102.3.99])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 13 May 2020 03:58:30 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id A336A2E46A4; Wed, 13 May 2020 09:28:26 +0530 (IST)
+Date:   Wed, 13 May 2020 09:28:26 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Christopher Lameter <cl@linux.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v4 2/3] powerpc/numa: Prefer node id queried from vphn
+Message-ID: <20200513035826.GB5710@in.ibm.com>
+Reply-To: ego@linux.vnet.ibm.com
+References: <20200512132937.19295-1-srikar@linux.vnet.ibm.com>
+ <20200512132937.19295-3-srikar@linux.vnet.ibm.com>
 MIME-Version: 1.0
-References: <20200513005441.1102586-1-bjorn.andersson@linaro.org> <20200513005441.1102586-4-bjorn.andersson@linaro.org>
-In-Reply-To: <20200513005441.1102586-4-bjorn.andersson@linaro.org>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Wed, 13 May 2020 11:57:42 +0800
-Message-ID: <CADBw62oF=o4xxar8yO+xwhLa3h2oD_GD_tWhFo1DDTJGgFnEjg@mail.gmail.com>
-Subject: Re: [PATCH 3/4] hwspinlock: qcom: Allow mmio usage in addition to syscon
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        Devicetree List <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512132937.19295-3-srikar@linux.vnet.ibm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-12_08:2020-05-11,2020-05-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 lowpriorityscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
+ malwarescore=0 adultscore=0 spamscore=0 clxscore=1015 impostorscore=0
+ cotscore=-2147483648 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005130031
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 8:55 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> In all modern Qualcomm platforms the mutex region of the TCSR is forked
-> off into its own block, all with a offset of 0 and stride of 4096. So
-> add support for directly memory mapping this register space, to avoid
-> the need to represent this block using a syscon.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+On Tue, May 12, 2020 at 06:59:36PM +0530, Srikar Dronamraju wrote:
+> Node id queried from the static device tree may not
+> be correct. For example: it may always show 0 on a shared processor.
+> Hence prefer the node id queried from vphn and fallback on the device tree
+> based node id if vphn query fails.
+> 
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: "Kirill A. Shutemov" <kirill@shutemov.name>
+> Cc: Christopher Lameter <cl@linux.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
+> Cc: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+
+Looks good to me.
+
+Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+
 > ---
->  drivers/hwspinlock/qcom_hwspinlock.c | 72 +++++++++++++++++++++-------
->  1 file changed, 56 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/hwspinlock/qcom_hwspinlock.c b/drivers/hwspinlock/qcom_hwspinlock.c
-> index f0da544b14d2..d8d4d729816c 100644
-> --- a/drivers/hwspinlock/qcom_hwspinlock.c
-> +++ b/drivers/hwspinlock/qcom_hwspinlock.c
-> @@ -70,41 +70,81 @@ static const struct of_device_id qcom_hwspinlock_of_match[] = {
->  };
->  MODULE_DEVICE_TABLE(of, qcom_hwspinlock_of_match);
->
-> -static int qcom_hwspinlock_probe(struct platform_device *pdev)
-> +static struct regmap *qcom_hwspinlock_probe_syscon(struct platform_device *pdev,
-> +                                                  u32 *base, u32 *stride)
->  {
-> -       struct hwspinlock_device *bank;
->         struct device_node *syscon;
-> -       struct reg_field field;
->         struct regmap *regmap;
-> -       size_t array_size;
-> -       u32 stride;
-> -       u32 base;
->         int ret;
-> -       int i;
->
->         syscon = of_parse_phandle(pdev->dev.of_node, "syscon", 0);
-> -       if (!syscon) {
-> -               dev_err(&pdev->dev, "no syscon property\n");
-> -               return -ENODEV;
-> -       }
-> +       if (!syscon)
-> +               return ERR_PTR(-ENODEV);
->
->         regmap = syscon_node_to_regmap(syscon);
->         of_node_put(syscon);
->         if (IS_ERR(regmap))
-> -               return PTR_ERR(regmap);
-> +               return regmap;
->
-> -       ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 1, &base);
-> +       ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 1, base);
->         if (ret < 0) {
->                 dev_err(&pdev->dev, "no offset in syscon\n");
-> -               return -EINVAL;
-> +               return ERR_PTR(-EINVAL);
->         }
->
-> -       ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 2, &stride);
-> +       ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 2, stride);
->         if (ret < 0) {
->                 dev_err(&pdev->dev, "no stride syscon\n");
-> -               return -EINVAL;
-> +               return ERR_PTR(-EINVAL);
->         }
->
-> +       return regmap;
-> +}
+> Changelog v2:->v3:
+> - Resolved comments from Gautham.
+> Link v2: https://lore.kernel.org/linuxppc-dev/20200428093836.27190-1-srikar@linux.vnet.ibm.com/t/#u
+> 
+> Changelog v1:->v2:
+> - Rebased to v5.7-rc3
+> 
+>  arch/powerpc/mm/numa.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+> index b3615b7..2815313 100644
+> --- a/arch/powerpc/mm/numa.c
+> +++ b/arch/powerpc/mm/numa.c
+> @@ -719,20 +719,20 @@ static int __init parse_numa_properties(void)
+>  	 */
+>  	for_each_present_cpu(i) {
+>  		struct device_node *cpu;
+> -		int nid;
+> -
+> -		cpu = of_get_cpu_node(i, NULL);
+> -		BUG_ON(!cpu);
+> -		nid = of_node_to_nid_single(cpu);
+> -		of_node_put(cpu);
+> +		int nid = vphn_get_nid(i);
+> 
+>  		/*
+>  		 * Don't fall back to default_nid yet -- we will plug
+>  		 * cpus into nodes once the memory scan has discovered
+>  		 * the topology.
+>  		 */
+> -		if (nid < 0)
+> -			continue;
+> -		node_set_online(nid);
+> +		if (nid == NUMA_NO_NODE) {
+> +			cpu = of_get_cpu_node(i, NULL);
+> +			BUG_ON(!cpu);
+> +			nid = of_node_to_nid_single(cpu);
+> +			of_node_put(cpu);
+> +		}
 > +
-> +static const struct regmap_config tcsr_mutex_config = {
-> +       .reg_bits               = 32,
-> +       .reg_stride             = 4,
-> +       .val_bits               = 32,
-> +       .max_register           = 0x40000,
-> +       .fast_io                = true,
-> +};
-> +
-> +static struct regmap *qcom_hwspinlock_probe_mmio(struct platform_device *pdev,
-> +                                                u32 *offset, u32 *stride)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct resource *res;
-> +       void __iomem *base;
-> +
-> +       /* All modern platform has offset 0 and stride of 4k */
-> +       *offset = 0;
-> +       *stride = 0x1000;
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       base = devm_ioremap_resource(&pdev->dev, res);
-
-I think you can use devm_platform_ioremap_resource(pdev, 0) to
-simplify your code, otherwise looks good to me.
-Reviewed-by: Baolin Wang <baolin.wang7@gmail.com>
-
-> +       if (IS_ERR(base))
-> +               return ERR_CAST(base);
-> +
-> +       return devm_regmap_init_mmio(dev, base, &tcsr_mutex_config);
-> +}
-> +
-> +static int qcom_hwspinlock_probe(struct platform_device *pdev)
-> +{
-> +       struct hwspinlock_device *bank;
-> +       struct reg_field field;
-> +       struct regmap *regmap;
-> +       size_t array_size;
-> +       u32 stride;
-> +       u32 base;
-> +       int i;
-> +
-> +       regmap = qcom_hwspinlock_probe_syscon(pdev, &base, &stride);
-> +       if (IS_ERR(regmap) && PTR_ERR(regmap) == -ENODEV)
-> +               regmap = qcom_hwspinlock_probe_mmio(pdev, &base, &stride);
-> +
-> +       if (IS_ERR(regmap))
-> +               return PTR_ERR(regmap);
-> +
->         array_size = QCOM_MUTEX_NUM_LOCKS * sizeof(struct hwspinlock);
->         bank = devm_kzalloc(&pdev->dev, sizeof(*bank) + array_size, GFP_KERNEL);
->         if (!bank)
-> --
-> 2.26.2
->
-
-
--- 
-Baolin Wang
+> +		if (likely(nid > 0))
+> +			node_set_online(nid);
+>  	}
+> 
+>  	get_n_mem_cells(&n_mem_addr_cells, &n_mem_size_cells);
+> -- 
+> 1.8.3.1
+> 
