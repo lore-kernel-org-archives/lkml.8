@@ -2,106 +2,154 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC65C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8324C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC17204EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6501207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589382121;
-	bh=5DbunmbKdhhIoLuDovWgUiQubs9jRyWUKOYRVFYPVPs=;
+	s=default; t=1589382148;
+	bh=MUVbOzmo8GzDjE2qVR87T11DM0yQvIi++WZvLydnjDs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aGpYc9HcDo7XJzWUmB8OIKvVU6Ix8tbZDUe5hRJ+7i9gjwieUtN3ZSK6KQ0dBmpPT
-	 xdE1Nje4h2T0F2ENZssm2yGvDD33k8lEXiMKZG0gOnecxjiqDUIx2vY+Vl0rcQnVYq
-	 RDZMYhVE/sSx1YBo50wJgJ/HMrZPaKXAVBYTSWps=
+	b=ggjoGcVPsAypDMuVIELjWWwj5/VQK5tLJXkidDUwEM7jpOh+CkZJHFSGQBpuJ4Vk/
+	 9eGs4PI/PGBje5jAFktQ57xg96VXorxNZmGDIncswL2JJlaGGNmmA1j7OI3dLvQRvQ
+	 w90/qoBudlciOeLpPQLaXrdiXnzXWkA35dncIW+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389384AbgEMPCA (ORCPT
+        id S2389391AbgEMPC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:02:00 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44347 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389054AbgEMPB6 (ORCPT
+        Wed, 13 May 2020 11:02:26 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37249 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388039AbgEMPC0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:01:58 -0400
-Received: by mail-wr1-f65.google.com with SMTP id 50so20766386wrc.11;
-        Wed, 13 May 2020 08:01:56 -0700 (PDT)
+        Wed, 13 May 2020 11:02:26 -0400
+Received: by mail-pl1-f193.google.com with SMTP id x10so6925109plr.4;
+        Wed, 13 May 2020 08:02:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ySQYNCFJieFw49hebY3MJRxVr5zT7izYFnFzCl37LtQ=;
-        b=ukoJt9BWtiaSr+NEzfjybj9b4MErjJAgb8nUVyNDbzC8uDPL7csNpDS5DjiMPOK6r/
-         uM7+A+RMBf8nupqkzmxFOFtcyyton1BaSom4eqnWqJMo/l6PsxqMP4NIZD/J18TjLakn
-         fS4NwDlU5TXwwX5DRBA2L94a208OP1MwxWdGDxk78KG/x4cjlz0u+LmZOZZsn3ivUAA/
-         jSFQVs7AsPGz7et5kUV/tnwOEjVLzLe2LhoeWVKJEew0NPCDw4ZrOw+F5AHJgBa8GHQa
-         o011hVUFQTviWTibkrmVA9lMDBHlgMRPg15oHebaeI9urXBIiCmfbgUwvxET6CdVwqED
-         BFVw==
-X-Gm-Message-State: AGi0PuYsqTDNKAv+GGejJ0YvIn8PMN7mcuCnFbvMpj4jNGsumnSjtpNA
-        CnjB25RhodowmpbjXdPPj/U=
-X-Google-Smtp-Source: APiQypJgZBp+xJJRlLfto0u7+TAJ63AvPCwqvbP8TiD3U2a/e+i8K84AM43rOUVJ7f2Lh/Wjf6YJ1g==
-X-Received: by 2002:a5d:6841:: with SMTP id o1mr31448481wrw.412.1589382115833;
-        Wed, 13 May 2020 08:01:55 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id b2sm25334319wrm.30.2020.05.13.08.01.54
+        bh=MT118aZMRZUFyZNYM/mGEw6BOShbBFfm71Ixm+ag1Wk=;
+        b=cVIFMuVnuPs7PgQTPIo1QazG+t0er1quF9fQ7qhDhobKz8hMN23xAH5+oHk6o5CjtS
+         UDZmbUuXecLs9AnPr0NFKHB4Gcr0klmaAwRfFBkGcOw1tpavFaH0or7jpYJMDnLrfUj9
+         YF7Ltz+KbOLUq7GXkcGhcWOa9ArVCXLwgnQMAp9mOZSQTFKrAsdsEYgKf8CFITzszOTM
+         QmJ2ej+zSFiWCPaiwPqPPrQA3VIxJ1fgWAsHqZrEY0cSLR9wDxEnTy89/OC1V90Y+7OL
+         fNTICzNHLvaDdU4bQmtwCVeuzrjCEqaUr/Ct4LqS127gDX8bozGEW57N0M/Q+0TeM3/v
+         Tzaw==
+X-Gm-Message-State: AGi0Pub2/mRccT3gjZSzv9ByWYcEZGxgS3T9pNCnFNxu3WYyR4Dv1wga
+        FFKS7Hw/dQGg4uyg6lOr/qw=
+X-Google-Smtp-Source: APiQypK/sufcq0cPAVcSuD3w73WdinHwTgnomrdyOeuh+IFkYrhqG3MPdpqAxWm6ywWZBeKsT2aoCA==
+X-Received: by 2002:a17:90a:8c9:: with SMTP id 9mr35596299pjn.183.1589382143917;
+        Wed, 13 May 2020 08:02:23 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id c124sm14605811pfb.187.2020.05.13.08.02.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 08:01:55 -0700 (PDT)
-Date:   Wed, 13 May 2020 15:01:53 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     linux-hyperv@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
-        x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>
-Subject: Re: [PATCH] x86/hyperv: Properly suspend/resume reenlightenment
- notifications
-Message-ID: <20200513150153.2xi4v2ekpv7zmofo@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
-References: <20200512160153.134467-1-vkuznets@redhat.com>
+        Wed, 13 May 2020 08:02:22 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 8E5C34063E; Wed, 13 May 2020 15:02:21 +0000 (UTC)
+Date:   Wed, 13 May 2020 15:02:21 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Al Viro <viro@ZenIV.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Xiaoming Ni <nixiaoming@huawei.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Helge Deller <deller@gmx.de>,
+        Parisc List <linux-parisc@vger.kernel.org>, yzaikin@google.com,
+        linux-fsdevel@vger.kernel.org,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: linux-next: manual merge of the vfs tree with the parisc-hd tree
+Message-ID: <20200513150221.GQ11244@42.do-not-panic.com>
+References: <20200511111123.68ccbaa3@canb.auug.org.au>
+ <99095805-8cbe-d140-e2f1-0c5a3e84d7e7@huawei.com>
+ <20200512003305.GX11244@42.do-not-panic.com>
+ <87y2pxs73w.fsf@x220.int.ebiederm.org>
+ <20200512172413.GC11244@42.do-not-panic.com>
+ <87k11hrqzc.fsf@x220.int.ebiederm.org>
+ <20200512220341.GE11244@42.do-not-panic.com>
+ <87d078oss9.fsf@x220.int.ebiederm.org>
+ <20200513141421.GP11244@42.do-not-panic.com>
+ <87tv0jopwn.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200512160153.134467-1-vkuznets@redhat.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <87tv0jopwn.fsf@x220.int.ebiederm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 06:01:53PM +0200, Vitaly Kuznetsov wrote:
-> Errors during hibernation with reenlightenment notifications enabled were
-> reported:
+On Wed, May 13, 2020 at 09:44:40AM -0500, Eric W. Biederman wrote:
+> Luis Chamberlain <mcgrof@kernel.org> writes:
 > 
->  [   51.730435] PM: hibernation entry
->  [   51.737435] PM: Syncing filesystems ...
->  ...
->  [   54.102216] Disabling non-boot CPUs ...
->  [   54.106633] smpboot: CPU 1 is now offline
->  [   54.110006] unchecked MSR access error: WRMSR to 0x40000106 (tried to
->      write 0x47c72780000100ee) at rIP: 0xffffffff90062f24
->      native_write_msr+0x4/0x20)
->  [   54.110006] Call Trace:
->  [   54.110006]  hv_cpu_die+0xd9/0xf0
->  ...
+> > On Wed, May 13, 2020 at 08:42:30AM -0500, Eric W. Biederman wrote:
+> >> Luis Chamberlain <mcgrof@kernel.org> writes:
+> >> 
+> >> > On Tue, May 12, 2020 at 12:40:55PM -0500, Eric W. Biederman wrote:
+> >> >> Luis Chamberlain <mcgrof@kernel.org> writes:
+> >> >> 
+> >> >> > On Tue, May 12, 2020 at 06:52:35AM -0500, Eric W. Biederman wrote:
+> >> >> >> Luis Chamberlain <mcgrof@kernel.org> writes:
+> >> >> >> 
+> >> >> >> > +static struct ctl_table fs_base_table[] = {
+> >> >> >> > +	{
+> >> >> >> > +		.procname	= "fs",
+> >> >> >> > +		.mode		= 0555,
+> >> >> >> > +		.child		= fs_table,
+> >> >> >> > +	},
+> >> >> >> > +	{ }
+> >> >> >> > +};
+> >> >> >>   ^^^^^^^^^^^^^^^^^^^^^^^^ You don't need this at all.
+> >> >> >> > > +static int __init fs_procsys_init(void)
+> >> >> >> > +{
+> >> >> >> > +	struct ctl_table_header *hdr;
+> >> >> >> > +
+> >> >> >> > +	hdr = register_sysctl_table(fs_base_table);
+> >> >> >>               ^^^^^^^^^^^^^^^^^^^^^ Please use register_sysctl instead.
+> >> >> >> 	AKA
+> >> >> >>         hdr = register_sysctl("fs", fs_table);
+> >> >> >
+> >> >> > Ah, much cleaner thanks!
+> >> >> 
+> >> >> It is my hope you we can get rid of register_sysctl_table one of these
+> >> >> days.  It was the original interface but today it is just a
+> >> >> compatibility wrapper.
+> >> >> 
+> >> >> I unfortunately ran out of steam last time before I finished converting
+> >> >> everything over.
+> >> >
+> >> > Let's give it one more go. I'll start with the fs stuff.
+> >> 
+> >> Just to be clear moving the tables out of kernel/sysctl.c is a related
+> >> but slightly different problem.
+> >
+> > Sure, but also before we go on this crusade, how about we add a few
+> > helpers:
+> >
+> > register_sysctl_kernel()
+> > register_sysctl_vm()
+> > register_sysctl_fs()
+> > register_sysctl_debug()
+> > register_sysctl_dev()
 > 
-> Normally, hv_cpu_die() just reassigns reenlightenment notifications to some
-> other CPU when the CPU receiving them goes offline. Upon hibernation, there
-> is no other CPU which is still online so cpumask_any_but(cpu_online_mask)
-> returns >= nr_cpu_ids and using it as hv_vp_index index is incorrect.
-> Disable the feature when cpumask_any_but() fails.
+> Hmm.
 > 
-> Also, as we now disable reenlightenment notifications upon hibernation we
-> need to restore them on resume. Check if hv_reenlightenment_cb was
-> previously set and restore from hv_resume().
+>   register_sysctl("kernel")
 > 
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> > That should make it easier to look for these, and shorter. We *know*
+> > this is a common path, given the size of the existing table.
+> 
+> I don't really care but one character shorter doesn't look like it
+> really helps.  Not really for grepping and not maintenance as we get a
+> bunch of trivial one line implementations.
 
-Applied to hyperv-fixes.
+Alright, let's skip the helpers for now.
 
-Thank you all.
-
-Wei.
+  Luis
