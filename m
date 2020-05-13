@@ -2,170 +2,181 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA92BCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3878BC2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85D23206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:10:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gMQBgdnI"
+	by mail.kernel.org (Postfix) with ESMTP id 14EE9206E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:13:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732994AbgEMKKo (ORCPT
+        id S1732913AbgEMKNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:10:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52522 "EHLO
+        Wed, 13 May 2020 06:13:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732382AbgEMKKm (ORCPT
+        with ESMTP id S1732620AbgEMKNy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 06:10:42 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E748CC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 03:10:40 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id n5so12908230wmd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 03:10:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HLNFbZ1pUXdpUu4uIHgZes4VhXZ3ubFdB8i3YmL6eQg=;
-        b=gMQBgdnIMWxdQ281X69UXFiONU35q6BA2601uQGUEHpjqLi5V8HCyK4H8zFwxayomQ
-         mJpAUrqL+E6M2zRhA3+ynOOKjOizz6VUdlyEjDsC3H1hftoopwObOU/bKxJX8xZxd6Di
-         ndY+GQzvG94Aodppqte8cBTfQdV1crDDfSZkLq2IJIs0Rq7Pp1PcFUiUSgKBcoMzbTup
-         A8J9ZJBzof9t6+H6X2OqlDZ2o/4ZL8y4/0cphFHirWpT1mmh79OxCeKN87cMHnMZ7DPP
-         9B+K2b6BX4nLVlXlCVKPPHUV70yAkyIJrkGnOhyEg5Cn8ROoSGsz/dixpXEB7FBOKTu+
-         ZU3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HLNFbZ1pUXdpUu4uIHgZes4VhXZ3ubFdB8i3YmL6eQg=;
-        b=mfElGE/wIzv87TUZ2CKc1/DSKFZ/5nhXD+Pq7iZV7G6cHgyVP703ETeos9WxyBwuM7
-         n/aiAODfmnqeHVcKrdVtfmlmvztbV42Q7CbJCSW4bJd3Pcl7vv/5zoAe/GzOs1TQ5wY3
-         WVsGhSgObIQlESbBUA9Ofg1RWv5BkJUEuRd/uHrcUNwUdPnkLw2PWXgC6OsLYiNMRqbn
-         4vStV1xufwa5zQgLxL7NUHfzMR9y+4A2Dyh7fJPbGQhXaKIfumAV2fOB8x5IbqXU8Q41
-         jSEeWEUDZzOPFC/GJR45IsROnj6s2/ei73Po9P0MLM6siDhm91DjOtsewoUxQfmNZokN
-         mMaA==
-X-Gm-Message-State: AGi0PuaJmy3IFfkkFSssqxw1rR14/hc7XGrnrsL/Cj+ztk+bD3y1G8S/
-        vV1YE2k7CquWhsxZoLYIjt+jMiXNPZI=
-X-Google-Smtp-Source: APiQypIYdTSZJe3Y4e3+lnSSbtwf1K8offweIlDZGjyZHvtGvqNlYAe+bH5LnVDK5Hv8ivjuh+nPcA==
-X-Received: by 2002:a1c:1f0d:: with SMTP id f13mr16463240wmf.184.1589364639220;
-        Wed, 13 May 2020 03:10:39 -0700 (PDT)
-Received: from [192.168.43.249] (212-39-89-233.ip.btc-net.bg. [212.39.89.233])
-        by smtp.googlemail.com with ESMTPSA id m7sm12180941wmc.40.2020.05.13.03.10.37
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 May 2020 03:10:38 -0700 (PDT)
-Subject: Re: [PATCH v8 00/10] Introduce OPP bandwidth bindings
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     vireshk@kernel.org, nm@ti.com, sboyd@kernel.org, rjw@rjwysocki.net,
-        saravanak@google.com, sibis@codeaurora.org, mka@chromium.org,
-        robh+dt@kernel.org, rnayak@codeaurora.org,
-        bjorn.andersson@linaro.org, vincent.guittot@linaro.org,
-        jcrouse@codeaurora.org, evgreen@chromium.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200512125327.1868-1-georgi.djakov@linaro.org>
- <20200513065559.wznvqc7tzvmv3ghy@vireshk-i7>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- mQINBFjTuRcBEACyAOVzghvyN19Sa/Nit4LPBWkICi5W20p6bwiZvdjhtuh50H5q4ktyxJtp
- 1+s8dMSa/j58hAWhrc2SNL3fttOCo+MM1bQWwe8uMBQJP4swgXf5ZUYkSssQlXxGKqBSbWLB
- uFHOOBTzaQBaNgsdXo+mQ1h8UCgM0zQOmbs2ort8aHnH2i65oLs5/Xgv/Qivde/FcFtvEFaL
- 0TZ7odM67u+M32VetH5nBVPESmnEDjRBPw/DOPhFBPXtal53ZFiiRr6Bm1qKVu3dOEYXHHDt
- nF13gB+vBZ6x5pjl02NUEucSHQiuCc2Aaavo6xnuBc3lnd4z/xk6GLBqFP3P/eJ56eJv4d0B
- 0LLgQ7c1T3fU4/5NDRRCnyk6HJ5+HSxD4KVuluj0jnXW4CKzFkKaTxOp7jE6ZD/9Sh74DM8v
- etN8uwDjtYsM07I3Szlh/I+iThxe/4zVtUQsvgXjwuoOOBWWc4m4KKg+W4zm8bSCqrd1DUgL
- f67WiEZgvN7tPXEzi84zT1PiUOM98dOnmREIamSpKOKFereIrKX2IcnZn8jyycE12zMkk+Sc
- ASMfXhfywB0tXRNmzsywdxQFcJ6jblPNxscnGMh2VlY2rezmqJdcK4G4Lprkc0jOHotV/6oJ
- mj9h95Ouvbq5TDHx+ERn8uytPygDBR67kNHs18LkvrEex/Z1cQARAQABtChHZW9yZ2kgRGph
- a292IDxnZW9yZ2kuZGpha292QGxpbmFyby5vcmc+iQI+BBMBAgAoBQJY07kXAhsDBQkHhM4A
- BgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRCyi/eZcnWWUuvsD/4miikUeAO6fU2Xy3fT
- l7RUCeb2Uuh1/nxYoE1vtXcow6SyAvIVTD32kHXucJJfYy2zFzptWpvD6Sa0Sc58qe4iLY4j
- M54ugOYK7XeRKkQHFqqR2T3g/toVG1BOLS2atooXEU+8OFbpLkBXbIdItqJ1M1SEw8YgKmmr
- JlLAaKMq3hMb5bDQx9erq7PqEKOB/Va0nNu17IL58q+Q5Om7S1x54Oj6LiG/9kNOxQTklOQZ
- t61oW1Ewjbl325fW0/Lk0QzmfLCrmGXXiedFEMRLCJbVImXVKdIt/Ubk6SAAUrA5dFVNBzm2
- L8r+HxJcfDeEpdOZJzuwRyFnH96u1Xz+7X2V26zMU6Wl2+lhvr2Tj7spxjppR+nuFiybQq7k
- MIwyEF0mb75RLhW33sdGStCZ/nBsXIGAUS7OBj+a5fm47vQKv6ekg60oRTHWysFSJm1mlRyq
- exhI6GwUo5GM/vE36rIPSJFRRgkt6nynoba/1c4VXxfhok2rkP0x3CApJ5RimbvITTnINY0o
- CU6f1ng1I0A1UTi2YcLjFq/gmCdOHExT4huywfu1DDf0p1xDyPA1FJaii/gJ32bBP3zK53hM
- dj5S7miqN7F6ZpvGSGXgahQzkGyYpBR5pda0m0k8drV2IQn+0W8Qwh4XZ6/YdfI81+xyFlXc
- CJjljqsMCJW6PdgEH7kCDQRY07kXARAAvupGd4Jdd8zRRiF+jMpv6ZGz8L55Di1fl1YRth6m
- lIxYTLwGf0/p0oDLIRldKswena3fbWh5bbTMkJmRiOQ/hffhPSNSyyh+WQeLY2kzl6geiHxD
- zbw37e2hd3rWAEfVFEXOLnmenaUeJFyhA3Wd8OLdRMuoV+RaLhNfeHctiEn1YGy2gLCq4VNb
- 4Wj5hEzABGO7+LZ14hdw3hJIEGKtQC65Jh/vTayGD+qdwedhINnIqslk9tCQ33a+jPrCjXLW
- X29rcgqigzsLHH7iVHWA9R5Aq7pCy5hSFsl4NBn1uV6UHlyOBUuiHBDVwTIAUnZ4S8EQiwgv
- WQxEkXEWLM850V+G6R593yZndTr3yydPgYv0xEDACd6GcNLR/x8mawmHKzNmnRJoOh6Rkfw2
- fSiVGesGo83+iYq0NZASrXHAjWgtZXO1YwjW9gCQ2jYu9RGuQM8zIPY1VDpQ6wJtjO/KaOLm
- NehSR2R6tgBJK7XD9it79LdbPKDKoFSqxaAvXwWgXBj0Oz+Y0BqfClnAbxx3kYlSwfPHDFYc
- R/ppSgnbR5j0Rjz/N6Lua3S42MDhQGoTlVkgAi1btbdV3qpFE6jglJsJUDlqnEnwf03EgjdJ
- 6KEh0z57lyVcy5F/EUKfTAMZweBnkPo+BF2LBYn3Qd+CS6haZAWaG7vzVJu4W/mPQzsAEQEA
- AYkCJQQYAQIADwUCWNO5FwIbDAUJB4TOAAAKCRCyi/eZcnWWUhlHD/0VE/2x6lKh2FGP+QHH
- UTKmiiwtMurYKJsSJlQx0T+j/1f+zYkY3MDX+gXa0d0xb4eFv8WNlEjkcpSPFr+pQ7CiAI33
- 99kAVMQEip/MwoTYvM9NXSMTpyRJ/asnLeqa0WU6l6Z9mQ41lLzPFBAJ21/ddT4xeBDv0dxM
- GqaH2C6bSnJkhSfSja9OxBe+F6LIAZgCFzlogbmSWmUdLBg+sh3K6aiBDAdZPUMvGHzHK3fj
- gHK4GqGCFK76bFrHQYgiBOrcR4GDklj4Gk9osIfdXIAkBvRGw8zg1zzUYwMYk+A6v40gBn00
- OOB13qJe9zyKpReWMAhg7BYPBKIm/qSr82aIQc4+FlDX2Ot6T/4tGUDr9MAHaBKFtVyIqXBO
- xOf0vQEokkUGRKWBE0uA3zFVRfLiT6NUjDQ0vdphTnsdA7h01MliZLQ2lLL2Mt5lsqU+6sup
- Tfql1omgEpjnFsPsyFebzcKGbdEr6vySGa3Cof+miX06hQXKe99a5+eHNhtZJcMAIO89wZmj
- 7ayYJIXFqjl/X0KBcCbiAl4vbdBw1bqFnO4zd1lMXKVoa29UHqby4MPbQhjWNVv9kqp8A39+
- E9xw890l1xdERkjVKX6IEJu2hf7X3MMl9tOjBK6MvdOUxvh1bNNmXh7OlBL1MpJYY/ydIm3B
- KEmKjLDvB0pePJkdTw==
-Message-ID: <ea73d0e7-7428-c3cf-b44b-59427c4d6109@linaro.org>
-Date:   Wed, 13 May 2020 13:10:29 +0300
+        Wed, 13 May 2020 06:13:54 -0400
+Received: from smtp-bc09.mail.infomaniak.ch (smtp-bc09.mail.infomaniak.ch [IPv6:2001:1600:3:17::bc09])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E291C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 03:13:54 -0700 (PDT)
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49MVrD08xhzlhGkd;
+        Wed, 13 May 2020 12:13:48 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 49MVr10GnBzlhBZN;
+        Wed, 13 May 2020 12:13:36 +0200 (CEST)
+Subject: Re: [PATCH v5 1/6] fs: Add support for an O_MAYEXEC flag on
+ openat2(2)
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20200505153156.925111-1-mic@digikod.net>
+ <20200505153156.925111-2-mic@digikod.net> <202005121258.4213DC8A2@keescook>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <39141f3e-0a4a-6a0f-a86e-7c769fe06ffd@digikod.net>
+Date:   Wed, 13 May 2020 12:13:36 +0200
+User-Agent: 
 MIME-Version: 1.0
-In-Reply-To: <20200513065559.wznvqc7tzvmv3ghy@vireshk-i7>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <202005121258.4213DC8A2@keescook>
+Content-Type: text/plain; charset=iso-8859-15
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Viresh,
 
-On 5/13/20 09:55, Viresh Kumar wrote:
-> On 12-05-20, 15:53, Georgi Djakov wrote:
->> Here is a proposal to extend the OPP bindings with bandwidth based on
->> a few previous discussions [1] and patchsets from me [2][3] and Saravana
->> [4][5][6][7][8][9].
+On 12/05/2020 23:05, Kees Cook wrote:
+> On Tue, May 05, 2020 at 05:31:51PM +0200, Mickaël Salaün wrote:
+>> When the O_MAYEXEC flag is passed, openat2(2) may be subject to
+>> additional restrictions depending on a security policy managed by the
+>> kernel through a sysctl or implemented by an LSM thanks to the
+>> inode_permission hook.  This new flag is ignored by open(2) and
+>> openat(2).
 >>
->> Changes in v8:
->> * Addressed review comments from Matthias, Sibi and Viresh.
->> * Picked reviewed-by tags.
->> * Picked Sibi's interconnect-tag patches into this patchset.
+>> The underlying idea is to be able to restrict scripts interpretation
+>> according to a policy defined by the system administrator.  For this to
+>> be possible, script interpreters must use the O_MAYEXEC flag
+>> appropriately.  To be fully effective, these interpreters also need to
+>> handle the other ways to execute code: command line parameters (e.g.,
+>> option -e for Perl), module loading (e.g., option -m for Python), stdin,
+>> file sourcing, environment variables, configuration files, etc.
+>> According to the threat model, it may be acceptable to allow some script
+>> interpreters (e.g. Bash) to interpret commands from stdin, may it be a
+>> TTY or a pipe, because it may not be enough to (directly) perform
+>> syscalls.  Further documentation can be found in a following patch.
 > 
-> I have applied the series with the modifications I replied with
-> separately.
+> You touch on this lightly in the cover letter, but it seems there are
+> plans for Python to restrict stdin parsing? Are there patches pending
+> anywhere for other interpreters? (e.g. does CLIP OS have such patches?)
 
-Thanks a lot!
+There is some example from CLIP OS 4 here :
+https://github.com/clipos-archive/clipos4_portage-overlay/search?q=O_MAYEXEC
+If you take a look at the whole pointed patches there is more than the
+O_MAYEXEC changes (which matches this search) e.g., to prevent Python
+interactive execution. There is patches for Bash, Wine, Java (Icedtea),
+Busybox's ash, Perl and Python. There is also some related patches which
+do not directly rely on O_MAYEXEC but which restrict the use of browser
+plugins and extensions, which may be seen as scripts too:
+https://github.com/clipos-archive/clipos4_portage-overlay/tree/master/www-client
 
-> Please lemme know if any more tags (reviewed/acked) etc need to be
-> applied or any more changes are required before I send the pull
-> request to Rafael.
 > 
-> Please give my branch a try as soon as you can.
+> There's always a push-back against adding features that have external
+> dependencies, and then those external dependencies can't happen without
+> the kernel first adding a feature. :) I like getting these catch-22s
+> broken, and I think the kernel is the right place to start, especially
+> since the threat model (and implementation) is already proven out in
+> CLIP OS, and now with IMA. So, while the interpreter side of this is
+> still under development, this gives them the tool they need to get it
+> done on the kernel side. So showing those pieces (as you've done) is
+> great, and I think finding a little bit more detail here would be even
+> better.
 
-On top of your branch i tested with scaling 3 different test paths (also
-tagged with different tags) and it looks good:
+OK, I can add my previous comment in the next cover letter.
 
- node                                  tag          avg         peak
---------------------------------------------------------------------
-slv_ebi_ch0                                      458824      1525000
-  cpu0                                   3          922          911
-  cpu0                                   2          902          901
-  cpu0                                   1       457000      1525000
+> 
+>> A simple security policy implementation, configured through a dedicated
+>> sysctl, is available in a following patch.
+>>
+>> This is an updated subset of the patch initially written by Vincent
+>> Strubel for CLIP OS 4:
+>> https://github.com/clipos-archive/src_platform_clip-patches/blob/f5cb330d6b684752e403b4e41b39f7004d88e561/1901_open_mayexec.patch
+>> This patch has been used for more than 11 years with customized script
+>> interpreters.  Some examples (with the original name O_MAYEXEC) can be
+>> found here:
+>> https://github.com/clipos-archive/clipos4_portage-overlay/search?q=O_MAYEXEC
+>>
+>> Signed-off-by: Mickaël Salaün <mic@digikod.net>
+>> Signed-off-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+>> Signed-off-by: Vincent Strubel <vincent.strubel@ssi.gouv.fr>
+> 
+> nit: this needs to be reordered. It's expected that the final SoB
+> matches the sender.
 
-Apart from that, i ran memory throughput tests and they also confirm
-that it's working as expected.
+OK, I just sorted the list alphabetically.
 
-There will be a minor conflict with my branch when this is merged upstream,
-so maybe we will need to report it or use an immutable tag/branch.
+> If you're trying to show co-authorship, please
+> see:
+> 
+> https://www.kernel.org/doc/html/latest/process/submitting-patches.html#when-to-use-acked-by-cc-and-co-developed-by
+> 
+> Based on what I've inferred about author ordering, I think you want:
+> 
+> Co-developed-by: Vincent Strubel <vincent.strubel@ssi.gouv.fr>
+> Signed-off-by: Vincent Strubel <vincent.strubel@ssi.gouv.fr>
+> Co-developed-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+> Signed-off-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
+> Co-developed-by: Mickaël Salaün <mic@digikod.net>
+> Signed-off-by: Mickaël Salaün <mic@digikod.net>
 
-Thanks,
-Georgi
+OK, according to the doc I'll remove myself as Co-developped-by because
+I'm already in the From, though.
+
+> 
+>> Reviewed-by: Deven Bowers <deven.desai@linux.microsoft.com>
+>> Cc: Aleksa Sarai <cyphar@cyphar.com>
+>> Cc: Al Viro <viro@zeniv.linux.org.uk>
+>> Cc: Kees Cook <keescook@chromium.org>
+> 
+> Everything else appears good to me, but Al and Aleksa know VFS internals
+> way better. :)
+> 
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> 
+
+Thanks!
