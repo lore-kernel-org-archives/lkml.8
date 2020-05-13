@@ -2,201 +2,164 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A23C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA50C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 237C3206B7
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17524206B7
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:34:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="okP+8glW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732002AbgEMBeT (ORCPT
+        id S1732047AbgEMBeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 21:34:19 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:37296 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728313AbgEMBeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 21:34:18 -0400
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 7067279B8061E412AB15;
-        Wed, 13 May 2020 09:34:15 +0800 (CST)
-Received: from dggeme760-chm.china.huawei.com (10.3.19.106) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Wed, 13 May 2020 09:34:15 +0800
-Received: from [127.0.0.1] (10.57.37.248) by dggeme760-chm.china.huawei.com
- (10.3.19.106) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1913.5; Wed, 13
- May 2020 09:34:14 +0800
-Subject: Re: [question] net: phy: rtl8211f: link speed shows 1000Mb/s but
- actual link speed in phy is 100Mb/s
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>, Salil Mehta <salil.mehta@huawei.com>
-References: <478f871a-583d-01f1-9cc5-2eea56d8c2a7@huawei.com>
- <20200512140017.GK409897@lunn.ch>
-From:   Yonglong Liu <liuyonglong@huawei.com>
-Message-ID: <ef25a0a2-e13f-def1-5e91-ceae1bfaf333@huawei.com>
-Date:   Wed, 13 May 2020 09:34:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-MIME-Version: 1.0
-In-Reply-To: <20200512140017.GK409897@lunn.ch>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.37.248]
-X-ClientProxiedBy: dggeme706-chm.china.huawei.com (10.1.199.102) To
- dggeme760-chm.china.huawei.com (10.3.19.106)
-X-CFilter-Loop: Reflected
+        Tue, 12 May 2020 21:34:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728313AbgEMBeY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 21:34:24 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3416C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 18:34:22 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id i62so17918387ybc.11
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 18:34:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=u2R6uh0TUyIu2nWEYyjL6Nl0urUWpNEVjVf1H4GcML0=;
+        b=okP+8glWZ24cEbndDhuAl3Tuv+Jt/bb2AhNhMJoZ75GxX+l7+KjGZHf2vslB7bIsal
+         Xx7zy08TTvc1CuKSZFmygbuhiQTqASiNK1dz3ARREXqPu+f5RajQQcNkwR267BSdBsk5
+         vFrALBlWsngapC7A593EE1sTx3W6sGmu0OKJhPg2a5PE3ASYLXAqcGIkQLLjUfoK1wKg
+         amoiCFy5hzzuBaxaBTwJOHkPbI6cOPU4e+gh/xvX35gtakzTMthmmqRqB8NMkx/HYhIP
+         bMJwOYeXAVor5ofeJO3eqEfVnK5MX4X8WYZWEDh6NpKi8+e+XMt3aRsMEYVxLB3D3Bln
+         ONgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=u2R6uh0TUyIu2nWEYyjL6Nl0urUWpNEVjVf1H4GcML0=;
+        b=WcvkqWbQmmBIW1JLBTGHqUVyjGMzaEx3AdxOWB+9D1hgzX6WLqqvI19jX3igif4pII
+         UhEhP/gD7Di+p9rI/ZY7lnhSbAWiyLuKvUZ0gcSzEMRvb/z8x++Yi+wOHZuJ1HyCwusa
+         29LX4eJ/hFvzNbqjRSJW87TycpLf/EIwaecaT4I9t4Sn6w4k7fQU3PDYAej4ZvLn96Z8
+         SpsAVgBrXFpdvGqNmtRT0Xv1nxTowhFQ22/iEp514a24N5p7ZClrMaHQCu17V+6ZtHTY
+         UFfErlUR9z8IfhnH8DnY99l2Jk2YduR9TkhibMZZwszTpeDrnl5SR+uhvOZjfZKKAJwX
+         +LVg==
+X-Gm-Message-State: AGi0PuaNXS/npA+MsYyMeRcP+WB7VFuXkmIdnRIxnbFuadnKQA+xoaLe
+        P+HRLvc4Z3Yvk9YOlYoKqCBc8cHexVGF9uk=
+X-Google-Smtp-Source: APiQypIlrERinGpziyimv7ST/mRamxZl/nRYvZaUdKBqsaRDjKaHUnpV2q/7vt/f/aSbV3nSAWo8kRuXKFW0288=
+X-Received: by 2002:a25:37c8:: with SMTP id e191mr40492234yba.388.1589333662255;
+ Tue, 12 May 2020 18:34:22 -0700 (PDT)
+Date:   Tue, 12 May 2020 18:34:15 -0700
+Message-Id: <20200513013415.148858-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
+Subject: [PATCH v1] driver core: Add state_synced sysfs file for devices that
+ support it
+From:   Saravana Kannan <saravanak@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Andrew:
-	Thanks for your reply!
+This can be used to check if a device supports sync_state() callbacks
+and therefore keeps resources left on by the bootloader enabled till all
+its consumers have probed.
 
-On 2020/5/12 22:00, Andrew Lunn wrote:
-> On Tue, May 12, 2020 at 08:48:21PM +0800, Yonglong Liu wrote:
->> I use two devices, both support 1000M speed, they are directly connected
->> with a network cable. Two devices enable autoneg, and then do the following
->> test repeatedly:
->> 	ifconfig eth5 down
->> 	ifconfig eth5 up
->> 	sleep $((RANDOM%6))
->> 	ifconfig eth5 down
->> 	ifconfig eth5 up
->> 	sleep 10
->>
->> With low probability, one device A link up with 100Mb/s, the other B link up with
->> 1000Mb/s(the actual link speed read from phy is 100Mb/s), and the network can
->> not work.
->>
->> device A:
->> Settings for eth5:
->>         Supported ports: [ TP ]
->>         Supported link modes:   10baseT/Half 10baseT/Full
->>                                 100baseT/Half 100baseT/Full
->>                                 1000baseT/Full
->>         Supported pause frame use: Symmetric Receive-only
->>         Supports auto-negotiation: Yes
->>         Supported FEC modes: Not reported
->>         Advertised link modes:  10baseT/Half 10baseT/Full
->>                                 100baseT/Half 100baseT/Full
->>                                 1000baseT/Full
->>         Advertised pause frame use: Symmetric
->>         Advertised auto-negotiation: Yes
->>         Advertised FEC modes: Not reported
->>         Link partner advertised link modes:  10baseT/Half 10baseT/Full
->>                                              100baseT/Half 100baseT/Full
->>         Link partner advertised pause frame use: Symmetric
->>         Link partner advertised auto-negotiation: Yes
->>         Link partner advertised FEC modes: Not reported
->>         Speed: 100Mb/s
->>         Duplex: Full
->>         Port: MII
->>         PHYAD: 3
->>         Transceiver: internal
->>         Auto-negotiation: on
->>         Current message level: 0x00000036 (54)
->>                                probe link ifdown ifup
->>         Link detected: yes
->>
->> The regs value read from mdio are:
->> reg 9 = 0x200
->> reg a = 0
->>
->> device B:
->> Settings for eth5:
->>         Supported ports: [ TP ]
->>         Supported link modes:   10baseT/Half 10baseT/Full
->>                                 100baseT/Half 100baseT/Full
->>                                 1000baseT/Full
->>         Supported pause frame use: Symmetric Receive-only
->>         Supports auto-negotiation: Yes
->>         Supported FEC modes: Not reported
->>         Advertised link modes:  10baseT/Half 10baseT/Full
->>                                 100baseT/Half 100baseT/Full
->>                                 1000baseT/Full
->>         Advertised pause frame use: Symmetric
->>         Advertised auto-negotiation: Yes
->>         Advertised FEC modes: Not reported
->>         Link partner advertised link modes:  10baseT/Half 10baseT/Full
->>                                              100baseT/Half 100baseT/Full
->>                                              1000baseT/Full
->>         Link partner advertised pause frame use: Symmetric
->>         Link partner advertised auto-negotiation: Yes
->>         Link partner advertised FEC modes: Not reported
->>         Speed: 1000Mb/s
->>         Duplex: Full
->>         Port: MII
->>         PHYAD: 3
->>         Transceiver: internal
->>         Auto-negotiation: on
->>         Current message level: 0x00000036 (54)
->>                                probe link ifdown ifup
->>         Link detected: yes
->>
->> The regs value read from mdio are:
->> reg 9 = 0
->> reg a = 0x800
->>
->> I had talk to the FAE of rtl8211f, they said if negotiation failed with 1000Mb/s,
->> rtl8211f will change reg 9 to 0, than try to negotiation with 100Mb/s.
->>
->> The problem happened as:
->> ifconfig eth5 up -> phy_start -> phy_start_aneg -> phy_modify_changed(MII_CTRL1000)
->> (this time both A and B, reg 9 = 0x200) -> wait for link up -> (B: reg 9 changed to 0)
->> -> link up.
-> 
-> This sounds like downshift, but not correctly working. 1Gbps requires
-> that 4 pairs in the cable work. If a 1Gbps link is negotiated, but
-> then does not establish because one of the pairs is broken, some PHYs
-> will try to 'downshift'. They drop down to 100Mbps, which only
-> requires two pairs of the cable to work. To do this, the PHY should
-> change what it is advertising, to no longer advertise 1G, just 100M
-> and 10M. The link partner should then try to use 100Mbps and
-> hopefully, a link is established.
-> 
-> Looking at the ethtool, you can see device A is reporting device B is
-> only advertising upto 100Mbps. Yet it is locally using 1G. That is
-> broken. So i would say device A has the problem. Are both PHYs
-> rtl8211f?
+This can also be used to check if sync_state() has been called for a
+device or whether it is still trying to keep resources enabled because
+they were left enabled by the bootloader and all its consumers haven't
+probed yet.
 
-Both PHY is rtl8211f. I think Device B is broken. Device B advertising
-it supported 1G, but actually, in phy, downshift to 100M, so Device B
-link up with 1G in driver side, but actually 100M in phy.
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ .../ABI/testing/sysfs-devices-state_synced    | 24 +++++++++++++++++++
+ drivers/base/dd.c                             | 16 +++++++++++++
+ 2 files changed, 40 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-devices-state_synced
 
-> 
->> I think this is the bug of the rtl8211f itself, any one have an idea
->> to avoid this bug?
-> 
-> Are you 100% sure your cable and board layout is good? Is it trying> downshift because something is broken? Fix the cable/connector and the
-
-Will check the layout with hardware engineer. This happened with a low
-probability. When this happened, another down/up operation or restart
-autoneg will solved.
-
-> reason to downshift goes away. But it does not solve the problem if a
-> customer has a broken cable. So you might want to deliberately cut a
-> pair in the cable so it becomes 100% reproducable and try to debug it
-> further. See if you can find out why auto-neg is not working
-> correctly.
-
-So, your opinion is, maybe we should checkout whether the hardware layout
-or cable have problem?
-
-By the way, do we have some mechanism to solve this downshift in software
-side? If the PHY advertising downshift to 100M, but software still have
-advertising with 1G(just like Device B), it will always have a broken network.
-
-> 
-> 	Andrew
-> 
-> .
-> 
+diff --git a/Documentation/ABI/testing/sysfs-devices-state_synced b/Documentation/ABI/testing/sysfs-devices-state_synced
+new file mode 100644
+index 000000000000..0c922d7d02fc
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-devices-state_synced
+@@ -0,0 +1,24 @@
++What:		/sys/devices/.../state_synced
++Date:		May 2020
++Contact:	Saravana Kannan <saravanak@google.com>
++Description:
++		The /sys/devices/.../state_synced attribute is only present for
++		devices whose bus types or driver provides the .sync_state()
++		callback. The number read from it (0 or 1) reflects the value
++		of the device's 'state_synced' field. A value of 0 means the
++		.sync_state() callback hasn't been called yet. A value of 1
++		means the .sync_state() callback has been called.
++
++		Generally, if a device has sync_state() support and has some of
++		the resources it provides enabled at the time the kernel starts
++		(Eg: enabled by hardware reset or bootloader or anything that
++		run before the kernel starts), then it'll keep those resources
++		enabled and in a state that's compatible with the state they
++		were in at the start of the kernel. The device will stop doing
++		this only when the sync_state() callback has been called --
++		which happens only when all its consumer devices are registered
++		and have probed successfully. Resources that were left disabled
++		at the time the kernel starts are not affected or limited in
++		any way by sync_state() callbacks.
++
++
+diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+index 48ca81cb8ebc..72599436ae84 100644
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -458,6 +458,13 @@ static void driver_deferred_probe_add_trigger(struct device *dev,
+ 		driver_deferred_probe_trigger();
+ }
+ 
++static ssize_t state_synced_show(struct device *dev,
++				 struct device_attribute *attr, char *buf)
++{
++	return sprintf(buf, "%u\n", dev->state_synced);
++}
++static DEVICE_ATTR_RO(state_synced);
++
+ static int really_probe(struct device *dev, struct device_driver *drv)
+ {
+ 	int ret = -EPROBE_DEFER;
+@@ -531,9 +538,16 @@ static int really_probe(struct device *dev, struct device_driver *drv)
+ 		goto dev_groups_failed;
+ 	}
+ 
++	if (dev_has_sync_state(dev) &&
++	    device_create_file(dev, &dev_attr_state_synced)) {
++		dev_err(dev, "state_synced sysfs add failed\n");
++		goto dev_sysfs_state_synced_failed;
++	}
++
+ 	if (test_remove) {
+ 		test_remove = false;
+ 
++		device_remove_file(dev, &dev_attr_state_synced);
+ 		device_remove_groups(dev, drv->dev_groups);
+ 
+ 		if (dev->bus->remove)
+@@ -563,6 +577,8 @@ static int really_probe(struct device *dev, struct device_driver *drv)
+ 		 drv->bus->name, __func__, dev_name(dev), drv->name);
+ 	goto done;
+ 
++dev_sysfs_state_synced_failed:
++	device_remove_groups(dev, drv->dev_groups);
+ dev_groups_failed:
+ 	if (dev->bus->remove)
+ 		dev->bus->remove(dev);
+-- 
+2.26.2.645.ge9eca65c58-goog
 
