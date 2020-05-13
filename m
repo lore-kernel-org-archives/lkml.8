@@ -2,71 +2,113 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DFFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2132C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A03D2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:55:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A5052065C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:56:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390354AbgEMSzQ (ORCPT
+        id S2390335AbgEMS4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 14:55:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49734 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732218AbgEMSzP (ORCPT
+        Wed, 13 May 2020 14:56:13 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:48235 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732218AbgEMS4N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 14:55:15 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F556C061A0C;
-        Wed, 13 May 2020 11:55:15 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2BB54127D484C;
-        Wed, 13 May 2020 11:55:12 -0700 (PDT)
-Date:   Wed, 13 May 2020 11:55:08 -0700 (PDT)
-Message-Id: <20200513.115508.257148925010604442.davem@davemloft.net>
-To:     xiaoliang.yang_1@nxp.com
-Cc:     po.liu@nxp.com, claudiu.manoil@nxp.com,
-        alexandru.marginean@nxp.com, vladimir.oltean@nxp.com,
-        leoyang.li@nxp.com, mingkai.hu@nxp.com, andrew@lunn.ch,
-        f.fainelli@gmail.com, vivien.didelot@gmail.com, jiri@resnulli.us,
-        idosch@idosch.org, kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, horatiu.vultur@microchip.com,
-        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
-        joergen.andreasen@microchip.com, UNGLinuxDriver@microchip.com,
-        vinicius.gomes@intel.com, nikolay@cumulusnetworks.com,
-        roopa@cumulusnetworks.com, linux-devel@linux.nxdi.nxp.com
-Subject: Re: [PATCH v2 net-next 0/3] net: dsa: felix: tc taprio and CBS
- offload support
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200513022510.18457-1-xiaoliang.yang_1@nxp.com>
-References: <20200513022510.18457-1-xiaoliang.yang_1@nxp.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Wed, 13 May 2020 14:56:13 -0400
+Received: from [192.168.1.123] (cm-84.210.220.251.getinternet.no [84.210.220.251])
+        (Authenticated sender: fredrik@strupe.net)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 67E2C240005;
+        Wed, 13 May 2020 18:56:09 +0000 (UTC)
+Subject: Re: [RFC PATCH] arm: Don't trap conditional UDF instructions
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>
+References: <b2042f19-9477-272c-0989-d6cab1572cca@strupe.net>
+ <20200513181209.GM1551@shell.armlinux.org.uk>
+From:   Fredrik Strupe <fredrik@strupe.net>
+Message-ID: <9fba4d17-d826-6a3a-86fc-60977aa6cc9e@strupe.net>
+Date:   Wed, 13 May 2020 20:56:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200513181209.GM1551@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 13 May 2020 11:55:13 -0700 (PDT)
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
-Date: Wed, 13 May 2020 10:25:07 +0800
+On 13.05.2020 20:12, Russell King - ARM Linux admin wrote:
+> On Wed, May 13, 2020 at 05:41:58PM +0200, Fredrik Strupe wrote:
+>> Hi,
+>>
+>> This is more of a question than a patch, but I hope the attached patch makes
+>> the issue a bit clearer.
+>>
+>> The arm port of Linux supports hooking/trapping of undefined instructions. Some
+>> parts of the code use this to trap UDF instructions with certain immediates in
+>> order to use them for other purposes, like 'UDF #16' which is equivalent to a
+>> BKPT instruction in A32.
+>>
+>> Moreover, most of the undef hooks on UDF instructions assume that UDF is
+>> conditional and mask out the condition prefix during matching. The attached
+>> patch shows the locations where this happens. However, the Arm architecture
+>> reference manual explicitly states that UDF is *not* conditional, making
+>> any instruction encoding with a condition prefix other than 0xe (always
+>> execute) unallocated.
+>
+> The latest version of the ARM architecture reference manual may say
+> that, but earlier versions say different things. The latest reference
+> manual does not apply to earlier architectures, so if you're writing
+> code to cover multiple different architectures, you must have an
+> understanding of each of those architectures.
+>
+> So, from the code:
+>
+> 	ARM:   xxxx 0111 1111 xxxx xxxx xxxx 1111 xxxx
+>
+> From DDI0100E:
+>
+> 3.13.1 Undefined instruction space
+>        Instructions with the following opcodes are undefined
+>        instruction space:
+>
+>        opcode[27:25] = 0b011
+>        opcode[4] = 1
+>
+>        31 28 27 26 25 24                                     5 4 3     0
+>        cond  0  1  1  x  x x x x x x x x x x x x x x x x x x x 1 x x x x
+>
+> So, in this version of the architecture, undefined instructions may
+> be conditional - and indeed that used to be the case.  The condition
+> code was always respected, and cond=1111 meant "never" (NV).
+>
+> Hence, trapping them if the condition code is not 1110 (AL) is
+> entirely reasonable, legal and safe.  If an ARM CPU defines an
+> instruction coding that matches the above, then it won't take the
+> undefined instruction trap, and we'll never see it.
+>
+> Now, as for UDF usage in the kernel, it may be quite correct that we
+> always use the AL condition code for them, but it would be very odd
+> for there to be an instruction implemented with a different (non-NV)
+> condition code that can't also have it's AL condition code encoding.
+> You could never execute such an instruction unconditionally.
+>
 
-> This patch series support tc taprio and CBS hardware offload according
-> to IEEE 802.1Qbv and IEEE-802.1Qav on VSC9959.
-> 
-> v1->v2 changes:
->  - Move port_qos_map_init() function to be common felix codes.
->  - Keep const for dsa_switch_ops structs, add felix_port_setup_tc
->    function to call port_setup_tc of felix.info.
->  - fix code style for cbs_set, rename variables.
+That makes sense. Thank you very much for a great answer!
 
-Series applied, thank you.
+Fredrik
+
