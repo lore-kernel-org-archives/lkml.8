@@ -2,144 +2,160 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2519C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE6BC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD4C02176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:02:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99F8220769
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:02:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BT0cJHsc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730143AbgEMHCj (ORCPT
+        id S1730312AbgEMHCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 03:02:39 -0400
-Received: from mga17.intel.com ([192.55.52.151]:53674 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726020AbgEMHCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 03:02:38 -0400
-IronPort-SDR: GO/M7kVewLrxISMq/AE5tX6aHvLnk03CzHOZJBU9An70JyUxwNrp4Z52gQLNbPXHE46XgYaCY1
- OGjRLOLcSqBg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 00:02:38 -0700
-IronPort-SDR: 97Mz8ZV6xPDWvCrpeSLuYcIbh85ttnDw6+1GKURocbPBpEWvkT7Ty1nIPN1qSg6/y9A/YRJp2x
- KvAQHRb8kC3g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,386,1583222400"; 
-   d="scan'208";a="371814032"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
-  by fmsmga001.fm.intel.com with ESMTP; 13 May 2020 00:02:35 -0700
-Subject: Re: [PATCH v8 4/4] USB: pci-quirks: Add Raspberry Pi 4 quirk
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Mathias Nyman <mathias.nyman@intel.com>
-Cc:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, wahrenst@gmx.net,
-        helgaas@kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org
-References: <20200505161318.26200-1-nsaenzjulienne@suse.de>
- <20200505161318.26200-5-nsaenzjulienne@suse.de>
- <20200511142514.GB27249@e121166-lin.cambridge.arm.com>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
- 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 fiD/
-Message-ID: <40515fe7-029b-e391-53f9-f87f95097adb@linux.intel.com>
-Date:   Wed, 13 May 2020 10:05:26 +0300
+        Wed, 13 May 2020 03:02:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbgEMHCm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 03:02:42 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43542C061A0C;
+        Wed, 13 May 2020 00:02:42 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id u16so27110529wmc.5;
+        Wed, 13 May 2020 00:02:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=reply-to:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=Dy8Jhh6UuIjYdQgEuvO0u3h8Ch6uEM4eGbltcbsMang=;
+        b=BT0cJHsc3Glo8geXjfBR1S4oNEPaYEYyYfD3Fau2YdIjGM7ikkS2Yp8bW6BmW78ySv
+         FXKIBBNHt6TesiqyZ/GvDSQniFIwcbeKCK1JVcDSYQ+jYamLlVdglqyVNuJC6i3ZTlHY
+         kcTh16jbw/mvGfumpngFq8fr+MTZuoQJ0a/nbkV4tPJlQApEr/+BCs29SAv0Nefz6JB7
+         8kcYmJaJalkvbqt7284kR0rVzX08/YZEpWJ1Q4MPa/wHRqsovOxwgHqlJ0ekZWMLXMWg
+         NHPpWfyfcKeosm8FB4O4Ml3+dFPot5/A9L15EtzWHexWDd7WJOeiTutT2dggdpouK7Pp
+         bHMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-transfer-encoding:content-language;
+        bh=Dy8Jhh6UuIjYdQgEuvO0u3h8Ch6uEM4eGbltcbsMang=;
+        b=CRMpaISGw9ywmyIBF+k+J+jav4mMUTfUN1yTR9NOcpAnHl2JyGQcwZrHR/lSPq8doK
+         LEmFzy9hCNvAc4VItXpamWAFTwj55xqbWTX9pAhgmJxZd4+2UpHEFXdOlRDYUXpD6xuf
+         S2B25iMA9R09NOGvAxbCHRplNQiraCWcva8a5QR8sukPueXeSOfw8SLVrmGURpxTQY9q
+         i5M3oWC9oC/xIZ9VZKJNs5V5049BCqosCymkFTev5TIGPDvVn1KIqqxTTCwR5EgMXylK
+         ccguQYqPRZAIZmlycBjI4dAmKkwfTxNc/w2tA3BjiTXx/gX6PgDx/Wzc5uqFI4j1+FSc
+         jC5g==
+X-Gm-Message-State: AGi0Puahu9E0UnMdNX5gyt2fDubIPstyTknyRlvyJY546cF8+MjqrExn
+        Gg6QXF2gUYLqKP3680fp9hG5L25J
+X-Google-Smtp-Source: APiQypL6H5LiHY+WHN2lUhR0xRgoqcNlS21mxYwDK4aftjSqKO9Mfp2AQiBafBotsWqxQRILrAhvwQ==
+X-Received: by 2002:a1c:9ad1:: with SMTP id c200mr19199796wme.147.1589353360875;
+        Wed, 13 May 2020 00:02:40 -0700 (PDT)
+Received: from ?IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7? ([2a02:908:1252:fb60:be8a:bd56:1f94:86e7])
+        by smtp.gmail.com with ESMTPSA id x17sm1053434wrp.71.2020.05.13.00.02.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 May 2020 00:02:40 -0700 (PDT)
+Reply-To: christian.koenig@amd.com
+Subject: Re: [RFC 09/17] drm/amdgpu: use dma-fence annotations in cs_submit()
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>
+Cc:     linux-rdma@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        linaro-mm-sig@lists.linaro.org,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        linux-media@vger.kernel.org
+References: <20200512085944.222637-1-daniel.vetter@ffwll.ch>
+ <20200512085944.222637-10-daniel.vetter@ffwll.ch>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
+Message-ID: <6cfd324e-0443-3a12-6a2c-25a546c68643@gmail.com>
+Date:   Wed, 13 May 2020 09:02:38 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200511142514.GB27249@e121166-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200512085944.222637-10-daniel.vetter@ffwll.ch>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.5.2020 17.25, Lorenzo Pieralisi wrote:
-> On Tue, May 05, 2020 at 06:13:17PM +0200, Nicolas Saenz Julienne wrote:
->> On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
->> loaded directly from an EEPROM or, if not present, by the SoC's
->> VideoCore. Inform VideoCore that VL805 was just reset.
->>
->> Also, as this creates a dependency between USB_PCI and VideoCore's
->> firmware interface, and since USB_PCI can't be set as a module neither
->> this can. Reflect that on the firmware interface Kconfg.
->>
->> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->> ---
->>
->> Changes since v5:
->>  - Fix Kconfig issue with allmodconfig
->>
->> Changes since v4:
->>  - Do not split up error message
->>
->> Changes since v3:
->>  - Add more complete error message
->>
->> Changes since v1:
->>  - Make RASPBERRYPI_FIRMWARE dependent on this quirk to make sure it
->>    gets compiled when needed.
->>
->>  drivers/firmware/Kconfig      |  3 ++-
->>  drivers/usb/host/pci-quirks.c | 16 ++++++++++++++++
->>  2 files changed, 18 insertions(+), 1 deletion(-)
-> 
-> Hi Mathias,
-> 
-> I would need your ACK to merge this series, thanks.
-> 
-> Lorenzo
+Am 12.05.20 um 10:59 schrieb Daniel Vetter:
+> This is a bit tricky, since ->notifier_lock is held while calling
+> dma_fence_wait we must ensure that also the read side (i.e.
+> dma_fence_begin_signalling) is on the same side. If we mix this up
+> lockdep complaints, and that's again why we want to have these
+> annotations.
+>
+> A nice side effect of this is that because of the fs_reclaim priming
+> for dma_fence_enable lockdep now automatically checks for us that
+> nothing in here allocates memory, without even running any userptr
+> workloads.
+>
+> Cc: linux-media@vger.kernel.org
+> Cc: linaro-mm-sig@lists.linaro.org
+> Cc: linux-rdma@vger.kernel.org
+> Cc: amd-gfx@lists.freedesktop.org
+> Cc: intel-gfx@lists.freedesktop.org
+> Cc: Chris Wilson <chris@chris-wilson.co.uk>
+> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> Cc: Christian König <christian.koenig@amd.com>
+> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> ---
+>   drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c | 5 +++++
+>   1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
+> index 7653f62b1b2d..6db3f3c629b0 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
+> @@ -1213,6 +1213,7 @@ static int amdgpu_cs_submit(struct amdgpu_cs_parser *p,
+>   	struct amdgpu_job *job;
+>   	uint64_t seq;
+>   	int r;
+> +	bool fence_cookie;
+>   
+>   	job = p->job;
+>   	p->job = NULL;
+> @@ -1227,6 +1228,8 @@ static int amdgpu_cs_submit(struct amdgpu_cs_parser *p,
+>   	 */
+>   	mutex_lock(&p->adev->notifier_lock);
+>   
+> +	fence_cookie = dma_fence_begin_signalling();
+> +
+>   	/* If userptr are invalidated after amdgpu_cs_parser_bos(), return
+>   	 * -EAGAIN, drmIoctl in libdrm will restart the amdgpu_cs_ioctl.
+>   	 */
+> @@ -1264,12 +1267,14 @@ static int amdgpu_cs_submit(struct amdgpu_cs_parser *p,
+>   	amdgpu_vm_move_to_lru_tail(p->adev, &fpriv->vm);
+>   
+>   	ttm_eu_fence_buffer_objects(&p->ticket, &p->validated, p->fence);
+> +	dma_fence_end_signalling(fence_cookie);
 
-Ah, yes, of course
+Mhm, this could come earlier in theory. E.g. after pushing the job to 
+the scheduler.
 
-Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Christian.
+
+>   	mutex_unlock(&p->adev->notifier_lock);
+>   
+>   	return 0;
+>   
+>   error_abort:
+>   	drm_sched_job_cleanup(&job->base);
+> +	dma_fence_end_signalling(fence_cookie);
+>   	mutex_unlock(&p->adev->notifier_lock);
+>   
+>   error_unlock:
 
