@@ -2,75 +2,177 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D738CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82127CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ECC9206CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6498B206CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:28:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732216AbgEMI1Q (ORCPT
+        id S1732229AbgEMI2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 04:27:16 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:47000 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729189AbgEMI1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 04:27:15 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 462ABAAF877951E563CA;
-        Wed, 13 May 2020 16:27:11 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 13 May 2020 16:27:04 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <linux@armlinux.org.uk>, <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linuxarm@huawei.com>, <kuba@kernel.org>,
-        Yufeng Mo <moyufeng@huawei.com>,
-        Jian Shen <shenjian15@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next] net: phy: realtek: add loopback support for RTL8211F
-Date:   Wed, 13 May 2020 16:25:44 +0800
-Message-ID: <1589358344-14009-1-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 13 May 2020 04:28:03 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51692 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729189AbgEMI2C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 04:28:02 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04D84Ngj000865;
+        Wed, 13 May 2020 04:28:01 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3101m8tf8d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 May 2020 04:28:01 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04D84hMb002619;
+        Wed, 13 May 2020 04:28:01 -0400
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3101m8tf7m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 May 2020 04:28:01 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04D8Pega024292;
+        Wed, 13 May 2020 08:27:59 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma01fra.de.ibm.com with ESMTP id 3100ubgf3q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 May 2020 08:27:59 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04D8RvNa62849358
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 May 2020 08:27:57 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EF70652054;
+        Wed, 13 May 2020 08:27:56 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.172.249])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id AAD1D52051;
+        Wed, 13 May 2020 08:27:56 +0000 (GMT)
+Subject: Re: s390x: kdump kernel can not boot if I load kernel and initrd
+ images via the kexec_file_load syscall.
+To:     Philipp Rudo <prudo@linux.ibm.com>, lijiang <lijiang@redhat.com>
+Cc:     Dave Young <dyoung@redhat.com>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Baoquan He <bhe@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <4d7ff4bb-f09e-7aec-964f-f5cc2412e5b7@redhat.com>
+ <20200511111558.2d3e3db3@laptop2-ibm.local>
+ <20200511170146.28eaafed@laptop2-ibm.local>
+ <19903f1e-b3ae-730e-8a02-ed30fb47e9ba@redhat.com>
+ <559a3c8f-9da9-a64d-aa78-434365c4b271@redhat.com>
+ <79241fab-3299-1ba3-1c2b-a29eb4e0af7c@redhat.com>
+ <20200512193956.15ae3f23@laptop2-ibm.local>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Message-ID: <ea013211-575e-993d-9437-ba961ef64fe0@de.ibm.com>
+Date:   Wed, 13 May 2020 10:27:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200512193956.15ae3f23@laptop2-ibm.local>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-13_02:2020-05-11,2020-05-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 priorityscore=1501 suspectscore=0 clxscore=1015 spamscore=0
+ mlxlogscore=999 impostorscore=0 malwarescore=0 bulkscore=0 phishscore=0
+ cotscore=-2147483648 mlxscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005130070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufeng Mo <moyufeng@huawei.com>
 
-PHY loopback is already supported by genphy driver. This patch
-adds the set_loopback interface to RTL8211F PHY driver, so the PHY
-selftest can run properly on it.
 
-Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- drivers/net/phy/realtek.c | 1 +
- 1 file changed, 1 insertion(+)
+On 12.05.20 19:39, Philipp Rudo wrote:
+> Hi Lianbo,
+> 
+> stupid me obviously never tested the kdump+initrd combination...
+> 
+> The patch below fixed the problem for me. Could please give it a try, too.
+> 
+> Thanks
+> Philipp
+> 
+> ---
+> 
+> From 3f77088c9139582261d2e3ee6476324fc1ded401 Mon Sep 17 00:00:00 2001
+> From: Philipp Rudo <prudo@linux.ibm.com>
+> Date: Tue, 12 May 2020 19:25:14 +0200
+> Subject: [PATCH] s390/kexec_file: fix initrd location for kdump kernel
+> 
+> initrd_start must not point at the location the initrd is loaded into
+> the crashkernel memory but at the location it will be after the
+> crashkernel memory is swapped with the memory at 0.
+> 
+> Fixes: ee337f5469fd ("s390/kexec_file: Add crash support to image loader")
+> Reported-by: Lianbo Jiang <lijiang@redhat.com>
+> Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
+> ---
+>  arch/s390/kernel/machine_kexec_file.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
+> index 8415ae7d2a23..f9e4baa64b67 100644
+> --- a/arch/s390/kernel/machine_kexec_file.c
+> +++ b/arch/s390/kernel/machine_kexec_file.c
+> @@ -151,7 +151,7 @@ static int kexec_file_add_initrd(struct kimage *image,
+>  		buf.mem += crashk_res.start;
+>  	buf.memsz = buf.bufsz;
+>  
+> -	data->parm->initrd_start = buf.mem;
+> +	data->parm->initrd_start = data->memsz;
+>  	data->parm->initrd_size = buf.memsz;
+>  	data->memsz += buf.memsz;
 
-diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
-index c7229d0..6c5918c 100644
---- a/drivers/net/phy/realtek.c
-+++ b/drivers/net/phy/realtek.c
-@@ -615,6 +615,7 @@ static struct phy_driver realtek_drvs[] = {
- 		.resume		= genphy_resume,
- 		.read_page	= rtl821x_read_page,
- 		.write_page	= rtl821x_write_page,
-+		.set_loopback   = genphy_loopback,
- 	}, {
- 		.name		= "Generic FE-GE Realtek PHY",
- 		.match_phy_device = rtlgen_match_phy_device,
--- 
-2.7.4
 
+Thanks, applied. 
