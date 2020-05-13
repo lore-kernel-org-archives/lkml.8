@@ -2,106 +2,70 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2E3C2D0FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 05:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2988C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 05:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2B223127
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 05:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9321820659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 05:46:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729046AbgEMFna (ORCPT
+        id S1728944AbgEMFqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 01:43:30 -0400
-Received: from mga05.intel.com ([192.55.52.43]:40375 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728097AbgEMFn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 01:43:29 -0400
-IronPort-SDR: qGgY2PZKhs7nps/88OPZ8JI/v9pjVb6CYa00n/H4ZWhzaqA5OFW0eJiP1GhULS6wv4s6M43z64
- n1uKKcuqg6WA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 22:43:29 -0700
-IronPort-SDR: SK59B42UbMYq2ls4ncVnwTImTJhK0cVzDiqBcnn6kBo26zDsrhp8LgIuVowGEwKjJKfpHifoyn
- Ls586/o5KqSg==
-X-IronPort-AV: E=Sophos;i="5.73,386,1583222400"; 
-   d="scan'208";a="265754104"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 22:43:28 -0700
-From:   ira.weiny@intel.com
-To:     linux-ext4@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Moyer <jmoyer@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/9] Enable ext4 support for per-file/directory DAX operations
-Date:   Tue, 12 May 2020 22:43:15 -0700
-Message-Id: <20200513054324.2138483-1-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 13 May 2020 01:46:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39426 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728131AbgEMFqS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 01:46:18 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CD9FC061A0C;
+        Tue, 12 May 2020 22:46:18 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jYkDZ-007EO7-Jb; Wed, 13 May 2020 05:46:09 +0000
+Date:   Wed, 13 May 2020 06:46:09 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     axboe@kernel.dk, zohar@linux.vnet.ibm.com, mcgrof@kernel.org,
+        keescook@chromium.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] fs: avoid fdput() after failed fdget() in
+ ksys_sync_file_range()
+Message-ID: <20200513054609.GS23230@ZenIV.linux.org.uk>
+References: <cover.1589311577.git.skhan@linuxfoundation.org>
+ <71cc3966f60f884924f9dff8875ed478e858dca1.1589311577.git.skhan@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <71cc3966f60f884924f9dff8875ed478e858dca1.1589311577.git.skhan@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+On Tue, May 12, 2020 at 01:43:04PM -0600, Shuah Khan wrote:
 
-Enable the same per file DAX support in ext4 as was done for xfs.  This series
-builds and depends on the V11 series for xfs.[1]
+> @@ -364,15 +364,15 @@ int sync_file_range(struct file *file, loff_t offset, loff_t nbytes,
+>  int ksys_sync_file_range(int fd, loff_t offset, loff_t nbytes,
+>  			 unsigned int flags)
+>  {
+> -	int ret;
+> -	struct fd f;
+> +	int ret = -EBADF;
+> +	struct fd f = fdget(fd);
+>  
+> -	ret = -EBADF;
+> -	f = fdget(fd);
+> -	if (f.file)
+> -		ret = sync_file_range(f.file, offset, nbytes, flags);
+> +	if (!f.file)
+> +		goto out;
+>  
+> +	ret = sync_file_range(f.file, offset, nbytes, flags);
+>  	fdput(f);
+> +out:
+>  	return ret;
 
-This passes the same xfstests test as XFS.
-
-The only issue is that this modifies the old mount option parsing code rather
-than waiting for the new parsing code to be finalized.
-
-This series starts with 3 fixes which include making Verity and Encrypt truly
-mutually exclusive from DAX.  I think these first 3 patches should be picked up
-for 5.8 regardless of what is decided regarding the mount parsing.
-
-[1] https://lore.kernel.org/lkml/20200428002142.404144-1-ira.weiny@intel.com/
-
-To: linux-kernel@vger.kernel.org
-Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Chinner <david@fromorbit.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc: Jan Kara <jack@suse.cz>
-Cc: linux-ext4@vger.kernel.org
-Cc: linux-xfs@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org
-
-Ira Weiny (9):
-  fs/ext4: Narrow scope of DAX check in setflags
-  fs/ext4: Disallow verity if inode is DAX
-  fs/ext4: Disallow encryption if inode is DAX
-  fs/ext4: Change EXT4_MOUNT_DAX to EXT4_MOUNT_DAX_ALWAYS
-  fs/ext4: Update ext4_should_use_dax()
-  fs/ext4: Only change S_DAX on inode load
-  fs/ext4: Make DAX mount option a tri-state
-  fs/ext4: Introduce DAX inode flag
-  Documentation/dax: Update DAX enablement for ext4
-
- Documentation/filesystems/dax.txt         |  6 +-
- Documentation/filesystems/ext4/verity.rst |  7 +++
- Documentation/filesystems/fscrypt.rst     |  4 +-
- fs/ext4/ext4.h                            | 20 ++++---
- fs/ext4/ialloc.c                          |  2 +-
- fs/ext4/inode.c                           | 27 +++++++--
- fs/ext4/ioctl.c                           | 32 +++++++++--
- fs/ext4/super.c                           | 67 +++++++++++++++--------
- fs/ext4/verity.c                          |  5 +-
- 9 files changed, 125 insertions(+), 45 deletions(-)
-
--- 
-2.25.1
-
+IDGI...  What's the point of that goto out, when it leads straight to return?
