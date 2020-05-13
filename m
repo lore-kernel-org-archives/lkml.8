@@ -2,52 +2,53 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E105C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D7BCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F03A24927
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B3922492F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363264;
-	bh=4m7XJmhmlHWuzWttM8S0PrW824Xv1kZgHZj4jUu04Nw=;
+	s=default; t=1589363266;
+	bh=tuNb+NYMQBnQMFewZOaFo7HcYsYxZ9JgcdnhsXbA1VA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e43g1fjSJTA/+lVgzt/IG9mFZO4m/+Mm5DTsed8+k3eLtEHx5ShZkuFSFZivKWUvg
-	 +aL9Rc9saQoFr4rJ94yE6+UDS839q/JE6BBUfK347FCToivogDU2sNTfOCTMBCY2pv
-	 QU7g/OeMwTGhvih1nJv7Bvr8fQgoNZMvry+w2ZgU=
+	b=CoZi8o4uB+ablo7Be4pA8nIVuklpaJQS8llnrMvhBZ9vctLKIRTEOR6B1ech4k8yM
+	 q1PCQRa5OYFPWUNKCgwzHm5voh04YCEQcN27kRXLxwyGz6HthaFcyNXs0LNMYC+w9x
+	 DoYXgMxbN7hxsCEcvmHv2sPXfh2SXfVxRiKpgyas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732912AbgEMJrn (ORCPT
+        id S1732921AbgEMJrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:47:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45406 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:47:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732860AbgEMJr2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:47:28 -0400
+        id S1732869AbgEMJra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:47:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D504F20753;
-        Wed, 13 May 2020 09:47:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51E0423126;
+        Wed, 13 May 2020 09:47:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363247;
-        bh=4m7XJmhmlHWuzWttM8S0PrW824Xv1kZgHZj4jUu04Nw=;
+        s=default; t=1589363249;
+        bh=tuNb+NYMQBnQMFewZOaFo7HcYsYxZ9JgcdnhsXbA1VA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=02g8wM931AJExaWhRBx2NfEHWLm9nUijZZLUAqjRKw81EXJW2IztjYNjWeaMwg/99
-         7tp00ktcAxdr8aH+Z8clKjEkwSZQrD8rDVhu6wMW8DFR3LiDTjAvXo+O3+zFHixM7K
-         Ys7FTld58oY7ucnMdD0f7lu7TB4Am1x2Y8N3uh0s=
+        b=z3QIMh/NjsqnVK5kbCFa+iGDgyordT/FKhW5W/wYgzhH+FJBu6aCiVKQJ9lfRTVtP
+         aCiISXEpA2f+DP0rOS82bGmXBr3gxUuiltTaEWLlzbQBlj+mYYNBLpSV4GdJH0SuHc
+         ShAWsXjV7oC/h3Csfl7zM2Pl691JO8Zc5/Nf9cZc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.19 45/48] netfilter: nf_osf: avoid passing pointer to local var
-Date:   Wed, 13 May 2020 11:45:11 +0200
-Message-Id: <20200513094404.213164359@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>,
+        Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.19 19/48] HID: wacom: Read HID_DG_CONTACTMAX directly for non-generic devices
+Date:   Wed, 13 May 2020 11:44:45 +0200
+Message-Id: <20200513094355.775789347@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
 References: <20200513094351.100352960@linuxfoundation.org>
@@ -60,75 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Jason Gerecke <jason.gerecke@wacom.com>
 
-commit c165d57b552aaca607fa5daf3fb524a6efe3c5a3 upstream.
+commit 778fbf4179991e7652e97d7f1ca1f657ef828422 upstream.
 
-gcc-10 points out that a code path exists where a pointer to a stack
-variable may be passed back to the caller:
+We've recently switched from extracting the value of HID_DG_CONTACTMAX
+at a fixed offset (which may not be correct for all tablets) to
+injecting the report into the driver for the generic codepath to handle.
+Unfortunately, this change was made for *all* tablets, even those which
+aren't generic. Because `wacom_wac_report` ignores reports from non-
+generic devices, the contact count never gets initialized. Ultimately
+this results in the touch device itself failing to probe, and thus the
+loss of touch input.
 
-net/netfilter/nfnetlink_osf.c: In function 'nf_osf_hdr_ctx_init':
-cc1: warning: function may return address of local variable [-Wreturn-local-addr]
-net/netfilter/nfnetlink_osf.c:171:16: note: declared here
-  171 |  struct tcphdr _tcph;
-      |                ^~~~~
+This commit adds back the fixed-offset extraction for non-generic devices.
 
-I am not sure whether this can happen in practice, but moving the
-variable declaration into the callers avoids the problem.
-
-Fixes: 31a9c29210e2 ("netfilter: nf_osf: add struct nf_osf_hdr_ctx")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Link: https://github.com/linuxwacom/input-wacom/issues/155
+Fixes: 184eccd40389 ("HID: wacom: generic: read HID_DG_CONTACTMAX from any feature report")
+Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+Reviewed-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
+CC: stable@vger.kernel.org # 5.3+
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nfnetlink_osf.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/hid/wacom_sys.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/netfilter/nfnetlink_osf.c
-+++ b/net/netfilter/nfnetlink_osf.c
-@@ -170,12 +170,12 @@ static bool nf_osf_match_one(const struc
- static const struct tcphdr *nf_osf_hdr_ctx_init(struct nf_osf_hdr_ctx *ctx,
- 						const struct sk_buff *skb,
- 						const struct iphdr *ip,
--						unsigned char *opts)
-+						unsigned char *opts,
-+						struct tcphdr *_tcph)
- {
- 	const struct tcphdr *tcp;
--	struct tcphdr _tcph;
- 
--	tcp = skb_header_pointer(skb, ip_hdrlen(skb), sizeof(struct tcphdr), &_tcph);
-+	tcp = skb_header_pointer(skb, ip_hdrlen(skb), sizeof(struct tcphdr), _tcph);
- 	if (!tcp)
- 		return NULL;
- 
-@@ -210,10 +210,11 @@ nf_osf_match(const struct sk_buff *skb,
- 	int fmatch = FMATCH_WRONG;
- 	struct nf_osf_hdr_ctx ctx;
- 	const struct tcphdr *tcp;
-+	struct tcphdr _tcph;
- 
- 	memset(&ctx, 0, sizeof(ctx));
- 
--	tcp = nf_osf_hdr_ctx_init(&ctx, skb, ip, opts);
-+	tcp = nf_osf_hdr_ctx_init(&ctx, skb, ip, opts, &_tcph);
- 	if (!tcp)
- 		return false;
- 
-@@ -270,10 +271,11 @@ const char *nf_osf_find(const struct sk_
- 	struct nf_osf_hdr_ctx ctx;
- 	const struct tcphdr *tcp;
- 	const char *genre = NULL;
-+	struct tcphdr _tcph;
- 
- 	memset(&ctx, 0, sizeof(ctx));
- 
--	tcp = nf_osf_hdr_ctx_init(&ctx, skb, ip, opts);
-+	tcp = nf_osf_hdr_ctx_init(&ctx, skb, ip, opts, &_tcph);
- 	if (!tcp)
- 		return NULL;
- 
+--- a/drivers/hid/wacom_sys.c
++++ b/drivers/hid/wacom_sys.c
+@@ -290,9 +290,11 @@ static void wacom_feature_mapping(struct
+ 			data[0] = field->report->id;
+ 			ret = wacom_get_report(hdev, HID_FEATURE_REPORT,
+ 					       data, n, WAC_CMD_RETRIES);
+-			if (ret == n) {
++			if (ret == n && features->type == HID_GENERIC) {
+ 				ret = hid_report_raw_event(hdev,
+ 					HID_FEATURE_REPORT, data, n, 0);
++			} else if (ret == 2 && features->type != HID_GENERIC) {
++				features->touch_max = data[1];
+ 			} else {
+ 				features->touch_max = 16;
+ 				hid_warn(hdev, "wacom_feature_mapping: "
 
 
