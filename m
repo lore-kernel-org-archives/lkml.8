@@ -2,178 +2,331 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E97C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC1EC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70FF22176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:27:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C0B920718
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:28:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qNzpdoEM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dmtiReVh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729663AbgEMG15 (ORCPT
+        id S1729714AbgEMG2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 02:27:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45968 "EHLO
+        Wed, 13 May 2020 02:28:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729602AbgEMG1y (ORCPT
+        with ESMTP id S1729679AbgEMG17 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 02:27:54 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3D14C061A0C;
-        Tue, 12 May 2020 23:27:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=LxzPoA5gvJN0ZEH7ZiGs9x0zOf60hnPDcSro4oU97rM=; b=qNzpdoEMGMmgdfxtOdvpBW+rxQ
-        7O4qjcKk5X4//kNZMOmxFmxnTrXtVmJst3Ur82QW4tVfJX+S+2Gk04HGnfRNDoXDHKv0erIrfRsUO
-        jla3SCtCGOQxqr2hKPnbaU92Q4eYl3wlaFbAHFukJV7xKhP/1rVX92IquXZmumv7p68HN6pr9Nbaw
-        FESpfho3HqUUXEt2/edXqqAkquu4B/Imsc8/t4PThletUfwOTdqjaxHJ0JKeCutpAXDcxa2tvPo7O
-        QWkrMRuUM8N/+OuJJrUSfHdpPfID4TCjJyvfUg/aWLdeDerAeEzog2SqpJpNqxxQl6daD4OQA0mne
-        JxLxr1Cw==;
-Received: from [2001:4bb8:180:9d3f:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jYkrI-00043g-7I; Wed, 13 May 2020 06:27:12 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org,
-        target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-cifs@vger.kernel.org, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, netdev@vger.kernel.org,
-        linux-sctp@vger.kernel.org, ceph-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org
-Subject: [PATCH 07/33] net: add sock_set_keepalive
-Date:   Wed, 13 May 2020 08:26:22 +0200
-Message-Id: <20200513062649.2100053-8-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513062649.2100053-1-hch@lst.de>
-References: <20200513062649.2100053-1-hch@lst.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Wed, 13 May 2020 02:27:59 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B48F4C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 23:27:59 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id d4so15583552qva.16
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 23:27:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=lGWolqBuvMNfz8fw1fhjOmxEDeQkoZRVWIgHyR7G5lo=;
+        b=dmtiReVhM4DDXSjv67mkDQF8AB30TCrdzmZU1ap+O6MJpbLIZH/J8NOO2IjtExXl+n
+         45fEB2sSMvtjY1ibT2P+Wp+uaUBZ0cJOXB2d57zfDUcxNPqficlMo8brONhK9mmRcXJF
+         FuOr1njRPm5T9mEu/mPxXPCL9qnHW0l7kEg5k+UKAUbdJi3/6CZXv0Uo4oq+RP35ijhc
+         gLCDIu7kTmThqkItll93VQ/wOfGaRR3NK/S4lM6XEmiuzTNyPc3n2aC7TgJ2G3QaChRK
+         kMqLcBC2VheHAoyfZaXBtTIkyGzJv5lAYSJTYv93TdKoprvJ6lILFiHpd6kWHpocxO7/
+         V3rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=lGWolqBuvMNfz8fw1fhjOmxEDeQkoZRVWIgHyR7G5lo=;
+        b=AhowJjTc7P8BNWfZf9snsSH6LaBfGoR0g+v06kt9FEqOycl83Qffrp9cbxyDf8Mlpd
+         7AHXbxenaFDupU1ubyEoLPSLdQibK2QiDf4ifRDh0rBzsC66UgzgyMQ3dm/rYrD1KgW+
+         caieEKjlzEI9dV8gQzYIpeXvwp90T9aUsUgnQ+JhmhKlelnONVbGSPCvfdyvkt5Zpd59
+         vt2cL4ghw3ubjT3fMxA0DCxobXxTJK+7lNGuD+p+SPZ4xA5S8Kns189nl+5wpOZnVvfD
+         CSLbAZCCBbpiIl2LOpi0lqqXNy1CYK62VugBWNgTzG9hrl31WqYlfN0tXY8bxMq59pDV
+         fVEA==
+X-Gm-Message-State: AOAM530FLgdGKIo524Q+ueGJgTgncmTsxwucu43PWrfd3x9yMRh5HsKk
+        q17YiCuTGA3j7O8HUqyVKTPLvmlqNTHP
+X-Google-Smtp-Source: ABdhPJwqlmYXAA94UutLzHJtdqvwxAhLj8+KDEAjiQG8JIGEAI1b09eoRiQnt1JLJLCxhjQUbvpCWqwri/+3
+X-Received: by 2002:ad4:4bb3:: with SMTP id i19mr7524359qvw.180.1589351278852;
+ Tue, 12 May 2020 23:27:58 -0700 (PDT)
+Date:   Tue, 12 May 2020 23:27:52 -0700
+In-Reply-To: <20200513062752.3681-1-irogers@google.com>
+Message-Id: <20200513062752.3681-2-irogers@google.com>
+Mime-Version: 1.0
+References: <20200513062752.3681-1-irogers@google.com>
+X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
+Subject: [PATCH v2 2/2] perf test: Improve pmu event metric testing
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Paul Clarke <pc@us.ibm.com>, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper to directly set the SO_KEEPALIVE sockopt from kernel space
-without going through a fake uaccess.
+Break pmu-events test into 2 and add a test to verify that all pmu metric
+expressions simply parse. Try to parse all metric ids/events, warning if
+metrics for the current architecture fail to parse.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Tested on power9, skylakex, haswell, broadwell, westmere, sandybridge and
+ivybridge with the patch set in place.
+May fail on other architectures if metrics are invalid. In particular s390
+is untested, but its expressions are trivial. The event encodings could
+be wrong but are only warned about. The untested architectures with
+expressions are power8, cascadelakex, tremontx, skylake, jaketown, ivytown
+and variants of haswell and broadwell.
+
+v2. changes the commit message as event parsing errors no longer cause
+the test to fail.
+
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- fs/dlm/lowcomms.c     |  6 +-----
- include/net/sock.h    |  1 +
- net/core/sock.c       | 10 ++++++++++
- net/rds/tcp_listen.c  |  6 +-----
- net/sunrpc/xprtsock.c |  4 +---
- 5 files changed, 14 insertions(+), 13 deletions(-)
+ tools/perf/tests/builtin-test.c |   5 +
+ tools/perf/tests/pmu-events.c   | 158 ++++++++++++++++++++++++++++++--
+ tools/perf/tests/tests.h        |   2 +
+ 3 files changed, 159 insertions(+), 6 deletions(-)
 
-diff --git a/fs/dlm/lowcomms.c b/fs/dlm/lowcomms.c
-index 0c0a6413fdfcc..16d616c180613 100644
---- a/fs/dlm/lowcomms.c
-+++ b/fs/dlm/lowcomms.c
-@@ -1259,11 +1259,7 @@ static struct socket *tcp_create_listen_sock(struct connection *con,
- 		con->sock = NULL;
- 		goto create_out;
- 	}
--	result = kernel_setsockopt(sock, SOL_SOCKET, SO_KEEPALIVE,
--				 (char *)&one, sizeof(one));
--	if (result < 0) {
--		log_print("Set keepalive failed: %d", result);
--	}
-+	sock_set_keepalive(sock->sk, true);
- 
- 	result = sock->ops->listen(sock, 5);
- 	if (result < 0) {
-diff --git a/include/net/sock.h b/include/net/sock.h
-index cf8a30e0168de..4cedde585424f 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -2691,6 +2691,7 @@ void sock_set_reuseaddr(struct sock *sk, unsigned char reuse);
- void sock_set_linger(struct sock *sk, bool onoff, unsigned int linger);
- void sock_set_priority(struct sock *sk, u32 priority);
- void sock_set_sndtimeo(struct sock *sk, unsigned int secs);
-+void sock_set_keepalive(struct sock *sk, bool keepalive);
- int sock_bindtoindex(struct sock *sk, int ifindex);
- void sock_set_timestamps(struct sock *sk, bool val, bool new, bool ns);
- 
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 1589f242ecc7e..dfd2b839f88bb 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -794,6 +794,16 @@ void sock_set_timestamps(struct sock *sk, bool val, bool new, bool ns)
- }
- EXPORT_SYMBOL(sock_set_timestamps);
- 
-+void sock_set_keepalive(struct sock *sk, bool keepalive)
-+{
-+	lock_sock(sk);
-+	if (sk->sk_prot->keepalive)
-+		sk->sk_prot->keepalive(sk, keepalive);
-+	sock_valbool_flag(sk, SOCK_KEEPOPEN, keepalive);
-+	release_sock(sk);
-+}
-+EXPORT_SYMBOL(sock_set_keepalive);
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 3471ec52ea11..8147c17c71ab 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -75,6 +75,11 @@ static struct test generic_tests[] = {
+ 	{
+ 		.desc = "PMU events",
+ 		.func = test__pmu_events,
++		.subtest = {
++			.get_nr		= test__pmu_events_subtest_get_nr,
++			.get_desc	= test__pmu_events_subtest_get_desc,
++		},
 +
- /*
-  *	This is meant for all protocols to use and covers goings on
-  *	at the socket level. Everything here is generic.
-diff --git a/net/rds/tcp_listen.c b/net/rds/tcp_listen.c
-index 96f7538e5fa8d..a55b39cd45a6c 100644
---- a/net/rds/tcp_listen.c
-+++ b/net/rds/tcp_listen.c
-@@ -43,13 +43,9 @@ int rds_tcp_keepalive(struct socket *sock)
- 	/* values below based on xs_udp_default_timeout */
- 	int keepidle = 5; /* send a probe 'keepidle' secs after last data */
- 	int keepcnt = 5; /* number of unack'ed probes before declaring dead */
--	int keepalive = 1;
- 	int ret = 0;
+ 	},
+ 	{
+ 		.desc = "DSO data read",
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index d64261da8bf7..c18b9ce8cace 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -8,6 +8,10 @@
+ #include <linux/zalloc.h>
+ #include "debug.h"
+ #include "../pmu-events/pmu-events.h"
++#include "util/evlist.h"
++#include "util/expr.h"
++#include "util/parse-events.h"
++#include <ctype.h>
  
--	ret = kernel_setsockopt(sock, SOL_SOCKET, SO_KEEPALIVE,
--				(char *)&keepalive, sizeof(keepalive));
--	if (ret < 0)
--		goto bail;
-+	sock_set_keepalive(sock->sk, true);
+ struct perf_pmu_test_event {
+ 	struct pmu_event event;
+@@ -144,7 +148,7 @@ static struct pmu_events_map *__test_pmu_get_events_map(void)
+ }
  
- 	ret = kernel_setsockopt(sock, IPPROTO_TCP, TCP_KEEPCNT,
- 				(char *)&keepcnt, sizeof(keepcnt));
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 845d0be805ece..bb61d3758be2b 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -2110,7 +2110,6 @@ static void xs_tcp_set_socket_timeouts(struct rpc_xprt *xprt,
- 	struct sock_xprt *transport = container_of(xprt, struct sock_xprt, xprt);
- 	unsigned int keepidle;
- 	unsigned int keepcnt;
--	unsigned int opt_on = 1;
- 	unsigned int timeo;
+ /* Verify generated events from pmu-events.c is as expected */
+-static int __test_pmu_event_table(void)
++static int test_pmu_event_table(void)
+ {
+ 	struct pmu_events_map *map = __test_pmu_get_events_map();
+ 	struct pmu_event *table;
+@@ -347,14 +351,11 @@ static int __test__pmu_event_aliases(char *pmu_name, int *count)
+ 	return res;
+ }
  
- 	spin_lock(&xprt->transport_lock);
-@@ -2122,8 +2121,7 @@ static void xs_tcp_set_socket_timeouts(struct rpc_xprt *xprt,
- 	spin_unlock(&xprt->transport_lock);
+-int test__pmu_events(struct test *test __maybe_unused,
+-		     int subtest __maybe_unused)
++
++static int test_aliases(void)
+ {
+ 	struct perf_pmu *pmu = NULL;
  
- 	/* TCP Keepalive options */
--	kernel_setsockopt(sock, SOL_SOCKET, SO_KEEPALIVE,
--			(char *)&opt_on, sizeof(opt_on));
-+	sock_set_keepalive(sock->sk, 1);
- 	kernel_setsockopt(sock, SOL_TCP, TCP_KEEPIDLE,
- 			(char *)&keepidle, sizeof(keepidle));
- 	kernel_setsockopt(sock, SOL_TCP, TCP_KEEPINTVL,
+-	if (__test_pmu_event_table())
+-		return -1;
+-
+ 	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
+ 		int count = 0;
+ 
+@@ -377,3 +378,148 @@ int test__pmu_events(struct test *test __maybe_unused,
+ 
+ 	return 0;
+ }
++
++static bool is_number(const char *str)
++{
++	size_t i;
++
++	for (i = 0; i < strlen(str); i++) {
++		if (!isdigit(str[i]) && str[i] != '.')
++			return false;
++	}
++	return true;
++}
++
++static int check_parse_id(const char *id, bool same_cpu, struct pmu_event *pe)
++{
++	struct parse_events_error error;
++	struct evlist *evlist;
++	int ret;
++
++	/* Numbers are always valid. */
++	if (is_number(id))
++		return 0;
++
++	evlist = evlist__new();
++	memset(&error, 0, sizeof(error));
++	ret = parse_events(evlist, id, &error);
++	if (ret && same_cpu) {
++		fprintf(stderr,
++			"\nWARNING: Parse event failed metric '%s' id '%s' expr '%s'\n",
++			pe->metric_name, id, pe->metric_expr);
++		fprintf(stderr, "Error string '%s' help '%s'\n",
++			error.str, error.help);
++	} else if (ret) {
++		pr_debug3("Parse event failed, but for an event that may not be supported by this CPU.\nid '%s' metric '%s' expr '%s'\n",
++			id, pe->metric_name, pe->metric_expr);
++	}
++	evlist__delete(evlist);
++	free(error.str);
++	free(error.help);
++	free(error.first_str);
++	free(error.first_help);
++	/* TODO: too many metrics are broken to fail on this test currently. */
++	return 0;
++}
++
++static int test_parsing(void)
++{
++	struct pmu_events_map *cpus_map = perf_pmu__find_map(NULL);
++	struct pmu_events_map *map;
++	struct pmu_event *pe;
++	int i, j, k;
++	const char **ids;
++	int idnum;
++	int ret = 0;
++	struct expr_parse_ctx ctx;
++	double result;
++
++	i = 0;
++	for (;;) {
++		map = &pmu_events_map[i++];
++		if (!map->table) {
++			map = NULL;
++			break;
++		}
++		j = 0;
++		for (;;) {
++			pe = &map->table[j++];
++			if (!pe->name && !pe->metric_group && !pe->metric_name)
++				break;
++			if (!pe->metric_expr)
++				continue;
++			if (expr__find_other(pe->metric_expr, NULL,
++						&ids, &idnum, 0) < 0) {
++				pr_debug("Parse other failed for map %s %s %s\n",
++					map->cpuid, map->version, map->type);
++				pr_debug("On metric %s\n", pe->metric_name);
++				pr_debug("On expression %s\n", pe->metric_expr);
++				ret++;
++				continue;
++			}
++			expr__ctx_init(&ctx);
++
++			/*
++			 * Add all ids with a made up value. The value may
++			 * trigger divide by zero when subtracted and so try to
++			 * make them unique.
++			 */
++			for (k = 0; k < idnum; k++)
++				expr__add_id(&ctx, ids[k], k + 1);
++
++			for (k = 0; k < idnum; k++) {
++				if (check_parse_id(ids[k], map == cpus_map, pe))
++					ret++;
++			}
++
++			if (expr__parse(&result, &ctx, pe->metric_expr, 0)) {
++				pr_debug("Parse failed for map %s %s %s\n",
++					map->cpuid, map->version, map->type);
++				pr_debug("On metric %s\n", pe->metric_name);
++				pr_debug("On expression %s\n", pe->metric_expr);
++				ret++;
++			}
++			for (k = 0; k < idnum; k++)
++				zfree(&ids[k]);
++			free(ids);
++		}
++	}
++	return ret;
++}
++
++static const struct {
++	int (*func)(void);
++	const char *desc;
++} pmu_events_testcase_table[] = {
++	{
++		.func = test_pmu_event_table,
++		.desc = "PMU event table sanity",
++	},
++	{
++		.func = test_aliases,
++		.desc = "PMU event map aliases",
++	},
++	{
++		.func = test_parsing,
++		.desc = "Parsing of PMU event table metrics",
++	},
++};
++
++const char *test__pmu_events_subtest_get_desc(int i)
++{
++	if (i < 0 || i >= (int)ARRAY_SIZE(pmu_events_testcase_table))
++		return NULL;
++	return pmu_events_testcase_table[i].desc;
++}
++
++int test__pmu_events_subtest_get_nr(void)
++{
++	return (int)ARRAY_SIZE(pmu_events_testcase_table);
++}
++
++int test__pmu_events(struct test *test __maybe_unused, int i)
++{
++	if (i < 0 || i >= (int)ARRAY_SIZE(pmu_events_testcase_table))
++		return TEST_FAIL;
++	return pmu_events_testcase_table[i].func();
++}
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index d6d4ac34eeb7..8e316c30ed3c 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -50,6 +50,8 @@ int test__perf_evsel__tp_sched_test(struct test *test, int subtest);
+ int test__syscall_openat_tp_fields(struct test *test, int subtest);
+ int test__pmu(struct test *test, int subtest);
+ int test__pmu_events(struct test *test, int subtest);
++const char *test__pmu_events_subtest_get_desc(int subtest);
++int test__pmu_events_subtest_get_nr(void);
+ int test__attr(struct test *test, int subtest);
+ int test__dso_data(struct test *test, int subtest);
+ int test__dso_data_cache(struct test *test, int subtest);
 -- 
-2.26.2
+2.26.2.645.ge9eca65c58-goog
 
