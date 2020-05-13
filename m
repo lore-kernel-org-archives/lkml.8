@@ -2,117 +2,74 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F17C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2372D205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FE9D205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:00:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ib3n/68s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388077AbgEMQAd (ORCPT
+        id S2389126AbgEMQAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 12:00:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50692 "EHLO
+        Wed, 13 May 2020 12:00:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729561AbgEMQAb (ORCPT
+        with ESMTP id S1729561AbgEMQAo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 12:00:31 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2A4EC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 09:00:30 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jYto3-0005yx-Kv; Wed, 13 May 2020 18:00:27 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jYto2-0002qd-Pi; Wed, 13 May 2020 18:00:26 +0200
-Date:   Wed, 13 May 2020 18:00:26 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, Michael Walle <michael@walle.cc>,
-        kernel@pengutronix.de, "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v1] net: phy: at803x: add cable test support
-Message-ID: <20200513160026.fdls7kpxb6luuwed@pengutronix.de>
-References: <20200513120648.14415-1-o.rempel@pengutronix.de>
- <0c80397b-58b8-0807-0b98-695db8068e25@gmail.com>
- <20200513154544.gwcccvbicpvrj6vm@pengutronix.de>
- <20200513154953.GI499265@lunn.ch>
+        Wed, 13 May 2020 12:00:44 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECCC0C061A0C;
+        Wed, 13 May 2020 09:00:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=MBXmzxvlvBp3urj1EfRdDjo/Nomb7enLOBCi4+LnpPQ=; b=Ib3n/68sFKiWSoHFw243qGtEKT
+        uIMPw1Lc04Of4bpkSt7Yyoo0wEMWGWlEBGRZGg5YyY/J85MCuuRtD8Ut4Pn8dQ6rjt2FAKlGCj3sb
+        EEPJaiqvvdNnys5f1elW1iOxmECbdFi3IJvzsq+A0h2GI5wayolWIt/6gvyUvcZ01/Szg72cbrPCN
+        qNmqVuL9aiEVYBc2HDVNuCEJXxyCpm8znHdnG6ASXSUsHemRJz+fYGd/RxrRO30wHhzmQ+8ewNAa3
+        f6A+qvxSlwXvcBAMKYxwhnw2ERDv5CBYBSAprCzOe7Y+NJNQef3YEA4wJB2dhF3pa55P9f2f8xwIL
+        Xthl7C4w==;
+Received: from [2001:4bb8:180:9d3f:c70:4a89:bc61:2] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jYtoF-0004fx-T9; Wed, 13 May 2020 16:00:41 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: clean up and streamline probe_kernel_* and friends v2
+Date:   Wed, 13 May 2020 18:00:20 +0200
+Message-Id: <20200513160038.2482415-1-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6a7oqghoxjesv4z7"
-Content-Disposition: inline
-In-Reply-To: <20200513154953.GI499265@lunn.ch>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 17:54:56 up 180 days,  7:13, 182 users,  load average: 0.04, 0.08,
- 0.05
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi all,
 
---6a7oqghoxjesv4z7
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+this series start cleaning up the safe kernel and user memory probing
+helpers in mm/maccess.c, and then allows architectures to implement
+the kernel probing without overriding the address space limit and
+temporarily allowing access to user memory.  It then switches x86
+over to this new mechanism by reusing the unsafe_* uaccess logic.
 
-On Wed, May 13, 2020 at 05:49:53PM +0200, Andrew Lunn wrote:
-> > Uff.. i missed this. Then I'll need only to add some changes on top of
-> > his patch.
->=20
-> I've been chatting with mwalle on IRC today. There should be a repost
-> of the patches soon.
+This version also switches to the saner copy_{from,to}_kernel_nofault
+naming suggested by Linus.
 
-Cool!
-@Michael, please CC me.
-
-you can include support for AR9331 and AR8032 in your patch (if you
-like)
-http://www.jhongtech.com/DOWN/ATHEROS--AR8032.pdf
-
-They have same register, but only 2 pairs.
-
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---6a7oqghoxjesv4z7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl68GZYACgkQ4omh9DUa
-UbMdlA/+O0iIZLBwArtGcqcdiVYupsTy1uBMg/9ZFt/f1XGNIgLXvf7Jy9ySSNeT
-ZNUOPpjJ+LnH5GpjhE6xVjq3hZ0IxI973b7Q5gWds10isDkljl9p+E6QPjJvhCnV
-btINYfg8BClFgDTvB0lBanAFs2Geny3AL4AR2EHND8mjtT2hRE3caXxd7kOxkbI2
-gXd322ndSZP+1HYedeGZLkI/RJTi37tDkM9dENGy706zjWzi+4FsFR0PVJdb0Bx6
-XLQ21B8C+/YYb1gj6cD1mi76GIaH0XaSoF5OO2oiW4ijOZZKgqX6/ZMTRl4iakgd
-cqYlgJ52Z//iCRyTQhyWyeEem9Chb33dBZicIjmaSZHqwIc0q6FkNdrYWjLFZg1b
-crFaeyfxopCnoZD7of5Gryx+PjHa9RFJKSiU8GVhdaW2VDB69XhuicxfQgMMefAo
-8xowyZgPbXrcxE9d1aZWbpmIzrK8EYMhuREk3S4JAKJEdz+3emLVExw8Wty5WhXS
-/AejFyTKqbOw/42iBXLCzeYEdHg1SaIoxdyhAosoB7LtiivGqI0MkbTP0+2UiSHO
-ohQAe0idYWEbByt057QwC2bK5gElRDZJUOL4Q8ncty2B5Wtb9SQESszC1Kaf0bGs
-2dYILv1mmM2ShJ0eiE4C0eAsn575hvlq4sIipq+84OJbfV3TFb8=
-=uxFm
------END PGP SIGNATURE-----
-
---6a7oqghoxjesv4z7--
+I kept the x86 helprs as-is without calling unsage_{get,put}_user as
+that avoids a number of hard to trace casts, and it will still work
+with the asm-goto based version easily.
