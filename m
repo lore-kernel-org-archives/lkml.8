@@ -2,293 +2,110 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F26CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F40C6CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D47124AD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1AB62051A
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:13:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589375626;
+	bh=s01ww56Iy2HzE2HrtXMqzEaC/e/ByugBCl1owjcPo1k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=o+DSjeKzdeVPxZKCenSaNi7etO1Fr2IKOXRthgy3zjqo1P5Wrpn1o+Bx4qQGzYAYu
+	 I0NMUgRjd9PbIf2Lqnhxx7zLHhcqaHLI2NiNJ31BYiHDSwPmT91ZOOqkFGkcQksiMk
+	 NphcjxO5MvyQN08lSWtfB56LyEJ0m6IkTqhj0Yf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387494AbgEMNNi (ORCPT
+        id S2387536AbgEMNNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:13:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36546 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725925AbgEMNNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:13:37 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1530C2051A;
-        Wed, 13 May 2020 13:13:36 +0000 (UTC)
-Date:   Wed, 13 May 2020 09:13:34 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH] x86/ftrace: Have ftrace trampolines turn read-only at the
- end of system boot up
-Message-ID: <20200513091334.29198bf8@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 13 May 2020 09:13:45 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46917 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725925AbgEMNNj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 09:13:39 -0400
+Received: by mail-pg1-f196.google.com with SMTP id p21so1908150pgm.13;
+        Wed, 13 May 2020 06:13:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uq9dGFS0JVEQgrQR7OlP7twEZ+C/lLS/sMFl5mNJPHU=;
+        b=Q7ttVilNlu+0UxHRSUg7h2tBi0EnQxJFitrkJkJeV8bATveqhijQRuG7USaliPTZ04
+         vyEzxvQA4nV1V//9jCcM3ifCH2RkzEK7CgQOdvho1hvN/1qvxFOpwwe3MkKYvd+sxhxu
+         8AP/cwTn0/4R8vpqykva99/GfhJZO2MGOPmHae/l5n70aViy0nnHJtnxO9aXddbNiuxi
+         PeanzS73DjhbmvlJhBImSGTAEGMYKd+I5E+gJ6RfuyZmX2Nyu+kps4wAb1xv9Nl9EGr5
+         0rHPwRjLSmj6GtMWWJEtHFcgQi1x/t/Xe1+t31a1yc2lOPrCBediE+eJ4tvQRj8vNF9C
+         84Tw==
+X-Gm-Message-State: AGi0PuayJdtyH4SRdDIc+kIMSGyRItjO9wX3XW1FauYwE4YsRzE30494
+        C7B3gVmKeTj278nfTLVYB0w=
+X-Google-Smtp-Source: APiQypKxV8QSG1pho/PpbgmnF61eWRfmHsoySCpOwBrcsRDeAgIsQVdeiZfuuDmDB1tV1uEtV4xZlg==
+X-Received: by 2002:a63:d24a:: with SMTP id t10mr24091301pgi.326.1589375617458;
+        Wed, 13 May 2020 06:13:37 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id d20sm15112860pjs.12.2020.05.13.06.13.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 06:13:36 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 4C2B54063E; Wed, 13 May 2020 13:13:35 +0000 (UTC)
+Date:   Wed, 13 May 2020 13:13:35 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>, keescook@chromium.org,
+        Scott Branden <scott.branden@broadcom.com>,
+        Mimi Zohar <zohar@linux.vnet.ibm.com>,
+        linux-security-module@vger.kernel.org, jmorris@namei.org,
+        serge@hallyn.com, ast@kernel.org, daniel@iogearbox.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org
+Cc:     Shuah Khan <skhan@linuxfoundation.org>, axboe@kernel.dk,
+        zohar@linux.vnet.ibm.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] fs: avoid fdput() after failed fdget() in
+ kernel_read_file_from_fd()
+Message-ID: <20200513131335.GN11244@42.do-not-panic.com>
+References: <cover.1589311577.git.skhan@linuxfoundation.org>
+ <1159d74f88d100521c568037327ebc8ec7ffc6ef.1589311577.git.skhan@linuxfoundation.org>
+ <20200513054950.GT23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513054950.GT23230@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[
-  I just finished all my testing on this patch. I'm sending this out one
-  more time to let people see it, before I send a pull request to Linus to
-  take it.
+On Wed, May 13, 2020 at 06:49:50AM +0100, Al Viro wrote:
+> On Tue, May 12, 2020 at 01:43:05PM -0600, Shuah Khan wrote:
+> > diff --git a/fs/exec.c b/fs/exec.c
+> > index 06b4c550af5d..ea24bdce939d 100644
+> > --- a/fs/exec.c
+> > +++ b/fs/exec.c
+> > @@ -1021,8 +1021,8 @@ int kernel_read_file_from_fd(int fd, void **buf, loff_t *size, loff_t max_size,
+> >  		goto out;
+> >  
+> >  	ret = kernel_read_file(f.file, buf, size, max_size, id);
+> > -out:
+> >  	fdput(f);
+> > +out:
+> >  	return ret;
+> 
+> Incidentally, why is that thing exported?
 
-  Peter, you gave your ack on it earlier, so I included that.
-]
+Both kernel_read_file_from_fd() and kernel_read_file() are exported
+because they have users, however kernel_read_file() only has security
+stuff as a user. Do we want to get rid of the lsm hook for it?
 
+I also have some non-posted patches which tucks away these kernel_read*()
+exports under a symbol namespace, to avoid wide-spread use / abuse on
+areas in the kernel, so I'd be happy to take this on if we want to
+remove it export / lsm hook as part of my series. I did this as there
+is another series of patches for a new driver which extend these family
+of functions with a now pread() variant....
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-
-Booting one of my machines, it triggered the following crash:
-
- Kernel/User page tables isolation: enabled
- ftrace: allocating 36577 entries in 143 pages
- Starting tracer 'function'
- BUG: unable to handle page fault for address: ffffffffa000005c
- #PF: supervisor write access in kernel mode
- #PF: error_code(0x0003) - permissions violation
- PGD 2014067 P4D 2014067 PUD 2015063 PMD 7b253067 PTE 7b252061
- Oops: 0003 [#1] PREEMPT SMP PTI
- CPU: 0 PID: 0 Comm: swapper Not tainted 5.4.0-test+ #24
- Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./To be filled by O.E.M., BIOS SDBLI944.86P 05/08/2007
- RIP: 0010:text_poke_early+0x4a/0x58
- Code: 34 24 48 89 54 24 08 e8 bf 72 0b 00 48 8b 34 24 48 8b 4c 24 08 84 c0 74 0b 48 89 df f3 a4 48 83 c4 10 5b c3 9c 58 fa 48 89 df <f3> a4 50 9d 48 83 c4 10 5b e9 d6 f9 ff ff
-0 41 57 49
- RSP: 0000:ffffffff82003d38 EFLAGS: 00010046
- RAX: 0000000000000046 RBX: ffffffffa000005c RCX: 0000000000000005
- RDX: 0000000000000005 RSI: ffffffff825b9a90 RDI: ffffffffa000005c
- RBP: ffffffffa000005c R08: 0000000000000000 R09: ffffffff8206e6e0
- R10: ffff88807b01f4c0 R11: ffffffff8176c106 R12: ffffffff8206e6e0
- R13: ffffffff824f2440 R14: 0000000000000000 R15: ffffffff8206eac0
- FS:  0000000000000000(0000) GS:ffff88807d400000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: ffffffffa000005c CR3: 0000000002012000 CR4: 00000000000006b0
- Call Trace:
-  text_poke_bp+0x27/0x64
-  ? mutex_lock+0x36/0x5d
-  arch_ftrace_update_trampoline+0x287/0x2d5
-  ? ftrace_replace_code+0x14b/0x160
-  ? ftrace_update_ftrace_func+0x65/0x6c
-  __register_ftrace_function+0x6d/0x81
-  ftrace_startup+0x23/0xc1
-  register_ftrace_function+0x20/0x37
-  func_set_flag+0x59/0x77
-  __set_tracer_option.isra.19+0x20/0x3e
-  trace_set_options+0xd6/0x13e
-  apply_trace_boot_options+0x44/0x6d
-  register_tracer+0x19e/0x1ac
-  early_trace_init+0x21b/0x2c9
-  start_kernel+0x241/0x518
-  ? load_ucode_intel_bsp+0x21/0x52
-  secondary_startup_64+0xa4/0xb0
-
-I was able to trigger it on other machines, when I added to the kernel
-command line of both "ftrace=function" and "trace_options=func_stack_trace".
-
-The cause is the "ftrace=function" would register the function tracer
-and create a trampoline, and it will set it as executable and
-read-only. Then the "trace_options=func_stack_trace" would then update
-the same trampoline to include the stack tracer version of the function
-tracer. But since the trampoline already exists, it updates it with
-text_poke_bp(). The problem is that text_poke_bp() called while
-system_state == SYSTEM_BOOTING, it will simply do a memcpy() and not
-the page mapping, as it would think that the text is still read-write.
-But in this case it is not, and we take a fault and crash.
-
-Instead, lets keep the ftrace trampolines read-write during boot up,
-and then when the kernel executable text is set to read-only, the
-ftrace trampolines get set to read-only as well.
-
-Link: https://lkml.kernel.org/r/20200430202147.4dc6e2de@oasis.local.home
-
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: stable@vger.kernel.org
-Fixes: 768ae4406a5c ("x86/ftrace: Use text_poke()")
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- arch/x86/include/asm/ftrace.h  |  6 ++++++
- arch/x86/kernel/ftrace.c       | 29 ++++++++++++++++++++++++++++-
- arch/x86/mm/init_64.c          |  3 +++
- include/linux/ftrace.h         | 23 +++++++++++++++++++++++
- kernel/trace/ftrace_internal.h | 22 ----------------------
- 5 files changed, 60 insertions(+), 23 deletions(-)
-
-diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
-index 85be2f506272..89af0d2c62aa 100644
---- a/arch/x86/include/asm/ftrace.h
-+++ b/arch/x86/include/asm/ftrace.h
-@@ -56,6 +56,12 @@ struct dyn_arch_ftrace {
- 
- #ifndef __ASSEMBLY__
- 
-+#if defined(CONFIG_FUNCTION_TRACER) && defined(CONFIG_DYNAMIC_FTRACE)
-+extern void set_ftrace_ops_ro(void);
-+#else
-+static inline void set_ftrace_ops_ro(void) { }
-+#endif
-+
- #define ARCH_HAS_SYSCALL_MATCH_SYM_NAME
- static inline bool arch_syscall_match_sym_name(const char *sym, const char *name)
- {
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index 37a0aeaf89e7..b0e641793be4 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -407,7 +407,8 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 
- 	set_vm_flush_reset_perms(trampoline);
- 
--	set_memory_ro((unsigned long)trampoline, npages);
-+	if (likely(system_state != SYSTEM_BOOTING))
-+		set_memory_ro((unsigned long)trampoline, npages);
- 	set_memory_x((unsigned long)trampoline, npages);
- 	return (unsigned long)trampoline;
- fail:
-@@ -415,6 +416,32 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 	return 0;
- }
- 
-+void set_ftrace_ops_ro(void)
-+{
-+	struct ftrace_ops *ops;
-+	unsigned long start_offset;
-+	unsigned long end_offset;
-+	unsigned long npages;
-+	unsigned long size;
-+
-+	do_for_each_ftrace_op(ops, ftrace_ops_list) {
-+		if (!(ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP))
-+			continue;
-+
-+		if (ops->flags & FTRACE_OPS_FL_SAVE_REGS) {
-+			start_offset = (unsigned long)ftrace_regs_caller;
-+			end_offset = (unsigned long)ftrace_regs_caller_end;
-+		} else {
-+			start_offset = (unsigned long)ftrace_caller;
-+			end_offset = (unsigned long)ftrace_epilogue;
-+		}
-+		size = end_offset - start_offset;
-+		size = size + RET_SIZE + sizeof(void *);
-+		npages = DIV_ROUND_UP(size, PAGE_SIZE);
-+		set_memory_ro((unsigned long)ops->trampoline, npages);
-+	} while_for_each_ftrace_op(ops);
-+}
-+
- static unsigned long calc_trampoline_call_offset(bool save_regs)
- {
- 	unsigned long start_offset;
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index 3b289c2f75cd..8b5f73f5e207 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -54,6 +54,7 @@
- #include <asm/init.h>
- #include <asm/uv/uv.h>
- #include <asm/setup.h>
-+#include <asm/ftrace.h>
- 
- #include "mm_internal.h"
- 
-@@ -1291,6 +1292,8 @@ void mark_rodata_ro(void)
- 	all_end = roundup((unsigned long)_brk_end, PMD_SIZE);
- 	set_memory_nx(text_end, (all_end - text_end) >> PAGE_SHIFT);
- 
-+	set_ftrace_ops_ro();
-+
- #ifdef CONFIG_CPA_DEBUG
- 	printk(KERN_INFO "Testing CPA: undo %lx-%lx\n", start, end);
- 	set_memory_rw(start, (end-start) >> PAGE_SHIFT);
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index db95244a62d4..ab4bd15cbcdb 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -210,6 +210,29 @@ struct ftrace_ops {
- #endif
- };
- 
-+extern struct ftrace_ops __rcu *ftrace_ops_list;
-+extern struct ftrace_ops ftrace_list_end;
-+
-+/*
-+ * Traverse the ftrace_global_list, invoking all entries.  The reason that we
-+ * can use rcu_dereference_raw_check() is that elements removed from this list
-+ * are simply leaked, so there is no need to interact with a grace-period
-+ * mechanism.  The rcu_dereference_raw_check() calls are needed to handle
-+ * concurrent insertions into the ftrace_global_list.
-+ *
-+ * Silly Alpha and silly pointer-speculation compiler optimizations!
-+ */
-+#define do_for_each_ftrace_op(op, list)			\
-+	op = rcu_dereference_raw_check(list);			\
-+	do
-+
-+/*
-+ * Optimized for just a single item in the list (as that is the normal case).
-+ */
-+#define while_for_each_ftrace_op(op)				\
-+	while (likely(op = rcu_dereference_raw_check((op)->next)) &&	\
-+	       unlikely((op) != &ftrace_list_end))
-+
- /*
-  * Type of the current tracing.
-  */
-diff --git a/kernel/trace/ftrace_internal.h b/kernel/trace/ftrace_internal.h
-index 0456e0a3dab1..382775edf690 100644
---- a/kernel/trace/ftrace_internal.h
-+++ b/kernel/trace/ftrace_internal.h
-@@ -4,28 +4,6 @@
- 
- #ifdef CONFIG_FUNCTION_TRACER
- 
--/*
-- * Traverse the ftrace_global_list, invoking all entries.  The reason that we
-- * can use rcu_dereference_raw_check() is that elements removed from this list
-- * are simply leaked, so there is no need to interact with a grace-period
-- * mechanism.  The rcu_dereference_raw_check() calls are needed to handle
-- * concurrent insertions into the ftrace_global_list.
-- *
-- * Silly Alpha and silly pointer-speculation compiler optimizations!
-- */
--#define do_for_each_ftrace_op(op, list)			\
--	op = rcu_dereference_raw_check(list);			\
--	do
--
--/*
-- * Optimized for just a single item in the list (as that is the normal case).
-- */
--#define while_for_each_ftrace_op(op)				\
--	while (likely(op = rcu_dereference_raw_check((op)->next)) &&	\
--	       unlikely((op) != &ftrace_list_end))
--
--extern struct ftrace_ops __rcu *ftrace_ops_list;
--extern struct ftrace_ops ftrace_list_end;
- extern struct mutex ftrace_lock;
- extern struct ftrace_ops global_ops;
- 
--- 
-2.20.1
-
+  Luis
