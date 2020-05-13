@@ -4,48 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6295BC2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCD9CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 429B724927
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43ABD2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363673;
-	bh=wfDPOwsVMlzcIDXAcbA6PHnmbspXvwVlZpAvciyZoFs=;
+	s=default; t=1589363680;
+	bh=1OeNgr0kGUcv+fOFi8Ga8SfHYKNOSW7hX+7O3AjZnV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vaSGA1u9JuOOkhkLyPD+DqAz5pJrpKtNiFZmgcZ7UyUlvLt1BH31RqveIxuy97bv7
-	 Sv9UksHPqqGv9vlATTO3XvRzBGkIAI0yVDYgnuMmAyXFSAN+KP1usgNyvBjwofCJbu
-	 aV4POcVsAZBOb5OKNBMBN7kCjOS0PObI/n2F6baU=
+	b=HipOQlQ9yHt46RaJUCvF/Lxi2cXu4BM2nez4F9Xl+ghjMLNeI9Cf8lXi2r+ByVw14
+	 ZAc/lGj3hXPIV6C/ad3FznfIPazSwCHpLfMB8bgAMScHCRWHkrV4PxWjKKzqwgz+oq
+	 9/dZa2USYRL+NXNgC7XPiuCZpyoKlBH6F5abr1ZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388111AbgEMJyc (ORCPT
+        id S2388136AbgEMJyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:54:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56928 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:54:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388102AbgEMJy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:54:29 -0400
+        id S2387655AbgEMJyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:54:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF2D5205ED;
-        Wed, 13 May 2020 09:54:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5657E205ED;
+        Wed, 13 May 2020 09:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363668;
-        bh=wfDPOwsVMlzcIDXAcbA6PHnmbspXvwVlZpAvciyZoFs=;
+        s=default; t=1589363675;
+        bh=1OeNgr0kGUcv+fOFi8Ga8SfHYKNOSW7hX+7O3AjZnV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u90cJODDSfM6dVpM6IarGt4OCq8aZPhv6TUHN8DY8uEf92Zq6klkzk5MqXWxO1TBE
-         /RvH4gm4bXQO90SXMoZxs8sXEC4bVf+0Bq/B9/5BFnHgvSpMdMKjABTw6uUQQsdBGm
-         aKNpo756gwuyEL7S2vilQXtVtU/cdujuJf+K5bVk=
+        b=zW77SC+1XsHAOY2Mztvm0pEOOSCCAk6hf8PuJsZXtcXa2MYO1GqZEKvnJSU04176R
+         /OjmYD8FdQO9T00wJK97HgEb1mlFTyO3HV748VDFx8pa1YmWlpYiChOd5xBG3c5dqP
+         IRsLjU5rZHZcyVbOP7lfzV7Z3zTmFfz5/Z+Axcqc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomas Winkler <tomas.winkler@intel.com>
-Subject: [PATCH 5.6 078/118] mei: me: disable mei interface on LBG servers.
-Date:   Wed, 13 May 2020 11:44:57 +0200
-Message-Id: <20200513094424.408115041@linuxfoundation.org>
+        stable@vger.kernel.org, Yoji <yoji.fujihar.min@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Markus Elfring <elfring@users.sourceforge.net>, 1vier1@web.de,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.6 081/118] ipc/mqueue.c: change __do_notify() to bypass check_kill_permission()
+Date:   Wed, 13 May 2020 11:45:00 +0200
+Message-Id: <20200513094424.603765372@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -58,79 +65,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Winkler <tomas.winkler@intel.com>
+From: Oleg Nesterov <oleg@redhat.com>
 
-commit d76bc8200f9cf8b6746e66b37317ba477eda25c4 upstream.
+commit b5f2006144c6ae941726037120fa1001ddede784 upstream.
 
-Disable the MEI driver on LBG SPS (server) platforms, some corner
-flows such as recovery mode does not work, and the driver
-doesn't have working use cases.
+Commit cc731525f26a ("signal: Remove kernel interal si_code magic")
+changed the value of SI_FROMUSER(SI_MESGQ), this means that mq_notify() no
+longer works if the sender doesn't have rights to send a signal.
 
+Change __do_notify() to use do_send_sig_info() instead of kill_pid_info()
+to avoid check_kill_permission().
+
+This needs the additional notify.sigev_signo != 0 check, shouldn't we
+change do_mq_notify() to deny sigev_signo == 0 ?
+
+Test-case:
+
+	#include <signal.h>
+	#include <mqueue.h>
+	#include <unistd.h>
+	#include <sys/wait.h>
+	#include <assert.h>
+
+	static int notified;
+
+	static void sigh(int sig)
+	{
+		notified = 1;
+	}
+
+	int main(void)
+	{
+		signal(SIGIO, sigh);
+
+		int fd = mq_open("/mq", O_RDWR|O_CREAT, 0666, NULL);
+		assert(fd >= 0);
+
+		struct sigevent se = {
+			.sigev_notify	= SIGEV_SIGNAL,
+			.sigev_signo	= SIGIO,
+		};
+		assert(mq_notify(fd, &se) == 0);
+
+		if (!fork()) {
+			assert(setuid(1) == 0);
+			mq_send(fd, "",1,0);
+			return 0;
+		}
+
+		wait(NULL);
+		mq_unlink("/mq");
+		assert(notified);
+		return 0;
+	}
+
+[manfred@colorfullife.com: 1) Add self_exec_id evaluation so that the implementation matches do_notify_parent 2) use PIDTYPE_TGID everywhere]
+Fixes: cc731525f26a ("signal: Remove kernel interal si_code magic")
+Reported-by: Yoji <yoji.fujihar.min@gmail.com>
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Manfred Spraul <manfred@colorfullife.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Markus Elfring <elfring@users.sourceforge.net>
+Cc: <1vier1@web.de>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-Link: https://lore.kernel.org/r/20200428211200.12200-1-tomas.winkler@intel.com
+Link: http://lkml.kernel.org/r/e2a782e4-eab9-4f5c-c749-c07a8f7a4e66@colorfullife.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/mei/hw-me.c  |    8 ++++++++
- drivers/misc/mei/hw-me.h  |    4 ++++
- drivers/misc/mei/pci-me.c |    2 +-
- 3 files changed, 13 insertions(+), 1 deletion(-)
+ ipc/mqueue.c |   34 ++++++++++++++++++++++++++--------
+ 1 file changed, 26 insertions(+), 8 deletions(-)
 
---- a/drivers/misc/mei/hw-me.c
-+++ b/drivers/misc/mei/hw-me.c
-@@ -1465,6 +1465,13 @@ static const struct mei_cfg mei_me_pch12
- 	MEI_CFG_DMA_128,
- };
+--- a/ipc/mqueue.c
++++ b/ipc/mqueue.c
+@@ -142,6 +142,7 @@ struct mqueue_inode_info {
  
-+/* LBG with quirk for SPS Firmware exclusion */
-+static const struct mei_cfg mei_me_pch12_sps_cfg = {
-+	MEI_CFG_PCH8_HFS,
-+	MEI_CFG_FW_VER_SUPP,
-+	MEI_CFG_FW_SPS,
-+};
+ 	struct sigevent notify;
+ 	struct pid *notify_owner;
++	u32 notify_self_exec_id;
+ 	struct user_namespace *notify_user_ns;
+ 	struct user_struct *user;	/* user who created, for accounting */
+ 	struct sock *notify_sock;
+@@ -774,28 +775,44 @@ static void __do_notify(struct mqueue_in
+ 	 * synchronously. */
+ 	if (info->notify_owner &&
+ 	    info->attr.mq_curmsgs == 1) {
+-		struct kernel_siginfo sig_i;
+ 		switch (info->notify.sigev_notify) {
+ 		case SIGEV_NONE:
+ 			break;
+-		case SIGEV_SIGNAL:
+-			/* sends signal */
++		case SIGEV_SIGNAL: {
++			struct kernel_siginfo sig_i;
++			struct task_struct *task;
 +
- /* Tiger Lake and newer devices */
- static const struct mei_cfg mei_me_pch15_cfg = {
- 	MEI_CFG_PCH8_HFS,
-@@ -1487,6 +1494,7 @@ static const struct mei_cfg *const mei_c
- 	[MEI_ME_PCH8_CFG] = &mei_me_pch8_cfg,
- 	[MEI_ME_PCH8_SPS_CFG] = &mei_me_pch8_sps_cfg,
- 	[MEI_ME_PCH12_CFG] = &mei_me_pch12_cfg,
-+	[MEI_ME_PCH12_SPS_CFG] = &mei_me_pch12_sps_cfg,
- 	[MEI_ME_PCH15_CFG] = &mei_me_pch15_cfg,
- };
++			/* do_mq_notify() accepts sigev_signo == 0, why?? */
++			if (!info->notify.sigev_signo)
++				break;
  
---- a/drivers/misc/mei/hw-me.h
-+++ b/drivers/misc/mei/hw-me.h
-@@ -80,6 +80,9 @@ struct mei_me_hw {
-  *                         servers platforms with quirk for
-  *                         SPS firmware exclusion.
-  * @MEI_ME_PCH12_CFG:      Platform Controller Hub Gen12 and newer
-+ * @MEI_ME_PCH12_SPS_CFG:  Platform Controller Hub Gen12 and newer
-+ *                         servers platforms with quirk for
-+ *                         SPS firmware exclusion.
-  * @MEI_ME_PCH15_CFG:      Platform Controller Hub Gen15 and newer
-  * @MEI_ME_NUM_CFG:        Upper Sentinel.
-  */
-@@ -93,6 +96,7 @@ enum mei_cfg_idx {
- 	MEI_ME_PCH8_CFG,
- 	MEI_ME_PCH8_SPS_CFG,
- 	MEI_ME_PCH12_CFG,
-+	MEI_ME_PCH12_SPS_CFG,
- 	MEI_ME_PCH15_CFG,
- 	MEI_ME_NUM_CFG,
- };
---- a/drivers/misc/mei/pci-me.c
-+++ b/drivers/misc/mei/pci-me.c
-@@ -79,7 +79,7 @@ static const struct pci_device_id mei_me
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_2, MEI_ME_PCH8_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_H, MEI_ME_PCH8_SPS_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_H_2, MEI_ME_PCH8_SPS_CFG)},
--	{MEI_PCI_DEVICE(MEI_DEV_ID_LBG, MEI_ME_PCH12_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_LBG, MEI_ME_PCH12_SPS_CFG)},
+ 			clear_siginfo(&sig_i);
+ 			sig_i.si_signo = info->notify.sigev_signo;
+ 			sig_i.si_errno = 0;
+ 			sig_i.si_code = SI_MESGQ;
+ 			sig_i.si_value = info->notify.sigev_value;
+-			/* map current pid/uid into info->owner's namespaces */
+ 			rcu_read_lock();
++			/* map current pid/uid into info->owner's namespaces */
+ 			sig_i.si_pid = task_tgid_nr_ns(current,
+ 						ns_of_pid(info->notify_owner));
+-			sig_i.si_uid = from_kuid_munged(info->notify_user_ns, current_uid());
++			sig_i.si_uid = from_kuid_munged(info->notify_user_ns,
++						current_uid());
++			/*
++			 * We can't use kill_pid_info(), this signal should
++			 * bypass check_kill_permission(). It is from kernel
++			 * but si_fromuser() can't know this.
++			 * We do check the self_exec_id, to avoid sending
++			 * signals to programs that don't expect them.
++			 */
++			task = pid_task(info->notify_owner, PIDTYPE_TGID);
++			if (task && task->self_exec_id ==
++						info->notify_self_exec_id) {
++				do_send_sig_info(info->notify.sigev_signo,
++						&sig_i, task, PIDTYPE_TGID);
++			}
+ 			rcu_read_unlock();
+-
+-			kill_pid_info(info->notify.sigev_signo,
+-				      &sig_i, info->notify_owner);
+ 			break;
++		}
+ 		case SIGEV_THREAD:
+ 			set_cookie(info->notify_cookie, NOTIFY_WOKENUP);
+ 			netlink_sendskb(info->notify_sock, info->notify_cookie);
+@@ -1384,6 +1401,7 @@ retry:
+ 			info->notify.sigev_signo = notification->sigev_signo;
+ 			info->notify.sigev_value = notification->sigev_value;
+ 			info->notify.sigev_notify = SIGEV_SIGNAL;
++			info->notify_self_exec_id = current->self_exec_id;
+ 			break;
+ 		}
  
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_BXT_M, MEI_ME_PCH8_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_APL_I, MEI_ME_PCH8_CFG)},
 
 
