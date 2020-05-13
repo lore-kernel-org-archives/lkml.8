@@ -2,148 +2,234 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15888C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D36EAC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 926CA20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C203205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:03:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="M6IU+a4v"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rgheQSt1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390071AbgEMSCn (ORCPT
+        id S2390110AbgEMSDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 14:02:43 -0400
-Received: from mail-eopbgr690072.outbound.protection.outlook.com ([40.107.69.72]:51425
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390049AbgEMSCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 14:02:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=L38nZifO2JRwOg1T2KYImiZxgpBlD96lfWPQzGidI1NChAVOjfYtOGgcMVGxMJdeKe2bYjTe6A8XcGHpSQUH3/SJkTFYjl5ZzhB8ZLGdoXa6XpBLefRZs28pGSVCHfOOlUJmurfea+ILE6GAriiMOnURxpUD6GU9d+71fHRtRehmGuxHESshV7sgTD21FkevCOuiw/NGcyH2vpSeIMTTuZQdFFuxbyhr0butPU341hc54+/t8Yc0kqZjKosBDZYTffRz+22iFzYbtgOxc59OJhTZnlw5Ax6eaShzEBeDU7HgXxVAYqX5dboVQniIzzJMv//z2xrnANThijgiwtZMHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gJ+PCNXiaBLRVrDVQ7vaKGvTHKGUUYfHkHgnxFuo7Xs=;
- b=lj+rQLNV1b4rbT55Moio32gbqsOLS5UQswPSHVRKlND9o9G8NkI3IdG/RmElNHSGDRew7If+AY1LQnF5qYQMBQmTZawGh1NNd05hWbD/NCKTLNgETYlbcv+d8kh4DmYS3/cunuUCbyPV73T6nLJrFC9Ux2KUthbB+f0Z0rQCYK8NRzqrAqatBUVtOQmQL0pPkiiIefNiCgzxtv1ueZO/HxlHCLaLHETNmbT1g8Mg3BO5ODFJKP7tuQa81134WfEKu5oxNaLAIeEGfNuoinqHpJ1OE7QGPH0MIbzGgUeJO8mU7bAsCeAeUby1wqmgoK8sWq1yXrPgf4isk5DYiEc0Tg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
+        Wed, 13 May 2020 14:03:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41508 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2390004AbgEMSDH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 14:03:07 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF22EC061A0C;
+        Wed, 13 May 2020 11:03:06 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id l1so577082qtp.6;
+        Wed, 13 May 2020 11:03:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gJ+PCNXiaBLRVrDVQ7vaKGvTHKGUUYfHkHgnxFuo7Xs=;
- b=M6IU+a4vZNoN0fA4M4j1wOyt89GafOKOIMVLZNw63cyUxk2a+HTrKMP0Db2o3KVuh6bUzlG8edpK3KA5e5yL2eW5mjRc/yIRjJkJqnq/Ypj88uR90wJMyhKWj2fRM90Rb0cYhMqhHLJgUQABqbx4G0cNEcYBZ7Xi05YBGHsKNP4=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=silabs.com;
-Received: from MWHPR11MB1775.namprd11.prod.outlook.com (2603:10b6:300:10e::14)
- by MWHPR11MB1440.namprd11.prod.outlook.com (2603:10b6:301:7::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.29; Wed, 13 May
- 2020 18:02:40 +0000
-Received: from MWHPR11MB1775.namprd11.prod.outlook.com
- ([fe80::e055:3e6d:ff4:56da]) by MWHPR11MB1775.namprd11.prod.outlook.com
- ([fe80::e055:3e6d:ff4:56da%5]) with mapi id 15.20.2979.033; Wed, 13 May 2020
- 18:02:40 +0000
-From:   =?ISO-8859-1?Q?J=E9r=F4me?= Pouiller <jerome.pouiller@silabs.com>
-To:     Mohamed Dawod <mhm.dawod@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] wfx: typo fix
-Date:   Wed, 13 May 2020 20:02:34 +0200
-Message-ID: <3242246.g26XRxWjXc@pc-42>
-Organization: Silicon Labs
-In-Reply-To: <20200513072433.GA11560@dinux>
-References: <20200513072433.GA11560@dinux>
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-ClientProxiedBy: SN4PR0601CA0005.namprd06.prod.outlook.com
- (2603:10b6:803:2f::15) To MWHPR11MB1775.namprd11.prod.outlook.com
- (2603:10b6:300:10e::14)
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3rJSQfC8qhqPgAdT7p7uqG4zYxw0cOP69JvDMu+AmoU=;
+        b=rgheQSt1YItEgWJaK+D0bGz+/qHfNOAGsXjdVRWwUQiGqsFIGS1wvoYG+aGTafU+PV
+         /Wam8diPaOgVXFRqoqZXtgZpq5ZoS7P+w+jAXFzuJRlWX6AXxlicjH1KtuahsCm7X1oB
+         1KM/eHxvJqcmXNEYPF4b+olwDLqfGRmRJKuO8mBihqp1FZjIXqkKRuN4K2fkmkt1KR4y
+         BY4TuAPJr9Fm34DqlaEou7vS5F0NmzH1lmiODzJGQ+/eBluPCt8Nwyn9o9iFlcChI8ne
+         mr8KP8dnkN8R85f07cGwIMBpujRbjafuA86KSdBGJqLxAx2+yPjgt33/gw2dY8MXvXik
+         E3ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3rJSQfC8qhqPgAdT7p7uqG4zYxw0cOP69JvDMu+AmoU=;
+        b=AL41WpjTzKYqMQaaAILJH7BYfajSEzOyfHxaPEF4CnDEXy/kxPXuWEjq/D9mQThxsY
+         TIgLjPtWoSqCWOknNR7VDtW1t7On35WjZiA25mC8yKRoezaf4y2ClhMjE3PnMtQSbyKa
+         LB757WRGI056kpd2w1hUMj9aziV6fO78R+87CmB3fgSUVI00ejadFvuPQjkqDkP50pZK
+         hr18nETEOZBWwjx5BzZtycI2w/dbnFob37KY3Sra07zsFZCnCcDRWKDM7xWWTz4yPSDt
+         uB8E+ZhDlsKuq9jR0ZH6LQBAxOjtNm2BUub3qj5DMjt+hi0J4XcZjji66ndHsLIE0PZ3
+         y3bA==
+X-Gm-Message-State: AOAM533Tcj/2BCeZkt8pfpcaHALVTC+JgZ8/tdCWDim+uta9d542dxad
+        pBKRtoWJLqwLH74/pSgiy9g=
+X-Google-Smtp-Source: ABdhPJxDn2Ym2XNFWojVR75lfnXVzFyakSG9ONLgdWGtZA79aHqlLy1IZQIR41clkG4iLZ4VQYg8Bg==
+X-Received: by 2002:ac8:67cf:: with SMTP id r15mr355571qtp.258.1589392985891;
+        Wed, 13 May 2020 11:03:05 -0700 (PDT)
+Received: from localhost.localdomain ([168.181.48.228])
+        by smtp.gmail.com with ESMTPSA id f68sm476350qke.74.2020.05.13.11.03.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 11:03:05 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id 8AE9BC08DA; Wed, 13 May 2020 15:03:02 -0300 (-03)
+Date:   Wed, 13 May 2020 15:03:02 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Jon Maloy <jmaloy@redhat.com>,
+        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org,
+        target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
+        linux-cifs@vger.kernel.org, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, netdev@vger.kernel.org,
+        linux-sctp@vger.kernel.org, ceph-devel@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 32/33] sctp: add sctp_sock_get_primary_addr
+Message-ID: <20200513180302.GC2491@localhost.localdomain>
+References: <20200513062649.2100053-1-hch@lst.de>
+ <20200513062649.2100053-33-hch@lst.de>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from pc-42.localnet (82.67.86.106) by SN4PR0601CA0005.namprd06.prod.outlook.com (2603:10b6:803:2f::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20 via Frontend Transport; Wed, 13 May 2020 18:02:38 +0000
-X-Originating-IP: [82.67.86.106]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3e735501-7e67-4a34-3fff-08d7f767d38f
-X-MS-TrafficTypeDiagnostic: MWHPR11MB1440:
-X-Microsoft-Antispam-PRVS: <MWHPR11MB144086DC445F226083F79A8993BF0@MWHPR11MB1440.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 0402872DA1
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: L711W+IdF99lERDOnWMZ5nSwzD16raY2PF7tY3iLWEiWJQ5cK3OkGxiW6F7ejFZuw5aYjQwbLhEYB3/DVrxx8ChdzpusL00MLVfxuv1DpckZvFdPWovmB4vifMhCeMUqApXTm0KrYRx9/imk7SEHuPFV6KBuL3vWJgSJJa9c+C2hQzuuitr2ZT0EAbD7a/+E9phMDTwowXd9rYKpouOyECMTj868b6Xaowr+iui1crJ1w6fAZcrl9SvjAlARf+fYEMVeRC5jJDuuZk76ycFK07sTHcwYuDmTqYvm8XowmUjIyDL9cxLXntiJn6KI7f0D4hGjJ9zsNkFZD1Z6+wlfuEQSmUEsy/CUZLLU3SkTEiGg1X7eok2ZV5lCbiTMPSKDooDB0KomqQGdRy5eceDxzvzvj+RX1xKn2550h0L0MwmDCypn7rNrqJAmRSKXRjrf2ge5lwXKWxT98xM6DtZMRvVtZkfb7VWYVHa/2vLoPYrwJKmvlQTFI/5FxMI1zhZ3D3XnVo5mHYqnQuc8Fe6MtwWK7IFz5xNCOctMOfN9llSCImS3p0JXmra+rfPs7b19pvPaaiiUYg49k/HiW2exDg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1775.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(346002)(376002)(136003)(396003)(39850400004)(33430700001)(6506007)(2906002)(316002)(33440700001)(6666004)(9686003)(33716001)(8936002)(4326008)(6512007)(478600001)(26005)(52116002)(5660300002)(6486002)(186003)(16526019)(66556008)(36916002)(86362001)(956004)(6916009)(66946007)(66476007)(8676002)(39026012)(21314003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: NhlWss0z/O0ZON1E87ZjN0h5zxSo2seRgflWGHNf6l4IJn5qmv84sNhBiDd/nXD5E+YJF2HqLYwyD83Tqz4OJ79ughp7LN/q4OAEtmuuIh/sBxVDVEA3uCVzwMREZ4VSDae6c7edi4e9m++mvzSVTlbbyDV7Nj/uuNRKkpNezUO4at98zy8eA1GoxELmtTfP3xIkUDxlPuLycksRyucvVEYATOgW+LHMA9lU8iKKr1ZsOzd8B+9ajSMOjcjpoXdoW7Z5fhIfNzbwHLS7JhGoTnZR/3Bjl+C97aj9xugVWNTZeJ7Q3xEzCcBMM/vWJTQIGDZgnJot9LbzOjOMyx4WcthPFWp/ak8MPLyV8XY5YNztWJa8IlQIL4hi7jjcW3Xeqzz2VPlML9cSZl4mN+RpstYQ8R/r8KTBvpLiPdziQ+lg1yfh7kZ37hsUtMWwrotdZeWZDV/HMyKTg5c+27HZ4CLzyTW4Zo05D8RHteJQZjo=
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e735501-7e67-4a34-3fff-08d7f767d38f
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2020 18:02:40.4235
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yKOYsQuDNADPrzdXJeeiQcoZJpW8kRo1gl3RCDEDcLg9dU75qJWBbyGTkHUCJPaQ06XiJDHOtNKFNQVEBOJJXg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1440
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513062649.2100053-33-hch@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, May 13, 2020 at 08:26:47AM +0200, Christoph Hellwig wrote:
+> Add a helper to directly get the SCTP_PRIMARY_ADDR sockopt from kernel
+> space without going through a fake uaccess.
 
-On Wednesday 13 May 2020 09:24:33 CEST Mohamed Dawod wrote:
->=20
-> fixing some typo errors in traces.h file
->=20
-> Signed-off-by: Mohamed Dawod <mhm.dawod@gmail.com>
+Same comment as on the other dlm/sctp patch.
+
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  drivers/staging/wfx/traces.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->=20
-
-It would be great if the subject started with "staging: wfx: " (as
-the other patches of this directory).
-
-Else, I like when commit messages start with a capital letter, but it is no=
-t big
-deal.
-
-
-> diff --git a/drivers/staging/wfx/traces.h b/drivers/staging/wfx/traces.h
-> index bb9f7e9..80e131c 100644
-> --- a/drivers/staging/wfx/traces.h
-> +++ b/drivers/staging/wfx/traces.h
-> @@ -32,16 +32,16 @@
->   *             xxx_name(XXX)       \
->   *             ...
+>  fs/dlm/lowcomms.c       | 11 +++-----
+>  include/net/sctp/sctp.h |  1 +
+>  net/sctp/socket.c       | 57 +++++++++++++++++++++++++----------------
+>  3 files changed, 39 insertions(+), 30 deletions(-)
+> 
+> diff --git a/fs/dlm/lowcomms.c b/fs/dlm/lowcomms.c
+> index 6fa45365666a8..46d2d71b62c57 100644
+> --- a/fs/dlm/lowcomms.c
+> +++ b/fs/dlm/lowcomms.c
+> @@ -855,10 +855,9 @@ static int tcp_accept_from_sock(struct connection *con)
+>  static int sctp_accept_from_sock(struct connection *con)
+>  {
+>  	/* Check that the new node is in the lockspace */
+> -	struct sctp_prim prim;
+> +	struct sctp_prim prim = { };
+>  	int nodeid;
+> -	int prim_len, ret;
+> -	int addr_len;
+> +	int addr_len, ret;
+>  	struct connection *newcon;
+>  	struct connection *addcon;
+>  	struct socket *newsock;
+> @@ -876,11 +875,7 @@ static int sctp_accept_from_sock(struct connection *con)
+>  	if (ret < 0)
+>  		goto accept_err;
+>  
+> -	memset(&prim, 0, sizeof(struct sctp_prim));
+> -	prim_len = sizeof(struct sctp_prim);
+> -
+> -	ret = kernel_getsockopt(newsock, IPPROTO_SCTP, SCTP_PRIMARY_ADDR,
+> -				(char *)&prim, &prim_len);
+> +	ret = sctp_sock_get_primary_addr(con->sock->sk, &prim);
+>  	if (ret < 0) {
+>  		log_print("getsockopt/sctp_primary_addr failed: %d", ret);
+>  		goto accept_err;
+> diff --git a/include/net/sctp/sctp.h b/include/net/sctp/sctp.h
+> index b505fa082f254..c98b1d14db853 100644
+> --- a/include/net/sctp/sctp.h
+> +++ b/include/net/sctp/sctp.h
+> @@ -618,5 +618,6 @@ static inline bool sctp_newsk_ready(const struct sock *sk)
+>  int sctp_setsockopt_bindx(struct sock *sk, struct sockaddr *kaddrs,
+>  		int addrs_size, int op);
+>  void sctp_sock_set_nodelay(struct sock *sk, bool val);
+> +int sctp_sock_get_primary_addr(struct sock *sk, struct sctp_prim *prim);
+>  
+>  #endif /* __net_sctp_h__ */
+> diff --git a/net/sctp/socket.c b/net/sctp/socket.c
+> index 64c395f7a86d5..39bf8090dbe1e 100644
+> --- a/net/sctp/socket.c
+> +++ b/net/sctp/socket.c
+> @@ -6411,6 +6411,35 @@ static int sctp_getsockopt_local_addrs(struct sock *sk, int len,
+>  	return err;
+>  }
+>  
+> +static int __sctp_sock_get_primary_addr(struct sock *sk, struct sctp_prim *prim)
+> +{
+> +	struct sctp_association *asoc;
+> +
+> +	asoc = sctp_id2assoc(sk, prim->ssp_assoc_id);
+> +	if (!asoc)
+> +		return -EINVAL;
+> +	if (!asoc->peer.primary_path)
+> +		return -ENOTCONN;
+> +
+> +	memcpy(&prim->ssp_addr, &asoc->peer.primary_path->ipaddr,
+> +		asoc->peer.primary_path->af_specific->sockaddr_len);
+> +
+> +	sctp_get_pf_specific(sk->sk_family)->addr_to_user(sctp_sk(sk),
+> +			(union sctp_addr *)&prim->ssp_addr);
+> +	return 0;
+> +}
+> +
+> +int sctp_sock_get_primary_addr(struct sock *sk, struct sctp_prim *prim)
+> +{
+> +	int ret;
+> +
+> +	lock_sock(sk);
+> +	ret = __sctp_sock_get_primary_addr(sk, prim);
+> +	release_sock(sk);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(sctp_sock_get_primary_addr);
+> +
+>  /* 7.1.10 Set Primary Address (SCTP_PRIMARY_ADDR)
 >   *
-> - *   3. Instanciate that list_names:
-> + *   3. Instantiate that list_names:
->   *
->   *          list_names
->   *
-> - *   4. Redefine xxx_name() as a entry of array for __print_symbolic()
-> + *   4. Redefine xxx_name() as an entry of array for __print_symbolic()
->   *
->   *          #undef xxx_name
->   *          #define xxx_name(msg) { msg, #msg },
->   *
-> - *   5. list_name can now nearlu be used with __print_symbolic() but,
-> + *   5. list_name can now nearly be used with __print_symbolic() but,
->   *      __print_symbolic() dislike last comma of list. So we define a ne=
-w list
->   *      with a dummy element:
-
-Ok.
-
-
-Thank you for your contribution.
-
---=20
-J=E9r=F4me Pouiller
-
-
+>   * Requests that the local SCTP stack use the enclosed peer address as
+> @@ -6421,35 +6450,19 @@ static int sctp_getsockopt_primary_addr(struct sock *sk, int len,
+>  					char __user *optval, int __user *optlen)
+>  {
+>  	struct sctp_prim prim;
+> -	struct sctp_association *asoc;
+> -	struct sctp_sock *sp = sctp_sk(sk);
+> +	int ret;
+>  
+>  	if (len < sizeof(struct sctp_prim))
+>  		return -EINVAL;
+> -
+> -	len = sizeof(struct sctp_prim);
+> -
+> -	if (copy_from_user(&prim, optval, len))
+> +	if (copy_from_user(&prim, optval, sizeof(struct sctp_prim)))
+>  		return -EFAULT;
+>  
+> -	asoc = sctp_id2assoc(sk, prim.ssp_assoc_id);
+> -	if (!asoc)
+> -		return -EINVAL;
+> -
+> -	if (!asoc->peer.primary_path)
+> -		return -ENOTCONN;
+> -
+> -	memcpy(&prim.ssp_addr, &asoc->peer.primary_path->ipaddr,
+> -		asoc->peer.primary_path->af_specific->sockaddr_len);
+> -
+> -	sctp_get_pf_specific(sk->sk_family)->addr_to_user(sp,
+> -			(union sctp_addr *)&prim.ssp_addr);
+> +	ret = __sctp_sock_get_primary_addr(sk, &prim);
+> +	if (ret)
+> +		return ret;
+>  
+> -	if (put_user(len, optlen))
+> +	if (put_user(len, optlen) || copy_to_user(optval, &prim, len))
+>  		return -EFAULT;
+> -	if (copy_to_user(optval, &prim, len))
+> -		return -EFAULT;
+> -
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.26.2
+> 
