@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C56EC2D0FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC44CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0E1F206E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:02:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7F1920575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:02:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364127;
-	bh=Ubz7VruHRIYMARfNxYnqVv5zsSbjW/xH3CYrn/L8SJg=;
+	s=default; t=1589364134;
+	bh=uOdmIxsIY5mVo19Rvp98hxeHLUkyCpu6hxH7U1G3Sgg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HeVdejWPnugFVmVbmxcpsG5u/ioZLDQ0kU16qgcJMDwm0mCGL/wRW3tkogu5W2cqP
-	 X9IzU59C7rJSzRL5GRFXwgzeGkL/iZCmsLYtYoUCGvxy5NmfhsyMJdrBbc+e7h7egK
-	 7ZYiHjj2c/756r7jAQXrBhwAdEPRYDMN1nJcicvE=
+	b=gMLfKxOskwbaF5a7SVq0XScYH0toYASvo5FgF1XdiQcmE+K6KTwLxxeTiyGbGXrE7
+	 w5M9Shb1wZrCIfpYsZ/LeG3KxtBwOeZurN3ki5F6BQPb1b8xyfct4H428EHcDMlhmT
+	 nsC7Xm2KI3PwRgBj409Zzn3G5MccWniLJkYdmilc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388631AbgEMKCG (ORCPT
+        id S2388637AbgEMKCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:02:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50268 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 06:02:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387493AbgEMJu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:50:27 -0400
+        id S2387474AbgEMJuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:50:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42C8F20740;
-        Wed, 13 May 2020 09:50:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECBFB20575;
+        Wed, 13 May 2020 09:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363426;
-        bh=Ubz7VruHRIYMARfNxYnqVv5zsSbjW/xH3CYrn/L8SJg=;
+        s=default; t=1589363419;
+        bh=uOdmIxsIY5mVo19Rvp98hxeHLUkyCpu6hxH7U1G3Sgg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=caogtro+jjim67ybypyOO0PW6Py1xZp//n5Dd5cgfpPIlV11d5Q9ZT8LRv+sk9vqp
-         n6mP+bLHNX78Eq4vxXv5Hpv/H+dFBZi042Bo8pkk6dOCnBi7vsakhaLD2SghBTL29A
-         LmHVGnvhyN7tCx38SO3FhxWRzy3iBM+vp6Spg1pQ=
+        b=nYLfg0pmfRzJkD5kaZ0+Pn8/SQvk84Jevc1jjfo2maTMfCACnI29396v2AZ9JFymg
+         BSek8ml6jRu6sChe2PCaukpg3FBd3gn9uAoeIz3Zz+zWgqJ1bCyDriFoQkcvtk+mbs
+         SJrs4zVuytn38b7EYP5damRQpuD9lp65ZbUVpGIg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, George Spelvin <lkml@sdf.org>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 5.4 68/90] batman-adv: fix batadv_nc_random_weight_tq
-Date:   Wed, 13 May 2020 11:45:04 +0200
-Message-Id: <20200513094416.485631562@linuxfoundation.org>
+        stable@vger.kernel.org, Vincent Chen <vincent.chen@sifive.com>,
+        Anup Patel <anup@brainfault.org>,
+        Yash Shah <yash.shah@sifive.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>
+Subject: [PATCH 5.4 66/90] riscv: set max_pfn to the PFN of the last page
+Date:   Wed, 13 May 2020 11:45:02 +0200
+Message-Id: <20200513094416.347394093@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -60,66 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: George Spelvin <lkml@sdf.org>
+From: Vincent Chen <vincent.chen@sifive.com>
 
-commit fd0c42c4dea54335967c5a86f15fc064235a2797 upstream.
+commit c749bb2d554825e007cbc43b791f54e124dadfce upstream.
 
-and change to pseudorandom numbers, as this is a traffic dithering
-operation that doesn't need crypto-grade.
+The current max_pfn equals to zero. In this case, I found it caused users
+cannot get some page information through /proc such as kpagecount in v5.6
+kernel because of new sanity checks. The following message is displayed by
+stress-ng test suite with the command "stress-ng --verbose --physpage 1 -t
+1" on HiFive unleashed board.
 
-The previous code operated in 4 steps:
+ # stress-ng --verbose --physpage 1 -t 1
+ stress-ng: debug: [109] 4 processors online, 4 processors configured
+ stress-ng: info: [109] dispatching hogs: 1 physpage
+ stress-ng: debug: [109] cache allocate: reducing cache level from L3 (too high) to L0
+ stress-ng: debug: [109] get_cpu_cache: invalid cache_level: 0
+ stress-ng: info: [109] cache allocate: using built-in defaults as no suitable cache found
+ stress-ng: debug: [109] cache allocate: default cache size: 2048K
+ stress-ng: debug: [109] starting stressors
+ stress-ng: debug: [109] 1 stressor spawned
+ stress-ng: debug: [110] stress-ng-physpage: started [110] (instance 0)
+ stress-ng: error: [110] stress-ng-physpage: cannot read page count for address 0x3fd34de000 in /proc/kpagecount, errno=0 (Success)
+ stress-ng: error: [110] stress-ng-physpage: cannot read page count for address 0x3fd32db078 in /proc/kpagecount, errno=0 (Success)
+ ...
+ stress-ng: error: [110] stress-ng-physpage: cannot read page count for address 0x3fd32db078 in /proc/kpagecount, errno=0 (Success)
+ stress-ng: debug: [110] stress-ng-physpage: exited [110] (instance 0)
+ stress-ng: debug: [109] process [110] terminated
+ stress-ng: info: [109] successful run completed in 1.00s
+ #
 
-1. Generate a random byte 0 <= rand_tq <= 255
-2. Multiply it by BATADV_TQ_MAX_VALUE - tq
-3. Divide by 255 (= BATADV_TQ_MAX_VALUE)
-4. Return BATADV_TQ_MAX_VALUE - rand_tq
+After applying this patch, the kernel can pass the test.
 
-This would apperar to scale (BATADV_TQ_MAX_VALUE - tq) by a random
-value between 0/255 and 255/255.
+ # stress-ng --verbose --physpage 1 -t 1
+ stress-ng: debug: [104] 4 processors online, 4 processors configured stress-ng: info: [104] dispatching hogs: 1 physpage
+ stress-ng: info: [104] cache allocate: using defaults, can't determine cache details from sysfs
+ stress-ng: debug: [104] cache allocate: default cache size: 2048K
+ stress-ng: debug: [104] starting stressors
+ stress-ng: debug: [104] 1 stressor spawned
+ stress-ng: debug: [105] stress-ng-physpage: started [105] (instance 0) stress-ng: debug: [105] stress-ng-physpage: exited [105] (instance 0) stress-ng: debug: [104] process [105] terminated
+ stress-ng: info: [104] successful run completed in 1.01s
+ #
 
-But!  The intermediate value between steps 3 and 4 is stored in a u8
-variable.  So it's truncated, and most of the time, is less than 255, after
-which the division produces 0.  Specifically, if tq is odd, the product is
-always even, and can never be 255.  If tq is even, there's exactly one
-random byte value that will produce a product byte of 255.
-
-Thus, the return value is 255 (511/512 of the time) or 254 (1/512
-of the time).
-
-If we assume that the truncation is a bug, and the code is meant to scale
-the input, a simpler way of looking at it is that it's returning a random
-value between tq and BATADV_TQ_MAX_VALUE, inclusive.
-
-Well, we have an optimized function for doing just that.
-
-Fixes: 3c12de9a5c75 ("batman-adv: network coding - code and transmit packets if possible")
-Signed-off-by: George Spelvin <lkml@sdf.org>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Cc: stable@vger.kernel.org
+Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
+Reviewed-by: Anup Patel <anup@brainfault.org>
+Reviewed-by: Yash Shah <yash.shah@sifive.com>
+Tested-by: Yash Shah <yash.shah@sifive.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/batman-adv/network-coding.c |    9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ arch/riscv/mm/init.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/batman-adv/network-coding.c
-+++ b/net/batman-adv/network-coding.c
-@@ -1009,15 +1009,8 @@ static struct batadv_nc_path *batadv_nc_
-  */
- static u8 batadv_nc_random_weight_tq(u8 tq)
- {
--	u8 rand_val, rand_tq;
--
--	get_random_bytes(&rand_val, sizeof(rand_val));
--
- 	/* randomize the estimated packet loss (max TQ - estimated TQ) */
--	rand_tq = rand_val * (BATADV_TQ_MAX_VALUE - tq);
--
--	/* normalize the randomized packet loss */
--	rand_tq /= BATADV_TQ_MAX_VALUE;
-+	u8 rand_tq = prandom_u32_max(BATADV_TQ_MAX_VALUE + 1 - tq);
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -116,7 +116,8 @@ void __init setup_bootmem(void)
+ 	memblock_reserve(vmlinux_start, vmlinux_end - vmlinux_start);
  
- 	/* convert to (randomized) estimated tq again */
- 	return BATADV_TQ_MAX_VALUE - rand_tq;
+ 	set_max_mapnr(PFN_DOWN(mem_size));
+-	max_low_pfn = PFN_DOWN(memblock_end_of_DRAM());
++	max_pfn = PFN_DOWN(memblock_end_of_DRAM());
++	max_low_pfn = max_pfn;
+ 
+ #ifdef CONFIG_BLK_DEV_INITRD
+ 	setup_initrd();
 
 
