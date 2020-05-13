@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82734C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5C8C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6082220740
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5EFA2078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363228;
-	bh=FswPGtNokP1twHi/b4irODojKXk9W7QfAlV/zClpSR0=;
+	s=default; t=1589363231;
+	bh=8WGXdX0TnAX86/ckTL3jkixuy+9Tp1nesLQ+hXMtkso=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rd/lePg0pkURd1xfkr+U+YXkSbSiK4lYut9UBgOU25k8P5nNNm2PMFI5ApHBjNr11
-	 m3aBNTOjQOGtyNeyxNT+Ikq3VyZQcG5VS+AuTC9CKeQpUW5ovytvLlPetqxA8x2p16
-	 YXLpL9DeshLbc0azUKe1yq+sE0UPcseLr5kUIH+c=
+	b=DV06bcfWxnItpqCusPBuSemoQOYyEcgHHmz+VgMPMTun6LYXaeK1pcUnvqSto7ZGE
+	 ZGjt3jyotDGHnWWUAzFgbaq+WNeY+MgYA1eQuHejl9BJ27RmlSZNCdo4vOLjpTr6M2
+	 FU7Y3bMMYZkjrEFvSICgVAUzX3Wt1QVTpzki5SQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732790AbgEMJrH (ORCPT
+        id S1732802AbgEMJrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:47:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44636 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:47:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732773AbgEMJrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:47:03 -0400
+        id S1732784AbgEMJrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:47:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAC5F20753;
-        Wed, 13 May 2020 09:47:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CEFE20769;
+        Wed, 13 May 2020 09:47:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363223;
-        bh=FswPGtNokP1twHi/b4irODojKXk9W7QfAlV/zClpSR0=;
+        s=default; t=1589363225;
+        bh=8WGXdX0TnAX86/ckTL3jkixuy+9Tp1nesLQ+hXMtkso=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HYD/054uLLKMN51Bl1cdDw2H0ItZhk3xbBcUfCpHtTAmrcPGnsqL50Glxupc4AjAE
-         asTtRdYDflUbFg/N6ywf7JZL8siUXMD6wiDondmVvoSZp7LfSMlQ6U/GbA2GHtsXKD
-         YWvk/huRjx37t5Dlt6+fK05ZLnkNcpFVSAy0SHuU=
+        b=nieX7bXyyzfsGK1SHLV1xeOHToVzo98Nt0t7CLkI0XiyZ0a+J5riTGOs/Glr8FAhR
+         SA3j0xykqSy8pd3yW3wFrMDFAjaAvK4DU2x/9hgl08uTLk4nQ4vQPJHlQ+87HtE2eX
+         IM6hDDJ+xkWkmRHscBXM1eZNTySAsWg5+2KVIjkg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 18/48] net: stricter validation of untrusted gso packets
-Date:   Wed, 13 May 2020 11:44:44 +0200
-Message-Id: <20200513094355.651615237@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: [PATCH 4.19 36/48] batman-adv: Fix refcnt leak in batadv_v_ogm_process
+Date:   Wed, 13 May 2020 11:45:02 +0200
+Message-Id: <20200513094401.060898423@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
 References: <20200513094351.100352960@linuxfoundation.org>
@@ -60,105 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 9274124f023b5c56dc4326637d4f787968b03607 ]
+commit 6f91a3f7af4186099dd10fa530dd7e0d9c29747d upstream.
 
-Syzkaller again found a path to a kernel crash through bad gso input:
-a packet with transport header extending beyond skb_headlen(skb).
+batadv_v_ogm_process() invokes batadv_hardif_neigh_get(), which returns
+a reference of the neighbor object to "hardif_neigh" with increased
+refcount.
 
-Tighten validation at kernel entry:
+When batadv_v_ogm_process() returns, "hardif_neigh" becomes invalid, so
+the refcount should be decreased to keep refcount balanced.
 
-- Verify that the transport header lies within the linear section.
+The reference counting issue happens in one exception handling paths of
+batadv_v_ogm_process(). When batadv_v_ogm_orig_get() fails to get the
+orig node and returns NULL, the refcnt increased by
+batadv_hardif_neigh_get() is not decreased, causing a refcnt leak.
 
-    To avoid pulling linux/tcp.h, verify just sizeof tcphdr.
-    tcp_gso_segment will call pskb_may_pull (th->doff * 4) before use.
+Fix this issue by jumping to "out" label when batadv_v_ogm_orig_get()
+fails to get the orig node.
 
-- Match the gso_type against the ip_proto found by the flow dissector.
-
-Fixes: bfd5f4a3d605 ("packet: Add GSO/csum offload support.")
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 9323158ef9f4 ("batman-adv: OGMv2 - implement originators logic")
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/linux/virtio_net.h |   26 ++++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
 
---- a/include/linux/virtio_net.h
-+++ b/include/linux/virtio_net.h
-@@ -3,6 +3,8 @@
- #define _LINUX_VIRTIO_NET_H
+---
+ net/batman-adv/bat_v_ogm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/net/batman-adv/bat_v_ogm.c
++++ b/net/batman-adv/bat_v_ogm.c
+@@ -735,7 +735,7 @@ static void batadv_v_ogm_process(const s
  
- #include <linux/if_vlan.h>
-+#include <uapi/linux/tcp.h>
-+#include <uapi/linux/udp.h>
- #include <uapi/linux/virtio_net.h>
+ 	orig_node = batadv_v_ogm_orig_get(bat_priv, ogm_packet->orig);
+ 	if (!orig_node)
+-		return;
++		goto out;
  
- static inline int virtio_net_hdr_set_proto(struct sk_buff *skb,
-@@ -28,17 +30,25 @@ static inline int virtio_net_hdr_to_skb(
- 					bool little_endian)
- {
- 	unsigned int gso_type = 0;
-+	unsigned int thlen = 0;
-+	unsigned int ip_proto;
- 
- 	if (hdr->gso_type != VIRTIO_NET_HDR_GSO_NONE) {
- 		switch (hdr->gso_type & ~VIRTIO_NET_HDR_GSO_ECN) {
- 		case VIRTIO_NET_HDR_GSO_TCPV4:
- 			gso_type = SKB_GSO_TCPV4;
-+			ip_proto = IPPROTO_TCP;
-+			thlen = sizeof(struct tcphdr);
- 			break;
- 		case VIRTIO_NET_HDR_GSO_TCPV6:
- 			gso_type = SKB_GSO_TCPV6;
-+			ip_proto = IPPROTO_TCP;
-+			thlen = sizeof(struct tcphdr);
- 			break;
- 		case VIRTIO_NET_HDR_GSO_UDP:
- 			gso_type = SKB_GSO_UDP;
-+			ip_proto = IPPROTO_UDP;
-+			thlen = sizeof(struct udphdr);
- 			break;
- 		default:
- 			return -EINVAL;
-@@ -57,16 +67,22 @@ static inline int virtio_net_hdr_to_skb(
- 
- 		if (!skb_partial_csum_set(skb, start, off))
- 			return -EINVAL;
-+
-+		if (skb_transport_offset(skb) + thlen > skb_headlen(skb))
-+			return -EINVAL;
- 	} else {
- 		/* gso packets without NEEDS_CSUM do not set transport_offset.
- 		 * probe and drop if does not match one of the above types.
- 		 */
- 		if (gso_type && skb->network_header) {
-+			struct flow_keys_basic keys;
-+
- 			if (!skb->protocol)
- 				virtio_net_hdr_set_proto(skb, hdr);
- retry:
--			skb_probe_transport_header(skb, -1);
--			if (!skb_transport_header_was_set(skb)) {
-+			if (!skb_flow_dissect_flow_keys_basic(skb, &keys,
-+							      NULL, 0, 0, 0,
-+							      0)) {
- 				/* UFO does not specify ipv4 or 6: try both */
- 				if (gso_type & SKB_GSO_UDP &&
- 				    skb->protocol == htons(ETH_P_IP)) {
-@@ -75,6 +91,12 @@ retry:
- 				}
- 				return -EINVAL;
- 			}
-+
-+			if (keys.control.thoff + thlen > skb_headlen(skb) ||
-+			    keys.basic.ip_proto != ip_proto)
-+				return -EINVAL;
-+
-+			skb_set_transport_header(skb, keys.control.thoff);
- 		}
- 	}
- 
+ 	neigh_node = batadv_neigh_node_get_or_create(orig_node, if_incoming,
+ 						     ethhdr->h_source);
 
 
