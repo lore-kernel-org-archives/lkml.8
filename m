@@ -4,60 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FFBC2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DBACA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96A3B20740
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB04D206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363410;
-	bh=h8SEZHcxjevCrV+7KP1HulgHGIYU8bJnnCg8YvMO62M=;
+	s=default; t=1589363416;
+	bh=YoXHFMlvuBDLbaC0h6kGRTwYbgdqwB7bsZo21oJfg20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2E/2wLfCusn8yFNpb7qGpieQJ5bM/msChyVXtrMcvnuqupudeNTgQ9qn0+q8thiwu
-	 WoOjlS9+lyDW9nsv9+rOo+2QI7sdV4tm2xnBwQKO/wHgcaNDOZKNMJTNrocz/O6rQt
-	 b0YjlPukqKdY4383aJcZ5ZKs8vX+zqPEJ82FUd9Y=
+	b=NDdNaOF4oHSs4QEvrmGTlKVTlH8YlRJvIC7u8/RHZ/rWNBx/l41mPgcXDUeWjbf0E
+	 r2+uSZWBtsSbtukrG6NhbAiPy5dSg4waTRRLIylHMLS2pDln/RB2jxnTf5Zh0WU8lM
+	 UUJChp6VCvJEvXY7oLJhA6bmiJXKvZuIv3wVcPA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387449AbgEMJuJ (ORCPT
+        id S2387465AbgEMJuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:50:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49682 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:50:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387439AbgEMJuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:50:05 -0400
+        id S2387448AbgEMJuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:50:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1836F23129;
-        Wed, 13 May 2020 09:50:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED8A9206D6;
+        Wed, 13 May 2020 09:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363404;
-        bh=h8SEZHcxjevCrV+7KP1HulgHGIYU8bJnnCg8YvMO62M=;
+        s=default; t=1589363409;
+        bh=YoXHFMlvuBDLbaC0h6kGRTwYbgdqwB7bsZo21oJfg20=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vltDHl5JP/4GPOlG23YZx/3uxWIHAu9fdO1Ie26xkd/73XrI5uCDVlHPSXhwMm9Zo
-         xSkeiyJPM3FhLVLkajkdH/8QSwol+UqGZSnpNd+IhzfbXW2XpycamdL5z+a7rlblDZ
-         E6PuubCpBymihYy+UX3nQrDVNgPVJ52e/YqsZM9Q=
+        b=U/d3MjjDIldbEH7tyEeMzbDw8CNYJzunGGQBFQ3/NmOdFIp7zi8ZcKW0UwMx49ldW
+         0SIvYKdZLNWlDwOs35xLOyVSuZNaSfbqDxhhurB4+B2Tj+DOBrMODBCoNMdo+RnEvy
+         ++XopfF0mvS1JgcrEWxh8WFHaXN+tpoh2qWCEaww=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Baoquan He <bhe@redhat.com>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 60/90] mm/page_alloc: fix watchdog soft lockups during set_zone_contiguous()
-Date:   Wed, 13 May 2020 11:44:56 +0200
-Message-Id: <20200513094415.998966830@linuxfoundation.org>
+        stable@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        Eduard Shishkin <edward6@linux.ibm.com>
+Subject: [PATCH 5.4 62/90] ceph: fix endianness bug when handling MDS session feature bits
+Date:   Wed, 13 May 2020 11:44:58 +0200
+Message-Id: <20200513094416.106484588@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -70,62 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Jeff Layton <jlayton@kernel.org>
 
-commit e84fe99b68ce353c37ceeecc95dce9696c976556 upstream.
+commit 0fa8263367db9287aa0632f96c1a5f93cc478150 upstream.
 
-Without CONFIG_PREEMPT, it can happen that we get soft lockups detected,
-e.g., while booting up.
+Eduard reported a problem mounting cephfs on s390 arch. The feature
+mask sent by the MDS is little-endian, so we need to convert it
+before storing and testing against it.
 
-  watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [swapper/0:1]
-  CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.6.0-next-20200331+ #4
-  Hardware name: Red Hat KVM, BIOS 1.11.1-4.module+el8.1.0+4066+0f1aadab 04/01/2014
-  RIP: __pageblock_pfn_to_page+0x134/0x1c0
-  Call Trace:
-   set_zone_contiguous+0x56/0x70
-   page_alloc_init_late+0x166/0x176
-   kernel_init_freeable+0xfa/0x255
-   kernel_init+0xa/0x106
-   ret_from_fork+0x35/0x40
-
-The issue becomes visible when having a lot of memory (e.g., 4TB)
-assigned to a single NUMA node - a system that can easily be created
-using QEMU.  Inside VMs on a hypervisor with quite some memory
-overcommit, this is fairly easy to trigger.
-
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Reviewed-by: Baoquan He <bhe@redhat.com>
-Reviewed-by: Shile Zhang <shile.zhang@linux.alibaba.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc: Shile Zhang <shile.zhang@linux.alibaba.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Alexander Duyck <alexander.duyck@gmail.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200416073417.5003-1-david@redhat.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: stable@vger.kernel.org
+Reported-and-Tested-by: Eduard Shishkin <edward6@linux.ibm.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/page_alloc.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/ceph/mds_client.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1555,6 +1555,7 @@ void set_zone_contiguous(struct zone *zo
- 		if (!__pageblock_pfn_to_page(block_start_pfn,
- 					     block_end_pfn, zone))
- 			return;
-+		cond_resched();
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -3072,8 +3072,7 @@ static void handle_session(struct ceph_m
+ 	void *end = p + msg->front.iov_len;
+ 	struct ceph_mds_session_head *h;
+ 	u32 op;
+-	u64 seq;
+-	unsigned long features = 0;
++	u64 seq, features = 0;
+ 	int wake = 0;
+ 	bool blacklisted = false;
+ 
+@@ -3092,9 +3091,8 @@ static void handle_session(struct ceph_m
+ 			goto bad;
+ 		/* version >= 3, feature bits */
+ 		ceph_decode_32_safe(&p, end, len, bad);
+-		ceph_decode_need(&p, end, len, bad);
+-		memcpy(&features, p, min_t(size_t, len, sizeof(features)));
+-		p += len;
++		ceph_decode_64_safe(&p, end, features, bad);
++		p += len - sizeof(features);
  	}
  
- 	/* We confirm that there is no hole */
+ 	mutex_lock(&mdsc->mutex);
 
 
