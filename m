@@ -2,232 +2,282 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 334C2CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 660EBCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0255D20740
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AF132078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:30:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="cmoclXMD"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ZYqNT7S9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732272AbgEMIaT (ORCPT
+        id S1732287AbgEMIac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 04:30:19 -0400
-Received: from mga14.intel.com ([192.55.52.115]:25584 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729189AbgEMIaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 04:30:18 -0400
-IronPort-SDR: DhfuMFUmruyOu/GusEzg74Jc3dxbb4WRHC7uO/uuV03CpuIzjw9zEg2YYp/9qPg+tlPPHRdxSB
- PjRgit37S+hA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 01:30:17 -0700
-IronPort-SDR: O200gs2YvUbsqLEcow2csnCHluXZy6srK9Wovlmtj06/wGmgNGeyAcHfDpBuj7nz2nPPR8v6oX
- YbMzik/HJtng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,387,1583222400"; 
-   d="scan'208";a="306724111"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by FMSMGA003.fm.intel.com with ESMTP; 13 May 2020 01:30:17 -0700
-Received: from fmsmsx120.amr.corp.intel.com (10.18.124.208) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 13 May 2020 01:30:17 -0700
-Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
- fmsmsx120.amr.corp.intel.com (10.18.124.208) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 13 May 2020 01:30:17 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.46) by
- edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Wed, 13 May 2020 01:30:17 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j3ZjXDvLS27e6KGyYbxd4pJu9intbfNa/IqjuhoEVFWrufJyj1QJEwkLw+2nZwC/rCQEE5udPZvR5OmAmG6oisHF/b+qSn7Sug0I5nODuHDNSSVoyGSptP2exFiwrS+3kbeemfc8kyUmeJS9oiLWATrmRT3HzLrWvjELidaZiQ4ElxSFS00m636p1oWkpdZH/03IxQbYUDtWjIp/treVPB4ZC9x4Mmnjl+/gSiELRZZXR957Ix8DUxxCZPd32nsgAxpE+jHAEg79QovxS+x6rr7OaP/N4oiM9oOdLoh30tiJb8I5T4nbgxDwjYNP36uEsLlPMOtr7UPtWLoHpknFxA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dzYAqn3JSJCdjfWXaPVuk31bs1k0XNFTW63Hk+O3h4g=;
- b=Ss8MP33YjG5msKB6BktSU6ZS2cyyIT6IJ7otSXgzyyvJewtdXqf9pkNGogyrPQ0KDQQYKca7dbmksfhh91vzYD69QHTf1rEfrXNnNjzezu63WahWzHR6BIQuzRNiQhnpD7hJgz8Iv6CdKCKOIozzUc3vpS1N4T8P5wNXIvIpSo8mOVx2JGugt4p4A3iL/DWon+/duWRzP9fXh+1QufOScx6Uf0RHRGe/DSIXseQOTSxFkmSBI6AIj4jeXNV3fXUDJfFLrXFreRMeqFJcSzsewmvn7SWOZjbCfDwwmZIwzJ1ozxBh3CtTNa3PBW5c0/9loUgZsGrCID9PFUQD69Jiiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dzYAqn3JSJCdjfWXaPVuk31bs1k0XNFTW63Hk+O3h4g=;
- b=cmoclXMDiRuARdoEuIVAMOTqLiLcqMHCldxBY0jpBbIEvdVcKvGcbfyUTzzp80lQ1F3Jpw7sipQPl8eGY3x7mw26ipTATWcxFO/hAH/88DyQYFdLijyQPokBxSwHi+OqN5p845Vxy3EpS1Tb/sWjEZBgXpUgSlVjs+l5MFtfBhk=
-Received: from MWHPR11MB1645.namprd11.prod.outlook.com (2603:10b6:301:b::12)
- by MWHPR11MB1280.namprd11.prod.outlook.com (2603:10b6:300:2b::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.34; Wed, 13 May
- 2020 08:30:15 +0000
-Received: from MWHPR11MB1645.namprd11.prod.outlook.com
- ([fe80::bc06:71a6:1cdd:59be]) by MWHPR11MB1645.namprd11.prod.outlook.com
- ([fe80::bc06:71a6:1cdd:59be%9]) with mapi id 15.20.2979.033; Wed, 13 May 2020
- 08:30:15 +0000
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>
-CC:     Alex Williamson <alex.williamson@redhat.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: RE: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Thread-Topic: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-Thread-Index: AQHWGDVStT24LxQ110qc/YDRWdRX86iDuewAgACI/wCAAD7wgIAAnasAgAFwKICAAOPOMIAAQj8AgACkdbD//7b+gIACl9WQgACeIICAAI58gIAAiiEAgAAWu4CAAAC9AIADZPhQgA7nFQCAACmhAIAADs6AgADMiYCABdYv8A==
-Date:   Wed, 13 May 2020 08:30:15 +0000
-Message-ID: <MWHPR11MB1645C60468BC6C6009C3DDE28CBF0@MWHPR11MB1645.namprd11.prod.outlook.com>
-References: <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
- <20200426191357.GB13640@mellanox.com> <20200426214355.29e19d33@x1.home>
- <20200427115818.GE13640@mellanox.com> <20200427071939.06aa300e@x1.home>
- <20200427132218.GG13640@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8E34AA@SHSMSX104.ccr.corp.intel.com>
- <20200508204710.GA78778@otc-nc-03> <20200508231610.GO19158@mellanox.com>
- <20200509000909.GA79981@otc-nc-03> <20200509122113.GP19158@mellanox.com>
-In-Reply-To: <20200509122113.GP19158@mellanox.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: mellanox.com; dkim=none (message not signed)
- header.d=none;mellanox.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.55.52.215]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 38af6b88-b2d1-4f8a-48f4-08d7f717dcaa
-x-ms-traffictypediagnostic: MWHPR11MB1280:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR11MB1280E0A475FDC0DCD167E2158CBF0@MWHPR11MB1280.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0402872DA1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0jNsMxH63xNiVQtDr9wzw7tk9uKS/4G1MhkvVaFuy4Tb+lXGI1wG+skKjg7RhRrEGnGTdZvPelI7NPlQ3ZWpAiTfsjvST7rpqKyryq42cZfpL3N8LP+Y5IUv6De7oFAJNgyzMqM3dEUSJja9fsCo8e23Dh4BfdE7nygNLAiKVUf1GhNbp9OpO3HWZhPfttz9gX3ahyiqKIzHD0Ad0I4qQCieBcc469QtO9JjaaGeUQR/z9wnZFnZFv1PCswh25sziOYDX4g2KytYa66ppP96f+UuBqnUZjQ0panR5/eYUhXh1LIB/sUNm3OEMTBUuPpeSzT+/MduOg77RS1hjjk3VljdCrjcTFk2QFBu5AmC9sAj1k4Q8N2NoXfcySAOt+hBdTrNNbzcEB2aOtGaOVTlbuTOXkfroFHChkbDiBBsQM3SU6bvQhXTH0J52I0pTuNJvYeuhDm5tuWuJQ5GNDp+3EDy/Ind78I5nT6GKOcMqLWeT1II/11Ozj9EGfXuwFUZvsacnUGsiOPos6MIW6pBCA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(346002)(39860400002)(366004)(396003)(136003)(33430700001)(8936002)(55016002)(26005)(76116006)(6506007)(316002)(33656002)(7696005)(4326008)(9686003)(52536014)(33440700001)(7416002)(64756008)(186003)(6636002)(66556008)(66476007)(8676002)(66446008)(86362001)(54906003)(5660300002)(478600001)(71200400001)(66946007)(2906002)(110136005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: RrWT69DGCK9QzfhKdGFAkfY0PRX688qN9vROMon99IEsecKbNJucTyJ4mBnP7fOVgy83+/vwTnjBwnWUK4xlcpwWi+XSvhKnnexR65/pRHzr6TzJHq99Xy6TH8UvfFEOrJvScvQdutP6Q3xkaVlMfQXDEMeQzeN6e+bCZvpvdI9pUR7fktAOoT5/P7u1/Z9XlTfFxl3d5Tv6eOXn0ZBXdTs9IswPKpkI3HBeh8oToQ0hJyQWBT2NwUjQO+uMQ5OM5IbrHmOFXWF1/+WZ+jcuFBL0hgg/eg3zrNzH3at+dqX7gd3gyxTr+7EAaewoLdvp1D9Dc4j7wo3nP7DeE9JMedFwzE0BKXSAABwt8/svn8VCHnu0U4EL4wOy97TG4WTUWCVvRUQJ8GdXQ0TPKIR02gTdzThT0ga9dpmmp4R/zkzZPnKdgqrJlO06LDGSXTL5eGmMIncfG5swSFvf1trgjO8OZU61+q9T+nJpTrfF1QQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 13 May 2020 04:30:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732174AbgEMIab (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 04:30:31 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C833C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 01:30:31 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id c83so3286278oob.6
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 01:30:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=P/cQOw5xN+TfOYRkXBpG74KgaYsRxjssQU8OCSQs0lw=;
+        b=ZYqNT7S96JIC/2QUMWjtKF68s7Mlj31GoqTmd/vNnuROLIyB0kD9KQbJGZzvzwvUbA
+         E3luqZwNVfQvG5bGKUij9LW4w7tisfb2ZjPEK2MdxiXprewxdAOya4VpMVU2y0meest4
+         Fp2TkQzADhnoZpBxsZgu12qAiKzzJR0VP+umY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=P/cQOw5xN+TfOYRkXBpG74KgaYsRxjssQU8OCSQs0lw=;
+        b=Ga06PIO5UdlCPNK5AcArrZ+GLH+5TTpfuXi7t00ezy5w0KIcQj1m8lJRDAE13TZOE3
+         Ji6xxRd64gsXHoP4wBnG78QqYFgRgOVSC80zHOowyzK9P0ATQch2TU35iHDchWLo4lRE
+         gARwaP0EQqQzUAAkqmB5FuMJ9torI9qjkbTh39SvaP25e8B4X3fQrbW9zLR1njZNjUqv
+         AbsaCXaKn/9t4ibnHZ9816oXlmLI0U8UxZIF9E7mLOnwdnl3OdW0XMIVp1wM03WhlDfH
+         0a0nR5qODyF/QL9qcSQLtDCmePBCzJ0TJo2UH7jEQHLt2ulI6PQHT3SX2BgiUFXHh51N
+         XHmA==
+X-Gm-Message-State: AGi0PuYqL8vN4Lra0x64Nj3uNnnuxFiCYqXpzuA9vquCZLJhY+s106Im
+        zKDf/3Ojad+Tm0ifEtVuPfAcaMIHzc/Ub8D1o9xLOA==
+X-Google-Smtp-Source: APiQypK721eLmXQ6tEOq0sY7098uVZ1/1lnGE6R9IvcYdjA6Ym65merSRHvKBROuVGmkJOSrpR7fmIYoiLovJ+FPnQA=
+X-Received: by 2002:a4a:d136:: with SMTP id n22mr21115688oor.85.1589358630346;
+ Wed, 13 May 2020 01:30:30 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 38af6b88-b2d1-4f8a-48f4-08d7f717dcaa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2020 08:30:15.1531
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: H7NPaJ3KKvx5w8I0WzkcmTdll9ceCyTjGzykTM6WAwruqtoDyFN1Wfg6Ad2dOKH5ESQZvgLTADc579Uz0qWHLg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1280
-X-OriginatorOrg: intel.com
+References: <20200512085944.222637-1-daniel.vetter@ffwll.ch>
+ <20200512085944.222637-3-daniel.vetter@ffwll.ch> <158927426244.15653.14406159524439944950@build.alporthouse.com>
+ <20200512090847.GF206103@phenom.ffwll.local> <158927519651.15653.17392305363363808831@build.alporthouse.com>
+In-Reply-To: <158927519651.15653.17392305363363808831@build.alporthouse.com>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Wed, 13 May 2020 10:30:19 +0200
+Message-ID: <CAKMK7uGnFhbpuurRsnZ4dvRV9gQ_3-rmSJaoqSFY=+Kvepz_CA@mail.gmail.com>
+Subject: Re: [RFC 02/17] dma-fence: basic lockdep annotations
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Jason Gunthorpe
-> Sent: Saturday, May 9, 2020 8:21 PM
-> > > putting emulation code back into them, except in a more dangerous
-> > > kernel location. This does not seem like a net win to me.
+On Tue, May 12, 2020 at 11:19 AM Chris Wilson <chris@chris-wilson.co.uk> wr=
+ote:
+> Quoting Daniel Vetter (2020-05-12 10:08:47)
+> > On Tue, May 12, 2020 at 10:04:22AM +0100, Chris Wilson wrote:
+> > > Quoting Daniel Vetter (2020-05-12 09:59:29)
+> > > > Design is similar to the lockdep annotations for workers, but with
+> > > > some twists:
+> > > >
+> > > > - We use a read-lock for the execution/worker/completion side, so t=
+hat
+> > > >   this explicit annotation can be more liberally sprinkled around.
+> > > >   With read locks lockdep isn't going to complain if the read-side
+> > > >   isn't nested the same way under all circumstances, so ABBA deadlo=
+cks
+> > > >   are ok. Which they are, since this is an annotation only.
+> > > >
+> > > > - We're using non-recursive lockdep read lock mode, since in recurs=
+ive
+> > > >   read lock mode lockdep does not catch read side hazards. And we
+> > > >   _very_ much want read side hazards to be caught. For full details=
+ of
+> > > >   this limitation see
+> > > >
+> > > >   commit e91498589746065e3ae95d9a00b068e525eec34f
+> > > >   Author: Peter Zijlstra <peterz@infradead.org>
+> > > >   Date:   Wed Aug 23 13:13:11 2017 +0200
+> > > >
+> > > >       locking/lockdep/selftests: Add mixed read-write ABBA tests
+> > > >
+> > > > - To allow nesting of the read-side explicit annotations we explici=
+tly
+> > > >   keep track of the nesting. lock_is_held() allows us to do that.
+> > > >
+> > > > - The wait-side annotation is a write lock, and entirely done withi=
+n
+> > > >   dma_fence_wait() for everyone by default.
+> > > >
+> > > > - To be able to freely annotate helper functions I want to make it =
+ok
+> > > >   to call dma_fence_begin/end_signalling from soft/hardirq context.
+> > > >   First attempt was using the hardirq locking context for the write
+> > > >   side in lockdep, but this forces all normal spinlocks nested with=
+in
+> > > >   dma_fence_begin/end_signalling to be spinlocks. That bollocks.
+> > > >
+> > > >   The approach now is to simple check in_atomic(), and for these ca=
+ses
+> > > >   entirely rely on the might_sleep() check in dma_fence_wait(). Tha=
+t
+> > > >   will catch any wrong nesting against spinlocks from soft/hardirq
+> > > >   contexts.
+> > > >
+> > > > The idea here is that every code path that's critical for eventuall=
+y
+> > > > signalling a dma_fence should be annotated with
+> > > > dma_fence_begin/end_signalling. The annotation ideally starts right
+> > > > after a dma_fence is published (added to a dma_resv, exposed as a
+> > > > sync_file fd, attached to a drm_syncobj fd, or anything else that
+> > > > makes the dma_fence visible to other kernel threads), up to and
+> > > > including the dma_fence_wait(). Examples are irq handlers, the
+> > > > scheduler rt threads, the tail of execbuf (after the corresponding
+> > > > fences are visible), any workers that end up signalling dma_fences =
+and
+> > > > really anything else. Not annotated should be code paths that only
+> > > > complete fences opportunistically as the gpu progresses, like e.g.
+> > > > shrinker/eviction code.
+> > > >
+> > > > The main class of deadlocks this is supposed to catch are:
+> > > >
+> > > > Thread A:
+> > > >
+> > > >         mutex_lock(A);
+> > > >         mutex_unlock(A);
+> > > >
+> > > >         dma_fence_signal();
+> > > >
+> > > > Thread B:
+> > > >
+> > > >         mutex_lock(A);
+> > > >         dma_fence_wait();
+> > > >         mutex_unlock(A);
+> > > >
+> > > > Thread B is blocked on A signalling the fence, but A never gets aro=
+und
+> > > > to that because it cannot acquire the lock A.
+> > > >
+> > > > Note that dma_fence_wait() is allowed to be nested within
+> > > > dma_fence_begin/end_signalling sections. To allow this to happen th=
+e
+> > > > read lock needs to be upgraded to a write lock, which means that an=
+y
+> > > > other lock is acquired between the dma_fence_begin_signalling() cal=
+l and
+> > > > the call to dma_fence_wait(), and still held, this will result in a=
+n
+> > > > immediate lockdep complaint. The only other option would be to not
+> > > > annotate such calls, defeating the point. Therefore these annotatio=
+ns
+> > > > cannot be sprinkled over the code entirely mindless to avoid false
+> > > > positives.
+> > > >
+> > > > v2: handle soft/hardirq ctx better against write side and dont forg=
+et
+> > > > EXPORT_SYMBOL, drivers can't use this otherwise.
+> > > >
+> > > > Cc: linux-media@vger.kernel.org
+> > > > Cc: linaro-mm-sig@lists.linaro.org
+> > > > Cc: linux-rdma@vger.kernel.org
+> > > > Cc: amd-gfx@lists.freedesktop.org
+> > > > Cc: intel-gfx@lists.freedesktop.org
+> > > > Cc: Chris Wilson <chris@chris-wilson.co.uk>
+> > > > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> > > > Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
+> > > > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> > > > ---
+> > > >  drivers/dma-buf/dma-fence.c | 53 +++++++++++++++++++++++++++++++++=
+++++
+> > > >  include/linux/dma-fence.h   | 12 +++++++++
+> > > >  2 files changed, 65 insertions(+)
+> > > >
+> > > > diff --git a/drivers/dma-buf/dma-fence.c b/drivers/dma-buf/dma-fenc=
+e.c
+> > > > index 6802125349fb..d5c0fd2efc70 100644
+> > > > --- a/drivers/dma-buf/dma-fence.c
+> > > > +++ b/drivers/dma-buf/dma-fence.c
+> > > > @@ -110,6 +110,52 @@ u64 dma_fence_context_alloc(unsigned num)
+> > > >  }
+> > > >  EXPORT_SYMBOL(dma_fence_context_alloc);
+> > > >
+> > > > +#ifdef CONFIG_LOCKDEP
+> > > > +struct lockdep_map     dma_fence_lockdep_map =3D {
+> > > > +       .name =3D "dma_fence_map"
+> > > > +};
+> > >
+> > > Not another false global sharing lockmap.
 > >
-> > Its not a whole lot of emulation right? mdev are soft partitioned. Ther=
-e is
-> > just a single PF, but we can create a separate partition for the guest =
-using
-> > PASID along with the normal BDF (RID). And exposing a consistent PCI li=
-ke
-> > interface to user space you get everything else for free.
-> >
-> > Yes, its not SRIOV, but giving that interface to user space via VFIO, w=
-e get
-> > all of that functionality without having to reinvent a different way to=
- do it.
-> >
-> > vDPA went the other way, IRC, they went and put a HW implementation of
-> what
-> > virtio is in hardware. So they sort of fit the model. Here the instance
-> > looks and feels like real hardware for the setup and control aspect.
->=20
-> VDPA and this are very similar, of course it depends on the exact HW
-> implementation.
->=20
+> > It's a global contract, it needs a global lockdep map. And yes a big
+> > reason for the motivation here is that i915-gem has a tremendous urge t=
+o
+> > just redefine all these global locks to fit to some local interpretatio=
+n
+> > of what's going on.
+>
+> No, you can build the global contract out of the actual contracts
+> between fence drivers. If you introduce a struct lockdep_map *map into
+> the fence_ops (so the fence_ops can remain const), you gain correctness
+> at the cost of having to run through all possible interactions once.
+> You can also then do if ops->lockmap ?: &global_fence_lockmap for
+> piecemeal conversion of drivers that do not already use lockmaps for
+> contract enforcement of their fence waits.
 
-Hi, Jason,
+I'm not quite sure whether you're actually proposing to have locking
+contracts per drivers, since that seems rather out of ... I dunno. But
+if that's what you want, that just doesn't make any sense at all:
 
-I have more thoughts below. let's see whether making sense to you.
+- Locking is rather core to kernel programming, aside from a few other
+things like hard/softirq/preempt/... disabled sections and how
+recursion works for these, or where and what you're allowed to
+allocate memory. Lockdep, might_sleep and a bunch of other such debug
+checks help us enforce that. If you instead go with every driver does
+what they please yolo, then you don't have an abstraction, all you
+have is smashing a rose and rose and Rose into one thing because they
+have the same 4 letter name. It's just an interface that can be used
+only when understanding every single implementation in detail - really
+not something that's an abstraction. Yes I've seen some of these
+dubious abstractions in i915, merged fairly recently, that doesn't
+make them a good idea.
 
-When talking about virtualization, here the target is unmodified guest=20
-kernel driver which expects seeing the raw controllability of queues=20
-as defined by device spec. In idxd, such controllability includes enable/
-disable SVA, dedicated or shared WQ, size, threshold, privilege, fault=20
-mode, max batch size, and many other attributes. Different guest OS=20
-has its own policy of using all or partial available controllability.=20
+- You need to test the full NxN matrix (yes you need to test the
+driver against itself in this world, since testing against something
+fake like vgem doesn't cut it). That's nuts. Strike that, that's
+impossible.
 
-When talking about application, we care about providing an efficient
-programming interface to userspace. For example with uacce, we
-allow an application to submit vaddr-based workloads to a reserved
-WQ with kernel bypassed. But it's not necessary to export the raw
-controllability of the reserved WQ to userspace, and we still rely on
-kernel driver to configure it including bind_mm. I'm not sure whether=20
-uacce would like to evolve as a generic queue management system
-including non-SVA and all vendor specific raw capabilities as=20
-expected by all kinds of guest kernel drivers. It sounds like not=20
-worthwhile at this point, given that we already have an highly efficient=20
-SVA interface for user applications.
+- Review is impossible, because the documentation can be summed up as
+"yolo". Without clear rules all review can do is check every code
+against every other piece of code, on every change. That's impossible,
+because we humans are mere mortals, and we're left with push&pray
+engineering, which really isn't.
 
-That is why we start with mdev as an evolutionary approach. Mdev is=20
-introduced to expose raw controllability of a subdevice (WQ or ADI) to=20
-guest. It build a channel between guest kernel driver and host kernel=20
-driver and uses device spec as the uAPI by sticking to the mmio interface.
-and all virtualization related setups are just consolidated together in vfi=
-o.=20
-the drawback, as you pointed out, is putting some degree of emulation
-code in the kernel. But as explained earlier, they are only small portion o=
-f
-code. Moreover, most registers are emulated as simple memory read/
-write, while the remaining logic mostly belongs to raw controllability=20
-(e.g. cmd register) that host driver grants to the guest thus must=20
-propagate to the device. For the latter part, I would call it more as=20
-'mediation' instead of 'emulation', as required in whatever uapi would=20
-be used.
+The other issue with this approach is that it's full on platform
+problem in extremis. Instead of extending the shared abstraction or
+adding new useful functionality, i915-gem has resorted to reinpreting
+rules to fix local problems. That leads to stuff like roughly
 
-If in the future, there do have such requirement of delegating raw
-WQ controllability to pure userspace applications for DMA engines,=20
-and there is be a well-defined uAPI to cover a large common set of=20
-controllability across multiple vendors, we will look at that option for
-sure.
+if (mutex_lock_timeout(HZ*10) =3D=3D -ETIME) {
+    /* I guess we deadlocked, try to bail out */
+}
 
-From above p.o.v, I feel vdpa is a different story. virtio/vhost has a=20
-well established eco-system between guest and host. The user
-space VMM already emulates all available controllability as defined=20
-in virtio spec. Host kernel already supports vhost uAPI for vring
-setup, iotlb management, etc. Extending that path for data path
-offloading sounds a reasonable choice for vdpa...
-
-Thanks
-Kevin
+except it's for fences. That's neither solid engineering - we don't
+generally let the kernel deadlock on itself to test whether maybe it
+was a deadlock or not, nor is this solid upstreaming in a open source
+project - we fix the problems where they are, not work around them
+just in our own driver.
+-Daniel
+--
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
