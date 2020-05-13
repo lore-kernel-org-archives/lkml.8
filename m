@@ -2,195 +2,104 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10525C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 394C1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8804A2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B26E42053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:26:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kbjMBxqj"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oU+zYpSz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389903AbgEMR0g (ORCPT
+        id S2389914AbgEMR0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 13:26:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732731AbgEMR0f (ORCPT
+        Wed, 13 May 2020 13:26:39 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:54496 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732731AbgEMR0i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 13:26:35 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85FF2C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 10:26:35 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id h26so193426lfg.6
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 10:26:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=JrvD+8j/uwSBmYwMcyxeX3ZIu+LCzAyC5RzQ6LSBn7c=;
-        b=kbjMBxqjonqink1/71GmGuP7tnUvhCqcIK5erePGVlxWe27IWnum6DKco8MnqLJgvw
-         fKfwmHJ6R0Q9J+mZ5zUYkLbXsJWtdodicm0awm5z3ctdYihV5Q9xJBHAZd4/4BX45fQH
-         C8Iqc7maRH9Vrkx2KZj8ODn7pM/575gMNvnZFahN5vqQgbOTiiMdUS9esH2tMYc+Tmng
-         r8zu0dXbuDq5jrIKiEwA+3fXicL2vl8WEA2r+OTjZAWNyMQ06d+o5++nfYZtx2GHHxQP
-         vqfWQ9hIAA472gY7QEhp/THXnemAkgnLWHcvIhQOfKta7YR2qRP5b9/3WXg6R9/jT/RG
-         WhJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=JrvD+8j/uwSBmYwMcyxeX3ZIu+LCzAyC5RzQ6LSBn7c=;
-        b=OzHmqwoezCrYT0Ftr0ohHxr/yWO3tCRa1W6mPNX+Qb05Yv/nU4qK9rpZCo1ZPxPbPJ
-         Imt5ze+jwr6iWChldS7EMGF85ChTUANZ0XAEVz4Qppne2Nshu1cUsUHkc5GLBZtts6kL
-         CC0l0Lh63JLqzf5k3DUhn+eRRJfv1aFMZXSXuyhVLg+I5+IJAA7DG0WbpB3Om3ClSKvw
-         P0CZ/JJ+0J//dNN4UgVcz++SvyoGG735wl7mQcFE79y3xheAEDoAaJQnpNCbIy7a1Iy2
-         dWLLQIXfJeyqmGR7/GdIAu8yLgtITC6qv1TV3j1htJNrNCGzUkvgkw0vz8x05c4IF+aP
-         INaA==
-X-Gm-Message-State: AOAM532b7JFUKxIX26yX3wRleacbgW9PvrLbCtXT8Y4I3xv6VcVNVRZU
-        IL95XdCZ+Og00psXAP6Huj8EHryVhmPB3KDZSxkhUw==
-X-Google-Smtp-Source: ABdhPJxhIMfik6aSCpK61qb4yefzvhrSwHwUeXQvdWLkvwIwnQYMKhHRI0L/jZkUY30VVGvBiZG9ckQR/Dah5rFSVHU=
-X-Received: by 2002:a19:40d2:: with SMTP id n201mr391372lfa.82.1589390793882;
- Wed, 13 May 2020 10:26:33 -0700 (PDT)
+        Wed, 13 May 2020 13:26:38 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04DHPnEH109727;
+        Wed, 13 May 2020 12:25:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589390749;
+        bh=duOsfIS+tq7+J/oq9NmLkFabkw0gD0IE1GYQRhOX5qg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=oU+zYpSz2npoUF8TOdFjvAo6oy3TDlzNxjM9OTYFYFveOmiCLMOlLpGap3JuPIkW2
+         R87XXmuprnHmGwGDf4VYlncFRBLlcIUsKM9oX+ThnhFpkmGK+OlH2oC34bzBnHrCnR
+         TJQ4vS/AiA2e4RwVCjmaSw9t804bdBoor0IFSQVc=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04DHPnSd123155
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 13 May 2020 12:25:49 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 13
+ May 2020 12:25:49 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 13 May 2020 12:25:49 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04DHPnc9115992;
+        Wed, 13 May 2020 12:25:49 -0500
+Subject: Re: [PATCH] ASoC: tlv320adcx140: Add controls for PDM clk and edge
+To:     Mark Brown <broonie@kernel.org>
+CC:     <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+References: <20200513144746.14337-1-dmurphy@ti.com>
+ <20200513153243.GO4803@sirena.org.uk>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <d2e3741e-ba06-7578-b5f3-2af75e1e33c7@ti.com>
+Date:   Wed, 13 May 2020 12:16:03 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200513094417.618129545@linuxfoundation.org>
-In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 13 May 2020 22:56:21 +0530
-Message-ID: <CA+G9fYvjbFmT2xjp3cDL9p9q4oT9+7jn4nX-DP6HHe42WBifhQ@mail.gmail.com>
-Subject: Re: [PATCH 5.6 000/118] 5.6.13-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200513153243.GO4803@sirena.org.uk>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020 at 15:22, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+Mark
+
+On 5/13/20 10:32 AM, Mark Brown wrote:
+> On Wed, May 13, 2020 at 09:47:46AM -0500, Dan Murphy wrote:
 >
-> This is the start of the stable review cycle for the 5.6.13 release.
-> There are 118 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 15 May 2020 09:41:20 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.6.13-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+>> +static const char * const pdmclk_text[] = {
+>> +	"2.8224 MHz", "1.4112 MHz", "705.6 kHz", "5.6448 MHz"
+>> +};
+>> +
+>> +static SOC_ENUM_SINGLE_DECL(pdmclk_select_enum, ADCX140_PDMCLK_CFG, 0,
+>> +			    pdmclk_text);
+>> +
+>> +static const struct snd_kcontrol_new pdmclk_div_controls[] = {
+>> +	SOC_DAPM_ENUM("PDM Clk Divider Select", pdmclk_select_enum),
+>> +};
+>> +
+>> +static const char * const pdm_edge_text[] = {
+>> +	"Negative", "Positive"
+>> +};
+> Are these (especially the clock and polarity) things that are going to
+> vary at runtime?  I'd have expected these to come from the hardware
+> rather than being something that could usefully change.
+Some microphone support low power modes that use a slower clock.
+Polarity will probably not change at run-time, but clock speed can 
+change to move mics from low power/low-resolution to higher 
+power/high-resolution mode.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+So polarity can be made hardware specific but clocks should be configurable.
 
-Summary
-------------------------------------------------------------------------
+I can break these out into separate patches if you want.
 
-kernel: 5.6.13-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.6.y
-git commit: f1d28d1c7608478dd10b7a36c40f2375bcc1648e
-git describe: v5.6.12-119-gf1d28d1c7608
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.6-oe/bui=
-ld/v5.6.12-119-gf1d28d1c7608
+Dan
 
-No regressions (compared to build v5.6.12)
-
-No fixes (compared to build v5.6.12)
-
-Ran 35302 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* libgpiod
-* linux-log-parser
-* ltp-containers-tests
-* ltp-cve-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-ipc-tests
-* ltp-sched-tests
-* ltp-syscalls-tests
-* perf
-* ltp-commands-tests
-* ltp-dio-tests
-* ltp-io-tests
-* ltp-math-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* network-basic-tests
-* kselftest/net
-* kselftest/networking
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-fs-tests
-* ltp-hugetlb-tests
-* ltp-mm-tests
-* ltp-open-posix-tests
-* v4l2-compliance
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-native/networking
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-* kselftest-vsyscall-mode-none/networking
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
