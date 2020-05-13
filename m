@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E20CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC655CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2174720769
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3819206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:49:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363393;
-	bh=DRnfapKAHniPBH4Zid0FNAbb9Jm5YcXFpjFxVu5RRS0=;
+	s=default; t=1589363396;
+	bh=8u0uR8nHmxO7TvSZjRQlwHVFGFWaYwihMzFHuBPVzZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EmDQPXoaF5Zq3Pg+FpRkNwMuoIqIaMSXoL3CqdS5Qn6d2SSId2m2L5ZfGvQAqJH0q
-	 t7vFkid/57Q4PhSY4OKlRUllPneTEKXlfAYoCnWK/Pdt/DyPycWsr+iciv+R/EFQ8T
-	 IvVakpSICPBOz8uyUUaar+9aXNcnoou6AO/UNIJU=
+	b=Ttp/yoo7BrhWwmd9V+cHZxKzh6kDzoKya8i74KaSI1deLvrKkV/fiKNAbD8j5i2Cb
+	 8pJDIPyYp85YsYHKO09SSgtSPUbwSQyUdqBgiZwqoQiuyLxFahVg0qow/IDbd0Ht5P
+	 4S+A+ANlLOLLPaiX7mDz59ChJ0U4pt3EAKHEjlJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732768AbgEMJtw (ORCPT
+        id S1733312AbgEMJt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:49:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49036 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:49:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733282AbgEMJtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:49:45 -0400
+        id S1732755AbgEMJtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:49:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFF1B206D6;
-        Wed, 13 May 2020 09:49:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AC0F20753;
+        Wed, 13 May 2020 09:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363385;
-        bh=DRnfapKAHniPBH4Zid0FNAbb9Jm5YcXFpjFxVu5RRS0=;
+        s=default; t=1589363387;
+        bh=8u0uR8nHmxO7TvSZjRQlwHVFGFWaYwihMzFHuBPVzZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O2AXu/74cl42d1kcA+raWguqEQdD2ABCx/QVfANaLKNC+2eYmEpS3A1oa9lmbBwbY
-         l0OUmQGzFfiQG6qSyRsaag9vuCH5IgrB7MWyda8qajjhQi9zu9AxeL1saSnG67ZiMh
-         /74IFJ/WX00wq4pi7lUgldAcEx8A/IKwUeVMOD9o=
+        b=rKr8/zQdK2RGykJhw/zhgTlDCFtJIrm/i/Ly2LXsVJgG6wIGPWmOZgJK8oqwn8lp4
+         EGmzkaadR7brUpLPK/MpDVzxUGdH66UoUYDgmZc5O91qVzswNmGcfib/f2BZ0xQ4xP
+         upeylKxcczbdbuEWf82OcN3nvkWoXQPo65knstAs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Andr=C3=A9=20Przywara?= <andre.przywara@arm.com>,
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
         Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 5.4 53/90] KVM: arm: vgic: Fix limit condition when writing to GICD_I[CS]ACTIVER
-Date:   Wed, 13 May 2020 11:44:49 +0200
-Message-Id: <20200513094414.397113042@linuxfoundation.org>
+Subject: [PATCH 5.4 54/90] KVM: arm64: Fix 32bit PC wrap-around
+Date:   Wed, 13 May 2020 11:44:50 +0200
+Message-Id: <20200513094414.492761851@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -62,44 +61,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marc Zyngier <maz@kernel.org>
 
-commit 1c32ca5dc6d00012f0c964e5fdd7042fcc71efb1 upstream.
+commit 0225fd5e0a6a32af7af0aefac45c8ebf19dc5183 upstream.
 
-When deciding whether a guest has to be stopped we check whether this
-is a private interrupt or not. Unfortunately, there's an off-by-one bug
-here, and we fail to recognize a whole range of interrupts as being
-global (GICv2 SPIs 32-63).
+In the unlikely event that a 32bit vcpu traps into the hypervisor
+on an instruction that is located right at the end of the 32bit
+range, the emulation of that instruction is going to increment
+PC past the 32bit range. This isn't great, as userspace can then
+observe this value and get a bit confused.
 
-Fix the condition from > to be >=.
+Conversly, userspace can do things like (in the context of a 64bit
+guest that is capable of 32bit EL0) setting PSTATE to AArch64-EL0,
+set PC to a 64bit value, change PSTATE to AArch32-USR, and observe
+that PC hasn't been truncated. More confusion.
+
+Fix both by:
+- truncating PC increments for 32bit guests
+- sanitizing all 32bit regs every time a core reg is changed by
+  userspace, and that PSTATE indicates a 32bit mode.
 
 Cc: stable@vger.kernel.org
-Fixes: abd7229626b93 ("KVM: arm/arm64: Simplify active_change_prepare and plug race")
-Reported-by: André Przywara <andre.przywara@arm.com>
+Acked-by: Will Deacon <will@kernel.org>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- virt/kvm/arm/vgic/vgic-mmio.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/kvm/guest.c     |    7 +++++++
+ virt/kvm/arm/hyp/aarch32.c |    8 ++++++--
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
---- a/virt/kvm/arm/vgic/vgic-mmio.c
-+++ b/virt/kvm/arm/vgic/vgic-mmio.c
-@@ -389,7 +389,7 @@ static void vgic_mmio_change_active(stru
- static void vgic_change_active_prepare(struct kvm_vcpu *vcpu, u32 intid)
- {
- 	if (vcpu->kvm->arch.vgic.vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3 ||
--	    intid > VGIC_NR_PRIVATE_IRQS)
-+	    intid >= VGIC_NR_PRIVATE_IRQS)
- 		kvm_arm_halt_guest(vcpu->kvm);
- }
+--- a/arch/arm64/kvm/guest.c
++++ b/arch/arm64/kvm/guest.c
+@@ -202,6 +202,13 @@ static int set_core_reg(struct kvm_vcpu
+ 	}
  
-@@ -397,7 +397,7 @@ static void vgic_change_active_prepare(s
- static void vgic_change_active_finish(struct kvm_vcpu *vcpu, u32 intid)
- {
- 	if (vcpu->kvm->arch.vgic.vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3 ||
--	    intid > VGIC_NR_PRIVATE_IRQS)
-+	    intid >= VGIC_NR_PRIVATE_IRQS)
- 		kvm_arm_resume_guest(vcpu->kvm);
+ 	memcpy((u32 *)regs + off, valp, KVM_REG_SIZE(reg->id));
++
++	if (*vcpu_cpsr(vcpu) & PSR_MODE32_BIT) {
++		int i;
++
++		for (i = 0; i < 16; i++)
++			*vcpu_reg32(vcpu, i) = (u32)*vcpu_reg32(vcpu, i);
++	}
+ out:
+ 	return err;
  }
+--- a/virt/kvm/arm/hyp/aarch32.c
++++ b/virt/kvm/arm/hyp/aarch32.c
+@@ -125,12 +125,16 @@ static void __hyp_text kvm_adjust_itstat
+  */
+ void __hyp_text kvm_skip_instr32(struct kvm_vcpu *vcpu, bool is_wide_instr)
+ {
++	u32 pc = *vcpu_pc(vcpu);
+ 	bool is_thumb;
  
+ 	is_thumb = !!(*vcpu_cpsr(vcpu) & PSR_AA32_T_BIT);
+ 	if (is_thumb && !is_wide_instr)
+-		*vcpu_pc(vcpu) += 2;
++		pc += 2;
+ 	else
+-		*vcpu_pc(vcpu) += 4;
++		pc += 4;
++
++	*vcpu_pc(vcpu) = pc;
++
+ 	kvm_adjust_itstate(vcpu);
+ }
 
 
