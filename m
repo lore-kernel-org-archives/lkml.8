@@ -2,51 +2,52 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 492F9C2D0FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 866B0C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F86A20575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 661D0206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363774;
-	bh=iiOvWsJz9xiC3AmULUmzoArSo4nHTVHWNQqV589ZIEI=;
+	s=default; t=1589363779;
+	bh=k4fil7W7//XYo4e4PP6yH1KzkpmbhcrSQ5oYqDqR9Jk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N4POJLmhUHTorkaXcGQKmbqMGtdKhihsMah7XtV1X7apMArZPBuTPN62DK4f+OMkc
-	 i6lhOWtnFkBvkX2U/HhgDuYNh53TbmO3WURiiO/eWMpCvGYOGV/6tpdu1wpDNvE5fk
-	 0bf0vBaRaf3elf+bq8Z5i1365l/l5d1xJCYeTQpQ=
+	b=o9mlKYzn5QvnFloOuR/jQ41BaZLXYOUBAXjWiCJS7l7xrNkedpHqMUsyP4gp3WP6E
+	 qE9sNx1bX1xJZdCkW+8GLm2sAu5SSbVv1w8eUNZt8eX/PPxTDJYxfvdp8NArxvI9AS
+	 TpmK0/2eFXojl+cogRhZDOZ1uRAdJRrJgQbiHNEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388388AbgEMJ4N (ORCPT
+        id S2388406AbgEMJ4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:56:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59608 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:56:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388374AbgEMJ4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:56:06 -0400
+        id S2388379AbgEMJ4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:56:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F97B20575;
-        Wed, 13 May 2020 09:56:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63AB020575;
+        Wed, 13 May 2020 09:56:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363766;
-        bh=iiOvWsJz9xiC3AmULUmzoArSo4nHTVHWNQqV589ZIEI=;
+        s=default; t=1589363770;
+        bh=k4fil7W7//XYo4e4PP6yH1KzkpmbhcrSQ5oYqDqR9Jk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oIeGvrr2nyOepeazKIDY3E9SaOH/Azm7wp10o1QoMwD6JNZR8sx37NkZveEpEtY3b
-         z3PR7ittpMWFeZxwh5Rqz37yLsHTLa7PpXOBPdHliJ8BemJVH8IzQclddlDutXRh/p
-         3iNQ6vl5ral3lFeyEqH2C78EhV+SOyK9ORdTBFSE=
+        b=vjskAzsR45s9KzmOLCBGAQy2sWYhqAfdZ2Thad8ykmAhWNxAHz82l6QCh0nPK/yc4
+         Ep9y+D3IRzLGlGI9Z6QcQC3PwMoIxDErkD3VWh2OHkeJ05gcCZ4DA/sCb6xTq+Wo+n
+         mrTPI37tKcveI+0umZeXZBa5jawjT1XC119Xedns=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 118/118] fanotify: merge duplicate events on parent and child
-Date:   Wed, 13 May 2020 11:45:37 +0200
-Message-Id: <20200513094428.139720747@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        borisvk@bstnet.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.6 109/118] kvm: ioapic: Restrict lazy EOI update to edge-triggered interrupts
+Date:   Wed, 13 May 2020 11:45:28 +0200
+Message-Id: <20200513094427.609460224@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -59,55 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Goldstein <amir73il@gmail.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-[ Upstream commit f367a62a7cad2447d835a9f14fc63997a9137246 ]
+commit 8be8f932e3db5fe4ed178b8892eeffeab530273a upstream.
 
-With inotify, when a watch is set on a directory and on its child, an
-event on the child is reported twice, once with wd of the parent watch
-and once with wd of the child watch without the filename.
+Commit f458d039db7e ("kvm: ioapic: Lazy update IOAPIC EOI") introduces
+the following infinite loop:
 
-With fanotify, when a watch is set on a directory and on its child, an
-event on the child is reported twice, but it has the exact same
-information - either an open file descriptor of the child or an encoded
-fid of the child.
+BUG: stack guard page was hit at 000000008f595917 \
+(stack is 00000000bdefe5a4..00000000ae2b06f5)
+kernel stack overflow (double-fault): 0000 [#1] SMP NOPTI
+RIP: 0010:kvm_set_irq+0x51/0x160 [kvm]
+Call Trace:
+ irqfd_resampler_ack+0x32/0x90 [kvm]
+ kvm_notify_acked_irq+0x62/0xd0 [kvm]
+ kvm_ioapic_update_eoi_one.isra.0+0x30/0x120 [kvm]
+ ioapic_set_irq+0x20e/0x240 [kvm]
+ kvm_ioapic_set_irq+0x5c/0x80 [kvm]
+ kvm_set_irq+0xbb/0x160 [kvm]
+ ? kvm_hv_set_sint+0x20/0x20 [kvm]
+ irqfd_resampler_ack+0x32/0x90 [kvm]
+ kvm_notify_acked_irq+0x62/0xd0 [kvm]
+ kvm_ioapic_update_eoi_one.isra.0+0x30/0x120 [kvm]
+ ioapic_set_irq+0x20e/0x240 [kvm]
+ kvm_ioapic_set_irq+0x5c/0x80 [kvm]
+ kvm_set_irq+0xbb/0x160 [kvm]
+ ? kvm_hv_set_sint+0x20/0x20 [kvm]
+....
 
-The reason that the two identical events are not merged is because the
-object id used for merging events in the queue is the child inode in one
-event and parent inode in the other.
+The re-entrancy happens because the irq state is the OR of
+the interrupt state and the resamplefd state.  That is, we don't
+want to show the state as 0 until we've had a chance to set the
+resamplefd.  But if the interrupt has _not_ gone low then
+ioapic_set_irq is invoked again, causing an infinite loop.
 
-For events with path or dentry data, use the victim inode instead of the
-watched inode as the object id for event merging, so that the event
-reported on parent will be merged with the event reported on the child.
+This can only happen for a level-triggered interrupt, otherwise
+irqfd_inject would immediately set the KVM_USERSPACE_IRQ_SOURCE_ID high
+and then low.  Fortunately, in the case of level-triggered interrupts the VMEXIT already happens because
+TMR is set.  Thus, fix the bug by restricting the lazy invocation
+of the ack notifier to edge-triggered interrupts, the only ones that
+need it.
 
-Link: https://lore.kernel.org/r/20200319151022.31456-9-amir73il@gmail.com
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Tested-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Reported-by: borisvk@bstnet.org
+Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+Link: https://www.spinics.net/lists/kvm/msg213512.html
+Fixes: f458d039db7e ("kvm: ioapic: Lazy update IOAPIC EOI")
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207489
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/notify/fanotify/fanotify.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ arch/x86/kvm/ioapic.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.c
-index 14d0ac4664595..f5d30573f4a99 100644
---- a/fs/notify/fanotify/fanotify.c
-+++ b/fs/notify/fanotify/fanotify.c
-@@ -314,7 +314,12 @@ struct fanotify_event *fanotify_alloc_event(struct fsnotify_group *group,
- 	if (!event)
- 		goto out;
- init: __maybe_unused
--	fsnotify_init_event(&event->fse, (unsigned long)inode);
-+	/*
-+	 * Use the victim inode instead of the watching inode as the id for
-+	 * event queue, so event reported on parent is merged with event
-+	 * reported on child when both directory and child watches exist.
-+	 */
-+	fsnotify_init_event(&event->fse, (unsigned long)id);
- 	event->mask = mask;
- 	if (FAN_GROUP_FLAG(group, FAN_REPORT_TID))
- 		event->pid = get_pid(task_pid(current));
--- 
-2.20.1
-
+--- a/arch/x86/kvm/ioapic.c
++++ b/arch/x86/kvm/ioapic.c
+@@ -225,12 +225,12 @@ static int ioapic_set_irq(struct kvm_ioa
+ 	}
+ 
+ 	/*
+-	 * AMD SVM AVIC accelerate EOI write and do not trap,
+-	 * in-kernel IOAPIC will not be able to receive the EOI.
+-	 * In this case, we do lazy update of the pending EOI when
+-	 * trying to set IOAPIC irq.
++	 * AMD SVM AVIC accelerate EOI write iff the interrupt is edge
++	 * triggered, in which case the in-kernel IOAPIC will not be able
++	 * to receive the EOI.  In this case, we do a lazy update of the
++	 * pending EOI when trying to set IOAPIC irq.
+ 	 */
+-	if (kvm_apicv_activated(ioapic->kvm))
++	if (edge && kvm_apicv_activated(ioapic->kvm))
+ 		ioapic_lazy_update_eoi(ioapic, irq);
+ 
+ 	/*
 
 
