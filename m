@@ -2,83 +2,369 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F5BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A8BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 044812065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:49:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589395779;
-	bh=Ys5KDcuIhzg94At9DkC++VLgyO7vAIMO1cgfj9AUkrc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=QuIYVdgoMXUiYv0mE+6TnEQs8IbRYKhDoyPfZTWPXoDnqg40LDtOuiOmmwJGZbNIQ
-	 hoDtAlocDeJ+e52kgvTOzkjXnP26ulHeygnWkwvEb/F6FZdjon8a9Ikd2y3vtWnjh4
-	 KcgkNPYLSK9QcbbeGZcAQ5sZYkoDSezWUIamCEAc=
+	by mail.kernel.org (Postfix) with ESMTP id EFC002054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:50:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=seznam.cz header.i=@seznam.cz header.b="ewxniBxk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390285AbgEMSth (ORCPT
+        id S2390313AbgEMSuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 14:49:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58546 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732218AbgEMStg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 14:49:36 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10918205CB;
-        Wed, 13 May 2020 18:49:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589395777;
-        bh=Ys5KDcuIhzg94At9DkC++VLgyO7vAIMO1cgfj9AUkrc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jxrLapFqWOwqbY4eyTu6jHwQsLBUZ61GrHzYKzf5dEjHUCWOQSVowJu0z6AT2PynV
-         /5FEACyVMxcpySDcOmLgVSIVZXcJjs4Ox2YVr0VyueyaTovmYUcUBp3kT4J92WeIhz
-         aRLB+qLgA22BWkQOxfuvKStDnibz7/8yIXSfgKQE=
-Date:   Wed, 13 May 2020 11:49:34 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Tariq Toukan <tariqt@mellanox.com>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] IB/mlx4: Replace zero-length array with flexible-array
-Message-ID: <20200513114934.22415a35@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200513184316.GA2217@ziepe.ca>
-References: <20200507185921.GA15146@embeddedor>
-        <20200509205151.209bdc9d@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <20200513184316.GA2217@ziepe.ca>
+        Wed, 13 May 2020 14:50:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48980 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387462AbgEMSue (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 14:50:34 -0400
+Received: from mxa2.seznam.cz (mxa2.seznam.cz [IPv6:2a02:598:2::90])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D2A4C061A0C;
+        Wed, 13 May 2020 11:50:33 -0700 (PDT)
+Received: from email.seznam.cz
+        by email-smtpc25a.ng.seznam.cz (email-smtpc25a.ng.seznam.cz [10.23.18.34])
+        id 5989d7e10287838858201bbf;
+        Wed, 13 May 2020 20:50:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seznam.cz; s=beta;
+        t=1589395821; bh=7OSh5aIXDq9/eo++d56tCZG9ZYJX4E/V+wxJv3MwvRI=;
+        h=Received:From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
+         Content-Transfer-Encoding;
+        b=ewxniBxkw2CEd+RHE9YBPBcxcdsLae2+rx5djacSBGHPH17PuJkS0yDZcOqVN7R3C
+         de5eVtqTAzqzOUd/8LKS8IvzrBFBgXkzsXYzgS80tg+Pddkh2m8Hbr3gDz0Jg6psTW
+         QbnSuNBPkG5mvycaBK30QwL5/8yZ4+jPcGTPvcyc=
+Received: from localhost.localdomain (212.69.128.228 [212.69.128.228])
+        by email-relay21.ng.seznam.cz (Seznam SMTPD 1.3.114) with ESMTP;
+        Wed, 13 May 2020 20:50:17 +0200 (CEST)  
+From:   michael.srba@seznam.cz
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Michael Srba <michael.srba@seznam.cz>
+Subject: [PATCH] arm64: dts: qcom: msm8916: Disable coresight by default
+Date:   Wed, 13 May 2020 20:47:35 +0200
+Message-Id: <20200513184735.30104-1-michael.srba@seznam.cz>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020 15:43:16 -0300 Jason Gunthorpe wrote:
-> On Sat, May 09, 2020 at 08:51:50PM -0700, Jakub Kicinski wrote:
-> > On Thu, 7 May 2020 13:59:21 -0500 Gustavo A. R. Silva wrote:  
-> > > The current codebase makes use of the zero-length array language
-> > > extension to the C90 standard, but the preferred mechanism to declare
-> > > variable-length types such as these ones is a flexible array member[1][2],
-> > > introduced in C99:
-> > > 
-> > > struct foo {
-> > >         int stuff;
-> > >         struct boo array[];
-> > > };
-> > >
-> > > ...  
-> > 
-> > Applied, thank you!  
-> 
-> Jakub,
-> 
-> Please don't take RDMA patches in netdev unless it is a special
-> case. There is alot of cross posting and they often get into both
-> patchworks.
+From: Michael Srba <michael.srba@seznam.cz>
 
-Sorry about that, I only looked at the subject after applying. 
+On some msm8916 devices, attempts at initializing coresight cause the boot to
+fail. This was fixed by disabling the coresight-related nodes in the board dts
+files. However, a cleaner approach was chosen for fixing the same issue on
+msm8998: disabling coresight by default, and enabling it in board dts files
+where desired.
+
+This patch implements the same solution for msm8916, removes now redundant 
+overwrites in board specific dts files and and enables coresight in db410c's
+board dts in order to keep the current behavior.
+
+Fixes: b1fcc5702a41 ("arm64: dts: qcom: msm8916: Add CTI options")
+Signed-off-by: Michael Srba <michael.srba@seznam.cz>
+
+---
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi     | 21 +++++++++++
+ .../boot/dts/qcom/msm8916-longcheer-l8150.dts | 23 ------------
+ .../qcom/msm8916-samsung-a2015-common.dtsi    | 23 ------------
+ arch/arm64/boot/dts/qcom/msm8916.dtsi         | 35 +++++++++++++++++++
+ 4 files changed, 56 insertions(+), 46 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+index 14982762088d..07c150b0ed54 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+@@ -519,6 +519,27 @@ mpps@a000 {
+ 		wcnss@a21b000 {
+ 			status = "okay";
+ 		};
++
++		tpiu@820000 { status = "okay"; };
++		funnel@821000 { status = "okay"; };
++		replicator@824000 { status = "okay"; };
++		etf@825000 { status = "okay"; };
++		etr@826000 { status = "okay"; };
++		funnel@841000 { status = "okay"; };
++		debug@850000 { status = "okay"; };
++		debug@852000 { status = "okay"; };
++		debug@854000 { status = "okay"; };
++		debug@856000 { status = "okay"; };
++		etm@85c000 { status = "okay"; };
++		etm@85d000 { status = "okay"; };
++		etm@85e000 { status = "okay"; };
++		etm@85f000 { status = "okay"; };
++		cti@810000 { status = "okay"; };
++		cti@811000 { status = "okay"; };
++		cti@858000 { status = "okay"; };
++		cti@859000 { status = "okay"; };
++		cti@85a000 { status = "okay"; };
++		cti@85b000 { status = "okay"; };
+ 	};
+ 
+ 	usb2513 {
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts b/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
+index d1ccb9472c8b..691eb1a87bc9 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
++++ b/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
+@@ -82,29 +82,6 @@ phy {
+ 		wcnss@a21b000 {
+ 			status = "okay";
+ 		};
+-
+-		/*
+-		 * Attempting to enable these devices causes a "synchronous
+-		 * external abort". Suspected cause is that the debug power
+-		 * domain is not enabled by default on this device.
+-		 * Disable these devices for now to avoid the crash.
+-		 *
+-		 * See: https://lore.kernel.org/linux-arm-msm/20190618202623.GA53651@gerhold.net/
+-		 */
+-		tpiu@820000 { status = "disabled"; };
+-		funnel@821000 { status = "disabled"; };
+-		replicator@824000 { status = "disabled"; };
+-		etf@825000 { status = "disabled"; };
+-		etr@826000 { status = "disabled"; };
+-		funnel@841000 { status = "disabled"; };
+-		debug@850000 { status = "disabled"; };
+-		debug@852000 { status = "disabled"; };
+-		debug@854000 { status = "disabled"; };
+-		debug@856000 { status = "disabled"; };
+-		etm@85c000 { status = "disabled"; };
+-		etm@85d000 { status = "disabled"; };
+-		etm@85e000 { status = "disabled"; };
+-		etm@85f000 { status = "disabled"; };
+ 	};
+ 
+ 	// FIXME: Use extcon device provided by charger driver when available
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
+index 43c5e0f882f1..af812f76e8be 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
+@@ -75,29 +75,6 @@ phy {
+ 		wcnss@a21b000 {
+ 			status = "okay";
+ 		};
+-
+-		/*
+-		 * Attempting to enable these devices causes a "synchronous
+-		 * external abort". Suspected cause is that the debug power
+-		 * domain is not enabled by default on this device.
+-		 * Disable these devices for now to avoid the crash.
+-		 *
+-		 * See: https://lore.kernel.org/linux-arm-msm/20190618202623.GA53651@gerhold.net/
+-		 */
+-		tpiu@820000 { status = "disabled"; };
+-		funnel@821000 { status = "disabled"; };
+-		replicator@824000 { status = "disabled"; };
+-		etf@825000 { status = "disabled"; };
+-		etr@826000 { status = "disabled"; };
+-		funnel@841000 { status = "disabled"; };
+-		debug@850000 { status = "disabled"; };
+-		debug@852000 { status = "disabled"; };
+-		debug@854000 { status = "disabled"; };
+-		debug@856000 { status = "disabled"; };
+-		etm@85c000 { status = "disabled"; };
+-		etm@85d000 { status = "disabled"; };
+-		etm@85e000 { status = "disabled"; };
+-		etm@85f000 { status = "disabled"; };
+ 	};
+ 
+ 	gpio-keys {
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 8b429954ea29..5cf117e247df 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -1228,6 +1228,8 @@ tpiu@820000 {
+ 			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+ 
++			status = "disabled";
++
+ 			in-ports {
+ 				port {
+ 					tpiu_in: endpoint {
+@@ -1244,6 +1246,8 @@ funnel@821000 {
+ 			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+ 
++			status = "disabled";
++
+ 			in-ports {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+@@ -1283,6 +1287,8 @@ replicator@824000 {
+ 			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+ 
++			status = "disabled";
++
+ 			out-ports {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+@@ -1317,6 +1323,8 @@ etf@825000 {
+ 			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+ 
++			status = "disabled";
++
+ 			in-ports {
+ 				port {
+ 					etf_in: endpoint {
+@@ -1341,6 +1349,8 @@ etr@826000 {
+ 			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+ 
++			status = "disabled";
++
+ 			in-ports {
+ 				port {
+ 					etr_in: endpoint {
+@@ -1357,6 +1367,8 @@ funnel@841000 {	/* APSS funnel only 4 inputs are used */
+ 			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+ 
++			status = "disabled";
++
+ 			in-ports {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+@@ -1402,6 +1414,7 @@ debug@850000 {
+ 			clocks = <&rpmcc RPM_QDSS_CLK>;
+ 			clock-names = "apb_pclk";
+ 			cpu = <&CPU0>;
++			status = "disabled";
+ 		};
+ 
+ 		debug@852000 {
+@@ -1410,6 +1423,7 @@ debug@852000 {
+ 			clocks = <&rpmcc RPM_QDSS_CLK>;
+ 			clock-names = "apb_pclk";
+ 			cpu = <&CPU1>;
++			status = "disabled";
+ 		};
+ 
+ 		debug@854000 {
+@@ -1418,6 +1432,7 @@ debug@854000 {
+ 			clocks = <&rpmcc RPM_QDSS_CLK>;
+ 			clock-names = "apb_pclk";
+ 			cpu = <&CPU2>;
++			status = "disabled";
+ 		};
+ 
+ 		debug@856000 {
+@@ -1426,6 +1441,7 @@ debug@856000 {
+ 			clocks = <&rpmcc RPM_QDSS_CLK>;
+ 			clock-names = "apb_pclk";
+ 			cpu = <&CPU3>;
++			status = "disabled";
+ 		};
+ 
+ 		etm0: etm@85c000 {
+@@ -1438,6 +1454,8 @@ etm0: etm@85c000 {
+ 
+ 			cpu = <&CPU0>;
+ 
++			status = "disabled";
++
+ 			out-ports {
+ 				port {
+ 					etm0_out: endpoint {
+@@ -1457,6 +1475,8 @@ etm1: etm@85d000 {
+ 
+ 			cpu = <&CPU1>;
+ 
++			status = "disabled";
++
+ 			out-ports {
+ 				port {
+ 					etm1_out: endpoint {
+@@ -1476,6 +1496,8 @@ etm2: etm@85e000 {
+ 
+ 			cpu = <&CPU2>;
+ 
++			status = "disabled";
++
+ 			out-ports {
+ 				port {
+ 					etm2_out: endpoint {
+@@ -1495,6 +1517,8 @@ etm3: etm@85f000 {
+ 
+ 			cpu = <&CPU3>;
+ 
++			status = "disabled";
++
+ 			out-ports {
+ 				port {
+ 					etm3_out: endpoint {
+@@ -1512,6 +1536,8 @@ cti@810000 {
+ 
+ 			clocks = <&rpmcc RPM_QDSS_CLK>;
+ 			clock-names = "apb_pclk";
++
++			status = "disabled";
+ 		};
+ 
+ 		/* CTI 1 - TPIU connections */
+@@ -1521,6 +1547,8 @@ cti@811000 {
+ 
+ 			clocks = <&rpmcc RPM_QDSS_CLK>;
+ 			clock-names = "apb_pclk";
++
++			status = "disabled";
+ 		};
+ 
+ 		/* CTIs 2-11 - no information - not instantiated */
+@@ -1538,6 +1566,7 @@ cti@858000 {
+ 			cpu = <&CPU0>;
+ 			arm,cs-dev-assoc = <&etm0>;
+ 
++			status = "disabled";
+ 		};
+ 
+ 		/* CTI - CPU-1 */
+@@ -1551,6 +1580,8 @@ cti@859000 {
+ 
+ 			cpu = <&CPU1>;
+ 			arm,cs-dev-assoc = <&etm1>;
++
++			status = "disabled";
+ 		};
+ 
+ 		/* CTI - CPU-2 */
+@@ -1564,6 +1595,8 @@ cti@85a000 {
+ 
+ 			cpu = <&CPU2>;
+ 			arm,cs-dev-assoc = <&etm2>;
++
++			status = "disabled";
+ 		};
+ 
+ 		/* CTI - CPU-3 */
+@@ -1577,6 +1610,8 @@ cti@85b000 {
+ 
+ 			cpu = <&CPU3>;
+ 			arm,cs-dev-assoc = <&etm3>;
++
++			status = "disabled";
+ 		};
+ 
+ 
+-- 
+2.24.0
+
