@@ -2,122 +2,131 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FF6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEBEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:59:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29AA32054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7057E20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:59:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iaIq54Ld"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgEMU6B (ORCPT
+        id S1726885AbgEMU7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 16:58:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:53488 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbgEMU6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 16:58:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8048230E;
-        Wed, 13 May 2020 13:57:59 -0700 (PDT)
-Received: from [10.57.36.85] (unknown [10.57.36.85])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD0923F68F;
-        Wed, 13 May 2020 13:57:57 -0700 (PDT)
-Subject: Re: [RFC PATCH] arm: Don't trap conditional UDF instructions
-To:     Fredrik Strupe <fredrik@strupe.net>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        linux-arm-kernel@lists.infradead.org
-References: <b2042f19-9477-272c-0989-d6cab1572cca@strupe.net>
- <20200513181209.GM1551@shell.armlinux.org.uk>
- <9fba4d17-d826-6a3a-86fc-60977aa6cc9e@strupe.net>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <d2171942-e4b4-4441-b3ba-b5c16c06c2a2@arm.com>
-Date:   Wed, 13 May 2020 21:57:54 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 13 May 2020 16:59:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41076 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbgEMU7T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 16:59:19 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73D1AC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 13:59:19 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id f23so286297pgj.4
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 13:59:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uaj9L7wTibe3Srb7QlLrRgpbwAw3iewpnn7RnSIv5I8=;
+        b=iaIq54LdYnfPTNfS44OsJ+ciGZe6w3yPt6q6lA1tXrAsYK9YE3h+ZMZ2MShZcqd1WF
+         0yg0sCdohed5MqX/R4az4SG9BeXS/cOarDzLr0T2pBx+eZi4H83eTchxqrAimPQJy6ol
+         d38765yeX+WRXcFd/xLsQJgmRKB7W3AYs2VX4pdEbeU9qXjLysjwL8iXyCy4nBPnWQYg
+         CcQdTmN5omQ+B3G91l8U0++jnVGbyGAQO2NP5YGRMVVFG7iN9GIQkVi98K0eI2OxlxMV
+         56qWjpQjEPoaiZROFEsmtUdGJmda4a+mgBHaK67gMAealXCnzQpPBP34CmKM1PX57GQ4
+         perg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uaj9L7wTibe3Srb7QlLrRgpbwAw3iewpnn7RnSIv5I8=;
+        b=tKV8u1Yy3vw1dkXkG4zzrsk6fkET3aLbsyhjIu0Jvl4acIx+4PJlFYOlwQpabkzTwX
+         SqZgH7+D7KUl4zV0F7qUFkshvOtpu3cs/0iP+p9PnyqxZ8wIHF64EiAcUKzufzsoaQZR
+         kG3n+eWhFQmA3nzVdT9DcFlRvHP43aHbKxxS9JqigQnCbNEFAhYzrH+tmUhthHLO/prE
+         d8ezwr3KNLdrliM7hHsbUxGCP4dlIn6+mh+XaDH85sJKDDo9IynNVJeFNuEtI/ElH4Zn
+         GD5el84WXu7RSaxcm3hetO4IQAvENh9Fc7krAPQXS/76jN1lpeh6MoS8++BJMN2+5Dvl
+         Sy5w==
+X-Gm-Message-State: AOAM532xI4eEVa7EjwA/xUIZVnuCVSGOYEFM9fKnUFeyZFfpQrV/M45J
+        50BDyW+MclqolUP1vgLM1s/Brg==
+X-Google-Smtp-Source: ABdhPJxHSTEOa5EHFLJiF8h8WzUgD8o6B/nx5qEh/Al8PX7Jdx3ub10Y6XacwkN56goCHSv+A+Jt7A==
+X-Received: by 2002:a62:1d48:: with SMTP id d69mr1102657pfd.102.1589403558913;
+        Wed, 13 May 2020 13:59:18 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id e21sm501052pga.71.2020.05.13.13.59.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 13:59:18 -0700 (PDT)
+Date:   Wed, 13 May 2020 14:59:15 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Arun Kumar Neelakantam <aneela@codeaurora.org>
+Cc:     ohad@wizery.com, bjorn.andersson@linaro.org, clew@codeaurora.org,
+        sricharan@codeaurora.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>
+Subject: Re: [PATCH V5 1/5] rpmsg: glink: Use complete_all for open states
+Message-ID: <20200513205915.GA8328@xps15>
+References: <1589346606-15046-1-git-send-email-aneela@codeaurora.org>
+ <1589346606-15046-2-git-send-email-aneela@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <9fba4d17-d826-6a3a-86fc-60977aa6cc9e@strupe.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589346606-15046-2-git-send-email-aneela@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-13 7:56 pm, Fredrik Strupe wrote:
-> On 13.05.2020 20:12, Russell King - ARM Linux admin wrote:
->> On Wed, May 13, 2020 at 05:41:58PM +0200, Fredrik Strupe wrote:
->>> Hi,
->>>
->>> This is more of a question than a patch, but I hope the attached patch makes
->>> the issue a bit clearer.
->>>
->>> The arm port of Linux supports hooking/trapping of undefined instructions. Some
->>> parts of the code use this to trap UDF instructions with certain immediates in
->>> order to use them for other purposes, like 'UDF #16' which is equivalent to a
->>> BKPT instruction in A32.
->>>
->>> Moreover, most of the undef hooks on UDF instructions assume that UDF is
->>> conditional and mask out the condition prefix during matching. The attached
->>> patch shows the locations where this happens. However, the Arm architecture
->>> reference manual explicitly states that UDF is *not* conditional, making
->>> any instruction encoding with a condition prefix other than 0xe (always
->>> execute) unallocated.
->>
->> The latest version of the ARM architecture reference manual may say
->> that, but earlier versions say different things. The latest reference
->> manual does not apply to earlier architectures, so if you're writing
->> code to cover multiple different architectures, you must have an
->> understanding of each of those architectures.
->>
->> So, from the code:
->>
->> 	ARM:   xxxx 0111 1111 xxxx xxxx xxxx 1111 xxxx
->>
->>  From DDI0100E:
->>
->> 3.13.1 Undefined instruction space
->>         Instructions with the following opcodes are undefined
->>         instruction space:
->>
->>         opcode[27:25] = 0b011
->>         opcode[4] = 1
->>
->>         31 28 27 26 25 24                                     5 4 3     0
->>         cond  0  1  1  x  x x x x x x x x x x x x x x x x x x x 1 x x x x
->>
->> So, in this version of the architecture, undefined instructions may
->> be conditional - and indeed that used to be the case.  The condition
->> code was always respected, and cond=1111 meant "never" (NV).
->>
->> Hence, trapping them if the condition code is not 1110 (AL) is
->> entirely reasonable, legal and safe.  If an ARM CPU defines an
->> instruction coding that matches the above, then it won't take the
->> undefined instruction trap, and we'll never see it.
->>
->> Now, as for UDF usage in the kernel, it may be quite correct that we
->> always use the AL condition code for them, but it would be very odd
->> for there to be an instruction implemented with a different (non-NV)
->> condition code that can't also have it's AL condition code encoding.
->> You could never execute such an instruction unconditionally.
->>
+Hi Arun,
+
+On Wed, May 13, 2020 at 10:40:02AM +0530, Arun Kumar Neelakantam wrote:
+> From: Chris Lew <clew@codeaurora.org>
 > 
-> That makes sense. Thank you very much for a great answer!
+> The open_req and open_ack completion variables are the state variables
+> to represet a remote channel as open. Use complete_all so there are no
 
-The other subtlety is that UDF is a *mnemonic* for a specific encoding 
-with cond=0b1110, thus "conditional UDF" is an oxymoron. You can still 
-have a conditional instruction from the "permanently undefined" space 
-(although on Armv7-A it's implementation-defined whether it causes an 
-exception regardless of the condition), it's just not a UDF.
+s/represet/represent
 
-Robin.
+> races with waiters and using completion_done.
+> 
+> Signed-off-by: Chris Lew <clew@codeaurora.org>
+> Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
+> ---
+>  drivers/rpmsg/qcom_glink_native.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
+> index 1995f5b..604f11f 100644
+> --- a/drivers/rpmsg/qcom_glink_native.c
+> +++ b/drivers/rpmsg/qcom_glink_native.c
+> @@ -970,7 +970,7 @@ static int qcom_glink_rx_open_ack(struct qcom_glink *glink, unsigned int lcid)
+>  		return -EINVAL;
+>  	}
+>  
+> -	complete(&channel->open_ack);
+> +	complete_all(&channel->open_ack);
+
+If you do this and as per the note in the comment section above
+completion_done(), there shouldn't be a need to call completion_done() in
+qcom_glink_announce_create().
+
+Thanks,
+Mathieu 
+
+>  
+>  	return 0;
+>  }
+> @@ -1413,7 +1413,7 @@ static int qcom_glink_rx_open(struct qcom_glink *glink, unsigned int rcid,
+>  	channel->rcid = ret;
+>  	spin_unlock_irqrestore(&glink->idr_lock, flags);
+>  
+> -	complete(&channel->open_req);
+> +	complete_all(&channel->open_req);
+>  
+>  	if (create_device) {
+>  		rpdev = kzalloc(sizeof(*rpdev), GFP_KERNEL);
+> -- 
+> 2.7.4
