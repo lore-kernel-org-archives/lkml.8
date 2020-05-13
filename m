@@ -2,111 +2,121 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D74C47077
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A37C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD40A20769
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 340C1206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 08:04:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="OWWcTn8b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729838AbgEMIE3 (ORCPT
+        id S1730070AbgEMIEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 04:04:29 -0400
-Received: from mga12.intel.com ([192.55.52.136]:36955 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726092AbgEMIE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 04:04:29 -0400
-IronPort-SDR: rzNmS4yBbc0OB0qugDU3l6drX7lfMDjXsdSHJXUHn4nYeqMNsrzUkEBfFFVjkzOWnUaVS8OzyU
- x+IrNt9Hl+bg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 01:04:29 -0700
-IronPort-SDR: hvfmiW9n/dexrwztqT/5I5mS1V6ijzXjhh41vo0KbnBPK7m+JfGf1zzjs6OwR1n5vzONKWeoT4
- GpTjzuNT0z7g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,387,1583222400"; 
-   d="scan'208";a="463844698"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 13 May 2020 01:04:29 -0700
-Received: from [10.249.229.18] (abudanko-mobl.ccr.corp.intel.com [10.249.229.18])
-        by linux.intel.com (Postfix) with ESMTP id 1198F5804B6;
-        Wed, 13 May 2020 01:04:26 -0700 (PDT)
-Subject: [PATCH v3 8/9] perf record: implement control commands handling
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <eb38e9e5-754f-d410-1d9b-e26b702d51b7@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <25f98682-5ef2-4257-f302-93b29da707a9@linux.intel.com>
-Date:   Wed, 13 May 2020 11:04:25 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <eb38e9e5-754f-d410-1d9b-e26b702d51b7@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
+        Wed, 13 May 2020 04:04:36 -0400
+Received: from mail-eopbgr30083.outbound.protection.outlook.com ([40.107.3.83]:37389
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726092AbgEMIEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 04:04:35 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Dl8vCc8EqPRkfmL1A3oGB1AgErlcmDON2O7kdXFs8crOy+n8xX32pHPtGhWCVC0RS86ikTcLtgg/2Kyrv7HobOukwymjScSO46vh1U75vfGjE1dzddB+2kjOe2Vh0EI1OAJO698ed+gtyki/H/7hN7vOUm02zm2So2WnkQzS7oFYrby9GdaWkPJyZ2dVJOYJASk1vtoLxp9NTJW3xH1+z9xEfbBqWiiBQ95HxUER4Ls8IiFjRHQASTt0zipVl90or9FxL5rnWgbkLOfNoN93PATAbCHf+ZaWaljfp0i32yBXTT22rNvh4CNDStAffr/lcK1HuMTAvs0S2M693SYmfA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N5P6k7UrOODGPA4uK6HpwyBYw0prUzYggxz8vKDfOZc=;
+ b=UaVcqQgt+nNh1ZTt+VD5nubKSDcQWTd8DV6EmZ4NxnxeU8ZQq1kaihr9QApyPwyqCHXBL6AW+eTb80bgp7ewJHrh5LVClkykR8T64KbuUvs2Tergc33UKioLHGXuoYR5MeEY020eqOb1byad7KvZQs0KYsUEdufm5HiXQckjPO80s94nsYnl4UrZjhcsFjwy9bF3+oRLPXG2Jv4LPbcLOemN5qrhrxdfv3S7qilKYHHrAPafswFpl1RgjcbJWBRETu7bpXRZkD5UGBGpFpyVgJuWBaFyi1h+oG7Zwp96URD8gqfg4k/og0cqGyvCuoVZa/9FN3e1po+u2zUNYbaL5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N5P6k7UrOODGPA4uK6HpwyBYw0prUzYggxz8vKDfOZc=;
+ b=OWWcTn8bkWypUMRcGvuJ96f2a6xuuNTR6yi5cyJFMrFM21Fe4L82CPBK27BAYYnETp+dYBnsrcaHC6gfL2Hm+TEIIT7Mu+VsMEYekeaT8udR2os4TIFD5P5pWh+o4xGRFT3JLQeXOYfmxaAi3b+Fw+r/Fp97fEUU/Hr/jVqllSc=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VE1PR04MB6672.eurprd04.prod.outlook.com (2603:10a6:803:127::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.33; Wed, 13 May
+ 2020 08:04:30 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::d5f0:c948:6ab0:c2aa]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::d5f0:c948:6ab0:c2aa%4]) with mapi id 15.20.3000.016; Wed, 13 May 2020
+ 08:04:30 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+CC:     "vkoul@kernel.org" <vkoul@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH v7 RESEND 05/13] dmaengine: imx-sdma: remove dupilicated
+ sdma_load_context
+Thread-Topic: [PATCH v7 RESEND 05/13] dmaengine: imx-sdma: remove dupilicated
+ sdma_load_context
+Thread-Index: AQHWJ3cg+wHd5ZE+ekmEy8iGd1YNmqilii+AgAAgo7A=
+Date:   Wed, 13 May 2020 08:04:30 +0000
+Message-ID: <VE1PR04MB66381A28CA5C64A0149DB2D089BF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <1589218356-17475-1-git-send-email-yibin.gong@nxp.com>
+ <1589218356-17475-6-git-send-email-yibin.gong@nxp.com>
+ <20200513060553.GK5877@pengutronix.de>
+In-Reply-To: <20200513060553.GK5877@pengutronix.de>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: pengutronix.de; dkim=none (message not signed)
+ header.d=none;pengutronix.de; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 7d8a7b3a-20f3-472a-b13f-08d7f71443b3
+x-ms-traffictypediagnostic: VE1PR04MB6672:|VE1PR04MB6672:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB667233AAF5ED7C2F4AA04D4A89BF0@VE1PR04MB6672.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:359;
+x-forefront-prvs: 0402872DA1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PrqY6h8vymMm/oibjoDA4j60CvoOUZy1s8oiUlJCMoT7G4byX99AzSN4zhUTKiuMFt/m0lC7lUxSEuEmw0nZ/h4vSiz0M1wEttYHJvsq7Y7wRc78o+Psfgra3tm2ETToickW12wXdBeKCtHB0Hs8i4BHt/9RyZQ4sbwUZkqqidduajrqapHntqQIWBw8rUOi4eZN0Vrn2p3yh1fZ0QCgLrlU+kySumvNQ58fIf2nbNv27CE0l1zhvZTwIRfSamaH3vYfDw6r0QsujKEXSnvKpBtkHXJsMsTFDjOy/WEfpD+5ueJ5adJF7TCVh6MKfgQJhPAHxAAQSCFXvjp/jn3ScmNohqKHoNkFY1Yq+kLAyL5QHgf9eH5UTGihdtfapQlEP4G30Mkvqq7bdWA4eKhW+XwN9o0iVbDPpFfGavLqdDklDfWdvF4ZiOjCAgxJKpSQTDCgSxswEexvkcw2kW0UbZLWxjeEArjkSJ8BkktXkD2doFcbPJwld/WwhtAmAY6YnLOB6n6VKUQoYmE2Y4J/lQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(346002)(376002)(366004)(39860400002)(33430700001)(66446008)(8936002)(9686003)(66556008)(66946007)(5660300002)(7416002)(52536014)(66476007)(7696005)(86362001)(2906002)(558084003)(55016002)(8676002)(186003)(33440700001)(76116006)(53546011)(6506007)(71200400001)(64756008)(33656002)(316002)(54906003)(6916009)(26005)(4326008)(478600001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: NCE3H2Kmv7OiN8INKzVCSmAZeAXkO1Le883HCd2T+bgLp0tSmawxECseT9OX6fAianq6CO7uxCXYgLljW0kBa5mhOzI5xfDATRak321Gi4dpvnRIIhbutDuWxbE/FmvrSLuyy7OFr3iDn7C5mKHVjT9+4SOQbuwrukKAujz0RW6Yk6ljTajF4QBio4zbL6ol5DB83rxoTU9WkLwlONE5yeZxv0OObHuFlZncx4sQpARYhvR7KJVVHtBBn381NHk3U369Xc4SbEdtzv1XoaVydBwnBzNmnCZJB5BsKUiBKC0OkOM020YORe9v5igxHpeeNkIo5v4ZFzZzspR2Q5nYQZzkfss5G5fJ/0rEDbmM6+zBpRETIlG89xxEXGjoie5qz4QU5bVhQLQW0MPUX/785NExG43ZZf/uD1MBx+mGqpca+N+77OOeBv3G32uhwNxODgkpgdYuiB5SVutsGw3Vn+HnDeHq1p7ZROWvfTHNh1w=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d8a7b3a-20f3-472a-b13f-08d7f71443b3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2020 08:04:30.1791
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AckU7Rv7YFuPhV8hebWwS+FDpT97nlIrfMQOLLmHR++s1rFCGyigNllvqN1hLIYUmlupMld4BILefSdDT6WdZQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6672
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Implement handling of 'enable' and 'disable' control commands
-coming from control file descriptor.
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/builtin-record.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 50dc2fe626e5..72f388623364 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1505,6 +1505,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	bool disabled = false, draining = false;
- 	int fd;
- 	float ratio = 0;
-+	enum evlist_ctl_cmd cmd = EVLIST_CTL_CMD_UNSUPPORTED;
- 
- 	atexit(record__sig_exit);
- 	signal(SIGCHLD, sig_handler);
-@@ -1802,8 +1803,23 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 			 * Propagate error, only if there's any. Ignore positive
- 			 * number of returned events and interrupt error.
- 			 */
--			if (err > 0 || (err < 0 && errno == EINTR))
-+			if (err > 0 || (err < 0 && errno == EINTR)) {
- 				err = 0;
-+				if (evlist__ctlfd_process(rec->evlist, &cmd) > 0) {
-+					switch (cmd) {
-+					case EVLIST_CTL_CMD_ENABLE:
-+						pr_info(EVLIST_ENABLED_MSG);
-+						break;
-+					case EVLIST_CTL_CMD_DISABLE:
-+						pr_info(EVLIST_DISABLED_MSG);
-+						break;
-+					case EVLIST_CTL_CMD_ACK:
-+					case EVLIST_CTL_CMD_UNSUPPORTED:
-+					default:
-+						break;
-+					}
-+				}
-+			}
- 			waking++;
- 
- 			if (evlist__filter_pollfd(rec->evlist, POLLERR | POLLHUP) == 0)
--- 
-2.24.1
-
-
+On 2020/05/13 14:06 Sascha Hauer <s.hauer@pengutronix.de> wrote:=20
+> Subject: Re: [PATCH v7 RESEND 05/13] dmaengine: imx-sdma: remove
+> dupilicated sdma_load_context
+>=20
+> In the subject: s/dupilicated/duplicated/
+Will fix typo in v8.
