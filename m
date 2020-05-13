@@ -2,112 +2,106 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F34C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC65C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CA9F20809
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:01:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="A2IpOOdI"
+	by mail.kernel.org (Postfix) with ESMTP id 0BC17204EF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:02:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589382121;
+	bh=5DbunmbKdhhIoLuDovWgUiQubs9jRyWUKOYRVFYPVPs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aGpYc9HcDo7XJzWUmB8OIKvVU6Ix8tbZDUe5hRJ+7i9gjwieUtN3ZSK6KQ0dBmpPT
+	 xdE1Nje4h2T0F2ENZssm2yGvDD33k8lEXiMKZG0gOnecxjiqDUIx2vY+Vl0rcQnVYq
+	 RDZMYhVE/sSx1YBo50wJgJ/HMrZPaKXAVBYTSWps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389333AbgEMPBT (ORCPT
+        id S2389384AbgEMPCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:01:19 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:29022 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389145AbgEMPAE (ORCPT
+        Wed, 13 May 2020 11:02:00 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44347 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389054AbgEMPB6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:00:04 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DEwPum008865;
-        Wed, 13 May 2020 16:59:48 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=z2rN6b1DaoZ4FRfpQXA7V8V8f0QP8v9ygRjk7fMWHog=;
- b=A2IpOOdI7DPGSwUtvPFDYQoxjQZAXSQtTj+4mX0QRqQlvwxTLatyzlf84+Fq6u3yDAey
- PA99q90lUy5Npt90Y692V+g2jz+G3KTzz1V7+nSPGR1yYbHl2F/7hiUxWkreVn1Wcf/L
- TBlwo0rnHPe3rkh+R86ZFkqKwFflkmtMac1hvVtlZPaqg7uwpinj2Q9ka8ZoV3i92nP8
- O81WgSSCZDYx5UAD9Vz5I/qjDmvJGBhzag5CZNGuOG/TY3G3M20meIkMYz67X4RKAnUO
- mnNAa0gD4S3l/wOIo35ILNm2V2oOsaveeWWJbNiidpiBNESvlZmh7t+rYgb4M8wjcKgu Ng== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3100vqde9n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 16:59:48 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4EA4210002A;
-        Wed, 13 May 2020 16:59:48 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4062B2D3006;
-        Wed, 13 May 2020 16:59:48 +0200 (CEST)
-Received: from localhost (10.75.127.49) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 13 May 2020 16:59:47
- +0200
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH 06/15] ARM: dts: stm32: update led nodes names for stm32f429-eval
-Date:   Wed, 13 May 2020 16:59:26 +0200
-Message-ID: <20200513145935.22493-7-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20200513145935.22493-1-benjamin.gaignard@st.com>
-References: <20200513145935.22493-1-benjamin.gaignard@st.com>
+        Wed, 13 May 2020 11:01:58 -0400
+Received: by mail-wr1-f65.google.com with SMTP id 50so20766386wrc.11;
+        Wed, 13 May 2020 08:01:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ySQYNCFJieFw49hebY3MJRxVr5zT7izYFnFzCl37LtQ=;
+        b=ukoJt9BWtiaSr+NEzfjybj9b4MErjJAgb8nUVyNDbzC8uDPL7csNpDS5DjiMPOK6r/
+         uM7+A+RMBf8nupqkzmxFOFtcyyton1BaSom4eqnWqJMo/l6PsxqMP4NIZD/J18TjLakn
+         fS4NwDlU5TXwwX5DRBA2L94a208OP1MwxWdGDxk78KG/x4cjlz0u+LmZOZZsn3ivUAA/
+         jSFQVs7AsPGz7et5kUV/tnwOEjVLzLe2LhoeWVKJEew0NPCDw4ZrOw+F5AHJgBa8GHQa
+         o011hVUFQTviWTibkrmVA9lMDBHlgMRPg15oHebaeI9urXBIiCmfbgUwvxET6CdVwqED
+         BFVw==
+X-Gm-Message-State: AGi0PuYsqTDNKAv+GGejJ0YvIn8PMN7mcuCnFbvMpj4jNGsumnSjtpNA
+        CnjB25RhodowmpbjXdPPj/U=
+X-Google-Smtp-Source: APiQypJgZBp+xJJRlLfto0u7+TAJ63AvPCwqvbP8TiD3U2a/e+i8K84AM43rOUVJ7f2Lh/Wjf6YJ1g==
+X-Received: by 2002:a5d:6841:: with SMTP id o1mr31448481wrw.412.1589382115833;
+        Wed, 13 May 2020 08:01:55 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id b2sm25334319wrm.30.2020.05.13.08.01.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 08:01:55 -0700 (PDT)
+Date:   Wed, 13 May 2020 15:01:53 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     linux-hyperv@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
+        x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>
+Subject: Re: [PATCH] x86/hyperv: Properly suspend/resume reenlightenment
+ notifications
+Message-ID: <20200513150153.2xi4v2ekpv7zmofo@liuwe-devbox-debian-v2.j3c5onc20sse1dnehy4noqpfcg.zx.internal.cloudapp.net>
+References: <20200512160153.134467-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-13_06:2020-05-13,2020-05-13 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512160153.134467-1-vkuznets@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update led nodes names to be aligned with yaml description
+On Tue, May 12, 2020 at 06:01:53PM +0200, Vitaly Kuznetsov wrote:
+> Errors during hibernation with reenlightenment notifications enabled were
+> reported:
+> 
+>  [   51.730435] PM: hibernation entry
+>  [   51.737435] PM: Syncing filesystems ...
+>  ...
+>  [   54.102216] Disabling non-boot CPUs ...
+>  [   54.106633] smpboot: CPU 1 is now offline
+>  [   54.110006] unchecked MSR access error: WRMSR to 0x40000106 (tried to
+>      write 0x47c72780000100ee) at rIP: 0xffffffff90062f24
+>      native_write_msr+0x4/0x20)
+>  [   54.110006] Call Trace:
+>  [   54.110006]  hv_cpu_die+0xd9/0xf0
+>  ...
+> 
+> Normally, hv_cpu_die() just reassigns reenlightenment notifications to some
+> other CPU when the CPU receiving them goes offline. Upon hibernation, there
+> is no other CPU which is still online so cpumask_any_but(cpu_online_mask)
+> returns >= nr_cpu_ids and using it as hv_vp_index index is incorrect.
+> Disable the feature when cpumask_any_but() fails.
+> 
+> Also, as we now disable reenlightenment notifications upon hibernation we
+> need to restore them on resume. Check if hv_reenlightenment_cb was
+> previously set and restore from hv_resume().
+> 
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- arch/arm/boot/dts/stm32429i-eval.dts | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Applied to hyperv-fixes.
 
-diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
-index c27fa355e5ab..4115e7e2b739 100644
---- a/arch/arm/boot/dts/stm32429i-eval.dts
-+++ b/arch/arm/boot/dts/stm32429i-eval.dts
-@@ -104,17 +104,17 @@
- 
- 	leds {
- 		compatible = "gpio-leds";
--		green {
-+		led-green {
- 			gpios = <&gpiog 6 1>;
- 			linux,default-trigger = "heartbeat";
- 		};
--		orange {
-+		led-orange {
- 			gpios = <&gpiog 7 1>;
- 		};
--		red {
-+		led-red {
- 			gpios = <&gpiog 10 1>;
- 		};
--		blue {
-+		led-blue {
- 			gpios = <&gpiog 12 1>;
- 		};
- 	};
--- 
-2.15.0
+Thank you all.
 
+Wei.
