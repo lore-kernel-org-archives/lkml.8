@@ -2,102 +2,113 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2258FCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FF4C2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE2DB24957
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:57:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jKyKLt7h"
+	by mail.kernel.org (Postfix) with ESMTP id A4C942492C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:58:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589374685;
+	bh=z8ktgUv0RqO7zvZCUaDL+1/C1Qami3n63M3XsUU5y0Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=INlWRaFhiM6sUjMGiElmmsxLc/rqwQBurefaoaz98/0LWcFZnqqJ1mn8Z82rSodow
+	 g3sHUK46PbNmEogeGncX3pYqtdjFeKqC9RCpyMD7HpsPfp29CmtTxVvFHQeb/a40iJ
+	 uZdw3qWjNJCYkzavm7f0NtiRuKkpUezj2NMN84gs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387425AbgEMM5l (ORCPT
+        id S1728588AbgEMM6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 08:57:41 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43292 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729345AbgEMM5k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 08:57:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589374659;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ob2GqH7qD296iB6P/14HKQmOuD3tUq1NGI9wvJ7eHUw=;
-        b=jKyKLt7hZAaHFtuHp89QWNMAlDoHb9+Kd//6qpgmMmotlBGyXO52IK2fB1gArKWXBsF0pe
-        xcwQ7J9JC9G9753SAXH1Vb978zLCqZKWODYvb3XDIgwbLxMz4U8u6nZ80k92cVhD4FrIsf
-        j+AjYhdgYQjK2IN2sg849KftK4jEkEA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-292-AXkP3UecMxq15pCZf32bTQ-1; Wed, 13 May 2020 08:57:38 -0400
-X-MC-Unique: AXkP3UecMxq15pCZf32bTQ-1
-Received: by mail-wm1-f71.google.com with SMTP id a206so4701194wmh.6
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 05:57:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=ob2GqH7qD296iB6P/14HKQmOuD3tUq1NGI9wvJ7eHUw=;
-        b=HJt7gC/J9VbxwwCMw2GrJm5Uq+G0c2nsbj+q3xJYz14U8xChIi6qX2QQ1IdwzQN7kU
-         /EU1fNOp7Nb72klIWcoFvpm1EmVdd+TdOS2u19/4cZ0CkN4Zk0EvVk91FKbx2jbEIqkK
-         euzaoL+NpTKefVtRVwcWlN02YBfG4n2I7X6cDG0yYdC2hMv6HxhXxXiFRNJU/3biCxP5
-         xrIxO7NoGCFmPx8qDTVqr33pMvMIXuv/G86yFOhpT4cbRS7hUlSVkL2Dj52EuobknphT
-         8AwLjoAj2yv6J86rrgMfGdQ5ix5uwMx0JVQHjrMV9nu8GgP5+jOngyHUxzIq0I/JhMkJ
-         7hFw==
-X-Gm-Message-State: AGi0PuY38eSj1Jync8gcGbV1qlX8HwsQuDef8MgWzoYi8WarGGCycQ9s
-        8txgN1kAkuw8JYZmIcnzbq7WExgbvAQWl4O77JZec4H3gRymSpVoKTaDaPwOQn3qNM68X/N1In+
-        scvbPk047OKKXzrG9e8TF2eQU
-X-Received: by 2002:adf:ea09:: with SMTP id q9mr31683730wrm.399.1589374656918;
-        Wed, 13 May 2020 05:57:36 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJENo1pNxT4cb92OnEACsibSpJCPfFYJKeXmxUB+ec9RrJ6uO1biLurikfbbxKtZB3cjIAnAg==
-X-Received: by 2002:adf:ea09:: with SMTP id q9mr31683712wrm.399.1589374656760;
-        Wed, 13 May 2020 05:57:36 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id 7sm29948323wra.50.2020.05.13.05.57.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 05:57:35 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     x86@kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>
-Subject: Re: [PATCH v2 0/3] x86/idt: Minor alloc_intr_gate() sanitization
-In-Reply-To: <20200428093824.1451532-1-vkuznets@redhat.com>
-References: <20200428093824.1451532-1-vkuznets@redhat.com>
-Date:   Wed, 13 May 2020 14:57:34 +0200
-Message-ID: <87imh0kn5t.fsf@vitty.brq.redhat.com>
+        Wed, 13 May 2020 08:58:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54060 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729345AbgEMM6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 08:58:04 -0400
+Received: from localhost (unknown [106.200.233.149])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09A2F20753;
+        Wed, 13 May 2020 12:58:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589374683;
+        bh=z8ktgUv0RqO7zvZCUaDL+1/C1Qami3n63M3XsUU5y0Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KU0Kz0GUcvuniZJeT5XqGvbln7iZQmRyoVX2qel6IiXd1LwLWp8cHmounYzweHPe6
+         DUAiwWPMlCGbDm4yeWath3SACqH1XJ8Cp5gHUsH16g53JIimP/t99xmEQlxo9jAnt/
+         eWsol2Lh2cI9pdEgM15dtngtE0ozxI6Kj4Z87HFs=
+Date:   Wed, 13 May 2020 18:27:59 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andreas =?iso-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v13 0/5] usb: xhci: Add support for Renesas USB
+ controllers
+Message-ID: <20200513125759.GI14092@vkoul-mobl>
+References: <20200506060025.1535960-1-vkoul@kernel.org>
+ <edb2df23-6193-fdb1-d9f9-ffc33a40c05e@linux.intel.com>
+ <20200513124007.GA1082134@kroah.com>
+ <f15262e7-3f46-5574-59cc-d98488f299fc@linux.intel.com>
+ <20200513125231.GA1084414@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513125231.GA1084414@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vitaly Kuznetsov <vkuznets@redhat.com> writes:
+On 13-05-20, 14:52, Greg Kroah-Hartman wrote:
+> On Wed, May 13, 2020 at 03:51:28PM +0300, Mathias Nyman wrote:
+> > On 13.5.2020 15.40, Greg Kroah-Hartman wrote:
+> > > On Wed, May 13, 2020 at 03:19:29PM +0300, Mathias Nyman wrote:
+> > >> On 6.5.2020 9.00, Vinod Koul wrote:
+> > >>> This series add support for Renesas USB controllers uPD720201 and uPD720202.
+> > >>> These require firmware to be loaded and in case devices have ROM those can
+> > >>> also be programmed if empty. If ROM is programmed, it runs from ROM as well.
+> > >>>
+> > >>> This includes patches from Christian which supported these controllers w/o
+> > >>> ROM and later my patches for ROM support and debugfs hook for rom erase and
+> > >>> export of xhci-pci functions.
+> > >>>
+> > >>
+> > >> First four patches look ok to me, but 5/5 that adds rom erase debugfs support
+> > >> still needs some work.
+> > >>
+> > >> If you prefer I can take the first four, maybe we can get them to 5.8, and then
+> > >> later add that debugs rom erase support.
+> > >>
+> > >> Let me know what you prefer
+> > > 
+> > > Oops, I just added all of these to my testing tree :)
+> > > 
+> > > What's wrong with the debugfs patch?  I can drop it, but it seemed
+> > > simple enough to me.
+> > 
+> > Added "usb_renesas" directory under debugfs root when we have easily accessible
+> > debugfs/usb/xhci directory to use as parent. 
+> 
+> I've responded to the patch now, sorry I missed that.
 
-> This series is a successor of "[PATCH] x86/idt: Keep spurious entries unset
-> in system_vectors".
->
-> The original issue I tried to address was that /proc/interrupts output
-> was always containing all possible system vectors, including non allocated
-> ones (e.g. 'Hypervisor callback interrupts' on bare metal). Thomas
-> suggested to expand this cosmetic change to making alloc_intr_gate()
-> __init.
->
-> Vitaly Kuznetsov (3):
->   x86/xen: Split HVM vector callback setup and interrupt gate allocation
->   x86/idt: Annotate alloc_intr_gate() with __init
->   x86/idt: Keep spurious entries unset in system_vectors
->
+I can send an update on top of this to use xhci root, or respin this
+patch, either ways is fine by me.
 
-Ping?
+> > Also not checking if adding directory failed (if debufs not supported)
+> 
+> That's fine and encouraged to do :)
 
+Yes, I have known you 'encouraging' folks for that, hence coded it :)
+
+Thanks
 -- 
-Vitaly
-
+~Vinod
