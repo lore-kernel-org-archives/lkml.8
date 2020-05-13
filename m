@@ -2,105 +2,164 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0662AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC533C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3BA320727
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A27A820575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:56:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zgg3uSPY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729992AbgEMVwN (ORCPT
+        id S1730039AbgEMV4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 17:52:13 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:55624 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729487AbgEMVwM (ORCPT
+        Wed, 13 May 2020 17:56:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729487AbgEMV4O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 17:52:12 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 342A21C0285; Wed, 13 May 2020 23:52:11 +0200 (CEST)
-Date:   Wed, 13 May 2020 23:52:10 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Miroslav Benes <mbenes@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
-        Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>
-Subject: Re: [PATCH 4.19 41/48] x86/unwind/orc: Prevent unwinding before ORC
- initialization
-Message-ID: <20200513215210.GB27858@amd>
-References: <20200513094351.100352960@linuxfoundation.org>
- <20200513094402.645961403@linuxfoundation.org>
+        Wed, 13 May 2020 17:56:14 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A35F4C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 14:56:12 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id s69so3378962pjb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 14:56:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=URXKt/CtJiUnLhAXRhzn7WHXaaovZqdso8oMCz+GR2c=;
+        b=zgg3uSPYjx1Fq9SF/NJZDBOu6PaZKWswvNlnYpfhfyOpMHs9QgxJblQ9SHH8w4SVTm
+         U/j8SreK901TGCI8VLZe+cGqfFACPgDBgsFNopQ6IwqhF0IGJlDwWt28aZCXIRLHhV2x
+         vGCe2fw3s0+OSJ931/VrF+xGe/D1G4Mu+Q3175i9r/udCjesuDuaEWCHLlw4srYQ47+p
+         wQodfH6T46WwVYrSeeva9WEM7EAc8UE64FUDcZ5lurlWEXPtrB5JiLHgSI1uOj7xhpoR
+         zZalj0FxzE0WLn62TQJhBirmicHXekBH1wLvNpHuHHRl8xSfazqCZmDTTVBbex0zdZlN
+         pr+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=URXKt/CtJiUnLhAXRhzn7WHXaaovZqdso8oMCz+GR2c=;
+        b=ip8LcuEmunovghHgJ7VxhT8QKu8kgh3qRt0YAEky7uuNDfa/hIWXr+kiMqlcpmwdrf
+         FiQnArnxK6UIrPZAO6N0b9VaV0nFB72eQb4+aeaMLgF+g/8qb9pvpmucLxFGFEFTjST6
+         GUGGyb+60LQiTsQMN7/vjlOReCOZmESJIikWRrLYcZM4G78VmXjcQ4ltIRp5qt4XHuKW
+         X+yA2LJSyq6ejNqxPXcqvrrNaHY8f9bbzusEONX9+jC09AjGr2W/ModJa8WOdkHl8U/r
+         ZlId+vh0ktCXpy5ZPEdsLs3oKZxIkL58RZZ3Hktp43VVGnog9xNcrsxgwZSkVlSVm0wa
+         WDkg==
+X-Gm-Message-State: AGi0Pua+HjgRZ1o623YA/HcN9tUIJfw0HD43cEEDAkJ/uQ8TsEZZJJkw
+        EurZNjJtjnren/bvjZpkjMIdzA==
+X-Google-Smtp-Source: APiQypLfZxmnarSDfauVRkIFplhL7r6EsFhDlKlDgtFu9R1IGXvtHs2lg5ugQzGaB0VBgM7OJ3kYkg==
+X-Received: by 2002:a17:90a:d3cc:: with SMTP id d12mr37699942pjw.158.1589406972131;
+        Wed, 13 May 2020 14:56:12 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id b24sm475244pfi.4.2020.05.13.14.56.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 14:56:11 -0700 (PDT)
+Date:   Wed, 13 May 2020 15:56:09 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Arun Kumar Neelakantam <aneela@codeaurora.org>
+Cc:     ohad@wizery.com, bjorn.andersson@linaro.org, clew@codeaurora.org,
+        sricharan@codeaurora.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>
+Subject: Re: [PATCH V5 3/5] rpmsg: glink: Add support for rpmsg glink chrdev
+Message-ID: <20200513215609.GB8328@xps15>
+References: <1589346606-15046-1-git-send-email-aneela@codeaurora.org>
+ <1589346606-15046-4-git-send-email-aneela@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="7ZAtKRhVyVSsbBD2"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513094402.645961403@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <1589346606-15046-4-git-send-email-aneela@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 13, 2020 at 10:40:04AM +0530, Arun Kumar Neelakantam wrote:
+> From: Chris Lew <clew@codeaurora.org>
+> 
+> RPMSG provides a char device interface to userspace. Probe the rpmsg
+> chrdev channel to enable the rpmsg_ctrl device creation on glink
+> transports.
+> 
+> Signed-off-by: Chris Lew <clew@codeaurora.org>
+> Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
+> ---
+>  drivers/rpmsg/qcom_glink_native.c | 40 ++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 39 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
+> index 604f11f..3a7f87c 100644
+> --- a/drivers/rpmsg/qcom_glink_native.c
+> +++ b/drivers/rpmsg/qcom_glink_native.c
+> @@ -1178,7 +1178,7 @@ static int qcom_glink_announce_create(struct rpmsg_device *rpdev)
+>  	__be32 *val = defaults;
+>  	int size;
+>  
+> -	if (glink->intentless)
+> +	if (glink->intentless || !completion_done(&channel->open_ack))
 
---7ZAtKRhVyVSsbBD2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please move this to patch 01.
 
-Hi!
-
-> From: Josh Poimboeuf <jpoimboe@redhat.com>
->=20
-> commit 98d0c8ebf77e0ba7c54a9ae05ea588f0e9e3f46e upstream.
->=20
-> If the unwinder is called before the ORC data has been initialized,
-> orc_find() returns NULL, and it tries to fall back to using frame
-> pointers.  This can cause some unexpected warnings during boot.
->=20
-> Move the 'orc_init' check from orc_find() to __unwind_init(), so that it
-> doesn't even try to unwind from an uninitialized state.
-
-> @@ -563,6 +560,9 @@ EXPORT_SYMBOL_GPL(unwind_next_frame);
->  void __unwind_start(struct unwind_state *state, struct task_struct *task,
->  		    struct pt_regs *regs, unsigned long *first_frame)
->  {
-> +	if (!orc_init)
-> +		goto done;
+>  		return 0;
+>  
+>  	prop = of_find_property(np, "qcom,intents", NULL);
+> @@ -1574,6 +1574,40 @@ static void qcom_glink_cancel_rx_work(struct qcom_glink *glink)
+>  		kfree(dcmd);
+>  }
+>  
+> +static void qcom_glink_device_release(struct device *dev)
+> +{
+> +	struct rpmsg_device *rpdev = to_rpmsg_device(dev);
+> +	struct glink_channel *channel = to_glink_channel(rpdev->ept);
 > +
->  	memset(state, 0, sizeof(*state));
->  	state->task =3D task;
-> =20
-
-As this returns the *state to the caller, should the "goto done" move
-below the memset? Otherwise we are returning partialy-initialized
-struct, which is ... weird.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---7ZAtKRhVyVSsbBD2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl68bAoACgkQMOfwapXb+vIO/wCfeBz+IYxkM6JcitMdJYsM+hlL
-nbMAn1Tq0iWjnwpbT7Xhq4LpYViSDVSd
-=vaev
------END PGP SIGNATURE-----
-
---7ZAtKRhVyVSsbBD2--
+> +	/* Release qcom_glink_alloc_channel() reference */
+> +	kref_put(&channel->refcount, qcom_glink_channel_release);
+> +	kfree(rpdev);
+> +}
+> +
+> +static int qcom_glink_create_chrdev(struct qcom_glink *glink)
+> +{
+> +	struct rpmsg_device *rpdev;
+> +	struct glink_channel *channel;
+> +
+> +	rpdev = kzalloc(sizeof(*rpdev), GFP_KERNEL);
+> +	if (!rpdev)
+> +		return -ENOMEM;
+> +
+> +	channel = qcom_glink_alloc_channel(glink, "rpmsg_chrdev");
+> +	if (IS_ERR(channel)) {
+> +		kfree(rpdev);
+> +		return PTR_ERR(channel);
+> +	}
+> +	channel->rpdev = rpdev;
+> +
+> +	rpdev->ept = &channel->ept;
+> +	rpdev->ops = &glink_device_ops;
+> +	rpdev->dev.parent = glink->dev;
+> +	rpdev->dev.release = qcom_glink_device_release;
+> +
+> +	return rpmsg_chrdev_register_device(rpdev);
+> +}
+> +
+>  struct qcom_glink *qcom_glink_native_probe(struct device *dev,
+>  					   unsigned long features,
+>  					   struct qcom_glink_pipe *rx,
+> @@ -1633,6 +1667,10 @@ struct qcom_glink *qcom_glink_native_probe(struct device *dev,
+>  	if (ret)
+>  		return ERR_PTR(ret);
+>  
+> +	ret = qcom_glink_create_chrdev(glink);
+> +	if (ret)
+> +		dev_err(glink->dev, "failed to register chrdev\n");
+> +
+>  	return glink;
+>  }
+>  EXPORT_SYMBOL_GPL(qcom_glink_native_probe);
+> -- 
+> 2.7.4
