@@ -7,28 +7,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E03C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 195C7C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02D692065C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEA86206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:56:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390453AbgEMS4r (ORCPT
+        id S2390461AbgEMS4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 14:56:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49960 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390414AbgEMS4h (ORCPT
+        Wed, 13 May 2020 14:56:49 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51900 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390405AbgEMS4i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 14:56:37 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2F19C061A0E;
-        Wed, 13 May 2020 11:56:37 -0700 (PDT)
+        Wed, 13 May 2020 14:56:38 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: sre)
-        with ESMTPSA id A2E9B2A2A5E
+        with ESMTPSA id A0F5C2A2A5C
 Received: by jupiter.universe (Postfix, from userid 1000)
-        id 9633A480129; Wed, 13 May 2020 20:56:29 +0200 (CEST)
+        id 9319A480128; Wed, 13 May 2020 20:56:29 +0200 (CEST)
 From:   Sebastian Reichel <sebastian.reichel@collabora.com>
 To:     Sebastian Reichel <sre@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -37,9 +34,9 @@ To:     Sebastian Reichel <sre@kernel.org>,
 Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, kernel@collabora.com,
         Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCHv1 17/19] power: supply: sbs-battery: switch to i2c's probe_new
-Date:   Wed, 13 May 2020 20:56:13 +0200
-Message-Id: <20200513185615.508236-18-sebastian.reichel@collabora.com>
+Subject: [PATCHv1 16/19] power: supply: sbs-battery: switch from of_property_* to device_property_*
+Date:   Wed, 13 May 2020 20:56:12 +0200
+Message-Id: <20200513185615.508236-17-sebastian.reichel@collabora.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513185615.508236-1-sebastian.reichel@collabora.com>
 References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
@@ -50,37 +47,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sbs-battery does not use the ID parameter, so switch to i2c's
-probe_new API.
+Switch from DT specific of_property_* API to generic and more
+modern device_property_* API.
 
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- drivers/power/supply/sbs-battery.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/power/supply/sbs-battery.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
-index 73dfe526c867..f0392be350eb 100644
+index 7c6905a486da..73dfe526c867 100644
 --- a/drivers/power/supply/sbs-battery.c
 +++ b/drivers/power/supply/sbs-battery.c
-@@ -992,8 +992,7 @@ static const struct power_supply_desc sbs_default_desc = {
- 	.external_power_changed = sbs_external_power_changed,
- };
+@@ -14,7 +14,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+-#include <linux/of.h>
++#include <linux/property.h>
+ #include <linux/of_device.h>
+ #include <linux/power/sbs-battery.h>
+ #include <linux/power_supply.h>
+@@ -1016,7 +1016,7 @@ static int sbs_probe(struct i2c_client *client,
+ 	if (!chip)
+ 		return -ENOMEM;
  
--static int sbs_probe(struct i2c_client *client,
--	const struct i2c_device_id *id)
-+static int sbs_probe(struct i2c_client *client)
- {
- 	struct sbs_info *chip;
- 	struct power_supply_desc *sbs_desc;
-@@ -1172,7 +1171,7 @@ static const struct of_device_id sbs_dt_ids[] = {
- MODULE_DEVICE_TABLE(of, sbs_dt_ids);
+-	chip->flags = (u32)(uintptr_t)of_device_get_match_data(&client->dev);
++	chip->flags = (u32)(uintptr_t)device_get_match_data(&client->dev);
+ 	chip->client = client;
+ 	chip->enable_detection = false;
+ 	psy_cfg.of_node = client->dev.of_node;
+@@ -1027,13 +1027,13 @@ static int sbs_probe(struct i2c_client *client,
+ 	/* use pdata if available, fall back to DT properties,
+ 	 * or hardcoded defaults if not
+ 	 */
+-	rc = of_property_read_u32(client->dev.of_node, "sbs,i2c-retry-count",
+-				  &chip->i2c_retry_count);
++	rc = device_property_read_u32(&client->dev, "sbs,i2c-retry-count",
++				      &chip->i2c_retry_count);
+ 	if (rc)
+ 		chip->i2c_retry_count = 0;
  
- static struct i2c_driver sbs_battery_driver = {
--	.probe		= sbs_probe,
-+	.probe_new	= sbs_probe,
- 	.remove		= sbs_remove,
- 	.alert		= sbs_alert,
- 	.id_table	= sbs_id,
+-	rc = of_property_read_u32(client->dev.of_node, "sbs,poll-retry-count",
+-				  &chip->poll_retry_count);
++	rc = device_property_read_u32(&client->dev, "sbs,poll-retry-count",
++				      &chip->poll_retry_count);
+ 	if (rc)
+ 		chip->poll_retry_count = 0;
+ 
+@@ -1043,7 +1043,7 @@ static int sbs_probe(struct i2c_client *client,
+ 	}
+ 	chip->i2c_retry_count = chip->i2c_retry_count + 1;
+ 
+-	chip->charger_broadcasts = !of_property_read_bool(client->dev.of_node,
++	chip->charger_broadcasts = !device_property_read_bool(&client->dev,
+ 					"sbs,disable-charger-broadcasts");
+ 
+ 	chip->gpio_detect = devm_gpiod_get_optional(&client->dev,
 -- 
 2.26.2
 
