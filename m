@@ -2,234 +2,434 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D36EAC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AF3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C203205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B0AD2065C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:05:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rgheQSt1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tVhDySki"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390110AbgEMSDJ (ORCPT
+        id S2390059AbgEMSF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 14:03:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41508 "EHLO
+        Wed, 13 May 2020 14:05:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390004AbgEMSDH (ORCPT
+        by vger.kernel.org with ESMTP id S2390038AbgEMSF2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 14:03:07 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF22EC061A0C;
-        Wed, 13 May 2020 11:03:06 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id l1so577082qtp.6;
-        Wed, 13 May 2020 11:03:06 -0700 (PDT)
+        Wed, 13 May 2020 14:05:28 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA7BEC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 11:05:27 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id t12so571013ile.9
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 11:05:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3rJSQfC8qhqPgAdT7p7uqG4zYxw0cOP69JvDMu+AmoU=;
-        b=rgheQSt1YItEgWJaK+D0bGz+/qHfNOAGsXjdVRWwUQiGqsFIGS1wvoYG+aGTafU+PV
-         /Wam8diPaOgVXFRqoqZXtgZpq5ZoS7P+w+jAXFzuJRlWX6AXxlicjH1KtuahsCm7X1oB
-         1KM/eHxvJqcmXNEYPF4b+olwDLqfGRmRJKuO8mBihqp1FZjIXqkKRuN4K2fkmkt1KR4y
-         BY4TuAPJr9Fm34DqlaEou7vS5F0NmzH1lmiODzJGQ+/eBluPCt8Nwyn9o9iFlcChI8ne
-         mr8KP8dnkN8R85f07cGwIMBpujRbjafuA86KSdBGJqLxAx2+yPjgt33/gw2dY8MXvXik
-         E3ww==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5zSix63yYbRzxgrdD3Z8gIFIPz1aTMmgUeD4jWJ12o0=;
+        b=tVhDySki+WoatmGXhE+SStVQlr/QQB3EitQwqoRqwIry6OcWEtMUqaNgikvjwdWsfa
+         HY2YmOKXJAtyvX2Pnz1j8Zg7yXQFAyFsyJYSvYWvaTxX9N3Pxx+F564PfBtFsLyF6yNw
+         x9N9DN1+gYoDotVX6o5bs8AOHpTSw5Nvw1ULFehH8KBqKmH5cnyJrAnTwpszMSjV3HCi
+         x3GlCi5wBwZLFe+PI0kWU0Qc0oseQ49knSP98rOl/x+arFVnaP/WXZaraGuz9cFpkLCt
+         NgLLkaA/RhbTqEm3tATgiaIaqI45Hsc4Inoc6CWfsR37T78CIqJgXPbCY0AT5gDvTZDC
+         ZnXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3rJSQfC8qhqPgAdT7p7uqG4zYxw0cOP69JvDMu+AmoU=;
-        b=AL41WpjTzKYqMQaaAILJH7BYfajSEzOyfHxaPEF4CnDEXy/kxPXuWEjq/D9mQThxsY
-         TIgLjPtWoSqCWOknNR7VDtW1t7On35WjZiA25mC8yKRoezaf4y2ClhMjE3PnMtQSbyKa
-         LB757WRGI056kpd2w1hUMj9aziV6fO78R+87CmB3fgSUVI00ejadFvuPQjkqDkP50pZK
-         hr18nETEOZBWwjx5BzZtycI2w/dbnFob37KY3Sra07zsFZCnCcDRWKDM7xWWTz4yPSDt
-         uB8E+ZhDlsKuq9jR0ZH6LQBAxOjtNm2BUub3qj5DMjt+hi0J4XcZjji66ndHsLIE0PZ3
-         y3bA==
-X-Gm-Message-State: AOAM533Tcj/2BCeZkt8pfpcaHALVTC+JgZ8/tdCWDim+uta9d542dxad
-        pBKRtoWJLqwLH74/pSgiy9g=
-X-Google-Smtp-Source: ABdhPJxDn2Ym2XNFWojVR75lfnXVzFyakSG9ONLgdWGtZA79aHqlLy1IZQIR41clkG4iLZ4VQYg8Bg==
-X-Received: by 2002:ac8:67cf:: with SMTP id r15mr355571qtp.258.1589392985891;
-        Wed, 13 May 2020 11:03:05 -0700 (PDT)
-Received: from localhost.localdomain ([168.181.48.228])
-        by smtp.gmail.com with ESMTPSA id f68sm476350qke.74.2020.05.13.11.03.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 11:03:05 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 8AE9BC08DA; Wed, 13 May 2020 15:03:02 -0300 (-03)
-Date:   Wed, 13 May 2020 15:03:02 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org,
-        target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-cifs@vger.kernel.org, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, netdev@vger.kernel.org,
-        linux-sctp@vger.kernel.org, ceph-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 32/33] sctp: add sctp_sock_get_primary_addr
-Message-ID: <20200513180302.GC2491@localhost.localdomain>
-References: <20200513062649.2100053-1-hch@lst.de>
- <20200513062649.2100053-33-hch@lst.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5zSix63yYbRzxgrdD3Z8gIFIPz1aTMmgUeD4jWJ12o0=;
+        b=tHB7IlvMPtUyJlg2Z8tJp+sgWLHo+atf0PP4hIYrIE5fCv+kGISoWE2vtynguwT2me
+         DjivYA+v7cRczGa+H23JDJi4ZS/gGP/QkFSPM8VuiZq9NqN0vORaBNsT0hH45V19V18O
+         407LkXD/qs1uYF2dqFuQG94xscKpbUi+mUHK8Mvmls+k9Z9tvYVwITG/uO9QlqbqOQFl
+         qdXnC6lwG6wb3d95lk46egQ1QWJuvDxOcrNa7/dpzmB4YGdr8fIv4Rqfiw4b1p6W6jMc
+         OiJ3n01kk/+wofPs0JXfdEaHl2t/Y6u5AEN7edGSfihKBzN9LF/vyGbVal1izfW0g5Nb
+         C8OA==
+X-Gm-Message-State: AOAM5318NDUsAfdibMKURMDeaU/zxRFbgZwhx5yDurvyk4LTo5jJAloD
+        QcDDOAK+5CdlUVB5CQBxZ6MJ1Mm2q+Ze+z4xMmMytg==
+X-Google-Smtp-Source: ABdhPJzWaK5BR7pTWwgZM14F5cUZJ0bxVRG2BUeiTJG/zPm0esSfV8QQkqAEdLgHNvUobZMncJ1acTg+YZ3GqHcnYiY=
+X-Received: by 2002:a92:750b:: with SMTP id q11mr758335ilc.50.1589393126857;
+ Wed, 13 May 2020 11:05:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513062649.2100053-33-hch@lst.de>
+References: <1587062312-4939-1-git-send-email-rishabhb@codeaurora.org>
+ <1587062312-4939-2-git-send-email-rishabhb@codeaurora.org>
+ <20200507202121.GK2329931@builder.lan> <7deb97ab40dd36d5a51111147cf4c14e@codeaurora.org>
+ <20200512003028.GA2165@builder.lan>
+In-Reply-To: <20200512003028.GA2165@builder.lan>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Wed, 13 May 2020 12:05:15 -0600
+Message-ID: <CANLsYkxfq+Rt_iBdpkXSBLTchHehUuf6N9qFwcU52k=MLjUeGQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] remoteproc: Add inline coredump functionality
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>, tsoni <tsoni@codeaurora.org>,
+        psodagud <psodagud@codeaurora.org>,
+        Siddharth Gupta <sidgup@codeaurora.org>,
+        linux-remoteproc-owner@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 08:26:47AM +0200, Christoph Hellwig wrote:
-> Add a helper to directly get the SCTP_PRIMARY_ADDR sockopt from kernel
-> space without going through a fake uaccess.
+On Mon, 11 May 2020 at 18:32, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Mon 11 May 17:11 PDT 2020, rishabhb@codeaurora.org wrote:
+>
+> > On 2020-05-07 13:21, Bjorn Andersson wrote:
+> > > On Thu 16 Apr 11:38 PDT 2020, Rishabh Bhatnagar wrote:
+> > >
+> > > > This patch adds the inline coredump functionality. The current
+> > > > coredump implementation uses vmalloc area to copy all the segments.
+> > > > But this might put a lot of strain on low memory targets as the
+> > > > firmware size sometimes is in ten's of MBs. The situation becomes
+> > > > worse if there are multiple remote processors  undergoing recovery
+> > > > at the same time. This patch directly copies the device memory to
+> > > > userspace buffer and avoids extra memory usage. This requires
+> > > > recovery to be halted until data is read by userspace and free
+> > > > function is called.
+> > > >
+> > > > Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+> > > > ---
+> > > >  drivers/remoteproc/remoteproc_coredump.c | 130
+> > > > +++++++++++++++++++++++++++++++
+> > > >  drivers/remoteproc/remoteproc_internal.h |  23 +++++-
+> > > >  include/linux/remoteproc.h               |   2 +
+> > > >  3 files changed, 153 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/drivers/remoteproc/remoteproc_coredump.c
+> > > > b/drivers/remoteproc/remoteproc_coredump.c
+> > > > index 9de0467..888b7dec91 100644
+> > > > --- a/drivers/remoteproc/remoteproc_coredump.c
+> > > > +++ b/drivers/remoteproc/remoteproc_coredump.c
+> > > > @@ -12,6 +12,84 @@
+> > > >  #include <linux/remoteproc.h>
+> > > >  #include "remoteproc_internal.h"
+> > > >
+> > > > +static void rproc_free_dump(void *data)
+> > >
+> > > rproc_coredump_free()
+> > >
+> > > > +{
+> > > > + struct rproc_coredump_state *dump_state = data;
+> > > > +
+> > > > + complete(&dump_state->dump_done);
+> > >
+> > > vfree(dump_state->header);
+> > >
+> > > > +}
+> > > > +
+> > > > +static unsigned long resolve_addr(loff_t user_offset,
+> > >
+> > > rproc_coredump_find_segment()
+> > >
+> > > > +                            struct list_head *segments,
+> > > > +                            unsigned long *data_left)
+> > > > +{
+> > > > + struct rproc_dump_segment *segment;
+> > > > +
+> > > > + list_for_each_entry(segment, segments, node) {
+> > > > +         if (user_offset >= segment->size)
+> > > > +                 user_offset -= segment->size;
+> > > > +         else
+> > > > +                 break;
+> > >
+> > >             if (user_offset < segment->size) {
+> > >                     *data_left = segment->size - user_offset;
+> > >                     return segment->da + user_offset;
+> > >             }
+> > >
+> > >             user_offset -= segment->size;
+> > > > + }
+> > >
+> > >     *data_left = 0;
+> > >     return 0;
+> > >
+> > > > +
+> > > > + if (&segment->node == segments) {
+> > > > +         *data_left = 0;
+> > > > +         return 0;
+> > > > + }
+> > > > +
+> > > > + *data_left = segment->size - user_offset;
+> > > > +
+> > > > + return segment->da + user_offset;
+> > > > +}
+> > > > +
+> > > > +static ssize_t rproc_read_dump(char *buffer, loff_t offset, size_t
+> > > > count,
+> > > > +                         void *data, size_t header_size)
+> > > > +{
+> > > > + void *device_mem;
+> > > > + size_t data_left, copy_size, bytes_left = count;
+> > > > + unsigned long addr;
+> > > > + struct rproc_coredump_state *dump_state = data;
+> > > > + struct rproc *rproc = dump_state->rproc;
+> > > > + void *elfcore = dump_state->header;
+> > > > +
+> > > > + /* Copy the header first */
+> > > > + if (offset < header_size) {
+> > > > +         copy_size = header_size - offset;
+> > > > +         copy_size = min(copy_size, bytes_left);
+> > > > +
+> > > > +         memcpy(buffer, elfcore + offset, copy_size);
+> > > > +         offset += copy_size;
+> > > > +         bytes_left -= copy_size;
+> > > > +         buffer += copy_size;
+> > > > + }
+> > >
+> > > Perhaps you can take inspiration from devcd_readv() here?
+> > >
+> > > > +
+> > > > + while (bytes_left) {
+> > > > +         addr = resolve_addr(offset - header_size,
+> > > > +                             &rproc->dump_segments, &data_left);
+> > > > +         /* EOF check */
+> > > > +         if (data_left == 0) {
+> > >
+> > > Afaict data_left denotes the amount of data left in this particular
+> > > segment, rather than in the entire core.
+> > >
+> > Yes, but it only returns 0 when the final segment has been copied
+> > completely.  Otherwise it gives data left to copy for every segment
+> > and moves to next segment once the current one is copied.
+>
+> You're right.
 
-Same comment as on the other dlm/sctp patch.
+I remember spending a lot of time looking at this function and now
+Bjorn has stumbled on it as well.  As such either a redesign or adding
+a generous amount of comments is in order.
 
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/dlm/lowcomms.c       | 11 +++-----
->  include/net/sctp/sctp.h |  1 +
->  net/sctp/socket.c       | 57 +++++++++++++++++++++++++----------------
->  3 files changed, 39 insertions(+), 30 deletions(-)
-> 
-> diff --git a/fs/dlm/lowcomms.c b/fs/dlm/lowcomms.c
-> index 6fa45365666a8..46d2d71b62c57 100644
-> --- a/fs/dlm/lowcomms.c
-> +++ b/fs/dlm/lowcomms.c
-> @@ -855,10 +855,9 @@ static int tcp_accept_from_sock(struct connection *con)
->  static int sctp_accept_from_sock(struct connection *con)
->  {
->  	/* Check that the new node is in the lockspace */
-> -	struct sctp_prim prim;
-> +	struct sctp_prim prim = { };
->  	int nodeid;
-> -	int prim_len, ret;
-> -	int addr_len;
-> +	int addr_len, ret;
->  	struct connection *newcon;
->  	struct connection *addcon;
->  	struct socket *newsock;
-> @@ -876,11 +875,7 @@ static int sctp_accept_from_sock(struct connection *con)
->  	if (ret < 0)
->  		goto accept_err;
->  
-> -	memset(&prim, 0, sizeof(struct sctp_prim));
-> -	prim_len = sizeof(struct sctp_prim);
-> -
-> -	ret = kernel_getsockopt(newsock, IPPROTO_SCTP, SCTP_PRIMARY_ADDR,
-> -				(char *)&prim, &prim_len);
-> +	ret = sctp_sock_get_primary_addr(con->sock->sk, &prim);
->  	if (ret < 0) {
->  		log_print("getsockopt/sctp_primary_addr failed: %d", ret);
->  		goto accept_err;
-> diff --git a/include/net/sctp/sctp.h b/include/net/sctp/sctp.h
-> index b505fa082f254..c98b1d14db853 100644
-> --- a/include/net/sctp/sctp.h
-> +++ b/include/net/sctp/sctp.h
-> @@ -618,5 +618,6 @@ static inline bool sctp_newsk_ready(const struct sock *sk)
->  int sctp_setsockopt_bindx(struct sock *sk, struct sockaddr *kaddrs,
->  		int addrs_size, int op);
->  void sctp_sock_set_nodelay(struct sock *sk, bool val);
-> +int sctp_sock_get_primary_addr(struct sock *sk, struct sctp_prim *prim);
->  
->  #endif /* __net_sctp_h__ */
-> diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-> index 64c395f7a86d5..39bf8090dbe1e 100644
-> --- a/net/sctp/socket.c
-> +++ b/net/sctp/socket.c
-> @@ -6411,6 +6411,35 @@ static int sctp_getsockopt_local_addrs(struct sock *sk, int len,
->  	return err;
->  }
->  
-> +static int __sctp_sock_get_primary_addr(struct sock *sk, struct sctp_prim *prim)
-> +{
-> +	struct sctp_association *asoc;
-> +
-> +	asoc = sctp_id2assoc(sk, prim->ssp_assoc_id);
-> +	if (!asoc)
-> +		return -EINVAL;
-> +	if (!asoc->peer.primary_path)
-> +		return -ENOTCONN;
-> +
-> +	memcpy(&prim->ssp_addr, &asoc->peer.primary_path->ipaddr,
-> +		asoc->peer.primary_path->af_specific->sockaddr_len);
-> +
-> +	sctp_get_pf_specific(sk->sk_family)->addr_to_user(sctp_sk(sk),
-> +			(union sctp_addr *)&prim->ssp_addr);
-> +	return 0;
-> +}
-> +
-> +int sctp_sock_get_primary_addr(struct sock *sk, struct sctp_prim *prim)
-> +{
-> +	int ret;
-> +
-> +	lock_sock(sk);
-> +	ret = __sctp_sock_get_primary_addr(sk, prim);
-> +	release_sock(sk);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(sctp_sock_get_primary_addr);
-> +
->  /* 7.1.10 Set Primary Address (SCTP_PRIMARY_ADDR)
->   *
->   * Requests that the local SCTP stack use the enclosed peer address as
-> @@ -6421,35 +6450,19 @@ static int sctp_getsockopt_primary_addr(struct sock *sk, int len,
->  					char __user *optval, int __user *optlen)
->  {
->  	struct sctp_prim prim;
-> -	struct sctp_association *asoc;
-> -	struct sctp_sock *sp = sctp_sk(sk);
-> +	int ret;
->  
->  	if (len < sizeof(struct sctp_prim))
->  		return -EINVAL;
-> -
-> -	len = sizeof(struct sctp_prim);
-> -
-> -	if (copy_from_user(&prim, optval, len))
-> +	if (copy_from_user(&prim, optval, sizeof(struct sctp_prim)))
->  		return -EFAULT;
->  
-> -	asoc = sctp_id2assoc(sk, prim.ssp_assoc_id);
-> -	if (!asoc)
-> -		return -EINVAL;
-> -
-> -	if (!asoc->peer.primary_path)
-> -		return -ENOTCONN;
-> -
-> -	memcpy(&prim.ssp_addr, &asoc->peer.primary_path->ipaddr,
-> -		asoc->peer.primary_path->af_specific->sockaddr_len);
-> -
-> -	sctp_get_pf_specific(sk->sk_family)->addr_to_user(sp,
-> -			(union sctp_addr *)&prim.ssp_addr);
-> +	ret = __sctp_sock_get_primary_addr(sk, &prim);
-> +	if (ret)
-> +		return ret;
->  
-> -	if (put_user(len, optlen))
-> +	if (put_user(len, optlen) || copy_to_user(optval, &prim, len))
->  		return -EFAULT;
-> -	if (copy_to_user(optval, &prim, len))
-> -		return -EFAULT;
-> -
->  	return 0;
->  }
->  
-> -- 
-> 2.26.2
-> 
+Thanks,
+Mathieu
+
+>
+> > > I think you should start by making bytes_left the minimum of the core
+> > > size and @count and then have this loop as long as bytes_left, copying
+> > > data to the buffer either from header or an appropriate segment based on
+> > > the current offset.
+> > >
+> > That would require an extra function that calculates entire core size,
+> > as its not available right now. Do you see any missed corner cases with this
+> > approach?
+>
+> You're looping over all the segments as you're building the header
+> anyways, so you could simply store this in the dump_state. I think this
+> depend more on the ability to reuse the read function between inline and
+> default coredump.
+>
+> Regards,
+> Bjorn
+>
+> > > > +                 pr_info("Ramdump complete %lld bytes read", offset);
+> > >
+> > > dev_dbg(&rproc->dev, ...)
+> > >
+> > > > +                 break;
+> > > > +         }
+> > > > +
+> > > > +         copy_size = min_t(size_t, bytes_left, data_left);
+> > > > +
+> > > > +         device_mem = rproc->ops->da_to_va(rproc, addr, copy_size);
+> > >
+> > > rproc_da_to_va()
+> > >
+> > > > +         if (!device_mem) {
+> > > > +                 pr_err("Address:%lx with size %zd out of remoteproc carveout\n",
+> > >
+> > > dev_err(&rproc->dev, "coredump: %#lx size %#zx outside of carveouts\n",
+> > > ..);
+> > >
+> > > > +                         addr, copy_size);
+> > > > +                 return -ENOMEM;
+> > > > +         }
+> > > > +         memcpy(buffer, device_mem, copy_size);
+> > > > +
+> > > > +         offset += copy_size;
+> > > > +         buffer += copy_size;
+> > > > +         bytes_left -= copy_size;
+> > > > + }
+> > > > +
+> > > > + return count - bytes_left;
+> > > > +}
+> > > > +
+> > > >  static void create_elf_header(void *data, int phnum, struct rproc
+> > > > *rproc)
+> > > >  {
+> > > >   struct elf32_phdr *phdr;
+> > > > @@ -55,6 +133,58 @@ static void create_elf_header(void *data, int
+> > > > phnum, struct rproc *rproc)
+> > > >  }
+> > > >
+> > > >  /**
+> > > > + * rproc_inline_coredump() - perform synchronized coredump
+> > > > + * @rproc:       rproc handle
+> > > > + *
+> > > > + * This function will generate an ELF header for the registered
+> > > > segments
+> > > > + * and create a devcoredump device associated with rproc. This
+> > > > function
+> > > > + * directly copies the segments from device memory to userspace. The
+> > > > + * recovery is stalled until the enitire coredump is read. This
+> > > > approach
+> > > > + * avoids using extra vmalloc memory(which can be really large).
+> > > > + */
+> > > > +void rproc_inline_coredump(struct rproc *rproc)
+> > > > +{
+> > > > + struct rproc_dump_segment *segment;
+> > > > + struct elf32_phdr *phdr;
+> > > > + struct elf32_hdr *ehdr;
+> > > > + struct rproc_coredump_state *dump_state;
+> > >
+> > > This can live on the stack, unless you follow my suggestion below...
+> > >
+> > > > + size_t header_size;
+> > > > + void *data;
+> > > > + int phnum = 0;
+> > > > +
+> > > > + if (list_empty(&rproc->dump_segments))
+> > > > +         return;
+> > > > +
+> > > > + header_size = sizeof(*ehdr);
+> > > > + list_for_each_entry(segment, &rproc->dump_segments, node) {
+> > > > +         header_size += sizeof(*phdr);
+> > > > +
+> > > > +         phnum++;
+> > > > + }
+> > > > +
+> > > > + data = vmalloc(header_size);
+> > > > + if (!data)
+> > > > +         return;
+> > > > +
+> > > > + ehdr = data;
+> > >
+> > > ehdr is unused.
+> > >
+> > > > + create_elf_header(data, phnum, rproc);
+> > > > +
+> > > > + dump_state = kzalloc(sizeof(*dump_state), GFP_KERNEL);
+> > > > + dump_state->rproc = rproc;
+> > > > + dump_state->header = data;
+> > > > + init_completion(&dump_state->dump_done);
+> > > > +
+> > > > + dev_coredumpm(&rproc->dev, NULL, dump_state, header_size,
+> > > > GFP_KERNEL,
+> > > > +               rproc_read_dump, rproc_free_dump);
+> > >
+> > > I can help feeling that if you vmalloc() either the header or the entire
+> > > thing depending on DEFAULT vs INLINE and populate it with either all
+> > > segments or just the header, then you should be able to use the same
+> > > (custom) read function to serve both cases.
+> > >
+> > > You should by doing this be able to avoid some duplication, your two
+> > > code paths would not diverge and the main difference would be if you
+> > > wait or not below (the kfree would have to go in the rproc_free_dump).
+> > >
+> > > > +
+> > > > + /* Wait until the dump is read and free is called */
+> > > > + wait_for_completion(&dump_state->dump_done);
+> > > > +
+> > > > + kfree(dump_state);
+> > > > +}
+> > > > +EXPORT_SYMBOL(rproc_inline_coredump);
+> > > > +
+> > > > +/**
+> > > >   * rproc_default_coredump() - perform coredump
+> > > >   * @rproc:       rproc handle
+> > > >   *
+> > > > diff --git a/drivers/remoteproc/remoteproc_internal.h
+> > > > b/drivers/remoteproc/remoteproc_internal.h
+> > > > index 28b6af2..ea6146e 100644
+> > > > --- a/drivers/remoteproc/remoteproc_internal.h
+> > > > +++ b/drivers/remoteproc/remoteproc_internal.h
+> > > > @@ -24,6 +24,18 @@ struct rproc_debug_trace {
+> > > >   struct rproc_mem_entry trace_mem;
+> > > >  };
+> > > >
+> > > > +struct rproc_coredump_state {
+> > >
+> > > This is only used within remoteproc_coredump.c, so please move it there.
+> > >
+> > > > + struct rproc *rproc;
+> > > > + void *header;
+> > > > + struct completion dump_done;
+> > > > +};
+> > > > +
+> > > > +enum rproc_coredump_conf {
+> > >
+> > > How about rproc_coredump_mechanism?
+> > >
+> > > > + COREDUMP_DEFAULT,
+> > > > + COREDUMP_INLINE,
+> > > > + COREDUMP_DISABLED,
+> > > > +};
+> > > > +
+> > > >  /* from remoteproc_core.c */
+> > > >  void rproc_release(struct kref *kref);
+> > > >  irqreturn_t rproc_vq_interrupt(struct rproc *rproc, int vq_id);
+> > > > @@ -49,6 +61,7 @@ struct dentry *rproc_create_trace_file(const char
+> > > > *name, struct rproc *rproc,
+> > > >
+> > > >  /* from remoteproc_coredump.c */
+> > > >  void rproc_default_coredump(struct rproc *rproc);
+> > > > +void rproc_inline_coredump(struct rproc *rproc);
+> > > >
+> > > >  void rproc_free_vring(struct rproc_vring *rvring);
+> > > >  int rproc_alloc_vring(struct rproc_vdev *rvdev, int i);
+> > > > @@ -125,8 +138,14 @@ struct resource_table
+> > > > *rproc_find_loaded_rsc_table(struct rproc *rproc,
+> > > >  static inline
+> > > >  void rproc_coredump(struct rproc *rproc)
+> > > >  {
+> > > > - return rproc_default_coredump(rproc);
+> > > > -
+> > > > + switch (rproc->coredump_conf) {
+> > > > + case COREDUMP_DEFAULT:
+> > > > +         return rproc_default_coredump(rproc);
+> > > > + case COREDUMP_INLINE:
+> > > > +         return rproc_inline_coredump(rproc);
+> > > > + default:
+> > > > +         break;
+> > > > + }
+> > >
+> > > I think this better belong inside remoteproc_coredump.c
+> > >
+> > > Regards,
+> > > Bjorn
+> > >
+> > > >  }
+> > > >
+> > > >  #endif /* REMOTEPROC_INTERNAL_H */
+> > > > diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> > > > index 16ad666..23298ce 100644
+> > > > --- a/include/linux/remoteproc.h
+> > > > +++ b/include/linux/remoteproc.h
+> > > > @@ -459,6 +459,7 @@ struct rproc_dump_segment {
+> > > >   * @dev: virtual device for refcounting and common remoteproc
+> > > > behavior
+> > > >   * @power: refcount of users who need this rproc powered up
+> > > >   * @state: state of the device
+> > > > + * @coredump_conf: Currenlty selected coredump configuration
+> > > >   * @lock: lock which protects concurrent manipulations of the rproc
+> > > >   * @dbg_dir: debugfs directory of this rproc device
+> > > >   * @traces: list of trace buffers
+> > > > @@ -492,6 +493,7 @@ struct rproc {
+> > > >   struct device dev;
+> > > >   atomic_t power;
+> > > >   unsigned int state;
+> > > > + unsigned int coredump_conf;
+> > > >   struct mutex lock;
+> > > >   struct dentry *dbg_dir;
+> > > >   struct list_head traces;
+> > > > --
+> > > > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+> > > > Forum,
+> > > > a Linux Foundation Collaborative Project
