@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 871DAC2D0FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E67CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6792E206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 392EA206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:59:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363955;
-	bh=pGMOmfgZYD4hG2YOmoxa8HOQPBwC8mhC3RTXFJgBhFU=;
+	s=default; t=1589363962;
+	bh=vtTYfenDTiknJybDemWFnKrjtKPZpagDPm/tbPp0Ouk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gg3BdnuGlIDXZXsZWi8/tlXrQSZ4cD32MmmlhVHHyZyCOjSDdKH6fsilerXXaOZuR
-	 jjkSGYfER0Ve0JmV8y4hI0W9Bt9RZYEX3MLOIvjP+hAHs6IWJT1ksv4WtYmDxSPK/x
-	 lAnn9Xrz1OciuObmOigtTrChH30JIFon58l17LTQ=
+	b=c9QlAH+jVx62OOTLMfxnyzri+XV7KFvBG/RqKEMpDoEr2A4FlN5r/qtRqMDT9i+2C
+	 HitsLt15FjKV6ix6it4hqSSBAeeMZ0GqTOp8Pbx8DHwyDmQf9lSSoBDfMjP79O3jdz
+	 g0BWLfjdukcxB6MY64zJhTiHNnZjd2a7EchBTFOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388352AbgEMJ7O (ORCPT
+        id S2388360AbgEMJ7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:59:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55868 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:59:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732603AbgEMJxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:53:44 -0400
+        id S2387962AbgEMJxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:53:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED2FF20575;
-        Wed, 13 May 2020 09:53:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68EB220769;
+        Wed, 13 May 2020 09:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363624;
-        bh=pGMOmfgZYD4hG2YOmoxa8HOQPBwC8mhC3RTXFJgBhFU=;
+        s=default; t=1589363611;
+        bh=vtTYfenDTiknJybDemWFnKrjtKPZpagDPm/tbPp0Ouk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xdjm2uVTZaZKfKnt6/9aZItU0RkMVQLaxv+9CZwnEipq45U0o16VJCq/FIiHc/dEs
-         M8UP9StKQlVccDAgyBUn6hnyYypAvFHOKc+cn4Yl0KgwZyUUbY1MuKBNis1pz3qAN/
-         +XMcNP4gdUG+dsAZzYXBoA+Wy9v5E5XN78MolyfA=
+        b=mJFQYNF7Upan6jqpRCgSyxNrSwBGJ7GXbCaKgkNhFsQztZKMYdTDhjZ7JdoNNUj2v
+         nPkgJsrHBQCY06kxQeaRiQbFGKRv3B4Ly+Q1Iv1rApFEMJq2BOi41tG3Su8WQZfNm/
+         0wDN753ukFXZDz/xQ7xMNmExJbcxDXNhHyywILIg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Jere=20Lepp=C3=A4nen?= <jere.leppanen@nokia.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.6 058/118] sctp: Fix bundling of SHUTDOWN with COOKIE-ACK
-Date:   Wed, 13 May 2020 11:44:37 +0200
-Message-Id: <20200513094422.085722067@linuxfoundation.org>
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>, Baruch Siach <baruch@tkos.co.il>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 027/118] net: phy: marvell10g: fix temperature sensor on 2110
+Date:   Wed, 13 May 2020 11:44:06 +0200
+Message-Id: <20200513094420.000084079@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -62,66 +62,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jere Leppänen <jere.leppanen@nokia.com>
+From: Baruch Siach <baruch@tkos.co.il>
 
-commit 145cb2f7177d94bc54563ed26027e952ee0ae03c upstream.
+[ Upstream commit c3e302edca2457bbd0c958c445a7538fbf6a6ac8 ]
 
-When we start shutdown in sctp_sf_do_dupcook_a(), we want to bundle
-the SHUTDOWN with the COOKIE-ACK to ensure that the peer receives them
-at the same time and in the correct order. This bundling was broken by
-commit 4ff40b86262b ("sctp: set chunk transport correctly when it's a
-new asoc"), which assigns a transport for the COOKIE-ACK, but not for
-the SHUTDOWN.
+Read the temperature sensor register from the correct location for the
+88E2110 PHY. There is no enable/disable bit on 2110, so make
+mv3310_hwmon_config() run on 88X3310 only.
 
-Fix this by passing a reference to the COOKIE-ACK chunk as an argument
-to sctp_sf_do_9_2_start_shutdown() and onward to
-sctp_make_shutdown(). This way the SHUTDOWN chunk is assigned the same
-transport as the COOKIE-ACK chunk, which allows them to be bundled.
-
-In sctp_sf_do_9_2_start_shutdown(), the void *arg parameter was
-previously unused. Now that we're taking it into use, it must be a
-valid pointer to a chunk, or NULL. There is only one call site where
-it's not, in sctp_sf_autoclose_timer_expire(). Fix that too.
-
-Fixes: 4ff40b86262b ("sctp: set chunk transport correctly when it's a new asoc")
-Signed-off-by: Jere Leppänen <jere.leppanen@nokia.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Fixes: 62d01535474b61 ("net: phy: marvell10g: add support for the 88x2110 PHY")
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+Reviewed-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/sctp/sm_statefuns.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/phy/marvell10g.c |   27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
---- a/net/sctp/sm_statefuns.c
-+++ b/net/sctp/sm_statefuns.c
-@@ -1865,7 +1865,7 @@ static enum sctp_disposition sctp_sf_do_
- 		 */
- 		sctp_add_cmd_sf(commands, SCTP_CMD_REPLY, SCTP_CHUNK(repl));
- 		return sctp_sf_do_9_2_start_shutdown(net, ep, asoc,
--						     SCTP_ST_CHUNK(0), NULL,
-+						     SCTP_ST_CHUNK(0), repl,
- 						     commands);
- 	} else {
- 		sctp_add_cmd_sf(commands, SCTP_CMD_NEW_STATE,
-@@ -5470,7 +5470,7 @@ enum sctp_disposition sctp_sf_do_9_2_sta
- 	 * in the Cumulative TSN Ack field the last sequential TSN it
- 	 * has received from the peer.
- 	 */
--	reply = sctp_make_shutdown(asoc, NULL);
-+	reply = sctp_make_shutdown(asoc, arg);
- 	if (!reply)
- 		goto nomem;
+--- a/drivers/net/phy/marvell10g.c
++++ b/drivers/net/phy/marvell10g.c
+@@ -44,6 +44,9 @@ enum {
+ 	MV_PCS_PAIRSWAP_AB	= 0x0002,
+ 	MV_PCS_PAIRSWAP_NONE	= 0x0003,
  
-@@ -6068,7 +6068,7 @@ enum sctp_disposition sctp_sf_autoclose_
- 	disposition = SCTP_DISPOSITION_CONSUME;
- 	if (sctp_outq_is_empty(&asoc->outqueue)) {
- 		disposition = sctp_sf_do_9_2_start_shutdown(net, ep, asoc, type,
--							    arg, commands);
-+							    NULL, commands);
++	/* Temperature read register (88E2110 only) */
++	MV_PCS_TEMP		= 0x8042,
++
+ 	/* These registers appear at 0x800X and 0xa00X - the 0xa00X control
+ 	 * registers appear to set themselves to the 0x800X when AN is
+ 	 * restarted, but status registers appear readable from either.
+@@ -54,6 +57,7 @@ enum {
+ 	/* Vendor2 MMD registers */
+ 	MV_V2_PORT_CTRL		= 0xf001,
+ 	MV_V2_PORT_CTRL_PWRDOWN = 0x0800,
++	/* Temperature control/read registers (88X3310 only) */
+ 	MV_V2_TEMP_CTRL		= 0xf08a,
+ 	MV_V2_TEMP_CTRL_MASK	= 0xc000,
+ 	MV_V2_TEMP_CTRL_SAMPLE	= 0x0000,
+@@ -79,6 +83,24 @@ static umode_t mv3310_hwmon_is_visible(c
+ 	return 0;
+ }
+ 
++static int mv3310_hwmon_read_temp_reg(struct phy_device *phydev)
++{
++	return phy_read_mmd(phydev, MDIO_MMD_VEND2, MV_V2_TEMP);
++}
++
++static int mv2110_hwmon_read_temp_reg(struct phy_device *phydev)
++{
++	return phy_read_mmd(phydev, MDIO_MMD_PCS, MV_PCS_TEMP);
++}
++
++static int mv10g_hwmon_read_temp_reg(struct phy_device *phydev)
++{
++	if (phydev->drv->phy_id == MARVELL_PHY_ID_88X3310)
++		return mv3310_hwmon_read_temp_reg(phydev);
++	else /* MARVELL_PHY_ID_88E2110 */
++		return mv2110_hwmon_read_temp_reg(phydev);
++}
++
+ static int mv3310_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+ 			     u32 attr, int channel, long *value)
+ {
+@@ -91,7 +113,7 @@ static int mv3310_hwmon_read(struct devi
  	}
  
- 	return disposition;
+ 	if (type == hwmon_temp && attr == hwmon_temp_input) {
+-		temp = phy_read_mmd(phydev, MDIO_MMD_VEND2, MV_V2_TEMP);
++		temp = mv10g_hwmon_read_temp_reg(phydev);
+ 		if (temp < 0)
+ 			return temp;
+ 
+@@ -144,6 +166,9 @@ static int mv3310_hwmon_config(struct ph
+ 	u16 val;
+ 	int ret;
+ 
++	if (phydev->drv->phy_id != MARVELL_PHY_ID_88X3310)
++		return 0;
++
+ 	ret = phy_write_mmd(phydev, MDIO_MMD_VEND2, MV_V2_TEMP,
+ 			    MV_V2_TEMP_UNKNOWN);
+ 	if (ret < 0)
 
 
