@@ -2,164 +2,385 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AB1C2D0FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9099BCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67A6C20671
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 506BD204EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:24:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="pH1mj81L"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cSBc9mHf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388973AbgEMOXM (ORCPT
+        id S2388979AbgEMOYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 10:23:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35600 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388788AbgEMOXL (ORCPT
+        Wed, 13 May 2020 10:24:05 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39910 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388790AbgEMOYF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 10:23:11 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E307C061A0C;
-        Wed, 13 May 2020 07:23:11 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6D87851F;
-        Wed, 13 May 2020 16:23:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1589379788;
-        bh=5O0na2DMiyEwLbl3btgk9akjCBMQkQ7SFKipuPV1wEA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pH1mj81La2wuE/YKdMXdaFC6dPVPCdpdSi0cuzqw8PjTHID3iK73wYjzUCAE4HvrR
-         zN4hlCqtr1aD6xyomzlUiZrk1MQX1W3Bf9lN5A5B5od6IilQufrh8/enV5IVqdJkjO
-         bB3T1akcTlxGSYFdE9fzoJ30Xmff9mcari/gTrDc=
-Date:   Wed, 13 May 2020 17:23:02 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH v5 29/38] drm: rcar-du: fix common struct sg_table
- related issues
-Message-ID: <20200513142302.GK5945@pendragon.ideasonboard.com>
-References: <20200513132114.6046-1-m.szyprowski@samsung.com>
- <20200513133245.6408-1-m.szyprowski@samsung.com>
- <CGME20200513133317eucas1p27aead4025db2da13e5b7c3e14a7cd79d@eucas1p2.samsung.com>
- <20200513133245.6408-29-m.szyprowski@samsung.com>
+        Wed, 13 May 2020 10:24:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589379841;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9hxa3pyn7WxrSiMYejxZ3g3vD/+4zkOzwGU8zsXuLvo=;
+        b=cSBc9mHfmoCzbo6B4JgjVfN1Nk5oBGxVQ9/hSWfJJx1ZKADu/GXjMI4MUKUUbIU4+5jB3s
+        tmRk73ujbch+KYaZZmq79IyT1MW1Ib5l6xooH7hKZsSUJSRmIp6cvJ1j0hTy+S8igAF+Js
+        iU3xWtE9qmV0tCNqun4RYiSsxWORBfM=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-130-zc5gDb66Oe25HT7QJmDQiA-1; Wed, 13 May 2020 10:24:00 -0400
+X-MC-Unique: zc5gDb66Oe25HT7QJmDQiA-1
+Received: by mail-wm1-f70.google.com with SMTP id m11so565001wml.5
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 07:23:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=9hxa3pyn7WxrSiMYejxZ3g3vD/+4zkOzwGU8zsXuLvo=;
+        b=G/s7RWwzE+hdX/aRNrP13iyHopueZTN1yzB4nL0/wM1WDbQITYkSyROw7t958L8O49
+         skOSZg5TRnD8+VNlFAlw8exMH0IlC92bGCtj/DHFqAVisOuLz9R4ty1de0UzUOpeaB8C
+         Npqcx3ARn0st9vGHEeSJd6yLugocO5AgHzE88BvAmBphaxS6SQbDVqZFOr5Mge5HwhAZ
+         fvsySNoKcTrxRuAP8NnZN/y+ir+4MfjoiNRQrjFbXK3UEq/vWH3tlhLStjrG6VXmi60W
+         denk/9oktuDs6bHWUtLbSDPXfed86+65hxuAZmHRFqsyODc9Jk8HHyBzmbyYnthn1E35
+         MFug==
+X-Gm-Message-State: AGi0PuYK7aQ8YYfEYM7NkhXHm+1VlKvk05LaENfTFi3SycWutNIQ3Q9o
+        QbhFAIY0bjOQpRLno9Qh6YT1NVk48CXKgJa5m4wQl8PzHJ3nJeTrqcfzzL1Q+uCew7S8XTxhI1C
+        p+z3floPzKUir0DvW0hc9Rv2g
+X-Received: by 2002:a5d:4e0a:: with SMTP id p10mr30663410wrt.215.1589379838373;
+        Wed, 13 May 2020 07:23:58 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJjUvLLshvObF5pQzc2nDS/Gwgm0XJv2KPrIhD18TAvwccu4AahTPPjG5VvdPXzOQJS8pyq9Q==
+X-Received: by 2002:a5d:4e0a:: with SMTP id p10mr30663365wrt.215.1589379837973;
+        Wed, 13 May 2020 07:23:57 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id n6sm24745963wrt.58.2020.05.13.07.23.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 07:23:57 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     kvm@vger.kernel.org, x86@kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Gavin Shan <gshan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/8] KVM: x86: interrupt based APF page-ready event delivery
+In-Reply-To: <20200513135350.GB173965@redhat.com>
+References: <20200511164752.2158645-1-vkuznets@redhat.com> <20200511164752.2158645-5-vkuznets@redhat.com> <20200512142411.GA138129@redhat.com> <87lflxm9sy.fsf@vitty.brq.redhat.com> <20200512180704.GE138129@redhat.com> <877dxgmcjv.fsf@vitty.brq.redhat.com> <20200513135350.GB173965@redhat.com>
+Date:   Wed, 13 May 2020 16:23:55 +0200
+Message-ID: <87ftc3lxqc.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200513133245.6408-29-m.szyprowski@samsung.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marek,
+Vivek Goyal <vgoyal@redhat.com> writes:
 
-Thank you for the patch.
+> On Wed, May 13, 2020 at 11:03:48AM +0200, Vitaly Kuznetsov wrote:
+>> Vivek Goyal <vgoyal@redhat.com> writes:
+>> 
+>> > On Tue, May 12, 2020 at 05:50:53PM +0200, Vitaly Kuznetsov wrote:
+>> >> Vivek Goyal <vgoyal@redhat.com> writes:
+>> >> 
+>> >> >
+>> >> > So if we are using a common structure "kvm_vcpu_pv_apf_data" to deliver
+>> >> > type1 and type2 events, to me it makes sense to retain existing
+>> >> > KVM_PV_REASON_PAGE_READY and KVM_PV_REASON_PAGE_NOT_PRESENT. Just that
+>> >> > in new scheme of things, KVM_PV_REASON_PAGE_NOT_PRESENT will be delivered
+>> >> > using #PF (and later possibly using #VE) and KVM_PV_REASON_PAGE_READY
+>> >> > will be delivered using interrupt.
+>> >> 
+>> >> We use different fields for page-not-present and page-ready events so
+>> >> there is no intersection. If we start setting KVM_PV_REASON_PAGE_READY
+>> >> to 'reason' we may accidentally destroy a 'page-not-present' event.
+>> >
+>> > This is confusing. So you mean at one point of time we might be using
+>> > same shared data structure for two events.
+>> >
+>> > - ->reason will be set to 1 and you will inject page_not_present
+>> >   execption.
+>> >
+>> > - If some page gets ready, you will now set ->token and queue 
+>> >   page ready exception. 
+>> >
+>> > Its very confusing. Can't we serialize the delivery of these events. So
+>> > that only one is in progress so that this structure is used by one event
+>> > at a time.
+>> 
+>> This is not how the mechanism (currently) works:
+>> - A process accesses a page which is swapped out
+>> 
+>> - We deliver synchronious APF (#PF) to the guest, it freezes the process
+>> and switches to another one.
+>> 
+>> - Another process accesses a swapped out page, APF is delivered and it
+>> also got frozen
+>> 
+>> ...
+>> 
+>> - At some point one of the previously unavailable pages become available
+>> (not necessarily the last or the first one) and we deliver this info via
+>> asynchronous APF (now interrupt).
+>> 
+>> - Note, after we deliver the interrupt and before it is actually
+>> consumed we may have another synchronous APF (#PF) event.
+>> 
+>> So we really need to separate memory locations for synchronous (type-1,
+>> #PF,...) and asynchronous (type-2, interrupt, ...) data.
+>> 
+>> The naming is unfortunate and misleading, I agree. What is currently
+>> named 'reason' should be something like 'apf_flag_for_pf' and it just
+>> means to distinguish real #PF from APF. This is going away in the
+>> future, we won't be abusing #PF anymore so I'd keep it as it is now,
+>> maybe add another comment somewhere.
+>
+> Shouldn't we do #VE changes also at the same time. Otherwise we are
+> again creating this intermediate mode where synchronous notifications
+> happen using #PF. Once we move to #VE, old guests will again stop
+> getting async #PF? 
+>
+> Also there is this issue of who is using this common shared area
+> between host and guest (struct kvm_vcpu_pv_apf_data) and how to 
+> use fields in this struct without breaking existing guests.
+>
+> For now I see you have modified meaning of fields of this structure
+> (->reason) beacuse you are not concerned about older guets because
+> they will not receive async pf to begin with. If that's the case,
+> renaming even reason makes sense. Havind said that, as we are
+> planning to not use this data structure for synchronous notifications,
+> creating this intermediate mode is just going to create more
+> confusion. So in new ABI, we should not even try to make use of
+> ->reason and design #VE changes at the same time. Core problem with
+> current ABI is racy access to ->reason and this patch set does not
+> get rid of that race anyway.
 
-On Wed, May 13, 2020 at 03:32:36PM +0200, Marek Szyprowski wrote:
-> The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
-> returns the number of the created entries in the DMA address space.
-> However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
-> dma_unmap_sg must be called with the original number of the entries
-> passed to the dma_map_sg().
-> 
-> struct sg_table is a common structure used for describing a non-contiguous
-> memory buffer, used commonly in the DRM and graphics subsystems. It
-> consists of a scatterlist with memory pages and DMA addresses (sgl entry),
-> as well as the number of scatterlist entries: CPU pages (orig_nents entry)
-> and DMA mapped pages (nents entry).
-> 
-> It turned out that it was a common mistake to misuse nents and orig_nents
-> entries, calling DMA-mapping functions with a wrong number of entries or
-> ignoring the number of mapped entries returned by the dma_map_sg()
-> function.
-> 
-> To avoid such issues, lets use a common dma-mapping wrappers operating
-> directly on the struct sg_table objects and use scatterlist page
-> iterators where possible. This, almost always, hides references to the
-> nents and orig_nents entries, making the code robust, easier to follow
-> and copy/paste safe.
-> 
-> dma_map_sgtable() function returns zero or an error code, so adjust the
-> return value check for the vsp1_du_map_sg() function.
-> 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Well, at least 'page ready' notifications don't access reason and can't
+collide with real #PF which is already an improvement :-)
 
-This is a very nice simplification, I've always foudn the dma_map_sg API
-cumbersome to use.
+>
+>> The other location is
+>> 'pageready_token' and it actually contains the token. This is to stay
+>> long term so any suggestions for better naming are welcome.
+>
+> pageready_token makes sense if this structure is being used both
+> types of notifications otherwise just ->token might be enough.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Yes, sure, when we stop using this structure for type-1 APF 'pageready_'
+prefix becomes superfluous.
 
-I assume you will get the whole series merged in one go. If I need to
-pick the patch up at any point, please let me know. Otherwise I'll wait
-until I see it upstream, no reply needed :-)
+>
+>> 
+>> We could've separated these two memory locations completely and
+>> e.g. used the remaining 56 bits of MSR_KVM_ASYNC_PF_INT as the new
+>> location information. Maybe we should do that just to avoid the
+>> confusion.
+>
+> If this is V2 of ABI, why not do "struct struct kvm_vcpu_pv_apf_data_v2"
+> instead? Only reason you seem to be sticking to existing structure and
+> ->reason fields because of #PF based sync notifications which is planned
+> to go away soon. So if we do both the changes together, there is no
+> need to keep this confusion w.r.t ->reason and existing structure.
+>
 
-> ---
-> For more information, see '[PATCH v5 00/38] DRM: fix struct sg_table nents
-> vs. orig_nents misuse' thread:
-> https://lore.kernel.org/linux-iommu/20200513132114.6046-1-m.szyprowski@samsung.com/T/
-> ---
->  drivers/gpu/drm/rcar-du/rcar_du_vsp.c  | 3 +--
->  drivers/media/platform/vsp1/vsp1_drm.c | 8 ++++----
->  2 files changed, 5 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_vsp.c b/drivers/gpu/drm/rcar-du/rcar_du_vsp.c
-> index 5e4faf2..2fc1816 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_vsp.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_vsp.c
-> @@ -197,9 +197,8 @@ int rcar_du_vsp_map_fb(struct rcar_du_vsp *vsp, struct drm_framebuffer *fb,
->  			goto fail;
->  
->  		ret = vsp1_du_map_sg(vsp->vsp, sgt);
-> -		if (!ret) {
-> +		if (ret) {
->  			sg_free_table(sgt);
-> -			ret = -ENOMEM;
->  			goto fail;
->  		}
->  	}
-> diff --git a/drivers/media/platform/vsp1/vsp1_drm.c b/drivers/media/platform/vsp1/vsp1_drm.c
-> index a4a45d6..86d5e3f 100644
-> --- a/drivers/media/platform/vsp1/vsp1_drm.c
-> +++ b/drivers/media/platform/vsp1/vsp1_drm.c
-> @@ -912,8 +912,8 @@ int vsp1_du_map_sg(struct device *dev, struct sg_table *sgt)
->  	 * skip cache sync. This will need to be revisited when support for
->  	 * non-coherent buffers will be added to the DU driver.
->  	 */
-> -	return dma_map_sg_attrs(vsp1->bus_master, sgt->sgl, sgt->nents,
-> -				DMA_TO_DEVICE, DMA_ATTR_SKIP_CPU_SYNC);
-> +	return dma_map_sgtable(vsp1->bus_master, sgt, DMA_TO_DEVICE,
-> +			       DMA_ATTR_SKIP_CPU_SYNC);
->  }
->  EXPORT_SYMBOL_GPL(vsp1_du_map_sg);
->  
-> @@ -921,8 +921,8 @@ void vsp1_du_unmap_sg(struct device *dev, struct sg_table *sgt)
->  {
->  	struct vsp1_device *vsp1 = dev_get_drvdata(dev);
->  
-> -	dma_unmap_sg_attrs(vsp1->bus_master, sgt->sgl, sgt->nents,
-> -			   DMA_TO_DEVICE, DMA_ATTR_SKIP_CPU_SYNC);
-> +	dma_unmap_sgtable(vsp1->bus_master, sgt, DMA_TO_DEVICE,
-> +			  DMA_ATTR_SKIP_CPU_SYNC);
->  }
->  EXPORT_SYMBOL_GPL(vsp1_du_unmap_sg);
->  
+Yes, sure. I don't know if Paolo already has #VE patches in his stash
+but we can definitely keep this on the list untill the second half is
+done, no rush.
+
+>> 
+>> >
+>> > Also how do I extend it now to do error delivery. Please keep that in
+>> > mind. We don't want to be redesigning this stuff again. Its already
+>> > very complicated.
+>> >
+>> > I really need ->reason field to be usable in both the paths so that
+>> > error can be delivered.
+>> 
+>> If we want to use 'reason' for both we'll get into a weird scenario when
+>> exception is blocking interrupt and, what's more confusing, vice
+>> versa. I'd like to avoid this complexity in KVM code. My suggestion
+>> would be to rename 'reason' to something like 'pf_abuse_flag' so it
+>> doesn't cause the confusion and add new 'reason' after 'token'.
+>> 
+>> >
+>> > And this notion of same structure being shared across multiple events
+>> > at the same time is just going to create more confusion, IMHO. If we
+>> > can decouple it by serializing it, that definitely feels simpler to
+>> > understand.
+>> 
+>> What if we just add sub-structures to the structure, e.g. 
+>> 
+>> struct kvm_vcpu_pv_apf_data {
+>>         struct {
+>>             __u32 apf_flag;
+>>         } legacy_apf_data;
+>>         struct {
+>>             __u32 token;
+>>         } apf_interrupt_data;
+>>         ....
+>>         __u8 pad[56];                                                                                  |
+>>         __u32 enabled;                                                                                 |
+>> };    
+>> 
+>> would it make it more obvious?
+>
+> To me this seems like an improvement. Just looking at it, it is clear
+> to me who is using what. But soon legacy_apf_data will be unused. Its
+> not clear to me when will be able to get rid of apf_flag and reuse it
+> for something else without having to worry about older guests.
+>
+> This will be second best option, if for some reason we don't want to
+> do #VE changes at the same time. To make new design cleaner and more
+> understandable, doing #VE changes at the same time will be good.
+
+No objections :-)
+
+>
+>> 
+>> >
+>> >> 
+>> >> With this patchset we have two completely separate channels:
+>> >> 1) Page-not-present goes through #PF and 'reason' in struct
+>> >> kvm_vcpu_pv_apf_data.
+>> >> 2) Page-ready goes through interrupt and 'pageready_token' in the same
+>> >> kvm_vcpu_pv_apf_data.
+>> >> 
+>> >> >
+>> >> >> +
+>> >> >> +	Note, previously, type 2 (page present) events were delivered via the
+>> >> >> +	same #PF exception as type 1 (page not present) events but this is
+>> >> >> +	now deprecated.
+>> >> >
+>> >> >> If bit 3 (interrupt based delivery) is not set APF events are not delivered.
+>> >> >
+>> >> > So all the old guests which were getting async pf will suddenly find
+>> >> > that async pf does not work anymore (after hypervisor update). And
+>> >> > some of them might report it as performance issue (if there were any
+>> >> > performance benefits to be had with async pf).
+>> >> 
+>> >> We still do APF_HALT but generally yes, there might be some performance
+>> >> implications. My RFC was preserving #PF path but the suggestion was to
+>> >> retire it completely. (and I kinda like it because it makes a lot of
+>> >> code go away)
+>> >
+>> > Ok. I don't have strong opinion here. If paolo likes it this way, so be
+>> > it. :-)
+>> 
+>> APF is a slowpath for overcommited scenarios and when we switch to
+>> APF_HALT we allow the host to run some other guest while PF is
+>> processed. This is not the same from guest's perspective but from host's
+>> we're fine as we're not wasting cycles.
+>> 
+>> >
+>> >> 
+>> >> >
+>> >> > [..]
+>> >> >>  
+>> >> >>  bool kvm_arch_can_inject_async_page_present(struct kvm_vcpu *vcpu)
+>> >> >>  {
+>> >> >> -	if (!(vcpu->arch.apf.msr_val & KVM_ASYNC_PF_ENABLED))
+>> >> >> +	if (!kvm_pv_async_pf_enabled(vcpu))
+>> >> >>  		return true;
+>> >> >
+>> >> > What does above mean. If async pf is not enabled, then it returns true,
+>> >> > implying one can inject async page present. But if async pf is not
+>> >> > enabled, there is no need to inject these events.
+>> >> 
+>> >> AFAIU this is a protection agains guest suddenly disabling APF
+>> >> mechanism.
+>> >
+>> > Can we provide that protection in MSR implementation. That is once APF
+>> > is enabled, it can't be disabled. Or it is a feature that we allow
+>> > guest to disable APF and want it that way?
+>> 
+>> We need to allow to disable the feature. E.g. think about kdump
+>> scenario, for example. Before we switch to kdump kernel we need to make
+>> sure there's no more 'magic' memory which can suggenly change.
+>
+> So are we waiting to receive all page ready events before we switch
+> to kdump kernel? If yes, that's not good. Existing kernel is corrupted
+> and nothing meaningful can be done. So we should switch to next
+> kernel asap. Previous kernel is dying anyway, so we don't care to
+> receive page ready events.
+
+No, we don't wait. We just disable the feature so no new notifications
+will get delivered (if they are the new kernel will get confused). If we
+happen to access one of the previously-unavailable pages again the host
+will just freeze us untill the page is ready, no harm done.
+
+>
+>> Also,
+>> kdump kernel may not even support APF so it will get very confused when
+>> APF events get delivered.
+>
+> New kernel can just ignore these events if it does not support async
+> pf? 
+>
+> This is somewhat similar to devices still doing interrupts in new
+> kernel. And solution for that seemed to be doing a "reset" of devices
+> in new kernel. We probably need similar logic where in new kernel
+> we simply disable "async pf" so that we don't get new notifications.
+
+Right and that's what we're doing - just disabling new notifications.
+
+>
+> IOW, waiting in crashed kernel for all page ready events does not
+> sound like a good option. It reduces the reliability of kdump
+> operation. 
+
+AFAIK we don't wait (kvm_pv_guest_cpu_reboot() -> kvm_pv_disable_apf()
+-> wrmsrl()).
+
+>
+>> 
+>> >
+>> >> What do we do with all the 'page ready' events after, we
+>> >> can't deliver them anymore. So we just eat them (hoping guest will
+>> >> unfreeze all processes on its own before disabling the mechanism).
+>> >> 
+>> >> It is the existing logic, my patch doesn't change it.
+>> >
+>> > I see its existing logic. Just it is very confusing and will be good
+>> > if we can atleast explain it with some comments.
+>> >
+>> > I don't know what to make out of this.
+>> >
+>> > bool kvm_arch_can_inject_async_page_present(struct kvm_vcpu *vcpu)
+>> > {
+>> >         if (!(vcpu->arch.apf.msr_val & KVM_ASYNC_PF_ENABLED))
+>> >                 return true;
+>> >         else
+>> >                 return kvm_can_do_async_pf(vcpu);
+>> > }
+>> >
+>> > If feature is disabled, then do inject async pf page present. If feature
+>> > is enabled and check whether we can inject async pf right now or not.
+>> >
+>> > It probably will help if this check if feature being enabled/disabled
+>> > is outside kvm_arch_can_inject_async_page_present() at the callsite
+>> > of kvm_arch_can_inject_async_page_present() and there we explain that
+>> > why it is important to inject page ready events despite the fact
+>> > that feature is disabled.
+>> 
+>> This code would definitely love some comments added, will do in the next
+>> version. And I'll also think how to improve the readability, thanks for
+>> the feedback!
+>
+> It definitely needs a comment (if it makes sense to still send page
+> ready events to guest).
+>
 
 -- 
-Regards,
+Vitaly
 
-Laurent Pinchart
