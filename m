@@ -2,233 +2,114 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC25C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C41C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CD51205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF5F206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:34:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OJhAG9BW"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="iFgMMOoR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729314AbgEMVcf (ORCPT
+        id S1729160AbgEMVeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 17:32:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46358 "EHLO
+        Wed, 13 May 2020 17:34:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728711AbgEMVce (ORCPT
+        by vger.kernel.org with ESMTP id S1728711AbgEMVeO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 17:32:34 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A32F5C061A0C;
-        Wed, 13 May 2020 14:32:34 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id h26so1146733qtu.8;
-        Wed, 13 May 2020 14:32:34 -0700 (PDT)
+        Wed, 13 May 2020 17:34:14 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEECDC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 14:34:13 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id u15so341312plm.2
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 14:34:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=A26fGJ89Px9TKT5FfDQDlph21JGLwE66ksaS/Q/F8qc=;
-        b=OJhAG9BWcRTQOcesGOTjFYU1A4jllSMmBriAP4GeYXPeOgdqt0FSXLpHgZ1FWZLT9h
-         ZrWqSF93q7aakC1EeMrchHZ5861vZgM002IlfxbHhkKlVtnxDoctsG0Gferf6NlXqGSj
-         DYOLFbi3jlTYkWXAVSwpel0B+9fPkTYO1cgdmFgBZAFzzg9hXYbBPV5BhCWT/eBSWF1t
-         AkpeLLUS2Tp486soxduAQhlfSrjYe0pxgO1ctU5ItmhBfkI6Ja3+UDgQL2od/1vW0Z9o
-         B39JH/rr1zfg4umpOs+7ZEzn1szScpdJDc25SbeIBocFpIL4qfdCtr01AbGhLe4LsYML
-         jpBA==
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LQvZ3cnoxWWWtAQPX/y16TnIryLF7O8ppBXXbOpkfJE=;
+        b=iFgMMOoReZ85Q2Uo0jGImdbsoBegv49w87WiEqZhNYhvoog2bsz4o7CTmTLm4XieeO
+         ftN9bDcc6DdF8g75K7+/B8AxEBdwcSwArR3cx8osqD/HZUKQIL30MKHIyvE4kfLfZv0e
+         WHs5SKUsoKUegLPENvjP/IrrAoV/vZo88hU1ekN0L5yIyZDqBURGPxKqPWHQBxUH5AU8
+         O/q8slAIWWgn4KCx7SlRdflaVne3T6kK9DAH6MJ+jYRcrlWjnvxApbpGt2v0ozBMIoy7
+         kLowFy2v1voohCXt+Xyvm16PrqX4LdZu8yaSd82XbS4SewWsn9iTNMhbX/pZv0X57lK+
+         jh+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=A26fGJ89Px9TKT5FfDQDlph21JGLwE66ksaS/Q/F8qc=;
-        b=ul3gEAoPowPeemflbqfeFqQDMrJVk2RdUHvhQHdSd4HHUg4xhmchJVgmls8qQEVeI3
-         O6tMlgEeyIUXNRwQCF7nvU3SIo1UfJ0s/EX9tQUcGFdVM6j95kV3HtmqdmlH8i/WV9/s
-         v4B4GKGLEhoS4Iw7dHD+H/+tBLmDMaa9taZ6s5BarsphBuvLpTtVMJR4vQcPuw8R/mxn
-         lHpAEiwtmi2FbtTLxbYCzz6YxtSbNhNVB3VP4b51KKUH3gUMnUaSI509T+uh7+BbwFh8
-         7bjQzuAPbfhHXN7lmUAkls3ftFIpSehYBK6pJuBN9Ah2+GS/NYAX4pOe/K5RIzrwn7Kj
-         uwjw==
-X-Gm-Message-State: AOAM530zTjUmkcIbCe3SsQ2l/z+Kl6n1E9BsaNmtXSAS7SF1UN9rm0yc
-        d5342SOd4XT0WzQczgfkBMk=
-X-Google-Smtp-Source: ABdhPJz0LvTgZRILNLUUTLRj+osPwoofipFZkbm70QG25R3TUD61efFy8LIYbojG2TvIliuJ4Iyc+Q==
-X-Received: by 2002:ac8:4890:: with SMTP id i16mr1203657qtq.299.1589405553665;
-        Wed, 13 May 2020 14:32:33 -0700 (PDT)
-Received: from localhost.localdomain ([2001:1284:f013:f4e9:6bc3:5a0:7baf:1a14])
-        by smtp.gmail.com with ESMTPSA id d196sm922814qkg.16.2020.05.13.14.32.32
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=LQvZ3cnoxWWWtAQPX/y16TnIryLF7O8ppBXXbOpkfJE=;
+        b=d0/QDQsHhOOynYU0b86Jep9ccijKOaewISS49iP8gDk7o5dneteKEgjEe0ueo7stBt
+         82Uj/P5qdRV7YpsyOD+wY3t4tQVLy8l13Oqz6KCEDmu4fAg269ocoXbXlEUmoZEEO9wt
+         z7KM9ubN8ZPN3gzHi4zloTfO+rbFYhmYuvYTXOyTehR4C63hmIpjEvdxx84YQ9/ydTJ6
+         34Jotss9+K3v+6aQR+k7cau2VAPKcohbXo6T/lUUUYf6P9K9mzdUavm9eNrhfVqjdHE8
+         Ia0CfPU5xEomQ5rbFUpvmpUmqU+Lw02I4m+tlMpx1d+32+4u65naNx7uU/DdLqGgmiF6
+         GJbQ==
+X-Gm-Message-State: AGi0PubAI8GKV8D+XSM687JWLB6oMrAdrRlar3ExlquPqLTlz26AlojE
+        BjUkcZYMyeBWxa+ZxE8hRoFLyYnxoR4=
+X-Google-Smtp-Source: APiQypJZ5JtNOolKe9h9jvBj34XsfS2ZZKsgyQ9Jm2zRk6dWIknX6wZjxyDaGNCHsu/j+99GbU5+gg==
+X-Received: by 2002:a17:90a:4e5:: with SMTP id g92mr36920442pjg.148.1589405652819;
+        Wed, 13 May 2020 14:34:12 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id r21sm16167599pjo.2.2020.05.13.14.34.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 14:32:32 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id 383EBC08DA; Wed, 13 May 2020 18:32:30 -0300 (-03)
-Date:   Wed, 13 May 2020 18:32:30 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Jonas Falkevik <jonas.falkevik@gmail.com>
-Cc:     Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-sctp@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xin Long <lucien.xin@gmail.com>
-Subject: Re: [PATCH] sctp: check assoc before SCTP_ADDR_{MADE_PRIM,ADDED}
- event
-Message-ID: <20200513213230.GE2491@localhost.localdomain>
-References: <CABUN9aCXZBTdYHSK5oSVX-HAA1wTWmyBW_ked_ydsCjsV-Ckaw@mail.gmail.com>
- <20200513160116.GA2491@localhost.localdomain>
- <CABUN9aCuoA+CXLujUxXyiKWQPkwq9_eOXNqOR=MK7dPY++Fxng@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABUN9aCuoA+CXLujUxXyiKWQPkwq9_eOXNqOR=MK7dPY++Fxng@mail.gmail.com>
+        Wed, 13 May 2020 14:34:12 -0700 (PDT)
+Date:   Wed, 13 May 2020 14:34:12 -0700 (PDT)
+X-Google-Original-Date: Wed, 13 May 2020 14:33:02 PDT (-0700)
+Subject:     Re: [PATCH] irqchip/sifive-plic: Remove incorrect requirement about number of irq contexts
+In-Reply-To: <20200512172636.96299-1-atish.patra@wdc.com>
+CC:     linux-kernel@vger.kernel.org, wesley@sifive.com,
+        Atish Patra <Atish.Patra@wdc.com>, jason@lakedaemon.net,
+        linux-riscv@lists.infradead.org,
+        Paul Walmsley <paul.walmsley@sifive.com>
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     Atish Patra <Atish.Patra@wdc.com>, Mark Zyngier <maz@kernel.org>,
+        tglx@linutronix.de
+Message-ID: <mhng-c1cfbecd-9399-4bcd-97d4-c5eb5692d1ed@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 10:11:05PM +0200, Jonas Falkevik wrote:
-> On Wed, May 13, 2020 at 6:01 PM Marcelo Ricardo Leitner
-> <marcelo.leitner@gmail.com> wrote:
-> >
-> > On Wed, May 13, 2020 at 04:52:16PM +0200, Jonas Falkevik wrote:
-> > > Do not generate SCTP_ADDR_{MADE_PRIM,ADDED} events for SCTP_FUTURE_ASSOC assocs.
-> >
-> > How did you get them?
-> >
-> 
-> I think one case is when receiving INIT chunk in sctp_sf_do_5_1B_init().
-> Here a closed association is created, sctp_make_temp_assoc().
-> Which is later used when calling sctp_process_init().
-> In sctp_process_init() one of the first things are to call
-> sctp_assoc_add_peer()
-> on the closed / temp assoc.
-> 
-> sctp_assoc_add_peer() are generating the SCTP_ADDR_ADDED event on the socket
-> for the potentially new association.
+On Tue, 12 May 2020 10:26:36 PDT (-0700), Atish Patra wrote:
+> From: "Wesley W. Terpstra" <wesley@sifive.com>
+>
+> A PLIC may not be connected to all the cores. In that case, nr_contexts
+> may be less than num_possible_cpus. This requirement is only valid a single
+> PLIC is the only interrupt controller for the whole system.
+>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> [Atish: Modified the commit text]
+> Signed-off-by: "Wesley W. Terpstra" <wesley@sifive.com>
+> ---
+>  drivers/irqchip/irq-sifive-plic.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+> index d0a71febdadc..822e074c0600 100644
+> --- a/drivers/irqchip/irq-sifive-plic.c
+> +++ b/drivers/irqchip/irq-sifive-plic.c
+> @@ -301,8 +301,6 @@ static int __init plic_init(struct device_node *node,
+>  	nr_contexts = of_irq_count(node);
+>  	if (WARN_ON(!nr_contexts))
+>  		goto out_iounmap;
+> -	if (WARN_ON(nr_contexts < num_possible_cpus()))
+> -		goto out_iounmap;
+>
+>  	error = -ENOMEM;
+>  	priv->irqdomain = irq_domain_add_linear(node, nr_irqs + 1,
 
-I see, thanks. The SCTP_FUTURE_ASSOC means something different. It is
-for setting/getting socket options that will be used for new asocs. In
-this case, it is just a coincidence that asoc_id is not set (but
-initialized to 0) and SCTP_FUTURE_ASSOC is also 0. Moreso, if I didn't
-miss anything, it would block valid events, such as those from
- sctp_sf_do_5_1D_ce
-   sctp_process_init
-because sctp_process_init will only call sctp_assoc_set_id() by its
-end.
+Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
 
-I can't see a good reason for generating any event on temp assocs. So
-I'm thinking the checks on this patch should be on whether the asoc is
-a temporary one instead. WDYT?
+I'm assuming this is going through the irqchip tree.
 
-Then, considering the socket is locked, both code points should be
-allocating the IDR earlier. It's expensive, yes (point being, it could
-be avoided in case of other failures), but it should be generating
-events with the right assoc id. Are you interested in pursuing this
-fix as well?
-
-> 
-> $ cat sctp.bpftrace
-> #!/usr/local/bin/bpftrace
-> 
-> BEGIN
-> {
->    printf("Tracing sctp_assoc_add_peer\n");
->    printf("Hit Ctrl-C to end.\n");
-> }
-> 
-> kprobe:sctp_assoc_add_peer
-> {
->    @[kstack]=count();
-> }
-> 
-> $ sudo bpftrace sctp.bpftrace
-> Attaching 2 probes...
-> Tracing sctp_assoc_add_peer
-> Hit Ctrl-C to end.
-> ^C
-> 
-> @[
->    sctp_assoc_add_peer+1
->    sctp_process_init+77
->    sctp_sf_do_5_1B_init+615
->    sctp_do_sm+132
->    sctp_endpoint_bh_rcv+256
->    sctp_rcv+2379
->    ip_protocol_deliver_rcu+393
->    ip_local_deliver_finish+68
->    ip_local_deliver+203
->    ip_rcv+156
->    __netif_receive_skb_one_core+96
->    process_backlog+164
->    net_rx_action+312
->    __softirqentry_text_start+238
->    do_softirq_own_stack+42
->    do_softirq.part.0+65
->    __local_bh_enable_ip+75
->    ip_finish_output2+415
->    ip_output+102
->    __ip_queue_xmit+364
->    sctp_packet_transmit+1814
->    sctp_outq_flush_ctrl.constprop.0+394
->    sctp_outq_flush+86
->    sctp_do_sm+3914
->    sctp_primitive_ASSOCIATE+44
->    __sctp_connect+707
->    sctp_inet_connect+98
->    __sys_connect+156
->    __x64_sys_connect+22
->    do_syscall_64+91
->    entry_SYSCALL_64_after_hwframe+68
-> ]: 1
-> ...
-> 
-> > I'm thinking you're fixing a side-effect of another issue here. For
-> > example, in sctp_assoc_update(), it first calls sctp_assoc_add_peer()
-> > to only then call sctp_assoc_set_id(), which would generate the event
-> > you might have seen. In this case, it should be allocating IDR before,
-> > so that the event can be sent with the right assoc_id already.
-> >
-> > >
-> > > These events are described in rfc6458#section-6.1
-> > > SCTP_PEER_ADDR_CHANGE:
-> > > This tag indicates that an address that is
-> > > part of an existing association has experienced a change of
-> > > state (e.g., a failure or return to service of the reachability
-> > > of an endpoint via a specific transport address).
-> > >
-> > > Signed-off-by: Jonas Falkevik <jonas.falkevik@gmail.com>
-> > > ---
-> > >  net/sctp/associola.c | 11 ++++++++---
-> > >  1 file changed, 8 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/net/sctp/associola.c b/net/sctp/associola.c
-> > > index 437079a4883d..0c5dd295f9b8 100644
-> > > --- a/net/sctp/associola.c
-> > > +++ b/net/sctp/associola.c
-> > > @@ -432,8 +432,10 @@ void sctp_assoc_set_primary(struct sctp_association *asoc,
-> > >          changeover = 1 ;
-> > >
-> > >      asoc->peer.primary_path = transport;
-> > > -    sctp_ulpevent_nofity_peer_addr_change(transport,
-> > > -                          SCTP_ADDR_MADE_PRIM, 0);
-> > > +    if (sctp_assoc2id(asoc) != SCTP_FUTURE_ASSOC)
-> > > +        sctp_ulpevent_nofity_peer_addr_change(transport,
-> > > +                              SCTP_ADDR_MADE_PRIM,
-> > > +                              0);
-> > >
-> > >      /* Set a default msg_name for events. */
-> > >      memcpy(&asoc->peer.primary_addr, &transport->ipaddr,
-> > > @@ -714,7 +716,10 @@ struct sctp_transport *sctp_assoc_add_peer(struct
-> > > sctp_association *asoc,
-> > >      list_add_tail_rcu(&peer->transports, &asoc->peer.transport_addr_list);
-> > >      asoc->peer.transport_count++;
-> > >
-> > > -    sctp_ulpevent_nofity_peer_addr_change(peer, SCTP_ADDR_ADDED, 0);
-> > > +    if (sctp_assoc2id(asoc) != SCTP_FUTURE_ASSOC)
-> > > +        sctp_ulpevent_nofity_peer_addr_change(peer,
-> > > +                              SCTP_ADDR_ADDED,
-> > > +                              0);
-> > >
-> > >      /* If we do not yet have a primary path, set one.  */
-> > >      if (!asoc->peer.primary_path) {
-> > > --
-> > > 2.25.3
+Thanks!
