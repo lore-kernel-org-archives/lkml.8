@@ -2,71 +2,144 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE971CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80892CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE1B2065D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7CED2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:55:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dUlRC2wU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388478AbgEMNzF (ORCPT
+        id S2388592AbgEMNzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:55:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47848 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387503AbgEMNzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:55:05 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F13362054F;
-        Wed, 13 May 2020 13:55:03 +0000 (UTC)
-Date:   Wed, 13 May 2020 09:55:03 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <dima@arista.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH] printk: Add loglevel for "do not print to consoles".
-Message-ID: <20200513095503.7488b0d6@gandalf.local.home>
-In-Reply-To: <20564555-7b84-f716-5dcd-978f76ad459a@i-love.sakura.ne.jp>
-References: <20200427062117.GC486@jagdpanzerIV.localdomain>
-        <4dae86af-1d9a-f5a8-cff6-aa91ec038a79@i-love.sakura.ne.jp>
-        <20200428121828.GP28637@dhcp22.suse.cz>
-        <b4d74234-8009-9ffd-011f-bd5d1a4b85f6@i-love.sakura.ne.jp>
-        <20200428154532.GU28637@dhcp22.suse.cz>
-        <b1d507b1-dae7-f526-c74a-d465ddecea6a@i-love.sakura.ne.jp>
-        <20200429142106.GG28637@dhcp22.suse.cz>
-        <a59271f1-b3fc-26d1-f0a2-5ec351d0095e@i-love.sakura.ne.jp>
-        <20200513062652.GM413@jagdpanzerIV.localdomain>
-        <a75d6560-ad99-5b02-3648-247c27c3a398@i-love.sakura.ne.jp>
-        <20200513100413.GH17734@linux-b0ei>
-        <20564555-7b84-f716-5dcd-978f76ad459a@i-love.sakura.ne.jp>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 13 May 2020 09:55:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59426 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727792AbgEMNzM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 09:55:12 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C338EC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:55:11 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id l18so20993155wrn.6
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:55:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=48yigY3AW0OWi2KarYrK3onBX5FM3CeGZqGr4rehEH0=;
+        b=dUlRC2wU20YGQCEEu1spx689311kjDxpkjS7LRClVxEbFbv2IhwNfObt/CcB9LTjxi
+         GpPw77ArCZqrtdPobECOYSjrkvQC8EeC5xe34FaECex0AAFRfIIHzkRGugDupGlhGDtR
+         m5QrEvnf4zKf+8z3Z+E0j+sjSFGYLLRVuYJrKe1GYXsWkUYxZnhDlT7fXgXwoXMusaoQ
+         swzVpEBtDOZxfZ3TcBZqHRUnQRKW9pvva9dqNqnx4DqgOlMfcHi3NDyS7F3MOOSAuCUT
+         BliWn0MMglQYgF5E17RByLHHuMTn3P8Z9IkFp5UhRPlkX+yvyixDxjSdpmdJbXiT4H2t
+         JHQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=48yigY3AW0OWi2KarYrK3onBX5FM3CeGZqGr4rehEH0=;
+        b=N/GFgYxIrFtuRuKlJrXpJGvWFRXNyrDi5E8SthDo2MZdhnqou/5kTQlq0BPVBGuWIt
+         tNjJ72nEwFlq/6t/2h/GIWJ2T1XE5MoK64AMmkrQJI/kTGGNdjyiWiLislKnU28E84FV
+         0W4DNVm0RBbF51mdKi7zBe0qVK2mdEd9/Von7/RvuEC+nzfyvPcpAGMUWjXCrRApnmbU
+         SiBp6UOqeN8YpsKKu2YRfFMOAePgi1uHKU5lyymxcxkpXVBpd0apn7jbtmZAbTOlN/1R
+         xBILt/oqcYB758F1GyVlU5LY2Vym83CsXLtDrf4R6Ye9ByK9bHWIuqlfk3pJBSXDzSMA
+         vDUA==
+X-Gm-Message-State: AGi0PuYj9iECaLPQK16YCLdGnYp9kDa6Vy5Eyt3sSCkdnmHxBFbKiQCW
+        HMxXRS+mCq/frxQvqWD4itdMVw==
+X-Google-Smtp-Source: APiQypJCdW+0lUJ5TdZTUHT0D3gjO6fpf4NeDs72V8iSEyo17JjX0nvKvG2A1t2tmcLDBG8xdGOifA==
+X-Received: by 2002:a5d:550c:: with SMTP id b12mr33201422wrv.152.1589378110345;
+        Wed, 13 May 2020 06:55:10 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:f:6020:e00f:4685:acf1:ea5e])
+        by smtp.gmail.com with ESMTPSA id g6sm27619898wrw.34.2020.05.13.06.55.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 06:55:09 -0700 (PDT)
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org
+Cc:     pauld@redhat.com, ouwen210@hotmail.com, pkondeti@codeaurora.org,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH v3] sched/fair: enqueue_task_fair optimization
+Date:   Wed, 13 May 2020 15:55:02 +0200
+Message-Id: <20200513135502.4672-1-vincent.guittot@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020 20:03:53 +0900
-Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> wrote:
+enqueue_task_fair jumps to enqueue_throttle label when cfs_rq_of(se) is
+throttled which means that se can't be NULL in such case and we can move
+the label after the if (!se) statement. Futhermore, the latter can be
+removed because se is always NULL when reaching this point.
 
-> I think that basically only oops (e.g. WARN()/BUG()/panic()) messages worth
-> printing to consoles and the rest messages do not worth printing to consoles.
-> Existing KERN_$LOGLEVEL is too rough-grained.
+Reviewed-by: Phil Auld <pauld@redhat.com>
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+---
 
-Why don't you look into having a "noconsole" command line option that will
-not print anything to the consoles but oops messages.
+v3 changes:
+  - updated commit message 
+  - removed an extra }
 
-Sounds more like what you would like, and something that perhaps would be
-acceptable by the larger community.
+ kernel/sched/fair.c | 39 +++++++++++++++++++--------------------
+ 1 file changed, 19 insertions(+), 20 deletions(-)
 
--- Steve
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 9a58874ef104..4e586863827b 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5512,28 +5512,27 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+                        list_add_leaf_cfs_rq(cfs_rq);
+ 	}
+ 
+-enqueue_throttle:
+-	if (!se) {
+-		add_nr_running(rq, 1);
+-		/*
+-		 * Since new tasks are assigned an initial util_avg equal to
+-		 * half of the spare capacity of their CPU, tiny tasks have the
+-		 * ability to cross the overutilized threshold, which will
+-		 * result in the load balancer ruining all the task placement
+-		 * done by EAS. As a way to mitigate that effect, do not account
+-		 * for the first enqueue operation of new tasks during the
+-		 * overutilized flag detection.
+-		 *
+-		 * A better way of solving this problem would be to wait for
+-		 * the PELT signals of tasks to converge before taking them
+-		 * into account, but that is not straightforward to implement,
+-		 * and the following generally works well enough in practice.
+-		 */
+-		if (flags & ENQUEUE_WAKEUP)
+-			update_overutilized_status(rq);
++	/* At this point se is NULL and we are at root level*/
++	add_nr_running(rq, 1);
+ 
+-	}
++	/*
++	 * Since new tasks are assigned an initial util_avg equal to
++	 * half of the spare capacity of their CPU, tiny tasks have the
++	 * ability to cross the overutilized threshold, which will
++	 * result in the load balancer ruining all the task placement
++	 * done by EAS. As a way to mitigate that effect, do not account
++	 * for the first enqueue operation of new tasks during the
++	 * overutilized flag detection.
++	 *
++	 * A better way of solving this problem would be to wait for
++	 * the PELT signals of tasks to converge before taking them
++	 * into account, but that is not straightforward to implement,
++	 * and the following generally works well enough in practice.
++	 */
++	if (flags & ENQUEUE_WAKEUP)
++		update_overutilized_status(rq);
+ 
++enqueue_throttle:
+ 	if (cfs_bandwidth_used()) {
+ 		/*
+ 		 * When bandwidth control is enabled; the cfs_rq_throttled()
+-- 
+2.17.1
+
