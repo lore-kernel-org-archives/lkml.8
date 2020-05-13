@@ -2,138 +2,165 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5CFC2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FE6CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2556205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38F4624932
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:00:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ueBZ7Xbb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbgEMNAO (ORCPT
+        id S1729437AbgEMNAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:00:14 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:61284 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgEMNAN (ORCPT
+        Wed, 13 May 2020 09:00:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50806 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbgEMNAX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:00:13 -0400
-Received: from fsav402.sakura.ne.jp (fsav402.sakura.ne.jp [133.242.250.101])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 04DCxVYK024851;
-        Wed, 13 May 2020 21:59:31 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav402.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav402.sakura.ne.jp);
- Wed, 13 May 2020 21:59:31 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav402.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 04DCxQMq024664
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Wed, 13 May 2020 21:59:31 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] printk: Add loglevel for "do not print to consoles".
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-References: <b4d74234-8009-9ffd-011f-bd5d1a4b85f6@i-love.sakura.ne.jp>
- <20200428154532.GU28637@dhcp22.suse.cz>
- <b1d507b1-dae7-f526-c74a-d465ddecea6a@i-love.sakura.ne.jp>
- <20200429142106.GG28637@dhcp22.suse.cz>
- <a59271f1-b3fc-26d1-f0a2-5ec351d0095e@i-love.sakura.ne.jp>
- <20200513062652.GM413@jagdpanzerIV.localdomain>
- <a75d6560-ad99-5b02-3648-247c27c3a398@i-love.sakura.ne.jp>
- <20200513100413.GH17734@linux-b0ei> <20200513104938.GW29153@dhcp22.suse.cz>
- <d66c38d9-dd97-072d-e1a7-949e9573b38d@i-love.sakura.ne.jp>
- <20200513121942.GK17734@linux-b0ei>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <2173e3ac-7d5e-24da-0c1e-6472df905767@i-love.sakura.ne.jp>
-Date:   Wed, 13 May 2020 21:59:23 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 13 May 2020 09:00:23 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CEC9C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:00:23 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id y22so4522652qki.3
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:00:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+cW70ChImxuqV2RBsl6w7NV4YFDYwLH2CWpZPYn8bwc=;
+        b=ueBZ7XbbZpEcGa6ncc1N99qMbGVjWNDNqkGunZjHci2h023ddhN8dJF1xJmuaONvN+
+         9TslYt/mBrZfFRMUkZb5agEyvyh5UhClFCX8DxTW9eEizKKEOfRycRQMTr4rMIjDot/o
+         2S1/8fFrfFxOfEbPhC5ryqLCeT+ahFmll6lbagvvUuCl/dCAQvux7Imp3edG0zObITXY
+         FQdfjaibsbo0zy2Y98ouPjVoqSnHj+N+OSzDvhSoWupA8W4KCX+NwYzCuc9mnmYL8jEO
+         OEnsjfGAuj6B/HOEA/3Mo835BKZDDu9hEyQNf++9enhJKbUQWDpFnZcS+rTSXyWFFyXA
+         5VQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+cW70ChImxuqV2RBsl6w7NV4YFDYwLH2CWpZPYn8bwc=;
+        b=SyHScNkUXO/R31m78wFeuouNkw3BrtKQpi8lZcO7KNpGcLY2KuMEq7/Q3wIoOF7oQ4
+         DOFYEYGMKXQNFIu20d3fy2rThRMwgP8decD5SxtGNVxfHCI8IlBjiyQyGqR6/gaYvVeO
+         YSAV6kHQhnh1l45WHfJ5i6IcQLBaBY+wZdYgHDWeVVwIset0XCWnVp4kZrPywBV5c5UT
+         U5gVlo5NtNmdXyBFtGUd4nSBqX85NN/FOSQbEJW6tLDvIEuiIFTXqdLt9b2bYbNEWTkf
+         nUB83GR68mLWHInaWwNJbNNgdnmFGWeoheyanC9VA3JOn6JrbdwQWYgd4LbG7t3vHeW2
+         D3ew==
+X-Gm-Message-State: AGi0PubCzhW6acuS1oBgcR6CoQLMudy6C9X+70zZYc8YISLq8NVLyGAS
+        1P2Pt8n9DuPExN8OY7FAZv5INg==
+X-Google-Smtp-Source: APiQypKwvGZuJBxRqVUHNYuvoj8QpY7uTR3OAQ4b8juIRpGo91ZqMW8ow8DkU+0C6ZNMsRFoLm9hcg==
+X-Received: by 2002:a37:84b:: with SMTP id 72mr15538452qki.252.1589374821767;
+        Wed, 13 May 2020 06:00:21 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:2627])
+        by smtp.gmail.com with ESMTPSA id t202sm13798497qke.97.2020.05.13.06.00.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 06:00:20 -0700 (PDT)
+Date:   Wed, 13 May 2020 09:00:02 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     linux-fsdevel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Kernel Team <kernel-team@fb.com>
+Subject: Re: [PATCH] vfs: keep inodes with page cache off the inode shrinker
+ LRU
+Message-ID: <20200513130002.GC488426@cmpxchg.org>
+References: <20200211175507.178100-1-hannes@cmpxchg.org>
+ <20200512212936.GA450429@cmpxchg.org>
+ <CALOAHbAZ0eUmrBGt=J0cJZzPmDtPKpfMK0jrUNa0Z_-JfDLoXA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200513121942.GK17734@linux-b0ei>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALOAHbAZ0eUmrBGt=J0cJZzPmDtPKpfMK0jrUNa0Z_-JfDLoXA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/05/13 21:19, Petr Mladek wrote:
-> On Wed 2020-05-13 20:24:24, Tetsuo Handa wrote:
->> On 2020/05/13 19:49, Michal Hocko wrote:
->>> On Wed 13-05-20 12:04:13, Petr Mladek wrote:
->>>> What is so special about  OOM dump task so that it would deserve such
->>>> complications?
->  
->> I don't think dump_tasks() is important information to be printed on consoles.
->> But since somebody might think dump_tasks() is important information to be
->> printed on consoles, I suggest switching KERN_NO_CONSOLES using e.g. sysctl.
+On Wed, May 13, 2020 at 09:32:58AM +0800, Yafang Shao wrote:
+> On Wed, May 13, 2020 at 5:29 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
+> >
+> > On Tue, Feb 11, 2020 at 12:55:07PM -0500, Johannes Weiner wrote:
+> > > The VFS inode shrinker is currently allowed to reclaim inodes with
+> > > populated page cache. As a result it can drop gigabytes of hot and
+> > > active page cache on the floor without consulting the VM (recorded as
+> > > "inodesteal" events in /proc/vmstat).
+> >
+> > I'm sending a rebased version of this patch.
+> >
+> > We've been running with this change in the Facebook fleet since
+> > February with no ill side effects observed.
+> >
+> > However, I just spent several hours chasing a mysterious reclaim
+> > problem that turned out to be this bug again on an unpatched system.
+> >
+> > In the scenario I was debugging, the problem wasn't that we were
+> > losing cache, but that we were losing the non-resident information for
+> > previously evicted cache.
+> >
+> > I understood the file set enough to know it was thrashing like crazy,
+> > but it didn't register as refaults to the kernel. Without detecting
+> > the refaults, reclaim wouldn't start swapping to relieve the
+> > struggling cache (plenty of cold anon memory around). It also meant
+> > the IO delays of those refaults didn't contribute to memory pressure
+> > in psi, which made userspace blind to the situation as well.
+> >
+> > The first aspect means we can get stuck in pathological thrashing, the
+> > second means userspace OOM detection breaks and we can leave servers
+> > (or Android devices, for that matter) hopelessly livelocked.
+> >
+> > New patch attached below. I hope we can get this fixed in 5.8, it's
+> > really quite a big hole in our cache management strategy.
+> >
+> > ---
+> > From 8db0b846ca0b7a136c0d3d8a1bee3d576990ba11 Mon Sep 17 00:00:00 2001
+> > From: Johannes Weiner <hannes@cmpxchg.org>
+> > Date: Tue, 11 Feb 2020 12:55:07 -0500
+> > Subject: [PATCH] vfs: keep inodes with page cache off the inode shrinker LRU
+> >
+> > The VFS inode shrinker is currently allowed to reclaim cold inodes
+> > with populated page cache. This behavior goes back to CONFIG_HIGHMEM
+> > setups, which required the ability to drop page cache in large highem
+> > zones to free up struct inodes in comparatively tiny lowmem zones.
+> >
+> > However, it has significant side effects that are hard to justify on
+> > systems without highmem:
+> >
+> > - It can drop gigabytes of hot and active page cache on the floor
+> > without consulting the VM (recorded as "inodesteal" events in
+> > /proc/vmstat). Such an "aging inversion" between unreferenced inodes
+> > holding hot cache easily happens in practice: for example, a git tree
+> > whose objects are accessed frequently but no open file descriptors are
+> > maintained throughout.
+> >
 > 
-> You might achieve the same with DEBUG loglevel. Or do I miss anything?
-
-Use of KERN_DEBUG affects userspace syslog daemon. We will have to ask administrators
-to configure syslog daemon not to filter KERN_DEBUG messages. And administrators will
-be bothered by needless KERN_DEBUG messages. Also,
-
+> Hi Johannes,
 > 
-> [*] It will have no effect when it was disabled by a sysfs knob.
+> I think it is reasonable to keep inodes with _active_ page cache off
+> the inode shrinker LRU, but I'm not sure whether it is proper to keep
+> the inodes with _only_ inactive page cache off the inode list lru
+> neither. Per my understanding, if the inode has only inactive page
+> cache, then invalidate all these inactive page cache could save the
+> reclaimer's time, IOW, it may improve the performance in this case.
 
-we will have to ask people to "don't make pr_debug() no-op" or
-"use KERN_DEBUG instead of pr_debug()".
+The shrinker doesn't know whether pages are active or inactive.
 
-Your suggestion to change KERN_$LOGLEVEL keeps bothering people. That's bad.
+There is a PageActive() flag, but that's a sampled state that's only
+uptodate when page reclaim is running. All the active pages could be
+stale and getting deactivated on the next scan; all the inactive pages
+could have page table references that would get them activated on the
+next reclaim run etc.
 
-> I know that it is meant as a modifier, like LOGLEVEL_SCHED and
-> KERN_CONT.
+You'd have to duplicate aspects of page reclaim itself to be sure
+you're axing the right pages.
 
-Right. KERN_NO_CONSOLES is a modifier.
-
->            But this is another reason to avoid it. We already have
-> huge pain with these two modifiers. They both do not work well.
-
-KERN_NO_CONSOLES can not cause pains like LOGLEVEL_SCHED because
-KERN_NO_CONSOLES is to say "no need to call console drivers" while
-LOGLEVEL_SCHED is to say "don't call console drivers now but have
-to call console drivers later".
-
-On 2020/05/13 21:34, Petr Mladek wrote:
-> On Wed 2020-05-13 20:03:53, Tetsuo Handa wrote:
->> On 2020/05/13 19:04, Petr Mladek wrote:
->>>> What is wrong with adding NO_CONSOLES ?
->>>
->>> How does it differ from KERN_DEBUG? The debug messages:
->>>
->>>   + can be disabled via sysfs
->>>   + might reach console when this loglevel is enabled
->>
->> KERN_NO_CONSOLES is different from KERN_DEBUG in that KERN_NO_CONSOLES
->> itself does not affect userspace daemon's judgement (whether to filter
->> KERN_$LOGLEVEL messages).
-> 
-> And that is the evil thing about it. It goes around the loglevel
-> filtering.
-> 
-> The administrator wants to decide what messages are important for him.
-
-Right.
-
-> NO_CONSOLES would mess with this decision. Some messages would suddenly
-> get hidden on console but appear in userspace.
-
-Wrong. Console loglevel is already hiding some messages.
-
->                                                Users would need to
-> investigate what the hell is happening. They would need to find the
-> new sysfs knob to restore the expected behavior, etc.
-
-That's part of deciding what messages are important for him, as well as
-deciding what KERN_$LOGLEVEL messages are worth printing to consoles.
-
+It also wouldn't be a reliable optimization. This only happens when
+there is a disconnect between the inode and the cache life time, which
+is true for some situations but not others.
