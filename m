@@ -2,111 +2,102 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C6AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD88C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A41F82054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:42:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="lr4OqABL"
+	by mail.kernel.org (Postfix) with ESMTP id 378AF2065C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589413384;
+	bh=3RSx/iEP5nlClH5EvnkR+0EJgWPf1xG9Ahhhm+mrsXE=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=WG8r0afRxy0CWvHDbunZqodnuU/bV8NalwBlS/1MRXhSW+XrOyZCNigoOjA+QuYpl
+	 i4qlrxFO+7SVQ35upk/aUIyrsf8OlkgAXd7EpXcTUlqsspndTBXO8gptS9qlSK4Dp/
+	 097Cehc+V1D7Rk1rUp9enqdpwrk2xgIiJEAhqf/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732781AbgEMXmT (ORCPT
+        id S1732805AbgEMXnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 19:42:19 -0400
-Received: from mail.efficios.com ([167.114.26.124]:44240 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732456AbgEMXmS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 19:42:18 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 8EA6C2BFAFD;
-        Wed, 13 May 2020 19:42:17 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id HE5reDYQ7HtZ; Wed, 13 May 2020 19:42:17 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 374D02BFE99;
-        Wed, 13 May 2020 19:42:17 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 374D02BFE99
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1589413337;
-        bh=gZP/CrJgMswY4fKTD3gwvtjS/7Z/7asD+PSqyElTKh8=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=lr4OqABLsSp0aAaqyT2bm+99FbSmkH7Uto45Qvqz1GGv8zNdq+LIeyRA/2bMn9Sw1
-         vGHg7UHNoazfOzSalNFkQJO4HKcBX2zPcQmFN3GtrlVmNKqmhatW+0uKUJ3Uv5ZLOY
-         VyuXxaDvvJrYUH8w7jHLWbA7GQe+d/Wq4sWuyQr8/aedzs7Quil/t8lLs5P/DkiK1+
-         gBRVXqmewBhmlLxaaE4s5Vuyatx9Chasy0z0GtJL3zn123nZ+R9GX8vNC6fTS4Fd1J
-         Ifsit3yLO5uNHoqVZewzZx7oMmiLGyCwetthiI4MW3HOSLwxMMF22eZ4JL/BzB8nvr
-         Bi5VCd9Hj5n3Q==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id MHSL4MiIFPVP; Wed, 13 May 2020 19:42:17 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 24C4F2BFE20;
-        Wed, 13 May 2020 19:42:17 -0400 (EDT)
-Date:   Wed, 13 May 2020 19:42:17 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
-        paulmck <paulmck@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>, rostedt <rostedt@goodmis.org>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Message-ID: <409359846.20366.1589413337072.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200505134100.957390899@linutronix.de>
-References: <20200505131602.633487962@linutronix.de> <20200505134100.957390899@linutronix.de>
-Subject: Re: [patch V4 part 1 29/36] x86/mce: Send #MC singal from task work
+        Wed, 13 May 2020 19:43:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47222 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732456AbgEMXnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 19:43:02 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C62F32054F;
+        Wed, 13 May 2020 23:43:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589413382;
+        bh=3RSx/iEP5nlClH5EvnkR+0EJgWPf1xG9Ahhhm+mrsXE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=zhn7LvLTsOH6TeWToTx2TYe2IiazB+KyNk03xeHcUhWXlc8V1VcDT8Lq45B52xAO0
+         TdqWwFNBHEAOqAdGhplPMd9kx0Kvc79CSh02v6bWE+aWrhc/RtiEHUEsSWTrCnJq0E
+         8R3yG+MRBuxM600vPiFUSmGlnIB9kFee8iatpvwU=
+Date:   Wed, 13 May 2020 18:47:38 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH perf/core] perf intel-pt: Fix clang build failure in
+ intel_pt_synth_pebs_sample
+Message-ID: <20200513234738.GA21211@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF76 (Linux)/8.8.15_GA_3928)
-Thread-Topic: x86/mce: Send #MC singal from task work
-Thread-Index: q+R/MvvYlgGjd3KZ3y/QG7hHPokAjQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On May 5, 2020, at 9:16 AM, Thomas Gleixner tglx@linutronix.de wrote:
+Fix the following build failure generated with command 
+$ make CC=clang HOSTCC=clang -C tools/ perf:
 
-> From: Peter Zijlstra <peterz@infradead.org>
-> 
+util/intel-pt.c:1802:24: error: field 'br_stack' with variable sized type 'struct branch_stack' not at the end of a struct or class is a GNU extension [-Werror,-Wgnu-variable-sized-type-not-at-end]
+                        struct branch_stack br_stack;
+                                            ^
+1 error generated.
 
-Patch title: singal -> signal.
+Fix this by reordering the members of struct br.
 
-> Convert #MC over to using task_work_add(); it will run the same code
-> slightly later, on the return to user path of the same exception.
+Clang version 11.0.0 was used.
 
-So I suspect that switching the order between tracehook_notify_resume()
-(which ends up calling task_work_run()) and do_signal() done by an
-earlier patch in this series intends to ensure the information about the
-instruction pointer causing the #MC is not overwritten by do_signal()
-(but I'm just guessing).
+Fixes: f283f293a60d ("perf tools: Replace zero-length array with flexible-array")
+Reported-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Here to fix what I break. :)
 
-If it's the case, I think it should be clearly stated as the intent of the
-earlier patch.
+ tools/perf/util/intel-pt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-
-Mathieu
-
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index f17b1e769ae4..b34179e3926f 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -1799,8 +1799,8 @@ static int intel_pt_synth_pebs_sample(struct intel_pt_queue *ptq)
+ 
+ 	if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
+ 		struct {
+-			struct branch_stack br_stack;
+ 			struct branch_entry entries[LBRS_MAX];
++			struct branch_stack br_stack;
+ 		} br;
+ 
+ 		if (items->mask[INTEL_PT_LBR_0_POS] ||
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.26.2
+
