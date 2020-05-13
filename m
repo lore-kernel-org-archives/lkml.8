@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1328CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F1AC2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 881F520575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0959420575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364157;
-	bh=EnnBG/aX6Kg6Mk78SEPquxSEbjde6dpFg9+8Mqr0Sik=;
+	s=default; t=1589364166;
+	bh=T7mwNA+BukZCmqrM9ItDpviYepoJkudAyU7T2jHsWvU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DGJmjWAz/M1Rkn4d2CIJ/oWhiDwIVnlseyaVRImd7iMC4zzX6pOK6OSvEi2uunDU6
-	 bEw8X2z9MBzDslezBI0cgs/nAvC38dBpmCciTGe4tcty/iStv1+y6HQkaFzLArYAy5
-	 uEE8xvpqhL5oGkcJECiDDrF/71Jnx/gP2WmDBbvU=
+	b=qrSViZ2uWKnshvbhdwIXF0KVcaK2EjRHcSWTGFrG0Ufh3qNQg8tB6Yw1TEMQSvpy1
+	 O5nPRp7maqpK0afHBZE69rjf6YqpuqFgpf6Bhg8h6rbvRbUwzeqTu4bmg/hTXax6KU
+	 F3Khqc0KAGHSDn1znUk/fAo5NIRY7OH8Vk5x+XCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388648AbgEMKCg (ORCPT
+        id S2388212AbgEMKCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:02:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49408 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 06:02:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387414AbgEMJt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:49:57 -0400
+        id S1732758AbgEMJtu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:49:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE9A5206D6;
-        Wed, 13 May 2020 09:49:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98712206D6;
+        Wed, 13 May 2020 09:49:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363397;
-        bh=EnnBG/aX6Kg6Mk78SEPquxSEbjde6dpFg9+8Mqr0Sik=;
+        s=default; t=1589363390;
+        bh=T7mwNA+BukZCmqrM9ItDpviYepoJkudAyU7T2jHsWvU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nuseMn/r2b6Tx038ZiLqyhJPfj+23QyCLt5jxGMFzUGEk3JueAor5gGyf/X96L8el
-         N62OeXKIZfDlPuh931D5pjPtTl11RTG3hGVB9U1pAbgsY1l833bpmX0Nz4sqVVaEF/
-         XvFCNiJXsCBNhO/U9M0U1iEsfR5D3jMLsMlNoe/0=
+        b=GqpASOK9TcIIdhCeZDoBTW0N9VxPcp2yXEnh3BdfqsSBTcmiOvzH/bX8UuYC9mxEv
+         1v+XoOdAqCNKx9Xq3KQNI60Xj4Ilwlb8A9Yz98r3vXgC6IPUjrVvRPFE/pSCmT54Hf
+         unmchlFyn2ruA40wBL97KY6pN+xiWEha6A9PRj8c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 40/90] net: mvpp2: cls: Prevent buffer overflow in mvpp2_ethtool_cls_rule_del()
-Date:   Wed, 13 May 2020 11:44:36 +0200
-Message-Id: <20200513094412.888788715@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Kyrill Tkachov <kyrylo.tkachov@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 5.4 55/90] arm64: hugetlb: avoid potential NULL dereference
+Date:   Wed, 13 May 2020 11:44:51 +0200
+Message-Id: <20200513094414.604281798@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -59,36 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Mark Rutland <mark.rutland@arm.com>
 
-[ Upstream commit 722c0f00d4feea77475a5dc943b53d60824a1e4e ]
+commit 027d0c7101f50cf03aeea9eebf484afd4920c8d3 upstream.
 
-The "info->fs.location" is a u32 that comes from the user via the
-ethtool_set_rxnfc() function.  We need to check for invalid values to
-prevent a buffer overflow.
+The static analyzer in GCC 10 spotted that in huge_pte_alloc() we may
+pass a NULL pmdp into pte_alloc_map() when pmd_alloc() returns NULL:
 
-I copy and pasted this check from the mvpp2_ethtool_cls_rule_ins()
-function.
+|   CC      arch/arm64/mm/pageattr.o
+|   CC      arch/arm64/mm/hugetlbpage.o
+|                  from arch/arm64/mm/hugetlbpage.c:10:
+| arch/arm64/mm/hugetlbpage.c: In function ‘huge_pte_alloc’:
+| ./arch/arm64/include/asm/pgtable-types.h:28:24: warning: dereference of NULL ‘pmdp’ [CWE-690] [-Wanalyzer-null-dereference]
+| ./arch/arm64/include/asm/pgtable.h:436:26: note: in expansion of macro ‘pmd_val’
+| arch/arm64/mm/hugetlbpage.c:242:10: note: in expansion of macro ‘pte_alloc_map’
+|     |arch/arm64/mm/hugetlbpage.c:232:10:
+|     |./arch/arm64/include/asm/pgtable-types.h:28:24:
+| ./arch/arm64/include/asm/pgtable.h:436:26: note: in expansion of macro ‘pmd_val’
+| arch/arm64/mm/hugetlbpage.c:242:10: note: in expansion of macro ‘pte_alloc_map’
 
-Fixes: 90b509b39ac9 ("net: mvpp2: cls: Add Classification offload support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This can only occur when the kernel cannot allocate a page, and so is
+unlikely to happen in practice before other systems start failing.
+
+We can avoid this by bailing out if pmd_alloc() fails, as we do earlier
+in the function if pud_alloc() fails.
+
+Fixes: 66b3923a1a0f ("arm64: hugetlb: add support for PTE contiguous bit")
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Reported-by: Kyrill Tkachov <kyrylo.tkachov@arm.com>
+Cc: <stable@vger.kernel.org> # 4.5.x-
+Cc: Will Deacon <will@kernel.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c |    3 +++
- 1 file changed, 3 insertions(+)
 
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-@@ -1422,6 +1422,9 @@ int mvpp2_ethtool_cls_rule_del(struct mv
- 	struct mvpp2_ethtool_fs *efs;
- 	int ret;
+---
+ arch/arm64/mm/hugetlbpage.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/arch/arm64/mm/hugetlbpage.c
++++ b/arch/arm64/mm/hugetlbpage.c
+@@ -230,6 +230,8 @@ pte_t *huge_pte_alloc(struct mm_struct *
+ 		ptep = (pte_t *)pudp;
+ 	} else if (sz == (CONT_PTE_SIZE)) {
+ 		pmdp = pmd_alloc(mm, pudp, addr);
++		if (!pmdp)
++			return NULL;
  
-+	if (info->fs.location >= MVPP2_N_RFS_ENTRIES_PER_FLOW)
-+		return -EINVAL;
-+
- 	efs = port->rfs_rules[info->fs.location];
- 	if (!efs)
- 		return -EINVAL;
+ 		WARN_ON(addr & (sz - 1));
+ 		/*
 
 
