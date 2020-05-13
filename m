@@ -2,105 +2,61 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D872CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F37CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59E5D205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363887;
-	bh=y+oxnLtI1KiA83DePMtZamOTgmV5x72VQoJt21rSaiw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ga/6D7eB4esXiJAiQwK/lvJKDaGLkFQwF0V2CUbOFOIXqKvDxQZBXMXnlBrqCGdTt
-	 o9jn2KJDNJL9rhp/wJ6BQSWTWJLf3O+pXfsOW+ZjfwPXF4ZiVQpGXhXvHDxN+H9ExG
-	 UQXman3hoBUuYW2J6bfCjTMl+OJCHjBwm9hfPTqU=
+	by mail.kernel.org (Postfix) with ESMTP id 3272D205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388517AbgEMJ6G (ORCPT
+        id S2387877AbgEMJ6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:58:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58182 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388230AbgEMJzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:55:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87F35205ED;
-        Wed, 13 May 2020 09:55:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363715;
-        bh=y+oxnLtI1KiA83DePMtZamOTgmV5x72VQoJt21rSaiw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SOUt3BBi8RzXTg2q/QZWSbkPhfa3zweMn0P5WEGYiE1Q2oEVbmMWkLqfawSaqE9VE
-         Fm6KcoSisu6kxI3ln730kAaXBAxoU0tjQ5VpN0voUZYErLiWfTnsVLkdwx5TNdD2WK
-         v5z3e1JSdrqaP5iKYOQJKIn5Mc5K1q8TzdMnYGf4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 5.6 095/118] batman-adv: Fix refcnt leak in batadv_v_ogm_process
-Date:   Wed, 13 May 2020 11:45:14 +0200
-Message-Id: <20200513094425.633017052@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
-References: <20200513094417.618129545@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 13 May 2020 05:58:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50526 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388178AbgEMJ6K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:58:10 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2406C061A0C;
+        Wed, 13 May 2020 02:58:09 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 04F29379; Wed, 13 May 2020 11:58:07 +0200 (CEST)
+Date:   Wed, 13 May 2020 11:58:06 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Samuel Zou <zou_wei@huawei.com>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] iommu/msm: Make msm_iommu_lock static
+Message-ID: <20200513095806.GL9820@8bytes.org>
+References: <1589249839-105820-1-git-send-email-zou_wei@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589249839-105820-1-git-send-email-zou_wei@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+On Tue, May 12, 2020 at 10:17:19AM +0800, Samuel Zou wrote:
+> Fix the following sparse warning:
+> 
+> drivers/iommu/msm_iommu.c:37:1: warning: symbol 'msm_iommu_lock' was not declared.
+> 
+> The msm_iommu_lock has only call site within msm_iommu.c
+> It should be static
+> 
+> Fixes: 0720d1f052dc ("msm: Add MSM IOMMU support")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Samuel Zou <zou_wei@huawei.com>
+> ---
+>  drivers/iommu/msm_iommu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 6f91a3f7af4186099dd10fa530dd7e0d9c29747d upstream.
-
-batadv_v_ogm_process() invokes batadv_hardif_neigh_get(), which returns
-a reference of the neighbor object to "hardif_neigh" with increased
-refcount.
-
-When batadv_v_ogm_process() returns, "hardif_neigh" becomes invalid, so
-the refcount should be decreased to keep refcount balanced.
-
-The reference counting issue happens in one exception handling paths of
-batadv_v_ogm_process(). When batadv_v_ogm_orig_get() fails to get the
-orig node and returns NULL, the refcnt increased by
-batadv_hardif_neigh_get() is not decreased, causing a refcnt leak.
-
-Fix this issue by jumping to "out" label when batadv_v_ogm_orig_get()
-fails to get the orig node.
-
-Fixes: 9323158ef9f4 ("batman-adv: OGMv2 - implement originators logic")
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- net/batman-adv/bat_v_ogm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/net/batman-adv/bat_v_ogm.c
-+++ b/net/batman-adv/bat_v_ogm.c
-@@ -893,7 +893,7 @@ static void batadv_v_ogm_process(const s
- 
- 	orig_node = batadv_v_ogm_orig_get(bat_priv, ogm_packet->orig);
- 	if (!orig_node)
--		return;
-+		goto out;
- 
- 	neigh_node = batadv_neigh_node_get_or_create(orig_node, if_incoming,
- 						     ethhdr->h_source);
-
-
+Applied, thanks.
