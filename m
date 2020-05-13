@@ -2,170 +2,136 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA47CC2D0F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08949C2D0FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81E7B206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:08:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="OZiU+kRV"
+	by mail.kernel.org (Postfix) with ESMTP id E5632206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:08:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730331AbgEMHIA (ORCPT
+        id S1730527AbgEMHIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 03:08:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52284 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729189AbgEMHIA (ORCPT
+        Wed, 13 May 2020 03:08:15 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:38627 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729189AbgEMHIO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 03:08:00 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9FD8C061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 00:07:59 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id a68so4139149otb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 00:07:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=U5dnCZ5YNvHzHQjGscrcpq9MiALGgU67N8Jq5EBQuzw=;
-        b=OZiU+kRVCLk5/6W0St2OK5Xb+p5aH38bGDJXr1TsF9faLdtdBKQuGuJ7Zp5SiMdew7
-         euECR2vCo6+/20wE4jAyKXi43lO8iX735T4hub/MDAh5jbFqtfScDmRenqpoSLVd8NNf
-         g8jnREjHPAvO3tUS/62IwHmPFGNzojTApT+lE=
+        Wed, 13 May 2020 03:08:14 -0400
+Received: by mail-il1-f200.google.com with SMTP id u11so15575358ilg.5
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 00:08:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=U5dnCZ5YNvHzHQjGscrcpq9MiALGgU67N8Jq5EBQuzw=;
-        b=pweqAWhyvvZEig/2jWnGJ4Plsxrv0m+fPhuxwegG3LaAbmR3V62eYjpzYU5LG5nofh
-         oK8x980teJN7u1sCApNPYUT7Y/ih0lPycxBmlbpzzmm0XMH9jkPlgT53acl/aogOGz3m
-         NrnWQ/mlDlDzzSDtjEj3r6cZXh0t6Hiv3J3GtcBwY2yBRHlMnSTyaRKXq2ctltMyb1pX
-         uViNc0lqAiaxxT8NYXYc2B7p8BgqwAHDMFrrtWhJCc5U9PjreiF2tSTrXX6dWkaGuY+w
-         RxK6QIzSN+aBgCkPD/4nNNI8tJt4I2oo4F9oqXdBVh/0VZatKnNx7XIjmZm6ynDqDF3i
-         IKIg==
-X-Gm-Message-State: AGi0Pua3xcII+fsal8ES7usoIbF0agjpWn3T47+xyb7LM2H44C46OXvK
-        aOwP24ElSoxFR51ubCVjq1WDoP6bDDhZFx4tNbGVWA==
-X-Google-Smtp-Source: APiQypLDDUNEGNzAQQ9b8u81ZQsefjAzdi6bm0eh+UnIE80cVeBpyFUq2uSk3Y7c5QYPc5UTCXnFi072V/n20RqH3kg=
-X-Received: by 2002:a9d:7c92:: with SMTP id q18mr20636927otn.281.1589353679188;
- Wed, 13 May 2020 00:07:59 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=4QBNP2HR3gpc8LrPnQK6peZDQZdUtluaIGBLQtNra78=;
+        b=QGxbNXVapTNMzlciPkkdXRCfjc058rcgWw1Zkp9cBRIdUcZqh3/ox7/oYHTfYDU+UO
+         IzQNApsgnokXbCIHbkFYrgc0DpiktugkKK/3sOEG878AsQWU8Ej3faloszk4SXNzY+B9
+         HePE9N030zLkyNtX9Vgm7kpK3InYw7mB0mK+cZESpmxhe9XaZ5Dd+iDYx/jW8Cc1ZFpL
+         nMHE4T/HMJBmFdrpSv4Qt7hP4OaCPPtGGhw17bQg36AhIhbocMY/I6GtxqtmLsLtZMLM
+         Rc5KuDp9Gp9phWMzsIcXICTOa++OicyEcfqSL8cNsK/ME4iufh5sAvQX+TjVM+5Z91NC
+         lUXQ==
+X-Gm-Message-State: AGi0PuZv80C0u2tBbBRk/H/h8acvjkBy8BY/VdsLkF53ydArlwLOjp74
+        KG6SN6zqRnZgrDXpAve7+UlCsOl1vI58NtzAtc7PvAxqCfF7
+X-Google-Smtp-Source: APiQypLP0LNvw//Am9YDhcfBkp/su2qZOVPUWsaX+yXrrHireJ83TAFbcTVPzbJ28ZGsP7fsJVILtpmiMGJgNjNbDqe9EvEYhVeK
 MIME-Version: 1.0
-References: <20200512085944.222637-1-daniel.vetter@ffwll.ch>
- <20200512085944.222637-10-daniel.vetter@ffwll.ch> <6cfd324e-0443-3a12-6a2c-25a546c68643@gmail.com>
-In-Reply-To: <6cfd324e-0443-3a12-6a2c-25a546c68643@gmail.com>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Wed, 13 May 2020 09:07:48 +0200
-Message-ID: <CAKMK7uEwrf=CqswANbKzF1veFER5mHPHcQxR1avLXJROOGpUvg@mail.gmail.com>
-Subject: Re: [RFC 09/17] drm/amdgpu: use dma-fence annotations in cs_submit()
-To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>
+X-Received: by 2002:a6b:c706:: with SMTP id x6mr23750484iof.112.1589353693496;
+ Wed, 13 May 2020 00:08:13 -0700 (PDT)
+Date:   Wed, 13 May 2020 00:08:13 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000052cae405a5823e68@google.com>
+Subject: general protection fault in cfg80211_dev_rename
+From:   syzbot <syzbot+fd5332e429401bf42d18@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, johannes@sipsolutions.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 9:02 AM Christian K=C3=B6nig
-<ckoenig.leichtzumerken@gmail.com> wrote:
->
-> Am 12.05.20 um 10:59 schrieb Daniel Vetter:
-> > This is a bit tricky, since ->notifier_lock is held while calling
-> > dma_fence_wait we must ensure that also the read side (i.e.
-> > dma_fence_begin_signalling) is on the same side. If we mix this up
-> > lockdep complaints, and that's again why we want to have these
-> > annotations.
-> >
-> > A nice side effect of this is that because of the fs_reclaim priming
-> > for dma_fence_enable lockdep now automatically checks for us that
-> > nothing in here allocates memory, without even running any userptr
-> > workloads.
-> >
-> > Cc: linux-media@vger.kernel.org
-> > Cc: linaro-mm-sig@lists.linaro.org
-> > Cc: linux-rdma@vger.kernel.org
-> > Cc: amd-gfx@lists.freedesktop.org
-> > Cc: intel-gfx@lists.freedesktop.org
-> > Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
-> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> > ---
-> >   drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c | 5 +++++
-> >   1 file changed, 5 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c b/drivers/gpu/drm/a=
-md/amdgpu/amdgpu_cs.c
-> > index 7653f62b1b2d..6db3f3c629b0 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-> > @@ -1213,6 +1213,7 @@ static int amdgpu_cs_submit(struct amdgpu_cs_pars=
-er *p,
-> >       struct amdgpu_job *job;
-> >       uint64_t seq;
-> >       int r;
-> > +     bool fence_cookie;
-> >
-> >       job =3D p->job;
-> >       p->job =3D NULL;
-> > @@ -1227,6 +1228,8 @@ static int amdgpu_cs_submit(struct amdgpu_cs_pars=
-er *p,
-> >        */
-> >       mutex_lock(&p->adev->notifier_lock);
-> >
-> > +     fence_cookie =3D dma_fence_begin_signalling();
-> > +
-> >       /* If userptr are invalidated after amdgpu_cs_parser_bos(), retur=
-n
-> >        * -EAGAIN, drmIoctl in libdrm will restart the amdgpu_cs_ioctl.
-> >        */
-> > @@ -1264,12 +1267,14 @@ static int amdgpu_cs_submit(struct amdgpu_cs_pa=
-rser *p,
-> >       amdgpu_vm_move_to_lru_tail(p->adev, &fpriv->vm);
-> >
-> >       ttm_eu_fence_buffer_objects(&p->ticket, &p->validated, p->fence);
-> > +     dma_fence_end_signalling(fence_cookie);
->
-> Mhm, this could come earlier in theory. E.g. after pushing the job to
-> the scheduler.
+Hello,
 
-Yeah, I have not much clue about how amdgpu works :-) In practice it
-doesn't matter much, since the enclosing adev->notifier_lock is a lot
-more strict about what it allows than the dma_fence signalling fake
-lock.
--Daniel
+syzbot found the following crash on:
 
->
-> Christian.
->
-> >       mutex_unlock(&p->adev->notifier_lock);
-> >
-> >       return 0;
-> >
-> >   error_abort:
-> >       drm_sched_job_cleanup(&job->base);
-> > +     dma_fence_end_signalling(fence_cookie);
-> >       mutex_unlock(&p->adev->notifier_lock);
-> >
-> >   error_unlock:
->
+HEAD commit:    2b6c6f07 bpf, i386: Remove unneeded conversion to bool
+git tree:       bpf-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=142a6eec100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=da7097535df759be
+dashboard link: https://syzkaller.appspot.com/bug?extid=fd5332e429401bf42d18
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+fd5332e429401bf42d18@syzkaller.appspotmail.com
+
+general protection fault, probably for non-canonical address 0xdffffc0000000006: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000030-0x0000000000000037]
+CPU: 1 PID: 17548 Comm: syz-executor.2 Not tainted 5.7.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:cfg80211_dev_rename+0x12b/0x210 net/wireless/core.c:146
+Code: ef 00 00 00 4c 8b b5 10 0c 00 00 4d 85 f6 74 36 e8 0a 6f 20 fa 49 8d 7e 48 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 c9 00 00 00 49 8b 7e 48 4c 89 e9 4c 89 f6 48 89
+RSP: 0018:ffffc900055774e0 EFLAGS: 00010207
+RAX: dffffc0000000000 RBX: ffffc90005577748 RCX: ffffc90010d1f000
+RDX: 0000000000000006 RSI: ffffffff8752bd86 RDI: 0000000000000037
+RBP: ffff888088b40000 R08: ffff8880624a85c0 R09: fffffbfff185d748
+R10: ffffffff8c2eba3f R11: fffffbfff185d747 R12: 0000000000000000
+R13: ffffc90005e19018 R14: ffffffffffffffef R15: ffff888088b40000
+FS:  00007fce5b9b5700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000048a140 CR3: 0000000097525000 CR4: 00000000001406e0
+DR0: 0000000020000900 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
+Call Trace:
+ nl80211_set_wiphy+0x29d/0x2b70 net/wireless/nl80211.c:3009
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:673 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:718 [inline]
+ genl_rcv_msg+0x627/0xdf0 net/netlink/genetlink.c:735
+ netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:746
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6bf/0x7e0 net/socket.c:2362
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2416
+ __sys_sendmsg+0xec/0x1b0 net/socket.c:2449
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45c829
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fce5b9b4c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000500b20 RCX: 000000000045c829
+RDX: 0000000000000000 RSI: 0000000020000000 RDI: 0000000000000003
+RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 00000000000009fd R14: 00000000004ccb59 R15: 00007fce5b9b56d4
+Modules linked in:
+---[ end trace 90c3adb6c5fb6794 ]---
+RIP: 0010:cfg80211_dev_rename+0x12b/0x210 net/wireless/core.c:146
+Code: ef 00 00 00 4c 8b b5 10 0c 00 00 4d 85 f6 74 36 e8 0a 6f 20 fa 49 8d 7e 48 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 c9 00 00 00 49 8b 7e 48 4c 89 e9 4c 89 f6 48 89
+RSP: 0018:ffffc900055774e0 EFLAGS: 00010207
+RAX: dffffc0000000000 RBX: ffffc90005577748 RCX: ffffc90010d1f000
+RDX: 0000000000000006 RSI: ffffffff8752bd86 RDI: 0000000000000037
+RBP: ffff888088b40000 R08: ffff8880624a85c0 R09: fffffbfff185d748
+R10: ffffffff8c2eba3f R11: fffffbfff185d747 R12: 0000000000000000
+R13: ffffc90005e19018 R14: ffffffffffffffef R15: ffff888088b40000
+FS:  00007fce5b9b5700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b3103e000 CR3: 0000000097525000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
 
 
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
