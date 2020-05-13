@@ -2,178 +2,182 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82622C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D87F3C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1A7120659
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08F8C204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:45:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="TIT8H80m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730383AbgEMPo1 (ORCPT
+        id S1731638AbgEMPpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:44:27 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:51988 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729483AbgEMPoZ (ORCPT
+        Wed, 13 May 2020 11:45:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48288 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbgEMPpN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:44:25 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jYtYF-0002PP-RZ; Wed, 13 May 2020 09:44:07 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jYtYE-0000QY-AN; Wed, 13 May 2020 09:44:07 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org,
-        rafael@kernel.org, jeyu@kernel.org, jmorris@namei.org,
-        keescook@chromium.org, paul@paul-moore.com,
-        stephen.smalley.work@gmail.com, eparis@parisplace.org,
-        nayna@linux.ibm.com, zohar@linux.ibm.com,
-        scott.branden@broadcom.com, dan.carpenter@oracle.com,
-        skhan@linuxfoundation.org, geert@linux-m68k.org,
-        tglx@linutronix.de, bauerman@linux.ibm.com, dhowells@redhat.com,
-        linux-integrity@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200513152108.25669-1-mcgrof@kernel.org>
-        <20200513152108.25669-3-mcgrof@kernel.org>
-Date:   Wed, 13 May 2020 10:40:31 -0500
-In-Reply-To: <20200513152108.25669-3-mcgrof@kernel.org> (Luis Chamberlain's
-        message of "Wed, 13 May 2020 15:21:07 +0000")
-Message-ID: <87k11fonbk.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 13 May 2020 11:45:13 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D936C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 08:45:12 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id 19so21808371oiy.8
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 08:45:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mei1LatTmGdj+EOMqNvHhmuC380OhE62eU0mPCj4HIU=;
+        b=TIT8H80mk+o//K+Djr3m9ymdXjqeJJh7T1O0QGR3OB+cw9gH6v6k/2XsLqv7s+oaGI
+         UWDF28wRCnpwGYavm+XRQfy+8o2ez7RJBPSI+LHD5tVHIt5p1Sr7uwpr2rlisGEov6IA
+         64dCFZ8mHEj3yDnfE1IkxFdtbSA94SYqY5inY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mei1LatTmGdj+EOMqNvHhmuC380OhE62eU0mPCj4HIU=;
+        b=g4IG+BXIEwni6FoVSKScfw8JnnPwc30Ma+/4nikMLbl3sPeHJBTketCcHEEZgyZYN5
+         s3h5XeOMChuRdOtCzkaqnhcWG7sGJrsPws2aiXXWGpfeBokZgR8N/J5GFtzwFc6+g8qq
+         DBnnHHmvEiU2aPxTdPtm/+E/8O24bhDpUS8MHZF4gMfGD5LUIoFO+C/6p6tjHJ8p8xlv
+         ygsNewA/F84R/vzxLOTMzq+6bxcfIobdupAL5jzkND24Xzmntd0nHPiSO3QkGRyK/J7F
+         9j8rIYUBgJ/4COkUFjgDBSud9sQtLsTCu7TZyzWtoTyDovzYKswtKeNzj4RHH/vSjOnH
+         VZ9g==
+X-Gm-Message-State: AGi0Puazn8fMZh+PWf7e2m8k5dfxZJG4Kz4ldThHhbRmjJy3laH42ey0
+        Pb/ivCLObuzxwelRYzCOPUt4yu+Zsk6Zzv9CSDRb9w==
+X-Google-Smtp-Source: APiQypI5v/GPcuUPKMBM3NTNqytmPwdux2KcE1khhFrjveIV/zK1dS2UemFwYRgCFispMAUfUJhE2vXjRmumZEBkQZg=
+X-Received: by 2002:aca:3b41:: with SMTP id i62mr9169611oia.101.1589384711122;
+ Wed, 13 May 2020 08:45:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jYtYE-0000QY-AN;;;mid=<87k11fonbk.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18UC1Rfu06BcwNif7UO1o/2p3AxKZc4ZvA=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 2/3] security: add symbol namespace for reading file data
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+References: <20200311112004.47138-1-stevensd@chromium.org> <20200311112004.47138-2-stevensd@chromium.org>
+In-Reply-To: <20200311112004.47138-2-stevensd@chromium.org>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Wed, 13 May 2020 17:45:00 +0200
+Message-ID: <CAKMK7uHFgiHLe9oiFBr-VR-6rU9-hLTpBTEVNh0ezyj54u70jw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] dma-buf: add support for virtio exported objects
+To:     David Stevens <stevensd@chromium.org>,
+        Tomasz Figa <tfiga@chromium.org>
+Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:VIRTIO CORE, NET..." 
+        <virtualization@lists.linux-foundation.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, virtio-dev@lists.oasis-open.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Luis Chamberlain <mcgrof@kernel.org> writes:
-
-> Certain symbols are not meant to be used by everybody, the security
-> helpers for reading files directly is one such case. Use a symbol
-> namespace for them.
+On Wed, Mar 11, 2020 at 12:20 PM David Stevens <stevensd@chromium.org> wrote:
 >
-> This will prevent abuse of use of these symbols in places they were
-> not inteded to be used, and provides an easy way to audit where these
-> types of operations happen as a whole.
+> This change adds a new dma-buf operation that allows dma-bufs to be used
+> by virtio drivers to share exported objects. The new operation allows
+> the importing driver to query the exporting driver for the UUID which
+> identifies the underlying exported object.
+>
+> Signed-off-by: David Stevens <stevensd@chromium.org>
 
-Why not just remove the ability for the firmware loader to be a module?
+Adding Tomasz Figa, I've discussed this with him at elce last year I
+think. Just to make sure.
 
-Is there some important use case that requires the firmware loader
-to be a module?
+Bunch of things:
+- obviously we need the users of this in a few drivers, can't really
+review anything stand-alone
+- adding very specific ops to the generic interface is rather awkward,
+eventually everyone wants that and we end up in a mess. I think the
+best solution here would be if we create a struct virtio_dma_buf which
+subclasses dma-buf, add a (hopefully safe) runtime upcasting
+functions, and then a virtio_dma_buf_get_uuid() function. Just storing
+the uuid should be doable (assuming this doesn't change during the
+lifetime of the buffer), so no need for a callback.
+- for the runtime upcasting the usual approach is to check the ->ops
+pointer. Which means that would need to be the same for all virtio
+dma_bufs, which might get a bit awkward. But I'd really prefer we not
+add allocator specific stuff like this to dma-buf.
+-Daniel
 
-We already compile the code in by default.  So it is probably just
-easier to remove the modular support all together.  Which would allow
-the export of the security hooks to be removed as well.
-
-Eric
-
-
-> Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 > ---
->  drivers/base/firmware_loader/fallback.c | 1 +
->  fs/exec.c                               | 2 ++
->  kernel/kexec.c                          | 2 ++
->  kernel/module.c                         | 2 ++
->  security/security.c                     | 6 +++---
->  5 files changed, 10 insertions(+), 3 deletions(-)
+>  drivers/dma-buf/dma-buf.c | 12 ++++++++++++
+>  include/linux/dma-buf.h   | 18 ++++++++++++++++++
+>  2 files changed, 30 insertions(+)
 >
-> diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
-> index d9ac7296205e..b088886dafda 100644
-> --- a/drivers/base/firmware_loader/fallback.c
-> +++ b/drivers/base/firmware_loader/fallback.c
-> @@ -19,6 +19,7 @@
->   */
->  
->  MODULE_IMPORT_NS(FIRMWARE_LOADER_PRIVATE);
-> +MODULE_IMPORT_NS(SECURITY_READ);
->  
->  extern struct firmware_fallback_config fw_fallback_config;
->  
-> diff --git a/fs/exec.c b/fs/exec.c
-> index 9791b9eef9ce..30bd800ab1d6 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -72,6 +72,8 @@
->  
->  #include <trace/events/sched.h>
->  
-> +MODULE_IMPORT_NS(SECURITY_READ);
-> +
->  int suid_dumpable = 0;
->  
->  static LIST_HEAD(formats);
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index f977786fe498..8d572b41a157 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -19,6 +19,8 @@
->  
->  #include "kexec_internal.h"
->  
-> +MODULE_IMPORT_NS(SECURITY_READ);
-> +
->  static int copy_user_segment_list(struct kimage *image,
->  				  unsigned long nr_segments,
->  				  struct kexec_segment __user *segments)
-> diff --git a/kernel/module.c b/kernel/module.c
-> index 80faaf2116dd..8973a463712e 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -59,6 +59,8 @@
->  #include <uapi/linux/module.h>
->  #include "module-internal.h"
->  
-> +MODULE_IMPORT_NS(SECURITY_READ);
-> +
->  #define CREATE_TRACE_POINTS
->  #include <trace/events/module.h>
->  
-> diff --git a/security/security.c b/security/security.c
-> index 8ae66e4c370f..bdbd1fc5105a 100644
-> --- a/security/security.c
-> +++ b/security/security.c
-> @@ -1654,7 +1654,7 @@ int security_kernel_read_file(struct file *file, enum kernel_read_file_id id)
->  		return ret;
->  	return ima_read_file(file, id);
+> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+> index d4097856c86b..fa5210ba6aaa 100644
+> --- a/drivers/dma-buf/dma-buf.c
+> +++ b/drivers/dma-buf/dma-buf.c
+> @@ -1158,6 +1158,18 @@ void dma_buf_vunmap(struct dma_buf *dmabuf, void *vaddr)
 >  }
-> -EXPORT_SYMBOL_GPL(security_kernel_read_file);
-> +EXPORT_SYMBOL_NS_GPL(security_kernel_read_file, SECURITY_READ);
->  
->  int security_kernel_post_read_file(struct file *file, char *buf, loff_t size,
->  				   enum kernel_read_file_id id)
-> @@ -1666,7 +1666,7 @@ int security_kernel_post_read_file(struct file *file, char *buf, loff_t size,
->  		return ret;
->  	return ima_post_read_file(file, buf, size, id);
->  }
-> -EXPORT_SYMBOL_GPL(security_kernel_post_read_file);
-> +EXPORT_SYMBOL_NS_GPL(security_kernel_post_read_file, SECURITY_READ);
->  
->  int security_kernel_load_data(enum kernel_load_data_id id)
+>  EXPORT_SYMBOL_GPL(dma_buf_vunmap);
+>
+> +int dma_buf_get_uuid(struct dma_buf *dmabuf, uuid_t *uuid)
+> +{
+> +       if (WARN_ON(!dmabuf) || !uuid)
+> +               return -EINVAL;
+> +
+> +       if (!dmabuf->ops->get_uuid)
+> +               return -ENODEV;
+> +
+> +       return dmabuf->ops->get_uuid(dmabuf, uuid);
+> +}
+> +EXPORT_SYMBOL_GPL(dma_buf_get_uuid);
+> +
+>  #ifdef CONFIG_DEBUG_FS
+>  static int dma_buf_debug_show(struct seq_file *s, void *unused)
 >  {
-> @@ -1677,7 +1677,7 @@ int security_kernel_load_data(enum kernel_load_data_id id)
->  		return ret;
->  	return ima_load_data(id);
->  }
-> -EXPORT_SYMBOL_GPL(security_kernel_load_data);
-> +EXPORT_SYMBOL_NS_GPL(security_kernel_load_data, SECURITY_READ);
->  
->  int security_task_fix_setuid(struct cred *new, const struct cred *old,
->  			     int flags)
+> diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
+> index abf5459a5b9d..00758523597d 100644
+> --- a/include/linux/dma-buf.h
+> +++ b/include/linux/dma-buf.h
+> @@ -251,6 +251,21 @@ struct dma_buf_ops {
+>
+>         void *(*vmap)(struct dma_buf *);
+>         void (*vunmap)(struct dma_buf *, void *vaddr);
+> +
+> +       /**
+> +        * @get_uuid
+> +        *
+> +        * This is called by dma_buf_get_uuid to get the UUID which identifies
+> +        * the buffer to virtio devices.
+> +        *
+> +        * This callback is optional.
+> +        *
+> +        * Returns:
+> +        *
+> +        * 0 on success or a negative error code on failure. On success uuid
+> +        * will be populated with the buffer's UUID.
+> +        */
+> +       int (*get_uuid)(struct dma_buf *dmabuf, uuid_t *uuid);
+>  };
+>
+>  /**
+> @@ -444,4 +459,7 @@ int dma_buf_mmap(struct dma_buf *, struct vm_area_struct *,
+>                  unsigned long);
+>  void *dma_buf_vmap(struct dma_buf *);
+>  void dma_buf_vunmap(struct dma_buf *, void *vaddr);
+> +
+> +int dma_buf_get_uuid(struct dma_buf *dmabuf, uuid_t *uuid);
+> +
+>  #endif /* __DMA_BUF_H__ */
+> --
+> 2.25.1.481.gfbce0eb801-goog
+>
+
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
