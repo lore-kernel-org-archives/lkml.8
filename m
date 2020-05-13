@@ -2,120 +2,282 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E202C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD3FC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FF25204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:45:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAA41207C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:47:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="dAMtO8jQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732355AbgEMPp4 (ORCPT
+        id S2388998AbgEMPq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:45:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48396 "EHLO
+        Wed, 13 May 2020 11:46:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728490AbgEMPpz (ORCPT
+        with ESMTP id S1729604AbgEMPq7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:45:55 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBDEBC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 08:45:54 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jYtZs-0004Pr-MC; Wed, 13 May 2020 17:45:48 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jYtZo-0002Hv-5S; Wed, 13 May 2020 17:45:44 +0200
-Date:   Wed, 13 May 2020 17:45:44 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Michael Walle <michael@walle.cc>,
-        Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] net: phy: at803x: add cable test support
-Message-ID: <20200513154544.gwcccvbicpvrj6vm@pengutronix.de>
-References: <20200513120648.14415-1-o.rempel@pengutronix.de>
- <0c80397b-58b8-0807-0b98-695db8068e25@gmail.com>
+        Wed, 13 May 2020 11:46:59 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93BCAC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 08:46:57 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id y16so21254wrs.3
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 08:46:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kC/Wx5fDOrFA5V1TSUixxtmSIDDSd8BbVGT5BWnbRLM=;
+        b=dAMtO8jQD+Ai7SeyseP4v3EFTC2agTgJgukJDbFISow3JiC4+kE0+Upo/+G/vtUaup
+         z0jHsmd1c4EI8nM6pZ+oTxxet6V4uMuelqKH4SSJGk5naOmH6ASqvGxH32CpP6GRkres
+         F/Dw60q3SwetZ9pGZpJYPtTkJvV6KqDZ7EbL4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=kC/Wx5fDOrFA5V1TSUixxtmSIDDSd8BbVGT5BWnbRLM=;
+        b=FjSUSwZcU0zlZ2tBiiqyWWrkGszZu4XEbAIXOSDPwaxRLaL4KBzM0p+Tr4hoji+SAl
+         ktpLAWMY6+mxyBO0NqCmiW+Lijd52hX3lCR9drSngMUxuX5EHwmc7KKQKCMmqwIE1W+0
+         Z8Gs2QC/2++umL8cwWWJqY9yj4XHYpYloZ/gL0It1zTfFQxoSJmQrP6EIPFRhqxP8d/D
+         9uhWxbCgSzrnpChgLDru/pkLpZ5s4CaynvbDBEXyRPK2+sN+WqT44PX92lyrMf6Ffwbk
+         O20HVjBfnZ/gGIVJ4wMIsiOoNToD4hBlbfQ/Q/1JhGPU2esGkurzUqe29wrJJw1CFdaE
+         tK+A==
+X-Gm-Message-State: AGi0PuaQBSmjuiiWL9Rrc8QaoDXkA6Pt2Jkrr2LcjIoUEx2Wk+EFl7Vs
+        5MK3Rp31UmS6NmiaL2WxCI85og==
+X-Google-Smtp-Source: APiQypK41W1FEz5rgWALE5Md3INO+YCZ+8cKSmS/VxwlX6x4xSY/wGBizAJVuaBQsZtsneI0jS3mBA==
+X-Received: by 2002:a05:6000:47:: with SMTP id k7mr23651194wrx.233.1589384816191;
+        Wed, 13 May 2020 08:46:56 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id v205sm18901272wmg.11.2020.05.13.08.46.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 08:46:55 -0700 (PDT)
+Date:   Wed, 13 May 2020 17:46:53 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Greg KH <greg@kroah.com>
+Cc:     Charan Teja Kalla <charante@codeaurora.org>, fengc@google.com,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, vinmenon@codeaurora.org,
+        ghackmann@google.com, stable@vger.kernel.org,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH v2] dma-buf: fix use-after-free in dmabuffs_dname
+Message-ID: <20200513154653.GK206103@phenom.ffwll.local>
+Mail-Followup-To: Greg KH <greg@kroah.com>,
+        Charan Teja Kalla <charante@codeaurora.org>, fengc@google.com,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, vinmenon@codeaurora.org,
+        ghackmann@google.com, stable@vger.kernel.org,
+        linux-media@vger.kernel.org
+References: <1588920063-17624-1-git-send-email-charante@codeaurora.org>
+ <20200512085221.GB3557007@kroah.com>
+ <a3cbf675-becc-1713-bcdc-664ddfe4a544@codeaurora.org>
+ <20200513125112.GC1083139@kroah.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="l4mc43ul3f7nhocp"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0c80397b-58b8-0807-0b98-695db8068e25@gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 17:35:33 up 180 days,  6:54, 192 users,  load average: 0.06, 0.06,
- 0.02
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200513125112.GC1083139@kroah.com>
+X-Operating-System: Linux phenom 5.6.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 13, 2020 at 02:51:12PM +0200, Greg KH wrote:
+> On Wed, May 13, 2020 at 05:40:26PM +0530, Charan Teja Kalla wrote:
+> > 
+> > Thank you Greg for the comments.
+> > On 5/12/2020 2:22 PM, Greg KH wrote:
+> > > On Fri, May 08, 2020 at 12:11:03PM +0530, Charan Teja Reddy wrote:
+> > >> The following race occurs while accessing the dmabuf object exported as
+> > >> file:
+> > >> P1				P2
+> > >> dma_buf_release()          dmabuffs_dname()
+> > >> 			   [say lsof reading /proc/<P1 pid>/fd/<num>]
+> > >>
+> > >> 			   read dmabuf stored in dentry->d_fsdata
+> > >> Free the dmabuf object
+> > >> 			   Start accessing the dmabuf structure
+> > >>
+> > >> In the above description, the dmabuf object freed in P1 is being
+> > >> accessed from P2 which is resulting into the use-after-free. Below is
+> > >> the dump stack reported.
+> > >>
+> > >> We are reading the dmabuf object stored in the dentry->d_fsdata but
+> > >> there is no binding between the dentry and the dmabuf which means that
+> > >> the dmabuf can be freed while it is being read from ->d_fsdata and
+> > >> inuse. Reviews on the patch V1 says that protecting the dmabuf inuse
+> > >> with an extra refcount is not a viable solution as the exported dmabuf
+> > >> is already under file's refcount and keeping the multiple refcounts on
+> > >> the same object coordinated is not possible.
+> > >>
+> > >> As we are reading the dmabuf in ->d_fsdata just to get the user passed
+> > >> name, we can directly store the name in d_fsdata thus can avoid the
+> > >> reading of dmabuf altogether.
+> > >>
+> > >> Call Trace:
+> > >>  kasan_report+0x12/0x20
+> > >>  __asan_report_load8_noabort+0x14/0x20
+> > >>  dmabuffs_dname+0x4f4/0x560
+> > >>  tomoyo_realpath_from_path+0x165/0x660
+> > >>  tomoyo_get_realpath
+> > >>  tomoyo_check_open_permission+0x2a3/0x3e0
+> > >>  tomoyo_file_open
+> > >>  tomoyo_file_open+0xa9/0xd0
+> > >>  security_file_open+0x71/0x300
+> > >>  do_dentry_open+0x37a/0x1380
+> > >>  vfs_open+0xa0/0xd0
+> > >>  path_openat+0x12ee/0x3490
+> > >>  do_filp_open+0x192/0x260
+> > >>  do_sys_openat2+0x5eb/0x7e0
+> > >>  do_sys_open+0xf2/0x180
+> > >>
+> > >> Fixes: bb2bb9030425 ("dma-buf: add DMA_BUF_SET_NAME ioctls")
+> > >> Reported-by: syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com
+> > >> Cc: <stable@vger.kernel.org> [5.3+]
+> > >> Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
+> > >> ---
+> > >>
+> > >> Changes in v2: 
+> > >>
+> > >> - Pass the user passed name in ->d_fsdata instead of dmabuf
+> > >> - Improve the commit message
+> > >>
+> > >> Changes in v1: (https://patchwork.kernel.org/patch/11514063/)
+> > >>
+> > >>  drivers/dma-buf/dma-buf.c | 17 ++++++++++-------
+> > >>  1 file changed, 10 insertions(+), 7 deletions(-)
+> > >>
+> > >> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+> > >> index 01ce125..0071f7d 100644
+> > >> --- a/drivers/dma-buf/dma-buf.c
+> > >> +++ b/drivers/dma-buf/dma-buf.c
+> > >> @@ -25,6 +25,7 @@
+> > >>  #include <linux/mm.h>
+> > >>  #include <linux/mount.h>
+> > >>  #include <linux/pseudo_fs.h>
+> > >> +#include <linux/dcache.h>
+> > >>  
+> > >>  #include <uapi/linux/dma-buf.h>
+> > >>  #include <uapi/linux/magic.h>
+> > >> @@ -40,15 +41,13 @@ struct dma_buf_list {
+> > >>  
+> > >>  static char *dmabuffs_dname(struct dentry *dentry, char *buffer, int buflen)
+> > >>  {
+> > >> -	struct dma_buf *dmabuf;
+> > >>  	char name[DMA_BUF_NAME_LEN];
+> > >>  	size_t ret = 0;
+> > >>  
+> > >> -	dmabuf = dentry->d_fsdata;
+> > >> -	dma_resv_lock(dmabuf->resv, NULL);
+> > >> -	if (dmabuf->name)
+> > >> -		ret = strlcpy(name, dmabuf->name, DMA_BUF_NAME_LEN);
+> > >> -	dma_resv_unlock(dmabuf->resv);
+> > >> +	spin_lock(&dentry->d_lock);
+> > > 
+> > > Are you sure this lock always protects d_fsdata?
+> > 
+> > I think yes. In the dma-buf.c, I have to make sure that d_fsdata should
+> > always be under d_lock thus it will be protected. (In this posted patch
+> > there is one place(in dma_buf_set_name) that is missed, will update this
+> > in V3).
+> > 
+> > > 
+> > >> +	if (dentry->d_fsdata)
+> > >> +		ret = strlcpy(name, dentry->d_fsdata, DMA_BUF_NAME_LEN);
+> > >> +	spin_unlock(&dentry->d_lock);
+> > >>  
+> > >>  	return dynamic_dname(dentry, buffer, buflen, "/%s:%s",
+> > >>  			     dentry->d_name.name, ret > 0 ? name : "");
+> > > 
+> > > If the above check fails the name will be what?  How could d_name.name
+> > > be valid but d_fsdata not be valid?
+> > 
+> > In case of check fails, empty string "" is appended to the name by the
+> > code, ret > 0 ? name : "", ret is initialized to zero. Thus the name
+> > string will be like "/dmabuf:".
+> 
+> So multiple objects can have the same "name" if this happens to multiple
+> ones at once?
+> 
+> > Regarding the validity of d_fsdata, we are setting the dmabuf's
+> > dentry->d_fsdata to NULL in the dma_buf_release() thus can go invalid if
+> > that dmabuf is in the free path.
+> 
+> Why are we allowing the name to be set if the dmabuf is on the free path
+> at all?  Shouldn't that be the real fix here?
+> 
+> > >> @@ -80,12 +79,16 @@ static int dma_buf_fs_init_context(struct fs_context *fc)
+> > >>  static int dma_buf_release(struct inode *inode, struct file *file)
+> > >>  {
+> > >>  	struct dma_buf *dmabuf;
+> > >> +	struct dentry *dentry = file->f_path.dentry;
+> > >>  
+> > >>  	if (!is_dma_buf_file(file))
+> > >>  		return -EINVAL;
+> > >>  
+> > >>  	dmabuf = file->private_data;
+> > >>  
+> > >> +	spin_lock(&dentry->d_lock);
+> > >> +	dentry->d_fsdata = NULL;
+> > >> +	spin_unlock(&dentry->d_lock);
+> > >>  	BUG_ON(dmabuf->vmapping_counter);
+> > >>  
+> > >>  	/*
+> > >> @@ -343,6 +346,7 @@ static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
+> > >>  	}
+> > >>  	kfree(dmabuf->name);
+> > >>  	dmabuf->name = name;
+> > >> +	dmabuf->file->f_path.dentry->d_fsdata = name;
+> > > 
+> > > You are just changing the use of d_fsdata from being a pointer to the
+> > > dmabuf to being a pointer to the name string?  What's to keep that name
+> > > string around and not have the same reference counting issues that the
+> > > dmabuf structure itself has?  Who frees that string memory?
+> > > 
+> > 
+> > Yes, I am just storing the name string in the d_fsdata in place of
+> > dmabuf and this helps to get rid of any extra refcount requirement.
+> > Because the user passed name carried in the d_fsdata is copied to the
+> > local buffer in dmabuffs_dname under spin_lock(d_lock) and the same
+> > d_fsdata is set to NULL(under the d_lock only) when that dmabuf is in
+> > the release path. So, when d_fsdata is NULL, name string is not accessed
+> > from the dmabuffs_dname thus extra count is not required.
+> > 
+> > String memory, stored in the dmabuf->name, is released from the
+> > dma_buf_release(). Flow will be like, It fist sets d_fsdata=NULL and
+> > then free the dmabuf->name.
+> > 
+> > However from your comments I have realized that there is a race in this
+> > patch when using the name string between dma_buf_set_name() and
+> > dmabuffs_dname(). But, If the idea of passing the name string inplace of
+> > dmabuf in d_fsdata looks fine, I can update this next patch.
+> 
+> I'll leave that to the dmabuf authors/maintainers, but it feels odd to
+> me...
 
---l4mc43ul3f7nhocp
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I have zero clue about fs internals. This all scares me, that's all. I
+know enough about lifetime bugs that if you don't deeply understand a
+subsystem, all that's guaranteed is that you will get it wrong.
 
-On Wed, May 13, 2020 at 08:23:42AM -0700, Florian Fainelli wrote:
->=20
->=20
-> On 5/13/2020 5:06 AM, Oleksij Rempel wrote:
-> > The cable test seems to be support by all of currently support Atherso
-> > PHYs, so add support for all of them. This patch was tested only on
-> > AR9331 PHY with following results:
-> > - No cable is detected as short
-> > - A 15m long cable connected only on one side is detected as 9m open.
-> > - A cable test with active link partner will provide no usable results.
->=20
-> How does this relate to Michael's recent work here:
->=20
-> https://www.spinics.net/lists/kernel/msg3509304.html
+/me out
 
-Uff.. i missed this. Then I'll need only to add some changes on top of
-his patch.
+Cheers, Daniel
 
-Regards,
-Oleksij
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
+> thanks,
+> 
+> greg k-h
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
---l4mc43ul3f7nhocp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl68FiQACgkQ4omh9DUa
-UbMiXxAAiOrCPbzXrEYAuGypWvsoxkF++QGU8vdMlA8GnrJqzvwiDc/IG4KoyILF
-Yu40ODr7ySGS3m1BLfg+xwz/SZiZCS9j13s1e/pmGKeMVEBanVZ9V3KVRdZnCv86
-+PYenNjsIIY4TojKGpdTqXVpYnLypWVyFQeJVraf7TEYpN/7iFXW8cAnqla0z3xO
-D+OjhxiyEG0ULZU4BhxQi/vYvyZuXqp7io9U6IxPNV7KayW8f56TAvq1Ev0RSClT
-ctknHooaYvvqQpMYR+5RGfICd1GNIxLxCzJzr6EdxJBndOYil7kokkuZxMoOzAOq
-N15sY8D2AAXGEjiKABXw43cU2bQUGUfqbKSFteIbgxO3hFebSq9kqGGdguIgNuZS
-0YLh6T4W3xpUgSPTM+emGHNoEDweIH5nUvEGlE4EjTmNBo87wNzT9ZI7kfkrL13X
-DTDcU4ebPhh7JA/7WcdgX7hriUwxKOdt+4vb+nwu8ir7v6U77DJDNeheh8HfOHzh
-OHkR2fKKt6lUr69eaI6Ki0Jk5CsSbxuh8wu8gDmiBMeV+X0JPr9k1WbEjHgm5Zmw
-ul0SRCa5yE5DudHFGniT7Fv2AKr/eqVuGabuZNXFr2FVcz3Usl8uT3rDCtgJLJff
-YX6rqvDW2kVcZ+hWKk5QSovbLV0jh1RHwBOgDnkus5gMITcKfMc=
-=dJ9z
------END PGP SIGNATURE-----
-
---l4mc43ul3f7nhocp--
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
