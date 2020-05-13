@@ -2,82 +2,155 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B724C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A844C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F8CF20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A9DB23126
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 01:20:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="bcpCCd4I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732008AbgEMBSx (ORCPT
+        id S1731951AbgEMBUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 21:18:53 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:49072 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728131AbgEMBSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 21:18:53 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CEC732CC98540DDD5EB9;
-        Wed, 13 May 2020 09:18:50 +0800 (CST)
-Received: from huawei.com (10.67.174.156) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Wed, 13 May 2020
- 09:18:41 +0800
-From:   ChenTao <chentao107@huawei.com>
-To:     <mark@fasheh.com>, <herton@canonical.com>,
-        <htl10@users.sourceforge.net>, <Larry.Finger@lwfinger.net>,
-        <kvalo@codeaurora.org>
-CC:     <davem@davemloft.net>, <linux-wireless@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <chentao107@huawei.com>
-Subject: [PATCH -next v2] rtl8187: Remove unused variable rtl8225z2_tx_power_ofdm
-Date:   Wed, 13 May 2020 09:17:54 +0800
-Message-ID: <20200513011754.28432-1-chentao107@huawei.com>
-X-Mailer: git-send-email 2.22.0
+        Tue, 12 May 2020 21:20:47 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17766 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731604AbgEMBUr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 21:20:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1589332815; cv=none; 
+        d=zoho.com.cn; s=zohoarc; 
+        b=cjRqHgQoFQcF9dXuptd75t76dh9Ox5nQ6TBCswsAIE4vmMvZMewIFAKPRRPZe/PJS2bY6Znhx+4w0WAA5Mc10//xuHcGOXibicDt0DNxz/yqmBq9jqQYI0HOJKQZLeRu97PeXH0+eg7Wh7IEp7qIfK2cgzhh49fR11LSI9OmNkM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
+        t=1589332815; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To; 
+        bh=UUH9TBEsGZClV0UvQJYkiGlyJwxsXutgInjbHM/99OA=; 
+        b=UeVNz+dMSImscqxWTjoQW6hcrDNWN8PeWNk2/x2Z7sWF8rnNDKBCow+UF1rwxfp6prWwIgTltl1mXREQhk3JzzzL9uRc8V36S/nmjqTuPp8mHYV/KUcZasCsX1zXsKb+mm4yvqUoOl5SfBFRA/dS2EfEd67YRPZXmbW7VWWx9bw=
+ARC-Authentication-Results: i=1; mx.zoho.com.cn;
+        dkim=pass  header.i=flygoat.com;
+        spf=pass  smtp.mailfrom=jiaxun.yang@flygoat.com;
+        dmarc=pass header.from=<jiaxun.yang@flygoat.com> header.from=<jiaxun.yang@flygoat.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1589332815;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:CC:Subject:Reply-to:In-Reply-To:References:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=UUH9TBEsGZClV0UvQJYkiGlyJwxsXutgInjbHM/99OA=;
+        b=bcpCCd4IolU5WLkjKiiyehRsPV+/qDkYcYvv6kgawo3IpvNaL0dpUfqw1G/bJJ3B
+        hTpUDBXWRJAWXQfNpXFhEmkx6v6tDlprHuJHAJtFK56CoaoP5V9/naZuiG0Yo92b7Hd
+        2ymduufrqGSTuebNjO6jnOS0hJEjt+PQJZIAEou0=
+Received: from [127.0.0.1] (223.104.5.223 [223.104.5.223]) by mx.zoho.com.cn
+        with SMTPS id 1589332811518609.5936666834109; Wed, 13 May 2020 09:20:11 +0800 (CST)
+Date:   Wed, 13 May 2020 09:20:08 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Burton <paulburton@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH v9 2/5] PCI: Add Loongson PCI Controller support
+User-Agent: K-9 Mail for Android
+Reply-to: jiaxun.yang@flygoat.com
+In-Reply-To: <20200512180602.GA273658@bjorn-Precision-5520>
+References: <20200512180602.GA273658@bjorn-Precision-5520>
+Message-ID: <08C2301A-7349-4044-80F4-0B0520780DB9@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.174.156]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following warning:
 
-drivers/net/wireless/realtek/rtl818x/rtl8187/rtl8225.c:609:17: warning:
-‘rtl8225z2_tx_power_ofdm’ defined but not used
- static const u8 rtl8225z2_tx_power_ofdm[] = {
 
-Acked-by: Hin-Tak Leung <htl10@users.sourceforge.net>
-Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: ChenTao <chentao107@huawei.com>
----
-v1->v2:
-- change the subject
+=E4=BA=8E 2020=E5=B9=B45=E6=9C=8813=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=882=
+:06:02, Bjorn Helgaas <helgaas@kernel=2Eorg> =E5=86=99=E5=88=B0:
+>On Tue, May 12, 2020 at 03:43:56PM +0800, Jiaxun Yang wrote:
+>> This controller can be found on Loongson-2K SoC, Loongson-3
+>> systems with RS780E/LS7A PCH=2E
+>>=20
+>> The RS780E part of code was previously located at
+>> arch/mips/pci/ops-loongson3=2Ec and now it can use generic PCI
+>> driver implementation=2E
+>>=20
+>> Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
+>> Reviewed-by: Rob Herring <robh@kernel=2Eorg>
+>
+>> +static void system_bus_quirk(struct pci_dev *pdev)
+>> +{
+>> +	u16 tmp;
+>> +
+>> +	/*=20
+>> +	 * These devices are not sharing resouces with rest of devices
+>> +	 * on host bus and firmware will ensure their BARs are placed
+>> +	 * in safe ranges=2E Also there might be some config registers
+>> +	 * in their config space so kernel shouldn't ignore them=2E
+>
+>"Firmware ensuring BARs are placed in 'safe' ranges" is not a
+>sufficient answer=2E  As I said before, Linux needs to know both the
+>ADDRESS and the SIZE of whatever non-standard BARs these are=2E
+>Otherwise, we're liable to assign that space to a different device=2E
 
- drivers/net/wireless/realtek/rtl818x/rtl8187/rtl8225.c | 4 ----
- 1 file changed, 4 deletions(-)
+The address assigned to these devices will never be a part of resources
+belongs to the host bridge=2E That's enforced by hardware and firmware,
+so address conflict would never happen=2E
 
-diff --git a/drivers/net/wireless/realtek/rtl818x/rtl8187/rtl8225.c b/drivers/net/wireless/realtek/rtl818x/rtl8187/rtl8225.c
-index b2616d61b66d..585784258c66 100644
---- a/drivers/net/wireless/realtek/rtl818x/rtl8187/rtl8225.c
-+++ b/drivers/net/wireless/realtek/rtl818x/rtl8187/rtl8225.c
-@@ -606,10 +606,6 @@ static const u8 rtl8225z2_tx_power_cck[] = {
- 	0x26, 0x25, 0x21, 0x1b, 0x14, 0x0d, 0x06, 0x03
- };
- 
--static const u8 rtl8225z2_tx_power_ofdm[] = {
--	0x42, 0x00, 0x40, 0x00, 0x40
--};
--
- static const u8 rtl8225z2_tx_gain_cck_ofdm[] = {
- 	0x00, 0x01, 0x02, 0x03, 0x04, 0x05,
- 	0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b,
--- 
-2.22.0
+I'm doing like this to ensure kernel will discover this device but do noth=
+ing
+about assignment of resources to it=2E
 
+>
+>If you have to hard-code the size, so be it=2E  That would mean the
+>hardware is completely broken, but at least we could make Linux deal
+>with it=2E  If the hardware consumes address space we don't know about,
+>we can't deal with that=2E
+>
+>> +	 */
+>> +	pdev->mmio_always_on =3D 1;
+>> +	pdev->non_compliant_bars =3D 1;
+>> +}
+>
+>> +void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int d=
+evfn,
+>> +			       int where)
+>> +{
+>> +	unsigned char busnum =3D bus->number;
+>> +	struct pci_host_bridge *bridge =3D pci_find_host_bridge(bus);
+>> +	struct loongson_pci *priv =3D  pci_host_bridge_priv(bridge);
+>> +
+>> +	/*
+>> +	 * Do not read more than one device on the bus other than
+>> +	 * the host bus 0=2E
+>> +	 */
+>
+>If the hardware is restricted such that the root bus number must be
+>zero, pleae say that explicitly here=2E  Otherwise, it just looks like
+>a bug=2E
+>
+>> +	if (priv->flags & FLAG_DEV_FIX && busnum !=3D 0 &&
+>> +		PCI_SLOT(devfn) > 0)
+>> +		return NULL;
+>> +
+>> +	/* CFG0 can only access standard space */
+>> +	if (where < PCI_CFG_SPACE_SIZE && priv->cfg0_base)
+>> +		return cfg0_map(priv, busnum, devfn, where);
+>> +
+>> +	/* CFG1 can access extended space */
+>> +	if (where < PCI_CFG_SPACE_EXP_SIZE && priv->cfg1_base)
+>> +		return cfg1_map(priv, busnum, devfn, where);
+>> +
+>> +	return NULL;
+>> +}
+
+--=20
+Jiaxun Yang
