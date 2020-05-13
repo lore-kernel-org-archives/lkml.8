@@ -2,97 +2,74 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DC7C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C917CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD2C0204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:09:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589386180;
-	bh=WdqE4cKf0ccXinlbg1MvpbxgyN4LOmP75On1HjwnySE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xyfFzOMh5lhYNH0IBdm5E519GtB7NHLWQYtb5VHXJJ7Ecx2VRVX9Q+94K7NR84Gs5
-	 EQBOMnDI34NMMuqR3fXZzFpImonR6lbQjct7X8cdO6Rvn0V+BNft4mP2LlcX5s8KjL
-	 waWNDuiQCZYp8Q9XgYXV/Jgr0sDRy/y7Gl1a31eI=
+	by mail.kernel.org (Postfix) with ESMTP id 09D60205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:09:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389466AbgEMQJk (ORCPT
+        id S2389496AbgEMQJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 12:09:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59016 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 12:09:43 -0400
+Received: from verein.lst.de ([213.95.11.211]:47365 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730657AbgEMQJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 12:09:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB670205CB;
-        Wed, 13 May 2020 16:09:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589386179;
-        bh=WdqE4cKf0ccXinlbg1MvpbxgyN4LOmP75On1HjwnySE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jCsO6gbqEaPkje+ceZ0NpYvOXh4pFINJxnLiCkUnjFcYlrkB/1tFYRbX/+8YCbglc
-         RvqicPTHZwK14lZl9OdlxuC8F6HA4xisy00wtjjz5GKlPatRkgcBrlpI3oY8eMBOLK
-         +2YqkwukULXM8ZIENDPPAlJaQwfu+wMaKaXJQhgI=
-Date:   Wed, 13 May 2020 18:09:36 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>, viro@zeniv.linux.org.uk,
-        rafael@kernel.org, jeyu@kernel.org, jmorris@namei.org,
-        keescook@chromium.org, paul@paul-moore.com,
-        stephen.smalley.work@gmail.com, eparis@parisplace.org,
-        nayna@linux.ibm.com, zohar@linux.ibm.com,
-        scott.branden@broadcom.com, dan.carpenter@oracle.com,
-        skhan@linuxfoundation.org, geert@linux-m68k.org,
-        tglx@linutronix.de, bauerman@linux.ibm.com, dhowells@redhat.com,
-        linux-integrity@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] security: add symbol namespace for reading file data
-Message-ID: <20200513160936.GC1362525@kroah.com>
-References: <20200513152108.25669-1-mcgrof@kernel.org>
- <20200513152108.25669-3-mcgrof@kernel.org>
- <87k11fonbk.fsf@x220.int.ebiederm.org>
+        id S2389465AbgEMQJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 12:09:41 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 3DC4168B05; Wed, 13 May 2020 18:09:38 +0200 (CEST)
+Date:   Wed, 13 May 2020 18:09:38 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] net: cleanly handle kernel vs user buffers for
+ ->msg_control
+Message-ID: <20200513160938.GA22381@lst.de>
+References: <20200511115913.1420836-1-hch@lst.de> <20200511115913.1420836-4-hch@lst.de> <c88897b9-7afb-a6f6-08f1-5aaa36631a25@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87k11fonbk.fsf@x220.int.ebiederm.org>
+In-Reply-To: <c88897b9-7afb-a6f6-08f1-5aaa36631a25@gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 10:40:31AM -0500, Eric W. Biederman wrote:
-> Luis Chamberlain <mcgrof@kernel.org> writes:
+On Wed, May 13, 2020 at 08:41:57AM -0700, Eric Dumazet wrote:
+> > +	 * recv* side when msg_control_is_user is set, msg_control is the kernel
+> > +	 * buffer used for all other cases.
+> > +	 */
+> > +	union {
+> > +		void		*msg_control;
+> > +		void __user	*msg_control_user;
+> > +	};
+> > +	bool		msg_control_is_user : 1;
 > 
-> > Certain symbols are not meant to be used by everybody, the security
-> > helpers for reading files directly is one such case. Use a symbol
-> > namespace for them.
-> >
-> > This will prevent abuse of use of these symbols in places they were
-> > not inteded to be used, and provides an easy way to audit where these
-> > types of operations happen as a whole.
+> Adding a field in this structure seems dangerous.
 > 
-> Why not just remove the ability for the firmware loader to be a module?
+> Some users of 'struct msghdr '  define their own struct on the stack,
+> and are unaware of this new mandatory field.
+> 
+> This bit contains garbage, crashes are likely to happen ?
+> 
+> Look at IPV6_2292PKTOPTIONS for example.
 
-I agree, it's been a mess of build options to try to keep alive over
-time.
+I though of that, an that is why the field is structured as-is.  The idea
+is that the field only matters if:
 
-> Is there some important use case that requires the firmware loader
-> to be a module?
+ (1) we are in the recvmsg and friends path, and
+ (2) msg_control is non-zero
 
-I don't think so anymore.
+I went through the places that initialize msg_control to find any spot
+that would need an annotation.  The IPV6_2292PKTOPTIONS sockopt doesn't
+need one as it is using the msghdr in sendmsg-like context.
 
-> We already compile the code in by default.  So it is probably just
-> easier to remove the modular support all together.  Which would allow
-> the export of the security hooks to be removed as well.
-
-Agreed.
-
-thanks,
-
-greg k-h
+That being said while I did the audit I'd appreciate another look from
+people that know the networking code better than me of course.
