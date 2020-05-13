@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72EC9C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E847CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4426B20575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4669F206B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364022;
-	bh=dHuJGjr6XK/FSo+1wCO++KttMGGK+sidM+ctbYH9GKE=;
+	s=default; t=1589364027;
+	bh=1zvD0OnGxIN8keCRL0TYLwEP8jE3c9haru81x4zAZxA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N2c6FZhctcGLhe0mE2QYCPEDN3icQiWMlQlEw45TYRT586j3dFqBGH/XJ605kcmG5
-	 i/nqAKlfHWzaXQt1ul8VckkdaA9pTMg+lbqB4nxQusaPMa2zfQAuIuth4/k9UtwoWg
-	 a8E7WjlggxLrdTny3qLv7xFT7fxxbh1DTwZEMzzo=
+	b=OayLG/SA9/wZZH1f9HL+G6GNy2ZLvOWeKWlKOV/j7Zh2m5WJiQAtbYC6dgbeYFHwu
+	 VbntybCO3rtCO6udluFjaazFCNQr9HD+6s/aeb5ODD+aAYf5Rsr/sZ/ec2n3Xoaik5
+	 0p6GCgiTmjTVhe1WY2DbioGl1w4doYIcdhvWV7a0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388270AbgEMKAV (ORCPT
+        id S2388584AbgEMKAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:00:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53458 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 06:00:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387754AbgEMJwL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:52:11 -0400
+        id S2387748AbgEMJwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:52:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB6CA20575;
-        Wed, 13 May 2020 09:52:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2612D20575;
+        Wed, 13 May 2020 09:52:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363531;
-        bh=dHuJGjr6XK/FSo+1wCO++KttMGGK+sidM+ctbYH9GKE=;
+        s=default; t=1589363528;
+        bh=1zvD0OnGxIN8keCRL0TYLwEP8jE3c9haru81x4zAZxA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zL7ZuXN38cuT978NATvXog5/+M0HVGI6ntNB66AMjtg1A4u4yQdenHkmNmEJgt8rO
-         1wrBvG5tO3J9igyU0i7Cd1QL3pOMpM3gmo0pVR/WTW4r0e34Xq56jSyEFK9hEq1p9P
-         GqDqm0yb2EtTXb7mhLPNJs7kzLq9iwdX48RQ3aNw=
+        b=P7L6UtGqWXaoyF+KSfJuN8GP+YSYYp53Po/X0iqQNGqea86VmXRkw7+ynUXfg1Da1
+         jY+70yri5d0NrdFmPSP/ncc4UcW+/YNEudi9KONGDb71Zv206W0zTZFQQuROoinMTt
+         aMQuXlrNrYibyWLomu+ttkFRNSPItCW0pG2aLnK8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Stefan Priebe - Profihost AG <s.priebe@profihost.ag>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        Roman Mashak <mrv@mojatatu.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 021/118] net: bridge: vlan: Add a schedule point during VLAN processing
-Date:   Wed, 13 May 2020 11:44:00 +0200
-Message-Id: <20200513094419.579670715@linuxfoundation.org>
+Subject: [PATCH 5.6 020/118] neigh: send protocol value in neighbor create notification
+Date:   Wed, 13 May 2020 11:43:59 +0200
+Message-Id: <20200513094419.505709069@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -61,43 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Roman Mashak <mrv@mojatatu.com>
 
-[ Upstream commit 7979457b1d3a069cd857f5bd69e070e30223dd0c ]
+[ Upstream commit 38212bb31fe923d0a2c6299bd2adfbb84cddef2a ]
 
-User space can request to delete a range of VLANs from a bridge slave in
-one netlink request. For each deleted VLAN the FDB needs to be traversed
-in order to flush all the affected entries.
+When a new neighbor entry has been added, event is generated but it does not
+include protocol, because its value is assigned after the event notification
+routine has run, so move protocol assignment code earlier.
 
-If a large range of VLANs is deleted and the number of FDB entries is
-large or the FDB lock is contented, it is possible for the kernel to
-loop through the deleted VLANs for a long time. In case preemption is
-disabled, this can result in a soft lockup.
-
-Fix this by adding a schedule point after each VLAN is deleted to yield
-the CPU, if needed. This is safe because the VLANs are traversed in
-process context.
-
-Fixes: bdced7ef7838 ("bridge: support for multiple vlans and vlan ranges in setlink and dellink requests")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reported-by: Stefan Priebe - Profihost AG <s.priebe@profihost.ag>
-Tested-by: Stefan Priebe - Profihost AG <s.priebe@profihost.ag>
-Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Fixes: df9b0e30d44c ("neighbor: Add protocol attribute")
+Cc: David Ahern <dsahern@gmail.com>
+Signed-off-by: Roman Mashak <mrv@mojatatu.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/bridge/br_netlink.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/core/neighbour.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/net/bridge/br_netlink.c
-+++ b/net/bridge/br_netlink.c
-@@ -612,6 +612,7 @@ int br_process_vlan_info(struct net_brid
- 					       v - 1, rtm_cmd);
- 				v_change_start = 0;
- 			}
-+			cond_resched();
- 		}
- 		/* v_change_start is set only if the last/whole range changed */
- 		if (v_change_start)
+--- a/net/core/neighbour.c
++++ b/net/core/neighbour.c
+@@ -1954,6 +1954,9 @@ static int neigh_add(struct sk_buff *skb
+ 				   NEIGH_UPDATE_F_OVERRIDE_ISROUTER);
+ 	}
+ 
++	if (protocol)
++		neigh->protocol = protocol;
++
+ 	if (ndm->ndm_flags & NTF_EXT_LEARNED)
+ 		flags |= NEIGH_UPDATE_F_EXT_LEARNED;
+ 
+@@ -1967,9 +1970,6 @@ static int neigh_add(struct sk_buff *skb
+ 		err = __neigh_update(neigh, lladdr, ndm->ndm_state, flags,
+ 				     NETLINK_CB(skb).portid, extack);
+ 
+-	if (protocol)
+-		neigh->protocol = protocol;
+-
+ 	neigh_release(neigh);
+ 
+ out:
 
 
