@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E37CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4FDC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01FDA20753
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D75EE205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363668;
-	bh=lhC84TnuSoyPmLnCTzbZ8mLnkdWfxi1drnOTtvPdi7U=;
+	s=default; t=1589363669;
+	bh=Sh7DwfrfOJhgpZljqzpzIQzvgSzRfrhZh3U8H3IvUWo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L0JVVEoANGtQyYpD/Xzih9uywbXFRJwwde7ZWHJLKeSqcy9iqt7MfXc47lQVCXPTW
-	 3MwOe0bZ46TRw1W/6bWpuZpsSIEYDUpYKYsg3It2T8qyEaZniCJYBxuH2HkBzikyNx
-	 iYheIu7FXAZnazY59yv1F3Gw26jyfGTwRuYPynG8=
+	b=UNMizZMvZvM57reX+DhFLZsqNSmTUdhsuMByernWqQvNRK4xubv2e7xJVaNUXOdsW
+	 SUReOnt8z4mNjKHuCUnuEdCx4OMPaFODZZAtLNYPBQUwHt0EBCczhycUjE6We2xY1u
+	 YsBZnh+Wx3on/3yXtRaRHC+hY6xKY3oU8N2JGpvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388097AbgEMJy1 (ORCPT
+        id S2388103AbgEMJy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:54:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56766 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:54:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388087AbgEMJyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:54:23 -0400
+        id S2388094AbgEMJy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:54:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06758206D6;
-        Wed, 13 May 2020 09:54:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7243B20769;
+        Wed, 13 May 2020 09:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363663;
-        bh=lhC84TnuSoyPmLnCTzbZ8mLnkdWfxi1drnOTtvPdi7U=;
+        s=default; t=1589363665;
+        bh=Sh7DwfrfOJhgpZljqzpzIQzvgSzRfrhZh3U8H3IvUWo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BPtJ6kyu8Q6mlTnwxKCiFUaffrYfgLpZckg3300euSWEqTaeAZ/cbGCwGnWLcNQBk
-         ivIpE5pIdQKg0PfjmlCHI9pC9y+NT2MXjJs+S0X6J9cG4kcIu99qs8EIyyLNW9tLBN
-         e4ybNSlLl0EZS+ruf+374WGya/oQF1+9W7NAcV+k=
+        b=gQxaVpDuDtyv5/v5MNWE1z8sTSRBHG3RENqQQehL47MXOZTHbEmauBcL26mvVE+16
+         OOV1XSKOlX1YzOaRxYceKwSw0flijjlzVjqZIIlk4ThQIJSBZ/ammGfAfXtHUpOIDd
+         EGMI3vB5zctp0fXIQmQ+iH/xg2ShRM13es+0b5zY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
         Haibo Chen <haibo.chen@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.6 076/118] driver core: platform: Initialize dma_parms for platform devices
-Date:   Wed, 13 May 2020 11:44:55 +0200
-Message-Id: <20200513094424.279803489@linuxfoundation.org>
+Subject: [PATCH 5.6 077/118] amba: Initialize dma_parms for amba devices
+Date:   Wed, 13 May 2020 11:44:56 +0200
+Message-Id: <20200513094424.342848300@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -62,57 +63,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ulf Hansson <ulf.hansson@linaro.org>
 
-commit 9495b7e92f716ab2bd6814fab5e97ab4a39adfdd upstream.
+commit f458488425f1cc9a396aa1d09bb00c48783936da upstream.
 
-It's currently the platform driver's responsibility to initialize the
-pointer, dma_parms, for its corresponding struct device. The benefit with
-this approach allows us to avoid the initialization and to not waste memory
-for the struct device_dma_parameters, as this can be decided on a case by
-case basis.
+It's currently the amba driver's responsibility to initialize the pointer,
+dma_parms, for its corresponding struct device. The benefit with this
+approach allows us to avoid the initialization and to not waste memory for
+the struct device_dma_parameters, as this can be decided on a case by case
+basis.
 
-However, it has turned out that this approach is not very practical.  Not
+However, it has turned out that this approach is not very practical. Not
 only does it lead to open coding, but also to real errors. In principle
 callers of dma_set_max_seg_size() doesn't check the error code, but just
 assumes it succeeds.
 
-For these reasons, let's do the initialization from the common platform bus
-at the device registration point. This also follows the way the PCI devices
+For these reasons, let's do the initialization from the common amba bus at
+the device registration point. This also follows the way the PCI devices
 are being managed, see pci_device_add().
 
 Suggested-by: Christoph Hellwig <hch@lst.de>
+Cc: Russell King <linux@armlinux.org.uk>
 Cc: <stable@vger.kernel.org>
 Tested-by: Haibo Chen <haibo.chen@nxp.com>
 Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
-Link: https://lore.kernel.org/r/20200422100954.31211-1-ulf.hansson@linaro.org
+Link: https://lore.kernel.org/r/20200422101013.31267-1-ulf.hansson@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/platform.c         |    2 ++
- include/linux/platform_device.h |    1 +
- 2 files changed, 3 insertions(+)
+ drivers/amba/bus.c       |    1 +
+ include/linux/amba/bus.h |    1 +
+ 2 files changed, 2 insertions(+)
 
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -361,6 +361,8 @@ struct platform_object {
-  */
- static void setup_pdev_dma_masks(struct platform_device *pdev)
- {
-+	pdev->dev.dma_parms = &pdev->dma_parms;
-+
- 	if (!pdev->dev.coherent_dma_mask)
- 		pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
- 	if (!pdev->dev.dma_mask) {
---- a/include/linux/platform_device.h
-+++ b/include/linux/platform_device.h
-@@ -25,6 +25,7 @@ struct platform_device {
- 	bool		id_auto;
- 	struct device	dev;
- 	u64		platform_dma_mask;
-+	struct device_dma_parameters dma_parms;
- 	u32		num_resources;
- 	struct resource	*resource;
+--- a/drivers/amba/bus.c
++++ b/drivers/amba/bus.c
+@@ -645,6 +645,7 @@ static void amba_device_initialize(struc
+ 	dev->dev.release = amba_device_release;
+ 	dev->dev.bus = &amba_bustype;
+ 	dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
++	dev->dev.dma_parms = &dev->dma_parms;
+ 	dev->res.name = dev_name(&dev->dev);
+ }
  
+--- a/include/linux/amba/bus.h
++++ b/include/linux/amba/bus.h
+@@ -65,6 +65,7 @@ struct amba_device {
+ 	struct device		dev;
+ 	struct resource		res;
+ 	struct clk		*pclk;
++	struct device_dma_parameters dma_parms;
+ 	unsigned int		periphid;
+ 	unsigned int		cid;
+ 	struct amba_cs_uci_id	uci;
 
 
