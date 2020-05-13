@@ -2,125 +2,329 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1B9C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 04:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCACC2D0FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 04:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B0B3206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 04:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60A4820675
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 04:30:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b="fT6L5UyW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q5LgiIXa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726088AbgEMEVR (ORCPT
+        id S1726062AbgEMEad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 00:21:17 -0400
-Received: from mx0a-002c1b01.pphosted.com ([148.163.151.68]:1480 "EHLO
-        mx0a-002c1b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725909AbgEMEVQ (ORCPT
+        Wed, 13 May 2020 00:30:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56020 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725898AbgEMEad (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 00:21:16 -0400
-Received: from pps.filterd (m0127838.ppops.net [127.0.0.1])
-        by mx0a-002c1b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04D4IV6I024396;
-        Tue, 12 May 2020 21:21:16 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nutanix.com; h=from : to : subject
- : date : message-id : content-type : content-id :
- content-transfer-encoding : mime-version; s=proofpoint20171006;
- bh=Mk/GhjcQEUv8RUInyp5LDgolKmm9jNh7XGOIwWSNKvo=;
- b=fT6L5UyW3AlpNlI9SXkLsd/ADeJXbtnAUUBwqY8k/YZM3eUZGZmru2UnTedRGcc1mJny
- vMrTrcoZZf9xtXc1pHb5SWX40urZkZuUDlVxvbVfnntmwMlwn/KKJxkdQ2h5LZK2mI5/
- HHaGpHQ5xrdFPoQn8BkM6NRMVQj6brCDG8nJoZi0gk2DxFn9Vg83Gcfx+849yR5WOiLW
- qbNMtt/MpMSiOMDjK/oeWXmc5DNVLgxmiA5ZvN5Aat+jgucGEkDcPBfkY566OJdMIbfs
- ku0+G7Z1a2QjyqJtQg54iqJSGQeQdewtFGMAnKlmfRIVlFl6sxEVBmHmUMwsoTcEcdpD tA== 
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2105.outbound.protection.outlook.com [104.47.55.105])
-        by mx0a-002c1b01.pphosted.com with ESMTP id 3100yn8x1j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 May 2020 21:21:15 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XYzVNgrQK4sq4QUooAWK9ZT3ImWgTX+kY+SnTulZ/W9eT6GyY75BuHwJVM51IlMRxp1rKkUk89YAlquiq069gv6jC1VbIffi72pXG9+7ESafUvbRt5+wdIJmRK3GFuUMVTF3iJOlTSVnwTvZ3SmaDHGd78n/cLht9aCq2FVD1mbGIPEB8GH35V3mdWiKgcpI5PJOeXZBBC2MxTPfjpaFM55I9Ef0JOqbnSGZM2jxhmH4TWpoutsNJgHak7gJQZbwcoKTBZ/Qlfmx8fbTJOngb60nAluslqGs9kd2HHwxSUOZY297mbHCgNHZQST4Dt4F2ZKpSVCuAKXqtVsczNYAzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mk/GhjcQEUv8RUInyp5LDgolKmm9jNh7XGOIwWSNKvo=;
- b=KUz6f8BNpNYGGciRtFpO80KmzS6/ZSget/k4yo4uN4lpj4E56Fd7qTzbEmPJyvtOMHQKj2PgBFTVTdg2WbxaHa9QhJDpYB8led6EiR901n9eXTwLXAWhWW14jovLtIhQS+7Vxq9KnE/xnVNklqzMMG8AVkK1Ca67RqHo3T4jL58CvSOTZ8jRe/zKyfpaPJVRkVv6WLuN3futlmkiHgTEc1ACoNAGdf69Z3YA6L6sA/7bBtsaWND2Lsw6TIFToOGjjPifRdjnzD9ATWJawyWVgVDMQQLV0cmlqSKq95JlfPaI1XUhWHzjexUH8fULqZNgJECJnG90AYp+T+DF1V9O3Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nutanix.com; dmarc=pass action=none header.from=nutanix.com;
- dkim=pass header.d=nutanix.com; arc=none
-Received: from BYAPR02MB5735.namprd02.prod.outlook.com (2603:10b6:a03:128::30)
- by BYAPR02MB5413.namprd02.prod.outlook.com (2603:10b6:a03:99::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.33; Wed, 13 May
- 2020 04:21:13 +0000
-Received: from BYAPR02MB5735.namprd02.prod.outlook.com
- ([fe80::b1a7:d1d2:ec70:66e]) by BYAPR02MB5735.namprd02.prod.outlook.com
- ([fe80::b1a7:d1d2:ec70:66e%5]) with mapi id 15.20.2979.033; Wed, 13 May 2020
- 04:21:13 +0000
-From:   Suresh Gumpula <suresh.gumpula@nutanix.com>
-To:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Virtual LAPIC page corruption
-Thread-Topic: Virtual LAPIC page corruption
-Thread-Index: AQHWKN3voVV18REUfU2qO8eUl1dg+A==
-Date:   Wed, 13 May 2020 04:21:12 +0000
-Message-ID: <67D1E884-FE2C-44C3-8214-75958A9D445A@nutanix.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=nutanix.com;
-x-originating-ip: [192.146.154.3]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4e030f5b-0378-4724-d86e-08d7f6f5124f
-x-ms-traffictypediagnostic: BYAPR02MB5413:
-x-microsoft-antispam-prvs: <BYAPR02MB54133CC0DA0A7E5B94875F4997BF0@BYAPR02MB5413.namprd02.prod.outlook.com>
-x-proofpoint-crosstenant: true
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0402872DA1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1jmMUSgfMGH9fqhelk/10EjQDnzw6B6lj/JC7avJzptJD7EeyJklXFtWNXjKgSzFpn80tv8fKmr4D/rLKfREglm92Mis0vYWOKgXCQeuhJMeHGzhjfvMubiYpsD1MlEyncOGclqAmiGtdHRonddt6fSt70zEProh3MMtm/5JVJZaKwIhhL3K6na+F21JqbUWNSIbg1DvgIvxnZGFitIHFG+JH5SxgYS1Mf648ltcCs/6hexWgUt8fQiJ/0R9qiLkIvfQNUGUAyu6VO7R2K1vH0cyirKBXFeJpq+vVyVGlx92VxgX7ij+QudaFe2fv3RuQDeJP33CfvIq/29bz2R/sIcKqJwu37cHwQjKPFRfzgzurji+arH5BtyShqdd2E+DI93Pwp+p1gtA/WChLWcUlbEniMm07RXy3KSh7nUtdTjlr7wq4VelVwOUmLhPeEf+A2C9ZJ35G7NQ/vaO4oedJ80325hN6pNiqVqEQcEcdFgrAbUu5F1Hv6G9hp1U5hu26NocYnSG/lRy22/4fUu+SD5J0J2F4rmx1tmLSRXsIsZER3uF4OrfcYiHMKP8bzjHWlzLnCC1Nr2PjeJQHNrhF3V2OvfPPA75b4DEvGRWg6kFPsOpiUejZ4ZBxXsWF6uWuoWbP2qXZMsrNvgpvbGJdw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR02MB5735.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(39860400002)(366004)(396003)(136003)(33430700001)(64756008)(478600001)(33440700001)(2906002)(26005)(316002)(966005)(8936002)(71200400001)(186003)(36756003)(450100002)(6512007)(6506007)(3480700007)(66476007)(66556008)(66946007)(66446008)(5660300002)(6486002)(86362001)(110136005)(76116006)(8676002)(33656002)(2616005)(4744005)(44832011)(489414009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: Ipa7b/uL6qHGA1WiiNbLl8ghbs4hPRTTxw3wnNHzcNt8BDwZk0vD/+Q/zdjcDD0tNHeuxH5QpSq+P60qK/way+AXcCCbjnGwahzTD13kJCf4TNnL09VxQNuVYm4o+k9KyUkBs+FImyrcUBTTKuFsLIsTMyEh3JFnd759rXcWDQxmpOOj1cuktStRynEa8JK4kAiZjaOZSW4oRtAeE7tUZG2P+SxzcHkIW4TOukHxNL34nUbcnt48vuNhtnQg/BUa3IvIJIb0MLYoNZf6ASjDPbBr25U8+UcVUz3AgebJfJGKfjtu5KL6p/fSWEdT5mjgE/3EZZCR0oXjpQDwgkT09A4QtwYAYUK9+kHJuAg52U1gpoXE7gLuiBmdK4Un5c6Dat3enZaxqowdeUuH3rQfjzOOpshBKbYVCPb2fV1ywv8Q0F7G4SdVIMM6Kif2oZHcxxZdjJJA7YUOr4iha0uHWD5B3jGm5i2T6myH2DU2WrM=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F4EB724E62F2454EA82648C11ED84283@namprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nutanix.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4e030f5b-0378-4724-d86e-08d7f6f5124f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2020 04:21:12.9678
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: bb047546-786f-4de1-bd75-24e5b6f79043
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1DzgaR09AliXktagaTQKie+y/wcJ73d+jnCRcQC1nOcWcFMTm4bxbLSfSVboISlRocYU6nOHojbg8DQp5AdML/SXJO0GUvH5NyFnI9e6ZC0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5413
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-13_01:2020-05-11,2020-05-13 signatures=0
-X-Proofpoint-Spam-Reason: safe
+        Wed, 13 May 2020 00:30:33 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDE58C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 21:30:32 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 132so13646215ybc.22
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 21:30:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=EiNwQd0S8x/f8opHNvYKx75ld5cmNHRPlXlTs3rCssg=;
+        b=q5LgiIXaw9ydusgTEv86D4AIe5wJt9ewFfX20KTt8X0/1M/sAbBfz0cX70w6RnoXkM
+         gGx62UP/baRZ4NStc86m4pEnjy3+PhXN1qWV3CVCy1N9VVsPy4+TfaujMVcAKkSYU6uq
+         BVoNTNT0C+d/jEodPM9Ix32AK/l1dKcwknFjmv5gApQviwC/VKDfa+XpJf6C8+OcBEyr
+         0HyStHD1H2eBZUiF2sH6khCnRQfXOiKScZnfF3BhZgeHcIEQB10U8IAfcAMwxBxiZVWk
+         +v9CHKsf1NUSZkTQZc6mcqkzkUF/xYRlXxcKnJo8zIY1/5xNQHBqlevBb9qc1XbinZvV
+         3xeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=EiNwQd0S8x/f8opHNvYKx75ld5cmNHRPlXlTs3rCssg=;
+        b=VWCq118VLwB16fYKQzT6ZX2yQRi5dpaRSwzaygoX21OKbKo19RPEHti6Yk7Xo0JpKS
+         GryXteO0l+JfNkUk/oqfWr4b2FwDtvvRi2bSDU0YIN4HYZlFD43GSrFmPBdlDtwcCgkd
+         3FzXr/sgwA12zDtborrTPjbueKi+w2gyJUk8eUZQ8zO7ZG77O0Hr65SxOpoudq7WOy9N
+         p8c/6x6JYI6xkG3TLTJlWv2+R7vGToTXFtw8g5tO9wFFEteo4Oxmkk11LcQS339tfscV
+         /MgvPZzNt5yrn4eDZ8WlZa9GjMbwC/Ze5Gv0iLdZ6S0ZvT295VXECP2UdVXDh12aus8X
+         N5ig==
+X-Gm-Message-State: AGi0PubWfHbZdz+6HTKKnP8MjSLYIZeiuqDs8djGVIJiLDwLcJ9C3lUe
+        WGH6c3cEqXZosxurYoj0lL7uhMvw9p5hdA==
+X-Google-Smtp-Source: APiQypJibMRuEoj4uxn3c6xxGRqpMBNe/+b7Vl9qGDBC+w7+GttrAcZoywefcu10NM4G0CyNG4YVOq7NKOqigA==
+X-Received: by 2002:a05:6902:6ae:: with SMTP id j14mr37197766ybt.418.1589344231896;
+ Tue, 12 May 2020 21:30:31 -0700 (PDT)
+Date:   Tue, 12 May 2020 21:29:56 -0700
+Message-Id: <20200513042956.109987-1-davidgow@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
+Subject: [RFC PATCH] kunit: Support skipped tests
+From:   David Gow <davidgow@google.com>
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        Alan Maguire <alan.maguire@oracle.com>
+Cc:     Marco Elver <elver@google.com>, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        David Gow <davidgow@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCldlIGFyZSBhIHNlZWluZyBhIHByb2JsZW0gd2l0aCB3aW5kb3dzIGd1ZXN0cygyMDE2
-LzIwMTJSMikgd2hlcmUgZ3Vlc3QgY3Jhc2hlcyB3aXRoIA0KVmlydHVhbCBBUElDIHBhZ2UgY29y
-cnVwdGlvbiBzaW1pbGFyIHRvIHRoZSBmb2xsb3dpbmcgcmVkaGF0IHRpY2tldC4NCmh0dHBzOi8v
-YnVnemlsbGEucmVkaGF0LmNvbS9zaG93X2J1Zy5jZ2k/aWQ9MTc1MTAxNw0KDQo+IEFyZzQ6IDAw
-MDAwMDAwMDAwMDAwMTcsIFR5cGUgb2YgY29ycnVwdGVkIHJlZ2lvbiwgY2FuIGJlDQoJMTYgIDog
-Q3JpdGljYWwgZmxvYXRpbmcgcG9pbnQgY29udHJvbCByZWdpc3RlciBtb2RpZmljYXRpb24NCgkx
-NyAgOiBMb2NhbCBBUElDIG1vZGlmaWNhdGlvbg0KDQpIZXJlLCB3ZSBhcmUgc2VlaW5nIHRoZSBj
-b3JydXB0aW9uIExBUElDIHBhZ2UgYW5kIGd1ZXN0IGlzIEJTT0QnaW5nLg0KTG9va2luZyBhdCB0
-aGUgZ3Vlc3Qgd2luZG93cyBkdW1wLCB3ZSBzZWUgdGhlIGZ1bGwgcGFnZSBpcyB6ZXJvZWQuIEFu
-ZCBpdCBzZWVtcyB0aGUgDQpHdWVzdCB3aW5kb3dzIGtlcm5lbCBwYXRjaGd1YXJkIGlzIGRldGVj
-dGluZyB0aGlzIGNhc2UgYW5kIHJlc2V0dGluZyB0aGUgVk0uDQoNCklzIGl0IHBvc3NpYmxlIHRo
-YXQgS1ZNLCBzb21laG93IGNvcnJ1cHRlZCB0aGUgdmlydHVhbCBMQVBJQyBwYWdlPyAgV2hpbGUg
-dGhlIGd1ZXN0IGlzIHJ1bm5pbmcNCnRoZSBLVk0gaXMgbm90IHN1cHBvc2VkIHRvIHRvdWNoIHRo
-YXQgdmNwdSBsYXBpYyBwYWdlPw0KDQpDb3VsZCB5b3UgcGxlYXNlIGdpdmUgdXMgc29tZSBwb2lu
-dGVycyBvbiB3aGF0IGNvdWxkIHdyb25nIGhlcmUuIElzIGl0IGEga25vd24gaXNzdWUgaW4gdGhl
-IGt2bT8NCldlIGFyZSB1c2luZyB0aGUgaG9zdCBrZXJuZWwgNC4xOSBhbmQgcWVtdSAyLjEyIGFu
-ZCB3aW5kb3dzIGd1ZXN0cygyMDE2LzIwMTIpDQoNCg0KVGhhbmtzLA0KU3VyZXNoDQoNCg0KDQo=
+This is a proof-of-concept to support "skipping" tests.
+
+The kunit_mark_skipped() macro marks the current test as "skipped", with
+the provided reason. The kunit_skip() macro will mark the test as
+skipped, and abort the test.
+
+The TAP specification supports this "SKIP directive" as a comment after
+the "ok" / "not ok" for a test. See the "Directives" section of the TAP
+spec for details:
+https://testanything.org/tap-specification.html#directives
+
+kunit_tool will parse this SKIP directive, and renders skipped tests in
+yellow and counts them. Skipped tests do not affect the result for a
+suite.
+
+Signed-off-by: David Gow <davidgow@google.com>
+---
+
+Following on from discussions about the KCSAN test[1], which requires a
+multi-core/processor system to make sense, it would be useful for tests
+to be able to mark themselves as "skipped", where tests have runtime
+dependencies which aren't met.
+
+As a proof-of-concept, this patch doesn't implement some things which
+we'd ideally like to have (e.g., non-static "reasons" for skipping the
+test, maybe some SKIP macros akin to the EXPECT and ASSERT ones), and
+the implementation is still pretty hacky, but I though I'd put this out
+there to see if there are any thoughts on the concept in general.
+
+Cheers,
+-- David
+
+[1]: https://lkml.org/lkml/2020/5/5/31
+
+ include/kunit/test.h                | 12 ++++++++++++
+ lib/kunit/kunit-example-test.c      |  7 +++++++
+ lib/kunit/test.c                    | 23 ++++++++++++++++-------
+ tools/testing/kunit/kunit_parser.py | 21 +++++++++++++++++----
+ 4 files changed, 52 insertions(+), 11 deletions(-)
+
+diff --git a/include/kunit/test.h b/include/kunit/test.h
+index 9b0c46a6ca1f..7817c5580b2c 100644
+--- a/include/kunit/test.h
++++ b/include/kunit/test.h
+@@ -178,6 +178,7 @@ struct kunit_suite {
+ 	/* private - internal use only */
+ 	struct dentry *debugfs;
+ 	char *log;
++	const char *skip_directive;
+ };
+ 
+ /**
+@@ -213,6 +214,8 @@ struct kunit {
+ 	 * protect it with some type of lock.
+ 	 */
+ 	struct list_head resources; /* Protected by lock. */
++
++	const char *skip_directive;
+ };
+ 
+ void kunit_init_test(struct kunit *test, const char *name, char *log);
+@@ -391,6 +394,15 @@ void kunit_cleanup(struct kunit *test);
+ 
+ void kunit_log_append(char *log, const char *fmt, ...);
+ 
++#define kunit_mark_skipped(test_or_suite, reason)			\
++	(test_or_suite)->skip_directive = "SKIP " reason
++
++#define kunit_skip(test_or_suite, reason)				\
++	do {								\
++		kunit_mark_skipped(test_or_suite, reason);		\
++		kunit_try_catch_throw(&((test_or_suite)->try_catch));	\
++	} while (0)
++
+ /*
+  * printk and log to per-test or per-suite log buffer.  Logging only done
+  * if CONFIG_KUNIT_DEBUGFS is 'y'; if it is 'n', no log is allocated/used.
+diff --git a/lib/kunit/kunit-example-test.c b/lib/kunit/kunit-example-test.c
+index be1164ecc476..998401a61458 100644
+--- a/lib/kunit/kunit-example-test.c
++++ b/lib/kunit/kunit-example-test.c
+@@ -29,6 +29,12 @@ static void example_simple_test(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, 1 + 1, 2);
+ }
+ 
++static void example_skip_test(struct kunit *test)
++{
++	kunit_skip(test, "this test should be skipped");
++	KUNIT_EXPECT_EQ(test, 1 + 1, 2);
++}
++
+ /*
+  * This is run once before each test case, see the comment on
+  * example_test_suite for more information.
+@@ -52,6 +58,7 @@ static struct kunit_case example_test_cases[] = {
+ 	 * test suite.
+ 	 */
+ 	KUNIT_CASE(example_simple_test),
++	KUNIT_CASE(example_skip_test),
+ 	{}
+ };
+ 
+diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+index ccb2ffad8dcf..84b9be3a8da7 100644
+--- a/lib/kunit/test.c
++++ b/lib/kunit/test.c
+@@ -79,10 +79,12 @@ static void kunit_print_ok_not_ok(void *test_or_suite,
+ 				  bool is_test,
+ 				  bool is_ok,
+ 				  size_t test_number,
+-				  const char *description)
++				  const char *description,
++				  const char *directive)
+ {
+ 	struct kunit_suite *suite = is_test ? NULL : test_or_suite;
+ 	struct kunit *test = is_test ? test_or_suite : NULL;
++	const char *directive_header = directive ? " # " : "";
+ 
+ 	/*
+ 	 * We do not log the test suite results as doing so would
+@@ -93,13 +95,16 @@ static void kunit_print_ok_not_ok(void *test_or_suite,
+ 	 * representation.
+ 	 */
+ 	if (suite)
+-		pr_info("%s %zd - %s\n",
++		pr_info("%s %zd - %s%s%s\n",
+ 			kunit_status_to_string(is_ok),
+-			test_number, description);
++			test_number, description,
++			directive_header, directive ? directive : "");
+ 	else
+-		kunit_log(KERN_INFO, test, KUNIT_SUBTEST_INDENT "%s %zd - %s",
++		kunit_log(KERN_INFO, test,
++			  KUNIT_SUBTEST_INDENT "%s %zd - %s%s%s",
+ 			  kunit_status_to_string(is_ok),
+-			  test_number, description);
++			  test_number, description,
++			  directive_header, directive ? directive : "");
+ }
+ 
+ bool kunit_suite_has_succeeded(struct kunit_suite *suite)
+@@ -122,7 +127,8 @@ static void kunit_print_subtest_end(struct kunit_suite *suite)
+ 	kunit_print_ok_not_ok((void *)suite, false,
+ 			      kunit_suite_has_succeeded(suite),
+ 			      kunit_suite_counter++,
+-			      suite->name);
++			      suite->name,
++			      suite->skip_directive);
+ }
+ 
+ unsigned int kunit_test_case_num(struct kunit_suite *suite,
+@@ -232,6 +238,7 @@ void kunit_init_test(struct kunit *test, const char *name, char *log)
+ 	if (test->log)
+ 		test->log[0] = '\0';
+ 	test->success = true;
++	test->skip_directive = NULL;
+ }
+ EXPORT_SYMBOL_GPL(kunit_init_test);
+ 
+@@ -357,7 +364,8 @@ static void kunit_run_case_catch_errors(struct kunit_suite *suite,
+ 
+ 	kunit_print_ok_not_ok(&test, true, test_case->success,
+ 			      kunit_test_case_num(suite, test_case),
+-			      test_case->name);
++			      test_case->name,
++			      test.skip_directive);
+ }
+ 
+ int kunit_run_tests(struct kunit_suite *suite)
+@@ -378,6 +386,7 @@ EXPORT_SYMBOL_GPL(kunit_run_tests);
+ static void kunit_init_suite(struct kunit_suite *suite)
+ {
+ 	kunit_debugfs_create_suite(suite);
++	suite->skip_directive = NULL;
+ }
+ 
+ int __kunit_test_suites_init(struct kunit_suite **suites)
+diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/kunit_parser.py
+index 64aac9dcd431..ecfc8ee1da2f 100644
+--- a/tools/testing/kunit/kunit_parser.py
++++ b/tools/testing/kunit/kunit_parser.py
+@@ -43,6 +43,7 @@ class TestCase(object):
+ class TestStatus(Enum):
+ 	SUCCESS = auto()
+ 	FAILURE = auto()
++	SKIPPED = auto()
+ 	TEST_CRASHED = auto()
+ 	NO_TESTS = auto()
+ 
+@@ -107,6 +108,8 @@ def save_non_diagnositic(lines: List[str], test_case: TestCase) -> None:
+ 
+ OkNotOkResult = namedtuple('OkNotOkResult', ['is_ok','description', 'text'])
+ 
++OK_NOT_OK_SKIP = re.compile(r'^[\s]*(ok|not ok) [0-9]+ - (.*) # SKIP (.*)$')
++
+ OK_NOT_OK_SUBTEST = re.compile(r'^[\s]+(ok|not ok) [0-9]+ - (.*)$')
+ 
+ OK_NOT_OK_MODULE = re.compile(r'^(ok|not ok) [0-9]+ - (.*)$')
+@@ -124,6 +127,10 @@ def parse_ok_not_ok_test_case(lines: List[str], test_case: TestCase) -> bool:
+ 	if match:
+ 		test_case.log.append(lines.pop(0))
+ 		test_case.name = match.group(2)
++		skip_match = OK_NOT_OK_SKIP.match(line)
++		if skip_match:
++			test_case.status = TestStatus.SKIPPED
++			return True
+ 		if test_case.status == TestStatus.TEST_CRASHED:
+ 			return True
+ 		if match.group(1) == 'ok':
+@@ -190,9 +197,9 @@ def max_status(left: TestStatus, right: TestStatus) -> TestStatus:
+ 		return TestStatus.TEST_CRASHED
+ 	elif left == TestStatus.FAILURE or right == TestStatus.FAILURE:
+ 		return TestStatus.FAILURE
+-	elif left != TestStatus.SUCCESS:
++	elif left != TestStatus.SUCCESS and left != TestStatus.SKIPPED:
+ 		return left
+-	elif right != TestStatus.SUCCESS:
++	elif right != TestStatus.SUCCESS and right != TestStatus.SKIPPED:
+ 		return right
+ 	else:
+ 		return TestStatus.SUCCESS
+@@ -281,10 +288,13 @@ def parse_run_tests(kernel_output) -> TestResult:
+ 	total_tests = 0
+ 	failed_tests = 0
+ 	crashed_tests = 0
++	skipped_tests = 0
+ 	test_result = parse_test_result(list(isolate_kunit_output(kernel_output)))
+ 	for test_suite in test_result.suites:
+ 		if test_suite.status == TestStatus.SUCCESS:
+ 			print_suite_divider(green('[PASSED] ') + test_suite.name)
++		elif test_suite.status == TestStatus.SKIPPED:
++			print_suite_divider(yellow('[SKIPPED] ') + test_suite.name)
+ 		elif test_suite.status == TestStatus.TEST_CRASHED:
+ 			print_suite_divider(red('[CRASHED] ' + test_suite.name))
+ 		else:
+@@ -293,6 +303,9 @@ def parse_run_tests(kernel_output) -> TestResult:
+ 			total_tests += 1
+ 			if test_case.status == TestStatus.SUCCESS:
+ 				print_with_timestamp(green('[PASSED] ') + test_case.name)
++			elif test_case.status == TestStatus.SKIPPED:
++				skipped_tests += 1
++				print_with_timestamp(yellow('[SKIPPED] ') + test_case.name)
+ 			elif test_case.status == TestStatus.TEST_CRASHED:
+ 				crashed_tests += 1
+ 				print_with_timestamp(red('[CRASHED] ' + test_case.name))
+@@ -306,6 +319,6 @@ def parse_run_tests(kernel_output) -> TestResult:
+ 	print_with_timestamp(DIVIDER)
+ 	fmt = green if test_result.status == TestStatus.SUCCESS else red
+ 	print_with_timestamp(
+-		fmt('Testing complete. %d tests run. %d failed. %d crashed.' %
+-		    (total_tests, failed_tests, crashed_tests)))
++		fmt('Testing complete. %d tests run. %d failed. %d crashed. %d skipped.' %
++		    (total_tests, failed_tests, crashed_tests, skipped_tests)))
+ 	return test_result
+-- 
+2.26.2.645.ge9eca65c58-goog
+
