@@ -2,119 +2,110 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B36D0CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA02CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5E1A204EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6663204EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:46:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CSUyk9Y2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388701AbgEMNqL (ORCPT
+        id S2388724AbgEMNqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:46:11 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:49832 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387751AbgEMNqI (ORCPT
+        Wed, 13 May 2020 09:46:21 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:5077 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbgEMNqV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:46:08 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jYri1-0007Yh-74; Wed, 13 May 2020 07:46:05 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jYri0-0006Pz-3e; Wed, 13 May 2020 07:46:05 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Xiaoming Ni <nixiaoming@huawei.com>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Helge Deller <deller@gmx.de>,
-        Parisc List <linux-parisc@vger.kernel.org>, yzaikin@google.com,
-        linux-fsdevel@vger.kernel.org,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-References: <20200511111123.68ccbaa3@canb.auug.org.au>
-        <99095805-8cbe-d140-e2f1-0c5a3e84d7e7@huawei.com>
-        <20200512003305.GX11244@42.do-not-panic.com>
-        <87y2pxs73w.fsf@x220.int.ebiederm.org>
-        <20200512172413.GC11244@42.do-not-panic.com>
-        <87k11hrqzc.fsf@x220.int.ebiederm.org>
-        <20200512220341.GE11244@42.do-not-panic.com>
-Date:   Wed, 13 May 2020 08:42:30 -0500
-In-Reply-To: <20200512220341.GE11244@42.do-not-panic.com> (Luis Chamberlain's
-        message of "Tue, 12 May 2020 22:03:41 +0000")
-Message-ID: <87d078oss9.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 13 May 2020 09:46:21 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ebbf9a40000>; Wed, 13 May 2020 06:44:04 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 13 May 2020 06:46:20 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 13 May 2020 06:46:20 -0700
+Received: from [10.26.74.82] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 May
+ 2020 13:46:18 +0000
+Subject: Re: [PATCH 5.4 00/90] 5.4.41-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200513094408.810028856@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <c3c95648-c2c5-892a-f060-ff30dc13b355@nvidia.com>
+Date:   Wed, 13 May 2020 14:46:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jYri0-0006Pz-3e;;;mid=<87d078oss9.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18vmS02bGQubPKIl5qUYavG96RWvX+2dVI=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: linux-next: manual merge of the vfs tree with the parisc-hd tree
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589377444; bh=WM1okI+x2PQ5GROkMjC1azGcWbRim/vI7yvB2+BKLLw=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=CSUyk9Y2sNyR1VpdGrTbtcQBkjeUfAEMwoLx1dB4Xdpr2BOCWlPBc7wthzv96k4fI
+         uyGbApMmvxOLc5y0kANGPmxLPMOiEB6NyZ9vkjvWWX9dQrAyIlnZmYQ2x2uLEushq7
+         n40J0JYHMcfcA/dDh1yK5QdgA48s7OaE3CgcPz8rGlIYIC0z9/21olBgIpVbROhuPI
+         rTDnf5pjQ1mWsxZ1lr7Icbo0GPpKCV3Xg8wXK3Xbp4j/wqMwUs7ZJEmi+0kgd/vJRY
+         PKLL+TNCT3Nwk7eogM8DxtCmMAx8ceDXqiO4Qi63SvuWJjjN7+iLuUDlCNmL0u9684
+         Lrz2eKswuyzAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Luis Chamberlain <mcgrof@kernel.org> writes:
 
-> On Tue, May 12, 2020 at 12:40:55PM -0500, Eric W. Biederman wrote:
->> Luis Chamberlain <mcgrof@kernel.org> writes:
->> 
->> > On Tue, May 12, 2020 at 06:52:35AM -0500, Eric W. Biederman wrote:
->> >> Luis Chamberlain <mcgrof@kernel.org> writes:
->> >> 
->> >> > +static struct ctl_table fs_base_table[] = {
->> >> > +	{
->> >> > +		.procname	= "fs",
->> >> > +		.mode		= 0555,
->> >> > +		.child		= fs_table,
->> >> > +	},
->> >> > +	{ }
->> >> > +};
->> >>   ^^^^^^^^^^^^^^^^^^^^^^^^ You don't need this at all.
->> >> > > +static int __init fs_procsys_init(void)
->> >> > +{
->> >> > +	struct ctl_table_header *hdr;
->> >> > +
->> >> > +	hdr = register_sysctl_table(fs_base_table);
->> >>               ^^^^^^^^^^^^^^^^^^^^^ Please use register_sysctl instead.
->> >> 	AKA
->> >>         hdr = register_sysctl("fs", fs_table);
->> >
->> > Ah, much cleaner thanks!
->> 
->> It is my hope you we can get rid of register_sysctl_table one of these
->> days.  It was the original interface but today it is just a
->> compatibility wrapper.
->> 
->> I unfortunately ran out of steam last time before I finished converting
->> everything over.
->
-> Let's give it one more go. I'll start with the fs stuff.
+On 13/05/2020 10:43, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.41 release.
+> There are 90 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri, 15 May 2020 09:41:20 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.41-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Just to be clear moving the tables out of kernel/sysctl.c is a related
-but slightly different problem.
+All tests are passing for Tegra ...
 
-Today it looks like there are 35 calls of register_sysctl_table
-and 9 calls of register_sysctl_paths.
+Test results for stable-v5.4:
+    13 builds:	13 pass, 0 fail
+    26 boots:	26 pass, 0 fail
+    42 tests:	42 pass, 0 fail
 
-Among them is lib/sysctl_test.c and check-sysctl-docs.
+Linux version:	5.4.41-rc1-g132220af41e6
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra210-p3450-0000,
+                tegra30-cardhu-a04
 
-Meanwhile I can only find 5 calls to register_sysctl in the tree
-so it looks like I didn't get very far converting things over.
+Cheers
+Jon
 
-Eric
-
+-- 
+nvpublic
