@@ -4,28 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DCFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E5F52065C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2A9D2065C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 18:56:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390437AbgEMS4l (ORCPT
+        id S2390445AbgEMS4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 14:56:41 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51900 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390381AbgEMS4g (ORCPT
+        Wed, 13 May 2020 14:56:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49958 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2390413AbgEMS4h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 14:56:36 -0400
+        Wed, 13 May 2020 14:56:37 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF0BEC061A0C;
+        Wed, 13 May 2020 11:56:37 -0700 (PDT)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: sre)
-        with ESMTPSA id 4724A2A0188
+        with ESMTPSA id 9F2C02A27A9
 Received: by jupiter.universe (Postfix, from userid 1000)
-        id 7203A480103; Wed, 13 May 2020 20:56:29 +0200 (CEST)
+        id 90659480110; Wed, 13 May 2020 20:56:29 +0200 (CEST)
 From:   Sebastian Reichel <sebastian.reichel@collabora.com>
 To:     Sebastian Reichel <sre@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -33,10 +36,11 @@ To:     Sebastian Reichel <sre@kernel.org>,
         "Rafael J . Wysocki" <rafael@kernel.org>
 Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, kernel@collabora.com,
+        Jean-Francois Dagenais <jeff.dagenais@gmail.com>,
         Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCHv1 05/19] power: supply: sbs-battery: Add TI BQ20Z65 support
-Date:   Wed, 13 May 2020 20:56:01 +0200
-Message-Id: <20200513185615.508236-6-sebastian.reichel@collabora.com>
+Subject: [PATCHv1 15/19] power: supply: sbs-battery: add ability to disable charger broadcasts
+Date:   Wed, 13 May 2020 20:56:11 +0200
+Message-Id: <20200513185615.508236-16-sebastian.reichel@collabora.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513185615.508236-1-sebastian.reichel@collabora.com>
 References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
@@ -47,86 +51,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for BQ20Z65 manufacturer data to the sbs-battery
-driver. Implementation has been verified using the public TRM
-available from [0] and tested using a GE Flex 3S2P battery.
+From: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
 
-[0] http://www.ti.com/lit/pdf/sluu386
+In certain designs, it is possible to add a battery on a populated i2c
+bus without an sbs compliant charger. In that case, the battery will
+un-necessarily and sometimes un-desirably master the bus trying to write
+info in the charger.
 
+It is observed in many occasion that these battery "broadcasts" are even
+corrupting other ongoing master to slave communication. I.e. the
+multi-master support in the battery is inadequate.
+
+Thankfully, the CHARGER_MODE bit allows designers to disable that SBS
+battery behaviour.
+
+This needs to be done once when the battery is first seen on the bus.
+
+Signed-off-by: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
+[rebased code]
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- .../bindings/power/supply/sbs_sbs-battery.txt     |  1 +
- drivers/power/supply/sbs-battery.c                | 15 ++++++++++-----
- 2 files changed, 11 insertions(+), 5 deletions(-)
+ .../bindings/power/supply/sbs_sbs-battery.txt |  2 ++
+ drivers/power/supply/sbs-battery.c            | 29 +++++++++++++++++++
+ 2 files changed, 31 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
-index 4e78e51018eb..fa5a8b516dbf 100644
+index fa5a8b516dbf..a5093ccef5c5 100644
 --- a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
 +++ b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
-@@ -6,6 +6,7 @@ Required properties :
-      part number compatible string might be used in order to take care of
-      vendor specific registers.
-      Known <vendor>,<part-number>:
-+       ti,bq20z65
-        ti,bq20z75
+@@ -16,6 +16,7 @@ Optional properties :
+    after an external change notification.
+  - sbs,battery-detect-gpios : The gpio which signals battery detection and
+    a flag specifying its polarity.
++ - sbs,disable-charger-broadcasts: for systems without sbs compliant chargers
  
- Optional properties :
+ Example:
+ 
+@@ -25,4 +26,5 @@ Example:
+ 		sbs,i2c-retry-count = <2>;
+ 		sbs,poll-retry-count = <10>;
+ 		sbs,battery-detect-gpios = <&gpio-controller 122 1>;
++		sbs,disable-charger-broadcasts;
+ 	}
 diff --git a/drivers/power/supply/sbs-battery.c b/drivers/power/supply/sbs-battery.c
-index 6acd242eed48..a15783802ef8 100644
+index e3c685b2c247..7c6905a486da 100644
 --- a/drivers/power/supply/sbs-battery.c
 +++ b/drivers/power/supply/sbs-battery.c
-@@ -149,8 +149,8 @@ static enum power_supply_property sbs_properties[] = {
- 	POWER_SUPPLY_PROP_MODEL_NAME
+@@ -68,6 +68,7 @@ enum sbs_capacity_mode {
+ 	CAPACITY_MODE_AMPS = 0,
+ 	CAPACITY_MODE_WATTS = BATTERY_MODE_CAPACITY_MASK
  };
++#define BATTERY_MODE_CHARGER_MASK	(1<<14)
  
--/* Supports special manufacturer commands from TI BQ20Z75 IC. */
--#define SBS_FLAGS_TI_BQ20Z75		BIT(0)
-+/* Supports special manufacturer commands from TI BQ20Z65 and BQ20Z75 IC. */
-+#define SBS_FLAGS_TI_BQ20ZX5		BIT(0)
+ /* manufacturer access defines */
+ #define MANUFACTURER_ACCESS_STATUS	0x0006
+@@ -193,6 +194,7 @@ struct sbs_info {
+ 	bool				is_present;
+ 	struct gpio_desc		*gpio_detect;
+ 	bool				enable_detection;
++	bool				charger_broadcasts;
+ 	int				last_state;
+ 	int				poll_time;
+ 	u32				i2c_retry_count;
+@@ -207,6 +209,27 @@ static char manufacturer[I2C_SMBUS_BLOCK_MAX + 1];
+ static char chemistry[I2C_SMBUS_BLOCK_MAX + 1];
+ static bool force_load;
  
- struct sbs_info {
- 	struct i2c_client		*client;
-@@ -626,7 +626,7 @@ static int sbs_get_property(struct power_supply *psy,
- 	switch (psp) {
- 	case POWER_SUPPLY_PROP_PRESENT:
- 	case POWER_SUPPLY_PROP_HEALTH:
--		if (chip->flags & SBS_FLAGS_TI_BQ20Z75)
-+		if (chip->flags & SBS_FLAGS_TI_BQ20ZX5)
- 			ret = sbs_get_ti_battery_presence_and_health(client,
- 								     psp, val);
- 		else
-@@ -950,7 +950,7 @@ static int sbs_suspend(struct device *dev)
- 	if (chip->poll_time > 0)
- 		cancel_delayed_work_sync(&chip->work);
++static int sbs_read_word_data(struct i2c_client *client, u8 address);
++static int sbs_write_word_data(struct i2c_client *client, u8 address, u16 value);
++
++static void sbs_disable_charger_broadcasts(struct sbs_info *chip)
++{
++	int val = sbs_read_word_data(chip->client, BATTERY_MODE_OFFSET);
++	if (val < 0)
++		goto exit;
++
++	val |= BATTERY_MODE_CHARGER_MASK;
++
++	val = sbs_write_word_data(chip->client, BATTERY_MODE_OFFSET, val);
++
++exit:
++	if (val < 0)
++		dev_err(&chip->client->dev,
++			"Failed to disable charger broadcasting: %d\n", val);
++	else
++		dev_dbg(&chip->client->dev, "%s\n", __func__);
++}
++
+ static int sbs_update_presence(struct sbs_info *chip, bool is_present)
+ {
+ 	struct i2c_client *client = chip->client;
+@@ -260,6 +283,9 @@ static int sbs_update_presence(struct sbs_info *chip, bool is_present)
+ 	dev_dbg(&client->dev, "PEC: %s\n", (client->flags & I2C_CLIENT_PEC) ?
+ 		"enabled" : "disabled");
  
--	if (chip->flags & SBS_FLAGS_TI_BQ20Z75) {
-+	if (chip->flags & SBS_FLAGS_TI_BQ20ZX5) {
- 		/* Write to manufacturer access with sleep command. */
- 		ret = sbs_write_word_data(client,
- 					  sbs_data[REG_MANUFACTURER_DATA].addr,
-@@ -970,6 +970,7 @@ static SIMPLE_DEV_PM_OPS(sbs_pm_ops, sbs_suspend, NULL);
- #endif
++	if (!chip->is_present && is_present && !chip->charger_broadcasts)
++		sbs_disable_charger_broadcasts(chip);
++
+ 	chip->is_present = true;
  
- static const struct i2c_device_id sbs_id[] = {
-+	{ "bq20z65", 0 },
- 	{ "bq20z75", 0 },
- 	{ "sbs-battery", 1 },
- 	{}
-@@ -978,9 +979,13 @@ MODULE_DEVICE_TABLE(i2c, sbs_id);
+ 	return 0;
+@@ -1017,6 +1043,9 @@ static int sbs_probe(struct i2c_client *client,
+ 	}
+ 	chip->i2c_retry_count = chip->i2c_retry_count + 1;
  
- static const struct of_device_id sbs_dt_ids[] = {
- 	{ .compatible = "sbs,sbs-battery" },
-+	{
-+		.compatible = "ti,bq20z65",
-+		.data = (void *)SBS_FLAGS_TI_BQ20ZX5,
-+	},
- 	{
- 		.compatible = "ti,bq20z75",
--		.data = (void *)SBS_FLAGS_TI_BQ20Z75,
-+		.data = (void *)SBS_FLAGS_TI_BQ20ZX5,
- 	},
- 	{ }
- };
++	chip->charger_broadcasts = !of_property_read_bool(client->dev.of_node,
++					"sbs,disable-charger-broadcasts");
++
+ 	chip->gpio_detect = devm_gpiod_get_optional(&client->dev,
+ 			"sbs,battery-detect", GPIOD_IN);
+ 	if (IS_ERR(chip->gpio_detect)) {
 -- 
 2.26.2
 
