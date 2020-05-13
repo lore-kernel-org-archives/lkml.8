@@ -2,145 +2,86 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 039C7C2D0F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 580A4C2D0F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D50AD20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DB40207BC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:22:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ljrH8A9j"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EMESmRnr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728667AbgEMCVu (ORCPT
+        id S1728747AbgEMCWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 22:21:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36196 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbgEMCVt (ORCPT
+        Tue, 12 May 2020 22:22:12 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:48890 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbgEMCWM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 22:21:49 -0400
-Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65AFAC061A0C;
-        Tue, 12 May 2020 19:21:49 -0700 (PDT)
-Received: by mail-qk1-x734.google.com with SMTP id c64so15877109qkf.12;
-        Tue, 12 May 2020 19:21:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GGhhasXuuhbZjHtgDHKIzfraEsH+O3PDW7OXcZoDnTg=;
-        b=ljrH8A9jIhOz1bLzUXsd4W/0wzUcVOq7F66qXSqMsIz7LCMRUnWeIkJLbQ6FwolPtN
-         d0HDeiJ1aITAaRZG2HoExZkhsZ7ivor5BuZlleh8DY7Z7R+T2kzdY+bZ+ZaOciEk7HRt
-         HOGV3IIK3BfG2dwXq4htDjuiHhPcNV4HPI7VxM2DIWelLCBnkJInihhUMXWXZlpL1Ekk
-         3IJXp4HW7dTqIJNuYNkEyjEKklU98PsaQHEn8cw7Hev00thiSSRCaknX/qseY1+/hEqi
-         Tgxl03vLRjxgRtQ1xwaKae3amlcgo6dJcNNcTGX+jRUIqlL0mb9aipcU3FVTvFjVK0li
-         P0iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GGhhasXuuhbZjHtgDHKIzfraEsH+O3PDW7OXcZoDnTg=;
-        b=jfZYpuSX86/ycpjmSBhHoB2T/EpJpNl2e7ooLOsr5EkhKj3yilcZXznMb5ZbhXNq+H
-         LZ5rcZRyyQK5vQx2h+M3CT3cQFxfFh6SstVAU2/4n/XX4I0KqC7Lyvxw0u+ZAVal1iTM
-         eUfgrnz/xoS8HLOlvo8uFrmaDpifvGA2YJyEzVX/hWzffGYs6iEPFr3qTe/UTrhfYWTY
-         DrypL+wf5KsXi9TtzSR7vHX4Hz8sCjgDGMl4MIDFZXsG3gBqJpIbPrR9IKfiLajdG9Ky
-         pfh2i6hkoQpBMWgNorhNWeq1mGO/GpuFrAhj5PLFNgffMSH/82Z2kyLo4ppnu0DKFNLJ
-         9tsA==
-X-Gm-Message-State: AGi0PubgZAfEwhTti4ID5Oqrc+z4UTuXIurumgnUyJqrGcqJKkasxUnX
-        h/GsA9ICaMs+g07jJiEG5VzA2KAF
-X-Google-Smtp-Source: APiQypKu8v/2I7/OWB4sgxAbXpPmJJqNhaNw8iT27Qit56iaxZo5BPkP/W1EOP1fqwvwAbIEAWr7eg==
-X-Received: by 2002:a37:8302:: with SMTP id f2mr23347571qkd.220.1589336507479;
-        Tue, 12 May 2020 19:21:47 -0700 (PDT)
-Received: from ?IPv6:2601:282:803:7700:4082:2138:4ed8:3e6? ([2601:282:803:7700:4082:2138:4ed8:3e6])
-        by smtp.googlemail.com with ESMTPSA id y23sm14321189qta.37.2020.05.12.19.21.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 May 2020 19:21:46 -0700 (PDT)
-Subject: Re: [v5,iproute2-next 1/2] iproute2-next:tc:action: add a gate
- control action
-To:     Po Liu <Po.Liu@nxp.com>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     vinicius.gomes@intel.com, stephen@networkplumber.org,
-        dcaratti@redhat.com, davem@davemloft.net, vlad@buslov.dev,
-        claudiu.manoil@nxp.com, vladimir.oltean@nxp.com,
-        alexandru.marginean@nxp.com
-References: <20200506084020.18106-2-Po.Liu@nxp.com>
- <20200508070247.6084-1-Po.Liu@nxp.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <5b3606fc-6903-da8b-94c6-b93eac1308f7@gmail.com>
-Date:   Tue, 12 May 2020 20:21:44 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.0
+        Tue, 12 May 2020 22:22:12 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04D2M2GV128834;
+        Tue, 12 May 2020 21:22:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589336522;
+        bh=PkD79KhQ6L8I25qd2ophTzYoQjxGMbERYNBealN9Tg8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=EMESmRnrmvDtPJnv7F+d6anbts8qm7QEn2R0yzTqNIZZiugyEwhKrM02pyT10TWGK
+         03bSQmfPFGIuvDXH17WoZksnzwcGCx77a6W4Rw/sSVDNlUOuPPq67aKl6GWW6on/jR
+         c2dCVOF/NzxWdPnXuCCrL+mmXgL401kdUFpRboIs=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04D2M2dA127541
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 May 2020 21:22:02 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 12
+ May 2020 21:22:01 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 12 May 2020 21:22:01 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04D2LwIV034536;
+        Tue, 12 May 2020 21:21:59 -0500
+Subject: Re: [PATCH] phy: cpcap-usb: Remove some useless code
+To:     Tony Lindgren <tony@atomide.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+CC:     <vkoul@kernel.org>, <pavel@ucw.cz>,
+        <sebastian.reichel@collabora.com>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+References: <20200507203127.202197-1-christophe.jaillet@wanadoo.fr>
+ <20200508152254.GZ37466@atomide.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <c8a8bcf5-f7e1-115d-34f5-3b88bc1ef0d7@ti.com>
+Date:   Wed, 13 May 2020 07:51:57 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200508070247.6084-1-Po.Liu@nxp.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200508152254.GZ37466@atomide.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/8/20 1:02 AM, Po Liu wrote:
-> Introduce a ingress frame gate control flow action.
-> Tc gate action does the work like this:
-> Assume there is a gate allow specified ingress frames can pass at
-> specific time slot, and also drop at specific time slot. Tc filter
-> chooses the ingress frames, and tc gate action would specify what slot
-> does these frames can be passed to device and what time slot would be
-> dropped.
-> Tc gate action would provide an entry list to tell how much time gate
-> keep open and how much time gate keep state close. Gate action also
-> assign a start time to tell when the entry list start. Then driver would
-> repeat the gate entry list cyclically.
-> For the software simulation, gate action require the user assign a time
-> clock type.
-> 
-> Below is the setting example in user space. Tc filter a stream source ip
-> address is 192.168.0.20 and gate action own two time slots. One is last
-> 200ms gate open let frame pass another is last 100ms gate close let
-> frames dropped.
-> 
->  # tc qdisc add dev eth0 ingress
->  # tc filter add dev eth0 parent ffff: protocol ip \
-> 
->             flower src_ip 192.168.0.20 \
->             action gate index 2 clockid CLOCK_TAI \
->             sched-entry open 200000000ns -1 8000000b \
->             sched-entry close 100000000ns
-> 
->  # tc chain del dev eth0 ingress chain 0
-> 
-> "sched-entry" follow the name taprio style. Gate state is
-> "open"/"close". Follow the period nanosecond. Then next -1 is internal
-> priority value means which ingress queue should put to. "-1" means
-> wildcard. The last value optional specifies the maximum number of
-> MSDU octets that are permitted to pass the gate during the specified
-> time interval, the overlimit frames would be dropped.
-> 
-> Below example shows filtering a stream with destination mac address is
-> 10:00:80:00:00:00 and ip type is ICMP, follow the action gate. The gate
-> action would run with one close time slot which means always keep close.
-> The time cycle is total 200000000ns. The base-time would calculate by:
-> 
->      1357000000000 + (N + 1) * cycletime
-> 
-> When the total value is the future time, it will be the start time.
-> The cycletime here would be 200000000ns for this case.
-> 
->  #tc filter add dev eth0 parent ffff:  protocol ip \
->            flower skip_hw ip_proto icmp dst_mac 10:00:80:00:00:00 \
->            action gate index 12 base-time 1357000000000ns \
->            sched-entry CLOSE 200000000ns \
->            clockid CLOCK_TAI
-> 
-> Signed-off-by: Po Liu <Po.Liu@nxp.com>
-> ---
->
 
-applied to iproute2-next. Thanks,
 
+On 5/8/2020 8:52 PM, Tony Lindgren wrote:
+> * Christophe JAILLET <christophe.jaillet@wanadoo.fr> [200507 20:32]:
+>> Axe a clk that is unused in the driver.
+> 
+> Thanks for fixing it:
+> 
+> Acked-by: Tony Lindgren <tony@atomide.com>
+
+merged, thanks!
+
+-Kishon
