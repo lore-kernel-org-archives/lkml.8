@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA07AC2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66ED4CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94E3120740
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B4B620740
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363202;
-	bh=IgVQvdEEeWcSDbRTQR3027sp00BplDpovZc7JGFPOmM=;
+	s=default; t=1589363207;
+	bh=lwCmYmBStc/B78iyH0w3hnthD4nOlcxlZPGhE6PV29M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wBs/PDPVlYvnYCEtkj6ICMHVaFTsOOzbWC1h4NhMJUqz+4iwtcfraQGPj8XbI+UTI
-	 tQFrDpe4VbN1tM/JLzfpGXrUE5xTt/qSrrWfKKJdM/he8MLoeP/9fyvYPu30ZJW+Pt
-	 j2GgI+gf5vqvSUYQuyL9Yz6NHFXPr2iHPFpz5uxM=
+	b=2X0Rffj7eGIAkCJMGPbM7n4e8FOafYLx2uv5tSBwbTHKtnuwhd67Uu0E1DZy8MFhj
+	 kmWk0QWz4mkVeBiYDmiUt5Ew4DoaEtl7/lnTHkOa4p5sBGuETAApoCtc8JMp82gy5C
+	 CDG5KMtSc8JThP9Hql5jIvsUKIzh8nfeJneFPr4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732691AbgEMJqm (ORCPT
+        id S1732710AbgEMJqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:46:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44090 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:46:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732674AbgEMJqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:46:38 -0400
+        id S1732689AbgEMJqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:46:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A399B20769;
-        Wed, 13 May 2020 09:46:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B88A6206F5;
+        Wed, 13 May 2020 09:46:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363196;
-        bh=IgVQvdEEeWcSDbRTQR3027sp00BplDpovZc7JGFPOmM=;
+        s=default; t=1589363201;
+        bh=lwCmYmBStc/B78iyH0w3hnthD4nOlcxlZPGhE6PV29M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XE7U68CQ0pyXISeLD5phTbsQsNHL7Qxzxn4VuXk3KcKVZqgx8mJgZvMz4gcTfO4+s
-         XZEvxLUpd2x92g30Lj/hQbQQwJ/nNi02EOaJpwduqC+rIcG7P1o8DVTtOqAGT94RfW
-         MuPOteI/vWyJm3WJiszrVekb7FlTwC3yUx6WW8oE=
+        b=r9sI0pdemDWCjtkS2+2JxaoFTWYaxcy/OxdZcsRXkaoXKo8dJPgzE47Z87XMIS0eZ
+         o/ioV/hjARwY/eTKWdKfZm7obq68dpmIrebe06V6/oMAWBmQ8Xb9QT5Gam+aNiS9R9
+         rJebHlIphu/kpTzByIpUPGJObC5OxoC8RFS23QXY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 17/48] bnxt_en: Fix VF anti-spoof filter setup.
-Date:   Wed, 13 May 2020 11:44:43 +0200
-Message-Id: <20200513094355.480214815@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Kyrill Tkachov <kyrylo.tkachov@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 4.19 27/48] arm64: hugetlb: avoid potential NULL dereference
+Date:   Wed, 13 May 2020 11:44:53 +0200
+Message-Id: <20200513094357.770767423@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
 References: <20200513094351.100352960@linuxfoundation.org>
@@ -59,88 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Mark Rutland <mark.rutland@arm.com>
 
-[ Upstream commit c71c4e49afe173823a2a85b0cabc9b3f1176ffa2 ]
+commit 027d0c7101f50cf03aeea9eebf484afd4920c8d3 upstream.
 
-Fix the logic that sets the enable/disable flag for the source MAC
-filter according to firmware spec 1.7.1.
+The static analyzer in GCC 10 spotted that in huge_pte_alloc() we may
+pass a NULL pmdp into pte_alloc_map() when pmd_alloc() returns NULL:
 
-In the original firmware spec. before 1.7.1, the VF spoof check flags
-were not latched after making the HWRM_FUNC_CFG call, so there was a
-need to keep the func_flags so that subsequent calls would perserve
-the VF spoof check setting.  A change was made in the 1.7.1 spec
-so that the flags became latched.  So we now set or clear the anti-
-spoof setting directly without retrieving the old settings in the
-stored vf->func_flags which are no longer valid.  We also remove the
-unneeded vf->func_flags.
+|   CC      arch/arm64/mm/pageattr.o
+|   CC      arch/arm64/mm/hugetlbpage.o
+|                  from arch/arm64/mm/hugetlbpage.c:10:
+| arch/arm64/mm/hugetlbpage.c: In function ‘huge_pte_alloc’:
+| ./arch/arm64/include/asm/pgtable-types.h:28:24: warning: dereference of NULL ‘pmdp’ [CWE-690] [-Wanalyzer-null-dereference]
+| ./arch/arm64/include/asm/pgtable.h:436:26: note: in expansion of macro ‘pmd_val’
+| arch/arm64/mm/hugetlbpage.c:242:10: note: in expansion of macro ‘pte_alloc_map’
+|     |arch/arm64/mm/hugetlbpage.c:232:10:
+|     |./arch/arm64/include/asm/pgtable-types.h:28:24:
+| ./arch/arm64/include/asm/pgtable.h:436:26: note: in expansion of macro ‘pmd_val’
+| arch/arm64/mm/hugetlbpage.c:242:10: note: in expansion of macro ‘pte_alloc_map’
 
-Fixes: 8eb992e876a8 ("bnxt_en: Update firmware interface spec to 1.7.6.2.")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This can only occur when the kernel cannot allocate a page, and so is
+unlikely to happen in practice before other systems start failing.
+
+We can avoid this by bailing out if pmd_alloc() fails, as we do earlier
+in the function if pud_alloc() fails.
+
+Fixes: 66b3923a1a0f ("arm64: hugetlb: add support for PTE contiguous bit")
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Reported-by: Kyrill Tkachov <kyrylo.tkachov@arm.com>
+Cc: <stable@vger.kernel.org> # 4.5.x-
+Cc: Will Deacon <will@kernel.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/broadcom/bnxt/bnxt.h       |    1 -
- drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c |    9 ++-------
- 2 files changed, 2 insertions(+), 8 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-@@ -839,7 +839,6 @@ struct bnxt_vf_info {
- #define BNXT_VF_LINK_FORCED	0x4
- #define BNXT_VF_LINK_UP		0x8
- #define BNXT_VF_TRUST		0x10
--	u32	func_flags; /* func cfg flags */
- 	u32	min_tx_rate;
- 	u32	max_tx_rate;
- 	void	*hwrm_cmd_req_addr;
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c
-@@ -99,11 +99,10 @@ int bnxt_set_vf_spoofchk(struct net_devi
- 	if (old_setting == setting)
- 		return 0;
+---
+ arch/arm64/mm/hugetlbpage.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/arch/arm64/mm/hugetlbpage.c
++++ b/arch/arm64/mm/hugetlbpage.c
+@@ -218,6 +218,8 @@ pte_t *huge_pte_alloc(struct mm_struct *
+ 		ptep = (pte_t *)pudp;
+ 	} else if (sz == (PAGE_SIZE * CONT_PTES)) {
+ 		pmdp = pmd_alloc(mm, pudp, addr);
++		if (!pmdp)
++			return NULL;
  
--	func_flags = vf->func_flags;
- 	if (setting)
--		func_flags |= FUNC_CFG_REQ_FLAGS_SRC_MAC_ADDR_CHECK_ENABLE;
-+		func_flags = FUNC_CFG_REQ_FLAGS_SRC_MAC_ADDR_CHECK_ENABLE;
- 	else
--		func_flags |= FUNC_CFG_REQ_FLAGS_SRC_MAC_ADDR_CHECK_DISABLE;
-+		func_flags = FUNC_CFG_REQ_FLAGS_SRC_MAC_ADDR_CHECK_DISABLE;
- 	/*TODO: if the driver supports VLAN filter on guest VLAN,
- 	 * the spoof check should also include vlan anti-spoofing
- 	 */
-@@ -112,7 +111,6 @@ int bnxt_set_vf_spoofchk(struct net_devi
- 	req.flags = cpu_to_le32(func_flags);
- 	rc = hwrm_send_message(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT);
- 	if (!rc) {
--		vf->func_flags = func_flags;
- 		if (setting)
- 			vf->flags |= BNXT_VF_SPOOFCHK;
- 		else
-@@ -197,7 +195,6 @@ int bnxt_set_vf_mac(struct net_device *d
- 	memcpy(vf->mac_addr, mac, ETH_ALEN);
- 	bnxt_hwrm_cmd_hdr_init(bp, &req, HWRM_FUNC_CFG, -1, -1);
- 	req.fid = cpu_to_le16(vf->fw_fid);
--	req.flags = cpu_to_le32(vf->func_flags);
- 	req.enables = cpu_to_le32(FUNC_CFG_REQ_ENABLES_DFLT_MAC_ADDR);
- 	memcpy(req.dflt_mac_addr, mac, ETH_ALEN);
- 	return hwrm_send_message(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT);
-@@ -235,7 +232,6 @@ int bnxt_set_vf_vlan(struct net_device *
- 
- 	bnxt_hwrm_cmd_hdr_init(bp, &req, HWRM_FUNC_CFG, -1, -1);
- 	req.fid = cpu_to_le16(vf->fw_fid);
--	req.flags = cpu_to_le32(vf->func_flags);
- 	req.dflt_vlan = cpu_to_le16(vlan_tag);
- 	req.enables = cpu_to_le32(FUNC_CFG_REQ_ENABLES_DFLT_VLAN);
- 	rc = hwrm_send_message(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT);
-@@ -274,7 +270,6 @@ int bnxt_set_vf_bw(struct net_device *de
- 		return 0;
- 	bnxt_hwrm_cmd_hdr_init(bp, &req, HWRM_FUNC_CFG, -1, -1);
- 	req.fid = cpu_to_le16(vf->fw_fid);
--	req.flags = cpu_to_le32(vf->func_flags);
- 	req.enables = cpu_to_le32(FUNC_CFG_REQ_ENABLES_MAX_BW);
- 	req.max_bw = cpu_to_le32(max_tx_rate);
- 	req.enables |= cpu_to_le32(FUNC_CFG_REQ_ENABLES_MIN_BW);
+ 		WARN_ON(addr & (sz - 1));
+ 		/*
 
 
