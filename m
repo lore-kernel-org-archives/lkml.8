@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B40CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5178FCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B83A20753
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27C1C20753
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363590;
-	bh=OZF5ZwFXj4P8n0iGxnlNhVhwzR/yGMlCOIbRSfvbciQ=;
+	s=default; t=1589363595;
+	bh=pM95nrK/ZvH2xPCEa2KhKYz52Uj9sIGd6V9yKNOB8TM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pSec60BVVJFy4uAwzclVGC6IHK5VfSXBO+xvZm5ZjGHe7WmjyDh8vd7Gvcrsd/f0d
-	 0Cq/fAWkCoLhpSld9P6DnXrj4d5DKvf+Q35f4R9S/XED8aY2M1lvpxJKVaMFY0biOB
-	 IhugXAVEgeXpkL1LxGIEmIckRF4QvA4BHiHWkGZE=
+	b=uUkqIu4Lez2S+bXxKVZfODtL/WxIeDNwhSjIp2K5y5P5BeQ+1mhcGPZZrxKz7q+RJ
+	 a1WFir9aeMDXy7FROCsT3D4UWj4S7XPbp68d8cgdawtDuwwkT9v2rVYUGEZG287ydk
+	 yOktFCzAxc6c3APbNe0qeUObosaV4XhZ/hrThng8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387908AbgEMJxI (ORCPT
+        id S2387923AbgEMJxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:53:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54842 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:53:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387896AbgEMJxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:53:05 -0400
+        id S2387900AbgEMJxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:53:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E54123127;
-        Wed, 13 May 2020 09:53:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD18C23128;
+        Wed, 13 May 2020 09:53:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363584;
-        bh=OZF5ZwFXj4P8n0iGxnlNhVhwzR/yGMlCOIbRSfvbciQ=;
+        s=default; t=1589363587;
+        bh=pM95nrK/ZvH2xPCEa2KhKYz52Uj9sIGd6V9yKNOB8TM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wWkogbHo1tIYDYoRL2rLLe2FicWYrdrXdEQWeYQ7LsI4rasIfMw8H9RCwn88zuT8n
-         zjNEq7ZhKN45e6BdyTg02vYdVkVDn9kCkAU01CCXJpF1myHGgikwXeIriv+Y6aVMTp
-         kuQE9roxS1cyDH8qU/t56aoK2T9qg0kR2T3RBqY0=
+        b=DBiS0J71Pw/0aAoodOaVXkh2xZgTxy8jdLwasDLPRvyc6hxU5EGWItcc8gmtgnDr7
+         cyH/PUoAZg2ZPIUl4e2225Hky50ex3Jo0gu1uoyy805a/ASkbx6LagD+3W4WZJLuq9
+         CH32xvVRj2M1Ss0ZjasVbtxuZ25GdiuTSajfnmj4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
+        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.6 026/118] net/mlx4_core: Fix use of ENOSPC around mlx4_counter_alloc()
-Date:   Wed, 13 May 2020 11:44:05 +0200
-Message-Id: <20200513094419.932663267@linuxfoundation.org>
+Subject: [PATCH 5.6 044/118] bnxt_en: Return error when allocating zero size context memory.
+Date:   Wed, 13 May 2020 11:44:23 +0200
+Message-Id: <20200513094421.147790032@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -60,49 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tariq Toukan <tariqt@mellanox.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit 40e473071dbad04316ddc3613c3a3d1c75458299 ]
+[ Upstream commit bbf211b1ecb891c7e0cc7888834504183fc8b534 ]
 
-When ENOSPC is set the idx is still valid and gets set to the global
-MLX4_SINK_COUNTER_INDEX.  However gcc's static analysis cannot tell that
-ENOSPC is impossible from mlx4_cmd_imm() and gives this warning:
+bnxt_alloc_ctx_pg_tbls() should return error when the memory size of the
+context memory to set up is zero.  By returning success (0), the caller
+may proceed normally and may crash later when it tries to set up the
+memory.
 
-drivers/net/ethernet/mellanox/mlx4/main.c:2552:28: warning: 'idx' may be
-used uninitialized in this function [-Wmaybe-uninitialized]
- 2552 |    priv->def_counter[port] = idx;
-
-Also, when ENOSPC is returned mlx4_allocate_default_counters should not
-fail.
-
-Fixes: 6de5f7f6a1fa ("net/mlx4_core: Allocate default counter per port")
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Fixes: 08fe9d181606 ("bnxt_en: Add Level 2 context memory paging support.")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/main.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx4/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/main.c
-@@ -2550,6 +2550,7 @@ static int mlx4_allocate_default_counter
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -6662,7 +6662,7 @@ static int bnxt_alloc_ctx_pg_tbls(struct
+ 	int rc;
  
- 		if (!err || err == -ENOSPC) {
- 			priv->def_counter[port] = idx;
-+			err = 0;
- 		} else if (err == -ENOENT) {
- 			err = 0;
- 			continue;
-@@ -2600,7 +2601,8 @@ int mlx4_counter_alloc(struct mlx4_dev *
- 				   MLX4_CMD_TIME_CLASS_A, MLX4_CMD_WRAPPED);
- 		if (!err)
- 			*idx = get_param_l(&out_param);
--
-+		if (WARN_ON(err == -ENOSPC))
-+			err = -EINVAL;
- 		return err;
- 	}
- 	return __mlx4_counter_alloc(dev, idx);
+ 	if (!mem_size)
+-		return 0;
++		return -EINVAL;
+ 
+ 	ctx_pg->nr_pages = DIV_ROUND_UP(mem_size, BNXT_PAGE_SIZE);
+ 	if (ctx_pg->nr_pages > MAX_CTX_TOTAL_PAGES) {
 
 
