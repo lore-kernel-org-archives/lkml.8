@@ -2,150 +2,146 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A770FCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCF7CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8607720740
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E82D20740
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:13:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VzDXqXnM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732257AbgEMJLE (ORCPT
+        id S1732349AbgEMJNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:11:04 -0400
-Received: from mga05.intel.com ([192.55.52.43]:55922 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730299AbgEMJLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:11:04 -0400
-IronPort-SDR: WS/6MFxI8STOIEn9F6h2u1v2kHJHZ6Ye8+8pO5zMgVFobF0zNVIvmk5CZkj2RolC39lJQDj+h2
- xbqfmhs3Jqcw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 02:11:03 -0700
-IronPort-SDR: Ua5hi5rFo4umR1oI75OeCOex7tlQp6bLWph0By+6gpnYrmOkpuMVvr20EsjT0esp0q9ujP4DZI
- 0uCFFRLar5kA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,387,1583222400"; 
-   d="scan'208";a="371844362"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 13 May 2020 02:11:01 -0700
-Received: by lahna (sSMTP sendmail emulation); Wed, 13 May 2020 12:11:00 +0300
-Date:   Wed, 13 May 2020 12:11:00 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Richard Hughes <hughsient@gmail.com>
-Cc:     ptyser@xes-inc.com, Lee Jones <lee.jones@linaro.org>,
-        tudor.ambarus@microchip.com,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        allison@lohutok.net, tglx@linutronix.de, jethro@fortanix.com,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mfd: Export LPC attributes for the system SPI chip
-Message-ID: <20200513091100.GY2571@lahna.fi.intel.com>
-References: <125a8c31e106dc68e6d3e3395cecc766db7fb897.camel@gmail.com>
- <20200513070847.GM2571@lahna.fi.intel.com>
- <CAD2FfiHsUjLC1K=HvF74LbRaKoc_zz6bOmGLQrQbW4CywWCP9A@mail.gmail.com>
+        Wed, 13 May 2020 05:13:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43594 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730677AbgEMJNn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:13:43 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFAF3C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 02:13:41 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id z22so13036781lfd.0
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 02:13:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=IFyPd5jaNLoWjNXVKhmuzoT4Iff8vuIMwsOFgF6oOY8=;
+        b=VzDXqXnMJRY3pyvJu/3XbYwAqBzyftpy8OJkHqzbWgYb8p7+5vAE+S8tQwDVcffOVh
+         vYhe1Gps3SR/KgfRjPa6EOReK16zzpV1Oq8iwCbNXmZbqGuUL/6StErGr9eya4qk8Vql
+         eoHka4yVI9NAQPOaJTgv9zjzsvmC0rGU4HGlewMOQXkI+z1GCtDOoTjacgx9IU+d8JSb
+         a0tke74vkvEZ9G7P056Js0DgY8650Gy/Dj+Zqb1VeJs+BzgMIch349ExS4q8Tp2Jb4Sm
+         Cr7aqrN0sHyvcqJcj+Df4O+QsKzlBC7Y1PyOuPiKVIbFJuERD5lA6trip0T+I6yC0V/2
+         E/aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=IFyPd5jaNLoWjNXVKhmuzoT4Iff8vuIMwsOFgF6oOY8=;
+        b=HyQzgzJkMI9b06z+/vKfm3xH2gygv3Eo2pXafgDbe4GUFg1WrQgvTkyeG/80d0yubq
+         hdgOiP76bGWt+9UaJ+dnAQ/04B142XxLrrBS62na1WgvwN22AvlgwsDQQV9Dfj9zNLoL
+         uDu4RSlJgqwLz3aLEeaCYEMyW5hAw4/FPOc6RSuXD5zknFkz2OjTuQ0GFkNDVDAvXGbh
+         bixssn1uT3axkUUgazzMEwFhQTxHZrXO8V950KjUnfusPvciYzhllCcU6mEAfbnmARz8
+         RM+PF9mhWFBKOWkUYj+pJW04nQJVq/v9wokbu4Q74MTEezsewnHoTxKR9cfEk6jTJdSK
+         aDwg==
+X-Gm-Message-State: AOAM533i2pX7KtaUVfBxZ57D7TSQAHv8UMWlXTnU0b05/Ae491FE22xJ
+        GZN7HjAcXDwQNDBeEyuG2MkNP34S
+X-Google-Smtp-Source: ABdhPJyv6JVdvUV6roCDn3iAyUesWz9Opt7yiBKnPF6+R53rtButc0mL1SrF6HiN8rkW4n9bvPO1hg==
+X-Received: by 2002:a19:4285:: with SMTP id p127mr17145726lfa.46.1589361219858;
+        Wed, 13 May 2020 02:13:39 -0700 (PDT)
+Received: from osv.localdomain ([89.175.180.246])
+        by smtp.gmail.com with ESMTPSA id d8sm15447446lfl.51.2020.05.13.02.13.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 02:13:39 -0700 (PDT)
+From:   Sergey Organov <sorganov@gmail.com>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Eugene Syromiatnikov <esyr@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] uapi, posix-timers: provide clockid-related macros
+ and functions to UAPI
+References: <20190923130531.GA27774@asgard.redhat.com>
+        <87y2pxvsbr.fsf@osv.gnss.ru> <20200512223103.GC1016@asgard.redhat.com>
+        <CALAqxLUGr=+UjYhQSN34fUMCqj1Ya85tbFKu685cN+XTWYfgXg@mail.gmail.com>
+Date:   Wed, 13 May 2020 12:13:37 +0300
+In-Reply-To: <CALAqxLUGr=+UjYhQSN34fUMCqj1Ya85tbFKu685cN+XTWYfgXg@mail.gmail.com>
+        (John Stultz's message of "Tue, 12 May 2020 15:40:07 -0700")
+Message-ID: <8736845ha6.fsf@osv.gnss.ru>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD2FfiHsUjLC1K=HvF74LbRaKoc_zz6bOmGLQrQbW4CywWCP9A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 09:48:55AM +0100, Richard Hughes wrote:
-> On Wed, 13 May 2020 at 08:08, Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> > I think this one should contain KernelVersion as well, see
-> > Documentation/ABI/README.
-> 
-> Thanks, I'll fix that up.
-> 
-> > I think you can always include this header without #ifs
-> 
-> Thanks.
-> 
-> > >  static struct resource wdt_ich_res[] = {
-> > > @@ -221,6 +236,16 @@ enum lpc_chipsets {
-> > >       LPC_APL,        /* Apollo Lake SoC */
-> > >       LPC_GLK,        /* Gemini Lake SoC */
-> > >       LPC_COUGARMOUNTAIN,/* Cougar Mountain SoC*/
-> > > +     LPC_SPT,        /* Sunrise Point */
-> > > +     LPC_KLK,        /* Kaby Lake */
-> > KBL for Kaby Lake
-> 
-> I can fix up all those, but out of interest how did you "know" the
-> right three digit identifier to use?
+John Stultz <john.stultz@linaro.org> writes:
 
-I work for Intel ;-)
+> On Tue, May 12, 2020 at 3:31 PM Eugene Syromiatnikov <esyr@redhat.com> wrote:
+>> On Tue, May 12, 2020 at 10:58:16PM +0300, Sergey Organov wrote:
+>> > Eugene Syromiatnikov <esyr@redhat.com> writes:
+>> >
+>> > > As of now, there is no interface exposed for converting pid/fd into
+>> > > clockid and vice versa; linuxptp, for example, has been carrying these
+>> > > definitions in missing.h header for quite some time[1].
+>> > >
+>> > > [1] https://sourceforge.net/p/linuxptp/code/ci/af380e86/tree/missing.h
+>> > >
+>> > > Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
+>> > > ---
+>> > > Changes since v1[1]:
+>> > >  * Actually tried to build with the patch and fixed the build error
+>> > >    reported by kbuild test robot[2].
+>> > >
+>> > > [1] https://lkml.org/lkml/2019/9/20/698
+>> > > [2] https://lkml.org/lkml/2019/9/22/13
+>> > > ---
+>> > >  include/linux/posix-timers.h | 47 +------------------------------------------
+>> > >  include/uapi/linux/time.h    | 48 ++++++++++++++++++++++++++++++++++++++++++++
+>> > >  2 files changed, 49 insertions(+), 46 deletions(-)
+>> >
+>> > Was this patch applied, rejected, lost?
+>> >
+>> > I can't find it in the current master.
+>>
+>> IIRC, it was ignored.
+>
+> Overlooked. :)  Not intentionally ignored.
+>
+> I don't have any major objection with adding helpers, though I feel
+> like you're exporting a lot more to the uapi then applications likely
+> need.
+>
+> Would it be better to add just the bits from the missing.h header you
+> pointed to:
+> #define CLOCKFD 3
+> #define FD_TO_CLOCKID(fd) ((~(clockid_t) (fd) << 3) | CLOCKFD)
+> #define CLOCKID_TO_FD(clk) ((unsigned int) ~((clk) >> 3))
+>
+>  to the uapi header?
 
-> > This is not PCH, Cactus Ridge is Thunderbolt host controller AFAIK.
-> 
-> This was suggested from someone testing the original spi_lpc.c code on
-> a macbook, I can remove it for now and work out if it's incorrect
-> later.
+Please, no:
 
-It is definitely incorrect. They are completely different things.
+1. These macros were copied almost verbatim from the kernel code long
+ago, and since then kernel has changed them to inline functions, so
+getting back to these obsolete macros is pointless.
 
-> > For example these PCI IDs are for the SPI-NOR controller (not LPC
-> > controller) so this causes this driver to try to bind to a completely
-> > different device which it cannot handle.
-> 
-> I'm really wondering if drivers/mfd/lpc_ich.c is the right place for
-> this kind of "just expose one byte of PCI config space" functionality.
-> Certainly drivers/platform/x86/intel_spi_lpc.c is much simpler, and
-> would also allow me to do some of the chipsec tests in the future --
-> for instance if BIOSWE is unset but BLE is set, try setting BIOSWE and
-> check that SMM clears it back.
+2. If we do need to export macroses, then kernel inline functions are
+better to be re-implemented in terms of these macros, not to have 2
+different points of implementation.
 
-Ideally there is one driver per device. Otherwise we end up issues when
-the device appears and there are several to choose from, which one to
-pick.
+Overall, I'd vote for the current approach of the patch, provided
+exporting inline functions to user-space is allowed.
 
-If this is touching the 00:1f.5 PCI device (SPI-NOR controller) then the
-right place is the intel-spi-pci.c as that's the driver for this
-controller. We can put this there so that it does not enable the SPI-NOR
-functionality itself and the mark the SPI-NOR functionality only as
-being dangerous or something like that.
+-- Sergey Organov
 
-> 
-> > > +     char tmp[2];
-> >
-> > Wouldn't this need to account the '\0' as well?
-> 
-> It's one char ('1' or '0') plus '`\0` -- no?
-
-You sprint() there "%d\n", so that includes a number, '\n' and '\0' unless
-I'm missing something.
-
-> > I think "spi" is bit too general name here. I would expect "spi" to
-> > actually refer to something connected to spi bus and possibly coming
-> > from drivers/spi/*.
-> > Perhaps "bios_protections" or something like that.
-> 
-> Sure, that's a good idea. I know BIOS is a badword now, so how about
-> just "firmware"? so /sys/kernel/security/firmware/bioswe
-
-Yup, sounds good :)
-
-> > > +     securityfs_remove(priv->spi_dir);
-> > > +     return -1;
-> > I don't know securityfs well enought but I think -1 is not correct here
-> > and if you want that then maybe -EPERM instead.
-> 
-> I will look, I don't think the actual value is terribly important. The
-> only time I can trigger this is forgetting to remove the securityfs
-> file in module unload, and then trying to re-insert the module --
-> which failed with -EEXIST from memory.
-> 
-> > I wonder if you can simply call
-> >         securityfs_remove(priv->spi_dir);
-> > and that removes the children automatically? I'm do not know securityfs
-> > so it may not be the case.
-> 
-> No, that doesn't work.
-
-OK
