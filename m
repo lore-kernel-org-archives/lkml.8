@@ -2,239 +2,170 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B88FC2D0FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81673CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC1FB206E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59A12206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:56:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ojoNBcdF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="beYiwgyd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733069AbgEMM4S (ORCPT
+        id S1733085AbgEMM4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 08:56:18 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:41487 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728379AbgEMM4P (ORCPT
+        Wed, 13 May 2020 08:56:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38522 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1733058AbgEMM4S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 08:56:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1589374575; x=1620910575;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Z3RtA3Is19gMLuQPixC7qZLhsQ/ltAtQlKTqxZJF4kc=;
-  b=ojoNBcdFjwObnjL0HOqbNOrH51SzViNsZ+9gpZV7Y42CvkaJ9A9mcPB3
-   pn0Nz+BB+ideeUHu8n6YH3UW9SJV05RHNlgE2Yn7i20N+iab2jwTXHf4P
-   1yGzTUNCUjszYDDyYfli0/eujJNuv8wYkyUpV9Y4DTLaq48X+A094jMbD
-   wyiptExhTZB1fKrplwnXabUFAODEyQ5AzL1r6d6X6RA8OKvj6IppFkS5U
-   p2phRFqWed952seyhzsADn+xFJP5Hv7KKMDrer7ZRfzB+YPNJZKZGveSM
-   LtiQKaBN28k/VHf8rlCuiaFNPr9eOZ8lCA/aTGD9vQmp9Hec9maNzM+t4
-   A==;
-IronPort-SDR: lO6DOcnAhr84ZBSxSAxSdxBBd5w2TOugv8+G0o0Vq5kEETCRHS/5YLSTywa4ycsGzA1J4ByVAq
- 0aS6FSaHetV7NqZ3WCeiHYIfI//XOXuyourN3Jp1z2/a1cSJLwCmZvqi2VGZ07o6j/1bUGyyOx
- SlYno5D6xVWWhZkAU6os1SH41UkBGaSEVxdsgvmUFQ9CA42JixTkKyJ3FJbtTLB1PEcJFqWcit
- 3xoupXRGh9bPwFty1g3eLsZpsguJOLBYe/iTZXIn37JhtZSaRjGeiSLroSxuzed6U5uCtgLv6G
- fwI=
-X-IronPort-AV: E=Sophos;i="5.73,387,1583218800"; 
-   d="scan'208";a="79436261"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 May 2020 05:56:14 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 13 May 2020 05:56:14 -0700
-Received: from soft-dev15.microsemi.net (10.10.115.15) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Wed, 13 May 2020 05:56:11 -0700
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-To:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Olof Johansson <olof@lixom.net>,
-        "Michael Turquette" <mturquette@baylibre.com>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 02/14] pinctrl: ocelot: Remove instance number from pin functions
-Date:   Wed, 13 May 2020 14:55:20 +0200
-Message-ID: <20200513125532.24585-3-lars.povlsen@microchip.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513125532.24585-1-lars.povlsen@microchip.com>
-References: <20200513125532.24585-1-lars.povlsen@microchip.com>
+        Wed, 13 May 2020 08:56:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589374576;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Rg6JkW5pd+D3Jw1ike2ImD0WSry7w4HYlBO089Hj5fo=;
+        b=beYiwgydbZMA0AdjWKt6NwgSpHan2RIwTJiPK4lmXuGaNjbrlJyeldpelSjprOEEF2S7Ys
+        CBHTaaw9+QSnS7jA2bfXqMliVNL9+z+bk/j0o9riaCao4BqWw1cN52N9wRvN4+4jcFNudC
+        GSutHiECzbgZ9KO2A08PdN7qTMyFo6w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-294-IKGYLsVMMAyDhyUHlrG70w-1; Wed, 13 May 2020 08:56:13 -0400
+X-MC-Unique: IKGYLsVMMAyDhyUHlrG70w-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6BE4F108BD0B;
+        Wed, 13 May 2020 12:56:11 +0000 (UTC)
+Received: from lorien.usersys.redhat.com (ovpn-113-165.phx2.redhat.com [10.3.113.165])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 52B9C2E033;
+        Wed, 13 May 2020 12:56:02 +0000 (UTC)
+Date:   Wed, 13 May 2020 08:56:00 -0400
+From:   Phil Auld <pauld@redhat.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org,
+        ouwen210@hotmail.com, pkondeti@codeaurora.org
+Subject: Re: [PATCH v2] sched/fair: fix unthrottle_cfs_rq for leaf_cfs_rq list
+Message-ID: <20200513125600.GC12425@lorien.usersys.redhat.com>
+References: <20200513123422.28299-1-vincent.guittot@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513123422.28299-1-vincent.guittot@linaro.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch removes the instance number from the "miim", "reco_clk" and
-"sfp" pin function.
+Hi Vincent,
 
-The change needed is to prepare the driver for adding new platforms
-with more of these instances. The instance number is also redundant,
-as this is implicit for each pin.
+On Wed, May 13, 2020 at 02:34:22PM +0200 Vincent Guittot wrote:
+> Although not exactly identical, unthrottle_cfs_rq() and enqueue_task_fair()
+> are quite close and follow the same sequence for enqueuing an entity in the
+> cfs hierarchy. Modify unthrottle_cfs_rq() to use the same pattern as
+> enqueue_task_fair(). This fixes a problem already faced with the latter and
+> add an optimization in the last for_each_sched_entity loop.
+> 
+> Reported-by Tao Zhou <zohooouoto@zoho.com.cn>
+> Reviewed-by: Phil Auld <pauld@redhat.com>
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> ---
+> 
+> v2 changes:
+> - Remove useless if statement
+> 
+>  kernel/sched/fair.c | 41 ++++++++++++++++++++++++++++++-----------
+>  1 file changed, 30 insertions(+), 11 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 4e12ba882663..a0c690d57430 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -4816,26 +4816,44 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
+>  	idle_task_delta = cfs_rq->idle_h_nr_running;
+>  	for_each_sched_entity(se) {
+>  		if (se->on_rq)
+> -			enqueue = 0;
 
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
----
- drivers/pinctrl/pinctrl-ocelot.c | 94 ++++++++++----------------------
- 1 file changed, 30 insertions(+), 64 deletions(-)
+Can probably drop the now-unused enqueue variable too.
 
-diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
-index d4ac65b1efc0b..375f3ea3b80c4 100644
---- a/drivers/pinctrl/pinctrl-ocelot.c
-+++ b/drivers/pinctrl/pinctrl-ocelot.c
-@@ -46,32 +46,15 @@ enum {
- 	FUNC_IRQ0_OUT,
- 	FUNC_IRQ1_IN,
- 	FUNC_IRQ1_OUT,
--	FUNC_MIIM1,
--	FUNC_MIIM2,
-+	FUNC_MIIM,
- 	FUNC_PCI_WAKE,
- 	FUNC_PTP0,
- 	FUNC_PTP1,
- 	FUNC_PTP2,
- 	FUNC_PTP3,
- 	FUNC_PWM,
--	FUNC_RECO_CLK0,
--	FUNC_RECO_CLK1,
--	FUNC_SFP0,
--	FUNC_SFP1,
--	FUNC_SFP2,
--	FUNC_SFP3,
--	FUNC_SFP4,
--	FUNC_SFP5,
--	FUNC_SFP6,
--	FUNC_SFP7,
--	FUNC_SFP8,
--	FUNC_SFP9,
--	FUNC_SFP10,
--	FUNC_SFP11,
--	FUNC_SFP12,
--	FUNC_SFP13,
--	FUNC_SFP14,
--	FUNC_SFP15,
-+	FUNC_RECO_CLK,
-+	FUNC_SFP,
- 	FUNC_SG0,
- 	FUNC_SG1,
- 	FUNC_SG2,
-@@ -92,32 +75,15 @@ static const char *const ocelot_function_names[] = {
- 	[FUNC_IRQ0_OUT]		= "irq0_out",
- 	[FUNC_IRQ1_IN]		= "irq1_in",
- 	[FUNC_IRQ1_OUT]		= "irq1_out",
--	[FUNC_MIIM1]		= "miim1",
--	[FUNC_MIIM2]		= "miim2",
-+	[FUNC_MIIM]		= "miim",
- 	[FUNC_PCI_WAKE]		= "pci_wake",
- 	[FUNC_PTP0]		= "ptp0",
- 	[FUNC_PTP1]		= "ptp1",
- 	[FUNC_PTP2]		= "ptp2",
- 	[FUNC_PTP3]		= "ptp3",
- 	[FUNC_PWM]		= "pwm",
--	[FUNC_RECO_CLK0]	= "reco_clk0",
--	[FUNC_RECO_CLK1]	= "reco_clk1",
--	[FUNC_SFP0]		= "sfp0",
--	[FUNC_SFP1]		= "sfp1",
--	[FUNC_SFP2]		= "sfp2",
--	[FUNC_SFP3]		= "sfp3",
--	[FUNC_SFP4]		= "sfp4",
--	[FUNC_SFP5]		= "sfp5",
--	[FUNC_SFP6]		= "sfp6",
--	[FUNC_SFP7]		= "sfp7",
--	[FUNC_SFP8]		= "sfp8",
--	[FUNC_SFP9]		= "sfp9",
--	[FUNC_SFP10]		= "sfp10",
--	[FUNC_SFP11]		= "sfp11",
--	[FUNC_SFP12]		= "sfp12",
--	[FUNC_SFP13]		= "sfp13",
--	[FUNC_SFP14]		= "sfp14",
--	[FUNC_SFP15]		= "sfp15",
-+	[FUNC_RECO_CLK]		= "reco_clk",
-+	[FUNC_SFP]		= "sfp",
- 	[FUNC_SG0]		= "sg0",
- 	[FUNC_SG1]		= "sg1",
- 	[FUNC_SG2]		= "sg2",
-@@ -168,18 +134,18 @@ OCELOT_P(6,  UART,      TWI_SCL_M, NONE);
- OCELOT_P(7,  UART,      TWI_SCL_M, NONE);
- OCELOT_P(8,  SI,        TWI_SCL_M, IRQ0_OUT);
- OCELOT_P(9,  SI,        TWI_SCL_M, IRQ1_OUT);
--OCELOT_P(10, PTP2,      TWI_SCL_M, SFP0);
--OCELOT_P(11, PTP3,      TWI_SCL_M, SFP1);
--OCELOT_P(12, UART2,     TWI_SCL_M, SFP2);
--OCELOT_P(13, UART2,     TWI_SCL_M, SFP3);
--OCELOT_P(14, MIIM1,     TWI_SCL_M, SFP4);
--OCELOT_P(15, MIIM1,     TWI_SCL_M, SFP5);
-+OCELOT_P(10, PTP2,      TWI_SCL_M, SFP);
-+OCELOT_P(11, PTP3,      TWI_SCL_M, SFP);
-+OCELOT_P(12, UART2,     TWI_SCL_M, SFP);
-+OCELOT_P(13, UART2,     TWI_SCL_M, SFP);
-+OCELOT_P(14, MIIM,      TWI_SCL_M, SFP);
-+OCELOT_P(15, MIIM,      TWI_SCL_M, SFP);
- OCELOT_P(16, TWI,       NONE,      SI);
- OCELOT_P(17, TWI,       TWI_SCL_M, SI);
- OCELOT_P(18, PTP0,      TWI_SCL_M, NONE);
- OCELOT_P(19, PTP1,      TWI_SCL_M, NONE);
--OCELOT_P(20, RECO_CLK0, TACHO,     NONE);
--OCELOT_P(21, RECO_CLK1, PWM,       NONE);
-+OCELOT_P(20, RECO_CLK,  TACHO,     TWI_SCL_M);
-+OCELOT_P(21, RECO_CLK,  PWM,       TWI_SCL_M);
 
- #define OCELOT_PIN(n) {						\
- 	.number = n,						\
-@@ -264,22 +230,22 @@ JAGUAR2_P(40, NONE,      TWI_SCL_M);
- JAGUAR2_P(41, NONE,      TWI_SCL_M);
- JAGUAR2_P(42, NONE,      TWI_SCL_M);
- JAGUAR2_P(43, NONE,      TWI_SCL_M);
--JAGUAR2_P(44, NONE,      SFP8);
--JAGUAR2_P(45, NONE,      SFP9);
--JAGUAR2_P(46, NONE,      SFP10);
--JAGUAR2_P(47, NONE,      SFP11);
--JAGUAR2_P(48, SFP0,      NONE);
--JAGUAR2_P(49, SFP1,      SI);
--JAGUAR2_P(50, SFP2,      SI);
--JAGUAR2_P(51, SFP3,      SI);
--JAGUAR2_P(52, SFP4,      NONE);
--JAGUAR2_P(53, SFP5,      NONE);
--JAGUAR2_P(54, SFP6,      NONE);
--JAGUAR2_P(55, SFP7,      NONE);
--JAGUAR2_P(56, MIIM1,     SFP12);
--JAGUAR2_P(57, MIIM1,     SFP13);
--JAGUAR2_P(58, MIIM2,     SFP14);
--JAGUAR2_P(59, MIIM2,     SFP15);
-+JAGUAR2_P(44, NONE,      SFP);
-+JAGUAR2_P(45, NONE,      SFP);
-+JAGUAR2_P(46, NONE,      SFP);
-+JAGUAR2_P(47, NONE,      SFP);
-+JAGUAR2_P(48, SFP,       NONE);
-+JAGUAR2_P(49, SFP,       SI);
-+JAGUAR2_P(50, SFP,       SI);
-+JAGUAR2_P(51, SFP,       SI);
-+JAGUAR2_P(52, SFP,       NONE);
-+JAGUAR2_P(53, SFP,       NONE);
-+JAGUAR2_P(54, SFP,       NONE);
-+JAGUAR2_P(55, SFP,       NONE);
-+JAGUAR2_P(56, MIIM,      SFP);
-+JAGUAR2_P(57, MIIM,      SFP);
-+JAGUAR2_P(58, MIIM,      SFP);
-+JAGUAR2_P(59, MIIM,      SFP);
- JAGUAR2_P(60, NONE,      NONE);
- JAGUAR2_P(61, NONE,      NONE);
- JAGUAR2_P(62, NONE,      NONE);
---
-2.26.2
+Cheers,
+Phil
+
+
+
+> +			break;
+> +		cfs_rq = cfs_rq_of(se);
+> +		enqueue_entity(cfs_rq, se, ENQUEUE_WAKEUP);
+>  
+> +		cfs_rq->h_nr_running += task_delta;
+> +		cfs_rq->idle_h_nr_running += idle_task_delta;
+> +
+> +		/* end evaluation on encountering a throttled cfs_rq */
+> +		if (cfs_rq_throttled(cfs_rq))
+> +			goto unthrottle_throttle;
+> +	}
+> +
+> +	for_each_sched_entity(se) {
+>  		cfs_rq = cfs_rq_of(se);
+> -		if (enqueue) {
+> -			enqueue_entity(cfs_rq, se, ENQUEUE_WAKEUP);
+> -		} else {
+> -			update_load_avg(cfs_rq, se, 0);
+> -			se_update_runnable(se);
+> -		}
+> +
+> +		update_load_avg(cfs_rq, se, UPDATE_TG);
+> +		se_update_runnable(se);
+>  
+>  		cfs_rq->h_nr_running += task_delta;
+>  		cfs_rq->idle_h_nr_running += idle_task_delta;
+>  
+> +
+> +		/* end evaluation on encountering a throttled cfs_rq */
+>  		if (cfs_rq_throttled(cfs_rq))
+> -			break;
+> +			goto unthrottle_throttle;
+> +
+> +		/*
+> +		 * One parent has been throttled and cfs_rq removed from the
+> +		 * list. Add it back to not break the leaf list.
+> +		 */
+> +		if (throttled_hierarchy(cfs_rq))
+> +			list_add_leaf_cfs_rq(cfs_rq);
+>  	}
+>  
+> -	if (!se)
+> -		add_nr_running(rq, task_delta);
+> +	/* At this point se is NULL and we are at root level*/
+> +	add_nr_running(rq, task_delta);
+>  
+> +unthrottle_throttle:
+>  	/*
+>  	 * The cfs_rq_throttled() breaks in the above iteration can result in
+>  	 * incomplete leaf list maintenance, resulting in triggering the
+> @@ -4844,7 +4862,8 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
+>  	for_each_sched_entity(se) {
+>  		cfs_rq = cfs_rq_of(se);
+>  
+> -		list_add_leaf_cfs_rq(cfs_rq);
+> +		if (list_add_leaf_cfs_rq(cfs_rq))
+> +			break;
+>  	}
+>  
+>  	assert_list_leaf_cfs_rq(rq);
+> -- 
+> 2.17.1
+> 
+
+-- 
+
