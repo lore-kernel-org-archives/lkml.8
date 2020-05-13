@@ -2,184 +2,108 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 640D1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D37C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F4022054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:02:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oeTy6T3z"
+	by mail.kernel.org (Postfix) with ESMTP id 0A0E0207DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:03:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbgEMVCw (ORCPT
+        id S1727030AbgEMVDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 17:02:52 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:57436 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725952AbgEMVCw (ORCPT
+        Wed, 13 May 2020 17:03:14 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:51200 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725952AbgEMVDN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 17:02:52 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04DKrGE5066369;
-        Wed, 13 May 2020 21:02:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=/3boRfPP9/nbgsqYwmPrKIYlI9iF/ok9lCvoAeyY0C8=;
- b=oeTy6T3zpL4mid5izCz7pT+UpH2DE7F4GbmYlPnijWMIOmwl1oLne/oN8vZWIXNpwjqd
- BOfjNNdQnghQVw32Y/8iDTTBJF5tQjKg8y2+AHV+myeNNb4vueg+1X0uKlF3NXoxjO/T
- ekycOEODQ2IFMlRLc4iT774jd8MWSg8/OZ8yTtCyGdNaKj3WGtaELuumPpwdcYNRp02C
- tKs/mxGz/G3trHiYHz+eh9PIRCY3rehwMfJHlUfPy5eVTP+JCIEPshTB0pKvsktVgp04
- S73lasR+gRwRsXIl8YtzYsLKwK9psYtPLUboRfxnJbADGsAW5qRKYrzEOj9Pk4zusm+R Ww== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 3100xwes3a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 13 May 2020 21:02:47 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04DL2avo119257;
-        Wed, 13 May 2020 21:02:46 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 3100ymv2q0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 May 2020 21:02:46 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04DL2juF006783;
-        Wed, 13 May 2020 21:02:45 GMT
-Received: from dhcp-10-159-252-198.vpn.oracle.com (/10.159.252.198)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 13 May 2020 14:02:45 -0700
-Subject: Re: [PATCH 1/2] IB/sa: Resolving use-after-free in ib_nl_send_msg.
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Kaike Wan <kaike.wan@intel.com>,
-        Gerd Rausch <gerd.rausch@oracle.com>,
-        =?UTF-8?Q?H=c3=a5kon_Bugge?= <haakon.bugge@oracle.com>,
-        Srinivas Eeda <srinivas.eeda@oracle.com>,
-        Rama Nichanamatlu <rama.nichanamatlu@oracle.com>,
-        Doug Ledford <dledford@redhat.com>
-References: <1588876487-5781-1-git-send-email-divya.indi@oracle.com>
- <1588876487-5781-2-git-send-email-divya.indi@oracle.com>
- <20200508000809.GM26002@ziepe.ca>
- <33fc99e2-e9fc-3c8c-e47f-41535f514c2d@oracle.com>
- <20200513150021.GD29989@ziepe.ca>
-From:   Divya Indi <divya.indi@oracle.com>
-Message-ID: <c761da30-3663-4932-dd72-3501f15c0197@oracle.com>
-Date:   Wed, 13 May 2020 14:02:01 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.0
+        Wed, 13 May 2020 17:03:13 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 088FC1C0285; Wed, 13 May 2020 23:03:12 +0200 (CEST)
+Date:   Wed, 13 May 2020 23:03:11 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>
+Subject: Re: [PATCH 4.19 35/48] batman-adv: Fix refcnt leak in
+ batadv_store_throughput_override
+Message-ID: <20200513210311.GA1822@duo.ucw.cz>
+References: <20200513094351.100352960@linuxfoundation.org>
+ <20200513094400.720293748@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20200513150021.GD29989@ziepe.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9620 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 suspectscore=11
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005130178
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9620 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 lowpriorityscore=0
- suspectscore=11 mlxlogscore=999 clxscore=1015 cotscore=-2147483648
- mlxscore=0 phishscore=0 adultscore=0 impostorscore=0 bulkscore=0
- malwarescore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005130177
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="FCuugMFkClbJLl1L"
+Content-Disposition: inline
+In-Reply-To: <20200513094400.720293748@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason,
 
-Please find my comments inline - 
+--FCuugMFkClbJLl1L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 5/13/20 8:00 AM, Jason Gunthorpe wrote:
-> On Mon, May 11, 2020 at 02:26:30PM -0700, Divya Indi wrote:
->>>> @@ -1123,6 +1156,18 @@ int ib_nl_handle_resolve_resp(struct sk_buff *skb,
->>>>  
->>>>  	send_buf = query->mad_buf;
->>>>  
->>>> +	/*
->>>> +	 * Make sure the IB_SA_NL_QUERY_SENT flag is set before
->>>> +	 * processing this query. If flag is not set, query can be accessed in
->>>> +	 * another context while setting the flag and processing the query will
->>>> +	 * eventually release it causing a possible use-after-free.
->>>> +	 */
->>> This comment doesn't really make sense, flags insige the memory being
->>> freed inherently can't prevent use after free.
->> I can definitely re-phrase here to make things clearer. But, the idea here is
->> in the unlikely/rare case where a response for a query comes in before the flag has been
->> set in ib_nl_make_request, we want to wait for the flag to be sent before proceeding. 
->> The response handler will eventually release the query so this wait avoids that if the flag has not been set
->> else 
->> 	"query->flags |= IB_SA_NL_QUERY_SENT;" 
->> will be accessing a query which was freed due to the above mentioned race.
->>
->> It is unlikely since getting a response => We have actually sent out the query to ibacm.
->>
->> How about this -
->>
->> "Getting a response is indicative of having sent out the query, but in an unlikely race when 
->> the response comes in before setting IB_SA_NL_QUERY_SENT, we need to wait till the flag is set to
->> avoid accessing a query that has been released."
-> It still makes no sense, a flag that is set before freeing the memory
-> is fundamentally useless to prevent races.
+Hi!
 
-Here the race is -
+> From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+>=20
+> commit 6107c5da0fca8b50b4d3215e94d619d38cc4a18c upstream.
+>=20
+> batadv_show_throughput_override() invokes batadv_hardif_get_by_netdev(),
+> which gets a batadv_hard_iface object from net_dev with increased refcnt
+> and its reference is assigned to a local pointer 'hard_iface'.
+>=20
+> When batadv_store_throughput_override() returns, "hard_iface" becomes
+> invalid, so the refcount should be decreased to keep refcount balanced.
+>=20
+> The issue happens in one error path of
+> batadv_store_throughput_override(). When batadv_parse_throughput()
+> returns NULL, the refcnt increased by batadv_hardif_get_by_netdev() is
+> not decreased, causing a refcnt leak.
+>=20
+> Fix this issue by jumping to "out" label when batadv_parse_throughput()
+> returns NULL.
 
-1. ib_nl_send_msg()
-2. query->flags |= IB_SA_NL_QUERY_SENT
-3. return;
-
--------------
-
-response_handler() {
-wait till flag is set.
-....
-kfree(query);
-
-}
-
-Here, if the response handler was called => Query was sent
-and flag should have been set. However if response handler kicks in
-before line 2, we want to wait and make sure the flag is set and
-then free the query.
-
-Ideally after ib_nl_send_msg, we should not be accessing the query
-because we can be getting a response/timeout asynchronously and cant be
-sure when. 
-
-The only places we access a query after it is successfully sent [response handler getting called
-=> sending was successful] -
-1. ib_nl_request_timeout
-2. While setting the flag.
-
-1. is taken care of because the request list access is protected by a lock
-and whoever gets the lock first deletes it from the request list and
-hence we can only have the response handler OR the timeout handler operate on the
-query.
-
-2. To handle this is why we wait in the response handler. Once the flag is
-set we are no longer accessing the query and hence safe to release it.
-
-I have modified the comment for v2 as follows -
-
-      /*
-+        * In case of a quick response ie when a response comes in before
-+        * setting IB_SA_NL_QUERY_SENT, we can have an unlikely race where the
-+        * response handler will release the query, but we can still access the
-+        * freed query while setting the flag.
-+        * Hence, before proceeding and eventually releasing the query -
-+        * wait till the flag is set. The flag should be set soon since getting
-+        * a response is indicative of having successfully sent the query.
-+        */
+Ok, this fixes the issue, but it brings up a question:
 
 
-Thanks,
-Divya
-
+> --- a/net/batman-adv/sysfs.c
+> +++ b/net/batman-adv/sysfs.c
+> @@ -1093,7 +1093,7 @@ static ssize_t batadv_store_throughput_o
+>  	ret =3D batadv_parse_throughput(net_dev, buff, "throughput_override",
+>  				      &tp_override);
+>  	if (!ret)
+> -		return count;
+> +		goto out;
 >
-> Jason
+
+If parsing of value from userspace failed we are currently returning
+success. That seems wrong. Should we return -EINVAL instead?
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--FCuugMFkClbJLl1L
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXrxgjwAKCRAw5/Bqldv6
+8jBxAKCPatfcX8F+QT4Xyocp9Z5aK5zspQCfeBHvHJ78hSvs+RqKA0ND11ZVfKs=
+=SVkw
+-----END PGP SIGNATURE-----
+
+--FCuugMFkClbJLl1L--
