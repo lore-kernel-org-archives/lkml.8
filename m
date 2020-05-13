@@ -2,78 +2,139 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCE6C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD13C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCFE820718
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:48:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589352480;
-	bh=kZUHIl/hslAIUun/scKZGchu54jJoiD5bFZ7D+UaEso=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tnolt/123qUDbh+W/BkQE9H1lwv9jqHkYBMtwDo7i/eE6bwpy5MQrHb0EazuXRiXy
-	 WfO50VhO2tr4GFeP1w6lTMTJDClhBNXVA3zG29g9d/ILZ121O/6RdttT2Skr8/Is/J
-	 1XMeNDofDTj/DLIgGmgxAWAyu3HMynxDHRSL2kJg=
+	by mail.kernel.org (Postfix) with ESMTP id 0AA4520708
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:50:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GmcSSLRz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729566AbgEMGsA (ORCPT
+        id S1729683AbgEMGu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 02:48:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32816 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729189AbgEMGr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 02:47:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 13 May 2020 02:50:26 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:47358 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729367AbgEMGuZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 02:50:25 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589352625; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=RWGNo+h1F7wmSA2OG3rwpi2qn7Oa+PH+QB/t0CyZYE4=; b=GmcSSLRzx/QqLzRiHIqrxrVqvpN0bJsH+uqMuAJdOR+a7dj3nQ6X35XzzWK//ES+uTe8nH3x
+ L3aEDp5vW5HT28ZlaKVacfwmS1zxJG347/XfHKYFHPIM9E81H605q0iiT+nU3QcqKcrs/DvX
+ QnkVAbwOd/3dzsTLgMClFO3SXrc=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebb98a0.7fbb800a6ea0-smtp-out-n04;
+ Wed, 13 May 2020 06:50:08 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8A2DFC433D2; Wed, 13 May 2020 06:50:08 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD45120708;
-        Wed, 13 May 2020 06:47:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589352479;
-        bh=kZUHIl/hslAIUun/scKZGchu54jJoiD5bFZ7D+UaEso=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PuQBkAr5QzzkidCv+HHPPcfF5KJPuORNomc6bYgImz/D7lVfJAhdo6oPqs4sNv/WQ
-         usqM4uvdRCJ4UAFK/wATmvjc6E1QcTtnzD9goysPqVRGzP6fPViTp+icxrXVSavUY+
-         A2XVYzt2HZ+U1oyHlm8IFeKhhiiJtkb9vZRFPPj4=
-Date:   Wed, 13 May 2020 08:47:55 +0200
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     "Idgar, Or" <Or.Idgar@dell.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "Ravich, Leonid" <Leonid.Ravich@dell.com>
-Subject: Re: CMA enhancement - non-default areas in x86
-Message-ID: <20200513064755.GA763968@kroah.com>
-References: <CH2PR19MB3767236EDC9BE964FC3AB91BFEBF0@CH2PR19MB3767.namprd19.prod.outlook.com>
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 87360C433F2;
+        Wed, 13 May 2020 06:50:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 87360C433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: gcc-10: kernel stack is corrupted and fails to boot
+References: <20200509120707.188595-1-arnd@arndb.de>
+        <20200509120707.188595-2-arnd@arndb.de>
+        <87v9l24qz6.fsf@kamboji.qca.qualcomm.com>
+        <87r1vq4qev.fsf@kamboji.qca.qualcomm.com>
+Date:   Wed, 13 May 2020 09:50:03 +0300
+In-Reply-To: <87r1vq4qev.fsf@kamboji.qca.qualcomm.com> (Kalle Valo's message
+        of "Mon, 11 May 2020 15:17:12 +0300")
+Message-ID: <87d078tjl0.fsf_-_@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CH2PR19MB3767236EDC9BE964FC3AB91BFEBF0@CH2PR19MB3767.namprd19.prod.outlook.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 06:13:55AM +0000, Idgar, Or wrote:
-> Hi,
-> I'm working with Linux kernel on x86 and needed a way to allocate a very large contiguous memory (around 20GB) for DMA operations.
+(trimming CC, changing title)
 
-For what type of device?
+Kalle Valo <kvalo@codeaurora.org> writes:
 
-> I've found out that CMA is one of the major ways to do so, but our problem is that CMA's default behavior is to create one default area from which all devices can allocate memory.
-> when booting, there were some drivers that allocated memory for DMA and used CMA memory if exist. The problem is that it takes memory that we need for our device and we want to make sure this area is dedicated for our device.
-> 
-> As I saw, the only way to reserve a dedicated area is by enabling OF_RESERVED_MEM which is available for several architectures but excluding x86 (and as far as I understand relies on device tree which is not in use with x86 or at least cannot be configured with OF_RESERVED_MEM).
-> 
-> I really want to leverage this mechanism/API and thought about modifying the code (and hopefully merge it upstream) so multiple non-default areas will be available for x86 and with a way to consume it by mapping specific area to specific device.
-> 
-> Is it something that will be open for merging if written properly?
+> Kalle Valo <kvalo@codeaurora.org> writes:
+>
+>> Arnd Bergmann <arnd@arndb.de> writes:
+>>
+>>> gcc-10 correctly points out a bug with a zero-length array in
+>>> struct ath10k_pci:
+>>>
+>>> drivers/net/wireless/ath/ath10k/ahb.c: In function 'ath10k_ahb_remove':
+>>> drivers/net/wireless/ath/ath10k/ahb.c:30:9: error: array subscript 0
+>>> is outside the bounds of an interior zero-length array 'struct
+>>> ath10k_ahb[0]' [-Werror=zero-length-bounds]
+>>>    30 |  return &((struct ath10k_pci *)ar->drv_priv)->ahb[0];
+>>>       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>> In file included from drivers/net/wireless/ath/ath10k/ahb.c:13:
+>>> drivers/net/wireless/ath/ath10k/pci.h:185:20: note: while referencing 'ahb'
+>>>   185 |  struct ath10k_ahb ahb[0];
+>>>       |                    ^~~
+>>>
+>>> The last addition to the struct ignored the comments and added
+>>> new members behind the array that must remain last.
+>>>
+>>> Change it to a flexible-array member and move it last again to
+>>> make it work correctly, prevent the same thing from happening
+>>> again (all compilers warn about flexible-array members in the
+>>> middle of a struct) and get it to build without warnings.
+>>
+>> Very good find, thanks! This bug would cause all sort of strange memory
+>> corruption issues.
+>
+> This motivated me to switch to using GCC 10.x and I noticed that you had
+> already upgraded crosstool so it was a trivial thing to do, awesome :)
+>
+> https://mirrors.edge.kernel.org/pub/tools/crosstool/
 
-We always will be glad to review patches, no need to ask us about that.
-Just post them!
+And now I have a problem :) I first noticed that my x86 testbox is not
+booting when I compile the kernel with GCC 10.1.0 from crosstool. I
+didn't get any error messages so I just downgraded the compiler and the
+kernel was booting fine again. Next I decided to try GCC 10.1 with my
+x86 laptop and it also failed to boot, but this time I got kernel logs
+and saw this:
 
-good luck,
+Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: start_secodary+0x178/0x180
 
-greg k-h
+Call Trace:
+dump_stack
+panic
+? _raw_spin_unlock_irqrestore
+? start_secondary
+__stack_chk_fail
+start_secondary
+secondary_startup
+
+(I wrote the above messages manually from a picture so expect typos)
+
+Then also on my x86 laptop I downgraded the compiler to GCC 8.1.0 (from
+crosstool), rebuilt the exactly same kernel version and the kernel
+booted without issues.
+
+I'm using 5.7.0-rc4-wt-ath+ which is basically v5.7-rc4 plus latest
+wireless patches, and I doubt the wireless patches are making any
+difference this early in the boot. All compilers I use are prebuilt
+binaries from kernel.org crosstool repo[1] with addition of ccache
+v3.4.1 to speed up my builds.
+
+Any ideas? How should I debug this further?
+
+[1] https://mirrors.edge.kernel.org/pub/tools/crosstool/
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
