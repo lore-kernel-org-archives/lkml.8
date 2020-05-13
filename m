@@ -2,106 +2,118 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F631C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D00C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 963462054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43C1F2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:55:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qh4dDJPO"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iogvTZzs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728533AbgEMUyY (ORCPT
+        id S1727956AbgEMUzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 16:54:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728479AbgEMUyX (ORCPT
+        Wed, 13 May 2020 16:55:36 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:58917 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726015AbgEMUzf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 16:54:23 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E904C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 13:54:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=dMTtYFDXqUdlmzWoL5eR1c/r+iW79rtsYdnr93KcRJA=; b=qh4dDJPOeMSykQV0ryuh0iRpxQ
-        a2LC4lSg3POAP5J5Spgh+PaMzfefovUjqOu4ubqcl+/GyxIzkYts176/t5BoH0N0w068WT/IvHxK3
-        fvJ73GeE0ecbuveu2+jZqZbICpUu1pmVOzaEZo53pcmvwfvZbh2SqowM0heR0I+OftggHI5usutcy
-        6220g9YkPmq4uG7ciZMherKR3C3pGSskAVCbgtQ+hnrMhoZuPktOlOXN9+0cOo24CXKgXoaqLznuP
-        Tz9RpDicEgBKDHb9dYEeAe0jeGmxwRFK0049wffYg/hbCkmu4ahTlY4TudkWMi7RMQ8yhdwsECVaZ
-        l3P5P7qw==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jYyOP-0001k3-MH; Wed, 13 May 2020 20:54:17 +0000
-Subject: Re: [PATCH] kobject: Make sure the parent does not get released
- before its children
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        kernel test robot <rong.a.chen@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-References: <20200513151840.36400-1-heikki.krogerus@linux.intel.com>
- <CAFd5g46npUaVOu9+xvLqw=DhCccuzOLpFLn1+8Qc8Un0AALThg@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ca1db965-e3aa-7c86-27b2-92fb4707ddb5@infradead.org>
-Date:   Wed, 13 May 2020 13:54:15 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 13 May 2020 16:55:35 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589403335; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=soxLFGcusBrU6Ui7EMNphc3/4GGGrCTLXGXwJr1QcwI=;
+ b=iogvTZzsoBVQ8yomeTZeL0ShzP3qsArRja8egCiQR2vEj/uVeFpV2do1KJlfOy41L2SqBlk6
+ KcjjZflp0+xk4SD6GkDZt/3ecFHCIxk6BwHuWLqoPqe4LkbFFCzp8eNZB79yLauDRK4e5lge
+ IPKOYN4B1xJMQicYI47UAbQ5kIA=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebc5ec5.7f453b5d4298-smtp-out-n05;
+ Wed, 13 May 2020 20:55:33 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8F963C43636; Wed, 13 May 2020 20:55:32 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: psodagud)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F0E27C433F2;
+        Wed, 13 May 2020 20:55:31 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <CAFd5g46npUaVOu9+xvLqw=DhCccuzOLpFLn1+8Qc8Un0AALThg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Wed, 13 May 2020 13:55:31 -0700
+From:   psodagud@codeaurora.org
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     john.stultz@linaro.org, sboyd@kernel.org, tj@kernel.org,
+        linux-kernel@vger.kernel.org, saravanak@google.com,
+        pkondeti@codeaurora.org, Joonwoo Park <joonwoop@codeaurora.org>
+Subject: Re: [PATCH v3 1/2] timer: make deferrable cpu unbound timers really
+ not bound to a cpu
+In-Reply-To: <87d0771swr.fsf@nanos.tec.linutronix.de>
+References: <1588444137-18651-1-git-send-email-psodagud@codeaurora.org>
+ <1588444137-18651-2-git-send-email-psodagud@codeaurora.org>
+ <87a72lkx9t.fsf@nanos.tec.linutronix.de>
+ <dbc01cd27346bb465744b93ece2b6362@codeaurora.org>
+ <87d0771swr.fsf@nanos.tec.linutronix.de>
+Message-ID: <ba1e3e84f0a77d550898222e94844ca7@codeaurora.org>
+X-Sender: psodagud@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/13/20 1:18 PM, Brendan Higgins wrote:
-> On Wed, May 13, 2020 at 8:18 AM Heikki Krogerus
-> <heikki.krogerus@linux.intel.com> wrote:
->>
->> In the function kobject_cleanup(), kobject_del(kobj) is
->> called before the kobj->release(). That makes it possible to
->> release the parent of the kobject before the kobject itself.
->>
->> To fix that, adding function __kboject_del() that does
->> everything that kobject_del() does except release the parent
->> reference. kobject_cleanup() then calls __kobject_del()
->> instead of kobject_del(), and separately decrements the
->> reference count of the parent kobject after kobj->release()
->> has been called.
+On 2020-05-13 13:28, Thomas Gleixner wrote:
+> psodagud@codeaurora.org writes:
+>> On 2020-05-06 06:28, Thomas Gleixner wrote:
+>>>>  #ifdef CONFIG_SMP
+>>>> +struct timer_base timer_base_deferrable;
+>>>>  unsigned int sysctl_timer_migration = 1;
+>>>> 
+>>>>  DEFINE_STATIC_KEY_FALSE(timers_migration_enabled);
+>>>> @@ -841,8 +842,14 @@ static inline struct timer_base
+>>>> *get_timer_cpu_base(u32 tflags, u32 cpu)
+>>>>  	 * If the timer is deferrable and NO_HZ_COMMON is set then we need
+>>>>  	 * to use the deferrable base.
+>>>>  	 */
+>>>> -	if (IS_ENABLED(CONFIG_NO_HZ_COMMON) && (tflags & 
+>>>> TIMER_DEFERRABLE))
+>>>> -		base = per_cpu_ptr(&timer_bases[BASE_DEF], cpu);
+>>>> +	if (IS_ENABLED(CONFIG_NO_HZ_COMMON) && (tflags & 
+>>>> TIMER_DEFERRABLE))
+>>>> {
+>>>> +#ifdef CONFIG_SMP
+>>>> +		base = &timer_base_deferrable;
+>>>> +#endif
+>>> 
+>>> There are definitely smarter ways of solving this than sprinkling
+>>> #ifdef's around the code.
+>> 
+>> I am able to understand all other comments and I will address all 
+>> those
+>> comments in the next patch set.
+>> It is not clear to me how to avoid #ifdef's in this case. Could you
+>> please share an example here?
 > 
-> I was starting to wonder if anything else needed to happen with this. :-)
-> 
-> Thanks for taking care of this!
-> 
->> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
->> Reported-by: kernel test robot <rong.a.chen@intel.com>
->> Fixes: 7589238a8cf3 ("Revert "software node: Simplify software_node_release() function"")
->> Cc: Brendan Higgins <brendanhiggins@google.com>
->> Cc: Randy Dunlap <rdunlap@infradead.org>
->> Suggested-by: "Rafael J. Wysocki" <rafael@kernel.org>
->> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> 
-> Didn't I and someone else test this?
-> 
-> Either way, I will test this out in a little bit.
-> 
-> Thanks!
-> 
+> The answer is further down already:
 
-Yes, I tested the earlier patch and acked it.
-(using lib/test_printf.ko)
+Thanks Tglx for quick response.
 
--- 
-~Randy
+I think, you are referring stub functions. Yes. I can reduce some of the 
+#ifdefs with stub functions as you mentioned and not all the cases 
+right?
+I have introduced two variables timer_base_deferrable and 
+deferrable_pending and I can put stub function where ever is possible. 
+But it may not be appropriate to have stub function for all the 
+references of these variables right? Correct me if my understanding is 
+wrong.
 
+-Thanks, Prasad
+
+> 
+>>> Stub functions exist to avoid this unreadable #ifdef garbage.
