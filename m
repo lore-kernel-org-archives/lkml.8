@@ -2,113 +2,128 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2636C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EC1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A403205CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:53:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VZ9ECzOG"
+	by mail.kernel.org (Postfix) with ESMTP id BE44F206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 17:56:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589392576;
+	bh=vxWmhfB5vjfKB/0ZB+Z7fShTQfkkErFyZOnc5LMDdUE=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=ufOmZ6/6wulMqfQOAWOWdiMcsM2WFQlyhZpQ7cu1mY0qQVNDjQctMw6MI1RnLANEF
+	 Wg2rFcPgblca5OxIIWy+G9oP2UEAv/DQJTNrRbyGaXiIF2iLz45DdEFHNbTjIzzd3j
+	 H22KhgJ+647AzpK3vP6SbpaUUu+vSLtdPmQWgaDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733046AbgEMRxB (ORCPT
+        id S1733202AbgEMR4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 13:53:01 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20605 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732488AbgEMRxB (ORCPT
+        Wed, 13 May 2020 13:56:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40448 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732986AbgEMR4O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 13:53:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589392380;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cKPU2UnIkMHFMemi3skP0Jo5jk1QLcLQuR3usoR03Lk=;
-        b=VZ9ECzOGxAC1IoKP0DlXadS7gZ2sc/oYFL8pStS3c7C2IuJ+1VtAWXqGc/0+RylXSmhZyQ
-        TFq5+n1h6OaSjisixNL9HK2aXG4smP6mPYes9BfnoWjVzC3dvsG3tw2OOzJTsU8NhfMq2a
-        i4Fiy76GW9KgxVKTGaJTTx8NgMW0W+I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-290-8XA14bRhP42nGAPBs401sw-1; Wed, 13 May 2020 13:52:58 -0400
-X-MC-Unique: 8XA14bRhP42nGAPBs401sw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C0DFB107ACCA;
-        Wed, 13 May 2020 17:52:56 +0000 (UTC)
-Received: from krava (unknown [10.40.195.109])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 9804010013D9;
-        Wed, 13 May 2020 17:52:54 +0000 (UTC)
-Date:   Wed, 13 May 2020 19:52:53 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf expr: Fix memory leaks in metric bison
-Message-ID: <20200513175253.GB3343750@krava>
-References: <20200513000318.15166-1-irogers@google.com>
+        Wed, 13 May 2020 13:56:14 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4555C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 10:56:14 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id n11so565225ilj.4
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 10:56:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=F16QtRSzf878DRAHE3ucRhzTHi9PQVc2FyzR7+y/rko=;
+        b=gC6Ys2Z0X4VwL2tBzGS4x3OiTHrcdcOLARYEx4CguoyfFZEmU4tW2Ja48mydzgWx9B
+         AS/BjGGUEfFjY2ALTRclJ/53GMtL/GU0s43O9XH4Hj+ik2iurcHuGpCjz+H302iTMblx
+         EaeAJujlOc/UM+k5YOzD/iG25gUfMG5IiyWx4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=F16QtRSzf878DRAHE3ucRhzTHi9PQVc2FyzR7+y/rko=;
+        b=dClh+vF4D3cSkj0bVeN84+Sc43zYzxw6NIMmHBljwh/CnkUoZcb/KYT+JRYnAqT+QV
+         CaNrEVEkBssS00Lw2vqZSJkCBqNpTJEX4z41dbFdkMiBLw04/1NjCTz3u2bQnzdDL8s+
+         1fESu/lGiFtW5NNK2FR7sJYfHO6AVbejUYsYky1eF56vFgkznZxfMG2nkZ8WkPrJfpAN
+         akLzmUheQuRJKA0uLuS50Ngl3j1ldj2wp1hpBUGi6tvrogeMr7DXTd6FNXZocxyk1qvi
+         v4w6oipX+s/+QHt9Q/tZ05BLMyOmFkcoNuPWXk5I3/MW2/QM9D8yPextWDArXdgiV1nR
+         ZuHg==
+X-Gm-Message-State: AOAM533Qxs0Mb504ENsROUd3IoYrFBjRYBWCqJUhHekbk8eS+JaI4dnE
+        dxW5W6o/uszZQ9tm4i19D8HeXA==
+X-Google-Smtp-Source: ABdhPJwUOgAGpAYb/jTO3l+3l7qXYKvLIv6vcxoLLkh3FRieCG+8TXXKp1Lml1CQgay7kjWqptMGsQ==
+X-Received: by 2002:a92:8144:: with SMTP id e65mr313116ild.242.1589392573981;
+        Wed, 13 May 2020 10:56:13 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id e13sm88045ils.27.2020.05.13.10.56.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 May 2020 10:56:13 -0700 (PDT)
+Subject: Re: [PATCH v2 2/2] fs: avoid fdput() after failed fdget() in
+ kernel_read_file_from_fd()
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     axboe@kernel.dk, zohar@linux.vnet.ibm.com, mcgrof@kernel.org,
+        keescook@chromium.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <cover.1589311577.git.skhan@linuxfoundation.org>
+ <1159d74f88d100521c568037327ebc8ec7ffc6ef.1589311577.git.skhan@linuxfoundation.org>
+ <20200513054950.GT23230@ZenIV.linux.org.uk>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <19709a34-68be-abb2-a8e1-f42e37a103ee@linuxfoundation.org>
+Date:   Wed, 13 May 2020 11:56:11 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513000318.15166-1-irogers@google.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200513054950.GT23230@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 05:03:18PM -0700, Ian Rogers wrote:
-> Add a destructor for strings to reclaim memory in the event of errors.
-> Free the ID given for a lookup, it was previously strdup-ed in the lex
-> code.
+On 5/12/20 11:49 PM, Al Viro wrote:
+> On Tue, May 12, 2020 at 01:43:05PM -0600, Shuah Khan wrote:
+>> Fix kernel_read_file_from_fd() to avoid fdput() after a failed fdget().
+>> fdput() doesn't do fput() on this file since FDPUT_FPUT isn't set
+>> in fd.flags. Fix it anyway since failed fdget() doesn't require
+>> a fdput().
+>>
+>> This was introduced in a commit that added kernel_read_file_from_fd() as
+>> a wrapper for the VFS common kernel_read_file().
+>>
+>> Fixes: b844f0ecbc56 ("vfs: define kernel_copy_file_from_fd()")
+>> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+>> ---
+>>   fs/exec.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/fs/exec.c b/fs/exec.c
+>> index 06b4c550af5d..ea24bdce939d 100644
+>> --- a/fs/exec.c
+>> +++ b/fs/exec.c
+>> @@ -1021,8 +1021,8 @@ int kernel_read_file_from_fd(int fd, void **buf, loff_t *size, loff_t max_size,
+>>   		goto out;
+>>   
+>>   	ret = kernel_read_file(f.file, buf, size, max_size, id);
+>> -out:
+>>   	fdput(f);
+>> +out:
+>>   	return ret;
 > 
-> Reviewed-by: Andi Kleen <ak@linux.intel.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Again, that goto is a pointless obfuscation; just return -EBADF
+> and be done with that.
+> 
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+My reasoning is if this routine ends up growing it might be useful
+to handle the return this way.
+
+In any case, I will send v3 for both of these patches.
 
 thanks,
-jirka
-
-> ---
->  tools/perf/util/expr.y | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> index 21e82a1e11a2..3b49b230b111 100644
-> --- a/tools/perf/util/expr.y
-> +++ b/tools/perf/util/expr.y
-> @@ -27,6 +27,7 @@
->  %token EXPR_PARSE EXPR_OTHER EXPR_ERROR
->  %token <num> NUMBER
->  %token <str> ID
-> +%destructor { free ($$); } <str>
->  %token MIN MAX IF ELSE SMT_ON
->  %left MIN MAX IF
->  %left '|'
-> @@ -94,8 +95,10 @@ if_expr:
->  expr:	  NUMBER
->  	| ID			{ if (lookup_id(ctx, $1, &$$) < 0) {
->  					pr_debug("%s not found\n", $1);
-> +					free($1);
->  					YYABORT;
->  				  }
-> +				  free($1);
->  				}
->  	| expr '|' expr		{ $$ = (long)$1 | (long)$3; }
->  	| expr '&' expr		{ $$ = (long)$1 & (long)$3; }
-> -- 
-> 2.26.2.645.ge9eca65c58-goog
-> 
-
+-- Shuah
