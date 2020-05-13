@@ -2,86 +2,138 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5FDCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B34C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35624206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 836A1206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:56:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="muJMCVLB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733139AbgEMM4d (ORCPT
+        id S1733156AbgEMM4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 08:56:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33650 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733110AbgEMM4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 08:56:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id EB7FAAD08;
-        Wed, 13 May 2020 12:56:31 +0000 (UTC)
-Message-ID: <87d71fa371739486a19f17a6b3ca72d2315220d2.camel@suse.de>
-Subject: Re: [PATCH v3 0/2] usb: xhci: Load Raspberry Pi 4 VL805's firmware
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     mbrugger@suse.com, u-boot@lists.denx.de, bmeng.cn@gmail.com,
-        marex@denx.de, linux-kernel@vger.kernel.org
-Cc:     sjg@chromium.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com,
-        mark.kettenis@xs4all.nl
-Date:   Wed, 13 May 2020 14:56:27 +0200
-In-Reply-To: <20200505162607.334-1-nsaenzjulienne@suse.de>
-References: <20200505162607.334-1-nsaenzjulienne@suse.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-zJ6m1nQczXy6DejoCnBn"
-User-Agent: Evolution 3.36.2 
+        Wed, 13 May 2020 08:56:37 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:6871 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732989AbgEMM4e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 08:56:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1589374593; x=1620910593;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=XzyAjS+VdICD+VDbBl+tF57k++B6rYPYjva3OeaJ/X8=;
+  b=muJMCVLBG01L3Gkgt5yYVoHUxYX8DuTMCbc3r+l/Q1Wmn5BEwRpks4ON
+   PVlYaH8QRNblx8VNSTvoknEEN/do5+Kn3bthzmVX9AwxCGpP5e1fDKVI+
+   9coRCf1gcKSkOmhP+6oN4qUtffyXCiKv5+Rvxtpn36AO+gmS/KqvglWUy
+   PnJXgJ1qmUr91Y+p4RSzq97Gt9bzzjkkFIhrZqGSCuP8m5BcfZJAz7rSh
+   w2u0Zgct0liLFN2Wm3S5o376WxBnl1Pk7VhXiPRvvdO0c6NIYgxpkEELH
+   Uc/thI3LG0HIwuOys0Qprohn4X841g8BISPXEoGOPu0P52o1Y7LK+jSp+
+   Q==;
+IronPort-SDR: JwLwlM1erNzBBGrUO3T1+ZqDwN8fhRVhDgIwzSxlGBJtM46S/CKnrYo4HkoV/lOh6UzB2CqgAu
+ a4xgKEkrsGAhVgDYrbv6HCfdIGBxKv/tUn0OKhb8cHQj0bUWBWnDwRI0DyO/bs3Lu8HCffr4Re
+ I2ZgrNSvM5UF2ub5WOoWyPliNeAYMKom1MVzcuFN3zeJBWDssIa3fvY6Vc4AICcjOfNxlWtaNY
+ KsKGX3TX+AxoU54N/faoOMEmT6yWR08YKHYD521JoOMg+VJ+m6vCeVKeNMTNXVDb3j7PkR/9ZS
+ 3tc=
+X-IronPort-AV: E=Sophos;i="5.73,387,1583218800"; 
+   d="scan'208";a="75132778"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 May 2020 05:56:33 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 13 May 2020 05:56:33 -0700
+Received: from soft-dev15.microsemi.net (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Wed, 13 May 2020 05:56:30 -0700
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+To:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        "Michael Turquette" <mturquette@baylibre.com>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 04/14] arm64: sparx5: Add support for Microchip 2xA53 SoC
+Date:   Wed, 13 May 2020 14:55:22 +0200
+Message-ID: <20200513125532.24585-5-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200513125532.24585-1-lars.povlsen@microchip.com>
+References: <20200513125532.24585-1-lars.povlsen@microchip.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This adds support for the Microchip Sparx5 ARMv8-based SoC family of
+TSN-capable gigabit switches.
 
---=-zJ6m1nQczXy6DejoCnBn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+---
+ MAINTAINERS                  |  8 ++++++++
+ arch/arm64/Kconfig.platforms | 14 ++++++++++++++
+ 2 files changed, 22 insertions(+)
 
-On Tue, 2020-05-05 at 18:26 +0200, Nicolas Saenz Julienne wrote:
-> Newer revisions of the RPi4 need their xHCI chip, VL805, firmware to be
-> loaded explicitly. Earlier versions didn't need that as they where using
-> an EEPROM for that purpose. This series takes care of setting up the
-> relevant infrastructure and run the firmware loading routine at the
-> right moment.
->=20
-> Note that this builds on top of Sylwester Nawrocki's "USB host support
-> for Raspberry Pi 4 board" series.
->=20
-> ---
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 091ec22c1a23f..1b5a18d3dbb9f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2079,6 +2079,14 @@ X:	drivers/net/wireless/atmel/
+ N:	at91
+ N:	atmel
 
-Just for the record, here's the version of this in the Linux Kernel:
-https://patchwork.kernel.org/cover/11529585/
++ARM/Microchip Sparx5 SoC support
++M:	Lars Povlsen <lars.povlsen@microchip.com>
++M:	Steen Hegelund <Steen.Hegelund@microchip.com>
++M:	Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
++L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
++N:	sparx5
++S:	Supported
++
+ ARM/MIOA701 MACHINE SUPPORT
+ M:	Robert Jarzmik <robert.jarzmik@free.fr>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index 55d70cfe0f9e1..e1734a13a967b 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -89,6 +89,20 @@ config ARCH_EXYNOS
+ 	help
+ 	  This enables support for ARMv8 based Samsung Exynos SoC family.
 
-Regards,
-Nicolas
-
-
---=-zJ6m1nQczXy6DejoCnBn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl677nsACgkQlfZmHno8
-x/4lwgf/az8ddaA++TvpX2NQkZGoTV4ECgURLlQzVVNgRpdiDSad2Dq0OMhJoUIS
-DSUgQOnYDBQGMkOPlhEMV/vsNtno+RvAenDdkBrFr5Y5rUtd5cFkcOkaUagw4+jP
-gFQluOKw3MyAhFlgQRZhlSTS9fihdmxlLZEosnS33gcyuS1SJnmyL2YL0NiP9aHG
-9VdyqXirGnrwPJXnBkEoAyHKchhriGj7hvfUZI2Yxp3Z1xEwSttz+KZy5VCFx+nr
-TaFhC35xIxEpkTY8mIxb+UcQfESD+Q1lDDcEiztuOH+PZJLuOO8jFymrTS7BsW6+
-fzTkDmCMuoKPZf1m9rddp1pO+VcMww==
-=1fCZ
------END PGP SIGNATURE-----
-
---=-zJ6m1nQczXy6DejoCnBn--
-
++config ARCH_SPARX5
++	bool "ARMv8 based Microchip Sparx5 SoC family"
++	select PINCTRL
++	select DW_APB_TIMER_OF
++	help
++	  This enables support for the Microchip Sparx5 ARMv8-based
++	  SoC family of TSN-capable gigabit switches.
++
++	  The SparX-5 Ethernet switch family provides a rich set of
++	  switching features such as advanced TCAM-based VLAN and QoS
++	  processing enabling delivery of differentiated services, and
++	  security through TCAM-based frame processing using versatile
++	  content aware processor (VCAP).
++
+ config ARCH_K3
+ 	bool "Texas Instruments Inc. K3 multicore SoC architecture"
+ 	select PM_GENERIC_DOMAINS if PM
+--
+2.26.2
