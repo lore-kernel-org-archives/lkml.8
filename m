@@ -2,329 +2,226 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCACC2D0FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 04:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7EDC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 04:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60A4820675
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 04:30:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q5LgiIXa"
+	by mail.kernel.org (Postfix) with ESMTP id 55BDB20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 04:32:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726062AbgEMEad (ORCPT
+        id S1726197AbgEMEcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 00:30:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56020 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725898AbgEMEad (ORCPT
+        Wed, 13 May 2020 00:32:20 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3976 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725898AbgEMEcU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 00:30:33 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDE58C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 21:30:32 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 132so13646215ybc.22
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 21:30:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=EiNwQd0S8x/f8opHNvYKx75ld5cmNHRPlXlTs3rCssg=;
-        b=q5LgiIXaw9ydusgTEv86D4AIe5wJt9ewFfX20KTt8X0/1M/sAbBfz0cX70w6RnoXkM
-         gGx62UP/baRZ4NStc86m4pEnjy3+PhXN1qWV3CVCy1N9VVsPy4+TfaujMVcAKkSYU6uq
-         BVoNTNT0C+d/jEodPM9Ix32AK/l1dKcwknFjmv5gApQviwC/VKDfa+XpJf6C8+OcBEyr
-         0HyStHD1H2eBZUiF2sH6khCnRQfXOiKScZnfF3BhZgeHcIEQB10U8IAfcAMwxBxiZVWk
-         +v9CHKsf1NUSZkTQZc6mcqkzkUF/xYRlXxcKnJo8zIY1/5xNQHBqlevBb9qc1XbinZvV
-         3xeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=EiNwQd0S8x/f8opHNvYKx75ld5cmNHRPlXlTs3rCssg=;
-        b=VWCq118VLwB16fYKQzT6ZX2yQRi5dpaRSwzaygoX21OKbKo19RPEHti6Yk7Xo0JpKS
-         GryXteO0l+JfNkUk/oqfWr4b2FwDtvvRi2bSDU0YIN4HYZlFD43GSrFmPBdlDtwcCgkd
-         3FzXr/sgwA12zDtborrTPjbueKi+w2gyJUk8eUZQ8zO7ZG77O0Hr65SxOpoudq7WOy9N
-         p8c/6x6JYI6xkG3TLTJlWv2+R7vGToTXFtw8g5tO9wFFEteo4Oxmkk11LcQS339tfscV
-         /MgvPZzNt5yrn4eDZ8WlZa9GjMbwC/Ze5Gv0iLdZ6S0ZvT295VXECP2UdVXDh12aus8X
-         N5ig==
-X-Gm-Message-State: AGi0PubWfHbZdz+6HTKKnP8MjSLYIZeiuqDs8djGVIJiLDwLcJ9C3lUe
-        WGH6c3cEqXZosxurYoj0lL7uhMvw9p5hdA==
-X-Google-Smtp-Source: APiQypJibMRuEoj4uxn3c6xxGRqpMBNe/+b7Vl9qGDBC+w7+GttrAcZoywefcu10NM4G0CyNG4YVOq7NKOqigA==
-X-Received: by 2002:a05:6902:6ae:: with SMTP id j14mr37197766ybt.418.1589344231896;
- Tue, 12 May 2020 21:30:31 -0700 (PDT)
-Date:   Tue, 12 May 2020 21:29:56 -0700
-Message-Id: <20200513042956.109987-1-davidgow@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
-Subject: [RFC PATCH] kunit: Support skipped tests
-From:   David Gow <davidgow@google.com>
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        Alan Maguire <alan.maguire@oracle.com>
-Cc:     Marco Elver <elver@google.com>, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        David Gow <davidgow@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 13 May 2020 00:32:20 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04D4VQfY038053;
+        Wed, 13 May 2020 00:31:43 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3101m6v7jc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 May 2020 00:31:42 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04D4Vaj8038405;
+        Wed, 13 May 2020 00:31:42 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3101m6v7j0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 May 2020 00:31:42 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04D4UEVU007517;
+        Wed, 13 May 2020 04:31:41 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma04dal.us.ibm.com with ESMTP id 3100ubmjx4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 May 2020 04:31:41 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04D4Vdsq12517636
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 May 2020 04:31:39 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0A82F78063;
+        Wed, 13 May 2020 04:31:40 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0B90F7805C;
+        Wed, 13 May 2020 04:31:35 +0000 (GMT)
+Received: from LeoBras (unknown [9.85.165.91])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 13 May 2020 04:31:35 +0000 (GMT)
+Message-ID: <ba97d52df60ac9c4a4afc2c03121a8c263aa5a15.camel@linux.ibm.com>
+Subject: Re: [PATCH 1/1] powerpc/rtas: Implement reentrant rtas call
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Nathan Lynch <nathanl@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Nadav Amit <namit@vmware.com>
+Date:   Wed, 13 May 2020 01:31:30 -0300
+In-Reply-To: <87ftdb87jf.fsf@linux.ibm.com>
+References: <20200408223901.760733-1-leonardo@linux.ibm.com>
+         <87ftdb87jf.fsf@linux.ibm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-h1B/JIutLyKglRH0NDZG"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-12_08:2020-05-11,2020-05-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 suspectscore=0 spamscore=0 cotscore=-2147483648
+ priorityscore=1501 clxscore=1011 impostorscore=0 bulkscore=0 phishscore=0
+ mlxscore=0 mlxlogscore=999 adultscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005130036
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a proof-of-concept to support "skipping" tests.
 
-The kunit_mark_skipped() macro marks the current test as "skipped", with
-the provided reason. The kunit_skip() macro will mark the test as
-skipped, and abort the test.
+--=-h1B/JIutLyKglRH0NDZG
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The TAP specification supports this "SKIP directive" as a comment after
-the "ok" / "not ok" for a test. See the "Directives" section of the TAP
-spec for details:
-https://testanything.org/tap-specification.html#directives
+Hello Nathan, thanks for the feedback!
 
-kunit_tool will parse this SKIP directive, and renders skipped tests in
-yellow and counts them. Skipped tests do not affect the result for a
-suite.
+On Fri, 2020-04-10 at 14:28 -0500, Nathan Lynch wrote:
+> Leonardo Bras <leonardo@linux.ibm.com> writes:
+> > Implement rtas_call_reentrant() for reentrant rtas-calls:
+> > "ibm,int-on", "ibm,int-off",ibm,get-xive" and  "ibm,set-xive".
+> >=20
+> > On LoPAPR Version 1.1 (March 24, 2016), from 7.3.10.1 to 7.3.10.4,
+> > items 2 and 3 say:
+> >=20
+> > 2 - For the PowerPC External Interrupt option: The * call must be
+> > reentrant to the number of processors on the platform.
+> > 3 - For the PowerPC External Interrupt option: The * argument call
+> > buffer for each simultaneous call must be physically unique.
+> >=20
+> > So, these rtas-calls can be called in a lockless way, if using
+> > a different buffer for each call.
+> >=20
 
-Signed-off-by: David Gow <davidgow@google.com>
----
+> From the language in the spec it's clear that these calls are intended
+> to be reentrant with respect to themselves, but it's less clear to me
+> that they are safe to call simultaneously with respect to each other or
+> arbitrary other RTAS methods.
 
-Following on from discussions about the KCSAN test[1], which requires a
-multi-core/processor system to make sense, it would be useful for tests
-to be able to mark themselves as "skipped", where tests have runtime
-dependencies which aren't met.
+In my viewpoint, being reentrant to themselves, without being reentrant
+to others would be very difficult to do, considering the way the
+rtas_call is crafted to work.
 
-As a proof-of-concept, this patch doesn't implement some things which
-we'd ideally like to have (e.g., non-static "reasons" for skipping the
-test, maybe some SKIP macros akin to the EXPECT and ASSERT ones), and
-the implementation is still pretty hacky, but I though I'd put this out
-there to see if there are any thoughts on the concept in general.
+I mean, I have no experience in rtas code, it's my viewpoint. In my
+thoughts there is something like this:
 
-Cheers,
--- David
+common_path -> selects function by token -> reentrant function
+					|-> non-reentrant function
 
-[1]: https://lkml.org/lkml/2020/5/5/31
+If there is one function that is reentrant, it means the common_path
+and function selection by token would need to be reentrant too.
 
- include/kunit/test.h                | 12 ++++++++++++
- lib/kunit/kunit-example-test.c      |  7 +++++++
- lib/kunit/test.c                    | 23 ++++++++++++++++-------
- tools/testing/kunit/kunit_parser.py | 21 +++++++++++++++++----
- 4 files changed, 52 insertions(+), 11 deletions(-)
+> > This can be useful to avoid deadlocks in crashing, where rtas-calls are
+> > needed, but some other thread crashed holding the rtas.lock.
+>=20
+> Are these calls commonly used in the crash-handling path? Is this
+> addressing a real issue you've seen?
+>=20
 
-diff --git a/include/kunit/test.h b/include/kunit/test.h
-index 9b0c46a6ca1f..7817c5580b2c 100644
---- a/include/kunit/test.h
-+++ b/include/kunit/test.h
-@@ -178,6 +178,7 @@ struct kunit_suite {
- 	/* private - internal use only */
- 	struct dentry *debugfs;
- 	char *log;
-+	const char *skip_directive;
- };
- 
- /**
-@@ -213,6 +214,8 @@ struct kunit {
- 	 * protect it with some type of lock.
- 	 */
- 	struct list_head resources; /* Protected by lock. */
-+
-+	const char *skip_directive;
- };
- 
- void kunit_init_test(struct kunit *test, const char *name, char *log);
-@@ -391,6 +394,15 @@ void kunit_cleanup(struct kunit *test);
- 
- void kunit_log_append(char *log, const char *fmt, ...);
- 
-+#define kunit_mark_skipped(test_or_suite, reason)			\
-+	(test_or_suite)->skip_directive = "SKIP " reason
-+
-+#define kunit_skip(test_or_suite, reason)				\
-+	do {								\
-+		kunit_mark_skipped(test_or_suite, reason);		\
-+		kunit_try_catch_throw(&((test_or_suite)->try_catch));	\
-+	} while (0)
-+
- /*
-  * printk and log to per-test or per-suite log buffer.  Logging only done
-  * if CONFIG_KUNIT_DEBUGFS is 'y'; if it is 'n', no log is allocated/used.
-diff --git a/lib/kunit/kunit-example-test.c b/lib/kunit/kunit-example-test.c
-index be1164ecc476..998401a61458 100644
---- a/lib/kunit/kunit-example-test.c
-+++ b/lib/kunit/kunit-example-test.c
-@@ -29,6 +29,12 @@ static void example_simple_test(struct kunit *test)
- 	KUNIT_EXPECT_EQ(test, 1 + 1, 2);
- }
- 
-+static void example_skip_test(struct kunit *test)
-+{
-+	kunit_skip(test, "this test should be skipped");
-+	KUNIT_EXPECT_EQ(test, 1 + 1, 2);
-+}
-+
- /*
-  * This is run once before each test case, see the comment on
-  * example_test_suite for more information.
-@@ -52,6 +58,7 @@ static struct kunit_case example_test_cases[] = {
- 	 * test suite.
- 	 */
- 	KUNIT_CASE(example_simple_test),
-+	KUNIT_CASE(example_skip_test),
- 	{}
- };
- 
-diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-index ccb2ffad8dcf..84b9be3a8da7 100644
---- a/lib/kunit/test.c
-+++ b/lib/kunit/test.c
-@@ -79,10 +79,12 @@ static void kunit_print_ok_not_ok(void *test_or_suite,
- 				  bool is_test,
- 				  bool is_ok,
- 				  size_t test_number,
--				  const char *description)
-+				  const char *description,
-+				  const char *directive)
- {
- 	struct kunit_suite *suite = is_test ? NULL : test_or_suite;
- 	struct kunit *test = is_test ? test_or_suite : NULL;
-+	const char *directive_header = directive ? " # " : "";
- 
- 	/*
- 	 * We do not log the test suite results as doing so would
-@@ -93,13 +95,16 @@ static void kunit_print_ok_not_ok(void *test_or_suite,
- 	 * representation.
- 	 */
- 	if (suite)
--		pr_info("%s %zd - %s\n",
-+		pr_info("%s %zd - %s%s%s\n",
- 			kunit_status_to_string(is_ok),
--			test_number, description);
-+			test_number, description,
-+			directive_header, directive ? directive : "");
- 	else
--		kunit_log(KERN_INFO, test, KUNIT_SUBTEST_INDENT "%s %zd - %s",
-+		kunit_log(KERN_INFO, test,
-+			  KUNIT_SUBTEST_INDENT "%s %zd - %s%s%s",
- 			  kunit_status_to_string(is_ok),
--			  test_number, description);
-+			  test_number, description,
-+			  directive_header, directive ? directive : "");
- }
- 
- bool kunit_suite_has_succeeded(struct kunit_suite *suite)
-@@ -122,7 +127,8 @@ static void kunit_print_subtest_end(struct kunit_suite *suite)
- 	kunit_print_ok_not_ok((void *)suite, false,
- 			      kunit_suite_has_succeeded(suite),
- 			      kunit_suite_counter++,
--			      suite->name);
-+			      suite->name,
-+			      suite->skip_directive);
- }
- 
- unsigned int kunit_test_case_num(struct kunit_suite *suite,
-@@ -232,6 +238,7 @@ void kunit_init_test(struct kunit *test, const char *name, char *log)
- 	if (test->log)
- 		test->log[0] = '\0';
- 	test->success = true;
-+	test->skip_directive = NULL;
- }
- EXPORT_SYMBOL_GPL(kunit_init_test);
- 
-@@ -357,7 +364,8 @@ static void kunit_run_case_catch_errors(struct kunit_suite *suite,
- 
- 	kunit_print_ok_not_ok(&test, true, test_case->success,
- 			      kunit_test_case_num(suite, test_case),
--			      test_case->name);
-+			      test_case->name,
-+			      test.skip_directive);
- }
- 
- int kunit_run_tests(struct kunit_suite *suite)
-@@ -378,6 +386,7 @@ EXPORT_SYMBOL_GPL(kunit_run_tests);
- static void kunit_init_suite(struct kunit_suite *suite)
- {
- 	kunit_debugfs_create_suite(suite);
-+	suite->skip_directive = NULL;
- }
- 
- int __kunit_test_suites_init(struct kunit_suite **suites)
-diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/kunit_parser.py
-index 64aac9dcd431..ecfc8ee1da2f 100644
---- a/tools/testing/kunit/kunit_parser.py
-+++ b/tools/testing/kunit/kunit_parser.py
-@@ -43,6 +43,7 @@ class TestCase(object):
- class TestStatus(Enum):
- 	SUCCESS = auto()
- 	FAILURE = auto()
-+	SKIPPED = auto()
- 	TEST_CRASHED = auto()
- 	NO_TESTS = auto()
- 
-@@ -107,6 +108,8 @@ def save_non_diagnositic(lines: List[str], test_case: TestCase) -> None:
- 
- OkNotOkResult = namedtuple('OkNotOkResult', ['is_ok','description', 'text'])
- 
-+OK_NOT_OK_SKIP = re.compile(r'^[\s]*(ok|not ok) [0-9]+ - (.*) # SKIP (.*)$')
-+
- OK_NOT_OK_SUBTEST = re.compile(r'^[\s]+(ok|not ok) [0-9]+ - (.*)$')
- 
- OK_NOT_OK_MODULE = re.compile(r'^(ok|not ok) [0-9]+ - (.*)$')
-@@ -124,6 +127,10 @@ def parse_ok_not_ok_test_case(lines: List[str], test_case: TestCase) -> bool:
- 	if match:
- 		test_case.log.append(lines.pop(0))
- 		test_case.name = match.group(2)
-+		skip_match = OK_NOT_OK_SKIP.match(line)
-+		if skip_match:
-+			test_case.status = TestStatus.SKIPPED
-+			return True
- 		if test_case.status == TestStatus.TEST_CRASHED:
- 			return True
- 		if match.group(1) == 'ok':
-@@ -190,9 +197,9 @@ def max_status(left: TestStatus, right: TestStatus) -> TestStatus:
- 		return TestStatus.TEST_CRASHED
- 	elif left == TestStatus.FAILURE or right == TestStatus.FAILURE:
- 		return TestStatus.FAILURE
--	elif left != TestStatus.SUCCESS:
-+	elif left != TestStatus.SUCCESS and left != TestStatus.SKIPPED:
- 		return left
--	elif right != TestStatus.SUCCESS:
-+	elif right != TestStatus.SUCCESS and right != TestStatus.SKIPPED:
- 		return right
- 	else:
- 		return TestStatus.SUCCESS
-@@ -281,10 +288,13 @@ def parse_run_tests(kernel_output) -> TestResult:
- 	total_tests = 0
- 	failed_tests = 0
- 	crashed_tests = 0
-+	skipped_tests = 0
- 	test_result = parse_test_result(list(isolate_kunit_output(kernel_output)))
- 	for test_suite in test_result.suites:
- 		if test_suite.status == TestStatus.SUCCESS:
- 			print_suite_divider(green('[PASSED] ') + test_suite.name)
-+		elif test_suite.status == TestStatus.SKIPPED:
-+			print_suite_divider(yellow('[SKIPPED] ') + test_suite.name)
- 		elif test_suite.status == TestStatus.TEST_CRASHED:
- 			print_suite_divider(red('[CRASHED] ' + test_suite.name))
- 		else:
-@@ -293,6 +303,9 @@ def parse_run_tests(kernel_output) -> TestResult:
- 			total_tests += 1
- 			if test_case.status == TestStatus.SUCCESS:
- 				print_with_timestamp(green('[PASSED] ') + test_case.name)
-+			elif test_case.status == TestStatus.SKIPPED:
-+				skipped_tests += 1
-+				print_with_timestamp(yellow('[SKIPPED] ') + test_case.name)
- 			elif test_case.status == TestStatus.TEST_CRASHED:
- 				crashed_tests += 1
- 				print_with_timestamp(red('[CRASHED] ' + test_case.name))
-@@ -306,6 +319,6 @@ def parse_run_tests(kernel_output) -> TestResult:
- 	print_with_timestamp(DIVIDER)
- 	fmt = green if test_result.status == TestStatus.SUCCESS else red
- 	print_with_timestamp(
--		fmt('Testing complete. %d tests run. %d failed. %d crashed.' %
--		    (total_tests, failed_tests, crashed_tests)))
-+		fmt('Testing complete. %d tests run. %d failed. %d crashed. %d skipped.' %
-+		    (total_tests, failed_tests, crashed_tests, skipped_tests)))
- 	return test_result
--- 
-2.26.2.645.ge9eca65c58-goog
+Yes, I noticed deadlocks during crashes, like this one:
+#0 arch_spin_lock
+#1  lock_rtas ()=20
+#2  rtas_call (token=3D8204, nargs=3D1, nret=3D1, outputs=3D0x0)
+#3  ics_rtas_mask_real_irq (hw_irq=3D4100)=20
+#4  machine_kexec_mask_interrupts
+#5  default_machine_crash_shutdown
+#6  machine_crash_shutdown=20
+#7  __crash_kexec
+#8  crash_kexec
+#9  oops_end
+
+On ics_rtas_mask_real_irq() we have both ibm_int_off and ibm_set_xive,
+so it makes sense to also add ibm_int_on and ibm_get_xive as reentrant
+too.
+
+Full discussion available on this thread:
+http://patchwork.ozlabs.org/project/linuxppc-dev/patch/20200401000020.59044=
+7-1-leonardo@linux.ibm.com/
+
+>=20
+> > +/*
+> > + * Used for reentrant rtas calls.
+> > + * According to LoPAR documentation, only "ibm,int-on", "ibm,int-off",
+> > + * "ibm,get-xive" and "ibm,set-xive" are currently reentrant.
+> > + * Reentrant calls need their own rtas_args buffer, so not using rtas.=
+args.
+> > + */
+>=20
+> Please use kernel-doc format in new code.
+
+Sure, v2 is going to be fixed.
+
+>=20
+>=20
+> > +int rtas_call_reentrant(int token, int nargs, int nret, int *outputs, =
+...)
+> > +{
+> > +	va_list list;
+> > +	struct rtas_args rtas_args;
+> > +
+> > +	if (!rtas.entry || token =3D=3D RTAS_UNKNOWN_SERVICE)
+> > +		return -1;
+> > +
+> > +	va_start(list, outputs);
+> > +	va_rtas_call_unlocked(&rtas_args, token, nargs, nret, list);
+> > +	va_end(list);
+>=20
+> No, I don't think you can place the RTAS argument buffer on the stack:
+>=20
+>   7.2.7, Software Implementation Note:
+>   | The OS must be aware that the effective address range for RTAS is 4
+>   | GB when instantiated in 32-bit mode and the OS should not pass RTAS
+>   | addresses or blocks of data which might fall outside of this range.
+
+Agree, moved to PACA.
+
+I will send a v2 soon, it will be a 2-patch patchset.
+
+Best regards,
+Leonardo Bras
+
+--=-h1B/JIutLyKglRH0NDZG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl67eCMACgkQlQYWtz9S
+ttQSLw/5AdNmiQ0LgG7a7BXJuq1+1ry8fn+YHyXeXN3k8BPdtaa2e3q/BtnAYBhK
+eRg3Dkbg9ztSd29F3cbqbJbsLm9PoaHSCkawE4E8fMaCeDgaKXucGPuuVCQOn40d
+G5hIf4XL0Ixz/zj0fcd8lh1ZZ+n61tAuoI6e3e5iRnaajyVjZpJwxI94lDPr3J4x
+jZWtazF9as1wYdkQRAwt5GiLHkzyyuw9mknJBwNVbPl1KtvCeCyaqIOKH/oIFp0n
+DvI5CLqy5Qm99j4V8e6nir6gUalsPChYnrn3RITPIFAdaS3Rk7a1Bk1OfOol1iOQ
+Sym3Tpnm70gxaosK2UAJLJxbq5EJmT/VzfWznuodWZ+N/Erp0+a7P4G3xB8mNJ+x
+6J/8122/GzeFubaTnvOcMqEgemcaJMseiJd3jQClQQBH/aHITKgIc9IDwzSifr5y
+tRUk3KTD8MfwNQtV53Q/JAJHrWTy0SEFl1slR+8Jv2UoyN1a/6sKrJgJkFQmOVEy
+ErGQpGtGW9rUXvy/Yt5jXHeTvNWbSuDbKh/XalbXyk6mLTcvx37L+85m8xaqatNf
+Xmz5a5DuqcLfD+0D7ExIKCruyG52Z72esbo4C0m1oZd9QLrIGgaZcZmigzpa6Clb
+hGqApNUPOUgE308Lnjvll3Eo2HUeyjnCbZav+YseEvVO6KbYyL8=
+=NL/i
+-----END PGP SIGNATURE-----
+
+--=-h1B/JIutLyKglRH0NDZG--
 
