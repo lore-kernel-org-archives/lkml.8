@@ -2,102 +2,104 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 692CFC2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0CBC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 521AD20740
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E534020740
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:04:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730734AbgEMLEM (ORCPT
+        id S1732459AbgEMLEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 07:04:12 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57410 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729893AbgEMLEM (ORCPT
+        Wed, 13 May 2020 07:04:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728784AbgEMLEa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 07:04:12 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 64084803087C;
-        Wed, 13 May 2020 11:04:09 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id O1ivolSjJlIp; Wed, 13 May 2020 14:04:08 +0300 (MSK)
-Date:   Wed, 13 May 2020 14:04:07 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Gareth Williams <gareth.williams.jx@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 00/17] spi: dw: Add generic DW DMA controller support
-Message-ID: <20200513110407.uaosfxebsgnllsf4@mobilestation>
-References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
- <20200508133336.GK4820@sirena.org.uk>
- <20200512200733.bdbbhkjkwjd5yzqq@mobilestation>
- <20200513102324.GB4803@sirena.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200513102324.GB4803@sirena.org.uk>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+        Wed, 13 May 2020 07:04:30 -0400
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F3E1C05BD09
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 04:04:30 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed60:81a0:190c:7969:2334])
+        by michel.telenet-ops.be with bizsmtp
+        id eB4T2200L5045R206B4TF2; Wed, 13 May 2020 13:04:28 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jYpBb-000523-Ec; Wed, 13 May 2020 13:04:27 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jYpBb-0005rT-BT; Wed, 13 May 2020 13:04:27 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Jens Axboe <axboe@kernel.dk>, Ulf Hansson <ulf.hansson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        linux-ide@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] ata: sata_rcar: Fix DMA boundary mask
+Date:   Wed, 13 May 2020 13:04:26 +0200
+Message-Id: <20200513110426.22472-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 11:23:24AM +0100, Mark Brown wrote:
-> On Tue, May 12, 2020 at 11:07:33PM +0300, Serge Semin wrote:
-> > On Fri, May 08, 2020 at 02:33:36PM +0100, Mark Brown wrote:
-> 
-> > > Please don't make new feature development dependent on conversion to the
-> > > new schema format, there's quite a backlog of reviews of schema
-> > > conversions so it can slow things down.  It's good to do the conversions
-> > > but please do them after adding any new stuff to the binding rather than
-> > > before.
-> 
-> > So by saying this do you want me to revert an order of the first two patches
-> > in the series, right? So the series would first add the DMA properties support
-> > to the binding, then would convert the binding file to DT schema.
-> 
-> The conversion to YAML format should be the very last thing in the patch
-> series,
+Before commit 9495b7e92f716ab2 ("driver core: platform: Initialize
+dma_parms for platform devices"), the R-Car SATA device didn't have DMA
+parameters.  Hence the DMA boundary mask supplied by its driver was
+silently ignored, as __scsi_init_queue() doesn't check the return value
+of dma_set_seg_boundary(), and the default value of 0xffffffff was used.
 
-Hm, haven't heard about this requirement. Could you point me out to a doc or
-some discussion concerning this for future reference? It's not a first DT
-conversion patch I've submitted and non of them were addressed with such
-request. I do understand that the order of DT concerning patches can be
-important and agree to fix it by updating the original legacy binding first,
-then perform a conversion. But placing the conversion in a tail of the series
-just seems unnecessary. The patch can be dropped from any place of the series
-if for some reason Rob would be late with review.
+Now the device has gained DMA parameters, the driver-supplied value is
+used, and the following warning is printed on Salvator-XS:
 
-Personally I prefer placing all DT changes in the head of the series, so Rob
-wouldn't need to search through the whole patchset looking for the DT-related
-patches.
+    DMA-API: sata_rcar ee300000.sata: mapping sg segment across boundary [start=0x00000000ffffe000] [end=0x00000000ffffefff] [boundary=0x000000001ffffffe]
+    WARNING: CPU: 5 PID: 38 at kernel/dma/debug.c:1233 debug_dma_map_sg+0x298/0x300
 
--Sergey
+(the range of start/end values depend on whether IOMMU support is
+ enabled or not)
 
-> and as Andy says there's another patch in flight also doing this
-> conversion which you should coordinate with.
+The issue here is that SATA_RCAR_DMA_BOUNDARY doesn't have bit 0 set, so
+any typical end value, which is odd, will trigger the check.
 
+Fix this by increasing the DMA boundary value by 1.
+
+Fixes: 8bfbeed58665dbbf ("sata_rcar: correct 'sata_rcar_sht'")
+Fixes: 9495b7e92f716ab2 ("driver core: platform: Initialize dma_parms for platform devices")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+As by default the DMA debug code prints the first error only, this issue
+may be hidden on plain v5.7-rc5, where the FCP driver triggers a similar
+warning.  Merging commit dd844fb8e50b12e6 ("media: platform: fcp: Set
+appropriate DMA parameters") from the media tree fixes the FCP issue,
+and exposes the SATA issue.
+
+I added the second fixes tag because that commit is already being
+backported to stable kernels, and this patch thus needs backporting,
+too.
+---
+ drivers/ata/sata_rcar.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/ata/sata_rcar.c b/drivers/ata/sata_rcar.c
+index 980aacdbcf3b42b9..752db75b611e8f8a 100644
+--- a/drivers/ata/sata_rcar.c
++++ b/drivers/ata/sata_rcar.c
+@@ -120,7 +120,7 @@
+ /* Descriptor table word 0 bit (when DTA32M = 1) */
+ #define SATA_RCAR_DTEND			BIT(0)
+ 
+-#define SATA_RCAR_DMA_BOUNDARY		0x1FFFFFFEUL
++#define SATA_RCAR_DMA_BOUNDARY		0x1FFFFFFFUL
+ 
+ /* Gen2 Physical Layer Control Registers */
+ #define RCAR_GEN2_PHY_CTL1_REG		0x1704
+-- 
+2.17.1
 
