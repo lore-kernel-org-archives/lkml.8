@@ -2,250 +2,96 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D646C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF67C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE7372054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6664C205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:09:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="F70NVotl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390388AbgEMTHj (ORCPT
+        id S2390405AbgEMTJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 15:07:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732218AbgEMTHi (ORCPT
+        Wed, 13 May 2020 15:09:07 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7607 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732218AbgEMTJH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 15:07:38 -0400
-Received: from wp148.webpack.hosteurope.de (wp148.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:849b::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53DAEC061A0C;
-        Wed, 13 May 2020 12:07:38 -0700 (PDT)
-Received: from ip1f126570.dynamic.kabel-deutschland.de ([31.18.101.112] helo=pengu.fritz.box); authenticated
-        by wp148.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1jYwis-0004tW-H9; Wed, 13 May 2020 21:07:18 +0200
-From:   Roelof Berg <rberg@berg-solutions.de>
-To:     rberg@berg-solutions.de
-Cc:     andrew@lunn.ch, Bryan Whitehead <bryan.whitehead@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] lan743x: Added fixed link support
-Date:   Wed, 13 May 2020 21:06:33 +0200
-Message-Id: <20200513190633.7815-1-rberg@berg-solutions.de>
-X-Mailer: git-send-email 2.20.1
+        Wed, 13 May 2020 15:09:07 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ebc45c10009>; Wed, 13 May 2020 12:08:49 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 13 May 2020 12:09:02 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 13 May 2020 12:09:02 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 May
+ 2020 19:09:01 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 13 May 2020 19:09:01 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.48]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ebc45ca0002>; Wed, 13 May 2020 12:09:01 -0700
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <lorenzo.pieralisi@arm.com>, <andrew.murray@arm.com>,
+        <bhelgaas@google.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH] PCI: dwc: Warn only for non-prefetchable memory resource size >4GB
+Date:   Thu, 14 May 2020 00:38:55 +0530
+Message-ID: <20200513190855.23318-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;rberg@berg-solutions.de;1589396858;56c0db42;
-X-HE-SMSGID: 1jYwis-0004tW-H9
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589396929; bh=399a5N89CJHgwM3w35E5bD204YjQ0+eeAF2xbWM2Itk=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=F70NVotlbQGXRqpqlmCtMSDoX+GucEYT1EUDrz5e9nE/F4FWmV2OAfuh+k+Iab5b3
+         mIasujMtRp633dGkD7IfjCNs/TlzV68x0MUUynbrth8wIteXUKArE9DIAH/lc0pE8T
+         w4CXJYaAEmWH+zbEuAYjID8B7QMnEaom2me239cfW7i8uz54Ue/oGj4fJ8LfhqjoTC
+         4MnBDZOcaZrPrnq861xhHRHidEJtYgrvYSCT0mRPyqn6gSNXlwED1PUp/JZkVQogLd
+         R2m3JET7CkuytE8kTpL46isbDY9tsu0lgY/aS9SmFesoqQuvNxJ3G536mxUVb1icXZ
+         WkEvG+WXQXRAQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Microchip lan7431 is frequently connected to a phy. However, it
-can also be directly connected to a MII remote peer without
-any phy in between. For supporting such a phyless hardware setup
-in Linux we added the capability to the driver to understand
-the fixed-link and the phy-connection-type entries in the device
-tree.
+commit 9e73fa02aa009 ("PCI: dwc: Warn if MEM resource size exceeds max for
+32-bits") enables warning for MEM resources of size >4GB but prefetchable
+ memory resources also come under this category where sizes can go beyond
+4GB. Avoid logging a warning for prefetchable memory resources.
 
-If a fixed-link node is configured in the device tree the lan7431
-device will deactivate auto negotiation and uses the speed and
-duplex settings configured in the fixed-link node.
-
-Also the phy-connection-type can be configured in the device tree
-and in case of a fixed-link connection the RGMII mode can be
-configured, all other modes fall back to the default: GMII.
-
-Example:
-
- &pcie {
-	status = "okay";
-
-	host@0 {
-		reg = <0 0 0 0 0>;
-
-		#address-cells = <3>;
-		#size-cells = <2>;
-
-		ethernet@0 {
-			compatible = "weyland-yutani,noscom1", "microchip,lan743x";
-			status = "okay";
-			reg = <0 0 0 0 0>;
-			phy-connection-type = "rgmii";
-
-			fixed-link {
-				speed = <100>;
-				full-duplex;
-			};
-		};
-	};
-};
-
-Signed-off-by: Roelof Berg <rberg@berg-solutions.de>
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 ---
- drivers/net/ethernet/microchip/lan743x_main.c | 94 +++++++++++++++++--
- drivers/net/ethernet/microchip/lan743x_main.h |  4 +
- 2 files changed, 89 insertions(+), 9 deletions(-)
+ drivers/pci/controller/dwc/pcie-designware-host.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/microchip/lan743x_main.c b/drivers/net/ethernet/microchip/lan743x_main.c
-index a43140f7b5eb..85f12881340b 100644
---- a/drivers/net/ethernet/microchip/lan743x_main.c
-+++ b/drivers/net/ethernet/microchip/lan743x_main.c
-@@ -9,9 +9,12 @@
- #include <linux/microchipphy.h>
- #include <linux/net_tstamp.h>
- #include <linux/phy.h>
-+#include <linux/phy_fixed.h>
- #include <linux/rtnetlink.h>
- #include <linux/iopoll.h>
- #include <linux/crc16.h>
-+#include <linux/of_mdio.h>
-+#include <linux/of_net.h>
- #include "lan743x_main.h"
- #include "lan743x_ethtool.h"
- 
-@@ -974,6 +977,8 @@ static void lan743x_phy_close(struct lan743x_adapter *adapter)
- 
- 	phy_stop(netdev->phydev);
- 	phy_disconnect(netdev->phydev);
-+	if (of_phy_is_fixed_link(adapter->pdev->dev.of_node))
-+		of_phy_deregister_fixed_link(adapter->pdev->dev.of_node);
- 	netdev->phydev = NULL;
- }
- 
-@@ -982,18 +987,86 @@ static int lan743x_phy_open(struct lan743x_adapter *adapter)
- 	struct lan743x_phy *phy = &adapter->phy;
- 	struct phy_device *phydev;
- 	struct net_device *netdev;
-+	struct device_node *phynode;
-+	u32 data;
-+	phy_interface_t phyifc = PHY_INTERFACE_MODE_GMII;
-+	bool fixed_link = false;
- 	int ret = -EIO;
- 
- 	netdev = adapter->netdev;
--	phydev = phy_find_first(adapter->mdiobus);
--	if (!phydev)
--		goto return_error;
-+	phynode = of_node_get(adapter->pdev->dev.of_node);
-+	if (phynode)
-+		of_get_phy_mode(phynode, &phyifc);
-+
-+	/* check if a fixed-link is defined in device-tree */
-+	if (phynode && of_phy_is_fixed_link(phynode)) {
-+		fixed_link = true;
-+		netdev_dbg(netdev, "fixed-link detected\n");
-+
-+		ret = of_phy_register_fixed_link(phynode);
-+		if (ret) {
-+			netdev_err(netdev, "cannot register fixed PHY\n");
-+			goto return_error;
-+		}
- 
--	ret = phy_connect_direct(netdev, phydev,
--				 lan743x_phy_link_status_change,
--				 PHY_INTERFACE_MODE_GMII);
--	if (ret)
--		goto return_error;
-+		phydev = of_phy_connect(netdev, phynode,
-+					lan743x_phy_link_status_change,
-+					0, phyifc);
-+		if (!phydev)
-+			goto return_error;
-+
-+		/* Configure MAC to fixed link parameters */
-+		data = lan743x_csr_read(adapter, MAC_CR);
-+		/* Disable auto negotiation */
-+		data &= ~(MAC_CR_ADD_ | MAC_CR_ASD_);
-+		/* Set duplex mode */
-+		if (phydev->duplex)
-+			data |= MAC_CR_DPX_;
-+		else
-+			data &= ~MAC_CR_DPX_;
-+		/* Set bus speed */
-+		switch (phydev->speed) {
-+		case 10:
-+			data &= ~MAC_CR_CFG_H_;
-+			data &= ~MAC_CR_CFG_L_;
-+			break;
-+		case 100:
-+			data &= ~MAC_CR_CFG_H_;
-+			data |= MAC_CR_CFG_L_;
-+			break;
-+		case 1000:
-+			data |= MAC_CR_CFG_H_;
-+			data |= MAC_CR_CFG_L_;
-+			break;
-+		}
-+		/* Set interface mode */
-+		if (phyifc == PHY_INTERFACE_MODE_RGMII ||
-+		    phyifc == PHY_INTERFACE_MODE_RGMII_ID ||
-+		    phyifc == PHY_INTERFACE_MODE_RGMII_RXID ||
-+		    phyifc == PHY_INTERFACE_MODE_RGMII_TXID)
-+			/* RGMII */
-+			data &= ~MAC_CR_MII_EN_;
-+		else
-+			/* GMII */
-+			data |= MAC_CR_MII_EN_;
-+		lan743x_csr_write(adapter, MAC_CR, data);
-+	} else {
-+		phydev = phy_find_first(adapter->mdiobus);
-+		if (!phydev)
-+			goto return_error;
-+
-+		ret = phy_connect_direct(netdev, phydev,
-+					 lan743x_phy_link_status_change,
-+					 PHY_INTERFACE_MODE_GMII);
-+		/* Note: We cannot use phyifc here because this would be SGMII
-+		 * on a standard PC.
-+		 */
-+		if (ret)
-+			goto return_error;
-+	}
-+
-+	if (phynode)
-+		of_node_put(phynode);
- 
- 	/* MAC doesn't support 1000T Half */
- 	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_1000baseT_Half_BIT);
-@@ -1004,10 +1077,13 @@ static int lan743x_phy_open(struct lan743x_adapter *adapter)
- 	phy->fc_autoneg = phydev->autoneg;
- 
- 	phy_start(phydev);
--	phy_start_aneg(phydev);
-+	if (!fixed_link)
-+		phy_start_aneg(phydev);
- 	return 0;
- 
- return_error:
-+	if (phynode)
-+		of_node_put(phynode);
- 	return ret;
- }
- 
-diff --git a/drivers/net/ethernet/microchip/lan743x_main.h b/drivers/net/ethernet/microchip/lan743x_main.h
-index 3b02eeae5f45..e49f6b6cd440 100644
---- a/drivers/net/ethernet/microchip/lan743x_main.h
-+++ b/drivers/net/ethernet/microchip/lan743x_main.h
-@@ -104,10 +104,14 @@
- 	((value << 0) & FCT_FLOW_CTL_ON_THRESHOLD_)
- 
- #define MAC_CR				(0x100)
-+#define MAC_CR_MII_EN_			BIT(19)
- #define MAC_CR_EEE_EN_			BIT(17)
- #define MAC_CR_ADD_			BIT(12)
- #define MAC_CR_ASD_			BIT(11)
- #define MAC_CR_CNTR_RST_		BIT(5)
-+#define MAC_CR_DPX_			BIT(3)
-+#define MAC_CR_CFG_H_			BIT(2)
-+#define MAC_CR_CFG_L_			BIT(1)
- #define MAC_CR_RST_			BIT(0)
- 
- #define MAC_RX				(0x104)
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 42fbfe2a1b8f..a29396529ea4 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -366,7 +366,8 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 			pp->mem = win->res;
+ 			pp->mem->name = "MEM";
+ 			mem_size = resource_size(pp->mem);
+-			if (upper_32_bits(mem_size))
++			if (upper_32_bits(mem_size) &&
++			    !(win->res->flags & IORESOURCE_PREFETCH))
+ 				dev_warn(dev, "MEM resource size exceeds max for 32 bits\n");
+ 			pp->mem_size = mem_size;
+ 			pp->mem_bus_addr = pp->mem->start - win->offset;
 -- 
-2.20.1
+2.17.1
 
