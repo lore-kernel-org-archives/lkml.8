@@ -2,171 +2,105 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D5EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA81C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE6B20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:20:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589383240;
-	bh=PG5I2bzme/83YuF1AHG3IlJmjtIvjHYIaV19Gaual/0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=u6TH6f5hOrsDAuB1rPgaA53pNPBE6SrYGQOOms5aLwKeOmnRAvWOQuWOFY1fauBdM
-	 ujDyS3h6Edr0ovRgI5idKI3TckpDe26l4jOJdleP8oxahV9IQkTBBEC/qy1syOe1D8
-	 lRpsAj1ZFT1k/xwizJsD2R5X8y8I/8Rz97oLN/XQ=
+	by mail.kernel.org (Postfix) with ESMTP id A90682065D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:20:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388954AbgEMPUj (ORCPT
+        id S2389116AbgEMPUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:20:39 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44092 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728692AbgEMPUi (ORCPT
+        Wed, 13 May 2020 11:20:46 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:52441 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728692AbgEMPUq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:20:38 -0400
-Received: by mail-ot1-f65.google.com with SMTP id j4so13679288otr.11
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 08:20:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=klA7kjCRgTh7w4ABQm1XG/GGzZPWDtCKKvZ6hhZvn0M=;
-        b=YK0ioO+YfCbNiaGbOoSJRicx6qImHVCju1HKhrbmZ+nAvS238PNTwdF2e8T7HZbTWW
-         7ThBzh6Ypt0tU6ddGckPvCTonNrN4FoCIqedhj+9V+5vCMXnmB/0xEG+6on6grUvLVA1
-         VekEw4jRwmH9LhGweKlmEf2kYFzp95crlrIx1XbtVWFlBHMsk8HcWDE21dgo4LZLahYD
-         kvPW0O4nqLEbuZFOOVSO1tuvvUwdwKhfemGivyz+YRyMLqJL0y1y8S1LFYsNgF6Bdk06
-         6RRGLEOvoLZkcOiVM5t6/9PhBlHaSWyyr5BlmaT7vqUb7dgX6ZItMD0U6+qH6b2J3dUc
-         0gEg==
-X-Gm-Message-State: AGi0PuboOSvRofnPZ4xXwz6ZOHnFXuYuqxcfjfU9bpEGD2IXkchCO0vu
-        mE7iQJA+jvj9Bnlwd+eIYaaXVWSLPJxqDk3aTBY=
-X-Google-Smtp-Source: APiQypI8Aw7GHNMbnvdlatUvOMGOBY4JkzTqMYMucj6SftC0csp2x2kbkUIA3PLWBYRoCQ3rzTxqhilz4ZlCHrhcefQ=
-X-Received: by 2002:a05:6830:10ce:: with SMTP id z14mr20242588oto.118.1589383237714;
- Wed, 13 May 2020 08:20:37 -0700 (PDT)
+        Wed, 13 May 2020 11:20:46 -0400
+Received: from fsav109.sakura.ne.jp (fsav109.sakura.ne.jp [27.133.134.236])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 04DFK6RG086103;
+        Thu, 14 May 2020 00:20:06 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav109.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav109.sakura.ne.jp);
+ Thu, 14 May 2020 00:20:06 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav109.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 04DFK6RQ086100
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Thu, 14 May 2020 00:20:06 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] printk: Add loglevel for "do not print to consoles".
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <dima@arista.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+References: <20200427062117.GC486@jagdpanzerIV.localdomain>
+ <4dae86af-1d9a-f5a8-cff6-aa91ec038a79@i-love.sakura.ne.jp>
+ <20200428121828.GP28637@dhcp22.suse.cz>
+ <b4d74234-8009-9ffd-011f-bd5d1a4b85f6@i-love.sakura.ne.jp>
+ <20200428154532.GU28637@dhcp22.suse.cz>
+ <b1d507b1-dae7-f526-c74a-d465ddecea6a@i-love.sakura.ne.jp>
+ <20200429142106.GG28637@dhcp22.suse.cz>
+ <a59271f1-b3fc-26d1-f0a2-5ec351d0095e@i-love.sakura.ne.jp>
+ <20200513062652.GM413@jagdpanzerIV.localdomain>
+ <a75d6560-ad99-5b02-3648-247c27c3a398@i-love.sakura.ne.jp>
+ <20200513100413.GH17734@linux-b0ei>
+ <20564555-7b84-f716-5dcd-978f76ad459a@i-love.sakura.ne.jp>
+ <20200513095503.7488b0d6@gandalf.local.home>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <5f272afb-2d74-c051-ce0a-4332ff080ef3@i-love.sakura.ne.jp>
+Date:   Thu, 14 May 2020 00:20:04 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200513151840.36400-1-heikki.krogerus@linux.intel.com>
-In-Reply-To: <20200513151840.36400-1-heikki.krogerus@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 13 May 2020 17:20:26 +0200
-Message-ID: <CAJZ5v0gJ0jCEVX=3zJfkRJdeoAot0nKFUOAoMSi9e_hdi8peqw@mail.gmail.com>
-Subject: Re: [PATCH] kobject: Make sure the parent does not get released
- before its children
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200513095503.7488b0d6@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 5:18 PM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
->
-> In the function kobject_cleanup(), kobject_del(kobj) is
-> called before the kobj->release(). That makes it possible to
-> release the parent of the kobject before the kobject itself.
->
-> To fix that, adding function __kboject_del() that does
-> everything that kobject_del() does except release the parent
-> reference. kobject_cleanup() then calls __kobject_del()
-> instead of kobject_del(), and separately decrements the
-> reference count of the parent kobject after kobj->release()
-> has been called.
->
-> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> Fixes: 7589238a8cf3 ("Revert "software node: Simplify software_node_release() function"")
-> Cc: Brendan Higgins <brendanhiggins@google.com>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Suggested-by: "Rafael J. Wysocki" <rafael@kernel.org>
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+On 2020/05/13 22:55, Steven Rostedt wrote:
+> On Wed, 13 May 2020 20:03:53 +0900
+> Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> wrote:
+> 
+>> I think that basically only oops (e.g. WARN()/BUG()/panic()) messages worth
+>> printing to consoles and the rest messages do not worth printing to consoles.
+>> Existing KERN_$LOGLEVEL is too rough-grained.
+> 
+> Why don't you look into having a "noconsole" command line option that will
+> not print anything to the consoles but oops messages.
 
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Well, such global option can be as harmful as "ignore_loglevel" command line
+option in that we have to worry about how per-console loglevel can co-exist.
 
-> ---
->  lib/kobject.c | 30 ++++++++++++++++++++----------
->  1 file changed, 20 insertions(+), 10 deletions(-)
->
-> diff --git a/lib/kobject.c b/lib/kobject.c
-> index 65fa7bf70c57..32432036bef8 100644
-> --- a/lib/kobject.c
-> +++ b/lib/kobject.c
-> @@ -599,14 +599,7 @@ int kobject_move(struct kobject *kobj, struct kobject *new_parent)
->  }
->  EXPORT_SYMBOL_GPL(kobject_move);
->
-> -/**
-> - * kobject_del() - Unlink kobject from hierarchy.
-> - * @kobj: object.
-> - *
-> - * This is the function that should be called to delete an object
-> - * successfully added via kobject_add().
-> - */
-> -void kobject_del(struct kobject *kobj)
-> +static void __kobject_del(struct kobject *kobj)
->  {
->         struct kernfs_node *sd;
->         const struct kobj_type *ktype;
-> @@ -625,9 +618,23 @@ void kobject_del(struct kobject *kobj)
->
->         kobj->state_in_sysfs = 0;
->         kobj_kset_leave(kobj);
-> -       kobject_put(kobj->parent);
->         kobj->parent = NULL;
->  }
-> +
-> +/**
-> + * kobject_del() - Unlink kobject from hierarchy.
-> + * @kobj: object.
-> + *
-> + * This is the function that should be called to delete an object
-> + * successfully added via kobject_add().
-> + */
-> +void kobject_del(struct kobject *kobj)
-> +{
-> +       struct kobject *parent = kobj->parent;
-> +
-> +       __kobject_del(kobj);
-> +       kobject_put(parent);
-> +}
->  EXPORT_SYMBOL(kobject_del);
->
->  /**
-> @@ -663,6 +670,7 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
->   */
->  static void kobject_cleanup(struct kobject *kobj)
->  {
-> +       struct kobject *parent = kobj->parent;
->         struct kobj_type *t = get_ktype(kobj);
->         const char *name = kobj->name;
->
-> @@ -684,7 +692,7 @@ static void kobject_cleanup(struct kobject *kobj)
->         if (kobj->state_in_sysfs) {
->                 pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
->                          kobject_name(kobj), kobj);
-> -               kobject_del(kobj);
-> +               __kobject_del(kobj);
->         }
->
->         if (t && t->release) {
-> @@ -698,6 +706,8 @@ static void kobject_cleanup(struct kobject *kobj)
->                 pr_debug("kobject: '%s': free name\n", name);
->                 kfree_const(name);
->         }
-> +
-> +       kobject_put(parent);
->  }
->
->  #ifdef CONFIG_DEBUG_KOBJECT_RELEASE
-> --
-> 2.26.2
->
+The idea of per-console loglevel is to allow specifying different threshold
+based on characteristics of each console while the effect of ignore_loglevel
+is to disallow specifying different threshold. (I'm wondering whether
+ignore_loglevel should be valid under CONSOLE_LOGLEVEL_SILENT, for
+CONSOLE_LOGLEVEL_SILENT says "don't print to consoles" while ignore_loglevel
+says "always print to consoles".)
+
+If we want to implement per-console loglevel in the future, shouldn't we first
+deprecate the conflicting "ignore_loglevel" command line option (and get rid
+of it by asking users to use LOGLEVEL_DEBUG as console loglevel)?
+
+The idea of "noconsole" command line option is to disallow printing almost all
+messages regardless of KERN_$LOGLEVEL while the idea of per-console loglevel is
+to allow printing some messages based on KERN_$LOGLEVEL.
+
+> 
+> Sounds more like what you would like, and something that perhaps would be
+> acceptable by the larger community.
+
+More we introduce global switches, more difficult to introduce fine-grained
+switches (e.g. per-console loglevel).
