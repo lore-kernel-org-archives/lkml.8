@@ -2,183 +2,88 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9C1CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D76FFC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 884BD20769
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:16:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pKvPSW2t"
+	by mail.kernel.org (Postfix) with ESMTP id AF0CC20753
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:16:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589368615;
+	bh=40kDCCPvDFkDZnvfE0oEeO/xo+Tmp5VDSTcS0YnGUcs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QUk/VBJREzgAF8PL9oDkhMEw0aH8tN6Tj5UT/beU7/RX2dPodZyjRBsHxX62YifF3
+	 eBGY8kNuRS5IhLumW8cFqzluePQz9eZIee4NqyN3xmL2yJ1CMSnjQLjBsAz7FURZ42
+	 jQEN6Lmir0TMjB5Kr2ZKL7h/yXnbFmPTbkxOBkXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732199AbgEMLQ2 (ORCPT
+        id S1732255AbgEMLQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 07:16:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34552 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730286AbgEMLQ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 07:16:28 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F6BFC061A0C;
-        Wed, 13 May 2020 04:16:27 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id v17so5140186ote.0;
-        Wed, 13 May 2020 04:16:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kmT3haoKYL7RaHgaxSv/OLDSB0fCvleON4tKRznJs/E=;
-        b=pKvPSW2tdPeQB7JcDzETIxB6dRyvhPkU+ceLt8PJLxG9l3jxbkO8KzEEXdCAkMbKUK
-         8OX/PCIzHtwVt4kfQqPiuZDAKqaaOyesvpj66CcWN5+PlXG52diEmq/TFYj5npR1xCFP
-         Vxdc+RBudn6c+QsTEpBx33ku6ZSlNn3vRdHgYdurFQ0dxuRKkXtqKwrgYZ0O7chkqylB
-         6bma4N2RvLfkz8RyyiF64ouT+rVUA0ktFFfMuow8NBCH0LQQBB//TTJ+TbAohu/ZTv0E
-         aYukrRFoxouG0LpdV1L9zeaRYERlz0FwKl9sf51XCPW6xycf5/luehiY+s58kSR1y4L5
-         YwUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kmT3haoKYL7RaHgaxSv/OLDSB0fCvleON4tKRznJs/E=;
-        b=b0+jopkOfYGtRPGmHDjrF8l+O3hxkjVCokG5ShaBmrcDzEayB10QGbKqwKIyf/948H
-         66SdhyLJPOmVIqCJYOqAxZ7EmmNbbuOqCf8gRBlstK4eqHbsWlfOZ06d6HQ+7NR/Np9W
-         s0ue9zLAbhyUTUebPUjVhoLO3Moxr2PDiM3LHngQEZlzMYXtS3i/qvdKiB59pDNobvq5
-         SGXGA+OYANy3nevkWGwfABo7rPIRJcJfdjRrmX8WsI5onCLdMXFiE4zb5hbgUq+hk2ld
-         BK3tc76D36V5hi6TDHIjREMHl1rqKu3C6rJEIQadLJ6aVlxs5M/sPXCoXPfkAbaFdOYG
-         VI7A==
-X-Gm-Message-State: AGi0PuZwg4Ugh0xj06GMqQtLjFlpYo5Z/BLhLUNOOAlQx4bzAFkWr70k
-        tT0xHQ7chO3t301/4hUCbUMOMJjmpm2D1H6IVCxdnVKGzfqdTg==
-X-Google-Smtp-Source: APiQypKCiadeMjqy4HJtxD3P1eyF9SmDO+r0O/RiOm5MGnBXerJmlguCBMcOgC8R7fErOqw5TY8VqepeP/PyfymSizA=
-X-Received: by 2002:a9d:7390:: with SMTP id j16mr18834815otk.43.1589368586398;
- Wed, 13 May 2020 04:16:26 -0700 (PDT)
+        Wed, 13 May 2020 07:16:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48448 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730286AbgEMLQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 07:16:54 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FBA5206E5;
+        Wed, 13 May 2020 11:16:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589368614;
+        bh=40kDCCPvDFkDZnvfE0oEeO/xo+Tmp5VDSTcS0YnGUcs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sXXj67nUm87Aj49o92BvnC3oSAFsTthqZjQKC0eGfYLl0piCJ61Rh/94Vv33cn0qU
+         NlwzFE3k3y3tH6QW1f+W4FOXT00EvVDZ1cSdL1TRZLYm6Pb+OPk/XkfSd3f3oNJF2N
+         +vpKvMCxEV0BPtWUsbbo7nJzNa8KBH7fAK3nsooc=
+Received: by pali.im (Postfix)
+        id E89ED774; Wed, 13 May 2020 13:16:51 +0200 (CEST)
+Date:   Wed, 13 May 2020 13:16:51 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 00/12] PCI: aardvark: Fix support for Turris MOX and
+ Compex wifi cards
+Message-ID: <20200513111651.q62dqauatryh6xd6@pali>
+References: <20200430080625.26070-1-pali@kernel.org>
 MIME-Version: 1.0
-References: <1586945948-11026-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1586945948-11026-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200512222648.GD2542285@oden.dyn.berto.se>
-In-Reply-To: <20200512222648.GD2542285@oden.dyn.berto.se>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Wed, 13 May 2020 12:16:00 +0100
-Message-ID: <CA+V-a8tC2KrspKWGHn8=+7DYjOUNuBXn+biS9NDB+qcqnd6f9w@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] media: rcar-vin: Invalidate pipeline if conversion
- is not possible on input formats
-To:     Niklas <niklas.soderlund@ragnatech.se>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200430080625.26070-1-pali@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Niklas,
+On Thursday 30 April 2020 10:06:13 Pali Rohár wrote:
+> Hello,
+> 
+> this is the fourth version of the patch series for Armada 3720 PCIe
+> controller (aardvark). It's main purpose is to fix some bugs regarding
+> buggy ath10k cards, but we also found out some suspicious stuff about
+> the driver and the SOC itself, which we try to address.
+> 
+> Patches are available also in my git branch pci-aardvark:
+> https://git.kernel.org/pub/scm/linux/kernel/git/pali/linux.git/log/?h=pci-aardvark
 
-Thank you for the review.
+Hello! Thanks everybody for review and testing of this patch series.
 
-On Tue, May 12, 2020 at 11:26 PM Niklas <niklas.soderlund@ragnatech.se> wro=
-te:
->
-> Hi Lad,
->
-> Thanks for your work.
->
-> On 2020-04-15 11:19:06 +0100, Lad Prabhakar wrote:
-> > Up until now the VIN was capable to convert any of its supported input =
-mbus
-> > formats to any of it's supported output pixel formats. With the additio=
-n of
-> > RAW formats this is no longer true.
->
-> Add blank line.
->
-> > This patch invalidates the pipeline by adding a check if given vin inpu=
-t
-> > format can be converted to supported output pixel format.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> I like this patch I think there is a typo bellow and patch [1] have been
-> merged in the media-tree which unfortunately addes one more thing to do
-> in this patch. In rvin_enum_fmt_vid_cap() there is a TODO noted for what
-> needs to be done. In imagine the fix is simple and the end result would
-> look something like this.
->
->     switch (f->mbus_code) {
->     case 0:
->     case MEDIA_BUS_FMT_YUYV8_1X16:
->     case MEDIA_BUS_FMT_UYVY8_1X16:
->     case MEDIA_BUS_FMT_UYVY8_2X8:
->     case MEDIA_BUS_FMT_UYVY10_2X10:
->     case MEDIA_BUS_FMT_RGB888_1X24:
->         break;
->     case MEDIA_BUS_FMT_SRGGB8_1X8:
->         if (f->index)
->             return -EINVAL;
->
->         f->pixelformat =3D V4L2_PIX_FMT_SRGGB8;
->         return 0;
->     case default:
->         return -EINVAL;
->     }
->
-> 1. d5f74a1eff9aef3b ("media: rcar-vin: Make use of V4L2_CAP_IO_MC")
->
-Sure Ill take of care of this and just repost this patch is that OK with yo=
-u ?
-
-> > ---
-> >  drivers/media/platform/rcar-vin/rcar-dma.c | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media=
-/platform/rcar-vin/rcar-dma.c
-> > index 1a30cd036371..48bd9bfc3948 100644
-> > --- a/drivers/media/platform/rcar-vin/rcar-dma.c
-> > +++ b/drivers/media/platform/rcar-vin/rcar-dma.c
-> > @@ -1109,13 +1109,17 @@ static int rvin_mc_validate_format(struct rvin_=
-dev *vin, struct v4l2_subdev *sd,
-> >       case MEDIA_BUS_FMT_UYVY8_1X16:
-> >       case MEDIA_BUS_FMT_UYVY8_2X8:
-> >       case MEDIA_BUS_FMT_UYVY10_2X10:
-> > +             break;
-> >       case MEDIA_BUS_FMT_RGB888_1X24:
-> > -             vin->mbus_code =3D fmt.format.code;
->
-> This is not right is it?
->
-> Should you not add a case for MEDIA_BUS_FMT_SRGGB8_1X8 instead of taking
-> over MEDIA_BUS_FMT_RGB888_1X24?
->
-Agreed, I blindly took this suggestion from your previous comments [1].
-
-[1] https://lkml.org/lkml/2020/3/19/858
-
-Cheers,
---Prabhakar Lad
-
-> > +             if (vin->format.pixelformat !=3D V4L2_PIX_FMT_SRGGB8)
-> > +                     return -EPIPE;
-> >               break;
-> >       default:
-> >               return -EPIPE;
-> >       }
-> >
-> > +     vin->mbus_code =3D fmt.format.code;
-> > +
-> >       switch (fmt.format.field) {
-> >       case V4L2_FIELD_TOP:
-> >       case V4L2_FIELD_BOTTOM:
-> > --
-> > 2.20.1
-> >
->
-> --
-> Regards,
-> Niklas S=C3=B6derlund
+I would like to ask, is there something needed to fix / modify in this
+patch series? If everything is OK, would you Bjorn or Lorenzo take this
+patch series into your tree?
