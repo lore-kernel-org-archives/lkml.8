@@ -2,108 +2,98 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BC2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39C602065C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3492120659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 20:24:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OVOopRhH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DpjJjWPS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390854AbgEMUSu (ORCPT
+        id S2390847AbgEMUYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 16:18:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34782 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732650AbgEMUSu (ORCPT
+        Wed, 13 May 2020 16:24:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732650AbgEMUYX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 16:18:50 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3334AC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 13:18:50 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id j13so1470102pjm.2
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 13:18:50 -0700 (PDT)
+        Wed, 13 May 2020 16:24:23 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AB52C061A0C;
+        Wed, 13 May 2020 13:24:22 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id b71so1028722ilg.8;
+        Wed, 13 May 2020 13:24:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=NFhpUl8J5nQNcbuIqqWOyLKJFuf8vP/sTwp9lphBqIg=;
-        b=OVOopRhHDJPSVt582OWv1n2bHvL2RJ4Ej1usaI3YQLjZfCdK5RRj5bkjRcOW0/tyr8
-         SkhLd0zgDwlz64rxPOTE7BwwGl5aeGThK9Y+BL9roibAfYro/ahbloBkaGKJeHgWaIMT
-         tHuqGbOt+suQHKd76FwG9a4krZjPc92s2L+l4AiS8MgX6FUiLAzWasqjYUCzdyE8VKHx
-         4q7pIWkp7OS7sNMDmT0EuL7LNc8eEVX69ujKM1vOTQQWSsfgRFQQ1DfzbUwPBblRxQhw
-         CuB9fl6jZXfzLQ/q/9xkkJnVNnEhXJqZRMrScETEkHIBjDtkSIUcufuRJ6oo86NlekIZ
-         Jfyw==
+        bh=/0PPB26EjKCEK4FysNGX/JGmScpUolfSHa5EDihTllg=;
+        b=DpjJjWPSkGc4uBWZSWOu3a8gE6D6kgBELTVAJpfcmJe1rw9c6mQsnxzKwM1zWR0/ep
+         P5fMP0DWk7itrunwNIy89fS79ZFHjAytH+q8pUfPM9MhERs1zJOWV7zlLf7OOSsvAF19
+         DtiOpo1mT/B0SkrptWiIV+aE8JC8gnj880EUrOE0MfzlUy38V89twiW3UMD84y0VR0hX
+         dyOZuCVuwgoZ12QiEUTSS8IBOi40/2l3zvwbFqJ3y2DmIRGRSGXXFnZbmI+P5pnpxvl3
+         kJHFFx1Zys8+ZbxEPxXWEgBBO9GIMc3agGS3DdgKeZFeppAcemofiiHSfdCoO3gGLeqk
+         ynjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NFhpUl8J5nQNcbuIqqWOyLKJFuf8vP/sTwp9lphBqIg=;
-        b=nXtSJyj2O1eGEr9mlTTah4NrdpuscYqUkCbNR8tukGXJK0y2yuSR1F5228umIzNJVc
-         ZMyIX68EkuquNbw7ddSgHcZpo64f7AfcNphXpRYkZnJW3nBfLzdfLAkC2kgdmtfn9ypM
-         vz+4JXm3xb+RfhvoRYKeIPi29J3q49itqvyPH+Vl7uUy/UE9K5jxYjSYEMb9YF5MMQq5
-         kEWc8Iu1cMOgIRkwIjDj7WQ0zH99uoLvnQ5Q3rRJ4+H9tTiEB8Ss7fjIyxWP90rYXR1Y
-         qJGbkOcR1WPVuHelscAbNX3gkX7HV+5HqXSvYoKoJFEB2B57zc4pAr8k+Y4nvvS+0tNQ
-         8y1A==
-X-Gm-Message-State: AGi0Pub8SMZr24Po5+/NuOMzzHn6sw82rhIQEKXWJmB3eZ6aj7yXI4Vn
-        YCX7tkigY8Ir1bo2ahy54HXbTv3+bj4JP+l7pxzZ7A==
-X-Google-Smtp-Source: APiQypL5qdvL27yQKnl1AbUHtAzXV73gwoxo3Zlu4/03cZATWKqFrDYk4v09riH3sBZr3ki1nShdVY7CkbDGaHWUlD0=
-X-Received: by 2002:a17:90a:17ed:: with SMTP id q100mr33102641pja.80.1589401129515;
- Wed, 13 May 2020 13:18:49 -0700 (PDT)
+        bh=/0PPB26EjKCEK4FysNGX/JGmScpUolfSHa5EDihTllg=;
+        b=PNj/PM/Hyok/+3kDFIpMreIuOf8otYIyQ4SHSbk3Ay8BAQ7zlxBAdJxLWd23gDIXkH
+         HstACWlY4NNjGz2++d1Msg2elZaE8XdRvyf4ItXZp8jZJJWKAVxpFmiGziscASE+amdi
+         ids1aXmHQiyjLSsLvQWIuVoO74Riqe7V2rVBNp7BKFnWkzdVodZYDc4no4eJpxns23BB
+         Swh4FCLD+ZOquguMk8srf+0z+A7sUdxxXMwoubKOzpFzJtDzJhieMjm5rdcFCynbmy0K
+         Jb7cGCcDNTsWjxcnQ+2zwEef0ooCNCCtDhkOPK7uKIPbjym3LzU5XkthNjKdOT+k0K/g
+         ckaA==
+X-Gm-Message-State: AOAM531dsFiIrk3JXs6EeGYpLv4OGPvzpGgp2/9tfzQHexr8wq237aqk
+        8zZ8XaHM5dUtVz/9Kk37DIPsH0fSRHucDV3efqQ=
+X-Google-Smtp-Source: ABdhPJxbUfrjvMOE70gMloZvlIhKbhNjJILxo1CxWouTHXmQImiYKQ7qMPsPb6ZN1UHsnym1/2QR7EQ6Tgsn6w7xjDI=
+X-Received: by 2002:a92:4b11:: with SMTP id m17mr1298260ilg.42.1589401461922;
+ Wed, 13 May 2020 13:24:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200513151840.36400-1-heikki.krogerus@linux.intel.com>
-In-Reply-To: <20200513151840.36400-1-heikki.krogerus@linux.intel.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Wed, 13 May 2020 13:18:38 -0700
-Message-ID: <CAFd5g46npUaVOu9+xvLqw=DhCccuzOLpFLn1+8Qc8Un0AALThg@mail.gmail.com>
-Subject: Re: [PATCH] kobject: Make sure the parent does not get released
- before its children
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
+References: <20200513184735.30104-1-michael.srba@seznam.cz>
+In-Reply-To: <20200513184735.30104-1-michael.srba@seznam.cz>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Wed, 13 May 2020 14:24:10 -0600
+Message-ID: <CAOCk7No9mnXwsmCZF14Hsx=oikCRe=PVcjoRsFsR5ZjftHPndw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: msm8916: Disable coresight by default
+To:     michael.srba@seznam.cz
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 8:18 AM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
+On Wed, May 13, 2020 at 12:50 PM <michael.srba@seznam.cz> wrote:
 >
-> In the function kobject_cleanup(), kobject_del(kobj) is
-> called before the kobj->release(). That makes it possible to
-> release the parent of the kobject before the kobject itself.
+> From: Michael Srba <michael.srba@seznam.cz>
 >
-> To fix that, adding function __kboject_del() that does
-> everything that kobject_del() does except release the parent
-> reference. kobject_cleanup() then calls __kobject_del()
-> instead of kobject_del(), and separately decrements the
-> reference count of the parent kobject after kobj->release()
-> has been called.
+> On some msm8916 devices, attempts at initializing coresight cause the boot to
+> fail. This was fixed by disabling the coresight-related nodes in the board dts
+> files. However, a cleaner approach was chosen for fixing the same issue on
+> msm8998: disabling coresight by default, and enabling it in board dts files
+> where desired.
+>
+> This patch implements the same solution for msm8916, removes now redundant
+> overwrites in board specific dts files and and enables coresight in db410c's
+> board dts in order to keep the current behavior.
+>
+> Fixes: b1fcc5702a41 ("arm64: dts: qcom: msm8916: Add CTI options")
+> Signed-off-by: Michael Srba <michael.srba@seznam.cz>
 
-I was starting to wonder if anything else needed to happen with this. :-)
-
-Thanks for taking care of this!
-
-> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> Fixes: 7589238a8cf3 ("Revert "software node: Simplify software_node_release() function"")
-> Cc: Brendan Higgins <brendanhiggins@google.com>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Suggested-by: "Rafael J. Wysocki" <rafael@kernel.org>
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-
-Didn't I and someone else test this?
-
-Either way, I will test this out in a little bit.
-
-Thanks!
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
