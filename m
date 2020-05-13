@@ -2,183 +2,76 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B8EAC2D0FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DE0CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3DE9204EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:26:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="o809Upep"
+	by mail.kernel.org (Postfix) with ESMTP id 15A57204EF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:26:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387758AbgEMN0U (ORCPT
+        id S2387818AbgEMN0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:26:20 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:40714 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727792AbgEMN0T (ORCPT
+        Wed, 13 May 2020 09:26:34 -0400
+Received: from cmccmta3.chinamobile.com ([221.176.66.81]:10926 "EHLO
+        cmccmta3.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733066AbgEMN0b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:26:19 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04DDQG0i118996;
-        Wed, 13 May 2020 08:26:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589376376;
-        bh=+e0mbSlpXXz27VKNTKjsJZwfHqlIfU65rOvu1CND0/8=;
-        h=From:To:Subject:Date;
-        b=o809UpepJP1zcTHnd3Xlt3a0t8lmasZ4Fgd8AZFEVkx7vPqRnmggOB/77HXhT3c6Q
-         AwTfZL4pw16iYI57t5sF5AFFS8rr322ToKdujLnguZcLbLwISaLebanmOO/Ea+GI8X
-         si8tK6XB3X+FADz8HMfBNkesDNoxAnFkNJvsahqk=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04DDQGGC096817;
-        Wed, 13 May 2020 08:26:16 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 13
- May 2020 08:26:15 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 13 May 2020 08:26:16 -0500
-Received: from uda0868495.fios-router.home (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04DDQF4H074601;
-        Wed, 13 May 2020 08:26:15 -0500
-From:   Murali Karicheri <m-karicheri2@ti.com>
-To:     <davem@davemloft.net>, <grygorii.strashko@ti.com>,
-        <ilias.apalodimas@linaro.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <nsekhar@ti.com>
-Subject: [PATCH net-next 0/2] am65-cpsw: add taprio/EST offload support
-Date:   Wed, 13 May 2020 09:26:13 -0400
-Message-ID: <20200513132615.16299-1-m-karicheri2@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 13 May 2020 09:26:31 -0400
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.17]) by rmmx-syy-dmz-app09-12009 (RichMail) with SMTP id 2ee95ebbf56d3c6-d0732; Wed, 13 May 2020 21:26:07 +0800 (CST)
+X-RM-TRANSID: 2ee95ebbf56d3c6-d0732
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[112.1.172.85])
+        by rmsmtp-syy-appsvr09-12009 (RichMail) with SMTP id 2ee95ebbf56c23b-4af97;
+        Wed, 13 May 2020 21:26:07 +0800 (CST)
+X-RM-TRANSID: 2ee95ebbf56c23b-4af97
+From:   Tang Bin <tangbin@cmss.chinamobile.com>
+To:     gregkh@linuxfoundation.org, stern@rowland.harvard.edu
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tang Bin <tangbin@cmss.chinamobile.com>,
+        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Subject: [PATCH v2] USB: host: ehci-mxc: Add error handling in ehci_mxc_drv_probe()
+Date:   Wed, 13 May 2020 21:26:47 +0800
+Message-Id: <20200513132647.5456-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-AM65 CPSW h/w supports Enhanced Scheduled Traffic (EST – defined
-in P802.1Qbv/D2.2 that later got included in IEEE 802.1Q-2018)
-configuration. EST allows express queue traffic to be scheduled
-(placed) on the wire at specific repeatable time intervals. In
-Linux kernel, EST configuration is done through tc command and
-the taprio scheduler in the net core implements a software only
-scheduler (SCH_TAPRIO). If the NIC is capable of EST configuration,
-user indicate "flag 2" in the command which is then parsed by
-taprio scheduler in net core and indicate that the command is to
-be offloaded to h/w. taprio then offloads the command to the
-driver by calling ndo_setup_tc() ndo ops. This patch implements
-ndo_setup_tc() as well as other changes required to offload EST
-configuration to CPSW h/w
+The function ehci_mxc_drv_probe() does not perform sufficient error
+checking after executing platform_get_irq(), thus fix it.
 
-For more details please refer patch 2/2.
+Fixes: 7e8d5cd93fa ("USB: Add EHCI support for MX27 and MX31 based boards")
+Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+---
+Changes from v1
+ - fix the subject.
+---
+ drivers/usb/host/ehci-mxc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-This series is based on original work done by Ivan Khoronzhuk
-<ivan.khoronzhuk@linaro.org> to add taprio offload support to
-AM65 CPSW 2G. 
-
-1. Example configuration 3 Gates
-
-ifconfig eth0 down
-ethtool -L eth0 tx 3
-
-#disable rrobin
-ethtool --set-priv-flags eth0 p0-rx-ptype-rrobin off
-
-ifconfig eth0 192.168.2.20
-
-tc qdisc replace dev eth0 parent root handle 100 taprio \
-    num_tc 3 \
-    map 0 0 1 2 0 0 0 0 0 0 0 0 0 0 0 0 \
-    queues 1@0 1@1 1@2 \
-    base-time 0000 \
-    sched-entry S 4 125000 \
-    sched-entry S 2 125000 \
-    sched-entry S 1 250000 \
-    flags 2
-
-2. Example configuration 8 Gates 
-
-ifconfig eth0 down
-ethtool -L eth0 tx 8
-
-#disable rrobin
-ethtool --set-priv-flags eth0 p0-rx-ptype-rrobin off
-
-ifconfig eth0 192.168.2.20
-
-tc qdisc replace dev eth0 parent root handle 100 taprio \
-    num_tc 8 \
-    map 0 1 2 3 4 5 6 7 0 0 0 0 0 0 0 0 \
-    queues 1@0 1@1 1@2 1@3 1@4 1@5 1@6 1@7 \
-    base-time 0000 \
-    sched-entry S 80 125000 \
-    sched-entry S 40 125000 \
-    sched-entry S 20 125000 \
-    sched-entry S 10 125000 \
-    sched-entry S 08 125000 \
-    sched-entry S 04 125000 \
-    sched-entry S 02 125000 \
-    sched-entry S 01 125000 \
-    flags 2
-
-
-Classify frames to particular priority using skbedit so that they land at
-a specific queue in cpsw h/w which is Gated by the EST gate which opens based
-on the sched-entry. 
-
-tc qdisc add dev eth0 clsact
-
-In the below for example an iperf3 session with destination port 5007
-will go through Q7.
-
-# Assume case 1: 8 TCs as per the second tc command listed above
-# Assign packet prio 7 for port 5007 -> hw_prio 7
-tc filter add dev eth0 egress protocol ip prio 1 u32 match ip dport 5007 0xffff action skbedit priority 7
-
-# Similarly, assign packet prio 6 for port 5006 -> hw_prio 6 and so forth
-tc filter add dev eth0 egress protocol ip prio 1 u32 match ip dport 5006 0xffff action skbedit priority 6
-tc filter add dev eth0 egress protocol ip prio 1 u32 match ip dport 5005 0xffff action skbedit priority 5
-tc filter add dev eth0 egress protocol ip prio 1 u32 match ip dport 5004 0xffff action skbedit priority 4
-tc filter add dev eth0 egress protocol ip prio 1 u32 match ip dport 5003 0xffff action skbedit priority 3
-tc filter add dev eth0 egress protocol ip prio 1 u32 match ip dport 5002 0xffff action skbedit priority 2
-tc filter add dev eth0 egress protocol ip prio 1 u32 match ip dport 5001 0xffff action skbedit priority 1
-
-#send iperf3 udp traffic for port 5007 with iperf3 server running at
-#a PC connected to the eth0 port
-
-iperf3 -c 192.168.2.10 -u -l1470 -b32M -t1 -p 5007
-
-Testing was done by capturing frames at the PC using wireshark and checking for
-the bust interval or cycle time of UDP frames with a specific port number. 
-Verified that the distance between first frame of a burst (cycle-time) is 1
-milli second and burst duration is within 125 usec based on the received packet
-timestamp shown in wireshark packet display. 
-
-Ivan Khoronzhuk (2):
-  ethernet: ti: am65-cpts: add routines to support taprio offload
-  ethernet: ti: am65-cpsw-qos: add TAPRIO offload support
-
- drivers/net/ethernet/ti/Kconfig             |   9 +
- drivers/net/ethernet/ti/Makefile            |   2 +-
- drivers/net/ethernet/ti/am65-cpsw-ethtool.c |  12 +-
- drivers/net/ethernet/ti/am65-cpsw-nuss.c    |   9 +
- drivers/net/ethernet/ti/am65-cpsw-nuss.h    |   5 +
- drivers/net/ethernet/ti/am65-cpsw-qos.c     | 626 ++++++++++++++++++++
- drivers/net/ethernet/ti/am65-cpsw-qos.h     |  29 +
- drivers/net/ethernet/ti/am65-cpts.c         |  48 ++
- drivers/net/ethernet/ti/am65-cpts.h         |  24 +
- 9 files changed, 761 insertions(+), 3 deletions(-)
- create mode 100644 drivers/net/ethernet/ti/am65-cpsw-qos.c
- create mode 100644 drivers/net/ethernet/ti/am65-cpsw-qos.h
-
+diff --git a/drivers/usb/host/ehci-mxc.c b/drivers/usb/host/ehci-mxc.c
+index c9f91e6c7..7f65c8604 100644
+--- a/drivers/usb/host/ehci-mxc.c
++++ b/drivers/usb/host/ehci-mxc.c
+@@ -50,6 +50,8 @@ static int ehci_mxc_drv_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	irq = platform_get_irq(pdev, 0);
++	if (irq < 0)
++		return irq;
+ 
+ 	hcd = usb_create_hcd(&ehci_mxc_hc_driver, dev, dev_name(dev));
+ 	if (!hcd)
 -- 
-2.17.1
+2.20.1.windows.1
+
+
 
