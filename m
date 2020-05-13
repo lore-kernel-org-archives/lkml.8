@@ -2,87 +2,184 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E91AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0ABC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58A9A20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3170C20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 23:03:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589410953;
-	bh=nkq4QibHgdf/84wDz2VcbjymUdMoVUptx7L8aeIN+2c=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=HnAiPnzjwD5FJoe1LvEhOFvQG66mq0TdXdM0GN858ghKElDk0n6rQ8M0HKqETsViw
-	 42aYtirbsbZjEb/xhseD0JjXI1sLpZm4/f3KHFu1lH9KfhXCbodn3iikCZG9UK0zN9
-	 IE61BcpRBcK7RDayJiCiVDEzyQJerwdIsvCXSEXU=
+	s=default; t=1589411016;
+	bh=JiwzGxwWx0NS2EXPzf/2f+eKgUV2OMKFWgrmHm0qu7Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=udWCKKm/Tbh/FvCMO9cVq2+rWRaejobCzzXRpFmAdjGFQE/H4SvikMaGLAnhKO0pl
+	 Ftn/b+4J11+90t6eRisaul74h3/2qpXPlFnqORBuWrZ4MYjptjEbh1Dw6XmvnDafjw
+	 /KPFiq9cfi4/6Kp6He96CeFzSDjhLzierIinkVP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732220AbgEMXCc (ORCPT
+        id S1732235AbgEMXDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 19:02:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38996 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 19:03:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731815AbgEMXCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 19:02:31 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731815AbgEMXDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 19:03:34 -0400
+Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45A3B20675;
-        Wed, 13 May 2020 23:02:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68FA020675;
+        Wed, 13 May 2020 23:03:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589410951;
-        bh=nkq4QibHgdf/84wDz2VcbjymUdMoVUptx7L8aeIN+2c=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=LqlA51UVu0TuMHAIUmJF1cVnfu0OTE+Nte9ev7/OYuwYc6qaOk6QO6w8qPnN/SlXg
-         F8cRi7R0cJoeKREv+ZmxSEbOqi6CMFswiAfVvjtERHkZ9I8acHJ74Y21R/iYInkyFw
-         hoFyDBQF8LWnQ/Bvw+vGUJ9h4YK5bEFb4Fc8zwTk=
-Subject: Re: [PATCH 4.19 00/48] 4.19.123-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200513094351.100352960@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <b7aed527-54db-189c-4d34-cc5834f18bc6@kernel.org>
-Date:   Wed, 13 May 2020 17:02:30 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        s=default; t=1589411013;
+        bh=JiwzGxwWx0NS2EXPzf/2f+eKgUV2OMKFWgrmHm0qu7Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pfBmySLrlBzf6/zjgOQhFegBu6eehkX+0kWEeQvRtOIhqFr49C8qBjJJ9+muojnjn
+         Eq/KnmMeYaP31Symr8RsvMxXPTEArPnnd2/Vx3ljZBxsTmpzCS1fqHzwEFHv8+852R
+         q1w9FgWfeY2/0ZaP6wOP/AD4NcTG2ZStFHsgO+wY=
+Date:   Thu, 14 May 2020 01:03:31 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Josh Triplett <josh@joshtriplett.org>
+Subject: Re: [PATCH 04/10] rcu: Implement rcu_segcblist_is_offloaded() config
+ dependent
+Message-ID: <20200513230330.GB18303@lenoir>
+References: <20200513164714.22557-1-frederic@kernel.org>
+ <20200513164714.22557-5-frederic@kernel.org>
+ <20200513182029.GT2869@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513182029.GT2869@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/13/20 3:44 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.123 release.
-> There are 48 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, May 13, 2020 at 11:20:29AM -0700, Paul E. McKenney wrote:
+> On Wed, May 13, 2020 at 06:47:08PM +0200, Frederic Weisbecker wrote:
+> > This simplify the usage of this API and avoid checking the kernel
+> > config from the callers.
+> > 
+> > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> > Cc: Paul E. McKenney <paulmck@kernel.org>
+> > Cc: Josh Triplett <josh@joshtriplett.org>
+> > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> > Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+> > Cc: Joel Fernandes <joel@joelfernandes.org>
+> > ---
+> >  include/linux/rcu_segcblist.h |  2 ++
+> >  kernel/rcu/rcu_segcblist.c    |  2 ++
+> >  kernel/rcu/rcu_segcblist.h    |  6 ++++++
+> >  kernel/rcu/tree.c             | 21 +++++++--------------
+> >  4 files changed, 17 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/include/linux/rcu_segcblist.h b/include/linux/rcu_segcblist.h
+> > index b36afe7b22c9..0ced0a0ecbcf 100644
+> > --- a/include/linux/rcu_segcblist.h
+> > +++ b/include/linux/rcu_segcblist.h
+> > @@ -73,7 +73,9 @@ struct rcu_segcblist {
+> >  	long len;
+> >  #endif
+> >  	u8 enabled;
+> > +#ifdef CONFIG_RCU_NOCB_CPU
+> >  	u8 offloaded;
+> > +#endif
 > 
-> Responses should be made by Fri, 15 May 2020 09:41:20 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.123-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+> Given that this is only one byte and that removing it won't actually
+> save any memory on most architectures, why not just leave it and
+> adjust as shown below?
 
-Compiled and booted on my test system. No dmesg regressions.
+Right, the point was to make it private to that config and trigger
+a build error otherwise. But if we have an off case that's fine.
 
-thanks,
--- Shuah
+> 
+> >  };
+> >  
+> >  #define RCU_SEGCBLIST_INITIALIZER(n) \
+> > diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
+> > index 9a0f66133b4b..d8ea2bef5574 100644
+> > --- a/kernel/rcu/rcu_segcblist.c
+> > +++ b/kernel/rcu/rcu_segcblist.c
+> > @@ -166,6 +166,7 @@ void rcu_segcblist_disable(struct rcu_segcblist *rsclp)
+> >  	rsclp->enabled = 0;
+> >  }
+> >  
+> > +#ifdef CONFIG_RCU_NOCB_CPU
+> >  /*
+> >   * Mark the specified rcu_segcblist structure as offloaded.  This
+> >   * structure must be empty.
+> > @@ -174,6 +175,7 @@ void rcu_segcblist_offload(struct rcu_segcblist *rsclp)
+> >  {
+> >  	rsclp->offloaded = 1;
+> >  }
+> > +#endif
+> 
+> Leave this unconditional, as it is nowhere near a fastpath.
+
+The point was to not raise false hopes to those who want to
+offload when it's not supported.
+
+Let's perhaps have at least a WARN_ON_ONCE(1) if it is called
+when !CONFIG_RCU_NOCB_CPU ?
+
+> 
+> >  /*
+> >   * Does the specified rcu_segcblist structure contain callbacks that
+> > diff --git a/kernel/rcu/rcu_segcblist.h b/kernel/rcu/rcu_segcblist.h
+> > index 5c293afc07b8..4c1503a82492 100644
+> > --- a/kernel/rcu/rcu_segcblist.h
+> > +++ b/kernel/rcu/rcu_segcblist.h
+> > @@ -62,7 +62,11 @@ static inline bool rcu_segcblist_is_enabled(struct rcu_segcblist *rsclp)
+> >  /* Is the specified rcu_segcblist offloaded?  */
+> >  static inline bool rcu_segcblist_is_offloaded(struct rcu_segcblist *rsclp)
+> >  {
+> > +#ifdef CONFIG_RCU_NOCB_CPU
+> >  	return rsclp->offloaded;
+> > +#else
+> > +	return false;
+> > +#endif
+> >  }
+> 
+> Then this can just be:
+> 
+> 	return IS_ENABLED(CONFIG_RCU_NOCB_CPU) && rsclp->offloaded;
+
+Ok.
+
+> > @@ -1401,8 +1401,7 @@ static bool __note_gp_changes(struct rcu_node *rnp, struct rcu_data *rdp)
+> >  {
+> >  	bool ret = false;
+> >  	bool need_qs;
+> > -	const bool offloaded = IS_ENABLED(CONFIG_RCU_NOCB_CPU) &&
+> > -			       rcu_segcblist_is_offloaded(&rdp->cblist);
+> > +	const bool offloaded = rcu_segcblist_is_offloaded(&rdp->cblist);
+> 
+> The adjustment to rcu_segcblist_is_offloaded() allows this (welcome!)
+> simplification to remain.
+
+Ok thanks!
+
+> > @@ -3243,8 +3237,7 @@ static int rcu_pending(int user)
+> >  
+> >  	/* Has RCU gone idle with this CPU needing another grace period? */
+> >  	if (!gp_in_progress && rcu_segcblist_is_enabled(&rdp->cblist) &&
+> > -	    (!IS_ENABLED(CONFIG_RCU_NOCB_CPU) ||
+> > -	     !rcu_segcblist_is_offloaded(&rdp->cblist)) &&
+> > +	    !rcu_segcblist_is_offloaded(&rdp->cblist) &&
+> 
+> Ditto.
+> 
+> As in "Why didn't I do it that way to start with???"  ;-)
+
+You say that to someone who's too lazy to script short commands typed
+100 times a day ;-)
