@@ -2,122 +2,145 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F821C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E998AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A8DB20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7826D2065C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:38:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KNAIVCs5"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="j0p6SIqo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387687AbgEMTiP (ORCPT
+        id S2390762AbgEMTij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 15:38:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1733092AbgEMTiO (ORCPT
+        Wed, 13 May 2020 15:38:39 -0400
+Received: from mail.efficios.com ([167.114.26.124]:36782 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732626AbgEMTih (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 15:38:14 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4F5BC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 12:38:14 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id m24so510855vsq.10
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 12:38:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ke4uWAP9sQZ5K5ZqcbNueL/vqjGx4KuSfWacNnG9IP8=;
-        b=KNAIVCs5xSS7MZJNvGuxgkkkhNsEsO5VSgsdXDdeQrNZCf9D+Sn2/2tSsN24QHNc8p
-         AvOTOqWe+sx6il52JIgv4kXuEZRZ0u51yvR7MKLbd9tIyP/Xzg0IqYK18kjhr/kYWe8G
-         42W/luCMqYbPVnfkpDJFoAuovJCbFmCn0DUVGtv2AI+0lmnPI1YqLE94SS104mzu4Bjn
-         J7x8nTO846CB35bhaKjcdPKDUbf8Oyd0b6uSZ9hhsip1o3y4p9Xj3RyjiOkcm4fR3SZb
-         rWElA7JW0rGfwLmbIywb7vTWW//w2WZ3cy/2DbHbqz7sRN8cCVSvbfjnaB4p2AXGG6Ig
-         xLiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ke4uWAP9sQZ5K5ZqcbNueL/vqjGx4KuSfWacNnG9IP8=;
-        b=JcHZhosBT4wFrinJWeEAze50FT+SJs+TZJLIBpW7qyP90gbsoVisKdCm3bl2GFeo6P
-         I6dL0b4MJ1C/fUfQqriDaCede/AV8z6AanLZaTf6+t69BlxaSe3543LzGBTeuDFLtInx
-         ugJJjipgWxvwjxJUuE9ceWzQ3691VXnAQG8GKCUAxFv7O5yJgknhAMB53QfB47RYqDus
-         l/+N7Rytm1nNGLl0Ll58XzkfuaZiqMTSAg3f00C09bJ524Ap6zoOgB+6O8Ri24FULsd0
-         DoDfEkTncP5QdJ+QTSxJ8wR39gr37AjdTLqTUaSK8XFdTK1eaBTJ6CfA+RZmTzpSSmmq
-         6IEA==
-X-Gm-Message-State: AOAM532jgZZcW2nubM89Wy58JdMLrgnwBr5b8xVu7xBoDRX/LBRQMLCQ
-        LtVJJqFOUl7Ru5ZeY94aH4B/+MECn2yyjqm7y2I=
-X-Google-Smtp-Source: ABdhPJxXY5J5q/rrCCt9ey3fgywEcsxm9dJjt4mAdeE5DwUTG5N/TW670z8VUoUjQ46NKw8Hm0DCwBQ7+Eq+mRYUQ04=
-X-Received: by 2002:a67:7f0a:: with SMTP id a10mr669800vsd.147.1589398693723;
- Wed, 13 May 2020 12:38:13 -0700 (PDT)
+        Wed, 13 May 2020 15:38:37 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id E56E42BD8E7;
+        Wed, 13 May 2020 15:38:35 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id EdVF3ZjFOAPe; Wed, 13 May 2020 15:38:35 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 9B7E32BD8E6;
+        Wed, 13 May 2020 15:38:35 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 9B7E32BD8E6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1589398715;
+        bh=W7Fi27HMs3xcXMs3/c0ZIWP7wGZIeXMC5xcLnPV/8NU=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=j0p6SIqoQm7EwhaBLW+kWxlRbeZrU/USPnDxeLJz/XUDkN/KAQBUK0gQHsleCgnhU
+         CAxECLTsUlEhpDybEy8bCmNp0Rk7cUqJaPCVrfA1Atze+6n+rtNQwUmc9whg+cwSIC
+         kfMPSA8d+5Rgumnrg+Lw12o1+XiTaNcONDVWhmpBDzrSVghKDxBlhA9DogDmTmdZP2
+         5MRwDVGV/NjcXAJZ13KUpQ45WA78iI/V36rsqcUDviTNRayCd2dwt+qjQ0QPv8Th31
+         0cmOJAZMBXLRBel60VLJuahfEt7/Si7GofIIw8ixbzuIC9uWJirsWtYqxMKy7+EEG2
+         Q6SH0cnUVd+yA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id iN0qKPAMr3wt; Wed, 13 May 2020 15:38:35 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 8CBEF2BD939;
+        Wed, 13 May 2020 15:38:35 -0400 (EDT)
+Date:   Wed, 13 May 2020 15:38:35 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Yuchung Cheng <ycheng@google.com>,
+        Jonathan Rajotte-Julien <joraj@efficios.com>
+Message-ID: <341326348.19635.1589398715534.JavaMail.zimbra@efficios.com>
+Subject: [regression] TC_MD5SIG on established sockets
 MIME-Version: 1.0
-References: <20200507212912.599433-1-alexandre.belloni@bootlin.com> <20200513174530.GA32096@animalcreek.com>
-In-Reply-To: <20200513174530.GA32096@animalcreek.com>
-From:   Vaibhav Agarwal <vaibhav.sr@gmail.com>
-Date:   Thu, 14 May 2020 01:07:36 +0530
-Message-ID: <CAAs3649-3dAmUqjLiEP8Ar3dKamp7ek1o0R5WN3g8kxTgz6fFg@mail.gmail.com>
-Subject: Re: [PATCH] greybus: audio: remove unused code
-To:     Mark Greer <mgreer@animalcreek.com>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, greybus-dev@lists.linaro.org,
-        devel@driverdev.osuosl.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF76 (Linux)/8.8.15_GA_3928)
+Thread-Index: VOzrMcTkJnQRmnFkM79HnTFxDREPXw==
+Thread-Topic: TC_MD5SIG on established sockets
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 11:15 PM Mark Greer <mgreer@animalcreek.com> wrote:
->
-> On Thu, May 07, 2020 at 11:29:11PM +0200, Alexandre Belloni wrote:
-> > GREYBUS_AUDIO_MSM8994 is not an existing configuration option and as
-> > reported in September 2016, it depends on an "out-of-tree qualcomm audio
-> > driver". This driver never made it upstream.
-> >
-> > https://lore.kernel.org/lkml/20160921073905.GA31263@kroah.com/
-> >
-> > Moreover, there doesn't seem to be any interest in actually fixing the
-> > driver as it uses ASoC APIs that have been removed from the kernel in 2018
-> > as shown by its use of snd_soc_register_codec and
-> > snd_soc_codec_get_drvdata, removed in commit 999f7f5af8eb ("ASoC: remove
-> > Codec related code").
-> >
-> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > ---
-Hi Alexandre,
+Hi,
 
-As mentioned in the mail archive referred, the GB Codec driver that is
-currently available in kernel tree is dependent on qualcomm audio
-driver. And some time later I made some minor modifications to remove
-the unnecessary dependencies. However, I missed to share the same with
-the community :(
+I am reporting a regression with respect to use of TCP_MD5SIG/TCP_MD5SIG_EXT
+on established sockets. It is observed by a customer.
 
-Thanks to you for triggering the thread. Now, I could retrieve my local
-changes and I have been in the process of updating it again to make it
-compatible with latest kernel.
+This issue is introduced by this commit:
 
-I'm planning to share the same here in the next few days.  I'll mark you
-in CC to seek your review comments as well.
+commit 721230326891 "tcp: md5: reject TCP_MD5SIG or TCP_MD5SIG_EXT on established sockets"
 
-In case, I'm unable to make those changes to the staging tree, I would
-also recommend to drop this code. Kindly let me know your opinion.
+The intent of this commit appears to be to fix a use of uninitialized value in
+tcp_parse_options(). The change introduced by this commit is to disallow setting
+the TCP_MD5SIG{,_EXT} socket options on an established socket.
 
---
-thanks,
-./va
+The justification for this change appears in the commit message:
 
->
-> Everything you say is true but it is still kinda sad to see this go.
-> But that is life...  If and when someone has the motivation to get this
-> working again they can take a look at the git history.
->
-> Thanks for this, Alexandre.
->
-> Acked-by: Mark Greer <mgreer@animalcreek.com>
+   "I believe this was caused by a TCP_MD5SIG being set on live
+    flow.
+    
+    This is highly unexpected, since TCP option space is limited.
+    
+    For instance, presence of TCP MD5 option automatically disables
+    TCP TimeStamp option at SYN/SYNACK time, which we can not do
+    once flow has been established.
+    
+    Really, adding/deleting an MD5 key only makes sense on sockets
+    in CLOSE or LISTEN state."
+
+However, reading through RFC2385 [1], this justification does not appear
+correct. Quoting to the RFC:
+
+   "This password never appears in the connection stream, and the actual
+    form of the password is up to the application. It could even change
+    during the lifetime of a particular connection so long as this change
+    was synchronized on both ends"
+
+The paragraph above clearly underlines that changing the MD5 signature of
+a live TCP socket is allowed.
+
+I also do not understand why it would be invalid to transition an established
+TCP socket from no-MD5 to MD5, or transition from MD5 to no-MD5. Quoting the
+RFC:
+
+  "The total header size is also an issue.  The TCP header specifies
+   where segment data starts with a 4-bit field which gives the total
+   size of the header (including options) in 32-byte words.  This means
+   that the total size of the header plus option must be less than or
+   equal to 60 bytes -- this leaves 40 bytes for options."
+
+The paragraph above seems to be the only indication that some TCP options
+cannot be combined on a given TCP socket: if the resulting header size does
+not fit. However, I do not see anything in the specification preventing any
+of the following use-cases on an established TCP socket:
+
+- Transition from no-MD5 to MD5,
+- Transition from MD5 to no-MD5,
+- Changing the MD5 key associated with a socket.
+
+As long as the resulting combination of options does not exceed the available
+header space.
+
+Can we please fix this KASAN report in a way that does not break user-space
+applications expectations about Linux' implementation of RFC2385 ?
+
+Thanks,
+
+Mathieu
+
+[1] RFC2385: https://tools.ietf.org/html/rfc2385
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
