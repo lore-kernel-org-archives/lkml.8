@@ -2,118 +2,112 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E18A7C433FB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3068EC43465
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03EEB20FC3
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 14:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73B2C22266
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:00:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NM/ixUgQ"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="c+3ilERf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389064AbgEMOwa (ORCPT
+        id S2389227AbgEMPAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 10:52:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40128 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728345AbgEMOw3 (ORCPT
+        Wed, 13 May 2020 11:00:36 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:49131 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389155AbgEMPAN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 10:52:29 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46882C061A0C;
-        Wed, 13 May 2020 07:52:28 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id x18so8957868ybq.8;
-        Wed, 13 May 2020 07:52:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=Ag7d1R4oU70+Y1dGMwgHYVRH8OdiIM2rnBAshx67Csg=;
-        b=NM/ixUgQ77MwmVFv32i2dIj/4IHwxgmq5ZhM4IPdxDPNFw/Xyrqmhv/4AiPJMIVHri
-         bHd4lqQWVL2Fd+P9oILIYjifQsnNF5G1cce5p06vNKHKHg0qFCEw7oxP2E7Ev+BgkNpa
-         onpn6Fj5kHqGbvJwXRhoHESFqrO0b21QLDOXSHIL6Q92VBuJUDMm7ciuumQyG56c+BEr
-         ndmkEJ5YwHkwRg9W3x8Rtq67T+l9DEVjv5Zn6lojDZ70dhluhGwDFiPTrqBNgqsS6+bo
-         dbPkeiCmQOy0Qax0+QaRnOqWevOHbh5P8NlXTv/VgguH21TdLBNf5enXG+Fc2rcD1Xmr
-         D4kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=Ag7d1R4oU70+Y1dGMwgHYVRH8OdiIM2rnBAshx67Csg=;
-        b=Vy0+CoQwsbYzLBmY763cvyp8ICWL3u28aZgmvLL+glZok4OqS9sfUOAAtn/pwxQn9J
-         z8NZCkMx9PtonXIq/P1xpqfOFL8xLS3T3hqOjIdlYI5VzlICxE/i0U8qEgWpy6YPDGGB
-         Jb3ZtY/VcTvONhjMikLM39IQtCfaex66rqoyj3ty9/0ygHpA0TLV5HOOymSKVeKDfEQY
-         TYzry055zMlyKVrKWUolX81uhp8j0adGUlGv9Ykcf+f4i0bHavZ25hfk6FDGs2YpdpoV
-         1qPqWFAL+1TpHCFB+lg4UV6lLRX7nip9oWWEumqqt8/oW610vu9ALHM3dCIxQxoKC/98
-         ShhA==
-X-Gm-Message-State: AOAM530xMKOxVdK4GNaxaszkZBGPoXsqf9H/4eW8VmZf4MYeK6JOy99R
-        7t3tgugpLeogqxtHrJMxLBQRqLyPnJEojfVyaMc=
-X-Google-Smtp-Source: ABdhPJw1+ODS777zhwKBpaQ1DEPQH6Wiw1QS2RVxWHIW4/0lA/gYWBoN1piY+NdIWjdtMZAD/7nDVNuZ6f/ZvjCCAVY=
-X-Received: by 2002:a25:2e50:: with SMTP id b16mr19372364ybn.346.1589381547494;
- Wed, 13 May 2020 07:52:27 -0700 (PDT)
+        Wed, 13 May 2020 11:00:13 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DEwJv0008668;
+        Wed, 13 May 2020 16:59:58 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=QTCaThy3GVFCYOhCkPvOzFwaT3nv8roy2DLEbs0qBbo=;
+ b=c+3ilERflSrBijQAJJe6KdPE0lLVj+4f4Lcx5gSA2cUC/2uEPNyJFLy00GETTt6p7y5f
+ fHKSf6vukoNpXa6w+E2JH8mssiWxFPrxm6618QjqKBXlBCMgd3dvH1raB09XvRMzQBJa
+ vagqwuh5vSiblFFvojO19IL/qMnTVrHMrFX5AoGZD1lIGkkKZDHyonrP1nbDbcrrzWzG
+ nYD5XZMCuTeSOseoVNpt8Xg+Hk8No/PAIJByhcmB21+E9LgFT/3AOM/s9oC7JjfPILHW
+ 3QNFfk9Jk3Si/44+ky826t7QZWG4n5MyGuohjaZWC1kdQ2wfrowb825vOWlNE9VSHT42 IA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 3100vqdeb4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 May 2020 16:59:58 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1BE9310002A;
+        Wed, 13 May 2020 16:59:58 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 084EC2D3006;
+        Wed, 13 May 2020 16:59:58 +0200 (CEST)
+Received: from localhost (10.75.127.50) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 13 May 2020 16:59:57
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <gregkh@linuxfoundation.org>
+CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH 15/15] dt-bindings: usb: dwc2: Fix issues for stm32mp15x SoC
+Date:   Wed, 13 May 2020 16:59:35 +0200
+Message-ID: <20200513145935.22493-16-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20200513145935.22493-1-benjamin.gaignard@st.com>
+References: <20200513145935.22493-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-From:   Jonas Falkevik <jonas.falkevik@gmail.com>
-Date:   Wed, 13 May 2020 16:52:16 +0200
-Message-ID: <CABUN9aCXZBTdYHSK5oSVX-HAA1wTWmyBW_ked_ydsCjsV-Ckaw@mail.gmail.com>
-Subject: [PATCH] sctp: check assoc before SCTP_ADDR_{MADE_PRIM,ADDED} event
-To:     Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-sctp@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Xin Long <lucien.xin@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG6NODE3.st.com (10.75.127.18) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-13_06:2020-05-13,2020-05-13 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not generate SCTP_ADDR_{MADE_PRIM,ADDED} events for SCTP_FUTURE_ASSOC assocs.
+Correct the compatible list for stm32mp15x SoC.
+Fix the name of the stm32mp15x dedicated supply to be aligned with
+what the driver use.
 
-These events are described in rfc6458#section-6.1
-SCTP_PEER_ADDR_CHANGE:
-This tag indicates that an address that is
-part of an existing association has experienced a change of
-state (e.g., a failure or return to service of the reachability
-of an endpoint via a specific transport address).
-
-Signed-off-by: Jonas Falkevik <jonas.falkevik@gmail.com>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 ---
- net/sctp/associola.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/usb/dwc2.yaml | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/net/sctp/associola.c b/net/sctp/associola.c
-index 437079a4883d..0c5dd295f9b8 100644
---- a/net/sctp/associola.c
-+++ b/net/sctp/associola.c
-@@ -432,8 +432,10 @@ void sctp_assoc_set_primary(struct sctp_association *asoc,
-         changeover = 1 ;
+diff --git a/Documentation/devicetree/bindings/usb/dwc2.yaml b/Documentation/devicetree/bindings/usb/dwc2.yaml
+index 0d6d850a7f17..1357b861310d 100644
+--- a/Documentation/devicetree/bindings/usb/dwc2.yaml
++++ b/Documentation/devicetree/bindings/usb/dwc2.yaml
+@@ -44,7 +44,9 @@ properties:
+       - const: st,stm32f4x9-hsotg
+       - const: st,stm32f7-hsotg
+       - const: st,stm32mp15-fsotg
+-      - const: st,stm32mp15-hsotg
++      - items:
++          - const: st,stm32mp15-hsotg
++          - const: snps,dwc2
+       - const: samsung,s3c6400-hsotg
+ 
+   reg:
+@@ -90,7 +92,7 @@ properties:
+   vusb_a-supply:
+     description: phandle to voltage regulator of analog section.
+ 
+-  vusb33d-supply:
++  usb33d-supply:
+     description: reference to the VBUS and ID sensing comparators supply, in
+       order to perform OTG operation, used on STM32MP15 SoCs.
+ 
+-- 
+2.15.0
 
-     asoc->peer.primary_path = transport;
--    sctp_ulpevent_nofity_peer_addr_change(transport,
--                          SCTP_ADDR_MADE_PRIM, 0);
-+    if (sctp_assoc2id(asoc) != SCTP_FUTURE_ASSOC)
-+        sctp_ulpevent_nofity_peer_addr_change(transport,
-+                              SCTP_ADDR_MADE_PRIM,
-+                              0);
-
-     /* Set a default msg_name for events. */
-     memcpy(&asoc->peer.primary_addr, &transport->ipaddr,
-@@ -714,7 +716,10 @@ struct sctp_transport *sctp_assoc_add_peer(struct
-sctp_association *asoc,
-     list_add_tail_rcu(&peer->transports, &asoc->peer.transport_addr_list);
-     asoc->peer.transport_count++;
-
--    sctp_ulpevent_nofity_peer_addr_change(peer, SCTP_ADDR_ADDED, 0);
-+    if (sctp_assoc2id(asoc) != SCTP_FUTURE_ASSOC)
-+        sctp_ulpevent_nofity_peer_addr_change(peer,
-+                              SCTP_ADDR_ADDED,
-+                              0);
-
-     /* If we do not yet have a primary path, set one.  */
-     if (!asoc->peer.primary_path) {
---
-2.25.3
