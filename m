@@ -2,142 +2,121 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6356C2D0F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 05:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3DC4C2D0FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 05:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80B9720659
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 05:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B11CB20659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 05:35:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RAgYphhM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="txZr0XeH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbgEMFfI (ORCPT
+        id S1728942AbgEMFfc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 01:35:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37708 "EHLO
+        Wed, 13 May 2020 01:35:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725977AbgEMFfI (ORCPT
+        by vger.kernel.org with ESMTP id S1725977AbgEMFfc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 01:35:08 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2386FC061A0C;
-        Tue, 12 May 2020 22:35:08 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id s20so6382842plp.6;
-        Tue, 12 May 2020 22:35:08 -0700 (PDT)
+        Wed, 13 May 2020 01:35:32 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33193C061A0C;
+        Tue, 12 May 2020 22:35:32 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id b190so1750890pfg.6;
+        Tue, 12 May 2020 22:35:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xKuGTzBt71m8CIHDiDqn23KXHfAjPSHatdr1dMN3hRc=;
-        b=RAgYphhM6lKLTBzgKAx5zx6yvuoUwfVoCymWZIgflUs/0LjoFuINBna/wDXzT6s361
-         vXaI97zbEJnU7eViR0Apq3Icr8xvQqY8wEeaPO3eAZGzLiuN0qrxjusCno/743PbjDDc
-         1lPMePNfi3BggixLBjij0p+j6KEGgk7zKTtPppn7Qkses6ZfnaM6PKEdTJHaQkZ6U3RR
-         a2681p03wrnW0L7W7EZA3EgBqtVU0d3WgbuGt/gU16kAOTSHTJ9nG9loAM8kf66BDiY2
-         xkCbyyR6c4lbSXd74JUhVyOWf2lvG/XitcT4Z88nlh7FMfTV8kJ/6Z4iep4ICrrpGTw8
-         a4ew==
+         :content-disposition:in-reply-to;
+        bh=N6F6FfdsbXnl/SVK+3lEcJ6QSNPZpV7bb51snrOs/po=;
+        b=txZr0XeHuO7k5BX0CUgXyG6VP+PiWZiHNGupxtphY/hX0tcBvm1GfmNP/og2vyHwOv
+         00Jwu6eowQehKsMOEiAPV4i9Vi5NAE2moFkGfslHOj3x05Tdu9JQJDxth4vfV4mf/kn+
+         KJvAsVzXd50wZPI1Gn3PtnYQhTMzDplkzXUja26WzfwUbj8IP0XbaXT7ZJzw/kbBqxPe
+         Hm1tw3kNPsV9/iC/4vsOiL/mfbhn0I1ofsTUcua2lOGO1OgkRRSvWR6IYrl2qxVq3Opp
+         6Qh5w/cHLZc1GgIQcizNm38dCKEq8WzKQVg0OUePgccFTt8XZyn+vCSYfnI44YihTSBb
+         yWZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xKuGTzBt71m8CIHDiDqn23KXHfAjPSHatdr1dMN3hRc=;
-        b=EF4/8BOwaGIs0RzoSBJkhOJQ/dA/UHXGiMzAOD1b3hSdfdObsp9j/n+Cx63qKelAL/
-         RGDSY/zilyNE/qd+c7cbPi6WLSxbZvs0b/l8TQlyZ5FQqqfMlWX150FHZZwUUHp9B7Ua
-         OGzlBoDHXcO5meodcVneaELUgVwsTxI3UsG0yMrGALOJPo2pRsArtLLJapFRh+r3WpRE
-         tjiviffWHWM3/xQyRT9romeS+Z7McbpCjIi0rmdk4bQQoslUAJKHCXSjIunzvyEi6wLS
-         uQaeA+FYC0V26wk+clMEFbVWUfWc17ggup7djmLWSuxwJWZ6wGRmQF43xyGOtgO1/8Nc
-         342g==
-X-Gm-Message-State: AGi0PuadxNZC+AvSjkTN4XcNVQeYHfIIMHsyoqfy2B0FIjk7tK87WRto
-        zDwfJyG/jFcIpqPGvkzh43gInSg=
-X-Google-Smtp-Source: APiQypKfvqODuQ4CFxPjmPeTQVxkuOOAoKkkaVAnEo+lH+kR3XTtYOdHg+gLw0Fcr+0cKMQIH8a5FQ==
-X-Received: by 2002:a17:90a:8c98:: with SMTP id b24mr23216888pjo.226.1589348107506;
-        Tue, 12 May 2020 22:35:07 -0700 (PDT)
-Received: from madhuparna-HP-Notebook ([2409:4071:5b5:d53:89fb:f860:f992:54ab])
-        by smtp.gmail.com with ESMTPSA id 21sm7298563pgc.6.2020.05.12.22.35.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 May 2020 22:35:06 -0700 (PDT)
-From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
-Date:   Wed, 13 May 2020 11:04:57 +0530
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        sfr@canb.auug.org.au, Amol Grover <frextrite@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH net 2/2 RESEND] ipmr: Add lockdep expression to
- ipmr_for_each_table macro
-Message-ID: <20200513053457.GA13541@madhuparna-HP-Notebook>
-References: <20200509072243.3141-1-frextrite@gmail.com>
- <20200509072243.3141-2-frextrite@gmail.com>
- <20200509141938.028fa959@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <20200512051705.GB9585@madhuparna-HP-Notebook>
- <20200512093231.7ce29f30@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+         :mime-version:content-disposition:in-reply-to;
+        bh=N6F6FfdsbXnl/SVK+3lEcJ6QSNPZpV7bb51snrOs/po=;
+        b=XkRXzRG8BGcP0XcP+yuGxoG81gRiQVDE1HrRCRiJq+KzHRt8bLJn6S0U9X7LFb2FeK
+         GuZKiLIA92tSge0utBjcdjxmBFCEB84OUSTbXpyE1wzCvQ8AytLWVw7qRWQP/KVpKaxr
+         Yh0NyRbkFQ8crQ5CIYt2Bz6Oirow/EbCF+U+T/+wufZxPbp/urIhPAdCqjDhXsnRPhtV
+         yYEK42sZKFP6IJIA0tvEjrQflyoPmufdZUHyBSLl8yzVRlMKV37nm2XF1RUz7YtSgER3
+         KljMfWAV1vVumx0tfDHL+QQTJTubBWhw/sf4QDoRZcshYsBPYEK6nlxFTzO67CiaJAXy
+         mh0Q==
+X-Gm-Message-State: AGi0PuYUzt0zT7JY0wiehaZEOR+X6ns87u2C6lvPo8DApGYETGPd0hdf
+        yWyS5Pb9GaUx2aR015Uz8cY=
+X-Google-Smtp-Source: APiQypKbmkqhqS7o4ermQSolZR+cfuqa+pjV4dqn2sJsZ4yPaDy9SgV2EtYA1EalVbPrFoB3VL2yMQ==
+X-Received: by 2002:a62:2bcb:: with SMTP id r194mr24565356pfr.26.1589348131658;
+        Tue, 12 May 2020 22:35:31 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id q16sm3263402pgm.91.2020.05.12.22.35.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 May 2020 22:35:30 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Wed, 13 May 2020 14:35:29 +0900
+To:     Alper Nebi Yasak <alpernebiyasak@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        linux-serial@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Feng Tang <feng.tang@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: Re: [RFC PATCH v2 1/3] printk: Add function to set console to
+ preferred console's driver
+Message-ID: <20200513053529.GL413@jagdpanzerIV.localdomain>
+References: <20200430161438.17640-1-alpernebiyasak@gmail.com>
+ <20200430161438.17640-2-alpernebiyasak@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200512093231.7ce29f30@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200430161438.17640-2-alpernebiyasak@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 09:32:31AM -0700, Jakub Kicinski wrote:
-> On Tue, 12 May 2020 10:47:05 +0530 Madhuparna Bhowmik wrote:
-> > > >  #ifdef CONFIG_IP_MROUTE_MULTIPLE_TABLES
-> > > > -#define ipmr_for_each_table(mrt, net) \
-> > > > -	list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list, \
-> > > > -				lockdep_rtnl_is_held())
-> > > > +#define ipmr_for_each_table(mrt, net)					\
-> > > > +	list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list,	\
-> > > > +				lockdep_rtnl_is_held() ||		\
-> > > > +				lockdep_is_held(&pernet_ops_rwsem))  
-> > > 
-> > > This is a strange condition, IMHO. How can we be fine with either
-> > > lock.. This is supposed to be the writer side lock, one can't have 
-> > > two writer side locks..
-> > > 
-> > > I think what is happening is this:
-> > > 
-> > > ipmr_net_init() -> ipmr_rules_init() -> ipmr_new_table()
-> > > 
-> > > ipmr_new_table() returns an existing table if there is one, but
-> > > obviously none can exist at init.  So a better fix would be:
-> > > 
-> > > #define ipmr_for_each_table(mrt, net)					\
-> > > 	list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list,	\
-> > > 				lockdep_rtnl_is_held() ||		\
-> > > 				list_empty(&net->ipv4.mr_tables))
-> > >  
-> > (adding Stephen)
-> > 
-> > Hi Jakub,
-> > 
-> > Thank you for your suggestion about this patch.
-> > Here is a stack trace for ipmr.c:
-> > 
-> > [...]
-> 
-> Thanks!
-> 
-> > > Thoughts?  
-> > 
-> > Do you think a similar fix (the one you suggested) is also applicable
-> > in the ip6mr case.
-> 
-> Yes, looking at the code it seems ip6mr has the exact same flow for
-> netns init.
+On (20/04/30 19:14), Alper Nebi Yasak wrote:
+[..]
+> +int update_console_to_preferred(void)
+> +{
+> +	struct console_cmdline *c = NULL;
+> +	struct console *con = NULL;
+> +	struct console *tmp = NULL;
+> +
+> +	if (preferred_console >= 0)
+> +		c = &console_cmdline[preferred_console];
+> +
+> +	if (!c || !c->name[0])
+> +		return 0;
+> +
+> +	for_each_console(con) {
+> +		if (!con->next || !(con->next->flags & CON_ENABLED))
+> +			continue;
+> +		if (strcmp(c->name, con->next->name) != 0)
+> +			continue;
 
-Alright, thanks a lot.
-I will send a patch for ip6mr.c soon.
+This matches the consoles by exact name. Consoles can have aliases,
+but matching by alias is rather complex and it has some side effects.
 
-Thank you,
-Madhuparna
+Let me Cc more people on this. VT has a console takeover logic,
+I wonder if we can extend the takeover code somehow.
+
+Daniel, any thoughts?
+
+https://lore.kernel.org/lkml/20200430161438.17640-1-alpernebiyasak@gmail.com
+
+	-ss
