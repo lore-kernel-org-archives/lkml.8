@@ -2,60 +2,60 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CEBC2D0F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6BCC2D0F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24DE2206CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C485A20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:09:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VEnpDexE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gK3dvzuS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbgEMCJm (ORCPT
+        id S1728851AbgEMCJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 22:09:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34286 "EHLO
+        Tue, 12 May 2020 22:09:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbgEMCJl (ORCPT
+        with ESMTP id S1726885AbgEMCJm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 22:09:41 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60ED9C061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 19:09:41 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id m7so6209251plt.5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 19:09:41 -0700 (PDT)
+        Tue, 12 May 2020 22:09:42 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DD7BC05BD09
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 19:09:42 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id j13so286464pjm.2
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 19:09:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=30k3g7kfn7bIzbjqMwYYoV+lbQ2qdyHsMEbPQh3FmRs=;
-        b=VEnpDexEnncojA2+uni+RuhZttreiRApv7RLWNpsKCikVkF04Yah550tFknZwIINV1
-         6GvJgAjKm6vBp29dmG9cgiQ04WVeBL8YAROTIDsBvkWFoYubQ17yHCXSjqLJIiRgrget
-         MkNmUz/X/UoBbR2e85L/34rpRNnmcIukW9New=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=zcD9lBfIOsrbGLPLwHavFpU04q9rS7x1jNQUtnqQyIk=;
+        b=gK3dvzuSyDVkWgPlzx40qbLhAs0owj9fIDJoyReMIZDN7XH+poriF7uHhlAQ+w+Fef
+         DfYQXms3qL1YXiyZFcegyl/miVUznOD7rrVn1aG88QwK6QTyvVR2rQ9JGnEXNfUDGcCG
+         FsW+Xj94YC0MRj70Y4eNIEyKrmXxmy0uYMqWc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=30k3g7kfn7bIzbjqMwYYoV+lbQ2qdyHsMEbPQh3FmRs=;
-        b=muzu4ekZzTYwVV2xNtdvXBmOJLdergk33G5ftZgMQGvp+S2XxxigS0kC+onul21cQs
-         KHkrHL6tnX68Rq7nKjajt+uS9SsxVOCn6DMgau2klU+BarfYp5NPLW1MgcavNnxXYrTC
-         8Yvm/6sjMP8ovEj8uA0UdBFhm7B5pOSxlK8T2+QQ8l03Una8FNaF0pIxCAv39m62N536
-         f+kDinAgEUT21U6gSj/iJ3wrqCngEAFPhvU/uR2/QhJppl9EgGKFxQtwz7v75h93VWpB
-         r+KstK4Gb2C4DydjjmSUCMHf36BGPrtlvzq6CgSx8YY8l9/en0SuBak83DWJduVwFLXg
-         u3ww==
-X-Gm-Message-State: AOAM530TDzoc+HhQTtAHqH9Tl08JUJi6zlKVY8P+pbPw6ag4lR/WkQ6G
-        RVRA1t38yWCn2QyQPrC8FvOchw==
-X-Google-Smtp-Source: ABdhPJwzjFKyOAvQxlaI87Fj2o2dIZsts/LJ9t7/iT1YUdO5bz9fWYeXCjxBWM39gJxQgizwI/xFAQ==
-X-Received: by 2002:a17:902:b08d:: with SMTP id p13mr4543034plr.241.1589335780671;
-        Tue, 12 May 2020 19:09:40 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=zcD9lBfIOsrbGLPLwHavFpU04q9rS7x1jNQUtnqQyIk=;
+        b=Jqd2OhiuInyVck4jHmd5me8cmWHOpY+v7AI8b/z+gJYniVuZY2XQkrubF0XQpnbGP2
+         iR/QH1wDVq8FHFautKm9c8bwGDq1dKRXmuued+vfIdf/a9HvZ+i4g1PHgbHSJq3TqVux
+         tNsAvZcyqdDFXfiTHwmnLVHic9TdXaF1DXVx5+7fX1wVDKGdggFKhGvQf0f7qtAiev3I
+         Pw5ORB5jssKny/itLOwx++jl0xB7j58K4zSYmeI1bpTos6ZApWCIUe3zPV45SENT0cPt
+         AcQGg0Sh9zmyMAsGv/BPEa5mHLetpgdzIXgUUzQsXOtJHC5SDxvesd6e8JJm5mE6pWWQ
+         mwkA==
+X-Gm-Message-State: AGi0PuZnf7POH+Hq1f5jP4q4gmUJQVzKf9yGYLDrtZv9IdKhr23meZws
+        4Q5u+s3VYzugx+n4TjlMqad/Jw==
+X-Google-Smtp-Source: APiQypKUVISxkbjbdV4dsOfusvVUfRQZvsmwFin9ROrdrs/K1iU7S4CxumWbbsgAW44gvZn353OnYg==
+X-Received: by 2002:a17:90b:2388:: with SMTP id mr8mr30064911pjb.97.1589335782204;
+        Tue, 12 May 2020 19:09:42 -0700 (PDT)
 Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id x7sm13456749pfj.122.2020.05.12.19.09.39
+        by smtp.gmail.com with ESMTPSA id x7sm13456749pfj.122.2020.05.12.19.09.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 19:09:39 -0700 (PDT)
+        Tue, 12 May 2020 19:09:41 -0700 (PDT)
 From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
 To:     marcel@holtmann.org, linux-bluetooth@vger.kernel.org
 Cc:     chromeos-bluetooth-upstreaming@chromium.org,
@@ -64,10 +64,12 @@ Cc:     chromeos-bluetooth-upstreaming@chromium.org,
         Johan Hedberg <johan.hedberg@gmail.com>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 0/2] Bluetooth: Update LE scanning parameters for suspend
-Date:   Tue, 12 May 2020 19:09:31 -0700
-Message-Id: <20200513020933.102443-1-abhishekpandit@chromium.org>
+Subject: [PATCH 1/2] Bluetooth: Fix incorrect type for window and interval
+Date:   Tue, 12 May 2020 19:09:32 -0700
+Message-Id: <20200512190924.1.Ibdf1535b0d4c63aaf337161a333b419d6d32c364@changeid>
 X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
+In-Reply-To: <20200513020933.102443-1-abhishekpandit@chromium.org>
+References: <20200513020933.102443-1-abhishekpandit@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,30 +77,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The types for window and interval should be uint16, not uint8.
 
-Hi linux-bluetooth,
+Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+---
 
-This series updates the values used for window and interval when the
-system suspends. It also fixes a u8 vs u16 bug when setting up passive
-scanning.
+ net/bluetooth/hci_request.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The values chosen for window and interval are 11.25ms and 640ms. I have
-tested these on several Chromebooks with different LE peers (mouse,
-keyboard, Raspberry Pi running bluez) and all of them are able to wake
-the system with those parameters.
-
-Thanks
-Abhishek
-
-
-
-Abhishek Pandit-Subedi (2):
-  Bluetooth: Fix incorrect type for window and interval
-  Bluetooth: Modify LE window and interval for suspend
-
- net/bluetooth/hci_request.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
+diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
+index 3f470f0e432c7..f6870e98faab2 100644
+--- a/net/bluetooth/hci_request.c
++++ b/net/bluetooth/hci_request.c
+@@ -890,7 +890,7 @@ void hci_req_add_le_passive_scan(struct hci_request *req)
+ 	struct hci_dev *hdev = req->hdev;
+ 	u8 own_addr_type;
+ 	u8 filter_policy;
+-	u8 window, interval;
++	u16 window, interval;
+ 
+ 	if (hdev->scanning_paused) {
+ 		bt_dev_dbg(hdev, "Scanning is paused for suspend");
 -- 
 2.26.2.645.ge9eca65c58-goog
 
