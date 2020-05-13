@@ -2,124 +2,116 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A53C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7657CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84F3720675
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BBA720659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:45:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HJpGEnR8"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PFMTomRM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729438AbgEMVnR (ORCPT
+        id S1729662AbgEMVpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 17:43:17 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28398 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729196AbgEMVnR (ORCPT
+        Wed, 13 May 2020 17:45:35 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:16462 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729196AbgEMVpf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 17:43:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589406195;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=14UosuVRXMChRoyaxAqU3xlncdZ3hrjsmYgbi9ygQkw=;
-        b=HJpGEnR8hafWL5fjEG+KV0oWsCF7nWNPRqIcgRlhpR6elV/O0H0vlyw1oavRXyFs/4N57I
-        xZXk50KPFco8ry6YILxbxomJ3IoO152xU60hwdTuNbSTD4Rh21Hui3upY/FqGwBHCugqu2
-        mFAgN05P+NqRmj9u7q6mAzD6PYj8O68=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-249-flou5OPuPb-Z3p6bv_Qvmw-1; Wed, 13 May 2020 17:43:13 -0400
-X-MC-Unique: flou5OPuPb-Z3p6bv_Qvmw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E4E4C18A0768;
-        Wed, 13 May 2020 21:43:05 +0000 (UTC)
-Received: from treble (ovpn-117-14.rdu2.redhat.com [10.10.117.14])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8159510013D9;
-        Wed, 13 May 2020 21:43:02 +0000 (UTC)
-Date:   Wed, 13 May 2020 16:43:00 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: Re: [patch V5 06/38] x86/entry: Provide helpers for execute on
- irqstack
-Message-ID: <20200513214300.ruikp7ldnko7t5pi@treble>
-References: <20200512210059.056244513@linutronix.de>
- <20200512213809.997307469@linutronix.de>
+        Wed, 13 May 2020 17:45:35 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ebc6a720000>; Wed, 13 May 2020 14:45:22 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 13 May 2020 14:45:34 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 13 May 2020 14:45:34 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 May
+ 2020 21:45:32 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 13 May 2020 21:45:32 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ebc6a7c0001>; Wed, 13 May 2020 14:45:32 -0700
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        "Ralph Campbell" <rcampbell@nvidia.com>
+Subject: [PATCH] mm/hmm/test: destroy xa_array instead of looping
+Date:   Wed, 13 May 2020 14:45:07 -0700
+Message-ID: <20200513214507.30592-1-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200512213809.997307469@linutronix.de>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589406322; bh=mUTdF1AVMZd0iSCg3E8fEbaYihKH2WAzpFyYOhyV/OU=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=PFMTomRMAVJQ+UmxKAlAwof1dFot0qpMAJ1vATc+rjN6uEFZzlhYJjSuMLTODsPgc
+         K1PGvX4Bl+rKy4f/9/TuNUPRXrd8vGl4tU9aHkqJKDonNKUipJOOOgodwCMSd9YrMw
+         0krWiaadjXUzTUkp7oLKOHZCjMyG14aKfhQeB8UVeMwu87bAoRYJuiF7RseMI3/pjg
+         b9UQxFVFq45A+LHLKLIOTboyOgW1OKpwRmzNoQx6GCVok9yNkgqS9kavltRa4ARTUv
+         cqFpoLFZXI0zCycLGP/OhkT0QgR3adaoJhqku3WXCke7DZF2GZD3THkRh8Gtdqf+Cn
+         tifp6KhgVPa1g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 11:01:05PM +0200, Thomas Gleixner wrote:
-> Device interrupt handlers and system vector handlers are executed on the
-> interrupt stack. The stack switch happens in the low level assembly entry
-> code. This conflicts with the efforts to consolidate the exit code in C to
-> ensure correctness vs. RCU and tracing.
-> 
-> As there is no way to move #DB away from IST due to the MOV SS issue, the
-> requirements vs. #DB and NMI for switching to the interrupt stack do not
-> exist anymore. The only requirement is that interrupts are disabled.
-> 
-> That allows to move the stack switching to C code which simplifies the
-> entry/exit handling further because it allows to switch stacks after
-> handling the entry and on exit before handling RCU, return to usermode and
-> kernel preemption in the same way as for regular exceptions.
-> 
-> The initial attempt of having the stack switching in inline ASM caused too
-> much headache vs. objtool and the unwinder. After analysing the use cases
-> it was agreed on that having the stack switch in ASM for the price of an
-> indirect call is acceptable as the main users are indirect call heavy
-> anyway and the few system vectors which are empty shells (scheduler IPI and
-> KVM posted interrupt vectors) can run from the regular stack.
-> 
-> Provide helper functions to check whether the interrupt stack is already
-> active and whether stack switching is required.
-> 
-> 64 bit only for now. 32 bit has a variant of that already. Once this is
-> cleaned up the two implementations might be consolidated as a cleanup on
-> top.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Link: https://lore.kernel.org/r/20200507161020.783541450@infradead.org
-> ---
-> V5: Moved the actual switch to ASM code
+The test driver uses an xa_array to store virtual to physical address
+translations for a simulated hardware device. The MMU notifier
+invalidation callback is used to keep the table consistent with the CPU
+page table and is frequently called only for a page or two. However, if
+the test process exits unexpectedly or is killed, the range can be
+[0..ULONG_MAX] in which case calling xa_erase() for every possible PFN
+results in CPU timeouts. Munmap() can result in a large range being
+invalidated but in that case, the xa_array is likely to contain entries
+that need to be invalidated.
+Check for [0..ULONG_MAX] explicitly and just destroy the whole table.
 
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+---
 
--- 
-Josh
+This patch is based on Jason Gunthorpe's hmm tree and should be folded
+into the ("mm/hmm/test: add selftest driver for HMM") patch once this
+patch is reviewed, etc.
+
+ lib/test_hmm.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/lib/test_hmm.c b/lib/test_hmm.c
+index 8b36c26b717b..b89852ec3c29 100644
+--- a/lib/test_hmm.c
++++ b/lib/test_hmm.c
+@@ -201,7 +201,13 @@ static void dmirror_do_update(struct dmirror *dmirror,=
+ unsigned long start,
+ 	 * The XArray doesn't hold references to pages since it relies on
+ 	 * the mmu notifier to clear page pointers when they become stale.
+ 	 * Therefore, it is OK to just clear the entry.
++	 * However, if the entire address space is being invalidated, it
++	 * takes too long to clear them one at a time so destroy the array.
+ 	 */
++	if (start =3D=3D 0 && end =3D=3D ULONG_MAX) {
++		xa_destroy(&dmirror->pt);
++		return;
++	}
+ 	for (pfn =3D start >> PAGE_SHIFT; pfn < (end >> PAGE_SHIFT); pfn++)
+ 		xa_erase(&dmirror->pt, pfn);
+ }
+--=20
+2.20.1
 
