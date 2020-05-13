@@ -2,327 +2,197 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9D3C2D0F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B901C2D0F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53041206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A18206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:30:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sqMPCg3Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbgEMCa2 (ORCPT
+        id S1728866AbgEMCag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 22:30:28 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:37636 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728500AbgEMCaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 22:30:16 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E375A2011E3;
-        Wed, 13 May 2020 04:30:12 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 33C842011E9;
-        Wed, 13 May 2020 04:30:03 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0AE84402D3;
-        Wed, 13 May 2020 10:29:50 +0800 (SGT)
-From:   Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
-To:     xiaoliang.yang_1@nxp.com, po.liu@nxp.com, claudiu.manoil@nxp.com,
-        alexandru.marginean@nxp.com, vladimir.oltean@nxp.com,
-        leoyang.li@nxp.com, mingkai.hu@nxp.com, andrew@lunn.ch,
-        f.fainelli@gmail.com, vivien.didelot@gmail.com,
-        davem@davemloft.net, jiri@resnulli.us, idosch@idosch.org,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, horatiu.vultur@microchip.com,
-        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
-        joergen.andreasen@microchip.com, UNGLinuxDriver@microchip.com,
-        vinicius.gomes@intel.com, nikolay@cumulusnetworks.com,
-        roopa@cumulusnetworks.com, linux-devel@linux.nxdi.nxp.com
-Subject: [PATCH v2 net-next 2/3] net: dsa: felix: Configure Time-Aware Scheduler via taprio offload
-Date:   Wed, 13 May 2020 10:25:09 +0800
-Message-Id: <20200513022510.18457-3-xiaoliang.yang_1@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200513022510.18457-1-xiaoliang.yang_1@nxp.com>
-References: <20200513022510.18457-1-xiaoliang.yang_1@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 12 May 2020 22:30:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37540 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728571AbgEMCad (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 May 2020 22:30:33 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA245C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 19:30:32 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id x5so7342756ioh.6
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 19:30:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mpKvcF6cYRPs0VzgIvpbSSok+xEKbZDD7B97t881690=;
+        b=sqMPCg3QfMXcQFjaw5y++wf6akTbJosdSGIyVaJm9w71VV8Hc95x4E+S5im0s5FIm9
+         mQMVfAMXxucEo5Qy2klvk5FWU469JLCzitibrEuW48AAyNgw8C9TvXd2ZGb7bFTXxDXC
+         vmxUIwnPjAufC9vq8KFfDJDtAQUGaAB8PYUAi5xmchF2Ax/PLc9hmATwDz6uiFeK5dSf
+         uxtcncnqHgcQp6MmBZNktKYrFwfVz+cuRl7rVuovioS7eDtOerqssnXLyBt7jUHYDw9a
+         1fWxnT/bqc/ulzP9cHhGYMCYdPHfGP6ZaAzMqmaBurU9D2zwWwu+Ny3RrA07xaeP7Bjw
+         77XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mpKvcF6cYRPs0VzgIvpbSSok+xEKbZDD7B97t881690=;
+        b=uJXJ0MFkxmZtdyC2iPPUODftV0vLbmQl0G+yVOjwHTYjMUSoGaqsT2FKWhMBSNXDS7
+         Y95WgkhgzkhoO3EsxJuZ3ZS7ROV/K8dkNrX/EC3tH886Mi7YYwu556VFmicg/r7ZDtLS
+         VEFeHUdGWCQcrxoy3JJdNPsxnfNwSXeXMP33LVZHbZ7/PZshFMmaohvQekvrZCmk1PaG
+         mxHg9vKmg4JKu8dddEPuAIVBSXZ++REGZKqxm3gx8m3J7f86L7pN2vUFuzZ4ZSOMij+5
+         fD6RdYhgiAjQ29XzWeKuo3/YWzuGpnrk2JOaau7q5q1xI/UrEJKdb7JGy0RU4aHP8Ib+
+         VtUQ==
+X-Gm-Message-State: AGi0PuablMSKt4gZJ8Z/ffBsPOSaVpE05y6ljll3BGNYvUrtop6/505i
+        jKJoHhDgsdY9tTy/1gQ7PIrSgrht+PWDoiO157la9Q==
+X-Google-Smtp-Source: APiQypISzJTNbOMQ+9SG0JmlbXCmMrEOYqOyMAOztDRhjIKcfsUC9WeehbbbAXBTBdPWoVzy6rY8muPb2tvf9asRWTw=
+X-Received: by 2002:a6b:ea11:: with SMTP id m17mr17257024ioc.149.1589337031931;
+ Tue, 12 May 2020 19:30:31 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200508145624.1.I4d7421c6bbb1f83ea58419082481082e19097841@changeid>
+ <20200512145930.1.I4d7421c6bbb1f83ea58419082481082e19097841@changeid>
+ <20200512121232.GB3150977@krava> <20200512141221.GL28888@kernel.org>
+In-Reply-To: <20200512141221.GL28888@kernel.org>
+From:   "Anand K. Mistry" <amistry@google.com>
+Date:   Wed, 13 May 2020 12:30:20 +1000
+Message-ID: <CAATStaOL7ZNnfMb0skgUvgpTFuTczZv6CKNxw9MGMKQGDkxfEA@mail.gmail.com>
+Subject: Re: [PATCH] perf record: Use an eventfd to wakeup when done
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ocelot VSC9959 switch supports time-based egress shaping in hardware
-according to IEEE 802.1Qbv. This patch add support for TAS configuration
-on egress port of VSC9959 switch.
+On Wed, 13 May 2020 at 00:12, Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+>
+> Em Tue, May 12, 2020 at 02:12:32PM +0200, Jiri Olsa escreveu:
+> > On Tue, May 12, 2020 at 02:59:36PM +1000, Anand K Mistry wrote:
+> >
+> > SNIP
+> >
+> > > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> > > index 1ab349abe90469..099ecaa66732a2 100644
+> > > --- a/tools/perf/builtin-record.c
+> > > +++ b/tools/perf/builtin-record.c
+> > > @@ -53,6 +53,7 @@
+> > >  #include <unistd.h>
+> > >  #include <sched.h>
+> > >  #include <signal.h>
+> > > +#include <sys/eventfd.h>
+> > >  #include <sys/mman.h>
+> > >  #include <sys/wait.h>
+> > >  #include <sys/types.h>
+> > > @@ -518,15 +519,28 @@ static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
+> > >
+> > >  static volatile int signr = -1;
+> > >  static volatile int child_finished;
+> > > +static int done_fd = -1;
+> > >
+> > >  static void sig_handler(int sig)
+> > >  {
+> > > +   u64 tmp = 1;
+> > >     if (sig == SIGCHLD)
+> > >             child_finished = 1;
+> > >     else
+> > >             signr = sig;
+> > >
+> > >     done = 1;
+> > > +
+> > > +   /*
+> > > +    * It is possible for this signal handler to run after done is checked
+> > > +    * in the main loop, but before the perf counter fds are polled. If this
+> > > +    * happens, the poll() will continue to wait even though done is set,
+> > > +    * and will only break out if either another signal is received, or the
+> > > +    * counters are ready for read. To ensure the poll() doesn't sleep when
+> > > +    * done is set, use an eventfd (done_fd) to wake up the poll().
+> > > +    */
+> > > +   if (write(done_fd, &tmp, sizeof(tmp)) < 0)
+> > > +           pr_err("failed to signal wakeup fd\n");
+> > >  }
+> > >
+> > >  static void sigsegv_handler(int sig)
+> > > @@ -1424,6 +1438,17 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+> > >     int fd;
+> > >     float ratio = 0;
+> > >
+> > > +   done_fd = eventfd(0, EFD_NONBLOCK);
+> > > +   if (done_fd < 0) {
+> > > +           pr_err("Failed to create wakeup eventfd, error: %m\n");
+> > > +           return -1;
+> > > +   }
+> > > +   err = evlist__add_pollfd(rec->evlist, done_fd);
+> > > +   if (err < 0) {
+> > > +           pr_err("Failed to add wakeup eventfd to poll list\n");
+> > > +           return -1;
+> > > +   }
+> >
+> > sorry I did not notice before, but I think we also
+> > need to close done_fd descriptor on the exit path
+> >
+> > also please change subject to PATCHv3 for the next version
 
-Felix driver is an instance of Ocelot family, with a DSA front-end. The
-patch uses tc taprio hardware offload to setup TAS set function on felix
-driver.
+Apologies. I'm still getting the hang of this.
 
-Signed-off-by: Xiaoliang Yang <xiaoliang.yang_1@nxp.com>
-Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
----
- drivers/net/dsa/ocelot/felix.c         |  19 ++++
- drivers/net/dsa/ocelot/felix.h         |   5 +
- drivers/net/dsa/ocelot/felix_vsc9959.c | 140 +++++++++++++++++++++++++
- 3 files changed, 164 insertions(+)
+>
+> Yeah, and, and don't take this as a requirement for this patch to be
+> processed, this can be made as a follow up patch by you or someone else
+> (me, maybe :)), that maybe tools/perf/builtin-top.c and
+> tools/perf/builtin-trace.c have the same issue?
+>
+> Could you please take a look there as well?
 
-diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
-index 58d6b0f454e5..d2b114c96952 100644
---- a/drivers/net/dsa/ocelot/felix.c
-+++ b/drivers/net/dsa/ocelot/felix.c
-@@ -237,6 +237,10 @@ static void felix_phylink_mac_config(struct dsa_switch *ds, int port,
- 
- 	if (felix->info->pcs_init)
- 		felix->info->pcs_init(ocelot, port, link_an_mode, state);
-+
-+	if (felix->info->port_sched_speed_set)
-+		felix->info->port_sched_speed_set(ocelot, port,
-+						  state->speed);
- }
- 
- static void felix_phylink_mac_an_restart(struct dsa_switch *ds, int port)
-@@ -730,6 +734,19 @@ static void felix_port_policer_del(struct dsa_switch *ds, int port)
- 	ocelot_port_policer_del(ocelot, port);
- }
- 
-+static int felix_port_setup_tc(struct dsa_switch *ds, int port,
-+			       enum tc_setup_type type,
-+			       void *type_data)
-+{
-+	struct ocelot *ocelot = ds->priv;
-+	struct felix *felix = ocelot_to_felix(ocelot);
-+
-+	if (felix->info->port_setup_tc)
-+		return felix->info->port_setup_tc(ds, port, type, type_data);
-+	else
-+		return -EOPNOTSUPP;
-+}
-+
- static const struct dsa_switch_ops felix_switch_ops = {
- 	.get_tag_protocol	= felix_get_tag_protocol,
- 	.setup			= felix_setup,
-@@ -768,6 +785,7 @@ static const struct dsa_switch_ops felix_switch_ops = {
- 	.cls_flower_add		= felix_cls_flower_add,
- 	.cls_flower_del		= felix_cls_flower_del,
- 	.cls_flower_stats	= felix_cls_flower_stats,
-+	.port_setup_tc          = felix_port_setup_tc,
- };
- 
- static struct felix_info *felix_instance_tbl[] = {
-@@ -856,6 +874,7 @@ static int felix_pci_probe(struct pci_dev *pdev,
- 
- 	ds->dev = &pdev->dev;
- 	ds->num_ports = felix->info->num_ports;
-+	ds->num_tx_queues = felix->info->num_tx_queues;
- 	ds->ops = &felix_switch_ops;
- 	ds->priv = ocelot;
- 	felix->ds = ds;
-diff --git a/drivers/net/dsa/ocelot/felix.h b/drivers/net/dsa/ocelot/felix.h
-index b94386fa8d63..352f7b940af7 100644
---- a/drivers/net/dsa/ocelot/felix.h
-+++ b/drivers/net/dsa/ocelot/felix.h
-@@ -20,6 +20,7 @@ struct felix_info {
- 	const struct ocelot_stat_layout	*stats_layout;
- 	unsigned int			num_stats;
- 	int				num_ports;
-+	int                             num_tx_queues;
- 	struct vcap_field		*vcap_is2_keys;
- 	struct vcap_field		*vcap_is2_actions;
- 	const struct vcap_props		*vcap;
-@@ -35,6 +36,10 @@ struct felix_info {
- 				  struct phylink_link_state *state);
- 	int	(*prevalidate_phy_mode)(struct ocelot *ocelot, int port,
- 					phy_interface_t phy_mode);
-+	int	(*port_setup_tc)(struct dsa_switch *ds, int port,
-+				 enum tc_setup_type type, void *type_data);
-+	void	(*port_sched_speed_set)(struct ocelot *ocelot, int port,
-+					u32 speed);
- };
- 
- extern struct felix_info		felix_info_vsc9959;
-diff --git a/drivers/net/dsa/ocelot/felix_vsc9959.c b/drivers/net/dsa/ocelot/felix_vsc9959.c
-index 1c56568d5aca..efdcc547e0c9 100644
---- a/drivers/net/dsa/ocelot/felix_vsc9959.c
-+++ b/drivers/net/dsa/ocelot/felix_vsc9959.c
-@@ -3,9 +3,12 @@
-  * Copyright 2018-2019 NXP Semiconductors
-  */
- #include <linux/fsl/enetc_mdio.h>
-+#include <soc/mscc/ocelot_qsys.h>
- #include <soc/mscc/ocelot_vcap.h>
-+#include <soc/mscc/ocelot_ptp.h>
- #include <soc/mscc/ocelot_sys.h>
- #include <soc/mscc/ocelot.h>
-+#include <net/pkt_sched.h>
- #include <linux/iopoll.h>
- #include <linux/pci.h>
- #include "felix.h"
-@@ -27,6 +30,8 @@
- #define USXGMII_LPA_DUPLEX(lpa)		(((lpa) & GENMASK(12, 12)) >> 12)
- #define USXGMII_LPA_SPEED(lpa)		(((lpa) & GENMASK(11, 9)) >> 9)
- 
-+#define VSC9959_TAS_GCL_ENTRY_MAX	63
-+
- enum usxgmii_speed {
- 	USXGMII_SPEED_10	= 0,
- 	USXGMII_SPEED_100	= 1,
-@@ -1209,6 +1214,138 @@ static void vsc9959_mdio_bus_free(struct ocelot *ocelot)
- 	mdiobus_unregister(felix->imdio);
- }
- 
-+static void vsc9959_sched_speed_set(struct ocelot *ocelot, int port,
-+				    u32 speed)
-+{
-+	ocelot_rmw_rix(ocelot,
-+		       QSYS_TAG_CONFIG_LINK_SPEED(speed),
-+		       QSYS_TAG_CONFIG_LINK_SPEED_M,
-+		       QSYS_TAG_CONFIG, port);
-+}
-+
-+static void vsc9959_new_base_time(struct ocelot *ocelot, ktime_t base_time,
-+				  u64 cycle_time,
-+				  struct timespec64 *new_base_ts)
-+{
-+	struct timespec64 ts;
-+	ktime_t new_base_time;
-+	ktime_t current_time;
-+
-+	ocelot_ptp_gettime64(&ocelot->ptp_info, &ts);
-+	current_time = timespec64_to_ktime(ts);
-+	new_base_time = base_time;
-+
-+	if (base_time < current_time) {
-+		u64 nr_of_cycles = current_time - base_time;
-+
-+		do_div(nr_of_cycles, cycle_time);
-+		new_base_time += cycle_time * (nr_of_cycles + 1);
-+	}
-+
-+	*new_base_ts = ktime_to_timespec64(new_base_time);
-+}
-+
-+static u32 vsc9959_tas_read_cfg_status(struct ocelot *ocelot)
-+{
-+	return ocelot_read(ocelot, QSYS_TAS_PARAM_CFG_CTRL);
-+}
-+
-+static void vsc9959_tas_gcl_set(struct ocelot *ocelot, const u32 gcl_ix,
-+				struct tc_taprio_sched_entry *entry)
-+{
-+	ocelot_write(ocelot,
-+		     QSYS_GCL_CFG_REG_1_GCL_ENTRY_NUM(gcl_ix) |
-+		     QSYS_GCL_CFG_REG_1_GATE_STATE(entry->gate_mask),
-+		     QSYS_GCL_CFG_REG_1);
-+	ocelot_write(ocelot, entry->interval, QSYS_GCL_CFG_REG_2);
-+}
-+
-+static int vsc9959_qos_port_tas_set(struct ocelot *ocelot, int port,
-+				    struct tc_taprio_qopt_offload *taprio)
-+{
-+	struct timespec64 base_ts;
-+	int ret, i;
-+	u32 val;
-+
-+	if (!taprio->enable) {
-+		ocelot_rmw_rix(ocelot,
-+			       QSYS_TAG_CONFIG_INIT_GATE_STATE(0xFF),
-+			       QSYS_TAG_CONFIG_ENABLE |
-+			       QSYS_TAG_CONFIG_INIT_GATE_STATE_M,
-+			       QSYS_TAG_CONFIG, port);
-+
-+		return 0;
-+	}
-+
-+	if (taprio->cycle_time > NSEC_PER_SEC ||
-+	    taprio->cycle_time_extension >= NSEC_PER_SEC)
-+		return -EINVAL;
-+
-+	if (taprio->num_entries > VSC9959_TAS_GCL_ENTRY_MAX)
-+		return -ERANGE;
-+
-+	ocelot_rmw(ocelot, QSYS_TAS_PARAM_CFG_CTRL_PORT_NUM(port) |
-+		   QSYS_TAS_PARAM_CFG_CTRL_ALWAYS_GUARD_BAND_SCH_Q,
-+		   QSYS_TAS_PARAM_CFG_CTRL_PORT_NUM_M |
-+		   QSYS_TAS_PARAM_CFG_CTRL_ALWAYS_GUARD_BAND_SCH_Q,
-+		   QSYS_TAS_PARAM_CFG_CTRL);
-+
-+	/* Hardware errata -  Admin config could not be overwritten if
-+	 * config is pending, need reset the TAS module
-+	 */
-+	val = ocelot_read(ocelot, QSYS_PARAM_STATUS_REG_8);
-+	if (val & QSYS_PARAM_STATUS_REG_8_CONFIG_PENDING)
-+		return  -EBUSY;
-+
-+	ocelot_rmw_rix(ocelot,
-+		       QSYS_TAG_CONFIG_ENABLE |
-+		       QSYS_TAG_CONFIG_INIT_GATE_STATE(0xFF) |
-+		       QSYS_TAG_CONFIG_SCH_TRAFFIC_QUEUES(0xFF),
-+		       QSYS_TAG_CONFIG_ENABLE |
-+		       QSYS_TAG_CONFIG_INIT_GATE_STATE_M |
-+		       QSYS_TAG_CONFIG_SCH_TRAFFIC_QUEUES_M,
-+		       QSYS_TAG_CONFIG, port);
-+
-+	vsc9959_new_base_time(ocelot, taprio->base_time,
-+			      taprio->cycle_time, &base_ts);
-+	ocelot_write(ocelot, base_ts.tv_nsec, QSYS_PARAM_CFG_REG_1);
-+	ocelot_write(ocelot, lower_32_bits(base_ts.tv_sec), QSYS_PARAM_CFG_REG_2);
-+	val = upper_32_bits(base_ts.tv_sec);
-+	ocelot_write(ocelot,
-+		     QSYS_PARAM_CFG_REG_3_BASE_TIME_SEC_MSB(val) |
-+		     QSYS_PARAM_CFG_REG_3_LIST_LENGTH(taprio->num_entries),
-+		     QSYS_PARAM_CFG_REG_3);
-+	ocelot_write(ocelot, taprio->cycle_time, QSYS_PARAM_CFG_REG_4);
-+	ocelot_write(ocelot, taprio->cycle_time_extension, QSYS_PARAM_CFG_REG_5);
-+
-+	for (i = 0; i < taprio->num_entries; i++)
-+		vsc9959_tas_gcl_set(ocelot, i, &taprio->entries[i]);
-+
-+	ocelot_rmw(ocelot, QSYS_TAS_PARAM_CFG_CTRL_CONFIG_CHANGE,
-+		   QSYS_TAS_PARAM_CFG_CTRL_CONFIG_CHANGE,
-+		   QSYS_TAS_PARAM_CFG_CTRL);
-+
-+	ret = readx_poll_timeout(vsc9959_tas_read_cfg_status, ocelot, val,
-+				 !(val & QSYS_TAS_PARAM_CFG_CTRL_CONFIG_CHANGE),
-+				 10, 100000);
-+
-+	return ret;
-+}
-+
-+static int vsc9959_port_setup_tc(struct dsa_switch *ds, int port,
-+				 enum tc_setup_type type,
-+				 void *type_data)
-+{
-+	struct ocelot *ocelot = ds->priv;
-+
-+	switch (type) {
-+	case TC_SETUP_QDISC_TAPRIO:
-+		return vsc9959_qos_port_tas_set(ocelot, port, type_data);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
- struct felix_info felix_info_vsc9959 = {
- 	.target_io_res		= vsc9959_target_io_res,
- 	.port_io_res		= vsc9959_port_io_res,
-@@ -1224,6 +1361,7 @@ struct felix_info felix_info_vsc9959 = {
- 	.shared_queue_sz	= 128 * 1024,
- 	.num_mact_rows		= 2048,
- 	.num_ports		= 6,
-+	.num_tx_queues		= FELIX_NUM_TC,
- 	.switch_pci_bar		= 4,
- 	.imdio_pci_bar		= 0,
- 	.mdio_bus_alloc		= vsc9959_mdio_bus_alloc,
-@@ -1232,4 +1370,6 @@ struct felix_info felix_info_vsc9959 = {
- 	.pcs_an_restart		= vsc9959_pcs_an_restart,
- 	.pcs_link_state		= vsc9959_pcs_link_state,
- 	.prevalidate_phy_mode	= vsc9959_prevalidate_phy_mode,
-+	.port_setup_tc          = vsc9959_port_setup_tc,
-+	.port_sched_speed_set   = vsc9959_sched_speed_set,
- };
+I looked at 'top', 'trace', and 'kvm'. kvm doesn't really have this
+issue because
+the poll() has a 100ms timeout. Even though it's technically affected,
+the timeout
+will make it unnoticeable (just delaying the exit for 100ms). top is
+in the same boat
+(uses a timeout).
+
+trace is the affected one because it has the following code:
+int timeout = done ? 100 : -1;
+if (!draining && evlist__poll(evlist, timeout) > 0) {
+
+Different logic, but still a gap and an indefinite timeout.
+
+>
+> - Arnaldo
+>
+> > thanks,
+> > jirka
+> >
+> > > +
+> > >     atexit(record__sig_exit);
+> > >     signal(SIGCHLD, sig_handler);
+> > >     signal(SIGINT, sig_handler);
+> > > --
+> > > 2.26.2.645.ge9eca65c58-goog
+> > >
+> >
+>
+> --
+>
+> - Arnaldo
+
+
+
 -- 
-2.17.1
-
+Anand K. Mistry
+Software Engineer
+Google Australia
