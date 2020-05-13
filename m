@@ -2,170 +2,156 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 199D9CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B38C47076
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72E362054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B19A2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:57:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KoxZeyCl"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="ezglxHUK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388720AbgEMNzf (ORCPT
+        id S2388730AbgEMN51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:55:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59490 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387791AbgEMNze (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:55:34 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A90EC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:55:34 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id v12so20967098wrp.12
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 06:55:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=ro4/47F9waKSpnFpewvvgqwDEwks4O/QZAQ3zybYolI=;
-        b=KoxZeyCl0MquxjpBtpVPCTxmRlo9/qkdZ5yoimjY8dggBtI9I0SUZj0OFgcpitMV+x
-         q6FCjH+17XtfVp9SPd0YMNjqDoh4Weqw6JhNLGpbrTih9W4IO88V+WvWtMnn61DdPOHl
-         mQw1MtCg1gWqgHeyScdizUWh19/QoUnNuzYbPNZtcSOUdlHQFOp+fqbN2gddKIsIPCdT
-         1HajbY7BKPqdb4AVSwaW1r8nnPi8cqr3mWUxw+GlPP2NWyMgRgxz4fYHU5wDFTwtxckQ
-         tMZq4WS4hv39M8WObHBAUknpNoDplqgAJyz1IvYSZNxvewhFLALuMhS+VVk/81xuLs59
-         TKZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ro4/47F9waKSpnFpewvvgqwDEwks4O/QZAQ3zybYolI=;
-        b=FIDmlF7O8oqHhx5VNp3CMiIQT1chPKpkD0eBK/TGMBkZHjQU9udCd+aZV+C68N5B07
-         WFvJGAv5rolFNkE/IEN43iNi4YJVYEoVOiYl41uR43pzkE4eytyH/tNu2Mf5xlMmLmvZ
-         JlF/j0Fe2KrGX53MbdO0Gd5gO1GB0gV5XWSEE9sxUpHm06kVY6SfKIUsoK44bv1JwpTY
-         FcnV5f1NXt5nOyjhh1Nzl7KYpf7JXlalyqONjTLEsMpzMh9wqk27p7YMsxtowQhoFJAA
-         y4k8/meWIJNt19gfeRA+s0oIjJmLVOirLQTUxGJirK4OIumXju+g+nW8yh3QHAARuGpT
-         BhoQ==
-X-Gm-Message-State: AGi0PuZ/b6hlCzaq8BRdVcd6Snm4TOxUt5jRT3jKh6InI2J/jFVcsHT8
-        WSdIE+BZYdzJAd85LuuucxWIUA==
-X-Google-Smtp-Source: APiQypKOzHGD3/QzZbuX9NOKKZvOQa5sJE/yTtR3abF6UhLgskodLDJRBKv+W34QhnOVj16eJcOptQ==
-X-Received: by 2002:adf:afe9:: with SMTP id y41mr13843907wrd.56.1589378133265;
-        Wed, 13 May 2020 06:55:33 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e0a:f:6020:e00f:4685:acf1:ea5e])
-        by smtp.gmail.com with ESMTPSA id z1sm36031220wmf.15.2020.05.13.06.55.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 06:55:32 -0700 (PDT)
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org
-Cc:     pauld@redhat.com, ouwen210@hotmail.com, pkondeti@codeaurora.org,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH v3] sched/fair: fix unthrottle_cfs_rq for leaf_cfs_rq list
-Date:   Wed, 13 May 2020 15:55:28 +0200
-Message-Id: <20200513135528.4742-1-vincent.guittot@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 13 May 2020 09:57:27 -0400
+Received: from mail-bn8nam12on2082.outbound.protection.outlook.com ([40.107.237.82]:6221
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727792AbgEMN50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 09:57:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VZU5kr2e4ucWfn9Gyo+9dZqyVxErtNfv/kqZVPdjeR+EcMGJvAmTMBhkDH/guvXjjaGF0JykDAXmAr1w5s99Co/JloAnoU2TO0PdrJwiblkeF8VdbZW0m2JL3bkPAuoIAwriZpQRUSRoy43QUrZ+9fscE1rIBrSTIO4/tOgGj5Checjxrrvc9uUmfqR2+wxyTq7z2UoN7ETamrvhA3EMEiHVlEjMwKj5Z0shGRCVWRSH8E+SSexX+WFPT99A9ArfKEXT8/jVGMHjfvGoqat/pEHNnZdA3v+sKtF0J8J1jM59pmg/m0/M5KfkDiAugUHgKaWqJt/YEPqGlDsnrgLigw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=z/CissEnr03/jFIrciKL+3QUEybGszDHRakSyGze/Mk=;
+ b=hG/FIHfew1ZNCNF9L7l2HEWXXZtsJnCOjYYs+J0gugoqQOUrOdMJP0NLO0tvcfWciar6UqF0Dj3VW8j5p4dBUqdCrRpGrCfoTSO0HD4K038QM3GwFNmf4rtpYWEPspt95Ey9z4MKZfxQbAtwrvwIOhqFIbr4zaPlZITYxUCJ4IG8aEjdml68xE+BFnk4kFjv3w4+FDSSp1Uw29Um2+ztBxCOYfpb00UsW4WOZ8pD5uiO8XyC9tFA1UZdYi7Ep8wjdHoFHJOP1uyxfC9DrvU2Gp3Ym/H73pXc83KhYNqpcACgyJRA3K/pE5UPRYcBX7BfQTZAkWRyH2eUdX1Cy/dTIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=z/CissEnr03/jFIrciKL+3QUEybGszDHRakSyGze/Mk=;
+ b=ezglxHUKNiabv5gtPqAS5GBwc0Pjm6d8tQnGwxqsYPvVZhfYUhuWwrs2GKF8KKW8Yte4aKN/dEqPjTSV1/vF5KD5La15FdxkL8TzfBZ1CFXWCSeVXG+xQOLX1phdga6ulCaq4XVXXThdAY2skgAQhoR5JlCUaGt4eb06/mEAl+Q=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=sifive.com;
+Received: from BYAPR13MB2614.namprd13.prod.outlook.com (2603:10b6:a03:b4::12)
+ by BYAPR13MB2279.namprd13.prod.outlook.com (2603:10b6:a02:bd::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.6; Wed, 13 May
+ 2020 13:57:21 +0000
+Received: from BYAPR13MB2614.namprd13.prod.outlook.com
+ ([fe80::c0fc:30a3:5e5f:c2b6]) by BYAPR13MB2614.namprd13.prod.outlook.com
+ ([fe80::c0fc:30a3:5e5f:c2b6%7]) with mapi id 15.20.3000.013; Wed, 13 May 2020
+ 13:57:21 +0000
+From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+To:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org
+Cc:     palmer@dabbelt.com, paul.walmsley@sifive.com, atish.patra@wdc.com,
+        Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Subject: [PATCH v1 0/3] fix macb phy probe failure if phy-reset is not handled
+Date:   Wed, 13 May 2020 06:56:58 -0700
+Message-Id: <1589378222-15238-1-git-send-email-sagar.kadam@sifive.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: BY5PR16CA0005.namprd16.prod.outlook.com
+ (2603:10b6:a03:1a0::18) To BYAPR13MB2614.namprd13.prod.outlook.com
+ (2603:10b6:a03:b4::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from gamma07.internal.sifive.com (64.62.193.194) by BY5PR16CA0005.namprd16.prod.outlook.com (2603:10b6:a03:1a0::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3000.20 via Frontend Transport; Wed, 13 May 2020 13:57:21 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [64.62.193.194]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 291f2f1e-14db-4bfc-0640-08d7f7458e9b
+X-MS-TrafficTypeDiagnostic: BYAPR13MB2279:
+X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR13MB2279CF6379D1536DBD8B5D7C99BF0@BYAPR13MB2279.namprd13.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-Forefront-PRVS: 0402872DA1
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR13MB2614.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(346002)(376002)(136003)(396003)(39830400003)(33430700001)(2906002)(8676002)(956004)(6486002)(316002)(7696005)(8936002)(86362001)(36756003)(26005)(107886003)(66946007)(66476007)(2616005)(6666004)(52116002)(16526019)(66556008)(33440700001)(966005)(478600001)(5660300002)(186003)(4326008);DIR:OUT;SFP:1101;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: N5mu5YLoMctltfIK2SnVkQ6ElKpqdMvD50DBH+8Kl3yphisBBL2+mrO2A1byK4P9B6v6LYl5dfAKB1Y71dc1Dg/cqb5eZFJnVZXrBMwO89Raq5/p+Ivf6CpytMOIoA9Vb/tRhKHQ3fqrrRNQUClkmfWohhmBN9iMJoiBrP277F9IiPHvhF+6Ul1dpsDhioT7Pd4x+OSSsGvNXKwtZikRGxqwubsWist4uwYu43jjS+V1z5TAMtjPP2fpOIZIKeEjJVxQ2u97IewV8VjvvVL8F/4apEUP3fU00h3YGl+gQtKEjVTrHZvLAB+u+PSQML+8uCWLbQiGYCGzbLhWjy7AQQPJXyc8R3KtF6+ZO1f+m7SafbmHoYoONT1FzDn5msvLN0u0/YQaIEvOzCWlKB4DZqneKUfD42AurwwTp2ZsMApLEasmuFHf4NWBC6giZoHZnk+zutF9bneBDcUCCfGhSUUFEBMDVFYvB4FbyF/beDpeOyssRXBPTCC0ZpMi8wyMDvtLfUKiWhhQu9/1uyGYQk/U/LYplJn8ItHh4Dao4uHyvJSnvcng5d2rDp2gWATIx7wwlAwCF/W4h69B+d4N1bwQEBGfozW2ufMww+TPpSk=
+X-MS-Exchange-AntiSpam-MessageData: NwvgaxkkE+vM1IZhTPVMFQTWFLLOfCd6hM6YsAymydyqHHn/nA9pFwQXPa4v97PB4LsMovmZrdLaIgj8Nh0XDClPgdukIrhOVN8cZf1frn+z/DVy1G3l/2NPTj2vcD+fsirjqETitOYD1BP0+WfVMYkOZgYiiRPkxl86YwAGN0L78kiRICZR5m5sxMXeesW8Ebh7X6idPggzpw6yRNyj5zxJFyZM1GlcuGGcKGWu+wfnJVxCnN/Bt14Wn19HXuP6x3gV4QfzK5IjFFtKZGnUwhujp0zrqNsGEpD2lJq1hyQV4BjGxpJGOBBWRwdYTZYVPTiVbAi1Z9x3Hhdagg+6N+ntvzi0UBqRlxgpP5Rwdv8R/QpioFbNaei4fjh1GO8krOIjwG+mjlAYiYKhzJLtEImYvjjDiO5tlslKZexemWVIL+xqobHQzjnX/ZV/IcPZx4G5AKAh7aHQXqGlhppMyiLw8xCDD/nftwxad29v+Vw=
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 291f2f1e-14db-4bfc-0640-08d7f7458e9b
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2020 13:57:21.6161
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 09m65hpxR63ujFVJdMUBLQyTyLgzGi3wPUBerTn4VnrOT/Odk9k3syMV9E64dKcQbXMGSysdYlSSdDttRFtygA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR13MB2279
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Although not exactly identical, unthrottle_cfs_rq() and enqueue_task_fair()
-are quite close and follow the same sequence for enqueuing an entity in the
-cfs hierarchy. Modify unthrottle_cfs_rq() to use the same pattern as
-enqueue_task_fair(). This fixes a problem already faced with the latter and
-add an optimization in the last for_each_sched_entity loop.
+HiFive Unleashed is having VSC8541-01 ethernet phy device and requires a
+specific reset sequence of 0-1-0-1 in order to use it in unmanaged mode.
+This series addresses a corner case where phy reset is not handled by boot
+stages prior to linux.
+Somewhat similar unreliable phy probe failure was reported and discussed
+here [1].
+The macb driver fails to detect the ethernet phy device if the bootloader
+doesn't provide a proper reset sequence to the phy device or the phy itself
+is in some invalid state. Currently, the FSBL is resetting the phy device,
+and so there is no issue observed in the linux network setup.
 
-Reported-by Tao Zhou <zohooouoto@zoho.com.cn>
-Reviewed-by: Phil Auld <pauld@redhat.com>
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
----
+The series is based on linux-5.7-rc5.
+Patch 1: Add the OUI to the phy dt node to fix issue of missing mdio device
+Patch 2 and 3:
+	Resetting phy needs GPIO support so add to dt and defconfig.
 
-v3 changes:
-  - remove the unused enqueue variable
+[1] https://lkml.org/lkml/2018/11/29/154
 
- kernel/sched/fair.c | 42 ++++++++++++++++++++++++++++++------------
- 1 file changed, 30 insertions(+), 12 deletions(-)
+To reproduce the issue: 
+1. Comment out VSC8541 reset sequence in fsbl/main.c
+   from within the freedom-u540-c000-bootloader.
+2. Build and flash fsbl.bin to micro sdcard.
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 4e12ba882663..9a58874ef104 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4792,7 +4792,6 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
- 	struct rq *rq = rq_of(cfs_rq);
- 	struct cfs_bandwidth *cfs_b = tg_cfs_bandwidth(cfs_rq->tg);
- 	struct sched_entity *se;
--	int enqueue = 1;
- 	long task_delta, idle_task_delta;
- 
- 	se = cfs_rq->tg->se[cpu_of(rq)];
-@@ -4816,26 +4815,44 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
- 	idle_task_delta = cfs_rq->idle_h_nr_running;
- 	for_each_sched_entity(se) {
- 		if (se->on_rq)
--			enqueue = 0;
-+			break;
-+		cfs_rq = cfs_rq_of(se);
-+		enqueue_entity(cfs_rq, se, ENQUEUE_WAKEUP);
- 
-+		cfs_rq->h_nr_running += task_delta;
-+		cfs_rq->idle_h_nr_running += idle_task_delta;
-+
-+		/* end evaluation on encountering a throttled cfs_rq */
-+		if (cfs_rq_throttled(cfs_rq))
-+			goto unthrottle_throttle;
-+	}
-+
-+	for_each_sched_entity(se) {
- 		cfs_rq = cfs_rq_of(se);
--		if (enqueue) {
--			enqueue_entity(cfs_rq, se, ENQUEUE_WAKEUP);
--		} else {
--			update_load_avg(cfs_rq, se, 0);
--			se_update_runnable(se);
--		}
-+
-+		update_load_avg(cfs_rq, se, UPDATE_TG);
-+		se_update_runnable(se);
- 
- 		cfs_rq->h_nr_running += task_delta;
- 		cfs_rq->idle_h_nr_running += idle_task_delta;
- 
-+
-+		/* end evaluation on encountering a throttled cfs_rq */
- 		if (cfs_rq_throttled(cfs_rq))
--			break;
-+			goto unthrottle_throttle;
-+
-+		/*
-+		 * One parent has been throttled and cfs_rq removed from the
-+		 * list. Add it back to not break the leaf list.
-+		 */
-+		if (throttled_hierarchy(cfs_rq))
-+			list_add_leaf_cfs_rq(cfs_rq);
- 	}
- 
--	if (!se)
--		add_nr_running(rq, task_delta);
-+	/* At this point se is NULL and we are at root level*/
-+	add_nr_running(rq, task_delta);
- 
-+unthrottle_throttle:
- 	/*
- 	 * The cfs_rq_throttled() breaks in the above iteration can result in
- 	 * incomplete leaf list maintenance, resulting in triggering the
-@@ -4844,7 +4861,8 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
- 	for_each_sched_entity(se) {
- 		cfs_rq = cfs_rq_of(se);
- 
--		list_add_leaf_cfs_rq(cfs_rq);
-+		if (list_add_leaf_cfs_rq(cfs_rq))
-+			break;
- 	}
- 
- 	assert_list_leaf_cfs_rq(rq);
+Boot the board and bootlog will show network setup failure messages as:
+
+[  1.069474] libphy: MACB_mii_bus: probed
+[  1.073092] mdio_bus 10090000.ethernet-ffffffff: MDIO device at address 0
+	       is missing 
+.....
+[  1.979252] macb 10090000.ethernet eth0: Could not attach PHY (-19)
+
+3. Now apply the series build, and boot kernel.
+4. MACB and VSC8541 driver get successfully probed and the network is set
+   without any failure.
+
+
+So irrespective of whether the prior stages handle the phy reset sequence,
+the probing is successful in both the cases of cold boot and warm boot.
+
+Change History:
+===============================
+V1:
+-Ignore 4th patch as suggested and so removed it from the series.
+-Verified this series on 5.7-rc5.
+
+V0: Base RFC patch. Verified on 5.7-rc2
+
+
+Sagar Shrikant Kadam (3):
+  dts: phy: fix missing mdio device and probe failure of vsc8541-01
+    device
+  dts: phy: add GPIO number and active state used for phy reset
+  riscv: defconfig: enable gpio support for HiFive Unleashed
+
+ arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts | 2 ++
+ arch/riscv/configs/defconfig                        | 2 ++
+ 2 files changed, 4 insertions(+)
+
 -- 
-2.17.1
+2.7.4
 
