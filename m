@@ -2,94 +2,136 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8396ACA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BEBC2D0FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 610DC20753
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98B4C2078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:21:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589368880;
+	bh=1rM3FpjaWvSlq2GT/NFR1D7yxdKbGJ971Atj6aZc2yo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qxvIEkWqQIOwQ4PfV7f96NT/vgQD9BX667KJJfm8A36eoBhF23xjOVeDBNyybNLPV
+	 ESAyla7lqyuMYu+3cxfFFvVHA1M/oH61Nbk+6ZO+GEo4/YutKILjh5iPXQVAFjCxHn
+	 1lYPdmbRvXTosxgaRRT/ruaEv3uZOiDiTwux3G9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732776AbgEMLUd (ORCPT
+        id S1732820AbgEMLVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 07:20:33 -0400
-Received: from smtp-190a.mail.infomaniak.ch ([185.125.25.10]:53887 "EHLO
-        smtp-190a.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732597AbgEMLUb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 07:20:31 -0400
-Received: from smtp-2-0000.mail.infomaniak.ch (unknown [10.5.36.107])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49MXK92FmnzlhR7q;
-        Wed, 13 May 2020 13:20:29 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 49MXK754Mvzlh9Q7;
-        Wed, 13 May 2020 13:20:27 +0200 (CEST)
-Subject: Re: [PATCH v5 5/6] doc: Add documentation for the
- fs.open_mayexec_enforce sysctl
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20200505153156.925111-1-mic@digikod.net>
- <20200505153156.925111-6-mic@digikod.net> <202005121459.158C3AE75@keescook>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <cb487ed9-30a3-635a-04a8-e9038bde87d4@digikod.net>
-Date:   Wed, 13 May 2020 13:20:27 +0200
-User-Agent: 
+        Wed, 13 May 2020 07:21:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52160 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732496AbgEMLVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 07:21:19 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3573320753;
+        Wed, 13 May 2020 11:21:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589368878;
+        bh=1rM3FpjaWvSlq2GT/NFR1D7yxdKbGJ971Atj6aZc2yo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VuhH0snCqTgyXK73vkjq4nWdUwTe8fMeut0GdsMCMiahxuPGfwDpOkR1/TB51yCiK
+         8qdbnMgMXleLVbKQosV+7fUXktbSL0TO/GUAbUlI237/y/oyXuQBo4bRuw4V1oLZC8
+         tkIqmZ2H1HwD0Cc2sMqkDuCh+TzFs6eWPt/hoPy8=
+Date:   Wed, 13 May 2020 12:21:16 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/17] spi: dw: Add generic DW DMA controller support
+Message-ID: <20200513112116.GE4803@sirena.org.uk>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508133336.GK4820@sirena.org.uk>
+ <20200512200733.bdbbhkjkwjd5yzqq@mobilestation>
+ <20200513102324.GB4803@sirena.org.uk>
+ <20200513110407.uaosfxebsgnllsf4@mobilestation>
 MIME-Version: 1.0
-In-Reply-To: <202005121459.158C3AE75@keescook>
-Content-Type: text/plain; charset=iso-8859-15
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qFgkTsE6LiHkLPZw"
+Content-Disposition: inline
+In-Reply-To: <20200513110407.uaosfxebsgnllsf4@mobilestation>
+X-Cookie: Long life is in store for you.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 13/05/2020 00:00, Kees Cook wrote:
-> On Tue, May 05, 2020 at 05:31:55PM +0200, Mickaël Salaün wrote:
->> This sysctl enables to propagate executable permission to userspace
->> thanks to the O_MAYEXEC flag.
->>
->> Signed-off-by: Mickaël Salaün <mic@digikod.net>
->> Reviewed-by: Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>
->> Cc: Aleksa Sarai <cyphar@cyphar.com>
->> Cc: Al Viro <viro@zeniv.linux.org.uk>
->> Cc: Jonathan Corbet <corbet@lwn.net>
->> Cc: Kees Cook <keescook@chromium.org>
-> 
-> I think this should be folded into the patch that adds the sysctl.
+--qFgkTsE6LiHkLPZw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-OK, I guess it is fine for the documentation maintainers too?
+On Wed, May 13, 2020 at 02:04:07PM +0300, Serge Semin wrote:
+> On Wed, May 13, 2020 at 11:23:24AM +0100, Mark Brown wrote:
+
+> > The conversion to YAML format should be the very last thing in the patch
+> > series,
+
+> Hm, haven't heard about this requirement. Could you point me out to a doc or
+> some discussion concerning this for future reference? It's not a first DT
+> conversion patch I've submitted and non of them were addressed with such
+> request. I do understand that the order of DT concerning patches can be
+> important and agree to fix it by updating the original legacy binding first,
+> then perform a conversion. But placing the conversion in a tail of the series
+> just seems unnecessary. The patch can be dropped from any place of the series
+> if for some reason Rob would be late with review.
+
+This is a practical observation based on the fact that there is a huge
+backlog of reviews of DT binding conversions and that those conversions
+typically go through several review cycles and that not everyone who's
+sending patches to the kernel is fully up to speed on processes or has
+strong English.  By telling people (including other people who find
+instructions on the list) to put the conversion right at the end of the
+series I am avoiding any ambiguity or confusion about ordering with
+regard to any other patches to the DT, including any new patches that
+get added to the series.
+
+> Personally I prefer placing all DT changes in the head of the series, so Rob
+> wouldn't need to search through the whole patchset looking for the DT-related
+> patches.
+
+Ideally the YAML conversions would be done entirely separately to other
+development rather than as part of a bigger series, they're pretty much
+orthogonal anyway.  Sadly there's obvious content collisions with any
+new development that adds DT stuff so that's not always the most
+practical thing.
+
+--qFgkTsE6LiHkLPZw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl672CsACgkQJNaLcl1U
+h9CvIgf8CclGE4F4cQcTkCuqaYdGr9ohJ2hjT7jc11cc7QMWD/qMRJp3MiooztOw
+uZbiDEGdSvfLq8OyAIQzKsbwaSp7JB9Fex40Xxw4YQwI0aKS3eGDoAjpbQ9pNaBX
+Lu2P43EHmVbsGqRB+FQ1eyRWK9mHCSMBRD4Vi+4eKgmajrP49rhKKgVEQLEv0TDB
+CUGxIaXw/hzzpcSMnibBRzU+0x7rXzxR/twRQyuRSGWtdWwdXs7StavwUtg/1Vzz
+8PzW69SHXfq51QITjsEsRQBiUwm9e5t1QOfxL6HPbjYPjzPnDNxRWcvJu+m3KITV
+7qkM0+jJ+R/al+sS+pG2410lS7ISTA==
+=n6l5
+-----END PGP SIGNATURE-----
+
+--qFgkTsE6LiHkLPZw--
