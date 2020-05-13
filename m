@@ -2,150 +2,114 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3B6C2D0FB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC9DC2D0F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE595206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3559D207BC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:33:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="zro3iuWt"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="a3x2n47K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728554AbgEMCcu (ORCPT
+        id S1728634AbgEMCdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 22:32:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37898 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbgEMCct (ORCPT
+        Tue, 12 May 2020 22:33:16 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:43488 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbgEMCdQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 22:32:49 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E19EC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 19:32:49 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id p127so666141oia.13
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 19:32:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=w05U4Ty4fjXvusSYkJgWcKh14hiK/1j5qmU3u7mm4Gk=;
-        b=zro3iuWtE97dmQ2yHOnvFSySz6cnEaOXpjCj7UrvI6HN1BoVBQATbBys+y8DGiKzn8
-         4e6gLMlpVYQR4pf6Sd/w32BfJdggxxqXNsZhm02yjJkagHlLAHfiKdHcve3uHOH6m4f1
-         QJB7XnkShMgbga+ToPaDQ7SoC0ox+6cG4W8sXyO4YkgFLoyu2SLqtgwOwoGjJc0SNBvx
-         m0fyuQ265Gx9qXMmG/6jCzVx6SjOJvkL2vpE0aZWoJ1fUl0NV3i53l9+SjWzeWiwOfvz
-         ahm888waBPeeJ5ZLoVKa6U7TJFqjxlUKCgdF2YMnqpAg3dBmWVdgKm6CIfZ6HweoHeQZ
-         pyTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=w05U4Ty4fjXvusSYkJgWcKh14hiK/1j5qmU3u7mm4Gk=;
-        b=hEqIdeF9zddXodoDEtB2FjYEW67fEhf/BkXbjter0TmtQPAnrJVyU2wc9h4J6AIeo+
-         Gnz6oJPyajANBxF5sx22J7q+MbebItUxkjbDnnz3d8rXpamGdPH7cNiW4XiUXVNVSsjX
-         nm2trciUdVkHoO2aHt6mkNYKj6Ctid67FSd+a3OCY3Vgwa3pgNmIaaBMA2/Ii4MeX5xa
-         S2SJh7ryRR3RtOpahtORZcPp37aJiEZYYs2yTs/tlnKyXnwJ0dzukMsvtZyKSWn63Cni
-         fXD4OV52gkO9HSPFXr9xtTRhWAaPspji5y0ZAlFCYt2SFrTQN2T5DRo+5sh8yE7BX3IB
-         SeBg==
-X-Gm-Message-State: AGi0PuZ5ivEBX3sXU3SSM3q8dgC1rdoSDcsNQ279U71U921VQ0QihmKv
-        WODr/Qnz7exfHuGcnOJc9kNimw==
-X-Google-Smtp-Source: APiQypKejIA0kmvj/Qz9PYOoadZzdtDminPHwnrVp5To0Q93DoZzo/+2d+BBBnoTnejQtKo4vIlOMw==
-X-Received: by 2002:aca:1007:: with SMTP id 7mr26354929oiq.139.1589337168640;
-        Tue, 12 May 2020 19:32:48 -0700 (PDT)
-Received: from [192.168.86.21] ([136.62.4.88])
-        by smtp.gmail.com with ESMTPSA id m189sm5841682oig.12.2020.05.12.19.32.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 May 2020 19:32:47 -0700 (PDT)
-Subject: Re: [PATCH 3/5] exec: Remove recursion from search_binary_handler
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
- <87sgga6ze4.fsf@x220.int.ebiederm.org>
- <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
- <87eerszyim.fsf_-_@x220.int.ebiederm.org>
- <ee83587b-8a1c-3c4f-cc0f-7bc98afabae1@I-love.SAKURA.ne.jp>
- <CAHk-=wgQ2ovXMW=5ZHCpowkE1PwPQSL7oV4YXzBxd6eqNRXxnQ@mail.gmail.com>
- <87sgg6v8we.fsf@x220.int.ebiederm.org> <202005111428.B094E3B76A@keescook>
- <874kslq9jm.fsf@x220.int.ebiederm.org>
- <CAHk-=wjhmoGLcMgcDB0rT-n6waC+rdnjU3FRKAwSTMSG=gaK9Q@mail.gmail.com>
-From:   Rob Landley <rob@landley.net>
-Message-ID: <6f282d0a-b448-14e9-cd4f-92cce99cc36f@landley.net>
-Date:   Tue, 12 May 2020 21:39:29 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Tue, 12 May 2020 22:33:16 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04D2X6cD020439;
+        Tue, 12 May 2020 21:33:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589337186;
+        bh=yTteBEh6Xwn4I3BnvI6/DQ8ygYomYcOGArsSXBO0R/M=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=a3x2n47K9GBaLLhitS5heuPagTcYKacY4q19cXTJ5s9Ud49C9v30kOX1chVBQwCkd
+         d35wSH+IYw4EPw4LFQM8mJNbFUYmFAFrkSSwty/t/I6IhgGWjazhGWWFWijX1EhNKp
+         SdmmHj+oyMjKs9gddleUaZW+I/JQyl24uNN1+1Es=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04D2X6pQ012778
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 May 2020 21:33:06 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 12
+ May 2020 21:33:05 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 12 May 2020 21:33:05 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04D2X3tF053605;
+        Tue, 12 May 2020 21:33:04 -0500
+Subject: Re: [RESEND PATCH v2 1/3] dt-bindings: phy: Drop reset-gpios from
+ marvell,mmp3-hsic-phy
+To:     Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200509081754.474787-1-lkundrak@v3.sk>
+ <20200509081754.474787-2-lkundrak@v3.sk>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <3fbe923d-6b38-bec5-c623-7640c6affbae@ti.com>
+Date:   Wed, 13 May 2020 08:03:03 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wjhmoGLcMgcDB0rT-n6waC+rdnjU3FRKAwSTMSG=gaK9Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200509081754.474787-2-lkundrak@v3.sk>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
++Rob
 
-
-On 5/12/20 7:20 PM, Linus Torvalds wrote:
-> On Tue, May 12, 2020 at 11:46 AM Eric W. Biederman
-> <ebiederm@xmission.com> wrote:
->>
->> I am still thinking about this one, but here is where I am at.  At a
->> practical level passing the file descriptor of the script to interpreter
->> seems like something we should encourage in the long term.  It removes
->> races and it is cheaper because then the interpreter does not have to
->> turn around and open the script itself.
+On 5/9/2020 1:47 PM, Lubomir Rintel wrote:
+> This has been added in error -- the PHY block doesn't have a reset pin.
 > 
-> Yeah, I think we should continue to support it, because I think it's
-> the right thing to do (and we might just end up having compatibility
-> issues if we don't).
-...
->> It is possible although unlikely for userspace to find the file
->> descriptor without consulting AT_EXECFD so just to be conservative I
->> think we should install the file descriptor in begin_new_exec even if
->> the next interpreter does not support AT_EXECFD.
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  .../devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml     | 7 -------
+>  1 file changed, 7 deletions(-)
 > 
-> Ack. I think the AT_EXECFD thing is a sign that this isn't internal to
-> binfmt_misc, but it also shouldn't be gating this issue. In reality,
-> ELF is the only real binary format that matters - the script/misc
-> binfmts are just indirection entries - and it supports AT_EXECFD, so
-> let's just ignore the theoretical case of "maybe nobody exposes it".
-
-Would this potentially make the re-exec-yourself case easier to do at some
-point? (Which nommu needs to do, and /proc/self/exe isn't always available.)
-
-Here's the first time I asked about that:
-
-https://lore.kernel.org/lkml/200612261823.07927.rob@landley.net/
-
-Here's the most recent:
-
-https://lkml.org/lkml/2017/9/5/246
-
-Here's someone else asking and being basically told "chroot isn't a thing":
-
-http://lkml.iu.edu/hypermail/linux/kernel/0906.3/00584.html
-
-(See also "CVE-2019-5736" and the workarounds thereto.)
-
-Rob
-
-P.S. Yes I'm aware it would only work properly with static binaries. Not the
-first thing that's true for.
+> diff --git a/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml b/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml
+> index 00609ace677c..30e290c57930 100644
+> --- a/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml
+> +++ b/Documentation/devicetree/bindings/phy/marvell,mmp3-hsic-phy.yaml
+> @@ -18,27 +18,20 @@ properties:
+>      maxItems: 1
+>      description: base address of the device
+>  
+> -  reset-gpios:
+> -    maxItems: 1
+> -    description: GPIO connected to reset
+> -
+>    "#phy-cells":
+>      const: 0
+>  
+>  required:
+>    - compatible
+>    - reg
+> -  - reset-gpios
+>    - "#phy-cells"
+>  
+>  additionalProperties: false
+>  
+>  examples:
+>    - |
+> -    #include <dt-bindings/gpio/gpio.h>
+>      hsic-phy@f0001800 {
+>              compatible = "marvell,mmp3-hsic-phy";
+>              reg = <0xf0001800 0x40>;
+> -            reset-gpios = <&gpio 63 GPIO_ACTIVE_HIGH>;
+>              #phy-cells = <0>;
+>      };
+> 
