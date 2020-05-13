@@ -6,44 +6,44 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0C9CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E625ACA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0202A206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C223120753
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 11:34:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZAYVD7ve"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bl+Zmt3Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731240AbgEMLdy (ORCPT
+        id S1731282AbgEMLec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 07:33:54 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47180 "EHLO
+        Wed, 13 May 2020 07:34:32 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20620 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728930AbgEMLdy (ORCPT
+        with ESMTP id S1726889AbgEMLec (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 07:33:54 -0400
+        Wed, 13 May 2020 07:34:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589369632;
+        s=mimecast20190719; t=1589369671;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=LRUoCKtlXHJ46xoUgnC/etCJOTrU/b9ynoKVd4gTyFc=;
-        b=ZAYVD7veetJacorI73OsR/IyhdgpVhYDLpU2A+OHpaiVbhAnOlFHBehSB34ioH85XkZPic
-        Oa0HAk+vvFQ82zpx2BYnbZ77yFgkxwcpKy8tGzHlSdvf4gNaR7D/IoDAUcYl9gp4pRhYpB
-        bKq+r5rnh4Sc1rCzzM0XBvY9QWdbfLg=
+        bh=HtclPAaVYkOroDgjLz8DtG3xfoOYXGN7ClRQrx80G0w=;
+        b=Bl+Zmt3ZHhkKb6QuFOfhfCh5G64q5BJKYrw6Zm+LKMmSufKyucafBdCWb16nRo3ZodOrL3
+        lr0TSoqVisRckVbSHPwQOrRZkJnIxiLrw/qrkIFQSz5Dw5S09ZqzvRw7PjiBwtYY6r7YG8
+        dDQFGm0w3jxR2UvxNlY8GEW+sfD6mro=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-508-lEQl-fVjN_2UtkpBD_nS2A-1; Wed, 13 May 2020 07:33:50 -0400
-X-MC-Unique: lEQl-fVjN_2UtkpBD_nS2A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-199-4EUCvJYrN-iyzP9rV0-X_g-1; Wed, 13 May 2020 07:34:29 -0400
+X-MC-Unique: 4EUCvJYrN-iyzP9rV0-X_g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C7480460;
-        Wed, 13 May 2020 11:33:48 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2F216100CCC9;
+        Wed, 13 May 2020 11:34:28 +0000 (UTC)
 Received: from krava (unknown [10.40.195.109])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 219BB5C1BB;
-        Wed, 13 May 2020 11:33:45 +0000 (UTC)
-Date:   Wed, 13 May 2020 13:33:45 +0200
+        by smtp.corp.redhat.com (Postfix) with SMTP id 763AF1000079;
+        Wed, 13 May 2020 11:34:25 +0000 (UTC)
+Date:   Wed, 13 May 2020 13:34:24 +0200
 From:   Jiri Olsa <jolsa@redhat.com>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Jiri Olsa <jolsa@kernel.org>,
@@ -57,90 +57,51 @@ Cc:     Jiri Olsa <jolsa@kernel.org>,
         Joe Mario <jmario@redhat.com>, Andi Kleen <ak@linux.intel.com>,
         Kajol Jain <kjain@linux.ibm.com>,
         John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH 3/4] perf stat: Add --metrics-file option
-Message-ID: <20200513113345.GI3158213@krava>
+Subject: Re: [PATCH 4/4] perf expr: Report line number with error
+Message-ID: <20200513113424.GJ3158213@krava>
 References: <20200511205307.3107775-1-jolsa@kernel.org>
- <20200511205307.3107775-4-jolsa@kernel.org>
- <CAP-5=fU5bbWWyWXDMoMvsMY4BbUsRUqgrOtGUrdiYjSsJZ+t-A@mail.gmail.com>
+ <20200511205307.3107775-5-jolsa@kernel.org>
+ <CAP-5=fVa+=4cQzw47qSGFQZfqw7Bvx85ZBTJwkHReuJbi4ZGiA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fU5bbWWyWXDMoMvsMY4BbUsRUqgrOtGUrdiYjSsJZ+t-A@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <CAP-5=fVa+=4cQzw47qSGFQZfqw7Bvx85ZBTJwkHReuJbi4ZGiA@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 12:04:55AM -0700, Ian Rogers wrote:
-
-SNIP
-
-> > +METRICS FILE
-> > +------------
-> > +The file with metrics has following syntax:
-> > +
-> > +  NAME = EXPRESSION ;
-> > +  NAME = EXPRESSION ;
-> > +  ...
-> > +
-> > +where NAME is unique identifier of the metric, which is later used in
-> > +perf stat as -M option argument (see below).
-> > +
-> > +The EXPRESSION is the metric's formula with following grammar:
-> > +
-> > +  EXPR: EVENT
-> > +  EXPR: EXPR if EXPR else EXPR
+On Wed, May 13, 2020 at 12:09:30AM -0700, Ian Rogers wrote:
+> On Mon, May 11, 2020 at 1:54 PM Jiri Olsa <jolsa@kernel.org> wrote:
+> >
+> > Display line number on when parsing custom metrics file, like:
+> >
+> >   $ cat metrics
+> >   // IPC
+> >   mine1 = inst_retired.any / cpu_clk_unhalted.thread;
+> >
+> >   krava
+> >   $ sudo perf stat --metrics-file ./metrics -M mine1 -a -I 1000 --metric-only
+> >   failed to parse metrics file: ./metrics:4
+> >
+> > Please note that because the grammar is flexible on new lines,
+> > the syntax could be broken on the next 'not fitting' item and
+> > not the first wrong word, like:
+> >
+> >   $ cat metrics
+> >   // IPC
+> >   krava
+> >   mine1 = inst_retired.any / cpu_clk_unhalted.thread;
+> >   $ sudo perf stat --metrics-file ./metrics -M mine1 -a -I 1000 --metric-only
+> >   failed to parse metrics file: ./metrics:3
 > 
-> Not introduced by this patch, but this patch is exposing it as an API.
+> A line number is better than nothing :-) It'd be nice to be told about
+> broken events and more information about what's broken in the line. A
+> common failure is @ vs / encoding and also no-use or misuse of \\.
+> Perhaps expand the test coverage.
 
-yea, I was thinking about this and I think we will put a disclaimer in
-here that this is not an API and the interface can change.. it's really
-mostly intended to help out with running a custom metric which is not
-compiled in ... I don't want to be commited to support old API
+yep, error reporting needs more changes.. but the line is crucial ;-)
 
-> This notion of if-else is really weird. For one thing there are no
-> comparison operators. The unit test doesn't really help:
->         ret |= test(&ctx, "1+1 if 3*4 else 0", 2);
-> What kind of comparison is "3*4"? If 0.0 causes the else clause then will -0.0?
-> A typical expression I see written in C is to give a ratio such:
->   value = denom == 0 ? 0 : nom / denom;
-> I've worked around encoding this by extending expr.y locally.
-
-AFAICS it's used only with #SMT_on in the condition, aybe we could limit
-the condition only for #SMT_on term?
-
-
-> 
-> > +  EXPR: NUMBER
-> > +  EXPR: EXPR | EXPR
-> > +  EXPR: EXPR & EXPR
-> > +  EXPR: EXPR ^ EXPR
-> 
-> Again, it's odd that these cast the double to a long and then assign
-> the result back to a double.
-
-is this even used anywhere? perhaps it was added just to be complete
-
-SNIP
-
-> > +       2.002460174                 0.86                23.37                 0.86
-> > +       3.003969795                 1.03                23.93                 1.03
-> > +  ...
-> 
-> A feature request would be to allow metrics in terms of other metrics,
-> not just events :-) For example, it is common to sum all cache
-> hit/miss events. It is laborious to copy that expression for hit rate,
-> miss rate, etc.
-> 
-> Perhaps the expression parsing code should be folded into the event
-> parsing code.
-
-nice idea, but let's finish straighten up what we have first ;-)
-
-I'll try to go through all the fixes/tests you posted and let's
-get it in first
-
-thanks,
 jirka
 
