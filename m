@@ -2,81 +2,36 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF57C433EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD48C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D57D20575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:59:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Tbxd8EQj"
+	by mail.kernel.org (Postfix) with ESMTP id E4D0120575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:02:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbgEMV73 (ORCPT
+        id S1730184AbgEMWCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 17:59:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50566 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730324AbgEMV7Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 17:59:24 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDF5EC05BD0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 14:59:23 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id f23so347489pgj.4
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 14:59:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=oMuwtgb2OcVuYmU/qlU+fBVpY5n0C+oIdI2dxORvY8g=;
-        b=Tbxd8EQj0sl+geyiQZ3s6Vr5SEBuLkHBaWw2+9jpomdwxZ0rqCSk6ifuFXJyYGO5Zi
-         xSeDm33xp4wXPtK7B7rlcuPF6BbaxLzKGxRSsEbaE+1cSNOTdzw8gojUTgaPWmtzb2E6
-         KZj2Gak04PurH0lCQPf8yNT9RnSmKf7wYW8KE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oMuwtgb2OcVuYmU/qlU+fBVpY5n0C+oIdI2dxORvY8g=;
-        b=uNiNOKIIj6gDq2h9R1ikpVWjJVNMItoNzXveRPmW1a1NG9aWNtpausKxIsYJRPuDMn
-         F4PTc8Tt97xO/YNM/O98XtnTTkNEiC8iLsMjPyNmJwvy2rzQc8sUPo94qjUpHH+DwuZ1
-         7XXUDuUOuFoWMFKubDCJtgqsMB6iHifKxMeGBq9CoJrTu8gjBvddxmynAalxZjD9blcj
-         Qly4InopNOXBUEVD6jrEBC4EcwXYaGzHyAPZwIO6Sb2f9e649YGCcouTCMVwCNWqhwfC
-         HmXkD1SzuG1TR5bh9hV/uVxqC2uCr7uG9GgJKIKyRMvk6uk/7CgAqn7fkdP3Fufo8S/+
-         oRgA==
-X-Gm-Message-State: AOAM53056McD9KQJJdF/JSA3m4IVM06T4r64+53ejSB9fTxsvrM3OujU
-        OrELdguGKKHP+5Rby/FMBWXfew==
-X-Google-Smtp-Source: ABdhPJx+UnFmi0FGlaF+9mdq+fNVJjeXfBPJOxBzaaMfI79bmG+44wi8Keu6UnmwMCZcSGqfmf5Omg==
-X-Received: by 2002:aa7:8b15:: with SMTP id f21mr1280026pfd.72.1589407163263;
-        Wed, 13 May 2020 14:59:23 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id k27sm547169pgb.30.2020.05.13.14.59.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 14:59:22 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
-        narmstrong@baylibre.com, a.hajda@samsung.com,
-        Laurent.pinchart@ideasonboard.com, spanda@codeaurora.org
-Cc:     bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org,
-        swboyd@chromium.org, devicetree@vger.kernel.org,
-        jeffrey.l.hugo@gmail.com, jernej.skrabec@siol.net,
-        linux-arm-msm@vger.kernel.org, robdclark@chromium.org,
-        jonas@kwiboo.se, linux-gpio@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v6 2/3] dt-bindings: drm/bridge: ti-sn65dsi86: Convert to yaml
-Date:   Wed, 13 May 2020 14:59:01 -0700
-Message-Id: <20200513145807.v6.2.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid>
-X-Mailer: git-send-email 2.26.2.645.ge9eca65c58-goog
-In-Reply-To: <20200513215902.261547-1-dianders@chromium.org>
-References: <20200513215902.261547-1-dianders@chromium.org>
+        Wed, 13 May 2020 18:02:44 -0400
+Received: from v6.sk ([167.172.42.174]:54296 "EHLO v6.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729775AbgEMWCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 18:02:43 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id 66010610A5;
+        Wed, 13 May 2020 22:02:10 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH] drm/etnaviv: Fix the pm_domain lookup
+Date:   Thu, 14 May 2020 00:02:04 +0200
+Message-Id: <20200513220204.1366296-1-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,422 +39,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This moves the bindings over, based a lot on toshiba,tc358768.yaml.
-Unless there's someone known to be better, I've set the maintainer in
-the yaml as the first person to submit bindings.
+On a GC860 (both 3D and 2D capable) GPU, kmscube crashes:
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+  # strace -f ~lkundrak/src/kmscube/build/kmscube
+  ...
+  ioctl(6, DRM_IOCTL_ETNAVIV_PM_QUERY_DOM, 0xbe92b720) = 0
+  ioctl(6, DRM_IOCTL_ETNAVIV_PM_QUERY_SIG <unfinished ...>) = ?
+  +++ killed by SIGSEGV +++
+  Segmentation fault (core dumped)
+
+And triggers an oops:
+
+  8<--- cut here ---
+  Unable to handle kernel NULL pointer dereference at virtual address 00000000
+  pgd = 40e2c0f7
+  [00000000] *pgd=0df6d831, *pte=00000000, *ppte=00000000
+  Internal error: Oops: 17 [#1] PREEMPT SMP ARM
+  Modules linked in:
+  CPU: 0 PID: 346 Comm: kmscube Not tainted 5.7.0-rc4+ #792
+  Hardware name: Marvell MMP2 (Device Tree Support)
+  PC is at strncpy+0x14/0x30
+  LR is at etnaviv_pm_query_sig+0xd0/0x104
+  pc : [<c04f35f4>]    lr : [<c05dd878>]    psr: 20010013
+  sp : c85f5e00  ip : c85f5eb5  fp : beb58748
+  r10: 0000004c  r9 : ca6f9100  r8 : c85f5e6c
+  r7 : 00000050  r6 : c85f5e6c  r5 : 00000001  r4 : c0b69ae8
+  r3 : c85f5e75  r2 : 0000003f  r1 : 00000000  r0 : c85f5e76
+  Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+  Control: 10c5387d  Table: 0df70019  DAC: 00000051
+  Process kmscube (pid: 346, stack limit = 0x816fba31)
+  Stack: (0xc85f5e00 to 0xc85f6000)
+  5e00: 00000000 d90e6000 00000020 c05d5b2c c85f5e6c c059ce90 00000000 c1003f88
+  5e20: c04c644b 0000004c c0b69610 c04c644b c85f5e6c 0000004b ca6f9100 c059d0bc
+  5e40: 00000001 c0d53ee8 c85f5f18 00000001 c85f5f50 c85f5e6c 0000004c c8454240
+  5e60: c05d5b2c 00000051 00000000 00000000 00000001 00000000 00000000 00000000
+  5e80: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+  5ea0: 00000000 00000000 00000000 00000000 00000000 00000000 00000274 c011c3fc
+  5ec0: 00000100 c0290434 5ebc5632 30e03501 5ebc5632 c8526600 00000274 00100cca
+  5ee0: 00000831 b64c5000 cdf72d90 c1003f88 00000000 c04c644b c8454240 beb58748
+  5f00: c8454240 00000006 c85f4000 d90ecad8 001c01a0 c02d49ac b64c52cc 80000007
+  5f20: da9d6dc0 d9aa4000 d9aa4040 00000000 00000274 c011818c 00000005 0e200080
+  5f40: 00000000 000003e5 00000000 00000100 00000000 00000000 00000000 cc78ac40
+  5f60: 00000006 00000007 c1009a98 b64c52cc c85f5fb0 c0118080 00000080 c1003f88
+  5f80: 00000000 00000001 beb58748 c04c644b 00000036 c0100288 c85f4000 00000036
+  5fa0: 001c01a0 c0100060 00000001 beb58748 00000006 c04c644b beb58748 0000004c
+  5fc0: 00000001 beb58748 c04c644b 00000036 beb58748 001bd688 beb58700 001c01a0
+  5fe0: b6f41f08 beb586d4 b6f2784c b6e16cec 80010010 00000006 00000000 00000000
+  [<c04f35f4>] (strncpy) from [<c05dd878>] (etnaviv_pm_query_sig+0xd0/0x104)
+  [<c05dd878>] (etnaviv_pm_query_sig) from [<c059ce90>] (drm_ioctl_kernel+0xb4/0xf8)
+  [<c059ce90>] (drm_ioctl_kernel) from [<c059d0bc>] (drm_ioctl+0x1e8/0x3b8)
+  [<c059d0bc>] (drm_ioctl) from [<c02d49ac>] (ksys_ioctl+0xe0/0xaf0)
+  [<c02d49ac>] (ksys_ioctl) from [<c0100060>] (ret_fast_syscall+0x0/0x54)
+  Exception stack(0xc85f5fa8 to 0xc85f5ff0)
+  5fa0:                   00000001 beb58748 00000006 c04c644b beb58748 0000004c
+  5fc0: 00000001 beb58748 c04c644b 00000036 beb58748 001bd688 beb58700 001c01a0
+  5fe0: b6f41f08 beb586d4 b6f2784c b6e16cec
+  Code: 012fff1e e2422001 e2403001 e080c002 (e5d12000)
+  ---[ end trace 387aad33cd9c15ea ]---
+
+Turns out that it's because pm_domain() returns a pointer outside any
+any of the etnaviv_pm_domains. Unless I'm mistaken, the algorithm in
+pm_domain() is entirely botched when GPU's features match more than one
+domain. This tries to remedy it.
+
+Tested with kmscube with mesa 20 on ome machine with GC860 and another
+with GC2000 + GC300 pair.
+
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
-I removed Stephen's review tag on v5 since I squashed in a bunch of
-other stuff.
+ drivers/gpu/drm/etnaviv/etnaviv_perfmon.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-Changes in v6: None
-Changes in v5:
-- Squash https://lore.kernel.org/r/20200506140208.v2.2.I0a2bca02b09c1fcb6b09479b489736d600b3e57f@changeid/
-
-Changes in v4: None
-Changes in v3: None
-Changes in v2:
-- specification => specifier.
-- power up => power.
-- Added back missing suspend-gpios.
-- data-lanes and lane-polarities are are the right place now.
-- endpoints don't need to be patternProperties.
-- Specified more details for data-lanes and lane-polarities.
-- Added old example back in, fixing bugs in it.
-- Example i2c bus is just called "i2c", not "i2c1" now.
-
- .../bindings/display/bridge/ti,sn65dsi86.txt  |  87 ------
- .../bindings/display/bridge/ti,sn65dsi86.yaml | 285 ++++++++++++++++++
- 2 files changed, 285 insertions(+), 87 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
- create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-
-diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
-deleted file mode 100644
-index 8ec4a7f2623a..000000000000
---- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
-+++ /dev/null
-@@ -1,87 +0,0 @@
--SN65DSI86 DSI to eDP bridge chip
----------------------------------
--
--This is the binding for Texas Instruments SN65DSI86 bridge.
--http://www.ti.com/general/docs/lit/getliterature.tsp?genericPartNumber=sn65dsi86&fileType=pdf
--
--Required properties:
--- compatible: Must be "ti,sn65dsi86"
--- reg: i2c address of the chip, 0x2d as per datasheet
--- enable-gpios: gpio specification for bridge_en pin (active high)
--
--- vccio-supply: A 1.8V supply that powers up the digital IOs.
--- vpll-supply: A 1.8V supply that powers up the displayport PLL.
--- vcca-supply: A 1.2V supply that powers up the analog circuits.
--- vcc-supply: A 1.2V supply that powers up the digital core.
--
--Optional properties:
--- interrupts-extended: Specifier for the SN65DSI86 interrupt line.
--
--- gpio-controller: Marks the device has a GPIO controller.
--- #gpio-cells    : Should be two. The first cell is the pin number and
--                   the second cell is used to specify flags.
--                   See ../../gpio/gpio.txt for more information.
--- #pwm-cells : Should be one. See ../../pwm/pwm.yaml for description of
--               the cell formats.
--
--- clock-names: should be "refclk"
--- clocks: Specification for input reference clock. The reference
--	  clock rate must be 12 MHz, 19.2 MHz, 26 MHz, 27 MHz or 38.4 MHz.
--
--- data-lanes: See ../../media/video-interface.txt
--- lane-polarities: See ../../media/video-interface.txt
--
--- suspend-gpios: specification for GPIO1 pin on bridge (active low)
--
--Required nodes:
--This device has two video ports. Their connections are modelled using the
--OF graph bindings specified in Documentation/devicetree/bindings/graph.txt.
--
--- Video port 0 for DSI input
--- Video port 1 for eDP output
--
--Example
---------
--
--edp-bridge@2d {
--	compatible = "ti,sn65dsi86";
--	#address-cells = <1>;
--	#size-cells = <0>;
--	reg = <0x2d>;
--
--	enable-gpios = <&msmgpio 33 GPIO_ACTIVE_HIGH>;
--	suspend-gpios = <&msmgpio 34 GPIO_ACTIVE_LOW>;
--
--	interrupts-extended = <&gpio3 4 IRQ_TYPE_EDGE_FALLING>;
--
--	vccio-supply = <&pm8916_l17>;
--	vcca-supply = <&pm8916_l6>;
--	vpll-supply = <&pm8916_l17>;
--	vcc-supply = <&pm8916_l6>;
--
--	clock-names = "refclk";
--	clocks = <&input_refclk>;
--
--	ports {
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		port@0 {
--			reg = <0>;
--
--			edp_bridge_in: endpoint {
--				remote-endpoint = <&dsi_out>;
--			};
--		};
--
--		port@1 {
--			reg = <1>;
--
--			edp_bridge_out: endpoint {
--				data-lanes = <2 1 3 0>;
--				lane-polarities = <0 1 0 1>;
--				remote-endpoint = <&edp_panel_in>;
--			};
--		};
--	};
--}
-diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-new file mode 100644
-index 000000000000..07d26121afca
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-@@ -0,0 +1,285 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/bridge/ti,sn65dsi86.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: SN65DSI86 DSI to eDP bridge chip
-+
-+maintainers:
-+  - Sandeep Panda <spanda@codeaurora.org>
-+
-+description: |
-+  The Texas Instruments SN65DSI86 bridge takes MIPI DSI in and outputs eDP.
-+  http://www.ti.com/general/docs/lit/getliterature.tsp?genericPartNumber=sn65dsi86&fileType=pdf
-+
-+properties:
-+  compatible:
-+    const: ti,sn65dsi86
-+
-+  reg:
-+    const: 0x2d
-+
-+  enable-gpios:
-+    maxItems: 1
-+    description: GPIO specifier for bridge_en pin (active high).
-+
-+  suspend-gpios:
-+    maxItems: 1
-+    description: GPIO specifier for GPIO1 pin on bridge (active low).
-+
-+  vccio-supply:
-+    description: A 1.8V supply that powers the digital IOs.
-+
-+  vpll-supply:
-+    description: A 1.8V supply that powers the DisplayPort PLL.
-+
-+  vcca-supply:
-+    description: A 1.2V supply that powers the analog circuits.
-+
-+  vcc-supply:
-+    description: A 1.2V supply that powers the digital core.
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+    description:
-+      Clock specifier for input reference clock. The reference clock rate must
-+      be 12 MHz, 19.2 MHz, 26 MHz, 27 MHz or 38.4 MHz.
-+
-+  clock-names:
-+    const: refclk
-+
-+  gpio-controller: true
-+  '#gpio-cells':
-+    const: 2
-+    description:
-+      First cell is pin number, second cell is flags.  GPIO pin numbers are
-+      1-based to match the datasheet.  See ../../gpio/gpio.txt for more
-+      information.
-+
-+  '#pwm-cells':
-+    const: 1
-+    description: See ../../pwm/pwm.yaml for description of the cell formats.
-+
-+  ports:
-+    type: object
-+    additionalProperties: false
-+
-+    properties:
-+      "#address-cells":
-+        const: 1
-+
-+      "#size-cells":
-+        const: 0
-+
-+      port@0:
-+        type: object
-+        additionalProperties: false
-+
-+        description:
-+          Video port for MIPI DSI input
-+
-+        properties:
-+          reg:
-+            const: 0
-+
-+          endpoint:
-+            type: object
-+            additionalProperties: false
-+            properties:
-+              remote-endpoint: true
-+
-+        required:
-+          - reg
-+
-+      port@1:
-+        type: object
-+        additionalProperties: false
-+
-+        description:
-+          Video port for eDP output (panel or connector).
-+
-+        properties:
-+          reg:
-+            const: 1
-+
-+          endpoint:
-+            type: object
-+            additionalProperties: false
-+
-+            properties:
-+              remote-endpoint: true
-+
-+              data-lanes:
-+                oneOf:
-+                  - minItems: 1
-+                    maxItems: 1
-+                    uniqueItems: true
-+                    items:
-+                      enum:
-+                        - 0
-+                        - 1
-+                    description:
-+                      If you have 1 logical lane the bridge supports routing
-+                      to either port 0 or port 1.  Port 0 is suggested.
-+                      See ../../media/video-interface.txt for details.
-+
-+                  - minItems: 2
-+                    maxItems: 2
-+                    uniqueItems: true
-+                    items:
-+                      enum:
-+                        - 0
-+                        - 1
-+                    description:
-+                      If you have 2 logical lanes the bridge supports
-+                      reordering but only on physical ports 0 and 1.
-+                      See ../../media/video-interface.txt for details.
-+
-+                  - minItems: 4
-+                    maxItems: 4
-+                    uniqueItems: true
-+                    items:
-+                      enum:
-+                        - 0
-+                        - 1
-+                        - 2
-+                        - 3
-+                    description:
-+                      If you have 4 logical lanes the bridge supports
-+                      reordering in any way.
-+                      See ../../media/video-interface.txt for details.
-+
-+              lane-polarities:
-+                minItems: 1
-+                maxItems: 4
-+                items:
-+                  enum:
-+                    - 0
-+                    - 1
-+                description: See ../../media/video-interface.txt
-+
-+            dependencies:
-+              lane-polarities: [data-lanes]
-+
-+        required:
-+          - reg
-+
-+    required:
-+      - "#address-cells"
-+      - "#size-cells"
-+      - port@0
-+      - port@1
-+
-+required:
-+  - compatible
-+  - reg
-+  - enable-gpios
-+  - vccio-supply
-+  - vpll-supply
-+  - vcca-supply
-+  - vcc-supply
-+  - ports
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,rpmh.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      bridge@2d {
-+        compatible = "ti,sn65dsi86";
-+        reg = <0x2d>;
-+
-+        interrupt-parent = <&tlmm>;
-+        interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
-+
-+        enable-gpios = <&tlmm 102 GPIO_ACTIVE_HIGH>;
-+
-+        vpll-supply = <&src_pp1800_s4a>;
-+        vccio-supply = <&src_pp1800_s4a>;
-+        vcca-supply = <&src_pp1200_l2a>;
-+        vcc-supply = <&src_pp1200_l2a>;
-+
-+        clocks = <&rpmhcc RPMH_LN_BB_CLK2>;
-+        clock-names = "refclk";
-+
-+        ports {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          port@0 {
-+            reg = <0>;
-+            endpoint {
-+              remote-endpoint = <&dsi0_out>;
-+            };
-+          };
-+
-+          port@1 {
-+            reg = <1>;
-+            endpoint {
-+              remote-endpoint = <&panel_in_edp>;
-+            };
-+          };
-+        };
-+      };
-+    };
-+  - |
-+    #include <dt-bindings/clock/qcom,rpmh.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      bridge@2d {
-+        compatible = "ti,sn65dsi86";
-+        reg = <0x2d>;
-+
-+        enable-gpios = <&msmgpio 33 GPIO_ACTIVE_HIGH>;
-+        suspend-gpios = <&msmgpio 34 GPIO_ACTIVE_LOW>;
-+
-+        interrupts-extended = <&gpio3 4 IRQ_TYPE_EDGE_FALLING>;
-+
-+        vccio-supply = <&pm8916_l17>;
-+        vcca-supply = <&pm8916_l6>;
-+        vpll-supply = <&pm8916_l17>;
-+        vcc-supply = <&pm8916_l6>;
-+
-+        clock-names = "refclk";
-+        clocks = <&input_refclk>;
-+
-+        ports {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          port@0 {
-+            reg = <0>;
-+
-+            edp_bridge_in: endpoint {
-+              remote-endpoint = <&dsi_out>;
-+            };
-+          };
-+
-+          port@1 {
-+            reg = <1>;
-+
-+            edp_bridge_out: endpoint {
-+              data-lanes = <2 1 3 0>;
-+              lane-polarities = <0 1 0 1>;
-+              remote-endpoint = <&edp_panel_in>;
-+            };
-+          };
-+        };
-+      };
-+    };
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+index e6795bafcbb9..9dc1bb4d4582 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+@@ -444,7 +444,6 @@ static unsigned int num_pm_domains(const struct etnaviv_gpu *gpu)
+ static const struct etnaviv_pm_domain *pm_domain(const struct etnaviv_gpu *gpu,
+ 	unsigned int index)
+ {
+-	const struct etnaviv_pm_domain *domain = NULL;
+ 	unsigned int offset = 0, i;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(doms_meta); i++) {
+@@ -453,15 +452,15 @@ static const struct etnaviv_pm_domain *pm_domain(const struct etnaviv_gpu *gpu,
+ 		if (!(gpu->identity.features & meta->feature))
+ 			continue;
+ 
+-		if (meta->nr_domains < (index - offset)) {
++		if (meta->nr_domains <= (index - offset)) {
+ 			offset += meta->nr_domains;
+ 			continue;
+ 		}
+ 
+-		domain = meta->domains + (index - offset);
++		return meta->domains + (index - offset);
+ 	}
+ 
+-	return domain;
++	return NULL;
+ }
+ 
+ int etnaviv_pm_query_dom(struct etnaviv_gpu *gpu,
 -- 
-2.26.2.645.ge9eca65c58-goog
+2.26.2
 
