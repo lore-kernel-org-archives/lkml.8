@@ -4,34 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C10DC2D0F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 05:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376D1C2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 05:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1A1C20659
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 05:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 230F020659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 05:43:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729193AbgEMFnh (ORCPT
+        id S1729210AbgEMFnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 01:43:37 -0400
-Received: from mga04.intel.com ([192.55.52.120]:41741 "EHLO mga04.intel.com"
+        Wed, 13 May 2020 01:43:40 -0400
+Received: from mga06.intel.com ([134.134.136.31]:12649 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728995AbgEMFna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 01:43:30 -0400
-IronPort-SDR: Rw+znrtGboFc4WDrDgAVJWzPzd/joAzJhSZVill7BQovLkcel19fNr+YCj5zu2rizttQnpQ9ra
- Lc6RHgkzWPiQ==
+        id S1729110AbgEMFnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 01:43:32 -0400
+IronPort-SDR: 9DzJvz15vmmGQ1y2ZW6dPqLy63XHc9Acc2c2SlzHBHcHHTodhPetilDdYsLULvpCBxvKKancEn
+ 4tcWc/RGwr2g==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 22:43:29 -0700
-IronPort-SDR: 5wqj0BBx2nEZC4PK11xvD2t9L0FVPR8XQ3DBJJHdyjnVnMIsUSsmMZQtsT/jgGm87ZC1/mU94T
- 2Mbq8aM0AMIQ==
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 22:43:32 -0700
+IronPort-SDR: QfxkYo4zwnuMogo2fCMzvUmopRKFineXUbiWeReeij6rUJuy8UhOkp2D+8ZIjVbdEhHqXBrR3A
+ sKoeVD9gmiGQ==
 X-IronPort-AV: E=Sophos;i="5.73,386,1583222400"; 
-   d="scan'208";a="306688131"
+   d="scan'208";a="280386428"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 22:43:29 -0700
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2020 22:43:31 -0700
 From:   ira.weiny@intel.com
 To:     linux-ext4@vger.kernel.org,
         Andreas Dilger <adilger.kernel@dilger.ca>,
@@ -42,9 +41,9 @@ Cc:     Ira Weiny <ira.weiny@intel.com>, Al Viro <viro@zeniv.linux.org.uk>,
         Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
         "Darrick J. Wong" <darrick.wong@oracle.com>,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/9] fs/ext4: Disallow encryption if inode is DAX
-Date:   Tue, 12 May 2020 22:43:18 -0700
-Message-Id: <20200513054324.2138483-4-ira.weiny@intel.com>
+Subject: [PATCH 5/9] fs/ext4: Update ext4_should_use_dax()
+Date:   Tue, 12 May 2020 22:43:20 -0700
+Message-Id: <20200513054324.2138483-6-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200513054324.2138483-1-ira.weiny@intel.com>
 References: <20200513054324.2138483-1-ira.weiny@intel.com>
@@ -57,77 +56,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-Encryption and DAX are incompatible.  Changing the DAX mode due to a
-change in Encryption mode is wrong without a corresponding
-address_space_operations update.
+S_DAX should only be enabled when the underlying block device supports
+dax.
 
-Make the 2 options mutually exclusive by returning an error if DAX was
-set first.
+Change ext4_should_use_dax() to check for device support prior to the
+over riding mount option.
 
-Furthermore, clarify the documentation of the exclusivity and how that
-will work.
+While we are at it change the function to ext4_should_enable_dax() as
+this better reflects the ask as well as matches xfs.
 
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
 ---
-Changes:
-	remove WARN_ON_ONCE
-	Add documentation to the encrypt doc WRT DAX
+Changes from RFC
+	Change function name to 'should enable'
+	Clean up bool conversion
+	Reorder this for better bisect-ability
 ---
- Documentation/filesystems/fscrypt.rst |  4 +++-
- fs/ext4/super.c                       | 10 +---------
- 2 files changed, 4 insertions(+), 10 deletions(-)
+ fs/ext4/inode.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/filesystems/fscrypt.rst b/Documentation/filesystems/fscrypt.rst
-index aa072112cfff..1475b8d52fef 100644
---- a/Documentation/filesystems/fscrypt.rst
-+++ b/Documentation/filesystems/fscrypt.rst
-@@ -1038,7 +1038,9 @@ astute users may notice some differences in behavior:
- - The ext4 filesystem does not support data journaling with encrypted
-   regular files.  It will fall back to ordered data mode instead.
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index a10ff12194db..d3a4c2ed7a1c 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -4398,10 +4398,8 @@ int ext4_get_inode_loc(struct inode *inode, struct ext4_iloc *iloc)
+ 		!ext4_test_inode_state(inode, EXT4_STATE_XATTR));
+ }
  
--- DAX (Direct Access) is not supported on encrypted files.
-+- DAX (Direct Access) is not supported on encrypted files.  Attempts to enable
-+  DAX on an encrypted file will fail.  Mount options will _not_ enable DAX on
-+  encrypted files.
+-static bool ext4_should_use_dax(struct inode *inode)
++static bool ext4_should_enable_dax(struct inode *inode)
+ {
+-	if (!test_opt(inode->i_sb, DAX_ALWAYS))
+-		return false;
+ 	if (!S_ISREG(inode->i_mode))
+ 		return false;
+ 	if (ext4_should_journal_data(inode))
+@@ -4412,7 +4410,13 @@ static bool ext4_should_use_dax(struct inode *inode)
+ 		return false;
+ 	if (ext4_test_inode_flag(inode, EXT4_INODE_VERITY))
+ 		return false;
+-	return true;
++	if (!bdev_dax_supported(inode->i_sb->s_bdev,
++				inode->i_sb->s_blocksize))
++		return false;
++	if (test_opt(inode->i_sb, DAX_ALWAYS))
++		return true;
++
++	return false;
+ }
  
- - The st_size of an encrypted symlink will not necessarily give the
-   length of the symlink target as required by POSIX.  It will actually
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index bf5fcb477f66..9873ab27e3fa 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -1320,7 +1320,7 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
- 	if (inode->i_ino == EXT4_ROOT_INO)
- 		return -EPERM;
- 
--	if (WARN_ON_ONCE(IS_DAX(inode) && i_size_read(inode)))
-+	if (IS_DAX(inode))
- 		return -EINVAL;
- 
- 	res = ext4_convert_inline_data(inode);
-@@ -1344,10 +1344,6 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
- 			ext4_set_inode_flag(inode, EXT4_INODE_ENCRYPT);
- 			ext4_clear_inode_state(inode,
- 					EXT4_STATE_MAY_INLINE_DATA);
--			/*
--			 * Update inode->i_flags - S_ENCRYPTED will be enabled,
--			 * S_DAX may be disabled
--			 */
- 			ext4_set_inode_flags(inode);
- 		}
- 		return res;
-@@ -1371,10 +1367,6 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
- 				    ctx, len, 0);
- 	if (!res) {
- 		ext4_set_inode_flag(inode, EXT4_INODE_ENCRYPT);
--		/*
--		 * Update inode->i_flags - S_ENCRYPTED will be enabled,
--		 * S_DAX may be disabled
--		 */
- 		ext4_set_inode_flags(inode);
- 		res = ext4_mark_inode_dirty(handle, inode);
- 		if (res)
+ void ext4_set_inode_flags(struct inode *inode)
+@@ -4430,7 +4434,7 @@ void ext4_set_inode_flags(struct inode *inode)
+ 		new_fl |= S_NOATIME;
+ 	if (flags & EXT4_DIRSYNC_FL)
+ 		new_fl |= S_DIRSYNC;
+-	if (ext4_should_use_dax(inode))
++	if (ext4_should_enable_dax(inode))
+ 		new_fl |= S_DAX;
+ 	if (flags & EXT4_ENCRYPT_FL)
+ 		new_fl |= S_ENCRYPTED;
 -- 
 2.25.1
 
