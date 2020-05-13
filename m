@@ -2,98 +2,93 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 239B7CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8671CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1BF320740
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:02:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589360541;
-	bh=CqsZkNMhhFEmwvrrSyan044GTPZoDUPfKqcy2R8Ls0o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VmsdvD/ICjA5LyrJJUY6UGu+ExUaN4F1O7dkB0RCIJPxQ4kk9yfRm8eLRnTSIkaHB
-	 xz3jwYEDPGtkUKaKzrcRiTEv45JrB0y1OcZlNp9puINWmPT44jarFcg9ZSU7tt2Ixd
-	 Ycqv3XUlirRuXF1Y+vY5wL3cm8xBXWWddvqRnHPI=
+	by mail.kernel.org (Postfix) with ESMTP id B7636206CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:03:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732366AbgEMJCU (ORCPT
+        id S1732330AbgEMJDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:02:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47132 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:03:23 -0400
+Received: from 8bytes.org ([81.169.241.247]:42288 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726020AbgEMJCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:02:19 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24654206CC;
-        Wed, 13 May 2020 09:02:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589360539;
-        bh=CqsZkNMhhFEmwvrrSyan044GTPZoDUPfKqcy2R8Ls0o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TRpAkENqc7CgUSrD1XHKcTgorVVSfpgABaWNQcjdHXZGtlULr1kxklX4v6396FkDp
-         A15vbUz9LMe1qwuzG9N4aIg+VsyNXg/ouBOwoaogYUFx4AF7vWFUZvSp8zqgUompwE
-         lRE5WW43G125cIf90oyBcY7q0z52qX9nXh9bAzDg=
-Date:   Wed, 13 May 2020 17:02:14 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Samuel Zou <zou_wei@huawei.com>, Arnd Bergmann <arnd@arndb.de>
-Cc:     jun.nie@linaro.org, linux@armlinux.org.uk,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] ARM: zx: Make zx_smp_prepare_cpus static
-Message-ID: <20200513090213.GH26997@dragon>
-References: <1589250561-106088-1-git-send-email-zou_wei@huawei.com>
+        id S1730634AbgEMJDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:03:23 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 63BBB46A; Wed, 13 May 2020 11:03:22 +0200 (CEST)
+Date:   Wed, 13 May 2020 11:03:21 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v4 03/38] iommu: add generic helper for mapping sgtable
+ objects
+Message-ID: <20200513090320.GH9820@8bytes.org>
+References: <20200512085710.14688-1-m.szyprowski@samsung.com>
+ <20200512090058.14910-1-m.szyprowski@samsung.com>
+ <CGME20200512090108eucas1p2168167ab5e1de09df0d5def83f64dbfe@eucas1p2.samsung.com>
+ <20200512090058.14910-3-m.szyprowski@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589250561-106088-1-git-send-email-zou_wei@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200512090058.14910-3-m.szyprowski@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 10:29:21AM +0800, Samuel Zou wrote:
-> Fix the following sparse warning:
-> 
-> arch/arm/mach-zx/platsmp.c:41:13: warning: symbol 'zx_smp_prepare_cpus' was not declared.
-> 
-> The zx_smp_prepare_cpus has only call site within platsmp.c
-> It should be static
-> 
-> Fixes: 71bc724300e6 ("ARM: zx: enable SMP and hotplug for zx296702")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Samuel Zou <zou_wei@huawei.com>
+Hi Marek,
 
-Acked-by: Shawn Guo <shawnguo@kernel.org>
-
-Hi Arnd,
-
-Can you please apply it to arm-soc tree?
-
-Shawn
-
+On Tue, May 12, 2020 at 11:00:23AM +0200, Marek Szyprowski wrote:
 > ---
->  arch/arm/mach-zx/platsmp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/mach-zx/platsmp.c b/arch/arm/mach-zx/platsmp.c
-> index d4e1d37..43a33ea 100644
-> --- a/arch/arm/mach-zx/platsmp.c
-> +++ b/arch/arm/mach-zx/platsmp.c
-> @@ -38,7 +38,7 @@ static void __iomem *pcu_base;
->  static void __iomem *matrix_base;
->  static void __iomem *scu_base;
+>  include/linux/iommu.h | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+
+Some nits below, with those fixed:
+
+	Acked-by: Joerg Roedel <jroedel@suse.de>
+
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 7cfd2dd..ba662ba 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -478,6 +478,22 @@ extern size_t iommu_map_sg_atomic(struct iommu_domain *domain,
+>  extern void iommu_set_fault_handler(struct iommu_domain *domain,
+>  			iommu_fault_handler_t handler, void *token);
 >  
-> -void __init zx_smp_prepare_cpus(unsigned int max_cpus)
-> +static void __init zx_smp_prepare_cpus(unsigned int max_cpus)
->  {
->  	struct device_node *np;
->  	unsigned long base = 0;
+> +/**
+> + * iommu_map_sgtable - Map the given buffer to the IOMMU domain
+> + * @domain:	The IOMMU domain to perfor
+                                    ^^^^^^ Truncated comment?
+> + * @iova:	The start addrees to map the buffer
+                          ^^^^^^^ Typo
+
+> + * @sgt:	The sg_table object describing the buffer
+> + * @prot:	IOMMU protection bits
+> + *
+> + * Create a mapping at @iova for the buffer described by a scatterlist
+> + * stored in the given sg_table object in the provided IOMMU domain.
+> + */
+> +static inline size_t iommu_map_sgtable(struct iommu_domain *domain,
+> +			unsigned long iova, struct sg_table *sgt, int prot)
+> +{
+> +	return iommu_map_sg(domain, iova, sgt->sgl, sgt->orig_nents, prot);
+> +}
+> +
+>  extern void iommu_get_resv_regions(struct device *dev, struct list_head *list);
+>  extern void iommu_put_resv_regions(struct device *dev, struct list_head *list);
+>  extern void generic_iommu_put_resv_regions(struct device *dev,
 > -- 
-> 2.6.2
-> 
+> 1.9.1
