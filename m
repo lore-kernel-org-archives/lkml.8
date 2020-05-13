@@ -2,172 +2,102 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F94BC2D0FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E20B1C2D0FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F64E206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:04:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cY9kffmc"
+	by mail.kernel.org (Postfix) with ESMTP id CB50520769
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 07:04:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730224AbgEMHEN (ORCPT
+        id S1730397AbgEMHEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 03:04:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729737AbgEMHEL (ORCPT
+        Wed, 13 May 2020 03:04:42 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43953 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729642AbgEMHEm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 03:04:11 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F144BC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 00:04:10 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id j21so7373300pgb.7
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 00:04:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Z1F2s/+f+lw9uO7rQ55VG5I1nlicDx+n8EcbwlW6GEY=;
-        b=cY9kffmcGW07Z5UEg2E491/shdagnh+lsIJV/FzgCG2qF5NAAQMIOJJ8UQLJt6Utm8
-         HOviAhzLo5bTShXUfI8T8WaD3YeSy4E2I6KUTmSTp+i5JLTWz9wLY4Lc80KTvBE4isoJ
-         xNBk1KN5zz9eRGwlBpAFn1uhwoavUYpNp/fb+EWka8AKuG8XlKJ7x+ycXIJSLK54Feho
-         YCdxChR2fIWNL2xIfYp0tsiPvMj78Yh4hcgpG1b7TB3sfa8P8oehtN5C3hJqxoxh9oxl
-         ZOkNTRFTqaUxPV2wipBjVcsvShi2+aFzGWhGW/FAWRJHUTsNQtVpucSgEzYj8AudW52I
-         oJOw==
+        Wed, 13 May 2020 03:04:42 -0400
+Received: by mail-oi1-f195.google.com with SMTP id i22so3966938oik.10;
+        Wed, 13 May 2020 00:04:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Z1F2s/+f+lw9uO7rQ55VG5I1nlicDx+n8EcbwlW6GEY=;
-        b=Hu6LWZldVjdGkuijlv2BdB8Wefi0D1Lx5M9mQvhR/T9frrxFxNl5+xtoeGlB4vqo3n
-         6T/zueFAqkOWeshfPMOXDJAKbQEgbeJUiA+gJegBIWj4wW8jmqQFmuCcflj+oc/rkj6x
-         WPyGg9i6/hO7Tsa9OYoIHyRebp7qeC93zR7072iWzs1piBXY4J9u5o0xF6qRXtP4G/h4
-         jDxU/IzC5y2u6SMLffc1tULo1eTnoc0JYQlBB2iSeXo+Pe+IJ5wlavmDVJ7PrDXQMWsG
-         aFlnQRPkSYfTcNPkPswcR5AgjhQwXLJyzzX5S05lO7PUFC70ukQF0SJZwjfpPhhJiD8k
-         S64w==
-X-Gm-Message-State: AGi0PuZiROByywAYYYh0BvxnZj1hYQ9KbqktlP+oIFF8JUA4PGu6OMhJ
-        QxLmm8OpCCXktiAMWSaE+kHu
-X-Google-Smtp-Source: APiQypL6xJQlrhvV3Y3+lPYNU7n5DCbP8jl8IH33zTYY2mG0swMjDBMjF6OdQlplq3rFwPPKyOf0VQ==
-X-Received: by 2002:a63:ed50:: with SMTP id m16mr24321664pgk.271.1589353450263;
-        Wed, 13 May 2020 00:04:10 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:30b:c888:d8ce:4edd:4c38:4a1b])
-        by smtp.gmail.com with ESMTPSA id g14sm13652430pfh.49.2020.05.13.00.04.06
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 13 May 2020 00:04:09 -0700 (PDT)
-Date:   Wed, 13 May 2020 12:34:03 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Hemant Kumar <hemantk@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jhugo@codeaurora.org, bbhatt@codeaurora.org
-Subject: Re: [PATCH v1 3/5] bus: mhi: core: Skip handling BHI irq if MHI reg
- access is not allowed
-Message-ID: <20200513070402.GA26866@Mani-XPS-13-9360>
-References: <1589248989-23824-1-git-send-email-hemantk@codeaurora.org>
- <1589248989-23824-4-git-send-email-hemantk@codeaurora.org>
- <20200512065349.GE4928@Mani-XPS-13-9360>
- <5e9a15ed-4bad-744a-af07-b28c3bcc47c4@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sMqsXTZkQsUYXsgUW5SNfqYNzeikt2R+rOYAkqTmE5k=;
+        b=Qlo78ui8y08TBdBC1f87m+1ryXxVvJIB0Om7wNF+f5clbFdgRJkuZ+KV3ytof3yMzv
+         pM02R0CKD0jZQOggg78PwzYCICqcG2pqnWlJxECulifzUnEt9l855gTMvHK8AU9y91ts
+         /uQ9XkcsXgSYXTS2E0/JG62+VXh+H3y2256SXpcam2KItKvB51Ef8zoWWhXlmsWq6bgv
+         RLKfQsNJ1wZv/aYbLb16oD9ElcNCyaUn1NW+mNoOSonhUUqa8QBQvjhGKC2E9s9WZHR2
+         63gmIBtMFhzTCBuzEMmdiQyxcXTTohcGoM/8EZXUExFNtORXZDpi9p2ZZcQNWEyOb7LV
+         pMKA==
+X-Gm-Message-State: AGi0Puack8XJaENLTjvv1ed5B7u91qa0FqxGx8C9af530hSjD2PmLX0s
+        uidHH4s9Gs0xSRIp3B+eG53NviECbNhbEtanQUiqrw==
+X-Google-Smtp-Source: APiQypI2i3OcOk0fZSl5EaM/AtAYKVxaJffZ2UtQJdWMHY7G9eIbkNlIzli6zPVMpFnI38y49fid2zK+GkOq09gyGKs=
+X-Received: by 2002:aca:cd93:: with SMTP id d141mr3674965oig.148.1589353479660;
+ Wed, 13 May 2020 00:04:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5e9a15ed-4bad-744a-af07-b28c3bcc47c4@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200512204543.22090-1-robh@kernel.org> <20200512204543.22090-5-robh@kernel.org>
+In-Reply-To: <20200512204543.22090-5-robh@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 13 May 2020 09:04:28 +0200
+Message-ID: <CAMuHMdWoh94eFvVKHt5si3LOX4Nwx0-JssxVOy=fXPMXxgndXg@mail.gmail.com>
+Subject: Re: [PATCH 5/5] dt-bindings: Fix incorrect 'reg' property sizes
+To:     Rob Herring <robh@kernel.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 05:28:45PM -0700, Hemant Kumar wrote:
-> Hi Mani,
-> 
-> On 5/11/20 11:53 PM, Manivannan Sadhasivam wrote:
-> > On Mon, May 11, 2020 at 07:03:07PM -0700, Hemant Kumar wrote:
-> > > Driver continues handling of BHI interrupt even if MHI register access
-> > > is not allowed. By doing so it calls the status call back and performs
-> > > early notification for the MHI client. This is not needed when MHI
-> > > register access is not allowed. Hence skip the handling in this case and
-> > > return. Also add debug log to print device state, local EE and device EE
-> > > when reg access is valid.
-> > > 
-> > > Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
-> > > Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> > > ---
-> > >   drivers/bus/mhi/core/main.c | 21 ++++++++++++++-------
-> > >   1 file changed, 14 insertions(+), 7 deletions(-)
-> > > 
-> > > diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-> > > index 9ec9b36..467c0ba 100644
-> > > --- a/drivers/bus/mhi/core/main.c
-> > > +++ b/drivers/bus/mhi/core/main.c
-> > > @@ -369,22 +369,29 @@ irqreturn_t mhi_irq_handler(int irq_number, void *dev)
-> > >   	return IRQ_HANDLED;
-> > >   }
-> > > -irqreturn_t mhi_intvec_threaded_handler(int irq_number, void *dev)
-> > > +irqreturn_t mhi_intvec_threaded_handler(int irq_number, void *priv)
-> > >   {
-> > > -	struct mhi_controller *mhi_cntrl = dev;
-> > > +	struct mhi_controller *mhi_cntrl = priv;
-> > > +	struct device *dev = &mhi_cntrl->mhi_dev->dev;
-> > >   	enum mhi_state state = MHI_STATE_MAX;
-> > >   	enum mhi_pm_state pm_state = 0;
-> > >   	enum mhi_ee_type ee = 0;
-> > >   	write_lock_irq(&mhi_cntrl->pm_lock);
-> > > -	if (MHI_REG_ACCESS_VALID(mhi_cntrl->pm_state)) {
-> > > -		state = mhi_get_mhi_state(mhi_cntrl);
-> > > -		ee = mhi_cntrl->ee;
-> > > -		mhi_cntrl->ee = mhi_get_exec_env(mhi_cntrl);
-> > > +	if (!MHI_REG_ACCESS_VALID(mhi_cntrl->pm_state)) {
-> > > +		write_unlock_irq(&mhi_cntrl->pm_lock);
-> > 
-> > write_lock is only used for protecting 'mhi_cntrl->ee' but here we are not
-> > updating it if reg access is not valid. So there is no reason to hold this lock.
-> Original code is using write_lock to protect pm_state as well as
-> mhi_cntrl->ee. This patch is keeping the lock same as original code. Just if
-> condition logic is negated here due to that write_unlock_irq is added under
-> if condition.
+Hi Rob,
 
-'mhi_cntrl->pm_state' is not always protected by 'pm_lock' and that too
-write_lock is used here but 'pm_state' is not modified. So as like in most of
-the places, locks are abused here as well.
+On Tue, May 12, 2020 at 10:46 PM Rob Herring <robh@kernel.org> wrote:
+> The examples template is a 'simple-bus' with a size of 1 cell for
+> #address-cells and #size-cells. The schema was only checking the entries
+> had between 2 and 4 cells which really only errors on I2C or SPI type
+> devices with a single cell.
+>
+> The easiest fix in most cases is to change the 'reg' property to for 1 cell
+> address and size. In some cases with child devices having 2 cells, that
+> doesn't make sense so a bus node is needed.
+>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-I think after 5.8, you should really think about fixing the usage of locks
-throughout the MHI stack.
+Thanks for your patch!
 
-So I'll take this patch as it is.
+>  .../devicetree/bindings/arm/renesas,prr.yaml  |  2 +-
+>  .../bindings/display/renesas,cmm.yaml         |  2 +-
+>  .../interrupt-controller/renesas,irqc.yaml    |  2 +-
+>  .../bindings/media/renesas,csi2.yaml          |  2 +-
+>  .../bindings/media/renesas,vin.yaml           |  6 +-
+>  .../bindings/net/renesas,ether.yaml           |  2 +-
+>  .../bindings/pwm/renesas,pwm-rcar.yaml        |  2 +-
+>  .../bindings/spi/renesas,sh-msiof.yaml        |  2 +-
+>  .../bindings/thermal/rcar-thermal.yaml        |  6 +-
+>  .../bindings/usb/renesas,usb3-peri.yaml       |  2 +-
+>  .../bindings/usb/renesas,usbhs.yaml           |  2 +-
 
-Thanks,
-Mani
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> > 
-> > > +		goto exit_intvec;
-> > >   	}
-> > > +	state = mhi_get_mhi_state(mhi_cntrl);
-> > > +	ee = mhi_cntrl->ee;
-> > > +	mhi_cntrl->ee = mhi_get_exec_env(mhi_cntrl);
-> > 
-> > But it is needed here.
-> > 
-> > Thanks,
-> > Mani
-> > 
-> > > +	dev_dbg(dev, "local ee:%s device ee:%s dev_state:%s\n",
-> > > +		TO_MHI_EXEC_STR(mhi_cntrl->ee), TO_MHI_EXEC_STR(ee),
-> > > +		TO_MHI_STATE_STR(state));
-> > > +
-> > >   	if (state == MHI_STATE_SYS_ERR) {
-> > > -		dev_dbg(&mhi_cntrl->mhi_dev->dev, "System error detected\n");
-> > > +		dev_dbg(dev, "System error detected\n");
-> > >   		pm_state = mhi_tryset_pm_state(mhi_cntrl,
-> > >   					       MHI_PM_SYS_ERR_DETECT);
-> > >   	}
-> > > -- 
-> > > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> > > a Linux Foundation Collaborative Project
-> 
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
