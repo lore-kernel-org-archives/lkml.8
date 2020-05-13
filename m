@@ -2,109 +2,204 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE21C2D0FB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3FEC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D1BF206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:30:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="X5DKCBbL"
+	by mail.kernel.org (Postfix) with ESMTP id 3CC9F206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:32:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589337131;
+	bh=NR4kxahQKP22TB7rE0p1ts0qBbmmIgs+xVrkSbv/kV0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QaO2Tv4mOlfX8bn4W50qSiDkxB01+e1EXCHCJi53xrx+Zffg1hiJhZGGLCiLYRfSj
+	 fO9I0ccA/uH8majDDFyCaxlJXU7TM1PQS6qvGt0UzE19BGH/jdlwKVE9hYRGN2fbRt
+	 I2qIGC8d8L1cZ9N5y+UfCptnHKZt/YcdkfHp0KoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729453AbgEMCa5 (ORCPT
+        id S1729773AbgEMCcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 22:30:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37606 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbgEMCa5 (ORCPT
+        Tue, 12 May 2020 22:32:10 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:51405 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727082AbgEMCcJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 22:30:57 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 307DDC061A0C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 19:30:56 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id j21so7092116pgb.7
-        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 19:30:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=s30LFx1aW+wj1WXhYvs6vLm6N7QrdlEvC0cIDKY6hWY=;
-        b=X5DKCBbL6h1aumMxEijHJ/83zfL5mqXeCiEM6B8/RQdQJTtuBO5ImrRgl3aWuMdvKe
-         fN39xdTOmnWSFzg5cjwBaVLf5ts7Ad84c73SR1p7RlEjFlHeqs3ihvF7IOcHf0X5YbT8
-         a4bn7jaOUl4YYRiky/E9AlnBhBrb97PnJu/ZWhIPM+HlS0ycY9fv0MZXKOzuOxo+VevE
-         LjvaN2Q3X85Jy/hC9yybPGmvI+G1LhCPxE7pekdSfIMekFduktP6KLkZI6FpJTLIL01u
-         voskqJWPA5lm5P61oy8HcBq2bGsatqnmQBTBykW2nCIb14n+g9ywe9ImlUH9RrNefqjk
-         7UJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=s30LFx1aW+wj1WXhYvs6vLm6N7QrdlEvC0cIDKY6hWY=;
-        b=hRKq77EfE++WjC03e5Hnu2nl343Op+sWcbPWow6XhwMByY0kxYy5TDSaLIs5DKJp2x
-         1bSPC5qX3ezysCOEWcVA4zM3giXfsv3JxaxKzS0h7zp1f5Ia5qfknUwun3JcJn5NqCPk
-         3qSjs9TpwtZcsFCFuOcme4CeKYIPq9z5HFdIB+RnkNgsLMPRUoEfV5BZ7Hr4tZMRhtUO
-         GAmwguEyz+XzJdGTJ4zFuNWhd54byvQLjGy8plIgWsYTPYAuggBQ0EQc49njw5W45f7S
-         HW9HATFfknUGtZx1OsnOZZyebHu5bAQWalZUCt4h9vHXQISWP2e7pfkQP8kIuoiaPzCR
-         GMlA==
-X-Gm-Message-State: AOAM532pGtxNC8bugBcEbUhH6Mt1+EUwWLa0mXhS1kYW9rNrzx8gYrLw
-        BUR7do8wLiPpSRGVbIgKV1JzVg==
-X-Google-Smtp-Source: ABdhPJxO+Z3ab4Ulh2jdsBRUUIjwSNOJMXnCQaQZ2uiMX7yesBHiFN61UvD6/LCaQlLV3ZUrO4vtDQ==
-X-Received: by 2002:a63:3ec4:: with SMTP id l187mr12718035pga.358.1589337055751;
-        Tue, 12 May 2020 19:30:55 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:1d8:eb9:1d84:211c? ([2605:e000:100e:8c61:1d8:eb9:1d84:211c])
-        by smtp.gmail.com with ESMTPSA id o21sm13740330pjr.37.2020.05.12.19.30.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 May 2020 19:30:55 -0700 (PDT)
-Subject: Re: [PATCH v4 10/10] loop: Add LOOP_CONFIGURE ioctl
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Martijn Coenen <maco@android.com>
-Cc:     Narayan Kamath <narayan@google.com>,
-        Zimuzo Ezeozue <zezeozue@google.com>, kernel-team@android.com,
-        Martijn Coenen <maco@google.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>
-References: <20200429140341.13294-1-maco@android.com>
- <20200429140341.13294-11-maco@android.com>
- <CAB0TPYHwor85-fWKu+OMT-1ys2L7OSqVoReJRzNOMAE0xK+yzg@mail.gmail.com>
- <1f3064a9-105f-02bb-6a1a-eb9875d292e3@kernel.dk>
-Message-ID: <4416f60a-6050-5067-6881-0ee9ef944669@kernel.dk>
-Date:   Tue, 12 May 2020 20:30:52 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 12 May 2020 22:32:09 -0400
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 04D2VenL025348;
+        Wed, 13 May 2020 11:31:41 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 04D2VenL025348
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1589337101;
+        bh=pHIa5fFsx8zz9gzzrhQU7O/+Uu4ZQI0I+ydqfvHXHw0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gMm1B1S3D6npQrdwB+n9OdwHGDO4Kpf8NvH3A0fkEiuC6IAD8oQKNe6i7aE0uYIun
+         MIJzWZVxVs4E+XSzEyHzSRfLFPQJH1zz2AtmMhB/88b2DwAV0827ot0CGZq6vVAjds
+         yL/Mp5gJMklg8iTGBQvwtH5ucyocz0zrwjADP0vdHdV/K2cp7rMwQVmZzO8F6l0pHd
+         D32G4LbVoFu9pQenZgAjLKODu6I11kdUKHxDZWiacOQIdI51KzJGrOYGm4tp3edCUQ
+         yfxYbDCf7RqmYn3sme1yvMtcU/itusRnlwilpb4ioF5zOTu1YXg0qDY9zThxsyzkHQ
+         3PPz1kuFasBPg==
+X-Nifty-SrcIP: [209.85.160.170]
+Received: by mail-qt1-f170.google.com with SMTP id x8so12926767qtr.2;
+        Tue, 12 May 2020 19:31:41 -0700 (PDT)
+X-Gm-Message-State: AOAM531EgHosBra8RN34zish0qgELVJ+LCiRkjEEaiITFJAIkW7iBFUG
+        y8xz0ZL/85w2YRMO4ijKjZdJaLy9TIfrhMco09M=
+X-Google-Smtp-Source: ABdhPJyPm1TDgFfhissLLm3GMkHaRGbgDKHsM/2UPq+3GdGM7Keo+khWxm395qEIMUGoAbv2ZHrd61RLsgQrBRArhyM=
+X-Received: by 2002:ac8:7698:: with SMTP id g24mr9239062qtr.290.1589337100109;
+ Tue, 12 May 2020 19:31:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1f3064a9-105f-02bb-6a1a-eb9875d292e3@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200512153607.5560-1-changbin.du@gmail.com>
+In-Reply-To: <20200512153607.5560-1-changbin.du@gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 13 May 2020 11:31:04 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATjTK2FXe8ogHSKQsFfw8GvpEOq76BfKGf+x2puF5PYKQ@mail.gmail.com>
+Message-ID: <CAK7LNATjTK2FXe8ogHSKQsFfw8GvpEOq76BfKGf+x2puF5PYKQ@mail.gmail.com>
+Subject: Re: [PATCH v6] streamline_config.pl: add LMC_KEEP to preserve some kconfigs
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/12/20 8:29 PM, Jens Axboe wrote:
-> On 5/12/20 12:46 AM, Martijn Coenen wrote:
->> Hi Jens,
->>
->> What do you think of this series?
-> 
-> Looks acceptable to me, but I'm getting a failure applying it to
-> for-5.8/drivers on this patch:
-> 
-> Applying: loop: Refactor loop_set_status() size calculation
-> 
-> So you'll probably want to respin on the right branch.
+On Wed, May 13, 2020 at 12:36 AM Changbin Du <changbin.du@gmail.com> wrote:
+>
+> Sometimes it is useful to preserve batches of configs when making
+> localmodconfig. For example, I usually don't want any usb and fs
+> modules to be disabled. Now we can do it by:
+>
+>  $ make LMC_KEEP="drivers/usb:fs" localmodconfig
+>
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+>
 
-Then you can also drop patch #1.
+Applied to linux-kbuild.
+Thanks.
+
+
+> ---
+> v6: add note for localyesconfig.
+> v5: use ':' as delimiter.
+> v4: fix typo.
+> v3: rename LOCALMODCONFIG_PRESERVE to shorter LMC_KEEP.
+> v2: fix typo in documentation. (Randy Dunlap)
+> ---
+>  Documentation/admin-guide/README.rst | 11 +++++++++--
+>  scripts/kconfig/Makefile             |  2 ++
+>  scripts/kconfig/streamline_config.pl | 21 +++++++++++++++++++++
+>  3 files changed, 32 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/admin-guide/README.rst b/Documentation/admin-guide/README.rst
+> index cc6151fc0845..5fb526900023 100644
+> --- a/Documentation/admin-guide/README.rst
+> +++ b/Documentation/admin-guide/README.rst
+> @@ -209,15 +209,22 @@ Configuring the kernel
+>                             store the lsmod of that machine into a file
+>                             and pass it in as a LSMOD parameter.
+>
+> +                           Also, you can preserve modules in certain folders
+> +                           or kconfig files by specifying their paths in
+> +                           parameter LMC_KEEP.
+> +
+>                     target$ lsmod > /tmp/mylsmod
+>                     target$ scp /tmp/mylsmod host:/tmp
+>
+> -                   host$ make LSMOD=/tmp/mylsmod localmodconfig
+> +                   host$ make LSMOD=/tmp/mylsmod \
+> +                           LMC_KEEP="drivers/usb:drivers/gpu:fs" \
+> +                           localmodconfig
+>
+>                             The above also works when cross compiling.
+>
+>       "make localyesconfig" Similar to localmodconfig, except it will convert
+> -                           all module options to built in (=y) options.
+> +                           all module options to built in (=y) options. You can
+> +                           also preserve modules by LMC_KEEP.
+>
+>       "make kvmconfig"   Enable additional options for kvm guest kernel support.
+>
+> diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+> index c9d0a4a8efb3..f3355bd86aa5 100644
+> --- a/scripts/kconfig/Makefile
+> +++ b/scripts/kconfig/Makefile
+> @@ -123,7 +123,9 @@ help:
+>         @echo  '  gconfig         - Update current config utilising a GTK+ based front-end'
+>         @echo  '  oldconfig       - Update current config utilising a provided .config as base'
+>         @echo  '  localmodconfig  - Update current config disabling modules not loaded'
+> +       @echo  '                    except those preserved by LMC_KEEP environment variable'
+>         @echo  '  localyesconfig  - Update current config converting local mods to core'
+> +       @echo  '                    except those preserved by LMC_KEEP environment variable'
+>         @echo  '  defconfig       - New config with default from ARCH supplied defconfig'
+>         @echo  '  savedefconfig   - Save current config as ./defconfig (minimal config)'
+>         @echo  '  allnoconfig     - New config where all options are answered with no'
+> diff --git a/scripts/kconfig/streamline_config.pl b/scripts/kconfig/streamline_config.pl
+> index e2f8504f5a2d..19857d18d814 100755
+> --- a/scripts/kconfig/streamline_config.pl
+> +++ b/scripts/kconfig/streamline_config.pl
+> @@ -143,6 +143,7 @@ my %depends;
+>  my %selects;
+>  my %prompts;
+>  my %objects;
+> +my %config2kfile;
+>  my $var;
+>  my $iflevel = 0;
+>  my @ifdeps;
+> @@ -201,6 +202,7 @@ sub read_kconfig {
+>         if (/^\s*(menu)?config\s+(\S+)\s*$/) {
+>             $state = "NEW";
+>             $config = $2;
+> +           $config2kfile{"CONFIG_$config"} = $kconfig;
+>
+>             # Add depends for 'if' nesting
+>             for (my $i = 0; $i < $iflevel; $i++) {
+> @@ -591,6 +593,20 @@ while ($repeat) {
+>  }
+>
+>  my %setconfigs;
+> +my @preserved_kconfigs = split(/:/,$ENV{LMC_KEEP});
+> +
+> +sub in_preserved_kconfigs {
+> +    my $kconfig = $config2kfile{$_[0]};
+> +    if (!defined($kconfig)) {
+> +        return 0;
+> +    }
+> +    foreach my $excl (@preserved_kconfigs) {
+> +        if($kconfig =~ /^$excl/) {
+> +            return 1;
+> +        }
+> +    }
+> +    return 0;
+> +}
+>
+>  # Finally, read the .config file and turn off any module enabled that
+>  # we could not find a reason to keep enabled.
+> @@ -644,6 +660,11 @@ foreach my $line (@config_file) {
+>      }
+>
+>      if (/^(CONFIG.*)=(m|y)/) {
+> +        if (in_preserved_kconfigs($1)) {
+> +            dprint "Preserve config $1";
+> +            print;
+> +            next;
+> +        }
+>         if (defined($configs{$1})) {
+>             if ($localyesconfig) {
+>                 $setconfigs{$1} = 'y';
+> --
+> 2.25.1
+>
+
 
 -- 
-Jens Axboe
-
+Best Regards
+Masahiro Yamada
