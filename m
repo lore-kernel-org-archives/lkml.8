@@ -2,136 +2,76 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56585C2D0FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D051FCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F74E204EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08B9C2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:49:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="jW7AnQal"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ewcl5ODp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388744AbgEMNtT (ORCPT
+        id S2388752AbgEMNtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:49:19 -0400
-Received: from ns.mm-sol.com ([37.157.136.199]:45375 "EHLO extserv.mm-sol.com"
+        Wed, 13 May 2020 09:49:31 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:57966 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388095AbgEMNtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:49:18 -0400
-Received: from [192.168.1.2] (212-5-158-106.ip.btc-net.bg [212.5.158.106])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id 98D7ACFDC;
-        Wed, 13 May 2020 16:49:13 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1589377754; bh=MPuMCjwAK4ickFvEAphG1V4j7sZJqS/FOfNLWab/sXY=;
-        h=Subject:To:Cc:From:Date:From;
-        b=jW7AnQalVZhBRrCArUUEHXqkzTpbf89eh/IqpUobGlDwwvMUGRc25od3FH3/E6Wz4
-         FxWYcdIsD5Bspw+tenmZdUDFeoHMj3Gtj58jpi10n9FnTgWcwYNVt2N+r6nAPGem6e
-         4B1Lf0CO3RrR/ZzrTJ4e7q4jr9WFv27HZ3P8dDEZd6ExSMdY8kKLizwyCYTsLUBhvh
-         K8PDLra+t6pxilv/ZaiIgq797KaSt4I8i6bvK0anHcKGrsRahHjhq88Bsuh1hwaFhi
-         myYfx9JHkkAUhk85REV/NHhKpRHs6F+i3HPtuRXwwEnAQ1Op7sQVSYmaPKZkv1JGlc
-         e+It4iaLsf1iw==
-Subject: Re: R: [PATCH v3 09/11] PCI: qcom: add ipq8064 rev2 variant and set
- tx term offset
-To:     ansuelsmth@gmail.com,
-        'Bjorn Andersson' <bjorn.andersson@linaro.org>
-Cc:     'Sham Muthayyan' <smuthayy@codeaurora.org>,
-        'Andy Gross' <agross@kernel.org>,
-        'Bjorn Helgaas' <bhelgaas@google.com>,
-        'Rob Herring' <robh+dt@kernel.org>,
-        'Mark Rutland' <mark.rutland@arm.com>,
-        'Lorenzo Pieralisi' <lorenzo.pieralisi@arm.com>,
-        'Andrew Murray' <amurray@thegoodpenguin.co.uk>,
-        'Philipp Zabel' <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200430220619.3169-1-ansuelsmth@gmail.com>
- <20200430220619.3169-10-ansuelsmth@gmail.com>
- <3dc89ec6-d550-9402-1a4a-ca0c6f1e1fb9@mm-sol.com>
- <02df01d62925$acd160a0$067421e0$@gmail.com>
-From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-Message-ID: <37ddf6ac-43c8-f2f1-ce53-e0959084b77c@mm-sol.com>
-Date:   Wed, 13 May 2020 16:49:10 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1727792AbgEMNta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 09:49:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=vE3N/bgCOSuBsuoedjezPDBuOaPIgi01RG5Bucwqlu8=; b=ewcl5ODpAGeimIVHP1ORPWJEFl
+        QIJBqbAhMG7S4Plui+l8Ele2Wr4GEWqKdI8dth1eWMUbgvCcd22tHLWy8Hlnc2F/LD7MVRhdm+j6e
+        aAW5YRVXbg20bp05k8hUBL3e3VHZdFBbnaUCF0IUE3+DBg4hUtS6Wrg9YgysqUc8j+Fo=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jYrlF-002ARp-BL; Wed, 13 May 2020 15:49:25 +0200
+Date:   Wed, 13 May 2020 15:49:25 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Doug Berger <opendmb@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 1/4] net: ethernet: validate pause autoneg
+ setting
+Message-ID: <20200513134925.GE499265@lunn.ch>
+References: <1589243050-18217-1-git-send-email-opendmb@gmail.com>
+ <1589243050-18217-2-git-send-email-opendmb@gmail.com>
+ <20200512004714.GD409897@lunn.ch>
+ <ae63b295-b6e3-6c34-c69d-9e3e33bf7119@gmail.com>
+ <20200512185503.GD1551@shell.armlinux.org.uk>
+ <0cf740ed-bd13-89d5-0f36-1e5305210e97@gmail.com>
+ <20200513053405.GE1551@shell.armlinux.org.uk>
+ <20200513092050.GB1605@shell.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <02df01d62925$acd160a0$067421e0$@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513092050.GB1605@shell.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> So, I think consistency of implementation is more important than fixing
+> this; the current behaviour has been established for many years now.
 
+Hi Russell, Doug
 
-On 5/13/20 3:54 PM, ansuelsmth@gmail.com wrote:
->> Hi Ansuel,
->>
->> On 5/1/20 1:06 AM, Ansuel Smith wrote:
->>> From: Sham Muthayyan <smuthayy@codeaurora.org>
->>>
->>> Add tx term offset support to pcie qcom driver need in some revision of
->>> the ipq806x SoC.
->>> Ipq8064 have tx term offset set to 7.
->>> Ipq8064-v2 revision and ipq8065 have the tx term offset set to 0.
->>>
->>> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
->>> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
->>> ---
->>>  drivers/pci/controller/dwc/pcie-qcom.c | 15 +++++++++++++++
->>>  1 file changed, 15 insertions(+)
->>>
->>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c
->> b/drivers/pci/controller/dwc/pcie-qcom.c
->>> index da8058fd1925..372d2c8508b5 100644
->>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
->>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
->>> @@ -45,6 +45,9 @@
->>>  #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
->>>
->>>  #define PCIE20_PARF_PHY_CTRL			0x40
->>> +#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(12,
->> 16)
->>
->> The mask definition is not correct. Should be GENMASK(20, 16)
->>
->>> +#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
->>> +
->>>  #define PCIE20_PARF_PHY_REFCLK			0x4C
->>>  #define PHY_REFCLK_SSP_EN			BIT(16)
->>>  #define PHY_REFCLK_USE_PAD			BIT(12)
->>> @@ -118,6 +121,7 @@ struct qcom_pcie_resources_2_1_0 {
->>>  	u32 tx_swing_full;
->>>  	u32 tx_swing_low;
->>>  	u32 rx0_eq;
->>> +	u8 phy_tx0_term_offset;
->>>  };
->>>
->>>  struct qcom_pcie_resources_1_0_0 {
->>> @@ -318,6 +322,11 @@ static int
->> qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
->>>  	if (IS_ERR(res->ext_reset))
->>>  		return PTR_ERR(res->ext_reset);
->>>
->>> +	if (of_device_is_compatible(dev->of_node, "qcom,pcie-ipq8064"))
->>> +		res->phy_tx0_term_offset = 7;
->>
->> Before your change the phy_tx0_term_offser was 0 for apq8064, but here
->> you change it to 7, why?
->>
-> 
-> apq8064 board should use qcom,pcie-apq8064 right? This should be set to 0
-> only with pcie-ipq8064 compatible. Tell me if I'm wrong.
+With netlink ethtool we have the possibility of adding a new API to
+control this. And we can leave the IOCTL API alone, and the current
+ethtool commands. We can add a new command to ethtool which uses the new API.
 
-Sorry, my fault. I read the compatible check above as apq8064 but it is ipq.
+Question is, do we want to do this? Would we be introducing yet more
+confusion, rather than making the situation better?
 
--- 
-regards,
-Stan
+	Andrew
