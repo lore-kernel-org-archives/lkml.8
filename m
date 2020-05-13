@@ -6,114 +6,83 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 162B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C493AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 118B720575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B548320575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:04:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730366AbgEMWDR (ORCPT
+        id S1730461AbgEMWEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 18:03:17 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:51938 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729775AbgEMWDQ (ORCPT
+        Wed, 13 May 2020 18:04:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51384 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729775AbgEMWEb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 18:03:16 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jYzT4-00009V-MU; Wed, 13 May 2020 16:03:10 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jYzT3-0004MR-Ko; Wed, 13 May 2020 16:03:10 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Rob Landley <rob@landley.net>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>, dalias@libc.org
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
-        <87sgga6ze4.fsf@x220.int.ebiederm.org>
-        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
-        <87eerszyim.fsf_-_@x220.int.ebiederm.org>
-        <ee83587b-8a1c-3c4f-cc0f-7bc98afabae1@I-love.SAKURA.ne.jp>
-        <CAHk-=wgQ2ovXMW=5ZHCpowkE1PwPQSL7oV4YXzBxd6eqNRXxnQ@mail.gmail.com>
-        <87sgg6v8we.fsf@x220.int.ebiederm.org>
-        <f33135b7-caa2-94f3-7563-fab6a1f5da0f@landley.net>
-Date:   Wed, 13 May 2020 16:59:35 -0500
-In-Reply-To: <f33135b7-caa2-94f3-7563-fab6a1f5da0f@landley.net> (Rob Landley's
-        message of "Mon, 11 May 2020 14:10:23 -0500")
-Message-ID: <87ftc3lcmw.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 13 May 2020 18:04:31 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55414C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 15:04:31 -0700 (PDT)
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1jYzUK-00058z-Vy; Thu, 14 May 2020 00:04:29 +0200
+Date:   Thu, 14 May 2020 00:04:28 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Stephen Berman <stephen.berman@gmx.net>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: power-off delay/hang due to commit 6d25be57 (mainline)
+Message-ID: <20200513220428.4nksinis2qs5dtmh@linutronix.de>
+References: <87bln7ves7.fsf@gmx.net>
+ <20200506215713.qoo4enq32ckcjmz7@linutronix.de>
+ <87v9l65d2y.fsf@gmx.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jYzT3-0004MR-Ko;;;mid=<87ftc3lcmw.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/bb/zy/n+ThDhzZ1lqWLBaPDs3XJ/oeMk=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 3/5] exec: Remove recursion from search_binary_handler
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87v9l65d2y.fsf@gmx.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob Landley <rob@landley.net> writes:
+On 2020-05-08 23:30:45 [+0200], Stephen Berman wrote:
+> > Can you log the output on the serial console?
+> 
+> How do I do that?
 
-> On 5/11/20 9:33 AM, Eric W. Biederman wrote:
->> What I do see is that interp_data is just a parameter that is smuggled
->> into the call of search binary handler.  And the next binary handler
->> needs to be binfmt_elf for it to make much sense, as only binfmt_elf
->> (and binfmt_elf_fdpic) deals with BINPRM_FLAGS_EXECFD.
->
-> The binfmt_elf_fdpic driver is separate from binfmt_elf for the same reason
-> ext2/ext3/ext4 used to have 3 drivers: fdpic is really just binfmt_elf with the
-> 4 main sections (text, data, bss, rodata) able to move independently of each
-> other (each tracked with its own base pointer).
->
-> It's kind of -fPIE on steroids, and various security people have sniffed at it
-> over the years to give ASLR more degrees of freedom on with-MMU systems. Many
-> moons ago Rich Felker proposed teaching the fdpic loader how to load normal ELF
-> binaries so there's just the one loader (there's a flag in the ELF header to say
-> whether the sections are independent or not).
+The spec for your mainboard says "serial port header". You would need to
+connect a cable there to another computer and log its output.
+The alternative would be to delay the output on the console and use a
+camera.
 
-Careful with your terminology.  ELF sections are for .o's For
-executables ELF have segments.  And reading through the code it is the
-program segments that are independently relocatable.
+> > If the commit you cited is really the problem then it would mean that a
+> > worker isn't scheduled for some reason. Could you please enable
+> > CONFIG_WQ_WATCHDOG to see if workqueue core code notices that a worker
+> > isn't making progress?
+> 
+> How will I know if that happens, is there a specific message in the tty?
 
-There is a flag but it is defined per architecture and I don't think one
-of the architectures define it.
+On the tty console where you see the "timing out command, waited"
+message, there should be something starting with
+|BUG: workqueue lockup - pool
 
-I looked at ARM and apparently with an MMU ARM turns fdpic binaries into
-PIE executables.  I am not certain why.
+following with the pool information that got stuck. That code checks the
+workqueues every 30secs by default. So if you waited >= 60secs then
+system is not detecting a stall.
 
-The registers passed to the entry point are also different for both
-cases.
+As far as I can tell, there is nothing special on your system. The CD
+and disk drives are served by the AHCI controller. There is no special
+SCSI/SATA/SAS controller.
+Right now I have no idea how the workqueues fit in the picture. Could
+you please check if the stall-dector says something?
+Is it possible to show me output when the timeout message comes? My
+guess is that the system is going down and before unounting/remount RO
+the filesystem it flushes its last data. But this is done before issuing
+the "halt-syscall".
 
-I think it would have been nice if the fdpic support had used a
-different ELF type, instead of a different depending on using a
-different architecture.
+> Thanks for your reply.
+> 
+> Steve Berman
 
-All that aside the core dumping code looks to be essentially the same
-between binfmt_elf.c and binfmt_elf_fdpic.c.  Do you think people would
-be interested in refactoring binfmt_elf.c and binfmt_elf_fdpic.c so that
-they could share the same core dumping code?
-
-Eric
+Sebastian
