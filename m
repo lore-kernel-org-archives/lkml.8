@@ -2,177 +2,142 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C05C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C842CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FBD7206A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D994D206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:05:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="EFJ3em0O"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="EujlaFy5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732439AbgEMJFk (ORCPT
+        id S1732455AbgEMJFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:05:40 -0400
-Received: from mail-db8eur05on2054.outbound.protection.outlook.com ([40.107.20.54]:6088
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730603AbgEMJFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:05:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NcBFV6WhewY/tbU3Is0Tnxu/jNoWLuNdR3wQw7dcrg0/v0nCln+AsxPA8Im7I7aWWh75pdRkahpfE7zXTaQpu30SFeE2HEcXBkQeOQK4Rhol0hhOdU9phlB17OZyiCpZb3Q5oGCGWZgjtYyoNtKz7zLHd1jWd737jdAjLhAw/1rsrs/cKqXpxAKeg3UPrG8WXtZypTdHq16AMPOUi5caRWW18qtN4hC6DVnJ3JAdC8w6/HQycmt84KJatIAdQyV/7tgtyppEfb90Wkc1pcEm/nUUzodgFJ6CDsshwkxCprK9KW0QpyME/HNsv5ZAVXkKVkH9+TLKlCR6uh5nnIl0AQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DSMlPGs/O07F0OqGvYGDcXIQRqOJK2nkRDayIya42rw=;
- b=hIvCnzdM7iN7NTPad0dDXXHKvdhPNQUNhORymOPFIxh0dorzzeI46UqQqw7L1/rUP3gDm2je0Q5Ii6m6IloxttMl6f1NqNQ222mDtoKXUuyQZSJiIJK4jIZguIvJiYwqz80qaUXfTeB9VONWotK9kPL9NYmpsn8rSyq1/3nZqdA27mH0jBZxEoVuYKRyNINfqtc0mensHlIRxWySNd9JLPSAk7+S3a22WBmIiqk6+lnZ4Y+TuYt1vT76wbsFeWrVlDVDEc7G06Obj7PnhuYcuvZTNg33vqGtbBlvMfojiqwgCQtpRxEZSiuz2RFv9R6GSdOBwvCrThSDdH5MQjkbcg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DSMlPGs/O07F0OqGvYGDcXIQRqOJK2nkRDayIya42rw=;
- b=EFJ3em0OndJKN+e1QuCaWFocclPL4MAPjtZkRYVMu7L9hE+kR4SkoAev9FFCBPIEwZmb3zwU4fuHbi8RsY2QxKpn6c0SDHn50t3Q/y23N4g0b3WDaAVNtImdB4iKYIDaMSA4lCjENbNmdKY8bmXTYAZ0IJIpX3e78gKOamHEKak=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VE1PR04MB6765.eurprd04.prod.outlook.com (2603:10a6:803:126::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.34; Wed, 13 May
- 2020 09:05:33 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::d5f0:c948:6ab0:c2aa]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::d5f0:c948:6ab0:c2aa%4]) with mapi id 15.20.3000.016; Wed, 13 May 2020
- 09:05:33 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-CC:     "vkoul@kernel.org" <vkoul@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "martin.fuzzey@flowbird.group" <martin.fuzzey@flowbird.group>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH v7 RESEND 07/13] spi: imx: fix ERR009165
-Thread-Topic: [PATCH v7 RESEND 07/13] spi: imx: fix ERR009165
-Thread-Index: AQHWJ3cnZ0DWmxBZKkqSbDLRijv4Zqilos2AgAASCaA=
-Date:   Wed, 13 May 2020 09:05:33 +0000
-Message-ID: <VE1PR04MB6638DE9AB1E51213DACCCA0F89BF0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <1589218356-17475-1-git-send-email-yibin.gong@nxp.com>
- <1589218356-17475-8-git-send-email-yibin.gong@nxp.com>
- <20200513073359.GM5877@pengutronix.de>
-In-Reply-To: <20200513073359.GM5877@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: pengutronix.de; dkim=none (message not signed)
- header.d=none;pengutronix.de; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c8d3405c-33ce-4a6a-56f6-08d7f71ccb35
-x-ms-traffictypediagnostic: VE1PR04MB6765:|VE1PR04MB6765:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6765B5A59C96EAEC55D259DE89BF0@VE1PR04MB6765.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0402872DA1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: khb+cMHEQCLWxbQ9giKB4nbXqtoM61CzbHjK1GRHQ74TBMDsQwqBuRRdemfr7CjAGQJzeiZMjnjfcmpTNM36RWj/JGZMUGt1aWTZApmWPZkjU7mUaQtgoKIzL9bup7v7iwrvtgovczs2hPhJMyNu/ndRnTeUKo/xZR2p+TR3lcaK4Xy2MWMnG9HQ74nZ09hj5nGePCbIyFJZG9OI85IqeEe4QpfwwxVsTzGJTM0YkHcFudHHlg3wH2u3mliEPvl1gcKqDUB8Rz2gMUxSoj9gBRfv7phpAu4vyY19nEJBta0jnOsEDvAV16kr8g1msSDrjcGA1pOOZ0r3L24r6iOSa0eTxFq7k/2AeNqrEcttD05CkYfmsWDKKj48iPz8+pMcSNji/AHt//VqoLaXmpfJULIUM+7tAX5WA+rnQIFbPQ/1A33hC+bodSzyxVtvgGjNhiHdXtnL9zuBzU7efQZ2o+nQveKxekpEyS/QCoROO9lUFULTloT+fGf8AQclmWGaiUep4uxa6BrLwdjdOz0Phw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(366004)(39860400002)(346002)(376002)(33430700001)(6916009)(33656002)(66446008)(55016002)(64756008)(86362001)(54906003)(8676002)(66556008)(76116006)(5660300002)(66946007)(66476007)(6506007)(316002)(478600001)(186003)(7416002)(52536014)(4326008)(8936002)(26005)(9686003)(2906002)(71200400001)(33440700001)(7696005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: rHbyuqL68E1ypyT1+2giYjmAVja/+KJSDDGTIusFxYXXFhtVc893rnIb4KT1oGjnhr8AKXOTigT9wyJr+oSP+mVyQWZAxeC30isQT6MWWvKePeUONUO0sNJ1tIIusLc7KHCBJKEircoHob9Hi0PZLldPSsBL93+kLiznCozKR6urWuQoiCdlFRN5qJVQwLS5J9FgSepguVUTnMpZk0D8/AzuGysOj4VWU74CG3kkjeTjC2FlZvICFjBdR1qhd3TYRfOD5q7JQsjnZn+p4VxLOuXTKAHFX9mr4EPP/5Ce/0XI9xDaDN1113hyZmwFxu81vBfBMc0JPu+W76/Ww8M/HrLuh+aDCIoHMero7em1h1vxwOFisFlanO4pJz6IKOhkMm3i+fFK9rTV5pnMCZ4ey68Ndt2YI69XOvPzexBurB97y777h4NgSs+bKrTIZ7CZ/9z/WKelnh8fXEOnQIzsAEm9vsDY2RAyBgShzHnVCts=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 13 May 2020 05:05:48 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:30959 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730603AbgEMJFr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:05:47 -0400
+X-UUID: 1c94421455df4e59b215e8ab80cba6f8-20200513
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=5D8WCKWhqtUmM0QZKWnoCy74fM9ScjwQw/X1UTYKKjQ=;
+        b=EujlaFy5m20lUy8K644gzWZF6PcKjM4OVXTQivTdUy5lse8kQyCNMk1s54WcZ3EsKU7EYtu5O/IMoxLjc7whnNX6LgOz8OZdOEAX8kkpxAiBl+MbsFRi10XEecygkmG88a1L3DyuqLljeBna+0OxqyUfd2q1SsrfsDcxE2MK0tA=;
+X-UUID: 1c94421455df4e59b215e8ab80cba6f8-20200513
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1888924811; Wed, 13 May 2020 17:05:45 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 13 May 2020 17:05:42 +0800
+Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 13 May 2020 17:05:41 +0800
+Message-ID: <1589360744.14554.10.camel@mtksdccf07>
+Subject: Re: [PATCH v2 1/3] rcu/kasan: record and print call_rcu() call stack
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Linux ARM" <linux-arm-kernel@lists.infradead.org>
+Date:   Wed, 13 May 2020 17:05:44 +0800
+In-Reply-To: <CACT4Y+Zv3rCZs8z56NHM0hHWMwQr_2AT8nx0vUigzMG2v3Rt8Q@mail.gmail.com>
+References: <20200511023111.15310-1-walter-zh.wu@mediatek.com>
+         <CACT4Y+YWNwTSoheJhc3nMdQi9m719F3PzpGo3TfRY3zAg9EwuQ@mail.gmail.com>
+         <CACT4Y+bO1Zg_jgFHbOWgp7fLAADOQ_-AZmjEHz0WG7=oyOt4Gg@mail.gmail.com>
+         <1589203771.21284.22.camel@mtksdccf07>
+         <CACT4Y+aOkuH6Dn+L+wv1qVOLgXyCY_Ck4hecAMw3DgyBgC9qHw@mail.gmail.com>
+         <1589254720.19238.36.camel@mtksdccf07>
+         <CACT4Y+aibZEBR-3bos3ox5Tuu48TnHC20mDDN0AkWeRUKrT0aw@mail.gmail.com>
+         <1589334472.19238.44.camel@mtksdccf07>
+         <CACT4Y+Zv3rCZs8z56NHM0hHWMwQr_2AT8nx0vUigzMG2v3Rt8Q@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c8d3405c-33ce-4a6a-56f6-08d7f71ccb35
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2020 09:05:33.5410
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Vfz5EV79WnHnTPTa0tXoQoJ9djZbxIGq1VhwL/onmcVqdwIBJP8NsKsj+1vqFiDXV5tuHCVhM5JN2/CHryEUtA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6765
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/05/13 Sascha Hauer <s.hauer@pengutronix.de> wrote:d
-> >  drivers/spi/spi-imx.c | 16 ++++++++--------
-> >  1 file changed, 8 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c index
-> > f4f28a4..70df8e6 100644
-> > --- a/drivers/spi/spi-imx.c
-> > +++ b/drivers/spi/spi-imx.c
-> > @@ -585,8 +585,8 @@ static int mx51_ecspi_prepare_transfer(struct
-> spi_imx_data *spi_imx,
-> >  	ctrl |=3D mx51_ecspi_clkdiv(spi_imx, t->speed_hz, &clk);
-> >  	spi_imx->spi_bus_clk =3D clk;
-> >
-> > -	if (spi_imx->usedma)
-> > -		ctrl |=3D MX51_ECSPI_CTRL_SMC;
-> > +	/* ERR009165: work in XHC mode as PIO */
-> > +	ctrl &=3D ~MX51_ECSPI_CTRL_SMC;
-> >
-> >  	writel(ctrl, spi_imx->base + MX51_ECSPI_CTRL);
-> >
-> > @@ -617,7 +617,7 @@ static void mx51_setup_wml(struct spi_imx_data
-> *spi_imx)
-> >  	 * and enable DMA request.
-> >  	 */
-> >  	writel(MX51_ECSPI_DMA_RX_WML(spi_imx->wml - 1) |
-> > -		MX51_ECSPI_DMA_TX_WML(spi_imx->wml) |
-> > +		MX51_ECSPI_DMA_TX_WML(0) |
-> >  		MX51_ECSPI_DMA_RXT_WML(spi_imx->wml) |
-> >  		MX51_ECSPI_DMA_TEDEN | MX51_ECSPI_DMA_RXDEN |
-> >  		MX51_ECSPI_DMA_RXTDEN, spi_imx->base + MX51_ECSPI_DMA);
-> @@ -1171,7
-> > +1171,11 @@ static int spi_imx_dma_configure(struct spi_master *master)
-> >  	tx.direction =3D DMA_MEM_TO_DEV;
-> >  	tx.dst_addr =3D spi_imx->base_phys + MXC_CSPITXDATA;
-> >  	tx.dst_addr_width =3D buswidth;
-> > -	tx.dst_maxburst =3D spi_imx->wml;
-> > +	/*
-> > +	 * For ERR009165 with tx_wml =3D 0 could enlarge burst size to fifo s=
-ize
-> > +	 * to speed up fifo filling as possible.
-> > +	 */
-> > +	tx.dst_maxburst =3D spi_imx->devtype_data->fifo_size;
->=20
-> In the next patch this is changed again to:
->=20
-> +       if (spi_imx->devtype_data->tx_glitch_fixed)
-> +               tx.dst_maxburst =3D spi_imx->wml;
-> +       else
-> +               tx.dst_maxburst =3D spi_imx->devtype_data->fifo_size;
->=20
-> So with tx_glitch_fixed we end up with tx.dst_maxburst being the same as =
-two
-> patches before which is rather confusing. Better introduce tx_glitch_fixe=
-d in
-> this patch, or maybe even merge this patch and the next one.
-Sorry confused you, I should repleace 'tx_wml=3D0' in the above comments wi=
-th ' TX_THRESHOLD=3D0', which means tx transfer dma have to wait all the tx=
- data in tx fifo transferred with ERR009165 rather than generically 'tx_wml=
-' (for example --half fifo size used as TX_THRESHOLD). Obviously TX_THRESHO=
-LD=3D0 would down performance, so enlarge dst_maxburst to fifo size as PIO =
-with ERR009165. After ERR009165 fixed at HW level. TX_THRESHOLD could be us=
-ed as common 'spi_imx->wml' so change it back. Will add more detail informa=
-tion in v8.
+T24gV2VkLCAyMDIwLTA1LTEzIGF0IDA4OjUxICswMjAwLCAnRG1pdHJ5IFZ5dWtvdicgdmlhIGth
+c2FuLWRldiB3cm90ZToNCj4gT24gV2VkLCBNYXkgMTMsIDIwMjAgYXQgMzo0OCBBTSBXYWx0ZXIg
+V3UgPHdhbHRlci16aC53dUBtZWRpYXRlay5jb20+IHdyb3RlOg0KPiA+ID4gPiA+IEFyZSB5b3Ug
+c3VyZSBpdCB3aWxsIGluY3JlYXNlIG9iamVjdCBzaXplPw0KPiA+ID4gPiA+IEkgdGhpbmsgd2Ug
+b3ZlcmxhcCBrYXNhbl9mcmVlX21ldGEgd2l0aCB0aGUgb2JqZWN0IGFzIHdlbGwuIFRoZSBvbmx5
+DQo+ID4gPiA+ID4gY2FzZSB3ZSBkb24ndCBvdmVybGFwIGthc2FuX2ZyZWVfbWV0YSB3aXRoIHRo
+ZSBvYmplY3QgYXJlDQo+ID4gPiA+ID4gU0xBQl9UWVBFU0FGRV9CWV9SQ1UgfHwgY2FjaGUtPmN0
+b3IuIEJ1dCB0aGVzZSBhcmUgcmFyZSBhbmQgaXQgc2hvdWxkDQo+ID4gPiA+ID4gb25seSBhZmZl
+Y3Qgc21hbGwgb2JqZWN0cyB3aXRoIHNtYWxsIHJlZHpvbmVzLg0KPiA+ID4gPiA+IEFuZCBJIHRo
+aW5rIG5vdyB3ZSBzaW1wbHkgaGF2ZSBhIGJ1ZyBmb3IgdGhlc2Ugb2JqZWN0cywgd2UgY2hlY2sN
+Cj4gPiA+ID4gPiBLQVNBTl9LTUFMTE9DX0ZSRUUgYW5kIHRoZW4gYXNzdW1lIG9iamVjdCBjb250
+YWlucyBmcmVlIHN0YWNrLCBidXQgZm9yDQo+ID4gPiA+ID4gb2JqZWN0cyB3aXRoIGN0b3IsIHRo
+ZXkgc3RpbGwgY29udGFpbiBsaXZlIG9iamVjdCBkYXRhLCB3ZSBkb24ndCBzdG9yZQ0KPiA+ID4g
+PiA+IGZyZWUgc3RhY2sgaW4gdGhlbS4NCj4gPiA+ID4gPiBTdWNoIG9iamVjdHMgY2FuIGJlIGJv
+dGggZnJlZSBhbmQgc3RpbGwgY29udGFpbiB1c2VyIGRhdGEuDQo+ID4gPiA+ID4NCj4gPiA+ID4N
+Cj4gPiA+ID4gT3ZlcmxheSBrYXNhbl9mcmVlX21ldGEuIEkgc2VlLiBidXQgb3ZlcmxheSBpdCBv
+bmx5IHdoZW4gdGhlIG9iamVjdCB3YXMNCj4gPiA+ID4gZnJlZWQuIGthc2FuX2ZyZWVfbWV0YSB3
+aWxsIGJlIHVzZWQgdW50aWwgZnJlZSBvYmplY3QuDQo+ID4gPiA+IDEpLiBXaGVuIHB1dCBvYmpl
+Y3QgaW50byBxdWFyYW50aW5lLCBpdCBuZWVkIGthc2FuX2ZyZWVfbWV0YS4NCj4gPiA+ID4gMiku
+IFdoZW4gdGhlIG9iamVjdCBleGl0IGZyb20gcXVhcmFudGluZSwgaXQgbmVlZCBrYXNhbl9mcmVl
+X21ldGENCj4gPiA+ID4NCj4gPiA+ID4gSWYgd2UgY2hvb3NlIHRvIG92ZXJsYXkga2FzYW5fZnJl
+ZV9tZXRhLCB0aGVuIHRoZSBmcmVlIHN0YWNrIHdpbGwgYmUNCj4gPiA+ID4gc3RvcmVkIHZlcnkg
+bGF0ZS4gSXQgbWF5IGhhcyBubyBmcmVlIHN0YWNrIGluIHJlcG9ydC4NCj4gPiA+DQo+ID4gPiBT
+b3JyeSwgSSBkb24ndCB1bmRlcnN0YW5kIHdoYXQgeW91IG1lYW4uDQo+ID4gPg0KPiA+ID4gV2h5
+IHdpbGwgaXQgYmUgc3RvcmVkIHRvbyBsYXRlPw0KPiA+ID4gSW4gX19rYXNhbl9zbGFiX2ZyZWUo
+KSBwdXR0aW5nIGludG8gcXVhcmFudGluZSBhbmQgcmVjb3JkaW5nIGZyZWUNCj4gPiA+IHN0YWNr
+IGFyZSBsaXRlcmFsbHkgYWRqYWNlbnQgbGluZXMgb2YgY29kZToNCj4gPiA+DQo+ID4gPiBzdGF0
+aWMgYm9vbCBfX2thc2FuX3NsYWJfZnJlZShzdHJ1Y3Qga21lbV9jYWNoZSAqY2FjaGUsIHZvaWQg
+Km9iamVjdCwNCj4gPiA+ICAgICAgIHVuc2lnbmVkIGxvbmcgaXAsIGJvb2wgcXVhcmFudGluZSkN
+Cj4gPiA+IHsNCj4gPiA+ICAgICAuLi4NCj4gPiA+ICAgICBrYXNhbl9zZXRfZnJlZV9pbmZvKGNh
+Y2hlLCBvYmplY3QsIHRhZyk7DQo+ID4gPiAgICAgcXVhcmFudGluZV9wdXQoZ2V0X2ZyZWVfaW5m
+byhjYWNoZSwgb2JqZWN0KSwgY2FjaGUpOw0KPiA+ID4NCj4gPiA+DQo+ID4gPiBKdXN0IHRvIG1h
+a2Ugc3VyZSwgd2hhdCBJIG1lYW50IGlzIHRoYXQgd2UgYWRkIGZyZWVfdHJhY2sgdG8ga2FzYW5f
+ZnJlZV9tZXRhOg0KPiA+ID4NCj4gPiA+IHN0cnVjdCBrYXNhbl9mcmVlX21ldGEgew0KPiA+ID4g
+ICAgIHN0cnVjdCBxbGlzdF9ub2RlIHF1YXJhbnRpbmVfbGluazsNCj4gPiA+ICsgIHN0cnVjdCBr
+YXNhbl90cmFjayBmcmVlX3RyYWNrOw0KPiA+ID4gfTsNCj4gPiA+DQo+ID4NCj4gPiBXaGVuIEkg
+c2VlIGFib3ZlIHN0cnVjdCBrYXNhbl9mcmVlX21ldGEsIEkga25vdyB3aHkgeW91IGRvbid0IHVu
+ZGVyc3RhbmQNCj4gPiBteSBtZWFuaW5nLCBiZWNhdXNlIEkgdGhvdWdodCB5b3Ugd2VyZSBnb2lu
+ZyB0byBvdmVybGF5IHRoZQ0KPiA+IHF1YXJhbnRpbmVfbGluayBieSBmcmVlX3RyYWNrLCBidXQg
+aXQgc2VlbXMgbGlrZSB0byBhZGQgZnJlZV90cmFjayB0bw0KPiA+IGthc2FuX2ZyZWVfbWV0YS4g
+RG9lcyBpdCBlbmxhcmdlIG1ldGEtZGF0YSBzaXplPw0KPiANCj4gSSB3b3VsZCBhc3N1bWUgaXQg
+c2hvdWxkIG5vdCBpbmNyZWFzZSBtZXRhLWRhdGEgc2l6ZS4gSW4gYm90aCBjYXNlcyB3ZQ0KPiBz
+dG9yZSBleGFjdGx5IHRoZSBzYW1lIGluZm9ybWF0aW9uIGluc2lkZSBvZiB0aGUgb2JqZWN0OiBx
+dWFyYW50aW5lDQo+IGxpbmsgYW5kIGZyZWUgdHJhY2suDQo+IEkgc2VlIGl0IG1vcmUgYXMgYSBx
+dWVzdGlvbiBvZiBjb2RlIG9yZ2FuaXphdGlvbi4gV2UgYWxyZWFkeSBoYXZlIGENCj4gY29uY2Vw
+dCBvZiAidGhpcyBkYXRhIGlzIHBsYWNlZCBpbnNpZGUgb2YgdGhlIGZyZWVkIG9iamVjdCIsIHdl
+DQo+IGFscmVhZHkgaGF2ZSBhIG5hbWUgZm9yIGl0IChrYXNhbl9mcmVlX21ldGEpLCB3ZSBhbHJl
+YWR5IGhhdmUgY29kZSB0bw0KPiBjaG9vc2Ugd2hlcmUgdG8gcGxhY2UgaXQsIHdlIGFscmVhZHkg
+aGF2ZSBoZWxwZXIgZnVuY3Rpb25zIHRvIGFjY2Vzcw0KPiBpdC4gQW5kIHlvdXIgY2hhbmdlIGVm
+ZmVjdGl2ZWx5IGR1cGxpY2F0ZXMgYWxsIG9mIHRoaXMgdG8gcGxhY2UgdGhlDQo+IGZyZWUgdHJh
+Y2suDQo+IA0KDQpJIHdhbnQgdG8gbWFrZSBhIHN1bW1hcnkuIFdoaWNoIG9mIHRoZSBmb2xsb3dp
+bmcgaXMgdGhlIGFwcHJvYWNoIHdlDQp3YW50PyBvciBpZiBJIGhhdmUgc29tZSBtaXN1bmRlcnN0
+YW5kaW5ncywgcGxlYXNlIGhlbHAgbWUgdG8gY29ycmVjdC4NClRoYW5rcy4NCg0KMSkgRm9yIGRp
+ZmZlcmVudCBvYmplY3QsIHRoZW4gaXQgd2lsbCBoYXMgdHdvIHdheXMuDQoxLmEpIFdoZW4gb2Jq
+ZWN0IGFyZSBMQUJfVFlQRVNBRkVfQllfUkNVIHx8IGNhY2hlLT5jdG9yLCB0aGVuIHN0b3JlIGZy
+ZWUNCnN0YWNrIGludG8gZnJlZSB0cmFjayBvZiBzdHJ1Y3Qga2FzYW5fZnJlZV9tZXRhLg0KMi5i
+KSBFeGNlcHQgMS5hKSwgc3RvcmUgZnJlZSBzdGFjayBpbnRvIGZyZWVkIG9iamVjdC4NCg0Kb3IN
+Cg0KMikgV2UgYWx3YXlzIHN0b3JlIGZyZWUgc3RhY2sgaW50byBmcmVlIHRyYWNrIG9mIHN0cnVj
+dCBrYXNhbl9mcmVlX21ldGENCg0KDQo+ID4gPiBBbmQgSSB0aGluayBpdHMgbGlmZS10aW1lIGFu
+ZCBldmVyeXRoaW5nIHNob3VsZCBiZSBleGFjdGx5IHdoYXQgd2UgbmVlZC4NCj4gPiA+DQo+ID4g
+PiBBbHNvIGl0IHNob3VsZCBoZWxwIHRvIGZpeCB0aGUgcHJvYmxlbSB3aXRoIGN0b3JzOiBrYXNh
+bl9mcmVlX21ldGEgaXMNCj4gPiA+IGFscmVhZHkgYWxsb2NhdGVkIG9uIHRoZSBzaWRlIGZvciBz
+dWNoIG9iamVjdHMsIGFuZCB0aGF0J3MgZXhhY3RseQ0KPiA+ID4gd2hhdCB3ZSBuZWVkIGZvciBv
+YmplY3RzIHdpdGggY3RvcidzLg0KPiA+DQo+ID4gSSBzZWUuDQo+IA0KDQo=
+
