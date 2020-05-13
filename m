@@ -2,109 +2,226 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1D2CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 410DAC2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7676220643
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAF8B20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 13:29:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bktn0BtX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387603AbgEMN15 (ORCPT
+        id S2387611AbgEMN3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 09:27:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:46022 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728341AbgEMN15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 09:27:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D01F230E;
-        Wed, 13 May 2020 06:27:56 -0700 (PDT)
-Received: from [10.57.36.85] (unknown [10.57.36.85])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 101FC3F71E;
-        Wed, 13 May 2020 06:27:54 -0700 (PDT)
-Subject: Re: [PATCH v4 03/38] iommu: add generic helper for mapping sgtable
- objects
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Joerg Roedel <joro@8bytes.org>
-References: <20200512085710.14688-1-m.szyprowski@samsung.com>
- <20200512090058.14910-1-m.szyprowski@samsung.com>
- <CGME20200512090108eucas1p2168167ab5e1de09df0d5def83f64dbfe@eucas1p2.samsung.com>
- <20200512090058.14910-3-m.szyprowski@samsung.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <a5f6922a-686e-d36d-e706-e36d02bff141@arm.com>
-Date:   Wed, 13 May 2020 14:27:52 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 13 May 2020 09:29:05 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45577 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726087AbgEMN3E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 09:29:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589376542;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KoV5Wqms5AH46esJ6zYoKxLFFe0Vww3N0l8ERghmRN4=;
+        b=bktn0BtX+60/E/PCsf6EUj3PeNMIsIYiGNNU63IrfDd5OBgcW9qVJlL0rmyg/uv6Dnz1AN
+        4AX1u3xL80zKar3IiCjImwY3IB1Pajd26vQmKgp1x9L5xj6zQRi9NhZwdUX5blx6t/uPDR
+        JreJDNxx2ub1SEvPmljM5HO3kB99xB0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-367-HnptDom5NM2MsQHnVL9a5Q-1; Wed, 13 May 2020 09:28:58 -0400
+X-MC-Unique: HnptDom5NM2MsQHnVL9a5Q-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0DEED80183C;
+        Wed, 13 May 2020 13:28:56 +0000 (UTC)
+Received: from [10.36.112.22] (ovpn-112-22.ams2.redhat.com [10.36.112.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 94BE910013BD;
+        Wed, 13 May 2020 13:28:45 +0000 (UTC)
+Subject: Re: [PATCH v11 00/13] SMMUv3 Nested Stage Setup (IOMMU part)
+To:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
+        Zhangfei Gao <zhangfei.gao@linaro.org>,
+        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "will@kernel.org" <will@kernel.org>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>
+Cc:     "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "yi.l.liu@intel.com" <yi.l.liu@intel.com>,
+        "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
+        "tn@semihalf.com" <tn@semihalf.com>,
+        "bbhushan2@marvell.com" <bbhushan2@marvell.com>
+References: <20200414150607.28488-1-eric.auger@redhat.com>
+ <eb27f625-ad7a-fcb5-2185-5471e4666f09@linaro.org>
+ <06fe02f7-2556-8986-2f1e-dcdf59773b8c@redhat.com>
+ <c7786a2a314e4c4ab37ef157ddfa23af@huawei.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <3858dd8c-ee55-b0d7-96cc-3c047ba8f652@redhat.com>
+Date:   Wed, 13 May 2020 15:28:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20200512090058.14910-3-m.szyprowski@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <c7786a2a314e4c4ab37ef157ddfa23af@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-12 10:00 am, Marek Szyprowski wrote:
-> struct sg_table is a common structure used for describing a memory
-> buffer. It consists of a scatterlist with memory pages and DMA addresses
-> (sgl entry), as well as the number of scatterlist entries: CPU pages
-> (orig_nents entry) and DMA mapped pages (nents entry).
-> 
-> It turned out that it was a common mistake to misuse nents and orig_nents
-> entries, calling mapping functions with a wrong number of entries.
-> 
-> To avoid such issues, lets introduce a common wrapper operating directly
-> on the struct sg_table objects, which take care of the proper use of
-> the nents and orig_nents entries.
+Hi Shameer,
 
-Modulo Joerg's comments,
-
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
-> For more information, see '[PATCH v4 00/38] DRM: fix struct sg_table nents
-> vs. orig_nents misuse' thread:
-> https://lore.kernel.org/dri-devel/20200512085710.14688-1-m.szyprowski@samsung.com/T/
-> ---
->   include/linux/iommu.h | 16 ++++++++++++++++
->   1 file changed, 16 insertions(+)
+On 5/7/20 8:59 AM, Shameerali Kolothum Thodi wrote:
+> Hi Eric,
 > 
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index 7cfd2dd..ba662ba 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -478,6 +478,22 @@ extern size_t iommu_map_sg_atomic(struct iommu_domain *domain,
->   extern void iommu_set_fault_handler(struct iommu_domain *domain,
->   			iommu_fault_handler_t handler, void *token);
->   
-> +/**
-> + * iommu_map_sgtable - Map the given buffer to the IOMMU domain
-> + * @domain:	The IOMMU domain to perfor
-> + * @iova:	The start addrees to map the buffer
-> + * @sgt:	The sg_table object describing the buffer
-> + * @prot:	IOMMU protection bits
-> + *
-> + * Create a mapping at @iova for the buffer described by a scatterlist
-> + * stored in the given sg_table object in the provided IOMMU domain.
-> + */
-> +static inline size_t iommu_map_sgtable(struct iommu_domain *domain,
-> +			unsigned long iova, struct sg_table *sgt, int prot)
-> +{
-> +	return iommu_map_sg(domain, iova, sgt->sgl, sgt->orig_nents, prot);
-> +}
-> +
->   extern void iommu_get_resv_regions(struct device *dev, struct list_head *list);
->   extern void iommu_put_resv_regions(struct device *dev, struct list_head *list);
->   extern void generic_iommu_put_resv_regions(struct device *dev,
+>> -----Original Message-----
+>> From: Shameerali Kolothum Thodi
+>> Sent: 30 April 2020 10:38
+>> To: 'Auger Eric' <eric.auger@redhat.com>; Zhangfei Gao
+>> <zhangfei.gao@linaro.org>; eric.auger.pro@gmail.com;
+>> iommu@lists.linux-foundation.org; linux-kernel@vger.kernel.org;
+>> kvm@vger.kernel.org; kvmarm@lists.cs.columbia.edu; will@kernel.org;
+>> joro@8bytes.org; maz@kernel.org; robin.murphy@arm.com
+>> Cc: jean-philippe@linaro.org; alex.williamson@redhat.com;
+>> jacob.jun.pan@linux.intel.com; yi.l.liu@intel.com; peter.maydell@linaro.org;
+>> tn@semihalf.com; bbhushan2@marvell.com
+>> Subject: RE: [PATCH v11 00/13] SMMUv3 Nested Stage Setup (IOMMU part)
+>>
+>> Hi Eric,
+>>
+>>> -----Original Message-----
+>>> From: Auger Eric [mailto:eric.auger@redhat.com]
+>>> Sent: 16 April 2020 08:45
+>>> To: Zhangfei Gao <zhangfei.gao@linaro.org>; eric.auger.pro@gmail.com;
+>>> iommu@lists.linux-foundation.org; linux-kernel@vger.kernel.org;
+>>> kvm@vger.kernel.org; kvmarm@lists.cs.columbia.edu; will@kernel.org;
+>>> joro@8bytes.org; maz@kernel.org; robin.murphy@arm.com
+>>> Cc: jean-philippe@linaro.org; Shameerali Kolothum Thodi
+>>> <shameerali.kolothum.thodi@huawei.com>; alex.williamson@redhat.com;
+>>> jacob.jun.pan@linux.intel.com; yi.l.liu@intel.com; peter.maydell@linaro.org;
+>>> tn@semihalf.com; bbhushan2@marvell.com
+>>> Subject: Re: [PATCH v11 00/13] SMMUv3 Nested Stage Setup (IOMMU part)
+>>>
+>>> Hi Zhangfei,
+>>>
+>>> On 4/16/20 6:25 AM, Zhangfei Gao wrote:
+>>>>
+>>>>
+>>>> On 2020/4/14 下午11:05, Eric Auger wrote:
+>>>>> This version fixes an issue observed by Shameer on an SMMU 3.2,
+>>>>> when moving from dual stage config to stage 1 only config.
+>>>>> The 2 high 64b of the STE now get reset. Otherwise, leaving the
+>>>>> S2TTB set may cause a C_BAD_STE error.
+>>>>>
+>>>>> This series can be found at:
+>>>>> https://github.com/eauger/linux/tree/v5.6-2stage-v11_10.1
+>>>>> (including the VFIO part)
+>>>>> The QEMU fellow series still can be found at:
+>>>>> https://github.com/eauger/qemu/tree/v4.2.0-2stage-rfcv6
+>>>>>
+>>>>> Users have expressed interest in that work and tested v9/v10:
+>>>>> - https://patchwork.kernel.org/cover/11039995/#23012381
+>>>>> - https://patchwork.kernel.org/cover/11039995/#23197235
+>>>>>
+>>>>> Background:
+>>>>>
+>>>>> This series brings the IOMMU part of HW nested paging support
+>>>>> in the SMMUv3. The VFIO part is submitted separately.
+>>>>>
+>>>>> The IOMMU API is extended to support 2 new API functionalities:
+>>>>> 1) pass the guest stage 1 configuration
+>>>>> 2) pass stage 1 MSI bindings
+>>>>>
+>>>>> Then those capabilities gets implemented in the SMMUv3 driver.
+>>>>>
+>>>>> The virtualizer passes information through the VFIO user API
+>>>>> which cascades them to the iommu subsystem. This allows the guest
+>>>>> to own stage 1 tables and context descriptors (so-called PASID
+>>>>> table) while the host owns stage 2 tables and main configuration
+>>>>> structures (STE).
+>>>>>
+>>>>>
+>>>>
+>>>> Thanks Eric
+>>>>
+>>>> Tested v11 on Hisilicon kunpeng920 board via hardware zip accelerator.
+>>>> 1. no-sva works, where guest app directly use physical address via ioctl.
+>>> Thank you for the testing. Glad it works for you.
+>>>> 2. vSVA still not work, same as v10,
+>>> Yes that's normal this series is not meant to support vSVM at this stage.
+>>>
+>>> I intend to add the missing pieces during the next weeks.
+>>
+>> Thanks for that. I have made an attempt to add the vSVA based on
+>> your v10 + JPBs sva patches. The host kernel and Qemu changes can
+>> be found here[1][2].
+>>
+>> This basically adds multiple pasid support on top of your changes.
+>> I have done some basic sanity testing and we have some initial success
+>> with the zip vf dev on our D06 platform. Please note that the STALL event is
+>> not yet supported though, but works fine if we mlock() guest usr mem.
 > 
+> I have added STALL support for our vSVA prototype and it seems to be
+> working(on our hardware). I have updated the kernel and qemu branches with
+> the same[1][2]. I should warn you though that these are prototype code and I am pretty
+> much re-using the VFIO_IOMMU_SET_PASID_TABLE interface for almost everything.
+> But thought of sharing, in case if it is useful somehow!.
+
+Thank you again for sharing the POC. I looked at the kernel and QEMU
+branches.
+
+Here are some preliminary comments:
+- "arm-smmu-v3: Reset S2TTB while switching back from nested stage":  as
+you mentionned S2TTB reset now is featured in v11
+- "arm-smmu-v3: Add support for multiple pasid in nested mode": I could
+easily integrate this into my series. Update the iommu api first and
+pass multiple CD info in a separate patch
+- "arm-smmu-v3: Add support to Invalidate CD": CD invalidation should be
+cascaded to host through the PASID cache invalidation uapi (no pb you
+warned us for the POC you simply used VFIO_IOMMU_SET_PASID_TABLE). I
+think I should add this support in my original series although it does
+not seem to trigger any issue up to now.
+- "arm-smmu-v3: Remove duplication of fault propagation". I understand
+the transcode is done somewhere else with SVA but we still need to do it
+if a single CD is used, right? I will review the SVA code to better
+understand.
+- for the STALL response injection I would tend to use a new VFIO region
+for responses. At the moment there is a single VFIO region for reporting
+the fault.
+
+On QEMU side:
+- I am currently working on 3.2 range invalidation support which is
+needed for DPDK/VFIO
+- While at it I will look at how to incrementally introduce some of the
+features you need in this series.
+
+Thanks
+
+Eric
+
+
+
+> 
+> Thanks,
+> Shameer
+> 
+> [1]https://github.com/hisilicon/kernel-dev/commits/vsva-prototype-host-v1
+> 
+> [2]https://github.com/hisilicon/qemu/tree/v4.2.0-2stage-rfcv6-vsva-prototype-v1
+> 
+
