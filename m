@@ -2,163 +2,92 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3595FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D46C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 375AB20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6779020575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 21:50:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729764AbgEMVs7 (ORCPT
+        id S1729893AbgEMVuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 17:48:59 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:55322 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729487AbgEMVs7 (ORCPT
+        Wed, 13 May 2020 17:50:09 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:36723 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729487AbgEMVuI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 17:48:59 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 8207E1C0281; Wed, 13 May 2020 23:48:57 +0200 (CEST)
-Date:   Wed, 13 May 2020 23:48:56 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Miroslav Benes <mbenes@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
-        Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>
-Subject: Re: [PATCH 4.19 37/48] x86/entry/64: Fix unwind hints in register
- clearing code
-Message-ID: <20200513214856.GA27858@amd>
-References: <20200513094351.100352960@linuxfoundation.org>
- <20200513094401.325580400@linuxfoundation.org>
+        Wed, 13 May 2020 17:50:08 -0400
+Received: from mail-qv1-f54.google.com ([209.85.219.54]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MbRbr-1ixzYF26Z7-00bqgH; Wed, 13 May 2020 23:50:06 +0200
+Received: by mail-qv1-f54.google.com with SMTP id ee19so687688qvb.11;
+        Wed, 13 May 2020 14:50:06 -0700 (PDT)
+X-Gm-Message-State: AOAM531JAEN9kSOOT1Y1baGa3r4pXSpQxM3vbmLSiwXKY1sseErZos0/
+        szpHAOjmK/PoYhEmkoU4y5YmUzsnfQ3Db0WCQcU=
+X-Google-Smtp-Source: ABdhPJxu6IOeZhVVTBpAnf6wMcH+LrEESP7lfvaexyVk2mxPcafnnpFLiQtV6YqpD7k1w+UdsGU8e7ppGk9I/merpdo=
+X-Received: by 2002:a0c:eb11:: with SMTP id j17mr1706535qvp.197.1589406605322;
+ Wed, 13 May 2020 14:50:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="mYCpIKhGyMATD0i+"
-Content-Disposition: inline
-In-Reply-To: <20200513094401.325580400@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20200509120707.188595-1-arnd@arndb.de> <20200509120707.188595-2-arnd@arndb.de>
+ <87v9l24qz6.fsf@kamboji.qca.qualcomm.com> <87r1vq4qev.fsf@kamboji.qca.qualcomm.com>
+ <87d078tjl0.fsf_-_@kamboji.qca.qualcomm.com> <20200513154847.GA158356@rani.riverdale.lan>
+ <CAK8P3a3KpM91+jv6+7KSKFRpwLqf38Lz1wbGhkFFyfDb9oahgA@mail.gmail.com> <20200513214128.GB6733@zn.tnic>
+In-Reply-To: <20200513214128.GB6733@zn.tnic>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 13 May 2020 23:49:49 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3XPCyNM7s3vbn8JYK6swA3ZpPtTWB+uhmAE3YEX-nmig@mail.gmail.com>
+Message-ID: <CAK8P3a3XPCyNM7s3vbn8JYK6swA3ZpPtTWB+uhmAE3YEX-nmig@mail.gmail.com>
+Subject: Re: gcc-10: kernel stack is corrupted and fails to boot
+To:     Borislav Petkov <bp@suse.de>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:ObwVCSlB/YIwv/A8inaMufMiam7thFJq82AUznYSpJ74m2HOXz7
+ TcPAdoPZ7qyhsM2nd0SmTXxwQvPlXdZoZTnC7dJekeqFSJ2a7ZD8hVIpnHP2khbHU+8gsK0
+ YjZl0nAkqb/Jx8vEs0h8ucVVZlIrfIMBBkcp1fc4MozTwaO66Tkj25v7tZh7+e+J7vPkZjk
+ ggoxlgoCpekurLCQI7PYA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:tDehfZeI1xE=:qrAs+11EYEgqXNdleolY3D
+ xku0pVmWpaS80lOiusVPe/MyQGiBkiCjhQbqUKlGnweUiCpQ4AQVAzmaxytZhWhrA6sT18A0C
+ CVC0FRTMiP+LPFSx3wDDOnReKHd7EVLSUvRDdiRyEUAI2V7etT18DyeeBIq33hh176X/AOKGx
+ q4t2DV8xAHNWXk+UES7Qxz7f0dfwyO5tA9N+5UeQPX5pvl1wCNGb8wurOfiPx740RWGXmVKGD
+ SaADQUk4MWogCRgz48RYAArbnUhpgDX7pZpmFQvditqVYEveu9l6UIT4/xVMHTI54lLv8R3NT
+ Rfyj1lLjPFy1nz3JOyrcdiwmMt47803sarE8HwYN069k5xTVFCq2Bihyoyr3p5uImBmwAqCsx
+ 1l4SwRoF3ITvH2TTxvs+nQZ5gEFIP+rXYOqUkt7fbF6zglQyWMtzcrDlgdo/vOczJdPJquMTg
+ CxZfMs7SLc0uTfKKbTgSnAJOW2qUj4p0/aof10Gl2hAz28npbEqPKmU3oCMB+dFSvANk7BrLI
+ DUz3LksPzkGSg1Z8g7kBOumU9DWtAVZBvjRXz6xi1ZFcRDbnIzUYacv7thXt6Zodro3vthK7y
+ z6S3t9qQq80kKnpIIKSqeo7YI85bDZuG2YJg8poDQb7E9lMWiWzRbJ/uaUP4TeOWlfp/Ccy6r
+ PT2yZ2tJOvr2OJ2C5BBF+fKvsaCfNdFB3X4PA4Vk5sH7Vkh51z3fxVRuVYIqKGv1dlaUrE/BQ
+ TSbKcZzVxTaYIgr5XYVXhW+/6mTCPkhGq5kUN3GzFQF7LnurwM3hD38j2+CjnJpkV3u5Bzli1
+ UzGx6I83Rxfu69yh2IyVJyTQWNu4W1lopWJMkG0qxXuSb/YzU0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 13, 2020 at 11:41 PM Borislav Petkov <bp@suse.de> wrote:
+>
+> On Wed, May 13, 2020 at 11:28:09PM +0200, Arnd Bergmann wrote:
+> > I see the patch in linux-next but not in mainline. I suppose we want
+> > it in v5.7 and backported to stable kernels so they can boot when
+> > built with gcc-10?
+>
+> It is queued for 5.8. For a good reason, if you read the whole thread
+> Arvind pointed you to.
+>
+> Lemme guess: gcc10 got released in the meantime (hohumm, website says
+> so) and so we probably should expedite this and send it to Linus now...?
 
---mYCpIKhGyMATD0i+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Right, in particular since Linus started building with gcc-10 already and
+would likely soon run into that problem if he hasn't already ;-)
 
-On Wed 2020-05-13 11:45:03, Greg Kroah-Hartman wrote:
-> From: Josh Poimboeuf <jpoimboe@redhat.com>
->=20
-> commit 06a9750edcffa808494d56da939085c35904e618 upstream.
->=20
-> The PUSH_AND_CLEAR_REGS macro zeroes each register immediately after
-> pushing it.  If an NMI or exception hits after a register is cleared,
-> but before the UNWIND_HINT_REGS annotation, the ORC unwinder will
-> wrongly think the previous value of the register was zero.  This can
-> confuse the unwinding process and cause it to exit early.
->=20
-> Because ORC is simpler than DWARF, there are a limited number of unwind
-> annotation states, so it's not possible to add an individual unwind hint
-> after each push/clear combination.  Instead, the register clearing
-> instructions need to be consolidated and moved to after the
-> UNWIND_HINT_REGS annotation.
-
-This actually makes kernel entry/exit slower, due to poor instruction
-scheduling. And that is a bit of hot path... Is it strictly
-neccessary? Not everyone needs ORC scheduler. Should it be somehow
-optional?
-
-Best regards,
-								Pavel
-
-> -	 * Interleave XOR with PUSH for better uop scheduling:
-> -	 */
->  	.if \save_ret
->  	pushq	%rsi		/* pt_regs->si */
->  	movq	8(%rsp), %rsi	/* temporarily store the return address in %rsi */
-> @@ -114,34 +107,43 @@ For 32-bit we have the following convent
->  	pushq   %rsi		/* pt_regs->si */
->  	.endif
->  	pushq	\rdx		/* pt_regs->dx */
-> -	xorl	%edx, %edx	/* nospec   dx */
->  	pushq   %rcx		/* pt_regs->cx */
-> -	xorl	%ecx, %ecx	/* nospec   cx */
->  	pushq   \rax		/* pt_regs->ax */
->  	pushq   %r8		/* pt_regs->r8 */
-> -	xorl	%r8d, %r8d	/* nospec   r8 */
->  	pushq   %r9		/* pt_regs->r9 */
-> -	xorl	%r9d, %r9d	/* nospec   r9 */
->  	pushq   %r10		/* pt_regs->r10 */
-> -	xorl	%r10d, %r10d	/* nospec   r10 */
->  	pushq   %r11		/* pt_regs->r11 */
-> -	xorl	%r11d, %r11d	/* nospec   r11*/
->  	pushq	%rbx		/* pt_regs->rbx */
-> -	xorl    %ebx, %ebx	/* nospec   rbx*/
->  	pushq	%rbp		/* pt_regs->rbp */
-> -	xorl    %ebp, %ebp	/* nospec   rbp*/
->  	pushq	%r12		/* pt_regs->r12 */
-> -	xorl	%r12d, %r12d	/* nospec   r12*/
->  	pushq	%r13		/* pt_regs->r13 */
-> -	xorl	%r13d, %r13d	/* nospec   r13*/
->  	pushq	%r14		/* pt_regs->r14 */
-> -	xorl	%r14d, %r14d	/* nospec   r14*/
->  	pushq	%r15		/* pt_regs->r15 */
-> -	xorl	%r15d, %r15d	/* nospec   r15*/
->  	UNWIND_HINT_REGS
-> +
->  	.if \save_ret
->  	pushq	%rsi		/* return address on top of stack */
->  	.endif
-> +
-> +	/*
-> +	 * Sanitize registers of values that a speculation attack might
-> +	 * otherwise want to exploit. The lower registers are likely clobbered
-> +	 * well before they could be put to use in a speculative execution
-> +	 * gadget.
-> +	 */
-> +	xorl	%edx,  %edx	/* nospec dx  */
-> +	xorl	%ecx,  %ecx	/* nospec cx  */
-> +	xorl	%r8d,  %r8d	/* nospec r8  */
-> +	xorl	%r9d,  %r9d	/* nospec r9  */
-> +	xorl	%r10d, %r10d	/* nospec r10 */
-> +	xorl	%r11d, %r11d	/* nospec r11 */
-> +	xorl	%ebx,  %ebx	/* nospec rbx */
-> +	xorl	%ebp,  %ebp	/* nospec rbp */
-> +	xorl	%r12d, %r12d	/* nospec r12 */
-> +	xorl	%r13d, %r13d	/* nospec r13 */
-> +	xorl	%r14d, %r14d	/* nospec r14 */
-> +	xorl	%r15d, %r15d	/* nospec r15 */
-> +
->  .endm
-> =20
->  .macro POP_REGS pop_rdi=3D1 skip_r11rcx=3D0
->=20
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---mYCpIKhGyMATD0i+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl68a0gACgkQMOfwapXb+vIrGgCfUxFYifTpou/d/zLj+TzOUT+N
-UvIAn0eMh/YolxsvDJ8kC1h+/gWGhzg2
-=3I5W
------END PGP SIGNATURE-----
-
---mYCpIKhGyMATD0i+--
+      Arnd
