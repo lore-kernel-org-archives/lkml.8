@@ -2,116 +2,136 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32808C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA20C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3404020659
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:50:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B2F720659
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 22:51:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nguQYG41"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j6EbuTzc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731897AbgEMWuc (ORCPT
+        id S1731906AbgEMWvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 18:50:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58566 "EHLO
+        Wed, 13 May 2020 18:51:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731523AbgEMWub (ORCPT
+        by vger.kernel.org with ESMTP id S1731276AbgEMWvL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 18:50:31 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54896C061A0C;
-        Wed, 13 May 2020 15:50:31 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id u6so1386259ljl.6;
-        Wed, 13 May 2020 15:50:31 -0700 (PDT)
+        Wed, 13 May 2020 18:51:11 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AA20C061A0C;
+        Wed, 13 May 2020 15:51:11 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id r8so1295464qtm.11;
+        Wed, 13 May 2020 15:51:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=q/Oigr+3uZfiLaPfc3epkA1fLtCLP5pj4EA6nPtKRSc=;
-        b=nguQYG41jvXLgEprtQDdE6GosUcmgMemKIqnlJFnYAKpswtpWrij3m9IxHQf2uybjk
-         YDCXvtRdVkyWV97328Fmx0UIzdICAfkJSCtgy2iJVvgEd7y6+goFlrxA3hF7tVbD293m
-         Qxd6YFQZOd+kaEVycgFI3ckc6myLE/UZoEBQVHoh5SIwqUjpK9tiG0mtM99sr2xscQJ7
-         GJ3QMagKYZcu/CYzlasjlUEbN/gw8sKobma0dlViXzzLCy/9WzdfnjSTJ4roo+pf8KQc
-         K2ri1f2rWt4nkcV+tqzPXw/rWiYtMXdS/k49iXL0fZQzUljf5lQAUL5EBPienMqLsmz6
-         3jPw==
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=TtpVlZ/2RH6oo7EEPwbarNNxdV4bkajp7+H3tQWdqBo=;
+        b=j6EbuTzcVqeARseNXu0wZHmmYoYVIYoakEBD1XUwFYcWzb7aMwG1QW85Zo+iF/RNdt
+         i9BWaOe2B7+bq4EYo4lMkkK4pCrfhdWFbKEeCZzA538z/s7E+cHXSvx1cPiqDEHcOzpv
+         cwHld95mBK8YJwVBh+WhIdMzx/x/sLShi+iSfYZ8G7QBG/IRD/3GP4NhLHIyFme22O6j
+         yEithcIFUfYA/jW8kyK1sSBJ8J1oE9esDoPtP14/2Bjgn92+LjehMRmMXXZaDiXl/vpa
+         Zt3aGLMXfgtHJXDRAQ13KbdyQUd9/dJOmH1M8rPAFK3daMxlgofZW9/6Gwk4BELeDZX9
+         A0gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=q/Oigr+3uZfiLaPfc3epkA1fLtCLP5pj4EA6nPtKRSc=;
-        b=Qs/Vux6XASl5JOki3TI0QacvsxXJiH81pTcBfxdYZNr2fMaqekwtYcWxfER+dfCjQR
-         e927IanvpvedaGyKQ7duPKu53V8W6AleDg1lWm7Da4CDA5mvQa8UBhU0gPkPLE+ErxCN
-         gwzYD2fJ0cmRAmbCIfuI3iMj5JIkHfrcRbUUr3xL2at3rpwFd+PjrFq3DXdifwaByUYn
-         Vk6GpAE81tYsufdnKzRNOjPEHn9ZtLTz5L3YXxIP05bNvqcElf9WON8DL64aIdU0r2rj
-         QENhTw4o0Bmw8TpLhSVe/SozX44K1F3UlQepmyzFNU/7EaWQcgCEckqlFxb4fZjNm9hZ
-         rHAg==
-X-Gm-Message-State: AOAM530K85fiYEuyg4zxl/44nLrhwLzcgND4bRsx3UwQfVk2mH6b2l75
-        2ViW15b8jzFOwRCL/a+L08uBZp60pCGYi5B0pfY=
-X-Google-Smtp-Source: ABdhPJzN3ySN/Thfh2m+erEMY5/DkyOIunD3tj8A5LEQeQKv07OxjIuBwGCM5ErOhqJ4nTY4fjmjIJ6qsiCk5W+S6BQ=
-X-Received: by 2002:a2e:a169:: with SMTP id u9mr816187ljl.144.1589410229680;
- Wed, 13 May 2020 15:50:29 -0700 (PDT)
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=TtpVlZ/2RH6oo7EEPwbarNNxdV4bkajp7+H3tQWdqBo=;
+        b=cjgMN5qlT12uxLsdo8MwjLu98aPN4E2wOWFX+NRVuqhHrYoTJKVQY5/gzQDkxywCuU
+         NqMnHlLBwZ0vpjChH+UXWii7UulUqqqDi6VzzG1F5++9z7SM56VQXXql8owVwmyGoSCg
+         5qZkf1GXHzk8FyHri8fK1qBHg5Eb8It1gBjUNKEGssiqerPIUBLVpfDLJ7RYT5b4HNxn
+         LYwEaOqMg0LQxPv98QL/Dk5fDHDqLlqdT0cgqQUADe3MUSQ2OrcjQlhV2M/z9G/Cf+6i
+         3HEBwkbNT6Vl4UbsRto31uahWdQGvoYQ0Gvm5K/CSi2+MBmkD3DUzpha4qH+cRKNDeeJ
+         WDqA==
+X-Gm-Message-State: AOAM532xhhVYGmiYFrshcndplz8J/beh6GvY7DCdcwQJxfAix/cp0BNI
+        IflBe6uNYSnf7xapuzT4zIo=
+X-Google-Smtp-Source: ABdhPJyI6le8yBvjLmiPUUMO054CX8HvmVjFsJlzKqTmIJV0+LObQZjNOXq/FecJomr3D0LJfQ/PGQ==
+X-Received: by 2002:aed:3783:: with SMTP id j3mr1506685qtb.306.1589410270502;
+        Wed, 13 May 2020 15:51:10 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id 132sm1076909qkj.117.2020.05.13.15.51.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 15:51:09 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 13 May 2020 18:51:08 -0400
+To:     Borislav Petkov <bp@suse.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: gcc-10: kernel stack is corrupted and fails to boot
+Message-ID: <20200513225108.GA2317231@rani.riverdale.lan>
+References: <20200509120707.188595-1-arnd@arndb.de>
+ <20200509120707.188595-2-arnd@arndb.de>
+ <87v9l24qz6.fsf@kamboji.qca.qualcomm.com>
+ <87r1vq4qev.fsf@kamboji.qca.qualcomm.com>
+ <87d078tjl0.fsf_-_@kamboji.qca.qualcomm.com>
+ <20200513154847.GA158356@rani.riverdale.lan>
+ <CAK8P3a3KpM91+jv6+7KSKFRpwLqf38Lz1wbGhkFFyfDb9oahgA@mail.gmail.com>
+ <20200513214128.GB6733@zn.tnic>
+ <CAK8P3a3XPCyNM7s3vbn8JYK6swA3ZpPtTWB+uhmAE3YEX-nmig@mail.gmail.com>
+ <20200513222038.GC6733@zn.tnic>
 MIME-Version: 1.0
-References: <1589263005-7887-1-git-send-email-alan.maguire@oracle.com>
- <20200513222424.4nfxgkequhdzn3u3@ast-mbp.dhcp.thefacebook.com> <dc6a17197c3406d877efd98de351e57d7bbe06a5.camel@perches.com>
-In-Reply-To: <dc6a17197c3406d877efd98de351e57d7bbe06a5.camel@perches.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Wed, 13 May 2020 15:50:17 -0700
-Message-ID: <CAADnVQLPSvRCO-xxW+Rcz4bzLM-DXjSzm8AwhyogrNTufBdoNw@mail.gmail.com>
-Subject: Re: [PATCH v2 bpf-next 0/7] bpf, printk: add BTF-based type printing
-To:     Joe Perches <joe@perches.com>
-Cc:     Alan Maguire <alan.maguire@oracle.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        bpf <bpf@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Yonghong Song <yhs@fb.com>, Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200513222038.GC6733@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 3:48 PM Joe Perches <joe@perches.com> wrote:
->
-> On Wed, 2020-05-13 at 15:24 -0700, Alexei Starovoitov wrote:
-> > On Tue, May 12, 2020 at 06:56:38AM +0100, Alan Maguire wrote:
-> > > The printk family of functions support printing specific pointer types
-> > > using %p format specifiers (MAC addresses, IP addresses, etc).  For
-> > > full details see Documentation/core-api/printk-formats.rst.
-> > >
-> > > This patchset proposes introducing a "print typed pointer" format
-> > > specifier "%pT"; the argument associated with the specifier is of
-> > > form "struct btf_ptr *" which consists of a .ptr value and a .type
-> > > value specifying a stringified type (e.g. "struct sk_buff") or
-> > > an .id value specifying a BPF Type Format (BTF) id identifying
-> > > the appropriate type it points to.
-> > >
-> > >   pr_info("%pT", BTF_PTR_TYPE(skb, "struct sk_buff"));
-> > >
-> > > ...gives us:
-> > >
-> > > (struct sk_buff){
-> > >  .transport_header = (__u16)65535,
-> > >  .mac_header = (__u16)65535,
-> > >  .end = (sk_buff_data_t)192,
-> > >  .head = (unsigned char *)000000007524fd8b,
-> > >  .data = (unsigned char *)000000007524fd8b,
-> >
-> > could you add "0x" prefix here to make it even more C like
-> > and unambiguous ?
->
-> linux pointers are not emitted with an 0x prefix
+On Thu, May 14, 2020 at 12:20:38AM +0200, Borislav Petkov wrote:
+> On Wed, May 13, 2020 at 11:49:49PM +0200, Arnd Bergmann wrote:
+> > Right, in particular since Linus started building with gcc-10 already and
+> > would likely soon run into that problem if he hasn't already ;-)
+> 
+> Oh noo, we don't want Linus' kernel broken. ;-)
+> 
+> We will send him the fix this weekend.
+> 
+> Looking at that branch:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=x86/build
+> 
+> I think we can send the whole thing even.
+> 
+> Linus, shout if you'd prefer only the last three commits there:
+> 
+> 950a37078aa0 x86/build: Use $(CONFIG_SHELL)
+> f670269a42bf x86: Fix early boot crash on gcc-10, next try
+> 73da86741e7f x86/build: Check whether the compiler is sane
+> 
+> but the other three from Masahiro are simple cleanups:
+> 
+> 675a59b7dec6 x86/boot/build: Add phony targets in arch/x86/boot/Makefile to PHONY
+> 30ce434e44d7 x86/boot/build: Make 'make bzlilo' not depend on vmlinux or $(obj)/bzImage
+> e3c7c1052271 x86/boot/build: Add cpustr.h to targets and remove clean-files
+> 
+> which should be ok to take now too AFAICT.
+> 
+> Thx.
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
 
-So? This is not at all comparable to %p
+I notice that doesn't add it to start_kernel (init/main.c). That's not
+currently affected, but I think we should it add for consistency and
+future-proofing, at least for 5.8?
