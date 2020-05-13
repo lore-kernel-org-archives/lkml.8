@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B78CCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF24DCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2520E20575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A17FF20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364329;
-	bh=LwGn39lj7UslFGfZpnJKr1mv5ArhCasq226wWa4aPUg=;
+	s=default; t=1589364339;
+	bh=BiQugPHdeVjEUkzmuQEKUIIb0sy0sQVRp6LCcQaiv1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E9UH960MmCz0cBoQH+ckvylbNPaGsL9DRUdK29aXkEEThB0uTCsfMPv3r6s/jG3VW
-	 9J2I0m2Lrfk9rjzjQlIE1uIdtBjh1lhk8YUe6bXXpvXrEh+Z0rHvGC6DOxF7NBmLPj
-	 ie9u+WZKu22UPT/lOfU9jMHwOtDHv+aWxUv0IBF0=
+	b=LWhivDEPb+TqsBrSQDIr5kKdE8ENFAAkbaRbllVZK+Gxs/G4DMqIWlm/rTCep2/RC
+	 0uFw3jEthc+72QJ26Gy6DkqjLI8vX9BBEMYpZzcv9khzuH4hWcdsbPmFobDJNL4tS0
+	 J/wgiidYSazVGhX6EdaQWOk4/FWpYCrJRtViC5R0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732655AbgEMJqc (ORCPT
+        id S2387578AbgEMKFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:46:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43854 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 06:05:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732636AbgEMJq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:46:27 -0400
+        id S1732589AbgEMJqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:46:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D17C623128;
-        Wed, 13 May 2020 09:46:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 147E820753;
+        Wed, 13 May 2020 09:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363186;
-        bh=LwGn39lj7UslFGfZpnJKr1mv5ArhCasq226wWa4aPUg=;
+        s=default; t=1589363171;
+        bh=BiQugPHdeVjEUkzmuQEKUIIb0sy0sQVRp6LCcQaiv1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EO/EVrTQDyAaDDhl0YWzXDaT+pf44wwhVQw1OMKrLhnRkBoKOgmYundfWpc8V/uax
-         bEGaDpPkoiNndZ6/kKPGw4fayQBjG34EfNgsLxydoumj2ga4EDbPxlgVNrhiYraQCZ
-         4yypOhJIgMWLUFNOPO4JUO5NoW5jMqm/VH08CikI=
+        b=eNRszdIJVZNjnp2fDXDq8ULE8jlFC2Z4VbWnlz0RiLGdJms/uxFArcqOvvHLXsqSh
+         BiP/oDtbAUOGj/1WgrwWmoHPsRaChBLCsMn03GaVUUAaMTiuhRysMJn2ce2V23LaaD
+         KKIZvUCYeB9n+7rqTjh8UcdMy2DGaibmRXLXLgoc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 07/48] net/mlx4_core: Fix use of ENOSPC around mlx4_counter_alloc()
-Date:   Wed, 13 May 2020 11:44:33 +0200
-Message-Id: <20200513094353.857327137@linuxfoundation.org>
+        stable@vger.kernel.org, Moshe Shemesh <moshe@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 4.19 15/48] net/mlx5: Fix command entry leak in Internal Error State
+Date:   Wed, 13 May 2020 11:44:41 +0200
+Message-Id: <20200513094355.175804017@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
 References: <20200513094351.100352960@linuxfoundation.org>
@@ -60,49 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tariq Toukan <tariqt@mellanox.com>
+From: Moshe Shemesh <moshe@mellanox.com>
 
-[ Upstream commit 40e473071dbad04316ddc3613c3a3d1c75458299 ]
+[ Upstream commit cece6f432cca9f18900463ed01b97a152a03600a ]
 
-When ENOSPC is set the idx is still valid and gets set to the global
-MLX4_SINK_COUNTER_INDEX.  However gcc's static analysis cannot tell that
-ENOSPC is impossible from mlx4_cmd_imm() and gives this warning:
+Processing commands by cmd_work_handler() while already in Internal
+Error State will result in entry leak, since the handler process force
+completion without doorbell. Forced completion doesn't release the entry
+and event completion will never arrive, so entry should be released.
 
-drivers/net/ethernet/mellanox/mlx4/main.c:2552:28: warning: 'idx' may be
-used uninitialized in this function [-Wmaybe-uninitialized]
- 2552 |    priv->def_counter[port] = idx;
-
-Also, when ENOSPC is returned mlx4_allocate_default_counters should not
-fail.
-
-Fixes: 6de5f7f6a1fa ("net/mlx4_core: Allocate default counter per port")
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 73dd3a4839c1 ("net/mlx5: Avoid using pending command interface slots")
+Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/main.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/cmd.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/net/ethernet/mellanox/mlx4/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/main.c
-@@ -2539,6 +2539,7 @@ static int mlx4_allocate_default_counter
+--- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
+@@ -896,6 +896,10 @@ static void cmd_work_handler(struct work
+ 		MLX5_SET(mbox_out, ent->out, syndrome, drv_synd);
  
- 		if (!err || err == -ENOSPC) {
- 			priv->def_counter[port] = idx;
-+			err = 0;
- 		} else if (err == -ENOENT) {
- 			err = 0;
- 			continue;
-@@ -2589,7 +2590,8 @@ int mlx4_counter_alloc(struct mlx4_dev *
- 				   MLX4_CMD_TIME_CLASS_A, MLX4_CMD_WRAPPED);
- 		if (!err)
- 			*idx = get_param_l(&out_param);
--
-+		if (WARN_ON(err == -ENOSPC))
-+			err = -EINVAL;
- 		return err;
+ 		mlx5_cmd_comp_handler(dev, 1UL << ent->idx, true);
++		/* no doorbell, no need to keep the entry */
++		free_ent(cmd, ent->idx);
++		if (ent->callback)
++			free_cmd(ent);
+ 		return;
  	}
- 	return __mlx4_counter_alloc(dev, idx);
+ 
 
 
