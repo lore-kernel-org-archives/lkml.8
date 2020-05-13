@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3068EC43465
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE8CC433F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73B2C22266
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E28BD20814
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:01:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="c+3ilERf"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="pQuA5mlI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389227AbgEMPAg (ORCPT
+        id S2389316AbgEMPBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:00:36 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:49131 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389155AbgEMPAN (ORCPT
+        Wed, 13 May 2020 11:01:15 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:25524 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388167AbgEMPAI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:00:13 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DEwJv0008668;
-        Wed, 13 May 2020 16:59:58 +0200
+        Wed, 13 May 2020 11:00:08 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DEwIF1014070;
+        Wed, 13 May 2020 16:59:50 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=QTCaThy3GVFCYOhCkPvOzFwaT3nv8roy2DLEbs0qBbo=;
- b=c+3ilERflSrBijQAJJe6KdPE0lLVj+4f4Lcx5gSA2cUC/2uEPNyJFLy00GETTt6p7y5f
- fHKSf6vukoNpXa6w+E2JH8mssiWxFPrxm6618QjqKBXlBCMgd3dvH1raB09XvRMzQBJa
- vagqwuh5vSiblFFvojO19IL/qMnTVrHMrFX5AoGZD1lIGkkKZDHyonrP1nbDbcrrzWzG
- nYD5XZMCuTeSOseoVNpt8Xg+Hk8No/PAIJByhcmB21+E9LgFT/3AOM/s9oC7JjfPILHW
- 3QNFfk9Jk3Si/44+ky826t7QZWG4n5MyGuohjaZWC1kdQ2wfrowb825vOWlNE9VSHT42 IA== 
+ bh=ND/Ui9QeJtuTQHrwcVceQrxlKJrz8tVZT9wD57SuC/4=;
+ b=pQuA5mlIwQRsbYfUpKN1I/OvvRO7nSkGazvir6QaJAa6xljFUR3NbubPn1V72WfspmnL
+ Ex2kSZxWyFe5u5hoU7IwGv+Cz5Pdq1to1oE6jWw/iJ8y9/r4XreOtGtL/OdKbksvNJUg
+ AOT+nTUhU16pcxrSnPH9TzfnT3BzESvt7JdiSCLnkG68MlLAGRdq4MCBIlOCTDEhC6v2
+ kZiBPvuoRwneNinKjbbx2pXeCKroERF9NLRUCX4doLDGAiR7TnpsBw/i285UX5b5FbDr
+ JMJXgeL2QudSyy+BMaCrJyo3pV3We6ti42tPyxpLoo/OYLiUFuQwoUJDuHQI5ywIwg9e +Q== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3100vqdeb4-1
+        by mx07-00178001.pphosted.com with ESMTP id 3100vpdfxb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 16:59:58 +0200
+        Wed, 13 May 2020 16:59:50 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1BE9310002A;
-        Wed, 13 May 2020 16:59:58 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 73256100034;
+        Wed, 13 May 2020 16:59:50 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 084EC2D3006;
-        Wed, 13 May 2020 16:59:58 +0200 (CEST)
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 63B3B2D3006;
+        Wed, 13 May 2020 16:59:50 +0200 (CEST)
 Received: from localhost (10.75.127.50) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 13 May 2020 16:59:57
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 13 May 2020 16:59:49
  +0200
 From:   Benjamin Gaignard <benjamin.gaignard@st.com>
 To:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
@@ -57,16 +57,16 @@ CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
         Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH 15/15] dt-bindings: usb: dwc2: Fix issues for stm32mp15x SoC
-Date:   Wed, 13 May 2020 16:59:35 +0200
-Message-ID: <20200513145935.22493-16-benjamin.gaignard@st.com>
+Subject: [PATCH 08/15] ARM: dts: stm32: update led nodes names for stm32f746-eval
+Date:   Wed, 13 May 2020 16:59:28 +0200
+Message-ID: <20200513145935.22493-9-benjamin.gaignard@st.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <20200513145935.22493-1-benjamin.gaignard@st.com>
 References: <20200513145935.22493-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG6NODE3.st.com (10.75.127.18) To SFHDAG3NODE3.st.com
+X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG3NODE3.st.com
  (10.75.127.9)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
  definitions=2020-05-13_06:2020-05-13,2020-05-13 signatures=0
@@ -75,39 +75,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Correct the compatible list for stm32mp15x SoC.
-Fix the name of the stm32mp15x dedicated supply to be aligned with
-what the driver use.
+Update led nodes names to be aligned with yaml description
 
 Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 ---
- Documentation/devicetree/bindings/usb/dwc2.yaml | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/stm32746g-eval.dts | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.yaml b/Documentation/devicetree/bindings/usb/dwc2.yaml
-index 0d6d850a7f17..1357b861310d 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.yaml
-+++ b/Documentation/devicetree/bindings/usb/dwc2.yaml
-@@ -44,7 +44,9 @@ properties:
-       - const: st,stm32f4x9-hsotg
-       - const: st,stm32f7-hsotg
-       - const: st,stm32mp15-fsotg
--      - const: st,stm32mp15-hsotg
-+      - items:
-+          - const: st,stm32mp15-hsotg
-+          - const: snps,dwc2
-       - const: samsung,s3c6400-hsotg
+diff --git a/arch/arm/boot/dts/stm32746g-eval.dts b/arch/arm/boot/dts/stm32746g-eval.dts
+index 4ea3f98dd275..ca8c192449ee 100644
+--- a/arch/arm/boot/dts/stm32746g-eval.dts
++++ b/arch/arm/boot/dts/stm32746g-eval.dts
+@@ -66,17 +66,17 @@
  
-   reg:
-@@ -90,7 +92,7 @@ properties:
-   vusb_a-supply:
-     description: phandle to voltage regulator of analog section.
- 
--  vusb33d-supply:
-+  usb33d-supply:
-     description: reference to the VBUS and ID sensing comparators supply, in
-       order to perform OTG operation, used on STM32MP15 SoCs.
- 
+ 	leds {
+ 		compatible = "gpio-leds";
+-		green {
++		led-green {
+ 			gpios = <&gpiof 10 1>;
+ 			linux,default-trigger = "heartbeat";
+ 		};
+-		orange {
++		led-orange {
+ 			gpios = <&stmfx_pinctrl 17 1>;
+ 		};
+-		red {
++		led-red {
+ 			gpios = <&gpiob 7 1>;
+ 		};
+-		blue {
++		led-blue {
+ 			gpios = <&stmfx_pinctrl 19 1>;
+ 		};
+ 	};
 -- 
 2.15.0
 
