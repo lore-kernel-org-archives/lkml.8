@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F78C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A96C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE04206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5894023127
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363730;
-	bh=21ZeV7DMXJGDzla/Lkcyv+lxyssas6Aup9sjf/i5oZA=;
+	s=default; t=1589363733;
+	bh=VlPbkUERKN0LMrdtSc9X7VczeSmPTSuGM0yfPHKQRTU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KzS601vOrk8NnWzN2dBTbOO6E/DnXx7SqyK1yECBrBPvaRucBKomHSAnSWhtQEVh9
-	 6QBpGSpV5TXccy1Z++vSIHgzGo95Hs4Ftlz36AIFsbO257t0LYhTQb2LOZ86CMZjVr
-	 Dr3y1BgNfbGDy67+/tQuqGPSAcB/kC8fLrMJujCE=
+	b=yb2L0xSD9jM7SKJNcYvb4DSVHrsL9XtNwHIjKx+zSf6Lf6/mCy/xUxjDpUxfe8Hhr
+	 Jv4XdaaY8qUKs+81VFk4HDG+vJcrb0FaES9RgqQGUOlNcXF8mEOoluSN28xHg9V2Cf
+	 WrIG8zzwhMfiDBzJuTzJPAvXa11wne5USYsmTnTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387473AbgEMJz2 (ORCPT
+        id S2388273AbgEMJzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:55:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58510 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:55:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387714AbgEMJzZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:55:25 -0400
+        id S2388264AbgEMJz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:55:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4673E20753;
-        Wed, 13 May 2020 09:55:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7DFB205ED;
+        Wed, 13 May 2020 09:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363724;
-        bh=21ZeV7DMXJGDzla/Lkcyv+lxyssas6Aup9sjf/i5oZA=;
+        s=default; t=1589363729;
+        bh=VlPbkUERKN0LMrdtSc9X7VczeSmPTSuGM0yfPHKQRTU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WjoV7rqigxuLzgoVpDJvhwz6vqXvol0WUx3FJmIxgTzb7XIIgp3AqqlYUtdJndfEs
-         axSukLbmPx3vyh0BVH435pdYvaLlqvHwUQk6JzU/4EwMw7m1VHo6Vud5yfosxcFsSj
-         0YKDjf7b2tcc4qPGbfec2/qGeT7IR7m0jy7opTFY=
+        b=0OfEsp0WHwChV3lBc4Cnar4/lvIyOiuvIjY9N6SEx9WWdUwU8IrvnitSZ7dpfwdsH
+         j2SDRfVprF/4OTOe9g9kNinp+tGDg5gjG3KFi0n9B6ozKTJk7KDcPUNqduebTbNd1v
+         kjSKVUxznWkd16QglOYnMXMnrwvr/Lg7MBvMmsno=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -50,9 +50,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Vince Weaver <vincent.weaver@maine.edu>
-Subject: [PATCH 5.6 099/118] x86/entry/64: Fix unwind hints in __switch_to_asm()
-Date:   Wed, 13 May 2020 11:45:18 +0200
-Message-Id: <20200513094425.959397282@linuxfoundation.org>
+Subject: [PATCH 5.6 101/118] x86/unwind/orc: Dont skip the first frame for inactive tasks
+Date:   Wed, 13 May 2020 11:45:20 +0200
+Message-Id: <20200513094426.113481151@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -65,21 +65,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Miroslav Benes <mbenes@suse.cz>
 
-commit 96c64806b4bf35f5edb465cafa6cec490e424a30 upstream.
+commit f1d9a2abff66aa8156fbc1493abed468db63ea48 upstream.
 
-UNWIND_HINT_FUNC has some limitations: specifically, it doesn't reset
-all the registers to undefined.  This causes objtool to get confused
-about the RBP push in __switch_to_asm(), resulting in bad ORC data.
+When unwinding an inactive task, the ORC unwinder skips the first frame
+by default.  If both the 'regs' and 'first_frame' parameters of
+unwind_start() are NULL, 'state->sp' and 'first_frame' are later
+initialized to the same value for an inactive task.  Given there is a
+"less than or equal to" comparison used at the end of __unwind_start()
+for skipping stack frames, the first frame is skipped.
 
-While __switch_to_asm() does do some stack magic, it's otherwise a
-normal callable-from-C function, so just annotate it as a function,
-which makes objtool happy and allows it to produces the correct hints
-automatically.
+Drop the equal part of the comparison and make the behavior equivalent
+to the frame pointer unwinder.
 
-Fixes: 8c1f75587a18 ("x86/entry/64: Add unwind hint annotations")
+Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
 Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Miroslav Benes <mbenes@suse.cz>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Andy Lutomirski <luto@kernel.org>
@@ -88,33 +90,23 @@ Cc: Jann Horn <jannh@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lore.kernel.org/r/03d0411920d10f7418f2e909210d8e9a3b2ab081.1587808742.git.jpoimboe@redhat.com
+Link: https://lore.kernel.org/r/7f08db872ab59e807016910acdbe82f744de7065.1587808742.git.jpoimboe@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/entry/entry_64.S |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/x86/kernel/unwind_orc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -279,8 +279,7 @@ SYM_CODE_END(entry_SYSCALL_64)
-  * %rdi: prev task
-  * %rsi: next task
-  */
--SYM_CODE_START(__switch_to_asm)
--	UNWIND_HINT_FUNC
-+SYM_FUNC_START(__switch_to_asm)
- 	/*
- 	 * Save callee-saved registers
- 	 * This must match the order in inactive_task_frame
-@@ -321,7 +320,7 @@ SYM_CODE_START(__switch_to_asm)
- 	popq	%rbp
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -651,7 +651,7 @@ void __unwind_start(struct unwind_state
+ 	/* Otherwise, skip ahead to the user-specified starting frame: */
+ 	while (!unwind_done(state) &&
+ 	       (!on_stack(&state->stack_info, first_frame, sizeof(long)) ||
+-			state->sp <= (unsigned long)first_frame))
++			state->sp < (unsigned long)first_frame))
+ 		unwind_next_frame(state);
  
- 	jmp	__switch_to
--SYM_CODE_END(__switch_to_asm)
-+SYM_FUNC_END(__switch_to_asm)
- 
- /*
-  * A newly forked process directly context switches into this address.
+ 	return;
 
 
