@@ -2,34 +2,34 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F02F4C2D0FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26993C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D93D120740
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 107422078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:09:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731529AbgEMMHI (ORCPT
+        id S1731493AbgEMMJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 08:07:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42398 "EHLO
+        Wed, 13 May 2020 08:09:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727778AbgEMMHI (ORCPT
+        with ESMTP id S1727778AbgEMMJS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 08:07:08 -0400
+        Wed, 13 May 2020 08:09:18 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D12C9C061A0C;
-        Wed, 13 May 2020 05:07:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBAC5C061A0C;
+        Wed, 13 May 2020 05:09:18 -0700 (PDT)
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1jYqA3-0001gY-Hy; Wed, 13 May 2020 14:06:55 +0200
+        id 1jYqCD-0001l1-QZ; Wed, 13 May 2020 14:09:09 +0200
 Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id BAED7100605; Wed, 13 May 2020 14:06:54 +0200 (CEST)
+        id 15F45100605; Wed, 13 May 2020 14:09:09 +0200 (CEST)
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Jiaxun Yang <jiaxun.yang@flygoat.com>, maz@kernel.org
 Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
@@ -37,11 +37,11 @@ Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Rob Herring <robh+dt@kernel.org>,
         Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: Re: [PATCH v3 1/6] irqchip: Add Loongson HyperTransport Vector support
-In-Reply-To: <20200501092139.2988670-1-jiaxun.yang@flygoat.com>
-References: <20200422142428.1249684-1-jiaxun.yang@flygoat.com> <20200501092139.2988670-1-jiaxun.yang@flygoat.com>
-Date:   Wed, 13 May 2020 14:06:54 +0200
-Message-ID: <87a72c3uox.fsf@nanos.tec.linutronix.de>
+Subject: Re: [PATCH v2 3/6] irqchip: Add Loongson PCH PIC controller
+In-Reply-To: <20200428063247.2223499-3-jiaxun.yang@flygoat.com>
+References: <20200422142428.1249684-1-jiaxun.yang@flygoat.com> <20200428063247.2223499-1-jiaxun.yang@flygoat.com> <20200428063247.2223499-3-jiaxun.yang@flygoat.com>
+Date:   Wed, 13 May 2020 14:09:09 +0200
+Message-ID: <877dxg3ul6.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Linutronix-Spam-Score: -1.0
@@ -53,79 +53,29 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Jiaxun Yang <jiaxun.yang@flygoat.com> writes:
-> +static void htvec_mask_irq(struct irq_data *d)
+> +static void pch_pic_bitset(struct pch_pic *priv, int offset, int bit)
 > +{
-> +	struct htvec *priv = irq_data_get_irq_chip_data(d);
-> +	void __iomem *addr = priv->base + HTVEC_EN_OFF;
+> +	void __iomem *addr = priv->base + offset + PIC_REG_IDX(bit) * 4;
 > +	unsigned long flags;
 > +	u32 reg;
 > +
-> +	raw_spin_lock_irqsave(&priv->htvec_lock, flags);
+> +	raw_spin_lock_irqsave(&priv->pic_lock, flags);
 
-No need for irqsave() these functions are called with interrupts disabled.
+See other reply.
 
-> +	addr += VEC_REG_IDX(d->hwirq) * 4;
 > +	reg = readl(addr);
-> +	reg &= ~BIT(VEC_REG_BIT(d->hwirq));
+> +	reg |= BIT(PIC_REG_BIT(bit));
 > +	writel(reg, addr);
-> +	raw_spin_unlock_irqrestore(&priv->htvec_lock, flags);
+> +	raw_spin_unlock_irqrestore(&priv->pic_lock, flags);
 > +}
-
-> +static int htvec_domain_alloc(struct irq_domain *domain, unsigned int virq,
-> +				  unsigned int nr_irqs, void *arg)
-> +{
-> +	struct htvec *priv = domain->host_data;
-> +	unsigned long hwirq;
-> +	unsigned int type, i;
-> +
-> +	irq_domain_translate_onecell(domain, arg, &hwirq, &type);
-> +
-> +	for (i = 0; i < nr_irqs; i++)
-> +		irq_domain_set_info(domain, virq + i, hwirq + i, &htvec_irq_chip,
-> +					priv, handle_edge_irq, NULL, NULL);
-
-This wants curly brackets and the second line of arguments wants to be
-aligned with the first argument:
-
-	for (i = 0; i < nr_irqs; i++) {
-		irq_domain_set_info(domain, virq + i, hwirq + i, &htvec_irq_chip,
-				    priv, handle_edge_irq, NULL, NULL);
-	}
-
-See https://lore.kernel.org/lkml/alpine.DEB.2.20.1701171956290.3645@nanos/
-
-The alignment of arguments wants to be fixed all over the place.
-
-> +static int htvec_of_init(struct device_node *node,
+> +static int pch_pic_of_init(struct device_node *node,
 > +				struct device_node *parent)
 > +{
-> +	struct htvec *priv;
-> +	int err, parent_irq[4], num_parents = 0, i;
+> +	struct pch_pic *priv;
+> +	struct irq_domain *parent_domain;
+> +	int err;
 
-Please order the variable declaration in reverse fir tree length order:
-
-	int err, parent_irq[4], num_parents = 0, i;
-	struct htvec *priv;
-
-That's way better readable than the above. All over the place please.
-
-> +	priv->htvec_domain = irq_domain_create_linear(of_node_to_fwnode(node),
-> +						   VEC_COUNT,
-> +						   &htvec_domain_ops,
-> +						   priv);
-> +	if (!priv->htvec_domain) {
-> +		pr_err("Failed to create IRQ domain\n");
-> +		err = -ENOMEM;
-> +		goto iounmap_base;
-> +	}
-> +
-> +	htvec_reset(priv);
-> +
-> +	for (i = 0; i < num_parents; i++)
-> +		irq_set_chained_handler_and_data(parent_irq[i],
-> +						htvec_irq_dispatch, priv);
-
-See above.
+ordering
 
 Thanks,
 
