@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EB1C2D0FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BF4CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6D72176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85AB2206D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:56:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363754;
-	bh=OBjA4hsPp4PLfpQ8jjfg+PmSNwEel0QxiScbjp+evq0=;
+	s=default; t=1589363761;
+	bh=FhvBPJNLASY6lwiZHMtDLrA+Rzd1BcGIVp+X4GlC4p0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yrK00VOocAicpf0ddx4YaR1PEFqRk8D6lNjuDOsqFEdPU/DrQHgoCo4rkwwcGuuHZ
-	 tlpOkMpdYnjz35orOcVMIEYiAH3WSKD677r+zN9YTA9wfvIAzlLaZGGBoWsu4fblXE
-	 OGeiBH16LSvR/EYU4mLfMs0ja8RCLgj5I9jVI+Qo=
+	b=HSgsbovYs5Gg1MZbmbgquH3iYep9rgXIAUiVDx9CZs6dE1354iglRuThIJtxC2hea
+	 xKluWTQR0ttrEs4bSS3FZ01L7kWhP/QYcRyarhOgrshGAUavxPtCfBmY2rOUd5aiLU
+	 iBLMo6dQMTTG2M2As2BZSCkdL6FBsKCBcHWul1IE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388330AbgEMJzx (ORCPT
+        id S2388363AbgEMJ4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:55:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59180 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:56:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388318AbgEMJzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:55:49 -0400
+        id S2388343AbgEMJz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:55:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 502E9205ED;
-        Wed, 13 May 2020 09:55:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF243205ED;
+        Wed, 13 May 2020 09:55:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363748;
-        bh=OBjA4hsPp4PLfpQ8jjfg+PmSNwEel0QxiScbjp+evq0=;
+        s=default; t=1589363756;
+        bh=FhvBPJNLASY6lwiZHMtDLrA+Rzd1BcGIVp+X4GlC4p0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Psf+JFyyIFOz35ZXxpkOS/IAIS89DPXsbya3b6sUi/1wB6UYqfkvffZS4AHYR12l/
-         Zvt9mN/zMiYGlNFRm+8obxaVv6H6tT1fckB3q3R2SSSMtmaSw429FKH1x3/Xn5aUwX
-         W4xVtolKqF0bcYDG+9mdTHNm28t7W1nuwgeJACm8=
+        b=HVle0bTapHvvkFJmx1HOSahziqu5AQMXZ9PJ1eXbeFJZsDGzGuf4+/26JMl+Bus1C
+         4whrfepFglxcn3iT9rTM5QCLc6NDnH0R3BP+gpj5BE33S5MnNnXt+bdzEb368Qvssb
+         TBVhqtrIR8I+Lsv/7hXnWDlsCVRksaEtlh1rN5FU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pierre Morel <pmorel@linux.ibm.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        Qian Cai <cailca@icloud.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Subject: [PATCH 5.6 071/118] KVM: s390: Remove false WARN_ON_ONCE for the PQAP instruction
-Date:   Wed, 13 May 2020 11:44:50 +0200
-Message-Id: <20200513094423.972699381@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        Johan Hovold <johan@kernel.org>,
+        syzbot+d29e9263e13ce0b9f4fd@syzkaller.appspotmail.com
+Subject: [PATCH 5.6 064/118] USB: serial: garmin_gps: add sanity checking for data length
+Date:   Wed, 13 May 2020 11:44:43 +0200
+Message-Id: <20200513094423.582702457@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -63,48 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Borntraeger <borntraeger@de.ibm.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 5615e74f48dcc982655543e979b6c3f3f877e6f6 upstream.
+commit e9b3c610a05c1cdf8e959a6d89c38807ff758ee6 upstream.
 
-In LPAR we will only get an intercept for FC==3 for the PQAP
-instruction. Running nested under z/VM can result in other intercepts as
-well as ECA_APIE is an effective bit: If one hypervisor layer has
-turned this bit off, the end result will be that we will get intercepts for
-all function codes. Usually the first one will be a query like PQAP(QCI).
-So the WARN_ON_ONCE is not right. Let us simply remove it.
+We must not process packets shorter than a packet ID
 
-Cc: Pierre Morel <pmorel@linux.ibm.com>
-Cc: Tony Krowiak <akrowiak@linux.ibm.com>
-Cc: stable@vger.kernel.org # v5.3+
-Fixes: e5282de93105 ("s390: ap: kvm: add PQAP interception for AQIC")
-Link: https://lore.kernel.org/kvm/20200505083515.2720-1-borntraeger@de.ibm.com
-Reported-by: Qian Cai <cailca@icloud.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-and-tested-by: syzbot+d29e9263e13ce0b9f4fd@syzkaller.appspotmail.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/kvm/priv.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/usb/serial/garmin_gps.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/s390/kvm/priv.c
-+++ b/arch/s390/kvm/priv.c
-@@ -626,10 +626,12 @@ static int handle_pqap(struct kvm_vcpu *
- 	 * available for the guest are AQIC and TAPQ with the t bit set
- 	 * since we do not set IC.3 (FIII) we currently will only intercept
- 	 * the AQIC function code.
-+	 * Note: running nested under z/VM can result in intercepts for other
-+	 * function codes, e.g. PQAP(QCI). We do not support this and bail out.
- 	 */
- 	reg0 = vcpu->run->s.regs.gprs[0];
- 	fc = (reg0 >> 24) & 0xff;
--	if (WARN_ON_ONCE(fc != 0x03))
-+	if (fc != 0x03)
- 		return -EOPNOTSUPP;
+--- a/drivers/usb/serial/garmin_gps.c
++++ b/drivers/usb/serial/garmin_gps.c
+@@ -1138,8 +1138,8 @@ static void garmin_read_process(struct g
+ 		   send it directly to the tty port */
+ 		if (garmin_data_p->flags & FLAGS_QUEUING) {
+ 			pkt_add(garmin_data_p, data, data_length);
+-		} else if (bulk_data ||
+-			   getLayerId(data) == GARMIN_LAYERID_APPL) {
++		} else if (bulk_data || (data_length >= sizeof(u32) &&
++				getLayerId(data) == GARMIN_LAYERID_APPL)) {
  
- 	/* PQAP instruction is allowed for guest kernel only */
+ 			spin_lock_irqsave(&garmin_data_p->lock, flags);
+ 			garmin_data_p->flags |= APP_RESP_SEEN;
 
 
