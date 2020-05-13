@@ -2,55 +2,51 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00094CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1328CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D25EE20575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 881F520575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:02:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364150;
-	bh=OTJv1G1EvSM2281z6zR4SjicsyoHdJm6SF5MRtyv4Ls=;
+	s=default; t=1589364157;
+	bh=EnnBG/aX6Kg6Mk78SEPquxSEbjde6dpFg9+8Mqr0Sik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HiXe9IscPdDo7NSGw0QOSA5h25FHHnRmLHIzFlqAJj0mEFVf5A7r7XeNFAnehafDY
-	 ceXtsD5AsCeix9NXLkU2SVM9qiMl70fZyRlrJHiFtQCG3WUoWmrLuF3EnwNWt+T8PZ
-	 eTLR82mFNK9F2QkH9ljQrF2Px8SP1whYXm2Zt/6Q=
+	b=DGJmjWAz/M1Rkn4d2CIJ/oWhiDwIVnlseyaVRImd7iMC4zzX6pOK6OSvEi2uunDU6
+	 bEw8X2z9MBzDslezBI0cgs/nAvC38dBpmCciTGe4tcty/iStv1+y6HQkaFzLArYAy5
+	 uEE8xvpqhL5oGkcJECiDDrF/71Jnx/gP2WmDBbvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388009AbgEMKCa (ORCPT
+        id S2388648AbgEMKCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:02:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49488 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 06:02:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387424AbgEMJuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:50:00 -0400
+        id S2387414AbgEMJt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:49:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D8B923126;
-        Wed, 13 May 2020 09:49:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE9A5206D6;
+        Wed, 13 May 2020 09:49:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363399;
-        bh=OTJv1G1EvSM2281z6zR4SjicsyoHdJm6SF5MRtyv4Ls=;
+        s=default; t=1589363397;
+        bh=EnnBG/aX6Kg6Mk78SEPquxSEbjde6dpFg9+8Mqr0Sik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WuSm0jQeqNtyhaV4o9x49rh89xvBDCeYp1qc4wF+9BzFh6V+H1X9HIvDU3tBBHmiF
-         St8K9mun6cw3PcgXgPmu32OWpUv4cMDMTOqK7tQAU8sL25odXwGvOgX5bTgR9959E3
-         YTWo5H+VSa5ZsgMwLjuWh/RfEOz5aXAe6GeHHOu8=
+        b=nuseMn/r2b6Tx038ZiLqyhJPfj+23QyCLt5jxGMFzUGEk3JueAor5gGyf/X96L8el
+         N62OeXKIZfDlPuh931D5pjPtTl11RTG3hGVB9U1pAbgsY1l833bpmX0Nz4sqVVaEF/
+         XvFCNiJXsCBNhO/U9M0U1iEsfR5D3jMLsMlNoe/0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roman Penyaev <rpenyaev@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Khazhismel Kumykov <khazhy@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>, Heiher <r@hev.cc>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 58/90] epoll: atomically remove wait entry on wake up
-Date:   Wed, 13 May 2020 11:44:54 +0200
-Message-Id: <20200513094415.888707435@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 40/90] net: mvpp2: cls: Prevent buffer overflow in mvpp2_ethtool_cls_rule_del()
+Date:   Wed, 13 May 2020 11:44:36 +0200
+Message-Id: <20200513094412.888788715@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094408.810028856@linuxfoundation.org>
 References: <20200513094408.810028856@linuxfoundation.org>
@@ -63,178 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Penyaev <rpenyaev@suse.de>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 412895f03cbf9633298111cb4dfde13b7720e2c5 upstream.
+[ Upstream commit 722c0f00d4feea77475a5dc943b53d60824a1e4e ]
 
-This patch does two things:
+The "info->fs.location" is a u32 that comes from the user via the
+ethtool_set_rxnfc() function.  We need to check for invalid values to
+prevent a buffer overflow.
 
- - fixes a lost wakeup introduced by commit 339ddb53d373 ("fs/epoll:
-   remove unnecessary wakeups of nested epoll")
+I copy and pasted this check from the mvpp2_ethtool_cls_rule_ins()
+function.
 
- - improves performance for events delivery.
-
-The description of the problem is the following: if N (>1) threads are
-waiting on ep->wq for new events and M (>1) events come, it is quite
-likely that >1 wakeups hit the same wait queue entry, because there is
-quite a big window between __add_wait_queue_exclusive() and the
-following __remove_wait_queue() calls in ep_poll() function.
-
-This can lead to lost wakeups, because thread, which was woken up, can
-handle not all the events in ->rdllist.  (in better words the problem is
-described here: https://lkml.org/lkml/2019/10/7/905)
-
-The idea of the current patch is to use init_wait() instead of
-init_waitqueue_entry().
-
-Internally init_wait() sets autoremove_wake_function as a callback,
-which removes the wait entry atomically (under the wq locks) from the
-list, thus the next coming wakeup hits the next wait entry in the wait
-queue, thus preventing lost wakeups.
-
-Problem is very well reproduced by the epoll60 test case [1].
-
-Wait entry removal on wakeup has also performance benefits, because
-there is no need to take a ep->lock and remove wait entry from the queue
-after the successful wakeup.  Here is the timing output of the epoll60
-test case:
-
-  With explicit wakeup from ep_scan_ready_list() (the state of the
-  code prior 339ddb53d373):
-
-    real    0m6.970s
-    user    0m49.786s
-    sys     0m0.113s
-
- After this patch:
-
-   real    0m5.220s
-   user    0m36.879s
-   sys     0m0.019s
-
-The other testcase is the stress-epoll [2], where one thread consumes
-all the events and other threads produce many events:
-
-  With explicit wakeup from ep_scan_ready_list() (the state of the
-  code prior 339ddb53d373):
-
-    threads  events/ms  run-time ms
-          8       5427         1474
-         16       6163         2596
-         32       6824         4689
-         64       7060         9064
-        128       6991        18309
-
- After this patch:
-
-    threads  events/ms  run-time ms
-          8       5598         1429
-         16       7073         2262
-         32       7502         4265
-         64       7640         8376
-        128       7634        16767
-
- (number of "events/ms" represents event bandwidth, thus higher is
-  better; number of "run-time ms" represents overall time spent
-  doing the benchmark, thus lower is better)
-
-[1] tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c
-[2] https://github.com/rouming/test-tools/blob/master/stress-epoll.c
-
-Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Jason Baron <jbaron@akamai.com>
-Cc: Khazhismel Kumykov <khazhy@google.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Heiher <r@hev.cc>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200430130326.1368509-2-rpenyaev@suse.de
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 90b509b39ac9 ("net: mvpp2: cls: Add Classification offload support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/eventpoll.c |   43 ++++++++++++++++++++++++-------------------
- 1 file changed, 24 insertions(+), 19 deletions(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -1827,7 +1827,6 @@ static int ep_poll(struct eventpoll *ep,
- {
- 	int res = 0, eavail, timed_out = 0;
- 	u64 slack = 0;
--	bool waiter = false;
- 	wait_queue_entry_t wait;
- 	ktime_t expires, *to = NULL;
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
+@@ -1422,6 +1422,9 @@ int mvpp2_ethtool_cls_rule_del(struct mv
+ 	struct mvpp2_ethtool_fs *efs;
+ 	int ret;
  
-@@ -1872,21 +1871,23 @@ fetch_events:
- 	 */
- 	ep_reset_busy_poll_napi_id(ep);
- 
--	/*
--	 * We don't have any available event to return to the caller.  We need
--	 * to sleep here, and we will be woken by ep_poll_callback() when events
--	 * become available.
--	 */
--	if (!waiter) {
--		waiter = true;
--		init_waitqueue_entry(&wait, current);
--
-+	do {
-+		/*
-+		 * Internally init_wait() uses autoremove_wake_function(),
-+		 * thus wait entry is removed from the wait queue on each
-+		 * wakeup. Why it is important? In case of several waiters
-+		 * each new wakeup will hit the next waiter, giving it the
-+		 * chance to harvest new event. Otherwise wakeup can be
-+		 * lost. This is also good performance-wise, because on
-+		 * normal wakeup path no need to call __remove_wait_queue()
-+		 * explicitly, thus ep->lock is not taken, which halts the
-+		 * event delivery.
-+		 */
-+		init_wait(&wait);
- 		write_lock_irq(&ep->lock);
- 		__add_wait_queue_exclusive(&ep->wq, &wait);
- 		write_unlock_irq(&ep->lock);
--	}
- 
--	for (;;) {
- 		/*
- 		 * We don't want to sleep if the ep_poll_callback() sends us
- 		 * a wakeup in between. That's why we set the task state
-@@ -1916,10 +1917,20 @@ fetch_events:
- 			timed_out = 1;
- 			break;
- 		}
--	}
++	if (info->fs.location >= MVPP2_N_RFS_ENTRIES_PER_FLOW)
++		return -EINVAL;
 +
-+		/* We were woken up, thus go and try to harvest some events */
-+		eavail = 1;
-+
-+	} while (0);
- 
- 	__set_current_state(TASK_RUNNING);
- 
-+	if (!list_empty_careful(&wait.entry)) {
-+		write_lock_irq(&ep->lock);
-+		__remove_wait_queue(&ep->wq, &wait);
-+		write_unlock_irq(&ep->lock);
-+	}
-+
- send_events:
- 	/*
- 	 * Try to transfer events to user space. In case we get 0 events and
-@@ -1930,12 +1941,6 @@ send_events:
- 	    !(res = ep_send_events(ep, events, maxevents)) && !timed_out)
- 		goto fetch_events;
- 
--	if (waiter) {
--		write_lock_irq(&ep->lock);
--		__remove_wait_queue(&ep->wq, &wait);
--		write_unlock_irq(&ep->lock);
--	}
--
- 	return res;
- }
- 
+ 	efs = port->rfs_rules[info->fs.location];
+ 	if (!efs)
+ 		return -EINVAL;
 
 
