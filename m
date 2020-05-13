@@ -2,159 +2,239 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBABCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B88FC2D0FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7BFF206D6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC1FB206E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 12:56:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LjeYk2vB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ojoNBcdF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733053AbgEMM4M (ORCPT
+        id S1733069AbgEMM4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 08:56:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50138 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728413AbgEMM4I (ORCPT
+        Wed, 13 May 2020 08:56:18 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:41487 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728379AbgEMM4P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 08:56:08 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 608D6C061A0C;
-        Wed, 13 May 2020 05:56:08 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id v12so20721753wrp.12;
-        Wed, 13 May 2020 05:56:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=ZvYSZy3tRiVgGxrommSRZgzj0zZx86esquo5YSSVJlY=;
-        b=LjeYk2vBbDldv/l0KEP5R9hh4MAw6ge/KdKd8X0nOXljYjeod0jstszKttwSCs0GNI
-         RbGxIV3nrqL/lTXMpPgoyBbT+GWmzCCnGjE9h6atSQDwdgnUU0uzd3nvnE3A/B9ndH2V
-         6KdsApABnSxKLH9gVNi3GVRIu29vbSd47LO8c1xLSFytwEvBF6RW6vFu4lTnc0Nqf81m
-         oKk0whIebq60H5qwEa4CMrVtT5pNiFEBC8/QUPMz6O+0BQpVhFaSTsN7hu6vDlXIim62
-         qgB//W9iEtH/PZLSOVBkAxZcSOmYPz4H3sruJdc11TXpd5yyw/UeA8MFmf4BzkFOpo5V
-         qRcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=ZvYSZy3tRiVgGxrommSRZgzj0zZx86esquo5YSSVJlY=;
-        b=YuurCNbZvgWIUre/xLr88FauMGlQtCYUFZwiKd5NNRAre3gYS6RqOFxmtA51VQQJUx
-         9J0fIWhNe5RTZMy/pXsoZTWfuyJP7rwFzYtnQEVnXH+eEEoQfxS2MrMwzI1NWBffpexJ
-         Y1c5/GsW2ddNzlZHbMdjW+oNmcWcPe9KGY+208rEQQvS5JsHVIaxaxtF60sBW7cz8vY/
-         hxTucXEZq2y4KGAjR8kNYc9Sy9sX/SMdzeuYGyyHDhjtDV6rve7qQ4NA8SJelPKdWD46
-         pgVoYgntFGUDsJUSSqH9vj/rUqJrNUIP4BmU5MBMWqs69WM5uyA7NriSTCVDfxM1J/3u
-         NVdA==
-X-Gm-Message-State: AGi0PuZyRFp+UcW03c3aNTp9zMQFsLXd84fFNltVE9u935pSqgUpoY38
-        YEhPCV4ITZNuKms5bXD07fQ=
-X-Google-Smtp-Source: APiQypJY2NANe8ct5IeGA83GoQ+oOMnFGXo9dSTJfF15HLlU84+nNZU2dVYmm3RJ3HYsgtQf2PxiYQ==
-X-Received: by 2002:adf:93a3:: with SMTP id 32mr19914479wrp.124.1589374566990;
-        Wed, 13 May 2020 05:56:06 -0700 (PDT)
-Received: from AnsuelXPS (host122-89-dynamic.247-95-r.retail.telecomitalia.it. [95.247.89.122])
-        by smtp.gmail.com with ESMTPSA id e5sm24239142wro.3.2020.05.13.05.56.04
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 May 2020 05:56:06 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Stanimir Varbanov'" <svarbanov@mm-sol.com>,
-        "'Rob Herring'" <robh@kernel.org>
-Cc:     "'Bjorn Andersson'" <bjorn.andersson@linaro.org>,
-        "'Andy Gross'" <agross@kernel.org>,
-        "'Bjorn Helgaas'" <bhelgaas@google.com>,
-        "'Mark Rutland'" <mark.rutland@arm.com>,
-        "'Lorenzo Pieralisi'" <lorenzo.pieralisi@arm.com>,
-        "'Andrew Murray'" <amurray@thegoodpenguin.co.uk>,
-        "'Philipp Zabel'" <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200430220619.3169-1-ansuelsmth@gmail.com> <20200430220619.3169-9-ansuelsmth@gmail.com> <20200507181044.GA15159@bogus> <062301d624a6$8be610d0$a3b23270$@gmail.com> <20200512154544.GA823@bogus> <99f42001-0f41-5e63-f6ad-2e744ec86d36@mm-sol.com>
-In-Reply-To: <99f42001-0f41-5e63-f6ad-2e744ec86d36@mm-sol.com>
-Subject: R: R: [PATCH v3 08/11] devicetree: bindings: pci: document PARF params bindings
-Date:   Wed, 13 May 2020 14:56:03 +0200
-Message-ID: <02e001d62925$dca9e9a0$95fdbce0$@gmail.com>
+        Wed, 13 May 2020 08:56:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1589374575; x=1620910575;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Z3RtA3Is19gMLuQPixC7qZLhsQ/ltAtQlKTqxZJF4kc=;
+  b=ojoNBcdFjwObnjL0HOqbNOrH51SzViNsZ+9gpZV7Y42CvkaJ9A9mcPB3
+   pn0Nz+BB+ideeUHu8n6YH3UW9SJV05RHNlgE2Yn7i20N+iab2jwTXHf4P
+   1yGzTUNCUjszYDDyYfli0/eujJNuv8wYkyUpV9Y4DTLaq48X+A094jMbD
+   wyiptExhTZB1fKrplwnXabUFAODEyQ5AzL1r6d6X6RA8OKvj6IppFkS5U
+   p2phRFqWed952seyhzsADn+xFJP5Hv7KKMDrer7ZRfzB+YPNJZKZGveSM
+   LtiQKaBN28k/VHf8rlCuiaFNPr9eOZ8lCA/aTGD9vQmp9Hec9maNzM+t4
+   A==;
+IronPort-SDR: lO6DOcnAhr84ZBSxSAxSdxBBd5w2TOugv8+G0o0Vq5kEETCRHS/5YLSTywa4ycsGzA1J4ByVAq
+ 0aS6FSaHetV7NqZ3WCeiHYIfI//XOXuyourN3Jp1z2/a1cSJLwCmZvqi2VGZ07o6j/1bUGyyOx
+ SlYno5D6xVWWhZkAU6os1SH41UkBGaSEVxdsgvmUFQ9CA42JixTkKyJ3FJbtTLB1PEcJFqWcit
+ 3xoupXRGh9bPwFty1g3eLsZpsguJOLBYe/iTZXIn37JhtZSaRjGeiSLroSxuzed6U5uCtgLv6G
+ fwI=
+X-IronPort-AV: E=Sophos;i="5.73,387,1583218800"; 
+   d="scan'208";a="79436261"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 May 2020 05:56:14 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 13 May 2020 05:56:14 -0700
+Received: from soft-dev15.microsemi.net (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Wed, 13 May 2020 05:56:11 -0700
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+To:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        "Michael Turquette" <mturquette@baylibre.com>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 02/14] pinctrl: ocelot: Remove instance number from pin functions
+Date:   Wed, 13 May 2020 14:55:20 +0200
+Message-ID: <20200513125532.24585-3-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200513125532.24585-1-lars.povlsen@microchip.com>
+References: <20200513125532.24585-1-lars.povlsen@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: it
-Thread-Index: AQH0plL6ngkayUAAEEU7BifA9vEwhgIhhTlHAlRDbrkC9wKkJgJCaswEAWN8iguoEGkfMA==
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On 5/12/20 6:45 PM, Rob Herring wrote:
-> > On Thu, May 07, 2020 at 09:34:35PM +0200, ansuelsmth@gmail.com
-> wrote:
-> >>> On Fri, May 01, 2020 at 12:06:15AM +0200, Ansuel Smith wrote:
-> >>>> It is now supported the editing of Tx De-Emphasis, Tx Swing and
-> >>>> Rx equalization params on ipq8064. Document this new optional
-> params.
-> >>>>
-> >>>> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> >>>> ---
-> >>>>  .../devicetree/bindings/pci/qcom,pcie.txt     | 36
-> +++++++++++++++++++
-> >>>>  1 file changed, 36 insertions(+)
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> >>> b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> >>>> index 6efcef040741..8cc5aea8a1da 100644
-> >>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> >>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> >>>> @@ -254,6 +254,42 @@
-> >>>>  			- "perst-gpios"	PCIe endpoint reset signal line
-> >>>>  			- "wake-gpios"	PCIe endpoint wake signal line
-> >>>>
-> >>>> +- qcom,tx-deemph-gen1:
-> >>>> +	Usage: optional (available for ipq/apq8064)
-> >>>> +	Value type: <u32>
-> >>>> +	Definition: Gen1 De-emphasis value.
-> >>>> +		    For ipq806x should be set to 24.
-> >>>
-> >>> Unless these need to be tuned per board, then the compatible string
-> for
-> >>> ipq806x should imply all these settings.
-> >>>
-> >>
-> >> It was requested by v2 to make this settings tunable. These don't change
-> are
-> >> all the same for every ipq806x SoC. The original implementation had this
-> >> value hardcoded for ipq806x. Should I restore this and drop this patch?
-> >
-> > Yes, please.
-> 
-> I still think that the values for tx deemph and tx swing should be
-> tunable. But I can live with them in the driver if they not break
-> support for apq8064.
-> 
-> The default values in the registers for apq8064 and ipq806x are:
-> 
-> 			default		your change
-> TX_DEEMPH_GEN1		21		24
-> TX_DEEMPH_GEN2_3_5DB	21		24
-> TX_DEEMPH_GEN2_6DB	32		34
-> 
-> TX_SWING_FULL		121		120
-> TX_SWING_LOW		121		120
-> 
-> So until now (without your change) apq8064 worked with default values.
-> 
+This patch removes the instance number from the "miim", "reco_clk" and
+"sfp" pin function.
 
-I will limit this to ipq8064(-v2) if this could be a problem.
+The change needed is to prepare the driver for adding new platforms
+with more of these instances. The instance number is also redundant,
+as this is implicit for each pin.
 
-> >
-> > Rob
-> >
-> 
-> --
-> regards,
-> Stan
+Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+---
+ drivers/pinctrl/pinctrl-ocelot.c | 94 ++++++++++----------------------
+ 1 file changed, 30 insertions(+), 64 deletions(-)
 
+diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
+index d4ac65b1efc0b..375f3ea3b80c4 100644
+--- a/drivers/pinctrl/pinctrl-ocelot.c
++++ b/drivers/pinctrl/pinctrl-ocelot.c
+@@ -46,32 +46,15 @@ enum {
+ 	FUNC_IRQ0_OUT,
+ 	FUNC_IRQ1_IN,
+ 	FUNC_IRQ1_OUT,
+-	FUNC_MIIM1,
+-	FUNC_MIIM2,
++	FUNC_MIIM,
+ 	FUNC_PCI_WAKE,
+ 	FUNC_PTP0,
+ 	FUNC_PTP1,
+ 	FUNC_PTP2,
+ 	FUNC_PTP3,
+ 	FUNC_PWM,
+-	FUNC_RECO_CLK0,
+-	FUNC_RECO_CLK1,
+-	FUNC_SFP0,
+-	FUNC_SFP1,
+-	FUNC_SFP2,
+-	FUNC_SFP3,
+-	FUNC_SFP4,
+-	FUNC_SFP5,
+-	FUNC_SFP6,
+-	FUNC_SFP7,
+-	FUNC_SFP8,
+-	FUNC_SFP9,
+-	FUNC_SFP10,
+-	FUNC_SFP11,
+-	FUNC_SFP12,
+-	FUNC_SFP13,
+-	FUNC_SFP14,
+-	FUNC_SFP15,
++	FUNC_RECO_CLK,
++	FUNC_SFP,
+ 	FUNC_SG0,
+ 	FUNC_SG1,
+ 	FUNC_SG2,
+@@ -92,32 +75,15 @@ static const char *const ocelot_function_names[] = {
+ 	[FUNC_IRQ0_OUT]		= "irq0_out",
+ 	[FUNC_IRQ1_IN]		= "irq1_in",
+ 	[FUNC_IRQ1_OUT]		= "irq1_out",
+-	[FUNC_MIIM1]		= "miim1",
+-	[FUNC_MIIM2]		= "miim2",
++	[FUNC_MIIM]		= "miim",
+ 	[FUNC_PCI_WAKE]		= "pci_wake",
+ 	[FUNC_PTP0]		= "ptp0",
+ 	[FUNC_PTP1]		= "ptp1",
+ 	[FUNC_PTP2]		= "ptp2",
+ 	[FUNC_PTP3]		= "ptp3",
+ 	[FUNC_PWM]		= "pwm",
+-	[FUNC_RECO_CLK0]	= "reco_clk0",
+-	[FUNC_RECO_CLK1]	= "reco_clk1",
+-	[FUNC_SFP0]		= "sfp0",
+-	[FUNC_SFP1]		= "sfp1",
+-	[FUNC_SFP2]		= "sfp2",
+-	[FUNC_SFP3]		= "sfp3",
+-	[FUNC_SFP4]		= "sfp4",
+-	[FUNC_SFP5]		= "sfp5",
+-	[FUNC_SFP6]		= "sfp6",
+-	[FUNC_SFP7]		= "sfp7",
+-	[FUNC_SFP8]		= "sfp8",
+-	[FUNC_SFP9]		= "sfp9",
+-	[FUNC_SFP10]		= "sfp10",
+-	[FUNC_SFP11]		= "sfp11",
+-	[FUNC_SFP12]		= "sfp12",
+-	[FUNC_SFP13]		= "sfp13",
+-	[FUNC_SFP14]		= "sfp14",
+-	[FUNC_SFP15]		= "sfp15",
++	[FUNC_RECO_CLK]		= "reco_clk",
++	[FUNC_SFP]		= "sfp",
+ 	[FUNC_SG0]		= "sg0",
+ 	[FUNC_SG1]		= "sg1",
+ 	[FUNC_SG2]		= "sg2",
+@@ -168,18 +134,18 @@ OCELOT_P(6,  UART,      TWI_SCL_M, NONE);
+ OCELOT_P(7,  UART,      TWI_SCL_M, NONE);
+ OCELOT_P(8,  SI,        TWI_SCL_M, IRQ0_OUT);
+ OCELOT_P(9,  SI,        TWI_SCL_M, IRQ1_OUT);
+-OCELOT_P(10, PTP2,      TWI_SCL_M, SFP0);
+-OCELOT_P(11, PTP3,      TWI_SCL_M, SFP1);
+-OCELOT_P(12, UART2,     TWI_SCL_M, SFP2);
+-OCELOT_P(13, UART2,     TWI_SCL_M, SFP3);
+-OCELOT_P(14, MIIM1,     TWI_SCL_M, SFP4);
+-OCELOT_P(15, MIIM1,     TWI_SCL_M, SFP5);
++OCELOT_P(10, PTP2,      TWI_SCL_M, SFP);
++OCELOT_P(11, PTP3,      TWI_SCL_M, SFP);
++OCELOT_P(12, UART2,     TWI_SCL_M, SFP);
++OCELOT_P(13, UART2,     TWI_SCL_M, SFP);
++OCELOT_P(14, MIIM,      TWI_SCL_M, SFP);
++OCELOT_P(15, MIIM,      TWI_SCL_M, SFP);
+ OCELOT_P(16, TWI,       NONE,      SI);
+ OCELOT_P(17, TWI,       TWI_SCL_M, SI);
+ OCELOT_P(18, PTP0,      TWI_SCL_M, NONE);
+ OCELOT_P(19, PTP1,      TWI_SCL_M, NONE);
+-OCELOT_P(20, RECO_CLK0, TACHO,     NONE);
+-OCELOT_P(21, RECO_CLK1, PWM,       NONE);
++OCELOT_P(20, RECO_CLK,  TACHO,     TWI_SCL_M);
++OCELOT_P(21, RECO_CLK,  PWM,       TWI_SCL_M);
+
+ #define OCELOT_PIN(n) {						\
+ 	.number = n,						\
+@@ -264,22 +230,22 @@ JAGUAR2_P(40, NONE,      TWI_SCL_M);
+ JAGUAR2_P(41, NONE,      TWI_SCL_M);
+ JAGUAR2_P(42, NONE,      TWI_SCL_M);
+ JAGUAR2_P(43, NONE,      TWI_SCL_M);
+-JAGUAR2_P(44, NONE,      SFP8);
+-JAGUAR2_P(45, NONE,      SFP9);
+-JAGUAR2_P(46, NONE,      SFP10);
+-JAGUAR2_P(47, NONE,      SFP11);
+-JAGUAR2_P(48, SFP0,      NONE);
+-JAGUAR2_P(49, SFP1,      SI);
+-JAGUAR2_P(50, SFP2,      SI);
+-JAGUAR2_P(51, SFP3,      SI);
+-JAGUAR2_P(52, SFP4,      NONE);
+-JAGUAR2_P(53, SFP5,      NONE);
+-JAGUAR2_P(54, SFP6,      NONE);
+-JAGUAR2_P(55, SFP7,      NONE);
+-JAGUAR2_P(56, MIIM1,     SFP12);
+-JAGUAR2_P(57, MIIM1,     SFP13);
+-JAGUAR2_P(58, MIIM2,     SFP14);
+-JAGUAR2_P(59, MIIM2,     SFP15);
++JAGUAR2_P(44, NONE,      SFP);
++JAGUAR2_P(45, NONE,      SFP);
++JAGUAR2_P(46, NONE,      SFP);
++JAGUAR2_P(47, NONE,      SFP);
++JAGUAR2_P(48, SFP,       NONE);
++JAGUAR2_P(49, SFP,       SI);
++JAGUAR2_P(50, SFP,       SI);
++JAGUAR2_P(51, SFP,       SI);
++JAGUAR2_P(52, SFP,       NONE);
++JAGUAR2_P(53, SFP,       NONE);
++JAGUAR2_P(54, SFP,       NONE);
++JAGUAR2_P(55, SFP,       NONE);
++JAGUAR2_P(56, MIIM,      SFP);
++JAGUAR2_P(57, MIIM,      SFP);
++JAGUAR2_P(58, MIIM,      SFP);
++JAGUAR2_P(59, MIIM,      SFP);
+ JAGUAR2_P(60, NONE,      NONE);
+ JAGUAR2_P(61, NONE,      NONE);
+ JAGUAR2_P(62, NONE,      NONE);
+--
+2.26.2
