@@ -2,119 +2,175 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D5AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A9E5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DE1B205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:51:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=seznam.cz header.i=@seznam.cz header.b="jQ/2ofxG"
+	by mail.kernel.org (Postfix) with ESMTP id 6277A205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:51:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589385092;
+	bh=BxUNMUdGNrS5sYZao1wEjB4fqjRTEIy2mDfAs/GHhnM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nAhy59WL1neibXBMagpMNpjivNiCRV5ncTq3omIQoMUZm72We5EZl+n8bF8EO8P2B
+	 pe9zkp1KFHkXXioqDeK6rFyWPEEwDXyVORbM6+H3hBh0gG7BejtzQ/hxAc1DFcuGhN
+	 Qa1MXFFTqvF0GNzfreEjZnFhr7a2bNeagu13KTs8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730406AbgEMPvX (ORCPT
+        id S1731910AbgEMPvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:51:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729121AbgEMPvW (ORCPT
+        Wed, 13 May 2020 11:51:31 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44200 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729467AbgEMPva (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:51:22 -0400
-X-Greylist: delayed 82 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 13 May 2020 08:51:21 PDT
-Received: from mxa2.seznam.cz (mxa2.seznam.cz [IPv6:2a02:598:2::90])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A0B4C061A0C;
-        Wed, 13 May 2020 08:51:21 -0700 (PDT)
-Received: from email.seznam.cz
-        by email-smtpc6b.ng.seznam.cz (email-smtpc6b.ng.seznam.cz [10.23.13.165])
-        id 52fbe97b09f5bd1253522525;
-        Wed, 13 May 2020 17:51:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seznam.cz; s=beta;
-        t=1589385077; bh=aNMmxbEhQ4116ra/TFzsO/WUqMIRJ1ETfre2+VnJRMc=;
-        h=Received:From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-         Content-Transfer-Encoding;
-        b=jQ/2ofxGw8oM4xo/Rv9UY2PnBABlc+GCQRAXJeIbUjXkTgD5ybptwHbzSONO7jjz6
-         i8OMc626J4g1sDvHh9/Meizj5J1Tl6Jvn8nas2Di1oOuRmKV9WeESyfh1digR1kecW
-         WTe2+ucJsV+dGOK3W/wlhApDSpq2IexHh6YLcNSQ=
-Received: from localhost.localdomain (212.69.128.228 [212.69.128.228])
-        by email-relay12.ng.seznam.cz (Seznam SMTPD 1.3.114) with ESMTP;
-        Wed, 13 May 2020 17:49:49 +0200 (CEST)  
-From:   michael.srba@seznam.cz
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Michael Srba <michael.srba@seznam.cz>
-Subject: [PATCH] arm64: dts: qcom: disable the new cti nodes on devices with broken coresight
-Date:   Wed, 13 May 2020 17:47:18 +0200
-Message-Id: <20200513154718.17401-1-michael.srba@seznam.cz>
-X-Mailer: git-send-email 2.24.0
+        Wed, 13 May 2020 11:51:30 -0400
+Received: by mail-ot1-f68.google.com with SMTP id j4so13767537otr.11
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 08:51:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dAc2/p9/ye87n+oDzeojjYRRxgpdmDIY9Lqiy5g0GGQ=;
+        b=sba5PDbZAVH+2kccsiBH3k2SS1V/JG6LJ1SOyhkKI5vv2i6u6+5B7EaCrvATF9XnKQ
+         xVo9FfrbTNzbJzr+hP/trXvWKt9gWHcQ1AKkFWUHloEKGQliQSmLkONcPTn3gza9qccx
+         UaywyhmDJCE3eLJKAOiDrP68+FDXf6g5GmhzBvDL1aKGxSxnkT3dGn1Inu3GOiRzOC7P
+         3zvx+URRVKC+oPEonWma+21lKvJROaqENwtM8uCZt1CTHJCUWAwgP1fjFUfFvFhMCxZI
+         yPm7sOfVjNM9EBR5JeCI5mDiM8pf70SnYaXNYoJSpdmG8B55j9eKUbQ04uXF6AnUvHhI
+         B3YQ==
+X-Gm-Message-State: AOAM531Sb5xFcLoDk8oBU/R36oapAwDprO2V61mhELn6e+LMwAvFLESi
+        3cYJAQ0reSfODNIsoYTjANurvSGHs4KJFNiPf9o=
+X-Google-Smtp-Source: ABdhPJwrnc+iD2Wdesi78Zg5BYnaqgwCv5dXh27FiLQYMIXUsJmPXAZstnE6lQn1FYPMaTFACuXNgsFsqKQu7JeIhYI=
+X-Received: by 2002:a9d:6ac8:: with SMTP id m8mr79195otq.262.1589385089449;
+ Wed, 13 May 2020 08:51:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200513151840.36400-1-heikki.krogerus@linux.intel.com> <20200513154228.GC1360420@kroah.com>
+In-Reply-To: <20200513154228.GC1360420@kroah.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 13 May 2020 17:51:18 +0200
+Message-ID: <CAJZ5v0jzF6HM41UBaWfuJ38TMg+jq+1pQAz0QHb9GwTDJV_F=Q@mail.gmail.com>
+Subject: Re: [PATCH] kobject: Make sure the parent does not get released
+ before its children
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Srba <michael.srba@seznam.cz>
+On Wed, May 13, 2020 at 5:42 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, May 13, 2020 at 06:18:40PM +0300, Heikki Krogerus wrote:
+> > In the function kobject_cleanup(), kobject_del(kobj) is
+> > called before the kobj->release(). That makes it possible to
+> > release the parent of the kobject before the kobject itself.
+> >
+> > To fix that, adding function __kboject_del() that does
+> > everything that kobject_del() does except release the parent
+> > reference. kobject_cleanup() then calls __kobject_del()
+> > instead of kobject_del(), and separately decrements the
+> > reference count of the parent kobject after kobj->release()
+> > has been called.
+> >
+> > Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> > Reported-by: kernel test robot <rong.a.chen@intel.com>
+> > Fixes: 7589238a8cf3 ("Revert "software node: Simplify software_node_release() function"")
+> > Cc: Brendan Higgins <brendanhiggins@google.com>
+> > Cc: Randy Dunlap <rdunlap@infradead.org>
+> > Suggested-by: "Rafael J. Wysocki" <rafael@kernel.org>
+> > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > ---
+> >  lib/kobject.c | 30 ++++++++++++++++++++----------
+> >  1 file changed, 20 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/lib/kobject.c b/lib/kobject.c
+> > index 65fa7bf70c57..32432036bef8 100644
+> > --- a/lib/kobject.c
+> > +++ b/lib/kobject.c
+> > @@ -599,14 +599,7 @@ int kobject_move(struct kobject *kobj, struct kobject *new_parent)
+> >  }
+> >  EXPORT_SYMBOL_GPL(kobject_move);
+> >
+> > -/**
+> > - * kobject_del() - Unlink kobject from hierarchy.
+> > - * @kobj: object.
+> > - *
+> > - * This is the function that should be called to delete an object
+> > - * successfully added via kobject_add().
+> > - */
+> > -void kobject_del(struct kobject *kobj)
+> > +static void __kobject_del(struct kobject *kobj)
+> >  {
+> >       struct kernfs_node *sd;
+> >       const struct kobj_type *ktype;
+> > @@ -625,9 +618,23 @@ void kobject_del(struct kobject *kobj)
+> >
+> >       kobj->state_in_sysfs = 0;
+> >       kobj_kset_leave(kobj);
+> > -     kobject_put(kobj->parent);
+> >       kobj->parent = NULL;
+> >  }
+> > +
+> > +/**
+> > + * kobject_del() - Unlink kobject from hierarchy.
+> > + * @kobj: object.
+> > + *
+> > + * This is the function that should be called to delete an object
+> > + * successfully added via kobject_add().
+> > + */
+> > +void kobject_del(struct kobject *kobj)
+> > +{
+> > +     struct kobject *parent = kobj->parent;
+> > +
+> > +     __kobject_del(kobj);
+> > +     kobject_put(parent);
+> > +}
+> >  EXPORT_SYMBOL(kobject_del);
+> >
+> >  /**
+> > @@ -663,6 +670,7 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
+> >   */
+> >  static void kobject_cleanup(struct kobject *kobj)
+> >  {
+> > +     struct kobject *parent = kobj->parent;
+> >       struct kobj_type *t = get_ktype(kobj);
+> >       const char *name = kobj->name;
+> >
+> > @@ -684,7 +692,7 @@ static void kobject_cleanup(struct kobject *kobj)
+> >       if (kobj->state_in_sysfs) {
+> >               pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
+> >                        kobject_name(kobj), kobj);
+> > -             kobject_del(kobj);
+> > +             __kobject_del(kobj);
+> >       }
+> >
+> >       if (t && t->release) {
+> > @@ -698,6 +706,8 @@ static void kobject_cleanup(struct kobject *kobj)
+> >               pr_debug("kobject: '%s': free name\n", name);
+> >               kfree_const(name);
+> >       }
+> > +
+> > +     kobject_put(parent);
+> >  }
+> >
+> >  #ifdef CONFIG_DEBUG_KOBJECT_RELEASE
+> > --
+> > 2.26.2
+> >
+>
+> Is this the older patch we talked about before, or something else?
+>
+> I can't remember how we left that thread...
 
-Attempting to enable these devices causes a "synchronous
-external abort". Suspected cause is that the debug power
-domain is not enabled by default on this device.
-Disable these devices for now to avoid the crash.
-
-See: https://lore.kernel.org/linux-arm-msm/20190618202623.GA53651@gerhold.net/
-
-Fixes: b1fcc5702a41 ("arm64: dts: qcom: msm8916: Add CTI options")
-Signed-off-by: Michael Srba <michael.srba@seznam.cz>
-
----
- arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts       | 6 ++++++
- arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi | 6 ++++++
- 2 files changed, 12 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts b/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
-index d1ccb9472c8b..28983b871a70 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
-+++ b/arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dts
-@@ -105,6 +105,12 @@ wcnss@a21b000 {
- 		etm@85d000 { status = "disabled"; };
- 		etm@85e000 { status = "disabled"; };
- 		etm@85f000 { status = "disabled"; };
-+		cti@810000 { status = "disabled"; };
-+		cti@811000 { status = "disabled"; };
-+		cti@858000 { status = "disabled"; };
-+		cti@859000 { status = "disabled"; };
-+		cti@85a000 { status = "disabled"; };
-+		cti@85b000 { status = "disabled"; };
- 	};
- 
- 	// FIXME: Use extcon device provided by charger driver when available
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-index 43c5e0f882f1..8569a1532a3f 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
-@@ -98,6 +98,12 @@ wcnss@a21b000 {
- 		etm@85d000 { status = "disabled"; };
- 		etm@85e000 { status = "disabled"; };
- 		etm@85f000 { status = "disabled"; };
-+		cti@810000 { status = "disabled"; };
-+		cti@811000 { status = "disabled"; };
-+		cti@858000 { status = "disabled"; };
-+		cti@859000 { status = "disabled"; };
-+		cti@85a000 { status = "disabled"; };
-+		cti@85b000 { status = "disabled"; };
- 	};
- 
- 	gpio-keys {
--- 
-2.24.0
-
+This is an alternative that you said might work. :-)
