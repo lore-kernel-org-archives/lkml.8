@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6A0C2D0F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA380CA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB86A20575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80F1D20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:58:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363916;
-	bh=+HEWT40WAKTvJiede5y7TrPjk/GLzquagjTyr1OHuQM=;
+	s=default; t=1589363918;
+	bh=Gfi63/hHDSs12PkUQ2zqadY7CKv2HaQWnYt1yzmH+sI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AJVFlCkrRoflW5spKwffc6JLO1liKyX5n4e4w6uV6WrQXg16YzUeW0B95R2ZV3EPS
-	 GNS7FgmMaWvvSYiM/fBYwbkb+Nd3Z6I19xTXvL7rvoVxDbxKH/rLFcK8YTvu8EY0Zb
-	 k40dHrrfbNy23NPpcUNHtkd6jvOV6TgfrI8VkOGU=
+	b=I+D0SIztYfiCaPFg82ZzTSSKWXIw77TDxTFZOOZ4eM5gIDsbrZxzJ80kZu9YdVpvE
+	 QyQMCg4LHOtN19jgfpKUySImsrmd1kTp75bPeAm8IOtAHKriPjSjYJ6dcXc8vfkJWW
+	 qbqZrQp6JbWNNi3X+MsaCF2PovFsfp29fDF1Mgx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388128AbgEMJyi (ORCPT
+        id S2387664AbgEMJyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:54:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57084 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:54:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388102AbgEMJye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:54:34 -0400
+        id S2388105AbgEMJyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:54:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 184DB23127;
-        Wed, 13 May 2020 09:54:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D2A7205ED;
+        Wed, 13 May 2020 09:54:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363673;
-        bh=+HEWT40WAKTvJiede5y7TrPjk/GLzquagjTyr1OHuQM=;
+        s=default; t=1589363670;
+        bh=Gfi63/hHDSs12PkUQ2zqadY7CKv2HaQWnYt1yzmH+sI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BEvRgAZAWxCV83MTahJdfp2ZivnchdyzvSH+5FJuQld+0z4tRAlargaUyp5xtunoN
-         ZWA8OgOeic+2BT8kkhvzSTiqoEoG7DGe9QDZV/4TAULn2Cm+poqurjamvH9gWHec+0
-         86u7X6Gdm1Jri4+6Ab+iLFYq1oUT+revcM7ZWS3M=
+        b=i0LIkoXGcj7hceyei4r60UElT2jennMNnmU82Lk0UG3oxbwQq2rBGxW1USv6hgxxR
+         z+TCTtAoHmcFVnfXK4ro0B4xs92CyVJjNocytTmbVK2HtbvCJsZWBfYxYKajSSepHK
+         UcmoMe4OHTF37k1y37VkM3s3TsyiIckR9VB/77M4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Kolesa <daniel@octaforge.org>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.6 080/118] drm/amd/display: work around fp code being emitted outside of DC_FP_START/END
-Date:   Wed, 13 May 2020 11:44:59 +0200
-Message-Id: <20200513094424.537172681@linuxfoundation.org>
+        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 5.6 079/118] drm: ingenic-drm: add MODULE_DEVICE_TABLE
+Date:   Wed, 13 May 2020 11:44:58 +0200
+Message-Id: <20200513094424.471966317@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -59,82 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Kolesa <daniel@octaforge.org>
+From: H. Nikolaus Schaller <hns@goldelico.com>
 
-commit 59dfb0c64d3853d20dc84f4561f28d4f5a2ddc7d upstream.
+commit c59359a02d14a7256cd508a4886b7d2012df2363 upstream.
 
-The dcn20_validate_bandwidth function would have code touching the
-incorrect registers emitted outside of the boundaries of the
-DC_FP_START/END macros, at least on ppc64le. Work around the
-problem by wrapping the whole function instead.
+so that the driver can load by matching the device tree
+if compiled as module.
 
-Signed-off-by: Daniel Kolesa <daniel@octaforge.org>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org # 5.6.x
+Cc: stable@vger.kernel.org # v5.3+
+Fixes: 90b86fcc47b4 ("DRM: Add KMS driver for the Ingenic JZ47xx SoCs")
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Link: https://patchwork.freedesktop.org/patch/msgid/1694a29b7a3449b6b662cec33d1b33f2ee0b174a.1588574111.git.hns@goldelico.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c |   31 +++++++++++++-----
- 1 file changed, 23 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/ingenic/ingenic-drm.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-@@ -3034,25 +3034,32 @@ validate_out:
- 	return out;
- }
+--- a/drivers/gpu/drm/ingenic/ingenic-drm.c
++++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
+@@ -843,6 +843,7 @@ static const struct of_device_id ingenic
+ 	{ .compatible = "ingenic,jz4770-lcd", .data = &jz4770_soc_info },
+ 	{ /* sentinel */ },
+ };
++MODULE_DEVICE_TABLE(of, ingenic_drm_of_match);
  
--
--bool dcn20_validate_bandwidth(struct dc *dc, struct dc_state *context,
--		bool fast_validate)
-+/*
-+ * This must be noinline to ensure anything that deals with FP registers
-+ * is contained within this call; previously our compiling with hard-float
-+ * would result in fp instructions being emitted outside of the boundaries
-+ * of the DC_FP_START/END macros, which makes sense as the compiler has no
-+ * idea about what is wrapped and what is not
-+ *
-+ * This is largely just a workaround to avoid breakage introduced with 5.6,
-+ * ideally all fp-using code should be moved into its own file, only that
-+ * should be compiled with hard-float, and all code exported from there
-+ * should be strictly wrapped with DC_FP_START/END
-+ */
-+static noinline bool dcn20_validate_bandwidth_fp(struct dc *dc,
-+		struct dc_state *context, bool fast_validate)
- {
- 	bool voltage_supported = false;
- 	bool full_pstate_supported = false;
- 	bool dummy_pstate_supported = false;
- 	double p_state_latency_us;
- 
--	DC_FP_START();
- 	p_state_latency_us = context->bw_ctx.dml.soc.dram_clock_change_latency_us;
- 	context->bw_ctx.dml.soc.disable_dram_clock_change_vactive_support =
- 		dc->debug.disable_dram_clock_change_vactive_support;
- 
- 	if (fast_validate) {
--		voltage_supported = dcn20_validate_bandwidth_internal(dc, context, true);
--
--		DC_FP_END();
--		return voltage_supported;
-+		return dcn20_validate_bandwidth_internal(dc, context, true);
- 	}
- 
- 	// Best case, we support full UCLK switch latency
-@@ -3081,7 +3088,15 @@ bool dcn20_validate_bandwidth(struct dc
- 
- restore_dml_state:
- 	context->bw_ctx.dml.soc.dram_clock_change_latency_us = p_state_latency_us;
-+	return voltage_supported;
-+}
- 
-+bool dcn20_validate_bandwidth(struct dc *dc, struct dc_state *context,
-+		bool fast_validate)
-+{
-+	bool voltage_supported = false;
-+	DC_FP_START();
-+	voltage_supported = dcn20_validate_bandwidth_fp(dc, context, fast_validate);
- 	DC_FP_END();
- 	return voltage_supported;
- }
+ static struct platform_driver ingenic_drm_driver = {
+ 	.driver = {
 
 
