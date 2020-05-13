@@ -2,150 +2,105 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DEBEC2D0FB
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A8AC2D0F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B0E8207BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE35B206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:30:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CVOy29ss"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Xr8CCr30"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbgEMCaD (ORCPT
+        id S1728580AbgEMCaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 22:30:03 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:22550 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728245AbgEMCaC (ORCPT
+        Tue, 12 May 2020 22:30:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728498AbgEMCaE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 22:30:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589337000;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iT2hW+HYXkczOFTWfJmASn4ajF5YSjXsGJSRKP6B8QY=;
-        b=CVOy29ssTBBUdBgXdE6VGpH7W+32DF86LhZcriuK6XUqjTXm0lLcpqLBfKGRGVxanBDBAP
-        M5xKKo6ucy8eMs3JiMePsGcmTRrOSBGCn9EY1prNu/9QwebPIFPE4I8JLIGRmWp0sC8DnO
-        AQGFIpIvZSkhqW9DlvuDICG8SwBEf8g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-281-EmZXlPFvPpqAhwBszIdqLA-1; Tue, 12 May 2020 22:29:56 -0400
-X-MC-Unique: EmZXlPFvPpqAhwBszIdqLA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 18B981005510;
-        Wed, 13 May 2020 02:29:53 +0000 (UTC)
-Received: from [10.72.13.188] (ovpn-13-188.pek2.redhat.com [10.72.13.188])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 189CC60BF1;
-        Wed, 13 May 2020 02:29:32 +0000 (UTC)
-Subject: Re: [PATCH RFC 00/15] Add VFIO mediated device support and IMS
- support for the idxd driver.
-To:     Jason Gunthorpe <jgg@mellanox.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "megha.dey@linux.intel.com" <megha.dey@linux.intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <AADFC41AFE54684AB9EE6CBC0274A5D19D8C5486@SHSMSX104.ccr.corp.intel.com>
- <20200426191357.GB13640@mellanox.com> <20200426214355.29e19d33@x1.home>
- <20200427115818.GE13640@mellanox.com> <20200427071939.06aa300e@x1.home>
- <20200427132218.GG13640@mellanox.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D8E34AA@SHSMSX104.ccr.corp.intel.com>
- <20200508204710.GA78778@otc-nc-03> <20200508231610.GO19158@mellanox.com>
- <20200509000909.GA79981@otc-nc-03> <20200509122113.GP19158@mellanox.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <196b23b9-12f7-2fc2-5efb-22e0642c456a@redhat.com>
-Date:   Wed, 13 May 2020 10:29:31 +0800
+        Tue, 12 May 2020 22:30:04 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36234C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 19:30:03 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id a4so7103737pgc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 19:30:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dRl4YBE3TMl0SsiV0tZC4Iqnfxs3bO+Y25NzUvxt45A=;
+        b=Xr8CCr30EpIbBzcUFmUdyJWqPcgRkkyRgJ8EuNa0FB0nt4+zA1favzlpTbLpHBYluj
+         0/tj98qvnGqD/m6l/2oGIJwAffNk9yJA2BSCxn5LEmEWplcJ+dgJlXrpxRH8DRfcpcYA
+         wS4eohtPzs81f4zWnLjkt0emvJ/qDc7ig6TaFCP3NwmZ7/3sZaN8dgm1FezAXzmmOjQI
+         ApPtLtHQ7JZgaLDQnQwvgal1A8fGW8ejl+PqS9hpr5JUOw/pc/EWAF1PvYOmacb5uWWR
+         pjZ8957+0ACJvt8MyHypjm/HHd0BEubrKizI9BTOATq0bJLhD7Zfgzd13UKC2FouaNPT
+         B5eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dRl4YBE3TMl0SsiV0tZC4Iqnfxs3bO+Y25NzUvxt45A=;
+        b=CNumOuoXQKukMVDsOh1W+73dmxi76nmG75MAVLas0TkrYyjvf/joAWFMxWt7EpTF77
+         FhzpgTPdWrYLMHzKgxSeQuAUnlkUp7/t1qnE0UQ//eidA+IuANoZa5BY16iiJu6zcJ4o
+         P9TKYcaEAhCRHbF+BkCTztv+8Lo2NkLAjYUolhLSh9Br3NaJyKBaMucxiiqxnZZA+4P5
+         G7iJs4T0SH6RnDAeL7NbpbiAewnw8vTQLgPLaSQ9Sq/+hxw9uWFQfPECIngX6ro0SDSS
+         o93bm/PeNanFqgZk5scOUi8SozkDZXw++r7phM9WjrYqGJrh2sUJVRjDe2eq6JuSdtzo
+         x2Tw==
+X-Gm-Message-State: AOAM532FMBw16X8Sd6LslfKhuCs0qaZA+OlAbhsqNDaXLrLDtdbRKH8v
+        LVXLuIhPrbUpUNbUto81MXB2fZV8614=
+X-Google-Smtp-Source: ABdhPJwgw+y9MRoDkNWNDGa5d1jKOUxGsSXi+rxOaTsYZXTBVkbDWUxv6H3GSNMHgnPDg+ecwsEaOQ==
+X-Received: by 2002:aa7:8c0a:: with SMTP id c10mr13866827pfd.177.1589337002687;
+        Tue, 12 May 2020 19:30:02 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:1d8:eb9:1d84:211c? ([2605:e000:100e:8c61:1d8:eb9:1d84:211c])
+        by smtp.gmail.com with ESMTPSA id g17sm2797521pgg.43.2020.05.12.19.30.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 May 2020 19:30:02 -0700 (PDT)
+Subject: Re: [PATCH v4 10/10] loop: Add LOOP_CONFIGURE ioctl
+To:     Martijn Coenen <maco@android.com>
+Cc:     Narayan Kamath <narayan@google.com>,
+        Zimuzo Ezeozue <zezeozue@google.com>, kernel-team@android.com,
+        Martijn Coenen <maco@google.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>
+References: <20200429140341.13294-1-maco@android.com>
+ <20200429140341.13294-11-maco@android.com>
+ <CAB0TPYHwor85-fWKu+OMT-1ys2L7OSqVoReJRzNOMAE0xK+yzg@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <1f3064a9-105f-02bb-6a1a-eb9875d292e3@kernel.dk>
+Date:   Tue, 12 May 2020 20:29:59 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200509122113.GP19158@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAB0TPYHwor85-fWKu+OMT-1ys2L7OSqVoReJRzNOMAE0xK+yzg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 5/12/20 12:46 AM, Martijn Coenen wrote:
+> Hi Jens,
+> 
+> What do you think of this series?
 
-On 2020/5/9 下午8:21, Jason Gunthorpe wrote:
-> On Fri, May 08, 2020 at 05:09:09PM -0700, Raj, Ashok wrote:
->> Hi Jason
->>
->> On Fri, May 08, 2020 at 08:16:10PM -0300, Jason Gunthorpe wrote:
->>> On Fri, May 08, 2020 at 01:47:10PM -0700, Raj, Ashok wrote:
->>>
->>>> Even when uaccel was under development, one of the options
->>>> was to use VFIO as the transport, goal was the same i.e to keep
->>>> the user space have one interface.
->>> I feel a bit out of the loop here, uaccel isn't in today's kernel is
->>> it? I've heard about it for a while, it sounds very similar to RDMA,
->>> so I hope they took some of my advice...
->> I think since 5.7 maybe? drivers/misc/uacce. I don't think this is like
->> RDMA, its just a plain accelerator. There is no connection management,
->> memory registration or other things.. IB was my first job at Intel,
->> but saying that i would be giving my age away:)
-> rdma was the first thing to do kernel bypass, all this stuff is like
-> rdma at some level.. I see this looks like the 'warp driver' stuff
-> redone
->
-> Wow, lots wrong here. Oh well.
->
->>> putting emulation code back into them, except in a more dangerous
->>> kernel location. This does not seem like a net win to me.
->> Its not a whole lot of emulation right? mdev are soft partitioned. There is
->> just a single PF, but we can create a separate partition for the guest using
->> PASID along with the normal BDF (RID). And exposing a consistent PCI like
->> interface to user space you get everything else for free.
->>
->> Yes, its not SRIOV, but giving that interface to user space via VFIO, we get
->> all of that functionality without having to reinvent a different way to do it.
->>
->> vDPA went the other way, IRC, they went and put a HW implementation of what
->> virtio is in hardware. So they sort of fit the model. Here the instance
->> looks and feels like real hardware for the setup and control aspect.
-> VDPA and this are very similar, of course it depends on the exact HW
-> implementation.
->
-> Jason
+Looks acceptable to me, but I'm getting a failure applying it to
+for-5.8/drivers on this patch:
 
+Applying: loop: Refactor loop_set_status() size calculation
 
-Actually this is not a must. Technically we can do ring/descriptor 
-translation in the vDPA driver as what zerocopy AF_XDP did.
+So you'll probably want to respin on the right branch.
 
-Thanks
-
-
->
+-- 
+Jens Axboe
 
