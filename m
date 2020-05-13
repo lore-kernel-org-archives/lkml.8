@@ -2,141 +2,335 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F82AC2D0F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D758DC2D0F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E114920708
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9BAC206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 06:29:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L0xgcDwW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LchWkKdr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729460AbgEMG3r (ORCPT
+        id S1732327AbgEMG3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 02:29:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46212 "EHLO
+        Wed, 13 May 2020 02:29:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732175AbgEMG3F (ORCPT
+        with ESMTP id S1729472AbgEMG3s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 02:29:05 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3618AC061A0C;
-        Tue, 12 May 2020 23:29:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=sYCeJWkvwiDcLO4azUz4Lghn771ZTzcCvIj3ODxfKA4=; b=L0xgcDwWBew/hUDnMRVxjAFIu0
-        nr3l2q6XF2Vl5FSu5iuND7L/B2s0+8lrY924YcHINLJjs2142Hvi/lu17oLe8a5J7XrMXSQn1vZ+s
-        KBdAEHb6c/nnwY5To5NpuwJe8USThbqwt/dx1BNtU4i0rsfEG1zyWAvoQtPe4Fn6tBCQ6dafGi6ti
-        sSF+YmLo/T0y5dtSly4MHmSA1G3UtgRy+xGkAB7nKDU2CUQp6V12yTilYZ/C2KcbvR3q/BB0ButgR
-        Tw5mexnLFPfVVKybEa3N1yFk0d6sUieQD9fw+qvEadIByagJTSJpz2Mw0hAKD9fkVdDYSQR4fa2Q+
-        MTpTE7mQ==;
-Received: from [2001:4bb8:180:9d3f:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jYksb-0005Jo-4P; Wed, 13 May 2020 06:28:33 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org,
-        target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-cifs@vger.kernel.org, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, netdev@vger.kernel.org,
-        linux-sctp@vger.kernel.org, ceph-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org
-Subject: [PATCH 33/33] net: remove kernel_getsockopt
-Date:   Wed, 13 May 2020 08:26:48 +0200
-Message-Id: <20200513062649.2100053-34-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200513062649.2100053-1-hch@lst.de>
-References: <20200513062649.2100053-1-hch@lst.de>
+        Wed, 13 May 2020 02:29:48 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69094C061A0C
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 23:29:48 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id b8so8286076ybn.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 May 2020 23:29:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=DD2RIURlKyorw73cEnlD3AdAkZEbqPSVlGDx7N8n7mI=;
+        b=LchWkKdrIeczHbSMY06bBZz3FnYLhsJY90HvzU81LINANTSehOkXFk5vS0iuVaeoPA
+         GZZJyGxglVFglHz0M7th6xQHH3VIsNKatESfpxEKtI4TfztOFfEwBoMkL80MZ/f5QTiL
+         ZZphrOgpxEnQgKBA0gVKzQ8tVXeDSQB5tMmXhH0QXQ6s2YLZSfj/pgK3e2gyu7QI4dYY
+         ZiXJQlmXbOhDqqzVO3GalEdqsnswRlCSfSLCpMXWb3ffeQ5dP41fWr9epRQbg24Sf1Vw
+         Unle5bYYHRqN/05ivnWjyDqGPsSvAKr89gHETpy+jtv1wcw6kQAiFoBiauyXGeT/xwcM
+         XFZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=DD2RIURlKyorw73cEnlD3AdAkZEbqPSVlGDx7N8n7mI=;
+        b=pNR2tX1c1iZPGW+cTTqJM8kvVhcbirmkT+LKamoxPHRdSYyUwvNIro6I546RZgeyib
+         dStzwej6ntzJ65RnvIC5ICAxlNlsf8zeE6flA+MGJSIXQ69dIDrARBR7tUm+vsW9F1C1
+         MKo40mN/kDrPSwVI6nmSkbv8eLYli0Fq280Cxf9GKRELln6t/NrJv1pkciNjDyFJaov9
+         1pSxWwHnUVeQrafOFm0hmMq1SZWZqA23uGrDh2z2tc7xwggLFyFPvOm53lQ0x7mnYXhl
+         1WHGPSAgs8xz7HAPM+fAw3vyMDTXKqipXbl3DfxIH7+1Xg4VCt8AYXhPPW6BHqRjTB7z
+         mmfQ==
+X-Gm-Message-State: AGi0PuZNvkPE0hG02TX9PdVoUDy8QlRIKG2cKc2it/+R3H9DW3ML9Yh9
+        KkxlpfNk7m3fpPSvYesRqLaTb27SEsnAN14DmqZOUg==
+X-Google-Smtp-Source: APiQypJLI4IBjgsuevwz2C1O4CEcQ1nKryo77G3FxewH2oBkNdx+/BlLRu+io5VNUqFRDHrkST2z9Rl/Oi9vS1N+pfE=
+X-Received: by 2002:a25:4446:: with SMTP id r67mr39429320yba.41.1589351387228;
+ Tue, 12 May 2020 23:29:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20200513062236.854-1-irogers@google.com> <20200513062236.854-2-irogers@google.com>
+In-Reply-To: <20200513062236.854-2-irogers@google.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 12 May 2020 23:29:35 -0700
+Message-ID: <CAP-5=fX69L=OdJAXqnP+M0nmgqsvSbJkwu-_VU8CDMVngBMZig@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf test: Improve pmu event metric testing
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Paul Clarke <pc@us.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No users left.
+On Tue, May 12, 2020 at 11:22 PM Ian Rogers <irogers@google.com> wrote:
+>
+> Break pmu-events test into 2 and add a test to verify that all pmu metric
+> expressions simply parse. Try to parse all metric ids/events, failing if
+> metrics for the current architecture fail to parse.
+>
+> Tested on power9, skylakex, haswell, broadwell, westmere, sandybridge and
+> ivybridge with the patch set in place.
+> May fail on other architectures if metrics are invalid. In particular s390
+> is untested, but its expressions are trivial. The event encodings could
+> be wrong. The other untested architectures with expressions are power8,
+> cascadelakex, tremontx, skylake, jaketown, ivytown and variants of
+> haswell and broadwell. For these the expression encoding is valid but
+> the event encodings may not be.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- include/linux/net.h |  2 --
- net/socket.c        | 34 ----------------------------------
- 2 files changed, 36 deletions(-)
+Sorry, this commit message needed updating to reflect that event
+parsing errors are no longer fatal. Fixed in v2:
+https://lore.kernel.org/lkml/20200513062752.3681-1-irogers@google.com/T/#t
 
-diff --git a/include/linux/net.h b/include/linux/net.h
-index ece7513326293..e10f378194a59 100644
---- a/include/linux/net.h
-+++ b/include/linux/net.h
-@@ -303,8 +303,6 @@ int kernel_connect(struct socket *sock, struct sockaddr *addr, int addrlen,
- 		   int flags);
- int kernel_getsockname(struct socket *sock, struct sockaddr *addr);
- int kernel_getpeername(struct socket *sock, struct sockaddr *addr);
--int kernel_getsockopt(struct socket *sock, int level, int optname, char *optval,
--		      int *optlen);
- int kernel_sendpage(struct socket *sock, struct page *page, int offset,
- 		    size_t size, int flags);
- int kernel_sendpage_locked(struct sock *sk, struct page *page, int offset,
-diff --git a/net/socket.c b/net/socket.c
-index f37c3ef508691..49000f0d87f71 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -3715,40 +3715,6 @@ int kernel_getpeername(struct socket *sock, struct sockaddr *addr)
- }
- EXPORT_SYMBOL(kernel_getpeername);
- 
--/**
-- *	kernel_getsockopt - get a socket option (kernel space)
-- *	@sock: socket
-- *	@level: API level (SOL_SOCKET, ...)
-- *	@optname: option tag
-- *	@optval: option value
-- *	@optlen: option length
-- *
-- *	Assigns the option length to @optlen.
-- *	Returns 0 or an error.
-- */
--
--int kernel_getsockopt(struct socket *sock, int level, int optname,
--			char *optval, int *optlen)
--{
--	mm_segment_t oldfs = get_fs();
--	char __user *uoptval;
--	int __user *uoptlen;
--	int err;
--
--	uoptval = (char __user __force *) optval;
--	uoptlen = (int __user __force *) optlen;
--
--	set_fs(KERNEL_DS);
--	if (level == SOL_SOCKET)
--		err = sock_getsockopt(sock, level, optname, uoptval, uoptlen);
--	else
--		err = sock->ops->getsockopt(sock, level, optname, uoptval,
--					    uoptlen);
--	set_fs(oldfs);
--	return err;
--}
--EXPORT_SYMBOL(kernel_getsockopt);
--
- /**
-  *	kernel_sendpage - send a &page through a socket (kernel space)
-  *	@sock: socket
--- 
-2.26.2
+Thanks,
+Ian
 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/tests/builtin-test.c |   5 +
+>  tools/perf/tests/pmu-events.c   | 158 ++++++++++++++++++++++++++++++--
+>  tools/perf/tests/tests.h        |   2 +
+>  3 files changed, 159 insertions(+), 6 deletions(-)
+>
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+> index 3471ec52ea11..8147c17c71ab 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+> @@ -75,6 +75,11 @@ static struct test generic_tests[] = {
+>         {
+>                 .desc = "PMU events",
+>                 .func = test__pmu_events,
+> +               .subtest = {
+> +                       .get_nr         = test__pmu_events_subtest_get_nr,
+> +                       .get_desc       = test__pmu_events_subtest_get_desc,
+> +               },
+> +
+>         },
+>         {
+>                 .desc = "DSO data read",
+> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+> index d64261da8bf7..c18b9ce8cace 100644
+> --- a/tools/perf/tests/pmu-events.c
+> +++ b/tools/perf/tests/pmu-events.c
+> @@ -8,6 +8,10 @@
+>  #include <linux/zalloc.h>
+>  #include "debug.h"
+>  #include "../pmu-events/pmu-events.h"
+> +#include "util/evlist.h"
+> +#include "util/expr.h"
+> +#include "util/parse-events.h"
+> +#include <ctype.h>
+>
+>  struct perf_pmu_test_event {
+>         struct pmu_event event;
+> @@ -144,7 +148,7 @@ static struct pmu_events_map *__test_pmu_get_events_map(void)
+>  }
+>
+>  /* Verify generated events from pmu-events.c is as expected */
+> -static int __test_pmu_event_table(void)
+> +static int test_pmu_event_table(void)
+>  {
+>         struct pmu_events_map *map = __test_pmu_get_events_map();
+>         struct pmu_event *table;
+> @@ -347,14 +351,11 @@ static int __test__pmu_event_aliases(char *pmu_name, int *count)
+>         return res;
+>  }
+>
+> -int test__pmu_events(struct test *test __maybe_unused,
+> -                    int subtest __maybe_unused)
+> +
+> +static int test_aliases(void)
+>  {
+>         struct perf_pmu *pmu = NULL;
+>
+> -       if (__test_pmu_event_table())
+> -               return -1;
+> -
+>         while ((pmu = perf_pmu__scan(pmu)) != NULL) {
+>                 int count = 0;
+>
+> @@ -377,3 +378,148 @@ int test__pmu_events(struct test *test __maybe_unused,
+>
+>         return 0;
+>  }
+> +
+> +static bool is_number(const char *str)
+> +{
+> +       size_t i;
+> +
+> +       for (i = 0; i < strlen(str); i++) {
+> +               if (!isdigit(str[i]) && str[i] != '.')
+> +                       return false;
+> +       }
+> +       return true;
+> +}
+> +
+> +static int check_parse_id(const char *id, bool same_cpu, struct pmu_event *pe)
+> +{
+> +       struct parse_events_error error;
+> +       struct evlist *evlist;
+> +       int ret;
+> +
+> +       /* Numbers are always valid. */
+> +       if (is_number(id))
+> +               return 0;
+> +
+> +       evlist = evlist__new();
+> +       memset(&error, 0, sizeof(error));
+> +       ret = parse_events(evlist, id, &error);
+> +       if (ret && same_cpu) {
+> +               fprintf(stderr,
+> +                       "\nWARNING: Parse event failed metric '%s' id '%s' expr '%s'\n",
+> +                       pe->metric_name, id, pe->metric_expr);
+> +               fprintf(stderr, "Error string '%s' help '%s'\n",
+> +                       error.str, error.help);
+> +       } else if (ret) {
+> +               pr_debug3("Parse event failed, but for an event that may not be supported by this CPU.\nid '%s' metric '%s' expr '%s'\n",
+> +                       id, pe->metric_name, pe->metric_expr);
+> +       }
+> +       evlist__delete(evlist);
+> +       free(error.str);
+> +       free(error.help);
+> +       free(error.first_str);
+> +       free(error.first_help);
+> +       /* TODO: too many metrics are broken to fail on this test currently. */
+> +       return 0;
+> +}
+> +
+> +static int test_parsing(void)
+> +{
+> +       struct pmu_events_map *cpus_map = perf_pmu__find_map(NULL);
+> +       struct pmu_events_map *map;
+> +       struct pmu_event *pe;
+> +       int i, j, k;
+> +       const char **ids;
+> +       int idnum;
+> +       int ret = 0;
+> +       struct expr_parse_ctx ctx;
+> +       double result;
+> +
+> +       i = 0;
+> +       for (;;) {
+> +               map = &pmu_events_map[i++];
+> +               if (!map->table) {
+> +                       map = NULL;
+> +                       break;
+> +               }
+> +               j = 0;
+> +               for (;;) {
+> +                       pe = &map->table[j++];
+> +                       if (!pe->name && !pe->metric_group && !pe->metric_name)
+> +                               break;
+> +                       if (!pe->metric_expr)
+> +                               continue;
+> +                       if (expr__find_other(pe->metric_expr, NULL,
+> +                                               &ids, &idnum, 0) < 0) {
+> +                               pr_debug("Parse other failed for map %s %s %s\n",
+> +                                       map->cpuid, map->version, map->type);
+> +                               pr_debug("On metric %s\n", pe->metric_name);
+> +                               pr_debug("On expression %s\n", pe->metric_expr);
+> +                               ret++;
+> +                               continue;
+> +                       }
+> +                       expr__ctx_init(&ctx);
+> +
+> +                       /*
+> +                        * Add all ids with a made up value. The value may
+> +                        * trigger divide by zero when subtracted and so try to
+> +                        * make them unique.
+> +                        */
+> +                       for (k = 0; k < idnum; k++)
+> +                               expr__add_id(&ctx, ids[k], k + 1);
+> +
+> +                       for (k = 0; k < idnum; k++) {
+> +                               if (check_parse_id(ids[k], map == cpus_map, pe))
+> +                                       ret++;
+> +                       }
+> +
+> +                       if (expr__parse(&result, &ctx, pe->metric_expr, 0)) {
+> +                               pr_debug("Parse failed for map %s %s %s\n",
+> +                                       map->cpuid, map->version, map->type);
+> +                               pr_debug("On metric %s\n", pe->metric_name);
+> +                               pr_debug("On expression %s\n", pe->metric_expr);
+> +                               ret++;
+> +                       }
+> +                       for (k = 0; k < idnum; k++)
+> +                               zfree(&ids[k]);
+> +                       free(ids);
+> +               }
+> +       }
+> +       return ret;
+> +}
+> +
+> +static const struct {
+> +       int (*func)(void);
+> +       const char *desc;
+> +} pmu_events_testcase_table[] = {
+> +       {
+> +               .func = test_pmu_event_table,
+> +               .desc = "PMU event table sanity",
+> +       },
+> +       {
+> +               .func = test_aliases,
+> +               .desc = "PMU event map aliases",
+> +       },
+> +       {
+> +               .func = test_parsing,
+> +               .desc = "Parsing of PMU event table metrics",
+> +       },
+> +};
+> +
+> +const char *test__pmu_events_subtest_get_desc(int i)
+> +{
+> +       if (i < 0 || i >= (int)ARRAY_SIZE(pmu_events_testcase_table))
+> +               return NULL;
+> +       return pmu_events_testcase_table[i].desc;
+> +}
+> +
+> +int test__pmu_events_subtest_get_nr(void)
+> +{
+> +       return (int)ARRAY_SIZE(pmu_events_testcase_table);
+> +}
+> +
+> +int test__pmu_events(struct test *test __maybe_unused, int i)
+> +{
+> +       if (i < 0 || i >= (int)ARRAY_SIZE(pmu_events_testcase_table))
+> +               return TEST_FAIL;
+> +       return pmu_events_testcase_table[i].func();
+> +}
+> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+> index d6d4ac34eeb7..8e316c30ed3c 100644
+> --- a/tools/perf/tests/tests.h
+> +++ b/tools/perf/tests/tests.h
+> @@ -50,6 +50,8 @@ int test__perf_evsel__tp_sched_test(struct test *test, int subtest);
+>  int test__syscall_openat_tp_fields(struct test *test, int subtest);
+>  int test__pmu(struct test *test, int subtest);
+>  int test__pmu_events(struct test *test, int subtest);
+> +const char *test__pmu_events_subtest_get_desc(int subtest);
+> +int test__pmu_events_subtest_get_nr(void);
+>  int test__attr(struct test *test, int subtest);
+>  int test__dso_data(struct test *test, int subtest);
+>  int test__dso_data_cache(struct test *test, int subtest);
+> --
+> 2.26.2.645.ge9eca65c58-goog
+>
