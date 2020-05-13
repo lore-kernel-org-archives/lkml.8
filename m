@@ -2,99 +2,94 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DDEC4345E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7ACC43460
 	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B9BA20825
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:00:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="KEWtE9DJ"
+	by mail.kernel.org (Postfix) with ESMTP id B8E0420DD4
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 15:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389182AbgEMPAT (ORCPT
+        id S2389199AbgEMPAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 11:00:19 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:56868 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389140AbgEMPAC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 11:00:02 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04DEwEa0012652;
-        Wed, 13 May 2020 16:59:51 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=YKDaVDrP2xQNZLQzpmWzpO0+LvV9JwL1ShvubDmLjTg=;
- b=KEWtE9DJ7xxHgWkTGUhfZtXbV9C9E4/GLgnfcf87m4lFvA/00B9DJOFrQa0+qCUW7h9r
- CYT5MRQxYWC9GDcNwsNcMqBQON8V2hUPdnTy5MXyqYoiIVr6F1nyLhO5zmlCCR/XnLUY
- /dw+zLhvk0iiauPFWN4Z95IeUDFoR4Il7lmeAQDRpGzMmo//vgBxMx5xb6fxw/j19NWM
- QiOCyMa9e2ZMCMZOZtZPWATIRSoBVx766XYzqKB08Na6cFHvvs4/86oZMrc4A1tedQRr
- icLUpI5cgb3Py6W5zujWsZnku5n4idrslsEpnIHN47a5ueZrJdMH90vsrqHcOaNbrzQa oA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3100vn5e3h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 13 May 2020 16:59:51 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8C9EB10002A;
-        Wed, 13 May 2020 16:59:51 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7DB8C2D3006;
-        Wed, 13 May 2020 16:59:51 +0200 (CEST)
-Received: from localhost (10.75.127.50) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 13 May 2020 16:59:50
- +0200
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH 09/15] ARM: dts: stm32: remove useless interrupt-names property on stm32f743
-Date:   Wed, 13 May 2020 16:59:29 +0200
-Message-ID: <20200513145935.22493-10-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20200513145935.22493-1-benjamin.gaignard@st.com>
-References: <20200513145935.22493-1-benjamin.gaignard@st.com>
+        Wed, 13 May 2020 11:00:25 -0400
+Received: from v6.sk ([167.172.42.174]:54010 "EHLO v6.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389173AbgEMPAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 11:00:17 -0400
+Received: from localhost (v6.sk [IPv6:::1])
+        by v6.sk (Postfix) with ESMTP id 3B67E610D5;
+        Wed, 13 May 2020 15:00:15 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH 2/3] drm/etnaviv: Don't ignore errors on getting clocks
+Date:   Wed, 13 May 2020 17:00:06 +0200
+Message-Id: <20200513150007.1315395-3-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200513150007.1315395-1-lkundrak@v3.sk>
+References: <[PATCH 0/3] drm/etnaviv: Clock fixes>
+ <20200513150007.1315395-1-lkundrak@v3.sk>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-13_06:2020-05-13,2020-05-13 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Driver doesn't use interrupt's name to get it so remove it from
-the node.
+There might be good reasons why the getting a clock failed. To treat the
+clocks as optional we're specifically only interested in ignoring -ENOENT,
+and devm_clk_get_optional() does just that.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- arch/arm/boot/dts/stm32h743.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
-index 05eb02e6d083..e1de90ade786 100644
---- a/arch/arm/boot/dts/stm32h743.dtsi
-+++ b/arch/arm/boot/dts/stm32h743.dtsi
-@@ -487,7 +487,6 @@
- 			assigned-clock-parents = <&rcc LSE_CK>;
- 			interrupt-parent = <&exti>;
- 			interrupts = <17 IRQ_TYPE_EDGE_RISING>;
--			interrupt-names = "alarm";
- 			st,syscfg = <&pwrcfg 0x00 0x100>;
- 			status = "disabled";
- 		};
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+index c6dacfe3d321..e7dbb924f576 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+@@ -1786,26 +1786,26 @@ static int etnaviv_gpu_platform_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* Get Clocks: */
+-	gpu->clk_reg = devm_clk_get(&pdev->dev, "reg");
++	gpu->clk_reg = devm_clk_get_optional(&pdev->dev, "reg");
+ 	DBG("clk_reg: %p", gpu->clk_reg);
+ 	if (IS_ERR(gpu->clk_reg))
+-		gpu->clk_reg = NULL;
++		return err;
+ 
+-	gpu->clk_bus = devm_clk_get(&pdev->dev, "bus");
++	gpu->clk_bus = devm_clk_get_optional(&pdev->dev, "bus");
+ 	DBG("clk_bus: %p", gpu->clk_bus);
+ 	if (IS_ERR(gpu->clk_bus))
+-		gpu->clk_bus = NULL;
++		return err;
+ 
+-	gpu->clk_core = devm_clk_get(&pdev->dev, "core");
++	gpu->clk_core = devm_clk_get_optional(&pdev->dev, "core");
+ 	DBG("clk_core: %p", gpu->clk_core);
+ 	if (IS_ERR(gpu->clk_core))
+-		gpu->clk_core = NULL;
++		return err;
+ 	gpu->base_rate_core = clk_get_rate(gpu->clk_core);
+ 
+-	gpu->clk_shader = devm_clk_get(&pdev->dev, "shader");
++	gpu->clk_shader = devm_clk_get_optional(&pdev->dev, "shader");
+ 	DBG("clk_shader: %p", gpu->clk_shader);
+ 	if (IS_ERR(gpu->clk_shader))
+-		gpu->clk_shader = NULL;
++		return err;
+ 	gpu->base_rate_shader = clk_get_rate(gpu->clk_shader);
+ 
+ 	/* TODO: figure out max mapped size */
 -- 
-2.15.0
+2.26.2
 
