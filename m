@@ -2,131 +2,110 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6523EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 498A0C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15E43205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E54C02054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:16:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fJdx3dGz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390644AbgEMTQa (ORCPT
+        id S2390654AbgEMTQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 15:16:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53164 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390443AbgEMTQ1 (ORCPT
+        Wed, 13 May 2020 15:16:37 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8013 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390443AbgEMTQf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 15:16:27 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B38F0C061A0C;
-        Wed, 13 May 2020 12:16:27 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jYwrc-0002zE-Hi; Wed, 13 May 2020 21:16:20 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 247F11C0440;
-        Wed, 13 May 2020 21:16:20 +0200 (CEST)
-Date:   Wed, 13 May 2020 19:16:20 -0000
-From:   "tip-bot2 for Vitaly Kuznetsov" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] x86/idt: Annotate alloc_intr_gate() with __init
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200428093824.1451532-3-vkuznets@redhat.com>
-References: <20200428093824.1451532-3-vkuznets@redhat.com>
+        Wed, 13 May 2020 15:16:35 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ebc47860001>; Wed, 13 May 2020 12:16:22 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 13 May 2020 12:16:35 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 13 May 2020 12:16:35 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 May
+ 2020 19:16:34 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 13 May 2020 19:16:34 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.48]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ebc478f0002>; Wed, 13 May 2020 12:16:33 -0700
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <robh+dt@kernel.org>, <lorenzo.pieralisi@arm.com>,
+        <andrew.murray@arm.com>, <bhelgaas@google.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH] arm64: tegra: Fix flag for 64-bit resources in 'ranges' property
+Date:   Thu, 14 May 2020 00:46:27 +0530
+Message-ID: <20200513191627.8533-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Message-ID: <158939738006.390.4250769933552969485.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1589397382; bh=w/XekWVPrm/cmb5lCApL00WgoP1t9EJZ4Acir2w8jUA=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=fJdx3dGzM+xx6XYDbd8KVP2yTcEkYlhmvqIGOjDrDeuODwyOf+5xgFeVPCi9816q0
+         QAWNHAvwAQcs73ENjFicPlQCgRUthO/29eqpWonuFgT8xIAzO2fiFlKZ/CHvhIWSW4
+         6zhnvh9SrEUVhnozZGihscrFUnxXRrUfC9U4GweLLAGR1WBrVdQv0bp3CsHncFRwvG
+         Zp3qMdWOQu5taLQIZ98Zt0EftsZL7DmxF9RyEHQhdI/t7bauTIBp3nzHGjnedFk1le
+         F23nAdZ/zACzLiKkNjY1QEWJt+j+kCP2VaGFK1RoRbnqp36CJOTpIwssH8BIk3M530
+         4tyYceuYIEF8A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/entry branch of tip:
+Fix flag in PCIe controllers device-tree nodes 'ranges' property to correctly
+represent 64-bit resources.
 
-Commit-ID:     4c74d51dab3dd655062a4740af150c1835e19cff
-Gitweb:        https://git.kernel.org/tip/4c74d51dab3dd655062a4740af150c1835e19cff
-Author:        Vitaly Kuznetsov <vkuznets@redhat.com>
-AuthorDate:    Tue, 28 Apr 2020 11:38:23 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 13 May 2020 21:13:54 +02:00
-
-x86/idt: Annotate alloc_intr_gate() with __init
-
-There seems to be no reason to allocate interrupt gates after init. Mark
-alloc_intr_gate() as __init and add WARN_ON() checks making sure it is
-only used before idt_setup_apic_and_irq_gates() finalizes IDT setup and
-maps all un-allocated entries to spurious entries.
-
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200428093824.1451532-3-vkuznets@redhat.com
-
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 ---
- arch/x86/kernel/idt.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
-index 98bcb50..0e92051 100644
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -51,6 +51,9 @@ struct idt_data {
- #define TSKG(_vector, _gdt)				\
- 	G(_vector, NULL, DEFAULT_STACK, GATE_TASK, DPL0, _gdt << 3)
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index e1ae01c2d039..f7462ad4aa70 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -1540,7 +1540,7 @@
  
-+
-+static bool idt_setup_done __initdata;
-+
- /*
-  * Early traps running on the DEFAULT_STACK because the other interrupt
-  * stacks work only after cpu_init().
-@@ -323,6 +326,7 @@ void __init idt_setup_apic_and_irq_gates(void)
- 		set_intr_gate(i, entry);
- 	}
- #endif
-+	idt_setup_done = true;
- }
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x36100000 0x0  0x36100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
++			  0xc3000000 0x14 0x00000000 0x14 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+ 			  0x82000000 0x0  0x40000000 0x17 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+ 	};
  
- /**
-@@ -352,6 +356,7 @@ void idt_invalidate(void *addr)
- 	load_idt(&idt);
- }
+@@ -1585,7 +1585,7 @@
  
-+/* This goes away once ASYNC_PF is sanitized */
- void __init update_intr_gate(unsigned int n, const void *addr)
- {
- 	if (WARN_ON_ONCE(!test_bit(n, system_vectors)))
-@@ -359,9 +364,14 @@ void __init update_intr_gate(unsigned int n, const void *addr)
- 	set_intr_gate(n, addr);
- }
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x38100000 0x0  0x38100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
++			  0xc3000000 0x18 0x00000000 0x18 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+ 			  0x82000000 0x0  0x40000000 0x1b 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+ 	};
  
--void alloc_intr_gate(unsigned int n, const void *addr)
-+void __init alloc_intr_gate(unsigned int n, const void *addr)
- {
--	BUG_ON(n < FIRST_SYSTEM_VECTOR);
--	if (!test_and_set_bit(n, system_vectors))
-+	if (WARN_ON(n < FIRST_SYSTEM_VECTOR))
-+		return;
-+
-+	if (WARN_ON(idt_setup_done))
-+		return;
-+
-+	if (!WARN_ON(test_and_set_bit(n, system_vectors)))
- 		set_intr_gate(n, addr);
- }
+@@ -1634,7 +1634,7 @@
+ 
+ 		bus-range = <0x0 0xff>;
+ 		ranges = <0x81000000 0x0  0x3a100000 0x0  0x3a100000 0x0 0x00100000   /* downstream I/O (1MB) */
+-			  0xc2000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
++			  0xc3000000 0x1c 0x00000000 0x1c 0x00000000 0x3 0x40000000   /* prefetchable memory (13GB) */
+ 			  0x82000000 0x0  0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
+ 	};
+ 
+-- 
+2.17.1
+
