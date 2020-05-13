@@ -2,53 +2,52 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCCBCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF541C2D0FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5872E20575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C652720575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:00:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364011;
-	bh=8BrPbkyC/yqgOYLEP9Es204DPM/VFXPE8zBaObCClVI=;
+	s=default; t=1589364015;
+	bh=bkmkk4bP/D3Sq7OZCDTSZpVQIw/X4y2O9aX1jXh4CDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ALC7zZxOUmlvEVXk+HutLlcI+cZy13yTeODSeotrppeMfo2iBNWig/k5TXQTZ8cFo
-	 5TebGe0+dj3H46WosDfjfpCwfpk/Huh7St9Q5aN108w9/sDFiqgbJpJW3DMPsE5V/d
-	 5DwPxqmf+dMsu5FuwKh9cWnN6v7fBJ90Z4UmxRkk=
+	b=YbwZcRxnY0AvcfrCPw3ToGFAWnoB92ae4or6Akas8CyXuv16Pi4hddCAWSckXKvEo
+	 oCvNZXF4Y+z54qBps/7UfE9kAxrj0KSMo7czu2eITomZvBmSbSy4U3egO+X9t4nkoV
+	 lUIHU9Rt2IciJNQqrwnt2RXWAc/Clad7ATkAo5W4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388575AbgEMKAK (ORCPT
+        id S2387771AbgEMJwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 06:00:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53886 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:52:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387798AbgEMJw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:52:28 -0400
+        id S2387762AbgEMJwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:52:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5E9B20740;
-        Wed, 13 May 2020 09:52:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 193F3206D6;
+        Wed, 13 May 2020 09:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363548;
-        bh=8BrPbkyC/yqgOYLEP9Es204DPM/VFXPE8zBaObCClVI=;
+        s=default; t=1589363533;
+        bh=bkmkk4bP/D3Sq7OZCDTSZpVQIw/X4y2O9aX1jXh4CDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FqU8ZfnzMUgVJuXZOn0SDnVaJ3nV129cK7gGYrpOeJf6PebCVGXpnboTHPofYs5bk
-         aoxVHROuwENgFWWNga9W7NKfTupS7byJXGE+7fOrou342YydxnRw02kzFX9U9ccs2I
-         62boPoERjsNQsqHtWH/DkqVEgo1N7TB4xNo8t0+g=
+        b=J6Eq7gy1yYINPeOLhGCReiMZKFDqtl1YB8FOnr4+77J4xnTGwowCaeIVt3/dtW1ET
+         t2/5P9qXA9zQobxACbq/pvKGV6O41SDz1UOi8evYoo2ep3mXzXQ7ohYAu69Qt9aGxl
+         Nt8FcjLDmEjQpCZypMLEm67r3y4I8jC5E5DyfoFs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 5.6 007/118] ext4: dont set dioread_nolock by default for blocksize < pagesize
-Date:   Wed, 13 May 2020 11:43:46 +0200
-Message-Id: <20200513094418.289827916@linuxfoundation.org>
+        stable@vger.kernel.org, Allen Pais <allen.pais@oracle.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 022/118] net: dsa: Do not leave DSA master with NULL netdev_ops
+Date:   Wed, 13 May 2020 11:44:01 +0200
+Message-Id: <20200513094419.651633965@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -61,69 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ritesh Harjani <riteshh@linux.ibm.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit 626b035b816b61a7a7b4d2205a6807e2f11a18c1 upstream.
+[ Upstream commit 050569fc8384c8056bacefcc246bcb2dfe574936 ]
 
-Currently on calling echo 3 > drop_caches on host machine, we see
-FS corruption in the guest. This happens on Power machine where
-blocksize < pagesize.
+When ndo_get_phys_port_name() for the CPU port was added we introduced
+an early check for when the DSA master network device in
+dsa_master_ndo_setup() already implements ndo_get_phys_port_name(). When
+we perform the teardown operation in dsa_master_ndo_teardown() we would
+not be checking that cpu_dp->orig_ndo_ops was successfully allocated and
+non-NULL initialized.
 
-So as a temporary workaound don't enable dioread_nolock by default
-for blocksize < pagesize until we identify the root cause.
+With network device drivers such as virtio_net, this leads to a NPD as
+soon as the DSA switch hanging off of it gets torn down because we are
+now assigning the virtio_net device's netdev_ops a NULL pointer.
 
-Also emit a warning msg in case if this mount option is manually
-enabled for blocksize < pagesize.
-
-Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Link: https://lore.kernel.org/r/20200327200744.12473-1-riteshh@linux.ibm.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: da7b9e9b00d4 ("net: dsa: Add ndo_get_phys_port_name() for CPU port")
+Reported-by: Allen Pais <allen.pais@oracle.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Tested-by: Allen Pais <allen.pais@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/ext4/super.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ net/dsa/master.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 446158ab507dd..70796de7c4682 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -2181,6 +2181,14 @@ static int parse_options(char *options, struct super_block *sb,
- 		}
- 	}
- #endif
-+	if (test_opt(sb, DIOREAD_NOLOCK)) {
-+		int blocksize =
-+			BLOCK_SIZE << le32_to_cpu(sbi->s_es->s_log_block_size);
-+		if (blocksize < PAGE_SIZE)
-+			ext4_msg(sb, KERN_WARNING, "Warning: mounting with an "
-+				 "experimental mount option 'dioread_nolock' "
-+				 "for blocksize < PAGE_SIZE");
-+	}
- 	return 1;
+--- a/net/dsa/master.c
++++ b/net/dsa/master.c
+@@ -289,7 +289,8 @@ static void dsa_master_ndo_teardown(stru
+ {
+ 	struct dsa_port *cpu_dp = dev->dsa_ptr;
+ 
+-	dev->netdev_ops = cpu_dp->orig_ndo_ops;
++	if (cpu_dp->orig_ndo_ops)
++		dev->netdev_ops = cpu_dp->orig_ndo_ops;
+ 	cpu_dp->orig_ndo_ops = NULL;
  }
  
-@@ -3787,7 +3795,6 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
- 		set_opt(sb, NO_UID32);
- 	/* xattr user namespace & acls are now defaulted on */
- 	set_opt(sb, XATTR_USER);
--	set_opt(sb, DIOREAD_NOLOCK);
- #ifdef CONFIG_EXT4_FS_POSIX_ACL
- 	set_opt(sb, POSIX_ACL);
- #endif
-@@ -3837,6 +3844,10 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
- 	sbi->s_li_wait_mult = EXT4_DEF_LI_WAIT_MULT;
- 
- 	blocksize = BLOCK_SIZE << le32_to_cpu(es->s_log_block_size);
-+
-+	if (blocksize == PAGE_SIZE)
-+		set_opt(sb, DIOREAD_NOLOCK);
-+
- 	if (blocksize < EXT4_MIN_BLOCK_SIZE ||
- 	    blocksize > EXT4_MAX_BLOCK_SIZE) {
- 		ext4_msg(sb, KERN_ERR,
--- 
-2.20.1
-
 
 
