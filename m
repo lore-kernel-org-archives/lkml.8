@@ -2,57 +2,55 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCD9CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF217C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43ABD2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F42A20575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:54:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589363680;
-	bh=1OeNgr0kGUcv+fOFi8Ga8SfHYKNOSW7hX+7O3AjZnV8=;
+	s=default; t=1589363682;
+	bh=SBu3nKrPUII6wLYa7UcjO4P0bf+07rMWUTiGAHrPK3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HipOQlQ9yHt46RaJUCvF/Lxi2cXu4BM2nez4F9Xl+ghjMLNeI9Cf8lXi2r+ByVw14
-	 ZAc/lGj3hXPIV6C/ad3FznfIPazSwCHpLfMB8bgAMScHCRWHkrV4PxWjKKzqwgz+oq
-	 9/dZa2USYRL+NXNgC7XPiuCZpyoKlBH6F5abr1ZI=
+	b=g8HKbGqYbqED3Oq98m7sXX6wIwbJir1FP3RkslBIlGoZCoZPq4khOwk1G6nuZCGVi
+	 oerC6nfkJpQ070OqLATQ8xef9nNR5auc+SGBf9I7T9YRrmEWdL1Ci1Em4RFAhQijP4
+	 AHVEgdW03ss75aHxx52oiplRM/zqXJCU9FD3eP7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388136AbgEMJyj (ORCPT
+        id S2388144AbgEMJym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:54:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57148 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:54:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387655AbgEMJyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:54:36 -0400
+        id S2388129AbgEMJyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:54:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5657E205ED;
-        Wed, 13 May 2020 09:54:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1EC320753;
+        Wed, 13 May 2020 09:54:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363675;
-        bh=1OeNgr0kGUcv+fOFi8Ga8SfHYKNOSW7hX+7O3AjZnV8=;
+        s=default; t=1589363678;
+        bh=SBu3nKrPUII6wLYa7UcjO4P0bf+07rMWUTiGAHrPK3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zW77SC+1XsHAOY2Mztvm0pEOOSCCAk6hf8PuJsZXtcXa2MYO1GqZEKvnJSU04176R
-         /OjmYD8FdQO9T00wJK97HgEb1mlFTyO3HV748VDFx8pa1YmWlpYiChOd5xBG3c5dqP
-         IRsLjU5rZHZcyVbOP7lfzV7Z3zTmFfz5/Z+Axcqc=
+        b=S5bp6vjPVjA7eDz6SUMGxjP7pLRtx9sYJsl0Anq/KoB+/PtL8jZbfINfqvquIXRTx
+         cipMnOSPY73EaDuaQLSExfO3nly4e/VcXkOzAgevV2pdKaHmw6h6yLIHLmp+fgncYS
+         6zHZpSvy215T4ISYP8LubbBBSwBjn86FYMDdZMXc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yoji <yoji.fujihar.min@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Manfred Spraul <manfred@colorfullife.com>,
+        stable@vger.kernel.org, Roman Penyaev <rpenyaev@suse.de>,
         Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Markus Elfring <elfring@users.sourceforge.net>, 1vier1@web.de,
+        Jason Baron <jbaron@akamai.com>,
+        Khazhismel Kumykov <khazhy@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>, Heiher <r@hev.cc>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.6 081/118] ipc/mqueue.c: change __do_notify() to bypass check_kill_permission()
-Date:   Wed, 13 May 2020 11:45:00 +0200
-Message-Id: <20200513094424.603765372@linuxfoundation.org>
+Subject: [PATCH 5.6 082/118] epoll: atomically remove wait entry on wake up
+Date:   Wed, 13 May 2020 11:45:01 +0200
+Message-Id: <20200513094424.670552201@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
 References: <20200513094417.618129545@linuxfoundation.org>
@@ -65,149 +63,178 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleg Nesterov <oleg@redhat.com>
+From: Roman Penyaev <rpenyaev@suse.de>
 
-commit b5f2006144c6ae941726037120fa1001ddede784 upstream.
+commit 412895f03cbf9633298111cb4dfde13b7720e2c5 upstream.
 
-Commit cc731525f26a ("signal: Remove kernel interal si_code magic")
-changed the value of SI_FROMUSER(SI_MESGQ), this means that mq_notify() no
-longer works if the sender doesn't have rights to send a signal.
+This patch does two things:
 
-Change __do_notify() to use do_send_sig_info() instead of kill_pid_info()
-to avoid check_kill_permission().
+ - fixes a lost wakeup introduced by commit 339ddb53d373 ("fs/epoll:
+   remove unnecessary wakeups of nested epoll")
 
-This needs the additional notify.sigev_signo != 0 check, shouldn't we
-change do_mq_notify() to deny sigev_signo == 0 ?
+ - improves performance for events delivery.
 
-Test-case:
+The description of the problem is the following: if N (>1) threads are
+waiting on ep->wq for new events and M (>1) events come, it is quite
+likely that >1 wakeups hit the same wait queue entry, because there is
+quite a big window between __add_wait_queue_exclusive() and the
+following __remove_wait_queue() calls in ep_poll() function.
 
-	#include <signal.h>
-	#include <mqueue.h>
-	#include <unistd.h>
-	#include <sys/wait.h>
-	#include <assert.h>
+This can lead to lost wakeups, because thread, which was woken up, can
+handle not all the events in ->rdllist.  (in better words the problem is
+described here: https://lkml.org/lkml/2019/10/7/905)
 
-	static int notified;
+The idea of the current patch is to use init_wait() instead of
+init_waitqueue_entry().
 
-	static void sigh(int sig)
-	{
-		notified = 1;
-	}
+Internally init_wait() sets autoremove_wake_function as a callback,
+which removes the wait entry atomically (under the wq locks) from the
+list, thus the next coming wakeup hits the next wait entry in the wait
+queue, thus preventing lost wakeups.
 
-	int main(void)
-	{
-		signal(SIGIO, sigh);
+Problem is very well reproduced by the epoll60 test case [1].
 
-		int fd = mq_open("/mq", O_RDWR|O_CREAT, 0666, NULL);
-		assert(fd >= 0);
+Wait entry removal on wakeup has also performance benefits, because
+there is no need to take a ep->lock and remove wait entry from the queue
+after the successful wakeup.  Here is the timing output of the epoll60
+test case:
 
-		struct sigevent se = {
-			.sigev_notify	= SIGEV_SIGNAL,
-			.sigev_signo	= SIGIO,
-		};
-		assert(mq_notify(fd, &se) == 0);
+  With explicit wakeup from ep_scan_ready_list() (the state of the
+  code prior 339ddb53d373):
 
-		if (!fork()) {
-			assert(setuid(1) == 0);
-			mq_send(fd, "",1,0);
-			return 0;
-		}
+    real    0m6.970s
+    user    0m49.786s
+    sys     0m0.113s
 
-		wait(NULL);
-		mq_unlink("/mq");
-		assert(notified);
-		return 0;
-	}
+ After this patch:
 
-[manfred@colorfullife.com: 1) Add self_exec_id evaluation so that the implementation matches do_notify_parent 2) use PIDTYPE_TGID everywhere]
-Fixes: cc731525f26a ("signal: Remove kernel interal si_code magic")
-Reported-by: Yoji <yoji.fujihar.min@gmail.com>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Manfred Spraul <manfred@colorfullife.com>
+   real    0m5.220s
+   user    0m36.879s
+   sys     0m0.019s
+
+The other testcase is the stress-epoll [2], where one thread consumes
+all the events and other threads produce many events:
+
+  With explicit wakeup from ep_scan_ready_list() (the state of the
+  code prior 339ddb53d373):
+
+    threads  events/ms  run-time ms
+          8       5427         1474
+         16       6163         2596
+         32       6824         4689
+         64       7060         9064
+        128       6991        18309
+
+ After this patch:
+
+    threads  events/ms  run-time ms
+          8       5598         1429
+         16       7073         2262
+         32       7502         4265
+         64       7640         8376
+        128       7634        16767
+
+ (number of "events/ms" represents event bandwidth, thus higher is
+  better; number of "run-time ms" represents overall time spent
+  doing the benchmark, thus lower is better)
+
+[1] tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c
+[2] https://github.com/rouming/test-tools/blob/master/stress-epoll.c
+
+Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Markus Elfring <elfring@users.sourceforge.net>
-Cc: <1vier1@web.de>
+Reviewed-by: Jason Baron <jbaron@akamai.com>
+Cc: Khazhismel Kumykov <khazhy@google.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Heiher <r@hev.cc>
 Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/e2a782e4-eab9-4f5c-c749-c07a8f7a4e66@colorfullife.com
+Link: http://lkml.kernel.org/r/20200430130326.1368509-2-rpenyaev@suse.de
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- ipc/mqueue.c |   34 ++++++++++++++++++++++++++--------
- 1 file changed, 26 insertions(+), 8 deletions(-)
+ fs/eventpoll.c |   43 ++++++++++++++++++++++++-------------------
+ 1 file changed, 24 insertions(+), 19 deletions(-)
 
---- a/ipc/mqueue.c
-+++ b/ipc/mqueue.c
-@@ -142,6 +142,7 @@ struct mqueue_inode_info {
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -1800,7 +1800,6 @@ static int ep_poll(struct eventpoll *ep,
+ {
+ 	int res = 0, eavail, timed_out = 0;
+ 	u64 slack = 0;
+-	bool waiter = false;
+ 	wait_queue_entry_t wait;
+ 	ktime_t expires, *to = NULL;
  
- 	struct sigevent notify;
- 	struct pid *notify_owner;
-+	u32 notify_self_exec_id;
- 	struct user_namespace *notify_user_ns;
- 	struct user_struct *user;	/* user who created, for accounting */
- 	struct sock *notify_sock;
-@@ -774,28 +775,44 @@ static void __do_notify(struct mqueue_in
- 	 * synchronously. */
- 	if (info->notify_owner &&
- 	    info->attr.mq_curmsgs == 1) {
--		struct kernel_siginfo sig_i;
- 		switch (info->notify.sigev_notify) {
- 		case SIGEV_NONE:
- 			break;
--		case SIGEV_SIGNAL:
--			/* sends signal */
-+		case SIGEV_SIGNAL: {
-+			struct kernel_siginfo sig_i;
-+			struct task_struct *task;
-+
-+			/* do_mq_notify() accepts sigev_signo == 0, why?? */
-+			if (!info->notify.sigev_signo)
-+				break;
+@@ -1845,21 +1844,23 @@ fetch_events:
+ 	 */
+ 	ep_reset_busy_poll_napi_id(ep);
  
- 			clear_siginfo(&sig_i);
- 			sig_i.si_signo = info->notify.sigev_signo;
- 			sig_i.si_errno = 0;
- 			sig_i.si_code = SI_MESGQ;
- 			sig_i.si_value = info->notify.sigev_value;
--			/* map current pid/uid into info->owner's namespaces */
- 			rcu_read_lock();
-+			/* map current pid/uid into info->owner's namespaces */
- 			sig_i.si_pid = task_tgid_nr_ns(current,
- 						ns_of_pid(info->notify_owner));
--			sig_i.si_uid = from_kuid_munged(info->notify_user_ns, current_uid());
-+			sig_i.si_uid = from_kuid_munged(info->notify_user_ns,
-+						current_uid());
-+			/*
-+			 * We can't use kill_pid_info(), this signal should
-+			 * bypass check_kill_permission(). It is from kernel
-+			 * but si_fromuser() can't know this.
-+			 * We do check the self_exec_id, to avoid sending
-+			 * signals to programs that don't expect them.
-+			 */
-+			task = pid_task(info->notify_owner, PIDTYPE_TGID);
-+			if (task && task->self_exec_id ==
-+						info->notify_self_exec_id) {
-+				do_send_sig_info(info->notify.sigev_signo,
-+						&sig_i, task, PIDTYPE_TGID);
-+			}
- 			rcu_read_unlock();
+-	/*
+-	 * We don't have any available event to return to the caller.  We need
+-	 * to sleep here, and we will be woken by ep_poll_callback() when events
+-	 * become available.
+-	 */
+-	if (!waiter) {
+-		waiter = true;
+-		init_waitqueue_entry(&wait, current);
 -
--			kill_pid_info(info->notify.sigev_signo,
--				      &sig_i, info->notify_owner);
- 			break;
-+		}
- 		case SIGEV_THREAD:
- 			set_cookie(info->notify_cookie, NOTIFY_WOKENUP);
- 			netlink_sendskb(info->notify_sock, info->notify_cookie);
-@@ -1384,6 +1401,7 @@ retry:
- 			info->notify.sigev_signo = notification->sigev_signo;
- 			info->notify.sigev_value = notification->sigev_value;
- 			info->notify.sigev_notify = SIGEV_SIGNAL;
-+			info->notify_self_exec_id = current->self_exec_id;
++	do {
++		/*
++		 * Internally init_wait() uses autoremove_wake_function(),
++		 * thus wait entry is removed from the wait queue on each
++		 * wakeup. Why it is important? In case of several waiters
++		 * each new wakeup will hit the next waiter, giving it the
++		 * chance to harvest new event. Otherwise wakeup can be
++		 * lost. This is also good performance-wise, because on
++		 * normal wakeup path no need to call __remove_wait_queue()
++		 * explicitly, thus ep->lock is not taken, which halts the
++		 * event delivery.
++		 */
++		init_wait(&wait);
+ 		write_lock_irq(&ep->lock);
+ 		__add_wait_queue_exclusive(&ep->wq, &wait);
+ 		write_unlock_irq(&ep->lock);
+-	}
+ 
+-	for (;;) {
+ 		/*
+ 		 * We don't want to sleep if the ep_poll_callback() sends us
+ 		 * a wakeup in between. That's why we set the task state
+@@ -1889,10 +1890,20 @@ fetch_events:
+ 			timed_out = 1;
  			break;
  		}
+-	}
++
++		/* We were woken up, thus go and try to harvest some events */
++		eavail = 1;
++
++	} while (0);
+ 
+ 	__set_current_state(TASK_RUNNING);
+ 
++	if (!list_empty_careful(&wait.entry)) {
++		write_lock_irq(&ep->lock);
++		__remove_wait_queue(&ep->wq, &wait);
++		write_unlock_irq(&ep->lock);
++	}
++
+ send_events:
+ 	/*
+ 	 * Try to transfer events to user space. In case we get 0 events and
+@@ -1903,12 +1914,6 @@ send_events:
+ 	    !(res = ep_send_events(ep, events, maxevents)) && !timed_out)
+ 		goto fetch_events;
+ 
+-	if (waiter) {
+-		write_lock_irq(&ep->lock);
+-		__remove_wait_queue(&ep->wq, &wait);
+-		write_unlock_irq(&ep->lock);
+-	}
+-
+ 	return res;
+ }
  
 
 
