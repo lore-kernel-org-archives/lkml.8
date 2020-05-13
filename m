@@ -2,152 +2,174 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	FUZZY_XPILL,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CBFCA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 852D6C2D0F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FEDF20753
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="A6zin1hH"
+	by mail.kernel.org (Postfix) with ESMTP id 6340220753
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 09:53:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589363583;
+	bh=xqrh2MopQeipAcdHacog6ivfLRVDwUVB/2W23jrA/+4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VteZU8gD/DTPf90dxKg37XbQnuTTetQM2QmXd2l068q9S1fIDDjncRbBUWQGjrg4+
+	 oWFDRhBsfh5n2dQ2RCnGm54kxpEH6SVQmaMUOoCBpYkS4zeCaWgq2XbAPbG2Z3z6si
+	 E+/n0fHdFgCSSOU65H2Vt2td4bed3yvc51VGcETI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387882AbgEMJxA (ORCPT
+        id S2387891AbgEMJxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:53:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387861AbgEMJwz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:53:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54586 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387860AbgEMJwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 13 May 2020 05:52:55 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5DA9C061A0C;
-        Wed, 13 May 2020 02:52:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ft535WPrBxMxFYAmdROL29Gd1hqYXPYu/0OGkw3PQ9g=; b=A6zin1hHZANRxscI7PjouY7Fe
-        R/b/ualhzllBnLuTEaV6fw8fz3Rr3xKP1K3veWH3haN0HXeVkSVrLPbGik2SEi1Tr1m3955OS0PvF
-        InTeKaHJNfU/1waUmxyIChWS13dXmXAQlSyBR2vR1HV9ecQFcoEsuZSStr+6fgo3xnQc5+JRCKEy3
-        xXiD9OOVPUyuPeh05a0TQmetdL/tTohXmxWq5c/Eta2tgqq5hIR/bpZaau9At0xvkxXIZZjbxZiSx
-        DdtLbMhjvQpQaE+Vw2Nq5RhK6O6qhc2aqKU9NBq963C1coP8FpmyOpAplXdSz55Avd88x6arkONEy
-        C5hn4P1Fw==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:57430)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jYo4F-00043y-DN; Wed, 13 May 2020 10:52:47 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jYo4E-0007fG-Fn; Wed, 13 May 2020 10:52:46 +0100
-Date:   Wed, 13 May 2020 10:52:46 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Doug Berger <opendmb@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 4/4] net: bcmgenet: add support for ethtool flow
- control
-Message-ID: <20200513095246.GH1551@shell.armlinux.org.uk>
-References: <1589243050-18217-1-git-send-email-opendmb@gmail.com>
- <1589243050-18217-5-git-send-email-opendmb@gmail.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95F60206D6;
+        Wed, 13 May 2020 09:52:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589363575;
+        bh=xqrh2MopQeipAcdHacog6ivfLRVDwUVB/2W23jrA/+4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Jok1ZPMZMc4D25jrfM1gzlHeZJ5+1XGKu1TxuCaT4ZtK8V1f+6OKb3SwsAHj5Po9I
+         GWcheY6C82PvHD/x+j5mQ2lWMNNtnXTr/e1KQTEDHS9TUlylZu9K58e2dWXxthTiQs
+         qmTOwkVMDCGQA2SihEqnDfungc6HNzKokQ3o5/do=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Bob Briscoe <ietf@bobbriscoe.net>,
+        Olivier Tilmans <olivier.tilmans@nokia-bell-labs.com>,
+        Dave Taht <dave.taht@gmail.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.6 040/118] tunnel: Propagate ECT(1) when decapsulating as recommended by RFC6040
+Date:   Wed, 13 May 2020 11:44:19 +0200
+Message-Id: <20200513094420.866941098@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200513094417.618129545@linuxfoundation.org>
+References: <20200513094417.618129545@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589243050-18217-5-git-send-email-opendmb@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 05:24:10PM -0700, Doug Berger wrote:
-> diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-> index 511d553a4d11..788da1ecea0c 100644
-> --- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
-> +++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-> @@ -25,6 +25,21 @@
->  
->  #include "bcmgenet.h"
->  
-> +static u32 _flow_control_autoneg(struct phy_device *phydev)
-> +{
-> +	bool tx_pause, rx_pause;
-> +	u32 cmd_bits = 0;
-> +
-> +	phy_get_pause(phydev, &tx_pause, &rx_pause);
-> +
-> +	if (!tx_pause)
-> +		cmd_bits |= CMD_TX_PAUSE_IGNORE;
-> +	if (!rx_pause)
-> +		cmd_bits |= CMD_RX_PAUSE_IGNORE;
-> +
-> +	return cmd_bits;
-> +}
-> +
->  /* setup netdev link state when PHY link status change and
->   * update UMAC and RGMII block when link up
->   */
-> @@ -71,12 +86,20 @@ void bcmgenet_mii_setup(struct net_device *dev)
->  		cmd_bits <<= CMD_SPEED_SHIFT;
->  
->  		/* duplex */
-> -		if (phydev->duplex != DUPLEX_FULL)
-> -			cmd_bits |= CMD_HD_EN;
-> -
-> -		/* pause capability */
-> -		if (!phydev->pause)
-> -			cmd_bits |= CMD_RX_PAUSE_IGNORE | CMD_TX_PAUSE_IGNORE;
-> +		if (phydev->duplex != DUPLEX_FULL) {
-> +			cmd_bits |= CMD_HD_EN |
-> +				CMD_RX_PAUSE_IGNORE | CMD_TX_PAUSE_IGNORE;
+From: "Toke Høiland-Jørgensen" <toke@redhat.com>
 
-phy_get_pause() already takes account of whether the PHY is in half
-duplex mode.  So:
+[ Upstream commit b723748750ece7d844cdf2f52c01d37f83387208 ]
 
-		bool tx_pause, rx_pause;
+RFC 6040 recommends propagating an ECT(1) mark from an outer tunnel header
+to the inner header if that inner header is already marked as ECT(0). When
+RFC 6040 decapsulation was implemented, this case of propagation was not
+added. This simply appears to be an oversight, so let's fix that.
 
-		if (phydev->autoneg && priv->autoneg_pause) {
-			phy_get_pause(phydev, &tx_pause, &rx_pause);
-		} else if (phydev->duplex == DUPLEX_FULL) {
-			tx_pause = priv->tx_pause;
-			rx_pause = priv->rx_pause;
-		} else {
-			tx_pause = false;
-			rx_pause = false;
-		}
+Fixes: eccc1bb8d4b4 ("tunnel: drop packet if ECN present with not-ECT")
+Reported-by: Bob Briscoe <ietf@bobbriscoe.net>
+Reported-by: Olivier Tilmans <olivier.tilmans@nokia-bell-labs.com>
+Cc: Dave Taht <dave.taht@gmail.com>
+Cc: Stephen Hemminger <stephen@networkplumber.org>
+Signed-off-by: Toke HÃ¸iland-JÃ¸rgensen <toke@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ include/net/inet_ecn.h |   57 +++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 55 insertions(+), 2 deletions(-)
 
-		if (!tx_pause)
-			cmd_bits |= CMD_TX_PAUSE_IGNORE;
-		if (!rx_pause)
-			cmd_bits |= CMD_RX_PAUSE_IGNORE;
+--- a/include/net/inet_ecn.h
++++ b/include/net/inet_ecn.h
+@@ -99,6 +99,20 @@ static inline int IP_ECN_set_ce(struct i
+ 	return 1;
+ }
+ 
++static inline int IP_ECN_set_ect1(struct iphdr *iph)
++{
++	u32 check = (__force u32)iph->check;
++
++	if ((iph->tos & INET_ECN_MASK) != INET_ECN_ECT_0)
++		return 0;
++
++	check += (__force u16)htons(0x100);
++
++	iph->check = (__force __sum16)(check + (check>=0xFFFF));
++	iph->tos ^= INET_ECN_MASK;
++	return 1;
++}
++
+ static inline void IP_ECN_clear(struct iphdr *iph)
+ {
+ 	iph->tos &= ~INET_ECN_MASK;
+@@ -134,6 +148,22 @@ static inline int IP6_ECN_set_ce(struct
+ 	return 1;
+ }
+ 
++static inline int IP6_ECN_set_ect1(struct sk_buff *skb, struct ipv6hdr *iph)
++{
++	__be32 from, to;
++
++	if ((ipv6_get_dsfield(iph) & INET_ECN_MASK) != INET_ECN_ECT_0)
++		return 0;
++
++	from = *(__be32 *)iph;
++	to = from ^ htonl(INET_ECN_MASK << 20);
++	*(__be32 *)iph = to;
++	if (skb->ip_summed == CHECKSUM_COMPLETE)
++		skb->csum = csum_add(csum_sub(skb->csum, (__force __wsum)from),
++				     (__force __wsum)to);
++	return 1;
++}
++
+ static inline void ipv6_copy_dscp(unsigned int dscp, struct ipv6hdr *inner)
+ {
+ 	dscp &= ~INET_ECN_MASK;
+@@ -159,6 +189,25 @@ static inline int INET_ECN_set_ce(struct
+ 	return 0;
+ }
+ 
++static inline int INET_ECN_set_ect1(struct sk_buff *skb)
++{
++	switch (skb->protocol) {
++	case cpu_to_be16(ETH_P_IP):
++		if (skb_network_header(skb) + sizeof(struct iphdr) <=
++		    skb_tail_pointer(skb))
++			return IP_ECN_set_ect1(ip_hdr(skb));
++		break;
++
++	case cpu_to_be16(ETH_P_IPV6):
++		if (skb_network_header(skb) + sizeof(struct ipv6hdr) <=
++		    skb_tail_pointer(skb))
++			return IP6_ECN_set_ect1(skb, ipv6_hdr(skb));
++		break;
++	}
++
++	return 0;
++}
++
+ /*
+  * RFC 6040 4.2
+  *  To decapsulate the inner header at the tunnel egress, a compliant
+@@ -208,8 +257,12 @@ static inline int INET_ECN_decapsulate(s
+ 	int rc;
+ 
+ 	rc = __INET_ECN_decapsulate(outer, inner, &set_ce);
+-	if (!rc && set_ce)
+-		INET_ECN_set_ce(skb);
++	if (!rc) {
++		if (set_ce)
++			INET_ECN_set_ce(skb);
++		else if ((outer & INET_ECN_MASK) == INET_ECN_ECT_1)
++			INET_ECN_set_ect1(skb);
++	}
+ 
+ 	return rc;
+ }
 
-would be entirely sufficient here.
 
-I wonder whether your implementation (which mine follows) is really
-correct though.  Consider this:
-
-# ethtool -A eth0 autoneg on tx on rx on
-# ethtool -s eth0 autoneg off speed 1000 duplex full
-
-At this point, what do you expect the resulting pause state to be?  It
-may not be what you actually think it should be - it will be tx and rx
-pause enabled (it's easier to see why that happens with my rewritten
-version of your implementation, which is functionally identical.)
-
-If we take the view that if link autoneg is disabled, and therefore the
-link partner's advertisement is zero, shouldn't it result in tx and rx
-pause being disabled?
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
