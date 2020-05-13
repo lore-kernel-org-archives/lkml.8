@@ -2,211 +2,336 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD9EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 986B9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6ADD2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4ED82054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 16:35:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pQuBIWh3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gIPtbS2c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389654AbgEMQdn (ORCPT
+        id S2389668AbgEMQfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 12:33:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728068AbgEMQdn (ORCPT
+        Wed, 13 May 2020 12:35:03 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:28762 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728354AbgEMQfC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 12:33:43 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D84E1C061A0C;
-        Wed, 13 May 2020 09:33:42 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id j3so240348ilk.11;
-        Wed, 13 May 2020 09:33:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=s1lBbWECS5IwE3IeUZjyhM1ZXxahSFoW3FrHXLj/HpU=;
-        b=pQuBIWh3mzzQZB+43EIVfTKnn7N3VSa4dHI0Cu+zzeVkHsG2ht6OeCjXixZtHrzS3W
-         VjkRDL+gUvs/58Wly4/yPkRCq83SuYuNCXeu0BLENwcaUUwjftTtZpHHl+Ne5ZGVNfGF
-         iIFmmXj/5ZtYXVnLYKCubZNR0FqfO07t06TjU1mf5MPEX64ECmrktmYsuHdoC/qec24j
-         /DbqYh1bOhnhdk8wkBedESeYquNo2/bkvHTSt7xUdnnQ+EBKxXNECEBdQc8CoV1ey56g
-         nXNCFExDjQPtjLdYq2UZsECD+1jgFjxYro2TgrUTZs8zEmzo9K+piTgyNuMiK/GEJnQW
-         V6fw==
+        Wed, 13 May 2020 12:35:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589387700;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9XHzfeBd6Ycnq2E1cOGJb06yk0FxduAZPIKhSGyVhGI=;
+        b=gIPtbS2cCl+7kF1rM0SeqdyXNPpLtCpxK53+LHP5QoE0tbAkA6xTg/d8z9+UCvx7uj5EOw
+        Z3AtJL96Af5wtsyaL371DveQdiQjeUuSOqYMnb/8Lu1wl4ZyEDTS/p3rFkSIUUainNTTN0
+        N2NVy3yZkS2VUsnO6QVXYmh4QfpC3m0=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-214-A0_yYoe_MWqg_CaXH7jNTA-1; Wed, 13 May 2020 12:34:58 -0400
+X-MC-Unique: A0_yYoe_MWqg_CaXH7jNTA-1
+Received: by mail-wm1-f69.google.com with SMTP id m123so5191201wmm.5
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 09:34:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=s1lBbWECS5IwE3IeUZjyhM1ZXxahSFoW3FrHXLj/HpU=;
-        b=B+JbRxFfNkaJUr/uf159wCj1DDHDe6VzTCWwyR27f9WGx3ZIxk3CGs9Elq/cpIpPQJ
-         wKwt0gHDTFrsRMJq1xtgYdzkTUqBeZI7PlOPmMZw5fUScmpGeEnmhmHVgdfApWr+az4V
-         f6wSD58z+zoBmyFBly0TgE3mzKxn/Q9B6neQ4rPGqYXugWmI6392wTtBTyec9GcYOtL4
-         +ZQ1Z26U6SG88iIvIfCyIE4Klsk7BIdqzK+f+UFuvpMcAKbaldOu87LJsPYCsCLDf+oE
-         vZT+IC/2LYyxrITJK38b5dQhKK2QjAlGaOx7Mih3T7Y62xQ9x2OA1ONHWxVxFiQZM0lW
-         Dg5Q==
-X-Gm-Message-State: AOAM533s8V0BQqMXRMn0Lc5inEaQ/SlqIMmMu12z4cx2NhEu1FTbKtsE
-        QFyhjdUzwaYIPvf4pxDqDTafabLdFgR2EcZ+WHk=
-X-Google-Smtp-Source: ABdhPJwxfphddCpUB9hXDPWmGIrIF4zunHFBgZWBofCeO9kPGqIS2d7FLMfTphgRor5KuWloT3TETMhfcnw7U5Rl+To=
-X-Received: by 2002:a92:3652:: with SMTP id d18mr304019ilf.212.1589387622176;
- Wed, 13 May 2020 09:33:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9XHzfeBd6Ycnq2E1cOGJb06yk0FxduAZPIKhSGyVhGI=;
+        b=T0JTf9Ie2a9Yj/0KlLazsvMYy3jZ7AHDW02jMpsyQtUGFjyp+ef8ZSL/TP2JIPThtH
+         Z/Ox3exoH/rOXfhMLdDpyyoe8nOTtHhBzqpCoEDzc5mHPy6ssiudQdtv+vHgJB/Bv3H3
+         F4Pnjbj5HvZDJ+E83W7zwfHTyTicL7CP+v9dxC79QH9j1PZDX49U2KA3t+PK7Kt9LHGv
+         yeEPuvxAHhnSSeUIwxFMjLCqedH4RxGkrudQAcd2Jebv4NpAiEfWqflrWIhtYF53Ob4C
+         8FsUvS/TgJ0qacf4giSiSRU1nB1GRZheYUqHNcfB74m67fwBmXSnLGeL2Dg8IgbDbmyI
+         EFWg==
+X-Gm-Message-State: AGi0PuZHm+UbM8Y93TDr+40aYhrHXSepTddhIyBdgQU2Jb2ktAcsutsu
+        bGxanDAGrrW4c8FKG+zmZD0brIsb5a+v5k4koU6K7bI1JXNhZwTfc2qMz7pvJPnSnwOM41GpZdW
+        VVBWh1g9O2LCNo585wug6GkrQ
+X-Received: by 2002:a1c:b604:: with SMTP id g4mr20433228wmf.103.1589387696778;
+        Wed, 13 May 2020 09:34:56 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKqiA2Xp0IN2p/gFQzld2/j/z7a01JqN+qAtpCQqjHgAHlWfHiJwq/aECdtAfuX0kd+FULJRA==
+X-Received: by 2002:a1c:b604:: with SMTP id g4mr20433202wmf.103.1589387696440;
+        Wed, 13 May 2020 09:34:56 -0700 (PDT)
+Received: from redhat.com (bzq-79-179-68-225.red.bezeqint.net. [79.179.68.225])
+        by smtp.gmail.com with ESMTPSA id z1sm36576406wmf.15.2020.05.13.09.34.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 09:34:55 -0700 (PDT)
+Date:   Wed, 13 May 2020 12:34:53 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     David Stevens <stevensd@chromium.org>
+Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jason Wang <jasowang@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+        virtio-dev@lists.oasis-open.org
+Subject: Re: [PATCH v3 4/4] drm/virtio: Support virtgpu exported resources
+Message-ID: <20200513123326-mutt-send-email-mst@kernel.org>
+References: <20200311112004.47138-1-stevensd@chromium.org>
+ <20200311112004.47138-5-stevensd@chromium.org>
 MIME-Version: 1.0
-References: <20200504031340.7103-1-nick.desaulniers@gmail.com>
- <CA+icZUUOaqeKeh6n4BJq2k6XQWAfNghUj57j42ZX5qyd3iOmLw@mail.gmail.com>
- <20200505004738.ew2lcp27c2n4jqia@google.com> <CAK7LNAR7-VMEWBcJ_Wd+61ZDHEa0gD8FaSs63YPu7m_FgH8Htg@mail.gmail.com>
- <CAKwvOdmEP9Auuc+M+MqPoQmx+70DgdsPYZQ6pg=8oGnfCviqRA@mail.gmail.com> <CAK7LNATm2r9pH7i=pe3e7WvNmumGnivn05J+Mz10DzrzB8i=hw@mail.gmail.com>
-In-Reply-To: <CAK7LNATm2r9pH7i=pe3e7WvNmumGnivn05J+Mz10DzrzB8i=hw@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Wed, 13 May 2020 18:33:30 +0200
-Message-ID: <CA+icZUUzLORp_TvDZiLO4WOdwEHTZF9vpi9BTHwQm-S3KDtMBw@mail.gmail.com>
-Subject: Re: [PATCH] Makefile: support compressed debug info
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Nick Desaulniers <nick.desaulniers@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200311112004.47138-5-stevensd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 4:52 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Nick,
->
-> On Wed, May 13, 2020 at 4:23 AM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
-> >
-> > On Mon, May 11, 2020 at 10:54 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > >
-> > > > >On Mon, May 4, 2020 at 5:13 AM Nick Desaulniers
-> > > > ><nick.desaulniers@gmail.com> wrote:
-> > > > >>
-> > > > >> As debug information gets larger and larger, it helps significantly save
-> > > > >> the size of vmlinux images to compress the information in the debug
-> > > > >> information sections. Note: this debug info is typically split off from
-> > > > >> the final compressed kernel image, which is why vmlinux is what's used
-> > > > >> in conjunction with GDB. Minimizing the debug info size should have no
-> > > > >> impact on boot times, or final compressed kernel image size.
-> > > > >>
-> > > Nick,
-> > >
-> > > I am OK with this patch.
-> > >
-> > > Fangrui provided the minimal requirement for
-> > > --compress-debug-sections=zlib
-> > >
-> > >
-> > > Is it worth recording in the help text?
-> > > Do you want to send v2?
-> >
-> > Yes I'd like to record that information.  I can also record Sedat's
-> > Tested-by tag.  Thank you for testing Sedat.
-> >
-> > I don't know what "linux-image-dbg file" are, or why they would be
-> > bigger.  The size of the debug info is the primary concern with this
-> > config.  It sounds like however that file is created might be
-> > problematic.
->
->
->
-> As Sedat explained, deb package data
-> is compressed by xz, which is default.
->
-> You can use another compression method,
-> or disable compression if you desire.
->
->
->
-> "man dpkg-deb" says as follows:
->
->  -Zcompress-type
->       Specify which compression type to use when building a package.
->       Allowed  values  are  gzip,  xz  (since  dpkg  1.15.6), and none
->       (default is xz).
->
->
->
-> Kbuild supports KDEB_COMPRESS variable
-> to change the compression method.
-> See line 46 of scripts/package/builddeb.
->
+On Wed, Mar 11, 2020 at 08:20:04PM +0900, David Stevens wrote:
+> Add support for UUID-based resource sharing mechanism to virtgpu. This
+> implements the new virtgpu commands and hooks them up to dma-buf's
+> get_uuid callback.
+> 
+> Signed-off-by: David Stevens <stevensd@chromium.org>
+> ---
+>  drivers/gpu/drm/virtio/virtgpu_drv.c   |  3 ++
+>  drivers/gpu/drm/virtio/virtgpu_drv.h   | 18 +++++++++
+>  drivers/gpu/drm/virtio/virtgpu_kms.c   |  4 ++
+>  drivers/gpu/drm/virtio/virtgpu_prime.c | 41 +++++++++++++++++--
+>  drivers/gpu/drm/virtio/virtgpu_vq.c    | 55 ++++++++++++++++++++++++++
+>  5 files changed, 118 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
+> index ab4bed78e656..776e6667042e 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_drv.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
+> @@ -165,6 +165,7 @@ static unsigned int features[] = {
+>  	VIRTIO_GPU_F_VIRGL,
+>  #endif
+>  	VIRTIO_GPU_F_EDID,
+> +	VIRTIO_GPU_F_RESOURCE_UUID,
+>  };
+>  static struct virtio_driver virtio_gpu_driver = {
+>  	.feature_table = features,
+> @@ -202,7 +203,9 @@ static struct drm_driver driver = {
+>  	.prime_handle_to_fd = drm_gem_prime_handle_to_fd,
+>  	.prime_fd_to_handle = drm_gem_prime_fd_to_handle,
+>  	.gem_prime_mmap = drm_gem_prime_mmap,
+> +	.gem_prime_export = virtgpu_gem_prime_export,
+>  	.gem_prime_import_sg_table = virtgpu_gem_prime_import_sg_table,
+> +	.gem_prime_get_uuid = virtgpu_gem_prime_get_uuid,
+>  
+>  	.gem_create_object = virtio_gpu_create_object,
+>  	.fops = &virtio_gpu_driver_fops,
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
+> index af9403e1cf78..fab65f0f5a4d 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_drv.h
+> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+> @@ -49,6 +49,10 @@
+>  #define DRIVER_MINOR 1
+>  #define DRIVER_PATCHLEVEL 0
+>  
+> +#define UUID_INITIALIZING 0
+> +#define UUID_INITIALIZED 1
+> +#define UUID_INITIALIZATION_FAILED 2
+> +
+>  struct virtio_gpu_object_params {
+>  	uint32_t format;
+>  	uint32_t width;
+> @@ -75,6 +79,9 @@ struct virtio_gpu_object {
+>  
+>  	bool dumb;
+>  	bool created;
+> +
+> +	int uuid_state;
+> +	uuid_t uuid;
+>  };
+>  #define gem_to_virtio_gpu_obj(gobj) \
+>  	container_of((gobj), struct virtio_gpu_object, base.base)
+> @@ -196,6 +203,7 @@ struct virtio_gpu_device {
+>  	bool has_virgl_3d;
+>  	bool has_edid;
+>  	bool has_indirect;
+> +	bool has_resource_assign_uuid;
+>  
+>  	struct work_struct config_changed_work;
+>  
+> @@ -206,6 +214,8 @@ struct virtio_gpu_device {
+>  	struct virtio_gpu_drv_capset *capsets;
+>  	uint32_t num_capsets;
+>  	struct list_head cap_cache;
+> +
+> +	spinlock_t resource_export_lock;
+>  };
+>  
+>  struct virtio_gpu_fpriv {
+> @@ -338,6 +348,10 @@ void virtio_gpu_dequeue_fence_func(struct work_struct *work);
+>  void virtio_gpu_disable_notify(struct virtio_gpu_device *vgdev);
+>  void virtio_gpu_enable_notify(struct virtio_gpu_device *vgdev);
+>  
+> +int
+> +virtio_gpu_cmd_resource_assign_uuid(struct virtio_gpu_device *vgdev,
+> +				    struct virtio_gpu_object_array *objs);
+> +
+>  /* virtio_gpu_display.c */
+>  void virtio_gpu_modeset_init(struct virtio_gpu_device *vgdev);
+>  void virtio_gpu_modeset_fini(struct virtio_gpu_device *vgdev);
+> @@ -366,6 +380,10 @@ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
+>  			     struct virtio_gpu_object **bo_ptr,
+>  			     struct virtio_gpu_fence *fence);
+>  /* virtgpu_prime.c */
+> +struct dma_buf *virtgpu_gem_prime_export(struct drm_gem_object *obj,
+> +					 int flags);
+> +int virtgpu_gem_prime_get_uuid(struct drm_gem_object *obj,
+> +			       uuid_t *uuid);
+>  struct drm_gem_object *virtgpu_gem_prime_import_sg_table(
+>  	struct drm_device *dev, struct dma_buf_attachment *attach,
+>  	struct sg_table *sgt);
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
+> index 4009c2f97d08..5a2aeb6d2f35 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_kms.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
+> @@ -134,6 +134,7 @@ int virtio_gpu_init(struct drm_device *dev)
+>  	vgdev->dev = dev->dev;
+>  
+>  	spin_lock_init(&vgdev->display_info_lock);
+> +	spin_lock_init(&vgdev->resource_export_lock);
+>  	ida_init(&vgdev->ctx_id_ida);
+>  	ida_init(&vgdev->resource_ida);
+>  	init_waitqueue_head(&vgdev->resp_wq);
+> @@ -162,6 +163,9 @@ int virtio_gpu_init(struct drm_device *dev)
+>  	if (virtio_has_feature(vgdev->vdev, VIRTIO_RING_F_INDIRECT_DESC)) {
+>  		vgdev->has_indirect = true;
+>  	}
+> +	if (virtio_has_feature(vgdev->vdev, VIRTIO_GPU_F_RESOURCE_UUID)) {
+> +		vgdev->has_resource_assign_uuid = true;
+> +	}
 
-Hi Masahiro,
 
-thanks for the clarification and the informations.
+Just a question: this relies on DMA bufs so I assume it is
+not really assumed to work when DMA API is bypassed, right?
+Rather than worry what does it mean, how about just
+disabling  this feature without PLATFORM_DMA for now?
 
-With next RC I will add KDEB_COMPRESS=gzip to my build-script and report.
+>  
+>  	DRM_INFO("features: %cvirgl %cedid\n",
+>  		 vgdev->has_virgl_3d ? '+' : '-',
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_prime.c b/drivers/gpu/drm/virtio/virtgpu_prime.c
+> index 050d24c39a8f..7c6357f59877 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_prime.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_prime.c
+> @@ -26,9 +26,44 @@
+>  
+>  #include "virtgpu_drv.h"
+>  
+> -/* Empty Implementations as there should not be any other driver for a virtual
+> - * device that might share buffers with virtgpu
+> - */
+> +int virtgpu_gem_prime_get_uuid(struct drm_gem_object *obj,
+> +			       uuid_t *uuid)
+> +{
+> +	struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(obj);
+> +	struct virtio_gpu_device *vgdev = obj->dev->dev_private;
+> +
+> +	wait_event(vgdev->resp_wq, bo->uuid_state != UUID_INITIALIZING);
+> +	if (bo->uuid_state != UUID_INITIALIZED)
+> +		return -ENODEV;
+> +
+> +	uuid_copy(uuid, &bo->uuid);
+> +
+> +	return 0;
+> +}
+> +
+> +struct dma_buf *virtgpu_gem_prime_export(struct drm_gem_object *obj,
+> +					 int flags)
+> +{
+> +	struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(obj);
+> +	struct virtio_gpu_device *vgdev = obj->dev->dev_private;
+> +	struct virtio_gpu_object_array *objs;
+> +	int ret = 0;
+> +
+> +	if (vgdev->has_resource_assign_uuid) {
+> +		objs = virtio_gpu_array_alloc(1);
+> +		if (!objs)
+> +			return ERR_PTR(-ENOMEM);
+> +		virtio_gpu_array_add_obj(objs, &bo->base.base);
+> +
+> +		ret = virtio_gpu_cmd_resource_assign_uuid(vgdev, objs);
+> +		if (ret)
+> +			return ERR_PTR(ret);
+> +	} else {
+> +		bo->uuid_state = UUID_INITIALIZATION_FAILED;
+> +  }
+> +
+> +	return drm_gem_prime_export(obj, flags);
+> +}
+>  
+>  struct drm_gem_object *virtgpu_gem_prime_import_sg_table(
+>  	struct drm_device *dev, struct dma_buf_attachment *attach,
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
+> index cfe9c54f87a3..b968eaa46bb0 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_vq.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
+> @@ -1111,3 +1111,58 @@ void virtio_gpu_cursor_ping(struct virtio_gpu_device *vgdev,
+>  	memcpy(cur_p, &output->cursor, sizeof(output->cursor));
+>  	virtio_gpu_queue_cursor(vgdev, vbuf);
+>  }
+> +
+> +static void virtio_gpu_cmd_resource_uuid_cb(struct virtio_gpu_device *vgdev,
+> +					    struct virtio_gpu_vbuffer *vbuf)
+> +{
+> +	struct virtio_gpu_object *obj =
+> +		gem_to_virtio_gpu_obj(vbuf->objs->objs[0]);
+> +	struct virtio_gpu_resp_resource_uuid *resp =
+> +		(struct virtio_gpu_resp_resource_uuid *)vbuf->resp_buf;
+> +	uint32_t resp_type = le32_to_cpu(resp->hdr.type);
+> +
+> +	spin_lock(&vgdev->resource_export_lock);
+> +	WARN_ON(obj->uuid_state != UUID_INITIALIZING);
+> +
+> +	if (resp_type == VIRTIO_GPU_RESP_OK_RESOURCE_UUID &&
+> +			obj->uuid_state == UUID_INITIALIZING) {
+> +		memcpy(&obj->uuid.b, resp->uuid, sizeof(obj->uuid.b));
+> +		obj->uuid_state = UUID_INITIALIZED;
+> +	} else {
+> +		obj->uuid_state = UUID_INITIALIZATION_FAILED;
+> +	}
+> +	spin_unlock(&vgdev->resource_export_lock);
+> +
+> +	wake_up_all(&vgdev->resp_wq);
+> +}
+> +
+> +int
+> +virtio_gpu_cmd_resource_assign_uuid(struct virtio_gpu_device *vgdev,
+> +				    struct virtio_gpu_object_array *objs)
+> +{
+> +	struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(objs->objs[0]);
+> +	struct virtio_gpu_resource_assign_uuid *cmd_p;
+> +	struct virtio_gpu_vbuffer *vbuf;
+> +	struct virtio_gpu_resp_resource_uuid *resp_buf;
+> +
+> +	resp_buf = kzalloc(sizeof(*resp_buf), GFP_KERNEL);
+> +	if (!resp_buf) {
+> +		spin_lock(&vgdev->resource_export_lock);
+> +		bo->uuid_state = UUID_INITIALIZATION_FAILED;
+> +		spin_unlock(&vgdev->resource_export_lock);
+> +		virtio_gpu_array_put_free(objs);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	cmd_p = virtio_gpu_alloc_cmd_resp(vgdev,
+> +		virtio_gpu_cmd_resource_uuid_cb, &vbuf, sizeof(*cmd_p),
+> +		sizeof(struct virtio_gpu_resp_resource_uuid), resp_buf);
+> +	memset(cmd_p, 0, sizeof(*cmd_p));
+> +
+> +	cmd_p->hdr.type = cpu_to_le32(VIRTIO_GPU_CMD_RESOURCE_ASSIGN_UUID);
+> +	cmd_p->resource_id = cpu_to_le32(bo->hw_res_handle);
+> +
+> +	vbuf->objs = objs;
+> +	virtio_gpu_queue_ctrl_buffer(vgdev, vbuf);
+> +	return 0;
+> +}
+> -- 
+> 2.25.1.481.gfbce0eb801-goog
 
-Regards,
-- Sedat -
-
->
-> If you are interested,
-> try "make bindeb-pkg" with/without CONFIG_DEBUG_INFO_COMPRESSED,
-> and compare the size of the generated debug package.
->
->
->
->
-> As Sedat stated,
->
-> (plain data) -> compress by gzip  ->  compress by xz
->
->    is often less efficient than
->
-> (plain data) -> compress by xz
->
->
->
-> I hope this is clearer.
->
->
->
->
->
->
->
->
-> > Fangrui, I wasn't able to easily find what version of binutils first
-> > added support.  Can you please teach me how to fish?
-> >
-> > Another question I had for Fangrui is, if the linker can compress
-> > these sections, shouldn't we just have the linker do it, not the the
-> > compiler and assembler?  IIUC the debug info can contain relocations,
-> > so the linker would have to decompress these, perform relocations,
-> > then recompress these?  I guess having the compiler and assembler
-> > compress the debug info as well would minimize the size of the .o
-> > files on disk.
-> >
-> > Otherwise I should add this flag to the assembler invocation, too, in
-> > v2.  Thoughts?
-> >
-> > I have a patch series that enables dwarf5 support in the kernel that
-> > I'm working up to.  I wanted to send this first.  Both roughly reduce
-> > the debug info size by 20% each, though I haven't measured them
-> > together, yet.  Requires ToT binutils because there have been many
-> > fixes from reports of mine recently.
-> > --
-> > Thanks,
-> > ~Nick Desaulniers
->
->
->
-> --
-> Best Regards
-> Masahiro Yamada
