@@ -2,90 +2,119 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAFAC2D0F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B582C2D0FB
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 803E1206F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:36:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589337392;
-	bh=Qb5YxbKNqO1hjR4pk5SxGUBqWRwEltCvitcnmRDfo8g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BjdGgbBje5oF/fCZf/Mjgh1hUixDvtOYsy4Oz42VCJ8ENb/W/7ulUengpwdi6PSGV
-	 jpz8sJJ8eamFl28qNyGfPIBCNs4pZhTpDjtFAdD54ss8tCQsalKoE9y7M1jhyENwsd
-	 xCplGXRwe9IqXOVTw2g9pY/jSS2PLpe1s6juKQQE=
+	by mail.kernel.org (Postfix) with ESMTP id 84AA8206F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 02:37:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728551AbgEMCgb (ORCPT
+        id S1728255AbgEMChB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 22:36:31 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33090 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbgEMCgb (ORCPT
+        Tue, 12 May 2020 22:37:01 -0400
+Received: from mo-csw1516.securemx.jp ([210.130.202.155]:56258 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725898AbgEMChA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 May 2020 22:36:31 -0400
-Received: by mail-ot1-f68.google.com with SMTP id v17so4318519ote.0;
-        Tue, 12 May 2020 19:36:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7wnpVWCP9xBr9T5vBuXfOUZYJmzKN5pB5SkDibuLBzk=;
-        b=FT+1qp3jZ7RryKZn/yLsf/L3DjeWWgAnJ5VVmyKlg84ndAIFLKzbzo0LWWzQUUg/or
-         S1B3nhPLpELNMtzDYOe6jvmBSqjOaX4IwCFRK7+pTBHRz8HevysjA1OlmP5kMCxSQrqE
-         /+t6m6l+FC1eIt78Co9NOfwQZk6vqRGOSG0OxyK7uzMzcGb0FP61oowTp4X+5ysn4Tu6
-         r2BTxx4gL+Su/NaTIzVn3Q+s9Gluj13xncxFXVFOlOJe+o4RPFT92bI6P06oU12LX+6D
-         ecneM3YGOjZcYHnuqb7Capo5+h2X0dQKvNtFNPwx/oqIRggf5r59xdDNQti5RAQPiFrf
-         lZRQ==
-X-Gm-Message-State: AGi0PuZQO8LOlPfXC0DZsIG5QIrP4V/4jSsell9e57TAO21MEBQEDHkP
-        bgJ4082dGf++37deA6d7NQ==
-X-Google-Smtp-Source: APiQypKz7w9+ujTbnNAlV8a7KsmclyFkQEi30VtmO7E5fGtBxfkqysmHbHJboQKagQghmmKJ5z4EkQ==
-X-Received: by 2002:a9d:7390:: with SMTP id j16mr17748738otk.43.1589337390334;
-        Tue, 12 May 2020 19:36:30 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q65sm658569oia.13.2020.05.12.19.36.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 19:36:29 -0700 (PDT)
-Received: (nullmailer pid 23099 invoked by uid 1000);
-        Wed, 13 May 2020 02:36:28 -0000
-Date:   Tue, 12 May 2020 21:36:28 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        netdev@vger.kernel.org, David Jander <david@protonic.nl>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH v1] dt-bindings: net: nxp,tja11xx: rework validation
- support
-Message-ID: <20200513023628.GA22844@bogus>
-References: <20200505104215.8975-1-o.rempel@pengutronix.de>
+        Tue, 12 May 2020 22:37:00 -0400
+Received: by mo-csw.securemx.jp (mx-mo-csw1516) id 04D2ae54007140; Wed, 13 May 2020 11:36:40 +0900
+X-Iguazu-Qid: 34trDAmeIu11rkEjys
+X-Iguazu-QSIG: v=2; s=0; t=1589337400; q=34trDAmeIu11rkEjys; m=pK2KXljWZTLcH9XwqUT1Sc58njnMsc8wOqfGuj2Bpqo=
+Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
+        by relay.securemx.jp (mx-mr1513) id 04D2acok007719;
+        Wed, 13 May 2020 11:36:39 +0900
+Received: from enc01.localdomain ([106.186.93.100])
+        by imx2.toshiba.co.jp  with ESMTP id 04D2acj8000332;
+        Wed, 13 May 2020 11:36:38 +0900 (JST)
+Received: from hop001.toshiba.co.jp ([133.199.164.63])
+        by enc01.localdomain  with ESMTP id 04D2acCb026192;
+        Wed, 13 May 2020 11:36:38 +0900
+From:   Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Borislav Petkov <bp@alien8.de>,
+        James Morse <james.morse@arm.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>
+Subject: Re: [Patch v2] efi: cper: Add support for printing Firmware Error Record Reference
+References: <20200512045502.3810339-1-punit1.agrawal@toshiba.co.jp>
+        <CAMj1kXGNWptRShYVtDwoB7jL1_2M1ioroFV=veFt0MB=n6_-OQ@mail.gmail.com>
+Date:   Wed, 13 May 2020 11:36:37 +0900
+In-Reply-To: <CAMj1kXGNWptRShYVtDwoB7jL1_2M1ioroFV=veFt0MB=n6_-OQ@mail.gmail.com>
+        (Ard Biesheuvel's message of "Tue, 12 May 2020 12:47:59 +0200")
+X-TSB-HOP: ON
+Message-ID: <87v9l0o91m.fsf@kokedama.swc.toshiba.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200505104215.8975-1-o.rempel@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  5 May 2020 12:42:15 +0200, Oleksij Rempel wrote:
-> To properly identify this node, we need to use ethernet-phy-id0180.dc80.
-> And add missing required properties.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->  .../devicetree/bindings/net/nxp,tja11xx.yaml  | 55 ++++++++++++-------
->  1 file changed, 35 insertions(+), 20 deletions(-)
-> 
+Ard Biesheuvel <ardb@kernel.org> writes:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> On Tue, 12 May 2020 at 06:55, Punit Agrawal
+> <punit1.agrawal@toshiba.co.jp> wrote:
+>>
+>> While debugging a boot failure, the following unknown error record was
+>> seen in the boot logs.
+>>
+>>     <...>
+>>     BERT: Error records from previous boot:
+>>     [Hardware Error]: event severity: fatal
+>>     [Hardware Error]:  Error 0, type: fatal
+>>     [Hardware Error]:   section type: unknown, 81212a96-09ed-4996-9471-8d729c8e69ed
+>>     [Hardware Error]:   section length: 0x290
+>>     [Hardware Error]:   00000000: 00000001 00000000 00000000 00020002  ................
+>>     [Hardware Error]:   00000010: 00020002 0000001f 00000320 00000000  ........ .......
+>>     [Hardware Error]:   00000020: 00000000 00000000 00000000 00000000  ................
+>>     [Hardware Error]:   00000030: 00000000 00000000 00000000 00000000  ................
+>>     <...>
+>>
+>> On further investigation, it was found that the error record with
+>> UUID (81212a96-09ed-4996-9471-8d729c8e69ed) has been defined in the
+>> UEFI Specification at least since v2.4 and has recently had additional
+>> fields defined in v2.7 Section N.2.10 Firmware Error Record Reference.
+>>
+>> Add support for parsing and printing the defined fields to give users
+>> a chance to figure out what went wrong.
+>>
+>> Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+>> Cc: Ard Biesheuvel <ardb@kernel.org>
+>> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+>> Cc: Borislav Petkov <bp@alien8.de>
+>> Cc: James Morse <james.morse@arm.com>
+>> Cc: linux-acpi@vger.kernel.org
+>> Cc: linux-efi@vger.kernel.org
+>> ---
+>> Hi Ard,
+>>
+>> I've updated the patch based on your feedback.
+>>
+>> As you noted, some aspects of the spec make it a bit tricky to support
+>> all revisions in a nice way (e.g., size check) but this version should
+>> fix existing issues.
+>>
+>> Thanks,
+>> Punit
+>>
+>> v1[0] -> v2:
+>> * Simplified error record structure definition
+>> * Fixed size check
+>> * Added comment to clarify offset calculation for dumped data
+>> * Style fixes for multiline if blocks
+>
+> Thanks. I will queue this as a fix.
+
+Thanks!
+
+Just for my understanding - are you planning to send this for v5.7 or
+v5.8? There's no rush, so I am fine either ways.
+
+[...]
+
