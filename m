@@ -2,82 +2,98 @@ Return-Path: <SRS0=g10L=63=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D97AFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF3E205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DDFA2065C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 19:18:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iqlCGMhc"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="PKR2BUB+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390660AbgEMTRO (ORCPT
+        id S2390510AbgEMTSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 15:17:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53284 "EHLO
+        Wed, 13 May 2020 15:18:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732218AbgEMTRO (ORCPT
+        by vger.kernel.org with ESMTP id S1733166AbgEMTSc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 15:17:14 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30D90C061A0C;
-        Wed, 13 May 2020 12:17:14 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id f4so165423pgi.10;
-        Wed, 13 May 2020 12:17:14 -0700 (PDT)
+        Wed, 13 May 2020 15:18:32 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B746C061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 12:18:32 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id l73so1978486pjb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 12:18:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=broadcom.com; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GqpOTC77iftRlmeCJv2qZPQF7gymosnRKGcq5umLM6E=;
-        b=iqlCGMhcrgy8UmEdmX2CoIak3ZfLfdmlriWXAYDX66rC+fwGlOW98aqlcJqAZO9wKU
-         cyFzW8CtCTA2vtvJ6Yky0qeaE0iMkAHnwIc2++aRVWChVvTXGCqaQxnNqXo6oJukWDLt
-         gwrd/RUEgg6D5nO8y2EBzva5JVLNFTu0fPoMze+LozW63ttxOi5pDVkf8gj79YhHE7pL
-         x7tlEjBtuoQV4h/DGXVqjz2FLY0v0E6dAP92r9x4gXfycvy0a4hBH3CSi1KZkpGuUJ3I
-         m0QUy/b7T9Rv8z84O9bNNbNC5siI5DUBJK3wIPeMsZhI7kkYbdMsl4Us18jg76alg59w
-         M2fg==
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=qcgpVTGY9wq1jzZvcaJkFQL+JrVfapS8nFhj9eA+ABc=;
+        b=PKR2BUB+pog2PEu9p/br0Lry5EXdc2KN6bOwJFyF1W4C+jUuMVRpfoHaza2pnCSoJC
+         C3/3pubb5sNA2c5ilG2xU+VRIP6IPZjNTi8SGl4twLBbc40AOYPQkQbFX4agaa6J5I2p
+         kQkSAiHTagcd7+07Xjd3fGOAZRu3XLx6/Wy0Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GqpOTC77iftRlmeCJv2qZPQF7gymosnRKGcq5umLM6E=;
-        b=msk/ymkGlVxizGEAtLamTBWc54xQOJOqqn7r8FSBTut6AxnHLUM/kYu+1VFcMuFFYm
-         nnigXGFQvAi+gghLtUXljvP3JqgcgWiJN0ZcRaXuNQwcBJ0c/joX8VqOfOvp8lk8eMgE
-         xxPVdVpPrIp1jXMuegSd7D0RtCl5K84RxzhCujxmJBmLeGhajWBsZOXsPg/YVOx8S9jT
-         HmpPoZlz85vstFj8w9jIssPXF05zMZ9sG4z+ESHwJ4yVUKUVSobwgT5vAU9pR6mqhUoc
-         KPSxm4uIuXgR5riY52T+nuC2yzLdxMPqqMlc+k5eXDlKghAzvT0OAcIJ3L5MciZanA3E
-         CrdQ==
-X-Gm-Message-State: AOAM533ck9J5S+zZKgASj/g5noZB9sDAF6mnwAn8SovZb5W5SZ1yjZUn
-        VEXucJQLKljoqfrr/Op5pQeLHc50
-X-Google-Smtp-Source: ABdhPJy5v2ZC7OJLzdwmuSXeKZfTfjEMxOTCmyVYUnRzVZxsIqhMgXszhPMKbMFlVPqodnUfDj4iHw==
-X-Received: by 2002:a63:145c:: with SMTP id 28mr723687pgu.77.1589397433198;
-        Wed, 13 May 2020 12:17:13 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id q62sm259612pfc.132.2020.05.13.12.17.10
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=qcgpVTGY9wq1jzZvcaJkFQL+JrVfapS8nFhj9eA+ABc=;
+        b=diopTRXfA9B6Gs4cISEylmiRtafsHnMDtaLPFoi9vG139udg3ufkS0cC4D4qWOE4UC
+         7Tks0P2uFiTit6GS/byMK317ozOwBIiUgJDuzP88ZEehdOyN+CZSmBX//l6KyhRcn2i2
+         ZXXQnO91C9aBsHBBHsaA2okpVmB3XnoXSkM7Rz1O/M7kaCQclPNvsdSqsacYIEvWB6wM
+         4aQVZBVAROTZGlIuDJ0QcwtkHbfpWUyLzS6pk/j63lAxLsTc70rS3+/bITkQT6u8Fx+X
+         RJ7tcKSJgFbj1/ow8i2JuxtsrXgIAhmtZAxrHCNW5OCS7P/OQttdm/SJjXTICXIS+vlx
+         6MHQ==
+X-Gm-Message-State: AOAM530pRWzaYc18mAYCrXK2PoWNrsRedveXLSCdXUZvW7fKPvJCDV6V
+        r+Cvqsjpw3k2c0GvtPMXSK9qhw==
+X-Google-Smtp-Source: ABdhPJxJVr3lxhEfVIbkG1ij/W35rEZtckIrZ7uIVDMxUKUrxWF05zoes3fP2LI5LZG41vLjul9Jjg==
+X-Received: by 2002:a17:902:ec04:: with SMTP id l4mr669377pld.6.1589397511978;
+        Wed, 13 May 2020 12:18:31 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id y6sm15938924pjw.15.2020.05.13.12.18.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 May 2020 12:17:12 -0700 (PDT)
-Subject: Re: [PATCH] lan743x: Added fixed link support
-To:     Roelof Berg <rberg@berg-solutions.de>
-Cc:     andrew@lunn.ch, Bryan Whitehead <bryan.whitehead@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200513190633.7815-1-rberg@berg-solutions.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <d6107622-b0c2-5b07-e7b2-01a417596c8e@gmail.com>
-Date:   Wed, 13 May 2020 12:17:08 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.0
+        Wed, 13 May 2020 12:18:31 -0700 (PDT)
+Subject: Re: [PATCH v5 1/7] fs: introduce kernel_pread_file* support
+To:     Mimi Zohar <zohar@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>
+References: <20200508002739.19360-1-scott.branden@broadcom.com>
+ <20200508002739.19360-2-scott.branden@broadcom.com>
+ <1589395153.5098.158.camel@kernel.org>
+ <0e6b5f65-8c61-b02e-7d35-b4ae52aebcf3@broadcom.com>
+ <1589396593.5098.166.camel@kernel.org>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <e1b92047-7003-0615-3d58-1388ec27c78a@broadcom.com>
+Date:   Wed, 13 May 2020 12:18:27 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200513190633.7815-1-rberg@berg-solutions.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1589396593.5098.166.camel@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -85,191 +101,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 5/13/2020 12:06 PM, Roelof Berg wrote:
-> Microchip lan7431 is frequently connected to a phy. However, it
-> can also be directly connected to a MII remote peer without
-> any phy in between. For supporting such a phyless hardware setup
-> in Linux we added the capability to the driver to understand
-> the fixed-link and the phy-connection-type entries in the device
-> tree.
-> 
-> If a fixed-link node is configured in the device tree the lan7431
-> device will deactivate auto negotiation and uses the speed and
-> duplex settings configured in the fixed-link node.
-> 
-> Also the phy-connection-type can be configured in the device tree
-> and in case of a fixed-link connection the RGMII mode can be
-> configured, all other modes fall back to the default: GMII.
-> 
-> Example:
-> 
->  &pcie {
-> 	status = "okay";
-> 
-> 	host@0 {
-> 		reg = <0 0 0 0 0>;
-> 
-> 		#address-cells = <3>;
-> 		#size-cells = <2>;
-> 
-> 		ethernet@0 {
-> 			compatible = "weyland-yutani,noscom1", "microchip,lan743x";
-> 			status = "okay";
-> 			reg = <0 0 0 0 0>;
-> 			phy-connection-type = "rgmii";
-> 
-> 			fixed-link {
-> 				speed = <100>;
-> 				full-duplex;
-> 			};
-> 		};
-> 	};
-> };
-> 
-> Signed-off-by: Roelof Berg <rberg@berg-solutions.de>
-> ---
->  drivers/net/ethernet/microchip/lan743x_main.c | 94 +++++++++++++++++--
->  drivers/net/ethernet/microchip/lan743x_main.h |  4 +
->  2 files changed, 89 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/microchip/lan743x_main.c b/drivers/net/ethernet/microchip/lan743x_main.c
-> index a43140f7b5eb..85f12881340b 100644
-> --- a/drivers/net/ethernet/microchip/lan743x_main.c
-> +++ b/drivers/net/ethernet/microchip/lan743x_main.c
-> @@ -9,9 +9,12 @@
->  #include <linux/microchipphy.h>
->  #include <linux/net_tstamp.h>
->  #include <linux/phy.h>
-> +#include <linux/phy_fixed.h>
->  #include <linux/rtnetlink.h>
->  #include <linux/iopoll.h>
->  #include <linux/crc16.h>
-> +#include <linux/of_mdio.h>
-> +#include <linux/of_net.h>
->  #include "lan743x_main.h"
->  #include "lan743x_ethtool.h"
->  
-> @@ -974,6 +977,8 @@ static void lan743x_phy_close(struct lan743x_adapter *adapter)
->  
->  	phy_stop(netdev->phydev);
->  	phy_disconnect(netdev->phydev);
-> +	if (of_phy_is_fixed_link(adapter->pdev->dev.of_node))
-> +		of_phy_deregister_fixed_link(adapter->pdev->dev.of_node);
->  	netdev->phydev = NULL;
->  }
->  
-> @@ -982,18 +987,86 @@ static int lan743x_phy_open(struct lan743x_adapter *adapter)
->  	struct lan743x_phy *phy = &adapter->phy;
->  	struct phy_device *phydev;
->  	struct net_device *netdev;
-> +	struct device_node *phynode;
-> +	u32 data;
-> +	phy_interface_t phyifc = PHY_INTERFACE_MODE_GMII;
-> +	bool fixed_link = false;
->  	int ret = -EIO;
->  
->  	netdev = adapter->netdev;
-> -	phydev = phy_find_first(adapter->mdiobus);
-> -	if (!phydev)
-> -		goto return_error;
-> +	phynode = of_node_get(adapter->pdev->dev.of_node);
-> +	if (phynode)
-> +		of_get_phy_mode(phynode, &phyifc);
-> +
-> +	/* check if a fixed-link is defined in device-tree */
-> +	if (phynode && of_phy_is_fixed_link(phynode)) {
-> +		fixed_link = true;
-> +		netdev_dbg(netdev, "fixed-link detected\n");
-> +
-> +		ret = of_phy_register_fixed_link(phynode);
-> +		if (ret) {
-> +			netdev_err(netdev, "cannot register fixed PHY\n");
-> +			goto return_error;
-> +		}
->  
-> -	ret = phy_connect_direct(netdev, phydev,
-> -				 lan743x_phy_link_status_change,
-> -				 PHY_INTERFACE_MODE_GMII);
-> -	if (ret)
-> -		goto return_error;
-> +		phydev = of_phy_connect(netdev, phynode,
-> +					lan743x_phy_link_status_change,
-> +					0, phyifc);
-> +		if (!phydev)
-> +			goto return_error;
-> +
-> +		/* Configure MAC to fixed link parameters */
-> +		data = lan743x_csr_read(adapter, MAC_CR);
-> +		/* Disable auto negotiation */
-> +		data &= ~(MAC_CR_ADD_ | MAC_CR_ASD_);
-> +		/* Set duplex mode */
-> +		if (phydev->duplex)
-> +			data |= MAC_CR_DPX_;
-> +		else
-> +			data &= ~MAC_CR_DPX_;
-> +		/* Set bus speed */
-> +		switch (phydev->speed) {
-> +		case 10:
-> +			data &= ~MAC_CR_CFG_H_;
-> +			data &= ~MAC_CR_CFG_L_;
-> +			break;
-> +		case 100:
-> +			data &= ~MAC_CR_CFG_H_;
-> +			data |= MAC_CR_CFG_L_;
-> +			break;
-> +		case 1000:
-> +			data |= MAC_CR_CFG_H_;
-> +			data |= MAC_CR_CFG_L_;
-> +			break;
-> +		}
-> +		/* Set interface mode */
-> +		if (phyifc == PHY_INTERFACE_MODE_RGMII ||
-> +		    phyifc == PHY_INTERFACE_MODE_RGMII_ID ||
-> +		    phyifc == PHY_INTERFACE_MODE_RGMII_RXID ||
-> +		    phyifc == PHY_INTERFACE_MODE_RGMII_TXID)
-> +			/* RGMII */
-> +			data &= ~MAC_CR_MII_EN_;
-> +		else
-> +			/* GMII */
-> +			data |= MAC_CR_MII_EN_;
-> +		lan743x_csr_write(adapter, MAC_CR, data);
+On 2020-05-13 12:03 p.m., Mimi Zohar wrote:
+> On Wed, 2020-05-13 at 11:53 -0700, Scott Branden wrote:
+>> Hi Mimi,
+>>
+>> On 2020-05-13 11:39 a.m., Mimi Zohar wrote:
+>>> [Cc'ing linux-security-module, linux-integrity]
+>>>
+>>> On Thu, 2020-05-07 at 17:27 -0700, Scott Branden wrote:
+>>>> Add kernel_pread_file* support to kernel to allow for partial read
+>>>> of files with an offset into the file.  Existing kernel_read_file
+>>>> functions call new kernel_pread_file functions with offset=0 and
+>>>> flags=KERNEL_PREAD_FLAG_WHOLE.
+>>>>
+>>>> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+>>>> ---
+>>> <snip>
+>>>
+>>>> @@ -941,14 +955,16 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
+>> The checkpatch shows this as kernel_read_file when it is actually the
+>> new function kernel_pread_file.
+>> Please see the call to kernel_pread_file from kernel_read_file in the
+>> complete patch rather this snippet.
+>>>>    
+>>>>    		if (bytes == 0)
+>>>>    			break;
+>>>> +
+>>>> +		buf_pos += bytes;
+>>>>    	}
+>>>>    
+>>>> -	if (pos != i_size) {
+>>>> +	if (pos != read_end) {
+>>>>    		ret = -EIO;
+>>>>    		goto out_free;
+>>>>    	}
+>>>>    
+>>>> -	ret = security_kernel_post_read_file(file, *buf, i_size, id);
+>>>> +	ret = security_kernel_post_read_file(file, *buf, alloc_size, id);
+>>>>    	if (!ret)
+>>>>    		*size = pos;
+>>> Prior to the patch set that introduced this security hook, firmware
+>>> would be read twice, once for measuring/appraising the firmware and
+>>> again reading the file contents into memory.  Partial reads will break
+>>> both IMA's measuring the file and appraising the file signatures.
+>> The partial file read support is needed for request_firmware_into_buf
+>> from drivers.  The EXPORT_SYMBOL_GPL is being removed so that
+>> there can be no abuse of the partial file read support.  Such file
+>> integrity checks are not needed for this use case.  The partial file
+>> (firmware image) is actually downloaded in portions and verified on the
+>> device it is loaded to.
+> It's all fine that the device will verify the firmware, but shouldn't
+> the kernel be able to also verify the firmware file signature it is
+> providing to the device, before providing it?
+Even if the kernel successfully verified the firmware file signature it
+would just be wasting its time.  The kernel in these use cases is not always
+trusted.  The device needs to authenticate the firmware image itself.
+>
+> The device firmware is being downloaded piecemeal from somewhere and
+> won't be measured?
+It doesn't need to be measured for current driver needs.
+If someone has such need the infrastructure could be added to the kernel
+at a later date.  Existing functionality is not broken in any way by 
+this patch series.
+>
+> Mimi
 
-All of this should be done in your adjust_link callback, I believe you
-did it here because you made phy_start_aneg() conditional on not finding
-a fixed PHY, but the point of a fixed PHY is to provide a full
-emulation, including that of the state machine transitions.
-
-> +	} else {
-> +		phydev = phy_find_first(adapter->mdiobus);
-> +		if (!phydev)
-> +			goto return_error;
-> +
-> +		ret = phy_connect_direct(netdev, phydev,
-> +					 lan743x_phy_link_status_change,
-> +					 PHY_INTERFACE_MODE_GMII);
-> +		/* Note: We cannot use phyifc here because this would be SGMII
-> +		 * on a standard PC.
-> +		 */
-> +		if (ret)
-> +			goto return_error;
-> +	}
-> +
-> +	if (phynode)
-> +		of_node_put(phynode);
->  
->  	/* MAC doesn't support 1000T Half */
->  	phy_remove_link_mode(phydev, ETHTOOL_LINK_MODE_1000baseT_Half_BIT);
-> @@ -1004,10 +1077,13 @@ static int lan743x_phy_open(struct lan743x_adapter *adapter)
->  	phy->fc_autoneg = phydev->autoneg;
->  
->  	phy_start(phydev);
-> -	phy_start_aneg(phydev);
-> +	if (!fixed_link)
-> +		phy_start_aneg(phydev);
-
-phy_start() should already trigger an auto-negotiation restart if
-necessary, so this calls seems to be redundant if nothing else. If
-someone it must be kept, it should not be made conditional on the fixed
-link.
--- 
-Florian
