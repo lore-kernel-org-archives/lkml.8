@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA6BC2D0F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 112B1C2D0FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E73A20769
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E33F724929
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 00:40:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732021AbgEMAkT (ORCPT
+        id S1731995AbgEMAkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 May 2020 20:40:19 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:62897 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731804AbgEMAjt (ORCPT
+        Tue, 12 May 2020 20:40:16 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:47113 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731840AbgEMAjt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 May 2020 20:39:49 -0400
-Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 12 May 2020 17:39:47 -0700
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 12 May 2020 17:39:48 -0700
 Received: from gurus-linux.qualcomm.com ([10.46.162.81])
-  by ironmsg02-sd.qualcomm.com with ESMTP; 12 May 2020 17:39:47 -0700
+  by ironmsg03-sd.qualcomm.com with ESMTP; 12 May 2020 17:39:47 -0700
 Received: by gurus-linux.qualcomm.com (Postfix, from userid 383780)
-        id 5279549C2; Tue, 12 May 2020 17:39:47 -0700 (PDT)
+        id 437E94D95; Tue, 12 May 2020 17:39:47 -0700 (PDT)
 From:   Guru Das Srinagesh <gurus@codeaurora.org>
 To:     linux-pwm@vger.kernel.org,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -44,16 +44,13 @@ Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
         linux-arm-kernel@lists.infradead.org,
         Guru Das Srinagesh <gurus@codeaurora.org>
 Subject: [RESEND PATCH v14 00/11] Convert PWM period and duty cycle to u64
-Date:   Tue, 12 May 2020 17:39:34 -0700
-Message-Id: <cover.1588616856.git.gurus@codeaurora.org>
+Date:   Tue, 12 May 2020 17:39:33 -0700
+Message-Id: <cover.1589330178.git.gurus@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <cover.1589330178.git.gurus@codeaurora.org>
-References: <cover.1589330178.git.gurus@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200513003934.ILCApOt2NCokd9EI-AAcS89nSN3a9CyqJL55cIut6gQ@z>
 
 Because period and duty cycle are defined in the PWM framework structs as ints
 with units of nanoseconds, the maximum time duration that can be set is limited
