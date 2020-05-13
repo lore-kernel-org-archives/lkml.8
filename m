@@ -7,48 +7,54 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C181CA90AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EAABCA90AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4300120575
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AD2620575
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 May 2020 10:04:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589364254;
-	bh=uJqOvzrQ2AZit/0w/6I9IAewZMfoYrywEgn8eRWxL+Y=;
+	s=default; t=1589364256;
+	bh=CsbIO5dipL0iKBcIfukTEXl367sjdfnK/Vip1aGHx/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Clz/s6NsOcG8Vv3l9g47kiu3YR8MZJwfPp39cx+z1qM+lYweaoTIPffgajrk5qqfi
-	 1swqsDXnu30KC2KX1Z/r79wUpFqkMKpKi0a3XECnYJeBgxrXSCjYEN0DaUNCcBu6Pj
-	 bD2EPPKqLNGty1M28dZ409C5aF4kW7PbB6rJB22Y=
+	b=Ou0P/fnk9JqKQ7K0sbhFyfBrNDXspbT95v5bfCPYsdbmz4ExLwpz69F4bwVPLy8it
+	 tl3+zGXcmjj5MBwBXSVHReicHT/MRfGmnMHagYmPRYVa/E6FiDwqn5/hfeAsVkQfWf
+	 fq6CktjCE1v78v+XJhWPhLgYGXchVz08pPOGM8HU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732941AbgEMJru (ORCPT
+        id S1732930AbgEMJrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 05:47:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45568 "EHLO mail.kernel.org"
+        Wed, 13 May 2020 05:47:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732838AbgEMJrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 05:47:35 -0400
+        id S1732875AbgEMJrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 05:47:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02584206F5;
-        Wed, 13 May 2020 09:47:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9728520753;
+        Wed, 13 May 2020 09:47:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589363254;
-        bh=uJqOvzrQ2AZit/0w/6I9IAewZMfoYrywEgn8eRWxL+Y=;
+        s=default; t=1589363252;
+        bh=CsbIO5dipL0iKBcIfukTEXl367sjdfnK/Vip1aGHx/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VICwhuW+MC3oMUdfbqt2m8wa8Wsduzo8d0JAW6cVYrjXlcxEiNwdm8nODEI4uhgWX
-         oUqsZL8D9zQrr2Dw1IGV4K3C6sgb8GmtR3dWz5TrYdKhaqLvMHpFCaqDngP401xdee
-         u+lACVJ2cSQo3KXr79VeaRI7aH3gt3QcZIyhyeaI=
+        b=13e+ky6kqbqQihHKlo8ToHijGMn8KfNE9QGWaS+2K1mL+DNZxRjYWTd784V08BcY2
+         y2Qmy37iAYHssb6KMnmlq66ZnS4TLX22GuJqBOLHUwmAyXEHTZ9cy7LF8100SoYuFA
+         J6Xx3mRSvRikxQjr5u+lt/Ld+FVrfwtgPqc4ymaY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ivan Delalande <colona@arista.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 47/48] scripts/decodecode: fix trapping instruction formatting
-Date:   Wed, 13 May 2020 11:45:13 +0200
-Message-Id: <20200513094404.831387763@linuxfoundation.org>
+        stable@vger.kernel.org, Vince Weaver <vincent.weaver@maine.edu>,
+        Dave Jones <dsj@fb.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Vegard Nossum <vegard.nossum@oracle.com>,
+        Joe Mario <jmario@redhat.com>, Miroslav Benes <mbenes@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.19 46/48] objtool: Fix stack offset tracking for indirect CFAs
+Date:   Wed, 13 May 2020 11:45:12 +0200
+Message-Id: <20200513094404.559723075@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200513094351.100352960@linuxfoundation.org>
 References: <20200513094351.100352960@linuxfoundation.org>
@@ -61,46 +67,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ivan Delalande <colona@arista.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-commit e08df079b23e2e982df15aa340bfbaf50f297504 upstream.
+commit d8dd25a461e4eec7190cb9d66616aceacc5110ad upstream.
 
-If the trapping instruction contains a ':', for a memory access through
-segment registers for example, the sed substitution will insert the '*'
-marker in the middle of the instruction instead of the line address:
+When the current frame address (CFA) is stored on the stack (i.e.,
+cfa->base == CFI_SP_INDIRECT), objtool neglects to adjust the stack
+offset when there are subsequent pushes or pops.  This results in bad
+ORC data at the end of the ENTER_IRQ_STACK macro, when it puts the
+previous stack pointer on the stack and does a subsequent push.
 
-	2b:   65 48 0f c7 0f          cmpxchg16b %gs:*(%rdi)          <-- trapping instruction
+This fixes the following unwinder warning:
 
-I started to think I had forgotten some quirk of the assembly syntax
-before noticing that it was actually coming from the script.  Fix it to
-add the address marker at the right place for these instructions:
+  WARNING: can't dereference registers at 00000000f0a6bdba for ip interrupt_entry+0x9f/0xa0
 
-	28:   49 8b 06                mov    (%r14),%rax
-	2b:*  65 48 0f c7 0f          cmpxchg16b %gs:(%rdi)           <-- trapping instruction
-	30:   0f 94 c0                sete   %al
-
-Fixes: 18ff44b189e2 ("scripts/decodecode: make faulting insn ptr more robust")
-Signed-off-by: Ivan Delalande <colona@arista.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Borislav Petkov <bp@suse.de>
-Link: http://lkml.kernel.org/r/20200419223653.GA31248@visor
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 627fce14809b ("objtool: Add ORC unwind table generation")
+Reported-by: Vince Weaver <vincent.weaver@maine.edu>
+Reported-by: Dave Jones <dsj@fb.com>
+Reported-by: Steven Rostedt <rostedt@goodmis.org>
+Reported-by: Vegard Nossum <vegard.nossum@oracle.com>
+Reported-by: Joe Mario <jmario@redhat.com>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Jann Horn <jannh@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/853d5d691b29e250333332f09b8e27410b2d9924.1587808742.git.jpoimboe@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- scripts/decodecode |    2 +-
+ tools/objtool/check.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/scripts/decodecode
-+++ b/scripts/decodecode
-@@ -119,7 +119,7 @@ faultlinenum=$(( $(wc -l $T.oo  | cut -d
- faultline=`cat $T.dis | head -1 | cut -d":" -f2-`
- faultline=`echo "$faultline" | sed -e 's/\[/\\\[/g; s/\]/\\\]/g'`
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -1315,7 +1315,7 @@ static int update_insn_state_regs(struct
+ 	struct cfi_reg *cfa = &state->cfa;
+ 	struct stack_op *op = &insn->stack_op;
  
--cat $T.oo | sed -e "${faultlinenum}s/^\(.*:\)\(.*\)/\1\*\2\t\t<-- trapping instruction/"
-+cat $T.oo | sed -e "${faultlinenum}s/^\([^:]*:\)\(.*\)/\1\*\2\t\t<-- trapping instruction/"
- echo
- cat $T.aa
- cleanup
+-	if (cfa->base != CFI_SP)
++	if (cfa->base != CFI_SP && cfa->base != CFI_SP_INDIRECT)
+ 		return 0;
+ 
+ 	/* push */
 
 
