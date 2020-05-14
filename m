@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 735D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F7CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51F9220675
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7921E20643
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:09:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483379;
-	bh=uHhK8nlqpp5T5x85pXHiy4QJRKiZuAiavSq3I3XXXcU=;
+	s=default; t=1589483387;
+	bh=Vl6X23xBoHqMoNR2/6ScvTgq2jadKK1uO7HHSis+OX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AtUyA4CuXorS9bhgmXT5sy0ZaT6mfgFU0ZVwMXfuGQYqrG3haEluyhKtoh2V8cLvc
-	 wgEpTStoJEEvF4CB2ggtgFFtbkuOWAM3jEnK6A5+z2101P+73/oSSnprfIlzo8o55p
-	 /7s0feBdWd8jQXJhopz8+u3NmTGNndsPQi2nGww0=
+	b=PW/Q6wHkfUZisM3C1YpLVAH02dFuO1CaDpLEbuF57eKMKEa1GpziV5BJfK4TkdCmT
+	 Z/9293Vomilj2qLgem1vu3zs7hySd0lQc/7Ugb6+FVL7xoOsyPapZF+Cda7QIIRO92
+	 MfqlV3YphbZF4sL6F0+leIeWYHae0DEQgKHuchz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729740AbgENTJc (ORCPT
+        id S1727856AbgENTJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:09:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51350 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:09:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728398AbgENSwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:52:49 -0400
+        id S1728432AbgENSwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:52:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFC18206DC;
-        Thu, 14 May 2020 18:52:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0EA4207C3;
+        Thu, 14 May 2020 18:52:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482368;
-        bh=uHhK8nlqpp5T5x85pXHiy4QJRKiZuAiavSq3I3XXXcU=;
+        s=default; t=1589482363;
+        bh=Vl6X23xBoHqMoNR2/6ScvTgq2jadKK1uO7HHSis+OX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KR6tyy6q/zuCVcbVfkAU+LKD06QoXXQ0mx2VQtpXwjDvbJldAmpXfNiao3upi4TAg
-         XCfrDB76mmVJ3tFlNemy14AJJtz5QaPkLABTi3XE6QBRz08l/4QYIxVxZwyudKXAk5
-         CMyroVWVm5oLVUOD7w1F41risTcmHuKIMtkG2DCY=
+        b=Bzh/9U/bFWZ/XuSTihY7yN6xp5hQzC/t+Ghbd1xLBXHNEdnO2HSA1k9AO3Dm59Jv3
+         3TitTuNB4dZ5wnIA4VqwiMkxH+iBXUWFRyrf6fbIB4hP63fyhw+46tqSOyYjsmXS2h
+         fDsVDD6CQR/itRpuS3Cb7hG92qrDhz22paknGx9E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Xu <peterx@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 47/62] KVM: selftests: Fix build for evmcs.h
-Date:   Thu, 14 May 2020 14:51:32 -0400
-Message-Id: <20200514185147.19716-47-sashal@kernel.org>
+Cc:     Joerg Roedel <jroedel@suse.de>, Qian Cai <cai@lca.pw>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.6 43/62] iommu/amd: Update Device Table in increase_address_space()
+Date:   Thu, 14 May 2020 14:51:28 -0400
+Message-Id: <20200514185147.19716-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185147.19716-1-sashal@kernel.org>
 References: <20200514185147.19716-1-sashal@kernel.org>
@@ -61,58 +59,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Xu <peterx@redhat.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-[ Upstream commit 8ffdaf9155ebe517cdec5edbcca19ba6e7ee9c3c ]
+[ Upstream commit 19c6978fba68a2cdedee7d55fb8c3063d47982d9 ]
 
-I got this error when building kvm selftests:
+The Device Table needs to be updated before the new page-table root
+can be published in domain->pt_root. Otherwise a concurrent call to
+fetch_pte might fetch a PTE which is not reachable through the Device
+Table Entry.
 
-/usr/bin/ld: /home/xz/git/linux/tools/testing/selftests/kvm/libkvm.a(vmx.o):/home/xz/git/linux/tools/testing/selftests/kvm/include/evmcs.h:222: multiple definition of `current_evmcs'; /tmp/cco1G48P.o:/home/xz/git/linux/tools/testing/selftests/kvm/include/evmcs.h:222: first defined here
-/usr/bin/ld: /home/xz/git/linux/tools/testing/selftests/kvm/libkvm.a(vmx.o):/home/xz/git/linux/tools/testing/selftests/kvm/include/evmcs.h:223: multiple definition of `current_vp_assist'; /tmp/cco1G48P.o:/home/xz/git/linux/tools/testing/selftests/kvm/include/evmcs.h:223: first defined here
-
-I think it's because evmcs.h is included both in a test file and a lib file so
-the structs have multiple declarations when linking.  After all it's not a good
-habit to declare structs in the header files.
-
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Peter Xu <peterx@redhat.com>
-Message-Id: <20200504220607.99627-1-peterx@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: 92d420ec028d ("iommu/amd: Relax locking in dma_ops path")
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Tested-by: Qian Cai <cai@lca.pw>
+Link: https://lore.kernel.org/r/20200504125413.16798-5-joro@8bytes.org
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/kvm/include/evmcs.h  | 4 ++--
- tools/testing/selftests/kvm/lib/x86_64/vmx.c | 3 +++
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ drivers/iommu/amd_iommu.c | 49 ++++++++++++++++++++++++++++-----------
+ 1 file changed, 36 insertions(+), 13 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/include/evmcs.h b/tools/testing/selftests/kvm/include/evmcs.h
-index 4912d23844bc6..e31ac9c5ead0c 100644
---- a/tools/testing/selftests/kvm/include/evmcs.h
-+++ b/tools/testing/selftests/kvm/include/evmcs.h
-@@ -217,8 +217,8 @@ struct hv_enlightened_vmcs {
- #define HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_MASK	\
- 		(~((1ull << HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT) - 1))
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index d2499c86d395c..2ae1daac888a0 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -101,6 +101,8 @@ struct kmem_cache *amd_iommu_irq_cache;
+ static void update_domain(struct protection_domain *domain);
+ static int protection_domain_init(struct protection_domain *domain);
+ static void detach_device(struct device *dev);
++static void update_and_flush_device_table(struct protection_domain *domain,
++					  struct domain_pgtable *pgtable);
  
--struct hv_enlightened_vmcs *current_evmcs;
--struct hv_vp_assist_page *current_vp_assist;
-+extern struct hv_enlightened_vmcs *current_evmcs;
-+extern struct hv_vp_assist_page *current_vp_assist;
+ /****************************************************************************
+  *
+@@ -1461,8 +1463,16 @@ static bool increase_address_space(struct protection_domain *domain,
  
- int vcpu_enable_evmcs(struct kvm_vm *vm, int vcpu_id);
+ 	*pte = PM_LEVEL_PDE(pgtable.mode, iommu_virt_to_phys(pgtable.root));
  
-diff --git a/tools/testing/selftests/kvm/lib/x86_64/vmx.c b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-index 7aaa99ca4dbc3..ce528f3cf093c 100644
---- a/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-+++ b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-@@ -17,6 +17,9 @@
+-	root = amd_iommu_domain_encode_pgtable(pte, pgtable.mode + 1);
++	pgtable.root  = pte;
++	pgtable.mode += 1;
++	update_and_flush_device_table(domain, &pgtable);
++	domain_flush_complete(domain);
  
- bool enable_evmcs;
++	/*
++	 * Device Table needs to be updated and flushed before the new root can
++	 * be published.
++	 */
++	root = amd_iommu_domain_encode_pgtable(pte, pgtable.mode);
+ 	atomic64_set(&domain->pt_root, root);
  
-+struct hv_enlightened_vmcs *current_evmcs;
-+struct hv_vp_assist_page *current_vp_assist;
+ 	ret = true;
+@@ -1893,19 +1903,17 @@ static bool dma_ops_domain(struct protection_domain *domain)
+ }
+ 
+ static void set_dte_entry(u16 devid, struct protection_domain *domain,
++			  struct domain_pgtable *pgtable,
+ 			  bool ats, bool ppr)
+ {
+-	struct domain_pgtable pgtable;
+ 	u64 pte_root = 0;
+ 	u64 flags = 0;
+ 	u32 old_domid;
+ 
+-	amd_iommu_domain_get_pgtable(domain, &pgtable);
++	if (pgtable->mode != PAGE_MODE_NONE)
++		pte_root = iommu_virt_to_phys(pgtable->root);
+ 
+-	if (pgtable.mode != PAGE_MODE_NONE)
+-		pte_root = iommu_virt_to_phys(pgtable.root);
+-
+-	pte_root |= (pgtable.mode & DEV_ENTRY_MODE_MASK)
++	pte_root |= (pgtable->mode & DEV_ENTRY_MODE_MASK)
+ 		    << DEV_ENTRY_MODE_SHIFT;
+ 	pte_root |= DTE_FLAG_IR | DTE_FLAG_IW | DTE_FLAG_V | DTE_FLAG_TV;
+ 
+@@ -1978,6 +1986,7 @@ static void clear_dte_entry(u16 devid)
+ static void do_attach(struct iommu_dev_data *dev_data,
+ 		      struct protection_domain *domain)
+ {
++	struct domain_pgtable pgtable;
+ 	struct amd_iommu *iommu;
+ 	bool ats;
+ 
+@@ -1993,7 +2002,9 @@ static void do_attach(struct iommu_dev_data *dev_data,
+ 	domain->dev_cnt                 += 1;
+ 
+ 	/* Update device table */
+-	set_dte_entry(dev_data->devid, domain, ats, dev_data->iommu_v2);
++	amd_iommu_domain_get_pgtable(domain, &pgtable);
++	set_dte_entry(dev_data->devid, domain, &pgtable,
++		      ats, dev_data->iommu_v2);
+ 	clone_aliases(dev_data->pdev);
+ 
+ 	device_flush_dte(dev_data);
+@@ -2304,22 +2315,34 @@ static int amd_iommu_domain_get_attr(struct iommu_domain *domain,
+  *
+  *****************************************************************************/
+ 
+-static void update_device_table(struct protection_domain *domain)
++static void update_device_table(struct protection_domain *domain,
++				struct domain_pgtable *pgtable)
+ {
+ 	struct iommu_dev_data *dev_data;
+ 
+ 	list_for_each_entry(dev_data, &domain->dev_list, list) {
+-		set_dte_entry(dev_data->devid, domain, dev_data->ats.enabled,
+-			      dev_data->iommu_v2);
++		set_dte_entry(dev_data->devid, domain, pgtable,
++			      dev_data->ats.enabled, dev_data->iommu_v2);
+ 		clone_aliases(dev_data->pdev);
+ 	}
+ }
+ 
++static void update_and_flush_device_table(struct protection_domain *domain,
++					  struct domain_pgtable *pgtable)
++{
++	update_device_table(domain, pgtable);
++	domain_flush_devices(domain);
++}
 +
- struct eptPageTableEntry {
- 	uint64_t readable:1;
- 	uint64_t writable:1;
+ static void update_domain(struct protection_domain *domain)
+ {
+-	update_device_table(domain);
++	struct domain_pgtable pgtable;
+ 
+-	domain_flush_devices(domain);
++	/* Update device table */
++	amd_iommu_domain_get_pgtable(domain, &pgtable);
++	update_and_flush_device_table(domain, &pgtable);
++
++	/* Flush domain TLB(s) and wait for completion */
+ 	domain_flush_tlb_pde(domain);
+ 	domain_flush_complete(domain);
+ }
 -- 
 2.20.1
 
