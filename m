@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28608C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8EDC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 003B82065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 976102065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483142;
-	bh=zkvJbF8iUOw5yGt6rrXjsoXF7Iak2+GLCW44OYA8mEs=;
+	s=default; t=1589483144;
+	bh=nx23dqVpWnjfhGPHJ3dCs8uLrVRnY0WPQ+tFW7+VuqM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rFwODljLrXlTQ6x7QyzjwOLb2wFjZaTU+uJwpzecZOE2cWZTl05jclmHuvBZILYy7
-	 mzAJmD4IG9aLBd2TrsZVNTQcDM1eVcZ63QatGkN3LP+ilfHYhTun51pU44INihdAa5
-	 ue1cIfM14DGIhXe2fBEja7yuWb4pbgwTszZ9JTf4=
+	b=jZeuJMGGJDwljF42e1h9TlRCpvBzOrV3mV4xGwi32LfP40nnm9jGp3AY7tui+kfsd
+	 v1ip7Mg52r2/1cVrT0Pvl0XBRgEWt/o/5y/iyZmi2la8eJ8no6HbDiv4iU10GgIuLy
+	 OFC75E21ATbCNTizCFUNBOwDXfykYojy2Ds+R+ps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730039AbgENTFk (ORCPT
+        id S1728936AbgENSyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:05:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53896 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:54:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728940AbgENSyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:54:06 -0400
+        id S1728871AbgENSxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:53:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFCC020727;
-        Thu, 14 May 2020 18:54:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D291D207CD;
+        Thu, 14 May 2020 18:53:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482445;
-        bh=zkvJbF8iUOw5yGt6rrXjsoXF7Iak2+GLCW44OYA8mEs=;
+        s=default; t=1589482433;
+        bh=nx23dqVpWnjfhGPHJ3dCs8uLrVRnY0WPQ+tFW7+VuqM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uOlB/JNLyZxEoX3JYZEaqoPAN9qRQb4clKjJOs6ALg3WA2KnEsjW6Etc18cG33zda
-         wIp3cvo+A4A82PD0g1L38BhQTvS0UhXlWwWsJzlScdjvOI9Cc1ZBfPSwQMacPDox5Z
-         RNKlXlHAqm8po449+8aUWAZzNUlTdJwKaBZmPUlc=
+        b=MhvjMLX01WBA+Ctmyv4rXx/JmNStazor32i59NLkvvvhWQFYOQvQ/3/xnDPgQ5cPY
+         YKxKtfFGT2q1yMgVLG/EVVyQvNrglz0kxM7wYcK2SvmDn7DF/Ioxp5k+O6+eIilGHB
+         ytJrhinvTVp/yYpTS5tQ6GZZM9r/PC+RD34MeLmU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 44/49] gcc-10: disable 'stringop-overflow' warning for now
-Date:   Thu, 14 May 2020 14:53:05 -0400
-Message-Id: <20200514185311.20294-44-sashal@kernel.org>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 34/49] USB: core: Fix misleading driver bug report
+Date:   Thu, 14 May 2020 14:52:55 -0400
+Message-Id: <20200514185311.20294-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185311.20294-1-sashal@kernel.org>
 References: <20200514185311.20294-1-sashal@kernel.org>
@@ -58,34 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-[ Upstream commit 5a76021c2eff7fcf2f0918a08fd8a37ce7922921 ]
+[ Upstream commit ac854131d9844f79e2fdcef67a7707227538d78a ]
 
-This is the final array bounds warning removal for gcc-10 for now.
+The syzbot fuzzer found a race between URB submission to endpoint 0
+and device reset.  Namely, during the reset we call usb_ep0_reinit()
+because the characteristics of ep0 may have changed (if the reset
+follows a firmware update, for example).  While usb_ep0_reinit() is
+running there is a brief period during which the pointers stored in
+udev->ep_in[0] and udev->ep_out[0] are set to NULL, and if an URB is
+submitted to ep0 during that period, usb_urb_ep_type_check() will
+report it as a driver bug.  In the absence of those pointers, the
+routine thinks that the endpoint doesn't exist.  The log message looks
+like this:
 
-Again, the warning is good, and we should re-enable all these warnings
-when we have converted all the legacy array declaration cases to
-flexible arrays. But in the meantime, it's just noise.
+------------[ cut here ]------------
+usb 2-1: BOGUS urb xfer, pipe 2 != type 2
+WARNING: CPU: 0 PID: 9241 at drivers/usb/core/urb.c:478
+usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
 
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Now, although submitting an URB while the device is being reset is a
+questionable thing to do, it shouldn't count as a driver bug as severe
+as submitting an URB for an endpoint that doesn't exist.  Indeed,
+endpoint 0 always exists, even while the device is in its unconfigured
+state.
+
+To prevent these misleading driver bug reports, this patch updates
+usb_disable_endpoint() to avoid clearing the ep_in[] and ep_out[]
+pointers when the endpoint being disabled is ep0.  There's no danger
+of leaving a stale pointer in place, because the usb_host_endpoint
+structure being pointed to is stored permanently in udev->ep0; it
+doesn't get deallocated until the entire usb_device structure does.
+
+Reported-and-tested-by: syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2005011558590.903-100000@netrider.rowland.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/core/message.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 8c8ad7e25e15e..b557cf8ce3ebc 100644
---- a/Makefile
-+++ b/Makefile
-@@ -860,6 +860,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
- # We'll want to enable this eventually, but it's not going away for 5.7 at least
- KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
- KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
-+KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
+diff --git a/drivers/usb/core/message.c b/drivers/usb/core/message.c
+index 02eaac7e1e34e..a1ac2f0723b0b 100644
+--- a/drivers/usb/core/message.c
++++ b/drivers/usb/core/message.c
+@@ -1143,11 +1143,11 @@ void usb_disable_endpoint(struct usb_device *dev, unsigned int epaddr,
  
- # Enabled with W=2, disabled by default as noisy
- KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
+ 	if (usb_endpoint_out(epaddr)) {
+ 		ep = dev->ep_out[epnum];
+-		if (reset_hardware)
++		if (reset_hardware && epnum != 0)
+ 			dev->ep_out[epnum] = NULL;
+ 	} else {
+ 		ep = dev->ep_in[epnum];
+-		if (reset_hardware)
++		if (reset_hardware && epnum != 0)
+ 			dev->ep_in[epnum] = NULL;
+ 	}
+ 	if (ep) {
 -- 
 2.20.1
 
