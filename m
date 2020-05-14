@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D064C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CD2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF21F20727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8353920727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:59:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482769;
-	bh=hhquD2HHwlrIVX+Uc4pLtUsRmSPJ620hWIIrbpeJByo=;
+	s=default; t=1589482779;
+	bh=2K8/xX5qPz/2GkBEO4hSwzpuw4kzPYUm1BPA9HRbYuE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mTv4K71OK/b9aJHWFKirn19ZOgYJyCeXPFDvXryHY4wEywCrhnXJq+q4ydVgF7L8Q
-	 MGUXJ48bVRJlwN3obh78tFZqk0MXb4Y/7THeMZ7ugIlOSiiD+9NDITxjE1AxaVkXrr
-	 dPY3Mjm8BZy2OxL4xh8V3J1EuMtZD1CyAYPb/p6Q=
+	b=Y/ecJgYZEqt7eYVVNcK6NStYUYPgHJP9F76H0pHADQCqDWtEP8hgR9Wac3+RvK7Wd
+	 4SG0G1EjCbuM18qErdf/zVoNKx7wmwAPOMO+dWyyN0qkHp8LoKVYW9ohSvepFp/Gjd
+	 fW42P0+merppIxaqnxA+idbRNm5qCoudgeCbM/mg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729568AbgENS73 (ORCPT
+        id S1729705AbgENS7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:59:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57018 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:59:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728015AbgENS4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:56:08 -0400
+        id S1729565AbgENS4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:56:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AC90207FB;
-        Thu, 14 May 2020 18:56:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A857820823;
+        Thu, 14 May 2020 18:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482568;
-        bh=hhquD2HHwlrIVX+Uc4pLtUsRmSPJ620hWIIrbpeJByo=;
+        s=default; t=1589482564;
+        bh=2K8/xX5qPz/2GkBEO4hSwzpuw4kzPYUm1BPA9HRbYuE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BZX4xnBsT3KifqeMTcjfGTO2XZjoJTA70kORI5EkiPgKlymfxzT0c1vAQWODyLyGZ
-         jniB+UWnqtNt0jOd+3Wdoo6ZGkEtnkuehJ2yTWBRCEnpHg/wfSuqmx5hLB3za2egzb
-         Uijcawf7tf0ybIRxSvzjlu6v8k6iqF4OKgFaYsqc=
+        b=OeqDwYcD2xeeVxvYkUGH0b97RTu7q+T2KD/KJA7lYzk6zb9zHfH8qUcYguuDjiqSD
+         jAVCUAQJ3x6X/VTIA9FlDee+f5VzFGHaPEldnZ++eqkitu/BgQY/98iQAh+lmta93P
+         q9PCzvVHTM2cHH6CeLyESV3Y+58ByN8aCFSceVy8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Moshe Shemesh <moshe@mellanox.com>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 14/27] net/mlx5: Fix command entry leak in Internal Error State
-Date:   Thu, 14 May 2020 14:55:37 -0400
-Message-Id: <20200514185550.21462-14-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 11/27] net/sonic: Fix a resource leak in an error handling path in 'jazz_sonic_probe()'
+Date:   Thu, 14 May 2020 14:55:34 -0400
+Message-Id: <20200514185550.21462-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185550.21462-1-sashal@kernel.org>
 References: <20200514185550.21462-1-sashal@kernel.org>
@@ -61,39 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Moshe Shemesh <moshe@mellanox.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit cece6f432cca9f18900463ed01b97a152a03600a ]
+[ Upstream commit 10e3cc180e64385edc9890c6855acf5ed9ca1339 ]
 
-Processing commands by cmd_work_handler() while already in Internal
-Error State will result in entry leak, since the handler process force
-completion without doorbell. Forced completion doesn't release the entry
-and event completion will never arrive, so entry should be released.
+A call to 'dma_alloc_coherent()' is hidden in 'sonic_alloc_descriptors()',
+called from 'sonic_probe1()'.
 
-Fixes: 73dd3a4839c1 ("net/mlx5: Avoid using pending command interface slots")
-Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
-Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+This is correctly freed in the remove function, but not in the error
+handling path of the probe function.
+Fix it and add the missing 'dma_free_coherent()' call.
+
+While at it, rename a label in order to be slightly more informative.
+
+Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/cmd.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/natsemi/jazzsonic.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-index a1057efa2294e..bb142a13d9f24 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/cmd.c
-@@ -847,6 +847,10 @@ static void cmd_work_handler(struct work_struct *work)
- 		MLX5_SET(mbox_out, ent->out, syndrome, drv_synd);
+diff --git a/drivers/net/ethernet/natsemi/jazzsonic.c b/drivers/net/ethernet/natsemi/jazzsonic.c
+index acf3f11e38cc1..68d2f31921ff8 100644
+--- a/drivers/net/ethernet/natsemi/jazzsonic.c
++++ b/drivers/net/ethernet/natsemi/jazzsonic.c
+@@ -247,13 +247,15 @@ static int jazz_sonic_probe(struct platform_device *pdev)
+ 		goto out;
+ 	err = register_netdev(dev);
+ 	if (err)
+-		goto out1;
++		goto undo_probe1;
  
- 		mlx5_cmd_comp_handler(dev, 1UL << ent->idx, true);
-+		/* no doorbell, no need to keep the entry */
-+		free_ent(cmd, ent->idx);
-+		if (ent->callback)
-+			free_cmd(ent);
- 		return;
- 	}
+ 	printk("%s: MAC %pM IRQ %d\n", dev->name, dev->dev_addr, dev->irq);
  
+ 	return 0;
+ 
+-out1:
++undo_probe1:
++	dma_free_coherent(lp->device, SIZEOF_SONIC_DESC * SONIC_BUS_SCALE(lp->dma_bitmode),
++			  lp->descriptors, lp->descriptors_laddr);
+ 	release_mem_region(dev->base_addr, SONIC_MEM_SIZE);
+ out:
+ 	free_netdev(dev);
 -- 
 2.20.1
 
