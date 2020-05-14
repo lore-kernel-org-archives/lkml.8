@@ -2,109 +2,90 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBB8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C0EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 285D6206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:05:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dOXhUBHk"
+	by mail.kernel.org (Postfix) with ESMTP id B360E206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:05:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726190AbgENLFD (ORCPT
+        id S1726225AbgENLFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 07:05:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59924 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgENLFD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 07:05:03 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDB21C061A0C;
-        Thu, 14 May 2020 04:05:02 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id t40so12306969pjb.3;
-        Thu, 14 May 2020 04:05:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZMXJJmn4oIa+JQJYqBoFnxPMqQn52lyOsqRLxMD4w8M=;
-        b=dOXhUBHkmcRcqC6sZCJHlAmTMHFYPALmKXWIC7fdx6azSSyt1YVXktUWn7/BrnQ2QS
-         eBpbHXGT0bwSzLEXpB4eWFBTl8AWd7qE582wwQEJmtdrrwyYPbY9lz4Sr//I5F6EPyJb
-         vT+EfPkP/ISnItuSOf4UM76jnCZO/rHDFqxVfhXOxWIaVqZC3XxTvCpsBLsP8SGw/RHa
-         bilmMONguFO/cjHo99nsLV7sQpHe/uBCbdGlxMWeK+r7KRm1Us6aszBgcpD6GIkGIlkD
-         2t6WZUTUlJgUx4f+O1rm85EnM2Os64rvrHme0ErrsjYw2+3z5nlED3VtZS5KbH9xWsih
-         YIow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZMXJJmn4oIa+JQJYqBoFnxPMqQn52lyOsqRLxMD4w8M=;
-        b=Hg3+4rd9vTl1Za7VT2+60KmHkgamKYxYvqs8T9eF2w48m+vObaMlsJaajCPLSg6J7N
-         UzjL/HWyKUffRNBITEMG0Unbe70jO94BxOBugafOMlGmkuL2XrXA0xh9ihRdYK5jha2I
-         zjmlu1vi3vL2HHO5XpxhJOl3kkiFIY8i8izxbnJKTaRyBuQbRsAW91OZC08Eu0Ms8r9w
-         RbONHP8+5wzsz6oNU8uI/b+CbFYYXdV5aR/aBiGPyV4kBgzeWKLUKxw9trWmvugxEtwK
-         k9psMmqpWc+U7NFgvcqLzSJf9++P97cogkE68zTcfG9xKLwVA9eCsva7/apO5SbCZSGx
-         Pt1g==
-X-Gm-Message-State: AOAM53122TqEqpJ3HJo31Y2L5lDwRbsG412MeqOjme9sTgoZzFlGc2Mr
-        EfjYnKZGPoQTwehb3TGyBJE=
-X-Google-Smtp-Source: ABdhPJzP6ABAznnkwvc7vzJ57R61MSe09PVbObJ/HjbmtVoC4vT66gTy1Vivmscp0dwyra37/1hnng==
-X-Received: by 2002:a17:902:7c97:: with SMTP id y23mr3349987pll.231.1589454302354;
-        Thu, 14 May 2020 04:05:02 -0700 (PDT)
-Received: from [192.168.68.125] ([210.185.116.244])
-        by smtp.gmail.com with ESMTPSA id a6sm2095533pfk.159.2020.05.14.04.04.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 May 2020 04:05:00 -0700 (PDT)
-Subject: Re: [PATCH 00/19 V2] mm: memcontrol: charge swapin pages on
- instantiation
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Joonsoo Kim <js1304@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-References: <20200508183105.225460-1-hannes@cmpxchg.org>
- <20200513113032.GA93568@dev-dsk-sblbir-1c-a524888b.ap-northeast-1.amazon.com>
- <20200513123545.GB488426@cmpxchg.org>
-From:   Balbir Singh <bsingharora@gmail.com>
-Message-ID: <f6a474e3-b491-dbf2-c404-f04999b039ff@gmail.com>
-Date:   Thu, 14 May 2020 21:04:53 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 14 May 2020 07:05:31 -0400
+Received: from mga06.intel.com ([134.134.136.31]:24211 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725925AbgENLFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 07:05:31 -0400
+IronPort-SDR: W8MgbRY7hrIedxv8XmxWrm+oqE2e48nKqlMY3AXx9bRlR75A0fn9ejGJJ527NI7fbMCgru2W8X
+ 2SodI9W7xBOw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 04:05:30 -0700
+IronPort-SDR: w0MadmGGvy/1pnfpiZYhtHgNO2uTk9eJ22jVhh0llLsYmnG3SszoGWen1fZolnLOyPoB5Fax5h
+ /xGYI7hWa9Nw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,391,1583222400"; 
+   d="scan'208";a="251628387"
+Received: from apogrebi-mobl2.ger.corp.intel.com ([10.249.39.119])
+  by orsmga007.jf.intel.com with ESMTP; 14 May 2020 04:05:27 -0700
+Message-ID: <8bde92d77e32e85b66017c4b9d72008067c16bd9.camel@linux.intel.com>
+Subject: Re: [PATCH RESEND] tpm: eventlog: Replace zero-length array with
+ flexible-array member
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Date:   Thu, 14 May 2020 14:05:27 +0300
+In-Reply-To: <20200513231416.GQ4897@embeddedor>
+References: <20200507040912.GA31382@embeddedor>
+         <20200513213905.GB31974@linux.intel.com> <20200513231416.GQ4897@embeddedor>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-In-Reply-To: <20200513123545.GB488426@cmpxchg.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 13/5/20 10:35 pm, Johannes Weiner wrote:
-> As a result, the memcg gets a breakdown for memory.stat without having
-> to have private knowledge of what a page cache page is - how to test
-> it, when it's safe to test it, whether there can be huge pages in the
-> page cache, etc. pp. Memcg can focus on counting bytes, and the VM
-> code that is specialized in dealing with the page cache (or anon
-> pages, or shmem pages) can fill in those kinds of details for us.
+On Wed, 2020-05-13 at 18:14 -0500, Gustavo A. R. Silva wrote:
+> On Thu, May 14, 2020 at 12:39:05AM +0300, Jarkko Sakkinen wrote:
+> > > [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> > > [2] https://github.com/KSPP/linux/issues/21
+> > > [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> > > [4] https://github.com/KSPP/linux/issues/43
+> > > 
+> > > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> > 
+> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > 
 > 
-> Less dependencies, less duplication, simpler API rules.
+> Hi Jarkko,
 > 
-> The memory.stat output is the same, it's just much simpler code.
+> Thanks for your RB.
+> 
+> There is a v2 of this patch:
+> 
+> https://lore.kernel.org/lkml/20200508163826.GA768@embeddedor/
+> 
+> Thanks
+> --
+> Gustavo
 
-Makes sense! Thanks, I should spend some time to re-read all of the memcontrol.c code :)
+Yup,
 
-Balbir Singh.
+http://git.infradead.org/users/jjs/linux-tpmdd.git/commit/47c18d91f4adb2ca164c8dbee861543b4466167d
+
+Does this look correct?
+
+
+/Jarkko
+
