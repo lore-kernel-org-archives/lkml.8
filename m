@@ -2,91 +2,107 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 803A1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8E8C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 518DB20727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D44A220727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:57:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482664;
-	bh=R2+G2g70Z5guBITJdADg/p7YFldTOiznc75Jb28esL0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tCWJz620oiFvYJA30TxatRYziCWvwREnyR2bJuKIuMjIMQUvmYDvPCTZHSJknZOOc
-	 o2x66HelnBWd70A8UQRwXT4Stkh035RivKlNHmwABlubWaAOdGAjM9ysZbl88l95gU
-	 jQ3mONW2zwk+cTs0SHNa2EjrAOVuhQH0FHmT6A/o=
+	s=default; t=1589482669;
+	bh=acwMIufVGceArSh6mThBo80jezBMTDN1/Jtz28I4Hu8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=181Cub/0w1kfd2mNKeYeZlEMk33riJVHT6374gzkZi0CjpdtMy5LFfqXTwtsncrdU
+	 jK97sQpFd7BqJs0qNlxskNiu8RMi4J4oYbUGis32WFpbkUuAinI8kBw+pZkJgkDDNE
+	 xvT+l0tC8mXbsqdYpCexnJb715veMx7VJMVPvJfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729848AbgENS5n (ORCPT
+        id S1729854AbgENS5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:57:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728841AbgENS4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:56:36 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 539BA207D5;
-        Thu, 14 May 2020 18:56:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482596;
-        bh=R2+G2g70Z5guBITJdADg/p7YFldTOiznc75Jb28esL0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WEDz8HHm7mhEm3pJxc+cR3koGUqC/uvfnjS9+NflwfvVjFCkrKoHxeuI7KIceB11Q
-         5b6cE6YNiZWbjyvML2BXQSccePm+pn+C/XfwrpYmfw45gr91Nu8uSi+CsLgvh+ePIG
-         gpnigpU7+2ZJ1i3v0jU5dvWisSiVzA1VEDdL2TJo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 08/14] net: moxa: Fix a potential double 'free_irq()'
-Date:   Thu, 14 May 2020 14:56:19 -0400
-Message-Id: <20200514185625.21753-8-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200514185625.21753-1-sashal@kernel.org>
-References: <20200514185625.21753-1-sashal@kernel.org>
+        Thu, 14 May 2020 14:57:49 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35487 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727829AbgENS5m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:57:42 -0400
+Received: by mail-ot1-f66.google.com with SMTP id k110so3265756otc.2;
+        Thu, 14 May 2020 11:57:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/8LVtCx28CvxbjaUol4yCcZRY15FgJyZvvF69XKd/M0=;
+        b=dLvm+WCSUlUSXJR/rqNr2Dxk9KK0IJR65mGaI0Tz98XQiQvn973Sd3ih6PMzq8cBv/
+         PUJehRhFpIvqB5IGrT0O3MEmRZuY4ViwQwJdPYfO1o7Wfjm32ALCBp+lFsfMOCvahUNp
+         E1g/ihdbYXzlSOAJaiht+h70NQ9Dg3MlnnKBkEwZ7sGCuXQEkO9nc/nuA1NVPZDg8zop
+         iJZn1aNJvolUnXxyHef1wIXyAQF7R2PSg9Ry8wC/4lRYkfiZUN3/PJaY0MW2CVrca5co
+         G/PC2xCVONPTl04hekwHsfNv4EqpZ8QwMrB5z0WD8yCijSQPgU6byM9IZq8AzqxAsWz3
+         4P+A==
+X-Gm-Message-State: AOAM533QjKBpbmzxoAtF0GM9t8yqnmVz2V5rl5glcjj8dfrNdwz6EzYN
+        P+LvHRrdhofdDoUyEBeiew==
+X-Google-Smtp-Source: ABdhPJw4mI4ppO8Dr25m9miTZxWJsae+emSBHCwQBGETRYpqm7RzS1GGvMUZ3eI0ctgemKfzl+w5Vw==
+X-Received: by 2002:a05:6830:3148:: with SMTP id c8mr4567539ots.138.1589482661322;
+        Thu, 14 May 2020 11:57:41 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t6sm1003881otb.27.2020.05.14.11.57.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 11:57:40 -0700 (PDT)
+Received: (nullmailer pid 29213 invoked by uid 1000);
+        Thu, 14 May 2020 18:57:39 -0000
+Date:   Thu, 14 May 2020 13:57:39 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>, linux-mmc@vger.kernel.org,
+        linux-serial@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 2/9] dt-bindings: irqchip: renesas-irqc: Document
+ r8a7742 bindings
+Message-ID: <20200514185739.GA27521@bogus>
+References: <1588794695-27852-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588794695-27852-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200514184306.GA8929@bogus>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514184306.GA8929@bogus>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+On Thu, May 14, 2020 at 01:43:06PM -0500, Rob Herring wrote:
+> On Wed,  6 May 2020 20:51:28 +0100, Lad Prabhakar wrote:
+> > Document SoC specific bindings for RZ/G1H (r8a7742) SoC.
+> > 
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> > v1->v2:
+> > * No change
+> > ---
+> > 
+> >  .../devicetree/bindings/interrupt-controller/renesas,irqc.yaml   | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
 
-[ Upstream commit ee8d2267f0e39a1bfd95532da3a6405004114b27 ]
+I'll just apply this with the others that haven't been picked up.
 
-Should an irq requested with 'devm_request_irq' be released explicitly,
-it should be done by 'devm_free_irq()', not 'free_irq()'.
-
-Fixes: 6c821bd9edc9 ("net: Add MOXA ART SoCs ethernet driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/moxa/moxart_ether.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/moxa/moxart_ether.c b/drivers/net/ethernet/moxa/moxart_ether.c
-index f1dde59c9fa6c..374e691b11da6 100644
---- a/drivers/net/ethernet/moxa/moxart_ether.c
-+++ b/drivers/net/ethernet/moxa/moxart_ether.c
-@@ -541,7 +541,7 @@ static int moxart_remove(struct platform_device *pdev)
- 	struct net_device *ndev = platform_get_drvdata(pdev);
- 
- 	unregister_netdev(ndev);
--	free_irq(ndev->irq, ndev);
-+	devm_free_irq(&pdev->dev, ndev->irq, ndev);
- 	moxart_mac_free_memory(ndev);
- 	free_netdev(ndev);
- 
--- 
-2.20.1
+Rob
 
