@@ -2,163 +2,213 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F00C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B08C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BFBB205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F77D20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:00:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="x2IC35Ep"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MkKcHfOX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbgENPAT (ORCPT
+        id S1728027AbgENPAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 11:00:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40232 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726146AbgENPAP (ORCPT
+        Thu, 14 May 2020 11:00:24 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:42116 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726146AbgENPAV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 11:00:15 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3F18C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 08:00:14 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id x2so1416487pfx.7
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 08:00:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=LKDhIqkg4dk5I2yUUB4YPd6c5Rk5/qL/3S3piqwGyfk=;
-        b=x2IC35EpcFxlDYphsQmsNFlsVgrnCmW3WwfF+86HN8Vu4f4gIl+8CqbVDxTq2+iNgF
-         UrOjdI5l3xWeXpO0peEVbLIX+a3DLBpGvc6wFqIX93NJp5Wm6R/lnRETx3hH+UVi7ikL
-         3xDZRiYopAj81rMzzpVMBs/hJAcoYsCNns5tLG76h9peIIt22xuQZCVTNN8b3dLuG9Qd
-         7rohVQ/rYeO3qh/P2OEUP0QbQcrix3aedQ2+wE3iVo9MQ2O1ssPKldtwXHv4c3WUGOrW
-         Gjs1CmG3RA1gCwgo3NHMq53Mc8tma1Cel99g15t1bN+so7bVZOWNMeffS2B+tuFlOjwA
-         +wkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=LKDhIqkg4dk5I2yUUB4YPd6c5Rk5/qL/3S3piqwGyfk=;
-        b=pVqXh4WPCJjo1BDJuHOWgLAlG8652aVMFTTOlH7QQ91LTvOnJxyRGwYMyWEPQD8deA
-         Q4e+rTwbOnNwzHIhqHncVNf56IE/H3dM3Hk+T96ETr9XiRkz/pGwRabRnzQ4H86UDKch
-         5Lz1GdvFj3AFaljgP3F/IicfOswDAQPaZbBBFkAFG499sx7d9fkdTLRD7zvkiZTWhMd2
-         1++1zK6rHiNZrxOTKPMQH2cL5ZnC9IwxHgruZaego/KaqrvHC/0qFkSVepqilbhXpadQ
-         IO1Mym8s2HzArvbTf9afgxvm5rgmzrPqlRrUFCN3TiXAcKlNx38f/VAhL8OBflFhaKdw
-         6DTA==
-X-Gm-Message-State: AOAM53117REBAqjuJmMO16cipNnle4MDlovDc82k7jVgdP7aKMbdDl63
-        wkoOxbTKYALkIeZabhlD0jKgZw==
-X-Google-Smtp-Source: ABdhPJyRTSE0r5gMqWqJxmqE4NqOtiMEEKpZVrZdtEsirDOPcCvaAAIa0Y9/QfR2PDuhl2x0DK1r5Q==
-X-Received: by 2002:a65:5287:: with SMTP id y7mr4211486pgp.86.1589468414210;
-        Thu, 14 May 2020 08:00:14 -0700 (PDT)
-Received: from [100.80.46.139] (9.sub-174-194-209.myvzw.com. [174.194.209.9])
-        by smtp.gmail.com with ESMTPSA id h26sm2546754pfk.35.2020.05.14.08.00.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 May 2020 08:00:13 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [patch V4 part 3 17/29] x86/entry: Convert Invalid Opcode exception to IDTENTRY
-Date:   Thu, 14 May 2020 08:00:10 -0700
-Message-Id: <D75719A6-44E5-4F6F-8308-58DD2E74374D@amacapital.net>
-References: <87k11ezog1.fsf@nanos.tec.linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <JGross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-In-Reply-To: <87k11ezog1.fsf@nanos.tec.linutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-X-Mailer: iPhone Mail (17E262)
+        Thu, 14 May 2020 11:00:21 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04EF06Rd029135;
+        Thu, 14 May 2020 10:00:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589468406;
+        bh=oPxuXqtF223OER+bcyGCz8Cb674T5LZwKws+2r6ddns=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=MkKcHfOX0rkPf/0CruxXMcU/KDNgv7PfzNXoxweAGS0wa6ecFAEvPpP/K37TmmSmb
+         Muc1KvKYi7OBEN/wPFkhaFxwWdgNqM3rPHdKkYoVv365sZNi2HVPqPogyD5qLel9IP
+         TIt80aFUFEPdMTPyhdw1PlkTnDLp9CTxsgTYgFoM=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04EF05qA117768
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 14 May 2020 10:00:06 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 14
+ May 2020 10:00:06 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 14 May 2020 10:00:05 -0500
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04EExgAm019279;
+        Thu, 14 May 2020 10:00:01 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>, <linux-pci@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-ntb@googlegroups.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 04/19] PCI: endpoint: Add API to create EPF device from device tree
+Date:   Thu, 14 May 2020 20:29:12 +0530
+Message-ID: <20200514145927.17555-5-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200514145927.17555-1-kishon@ti.com>
+References: <20200514145927.17555-1-kishon@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add API to create EPF device from device tree and the device managed
+interface corresponding to it. This is added in order to define
+an endpoint function completely from device tree.
 
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/pci/endpoint/pci-epf-core.c | 68 +++++++++++++++++++++++++++++
+ include/linux/pci-epf.h             |  6 +++
+ 2 files changed, 74 insertions(+)
 
-> On May 14, 2020, at 5:33 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
->=20
-> =EF=BB=BFAndy Lutomirski <luto@kernel.org> writes:
->=20
->>> On Tue, May 5, 2020 at 7:15 AM Thomas Gleixner <tglx@linutronix.de> wrot=
-e:
->>>=20
->>> From: Thomas Gleixner <tglx@linutronix.de>
->>>=20
->>> Convert #UD to IDTENTRY:
->>>  - Implement the C entry point with DEFINE_IDTENTRY
->>>  - Emit the ASM stub with DECLARE_IDTENTRY
->>>  - Remove the ASM idtentry in 64bit
->>>  - Remove the open coded ASM entry code in 32bit
->>>  - Fixup the XEN/PV code
->>>  - Fixup the FOOF bug call in fault.c
->>>  - Remove the old prototyoes
->>>=20
->>> No functional change.
->>=20
->> I think there *is* a functional change:
->>=20
->>=20
->>> --- a/arch/x86/mm/fault.c
->>> +++ b/arch/x86/mm/fault.c
->>> @@ -567,7 +567,7 @@ static int is_f00f_bug(struct pt_regs *r
->>>                nr =3D (address - idt_descr.address) >> 3;
->>>=20
->>>                if (nr =3D=3D 6) {
->>> -                       do_invalid_op(regs, 0);
->>> +                       handle_invalid_op(regs);
->>=20
->> I suspect the old code was wrong and no one noticed because no one has
->> a F00F-buggy machine any more.
->=20
-> I don't think so. It's really just the same thing. The old #UD C
-> function was:
->=20
-> void do_invalid_op(struct pt_regs *regs, long error_code)
-> {
->    do_error_trap(regs, error_code, "invalid opcode", X86_TRAP_UD,
->                      SIGILL, ILL_ILLOPN, (void __user *)uprobe_get_trap_ad=
-dr(regs));
-> }
->=20
-> after expanding the DO_ERROR() muck.
->=20
-> The new one does:
->=20
-> void handle_invalid_op(struct pt_regs *regs)
-> {
->    do_error_trap(regs, 0, "invalid opcode", X86_TRAP_UD, SIGILL,
->              ILL_ILLOPN, error_get_trap_addr(regs));
-> }
->=20
-> which is exactly the same except for the error code being hardcoded to
-> zero in handle_invalid_op() because #UD does not have one.
->=20
->> So maybe document that you fixed up the F00F bug, too.  Otherwise:
->=20
-> Not sure what to document :)
+diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+index 244e00f48c5c..cb6c7b886325 100644
+--- a/drivers/pci/endpoint/pci-epf-core.c
++++ b/drivers/pci/endpoint/pci-epf-core.c
+@@ -280,6 +280,73 @@ struct pci_epf *pci_epf_create(const char *name)
+ }
+ EXPORT_SYMBOL_GPL(pci_epf_create);
+ 
++/**
++ * pci_epf_of_create() - create a new PCI EPF device from device tree node
++ * @node: the device node of the PCI EPF device.
++ *
++ * Invoke to create a new PCI EPF device by providing a device tree node
++ * with compatible property.
++ */
++struct pci_epf *pci_epf_of_create(struct device_node *node)
++{
++	struct pci_epf *epf;
++	const char *compat;
++	int ret;
++
++	of_node_get(node);
++
++	ret = of_property_read_string(node, "compatible", &compat);
++	if (ret) {
++		of_node_put(node);
++		return ERR_PTR(ret);
++	}
++
++	epf = pci_epf_create(compat);
++	if (!IS_ERR(epf))
++		epf->node = node;
++
++	return epf;
++}
++EXPORT_SYMBOL_GPL(pci_epf_of_create);
++
++static void devm_epf_release(struct device *dev, void *res)
++{
++	struct pci_epf *epf = *(struct pci_epf **)res;
++
++	pci_epf_destroy(epf);
++}
++
++/**
++ * devm_pci_epf_of_create() - create a new PCI EPF device from device tree node
++ * @dev: device that is creating the new EPF
++ * @node: the device node of the PCI EPF device.
++ *
++ * Invoke to create a new PCI EPF device by providing a device tree node with
++ * compatible property. While at that, it also associates the device with the
++ * EPF using devres. On driver detach, release function is invoked on the devres
++ * data, where devres data is freed.
++ */
++struct pci_epf *devm_pci_epf_of_create(struct device *dev,
++				       struct device_node *node)
++{
++	struct pci_epf **ptr, *epf;
++
++	ptr = devres_alloc(devm_epf_release, sizeof(*ptr), GFP_KERNEL);
++	if (!ptr)
++		return ERR_PTR(-ENOMEM);
++
++	epf = pci_epf_of_create(node);
++	if (!IS_ERR(epf)) {
++		*ptr = epf;
++		devres_add(dev, ptr);
++	} else {
++		devres_free(ptr);
++	}
++
++	return epf;
++}
++EXPORT_SYMBOL_GPL(devm_pci_epf_of_create);
++
+ const struct pci_epf_device_id *
+ pci_epf_match_device(const struct pci_epf_device_id *id, struct pci_epf *epf)
+ {
+@@ -300,6 +367,7 @@ static void pci_epf_dev_release(struct device *dev)
+ {
+ 	struct pci_epf *epf = to_pci_epf(dev);
+ 
++	of_node_put(epf->node);
+ 	kfree(epf->name);
+ 	kfree(epf);
+ }
+diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
+index 6644ff3b0702..8fb77ab1968f 100644
+--- a/include/linux/pci-epf.h
++++ b/include/linux/pci-epf.h
+@@ -11,6 +11,7 @@
+ 
+ #include <linux/device.h>
+ #include <linux/mod_devicetable.h>
++#include <linux/of.h>
+ #include <linux/pci.h>
+ 
+ struct pci_epf;
+@@ -108,6 +109,7 @@ struct pci_epf_bar {
+ /**
+  * struct pci_epf - represents the PCI EPF device
+  * @dev: the PCI EPF device
++ * @node: the device tree node of the PCI EPF device
+  * @name: the name of the PCI EPF device
+  * @header: represents standard configuration header
+  * @bar: represents the BAR of EPF device
+@@ -121,6 +123,7 @@ struct pci_epf_bar {
+  */
+ struct pci_epf {
+ 	struct device		dev;
++	struct device_node	*node;
+ 	const char		*name;
+ 	struct pci_epf_header	*header;
+ 	struct pci_epf_bar	bar[6];
+@@ -167,6 +170,9 @@ static inline void *epf_get_drvdata(struct pci_epf *epf)
+ const struct pci_epf_device_id *
+ pci_epf_match_device(const struct pci_epf_device_id *id, struct pci_epf *epf);
+ struct pci_epf *pci_epf_create(const char *name);
++struct pci_epf *pci_epf_of_create(struct device_node *node);
++struct pci_epf *devm_pci_epf_of_create(struct device *dev,
++				       struct device_node *node);
+ void pci_epf_destroy(struct pci_epf *epf);
+ int __pci_epf_register_driver(struct pci_epf_driver *driver,
+ 			      struct module *owner);
+-- 
+2.17.1
 
-Duh, right, never mind.  Here I was thinking the old C handlers did all the e=
-ntry/exit work.
-
->=20
-> Thanks,
->=20
->        tglx
