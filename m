@@ -2,105 +2,76 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C55C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9CFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6190205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:09:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589468989;
-	bh=5BS+zntyORlSpwk914jDMZ3wKAGD5FbrN8BO7KMYlq0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fmIx/5qpyI8BhhjYGXXxVhcFtMh00cv0xUVB/mzW+DLwLXlsBFFnFZ4a/rfBy6QG6
-	 nyC3LO6smTU5jCJ95PcKelSLX41fXpygQZAdiiD8NQyOmgncMNtnUs85Vvx2H4gixd
-	 hU5Su3MQSUjNHv4ttT3l2fPs7HGYPAUw6/m2AqLY=
+	by mail.kernel.org (Postfix) with ESMTP id 65EEA205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:09:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728027AbgENPJt (ORCPT
+        id S1728040AbgENPJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 11:09:49 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39338 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbgENPJr (ORCPT
+        Thu, 14 May 2020 11:09:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbgENPJ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 11:09:47 -0400
-Received: by mail-ot1-f65.google.com with SMTP id q11so2599415oti.6;
-        Thu, 14 May 2020 08:09:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tW8nu2beqUg3pvUiUBRWDjCZLdKTcmhuNvYMdwLUoFY=;
-        b=rkmOHYTk+FiJWlYHLBVmjVQb6bmrKJFb+0NrkwgIP8qwIF2/uEoLJy3FdXiCySLTj5
-         OT9Sw28/PHIw8tmEzVX2PMVEti4UOseVZwEp2qcgbq0Jb4IQFiqKLlkB8YTSCG8TStN5
-         N5vSth6UKQVAEy5SzcZGT+363AvGLTC2fN6KAzHOIW8lFKStTRwLDsePlXK69NP0ItaP
-         ZWlcCwStAHOpaW3/+5et2iNRaJKMlASZIvAwr0aZIoJKcPufA+YEzOK9G1ieM9T+y7kh
-         F4eEA2TX89FDyypwpiyHmehIXzc7z0vh5gFPsxsMXyvASbpURY8DdSQg6ykizlLeCGJ3
-         cGrQ==
-X-Gm-Message-State: AOAM533xfD/oTv7wu9XsqlnnMCq4rCrF03ZexOEVT1tuBWSUvPMo0+Gn
-        fjc/GnGySx9WA6NCgRS5dQ==
-X-Google-Smtp-Source: ABdhPJzKs1tRGGs9nxYUL4m/XfjeSnfvEnglU/L87PjQG0UjFyQlL15ESiGbaZqXIxCMWcPvEsleow==
-X-Received: by 2002:a9d:7d8a:: with SMTP id j10mr4047966otn.266.1589468985186;
-        Thu, 14 May 2020 08:09:45 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 61sm843911otp.13.2020.05.14.08.09.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 08:09:44 -0700 (PDT)
-Received: (nullmailer pid 30485 invoked by uid 1000);
-        Thu, 14 May 2020 15:09:43 -0000
-Date:   Thu, 14 May 2020 10:09:43 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Paul Burton <paulburton@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        Ralf Baechle <ralf@linux-mips.org>, devicetree@vger.kernel.org,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        linux-mips@vger.kernel.org
-Subject: Re: [PATCH v2 02/20] dt-bindings: bus: Add MIPS CDMM controller
-Message-ID: <20200514150943.GA30404@bogus>
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
- <20200506174238.15385-3-Sergey.Semin@baikalelectronics.ru>
+        Thu, 14 May 2020 11:09:58 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48376C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 08:09:58 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jZFUb-0001hT-NA; Thu, 14 May 2020 17:09:49 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id EFD8F1004CE; Thu, 14 May 2020 17:09:48 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Marco Elver <elver@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
+In-Reply-To: <20200514142450.GC2978@hirez.programming.kicks-ass.net>
+References: <20200513124021.GB20278@willie-the-truck> <CANpmjNM5XW+ufJ6Mw2Tn7aShRCZaUPGcH=u=4Sk5kqLKyf3v5A@mail.gmail.com> <20200513165008.GA24836@willie-the-truck> <CANpmjNN=n59ue06s0MfmRFvKX=WB2NgLgbP6kG_MYCGy2R6PHg@mail.gmail.com> <20200513174747.GB24836@willie-the-truck> <CANpmjNNOpJk0tprXKB_deiNAv_UmmORf1-2uajLhnLWQQ1hvoA@mail.gmail.com> <20200513212520.GC28594@willie-the-truck> <CANpmjNOAi2K6knC9OFUGjpMo-rvtLDzKMb==J=vTRkmaWctFaQ@mail.gmail.com> <20200514110537.GC4280@willie-the-truck> <CANpmjNMTsY_8241bS7=XAfqvZHFLrVEkv_uM4aDUWE_kh3Rvbw@mail.gmail.com> <20200514142450.GC2978@hirez.programming.kicks-ass.net>
+Date:   Thu, 14 May 2020 17:09:48 +0200
+Message-ID: <875zcyzh6r.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506174238.15385-3-Sergey.Semin@baikalelectronics.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 May 2020 20:42:20 +0300,  wrote:
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> 
-> It's a Common Device Memory Map controller embedded into the MIPS IP
-> cores, which dts node is supposed to have compatible and reg properties.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: linux-mips@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> 
-> ---
-> 
-> Changelog v2:
-> - Lowercase the example hex'es.
-> ---
->  .../bindings/bus/mti,mips-cdmm.yaml           | 35 +++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/bus/mti,mips-cdmm.yaml
-> 
+Peter Zijlstra <peterz@infradead.org> writes:
+> On Thu, May 14, 2020 at 03:35:58PM +0200, Marco Elver wrote:
+>> Any preferences?
+>
+> I suppose DTRT, if we then write the Makefile rule like:
+>
+> KCSAN_SANITIZE := KCSAN_FUNCTION_ATTRIBUTES
+>
+> and set that to either 'y'/'n' depending on the compiler at hand
+> supporting enough magic to make it all work.
+>
+> I suppose all the sanitize stuff is most important for developers and
+> we tend to have the latest compiler versions anyway, right?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Developers and CI/testing stuff. Yes we really should require a sane
+compiler instead of introducing boatloads of horrible workarounds all
+over the place which then break when the code changes slightly.
+
+Thanks,
+
+        tglx
