@@ -2,115 +2,122 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7498C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4AFC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEF2D2065C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:53:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tVE470XW"
+	by mail.kernel.org (Postfix) with ESMTP id 907912074A
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:03:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgENVxD (ORCPT
+        id S1727898AbgENWD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 17:53:03 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:59060 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbgENVxD (ORCPT
+        Thu, 14 May 2020 18:03:29 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:50491 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726126AbgENWD2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 17:53:03 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04ELqvKs096190;
-        Thu, 14 May 2020 16:52:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589493177;
-        bh=gq1egVzpDSB9B+OD1HzxXbmyNMglkSN4GoPkuCuAoZw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=tVE470XWB6YZ/q4MZMgEKQqGk8Bs3y5T7zDmGrQpAWdSperW386SBKl4uKuOtpUeU
-         CUnOziB5GRQI9kJ1ZJkB0I8bTVUhVaLr96mQnsYtVSYl3L7RdigjQFCT+6lrSxLcXG
-         5B8fhqNusISqVdLe2vlubt9M4B86QPWxCctcuBDI=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04ELqvGJ030194
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 14 May 2020 16:52:57 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 14
- May 2020 16:52:57 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 14 May 2020 16:52:57 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04ELqvEs072265;
-        Thu, 14 May 2020 16:52:57 -0500
-Subject: Re: [PATCH net-next 2/2] net: phy: DP83822: Add ability to advertise
- Fiber connection
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200514173055.15013-1-dmurphy@ti.com>
- <20200514173055.15013-3-dmurphy@ti.com> <20200514185217.GX499265@lunn.ch>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <2ccba0e1-d7f1-86ae-d67c-5e9f4a3b0c4f@ti.com>
-Date:   Thu, 14 May 2020 16:43:25 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 14 May 2020 18:03:28 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id F3A423C04C1;
+        Fri, 15 May 2020 00:03:24 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id o1TOWhpVUiKY; Fri, 15 May 2020 00:03:16 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 9B5E93C04C0;
+        Fri, 15 May 2020 00:03:16 +0200 (CEST)
+Received: from lxhi-065.adit-jv.com (10.72.94.5) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 15 May
+ 2020 00:03:16 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        <stable@vger.kernel.org>, Hardik Gajjar <hgajjar@de.adit-jv.com>,
+        <linux-renesas-soc@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH] usb: core: hub: limit HUB_QUIRK_DISABLE_AUTOSUSPEND to USB5534B
+Date:   Fri, 15 May 2020 00:02:46 +0200
+Message-ID: <20200514220246.13290-1-erosca@de.adit-jv.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200514185217.GX499265@lunn.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.72.94.5]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew
+On Tue, May 12, 2020 at 09:36:07PM +0800, Kai-Heng Feng wrote [1]:
+> This patch prevents my Raven Ridge xHCI from getting runtime suspend.
 
-On 5/14/20 1:52 PM, Andrew Lunn wrote:
->> +static int dp83822_config_init(struct phy_device *phydev)
->> +{
->> +	struct dp83822_private *dp83822 = phydev->priv;
->> +	int err = 0;
->> +
->> +	if (dp83822->fx_enabled) {
->> +		linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT,
->> +				 phydev->supported);
->> +		linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT,
->> +				 phydev->advertising);
->> +
->> +		/*  Auto negotiation is not available in fiber mode */
->> +		phydev->autoneg = AUTONEG_DISABLE;
->> +		phydev->speed = SPEED_100;
->> +		phydev->duplex = DUPLEX_FULL;
-> Hi Dan
->
-> This is normally determined by reading the ability registers,
-> genphy_read_abilities(). When strapped to fibre mode, does it still
-> indicate all the usual copper capabilities, which it can not actually
-> do?
+The problem described in v5.6 commit 1208f9e1d758c9 ("USB: hub: Fix the
+broken detection of USB3 device in SMSC hub") applies solely to the
+USB5534B hub [2] present on the Kingfisher Infotainment Carrier Board,
+manufactured by Shimafuji Electric Inc [3].
 
-Auto negotiation is not available when in Fiber mode for this PHY.  The 
-Speed is locked at 100Mbps for fiber.
+Despite that, the aforementioned commit applied the quirk to _all_ hubs
+carrying vendor ID 0x424 (i.e. SMSC), of which there are more [4] than
+initially expected. Consequently, the quirk is now enabled on platforms
+carrying SMSC/Microchip hub models which potentially don't exhibit the
+original issue.
 
-Duplex can be either FULL or HALF so that should be removed.
+To avoid reports like [1], further limit the quirk's scope to
+USB5534B [2], by employing both Vendor and Product ID checks.
 
-I am verifying with the PHY team on the BMSR register but I do not see 
-any bits for FX there.
+Tested on H3ULCB + Kingfisher rev. M05.
 
-If we remove these settings then I will need to read the PHY_STS 
-register to manage the speed and mode of the fiber.  This register 
-reports the PHY link status regardless of the mode.
+[1] https://lore.kernel.org/linux-renesas-soc/73933975-6F0E-40F5-9584-D2B8F615C0F3@canonical.com/
+[2] https://www.microchip.com/wwwproducts/en/USB5534B
+[3] http://www.shimafuji.co.jp/wp/wp-content/uploads/2018/08/SBEV-RCAR-KF-M06Board_HWSpecificationEN_Rev130.pdf
+[4] https://devicehunt.com/search/type/usb/vendor/0424/device/any
 
-Dan
+Fixes: 1208f9e1d758c9 ("USB: hub: Fix the broken detection of USB3 device in SMSC hub")
+Cc: stable@vger.kernel.org # v4.14+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Hardik Gajjar <hgajjar@de.adit-jv.com>
+Cc: linux-renesas-soc@vger.kernel.org
+Cc: linux-usb@vger.kernel.org
+Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+---
+ drivers/usb/core/hub.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index 2b6565c06c23..fc748c731832 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -39,6 +39,7 @@
+ 
+ #define USB_VENDOR_GENESYS_LOGIC		0x05e3
+ #define USB_VENDOR_SMSC				0x0424
++#define USB_PRODUCT_USB5534B			0x5534
+ #define HUB_QUIRK_CHECK_PORT_AUTOSUSPEND	0x01
+ #define HUB_QUIRK_DISABLE_AUTOSUSPEND		0x02
+ 
+@@ -5621,8 +5622,11 @@ static void hub_event(struct work_struct *work)
+ }
+ 
+ static const struct usb_device_id hub_id_table[] = {
+-    { .match_flags = USB_DEVICE_ID_MATCH_VENDOR | USB_DEVICE_ID_MATCH_INT_CLASS,
++    { .match_flags = USB_DEVICE_ID_MATCH_VENDOR
++                   | USB_DEVICE_ID_MATCH_PRODUCT
++                   | USB_DEVICE_ID_MATCH_INT_CLASS,
+       .idVendor = USB_VENDOR_SMSC,
++      .idProduct = USB_PRODUCT_USB5534B,
+       .bInterfaceClass = USB_CLASS_HUB,
+       .driver_info = HUB_QUIRK_DISABLE_AUTOSUSPEND},
+     { .match_flags = USB_DEVICE_ID_MATCH_VENDOR
+-- 
+2.26.2
 
->
-> 	Andrew
