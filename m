@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE14C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EEFC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6850820727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21FA320787
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:52:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482345;
-	bh=e923IeQUkDFGtCFMSIPljVav9gG9Zf2cBBiEpAXaqGA=;
+	s=default; t=1589482348;
+	bh=vSq6GEaaTggr4ryfJsodFdPoAGAAd+nM4yc6WZxN46A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AuO1Rui3YWARe5J1yvFNWJPl5bON/kY2Sl5s7Q9881ZjJQHKNS/4j/wx63xSkpK92
-	 u/fdHGedaI7+sO+8UdXhFLQxuYYJrB+K9no6t8+z3UApmDFmXQT0pJJORSyIz4d4Ls
-	 M598coLNXLjpLqfOti9qqqcdilV+vwd+wC5uA/Hg=
+	b=MlBMqCZhIhUPQcPTeTgP40dVLNFgJ5EXJnfChIUWANU947ekwwb3Wlm/l1wv0TdRo
+	 fIheD9Gw6bYBWei4knyLCxB1loTHly3c0hIk+Ep3RU9GhDQcJLkSzZ4HIqRZSowqGd
+	 kKkI517IIt5veEVhP3gokMcNN9lkyKLBMmcQE2JE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbgENSwY (ORCPT
+        id S1728319AbgENSw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:52:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50476 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:52:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728271AbgENSwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:52:21 -0400
+        id S1728298AbgENSwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:52:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72D5E206A5;
-        Thu, 14 May 2020 18:52:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D37552065F;
+        Thu, 14 May 2020 18:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482341;
-        bh=e923IeQUkDFGtCFMSIPljVav9gG9Zf2cBBiEpAXaqGA=;
+        s=default; t=1589482343;
+        bh=vSq6GEaaTggr4ryfJsodFdPoAGAAd+nM4yc6WZxN46A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oG2R26SaAJoOazKuPjlEiwZblhjEDzSX4BnYOpExYH3n+VeWsTi3lrM9moxjabCMk
-         BVHv8E6jcn1B751CUYFBtKaWiip5yzEi7yydCWt9K5TI1iQWGvklY3uQ0y/gDuYwrf
-         uyaoAxTZro3SeXGFInpD+bi+SsSBeL7dmaIcO8W8=
+        b=tDpPycG5aRTbIeplqsPUO7VgsWh16QhIFh+BjevLy7rxdIiBow8zGt5rlaY12oZCl
+         fzcjI7ENlrWdI9L6XTS8eTgRhRt47a1k+bcL/iosJwqa7JWs+p8FKJj2DwTv+HGXDe
+         P9XMHKwW1EsgoDj9N8a0+4CBPPAWoF9Q9oFpOcNM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alan Maguire <alan.maguire@oracle.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
         linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 25/62] ftrace/selftests: workaround cgroup RT scheduling issues
-Date:   Thu, 14 May 2020 14:51:10 -0400
-Message-Id: <20200514185147.19716-25-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 27/62] selftests: fix kvm relocatable native/cross builds and installs
+Date:   Thu, 14 May 2020 14:51:12 -0400
+Message-Id: <20200514185147.19716-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185147.19716-1-sashal@kernel.org>
 References: <20200514185147.19716-1-sashal@kernel.org>
@@ -61,85 +59,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Maguire <alan.maguire@oracle.com>
+From: Shuah Khan <skhan@linuxfoundation.org>
 
-[ Upstream commit 57c4cfd4a2eef8f94052bd7c0fce0981f74fb213 ]
+[ Upstream commit 66d69e081b526b6a6031f0d3ca8ddff71e5707a5 ]
 
-wakeup_rt.tc and wakeup.tc tests in tracers/ subdirectory
-fail due to the chrt command returning:
+kvm test Makefile doesn't fully support cross-builds and installs.
+UNAME_M = $(shell uname -m) variable is used to define the target
+programs and libraries to be built from arch specific sources in
+sub-directories.
 
- chrt: failed to set pid 0's policy: Operation not permitted.
+For cross-builds to work, UNAME_M has to map to ARCH and arch specific
+directories and targets in this Makefile.
 
-To work around this, temporarily disable grout RT scheduling
-during ftracetest execution.  Restore original value on
-test run completion.  With these changes in place, both
-tests consistently pass.
+UNAME_M variable to used to run the compiles pointing to the right arch
+directories and build the right targets for these supported architectures.
 
-Fixes: c575dea2c1a5 ("selftests/ftrace: Add wakeup_rt tracer testcase")
-Fixes: c1edd060b413 ("selftests/ftrace: Add wakeup tracer testcase")
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+TEST_GEN_PROGS and LIBKVM are set using UNAME_M variable.
+LINUX_TOOL_ARCH_INCLUDE is set using ARCH variable.
+
+x86_64 targets are named to include x86_64 as a suffix and directories
+for includes are in x86_64 sub-directory. s390x and aarch64 follow the
+same convention. "uname -m" doesn't result in the correct mapping for
+s390x and aarch64. Fix it to set UNAME_M correctly for s390x and aarch64
+cross-builds.
+
+In addition, Makefile doesn't create arch sub-directories in the case of
+relocatable builds and test programs under s390x and x86_64 directories
+fail to build. This is a problem for native and cross-builds. Fix it to
+create all necessary directories keying off of TEST_GEN_PROGS.
+
+The following use-cases work with this change:
+
+Native x86_64:
+make O=/tmp/kselftest -C tools/testing/selftests TARGETS=kvm install \
+ INSTALL_PATH=$HOME/x86_64
+
+arm64 cross-build:
+make O=$HOME/arm64_build/ ARCH=arm64 HOSTCC=gcc \
+	CROSS_COMPILE=aarch64-linux-gnu- defconfig
+
+make O=$HOME/arm64_build/ ARCH=arm64 HOSTCC=gcc \
+	CROSS_COMPILE=aarch64-linux-gnu- all
+
+make kselftest-install TARGETS=kvm O=$HOME/arm64_build ARCH=arm64 \
+	HOSTCC=gcc CROSS_COMPILE=aarch64-linux-gnu-
+
+s390x cross-build:
+make O=$HOME/s390x_build/ ARCH=s390 HOSTCC=gcc \
+	CROSS_COMPILE=s390x-linux-gnu- defconfig
+
+make O=$HOME/s390x_build/ ARCH=s390 HOSTCC=gcc \
+	CROSS_COMPILE=s390x-linux-gnu- all
+
+make kselftest-install TARGETS=kvm O=$HOME/s390x_build/ ARCH=s390 \
+	HOSTCC=gcc CROSS_COMPILE=s390x-linux-gnu- all
+
+No regressions in the following use-cases:
+make -C tools/testing/selftests TARGETS=kvm
+make kselftest-all TARGETS=kvm
+
 Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/ftrace/ftracetest | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ tools/testing/selftests/kvm/Makefile | 29 +++++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
-index 063ecb290a5a3..144308a757b70 100755
---- a/tools/testing/selftests/ftrace/ftracetest
-+++ b/tools/testing/selftests/ftrace/ftracetest
-@@ -29,8 +29,25 @@ err_ret=1
- # kselftest skip code is 4
- err_skip=4
+diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+index d91c53b726e60..75dec268787f3 100644
+--- a/tools/testing/selftests/kvm/Makefile
++++ b/tools/testing/selftests/kvm/Makefile
+@@ -5,8 +5,34 @@ all:
  
-+# cgroup RT scheduling prevents chrt commands from succeeding, which
-+# induces failures in test wakeup tests.  Disable for the duration of
-+# the tests.
+ top_srcdir = ../../../..
+ KSFT_KHDR_INSTALL := 1
 +
-+readonly sched_rt_runtime=/proc/sys/kernel/sched_rt_runtime_us
-+
-+sched_rt_runtime_orig=$(cat $sched_rt_runtime)
-+
-+setup() {
-+  echo -1 > $sched_rt_runtime
-+}
-+
-+cleanup() {
-+  echo $sched_rt_runtime_orig > $sched_rt_runtime
-+}
-+
- errexit() { # message
-   echo "Error: $1" 1>&2
-+  cleanup
-   exit $err_ret
- }
++# For cross-builds to work, UNAME_M has to map to ARCH and arch specific
++# directories and targets in this Makefile. "uname -m" doesn't map to
++# arch specific sub-directory names.
++#
++# UNAME_M variable to used to run the compiles pointing to the right arch
++# directories and build the right targets for these supported architectures.
++#
++# TEST_GEN_PROGS and LIBKVM are set using UNAME_M variable.
++# LINUX_TOOL_ARCH_INCLUDE is set using ARCH variable.
++#
++# x86_64 targets are named to include x86_64 as a suffix and directories
++# for includes are in x86_64 sub-directory. s390x and aarch64 follow the
++# same convention. "uname -m" doesn't result in the correct mapping for
++# s390x and aarch64.
++#
++# No change necessary for x86_64
+ UNAME_M := $(shell uname -m)
  
-@@ -39,6 +56,8 @@ if [ `id -u` -ne 0 ]; then
-   errexit "this must be run by root user"
- fi
- 
-+setup
++# Set UNAME_M for arm64 compile/install to work
++ifeq ($(ARCH),arm64)
++	UNAME_M := aarch64
++endif
++# Set UNAME_M s390x compile/install to work
++ifeq ($(ARCH),s390)
++	UNAME_M := s390x
++endif
 +
- # Utilities
- absdir() { # file_path
-   (cd `dirname $1`; pwd)
-@@ -235,6 +254,7 @@ TOTAL_RESULT=0
+ LIBKVM = lib/assert.c lib/elf.c lib/io.c lib/kvm_util.c lib/sparsebit.c
+ LIBKVM_x86_64 = lib/x86_64/processor.c lib/x86_64/vmx.c lib/x86_64/svm.c lib/x86_64/ucall.c
+ LIBKVM_aarch64 = lib/aarch64/processor.c lib/aarch64/ucall.c
+@@ -47,7 +73,7 @@ LIBKVM += $(LIBKVM_$(UNAME_M))
+ INSTALL_HDR_PATH = $(top_srcdir)/usr
+ LINUX_HDR_PATH = $(INSTALL_HDR_PATH)/include/
+ LINUX_TOOL_INCLUDE = $(top_srcdir)/tools/include
+-LINUX_TOOL_ARCH_INCLUDE = $(top_srcdir)/tools/arch/x86/include
++LINUX_TOOL_ARCH_INCLUDE = $(top_srcdir)/tools/arch/$(ARCH)/include
+ CFLAGS += -Wall -Wstrict-prototypes -Wuninitialized -O2 -g -std=gnu99 \
+ 	-fno-stack-protector -fno-PIE -I$(LINUX_TOOL_INCLUDE) \
+ 	-I$(LINUX_TOOL_ARCH_INCLUDE) -I$(LINUX_HDR_PATH) -Iinclude \
+@@ -78,6 +104,7 @@ $(LIBKVM_OBJ): $(OUTPUT)/%.o: %.c
+ $(OUTPUT)/libkvm.a: $(LIBKVM_OBJ)
+ 	$(AR) crs $@ $^
  
- INSTANCE=
- CASENO=0
-+
- testcase() { # testfile
-   CASENO=$((CASENO+1))
-   desc=`grep "^#[ \t]*description:" $1 | cut -f2 -d:`
-@@ -406,5 +426,7 @@ prlog "# of unsupported: " `echo $UNSUPPORTED_CASES | wc -w`
- prlog "# of xfailed: " `echo $XFAILED_CASES | wc -w`
- prlog "# of undefined(test bug): " `echo $UNDEFINED_CASES | wc -w`
++x := $(shell mkdir -p $(sort $(dir $(TEST_GEN_PROGS))))
+ all: $(STATIC_LIBS)
+ $(TEST_GEN_PROGS): $(STATIC_LIBS)
  
-+cleanup
-+
- # if no error, return 0
- exit $TOTAL_RESULT
 -- 
 2.20.1
 
