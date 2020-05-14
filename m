@@ -2,93 +2,89 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 946C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 329DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3BB20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:16:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="KQTYpgkm"
+	by mail.kernel.org (Postfix) with ESMTP id 37EB8205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:18:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbgENBQb (ORCPT
+        id S1728073AbgENBSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 21:16:31 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:30287 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725943AbgENBQb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 21:16:31 -0400
-X-UUID: 1fc01e12372544abbe0a7183ca72fb34-20200514
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=zjMY/FI5QGNWlw3U1ijZ6qtahuUWrj4419TytCRSaxY=;
-        b=KQTYpgkmb5q5ycBXcY0piGxVCS/mYOvsireZQ7MPT+pBstfejaLe1ZJcxMz1u536QdGT0uQgqzhFU2g1VpqtDxPBaL4BJPiQDDrtyffSu9wmdmIxBeqP+uZCh8DmxPR1GN/Z1aYnR9teC0v0wVEardcFJjBuvypwRWbuCjWlmVc=;
-X-UUID: 1fc01e12372544abbe0a7183ca72fb34-20200514
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <qii.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 66452614; Thu, 14 May 2020 09:16:26 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs07n1.mediatek.inc
- (172.21.101.16) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 14 May
- 2020 09:16:24 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 14 May 2020 09:16:23 +0800
-Message-ID: <1589418905.25512.10.camel@mhfsdcap03>
-Subject: Re: [PATCH] i2c: mediatek: Add i2c ac-timing adjust support
-From:   Qii Wang <qii.wang@mediatek.com>
-To:     Wolfram Sang <wsa@the-dreams.de>
-CC:     <linux-i2c@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
-Date:   Thu, 14 May 2020 09:15:05 +0800
-In-Reply-To: <20200512133852.GE13516@ninjato>
-References: <1585223676-30809-1-git-send-email-qii.wang@mediatek.com>
-         <20200512133852.GE13516@ninjato>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Wed, 13 May 2020 21:18:22 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:39050 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725952AbgENBSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 21:18:20 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4E25B1A0194;
+        Thu, 14 May 2020 03:18:19 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7CCCD1A0167;
+        Thu, 14 May 2020 03:18:15 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 6F753402BB;
+        Thu, 14 May 2020 09:18:10 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 2/2] ARM: dts: imx6sl: Use nvmem interface to get fuse data
+Date:   Thu, 14 May 2020 09:08:48 +0800
+Message-Id: <1589418528-26410-2-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1589418528-26410-1-git-send-email-Anson.Huang@nxp.com>
+References: <1589418528-26410-1-git-send-email-Anson.Huang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA1LTEyIGF0IDE1OjM4ICswMjAwLCBXb2xmcmFtIFNhbmcgd3JvdGU6DQo+
-IEhpIFFpaSBXYW5nLA0KPiANCj4gT24gVGh1LCBNYXIgMjYsIDIwMjAgYXQgMDc6NTQ6MzZQTSAr
-MDgwMCwgcWlpLndhbmdAbWVkaWF0ZWsuY29tIHdyb3RlOg0KPiA+IEZyb206IFFpaSBXYW5nIDxx
-aWkud2FuZ0BtZWRpYXRlay5jb20+DQo+ID4gDQo+ID4gVGhpcyBwYXRjaCBhZGRzIGEgYWxnb3Jp
-dGhtIHRvIGNhbGN1bGF0ZSBzb21lIGFjLXRpbWluZyBwYXJhbWV0ZXJzDQo+ID4gd2hpY2ggY2Fu
-IGZ1bGx5IG1lZXQgSTJDIFNwZWMuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogUWlpIFdhbmcg
-PHFpaS53YW5nQG1lZGlhdGVrLmNvbT4NCj4gDQo+IENvdWxkIHlvdSByZWJhc2UgdGhpcyBvbiB0
-b3Agb2YgaTJjL2Zvci1uZXh0IG9yIHY1LjctcmNYPyBCZWNhdXNlIG9mDQo+IGNvbW1pdCA5MDIy
-NGU2NDY4ZTEgKCJpMmM6IGRyaXZlcnM6IFVzZSBnZW5lcmljIGRlZmluaXRpb25zIGZvciBidXMN
-Cj4gZnJlcXVlbmNpZXMiKSB3aGljaCB3YXMgYWRkZWQgdHdvIGRheXMgYmVmb3JlIHlvdXIgcGF0
-Y2ggd2FzIHNlbnQgb3V0Lg0KPiANCj4gT3RoZXJ3aXNlIG1vc3RseSBtaW5vciBuaXRzLg0KPiAN
-Cj4gPiArc3RhdGljIGludCBtdGtfaTJjX21heF9zdGVwX2NudCh1bnNpZ25lZCBpbnQgdGFyZ2V0
-X3NwZWVkKQ0KPiA+ICt7DQo+ID4gKwlpZiAodGFyZ2V0X3NwZWVkID4gTUFYX0ZTX01PREVfU1BF
-RUQpDQo+ID4gKwkJcmV0dXJuIE1BWF9IU19TVEVQX0NOVF9ESVY7DQo+ID4gKwllbHNlDQo+ID4g
-KwkJcmV0dXJuIE1BWF9TVEVQX0NOVF9ESVY7DQo+ID4gK30NCj4gDQo+IE1heWJlIHRlcm5hcnkg
-b3BlcmF0b3IgaGVyZT8gWW91ciBjaG9pY2UuDQo+IA0KDQpVc2UgdGVybmFyeSBvcGVyYXRvciBo
-ZXJlIHdpbGwgb3ZlciA4MCBieXRlcywgYW5kIG5lZWQgYSBsaW5lIGJyZWFrLA0KTWF5YmUgdGhp
-cyBjb2RlIGxvb2tzIHNpbXBsZXIuDQoNCj4gQW5kIG15IGNvZGUgY2hlY2tlcnMgY29tcGxhaW5l
-ZDoNCj4gDQo+ICAgICBDUFBDSEVDSw0KPiBkcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5j
-OjU5MToxMTogd2FybmluZzogUmVkdW5kYW50IGFzc2lnbm1lbnQgb2YgJ3NkYV9tYXgnIHRvIGl0
-c2VsZi4gW3NlbGZBc3NpZ25tZW50XQ0KPiAgIHNkYV9tYXggPSBzZGFfbWF4Ow0KPiAgICAgICAg
-ICAgXg0KPiBkcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jOjU5NzoxMTogd2FybmluZzog
-UmVkdW5kYW50IGFzc2lnbm1lbnQgb2YgJ3NkYV9taW4nIHRvIGl0c2VsZi4gW3NlbGZBc3NpZ25t
-ZW50XQ0KPiAgIHNkYV9taW4gPSBzZGFfbWluOw0KPiANCm9rLCBJIHdpbGwgbW9kaWZ5IGl0Lg0K
-DQo+IExhc3QgcXVlc3Rpb246IFlvdSBzZWVtIHRvIGJlIHRoZSBvbmUgZG9pbmcgbWFqb3IgdXBk
-YXRlcyB0byB0aGlzDQo+IGRyaXZlci4gVGhhbmtzIGZvciB0aGF0ISBBcmUgeW91IG1heWJlIGlu
-dGVyZXN0ZWQgaW4gYmVjb21pbmcgdGhlDQo+IG1haW50YWluZXIgZm9yIHRoaXMgZHJpdmVyPyBJ
-IHRoaW5rIHRoZXJlIHdvbid0IGJlIG11Y2ggcGF0Y2hlcyB0bw0KPiByZXZpZXcgYW5kIHJlcG9y
-dHMgdG8gaGFuZGxlIGJ1dCBpdCB3aWxsIHNwZWVkIHVwIHByb2Nlc3NpbmcgZm9yIG1lLg0KPiAN
-Cg0KWWVzLCBJdCBpcyBteSBob25vciB0byBiZSB0aGUgbWFpbnRhaW5lciBmb3IgdGhpcyBkcml2
-ZXIuDQoNCj4gQWxsIHRoZSBiZXN0LA0KPiANCj4gICAgV29sZnJhbQ0KPiANCg0K
+Although ocotp clock is always ON for i.MX6SL, OCOTP can be
+accessed directly, but since i.MX6SL nvmem interface is supported,
+and fsl,tempmon-data is deprecated, use it instead of getting fuse
+data by reading ocotp directly, this makes all i.MX6 SoCs aligned.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6sl.dtsi | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index 8230b45..fcb84fe 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -98,7 +98,8 @@
+ 		interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-parent = <&gpc>;
+ 		fsl,tempmon = <&anatop>;
+-		fsl,tempmon-data = <&ocotp>;
++		nvmem-cells = <&tempmon_calib>, <&tempmon_temp_grade>;
++		nvmem-cell-names = "calib", "temp_grade";
+ 		clocks = <&clks IMX6SL_CLK_PLL3_USB_OTG>;
+ 	};
+ 
+@@ -961,6 +962,14 @@
+ 				cpu_speed_grade: speed-grade@10 {
+ 					reg = <0x10 4>;
+ 				};
++
++				tempmon_calib: calib@38 {
++					reg = <0x38 4>;
++				};
++
++				tempmon_temp_grade: temp-grade@20 {
++					reg = <0x20 4>;
++				};
+ 			};
+ 
+ 			audmux: audmux@21d8000 {
+-- 
+2.7.4
 
