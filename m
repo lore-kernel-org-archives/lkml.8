@@ -2,88 +2,135 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F61C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D009C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 712972065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FE682065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:12:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbgENKKL (ORCPT
+        id S1726098AbgENKMk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 06:10:11 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:44205 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgENKKL (ORCPT
+        Thu, 14 May 2020 06:12:40 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:57360 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726050AbgENKMj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 06:10:11 -0400
-Received: from [192.168.1.11] (lfbn-gre-1-325-105.w90-112.abo.wanadoo.fr [90.112.45.105])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 6A02C20000B;
-        Thu, 14 May 2020 10:10:04 +0000 (UTC)
-Subject: Re: [PATCH 04/10] riscv: Fix print_vm_layout build error if NOMMU
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Hulk Robot <hulkci@huawei.com>
-References: <20200511022001.179767-1-wangkefeng.wang@huawei.com>
- <20200511022001.179767-5-wangkefeng.wang@huawei.com>
-From:   Alex Ghiti <alex@ghiti.fr>
-Message-ID: <1daca195-f63c-2693-068f-6d624aa1b899@ghiti.fr>
-Date:   Thu, 14 May 2020 06:10:04 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200511022001.179767-5-wangkefeng.wang@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Thu, 14 May 2020 06:12:39 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-29-y0BDf4GNOjC8TdKy0usypQ-1; Thu, 14 May 2020 11:12:35 +0100
+X-MC-Unique: y0BDf4GNOjC8TdKy0usypQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 14 May 2020 11:12:34 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 14 May 2020 11:12:34 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Kees Cook' <keescook@chromium.org>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>
+CC:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Alexei Starovoitov" <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        "Daniel Borkmann" <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, "Jan Kara" <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?iso-8859-1?Q?Philippe_Tr=E9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        "Scott Shell" <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        "kernel-hardening@lists.openwall.com" 
+        <kernel-hardening@lists.openwall.com>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+Subject: RE: [PATCH v5 3/6] fs: Enable to enforce noexec mounts or file exec
+ through O_MAYEXEC
+Thread-Topic: [PATCH v5 3/6] fs: Enable to enforce noexec mounts or file exec
+ through O_MAYEXEC
+Thread-Index: AQHWKZyBpmhTpEnBl0+f5QrKafolWKinXOJQ
+Date:   Thu, 14 May 2020 10:12:34 +0000
+Message-ID: <33eba9f60af54f1585ba82af73be4eb2@AcuMS.aculab.com>
+References: <20200505153156.925111-1-mic@digikod.net>
+ <20200505153156.925111-4-mic@digikod.net>
+ <CAEjxPJ7y2G5hW0WTH0rSrDZrorzcJ7nrQBjfps2OWV5t1BUYHw@mail.gmail.com>
+ <202005131525.D08BFB3@keescook> <202005132002.91B8B63@keescook>
+In-Reply-To: <202005132002.91B8B63@keescook>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Kees Cook
+> Sent: 14 May 2020 04:05
+> On Wed, May 13, 2020 at 04:27:39PM -0700, Kees Cook wrote:
+> > Like, couldn't just the entire thing just be:
+> >
+> > diff --git a/fs/namei.c b/fs/namei.c
+> > index a320371899cf..0ab18e19f5da 100644
+> > --- a/fs/namei.c
+> > +++ b/fs/namei.c
+> > @@ -2849,6 +2849,13 @@ static int may_open(const struct path *path, int acc_mode, int flag)
+> >  		break;
+> >  	}
+> >
+> > +	if (unlikely(mask & MAY_OPENEXEC)) {
+> > +		if (sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_MOUNT &&
+> > +		    path_noexec(path))
+> > +			return -EACCES;
+> > +		if (sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_FILE)
+> > +			acc_mode |= MAY_EXEC;
+> > +	}
+> >  	error = inode_permission(inode, MAY_OPEN | acc_mode);
+> >  	if (error)
+> >  		return error;
+> >
+> 
+> FYI, I've confirmed this now. Effectively with patch 2 dropped, patch 3
+> reduced to this plus the Kconfig and sysctl changes, the self tests
+> pass.
+> 
+> I think this makes things much cleaner and correct.
 
-On 5/10/20 10:19 PM, Kefeng Wang wrote:
-> arch/riscv/mm/init.c: In function ‘print_vm_layout’:
-> arch/riscv/mm/init.c:68:37: error: ‘FIXADDR_START’ undeclared (first use in this function);
-> arch/riscv/mm/init.c:69:20: error: ‘FIXADDR_TOP’ undeclared
-> arch/riscv/mm/init.c:70:37: error: ‘PCI_IO_START’ undeclared
-> arch/riscv/mm/init.c:71:20: error: ‘PCI_IO_END’ undeclared
-> arch/riscv/mm/init.c:72:38: error: ‘VMEMMAP_START’ undeclared
-> arch/riscv/mm/init.c:73:20: error: ‘VMEMMAP_END’ undeclared (first use in this function);
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> ---
->   arch/riscv/mm/init.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index dfcaebc3928f..58c39c44b9c9 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -49,7 +49,7 @@ static void setup_zero_page(void)
->   	memset((void *)empty_zero_page, 0, PAGE_SIZE);
->   }
->   
-> -#ifdef CONFIG_DEBUG_VM
-> +#if defined(CONFIG_MMU) && defined(DEBUG_VM)
+And a summary of that would be right for the 0/n patch email.
 
+	David
 
-Shouldn't it be CONFIG_DEBUG_VM ?
-
-
->   static inline void print_mlk(char *name, unsigned long b, unsigned long t)
->   {
->   	pr_notice("%12s : 0x%08lx - 0x%08lx   (%4ld kB)\n", name, b, t,
-
-
-Alex
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
