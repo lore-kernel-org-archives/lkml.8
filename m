@@ -2,114 +2,153 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48967C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80336C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEBCB20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:28:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="GstG9I6h"
+	by mail.kernel.org (Postfix) with ESMTP id 52DBE20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:28:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726113AbgENI2N (ORCPT
+        id S1726140AbgENI2a convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 04:28:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35356 "EHLO
+        Thu, 14 May 2020 04:28:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725935AbgENI2M (ORCPT
+        by vger.kernel.org with ESMTP id S1725925AbgENI2a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 04:28:12 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDA86C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:28:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Iqx+R9RDnrWxC9fRW/DBM4vpRxdzcnblY4Sl8eFkAaY=; b=GstG9I6hknIsoz0GovgM/aKyw
-        EOehkTOlDR+MGFWAu7a5CoJMVuTeM52dktLtmWG1IUTMC/D+Yi6lkQ5K0qL0LYEOI1QxS+YWG3UIT
-        O2hb9kA+yw8UK97d6jTAY2SMjJoCylS0lO322C/SwZNJS52j8wT2p6O4pcCPqF18PUalGCja7QmCk
-        MIvyJt3c5zoWFKS9wWnG10ZNsqAEOBz+LAT20a8DCisLnhKygRF2mL9IgpiP/PahEUAgV8SSjBKap
-        NbagSgPI9Il7iUjkTkjTeCNk0Ni3t89PHrObFfwaI4vgvyW8eLWhZI29+XjxJ90SaGEb7tALpQoD/
-        pQdL653pg==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:57828)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jZ9Di-0007Ua-GB; Thu, 14 May 2020 09:27:58 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jZ9Dg-0000Pj-2w; Thu, 14 May 2020 09:27:56 +0100
-Date:   Thu, 14 May 2020 09:27:56 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Lucas Stach <l.stach@pengutronix.de>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        The etnaviv authors <etnaviv@lists.freedesktop.org>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>
-Subject: Re: [PATCH 2/3] drm/etnaviv: Don't ignore errors on getting clocks
-Message-ID: <20200514082755.GN1551@shell.armlinux.org.uk>
-References: <20200513150007.1315395-1-lkundrak@v3.sk>
- <20200513150007.1315395-3-lkundrak@v3.sk>
- <CAOMZO5B582=tZ_YBCyVYFtGh=z5hZKFxP7XoUHEmH3jZsk2uYQ@mail.gmail.com>
- <CAOMZO5BdiXCVXs+8jP7PoRvgKd1sxCu4KhjvJBvL=Qig2WOs4g@mail.gmail.com>
- <1e15be39906034a95b86c026e060ed9866586d94.camel@pengutronix.de>
+        Thu, 14 May 2020 04:28:30 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAEAFC061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:28:29 -0700 (PDT)
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jZ9E3-00034w-Gf; Thu, 14 May 2020 10:28:19 +0200
+Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ore@pengutronix.de>)
+        id 1jZ9Dx-00079a-7M; Thu, 14 May 2020 10:28:13 +0200
+Date:   Thu, 14 May 2020 10:28:13 +0200
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+To:     Christian Herber <christian.herber@nxp.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        David Jander <david@protonic.nl>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        "mkl@pengutronix.de" <mkl@pengutronix.de>,
+        Marek Vasut <marex@denx.de>
+Subject: Re: [EXT] Re: signal quality and cable diagnostic
+Message-ID: <20200514082813.GA1896@pengutronix.de>
+References: <20200511141310.GA2543@pengutronix.de>
+ <20200511143337.GC413878@lunn.ch>
+ <20200512082201.GB16536@pengutronix.de>
+ <AM0PR04MB7041DE18F2966573DB6E078586BC0@AM0PR04MB7041.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1e15be39906034a95b86c026e060ed9866586d94.camel@pengutronix.de>
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <AM0PR04MB7041DE18F2966573DB6E078586BC0@AM0PR04MB7041.eurprd04.prod.outlook.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:10:16 up 245 days, 20:58, 472 users,  load average: 45.38,
+ 32.12, 24.29
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 10:18:02AM +0200, Lucas Stach wrote:
-> Am Mittwoch, den 13.05.2020, 23:41 -0300 schrieb Fabio Estevam:
-> > On Wed, May 13, 2020 at 2:09 PM Fabio Estevam <festevam@gmail.com> wrote:
-> > 
-> > > The binding doc Documentation/devicetree/bindings/gpu/vivante,gc.yaml
-> > > says that only the 'reg' clock could be optional, the others are
-> > > required.
-> > 
-> > arch/arm/boot/dts/dove.dtsi only uses the 'core' clock.
-> > arch/arm/boot/dts/stm32mp157.dtsi uses 'bus' and 'core'
-> > 
-> > Maybe the binding needs to be updated and it seems that using
-> > devm_clk_get_optional() like you propose is safe.
+Hi Christian,
+
+On Thu, May 14, 2020 at 07:13:30AM +0000, Christian Herber wrote:
+> On Tue, May 12, 2020 at 10:22:01AM +0200, Oleksij Rempel wrote:
 > 
-> The binding is correct as-is. We want to require those clocks to be
-> present, but the dove DT was added before the binding was finalized, so
-> the driver still treats the clocks as optional to not break
-> compatibility with old DTs. Maybe this warrants a comment in the
-> code...
+> > So I think we should pass raw SQI value to user space, at least in the
+> > first implementation.
+> 
+> > What do you think about this?
+> 
+> Hi Oleksij,
+> 
+> I had a check about the background of this SQI thing. The table you reference with concrete SNR values is informative only and not a requirement. The requirements are rather loose.
+> 
+> This is from OA:
+> - Only for SQI=0 a link loss shall occur.
+> - The indicated signal quality shall monotonic increasing /decreasing with noise level.
+> - It shall be indicated in the datasheet at which level a BER<10^-10 (better than 10^-10) is achieved (e.g. "from SQI=3 to SQI=7 the link has a BER<10^-10 (better than 10^-10)")
+> 
+> I.e. SQI does not need to have a direct correlation with SNR. The fundamental underlying metric is the BER.
+> You can report the raw SQI level and users would have to look up what it means in the respective data sheet. There is no guaranteed relation between SQI levels of different devices, i.e. SQI 5 can have lower BER than SQI 6 on another device.
+> Alternatively, you could report BER < x for the different SQI levels. However, this requires the information to be available. While I could provide these for NXP, it might not be easily available for other vendors.
+> If reporting raw SQI, at least the SQI level for BER<10^-10 should be presented to give any meaning to the value.
 
-The binding doc in mainline says:
+So the question is, which values to provide via KAPI to user space?
 
-  clocks:
-    items:
-      - description: AXI/master interface clock
-      - description: GPU core clock
-      - description: Shader clock (only required if GPU has feature PIPE_3D)
-      - description: AHB/slave interface clock (only required if GPU can gate slave interface independently)
-    minItems: 1
-    maxItems: 4
+- SQI
+  The PHY can probably measure the SNR quite fast and has some internal
+  function or lookup table to deduct the SQI from the measured SNR.
 
-  clock-names:
-    items:
-      enum: [ bus, core, shader, reg ]
-    minItems: 1
-    maxItems: 4
+  If I understand you correctly, we can only compare SQI values of the
+  same PHY, as different PHYs give different SQIs for the same link
+  characteristics (=SNR).
+- SNR range
+  We read the SQI from the PHY look up the SNR range for that value from
+  the data sheet and provide that value to use space. This gives a
+  better description of the quality of the link.
+- "guestimated" BER
+  The manufacturer of the PHY has probably done some extensive testing
+  that a measured SNR can be correlated to some BER. This value may be
+  provided in the data sheet, too.
 
-which looks correct to me - and means that Dove is compliant with that.
+The SNR seems to be most universal value, when it comes to comparing
+different situations (different links and different PHYs). The
+resolution of BER is not that detailed, for the NXP PHY is says only
+"BER below 1e-10" or not.
+
+> While I could provide these for NXP, it might not be easily available
+> for other vendors.
+
+It will be great if you can provide this information. It may force other
+vendors to do the same :)
+
+The actual procedure to measure the BER is the following testing
+strategy suggested by opensig[1]:
+--------------------------------------------------------------------------------
+Procedure:
+1. Configure the DUT as MASTER.
+2. Connect the packet monitoring station to the automotive cable.
+3. Connect the DUT to the automotive cable.
+4. Send 2,470,000 1,518-byte packets (for a 10 -10 BER) and the monitor will
+   count the number of packet errors.
+5. Repeat step 4 for the remaining automotive cables.
+6. Repeat steps 4-5 with the DUT configured as SLAVE.
+--------------------------------------------------------------------------------
+
+[1] http://www.opensig.org/download/document/225/Open_Alliance_100BASE-T1_PMA_Test_Suite_v1.0-dec.pdf
+
+Regards,
+Oleksij & Marc
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
