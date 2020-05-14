@@ -2,140 +2,105 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BFCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1459C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 769DC206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E74206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:26:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgENKXv (ORCPT
+        id S1726151AbgENK0s convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 06:23:51 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57120 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725974AbgENKXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 06:23:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 8E97AAE67;
-        Thu, 14 May 2020 10:23:49 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 62C4A1E12A8; Thu, 14 May 2020 12:23:46 +0200 (CEST)
-Date:   Thu, 14 May 2020 12:23:46 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     ira.weiny@intel.com
-Cc:     linux-ext4@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V1 3/9] fs/ext4: Disallow encryption if inode is DAX
-Message-ID: <20200514102346.GE9569@quack2.suse.cz>
-References: <20200514065316.2500078-1-ira.weiny@intel.com>
- <20200514065316.2500078-4-ira.weiny@intel.com>
+        Thu, 14 May 2020 06:26:48 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:28852 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726015AbgENK0q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 06:26:46 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-129-mzoWMat6PF2wNz8vgiMclw-1; Thu, 14 May 2020 11:26:43 +0100
+X-MC-Unique: mzoWMat6PF2wNz8vgiMclw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 14 May 2020 11:26:41 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 14 May 2020 11:26:41 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Christoph Hellwig' <hch@lst.de>
+CC:     'Joe Perches' <joe@perches.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "Alexey Kuznetsov" <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Jon Maloy <jmaloy@redhat.com>,
+        Ying Xue <ying.xue@windriver.com>,
+        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
+        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
+        "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
+        "cluster-devel@redhat.com" <cluster-devel@redhat.com>,
+        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
+        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
+        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: RE: remove kernel_setsockopt and kernel_getsockopt
+Thread-Topic: remove kernel_setsockopt and kernel_getsockopt
+Thread-Index: AQHWKU15LJmP4mOGDE2/GHhLszFt9KinP7aQgAAO/ACAABIowA==
+Date:   Thu, 14 May 2020 10:26:41 +0000
+Message-ID: <a76440f7305c4653877ff2abff499f4e@AcuMS.aculab.com>
+References: <20200513062649.2100053-1-hch@lst.de>
+ <ecc165c33962d964d518c80de605af632eee0474.camel@perches.com>
+ <756758e8f0e34e2e97db470609f5fbba@AcuMS.aculab.com>
+ <20200514101838.GA12548@lst.de>
+In-Reply-To: <20200514101838.GA12548@lst.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200514065316.2500078-4-ira.weiny@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 13-05-20 23:53:09, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> Encryption and DAX are incompatible.  Changing the DAX mode due to a
-> change in Encryption mode is wrong without a corresponding
-> address_space_operations update.
-> 
-> Make the 2 options mutually exclusive by returning an error if DAX was
-> set first.
-> 
-> Furthermore, clarify the documentation of the exclusivity and how that
-> will work.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+From: Christoph Hellwig
+> Only for those were we have users, and all those are covered.
 
-Looks good to me. You can add:
+What do we tell all our users when our kernel SCTP code
+no longer works?
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+It uses SO_REUSADDR, SCTP_EVENTS, SCTP_NODELAY,
+SCTP_STATUS, SCTP_INITMSG, IPV6_ONLY, SCTP_SOCKOPT_BINDX_ADD
+and SO_LINGER.
+We should probably use the CONNECTX function as well.
 
-								Honza
+I doubt we are the one company with out-of-tree drivers
+that use the kernel_socket interface.
 
+	David
 
-> 
-> ---
-> Changes:
-> 	remove WARN_ON_ONCE
-> 	Add documentation to the encrypt doc WRT DAX
-> ---
->  Documentation/filesystems/fscrypt.rst |  4 +++-
->  fs/ext4/super.c                       | 10 +---------
->  2 files changed, 4 insertions(+), 10 deletions(-)
-> 
-> diff --git a/Documentation/filesystems/fscrypt.rst b/Documentation/filesystems/fscrypt.rst
-> index aa072112cfff..1475b8d52fef 100644
-> --- a/Documentation/filesystems/fscrypt.rst
-> +++ b/Documentation/filesystems/fscrypt.rst
-> @@ -1038,7 +1038,9 @@ astute users may notice some differences in behavior:
->  - The ext4 filesystem does not support data journaling with encrypted
->    regular files.  It will fall back to ordered data mode instead.
->  
-> -- DAX (Direct Access) is not supported on encrypted files.
-> +- DAX (Direct Access) is not supported on encrypted files.  Attempts to enable
-> +  DAX on an encrypted file will fail.  Mount options will _not_ enable DAX on
-> +  encrypted files.
->  
->  - The st_size of an encrypted symlink will not necessarily give the
->    length of the symlink target as required by POSIX.  It will actually
-> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> index bf5fcb477f66..9873ab27e3fa 100644
-> --- a/fs/ext4/super.c
-> +++ b/fs/ext4/super.c
-> @@ -1320,7 +1320,7 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
->  	if (inode->i_ino == EXT4_ROOT_INO)
->  		return -EPERM;
->  
-> -	if (WARN_ON_ONCE(IS_DAX(inode) && i_size_read(inode)))
-> +	if (IS_DAX(inode))
->  		return -EINVAL;
->  
->  	res = ext4_convert_inline_data(inode);
-> @@ -1344,10 +1344,6 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
->  			ext4_set_inode_flag(inode, EXT4_INODE_ENCRYPT);
->  			ext4_clear_inode_state(inode,
->  					EXT4_STATE_MAY_INLINE_DATA);
-> -			/*
-> -			 * Update inode->i_flags - S_ENCRYPTED will be enabled,
-> -			 * S_DAX may be disabled
-> -			 */
->  			ext4_set_inode_flags(inode);
->  		}
->  		return res;
-> @@ -1371,10 +1367,6 @@ static int ext4_set_context(struct inode *inode, const void *ctx, size_t len,
->  				    ctx, len, 0);
->  	if (!res) {
->  		ext4_set_inode_flag(inode, EXT4_INODE_ENCRYPT);
-> -		/*
-> -		 * Update inode->i_flags - S_ENCRYPTED will be enabled,
-> -		 * S_DAX may be disabled
-> -		 */
->  		ext4_set_inode_flags(inode);
->  		res = ext4_mark_inode_dirty(handle, inode);
->  		if (res)
-> -- 
-> 2.25.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
