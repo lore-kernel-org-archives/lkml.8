@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D220C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C40AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EEDF207F9
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EECE8207D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:55:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482541;
-	bh=zd6aUnCIA4Yjpf84Uurs8gQ29QfEltSX3ZdTt+vzEJE=;
+	s=default; t=1589482538;
+	bh=umsyuoNpLQ17v3hGaAHM5Ts4XabLpMvGpymU0+W+YQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NLECab1L+vFwTTr6FC+oY05UpesEt2xqCuwCzQ8UAhDZMlSJTfxIEuYy0A/dIbO1+
-	 zbX++Bi9aqrvOinwfTGzQoQ8IkS+jaZnohqQNG9mSHUs2rpge2zKpb0l+JtuOBGz6+
-	 Iu3dNroEp+XixAhdllPgkOSXQvYVjnKaQUnB3J4E=
+	b=mXHTVvndEzGj6I/Oa9JDW4T5dQWpP8qAGMUllMqCjBEFUsX8/QR7D4nkQ+Z3xC8Tt
+	 28G9tvexZsgYQvENIVjk8xmkOfP9PTWb8o/era1F0JiCyc1tWGAxD2rtVexgGF0kBQ
+	 ZdpR8P9+yB1WB3xKx6Yss6z6OhFdh5GTA3lby43E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729443AbgENSzk (ORCPT
+        id S1729429AbgENSzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:55:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55934 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:55:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729358AbgENSzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:55:22 -0400
+        id S1729352AbgENSzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:55:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D466B206F1;
-        Thu, 14 May 2020 18:55:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6C19207F9;
+        Thu, 14 May 2020 18:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482521;
-        bh=zd6aUnCIA4Yjpf84Uurs8gQ29QfEltSX3ZdTt+vzEJE=;
+        s=default; t=1589482520;
+        bh=umsyuoNpLQ17v3hGaAHM5Ts4XabLpMvGpymU0+W+YQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dyAHURI/N4hxKjyZ+1X4x6tTUtRCjfmgi7FbXpxM7HReZPDrMa332Z1GBxHwPZWoe
-         rexCfxf5F/4WjHq0gJJYw2XZNlkA2WZha8DtQiXLhri+j1EIn9S43WCbPC3Pa5z20t
-         vtK03FV7WAYVCIBry/aaHHZvZpI8KkeA18nZfQOY=
+        b=2SF6qLM/CJ+yqNDu3yauP0EMsdLVPUfCMa/irQNLWB3vOAP38W+qbUH52E1F95Z0v
+         PxEBq2u8ush6X2SnDtBdPmeJN3h2lIr3p4SZSRfPEyOqjv5a+IlQFb9HwrxBOSDlnk
+         qlQiZ5Lju3JhqvwlRhXfDOCv+6u1VGYz0kFYbSII=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefano Garzarella <sgarzare@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 17/39] vhost/vsock: fix packet delivery order to monitoring devices
-Date:   Thu, 14 May 2020 14:54:34 -0400
-Message-Id: <20200514185456.21060-17-sashal@kernel.org>
+Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>, Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 16/39] configfs: fix config_item refcnt leak in configfs_rmdir()
+Date:   Thu, 14 May 2020 14:54:33 -0400
+Message-Id: <20200514185456.21060-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185456.21060-1-sashal@kernel.org>
 References: <20200514185456.21060-1-sashal@kernel.org>
@@ -60,45 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Garzarella <sgarzare@redhat.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 107bc0766b9feb5113074c753735a3f115c2141f ]
+[ Upstream commit 8aebfffacfa379ba400da573a5bf9e49634e38cb ]
 
-We want to deliver packets to monitoring devices before it is
-put in the virtqueue, to avoid that replies can appear in the
-packet capture before the transmitted packet.
+configfs_rmdir() invokes configfs_get_config_item(), which returns a
+reference of the specified config_item object to "parent_item" with
+increased refcnt.
 
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+When configfs_rmdir() returns, local variable "parent_item" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
+
+The reference counting issue happens in one exception handling path of
+configfs_rmdir(). When down_write_killable() fails, the function forgets
+to decrease the refcnt increased by configfs_get_config_item(), causing
+a refcnt leak.
+
+Fix this issue by calling config_item_put() when down_write_killable()
+fails.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vhost/vsock.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ fs/configfs/dir.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-index 834e88e20550f..3f2f34ebf51f5 100644
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -182,14 +182,14 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
- 			break;
- 		}
- 
--		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
--		added = true;
--
--		/* Deliver to monitoring devices all correctly transmitted
--		 * packets.
-+		/* Deliver to monitoring devices all packets that we
-+		 * will transmit.
- 		 */
- 		virtio_transport_deliver_tap_pkt(pkt);
- 
-+		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
-+		added = true;
-+
- 		pkt->off += payload_len;
- 		total_len += payload_len;
- 
+diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
+index c2ef617d2f97d..c875f246cb0e9 100644
+--- a/fs/configfs/dir.c
++++ b/fs/configfs/dir.c
+@@ -1537,6 +1537,7 @@ static int configfs_rmdir(struct inode *dir, struct dentry *dentry)
+ 		spin_lock(&configfs_dirent_lock);
+ 		configfs_detach_rollback(dentry);
+ 		spin_unlock(&configfs_dirent_lock);
++		config_item_put(parent_item);
+ 		return -EINTR;
+ 	}
+ 	frag->frag_dead = true;
 -- 
 2.20.1
 
