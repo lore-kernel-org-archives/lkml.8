@@ -2,151 +2,80 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D09C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5C7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64AFA20643
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:28:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 199C520643
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:29:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbgENT2T (ORCPT
+        id S1726090AbgENT32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:28:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54026 "EHLO
+        Thu, 14 May 2020 15:29:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726132AbgENT2T (ORCPT
+        by vger.kernel.org with ESMTP id S1725965AbgENT30 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 15:28:19 -0400
-Received: from smtp-8fad.mail.infomaniak.ch (smtp-8fad.mail.infomaniak.ch [IPv6:2001:1600:3:17::8fad])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09427C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 12:28:19 -0700 (PDT)
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
-        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49NM5Y60DmzlhGVS;
-        Thu, 14 May 2020 21:28:17 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 49NM5X23j6zljVWn;
-        Thu, 14 May 2020 21:28:16 +0200 (CEST)
-Subject: Re: [RFC PATCH v3 00/12] Integrity Policy Enforcement LSM (IPE)
-To:     Deven Bowers <deven.desai@linux.microsoft.com>, agk@redhat.com,
-        axboe@kernel.dk, snitzer@redhat.com, jmorris@namei.org,
-        serge@hallyn.com, zohar@linux.ibm.com,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, jannh@google.com
-Cc:     tyhicks@linux.microsoft.com, pasha.tatashin@soleen.com,
-        sashal@kernel.org, jaskarankhurana@linux.microsoft.com,
-        nramas@linux.microsoft.com, mdsakib@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, corbet@lwn.net
-References: <20200415162550.2324-1-deven.desai@linux.microsoft.com>
- <b07ac7e1-7cf5-92c9-81d0-64174c3d5024@digikod.net>
- <0001755a-6b2a-b13b-960c-eb0b065c8e3c@linux.microsoft.com>
- <8ba7b15f-de91-40f7-fc95-115228345fce@linux.microsoft.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <44fb36ae-959d-4ff7-ed1f-ccfc2e292232@digikod.net>
-Date:   Thu, 14 May 2020 21:28:15 +0200
-User-Agent: 
+        Thu, 14 May 2020 15:29:26 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4CC8C061A0C;
+        Thu, 14 May 2020 12:29:25 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jZJXe-0007Td-4a; Thu, 14 May 2020 21:29:14 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 5C81B1004CE; Thu, 14 May 2020 21:29:13 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Borislav Petkov <bp@alien8.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     "Dr. Greg" <greg@enjellic.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-sgx@vger.kernel.org,
+        akpm@linux-foundation.org, dave.hansen@intel.com,
+        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, kai.svahn@intel.com,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com
+Subject: Re: [PATCH v29 00/20] Intel SGX foundations
+In-Reply-To: <20200514162054.GE9266@zn.tnic>
+References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com> <20200426165753.GA11046@wind.enjellic.com> <87d07gk24l.fsf@nanos.tec.linutronix.de> <20200508190226.GA31465@wind.enjellic.com> <20200508195635.GR27052@linux.intel.com> <20200514091637.GA25156@wind.enjellic.com> <20200514161559.GA15603@linux.intel.com> <20200514162054.GE9266@zn.tnic>
+Date:   Thu, 14 May 2020 21:29:13 +0200
+Message-ID: <87pnb6xqly.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <8ba7b15f-de91-40f7-fc95-115228345fce@linux.microsoft.com>
-Content-Type: text/plain; charset=iso-8859-15
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Borislav Petkov <bp@alien8.de> writes:
 
-On 12/05/2020 22:46, Deven Bowers wrote:
-> 
-> 
-> On 5/11/2020 11:03 AM, Deven Bowers wrote:
->>
->>
->> On 5/10/2020 2:28 AM, Mickaël Salaün wrote:
->>
->> [...snip]
->>
->>>>
->>>> Additionally, rules are evaluated top-to-bottom. As a result, any
->>>> revocation rules, or denies should be placed early in the file to
->>>> ensure
->>>> that these rules are evaluated before a rule with "action=ALLOW" is
->>>> hit.
->>>>
->>>> IPE policy is designed to be forward compatible and backwards
->>>> compatible,
->>>> thus any failure to parse a rule will result in the line being ignored,
->>>> and a warning being emitted. If backwards compatibility is not
->>>> required,
->>>> the kernel commandline parameter and sysctl, ipe.strict_parse can be
->>>> enabled, which will cause these warnings to be fatal.
->>>
->>> Ignoring unknown command may lead to inconsistent beaviors. To achieve
->>> forward compatibility, I think it would be better to never ignore
->>> unknown rule but to give a way to userspace to known what is the current
->>> kernel ABI. This could be done with a securityfs file listing the
->>> current policy grammar.
->>>
->>
->> That's a fair point. From a manual perspective, I think this is fine.
->> A human-user can interpret a grammar successfully on their own when new
->> syntax is introduced.
->>
->>  From a producing API perspective, I'd have to think about it a bit
->> more. Ideally, the grammar would be structured in such a way that the
->> userland
->> interpreter of this grammar would not have to be updated once new syntax
->> is introduced, avoiding the need to update the userland binary. To do so
->> generically ("op=%s") is easy, but doesn't necessarily convey sufficient
->> information (what happens when a new "op" token is introduced?). I think
->> this may come down to regular expression representations of valid values
->> for these tokens, which worries me as regular expressions are incredibly
->> error-prone[1].
->>
->> I'll see what I can come up with regarding this.
-> 
-> I have not found a way that I like to expose some kind of grammar
-> through securityfs that can be understood by usermode to parse the
-> policy. Here's what I propose as a compromise:
-> 
->     1. I remove the unknown command behavior. This address your
-> first point about inconsistent behaviors, and effectively removes the
-> strict_parse sysctl (as it is always enabled).
-> 
->     2. I introduce a versioning system for the properties
-> themselves. The valid set of properties and their versions
-> can be found in securityfs, under say, ipe/config in a key=value
-> format where `key` indicates the understood token, and `value`
-> indicates their current version. For example:
-> 
->     $ cat $SECURITYFS/ipe/config
->     op=1
->     action=1
->     policy_name=1
->     policy_version=1
->     dmverity_signature=1
->     dmverity_roothash=1
->     boot_verified=1
+> On Thu, May 14, 2020 at 09:15:59AM -0700, Sean Christopherson wrote:
+>> I'm not opposed to adding a kernel param to disable SGX.  At one point
+>> there was a proposal to extend clearcpuid to allow disabling multiple
+>> feature bits, but it looks like that went the way of the dodo.
 
-The name ipe/config sounds like a file to configure IPE. Maybe something
-like ipe/config_abi or ipe/config_grammar?
+clearcpuid is a trainwreck which should have never happened.
 
-> 
-> if new syntax is introduced, the version number is increased.
-> 
->     3. The format of those versions are documented as part of
-> the admin-guide around IPE. If user-mode at that point wants to rip
-> the documentation formats and correlate with the versioning, then
-> it fulfills the same functionality as above, with out the complexity
-> around exposing a parsing grammar and interpreting it on-the-fly.
-> Many of these are unlikely to move past version 1, however.
-> 
-> Thoughts?
-> 
+>> Note, such a param would disable SGX entirely, e.g. clear the feature bit
+>> in /proc/cpuinfo and prevent any in-kernel SGX code from running.
+>
+> It is a usual practice for big features like SGX to add a
+> "nosgx" cmdline param to disable it in case something goes
+> south. We do this for all features - see all "no*" switches in
+> Documentation/admin-guide/kernel-parameters.txt
 
-That seems reasonable.
+Correct.
+
+Thanks,
+
+        tglx
