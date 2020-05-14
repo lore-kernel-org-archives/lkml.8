@@ -2,102 +2,123 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1CDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A002C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC6F920709
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D1E22065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:25:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sUu77TjW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbgENXZg (ORCPT
+        id S1728115AbgENXZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 19:25:36 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:50980 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbgENXZf (ORCPT
+        Thu, 14 May 2020 19:25:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34678 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbgENXZy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 19:25:35 -0400
-Received: from fsav405.sakura.ne.jp (fsav405.sakura.ne.jp [133.242.250.104])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 04ENOsH2007040;
-        Fri, 15 May 2020 08:24:54 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav405.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav405.sakura.ne.jp);
- Fri, 15 May 2020 08:24:54 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav405.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 04ENOsEO007035
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Fri, 15 May 2020 08:24:54 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] printk: Add loglevel for "do not print to consoles".
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-References: <a59271f1-b3fc-26d1-f0a2-5ec351d0095e@i-love.sakura.ne.jp>
- <20200513062652.GM413@jagdpanzerIV.localdomain>
- <a75d6560-ad99-5b02-3648-247c27c3a398@i-love.sakura.ne.jp>
- <20200513100413.GH17734@linux-b0ei> <20200513104938.GW29153@dhcp22.suse.cz>
- <d66c38d9-dd97-072d-e1a7-949e9573b38d@i-love.sakura.ne.jp>
- <20200513121942.GK17734@linux-b0ei>
- <2173e3ac-7d5e-24da-0c1e-6472df905767@i-love.sakura.ne.jp>
- <20200514080053.GN17734@linux-b0ei>
- <7af6fc77-986a-8a6a-ea93-b807db44413c@i-love.sakura.ne.jp>
- <20200514162612.GR17734@linux-b0ei>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <aa0e661d-684a-c00c-3484-fa80da564380@i-love.sakura.ne.jp>
-Date:   Fri, 15 May 2020 08:24:49 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 14 May 2020 19:25:54 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EEC7C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 16:25:54 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id n18so80296pfa.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 16:25:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rQrnCHYLO0Vg5jOwAUNb34HO2tHD8mNTv/oZ6XDZtGw=;
+        b=sUu77TjWviN24ATo8ztZkS6DEzpQ1s9mMpUFWdowgLqzTJcNhQWj2TDf+3EoxYs3kL
+         42+AfMDQ7/kfY0CHdwNZeq99syfjbJn2r/lIsRVsdTl9BCq/WKvNfGChxwsWUqt+nLq0
+         jjQY4zswFCOqoFFc0yMa6mGOiO9SwTOte4EcVduTNcwclk1u1wQbNlgyGL6rzu9sHd/1
+         lEjxK+XbYrAz8TAWOBPKMsMBGdMwCN+BCi3t5m1A13MUjDgl/V8yGOnHmFuAWsOSpYJb
+         nNb0aO1yyaz+2DzzTg6v82spoFHdZ+ddGMds72SomIfSkbbZqGurznmivZtPCVcqIw/G
+         Yogw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rQrnCHYLO0Vg5jOwAUNb34HO2tHD8mNTv/oZ6XDZtGw=;
+        b=G3YJEi1SxSTVNJvxeoe+j+epURcv/kc0QQYc0IL2ePb1XoazXSNdjSRsJIgQANvUHT
+         Jh1H7EOOu1tPA3kNQqp//ealMuH5ZVAA5HIy4l0WATTlSyui83TCVxFoAVZgUPkQTybb
+         mIr8f8T48JuxpH/qZCQcMtrbP8eu6GNcPT3zzCLpC80koAb48kSx6faY+hVsRaCFR6Bj
+         undJw4qAWAvqjffTeBjIJtSHMQUioA2W8vslTanzupUbMfSR7kMhzg/8WqJVLTLvjyiu
+         vlrIlDwSVyTL3vO8PQZTKHpvoKfIe0XVBa/NbsoTJtThSsM/hHKDc+Nv91Tj8tECXkjl
+         ToHg==
+X-Gm-Message-State: AOAM5316IMZON0HkAX0nTGSMrEBmf9YJtBsbIkBgnCCzMiMT7zfWMAx0
+        Eo9p4mqUP6DPaoF7OQf22mdCofSvxFhlkabfB6ykIIY+tkE=
+X-Google-Smtp-Source: ABdhPJzrjVCdyFvdAYHnaYzO3t9QKrcZasLyT+6cHGtriw0SjQnZT96e3FIx7TuiJFq0J5INzxCRbMPOTZv5vrjhvCk=
+X-Received: by 2002:aa7:8c44:: with SMTP id e4mr967827pfd.108.1589498753790;
+ Thu, 14 May 2020 16:25:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200514162612.GR17734@linux-b0ei>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <87imgykunh.fsf@m5Zedd9JOGzJrf0>
+In-Reply-To: <87imgykunh.fsf@m5Zedd9JOGzJrf0>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 14 May 2020 16:25:42 -0700
+Message-ID: <CAKwvOdnJ9p+iGYP31TJcaCLBqk2gOes4=5z=K8Tv_jytn6+RgA@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: compile_h: fix compiler version detection with clang
+To:     Yuxuan Shui <yshuiv7@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/05/15 1:26, Petr Mladek wrote:
-> This does not make much sense to me. KERN_NO_CONSOLES would be another
-> global flag. If you enable/disable its functionality, it would affect
-> all strings with this flag (not only the ones used by OOM killer).
+On Thu, May 14, 2020 at 3:43 PM Yuxuan Shui <yshuiv7@gmail.com> wrote:
+>
+>
+> In some setup clang will print a line about CUDA version it detects,
+> like this:
+>
+>     Found CUDA installation: /opt/cuda, version 10.1
+>
+> So grepping ' version ' matches 2 lines, and results in a broken string in
+> compiler.h, which doesn't compile.
+>
+> This commit adds a "head -n1" to fix this problem.
+>
+> Signed-off-by: Yuxuan Shui <yshuiv7@gmail.com>
 
-Are you assuming that the switch is applied on KERN_$LEVEL setting (e.g.
+Hi Yuxuan, thanks for the patch!
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-  /proc/sys/kernel/print_emerg_messages_on_consoles
-  /proc/sys/kernel/print_alert_messages_on_consoles
-  /proc/sys/kernel/print_crit_messages_on_consoles
-  /proc/sys/kernel/print_err_messages_on_consoles
-  /proc/sys/kernel/print_warning_messages_on_consoles
-  /proc/sys/kernel/print_notice_messages_on_consoles
-  /proc/sys/kernel/print_info_messages_on_consoles
-  /proc/sys/kernel/print_debug_messages_on_consoles
+Might be worthwhile for Masahiro to add
 
-) ? Then, that is not what I'm proposing.
+Cc: stable@vger.kernel.org
 
-The switch I will propose is applied on individual printk() call (e.g.
+if/when picked up?
 
-  printk("%s[%7d] %5d %5d %8lu %8lu %8ld %8lu         %5hd %s\n",
-         sysctl_oom_dump_tasks == 2 ? KERN_INFO KERN_NO_CONSOLES : KERN_INFO,
-         task->pid, from_kuid(&init_user_ns, task_uid(task)),
-         task->tgid, task->mm->total_vm, get_mm_rss(task->mm),
-         mm_pgtables_bytes(task->mm),
-         get_mm_counter(task->mm, MM_SWAPENTS),
-         task->signal->oom_score_adj, task->comm);
+> ---
+>  scripts/mkcompile_h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/scripts/mkcompile_h b/scripts/mkcompile_h
+> index 5b80a4699740..8e6b4fc6fdd9 100755
+> --- a/scripts/mkcompile_h
+> +++ b/scripts/mkcompile_h
+> @@ -62,7 +62,7 @@ UTS_VERSION="$(echo $UTS_VERSION $CONFIG_FLAGS $TIMESTAMP | cut -b -$UTS_LEN)"
+>    printf '#define LINUX_COMPILE_BY "%s"\n' "$LINUX_COMPILE_BY"
+>    echo \#define LINUX_COMPILE_HOST \"$LINUX_COMPILE_HOST\"
+>
+> -  CC_VERSION=$($CC -v 2>&1 | grep ' version ' | sed 's/[[:space:]]*$//')
+> +  CC_VERSION=$($CC -v 2>&1 | grep ' version ' | head -n1 | sed 's/[[:space:]]*$//')
+>    LD_VERSION=$($LD -v | head -n1 | sed 's/(compatible with [^)]*)//' \
+>                       | sed 's/[[:space:]]*$//')
+>    printf '#define LINUX_COMPILER "%s"\n' "$CC_VERSION, $LD_VERSION"
+> --
+> 2.26.2
 
-) which is NOT another global flag.
 
-Since Dmitry Safonov is working on adding loglevel argument to show_stack(),
-we will also be able to implement dump_stack_loglvl(const char *loglvl). Thus,
-we will be able to apply KERN_NO_CONSOLES flags to e.g. only dump_stack() /
-show_mem() / dump_tasks() etc. WITHOUT MAKING THE SWITCHES GLOBAL.
-The direction is heading for "+ loglevel assigned to each message".
+-- 
+Thanks,
+~Nick Desaulniers
