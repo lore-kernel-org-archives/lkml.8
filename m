@@ -4,146 +4,237 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45713C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 553B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F2322065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:28:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14A422065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:30:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pAsoCW4t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ODGQhpxO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbgENX2l (ORCPT
+        id S1728278AbgENXa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 19:28:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35116 "EHLO
+        Thu, 14 May 2020 19:30:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbgENX2k (ORCPT
+        with ESMTP id S1727956AbgENXaZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 19:28:40 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24B96C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 16:28:39 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id a136so737537qkg.6
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 16:28:39 -0700 (PDT)
+        Thu, 14 May 2020 19:30:25 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 974F8C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 16:30:25 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id t12so626908ile.9
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 16:30:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :organization:user-agent:mime-version:content-transfer-encoding;
-        bh=I/FTFu3Esb5NA/l5xL7ux/92tkQ2JvycVABxeQURrbo=;
-        b=pAsoCW4twMPuMB+CSRxUc0zI1h1/vtfog4+l7wXkwYtyLwBFT2gAmZGs6GulY5TvDJ
-         ovjrxjtG+IlKRkoTqxxV2x0VQLbNK52e+UIYRx9VfbNY9YIdKLb/mqXe1caBEo+oSDu2
-         oJKVVDQHPf5T9keTXAJEacNAMJoZLnGjxzGfX1+TfgDGict68GRGXksj71lkVfne+NdQ
-         FCaynLyTYju2qp23k25nDo6XyshMaxOBptuyaZb0i3yBQj4X6Aqjn7s1eJM5v5+p8AHC
-         hh9cDQ4A3PI9jPF9rp3aAbUoQnjXO99lNrm11rK3WwvlqMRBEfc7ey//pYGSd+Dayw0R
-         3SBA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nuIERYhuXXo2ajPM92lIoUzXr3Ylv4BmhFGwWA6yt1Y=;
+        b=ODGQhpxOT8S6BNJB/wP6MJrtgy6xbMpiMb+YIymLTOfQkpDAjkvW89nwXmuG7RSsb2
+         d4vsg/k9vxvaI/5GsEIUGNn/ydU4ukPDGSiBBe+7+jNyXn8RU34Zp/3yjL9dGgAW9uoD
+         2GcqLuu6PWqfO5wGZAY4sHTiE+TkJYbROBvoNo2iw7uzw6N94jA0bR1XdeNrwsemnjPr
+         72nvj4bPFZh+u8M+kRR14vYNBgM4vomHXNNov1vppVTUguiADa15YCruty369RfrcU7j
+         t6UnRoi0lgAAVq0Lbj34ZVkzwOeWVXDwjSZFotsLWM3BXTx38eYSy29Zv24I+ZMochT4
+         2/ZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=I/FTFu3Esb5NA/l5xL7ux/92tkQ2JvycVABxeQURrbo=;
-        b=FzdYOUY3ol0y/tIBUabhWn0Za+xJhToekZWPQTTvAPEfSuOnrx2TcZYt6oUUUAQhRO
-         GLwH7Ve2l9yG84Agns68gkTcFqO3UWaxVbD189JgWue115pCujoJMEcZ7UmXfBicxU0H
-         ShGa3zh+aJ3nB+iSNBfThZX/5LI+7fqZ0Fea+JNF8bPNshVXsHDsura7JfFPvO7z2MW4
-         2zLC66QEwI24GPoBfPiR/EqthIhbAF3aURo0LatIVRmtPvwiFqsrhZUvMInPCpUs1z7a
-         E05NrS9/9gbcC2ekt/MQc9sWFAkcE8vCK3n04XZqa30cBZruvCjyyYFe9Mce4AyLV3Ij
-         j5Mw==
-X-Gm-Message-State: AOAM532PHem8BQpioQK6T/Q1TRd/l2ZWH2zBURcPnEmcV9SRZmG4wpcO
-        zN+ioejPAeyDuns8sxw2s70Kprfg
-X-Google-Smtp-Source: ABdhPJz4jcoS7U+Fo0E8WD2tpzZFNH7JRT/QQnnFFJl6Mcw1x1jIY+ShCqeS4tZnEf3kXzfE8BXfPQ==
-X-Received: by 2002:a37:8187:: with SMTP id c129mr806073qkd.211.1589498918382;
-        Thu, 14 May 2020 16:28:38 -0700 (PDT)
-Received: from LeoBras (179-125-143-209.dynamic.desktop.com.br. [179.125.143.209])
-        by smtp.gmail.com with ESMTPSA id n20sm290110qkk.53.2020.05.14.16.28.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 16:28:37 -0700 (PDT)
-Message-ID: <fc13b26ff3d2ea2e84049eabda0c60a60d851b40.camel@gmail.com>
-Subject: Re: [PATCH v3 2/2] powerpc/rtas: Implement reentrant rtas call
-From:   Leonardo Bras <leobras.c@gmail.com>
-To:     Nathan Lynch <nathanl@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Nadav Amit <namit@vmware.com>
-Date:   Thu, 14 May 2020 20:28:15 -0300
-In-Reply-To: <878shu2vjp.fsf@linux.ibm.com>
-References: <20200514011245.127174-1-leobras.c@gmail.com>
-         <20200514011245.127174-3-leobras.c@gmail.com>
-         <878shu2vjp.fsf@linux.ibm.com>
-Organization: IBM
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nuIERYhuXXo2ajPM92lIoUzXr3Ylv4BmhFGwWA6yt1Y=;
+        b=fyURR6cO3EOGzHz085S6nlvIXxjlAKw1hBDfhFOlhqa5KSh5M9aw5w99mZ1tSGJNDQ
+         uedcGC82mdKWz0x7b9Ha9EMIN/bl7OnH4wTdWttk7ErwXr3xJL9Pjvt80B0x8QVtNpTb
+         YYCMXSQ35vFe+2/uEdT5w5nPkHsMBhXV5whP1SWoRee1Y7QJaIucds3NLSKTFzcxA+wF
+         wakh35wKrdGpCsennB7Vzef0ob28ezNIe3oSQCXjmF+Adawj/A8jPfkBXtFXuTg6SkMn
+         bs4LfC0MDDozTWqq0sv0bV7grUIYtFVndKDN8hisHt54H0ADFkhSk8lvBa4CX2nL3lrQ
+         QJGw==
+X-Gm-Message-State: AOAM530f8xfYND8OiB9FBUhANk/ttLQONJJXqEihEDz+AzobTAPzPo0Q
+        7+mmcI75MwQreLWNvvpqt52Id95+IhlFdhjIIP48Jg==
+X-Google-Smtp-Source: ABdhPJwdZ/3HIQgtjIyQOIKQ3aaEBtjRdGEQFbAGBSbma5oOkWvMcPrUigomLxxfyjRSgyxxdZCD/pe1zxztTw3lJqU=
+X-Received: by 2002:a92:5e99:: with SMTP id f25mr709820ilg.0.1589499024964;
+ Thu, 14 May 2020 16:30:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <cover.1588460322.git.syednwaris@gmail.com> <3eeb13d101db69be8eca739522bbf303527339bd.1588460322.git.syednwaris@gmail.com>
+ <20200504113804.GD185537@smile.fi.intel.com>
+In-Reply-To: <20200504113804.GD185537@smile.fi.intel.com>
+From:   Syed Nayyar Waris <syednwaris@gmail.com>
+Date:   Fri, 15 May 2020 05:00:13 +0530
+Message-ID: <CACG_h5qXK=9vhwreMxKGPgT9Wf6yee_Le0bAboN+jP=nxxFy1g@mail.gmail.com>
+Subject: Re: [PATCH v5 2/4] lib/test_bitmap.c: Add for_each_set_clump test cases
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Nathan,
-
-On Thu, 2020-05-14 at 13:58 -0500, Nathan Lynch wrote:
-> Hi,
-> 
-> Leonardo Bras <leobras.c@gmail.com> writes:
-> > +/**
-> > + * rtas_call_reentrant() - Used for reentrant rtas calls
-> > + * @token:	Token for desired reentrant RTAS call
-> > + * @nargs:	Number of Input Parameters
-> > + * @nret:	Number of Output Parameters
-> > + * @outputs:	Array of outputs
-> > + * @...:	Inputs for desired RTAS call
-> > + *
-> > + * According to LoPAR documentation, only "ibm,int-on", "ibm,int-off",
-> > + * "ibm,get-xive" and "ibm,set-xive" are currently reentrant.
-> > + * Reentrant calls need their own rtas_args buffer, so not using rtas.args, but
-> > + * PACA one instead.
-> > + *
-> > + * Return:	-1 on error,
-> > + *		First output value of RTAS call if (nret > 0),
-> > + *		0 otherwise,
-> > + */
+On Mon, May 4, 2020 at 5:08 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Sun, May 03, 2020 at 04:41:42AM +0530, Syed Nayyar Waris wrote:
+> > The introduction of the generic for_each_set_clump macro need test
+> > cases to verify the implementation. This patch adds test cases for
+> > scenarios in which clump sizes are 8 bits, 24 bits, 30 bits and 6 bits.
+> > The cases contain situations where clump is getting split at the word
+> > boundary and also when zeroes are present in the start and middle of
+> > bitmap.
+>
+>
+> > +static const unsigned long bitmap_test_data[] __initconst = {
+> > +     0x38000201,
+> > +     0x05ff0f38,
+> > +     0xeffedcba,
+> > +     0xbbbbabcd,
+> > +     0x000000aa,
+> > +     0x000000aa,
+> > +     0x00ff0000,
+> > +     0xaaaaaa00,
+> > +     0xff000000,
+> > +     0x00aa0000,
+> > +     0x00000000,
+> > +     0x00000000,
+> > +     0x00000000,
+> > +     0x0f000000,
+> > +     0x00000ac0,
+> > +};
 > > +
-> > +int rtas_call_reentrant(int token, int nargs, int nret, int *outputs, ...)
+> > +static const unsigned long clump_exp1[] __initconst = {
+> > +     0x01,   /* 1 bit set */
+> > +     0x02,   /* non-edge 1 bit set */
+> > +     0x00,   /* zero bits set */
+> > +     0x38,   /* 3 bits set across 4-bit boundary */
+> > +     0x38,   /* Repeated clump */
+> > +     0x0F,   /* 4 bits set */
+> > +     0xFF,   /* all bits set */
+> > +     0x05,   /* non-adjacent 2 bits set */
+> > +};
+> > +
+> > +static const unsigned long clump_exp2[] __initconst = {
+> > +     0xfedcba,       /* 24 bits */
+> > +     0xabcdef,
+> > +     0xaabbbb,       /* Clump split between 2 words */
+> > +     0x000000,       /* zeroes in between */
+> > +     0x0000aa,
+> > +     0x000000,
+> > +     0x0000ff,
+> > +     0xaaaaaa,
+> > +     0x000000,
+> > +     0x0000ff,
+> > +};
+> > +
+> > +static const unsigned long clump_exp3[] __initconst = {
+> > +     0x00000000,     /* starting with 0s*/
+> > +     0x00000000,     /* All 0s */
+> > +     0x00000000,
+> > +     0x00000000,
+> > +     0x3f00000f,     /* Non zero set */
+> > +     0x2aa80003,
+> > +     0x00000aaa,
+> > +     0x00003fc0,
+> > +};
+> > +
+> > +static const unsigned long clump_exp4[] __initconst = {
+> > +     0x00,
+> > +     0x2b,
+> > +};
+> > +
+>
+> One more struct here, like
+>
+> struct clump_test_data {
+>         unsigned long *data; // with offset implied
+>         unsigned long count;
+>         unsigned long size;
+>         unsigned long limit;
+>         unsigned long *exp;
+> };
+>
+> > +static const unsigned long * const clump_data[] __initconst = {
+> > +     clump_exp1,
+> > +     clump_exp2,
+> > +     clump_exp3,
+> > +     clump_exp4,
+> > +};
+> > +
+> >  static void __init test_for_each_set_clump8(void)
+> >  {
+> >  #define CLUMP_EXP_NUMBITS 64
+> > @@ -610,6 +708,48 @@ static void __init test_for_each_set_clump8(void)
+> >               expect_eq_clump8(start, CLUMP_EXP_NUMBITS, clump_exp, &clump);
+> >  }
+> >
+> > +static void __init execute_for_each_set_clump_test(unsigned long *bits,
+> > +                             unsigned long size,
+> > +                             unsigned long clump_size,
+> > +                             const unsigned long *clump_exp)
 > > +{
-> > +	va_list list;
-> > +	struct rtas_args *args;
-> > +	int i;
+> > +     unsigned long start, clump;
 > > +
-> > +	if (!rtas.entry || token == RTAS_UNKNOWN_SERVICE)
-> > +		return -1;
+> > +     for_each_set_clump(start, clump, bits, size, clump_size)
+> > +             expect_eq_clump(start, size, clump_exp, &clump, clump_size);
+> > +}
 > > +
-> > +	/* We use the per-cpu (PACA) rtas args buffer */
-> > +	args = &local_paca->reentrant_args;
-> > +
-> > +	va_start(list, outputs);
-> > +	va_rtas_call_unlocked(args, token, nargs, nret, list);
-> > +	va_end(list);
-> > +
-> > +	if (nret > 1 && outputs)
-> > +		for (i = 0; i < nret - 1; ++i)
-> > +			outputs[i] = be32_to_cpu(args->rets[i + 1]);
-> 
-> Doesn't this need to be more careful about preemption and exceptions?
-> I.e. the args structure in the paca needs to be protected from
-> concurrent use somehow, like any per-cpu data structure.
-> 
-> local_irq_save/restore while accessing local_paca->reentrant_args here
-> would be sufficient I think?
+>
+> > +static void __init prepare_test_data(unsigned long * bits,
+> > +                             const unsigned long * test_data,
+> > +                             int start, int count)
+>
+> ... prepare_test_data(struct clump_test_data *data)
+> {
+>         ...
+> }
 
-Yes, you are right.
-I will also add preempt_{dis,en}able, which in most kernels will
-compile out, but it will be kind of 'ready' if we ever decide to
-support PREEMPT.
+Hi. I have sent a new patchset (v6) incorporating your review
+comments. Regarding your above review comment for function
+'prepare_test_data', the parameter 'struct clump_test_data' has
+already been declared outside (as was suggested.. see further above),
+so I didn't require that (struct clump_test_data) as a parameter for
+the function, as it can be accessed from everywhere.
 
-Thanks for the feedback!
+Further, below ...
 
+...
+
+> > +static void __init test_for_each_set_clump(void)
+> > +{
+> > +     int i;
+> > +     int count[] = {2, 8, 4, 1};
+> > +     int offset[] = {0, 2, 10, 14};
+> > +     unsigned long limit[] = {64, 240, 240, 18};
+> > +     unsigned long clump_size[] = {8, 24, 30, 6};
+> > +     DECLARE_BITMAP(bits, 256);
+> > +
+> > +     for(i = 0; i < 4; i++)
+> > +     {
+> > +             prepare_test_data(bits, bitmap_test_data, offset[i], count[i]);
+> > +             execute_for_each_set_clump_test(bits, limit[i],
+> > +                                     clump_size[i], clump_data[i]);
+> > +     }
+>
+> As I told you it should be as simple as
+>
+>         unsigned int i;
+>
+>         for (i < ARRAY_SIZE(clump_test_data)) {
+>                 prepare()
+>                 execute()
+>         }
+>
+
+Since it is required to use 'for loop' with 'ARRAY_SIZE', this implies
+that 'clump_test_data'  be an array, which has been done so. I have
+done here a minor addition that the 'prepare_test_data' function is
+called with argument 'i' (index) to prepare data specifically for the
+ith test case. Without passing 'i' it would not be possible (I
+believe) to populate the bitmap properly for the ith test case.
+
+Let me know if the new patchset seems alright. Thank you.
+
+Regards
+Syed Nayyar Waris
