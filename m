@@ -2,124 +2,144 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16466C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E868206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:14:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iZ8lBoHl"
+	by mail.kernel.org (Postfix) with ESMTP id CC3662073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:15:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589462157;
+	bh=v6MXwV/gG1H4E+LPHWAerasj/q/Dsnckh5u8rtbYcbI=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=SFUHnTsvm5mfEFn5JmdJmBOEfLPcyL3TH8UKC1v5AvMIx7ZJ989ZBaG1tEeFU6GPX
+	 G2pYfui4JMQxbo+15RqIpKyKRQSeZOIo27tMrNS4ke5WNyzCacuLpoNsq3AhgG713b
+	 b6T7XXm2FZv/LZQkH+HCrQnO+ImB5qiAbRyecSjs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgENNOd (ORCPT
+        id S1726813AbgENNP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:14:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726056AbgENNOd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:14:33 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF76BC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:14:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=K4yRXfBE6Kumf0RteQ59RKHAoo/xaI0w9/3Qtk/InMg=; b=iZ8lBoHlXLdkxFqPbB/Agxm8ix
-        31/ut5izgfIci1Z70gYmMDgmrpmqo7bvkQdNZaTS+FKx+uN+3eayh5YxRN8tJOGrdm+xCzHCymb2b
-        iWNd5G2YghcIsXBKQnEnd1WF3KiRD6blxpU1RkU+oOU7P4oXp/zA+1ufUCBZPoKeKlLHy169l3Rub
-        j4H6OTw1LGWREw324FnMstFtyTIHx8PuOx+jHEGO1uoFwJNlp6N4Q3Ewj9Xbg3n97c46FEVl17AHJ
-        6L18sdVhZCWMztkJ2SQUakG+kWhZMFsiuR2yJv3Q9MtxpEWHCekEizukILUqkFNkeZJVUaGdY1Bv+
-        I6v+h4sA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZDgj-0007lq-OX; Thu, 14 May 2020 13:14:13 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Thu, 14 May 2020 09:15:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59894 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726037AbgENNP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 09:15:56 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 556163007CD;
-        Thu, 14 May 2020 15:14:12 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3C7E4213C8B61; Thu, 14 May 2020 15:14:12 +0200 (CEST)
-Date:   Thu, 14 May 2020 15:14:12 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Will Deacon <will@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
-Message-ID: <20200514131412.GP2957@hirez.programming.kicks-ass.net>
-References: <CANpmjNMariz3-keqwUsLHVrpk2r7ThLSKtkhHxTDa3SEGeznhA@mail.gmail.com>
- <20200513123243.GO2957@hirez.programming.kicks-ass.net>
- <20200513124021.GB20278@willie-the-truck>
- <CANpmjNM5XW+ufJ6Mw2Tn7aShRCZaUPGcH=u=4Sk5kqLKyf3v5A@mail.gmail.com>
- <20200513132440.GN2978@hirez.programming.kicks-ass.net>
- <CANpmjNM5dD1VH0hoQwsZYEL=mhWunKwAEJMQgASzHSN019OCnw@mail.gmail.com>
- <20200514112142.GV2978@hirez.programming.kicks-ass.net>
- <20200514120104.GD4280@willie-the-truck>
- <20200514122735.GW2978@hirez.programming.kicks-ass.net>
- <CANpmjNPmZv6TBQJ93TRuxCxJCpvJy8+XS5u9+ucOE2eEebEw9Q@mail.gmail.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B327206DA;
+        Thu, 14 May 2020 13:15:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589462156;
+        bh=v6MXwV/gG1H4E+LPHWAerasj/q/Dsnckh5u8rtbYcbI=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=XB6Ugjlx1W02LH3VZWK0fqRmtjYZSNl3xW6tdtxis9HDm4ZOUr75Aq2XAHcOg2XDj
+         EYLZkgbIWPq0x/CprqqaTBIrrj/qGQii0SrkXoVlo6d8P3nz7JPKXPOXRJmQOqTH1i
+         M9Z22+FO6a0yNNOu7fSdROa1ZtoLKX87+Qg9RbSM=
+Message-ID: <4e5bf0e3bf055e53a342b19d168f6cf441781973.camel@kernel.org>
+Subject: Re: [PATCH] ceph: don't return -ESTALE if there's still an open file
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Luis Henriques <lhenriques@suse.com>
+Cc:     Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>
+Date:   Thu, 14 May 2020 09:15:54 -0400
+In-Reply-To: <20200514124845.GA12559@suse.com>
+References: <20200514111453.GA99187@suse.com>
+         <8497fe9a11ac1837813ee5f14b6ebae8fa6bf707.camel@kernel.org>
+         <20200514124845.GA12559@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNPmZv6TBQJ93TRuxCxJCpvJy8+XS5u9+ucOE2eEebEw9Q@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 03:07:08PM +0200, Marco Elver wrote:
-> On Thu, 14 May 2020 at 14:27, Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Thu, May 14, 2020 at 01:01:04PM +0100, Will Deacon wrote:
-> >
-> > > > +#if __has_feature(undefined_sanitizer)
-> > >
-> > > Hmm, this might want to be __has_feature(undefined_behavior_sanitizer)
-> > > (and damn is that hard for a Brit to type out!)
-> >
-> > (I know right, it should be behaviour, dammit!)
-> >
-> > I tried without the condition, eg.:
-> >
-> > +#define __no_sanitize_undefined \
-> > +               __attribute__((no_sanitize("undefined")))
-> >
-> > and it still generated UBSAN gunk.
+On Thu, 2020-05-14 at 13:48 +0100, Luis Henriques wrote:
+> On Thu, May 14, 2020 at 08:10:09AM -0400, Jeff Layton wrote:
+> > On Thu, 2020-05-14 at 12:14 +0100, Luis Henriques wrote:
+> > > Similarly to commit 03f219041fdb ("ceph: check i_nlink while converting
+> > > a file handle to dentry"), this fixes another corner case with
+> > > name_to_handle_at/open_by_handle_at.  The issue has been detected by
+> > > xfstest generic/467, when doing:
+> > > 
+> > >  - name_to_handle_at("/cephfs/myfile")
+> > >  - open("/cephfs/myfile")
+> > >  - unlink("/cephfs/myfile")
+> > >  - open_by_handle_at()
+> > > 
+> > > The call to open_by_handle_at should not fail because the file still
+> > > exists and we do have a valid handle to it.
+> > > 
+> > > Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> > > ---
+> > >  fs/ceph/export.c | 13 +++++++++++--
+> > >  1 file changed, 11 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+> > > index 79dc06881e78..8556df9d94d0 100644
+> > > --- a/fs/ceph/export.c
+> > > +++ b/fs/ceph/export.c
+> > > @@ -171,12 +171,21 @@ struct inode *ceph_lookup_inode(struct super_block *sb, u64 ino)
+> > >  
+> > >  static struct dentry *__fh_to_dentry(struct super_block *sb, u64 ino)
+> > >  {
+> > > +	struct ceph_inode_info *ci;
+> > >  	struct inode *inode = __lookup_inode(sb, ino);
+> > > +
+> > >  	if (IS_ERR(inode))
+> > >  		return ERR_CAST(inode);
+> > >  	if (inode->i_nlink == 0) {
+> > > -		iput(inode);
+> > > -		return ERR_PTR(-ESTALE);
+> > > +		bool is_open;
+> > > +		ci = ceph_inode(inode);
+> > > +		spin_lock(&ci->i_ceph_lock);
+> > > +		is_open = __ceph_is_file_opened(ci);
+> > > +		spin_unlock(&ci->i_ceph_lock);
+> > > +		if (!is_open) {
+> > > +			iput(inode);
+> > > +			return ERR_PTR(-ESTALE);
+> > > +		}
+> > >  	}
+> > >  	return d_obtain_alias(inode);
+> > >  }
+> > 
+> > Thanks Luis. Out of curiousity, is there any reason we shouldn't ignore
+> > the i_nlink value here? Does anything obviously break if we do?
 > 
-> Which ubsan calls are left? I'm trying to reproduce.
+> Yes, the scenario described in commit 03f219041fdb is still valid, which
+> is basically the same but without the extra open(2):
+> 
+>   - name_to_handle_at("/cephfs/myfile")
+>   - unlink("/cephfs/myfile")
+>   - open_by_handle_at()
+> 
 
-To be more precise, the patches were on top of:
+Ok, I guess we end up doing some delayed cleanup, and that allows the
+inode to be found in that situation.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git entry-v5-the-rest
+> The open_by_handle_at man page isn't really clear about these 2 scenarios,
+> but generic/426 will fail if -ESTALE isn't returned.  Want me to add a
+> comment to the code, describing these 2 scenarios?
+> 
 
-$ grep ubsan poke_int3_handler-clang10.asm
-0074                    74: R_X86_64_PLT32      __ubsan_handle_load_invalid_value-0x4
-0083                    83: R_X86_64_PLT32      __ubsan_handle_load_invalid_value-0x4
-01c5                    1c5: R_X86_64_PLT32     __ubsan_handle_builtin_unreachable-0x4
+(cc'ing Amir since he added this test)
 
-I think the config was defconfig_x86-64 inspired with KASAN+UBSAN
-enabled.
+I don't think there is any hard requirement that open_by_handle_at
+should fail in that situation. It generally does for most filesystems
+due to the way they handle cleaning up unlinked inodes, but I don't
+think it's technically illegal to allow the inode to still be found. If
+the caller cares about whether it has been unlinked it can always test
+i_nlink itself.
 
-So I build with:
+Amir, is this required for some reason that I'm not aware of?
 
-  touch arch/x86/kernel/alterantive.c;
-  make CC=clang-10 V=1 O=defconfig-build/ arch/x86/kernel/alterantive.o
+Thanks,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
-And then dump the output with:
-
-  ./objdump-func.sh defconfig-build/arch/x86/kernel/alterantive.o poke_int3_handler
-
-$ # cat objdump-func.sh
-#!/bin/bash
-objdump -dr $1 | awk "/^\$/ { P=0; } /$2[^>]*>:\$/ { P=1; O=strtonum(\"0x\" \$1); } { if (P) { o=strtonum(\"0x\" \$1); printf(\"%04x \", o-O); print \$0; } }"
-
-
-Hope that is enough to reproduce.
