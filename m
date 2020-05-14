@@ -2,108 +2,117 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8384C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B16C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 928922065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11A1F20727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:35:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="C9hE8LpM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ewvng4bG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgENNed (ORCPT
+        id S1726937AbgENNfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:34:33 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:21015 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgENNed (ORCPT
+        Thu, 14 May 2020 09:35:05 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28371 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726128AbgENNfE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:34:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1589463273; x=1620999273;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-transfer-encoding;
-  bh=8PX/L/naQftDsm+cBX69ACqTXRpTmFduJBFfTfnCbEE=;
-  b=C9hE8LpMowxWM/OSoTLdXkGb/G0znJeZsxE+KBhqS1lA7fqseDMgedVC
-   UONYckln/A2m9rhvuNDeAv25pLNifN7xiXXUi5WTS/YvSn3BEQwr+uQCl
-   cFtHNqV6o0UsB4wYjI8fW7j9oFpgWFnVItnnyEsv9E7HsHGa9HLs1DDCe
-   Pnm55j0X2otuaKgs5b3sTjYg8fkA5uQp7HL17Z2/fha5wqYo4AeGNJ6rv
-   00/Am6fPhVkakTcB9iTNrXSbMeC2Dc9fh2dEJklr4REw30rjHr1Q3TyCf
-   mZlg4jSogHkYYCVSNsrpo9GxplPJzgYC9VoQOsSJ8qJpwawOUl5/LkziD
-   Q==;
-IronPort-SDR: swCtBAYDjjCyyiUqg4mYkZSLQ0eObN975BJbFniIZu+olCbm32G7T6/8Q2eh04SdZ/klDr18cP
- UQqv3n+rPSpY1Its92krlFMTWOt8jgHsED/459C/lx7/B3+i6PpQ0R2V2f9U2OpeTVQIbxBmX2
- hifD8LMtyXKqP0QWcVT1lr0yyklabHo2D93jXkBJvkAUMoUKT8XUkxlnimdT2kW3MQNZpCowb8
- nZJZuTlI+6OP5fVmKICvya+4mo62kYB4TdnUgTDCHt2WKuc+DbKnD2aorLFhIoyLrVshyba5sv
- eWY=
-X-IronPort-AV: E=Sophos;i="5.73,391,1583164800"; 
-   d="scan'208";a="240388828"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 14 May 2020 21:34:33 +0800
-IronPort-SDR: UQqrcpAkSslpR8S1FwmY3S9XoKwk9p/bamfgOsV3dOP5nfLLVeItZvQIXbu99uDVzyy5qGFeRn
- q/3UJoABjlwppkA7FGE6R35IKkv/Sf4sE=
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 06:24:12 -0700
-IronPort-SDR: dOQ+2MaR1eefUwGBgVuaBVDuKbxo6IuUfevUdMIWNzRnJriKNVZWhzBAYBLQItiXfufb6QRhTF
- P+f96057z1OA==
-WDCIronportException: Internal
-Received: from unknown (HELO redsun52) ([10.149.66.28])
-  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 06:34:29 -0700
-Date:   Thu, 14 May 2020 14:34:26 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@wdc.com>
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-cc:     Bibo Mao <maobibo@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Dmitry Korotin <dkorotin@wavecomp.com>,
-        =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Steven Price <steven.price@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mike Rapoport <rppt@linux.ibm.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Maciej W. Rozycki" <macro@linux-mips.org>
-Subject: Re: [PATCH] MIPS: update tlb even if pte entry has no change
-In-Reply-To: <f165deac-1a71-dd88-dfe5-c1701f31567b@cogentembedded.com>
-Message-ID: <alpine.LFD.2.21.2005141426160.6492@redsun52.ssa.fujisawa.hgst.com>
-References: <1589422677-11455-1-git-send-email-maobibo@loongson.cn> <b46f4ac1-9738-6037-d60a-faebf2b4365c@cogentembedded.com> <f165deac-1a71-dd88-dfe5-c1701f31567b@cogentembedded.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Thu, 14 May 2020 09:35:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589463303;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=OMrvXzbHxIHtlTr7OrPCuHaO6zs7j1Kvj33xIsqdLqw=;
+        b=Ewvng4bGssK+hRHNVXaR3ObQY/SZrEzgxtiKOIcXiRSnTfrxM5IboFyh6J5semFN0JQZV+
+        ggnnkx9OTqDzxd3rwSMbbY4WErAN2DEmhyQ3QizNPTOTflHjS0KJZa6GcRKS6x4ulppHMG
+        27Mr7VmxGI//M8aPg7mHp7q1taYJIqc=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-273-PDDfF_coNhmZIgqbXrX5cQ-1; Thu, 14 May 2020 09:34:57 -0400
+X-MC-Unique: PDDfF_coNhmZIgqbXrX5cQ-1
+Received: by mail-ed1-f69.google.com with SMTP id df5so1178606edb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:34:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OMrvXzbHxIHtlTr7OrPCuHaO6zs7j1Kvj33xIsqdLqw=;
+        b=cmw6GT/NnoS1hWzZboUoS0DnRO7uFJ8a8HQuSAh9PkbUNqm/9sl2BV+2ucGTap3Yzu
+         XV8m/jdRt24oTM+lTZv4NEplxPofSdjxBikgJOXcb2zDz+i1hekZkc6UJHi64qYPoQnw
+         67Gy6FOgcNbnkiPr8VZNR5FKVPTSoR5cBV/Q/Ggoh9hvEWqSwZZeIvvmkzghifqVYLcs
+         CSez12GTL8wlAwSGxkMH2SfkjHsZHN2xP0CsjtwA3CmpIfJ24M2Ngu8uyckDZYin1PkQ
+         91oGebG/0HpPfqinx1YLkiZjywBpAJ9Ogqm0hWU2L5Opjp9YOfi1vSEZ6QderGVfI3QQ
+         HHog==
+X-Gm-Message-State: AOAM5310EtV6efLftcap9bI+lUwktcGU5gCCsiubQozprlMrGzdhDovU
+        KQz/H9omweqKuHFvy1EfWEqs+Cxcgq2t1XfDwDUw41nWAoCye05loYT1PKGWRldn7GeZ9LkmXW7
+        HbSrt2jR6ZUi3WNt15fbtrDeEYm1QLW7lS3huqCrO
+X-Received: by 2002:a50:cb85:: with SMTP id k5mr4141711edi.152.1589463296510;
+        Thu, 14 May 2020 06:34:56 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx6HCo/Mwy8BGcIwwFh1GYMRgc0wPWftjgR/KqFfbQNlVBW9tnOqgd0duz/dtqSl+5jNGmew1ye9UH26nid8Cg=
+X-Received: by 2002:a50:cb85:: with SMTP id k5mr4141685edi.152.1589463296298;
+ Thu, 14 May 2020 06:34:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <CAE4VaGCDTeE16nNmSS8fGzCBvHsO=qkJAW6yDiORAxgsPi-Ziw@mail.gmail.com>
+ <20200508092212.GE3758@techsingularity.net> <CAE4VaGC_v6On-YvqdTwAWu3Mq4ofiV0pLov-QpV+QHr_SJr+Rw@mail.gmail.com>
+ <CAE4VaGDQWPePtmtCZP=ROYW1KPxtPhGDrxqy2QbirHGJdwk4=w@mail.gmail.com>
+ <20200513153023.GF3758@techsingularity.net> <CAE4VaGBq5+ucS4p+0AzFsNP7YDsg7dLZ73dzuhBerHiM4EYP_Q@mail.gmail.com>
+ <20200514095055.GG3758@techsingularity.net> <CAE4VaGCGUFOAZ+YHDnmeJ95o4W0j04Yb7EWnf8a43caUQs_WuQ@mail.gmail.com>
+ <20200514100814.GH3758@techsingularity.net> <CAE4VaGBwFvduqOyn8pQnN3U4ozuB=4DVx6i1vheAg-2PegvE9Q@mail.gmail.com>
+ <20200514115050.GI3758@techsingularity.net>
+In-Reply-To: <20200514115050.GI3758@techsingularity.net>
+From:   Jirka Hladky <jhladky@redhat.com>
+Date:   Thu, 14 May 2020 15:34:45 +0200
+Message-ID: <CAE4VaGCf0s0m6VdX=jPPOpB1xc5mLwdHaakNOsUppy+Pqxsj-g@mail.gmail.com>
+Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
+ balancer v6
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Phil Auld <pauld@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Douglas Shakshober <dshaks@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Joe Mario <jmario@redhat.com>, Bill Gray <bgray@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 May 2020, Sergei Shtylyov wrote:
+THANK YOU!
 
-> >> If there are two threads reading the same memory and tlb miss happens,
-> >> one thread fills pte entry, the other reads new pte value during page fault
-> >> handling. PTE value may be updated before page faul, so the process need
-> > 
-> >     Fault.
-> 
->     And "needs".
-> 
-> >> need update tlb still.
-> 
->     Oh, and one "need" is enough. :-)
 
- Hmm, "the process need update" looks right to me (compare "the process 
-need not update") as "need" is used as a modal verb in this sentence.  
-Alternatively "the process needs to update" could be used (with "need" as 
-a main verb, and "to" then).
+On Thu, May 14, 2020 at 1:50 PM Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+> On Thu, May 14, 2020 at 12:22:05PM +0200, Jirka Hladky wrote:
+> > Thanks!
+> >
+> > Do you have a link? I cannot find it on github
+> > (https://github.com/gormanm/mmtests, searched for
+> > config-network-netperf-cstate-small-cross-socket)
+> >
+>
+> https://github.com/gormanm/mmtests/blob/master/configs/config-network-netperf-cstate-small-cross-socket
+>
+> --
+> Mel Gorman
+> SUSE Labs
+>
 
- I'm not a native English speaker though, so I might be missing a usage 
-subtlety here.
 
- NB I'd be in favour of capitalising "PTE" and "TLB" consistently 
-throughout though as the norm is with acronyms.
+-- 
+-Jirka
 
-  Maciej
