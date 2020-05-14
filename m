@@ -2,137 +2,85 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8476BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FF1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60F0F20722
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:30:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589455837;
-	bh=N0SNu+Nn/EIk64Sqc/MA48Bp1bPQoGgfY6AXnq6mazE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=MhvxmFw6ju5mjzoNb7qf3CeEFSaGb0xy+0qB9nV0qiZ6l6sy+egMU1XBaJj7qNQ+Y
-	 8FDQTUN07V3y7anyil3TvCWDveyzgr4ZBsg7jxRAKF0qH3n48rdBK80F98pgC8Q0DX
-	 ykPgi7la9gubEELONeQqTC73JmciBj+RkH+vKUL0=
+	by mail.kernel.org (Postfix) with ESMTP id D5744206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:33:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbgENLag (ORCPT
+        id S1726128AbgENLdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 07:30:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35664 "EHLO
+        Thu, 14 May 2020 07:33:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbgENLag (ORCPT
+        with ESMTP id S1726010AbgENLdS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 07:30:36 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94F17C061A0C;
-        Thu, 14 May 2020 04:30:35 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id o14so3114219ljp.4;
-        Thu, 14 May 2020 04:30:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=ah//zqGVr2uq0yxwfS0temU7octJ3zdlPot3c86bBKg=;
-        b=ZWiahqDG1NmV5BZmHPba70NLT3jWoiGhVL8LiWzNM5EhW7iB8gMGIHJWV5rCTG8rSo
-         HQJAj/lGM8deoncy8mlMupsfxwUzmZfcH7LSJB4TBSc5VzKIqmp9ASkktLIpfvCVNc3A
-         BoMwqKygagvsl3T0XOfD4ktdNoyypTKBqlGaj+q0h9E0RS2FYPE/MZptMW8/G1zMOSQW
-         HVAoWBCuHRgv0LAKY8q86/wb7mFb7ezeOtSWtnkM57R2R6U0QTqBIQpwkwljLayq4+jk
-         pfTZPKz/kEOk9lEBP50dMvgmYYWd9kRdtTbQY2kjDY48W1NzTDBvZQGOhiLt3kCT8Jp6
-         i9Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=ah//zqGVr2uq0yxwfS0temU7octJ3zdlPot3c86bBKg=;
-        b=koOyuQU/wwm2FhIT6rroXW1il2D/fegpTtMkuxpKgHU+yClv9vji5dI+CgMs/OX86d
-         Fc3y2zVxP7icLfiPAiowYKxaRQm5WXYA6Jw1tRN89WZzbj40k2UJFeCw+Qk/8XwO2MU9
-         PH+2KIQPJIUNbiOYmh3B6yHL8dqUJL1nxuU69F7J5x8U9Q4krHORUJe+nu6RCcC3jVO/
-         MZPHcqZFQr+AOuwJyHbBnjQw+5MtvrHH3L3+sSyfaqp3PVuIC3mjJ8mfPedsakuPRVIc
-         z85p1xxvZu6/LwFBouuJCjkF5/zyMS30l2if9t4YuS2gQiqbM3PkppfNEETemn3KpVmf
-         Efog==
-X-Gm-Message-State: AOAM5315o8hDrmT/oEty2sXiBLL1JpbFe5lFr8fhXUYp6YNL+rBJ7rZq
-        Y9s4lC16jd9ESp/cU8wPAK4=
-X-Google-Smtp-Source: ABdhPJzBPTrOoPSmDrxxlZaojs5Gyl65qbnn/VHe5j3S87HnxSM5SrSaFP8FYBZdlRTpPyemwx7bpg==
-X-Received: by 2002:a2e:a313:: with SMTP id l19mr2474879lje.133.1589455834002;
-        Thu, 14 May 2020 04:30:34 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id l26sm1340749ljc.49.2020.05.14.04.30.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 May 2020 04:30:33 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Sandeep Maheswaram <sanm@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3 driver
-In-Reply-To: <878shu4uwk.fsf@kernel.org>
-References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org> <1585718145-29537-3-git-send-email-sanm@codeaurora.org> <878shu4uwk.fsf@kernel.org>
-Date:   Thu, 14 May 2020 14:30:28 +0300
-Message-ID: <875zcy4uuj.fsf@kernel.org>
+        Thu, 14 May 2020 07:33:18 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94955C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 04:33:18 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jZC6o-0004st-Pi; Thu, 14 May 2020 13:33:02 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 168751004CE; Thu, 14 May 2020 13:33:02 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Singh\, Balbir" <sblbir@amazon.com>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "keescook\@chromium.org" <keescook@chromium.org>,
+        "thomas.lendacky\@amd.com" <thomas.lendacky@amd.com>,
+        "tony.luck\@intel.com" <tony.luck@intel.com>,
+        "benh\@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "jpoimboe\@redhat.com" <jpoimboe@redhat.com>,
+        "x86\@kernel.org" <x86@kernel.org>,
+        "dave.hansen\@intel.com" <dave.hansen@intel.com>
+Subject: Re:  [PATCH v6 5/6] Optionally flush L1D on context switch
+In-Reply-To: <c51109f10f6572f5cf60d2693f84ff8e65c7804a.camel@amazon.com>
+References: <20200510014803.12190-1-sblbir@amazon.com> <20200510014803.12190-6-sblbir@amazon.com> <875zcz3j47.fsf@nanos.tec.linutronix.de> <c51109f10f6572f5cf60d2693f84ff8e65c7804a.camel@amazon.com>
+Date:   Thu, 14 May 2020 13:33:02 +0200
+Message-ID: <87pnb6zr81.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Balbir,
 
-Felipe Balbi <balbi@kernel.org> writes:
-
-> Hi,
+"Singh, Balbir" <sblbir@amazon.com> writes:
+> On Wed, 2020-05-13 at 18:16 +0200, Thomas Gleixner wrote:
+>> Balbir Singh <sblbir@amazon.com> writes:
+>> But looking at this deeper (yes I should have noticed earlier):
+>> 
+>>     Why do we need yet another PRCTL?
+>> 
+>> We already have PR_SET_SPECULATION_CTRL/PR_GET_SPECULATION_CTRL. That
+>> L1D flush thingy fits into this category, right?
 >
-> Sandeep Maheswaram <sanm@codeaurora.org> writes:
->> +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
->> +{
->> +	struct device *dev =3D qcom->dev;
->> +	int ret;
->> +
->> +	if (!device_is_bound(&qcom->dwc3->dev))
->> +		return -EPROBE_DEFER;
+> It does, I thought about it for a while when I was changing the code and
+> left it aside because, looking at the definition
 >
-> this breaks allmodconfig. I'm dropping this series from my queue for
-> this merge window.
+> 1    PR_SPEC_ENABLE         The speculation feature is enabled,
+> mitigation is disabled.
+> 2    PR_SPEC_DISABLE        The speculation feature is disabled,
+> mitigation is enabled.
+>
+> With L1D flush, there is no overriding of the feature as such (as in
+> enable when the mitigation is disabled and vice-versa). I am happy to
+> reconsider my initial thought though.
 
-Sorry, I meant this patch ;-)
+L1D is always enabled as L1D will be a source of trouble forever :)
 
-=2D-=20
-balbi
+Thanks,
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl69K9QACgkQzL64meEa
-mQZ7vhAArWjaK6Aj1DN1EzYA0n/cMOhFyrbXdSjFMQVnz2FVLtseCEoKC6OdSMLx
-jGEzTYRjI+78Ypm8agyAVxlEvWvpG9z7NNNTA8yDIevNKQ47q5M/XWRsI2ueElV1
-LG6mt2SdK5RH1Id4BQAIZ36/IG/CIlQiml4EJYUtT0RjNhCmP7kI73bN4bp8EH3u
-8TGjNwFfguoI0RjJLXbOSIkTvYUbMFv/X3Ap5qk7sne3BBBMZkNGepGG5t8HGWHa
-uFgM1IXpgVQ3Wnua5nlSjk/PYjm+Vkm/z4Tj646+cUZHyhlZNpwSlMDtrPT9euAS
-7cWU4zVE2ve74Jpu2CJbVuHEpVmNSoh4zlnqDHpth8AEfiSndn4AlzkHd7ZLY1lA
-ZEXGRu8aylz4/fIQMlxA1J2NiV+81zi8awOD4D4/ERBJrf5Fx5s41ChUXXynbmrx
-OSube67GvjjMZdCG1gjZatIIex8pj0DMM91bDAEPvZIbr/Z1G5FwrNnoIaJpE3Xi
-DT9N6CGkz+PvOpME7y/CLpOlfqYe1Js/+RkzRJ80Qwy/G1V5n7McOKSU4o7AOmZk
-m40we7nmSzN+Q1KmAh0EzjtfLhrUWGMcuwRcI+p5jc40G/4dm6ySKVv9b5z+l+No
-1yahDWmAwNgIDBJtRvET0vbw5F7oaCqzy+p+lKq7s/8UnxLVJNQ=
-=mQ/l
------END PGP SIGNATURE-----
---=-=-=--
+        tglx
