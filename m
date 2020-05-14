@@ -2,101 +2,101 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 392BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D00DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0759A20657
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:43:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589481791;
-	bh=BeBb7bNCglxE5Wm/tjXIDeZkke/2v4+gPrRjkPF3Ago=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QtihH9GQLkE8zJX6hO6ixnPy9Ew9k9dnZ4fwSyYFqaGAiGwd+hkhDoMN2Bqqi4SIi
-	 lhi8iz0Tr8DOGxE3p/kWVnfY0KNAeCw+JV69ojrqbQn8r/12N0OtKsIdRgxAEg1ppH
-	 QWjr/v4ksjTSua6KiBUMgQQ2GKjUntnjK8JmT5i8=
+	by mail.kernel.org (Postfix) with ESMTP id 5C95620657
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:44:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgENSnK (ORCPT
+        id S1727772AbgENSob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:43:10 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34940 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726667AbgENSnJ (ORCPT
+        Thu, 14 May 2020 14:44:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47160 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726667AbgENSob (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:43:09 -0400
-Received: by mail-ot1-f65.google.com with SMTP id k110so3227723otc.2;
-        Thu, 14 May 2020 11:43:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LGIrY8SDvuTjzejIhxpj+PL53sSxg728mdDpAEJQxe8=;
-        b=VjMLuS9LaTLFpJxYAiOTvbA77irUT3TzEmddQKQiW48weKq+0ztjMvoUGxDmSvGofA
-         5HVk9GHmSMrWwg2ZxR8R+AalcuzWy4Kxg4xGaqEgV/X1hyhS2cUKv6SxCj01SmOUOJeU
-         9DdM6OU8glQtxAg6TwTchBI0rllF+xjlhCAMo7iFeu5cKhS1Mff2OqxMmnnryAkpvIlc
-         YPnghLK5Lmj8nilC7eV9qodckZooxEMYJlvlc/o29EcK0R0FJ0UHHNCJ3iMvoKUptDUQ
-         FQYB23iCcXJwRgTy48tDNlfaiXeOSn2ISPXtHPsDlzg/KmpGpJWwmGEXOg4lUk/pcsBY
-         KPlQ==
-X-Gm-Message-State: AOAM531ZLX7uoEa7knaT7m/VyrRHC4SYyiEoy7qCAS5xA/RFxWMUhmTs
-        VIpXHmGdoT1u/LrCR2kHHQ==
-X-Google-Smtp-Source: ABdhPJx/47NNA/05up2GtjIFWDb9o6IjAicvuuijIfSOZFUWsZZdtOa4nLGqRlZMFhvFdlQEXu78YQ==
-X-Received: by 2002:a05:6830:2147:: with SMTP id r7mr4711948otd.325.1589481788330;
-        Thu, 14 May 2020 11:43:08 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i7sm974717otr.80.2020.05.14.11.43.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 11:43:07 -0700 (PDT)
-Received: (nullmailer pid 8968 invoked by uid 1000);
-        Thu, 14 May 2020 18:43:06 -0000
-Date:   Thu, 14 May 2020 13:43:06 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>, linux-mmc@vger.kernel.org,
-        linux-serial@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 2/9] dt-bindings: irqchip: renesas-irqc: Document
- r8a7742 bindings
-Message-ID: <20200514184306.GA8929@bogus>
-References: <1588794695-27852-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1588794695-27852-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Thu, 14 May 2020 14:44:31 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 055B6C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 11:44:31 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jZIq1-0005j2-Pr; Thu, 14 May 2020 20:44:09 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 019A81004CE; Thu, 14 May 2020 20:44:08 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [patch V4 part 4 08/24] x86/entry: Provide IDTENTRY_IST
+In-Reply-To: <CALCETrWKi=+GUbAi+3OJ3CMaegz2HqQYNQKdwmRHb_xoc+YVgQ@mail.gmail.com>
+References: <20200505134926.578885807@linutronix.de> <20200505135314.137125609@linutronix.de> <CALCETrWKi=+GUbAi+3OJ3CMaegz2HqQYNQKdwmRHb_xoc+YVgQ@mail.gmail.com>
+Date:   Thu, 14 May 2020 20:44:08 +0200
+Message-ID: <87v9kyxsp3.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1588794695-27852-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  6 May 2020 20:51:28 +0100, Lad Prabhakar wrote:
-> Document SoC specific bindings for RZ/G1H (r8a7742) SoC.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v1->v2:
-> * No change
-> ---
-> 
->  .../devicetree/bindings/interrupt-controller/renesas,irqc.yaml   | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Andy Lutomirski <luto@kernel.org> writes:
+> On Tue, May 5, 2020 at 7:16 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>>
+>> Same as IDTENTRY but for exceptions which run on Interrupt STacks (IST) on
+>> 64bit. For 32bit this maps to IDTENTRY.
+>>
+>> There are 3 variants which will be used:
+>>       IDTENTRY_MCE
+>>       IDTENTRY_DB
+>>       IDTENTRY_NMI
+>>
+>> These map to IDTENTRY_IST, but only the MCE and DB variants are emitting
+>> ASM code as the NMI entry needs hand crafted ASM still.
+>>
+>> The function defines do not contain any idtenter/exit calls as these
+>> exceptions need special treatment.
+>
+> Okay I guess, but in the long run I'm guessing that we'll want to
+> merge a bunch of this to DECLARE_IDTENTRY_NOASM and just manually emit
+> the special cases in entry_32/64.S.
 
-Acked-by: Rob Herring <robh@kernel.org>
+The ASM is still the paranoid muck which is emitted nicely.
+
+But on the C side this needs a different treatment than the regular
+exceptions which all use idtentry_enter() before and idtentry_exit()
+after the handler function body.
+
+Those need magic things before and after nmi_enter/exit(). That's why
+the C function is directly called and does not have any automatically
+emitted enter/exit stuff like the other IDTENTRY variants.
+
+Thanks,
+
+        tglx
+
+
