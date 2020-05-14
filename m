@@ -2,173 +2,277 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 366EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B682CC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 029AC2065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:28:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="OeRNBDYX"
+	by mail.kernel.org (Postfix) with ESMTP id 8F64C2076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:31:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589491863;
+	bh=TP5R1Ls94fClOtnKL6qicXkxkmd66c9n7XY4ithYPeY=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=eTO9KE4k9KmPnGY8Wz8iSY4LCCUCRoObRe5SJc2g5ixyHM+reSQOfyKsNnHVLFcWJ
+	 AlerO7qBsIsxE0nbCVzoAhA6UdJSL4Z9cvcLGFtoOoehLpPCV2aX2P/aphCFDZvTAC
+	 W3iUEeGcSSgzaXdjoB5dVu6n8xkAlVXqjb2rOdEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbgENV25 (ORCPT
+        id S1728113AbgENVbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 17:28:57 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:57470 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbgENV24 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 17:28:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1589491736; x=1621027736;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version:subject;
-  bh=Yezbi7AQfUMT0qNCPnMZ02HTQsMDXfrnbbka4Wj1wNY=;
-  b=OeRNBDYXsMRXUtI4rsZATK9N5/Mno5ruqpYPcbLb0QvSPmMGkB2xRzQ7
-   dCmma5nGH9ZSCF20eLr8YxoNjO0KxYO1R13gDpWMjveahX+QchSWly4BL
-   jMPGLH4cPzMkB30pvU8jXKRoPtoDt3ldSnJgIvGH2zQgCtEP6+u/3Qr9J
-   s=;
-IronPort-SDR: t5l9s8uzYvtD6Vka3vUgGf4wNKI7p32r07c569rdZmpjzjwBLgHPVv4IpskNmqv2iyc8IaPrp8
- cvZeYYmhYAMQ==
-X-IronPort-AV: E=Sophos;i="5.73,392,1583193600"; 
-   d="scan'208";a="30471394"
-Subject: Re: [PATCH v6 5/6] Optionally flush L1D on context switch
-Thread-Topic: [PATCH v6 5/6] Optionally flush L1D on context switch
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1a-807d4a99.us-east-1.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 14 May 2020 21:28:43 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-807d4a99.us-east-1.amazon.com (Postfix) with ESMTPS id 8C945A238F;
-        Thu, 14 May 2020 21:28:39 +0000 (UTC)
-Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 14 May 2020 21:28:38 +0000
-Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
- EX13d01UWB002.ant.amazon.com (10.43.161.136) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 14 May 2020 21:28:38 +0000
-Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
- EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1497.006;
- Thu, 14 May 2020 21:28:38 +0000
-From:   "Singh, Balbir" <sblbir@amazon.com>
-To:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "keescook@chromium.org" <keescook@chromium.org>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "dave.hansen@intel.com" <dave.hansen@intel.com>
-Thread-Index: AQHWJm0VV4Hzu4vjckmHwrAVGGHnm6imKUmAgAH3HoA=
-Date:   Thu, 14 May 2020 21:28:38 +0000
-Message-ID: <6f8299db4170800e9db5b0b7da663e3cf6c5fec5.camel@amazon.com>
-References: <20200510014803.12190-1-sblbir@amazon.com>
-         <20200510014803.12190-6-sblbir@amazon.com>
-         <878shv3ldy.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <878shv3ldy.fsf@nanos.tec.linutronix.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.162.140]
+        Thu, 14 May 2020 17:31:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50780 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726216AbgENVbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 17:31:02 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A994D2065D;
+        Thu, 14 May 2020 21:31:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589491861;
+        bh=TP5R1Ls94fClOtnKL6qicXkxkmd66c9n7XY4ithYPeY=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=TJagVHWSUGRPvnEroLw1kjGPEvfh1SLUtiSRlmDAFowhEF0Ej369Tj3zZu7Y/T7LU
+         HhSbBDM+yjNZNiP84mczhNxo/NyAID64q2H7/k1WnXEOy/1symwS0bLC2m2cpcbRUw
+         n8+JcMIAHriZ46lcC112nKLzMHgswOyLYGh18SVU=
 Content-Type: text/plain; charset="utf-8"
-Content-ID: <75863FDFF49CCB4EA870DAD3B7BA9A89@amazon.com>
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200512115023.2856617-3-bryan.odonoghue@linaro.org>
+References: <20200512115023.2856617-1-bryan.odonoghue@linaro.org> <20200512115023.2856617-3-bryan.odonoghue@linaro.org>
+Subject: Re: [PATCH v4 2/2] clk: qcom: gcc-msm8939: Add MSM8939 Generic Clock Controller
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        shawn.guo@linaro.org, p.zabel@pengutronix.de,
+        vincent.knecht@mailoo.org, konradybcio@gmail.com,
+        bryan.odonoghue@linaro.org
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, mturquette@baylibre.com,
+        robh+dt@kernel.org
+Date:   Thu, 14 May 2020 14:31:00 -0700
+Message-ID: <158949186096.215346.4442403798485610696@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA1LTEzIGF0IDE3OjI3ICswMjAwLCBUaG9tYXMgR2xlaXhuZXIgd3JvdGU6
-DQo+IENBVVRJT046IFRoaXMgZW1haWwgb3JpZ2luYXRlZCBmcm9tIG91dHNpZGUgb2YgdGhlIG9y
-Z2FuaXphdGlvbi4gRG8NCj4gbm90IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5s
-ZXNzIHlvdSBjYW4gY29uZmlybSB0aGUgc2VuZGVyDQo+IGFuZCBrbm93IHRoZSBjb250ZW50IGlz
-IHNhZmUuDQo+IA0KPiANCj4gDQo+IEJhbGJpciBTaW5naCA8c2JsYmlyQGFtYXpvbi5jb20+IHdy
-aXRlczoNCj4gDQo+ID4gSW1wbGVtZW50IGEgbWVjaGFuaXNtIHRvIHNlbGVjdGl2ZWx5IGZsdXNo
-IHRoZSBMMUQgY2FjaGUuIFRoZSBnb2FsDQo+ID4gaXMgdG8NCj4gPiBhbGxvdyB0YXNrcyB0aGF0
-IGFyZSBwYXJhbm9pZCBkdWUgdG8gdGhlIHJlY2VudCBzbm9vcCBhc3Npc3RlZCBkYXRhDQo+ID4g
-c2FtcGxpbmcNCj4gPiB2dWxuZXJhYmlsaXRlcywgdG8gZmx1c2ggdGhlaXIgTDFEIG9uIGJlaW5n
-IHN3aXRjaGVkIG91dC4gIFRoaXMNCj4gPiBwcm90ZWN0cw0KPiA+IHRoZWlyIGRhdGEgZnJvbSBi
-ZWluZyBzbm9vcGVkIG9yIGxlYWtlZCB2aWEgc2lkZSBjaGFubmVscyBhZnRlciB0aGUNCj4gPiB0
-YXNrDQo+ID4gaGFzIGNvbnRleHQgc3dpdGNoZWQgb3V0Lg0KPiA+IA0KPiA+IFRoZXJlIGFyZSB0
-d28gc2NlbmFyaW9zIHdlIG1pZ2h0IHdhbnQgdG8gcHJvdGVjdCBhZ2FpbnN0LCBhIHRhc2sNCj4g
-PiBsZWF2aW5nDQo+ID4gdGhlIENQVSB3aXRoIGRhdGEgc3RpbGwgaW4gTDFEICh3aGljaCBpcyB0
-aGUgbWFpbiBjb25jZXJuIG9mIHRoaXMNCj4gPiBwYXRjaCksDQo+ID4gdGhlIHNlY29uZCBzY2Vu
-YXJpbyBpcyBhIG1hbGljaW91cyB0YXNrIGNvbWluZyBpbiAobm90IHNvIHdlbGwNCj4gPiB0cnVz
-dGVkKQ0KPiA+IGZvciB3aGljaCB3ZSB3YW50IHRvIGNsZWFuIHVwIHRoZSBjYWNoZSBiZWZvcmUg
-aXQgc3RhcnRzLiBPbmx5IHRoZQ0KPiA+IGNhc2UNCj4gPiBmb3IgdGhlIGZvcm1lciBpcyBhZGRy
-ZXNzZWQuDQo+ID4gDQo+ID4gQSBuZXcgdGhyZWFkX2luZm8gZmxhZyBUSUZfU1BFQ19GTFVTSF9M
-MUQgaXMgYWRkZWQgdG8gdHJhY2sgdGFza3MNCj4gPiB3aGljaA0KPiA+IG9wdC1pbnRvIEwxRCBm
-bHVzaGluZy4gY3B1X3RsYnN0YXRlLmxhc3RfdXNlcl9tbV9zcGVjIGlzIHVzZWQgdG8NCj4gPiBj
-b252ZXJ0DQo+ID4gdGhlIFRJRiBmbGFncyBpbnRvIG1tIHN0YXRlIChwZXIgY3B1IHZpYSBsYXN0
-X3VzZXJfbW1fc3BlYykgaW4NCj4gPiBjb25kX21pdGlnYXRpb24oKSwgd2hpY2ggdGhlbiB1c2Vk
-IHRvIGRvIGRlY2lkZSB3aGVuIHRvIGNhbGwNCj4gPiBmbHVzaF9sMWQoKS4NCj4gPiANCj4gPiBB
-ZGQgcHJjdGwoKSdzIHRvIG9wdC1pbiB0byB0aGUgTDFEIGNhY2hlIG9uIGNvbnRleHQgc3dpdGNo
-IG91dCwgdGhlDQo+ID4gZXhpc3RpbmcgbWVjaGFuaXNtcyBvZiB0cmFja2luZyBwcmV2X21tIHZp
-YSBjcHVfdGxic3RhdGUgaXMNCj4gPiByZXVzZWQgdG8gdHJhY2sgc3RhdGUgb2YgdGhlIHRhc2tz
-IGFuZCB0byBmbHVzaCB0aGUgTDFEIGNhY2hlLg0KPiA+IFRoZSBwcmN0bCBpbnRlcmZhY2UgaXMg
-Z2VuZXJpYyBhbmQgY2FuIGJlIHBvcnRlZCBvdmVyIHRvIG90aGVyDQo+ID4gYXJjaGl0ZWN0dXJl
-cy4NCj4gPiANCj4gPiBTdWdnZXN0ZWQtYnk6IFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJv
-bml4LmRlPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEJhbGJpciBTaW5naCA8c2JsYmlyQGFtYXpvbi5j
-b20+DQo+ID4gUmV2aWV3ZWQtYnk6IEtlZXMgQ29vayA8a2Vlc2Nvb2tAY2hyb21pdW0ub3JnPg0K
-PiA+IC0tLQ0KPiA+ICBhcmNoL3g4Ni9pbmNsdWRlL2FzbS90aHJlYWRfaW5mby5oIHwgIDcgKysr
-Ky0NCj4gPiAgYXJjaC94ODYvbW0vdGxiLmMgICAgICAgICAgICAgICAgICB8IDQ0DQo+ID4gKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKy0tDQo+ID4gIGluY2x1ZGUvdWFwaS9saW51eC9wcmN0
-bC5oICAgICAgICAgfCAgNCArKysNCj4gPiAga2VybmVsL3N5cy5jICAgICAgICAgICAgICAgICAg
-ICAgICB8IDIwICsrKysrKysrKysrKysrDQo+ID4gIDQgZmlsZXMgY2hhbmdlZCwgNzIgaW5zZXJ0
-aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYv
-aW5jbHVkZS9hc20vdGhyZWFkX2luZm8uaA0KPiA+IGIvYXJjaC94ODYvaW5jbHVkZS9hc20vdGhy
-ZWFkX2luZm8uaA0KPiA+IGluZGV4IDhkZThjZWNjYjhiYy4uNjdkZTY5M2Q5YmExIDEwMDY0NA0K
-PiA+IC0tLSBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL3RocmVhZF9pbmZvLmgNCj4gPiArKysgYi9h
-cmNoL3g4Ni9pbmNsdWRlL2FzbS90aHJlYWRfaW5mby5oDQo+ID4gQEAgLTg0LDcgKzg0LDcgQEAg
-c3RydWN0IHRocmVhZF9pbmZvIHsNCj4gPiAgI2RlZmluZSBUSUZfU1lTQ0FMTF9BVURJVCAgICA3
-ICAgICAgIC8qIHN5c2NhbGwgYXVkaXRpbmcgYWN0aXZlICovDQo+ID4gICNkZWZpbmUgVElGX1NF
-Q0NPTVAgICAgICAgICAgOCAgICAgICAvKiBzZWN1cmUgY29tcHV0aW5nICovDQo+ID4gICNkZWZp
-bmUgVElGX1NQRUNfSUIgICAgICAgICAgOSAgICAgICAvKiBJbmRpcmVjdCBicmFuY2ggc3BlY3Vs
-YXRpb24NCj4gPiBtaXRpZ2F0aW9uICovDQo+ID4gLSNkZWZpbmUgVElGX1NQRUNfRk9SQ0VfVVBE
-QVRFICAgICAgICAxMCAgICAgIC8qIEZvcmNlIHNwZWN1bGF0aW9uDQo+ID4gTVNSIHVwZGF0ZSBp
-biBjb250ZXh0IHN3aXRjaCAqLw0KPiA+ICsjZGVmaW5lIFRJRl9TUEVDX0ZMVVNIX0wxRCAgIDEw
-ICAgICAgLyogRmx1c2ggTDFEIG9uIG1tIHN3aXRjaGVzDQo+ID4gKHByb2Nlc3NlcykgKi8NCj4g
-PiAgI2RlZmluZSBUSUZfVVNFUl9SRVRVUk5fTk9USUZZICAgICAgIDExICAgICAgLyogbm90aWZ5
-IGtlcm5lbCBvZg0KPiA+IHVzZXJzcGFjZSByZXR1cm4gKi8NCj4gPiAgI2RlZmluZSBUSUZfVVBS
-T0JFICAgICAgICAgICAxMiAgICAgIC8qIGJyZWFrcG9pbnRlZCBvcg0KPiA+IHNpbmdsZXN0ZXBw
-aW5nICovDQo+ID4gICNkZWZpbmUgVElGX1BBVENIX1BFTkRJTkcgICAgMTMgICAgICAvKiBwZW5k
-aW5nIGxpdmUgcGF0Y2hpbmcNCj4gPiB1cGRhdGUgKi8NCj4gPiBAQCAtOTYsNiArOTYsNyBAQCBz
-dHJ1Y3QgdGhyZWFkX2luZm8gew0KPiA+ICAjZGVmaW5lIFRJRl9NRU1ESUUgICAgICAgICAgIDIw
-ICAgICAgLyogaXMgdGVybWluYXRpbmcgZHVlIHRvIE9PTQ0KPiA+IGtpbGxlciAqLw0KPiA+ICAj
-ZGVmaW5lIFRJRl9QT0xMSU5HX05SRkxBRyAgIDIxICAgICAgLyogaWRsZSBpcyBwb2xsaW5nIGZv
-cg0KPiA+IFRJRl9ORUVEX1JFU0NIRUQgKi8NCj4gPiAgI2RlZmluZSBUSUZfSU9fQklUTUFQICAg
-ICAgICAgICAgICAgIDIyICAgICAgLyogdXNlcyBJL08gYml0bWFwICovDQo+ID4gKyNkZWZpbmUg
-VElGX1NQRUNfRk9SQ0VfVVBEQVRFICAgICAgICAyMyAgICAgIC8qIEZvcmNlIHNwZWN1bGF0aW9u
-DQo+ID4gTVNSIHVwZGF0ZSBpbiBjb250ZXh0IHN3aXRjaCAqLw0KPiA+ICAjZGVmaW5lIFRJRl9G
-T1JDRURfVEYgICAgICAgICAgICAgICAgMjQgICAgICAvKiB0cnVlIGlmIFRGIGluDQo+ID4gZWZs
-YWdzIGFydGlmaWNpYWxseSAqLw0KPiA+ICAjZGVmaW5lIFRJRl9CTE9DS1NURVAgICAgICAgICAg
-ICAgICAgMjUgICAgICAvKiBzZXQgd2hlbiB3ZSB3YW50DQo+ID4gREVCVUdDVExNU1JfQlRGICov
-DQo+ID4gICNkZWZpbmUgVElGX0xBWllfTU1VX1VQREFURVMgMjcgICAgICAvKiB0YXNrIGlzIHVw
-ZGF0aW5nIHRoZSBtbXUNCj4gPiBsYXppbHkgKi8NCj4gPiBAQCAtMTMyLDYgKzEzMyw3IEBAIHN0
-cnVjdCB0aHJlYWRfaW5mbyB7DQo+ID4gICNkZWZpbmUgX1RJRl9BRERSMzIgICAgICAgICAgKDEg
-PDwgVElGX0FERFIzMikNCj4gPiAgI2RlZmluZSBfVElGX1gzMiAgICAgICAgICAgICAoMSA8PCBU
-SUZfWDMyKQ0KPiA+ICAjZGVmaW5lIF9USUZfRlNDSEVDSyAgICAgICAgICgxIDw8IFRJRl9GU0NI
-RUNLKQ0KPiA+ICsjZGVmaW5lIF9USUZfU1BFQ19GTFVTSF9MMUQgICgxIDw8IFRJRl9TUEVDX0ZM
-VVNIX0wxRCkNCj4gDQo+IEJhaC4gVGhlc2UgZGVmaW5lcyBhcmUgb3JkZXJlZCBpbiB0aGUgc2Ft
-ZSB3YXkgYXMgdGhlIFRJRiBkZWZpbmVzLi4uLg0KPiANCj4gPiAgLyoNCj4gPiAtICogQml0cyB0
-byBtYW5nbGUgdGhlIFRJRl9TUEVDX0lCIHN0YXRlIGludG8gdGhlIG1tIHBvaW50ZXIgd2hpY2gN
-Cj4gPiBpcw0KPiA+ICsgKiBCaXRzIHRvIG1hbmdsZSB0aGUgVElGX1NQRUNfKiBzdGF0ZSBpbnRv
-IHRoZSBtbSBwb2ludGVyIHdoaWNoIGlzDQo+ID4gICAqIHN0b3JlZCBpbiBjcHVfdGxiX3N0YXRl
-Lmxhc3RfdXNlcl9tbV9zcGVjLg0KPiA+ICAgKi8NCj4gPiAgI2RlZmluZSBMQVNUX1VTRVJfTU1f
-SUJQQiAgICAweDFVTA0KPiA+IC0jZGVmaW5lIExBU1RfVVNFUl9NTV9TUEVDX01BU0sgICAgICAg
-KExBU1RfVVNFUl9NTV9JQlBCKQ0KPiA+ICsjZGVmaW5lIExBU1RfVVNFUl9NTV9MMURfRkxVU0gg
-ICAgICAgMHgyVUwNCj4gPiArI2RlZmluZSBMQVNUX1VTRVJfTU1fU1BFQ19NQVNLICAgICAgIChM
-QVNUX1VTRVJfTU1fSUJQQiB8DQo+ID4gTEFTVF9VU0VSX01NX0wxRF9GTFVTSCkNCj4gDQo+IFlv
-dSBsb3N0DQo+IA0KPiArICAgICAgIEJVSUxEX0JVR19PTihUSUZfU1BFQ19GTFVTSF9MMUQgIT0g
-VElGX1NQRUNfSUIgKyAxKTsNCj4gDQo+IGZyb20gcGF0Y2ggSSBnYXZlIHlvdS4NCg0KDQpPb3Bz
-Li4gSSdsbCBmaXggdXAgYm90aCBhbmQgcmVkbyBwYXRjaCA1LzYsIGJ5IHNwbGl0dGluZyBpdCB1
-cCwgaW50bw0KaW50ZXJmYWNlIHZzIGZsdXNoIGJpdHMNCg0KVGhhbmtzLA0KQmFsYmlyIFNpbmdo
-Lg0K
+Quoting Bryan O'Donoghue (2020-05-12 04:50:23)
+> This patch adds support for the MSM8939 GCC. The MSM8939 is based on the
+> MSM8916. MSM8939 is compatible in several ways with MSM8916 but, has
+> additional functional blocks added which require additional PLL sources. =
+In
+> some cases functional blocks from the MSM8916 have different clock sources
+> or different supported frequencies.
+>=20
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: linux-clk@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+
+Is this a co-developed-by tag?
+
+> Tested-by: Vincent Knecht <vincent.knecht@mailoo.org>
+> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> ---
+> diff --git a/drivers/clk/qcom/gcc-msm8939.c b/drivers/clk/qcom/gcc-msm893=
+9.c
+> new file mode 100644
+> index 000000000000..71081eb23081
+> --- /dev/null
+> +++ b/drivers/clk/qcom/gcc-msm8939.c
+> @@ -0,0 +1,3999 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright 2020 Linaro Limited
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/bitops.h>
+> +#include <linux/err.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset-controller.h>
+> +
+> +#include <dt-bindings/clock/qcom,gcc-msm8939.h>
+> +#include <dt-bindings/reset/qcom,gcc-msm8939.h>
+> +
+> +#include "common.h"
+> +#include "clk-regmap.h"
+> +#include "clk-pll.h"
+> +#include "clk-rcg.h"
+> +#include "clk-branch.h"
+> +#include "reset.h"
+> +#include "gdsc.h"
+> +
+> +enum {
+> +       P_XO,
+> +       P_GPLL0,
+> +       P_GPLL0_AUX,
+> +       P_BIMC,
+> +       P_GPLL1,
+> +       P_GPLL1_AUX,
+> +       P_GPLL2,
+> +       P_GPLL2_AUX,
+> +       P_GPLL3,
+> +       P_GPLL3_AUX,
+> +       P_GPLL4,
+> +       P_GPLL5,
+> +       P_GPLL5_AUX,
+> +       P_GPLL5_EARLY,
+> +       P_GPLL6,
+> +       P_GPLL6_AUX,
+> +       P_SLEEP_CLK,
+> +       P_DSI0_PHYPLL_BYTE,
+> +       P_DSI0_PHYPLL_DSI,
+> +       P_EXT_PRI_I2S,
+> +       P_EXT_SEC_I2S,
+> +       P_EXT_MCLK,
+> +};
+> +
+> +static struct clk_pll gpll0 =3D {
+> +       .l_reg =3D 0x21004,
+> +       .m_reg =3D 0x21008,
+> +       .n_reg =3D 0x2100c,
+> +       .config_reg =3D 0x21010,
+> +       .mode_reg =3D 0x21000,
+> +       .status_reg =3D 0x2101c,
+> +       .status_bit =3D 17,
+> +       .clkr.hw.init =3D &(struct clk_init_data){
+> +               .name =3D "gpll0",
+> +               .parent_data =3D &(const struct clk_parent_data) {
+> +                       .fw_name =3D "xo",
+> +                       .name =3D "xo",
+
+Please only have .fw_name. The .name field is a fallback, but given that
+this is new code there shouldn't be a need for a fallback to the old way
+of doing things.
+
+> +               },
+> +               .num_parents =3D 1,
+> +               .ops =3D &clk_pll_ops,
+> +       },
+> +};
+> +
+> +static struct clk_regmap gpll0_vote =3D {
+> +       .enable_reg =3D 0x45000,
+> +       .enable_mask =3D BIT(0),
+> +       .hw.init =3D &(struct clk_init_data){
+> +               .name =3D "gpll0_vote",
+> +               .parent_data =3D &(const struct clk_parent_data) {
+> +                       .hw =3D &gpll0.clkr.hw,
+> +               },
+> +               .num_parents =3D 1,
+> +               .ops =3D &clk_pll_vote_ops,
+> +       },
+> +};
+> +
+> +static struct clk_pll gpll1 =3D {
+> +       .l_reg =3D 0x20004,
+> +       .m_reg =3D 0x20008,
+> +       .n_reg =3D 0x2000c,
+> +       .config_reg =3D 0x20010,
+> +       .mode_reg =3D 0x20000,
+> +       .status_reg =3D 0x2001c,
+> +       .status_bit =3D 17,
+> +       .clkr.hw.init =3D &(struct clk_init_data){
+> +               .name =3D "gpll1",
+> +               .parent_data =3D &(const struct clk_parent_data) {
+> +                       .fw_name =3D "xo",
+> +                       .name =3D "xo",
+> +               },
+> +               .num_parents =3D 1,
+> +               .ops =3D &clk_pll_ops,
+> +       },
+> +};
+> +
+> +static struct clk_regmap gpll1_vote =3D {
+> +       .enable_reg =3D 0x45000,
+> +       .enable_mask =3D BIT(1),
+> +       .hw.init =3D &(struct clk_init_data){
+> +               .name =3D "gpll1_vote",
+> +               .parent_data =3D &(const struct clk_parent_data) {
+> +                       .hw =3D &gpll1.clkr.hw,
+> +               },
+> +               .num_parents =3D 1,
+> +               .ops =3D &clk_pll_vote_ops,
+> +       },
+> +};
+> +
+> +static struct clk_pll gpll2 =3D {
+> +       .l_reg =3D 0x4a004,
+> +       .m_reg =3D 0x4a008,
+> +       .n_reg =3D 0x4a00c,
+> +       .config_reg =3D 0x4a010,
+> +       .mode_reg =3D 0x4a000,
+> +       .status_reg =3D 0x4a01c,
+> +       .status_bit =3D 17,
+> +       .clkr.hw.init =3D &(struct clk_init_data){
+> +               .name =3D "gpll2",
+[...]
+> +
+> +static int gcc_msm8939_probe(struct platform_device *pdev)
+> +{
+> +       int ret;
+> +       struct regmap *regmap;
+> +
+> +       ret =3D qcom_cc_probe(pdev, &gcc_msm8939_desc);
+> +       if (ret)
+> +               return ret;
+> +
+> +       regmap =3D dev_get_regmap(&pdev->dev, NULL);
+> +       clk_pll_configure_sr_hpm_lp(&gpll3, regmap, &gpll3_config, true);
+> +       clk_pll_configure_sr_hpm_lp(&gpll4, regmap, &gpll4_config, true);
+
+We should probably configure these before registering the clks. Can you
+do the usual, map registers, configure stuff, and then
+qcom_cc_really_probe()?
+
+> +
+> +       return 0;
+
+And then this can fail so return an error in case it does.
+
+> +}
+> +
+> +static struct platform_driver gcc_msm8939_driver =3D {
+> +       .probe          =3D gcc_msm8939_probe,
+> +       .driver         =3D {
+> +               .name   =3D "gcc-msm8939",
+> +               .of_match_table =3D gcc_msm8939_match_table,
+> +       },
+> +};
+> +
+> +static int __init gcc_msm8939_init(void)
+> +{
+> +       return platform_driver_register(&gcc_msm8939_driver);
+> +}
+> +core_initcall(gcc_msm8939_init);
+> +
+> +static void __exit gcc_msm8939_exit(void)
+> +{
+> +       platform_driver_unregister(&gcc_msm8939_driver);
+> +}
+> +module_exit(gcc_msm8939_exit);
+> +
+> +MODULE_DESCRIPTION("Qualcomm GCC MSM8939 Driver");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform:gcc-msm8939");
+
+The module alias isn't needed right?
