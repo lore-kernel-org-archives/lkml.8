@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D6FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9172FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4F220727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62FDB20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:45:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A/6yXe9Q"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T68WEwt3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbgENOpv (ORCPT
+        id S1728102AbgENOpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:45:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37978 "EHLO
+        Thu, 14 May 2020 10:45:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727050AbgENOpt (ORCPT
+        with ESMTP id S1728056AbgENOpv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:45:49 -0400
+        Thu, 14 May 2020 10:45:51 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71FC5C05BD43;
-        Thu, 14 May 2020 07:45:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FDA8C061A0E;
+        Thu, 14 May 2020 07:45:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=n/VDrwpuAAZTMi/NsPVhZan1IjRJOcWlFtFe+ELqF4s=; b=A/6yXe9QN5hjDCKZwj/R0g6dDQ
-        QktrBdvk7Ro/y3VRKxnXnhqYcQauU0zQgkXXQQedjgpNPyBKCAfwQ/cBMkb8LC5dRA/76u6lyKToR
-        E3M/K0NCiRmoa3/raJDY/2rcEG3jCfe5diDJOB3bs2pustwZDgoLev/VcsX7UP4bs+biNTMKzYQr8
-        0moKB8bPoBQD3FeKdgeZXta6IemAepIpZGJ67WrrMtKjug0lXiAx5Czic4Srx1dbFb1RuykYaGGYT
-        FgHNvhO4Te3xoKHVjE0xcG1Ou/7UDvIjTKVgkoZIT93YJ6UDcfyuVMYEkWHVaIujw4T8fh327ZQm6
-        g6oKcG8Q==;
+        bh=K6bU6um5eIVttU2iqx+CgqqLI2bN0WcDTpXICi4zCUM=; b=T68WEwt3z66Ziqd4JKu+Ok8iz5
+        Tuwu8/X7ifBccA0RHP04VChPhogVfYEWP3m0ZhSXEDrnn3S3sLmvTqdZdXE1umONR4MGuHl4i0Rxp
+        LGkbVlb7sYzcWYJ9jxAykmqFRZTreCGS4j9/5Gexk6v90blfea5LIvZjV+6vfIyKvx0aBwKP+xWEX
+        n9i9KHlJr/Hw3wuCc/ufvlzZ6Es4oeK1AjhVW0IHl1PuBrWPRNj/W/x4B+Pb+Qr3Y0tYc+W4zG6c/
+        uddhT6VOkyc/LJfXgzkjjgQzWbcSB0Q00gUD1v7lEm/hhhrjN5t8alnLbCxUtEOEXXHBQmDWX54l7
+        zhFgGNmA==;
 Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZF7G-0004eD-Ts; Thu, 14 May 2020 14:45:43 +0000
+        id 1jZF7M-0004sY-Ca; Thu, 14 May 2020 14:45:48 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
         Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
         Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/4] ipv6: move SIOCADDRT and SIOCDELRT handling into ->compat_ioctl
-Date:   Thu, 14 May 2020 16:45:33 +0200
-Message-Id: <20200514144535.3000410-3-hch@lst.de>
+Subject: [PATCH 4/4] ipv4,appletalk: move SIOCADDRT and SIOCDELRT handling into ->compat_ioctl
+Date:   Thu, 14 May 2020 16:45:35 +0200
+Message-Id: <20200514144535.3000410-5-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200514144535.3000410-1-hch@lst.de>
 References: <20200514144535.3000410-1-hch@lst.de>
@@ -60,262 +60,264 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 To prepare removing the global routing_ioctl hack start lifting the code
-into a newly added ipv6 ->compat_ioctl handler.
+into the ipv4 and appletalk ->compat_ioctl handlers.  Unlike the existing
+handler we don't bother copying in the name - there are no compat issues for
+char arrays.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- include/net/ipv6.h   |  2 ++
- net/dccp/ipv6.c      |  1 +
- net/ipv6/af_inet6.c  | 53 +++++++++++++++++++++++++++++++++++++
- net/ipv6/raw.c       |  1 +
- net/l2tp/l2tp_ip6.c  |  1 +
- net/mptcp/protocol.c |  1 +
- net/sctp/ipv6.c      |  1 +
- net/socket.c         | 63 ++++++++++++--------------------------------
- 8 files changed, 77 insertions(+), 46 deletions(-)
+ include/net/compat.h | 18 +++++++++++++
+ net/appletalk/ddp.c  | 49 ++++++++++++++++++++++++++++++----
+ net/ipv4/af_inet.c   | 38 ++++++++++++++++++++++-----
+ net/socket.c         | 62 --------------------------------------------
+ 4 files changed, 94 insertions(+), 73 deletions(-)
 
-diff --git a/include/net/ipv6.h b/include/net/ipv6.h
-index 955badd1e8ffc..5fc3a9d7b053e 100644
---- a/include/net/ipv6.h
-+++ b/include/net/ipv6.h
-@@ -1115,6 +1115,8 @@ int inet6_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len);
- int inet6_getname(struct socket *sock, struct sockaddr *uaddr,
- 		  int peer);
- int inet6_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg);
-+int inet6_compat_ioctl(struct socket *sock, unsigned int cmd,
-+		unsigned long arg);
+diff --git a/include/net/compat.h b/include/net/compat.h
+index e341260642fee..2b5e1f7ba1533 100644
+--- a/include/net/compat.h
++++ b/include/net/compat.h
+@@ -30,6 +30,24 @@ struct compat_cmsghdr {
+ 	compat_int_t	cmsg_type;
+ };
  
- int inet6_hash_connect(struct inet_timewait_death_row *death_row,
- 			      struct sock *sk);
-diff --git a/net/dccp/ipv6.c b/net/dccp/ipv6.c
-index 1e5e08cc0bfc3..650187d688519 100644
---- a/net/dccp/ipv6.c
-+++ b/net/dccp/ipv6.c
-@@ -1082,6 +1082,7 @@ static const struct proto_ops inet6_dccp_ops = {
- 	.mmap		   = sock_no_mmap,
- 	.sendpage	   = sock_no_sendpage,
- #ifdef CONFIG_COMPAT
-+	.compat_ioctl	   = inet6_compat_ioctl,
- 	.compat_setsockopt = compat_sock_common_setsockopt,
- 	.compat_getsockopt = compat_sock_common_getsockopt,
- #endif
-diff --git a/net/ipv6/af_inet6.c b/net/ipv6/af_inet6.c
-index 066a85531edcd..914e8ae3d6fdd 100644
---- a/net/ipv6/af_inet6.c
-+++ b/net/ipv6/af_inet6.c
-@@ -60,6 +60,7 @@
- #include <net/calipso.h>
- #include <net/seg6.h>
- #include <net/rpl.h>
-+#include <net/compat.h>
- 
- #include <linux/uaccess.h>
- #include <linux/mroute6.h>
-@@ -569,6 +570,56 @@ int inet6_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
- }
- EXPORT_SYMBOL(inet6_ioctl);
- 
-+#ifdef CONFIG_COMPAT
-+struct compat_in6_rtmsg {
-+	struct in6_addr		rtmsg_dst;
-+	struct in6_addr		rtmsg_src;
-+	struct in6_addr		rtmsg_gateway;
-+	u32			rtmsg_type;
-+	u16			rtmsg_dst_len;
-+	u16			rtmsg_src_len;
-+	u32			rtmsg_metric;
-+	u32			rtmsg_info;
-+	u32			rtmsg_flags;
-+	s32			rtmsg_ifindex;
++struct compat_rtentry {
++	u32		rt_pad1;
++	struct sockaddr rt_dst;         /* target address               */
++	struct sockaddr rt_gateway;     /* gateway addr (RTF_GATEWAY)   */
++	struct sockaddr rt_genmask;     /* target network mask (IP)     */
++	unsigned short	rt_flags;
++	short		rt_pad2;
++	u32		rt_pad3;
++	unsigned char	rt_tos;
++	unsigned char	rt_class;
++	short		rt_pad4;
++	short		rt_metric;      /* +1 for binary compatibility! */
++	compat_uptr_t	rt_dev;         /* forcing the device at add    */
++	u32		rt_mtu;         /* per route MTU/Window         */
++	u32		rt_window;      /* Window clamping              */
++	unsigned short  rt_irtt;        /* Initial RTT                  */
 +};
 +
-+static int inet6_compat_routing_ioctl(struct sock *sk, unsigned int cmd,
-+		struct compat_in6_rtmsg __user *ur)
+ #else /* defined(CONFIG_COMPAT) */
+ /*
+  * To avoid compiler warnings:
+diff --git a/net/appletalk/ddp.c b/net/appletalk/ddp.c
+index 4177a74f65436..24b0724e05bb6 100644
+--- a/net/appletalk/ddp.c
++++ b/net/appletalk/ddp.c
+@@ -57,6 +57,7 @@
+ #include <net/sock.h>
+ #include <net/tcp_states.h>
+ #include <net/route.h>
++#include <net/compat.h>
+ #include <linux/atalk.h>
+ #include <linux/highmem.h>
+ 
+@@ -1839,20 +1840,58 @@ static int atalk_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ 
+ 
+ #ifdef CONFIG_COMPAT
++static int atalk_compat_routing_ioctl(struct sock *sk, unsigned int cmd,
++		struct compat_rtentry __user *ur)
 +{
-+	struct in6_rtmsg rt;
++	struct rtentry rt;
++	compat_uptr_t rtdev;
 +
-+	if (copy_from_user(&rt.rtmsg_dst, &ur->rtmsg_dst,
-+			3 * sizeof(struct in6_addr)) ||
-+	    get_user(rt.rtmsg_type, &ur->rtmsg_type) ||
-+	    get_user(rt.rtmsg_dst_len, &ur->rtmsg_dst_len) ||
-+	    get_user(rt.rtmsg_src_len, &ur->rtmsg_src_len) ||
-+	    get_user(rt.rtmsg_metric, &ur->rtmsg_metric) ||
-+	    get_user(rt.rtmsg_info, &ur->rtmsg_info) ||
-+	    get_user(rt.rtmsg_flags, &ur->rtmsg_flags) ||
-+	    get_user(rt.rtmsg_ifindex, &ur->rtmsg_ifindex))
++	if (copy_from_user(&rt.rt_dst, &ur->rt_dst,
++			3 * sizeof(struct sockaddr)) ||
++	    get_user(rt.rt_flags, &ur->rt_flags) ||
++	    get_user(rt.rt_metric, &ur->rt_metric) ||
++	    get_user(rt.rt_mtu, &ur->rt_mtu) ||
++	    get_user(rt.rt_window, &ur->rt_window) ||
++	    get_user(rt.rt_irtt, &ur->rt_irtt) ||
++	    get_user(rtdev, &ur->rt_dev))
 +		return -EFAULT;
 +
++	switch (cmd) {
++	case SIOCDELRT:
++		if (rt.rt_dst.sa_family != AF_APPLETALK)
++			return -EINVAL;
++		return atrtr_delete(&((struct sockaddr_at *)
++				      &rt.rt_dst)->sat_addr);
 +
-+	return ipv6_route_ioctl(sock_net(sk), cmd, &rt);
++	case SIOCADDRT:
++		rt.rt_dev = compat_ptr(rtdev);
++		return atrtr_ioctl_addrt(&rt);
++	default:
++		return -EINVAL;
++	}
 +}
-+
-+int inet6_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
-+{
+ static int atalk_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ {
 +	struct sock *sk = sock->sk;
 +	void __user *argp = compat_ptr(arg);
 +
 +	switch (cmd) {
 +	case SIOCADDRT:
 +	case SIOCDELRT:
-+		return inet6_compat_routing_ioctl(sk, cmd, argp);
++		return atalk_compat_routing_ioctl(sk, cmd, argp);
+ 	/*
+ 	 * SIOCATALKDIFADDR is a SIOCPROTOPRIVATE ioctl number, so we
+ 	 * cannot handle it in common code. The data we access if ifreq
+ 	 * here is compatible, so we can simply call the native
+ 	 * handler.
+ 	 */
+-	if (cmd == SIOCATALKDIFADDR)
+-		return atalk_ioctl(sock, cmd, (unsigned long)compat_ptr(arg));
+-
+-	return -ENOIOCTLCMD;
++	case SIOCATALKDIFADDR:
++		return atalk_ioctl(sock, cmd, (unsigned long)argp);
 +	default:
 +		return -ENOIOCTLCMD;
 +	}
-+}
-+EXPORT_SYMBOL_GPL(inet6_compat_ioctl);
+ }
+-#endif
 +#endif /* CONFIG_COMPAT */
+ 
+ 
+ static const struct net_proto_family atalk_family_ops = {
+diff --git a/net/ipv4/af_inet.c b/net/ipv4/af_inet.c
+index 6177c4ba00370..b99c5e36e0a8f 100644
+--- a/net/ipv4/af_inet.c
++++ b/net/ipv4/af_inet.c
+@@ -116,6 +116,7 @@
+ #include <linux/mroute.h>
+ #endif
+ #include <net/l3mdev.h>
++#include <net/compat.h>
+ 
+ #include <trace/events/sock.h>
+ 
+@@ -968,17 +969,42 @@ int inet_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ EXPORT_SYMBOL(inet_ioctl);
+ 
+ #ifdef CONFIG_COMPAT
++static int inet_compat_routing_ioctl(struct sock *sk, unsigned int cmd,
++		struct compat_rtentry __user *ur)
++{
++	struct rtentry rt;
++	compat_uptr_t rtdev;
 +
- INDIRECT_CALLABLE_DECLARE(int udpv6_sendmsg(struct sock *, struct msghdr *,
- 					    size_t));
- int inet6_sendmsg(struct socket *sock, struct msghdr *msg, size_t size)
-@@ -630,6 +681,7 @@ const struct proto_ops inet6_stream_ops = {
- 	.read_sock	   = tcp_read_sock,
- 	.peek_len	   = tcp_peek_len,
- #ifdef CONFIG_COMPAT
-+	.compat_ioctl	   = inet6_compat_ioctl,
- 	.compat_setsockopt = compat_sock_common_setsockopt,
- 	.compat_getsockopt = compat_sock_common_getsockopt,
- #endif
-@@ -658,6 +710,7 @@ const struct proto_ops inet6_dgram_ops = {
- 	.sendpage	   = sock_no_sendpage,
- 	.set_peek_off	   = sk_set_peek_off,
- #ifdef CONFIG_COMPAT
-+	.compat_ioctl	   = inet6_compat_ioctl,
- 	.compat_setsockopt = compat_sock_common_setsockopt,
- 	.compat_getsockopt = compat_sock_common_getsockopt,
- #endif
-diff --git a/net/ipv6/raw.c b/net/ipv6/raw.c
-index 0028aa1d78691..8ef5a7b30524f 100644
---- a/net/ipv6/raw.c
-+++ b/net/ipv6/raw.c
-@@ -1377,6 +1377,7 @@ const struct proto_ops inet6_sockraw_ops = {
- 	.mmap		   = sock_no_mmap,
- 	.sendpage	   = sock_no_sendpage,
- #ifdef CONFIG_COMPAT
-+	.compat_ioctl	   = inet6_compat_ioctl,
- 	.compat_setsockopt = compat_sock_common_setsockopt,
- 	.compat_getsockopt = compat_sock_common_getsockopt,
- #endif
-diff --git a/net/l2tp/l2tp_ip6.c b/net/l2tp/l2tp_ip6.c
-index d148766f40d11..fdfef926c5916 100644
---- a/net/l2tp/l2tp_ip6.c
-+++ b/net/l2tp/l2tp_ip6.c
-@@ -758,6 +758,7 @@ static const struct proto_ops l2tp_ip6_ops = {
- 	.mmap		   = sock_no_mmap,
- 	.sendpage	   = sock_no_sendpage,
- #ifdef CONFIG_COMPAT
-+	.compat_ioctl	   = inet6_compat_ioctl,
- 	.compat_setsockopt = compat_sock_common_setsockopt,
- 	.compat_getsockopt = compat_sock_common_getsockopt,
- #endif
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index e1f23016ed3f8..adefa5b7af698 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2006,6 +2006,7 @@ static const struct proto_ops mptcp_v6_stream_ops = {
- 	.mmap		   = sock_no_mmap,
- 	.sendpage	   = inet_sendpage,
- #ifdef CONFIG_COMPAT
-+	.compat_ioctl	   = inet6_compat_ioctl,
- 	.compat_setsockopt = compat_sock_common_setsockopt,
- 	.compat_getsockopt = compat_sock_common_getsockopt,
- #endif
-diff --git a/net/sctp/ipv6.c b/net/sctp/ipv6.c
-index c87af430107ae..ccfa0ab3e7f48 100644
---- a/net/sctp/ipv6.c
-+++ b/net/sctp/ipv6.c
-@@ -1032,6 +1032,7 @@ static const struct proto_ops inet6_seqpacket_ops = {
- 	.recvmsg	   = inet_recvmsg,
- 	.mmap		   = sock_no_mmap,
- #ifdef CONFIG_COMPAT
-+	.compat_ioctl	   = inet6_compat_ioctl,
- 	.compat_setsockopt = compat_sock_common_setsockopt,
- 	.compat_getsockopt = compat_sock_common_getsockopt,
- #endif
++	if (copy_from_user(&rt.rt_dst, &ur->rt_dst,
++			3 * sizeof(struct sockaddr)) ||
++	    get_user(rt.rt_flags, &ur->rt_flags) ||
++	    get_user(rt.rt_metric, &ur->rt_metric) ||
++	    get_user(rt.rt_mtu, &ur->rt_mtu) ||
++	    get_user(rt.rt_window, &ur->rt_window) ||
++	    get_user(rt.rt_irtt, &ur->rt_irtt) ||
++	    get_user(rtdev, &ur->rt_dev))
++		return -EFAULT;
++
++	rt.rt_dev = compat_ptr(rtdev);
++	return ip_rt_ioctl(sock_net(sk), cmd, &rt);
++}
++
+ static int inet_compat_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ {
+ 	struct sock *sk = sock->sk;
+-	int err = -ENOIOCTLCMD;
+-
+-	if (sk->sk_prot->compat_ioctl)
+-		err = sk->sk_prot->compat_ioctl(sk, cmd, arg);
++	void __user *argp = compat_ptr(arg);
+ 
+-	return err;
++	switch (cmd) {
++	case SIOCADDRT:
++	case SIOCDELRT:
++		return inet_compat_routing_ioctl(sk, cmd, argp);
++	default:
++		if (!sk->sk_prot->compat_ioctl)
++			return -ENOIOCTLCMD;
++		return sk->sk_prot->compat_ioctl(sk, cmd, arg);
++	}
+ }
+-#endif
++#endif /* CONFIG_COMPAT */
+ 
+ const struct proto_ops inet_stream_ops = {
+ 	.family		   = PF_INET,
 diff --git a/net/socket.c b/net/socket.c
-index 1c9a7260a41de..afe3e8abe3c13 100644
+index afe3e8abe3c13..80422fc3c836e 100644
 --- a/net/socket.c
 +++ b/net/socket.c
-@@ -3384,62 +3384,33 @@ struct rtentry32 {
- 	unsigned short  rt_irtt;        /* Initial RTT                  */
- };
+@@ -3366,65 +3366,6 @@ static int compat_sioc_ifmap(struct net *net, unsigned int cmd,
+ 	return err;
+ }
  
--struct in6_rtmsg32 {
--	struct in6_addr		rtmsg_dst;
--	struct in6_addr		rtmsg_src;
--	struct in6_addr		rtmsg_gateway;
--	u32			rtmsg_type;
--	u16			rtmsg_dst_len;
--	u16			rtmsg_src_len;
--	u32			rtmsg_metric;
--	u32			rtmsg_info;
--	u32			rtmsg_flags;
--	s32			rtmsg_ifindex;
+-struct rtentry32 {
+-	u32		rt_pad1;
+-	struct sockaddr rt_dst;         /* target address               */
+-	struct sockaddr rt_gateway;     /* gateway addr (RTF_GATEWAY)   */
+-	struct sockaddr rt_genmask;     /* target network mask (IP)     */
+-	unsigned short	rt_flags;
+-	short		rt_pad2;
+-	u32		rt_pad3;
+-	unsigned char	rt_tos;
+-	unsigned char	rt_class;
+-	short		rt_pad4;
+-	short		rt_metric;      /* +1 for binary compatibility! */
+-	/* char * */ u32 rt_dev;        /* forcing the device at add    */
+-	u32		rt_mtu;         /* per route MTU/Window         */
+-	u32		rt_window;      /* Window clamping              */
+-	unsigned short  rt_irtt;        /* Initial RTT                  */
 -};
 -
- static int routing_ioctl(struct net *net, struct socket *sock,
- 			 unsigned int cmd, void __user *argp)
- {
- 	int ret;
- 	void *r = NULL;
--	struct in6_rtmsg r6;
- 	struct rtentry r4;
- 	char devname[16];
- 	u32 rtdev;
- 	mm_segment_t old_fs = get_fs();
-+	struct rtentry32 __user *ur4 = argp;
-+
-+	ret = copy_from_user(&r4.rt_dst, &(ur4->rt_dst),
-+				3 * sizeof(struct sockaddr));
-+	ret |= get_user(r4.rt_flags, &(ur4->rt_flags));
-+	ret |= get_user(r4.rt_metric, &(ur4->rt_metric));
-+	ret |= get_user(r4.rt_mtu, &(ur4->rt_mtu));
-+	ret |= get_user(r4.rt_window, &(ur4->rt_window));
-+	ret |= get_user(r4.rt_irtt, &(ur4->rt_irtt));
-+	ret |= get_user(rtdev, &(ur4->rt_dev));
-+	if (rtdev) {
-+		ret |= copy_from_user(devname, compat_ptr(rtdev), 15);
-+		r4.rt_dev = (char __user __force *)devname;
-+		devname[15] = 0;
-+	} else
-+		r4.rt_dev = NULL;
- 
--	if (sock && sock->sk && sock->sk->sk_family == AF_INET6) { /* ipv6 */
--		struct in6_rtmsg32 __user *ur6 = argp;
--		ret = copy_from_user(&r6.rtmsg_dst, &(ur6->rtmsg_dst),
--			3 * sizeof(struct in6_addr));
--		ret |= get_user(r6.rtmsg_type, &(ur6->rtmsg_type));
--		ret |= get_user(r6.rtmsg_dst_len, &(ur6->rtmsg_dst_len));
--		ret |= get_user(r6.rtmsg_src_len, &(ur6->rtmsg_src_len));
--		ret |= get_user(r6.rtmsg_metric, &(ur6->rtmsg_metric));
--		ret |= get_user(r6.rtmsg_info, &(ur6->rtmsg_info));
--		ret |= get_user(r6.rtmsg_flags, &(ur6->rtmsg_flags));
--		ret |= get_user(r6.rtmsg_ifindex, &(ur6->rtmsg_ifindex));
+-static int routing_ioctl(struct net *net, struct socket *sock,
+-			 unsigned int cmd, void __user *argp)
+-{
+-	int ret;
+-	void *r = NULL;
+-	struct rtentry r4;
+-	char devname[16];
+-	u32 rtdev;
+-	mm_segment_t old_fs = get_fs();
+-	struct rtentry32 __user *ur4 = argp;
 -
--		r = (void *) &r6;
--	} else { /* ipv4 */
--		struct rtentry32 __user *ur4 = argp;
--		ret = copy_from_user(&r4.rt_dst, &(ur4->rt_dst),
--					3 * sizeof(struct sockaddr));
--		ret |= get_user(r4.rt_flags, &(ur4->rt_flags));
--		ret |= get_user(r4.rt_metric, &(ur4->rt_metric));
--		ret |= get_user(r4.rt_mtu, &(ur4->rt_mtu));
--		ret |= get_user(r4.rt_window, &(ur4->rt_window));
--		ret |= get_user(r4.rt_irtt, &(ur4->rt_irtt));
--		ret |= get_user(rtdev, &(ur4->rt_dev));
--		if (rtdev) {
--			ret |= copy_from_user(devname, compat_ptr(rtdev), 15);
--			r4.rt_dev = (char __user __force *)devname;
--			devname[15] = 0;
--		} else
--			r4.rt_dev = NULL;
+-	ret = copy_from_user(&r4.rt_dst, &(ur4->rt_dst),
+-				3 * sizeof(struct sockaddr));
+-	ret |= get_user(r4.rt_flags, &(ur4->rt_flags));
+-	ret |= get_user(r4.rt_metric, &(ur4->rt_metric));
+-	ret |= get_user(r4.rt_mtu, &(ur4->rt_mtu));
+-	ret |= get_user(r4.rt_window, &(ur4->rt_window));
+-	ret |= get_user(r4.rt_irtt, &(ur4->rt_irtt));
+-	ret |= get_user(rtdev, &(ur4->rt_dev));
+-	if (rtdev) {
+-		ret |= copy_from_user(devname, compat_ptr(rtdev), 15);
+-		r4.rt_dev = (char __user __force *)devname;
+-		devname[15] = 0;
+-	} else
+-		r4.rt_dev = NULL;
 -
--		r = (void *) &r4;
+-	r = (void *) &r4;
+-
+-	if (ret) {
+-		ret = -EFAULT;
+-		goto out;
 -	}
-+	r = (void *) &r4;
- 
- 	if (ret) {
- 		ret = -EFAULT;
+-
+-	set_fs(KERNEL_DS);
+-	ret = sock_do_ioctl(net, sock, cmd, (unsigned long) r);
+-	set_fs(old_fs);
+-
+-out:
+-	return ret;
+-}
+-
+ /* Since old style bridge ioctl's endup using SIOCDEVPRIVATE
+  * for some operations; this forces use of the newer bridge-utils that
+  * use compatible ioctls
+@@ -3463,9 +3404,6 @@ static int compat_sock_ioctl_trans(struct file *file, struct socket *sock,
+ 	case SIOCGIFMAP:
+ 	case SIOCSIFMAP:
+ 		return compat_sioc_ifmap(net, cmd, argp);
+-	case SIOCADDRT:
+-	case SIOCDELRT:
+-		return routing_ioctl(net, sock, cmd, argp);
+ 	case SIOCGSTAMP_OLD:
+ 	case SIOCGSTAMPNS_OLD:
+ 		if (!sock->ops->gettstamp)
 -- 
 2.26.2
 
