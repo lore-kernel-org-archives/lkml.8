@@ -2,163 +2,167 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F49C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 064E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7476D205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0B23205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:03:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GLOnAciQ"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="gYeH/Ebn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgENN5d (ORCPT
+        id S1726245AbgENODZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:57:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58606 "EHLO
+        Thu, 14 May 2020 10:03:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726073AbgENN5d (ORCPT
+        by vger.kernel.org with ESMTP id S1726037AbgENODY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:57:33 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D485C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:57:33 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id d184so1352216pfd.4
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:57:33 -0700 (PDT)
+        Thu, 14 May 2020 10:03:24 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DADEC061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:03:24 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id 190so3069919qki.1
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:03:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GqYiH+VZrEFE/4Bke7hJw678bo+ME1oNIhgtpxt66To=;
-        b=GLOnAciQbNb0HdK3JXKhpQq3JT9fJe2X9eCvLqzKyG/QiVAnAvlnhQuicAAjKHv8TJ
-         S95azhHwl+I2LHx9a+0KbCA/C2DIReQ7HIvy6ghaGru+2EOkh9WN8ap0LRd2rezdzkF1
-         KswYo2ef+5oonlA4pE78CdceA8Iml+rbTmTUDJfJHYTm2Qb7UCK/mv44DoF2T6gSyJeL
-         6q8OnrUaaPV5Gb8sYykwYOST5ZK+UOfOSFJTPRil/RgTkL5e8TIhIjzuHxct5AkX59fL
-         zV65xs1bfu06JmC5yN52tPY3ADCpK61sIvAF+bMxtJukgD6rh3Xttjgv8kLKHLdAENH6
-         vM7A==
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=DPPma3BWcIsf3J/I70N8Nn3h+M8824Udo5W6dirat1Q=;
+        b=gYeH/EbnoXl71eid3pRmazK7xy05PoyQl4HRdQVxqc3vUTmfBZVm9mX8lKWNLWkS9W
+         0g3moK8CoN2hVva4yEIlApR1lxdLjtLTKKwduXuSnphKSuR1+nZP58OquuLTWh7djnNq
+         opJ+ui5SlJPvbZPokEDbddfDUxGwaPThaNyeWfGSxOxpCIa1EEatvy082rKKhmVJAGM1
+         FNLOxXGfj9+Hiu8SAoQvjk58tPQisRePOCGIqtimdEnhlLV1HO6GSy7houWypJKmcYK+
+         YDa/SmNui5MHlfB5K80qDpWGHNntYbYLMjhBFThcth4RwTTXXtqUjsOokOTtc73nsa+/
+         LpyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GqYiH+VZrEFE/4Bke7hJw678bo+ME1oNIhgtpxt66To=;
-        b=GF4qdnqZ9PUUGd8hEnVejzp821hp82JH9YTuZ8ZALOo2xexSQHoTZdrsuy/+2vcvBa
-         MYvFJ1p4t9vJ8+o3SH6C1t2YRDz6XopmTcj4VAzqBLxw00pSdOKqOGCjVD6pAX9qFxYg
-         V8Zg9TM5Hf5MLXev5sWolURJaE5eaMmpeYTl2PiifIDi1Zfw23nXHSxOvnPsgtWlZZiK
-         KfCSrL0geyoJgPgQ2X12X7mhGGOrI2JZ8nxMeZ56/zP3DXD7SEDrw7LqPtvMIBmWbMva
-         xbnINiHg2WjaOtpE219LRqX1rGoUTZaHJGyMwdIBnf7jGEj3qoJnqkRX3u1I4e+oHLVd
-         w6bw==
-X-Gm-Message-State: AOAM532foXYsEs7YkJ0fddgiP0dSEpDpw5KuXIBpiV30D1mZX0ijYqwz
-        pIO0bDW9dSP9i45N+lEtVU8wQA==
-X-Google-Smtp-Source: ABdhPJzc+/MZVVljv3fDoixtlxn6rODPGLabMeEYFLm1Mq6UZO49T7Fo/gZ46zRg57ca6oYy4r7G9w==
-X-Received: by 2002:a63:7c50:: with SMTP id l16mr4179481pgn.59.1589464652579;
-        Thu, 14 May 2020 06:57:32 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id v10sm16179337pjy.48.2020.05.14.06.57.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 06:57:31 -0700 (PDT)
-Date:   Thu, 14 May 2020 06:56:02 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        agross@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: qcom: db820c: fix audio configuration
-Message-ID: <20200514135602.GT2165@builder.lan>
-References: <20200417092327.7341-1-srinivas.kandagatla@linaro.org>
- <20200514134353.GT14092@vkoul-mobl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200514134353.GT14092@vkoul-mobl>
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=DPPma3BWcIsf3J/I70N8Nn3h+M8824Udo5W6dirat1Q=;
+        b=oU04hEOqOkSI/tg0p1OGaOsoq41Inkp7woQk1ipYwG81R4mOl/UPGzz3cHXR2gJj7C
+         P87tA6/GhJdYMrXei7ih752Pa5k4tEBjrGt7C3TVkwfPcMU1+rYOVT4Qifyy4OYFPI5y
+         zjwkW5iWz2EJSZqbpGMikOfarXLLdUCs8JIWoD+xmG3kh7F2lG2qEHKkJ+CmxeABvIoa
+         owSbupqHOlSXcOf9jJJZ/U3QS1y2+WJBjrK/5Gx10QwtmoHxgoOZampGccYURflbi10F
+         UqiOQ/GVs1VKmsUoAofka/7R5Zuhjsw6d5onQYikpvFxknQSjzXGhU3cN7QlVCRN50Ca
+         Oxug==
+X-Gm-Message-State: AOAM531awBuWaqJ19CSu4nLsnu6OO0HWLOwpmWbQ2wGumGzdMrY+jTsf
+        vGh4FctgwIv/a026x/a+R+ZgLg==
+X-Google-Smtp-Source: ABdhPJyXJtAqYOZRYhFZ7uYjxNZfKgwQhSgvkhQokfCdKf9HbVI5MRMO3cZ7ualj7v4u6dbRGv3N7w==
+X-Received: by 2002:a37:658a:: with SMTP id z132mr4906470qkb.267.1589465002907;
+        Thu, 14 May 2020 07:03:22 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id k138sm2650919qke.55.2020.05.14.07.03.22
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 May 2020 07:03:22 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: Default enable RCU list lockdep debugging with PROVE_RCU
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20200514135402.GI2869@paulmck-ThinkPad-P72>
+Date:   Thu, 14 May 2020 10:03:21 -0400
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Amol Grover <frextrite@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <CC392959-36FD-459F-BD13-8F50C22FC615@lca.pw>
+References: <20200514222535.259cb69e@canb.auug.org.au>
+ <ADC503BE-32C0-46BB-A65E-59FFEC30ED57@lca.pw>
+ <20200514133328.GG2869@paulmck-ThinkPad-P72>
+ <ADE40EB3-1B1C-4CCF-9B8A-1F2BC585BCFB@lca.pw>
+ <20200514135402.GI2869@paulmck-ThinkPad-P72>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 14 May 06:43 PDT 2020, Vinod Koul wrote:
 
-> On 17-04-20, 10:23, Srinivas Kandagatla wrote:
-> > After patch f864edff110d ("ASoC: qdsp6: q6routing: remove default routing")
-> > and 9b60441692d9 ("ASoC: qdsp6: q6asm-dai: only enable dais from device tree")
-> > asm dais and routing needs to be properly specified at device tree level.
-> > 
-> > This patch fixes this.
-> 
-> Can we add the Fixes tag here please?
-> 
 
-Yes, I added that and picked this patch for 5.7-rc and sent out a pull
-request. Unfortunately this does not seem to have been picked up yet.
+> On May 14, 2020, at 9:54 AM, Paul E. McKenney <paulmck@kernel.org> =
+wrote:
+>=20
+> On Thu, May 14, 2020 at 09:44:28AM -0400, Qian Cai wrote:
+>>=20
+>>=20
+>>> On May 14, 2020, at 9:33 AM, Paul E. McKenney <paulmck@kernel.org> =
+wrote:
+>>>=20
+>>> On Thu, May 14, 2020 at 08:31:13AM -0400, Qian Cai wrote:
+>>>>=20
+>>>>=20
+>>>>> On May 14, 2020, at 8:25 AM, Stephen Rothwell =
+<sfr@canb.auug.org.au> wrote:
+>>>>>=20
+>>>>> Hi Paul,
+>>>>>=20
+>>>>> This patch in the rcu tree
+>>>>>=20
+>>>>> d13fee049fa8 ("Default enable RCU list lockdep debugging with =
+PROVE_RCU")
+>>>>>=20
+>>>>> is causing whack-a-mole in the syzbot testing of linux-next.  =
+Because
+>>>>> they always do a debug build of linux-next, no testing is getting =
+done. :-(
+>>>>>=20
+>>>>> Can we find another way to find all the bugs that are being =
+discovered
+>>>>> (very slowly)?
+>>>>=20
+>>>> Alternatively, could syzbot to use PROVE_RCU=3Dn temporarily =
+because it can=E2=80=99t keep up with it? I personally found =
+PROVE_RCU_LIST=3Dy is still useful for my linux-next testing, and =
+don=E2=80=99t want to lose that coverage overnight.
+>>>=20
+>>> The problem is that PROVE_RCU is exactly PROVE_LOCKING, and asking =
+people
+>>> to test without PROVE_LOCKING is a no-go in my opinion.  But of =
+course
+>>> on the other hand if there is no testing of RCU list lockdep =
+debugging,
+>>> those issues will never be found, let alone fixed.
+>>>=20
+>>> One approach would be to do as Stephen asks (either remove =
+d13fee049fa8
+>>> or pull it out of -next) and have testers force-enable the RCU list
+>>> lockdep debugging.
+>>>=20
+>>> Would that work for you?
+>>=20
+>> Alternatively, how about having
+>>=20
+>> PROVE_RCU_LIST=3Dn if DEBUG_AID_FOR_SYZBOT
+>>=20
+>> since it is only syzbot can=E2=80=99t keep up with it?
+>=20
+> Sound good to me, assuming that this works for the syzkaller guys.
+> Or could there be a "select PROVE_RCU_LIST" for the people who would
+> like to test it.
+>=20
+> Alternatively, if we revert d13fee049fa8 from -next, I could provide
+> you a script that updates your .config to set both RCU_EXPERT and
+> PROVE_RCU_LIST.
+>=20
+> There are a lot of ways to appraoch this.
+>=20
+> So what would work best for everyone?
 
-> Other than that lgtm:
-> 
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
-Thanks
+If PROVE_RCU_LIST=3Dn if DEBUG_AID_FOR_SYZBOT works for syzbot guys, =
+that would be great, so other testing agents could still report/fix =
+those RCU-list bugs and then pave a way for syzbot to return back once =
+all those false positives had been sorted out.
 
-Regards,
-Bjorn
-
-> > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 22 +++++++++++++++++++-
-> >  arch/arm64/boot/dts/qcom/msm8996.dtsi        |  2 ++
-> >  2 files changed, 23 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-> > index 4692b7ad16b7..cf217b6b2b39 100644
-> > --- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-> > @@ -908,10 +908,30 @@
-> >  	status = "okay";
-> >  };
-> >  
-> > +&q6asmdai {
-> > +	dai@0 {
-> > +		reg = <0>;
-> > +		direction = <2>;
-> > +	};
-> > +
-> > +	dai@1 {
-> > +		reg = <1>;
-> > +		direction = <2>;
-> > +	};
-> > +
-> > +	dai@2 {
-> > +		reg = <2>;
-> > +		direction = <1>;
-> > +	};
-> > +};
-> > +
-> >  &sound {
-> >  	compatible = "qcom,apq8096-sndcard";
-> >  	model = "DB820c";
-> > -	audio-routing =	"RX_BIAS", "MCLK";
-> > +	audio-routing =	"RX_BIAS", "MCLK",
-> > +		"MM_DL1",  "MultiMedia1 Playback",
-> > +		"MM_DL2",  "MultiMedia2 Playback",
-> > +		"MultiMedia3 Capture", "MM_UL3";
-> >  
-> >  	mm1-dai-link {
-> >  		link-name = "MultiMedia1";
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> > index 14827adebd94..98634d5c4440 100644
-> > --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> > @@ -2066,6 +2066,8 @@
-> >  						reg = <APR_SVC_ASM>;
-> >  						q6asmdai: dais {
-> >  							compatible = "qcom,q6asm-dais";
-> > +							#address-cells = <1>;
-> > +							#size-cells = <0>;
-> >  							#sound-dai-cells = <1>;
-> >  							iommus = <&lpass_q6_smmu 1>;
-> >  						};
-> > -- 
-> > 2.21.0
-> 
-> -- 
-> ~Vinod
+Otherwise,  =E2=80=9Cselect PROVE_RCU_LIST=E2=80=9D *might* be better =
+than buried into RCU_EXPERT where we will probably never saw those false =
+positives been addressed since my configs does not cover a wide range of =
+subsystems and probably not many other bots would enable RCU_EXPERT.=
