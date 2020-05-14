@@ -2,114 +2,139 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4222CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C122C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B03A20709
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A439207CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:39:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="oMQv2N5U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbgENIhs (ORCPT
+        id S1726241AbgENIjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 04:37:48 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59457 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbgENIhp (ORCPT
+        Thu, 14 May 2020 04:39:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725878AbgENIjG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 04:37:45 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jZ9N6-0000Ln-N0; Thu, 14 May 2020 08:37:40 +0000
-Date:   Thu, 14 May 2020 10:37:39 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc:     "Luck, Tony" <tony.luck@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
+        Thu, 14 May 2020 04:39:06 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49688C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:39:06 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id d207so10817965wmd.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:39:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tnuTV/zXdDzicY2b17ET4DFOi9wOJQg8YIzv1AfW3WE=;
+        b=oMQv2N5Uoee4PNvjxqELJOdtY+6u6I9dJbzTAYSosIwOc1NbOr3Go3jCOQYIOyNs9a
+         iWubTq/HyBgZ7wxkH3Fv9mCtq1R7BylmqgFJN3A8aQcEQgTbO+jddHUOv8ev/9/mN0Tg
+         Y/y3NFdhrrD0BvVUBvR2XnVP/758zyG8c/u5HpuRAHGtf8wWaqc4sKMOLtw7b7gOYQbk
+         9HB31ok5iClkiZ618qlcnXN1xXRIAwsjdqz6jxnsV5cEkLGSLAOy8K/UWW1ZaTWXLjjl
+         mHmCu2pS3SRcVvGFucmB8C831De63G4rsEA+dZU0h/ne17J+s6WR4mCQAp0Uj9CLDePt
+         iqWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tnuTV/zXdDzicY2b17ET4DFOi9wOJQg8YIzv1AfW3WE=;
+        b=CC2lHhhlxdFa+lhyXCUC05VDgvwqV6j4TOS080NAUzQnbLIHFvmOeJmQjqKO0y+gEY
+         jamTFqOO6STduvGa6UJ4ocGgdYoMvXD2rxRWtU49VWmE2tXYYMyoeXuzQKQmyw2bUe2P
+         hCskqt1Qa4ZVcWz76aWzETLgMSDcW+iK8+vgp9FWAOps/Erk2QvNdCD8lzXiNqTcQONK
+         JYe1rwgI0S0/R9xUo/pODBpYZIry7Crse4i9Jbti0HYLrvNahTDNLhXbQWFCpxJh41NO
+         yTWKxPMQSu7u1o2WpmZu7XOx/qwHURf4Z3aAFh7ltPMaMUCoCje0aEi3e/1bquhixirJ
+         0j3g==
+X-Gm-Message-State: AGi0PuaGZGTl6+iDaN2f+I85qEBQk0nEfMcv34i54d4eN/BqqAbSxFTN
+        2IQUF8FODBQTjp7Rs2fkq2k9RQ==
+X-Google-Smtp-Source: APiQypJdRVNG7dbrl/q2cvp5LB+HckmtujXzbpUZ+iYZXFAJE2euKPihQf6Ut4igAb6LJPAXXs3O8g==
+X-Received: by 2002:a1c:7f86:: with SMTP id a128mr47570067wmd.95.1589445544981;
+        Thu, 14 May 2020 01:39:04 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id z7sm2975922wrl.88.2020.05.14.01.39.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 01:39:04 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ia64: enable HAVE_COPY_THREAD_TLS, switch to
- kernel_clone_args
-Message-ID: <20200514083739.m2idxcxof4jyreck@wittgenstein>
-References: <20200513204848.1208864-1-christian.brauner@ubuntu.com>
- <3908561D78D1C84285E8C5FCA982C28F7F6266E0@ORSMSX115.amr.corp.intel.com>
- <79e58d9b-5a39-390c-2f0c-0d87b63442b4@physik.fu-berlin.de>
- <20200514074606.vkc35syhdep23rzh@wittgenstein>
- <6b298416-1e64-eee7-0bb4-3b1f7f67adc6@physik.fu-berlin.de>
- <20200514075808.krdtypxpag4tfa74@wittgenstein>
- <917c9b03-cfd0-4bcf-d6a6-6aef7489b27b@physik.fu-berlin.de>
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v5 0/2] irq/irq_sim: improve the API
+Date:   Thu, 14 May 2020 10:38:59 +0200
+Message-Id: <20200514083901.23445-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <917c9b03-cfd0-4bcf-d6a6-6aef7489b27b@physik.fu-berlin.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 10:24:25AM +0200, John Paul Adrian Glaubitz wrote:
-> Hi!
-> 
-> On 5/14/20 9:58 AM, Christian Brauner wrote:
-> >> The machine also serves as a Debian buildd which is why it's a bit more
-> >> busy than other servers.
-> > 
-> > Oh? Does it also produce Debian images for ia64 similar to what is done
-> > for sparc64?
-> 
-> Yes, it's actually the same person who does this - me ;).
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Well thank you very much. Thanks to this I was able to test my sparc
-patches in qemu. :)
+The interrupt simulator API exposes a lot of custom data structures and
+functions and doesn't reuse the interfaces already exposed by the irq
+subsystem. This series tries to address it.
 
-> 
-> These images should work just fine:
-> 
-> > https://cdimage.debian.org/cdimage/ports/2020-04-19/
+First, we make irq_domain_reset_irq_data() available to non-V2 domain API
+users - that'll be used in the subsequent patch. Next we overhaul the
+public interfaces - we hide all specific data structures and instead
+rely on the irq_domain struct and virtual interrupt numberspace.
 
-Oh I didn't find these images when searching for them. They would be
-super helpful but there's no qemu for ia64 anymore that's useable. I had
-tried building qemu from an old source based on a gsoc project for an
-ia64 port but that turned out to be more involved than writing ia64
-assembly itself. :)
+The end effect is that we limit the interrupt simulator API to two
+functions (plus one device managed variant) and zero new structures.
 
-> 
-> The latest snapshot is currently broken due to a regression in initramfs-tools.
-> 
-> >>>> As for getting a working cross-compiler for ia64 in Debian, this has
-> >>>> been on my TODO list for a while now. Building a cross-compiler for
-> >>>> ia64 is a bit more tricky due to it's dependency on the external
-> >>>> libunwind.
-> >>>
-> >>> I hit that roadblock as well but yeah, a cross-compiler would be
-> >>> helpful.
-> >>
-> >> It's not difficult, it's just a bit of annoying package work including
-> >> some trial and error testing.
-> >>
-> >> Once the cross-compiler is in Debian, it will be available in Ubuntu as well.
-> > 
-> > Would that based on a recent gcc? I vaguely remember a post somwhere
-> > that gcc 10 or 11 was planning to drop support for ia64?
-> 
-> Yes, that would be the latest gcc. There are no plans at the moment to
-> drop ia64 from gcc as the backend is already ported to MODE_CC.
-> 
-> m68k was on the brink of being removed, but I started a Bountysource campaign
-> to convert it from cc0 to MODE_CC and it was eventually saved ;).
-> 
-> > https://www.bountysource.com/issues/80706251-m68k-convert-the-backend-to-mode_cc-so-it-can-be-kept-in-future-releases
+v1: https://lkml.org/lkml/2019/8/12/558
 
-Oh that's pretty neat. Thanks!
-Christian
+v1 -> v2:
+- instead of just making the new data structures opaque for users, remove
+  them entirely in favor of irq_domain
+- call irq_set_handler() & irq_domain_reset_irq_data() when unmapping
+  the simulated interrupt
+- fix a memory leak in error path
+- make it possible to use irq_find_matching_fwnode() with the simulator
+  domain
+- correctly use irq_create_mapping() and irq_find_mapping(): only use the
+  former at init-time and the latter at interrupt-time
+
+v2 -> v3:
+- drop the controverial changes to irq_domain code and only leave the
+  changes to irq_sim and its users with the plan to revisit the former
+  at a later time
+
+v3 -> v4:
+- add the Ack from Jonathan
+- remove redundant parts of patch 1/2
+
+v4 -> v5:
+- add the review tags from Linus
+- use the irq_set_irqchip_state interface and drop irq_sim_fire() entirely
+  as suggested by Marc
+
+Bartosz Golaszewski (2):
+  irq: make irq_domain_reset_irq_data() available even for non-V2 users
+  irq/irq_sim: simplify the API
+
+ drivers/gpio/gpio-mockup.c          |  53 ++++--
+ drivers/iio/dummy/iio_dummy_evgen.c |  34 ++--
+ include/linux/irq_sim.h             |  33 +---
+ include/linux/irqdomain.h           |   2 +-
+ kernel/irq/Kconfig                  |   1 +
+ kernel/irq/irq_sim.c                | 267 +++++++++++++++++-----------
+ kernel/irq/irqdomain.c              |  24 +--
+ 7 files changed, 250 insertions(+), 164 deletions(-)
+
+-- 
+2.25.0
+
