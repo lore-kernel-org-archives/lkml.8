@@ -2,84 +2,75 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6090BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2051B2065C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 471EB206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:37:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbgENTh1 (ORCPT
+        id S1728295AbgENThj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:37:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726667AbgENTh0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 15:37:26 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBEFCC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 12:37:26 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jZJfV-0007qm-DB; Thu, 14 May 2020 21:37:21 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id BD80F1004CE; Thu, 14 May 2020 21:37:20 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Marco Elver <elver@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
-In-Reply-To: <CANpmjNOGFqhtDa9wWpXs2kztQsSozbwsuMO5BqqW0c0g0zGfSA@mail.gmail.com>
-References: <20200513124021.GB20278@willie-the-truck> <CANpmjNM5XW+ufJ6Mw2Tn7aShRCZaUPGcH=u=4Sk5kqLKyf3v5A@mail.gmail.com> <20200513165008.GA24836@willie-the-truck> <CANpmjNN=n59ue06s0MfmRFvKX=WB2NgLgbP6kG_MYCGy2R6PHg@mail.gmail.com> <20200513174747.GB24836@willie-the-truck> <CANpmjNNOpJk0tprXKB_deiNAv_UmmORf1-2uajLhnLWQQ1hvoA@mail.gmail.com> <20200513212520.GC28594@willie-the-truck> <CANpmjNOAi2K6knC9OFUGjpMo-rvtLDzKMb==J=vTRkmaWctFaQ@mail.gmail.com> <20200514110537.GC4280@willie-the-truck> <CANpmjNMTsY_8241bS7=XAfqvZHFLrVEkv_uM4aDUWE_kh3Rvbw@mail.gmail.com> <20200514142450.GC2978@hirez.programming.kicks-ass.net> <875zcyzh6r.fsf@nanos.tec.linutronix.de> <CANpmjNOGFqhtDa9wWpXs2kztQsSozbwsuMO5BqqW0c0g0zGfSA@mail.gmail.com>
-Date:   Thu, 14 May 2020 21:37:20 +0200
-Message-ID: <87k11exq8f.fsf@nanos.tec.linutronix.de>
+        Thu, 14 May 2020 15:37:39 -0400
+Received: from namei.org ([65.99.196.166]:59072 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726667AbgENThj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 15:37:39 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id 04EJb3d8007993;
+        Thu, 14 May 2020 19:37:03 GMT
+Date:   Fri, 15 May 2020 05:37:03 +1000 (AEST)
+From:   James Morris <jmorris@namei.org>
+To:     =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-security-module@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v17 05/10] fs,landlock: Support filesystem
+ access-control
+In-Reply-To: <2561827e-020c-9a76-98ae-9514904c69f9@digikod.net>
+Message-ID: <alpine.LRH.2.21.2005150536440.7929@namei.org>
+References: <20200511192156.1618284-1-mic@digikod.net> <20200511192156.1618284-6-mic@digikod.net> <alpine.LRH.2.21.2005141335280.30052@namei.org> <c159d845-6108-4b67-6527-405589fa5382@digikod.net> <alpine.LRH.2.21.2005150329580.26489@namei.org>
+ <2561827e-020c-9a76-98ae-9514904c69f9@digikod.net>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/mixed; boundary="1665246916-72433049-1589485024=:7929"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marco Elver <elver@google.com> writes:
-> On Thu, 14 May 2020 at 17:09, Thomas Gleixner <tglx@linutronix.de> wrote:
->>
->> Peter Zijlstra <peterz@infradead.org> writes:
->> > On Thu, May 14, 2020 at 03:35:58PM +0200, Marco Elver wrote:
->> >> Any preferences?
->> >
->> > I suppose DTRT, if we then write the Makefile rule like:
->> >
->> > KCSAN_SANITIZE := KCSAN_FUNCTION_ATTRIBUTES
->> >
->> > and set that to either 'y'/'n' depending on the compiler at hand
->> > supporting enough magic to make it all work.
->> >
->> > I suppose all the sanitize stuff is most important for developers and
->> > we tend to have the latest compiler versions anyway, right?
->>
->> Developers and CI/testing stuff. Yes we really should require a sane
->> compiler instead of introducing boatloads of horrible workarounds all
->> over the place which then break when the code changes slightly.
->
-> In which case, let me prepare a series on top of -tip for switching at
-> least KCSAN to Clang 11. If that's what we'll need, I don't see a
-> better option right now.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-And for a change that might make this time GCC people look at their open
-bugs. :)
+--1665246916-72433049-1589485024=:7929
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-/me mumbles jumplabels and goes back to juggle patches
+On Thu, 14 May 2020, Mickaël Salaün wrote:
+
+> > fsnotify is not an LSM.
+> 
+> Yes, so I'll need to add a new LSM hook for this (release) call, right?
+
+Unless an existing one will work.
+
+-- 
+James Morris
+<jmorris@namei.org>
+
+--1665246916-72433049-1589485024=:7929--
