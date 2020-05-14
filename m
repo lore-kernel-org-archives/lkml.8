@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74821C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3DBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B67520809
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56C602074A
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:58:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482710;
-	bh=xAelhCPtSyF6zOr5VVTz5VomLJWPOgAIM1EHIYZ5HGo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZzUyu+fhSkNEBE8z/PIUJuhQrWWGKbiHNfIIbpysKPMy3j8mJYrSIcEzykFII4aGa
-	 JfJSFTSIESF/MF5gD0G6kvV1gjlwNKYGQH3HUoXmFgoD1u/4ltXZnWMijkncrweajp
-	 RJLU7fsCebUvlgOIdiRoycVzRZIOTZZeCny3wLcs=
+	s=default; t=1589482713;
+	bh=D0AZR5j8vszCNk++qXJCfjnlBJ54iy8ybh+aaPcU4tg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=XQuXcnd57W5wwsg8YFyuT2CpqlR8OsBIpXPx5kTDLquprbzfudJ9YjT9aO+gfZOEv
+	 c6Bemot6moB+0vL70o7BW+HnOPTYbypa6e8rfQC9EJ2QYjEID/hV2sUNl3QsNzokWg
+	 sR2eC3QX+GW0nIvTyXiBovg8xW2NIqEXJls58beY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbgENS40 (ORCPT
+        id S1729900AbgENS6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:56:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57034 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:58:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729590AbgENS4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:56:09 -0400
+        id S1729703AbgENS41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:56:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7515420801;
-        Thu, 14 May 2020 18:56:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57742207DA;
+        Thu, 14 May 2020 18:56:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482569;
-        bh=xAelhCPtSyF6zOr5VVTz5VomLJWPOgAIM1EHIYZ5HGo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A9cozytUgmD3NYHYtEXo1fpDXtNwMopGIyg1i590awcyF7buQdFDPUhB+/ga+KXs0
-         7rJkMTDrYMHDSwTxjmbYyFXLjQrQVPNYPusJuseQwY2q9hXKxgxT94+6++8eJmOXvZ
-         TLzwoSN+uK69Q4IwIQsZ5wNLB4RMJXHMzWR3WJ/c=
+        s=default; t=1589482587;
+        bh=D0AZR5j8vszCNk++qXJCfjnlBJ54iy8ybh+aaPcU4tg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=h23Cmly7S8kVPtd3gqznBgwR/eDLiHZHQlh5rNgvikHYmRiARlzhodBGGLNMH3N4P
+         kW8RQaqmj4fAGcpP4ST6v0UXkkIUDwhvoRwHFFd8ni7KUaYUBRjcn/kmJG3tvOsQkz
+         I239SA87BbuWSucPD4BivA8tRKxvJs8I/vIyUpGI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julia Lawall <Julia.Lawall@inria.fr>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 15/27] dp83640: reverse arguments to list_add_tail
-Date:   Thu, 14 May 2020 14:55:38 -0400
-Message-Id: <20200514185550.21462-15-sashal@kernel.org>
+Cc:     Sergei Trofimovich <slyfox@gentoo.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 01/14] Makefile: disallow data races on gcc-10 as well
+Date:   Thu, 14 May 2020 14:56:12 -0400
+Message-Id: <20200514185625.21753-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200514185550.21462-1-sashal@kernel.org>
-References: <20200514185550.21462-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,37 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julia Lawall <Julia.Lawall@inria.fr>
+From: Sergei Trofimovich <slyfox@gentoo.org>
 
-[ Upstream commit 865308373ed49c9fb05720d14cbf1315349b32a9 ]
+[ Upstream commit b1112139a103b4b1101d0d2d72931f2d33d8c978 ]
 
-In this code, it appears that phyter_clocks is a list head, based on
-the previous list_for_each, and that clock->list is intended to be a
-list element, given that it has just been initialized in
-dp83640_clock_init.  Accordingly, switch the arguments to
-list_add_tail, which takes the list head as the second argument.
+gcc-10 will rename --param=allow-store-data-races=0
+to -fno-allow-store-data-races.
 
-Fixes: cb646e2b02b27 ("ptp: Added a clock driver for the National Semiconductor PHYTER.")
-Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The flag change happened at https://gcc.gnu.org/PR92046.
+
+Signed-off-by: Sergei Trofimovich <slyfox@gentoo.org>
+Acked-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/dp83640.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/phy/dp83640.c b/drivers/net/phy/dp83640.c
-index 557f6510bad75..7e94526de51c3 100644
---- a/drivers/net/phy/dp83640.c
-+++ b/drivers/net/phy/dp83640.c
-@@ -1108,7 +1108,7 @@ static struct dp83640_clock *dp83640_clock_get_bus(struct mii_bus *bus)
- 		goto out;
- 	}
- 	dp83640_clock_init(clock, bus);
--	list_add_tail(&phyter_clocks, &clock->list);
-+	list_add_tail(&clock->list, &phyter_clocks);
- out:
- 	mutex_unlock(&phyter_clocks_lock);
+diff --git a/Makefile b/Makefile
+index 6b88acb0b9b13..162a5e22abeaf 100644
+--- a/Makefile
++++ b/Makefile
+@@ -651,6 +651,7 @@ endif
  
+ # Tell gcc to never replace conditional load with a non-conditional one
+ KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
++KBUILD_CFLAGS	+= $(call cc-option,-fno-allow-store-data-races)
+ 
+ # check for 'asm goto'
+ ifeq ($(shell $(CONFIG_SHELL) $(srctree)/scripts/gcc-goto.sh $(CC) $(KBUILD_CFLAGS)), y)
 -- 
 2.20.1
 
