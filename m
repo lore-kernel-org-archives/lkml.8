@@ -2,96 +2,127 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 475F7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 04:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF53CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 04:53:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B7AE206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 04:50:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589431844;
-	bh=7s71FvC/Ra8fPfWzI1C288e4pFvBrJZ6E6eRlQ3VLbs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cPVSmh3n5Qo+ruVGtOuTXPH6QN5souaAPGOnfjkxdjF64gua85B3sTIyu7TO874OF
-	 0Kg1xJwKBWzpJ1xIHsyhsEKKugxD9Sbjl6jvPJwNthbP0htZFilX4/Q9NsLEpiCphH
-	 O5aMzDAb4e8iY4oYRLmIwsz7rlvHuXxhlg9O9z14=
+	by mail.kernel.org (Postfix) with ESMTP id 97772206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 04:53:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t//QhNx7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726142AbgENEun (ORCPT
+        id S1725967AbgENExs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 00:50:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37444 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725794AbgENEum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 00:50:42 -0400
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEEC820728
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 04:50:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589431842;
-        bh=7s71FvC/Ra8fPfWzI1C288e4pFvBrJZ6E6eRlQ3VLbs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ihfFJ/20IXoiKRPpLknrCfv6677LqUQCxOQbm7gGE05UEwb30LP3fUuClIwuVj4xI
-         1xRq515Y46Sa8r4inr3+oT3+7N7qfWFiLJFpH/UTsqqrfc/vOz3k2Zxzx9GNSha3Ci
-         jm0aW1I25n073+VLgWhTm1eS67MB1bN+Yj0ZY/2w=
-Received: by mail-wr1-f51.google.com with SMTP id l17so2133779wrr.4
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 21:50:41 -0700 (PDT)
-X-Gm-Message-State: AOAM5306aR5aCHFWUqPwJLbzjkA+/NDX4WDNqHQfdv/sQlVqMSv9WbWb
-        7JMhgfqbXgSUTT8LOOThEQufF86i4EmOLrCe+u4XSg==
-X-Google-Smtp-Source: ABdhPJxg5jqNf7alvFhE1Ed7nw8T+ylnhEiiNfcE0OZzlqAm6PU50bgDK4l0aR2BhG2oPRxwSAYP9Hanhzt1/g7cS+k=
-X-Received: by 2002:adf:f446:: with SMTP id f6mr3041841wrp.75.1589431840312;
- Wed, 13 May 2020 21:50:40 -0700 (PDT)
+        Thu, 14 May 2020 00:53:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58402 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725794AbgENExr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 00:53:47 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 278E7C061A0C;
+        Wed, 13 May 2020 21:53:47 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id r17so1426156lff.9;
+        Wed, 13 May 2020 21:53:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=JV+sxUdFOhEyDczRx6GrqOwClj4olBpIsLuQqAp2XRE=;
+        b=t//QhNx7KmG0d0ZfpVSb1+M24XomDrqF6cL88YDUe2dnW9t1e883+x2ye8bCEqDH73
+         yh+yI/LUSNF8QWGUwyRuvtb0ci7sdxzju1E69m7QYMXIzD50yVqhIOyPGm9j0z/IpP5v
+         g/X5LVm9pqlgmUUwZZOrsuvuxJEs+WhIzdjCI+AEY/e1OKzsQ1G3jrOVCP15qovfUB3L
+         JqR96u1YE+KIEckvsrR64kkApMRfxTUAi0CgqzRZqm9ZRo3XVZsloC82yT14XoPb64U2
+         Nhbiynd6AUKIcER0o3TaeVH/acse0s4okgqO+pYtUdRagD3llebYiyFWE8b5IwcmzfA9
+         2ozw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JV+sxUdFOhEyDczRx6GrqOwClj4olBpIsLuQqAp2XRE=;
+        b=N7HfYjb3+TSBMDMiDztQYQxRPNzYhI9tos6WPhWgJdDS8/6BiklmFYE4BIkZ/P0aEC
+         UXRJjW98MIcJppb/DIJE1ApTtB4ErIYy2LEhoMKgGKo2Gnn6nW1WSW5lC+TDIYfAwnn1
+         IWqlWkvzrRzzE1OpeBKJZmp8x0iC04SaZbjJ9KCCAVDdLUc/KweSuEBq4ZaSc1dWif2m
+         +pSWEW6uOE3nhe0GhN0uzD+mX8nClQLOdtOu5ekQzh1bUxeJwlwnJLLG4cYfWLDSnGyK
+         pOrw5/TS1/rBWBMhsKDYhcsA2EckGJ/WzPZ4OsQLgioMj0HS6/FtdmXz3YKZRsGo/nHi
+         By8Q==
+X-Gm-Message-State: AOAM533b13NdTRPSfavP1zVcmidN6fQ0jSATG7Fl0/fQZ4ZIK3pWNOx+
+        JGQ2IOg48/niuzt/v4lX0jo=
+X-Google-Smtp-Source: ABdhPJxMkUCa0Jt19pwvXDbnDR/kEKhPFIHPsQYl4Vknfa2RZqF2s8yJyRHlBnZcXEuvrbs4dX8JMw==
+X-Received: by 2002:a05:6512:1051:: with SMTP id c17mr1911854lfb.206.1589432025595;
+        Wed, 13 May 2020 21:53:45 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id x8sm742454ljc.56.2020.05.13.21.53.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 May 2020 21:53:44 -0700 (PDT)
+Subject: Re: [PATCH v11 33/56] Input: atmel_mxt_ts - delay enabling IRQ when
+ not using regulators
+To:     "Wang, Jiada" <jiada_wang@mentor.com>, nick@shmanahar.org,
+        dmitry.torokhov@gmail.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, bsz@semihalf.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
+References: <20200508055656.96389-1-jiada_wang@mentor.com>
+ <20200508055656.96389-34-jiada_wang@mentor.com>
+ <3a942afa-c047-2c88-1c8e-a90fa018738e@gmail.com>
+ <6af23ae6-2f1c-0459-d2b6-1b01ddb0c3dc@mentor.com>
+ <c88d24ef-e0e0-db3b-1000-b21af906eb4f@gmail.com>
+ <aaf99a11-037e-93d8-93e4-d83e3aa4a42e@mentor.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <63c93fc0-ac09-ec77-c590-08e419734205@gmail.com>
+Date:   Thu, 14 May 2020 07:53:43 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200505134354.774943181@linutronix.de> <20200505134905.928967113@linutronix.de>
-In-Reply-To: <20200505134905.928967113@linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 13 May 2020 21:50:29 -0700
-X-Gmail-Original-Message-ID: <CALCETrVS+GZ05_UER-f3-BAanQMLQ24X=He7w-07LKH6HP0rdQ@mail.gmail.com>
-Message-ID: <CALCETrVS+GZ05_UER-f3-BAanQMLQ24X=He7w-07LKH6HP0rdQ@mail.gmail.com>
-Subject: Re: [patch V4 part 3 27/29] x86/entry: Convert Alignment check
- exception to IDTENTRY
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <aaf99a11-037e-93d8-93e4-d83e3aa4a42e@mentor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 7:15 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> From: Thomas Gleixner <tglx@linutronix.de>
->
-> Convert #AC to IDTENTRY_ERRORCODE:
->   - Implement the C entry point with DEFINE_IDTENTRY
->   - Emit the ASM stub with DECLARE_IDTENTRY
->   - Remove the ASM idtentry in 64bit
->   - Remove the open coded ASM entry code in 32bit
->   - Fixup the XEN/PV code
->   - Remove the old prototyoes
->   - Remove the RCU warning as the new entry macro ensures correctness
->
-> No functional change.
+13.05.2020 08:07, Wang, Jiada пишет:
+> Hello Dmitry
+> 
+> On 2020/05/12 8:13, Dmitry Osipenko wrote:
+>> 11.05.2020 05:05, Wang, Jiada пишет:
+>>> Hello Dmitry
+>>>
+>>> Thanks for your comment and test,
+>>>
+>>> can you let me know which platform (board) you are using for test,
+>>> and DTS changes if you have added any.
+>>
+>> That's this device-tree [1] without any extra changes.
+>>
+> I am using Samsung Chromebook Pro for testing,
+> but obviously some of the use cases it can't cover.
+> 
+> I also would like to test on same device you are using,
+> would you please let me know how to boot Acer Iconia Tab A500
+> with custom images. Are you booting Linux or Android on it?
 
+I'm using Ubuntu 20.04 on it at the moment. In order to boot custom
+images you'll need at least to install a custom recovery, which will
+allow to flash boot.img on eMMC storage.
 
-Acked-by: Andy Lutomirski <luto@kernel.org>
+Ideally, you'll need to install an unlocked bootloader that will enable
+Android's fastboot, and thus, allow to easily boot kernel zImage without
+messing with flashing boot images.
+
+Could you please tell what is the current state of yours device: does it
+have a stock Android installed? is it rooted? is custom recovery installed?
+
+My device was unlocked about 8+ years ago, so I'm not sure what's the
+best way to do it nowadays. The XDA forums [1] could be a good starting
+point, I may give you some advises once you'll tell what's the current
+status of yours device.
+
+[1] https://forum.xda-developers.com/iconia-a500
