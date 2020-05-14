@@ -2,113 +2,139 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A66BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA5EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40A1E206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:37:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="oVWM6T5q"
+	by mail.kernel.org (Postfix) with ESMTP id AF949206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:38:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589449121;
+	bh=p1doL36G2c7yhzTcmyQM52QYqsuvRFETy5dpSj2TRJ0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=1IRKN03Uypp0uuStYVyolEJyA8DXzUbF/RWlA7mjU47TJk6uvEz74r9tsJar9xOoJ
+	 mzy4yZZ12NFb+gZbTIF1ECuFHKiTpSS8jj9z2MIreZjZL7an/oL/sIPvZlAa4jnveL
+	 fRKGVBumaqaqRTO1rH76NF+GgVw/Unx/JzE3aIYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726056AbgENJhl (ORCPT
+        id S1726100AbgENJil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 05:37:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46366 "EHLO
+        Thu, 14 May 2020 05:38:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725925AbgENJhl (ORCPT
+        by vger.kernel.org with ESMTP id S1726050AbgENJik (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 05:37:41 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98A84C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 02:37:40 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id a4so2000332lfh.12
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 02:37:40 -0700 (PDT)
+        Thu, 14 May 2020 05:38:40 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0953C061A0C;
+        Thu, 14 May 2020 02:38:39 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id z22so2084831lfd.0;
+        Thu, 14 May 2020 02:38:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7Gj0cNxCY34MN1EL7DKRnwUOlinn6Wz+qtY7EpWgz5M=;
-        b=oVWM6T5qZTorNnMZprnZOFTQiXbb4XbmVvFkT7FzHv9IpJGm8S3O+vQnaZOON2iK3v
-         JJmYe7DK9Kk46bakSudSmewV9tYtLrAJelqpH90nTEdK2VJU3z6p2veVBw9i0Pj4qfEh
-         25uwitsnpu/9GZtCVbF36DKWxme9aL/hXO6yHQsnOG0ZXJSywTZkNd1u+E++RrTVQxC9
-         330RYbOiJgbJfDg3T3sM7JDfeCyw9Q8urwfZ41UHPSQPqE2rwNz8O/KoBuF/DGcQlocl
-         YXFSZJnthWJx1Vs86AyjOBu1d4/4wAF6O8Oztf1P0XGe9SnW5ZMdrNJfBTMwe1BE0Yyt
-         41bg==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=p1doL36G2c7yhzTcmyQM52QYqsuvRFETy5dpSj2TRJ0=;
+        b=toI+rQpJnNbUCzcB+dgkiFl8ZbxTzcp06t53gOCpWvhpI+lmGb+KFHlEvaufI6/A/l
+         zHVf/rngtHD8UvZsZ0BpsW4KmsUyaQClpKSdgm9HLuFPVsSlbEpQZixShCGUwur8dJf0
+         uGYG+IepnjneVJ3UySonJ2FYkAHJbkcJAuTXQEoMMbYnGQEOqAYUc65rm5nHUeqg+dcT
+         G2g6RuM5CZVJ0+1eU7vrMbBuqoJon/IaAOUbmdJScRcfMuoqiIkMaKHFvDmtwMm/uGRt
+         H7dLzRm1URyCs9fW8FiWvwljgZeUL4xHGL8J5aLVvwJVMOVjD64wh2V/TmHW4xEcrSj0
+         +PHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7Gj0cNxCY34MN1EL7DKRnwUOlinn6Wz+qtY7EpWgz5M=;
-        b=OsZ/TW5u/rvDPOywr2vRh+Ki/X3u6ZVwS8TzLfTJYVzdw3r9kLfOUiHlnz7Wqh7YMq
-         jutrLhIcKB3JSD5meWTCWVosKjdI2o5ULw8lotrIob6MpQnmJ11ha3vtc11RGsiW+hJc
-         IP8EF7ssN/zHc1Ngxl4d9iTPTMd8jehHsk6z7BZvd51KnQ/kE2jjNezwUGk29mM69YA9
-         KDs7tY6uwHY6fMdibUZ53je8FtsxEi7sXrcUu7PguGNgkOWHwoRrmTKp7R7IBm0+qc4I
-         ev7gGg0oOrdPQUJbjZI/jgJTVFX+9yzGm7RocHJoSkiZSNbJBVHQp0Pk57MoFwGwt9S8
-         Jj1Q==
-X-Gm-Message-State: AOAM531+aKqpReoDPNSWyQuhCHgpFssTv5iHIAAZWw/MzWwx7brkPtca
-        nZZ1fQgyLywZbUSQpnKCEV+EhZBG2Xo=
-X-Google-Smtp-Source: ABdhPJwxSDqV5OeLS9W2cuCCEbpgT+k+80gl6sncjS9yh7y8GD02pIYkoXe52KVnpd8P8A4t9cCOIw==
-X-Received: by 2002:a19:8107:: with SMTP id c7mr1198346lfd.38.1589449058740;
-        Thu, 14 May 2020 02:37:38 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:428e:17ae:1023:2fd9:377b:94c8? ([2a00:1fa0:428e:17ae:1023:2fd9:377b:94c8])
-        by smtp.gmail.com with ESMTPSA id d16sm1172540ljj.84.2020.05.14.02.37.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 May 2020 02:37:38 -0700 (PDT)
-Subject: Re: [PATCH] MIPS: update tlb even if pte entry has no change
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-To:     Bibo Mao <maobibo@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Dmitry Korotin <dkorotin@wavecomp.com>,
-        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Steven Price <steven.price@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1589422677-11455-1-git-send-email-maobibo@loongson.cn>
- <b46f4ac1-9738-6037-d60a-faebf2b4365c@cogentembedded.com>
-Message-ID: <f165deac-1a71-dd88-dfe5-c1701f31567b@cogentembedded.com>
-Date:   Thu, 14 May 2020 12:37:27 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=p1doL36G2c7yhzTcmyQM52QYqsuvRFETy5dpSj2TRJ0=;
+        b=CbzE2O3hHfHVUDUY8Faqzf1N7EqewfEeVBE0rYyHhtXEYUyxvfeSQfUwM/N3YNwCqp
+         tVVCPEkZ6dvvZjtGUX26qgCOmRc5lhoA2/RsjF729EeBtGLysJfQ/hDnH6GS+EHyYhLg
+         CXbG1sL6Ta4uTbAshf9PKQq2Q0tX3m9GydnUcbIaSqtQLz+r9PPB/4os2hcTbZtZdy97
+         2mgPbJ5FN9tXSkgv7dyFhp/M3cs9irM8XBjExKZEsgu06Jy3E5ziZnM6q9u0zi2Rgedy
+         hY8Wgo30OZbEwDQybjxjbBFreZqwt7a6FZqzlC8vlLxgrgNxX39IISkC06CpwfWJJSRX
+         WsqQ==
+X-Gm-Message-State: AOAM530qhf0kdvR+KjRzscCoAA5XopA+XUCZ2q5TMCOGJJrJAbZ1osqz
+        EL+oDNuWXDAwzsHojB5CHNS3GouJEwqm/g==
+X-Google-Smtp-Source: ABdhPJweyHUB48SIZU9eU3c0UH9UXABozzSP4zy46Gq1mNAcOXb8OYrBNiR8O6eFfLYj5n/NGtVV0A==
+X-Received: by 2002:a19:f70f:: with SMTP id z15mr2686757lfe.53.1589449118242;
+        Thu, 14 May 2020 02:38:38 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id f25sm1071515lja.5.2020.05.14.02.38.36
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 14 May 2020 02:38:37 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Macpaul Lin <macpaul.lin@mediatek.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        =?utf-8?Q?Micha=C5=82_Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Sergey Organov <sorganov@gmail.com>,
+        Macpaul Lin <macpaul.lin@mediatek.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Cc:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        Macpaul Lin <macpaul.lin@gmail.com>,
+        Stan Lu <stan.lu@mediatek.com>
+Subject: Re: [PATCH] usb: gadget: u_serial: fix coverity warning: negative index at array
+In-Reply-To: <1589443500-3990-1-git-send-email-macpaul.lin@mediatek.com>
+References: <1589443500-3990-1-git-send-email-macpaul.lin@mediatek.com>
+Date:   Thu, 14 May 2020 12:38:33 +0300
+Message-ID: <87zhaa5012.fsf@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <b46f4ac1-9738-6037-d60a-faebf2b4365c@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14.05.2020 12:35, Sergei Shtylyov wrote:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
->> From: bibo mao <maobibo@loongson.cn>
->>
->> If there are two threads reading the same memory and tlb miss happens,
->> one thread fills pte entry, the other reads new pte value during page fault
->> handling. PTE value may be updated before page faul, so the process need
-> 
->     Fault.
+Macpaul Lin <macpaul.lin@mediatek.com> writes:
 
-    And "needs".
+> This issue has been reported by coverity scanner.
+> Replace "int portnum" by "unsigned int", this void negative index at
+> array.
+>
+> Signed-off-by: Stan Lu <stan.lu@mediatek.com>
+> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
 
->> need update tlb still.
+please rebase on testing/fixes
 
-    Oh, and one "need" is enough. :-)
+error: patch failed: drivers/usb/gadget/function/u_serial.c:587
+error: drivers/usb/gadget/function/u_serial.c: patch does not apply
+hint: Use 'git am --show-current-patch=3Ddiff' to see the failed patch
+Applying: usb: gadget: u_serial: fix coverity warning: negative index at ar=
+ray
+Patch failed at 0001 usb: gadget: u_serial: fix coverity warning: negative =
+index at array
+When you have resolved this problem, run "git am --continue".
+If you prefer to skip this patch, run "git am --skip" instead.
+To restore the original branch and stop patching, run "git am --abort".
 
->> Also this patch define flush_tlb_fix_spurious_fault as empty, since it not
->> necessary to flush the page for all CPUs
->>
->> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> [...]
+=2D-=20
+balbi
 
-MBR, Sergei
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl69EZkACgkQzL64meEa
+mQa6Qw//Z0NbbILQ3n/09Coti9vMt51E2QalESJ3ogcfVbWjTSptfs2I6x92JE0Y
+fIpmObM90gVjqzGmDGgBj3iwZZTVkddXWDasoW2w18o05g2R65TDGBwO1C1XDlaN
+DdGn0GLUNcifF5t/rUEy2Csqv35IwKluHmDdsLTjVlTWFdPKkT1VaW0/caI1CpFf
+rk4CloEcMxwGBLdx98CPyY24MzzyyhtxNjahZ+hCCXO5S0GF2dnpaaZ1x/TtZ5VN
+UbdQzSgrDMEuMtrrUfIlakrTTR6aELxqm0yAqupDsbBAkPdLfpXooqfwKB4fEmhJ
+Ns1+CUiAK+BmpXEKmyWybSSUwe+FSBkuUK9+QskFGB/R0mjjyXQVdbYpgL1OIjY1
+eBDWzSQZmNGMJ0iLZXc1az0+XVxeI2KKzN+n1IYCwgQTQNYUCYtEEDpFaFEosogt
+hmVmo2/iadctVQ/+PU8hfcmylLg6hUBMrApObdsY3JB8tq7SOJIyW2Hx2+Imktwg
+vnTnKrFcXLSTmJ/0HbHkP6XZ1UDt1Go06rPzCBzahTPdXVKcqT/D+L7fm7sHmcCX
+C/2pHGtodGiUt9R9m+eeYilDbUTTj95vmGzyu/mPtRG5tAOqsSVDVyLffuBFDZe8
+Y05awSTgxKqblxXWlK+UZNsvV4nxOTxCaovWn5XoGtA8GYk64Mo=
+=XPNg
+-----END PGP SIGNATURE-----
+--=-=-=--
