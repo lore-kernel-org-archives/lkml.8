@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E76C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25026C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8930720727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F37D02074A
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:59:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482759;
-	bh=QN7DanSw/R5a5ejEmnces8IxIoCcRieV2B+iz4eTOR8=;
+	s=default; t=1589482765;
+	bh=gPsB0+HPwXMqu+Z5ey60YQRN3nRXoMTSxXCJNshT5Fw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w1h/JjQZ3l5vLLnxvu33NULK2RniG2z9edqf8qAJS7Ayo6KCpoWGk+jpXXfAASrrk
-	 ebuO08ukigKtEe4CvV0cgbsK+CB+9Bpj00yPiO/X+VJ88MIpx2e4EDPp9e2PAIi7wF
-	 m7+SvVgbxdbIsK0kNLlqFcsKh279sRwQ6+ViXR6E=
+	b=AYnwBIgw3VwlRUhXO2Jw3Ao0zFpl8fEDj1ez0D9Hly1HgiRVfb0cJiBKNV2+4JzPB
+	 KvIEzA31tdasE+LP81mJuiYCEzBbdbp/AbGqfmSMpuVZbOnJN8E19tondtx+OqEEeI
+	 kFtvXkOtSX2oINqVZbKoVgvkYtyMj6O9KCMh33Ws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728891AbgENS4M (ORCPT
+        id S1729576AbgENS4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:56:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56706 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:56:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729525AbgENSz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:55:56 -0400
+        id S1729517AbgENSzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:55:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99BFA207E8;
-        Thu, 14 May 2020 18:55:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 669332074A;
+        Thu, 14 May 2020 18:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482555;
-        bh=QN7DanSw/R5a5ejEmnces8IxIoCcRieV2B+iz4eTOR8=;
+        s=default; t=1589482553;
+        bh=gPsB0+HPwXMqu+Z5ey60YQRN3nRXoMTSxXCJNshT5Fw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sxr80rahmF7dihLT4N3DSEunJ08o0767LUYdnxdTzuiRRbG+mBj6Wi7RmFMqzXIRn
-         M7MuHflavdaJTixZ1B5ursk1TEPsPBI18zS8xLxI1Hx33az7RGCAOjYLj36depngSA
-         vDMjug72tEqqLdNx4qXcSAKHKeXtGYf7yDahWBrs=
+        b=LCwwP2kFAWCr19DTVsUupNsrUYQ6SXIb3uyqNVv0YwdCIURrNc1tjGHkamT0JCegg
+         ZSgE1IBN+icSVeNbJxspLBBQMNJmhH3b9KRV8yP2vqIk75SGqNg8XqhR3kGGF1fglU
+         Scuyjb71dN4ghOA0davESpAwocbZX9tzE2x8PMCU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     George Spelvin <lkml@sdf.org>, Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
+Cc:     =?UTF-8?q?Fr=C3=A9d=C3=A9ric=20Pierret=20=28fepitre=29?= 
+        <frederic.pierret@qubes-os.org>, Kees Cook <keescook@chromium.org>,
         Sasha Levin <sashal@kernel.org>,
-        b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 04/27] batman-adv: fix batadv_nc_random_weight_tq
-Date:   Thu, 14 May 2020 14:55:27 -0400
-Message-Id: <20200514185550.21462-4-sashal@kernel.org>
+        kernel-hardening@lists.openwall.com
+Subject: [PATCH AUTOSEL 4.9 02/27] gcc-common.h: Update for GCC 10
+Date:   Thu, 14 May 2020 14:55:25 -0400
+Message-Id: <20200514185550.21462-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185550.21462-1-sashal@kernel.org>
 References: <20200514185550.21462-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,68 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: George Spelvin <lkml@sdf.org>
+From: Frédéric Pierret (fepitre) <frederic.pierret@qubes-os.org>
 
-[ Upstream commit fd0c42c4dea54335967c5a86f15fc064235a2797 ]
+[ Upstream commit c7527373fe28f97d8a196ab562db5589be0d34b9 ]
 
-and change to pseudorandom numbers, as this is a traffic dithering
-operation that doesn't need crypto-grade.
+Remove "params.h" include, which has been dropped in GCC 10.
 
-The previous code operated in 4 steps:
+Remove is_a_helper() macro, which is now defined in gimple.h, as seen
+when running './scripts/gcc-plugin.sh g++ g++ gcc':
 
-1. Generate a random byte 0 <= rand_tq <= 255
-2. Multiply it by BATADV_TQ_MAX_VALUE - tq
-3. Divide by 255 (= BATADV_TQ_MAX_VALUE)
-4. Return BATADV_TQ_MAX_VALUE - rand_tq
+In file included from <stdin>:1:
+./gcc-plugins/gcc-common.h:852:13: error: redefinition of ‘static bool is_a_helper<T>::test(U*) [with U = const gimple; T = const ggoto*]’
+  852 | inline bool is_a_helper<const ggoto *>::test(const_gimple gs)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from ./gcc-plugins/gcc-common.h:125,
+                 from <stdin>:1:
+/usr/lib/gcc/x86_64-redhat-linux/10/plugin/include/gimple.h:1037:1: note: ‘static bool is_a_helper<T>::test(U*) [with U = const gimple; T = const ggoto*]’ previously declared here
+ 1037 | is_a_helper <const ggoto *>::test (const gimple *gs)
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This would apperar to scale (BATADV_TQ_MAX_VALUE - tq) by a random
-value between 0/255 and 255/255.
+Add -Wno-format-diag to scripts/gcc-plugins/Makefile to avoid
+meaningless warnings from error() formats used by plugins:
 
-But!  The intermediate value between steps 3 and 4 is stored in a u8
-variable.  So it's truncated, and most of the time, is less than 255, after
-which the division produces 0.  Specifically, if tq is odd, the product is
-always even, and can never be 255.  If tq is even, there's exactly one
-random byte value that will produce a product byte of 255.
+scripts/gcc-plugins/structleak_plugin.c: In function ‘int plugin_init(plugin_name_args*, plugin_gcc_version*)’:
+scripts/gcc-plugins/structleak_plugin.c:253:12: warning: unquoted sequence of 2 consecutive punctuation characters ‘'-’ in format [-Wformat-diag]
+  253 |   error(G_("unknown option '-fplugin-arg-%s-%s'"), plugin_name, argv[i].key);
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Thus, the return value is 255 (511/512 of the time) or 254 (1/512
-of the time).
-
-If we assume that the truncation is a bug, and the code is meant to scale
-the input, a simpler way of looking at it is that it's returning a random
-value between tq and BATADV_TQ_MAX_VALUE, inclusive.
-
-Well, we have an optimized function for doing just that.
-
-Fixes: 3c12de9a5c75 ("batman-adv: network coding - code and transmit packets if possible")
-Signed-off-by: George Spelvin <lkml@sdf.org>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Frédéric Pierret (fepitre) <frederic.pierret@qubes-os.org>
+Link: https://lore.kernel.org/r/20200407113259.270172-1-frederic.pierret@qubes-os.org
+[kees: include -Wno-format-diag for plugin builds]
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/network-coding.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ scripts/gcc-plugins/Makefile     | 1 +
+ scripts/gcc-plugins/gcc-common.h | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/net/batman-adv/network-coding.c b/net/batman-adv/network-coding.c
-index a7b5cf08d3630..09549885cd147 100644
---- a/net/batman-adv/network-coding.c
-+++ b/net/batman-adv/network-coding.c
-@@ -1012,15 +1012,8 @@ static struct batadv_nc_path *batadv_nc_get_path(struct batadv_priv *bat_priv,
-  */
- static u8 batadv_nc_random_weight_tq(u8 tq)
- {
--	u8 rand_val, rand_tq;
--
--	get_random_bytes(&rand_val, sizeof(rand_val));
--
- 	/* randomize the estimated packet loss (max TQ - estimated TQ) */
--	rand_tq = rand_val * (BATADV_TQ_MAX_VALUE - tq);
--
--	/* normalize the randomized packet loss */
--	rand_tq /= BATADV_TQ_MAX_VALUE;
-+	u8 rand_tq = prandom_u32_max(BATADV_TQ_MAX_VALUE + 1 - tq);
+diff --git a/scripts/gcc-plugins/Makefile b/scripts/gcc-plugins/Makefile
+index 8b29dc17c73ca..2cad963c4fb7f 100644
+--- a/scripts/gcc-plugins/Makefile
++++ b/scripts/gcc-plugins/Makefile
+@@ -9,6 +9,7 @@ else
+   HOST_EXTRACXXFLAGS += -I$(GCC_PLUGINS_DIR)/include -I$(src) -std=gnu++98 -fno-rtti
+   HOST_EXTRACXXFLAGS += -fno-exceptions -fasynchronous-unwind-tables -ggdb
+   HOST_EXTRACXXFLAGS += -Wno-narrowing -Wno-unused-variable
++  HOST_EXTRACXXFLAGS += -Wno-format-diag
+   export HOST_EXTRACXXFLAGS
+ endif
  
- 	/* convert to (randomized) estimated tq again */
- 	return BATADV_TQ_MAX_VALUE - rand_tq;
+diff --git a/scripts/gcc-plugins/gcc-common.h b/scripts/gcc-plugins/gcc-common.h
+index 08fe09c28bd27..6792915f51747 100644
+--- a/scripts/gcc-plugins/gcc-common.h
++++ b/scripts/gcc-plugins/gcc-common.h
+@@ -31,7 +31,9 @@
+ #include "ggc.h"
+ #include "timevar.h"
+ 
++#if BUILDING_GCC_VERSION < 10000
+ #include "params.h"
++#endif
+ 
+ #if BUILDING_GCC_VERSION <= 4009
+ #include "pointer-set.h"
+@@ -796,6 +798,7 @@ static inline gimple gimple_build_assign_with_ops(enum tree_code subcode, tree l
+ 	return gimple_build_assign(lhs, subcode, op1, op2 PASS_MEM_STAT);
+ }
+ 
++#if BUILDING_GCC_VERSION < 10000
+ template <>
+ template <>
+ inline bool is_a_helper<const ggoto *>::test(const_gimple gs)
+@@ -809,6 +812,7 @@ inline bool is_a_helper<const greturn *>::test(const_gimple gs)
+ {
+ 	return gs->code == GIMPLE_RETURN;
+ }
++#endif
+ 
+ static inline gasm *as_a_gasm(gimple stmt)
+ {
 -- 
 2.20.1
 
