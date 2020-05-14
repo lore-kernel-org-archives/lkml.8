@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1310C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C65C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB1DB20671
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DA2120671
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:19:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589465966;
-	bh=1QRzCwM83xBzdk3JMEqd9YskjPLsmLHOo5Dg0XBFfUQ=;
+	s=default; t=1589465982;
+	bh=CqlOlSNj6xMgLkcVQs+wVSmgmeGRK1Di3OwNatOVBR4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uIWSmJz8NWPcIWh4jbXRtxjylRiQjSA5tZHUSxq13f2WBn1AgFIhF/o8Tkp9nldNB
-	 0gDAvjkPpUeob2jSUxtPwahpfk55MqXS4mBAhTal4baa/9tKO93Ti3y4EDUtn1FPuh
-	 gTjDvr5GpMxdAFWsQ2qtCcM8iDKEYAEaS7BaKXPk=
+	b=XFktd0k9iwmdgrI2qTSeKrCLZ0dhORJFDwUbR2oim1fTaJ4ANilgRofomGtp5N+Bd
+	 sTmbxq39HI/Lgr9KRnMlU33MjYXw2756tVfjLuq5UqC0C/q/5KN2OsXqoGH4p2ve5E
+	 zEYvV+IPaxGwIw2bBtNg8iEpoIy+jQDck7ZY//cA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgENOT0 (ORCPT
+        id S1727844AbgENOTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:19:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34308 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 10:19:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgENOTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:19:25 -0400
+        id S1726128AbgENOTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 10:19:41 -0400
 Received: from localhost (unknown [122.182.193.86])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC97020671;
-        Thu, 14 May 2020 14:19:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 374B320671;
+        Thu, 14 May 2020 14:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589465965;
-        bh=1QRzCwM83xBzdk3JMEqd9YskjPLsmLHOo5Dg0XBFfUQ=;
+        s=default; t=1589465981;
+        bh=CqlOlSNj6xMgLkcVQs+wVSmgmeGRK1Di3OwNatOVBR4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OyhIIPyuih2c+TzcbNDk738ALiOGAVzvx5UjHkzIQ4106Hgi7mis5P3vXLKi5j4Nt
-         SuP71KVWjQgWEARbJRjTdxz6VwhsaWKaG8pRDDXki81+YjeiRTAUUkmj3a2RQSjYeD
-         Esdnmv4bVo4udLOhjHRWEtg94rQ/dcTXT9CmvcBs=
-Date:   Thu, 14 May 2020 19:49:21 +0530
+        b=GhHYYP9NMzwqNwrdB6p0wbncrpkva/VTQ5PUnbmTN8yXJtRH1DWJrOPYYqPkzKqCR
+         J35xcLxvknxX1dmNXlrjOt+odbDymlLv7gvuwjATeKhxWW8wDoozWud5xDPO8oeoyu
+         Vpfgg2HTB7aP8aZY1zFWSg4NSdczSs/JBD+cn7D8=
+Date:   Thu, 14 May 2020 19:49:36 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
@@ -46,25 +46,22 @@ Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
         Rob Herring <robh+dt@kernel.org>,
         linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] dt-bindings: hwlock: qcom: Allow device on mmio bus
-Message-ID: <20200514141921.GY14092@vkoul-mobl>
+Subject: Re: [PATCH 4/4] arm64: dts: qcom: sm8250: Drop tcsr_mutex syscon
+Message-ID: <20200514141936.GZ14092@vkoul-mobl>
 References: <20200513005441.1102586-1-bjorn.andersson@linaro.org>
- <20200513005441.1102586-3-bjorn.andersson@linaro.org>
+ <20200513005441.1102586-5-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513005441.1102586-3-bjorn.andersson@linaro.org>
+In-Reply-To: <20200513005441.1102586-5-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 12-05-20, 17:54, Bjorn Andersson wrote:
-> In all modern Qualcomm platforms the mutex region of the TCSR is forked
-> off into its own block, all with a offset of 0 and stride of 4096.
-> Update the binding to allow the hardware block to be described directly
-> on the mmio bus, in addition to allowing the existing syscon based
-> definition.
+> Now that we don't need the intermediate syscon to represent the TCSR
+> mutexes, update the dts to describe the TCSR mutex directly.
 
 Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
