@@ -3,56 +3,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C25B7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 04:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCC5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 04:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABAAB206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 04:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D130F206D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 04:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589431628;
-	bh=v2k338ZVKb2TLymC3FOJ/qsujLq2OYj+f52HHqgoWn4=;
+	s=default; t=1589431656;
+	bh=cUOOvbAlTUvF4yuAaPRuysWH/grNtVq0r18hf4xegog=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OXe0d1xi0vHoU0qe4dbCEf4WUV+JS01iTw5bD66yZEnF6O3YwP19y5d65CdoQLplN
-	 8rjKQnUB3qNefifyBCpZpHaAZ85NObo8dqTyMxNdeiND4+fO5HN6pBbJShhxLWyNhB
-	 PuXen25o2+Jj2QPN4gyLraS2ooy5b9sh4l7G8k8Y=
+	b=hxduyk0nLILg/GR4XNZXnMITgziJ9QC1zc6MM97kyDQzQhvSEMGr67r0t26zSDLKo
+	 cXDObIHLfJR9VyZo82ht1cly94HJZ7ctdVhygiPfZqBiiIcMeaeaAuv+LfyXVVqGZ9
+	 mO58RlQRpfZYQqrax/718Cag1nFqsH7MRHAEvTdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726113AbgENErH (ORCPT
+        id S1726119AbgENErg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 00:47:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34486 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 00:47:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725794AbgENErH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 00:47:07 -0400
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+        id S1725794AbgENErf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 00:47:35 -0400
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEEDF20709
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 04:47:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CC0B207BB
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 04:47:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589431627;
-        bh=v2k338ZVKb2TLymC3FOJ/qsujLq2OYj+f52HHqgoWn4=;
+        s=default; t=1589431655;
+        bh=cUOOvbAlTUvF4yuAaPRuysWH/grNtVq0r18hf4xegog=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Wy+s/w4FjEDtVchV8rqRwyVLyCLQokXtNbuRlZFWp85TOObbFxCebIpRItBzH0O0y
-         fEFNAa077tKvtsnaA3e5YwLENjw02TmacFBLuApPRIwCd5SfV/BusW/aiHWM6IYo0f
-         ojBQs7c2IYC8ZI+kSDr2mQcZUxkiOi8+7b0qgjtI=
-Received: by mail-wr1-f45.google.com with SMTP id w7so2059997wre.13
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 21:47:06 -0700 (PDT)
-X-Gm-Message-State: AOAM532KI+GbIUbUh0sgpoPrMVlCtrklnWZIoggTOk3vxB3+aY9S4KuE
-        68I4Aoe09UHWm4CJiz0ECjPUX7jzcXYRJft7h1dBhg==
-X-Google-Smtp-Source: ABdhPJwCwE9amHd0SB0x6mmFz3XDxiugtWB4VDwrOqMUKew1TSt/Ihs8x2TQdYfP0w+iJO2vUpRPpr3FBaM5OsoFIJw=
-X-Received: by 2002:adf:a298:: with SMTP id s24mr3048386wra.184.1589431624875;
- Wed, 13 May 2020 21:47:04 -0700 (PDT)
+        b=PRYtGqAS/RrhCmhn1N30hkrvUDFLCgMrubbbIvdhkTTvo2Uc16nvdKAJLtqsOCbsM
+         lFKUuNZNGZyRRtz/fJrghvNawtdFht16X5CsqMg9Gt+/hY2MsRGXOPST3p/su9i7pr
+         4F449LPKkHH9UUfJbUFaUu0Gk315FDNzDznaZVUE=
+Received: by mail-wr1-f43.google.com with SMTP id h17so2093744wrc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 21:47:34 -0700 (PDT)
+X-Gm-Message-State: AOAM532KjVKPgAlzwCYUGUGkg1ZpswrG7ehq0lyGgaNHpiR/Mfgc+FF+
+        /+OKASlMg6UUJtrJkKJTGr6XjucnTfWgrPC92hHSQw==
+X-Google-Smtp-Source: ABdhPJwP41B1KzZCRqkq1XDuH9EaW7w1X8ZSf6D4eY6NxBftBo1rhtCM+qTBb7e2bYvEC5YtVT6qYDqDIUABwTqfero=
+X-Received: by 2002:adf:eccf:: with SMTP id s15mr3036758wro.70.1589431653434;
+ Wed, 13 May 2020 21:47:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200505134354.774943181@linutronix.de> <20200505134905.258989060@linutronix.de>
-In-Reply-To: <20200505134905.258989060@linutronix.de>
+References: <20200505134354.774943181@linutronix.de> <20200505134905.443591450@linutronix.de>
+In-Reply-To: <20200505134905.443591450@linutronix.de>
 From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 13 May 2020 21:46:53 -0700
-X-Gmail-Original-Message-ID: <CALCETrUwQ_1APnsL3kRKoQF53Hkdc0yLYWHvEmwvA3qksQx-+A@mail.gmail.com>
-Message-ID: <CALCETrUwQ_1APnsL3kRKoQF53Hkdc0yLYWHvEmwvA3qksQx-+A@mail.gmail.com>
-Subject: Re: [patch V4 part 3 20/29] x86/entry: Provide IDTENTRY_ERRORCODE
+Date:   Wed, 13 May 2020 21:47:21 -0700
+X-Gmail-Original-Message-ID: <CALCETrXeuNkgfSiK2Z8rEBnCx-_uoSfYwO1xNKaoWwAShx51CA@mail.gmail.com>
+Message-ID: <CALCETrXeuNkgfSiK2Z8rEBnCx-_uoSfYwO1xNKaoWwAShx51CA@mail.gmail.com>
+Subject: Re: [patch V4 part 3 22/29] x86/entry: Convert Segment not present
+ exception to IDTENTRY
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
         "Paul E. McKenney" <paulmck@kernel.org>,
@@ -81,8 +82,15 @@ On Tue, May 5, 2020 at 7:15 AM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
 > From: Thomas Gleixner <tglx@linutronix.de>
 >
-> Same as IDTENTRY but the C entry point has an error code argument.
+> Convert #NP to IDTENTRY_ERRORCODE:
+>   - Implement the C entry point with DEFINE_IDTENTRY
+>   - Emit the ASM stub with DECLARE_IDTENTRY
+>   - Remove the ASM idtentry in 64bit
+>   - Remove the open coded ASM entry code in 32bit
+>   - Fixup the XEN/PV code
+>   - Remove the old prototyoes
 >
+> No functional change.
 
 
 Acked-by: Andy Lutomirski <luto@kernel.org>
