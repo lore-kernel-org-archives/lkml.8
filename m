@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A389C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0DDC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C77892065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 655D32065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:03:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483020;
-	bh=7BopdSLcp8J4FWItB9qb1y6DyvBGvmyL2nsMbg4ACkw=;
+	s=default; t=1589483024;
+	bh=0R8mz2R+nq6sMxuEDlBQl2ByD9/WeJn9V11MB1lxkeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oUJaANzc008WU7sO9ne/aG1F9yDjzxyM/pPUEkIgUL3XUmPZVUtbfprOE8Og57y70
-	 pVjbu5I36Pg9Z1SZrj+lGlP/ShbhEBDfw47n6TMXGNrh8pp52P7mQKVYvou5J53boV
-	 UZ2I5vIk+kWlWazMPlJtnygOp+ulvxayD8B0g4P8=
+	b=ix46svWlSWmJ2aDGLP0o2muiAvJpZWMwjqZm3jFVRST4jpCueLLkyURiMtPWv3VKg
+	 9MfI2yhc5twxq0eNcxTxZnKrJGpxNicYY5zoRekIrH9JKH1evUKTPdX2lEbTMlAEQI
+	 RzytKwklNPFNGKFvIvUJtKrfdHgMrEF8FuGmLx7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729490AbgENTDj (ORCPT
+        id S1729167AbgENSym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:03:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54852 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:54:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729179AbgENSyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:54:44 -0400
+        id S1729024AbgENSyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:54:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7C022074A;
-        Thu, 14 May 2020 18:54:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE5D820767;
+        Thu, 14 May 2020 18:54:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482483;
-        bh=7BopdSLcp8J4FWItB9qb1y6DyvBGvmyL2nsMbg4ACkw=;
+        s=default; t=1589482461;
+        bh=0R8mz2R+nq6sMxuEDlBQl2ByD9/WeJn9V11MB1lxkeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kmxFlHNpLZakuhVz8IKyZ75fNtJpROo3i8IdN8fve36KVCUpul/TVOUMfnZ7cAn4q
-         lfTqRa/lb+N36nx/7En9qTsfNLf7XW0ZbIDJ3MYGVAh7jHGSR7/1MO+5jM7av3HyVK
-         e1SSLvEsCsftN8BuZ9ynZ2Rw2AKO/WWPCC+VqSiw=
+        b=ueJ3hq/X4UY4CfD+K3V0BrhGuqBUDj1eW5esosSmbVVE8XXFUZiUI95WN0hqtoX0q
+         mkz0cXQQMVjM+j7qxBcsMhBCP9uDzAPGFs4N4NT5U7qzAZRs6cS7HwSMjrWG/EEEug
+         WxdvLGBmoui/r8ElMkjDSk7SdjL7QJUeQRzy7XKQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 23/31] HID: quirks: Add HID_QUIRK_NO_INIT_REPORTS quirk for Dell K12A keyboard-dock
-Date:   Thu, 14 May 2020 14:54:05 -0400
-Message-Id: <20200514185413.20755-23-sashal@kernel.org>
+Cc:     Thierry Reding <treding@nvidia.com>,
+        kbuild test robot <lkp@intel.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 06/31] phy: tegra: Select USB_COMMON for usb_get_maximum_speed()
+Date:   Thu, 14 May 2020 14:53:48 -0400
+Message-Id: <20200514185413.20755-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185413.20755-1-sashal@kernel.org>
 References: <20200514185413.20755-1-sashal@kernel.org>
@@ -60,50 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 1e189f267015a098bdcb82cc652d13fbf2203fa0 ]
+[ Upstream commit 0d5c9bc7c68009af04bbadf22306467674c6fb90 ]
 
-Add a HID_QUIRK_NO_INIT_REPORTS quirk for the Dell K12A keyboard-dock,
-which can be used with various Dell Venue 11 models.
+The usb_get_maximum_speed() function is part of the usb-common module,
+so enable it by selecting the corresponding Kconfig symbol.
 
-Without this quirk the keyboard/touchpad combo works fine when connected
-at boot, but when hotplugged 9 out of 10 times it will not work properly.
-Adding the quirk fixes this.
+While at it, also make sure to depend on USB_SUPPORT because USB_PHY
+requires that. This can lead to Kconfig conflicts if USB_SUPPORT is not
+enabled while attempting to enable PHY_TEGRA_XUSB.
 
-Cc: Mario Limonciello <mario.limonciello@dell.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Reported-by: kbuild test robot <lkp@intel.com>
+Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://lore.kernel.org/r/20200330101038.2422389-1-thierry.reding@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h    | 1 +
- drivers/hid/hid-quirks.c | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/phy/tegra/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index e071fd3c6b2b0..c1fed1aaecdf8 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -1081,6 +1081,7 @@
- #define USB_DEVICE_ID_SYNAPTICS_LTS2	0x1d10
- #define USB_DEVICE_ID_SYNAPTICS_HD	0x0ac3
- #define USB_DEVICE_ID_SYNAPTICS_QUAD_HD	0x1ac3
-+#define USB_DEVICE_ID_SYNAPTICS_DELL_K12A	0x2819
- #define USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012	0x2968
- #define USB_DEVICE_ID_SYNAPTICS_TP_V103	0x5710
+diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
+index a3b1de953fb70..bf4e93b835e91 100644
+--- a/drivers/phy/tegra/Kconfig
++++ b/drivers/phy/tegra/Kconfig
+@@ -1,6 +1,7 @@
+ config PHY_TEGRA_XUSB
+ 	tristate "NVIDIA Tegra XUSB pad controller driver"
+-	depends on ARCH_TEGRA
++	depends on ARCH_TEGRA && USB_SUPPORT
++	select USB_COMMON
+ 	help
+ 	  Choose this option if you have an NVIDIA Tegra SoC.
  
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index b9529bed4d763..e5beee3e8582a 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -163,6 +163,7 @@ static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_LTS2), HID_QUIRK_NO_INIT_REPORTS },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_QUAD_HD), HID_QUIRK_NO_INIT_REPORTS },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_TP_V103), HID_QUIRK_NO_INIT_REPORTS },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_DELL_K12A), HID_QUIRK_NO_INIT_REPORTS },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TOPMAX, USB_DEVICE_ID_TOPMAX_COBRAPAD), HID_QUIRK_BADPAD },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TOUCHPACK, USB_DEVICE_ID_TOUCHPACK_RTS), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TPV, USB_DEVICE_ID_TPV_OPTICAL_TOUCHSCREEN_8882), HID_QUIRK_NOGET },
 -- 
 2.20.1
 
