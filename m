@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 569FCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C51C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3268320675
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 049D8207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482834;
-	bh=M7pvGnvnXA7VoSIGQiVFsoWdv3eCoTkXxemX1i2yzuI=;
+	s=default; t=1589482831;
+	bh=P3vnlNl2kfwRlE3gX2+SClcTGmFVrHC5ebGzq7c4wOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lMAag1oJPJ/F8UajCUrdCDZqmBthAQHTwXtvbWygsp+5C/9zJKele/QvZLQABqUsE
-	 WmecGsa8jwU4ONghlnmQUZtTs9qqIyRJuft/JSdxANNdAfGHBc4x9c4nelbPxR6DzY
-	 QStu2EnLxPZA7Gv6nGEuMw1KWWJYCNKOh+o6YA9c=
+	b=hDzT1F6KIrFtOsUmvDR18TgT4Fb87+1baqi+AGHs6d5sJlOlq5R+JLjS0iRvQ29l9
+	 +aVbphOcl0EJ0wjrk9RXFSeN24vXgoIvPuSlOICkZAyFUwid7dCq5RByq5fJCEg5Zb
+	 G/HYWzxHOTIoO1y+FyApDXBnvt4cLXM6suXEJZbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729938AbgENTAd (ORCPT
+        id S1729481AbgENSzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:00:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56416 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729474AbgENSzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 14 May 2020 14:55:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56170 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729397AbgENSzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:55:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8582207F9;
-        Thu, 14 May 2020 18:55:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09E7E20767;
+        Thu, 14 May 2020 18:55:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482545;
-        bh=M7pvGnvnXA7VoSIGQiVFsoWdv3eCoTkXxemX1i2yzuI=;
+        s=default; t=1589482532;
+        bh=P3vnlNl2kfwRlE3gX2+SClcTGmFVrHC5ebGzq7c4wOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TVP9EWKLPfXZv36uJmL5aeEAK/xlywXjd8/6Dhopk/PPwWTHLmec94e44nRaFeZ1l
-         I4UVE5pZGMQdBcAoyjOJloLkvJEkxZyyBAVt5AEX4HnY8ZbD3Ar3vO6i3IrWF+vX61
-         WVRpBctLnCCE7jDxKTu7BnBy1HX81UK8xXLjmQrc=
+        b=C1+I9BO4GafDA7sEkWIrMK7Oe/wFMsI6/R/N3ukO/a1XHACuvYXHSlulqEbz+fFSh
+         uYLozwSp8Z9Nk4w6YscAtxf6ypKOkdSAlDHlXXAAvOHMPDnAjoW4qqPpOOcWXPGDKI
+         WTPrsJHgxp6Sw6M8fBBpFYIhtQhaxM+A8fnYBTTI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 37/39] ARM: futex: Address build warning
-Date:   Thu, 14 May 2020 14:54:54 -0400
-Message-Id: <20200514185456.21060-37-sashal@kernel.org>
+Cc:     Alex Elder <elder@linaro.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 26/39] net: ipa: fix a bug in ipa_endpoint_stop()
+Date:   Thu, 14 May 2020 14:54:43 -0400
+Message-Id: <20200514185456.21060-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185456.21060-1-sashal@kernel.org>
 References: <20200514185456.21060-1-sashal@kernel.org>
@@ -60,68 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Alex Elder <elder@linaro.org>
 
-[ Upstream commit 8101b5a1531f3390b3a69fa7934c70a8fd6566ad ]
+[ Upstream commit 713b6ebb4c376b3fb65fdceb3b59e401c93248f9 ]
 
-Stephen reported the following build warning on a ARM multi_v7_defconfig
-build with GCC 9.2.1:
+In ipa_endpoint_stop(), for TX endpoints we set the number of retries
+to 0.  When we break out of the loop, retries being 0 means we return
+EIO rather than the value of ret (which should be 0).
 
-kernel/futex.c: In function 'do_futex':
-kernel/futex.c:1676:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
- 1676 |   return oldval == cmparg;
-      |          ~~~~~~~^~~~~~~~~
-kernel/futex.c:1652:6: note: 'oldval' was declared here
- 1652 |  int oldval, ret;
-      |      ^~~~~~
+Fix this by using a non-zero retry count for both RX and TX
+channels, and just break out of the loop after calling
+gsi_channel_stop() for TX channels.  This way only RX channels
+will retry, and the retry count will be non-zero at the end
+for TX channels (so the proper value gets returned).
 
-introduced by commit a08971e9488d ("futex: arch_futex_atomic_op_inuser()
-calling conventions change").
-
-While that change should not make any difference it confuses GCC which
-fails to work out that oldval is not referenced when the return value is
-not zero.
-
-GCC fails to properly analyze arch_futex_atomic_op_inuser(). It's not the
-early return, the issue is with the assembly macros. GCC fails to detect
-that those either set 'ret' to 0 and set oldval or set 'ret' to -EFAULT
-which makes oldval uninteresting. The store to the callsite supplied oldval
-pointer is conditional on ret == 0.
-
-The straight forward way to solve this is to make the store unconditional.
-
-Aside of addressing the build warning this makes sense anyway because it
-removes the conditional from the fastpath. In the error case the stored
-value is uninteresting and the extra store does not matter at all.
-
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/87pncao2ph.fsf@nanos.tec.linutronix.de
+Signed-off-by: Alex Elder <elder@linaro.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/include/asm/futex.h | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/net/ipa/ipa_endpoint.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/include/asm/futex.h b/arch/arm/include/asm/futex.h
-index ffebe7b7a5b74..91ca80035fc42 100644
---- a/arch/arm/include/asm/futex.h
-+++ b/arch/arm/include/asm/futex.h
-@@ -163,8 +163,13 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- 	preempt_enable();
- #endif
+diff --git a/drivers/net/ipa/ipa_endpoint.c b/drivers/net/ipa/ipa_endpoint.c
+index 915b4cd05dd29..78ed431e6eb86 100644
+--- a/drivers/net/ipa/ipa_endpoint.c
++++ b/drivers/net/ipa/ipa_endpoint.c
+@@ -1284,7 +1284,7 @@ static int ipa_endpoint_stop_rx_dma(struct ipa *ipa)
+  */
+ int ipa_endpoint_stop(struct ipa_endpoint *endpoint)
+ {
+-	u32 retries = endpoint->toward_ipa ? 0 : IPA_ENDPOINT_STOP_RX_RETRIES;
++	u32 retries = IPA_ENDPOINT_STOP_RX_RETRIES;
+ 	int ret;
  
--	if (!ret)
--		*oval = oldval;
-+	/*
-+	 * Store unconditionally. If ret != 0 the extra store is the least
-+	 * of the worries but GCC cannot figure out that __futex_atomic_op()
-+	 * is either setting ret to -EFAULT or storing the old value in
-+	 * oldval which results in a uninitialized warning at the call site.
-+	 */
-+	*oval = oldval;
+ 	do {
+@@ -1292,12 +1292,9 @@ int ipa_endpoint_stop(struct ipa_endpoint *endpoint)
+ 		struct gsi *gsi = &ipa->gsi;
  
- 	return ret;
- }
+ 		ret = gsi_channel_stop(gsi, endpoint->channel_id);
+-		if (ret != -EAGAIN)
++		if (ret != -EAGAIN || endpoint->toward_ipa)
+ 			break;
+ 
+-		if (endpoint->toward_ipa)
+-			continue;
+-
+ 		/* For IPA v3.5.1, send a DMA read task and check again */
+ 		if (ipa->version == IPA_VERSION_3_5_1) {
+ 			ret = ipa_endpoint_stop_rx_dma(ipa);
 -- 
 2.20.1
 
