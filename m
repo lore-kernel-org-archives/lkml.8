@@ -2,133 +2,153 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA96C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 776C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 270B0206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:13:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DZ8dOkD2"
+	by mail.kernel.org (Postfix) with ESMTP id 3F8F0206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:16:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589440596;
+	bh=x6XY+w06HhJq6OnCryR2C8r+d8634pKZTzl7OEtJ84I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0HgDXvATHiKZr+J3pHwaYAZwaXQ0SraVJqK2yfpC4ZU1tQOf7DTYtKh7iiHhF8aVh
+	 FFiAn6OezZd2M3HOGjsPyo3dwfFrwVnq/GR9XgouInwd9tL1BTWRxiwc17Ec8wNiUt
+	 MHxPulSFlUyYv4PUMt+CRqRYavH6YXs0Qtg59syQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725977AbgENHNf (ORCPT
+        id S1726035AbgENHQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 03:13:35 -0400
-Received: from mail-db8eur05on2047.outbound.protection.outlook.com ([40.107.20.47]:6083
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725866AbgENHNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 03:13:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XPv5fDv/w83Gy3o15NANiY16NenRlC00twFzJhRZzE6ujGi2e5Pito5X41tIVaMzOnuNpJcdmVbFxzKxNW+ejCJ1VJLU4v6o80O9XKIyiLKlrQiXsBGWwk4HyGZd9m8CKEFQMIXblvrh1E/90WFGQYcoCJKF2hZ8+vdkse7kMZ6LXqD9DhwzozHBnhW7rcQP5QGtBZLexfAkA9V4hx1SL28uarIzBL1JgwbE0mlfBFIbLnWeXR9fBkoJLE3djCqSkCyPeisuneJBVdkY/Iq1x6wDyLDu2gfmx4zSMigaLAyTmtYaBxu4Njs6ysl5/RisBZyxYrLNcpF9OTgv9r0iZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=maY+MjDq7rpXVjrdP94zzFJKMiY0khqwZM/KYj0KhIM=;
- b=hwtSaD2m5+qwVQ9a73MlVoLW7Yf7JyG7GWSAY8e2wITe5Wp8NiXGnMG8ArkQz0eqbwkSTwNaFXQcT2Tg17zvdTul5bDxAlNX/Bg5HDcR2gdl40UgP2Nv/IMtrWg6nZVKooukbFYCiGWj6zriV8vO6WOHFMSDJwYY7wQYNRFWYbOGE6lZ0AUrv34BR4QVxZcxJFO7kmTca33AX3JcTcIW8O3Z1HDkArWbby1HiOoqR6DpOPTIL+nA1HXoRh5kqS6Ev1m4xK742wu7kRgS5YM7FRuugR7B0iNyYmtF2QuLXJtEewefuasJkhAqtEUlncKSfRRClmYo8ioTdmN9OpcD2g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=maY+MjDq7rpXVjrdP94zzFJKMiY0khqwZM/KYj0KhIM=;
- b=DZ8dOkD2CAvrn+ZMXv2JMcc4FEZcpNi5I4gU3Csh1hle7yK08wqEmGlVWpD3AluA007pa21poRxS63mtaj/Fz+NzK6S9ZhmJtu8D3NG652UH5YJYZvu69gHmKuYR6pdMJSuJJHGHUBt404r7alOt832XUYKMiFc94Phd6K9+7WE=
-Received: from AM0PR04MB7041.eurprd04.prod.outlook.com (2603:10a6:208:19a::13)
- by AM0PR04MB5876.eurprd04.prod.outlook.com (2603:10a6:208:130::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26; Thu, 14 May
- 2020 07:13:30 +0000
-Received: from AM0PR04MB7041.eurprd04.prod.outlook.com
- ([fe80::1cab:2a78:51cb:2a00]) by AM0PR04MB7041.eurprd04.prod.outlook.com
- ([fe80::1cab:2a78:51cb:2a00%9]) with mapi id 15.20.2979.033; Thu, 14 May 2020
- 07:13:30 +0000
-From:   Christian Herber <christian.herber@nxp.com>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>
-CC:     "David S. Miller" <davem@davemloft.net>,
+        Thu, 14 May 2020 03:16:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725909AbgENHQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 03:16:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80546206B6;
+        Thu, 14 May 2020 07:16:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589440594;
+        bh=x6XY+w06HhJq6OnCryR2C8r+d8634pKZTzl7OEtJ84I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fsVHPsSugeuQaqh74KM3vTh5YlMixAmucxuZV15thPoJJMrucj9GTrX+4SfuldnhB
+         9l1LHA1eD+XBDjopMaSSsjMf2YIDC55sDJofhKonyQwyNCXX2L9+6xLEwnVOYrkmJu
+         HPyLWUmcgMwI4jj/qfiwZg1D0JFjzHw6/eb6nNR8=
+Date:   Thu, 14 May 2020 09:16:31 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Emil Velikov <emil.l.velikov@gmail.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>, x86@kernel.org,
+        linux-input@vger.kernel.org,
+        linux-fbdev <linux-fbdev@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        platform-driver-x86@vger.kernel.org,
+        Tony Prisk <linux@prisktech.co.nz>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        David Jander <david@protonic.nl>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        "mkl@pengutronix.de" <mkl@pengutronix.de>,
-        Marek Vasut <marex@denx.de>
-Subject: RE: [EXT] Re: signal quality and cable diagnostic
-Thread-Topic: [EXT] Re: signal quality and cable diagnostic
-Thread-Index: AQHWJ6ExNilqBbwzZ0ehkAYa7smAYaikHY+AgAMNSsA=
-Date:   Thu, 14 May 2020 07:13:30 +0000
-Message-ID: <AM0PR04MB7041DE18F2966573DB6E078586BC0@AM0PR04MB7041.eurprd04.prod.outlook.com>
-References: <20200511141310.GA2543@pengutronix.de>
- <20200511143337.GC413878@lunn.ch> <20200512082201.GB16536@pengutronix.de>
-In-Reply-To: <20200512082201.GB16536@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: pengutronix.de; dkim=none (message not signed)
- header.d=none;pengutronix.de; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [88.130.52.52]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c8a47c7f-f02f-44b9-7eba-08d7f7d64e6d
-x-ms-traffictypediagnostic: AM0PR04MB5876:
-x-microsoft-antispam-prvs: <AM0PR04MB5876160120A46E3C784DB94C86BC0@AM0PR04MB5876.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 040359335D
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: wnIPQOEhJoI7IcWInAc4/jLbMXpiMZWdkzsv5bm60u6wfx0iRQeklTaohA1uGmkUU24xqI5ftfpSDKrErXPGwIq4JwA9ROYl63+BCqQMG5GeV99JhN5rt99M2l1UXNLkLNOiF7ZeV9TOqgMhlCsyIMBweN//AK2NMsfaUb8WEhnkRjVldtPkriqW1jeyGpK4MvP7vRBwFw9jq2Y8D4sMVU3v1AmQnn+OwMfu59VMYEDphx1CL3hHQ9Ujr5pCKcAXAgE1CDyXV+MRP8Yoc3znbm0UIKzftTFIGRv8KTN5J4wlt8yjD5/N4o14ANyPVxgGZXFDqWE5S3kS9RcWOj47yrqb51OVSmVA+Vx1lI7sGB7ZNEV0ABbXnLbv4PPZ8YQ2dxvJ+2ejZgiYfOeeMMOx7FEYYNkflCFC5lIXBmAFRgFFrzrDJ0flnkoguQ3LqHXx
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB7041.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(136003)(39860400002)(376002)(346002)(316002)(86362001)(8936002)(71200400001)(2906002)(9686003)(4326008)(26005)(110136005)(52536014)(54906003)(7696005)(55016002)(5660300002)(66476007)(44832011)(66556008)(66946007)(8676002)(33656002)(66446008)(76116006)(7416002)(64756008)(478600001)(186003)(6506007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: kqSDKHQoCTRcsrSrgEI0Q3wBA9TH5/pa5fxuoMsVBLOCyYQLnxSo46mlSSu0EdSC7/f1yMJGWgW4Q1PO5K8C8Eq83qQzam56tUKPfDp0Gto5JuDUgo1fgDJD41ueEz68+Lu2w1uIfJ9NhqWPfXWytujNJS2GCoRKoPLaoWUqc3Hhp7mC4jHgqIYaMMHiD9laS2fOesdoBedfJKAnh8DSZo+yrNbAFqNBjGFkPs5Oh2im4tHM5Nx7DgPhyMtXbDybrozCvJP4jyQA3cht4iXf3n4hRghFIrvMKtGocq4dmTcV34A8ckQSMI1er+ZGHvLrLHqQeZRojGWNE9wHbyeLBxpfYDkUF4S31r/1rytw8y3l6TWPfScOWF18vFjNNePlVLluO4jJgEFAbjQda2uYJnXrK9lFjjHOMaYgYJ3zrxshpFhH28wWIoTNWm0Bclar/3pp437jWFWhTz2G3saaNR1et6wnWG0HMeFIbx1ld3c=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Gong <richard.gong@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        LAKML <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 00/10] drivers, provide a way to add sysfs groups
+ easily
+Message-ID: <20200514071631.GA1566388@kroah.com>
+References: <20190731124349.4474-1-gregkh@linuxfoundation.org>
+ <20190731131045.GB147138@dtor-ws>
+ <20190802104633.GA14823@kroah.com>
+ <CACvgo52+Uqx4GJFwadJoFzzt5EMc69HcW-+K9uxv9t25TtSDBg@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c8a47c7f-f02f-44b9-7eba-08d7f7d64e6d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2020 07:13:30.5571
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XSnbpQnw1Nojp8OxCHdzlvEUNgbn2v4LJiZc2qjnk/HJmunejyM6XnJEaQwCE2n3hbRAe5Wvgy01UXebK4hIMXxdjc2eNcAwm2X4rB02mTw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5876
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACvgo52+Uqx4GJFwadJoFzzt5EMc69HcW-+K9uxv9t25TtSDBg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCBNYXkgMTIsIDIwMjAgYXQgMTA6MjI6MDFBTSArMDIwMCwgT2xla3NpaiBSZW1wZWwg
-d3JvdGU6DQoNCj4gU28gSSB0aGluayB3ZSBzaG91bGQgcGFzcyByYXcgU1FJIHZhbHVlIHRvIHVz
-ZXIgc3BhY2UsIGF0IGxlYXN0IGluIHRoZQ0KPiBmaXJzdCBpbXBsZW1lbnRhdGlvbi4NCg0KPiBX
-aGF0IGRvIHlvdSB0aGluayBhYm91dCB0aGlzPw0KDQpIaSBPbGVrc2lqLA0KDQpJIGhhZCBhIGNo
-ZWNrIGFib3V0IHRoZSBiYWNrZ3JvdW5kIG9mIHRoaXMgU1FJIHRoaW5nLiBUaGUgdGFibGUgeW91
-IHJlZmVyZW5jZSB3aXRoIGNvbmNyZXRlIFNOUiB2YWx1ZXMgaXMgaW5mb3JtYXRpdmUgb25seSBh
-bmQgbm90IGEgcmVxdWlyZW1lbnQuIFRoZSByZXF1aXJlbWVudHMgYXJlIHJhdGhlciBsb29zZS4N
-Cg0KVGhpcyBpcyBmcm9tIE9BOg0KLSBPbmx5IGZvciBTUUk9MCBhIGxpbmsgbG9zcyBzaGFsbCBv
-Y2N1ci4NCi0gVGhlIGluZGljYXRlZCBzaWduYWwgcXVhbGl0eSBzaGFsbCBtb25vdG9uaWMgaW5j
-cmVhc2luZyAvZGVjcmVhc2luZyB3aXRoIG5vaXNlIGxldmVsLg0KLSBJdCBzaGFsbCBiZSBpbmRp
-Y2F0ZWQgaW4gdGhlIGRhdGFzaGVldCBhdCB3aGljaCBsZXZlbCBhIEJFUjwxMF4tMTAgKGJldHRl
-ciB0aGFuIDEwXi0xMCkgaXMgYWNoaWV2ZWQgKGUuZy4gImZyb20gU1FJPTMgdG8gU1FJPTcgdGhl
-IGxpbmsgaGFzIGEgQkVSPDEwXi0xMCAoYmV0dGVyIHRoYW4gMTBeLTEwKSIpDQoNCkkuZS4gU1FJ
-IGRvZXMgbm90IG5lZWQgdG8gaGF2ZSBhIGRpcmVjdCBjb3JyZWxhdGlvbiB3aXRoIFNOUi4gVGhl
-IGZ1bmRhbWVudGFsIHVuZGVybHlpbmcgbWV0cmljIGlzIHRoZSBCRVIuDQpZb3UgY2FuIHJlcG9y
-dCB0aGUgcmF3IFNRSSBsZXZlbCBhbmQgdXNlcnMgd291bGQgaGF2ZSB0byBsb29rIHVwIHdoYXQg
-aXQgbWVhbnMgaW4gdGhlIHJlc3BlY3RpdmUgZGF0YSBzaGVldC4gVGhlcmUgaXMgbm8gZ3VhcmFu
-dGVlZCByZWxhdGlvbiBiZXR3ZWVuIFNRSSBsZXZlbHMgb2YgZGlmZmVyZW50IGRldmljZXMsIGku
-ZS4gU1FJIDUgY2FuIGhhdmUgbG93ZXIgQkVSIHRoYW4gU1FJIDYgb24gYW5vdGhlciBkZXZpY2Uu
-DQpBbHRlcm5hdGl2ZWx5LCB5b3UgY291bGQgcmVwb3J0IEJFUiA8IHggZm9yIHRoZSBkaWZmZXJl
-bnQgU1FJIGxldmVscy4gSG93ZXZlciwgdGhpcyByZXF1aXJlcyB0aGUgaW5mb3JtYXRpb24gdG8g
-YmUgYXZhaWxhYmxlLiBXaGlsZSBJIGNvdWxkIHByb3ZpZGUgdGhlc2UgZm9yIE5YUCwgaXQgbWln
-aHQgbm90IGJlIGVhc2lseSBhdmFpbGFibGUgZm9yIG90aGVyIHZlbmRvcnMuDQpJZiByZXBvcnRp
-bmcgcmF3IFNRSSwgYXQgbGVhc3QgdGhlIFNRSSBsZXZlbCBmb3IgQkVSPDEwXi0xMCBzaG91bGQg
-YmUgcHJlc2VudGVkIHRvIGdpdmUgYW55IG1lYW5pbmcgdG8gdGhlIHZhbHVlLg0KDQpSZWdhcmRz
-LA0KDQpDaHJpc3RpYW4NCg==
+On Wed, May 13, 2020 at 11:18:15PM +0100, Emil Velikov wrote:
+> Hi Greg,
+> 
+> On Fri, 2 Aug 2019 at 11:46, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> 
+> >
+> > I have now done this with patch 1/10.  Here's the pull info if any
+> > subsystem maintainer wants to suck this into their tree to provide the
+> > ability for drivers to add/remove attribute groups easily.
+> >
+> > This is part of my driver-core tree now, and will go to Linus for
+> > 5.4-rc1, along with a few platform drivers that have been acked by their
+> > various subsystem maintainers that convert them to use this new
+> > functionality.
+> >
+> > If anyone has any questions about this, please let me know.
+> >
+> > thanks,
+> >
+> > greg k-h
+> >
+> > -------------------
+> >
+> > The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+> >
+> >   Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+> >
+> > are available in the Git repository at:
+> >
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/dev_groups_all_drivers
+> >
+> > for you to fetch changes up to 23b6904442d08b7dbed7622ed33b236d41a3aa8b:
+> >
+> >   driver core: add dev_groups to all drivers (2019-08-02 12:37:53 +0200)
+> >
+> > ----------------------------------------------------------------
+> > dev_groups added to struct driver
+> >
+> > Persistent tag for others to pull this branch from
+> >
+> > This is the first patch in a longer series that adds the ability for the
+> > driver core to create and remove a list of attribute groups
+> > automatically when the device is bound/unbound from a specific driver.
+> >
+> > See:
+> >         https://lore.kernel.org/r/20190731124349.4474-2-gregkh@linuxfoundation.org
+> > for details on this patch, and examples of how to use it in other
+> > drivers.
+> >
+> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >
+> > ----------------------------------------------------------------
+> > Dmitry Torokhov (1):
+> >       driver core: add dev_groups to all drivers
+> >
+> >  drivers/base/dd.c      | 14 ++++++++++++++
+> >  include/linux/device.h |  3 +++
+> >  2 files changed, 17 insertions(+)
+> > _______________________________________________
+> 
+> Was planning to re-spin DRM a series which uses .dev_groups, although
+> I cannot see the core patch.
+> Did the it get reverted or simply fell though the cracks?
+
+Nope, it's in there:
+	23b6904442d0 ("driver core: add dev_groups to all drivers")
+which showed up in the 5.4 kernel release.
+
+Lots of other subsystems have already been converted to use this, do you
+not see it in your tree?
+
+thanks,
+
+greg k-h
