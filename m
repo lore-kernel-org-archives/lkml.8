@@ -2,154 +2,103 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD96C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE76920671
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:15:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589465729;
-	bh=M7KMNxwSSfTgmt0MkIbH3NUhq1iJ/RxQlCObAMOEohI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cNT+yKlRvJeXSntFL223MH6rgFDK39CETewYmv/csvguS8cvDyvvS6gdrjApLS5r8
-	 toY5BhRhvy31FQo+ebLm2s242YBOY/FcKFnLHvE+p5fLQ8A1nhSt6N1KLf81X3aJSX
-	 nSRuHtwmVkQUyXFRMuFRCG+5sS4o4vWZm+zbbC98=
+	by mail.kernel.org (Postfix) with ESMTP id B855E20671
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:16:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="B/sOjEXB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgENOP3 (ORCPT
+        id S1726492AbgENOQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:15:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60034 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726050AbgENOP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:15:28 -0400
-Received: from localhost (unknown [122.182.193.86])
+        Thu, 14 May 2020 10:16:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbgENOQY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 10:16:24 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D826C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:16:24 -0700 (PDT)
+Received: from zn.tnic (p200300EC2F0BBD00DC45039F589BC722.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:bd00:dc45:39f:589b:c722])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D01120671;
-        Thu, 14 May 2020 14:15:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589465728;
-        bh=M7KMNxwSSfTgmt0MkIbH3NUhq1iJ/RxQlCObAMOEohI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cy47zUIYmLwIScfGmX6mF9OXTP9WaSnD6gHHFTDbe73TFgrG6NYkxi7EdlzBvLDtT
-         ksnbsUjUmVOICSr91LcFngJ1hZJ/B8wGgzjyS/PbI2659ixty6zTmFVkVPtM0iZHYc
-         9slKetQe6APMCEO5Nlt1viRNLBMGf0718rE/yoFM=
-Date:   Thu, 14 May 2020 19:45:23 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] hwspinlock: qcom: Allow mmio usage in addition to
- syscon
-Message-ID: <20200514141523.GW14092@vkoul-mobl>
-References: <20200513005441.1102586-1-bjorn.andersson@linaro.org>
- <20200513005441.1102586-4-bjorn.andersson@linaro.org>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C712A1EC015C;
+        Thu, 14 May 2020 16:16:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1589465780;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=j3imiznRcTcesSved9eAcuXC+pa5ngT+M54jGjyJhLM=;
+        b=B/sOjEXBhpV8YUWlTypNzQpxGaJEb+QBrJu20oiBM46w2rubcez3+gujWhltnAg1yO1hJH
+        6ejjyRDTpkAijOAKrYplYMaETfO8SM7zo2tHNEsK4YAdaZE1PvsxDjeK7J7c/NKpDmn/X+
+        no9h/n9PzV0+H3MuI9UoTo6uqEcD+PA=
+Date:   Thu, 14 May 2020 16:16:16 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [patch V4 part 1 29/36] x86/mce: Send #MC singal from task work
+Message-ID: <20200514141616.GC9266@zn.tnic>
+References: <20200505131602.633487962@linutronix.de>
+ <20200505134100.957390899@linutronix.de>
+ <CALCETrX=Obqn2ms5EYs7HPxTE_UgnVkmt-HoAoGzB4BajuMwLA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200513005441.1102586-4-bjorn.andersson@linaro.org>
+In-Reply-To: <CALCETrX=Obqn2ms5EYs7HPxTE_UgnVkmt-HoAoGzB4BajuMwLA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12-05-20, 17:54, Bjorn Andersson wrote:
-> In all modern Qualcomm platforms the mutex region of the TCSR is forked
-> off into its own block, all with a offset of 0 and stride of 4096. So
-> add support for directly memory mapping this register space, to avoid
-> the need to represent this block using a syscon.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  drivers/hwspinlock/qcom_hwspinlock.c | 72 +++++++++++++++++++++-------
->  1 file changed, 56 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/hwspinlock/qcom_hwspinlock.c b/drivers/hwspinlock/qcom_hwspinlock.c
-> index f0da544b14d2..d8d4d729816c 100644
-> --- a/drivers/hwspinlock/qcom_hwspinlock.c
-> +++ b/drivers/hwspinlock/qcom_hwspinlock.c
-> @@ -70,41 +70,81 @@ static const struct of_device_id qcom_hwspinlock_of_match[] = {
->  };
->  MODULE_DEVICE_TABLE(of, qcom_hwspinlock_of_match);
->  
-> -static int qcom_hwspinlock_probe(struct platform_device *pdev)
-> +static struct regmap *qcom_hwspinlock_probe_syscon(struct platform_device *pdev,
-> +						   u32 *base, u32 *stride)
->  {
-> -	struct hwspinlock_device *bank;
->  	struct device_node *syscon;
-> -	struct reg_field field;
->  	struct regmap *regmap;
-> -	size_t array_size;
-> -	u32 stride;
-> -	u32 base;
->  	int ret;
-> -	int i;
->  
->  	syscon = of_parse_phandle(pdev->dev.of_node, "syscon", 0);
-> -	if (!syscon) {
-> -		dev_err(&pdev->dev, "no syscon property\n");
+On Thu, May 07, 2020 at 11:02:09AM -0700, Andy Lutomirski wrote:
+> IOW, if we want to recover from CPL0 #MC, we will need a different mechanism.
 
-any reason to drop the log?
+Recovering from CPL0 #MC is mostly doomed to failure. Except this mcsafe
+crap with the exception handling:
 
-> -		return -ENODEV;
-> -	}
-> +	if (!syscon)
-> +		return ERR_PTR(-ENODEV);
->  
->  	regmap = syscon_node_to_regmap(syscon);
->  	of_node_put(syscon);
->  	if (IS_ERR(regmap))
-> -		return PTR_ERR(regmap);
-> +		return regmap;
->  
-> -	ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 1, &base);
-> +	ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 1, base);
->  	if (ret < 0) {
->  		dev_err(&pdev->dev, "no offset in syscon\n");
-> -		return -EINVAL;
-> +		return ERR_PTR(-EINVAL);
->  	}
->  
-> -	ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 2, &stride);
-> +	ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 2, stride);
->  	if (ret < 0) {
->  		dev_err(&pdev->dev, "no stride syscon\n");
-> -		return -EINVAL;
-> +		return ERR_PTR(-EINVAL);
->  	}
->  
-> +	return regmap;
-> +}
-> +
-> +static const struct regmap_config tcsr_mutex_config = {
-> +	.reg_bits		= 32,
-> +	.reg_stride		= 4,
-> +	.val_bits		= 32,
-> +	.max_register		= 0x40000,
-> +	.fast_io		= true,
-> +};
-> +
-> +static struct regmap *qcom_hwspinlock_probe_mmio(struct platform_device *pdev,
-> +						 u32 *offset, u32 *stride)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *res;
-> +	void __iomem *base;
-> +
-> +	/* All modern platform has offset 0 and stride of 4k */
-> +	*offset = 0;
-> +	*stride = 0x1000;
+                /*
+                 * Handle an MCE which has happened in kernel space but from
+                 * which the kernel can recover: ex_has_fault_handler() has
+                 * already verified that the rIP at which the error happened is
+                 * a rIP from which the kernel can recover (by jumping to
+                 * recovery code specified in _ASM_EXTABLE_FAULT()) and the
+                 * corresponding exception handler which would do that is the
+                 * proper one.
+                 */
+                if (m.kflags & MCE_IN_KERNEL_RECOV) {
+                        if (!fixup_exception(regs, X86_TRAP_MC, error_code, 0))
+                                mce_panic("Failed kernel mode recovery", &m, msg);
 
-Wouldn't it make sense to read this from DT rather than code in kernel?
+
+Other than that, we iz done.
 
 -- 
-~Vinod
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
