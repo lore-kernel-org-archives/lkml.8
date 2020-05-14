@@ -2,66 +2,85 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C58C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBD1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02C352065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:53:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589475231;
-	bh=uLsNhapwCHDABTtF2A6EH6XG/RphfBmrqkR3vk1nbHM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZZcjK9mpdzDBMaJAhT+tN/hJ9fp8bhkzqVsOklhlRd2wYt4psK+o7XNmdvSEiOjPJ
-	 ZzeFZjawKGDQAvz8VaryGarYKDtHa8MutUBsI1r/gLOVDcJW2x7GNXfjjITF3+29tA
-	 twRVF25/7iJ2EkoXouSn+RiA7yLzYAG/NxKmVcOg=
+	by mail.kernel.org (Postfix) with ESMTP id 8476E20671
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgENQxu (ORCPT
+        id S1726100AbgENQ4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 12:53:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59264 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 12:56:36 -0400
+Received: from mga18.intel.com ([134.134.136.126]:49929 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbgENQxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 12:53:50 -0400
-Received: from localhost (unknown [122.182.193.86])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA9FE2065F;
-        Thu, 14 May 2020 16:53:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589475229;
-        bh=uLsNhapwCHDABTtF2A6EH6XG/RphfBmrqkR3vk1nbHM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=snFrfeWHib9cVGp/q9/42I5b4Qz43/1+9jJSArgjjz0VOLBE4BXbd1tSgo36qBgTl
-         TXlZF83pc90U+H0Rm126mgQz+LraJe46hpGQnwd0lkJWCos9PC9quXHb+1jd4fgaXZ
-         vVPvnjGuHV7qMyWQz4/OWmwNCx7BzQsXtdAsVRy4=
-Date:   Thu, 14 May 2020 22:23:38 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/5] remoteproc: qcom: PIL info support
-Message-ID: <20200514165338.GA14092@vkoul-mobl>
-References: <20200513055641.1413100-1-bjorn.andersson@linaro.org>
+        id S1725965AbgENQ4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 12:56:36 -0400
+IronPort-SDR: L/aSbEo+KoRPGrFPnzzbk9CSUYbIKQ0vl0TBTxNt+TE4T6fU0Gbm45lCAh9BBAdo/um25vzHP9
+ W4b3I9mqHyNQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 09:56:36 -0700
+IronPort-SDR: jHoPhh0H1yXReoPmZeCYgQAMVQkVODStMAUco2qf75a82JwNeVGlyf5xeipSQtBexSLY4QXGaZ
+ rPECBZ1bMhKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,392,1583222400"; 
+   d="scan'208";a="280919313"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga002.jf.intel.com with ESMTP; 14 May 2020 09:56:35 -0700
+Date:   Thu, 14 May 2020 09:55:13 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        Tony Luck <tony.luck@intel.com>
+Cc:     x86 <x86@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/split_lock: Add Icelake microserver CPU model
+Message-ID: <20200514165510.GH242333@romley-ivt3.sc.intel.com>
+References: <1588290395-2677-1-git-send-email-fenghua.yu@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513055641.1413100-1-bjorn.andersson@linaro.org>
+In-Reply-To: <1588290395-2677-1-git-send-email-fenghua.yu@intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12-05-20, 22:56, Bjorn Andersson wrote:
-> Introduce support for filling out the relocation information in IMEM, to aid
-> post mortem debug tools to locate the various remoteprocs.
+On Thu, Apr 30, 2020 at 04:46:35PM -0700, Fenghua Yu wrote:
+> Icelake microserver CPU supports split lock detection while it doesn't
+> have the split lock enumeration bit in IA32_CORE_CAPABILITIES.
+> 
+> Enumerate the feature by model number.
+> 
+> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> Reviewed-by: Tony Luck <tony.luck@intel.com>
+> ---
+>  arch/x86/kernel/cpu/intel.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+> index a19a680542ce..b59bc4ab2425 100644
+> --- a/arch/x86/kernel/cpu/intel.c
+> +++ b/arch/x86/kernel/cpu/intel.c
+> @@ -1135,6 +1135,7 @@ void switch_to_sld(unsigned long tifn)
+>  static const struct x86_cpu_id split_lock_cpu_ids[] __initconst = {
+>  	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		0),
+>  	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		0),
+> +	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_D,		0),
+>  	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT,	1),
+>  	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_D,	1),
+>  	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,	1),
 
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Hi, Thomas,
 
--- 
-~Vinod
+Any comment on this patch? Will you accept this patch?
+
+Thanks.
+
+-Fenghua
