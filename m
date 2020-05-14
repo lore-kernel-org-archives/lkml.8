@@ -2,103 +2,121 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B261C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91022C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D91B12065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:33:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IGPh/KCQ"
+	by mail.kernel.org (Postfix) with ESMTP id 653E420709
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:35:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589495735;
+	bh=PzRII4/RfN31cWmlbYBqI5etPc9zdw9KR1iB+zAlMNc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BnyL0ihkHXkrJIbVW82LzGlbLxO1rlRp2sjdElZwN3HSjj5Jv/PwdfASi7OqVhdq+
+	 WvsGOziMCGhKR5bYNVpzIFtlacVOq+yYgnJPoboXCoRcfewCuyrlty2xe38SHsrxSL
+	 LWfIHrfhHg8wVLbGfz2UtF6Pyvaf6aVFwXhV9ErE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbgENWdR (ORCPT
+        id S1728690AbgENWfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 18:33:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54742 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728662AbgENWdQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 18:33:16 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6172C061A0C;
-        Thu, 14 May 2020 15:33:16 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Thu, 14 May 2020 18:35:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728501AbgENWfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 18:35:34 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49NRBz12stz9sTD;
-        Fri, 15 May 2020 08:33:15 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589495595;
-        bh=9ljetqOT3gzLUa3iB3zxx9ekxV1W553qAgBlDt6WpxU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=IGPh/KCQIXEjTD5o4hs9pv1VepHB3q9mHPJY78sTSetOeXmVS7mobygDgk03k4MvJ
-         V8T9R3B+QUJMVK/lIpDt4NHeQiC8HVx7JB+RnCc5OcZzUtTO5A6+G2pnTe7dQIiywZ
-         RbPaK1mtdDqzEZZ7tc39Fh5+VCIn80H5dO4pPfu9nMp+ov+wQoUV4WHz4ypyzGvMYd
-         /GaBNOjkDU8qQKzXmDZLU/UHMZj0kJmWylWDwopYp0ODN1expmsa3qoaumyGF6Iy92
-         uG9gzJIUP2E3HrYTp2FLbEX/lILUirZDGowtmpP/WrELqRUC2PY6rXfcJlzjGBkfze
-         ryy0c4RXyMZhQ==
-Date:   Fri, 15 May 2020 08:33:14 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Trond Myklebust <trondmy@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Subject: linux-next: Fixes tag needs some work in the nfs tree
-Message-ID: <20200515083314.19b8ce17@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DA932065C;
+        Thu, 14 May 2020 22:35:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589495733;
+        bh=PzRII4/RfN31cWmlbYBqI5etPc9zdw9KR1iB+zAlMNc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dhb9MbKX9DzBEN+QS/Qp8tagSDXmw6j+EI1XBKpliU9NuJ4BZMqzSYxtsia+YzvOZ
+         xuhyQ1U6K9I3RG6GMpaTPH69YrsZatjYiBEJx2CuKtYrxuZ4ZmU6QmNYBhO/foyyEN
+         F3SVey4ul1KTyP9TcLb14dADf1zj+Ry83IWULWh8=
+Received: by pali.im (Postfix)
+        id 05D177B2; Fri, 15 May 2020 00:35:30 +0200 (CEST)
+Date:   Fri, 15 May 2020 00:35:30 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     koba.ko@canonical.com
+Cc:     Matthew Garrett <mjg59@srcf.ucam.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mario.Limonciello@dell.com
+Subject: Re: [PATCH] V2: platform/x86: dell-laptop: don't register
+ platform::micmute if the related tokens don't exist.
+Message-ID: <20200514223530.24r7c42bvwxvyyv5@pali>
+References: <20200511014456.5149-1-koba.ko@canonical.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/CSM5oeRrnhsWXrdg_dNIZNr";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200511014456.5149-1-koba.ko@canonical.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/CSM5oeRrnhsWXrdg_dNIZNr
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Monday 11 May 2020 09:44:56 koba.ko@canonical.com wrote:
+> From: Koba Ko <koba.ko@canonical.com>
+> 
+> On dell G3-3590, error message is issued during boot up,
+> "platform::micmute: Setting an LED's brightness failed (-19)",
+> but there's no micmute led on the machine.
+> 
+> Get the related tokens of SMBIOS, GLOBAL_MIC_MUTE_DISABLE/ENABLE.
+> If one of two tokens doesn't exist,
+> don't call led_classdev_register() for platform::micmute.
+> After that, you wouldn't see the platform::micmute in /sys/class/leds/,
+> and the error message wouldn't see in dmesg.
+> 
+> Signed-off-by: Koba Ko <koba.ko@canonical.com>
 
-Hi all,
+Fine for me, you can add:
 
-In commit
+Reviewed-by: Pali Rohár <pali@kernel.org>
 
-  1ce8dbb6a593 ("NFSv3: fix rpc receive buffer size for MOUNT call")
+Darren / Andy, when applying this patch, please add Fixes line so this
+change would be propagated to stable kernels:
 
-Fixes tag
+Fixes: d00fa46e0a2c6 ("platform/x86: dell-laptop: Add micmute LED trigger support")
 
-  Fixes: e3d3ab64dd66 ("SUNRPC: Use au_rslack when computing reply buffer s=
-ize")
-
-has these problem(s):
-
-  - Target SHA1 does not exist
-
-Maybe you meant
-
-Fixes: 2c94b8eca1a2 ("SUNRPC: Use au_rslack when computing reply buffer siz=
-e")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/CSM5oeRrnhsWXrdg_dNIZNr
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl69xyoACgkQAVBC80lX
-0GznKAf9EOJiF3zL8xx7wFVSGVyvp5Dc9NeoAJcKjrDpm3Ku9LDrwyiu6AvpJTsv
-WhR4O6wgddP4uklffvYhWxxypMM32dGSFUMz0hCP2NicLxzgasVTpSujfxFt6cC2
-BRJimyK672lbNN6AASlY871heAvjCpmHPgk1Nu997PiMiZ0aLvrgLu3S1izbjSz7
-9btKUKhLSFvDCKzq5wlJxiu4wf7h8cCSRhC9DQLQuEUu760mc+Wbhu2v7SiM8ZuT
-V/2R/XkTphUV68zSKUPjl4G4OC+ENnbvwyfJpyoZl/m4UdiU1gSl/I3KtyI3rKW3
-Tt3fdNwEBgpTHhCiWoWvlCybJDIH4w==
-=fYEB
------END PGP SIGNATURE-----
-
---Sig_/CSM5oeRrnhsWXrdg_dNIZNr--
+> ---
+> Changelog:
+> 1. Refine the typo of comment.
+> ---
+>  drivers/platform/x86/dell-laptop.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/dell-laptop.c
+> index 1e46022fb2c5..afc1ded83e56 100644
+> --- a/drivers/platform/x86/dell-laptop.c
+> +++ b/drivers/platform/x86/dell-laptop.c
+> @@ -2208,10 +2208,13 @@ static int __init dell_init(void)
+>  
+>  	dell_laptop_register_notifier(&dell_laptop_notifier);
+>  
+> -	micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
+> -	ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
+> -	if (ret < 0)
+> -		goto fail_led;
+> +	if (dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE) &&
+> +	    dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) {
+> +		micmute_led_cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
+> +		ret = led_classdev_register(&platform_device->dev, &micmute_led_cdev);
+> +		if (ret < 0)
+> +			goto fail_led;
+> +	}
+>  
+>  	if (acpi_video_get_backlight_type() != acpi_backlight_vendor)
+>  		return 0;
+> -- 
+> 2.17.1
+> 
