@@ -2,157 +2,77 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAABDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F0BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97605206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A07FA2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:54:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n73P5w0/"
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="isnKMIlX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728007AbgENPwU (ORCPT
+        id S1726726AbgENPyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 11:52:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48496 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726117AbgENPwT (ORCPT
+        Thu, 14 May 2020 11:54:08 -0400
+Received: from m15114.mail.126.com ([220.181.15.114]:50670 "EHLO
+        m15114.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbgENPyH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 11:52:19 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BF8AC061A0C;
-        Thu, 14 May 2020 08:52:19 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id p127so5444734oia.13;
-        Thu, 14 May 2020 08:52:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ts3exPU5b4D6Eif+mpAKX6mXkCcZa+SnvdeaxQ9mZeM=;
-        b=n73P5w0/ZNHj6r9xqk6zxWRaFGCxbL5c36nerRqhbZ5NOMMw/V3LHaS6GjNroeq11B
-         hkLhReslaIkbpZbAmEJwH90HGvHSvkx5StDy556cfRaMyefW6OB07aO5MhmBrmm8vThA
-         4JJ/S6xJSxyXUNLyTP60+uVZXT6qbnH2OnlRXyadY3R8dgUg7BeoW+9BjOZVroQby/pn
-         ScWezo6502Bf69Wwn8oTIxxwvwWJwv33hZiiPV00+mteAt3qiPDxB+ZEIrcjT3VvOlRg
-         /D0Qa8Pd9eVeK3/GHbPGEp1qFGbWcZ72unt4SIogHXcUPb+Kfgl4E8kmDFv+SLZVW6UY
-         FV3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ts3exPU5b4D6Eif+mpAKX6mXkCcZa+SnvdeaxQ9mZeM=;
-        b=QNANLJO9r6CYlMmN0PWwhRnuUIm5mqeG3EQ+wxMlaTPgf6OiY/tYKQbLwNYDA4MBo7
-         60zLGdZLaD2uh+PjfzBtYNhhEVTeUoxPH2DsivFsNVS914jaHb0anNImffH3T17PZH5P
-         WD/L7m5i8kW7A/KpNiwd694YXbxxEAQsGCDfvWAM4Zp3QcQ58ehuCPjfYO8GMJ31Vo0V
-         AfIsreex6NeuvfDF/h/kOlhS+c/VB2d+IuTLKDd23fc+9uhROgIVPShQrQUxSd1gp4ZZ
-         3uDp22R0m482APgAf5NaPFfR12Zc4nhDduZcV7yrlFtIQ6gO/9Zl4Lr+jxCnhCsuKhdf
-         PfgA==
-X-Gm-Message-State: AOAM533e2/uCCZn3c6B4xnQgusuAUXvjI80AIt1ZZm2mQyZmw4LeNWra
-        k0DUhqPeNR483w8r4SIltIAxSKNig7Bc407LORg=
-X-Google-Smtp-Source: ABdhPJyTq5NgHHXOOIt7GEAvBuXGY23iCp2ui/mBClBnszl5WhyiAHvYPhzgbDeRnkGUD739ES1OpYBXdtop71nCBtY=
-X-Received: by 2002:aca:210a:: with SMTP id 10mr6129577oiz.92.1589471539001;
- Thu, 14 May 2020 08:52:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200505153156.925111-1-mic@digikod.net> <20200505153156.925111-4-mic@digikod.net>
- <CAEjxPJ7y2G5hW0WTH0rSrDZrorzcJ7nrQBjfps2OWV5t1BUYHw@mail.gmail.com>
- <202005131525.D08BFB3@keescook> <202005132002.91B8B63@keescook>
- <CAEjxPJ7WjeQAz3XSCtgpYiRtH+Jx-UkSTaEcnVyz_jwXKE3dkw@mail.gmail.com> <202005140739.F3A4D8F3@keescook>
-In-Reply-To: <202005140739.F3A4D8F3@keescook>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Thu, 14 May 2020 11:52:07 -0400
-Message-ID: <CAEjxPJ5dPmBo7cORWq9U-Ma9BcT2cnMR39RG9_7uAZXwsPxb9w@mail.gmail.com>
-Subject: Re: [PATCH v5 3/6] fs: Enable to enforce noexec mounts or file exec
- through O_MAYEXEC
-To:     Kees Cook <keescook@chromium.org>
-Cc:     =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=C3=A9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 14 May 2020 11:54:07 -0400
+X-Greylist: delayed 1901 seconds by postgrey-1.27 at vger.kernel.org; Thu, 14 May 2020 11:54:06 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=loOkN7VR0utdCoO10a
+        fFg9YFqd0qPWF5aEj3qXr6pO4=; b=isnKMIlXy9yyH2wYUE/NeeCXFvUqWcr4Dv
+        VruGSwZ7uk/v7k5kBHCwMV1UemAeigPfehx/Wgrx5SgcS7hpUXvrD2G4oQMAHp48
+        gKH8Jiegh5INBeBrWpK9gXa3vDkOBvoP2qknwb7uYzMuvsZg93AzhdP61Um3U8Jh
+        LStIF/sG4=
+Received: from 192.168.137.228 (unknown [112.10.75.116])
+        by smtp7 (Coremail) with SMTP id DsmowADH5yPPYb1e4wrUEw--.20957S3;
+        Thu, 14 May 2020 23:20:49 +0800 (CST)
+From:   Xianting Tian <xianting_tian@126.com>
+To:     tglx@linutronix.de, john.stultz@linaro.org, sboyd@kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] timers: Use set_current_state macro
+Date:   Thu, 14 May 2020 11:20:47 -0400
+Message-Id: <1589469647-33814-1-git-send-email-xianting_tian@126.com>
+X-Mailer: git-send-email 1.8.3.1
+X-CM-TRANSID: DsmowADH5yPPYb1e4wrUEw--.20957S3
+X-Coremail-Antispam: 1Uf129KBjvdXoW5KF4fZrWfJF4fCw4kGFyDJrb_yoWxWrXEk3
+        97tF409r45JF9FgF4UC3yfury0gr13GF1kAw4UuF43Aw4qy3y5twnYqFn8CFn3Wr98WFy5
+        Zan8J34DKr1rtjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU8kpnPUUUUU==
+X-Originating-IP: [112.10.75.116]
+X-CM-SenderInfo: h0ld03plqjs3xldqqiyswou0bp/1tbiwQEkpFpD+ZN0LAAAsr
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 10:41 AM Kees Cook <keescook@chromium.org> wrote:
->
-> On Thu, May 14, 2020 at 08:22:01AM -0400, Stephen Smalley wrote:
-> > On Wed, May 13, 2020 at 11:05 PM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > On Wed, May 13, 2020 at 04:27:39PM -0700, Kees Cook wrote:
-> > > > Like, couldn't just the entire thing just be:
-> > > >
-> > > > diff --git a/fs/namei.c b/fs/namei.c
-> > > > index a320371899cf..0ab18e19f5da 100644
-> > > > --- a/fs/namei.c
-> > > > +++ b/fs/namei.c
-> > > > @@ -2849,6 +2849,13 @@ static int may_open(const struct path *path, int acc_mode, int flag)
-> > > >               break;
-> > > >       }
-> > > >
-> > > > +     if (unlikely(mask & MAY_OPENEXEC)) {
-> > > > +             if (sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_MOUNT &&
-> > > > +                 path_noexec(path))
-> > > > +                     return -EACCES;
-> > > > +             if (sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_FILE)
-> > > > +                     acc_mode |= MAY_EXEC;
-> > > > +     }
-> > > >       error = inode_permission(inode, MAY_OPEN | acc_mode);
-> > > >       if (error)
-> > > >               return error;
-> > > >
-> > >
-> > > FYI, I've confirmed this now. Effectively with patch 2 dropped, patch 3
-> > > reduced to this plus the Kconfig and sysctl changes, the self tests
-> > > pass.
-> > >
-> > > I think this makes things much cleaner and correct.
-> >
-> > I think that covers inode-based security modules but not path-based
-> > ones (they don't implement the inode_permission hook).  For those, I
-> > would tentatively guess that we need to make sure FMODE_EXEC is set on
-> > the open file and then they need to check for that in their file_open
-> > hooks.
->
-> Does there need to be an FMODE_OPENEXEC, or is the presence of
-> FMODE_OPEN with FMODE_EXEC sufficient?
+Use set_current_state macro instead of current->state = TASK_RUNNING
 
-I don't think we need an extra flag/mode bit.  But note that 1)
-FMODE_OPENED isn't set until after security_file_open() is called so
-we can't rely on it there, 2) __FMODE_EXEC aka FMODE_EXEC is set in
-f_flags not f_mode, 3) FMODE_EXEC was originally introduced for
-distributed filesystems so that they could return ETXTBUSY if the file
-was opened for write and execute on different nodes, 4) AppArmor and
-TOMOYO have special handling of execve based on current->in_execve so
-I guess the only overlap would be for uselib(2).
+Signed-off-by: Xianting Tian <xianting_tian@126.com>
+---
+ kernel/time/timer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index 4820823..b9ecf87 100644
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -1882,7 +1882,7 @@ signed long __sched schedule_timeout(signed long timeout)
+ 			printk(KERN_ERR "schedule_timeout: wrong timeout "
+ 				"value %lx\n", timeout);
+ 			dump_stack();
+-			current->state = TASK_RUNNING;
++			set_current_state(TASK_RUNNING);
+ 			goto out;
+ 		}
+ 	}
+-- 
+1.8.3.1
+
