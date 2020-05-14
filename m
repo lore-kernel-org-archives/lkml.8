@@ -2,153 +2,68 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D421C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BB2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2C042054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AE3F207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:50:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589421027;
+	bh=BpNNBdk7gNLybbEEWzgw5zIGbVURf44ZrdrXwXHHVe4=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=etoQFPvwI3ufWPGe63XEUMvf/ljYDHE6ptWiVL0w9ORrcMrzQmBPNpj4ZhnCBmbGy
+	 MvsdMy0w95C+BYvWecdPWDKSGKQFNIs0GSKv0EkuvJSErz2J2zPU+HWr+TqTrKBpWK
+	 cT6JafV8IENMEqudSSV4RLIuCWcrwmFR7fgTOZ5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728543AbgENBrU (ORCPT
+        id S1728366AbgENBu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 21:47:20 -0400
-Received: from smtp.h3c.com ([221.12.31.13]:58168 "EHLO h3cspam01-ex.h3c.com"
+        Wed, 13 May 2020 21:50:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725925AbgENBrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 21:47:19 -0400
-Received: from DAG2EX03-BASE.srv.huawei-3com.com ([10.8.0.66])
-        by h3cspam01-ex.h3c.com with ESMTPS id 04E1kP5b046938
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 14 May 2020 09:46:25 +0800 (GMT-8)
-        (envelope-from tian.xianting@h3c.com)
-Received: from DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) by
- DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 14 May 2020 09:46:26 +0800
-Received: from DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074])
- by DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074%6]) with
- mapi id 15.01.1713.004; Thu, 14 May 2020 09:46:26 +0800
-From:   Tianxianting <tian.xianting@h3c.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        "john.stultz@linaro.org" <john.stultz@linaro.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIHRpbWVyczogdXNlIHNldF9jdXJyZW50X3N0YXRl?=
- =?utf-8?Q?_macro?=
-Thread-Topic: [PATCH] timers: use set_current_state macro
-Thread-Index: AQHWJN1i8nvFEDn09kuOWWA9opf9/6imCT8AgADM2eA=
-Date:   Thu, 14 May 2020 01:46:26 +0000
-Message-ID: <90b599bbd90e47e9b0171df6862ae034@h3c.com>
-References: <20200508020222.15791-1-tian.xianting@h3c.com>
- <875zcz1qf9.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <875zcz1qf9.fsf@nanos.tec.linutronix.de>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.99.141.128]
-x-sender-location: DAG2
+        id S1725925AbgENBu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 21:50:26 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EAD220575;
+        Thu, 14 May 2020 01:50:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589421026;
+        bh=BpNNBdk7gNLybbEEWzgw5zIGbVURf44ZrdrXwXHHVe4=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=dcLcIQw8bFXeEItlckcT41rvhg9OEIyjgQSun1P5JibqqkvGD8pYAwu9TnJmttHsb
+         jmVg13G131/qM0u9tndfhaPu08Xdpfou+hYJy3VtJMhMkBBe2IdtLCPNIXR1Garj9Y
+         ZL+9Rioj/fIcawNIurMeMPft0u/NFUFsPyx6y6UQ=
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-DNSRBL: 
-X-MAIL: h3cspam01-ex.h3c.com 04E1kP5b046938
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1588863647-17240-3-git-send-email-akashast@codeaurora.org>
+References: <1588863647-17240-1-git-send-email-akashast@codeaurora.org> <1588863647-17240-3-git-send-email-akashast@codeaurora.org>
+Subject: Re: [PATCH V6 2/3] dt-bindings: geni-se: Add interconnect binding for GENI QUP
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
+        rojay@codeaurora.org, skakit@codeaurora.org, mka@chromium.org,
+        Akash Asthana <akashast@codeaurora.org>
+To:     Akash Asthana <akashast@codeaurora.org>,
+        gregkh@linuxfoundation.org, robh+dt@kernel.org
+Date:   Wed, 13 May 2020 18:50:25 -0700
+Message-ID: <158942102514.215346.10346039963897349342@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgVGhvbWFzDQpUaGFua3MgZm9yIHlvdXIgcmVwbHkgOikNCkkgYW0gc29ycnkgZm9yIGluY29u
-dmVuaWVuY2luZyB5b3UgYWJvdXQgdGhpcy4NCnRpYW4ueGlhbnRpbmdAaDNjLmNvbSBpcyB0aGUg
-bWFpbCB3aGljaCBpcyBwcm92aWRlZCBieSBteSBjb21wYW55LA0KTXkgY29tcGFueSBtYXkgYWRk
-ZWQgc29tZSBsaW1pdCZzaWduYXR1cmUgd2hlbiBJIHNlbmQgdGhlIG1haWwgb3V0IG9mIGl0LA0K
-SSB3aWxsIHJlLXNlbmQgdGhlIHBhdGNoIHZpYSBteSBwZXJzb25hbCBtYWlsLCBJIHVzZWQgaXQg
-dG8gc2VuZCBzZXZlcmFsIHBhdGNoZXMgYmVmb3JlLCBhbmQgcGF0Y2hlcyB3ZXJlIGFjY2VwdGVk
-Lg0KDQotLS0tLemCruS7tuWOn+S7ti0tLS0tDQrlj5Hku7bkuro6IFRob21hcyBHbGVpeG5lciBb
-bWFpbHRvOnRnbHhAbGludXRyb25peC5kZV0NCuWPkemAgeaXtumXtDogMjAyMOW5tDXmnIgxNOaX
-pSA1OjIyDQrmlLbku7bkuro6IHRpYW54aWFudGluZyAoUkQpIDx0aWFuLnhpYW50aW5nQGgzYy5j
-b20+OyBqb2huLnN0dWx0ekBsaW5hcm8ub3JnOyBzYm95ZEBrZXJuZWwub3JnDQrmioTpgIE6IGxp
-bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHRpYW54aWFudGluZyAoUkQpIDx0aWFuLnhpYW50
-aW5nQGgzYy5jb20+DQrkuLvpopg6IFJlOiBbUEFUQ0hdIHRpbWVyczogdXNlIHNldF9jdXJyZW50
-X3N0YXRlIG1hY3JvDQoNClhpYW50aW5nLA0KDQpYaWFudGluZyBUaWFuIDx0aWFuLnhpYW50aW5n
-QGgzYy5jb20+IHdyaXRlczoNCg0KdGhhbmtzIGZvciB5b3VyIHBhdGNoLg0KDQpDYW4geW91IHBs
-ZWFzZSBmaXggeW91ciBtYWlsIGNsaWVudCB0byBoYXZlIHByb3BlciBtYWlsIGhlYWRlcnM/IEl0
-DQpwcm92aWRlczoNCg0KICBDb250ZW50LVR5cGU6IHRleHQvcGxhaW4NCiAgQ29udGVudC1UcmFu
-c2Zlci1FbmNvZGluZzogcXVvdGVkLXByaW50YWJsZQ0KDQpidXQgaXQgZmFpbHMgdG8gcHJvdmlk
-ZSB0aGUgY2hhcnNldCBpbmZvcm1hdGlvbi4gVGhhdCBjYXVzZXMgdGhlIGZvb3RlciB0byBiZWNv
-bWUgdW5yZWFkYWJsZSBnYXJiYWdlIG5vdCBvbmx5IGluIG15IG1haWwgcmVhZGVyLiBTZWU6DQoN
-CiAgaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC8yMDIwMDUwODAyMDIyMi4xNTc5MS0xLXRp
-YW4ueGlhbnRpbmdAaDNjLmNvbS8NCg0KV2hhdCdzIHdvcnNlIGlzIHRoYXQgaXMgY2F1c2VzIG15
-IHBhdGNoIGhhbmRsaW5nIHNjcmlwdHMgdG8gZGVjb2RlIHRoZSBtYWlsIGJvZHkgY29ycmVjdGx5
-LiBBbmQgSSdtIG5vdCByZWFsbHkgaW5jbGluZWQgdG8gZmlndXJlIG91dCBob3cgdG8gaGFuZGxl
-IHRoaXMgY2FzZS4NCg0KPiAtLS0gYS9rZXJuZWwvdGltZS90aW1lci5jDQo+ICsrKyBiL2tlcm5l
-bC90aW1lL3RpbWVyLmMNCj4gQEAgLTE4ODUsNyArMTg4NSw3IEBAIHNpZ25lZCBsb25nIF9fc2No
-ZWQgc2NoZWR1bGVfdGltZW91dChzaWduZWQgbG9uZyB0aW1lb3V0KQ0KPiAgICAgICAgICAgICAg
-ICAgICAgICAgICBwcmludGsoS0VSTl9FUlIgInNjaGVkdWxlX3RpbWVvdXQ6IHdyb25nIHRpbWVv
-dXQgIg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJ2YWx1ZSAlbHhcbiIsIHRp
-bWVvdXQpOw0KPiAgICAgICAgICAgICAgICAgICAgICAgICBkdW1wX3N0YWNrKCk7DQo+IC0gICAg
-ICAgICAgICAgICAgICAgICAgIGN1cnJlbnQtPnN0YXRlID0gVEFTS19SVU5OSU5HOw0KPiArICAg
-ICAgICAgICAgICAgICAgICAgICBzZXRfY3VycmVudF9zdGF0ZShUQVNLX1JVTk5JTkcpOw0KDQpU
-aGF0J3Mgbm90IHRoZSBzYW1lIGFuZCBhZGRzIGEgYmFycmllciB3aGljaCBpcyBub3QgbmVlZGVk
-Lg0KDQpOb3QgYSBiaWcgcHJvYmxlbSBpbiB0aGF0IHBhcnRpY3VsYXIgZXJyb3IgaGFuZGxpbmcg
-Y29kZSBwYXRoLCBidXQgaW4gZ2VuZXJhbCB5b3UgcmVhbGx5IGhhdmUgdG8gbG9vayB3aGV0aGVy
-IHlvdXIgcmVwbGFjZW1lbnQgaXMgcmVzdWx0aW5nIGluIHRoZSBzYW1lIGNvZGUuDQoNCklmIG5v
-dCB0aGVuIHlvdSBuZWVkIHRvIG1ha2UgYW4gYXJndW1lbnQgaW4gdGhlIGNoYW5nZWxvZyB3aHkg
-eW91IGFyZSByZXBsYWNpbmcgZXhpc3RpbmcgY29kZSB3aXRoIHNvbWV0aGluZyB3aGljaCBpcyBu
-b3QgZnVsbHkgZXF1aXZhbGVudC4NCg0KRm9yIHRoaXMgcGFydGljdWxhciBjYXNlLCBwbGVhc2Ug
-Y2hlY2sgdGhlIGltcGxlbWVudGF0aW9uIGFuZCByZWFkIHRoZSBkb2N1bWVudGF0aW9uIG9mIHNl
-dF9jdXJyZW50X3N0YXRlKCkgaW4gaW5jbHVkZS9saW51eC9zY2hlZC5oLg0KDQo+IC0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0NCj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tDQo+IMKxwr7Dk8OKwrzDvsK8wrDDhsOkwrjCvcK8w77CusKsw5PDkMOQ
-w4LCu8Kqw4jDvcK8wq/DjcOFwrXDhMKxwqPDg8Ocw5DDhcOPwqLCo8Kswr3DtsOPw57Dk8OawrfC
-osOLw43CuMO4w4nDj8ODw6bCtcOYw5bCt8OWw5DDgcOQwrPDtg0KPiDCtcOEwrjDtsOIw4vCu8Oy
-w4jCusOXw6nCocKjwr3Du8OWwrnDiMOOwrrDjsOGw6TDi8O7w4jDi8OSw5TDiMOOwrrDjsOQw47D
-isK9w4rCucOTw4PCo8KowrDDvMOAwqjCtcKrwrLCu8OPw57Dk8Oaw4jCq8Kywr/Cu8OywrLCv8K3
-w5bCtcOYw5DCuQ0KPiDDgsK2wqHCosK4wrTDlsOGwqHCog0KPiDCu8Oyw4nCosK3wqLCo8KpwrHC
-vsOTw4rCvMO+w5bDkMK1w4TDkMOFw4/CosKhwqPDiMOnwrnDu8OEw7rCtMOtw4rDlcOBw4vCscK+
-w5PDisK8w77Co8Ksw4fDq8OEw7rDgcKiwrzCtMK1w6fCu8KwwrvDssOTw4rCvMO+w43CqMOWwqrC
-t8KiwrzDvg0KPiDDiMOLwrLCosOJwr7Cs8O9wrHCvg0KPiDDk8OKwrzDvsKjwqENCg0KVGhpcyBp
-cyB0aGUgcmVzdWx0aW5nIGdhcmJhZ2UuIE5vdCB0aGF0IEkgY291bGQgZGVjaXBoZXIgdGhlIGNo
-aW5lc2UgY2hhcmFjdGVycyB3aGljaCBzaG91bGQgYmUgaGVyZSBpbnN0ZWFkLCBidXQgYXQgbGVh
-c3QgdGhleSB3b3VsZCBsb29rIHdheSBuaWNlci4gQnV0IHNlZSBiZWxvdzoNCg0KPiBUaGlzIGUt
-bWFpbCBhbmQgaXRzIGF0dGFjaG1lbnRzIGNvbnRhaW4gY29uZmlkZW50aWFsIGluZm9ybWF0aW9u
-IGZyb20NCj4gTmV3IEgzQywgd2hpY2ggaXMgaW50ZW5kZWQgb25seSBmb3IgdGhlIHBlcnNvbiBv
-ciBlbnRpdHkgd2hvc2UgYWRkcmVzcw0KPiBpcyBsaXN0ZWQgYWJvdmUuIEFueSB1c2Ugb2YgdGhl
-IGluZm9ybWF0aW9uIGNvbnRhaW5lZCBoZXJlaW4gaW4gYW55DQo+IHdheSAoaW5jbHVkaW5nLCBi
-dXQgbm90IGxpbWl0ZWQgdG8sIHRvdGFsIG9yIHBhcnRpYWwgZGlzY2xvc3VyZSwNCj4gcmVwcm9k
-dWN0aW9uLCBvciBkaXNzZW1pbmF0aW9uKSBieSBwZXJzb25zIG90aGVyIHRoYW4gdGhlIGludGVu
-ZGVkDQo+IHJlY2lwaWVudChzKSBpcyBwcm9oaWJpdGVkLiBJZiB5b3UgcmVjZWl2ZSB0aGlzIGUt
-bWFpbCBpbiBlcnJvciwNCj4gcGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIGJ5IHBob25lIG9yIGVt
-YWlsIGltbWVkaWF0ZWx5IGFuZCBkZWxldGUgaXQhDQoNCkNhbiB5b3UgcGxlYXNlIHJlbW92ZSB0
-aGlzIGRpc2NsYWltZXIgY29tcGxldGVseSAod2hpY2ggYXZvaWRzIHRoZSBnYXJiYWdlIGlzc3Vl
-IGFzIHdlbGwpID8NCg0KSXQgZG9lcyBub3QgbWFrZSBhbnkgc2Vuc2UgaWYgeW91IHNlbmQgbWFp
-bCB0byBhIHB1YmxpYyBtYWlsaW5nIGxpc3Q6DQoNCiAxKSBJZiB5b3Ugc2VuZCBtYWlsIHRvIGEg
-cHVibGljIGxpc3Qgd2hpY2ggaXMgYXJjaGl2ZWQgaW4gcHVibGljIHRoZW4NCiAgICB0aGUgaW5m
-b3JtYXRpb24gY2FuJ3QgYmUgY29uZmlkZW50aWFsIGFuZCByZXN0cmljdGVkIHRvIGEgcGFydGlj
-dWxhcg0KICAgIGF1ZGllbmNlLiBJdCBjYW4gYmUgYWNjZXNzZWQgYnkgZXZlcnlvbmUgb24gdGhp
-cyBwbGFuZXQgd2hvIGhhcw0KICAgIGFjY2VzcyB0byB0aGUgaW50ZXJuZXQuDQoNCiAyKSBJZiB5
-b3UgcmVhbGx5IHNlbmQgY29uZmlkZW50YWwgaW5mb3JtYXRpb24gYWNjaWRlbnRhbGx5IHRoZW4g
-dGhlcmUNCiAgICBpcyBubyB3YXkgdG8gZGVsZXRlIGl0LiBJdCdzIG91dCB0aGVyZSBpbiB0aGUg
-cHVibGljIGFuZCBpbiBhcmNoaXZlcw0KICAgIGFuZCB5b3UgY2FuJ3QgY2FsbCBpdCBiYWNrLg0K
-DQpUaGFua3MsDQoNCiAgICAgICAgdGdseA0KDQoNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCuacrOmC
-ruS7tuWPiuWFtumZhOS7tuWQq+acieaWsOWNjuS4iembhuWboueahOS/neWvhuS/oeaBr++8jOS7
-hemZkOS6juWPkemAgee7meS4iumdouWcsOWdgOS4reWIl+WHug0K55qE5Liq5Lq65oiW576k57uE
-44CC56aB5q2i5Lu75L2V5YW25LuW5Lq65Lul5Lu75L2V5b2i5byP5L2/55So77yI5YyF5ous5L2G
-5LiN6ZmQ5LqO5YWo6YOo5oiW6YOo5YiG5Zyw5rOE6Zyy44CB5aSN5Yi244CBDQrmiJbmlaPlj5Hv
-vInmnKzpgq7ku7bkuK3nmoTkv6Hmga/jgILlpoLmnpzmgqjplJnmlLbkuobmnKzpgq7ku7bvvIzo
-r7fmgqjnq4vljbPnlLXor53miJbpgq7ku7bpgJrnn6Xlj5Hku7bkurrlubbliKDpmaTmnKwNCumC
-ruS7tu+8gQ0KVGhpcyBlLW1haWwgYW5kIGl0cyBhdHRhY2htZW50cyBjb250YWluIGNvbmZpZGVu
-dGlhbCBpbmZvcm1hdGlvbiBmcm9tIE5ldyBIM0MsIHdoaWNoIGlzDQppbnRlbmRlZCBvbmx5IGZv
-ciB0aGUgcGVyc29uIG9yIGVudGl0eSB3aG9zZSBhZGRyZXNzIGlzIGxpc3RlZCBhYm92ZS4gQW55
-IHVzZSBvZiB0aGUNCmluZm9ybWF0aW9uIGNvbnRhaW5lZCBoZXJlaW4gaW4gYW55IHdheSAoaW5j
-bHVkaW5nLCBidXQgbm90IGxpbWl0ZWQgdG8sIHRvdGFsIG9yIHBhcnRpYWwNCmRpc2Nsb3N1cmUs
-IHJlcHJvZHVjdGlvbiwgb3IgZGlzc2VtaW5hdGlvbikgYnkgcGVyc29ucyBvdGhlciB0aGFuIHRo
-ZSBpbnRlbmRlZA0KcmVjaXBpZW50KHMpIGlzIHByb2hpYml0ZWQuIElmIHlvdSByZWNlaXZlIHRo
-aXMgZS1tYWlsIGluIGVycm9yLCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXINCmJ5IHBob25lIG9y
-IGVtYWlsIGltbWVkaWF0ZWx5IGFuZCBkZWxldGUgaXQhDQo=
+Quoting Akash Asthana (2020-05-07 08:00:46)
+> Add documentation for the interconnect and interconnect-names properties
+> for the GENI QUP.
+>=20
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> ---
+
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
