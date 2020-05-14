@@ -2,179 +2,160 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6362DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34F3720657
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:55:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F9fnzSs2"
+	by mail.kernel.org (Postfix) with ESMTP id E7783206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:55:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589478945;
+	bh=YuV4JmNCFxZTXRRZDTourQqWeIzvbe4ZSXIszNZz9GA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XAxW7JfYRAOmJnNR5rYGT1oR5sg3VX2F5mZrAXZnJ2gogw+yrc/VU1T15kjcXzHOp
+	 OoOJzWiV3SIo41Gtbmu9J3PMcX/3V80tdo3irQAgVStxE5xrCdYgvZ1LJ/3jZLr5iv
+	 +FZUpSh0nE2cfz9l6IlR+6QMCzpCI2EN//Xf+kgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726076AbgENRzD (ORCPT
+        id S1726135AbgENRzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 13:55:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39412 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725965AbgENRzD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 13:55:03 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA621C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 10:55:01 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id i16so1971002ybq.9
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 10:55:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Bqd0enkhMSxrfL/Adcye9oJBjo0l5uHXN5shg57c40Q=;
-        b=F9fnzSs25Igfl0QV3polvMoP/mjq0cibxyISTPDDG60KqRjcudk+iygVw/pMmJA1Df
-         H7cqJ7BIZz61FBdRCXZkrbsUr33+Z1mHHlejnzs4hz1ViXuoFpfVWrthA829Se6kGhOk
-         aWGDKcNHRbfBmnXEpahkWPktevBMOdB3RGoxPlDGk8rsgFhApK5ajWAH94k7H1t03BY1
-         wnTsh+pATo/tW0LFYwCJ2Up7M4IlOkurt2hAZPjab3fxiML1b7+T9p3QMIyzLAurFJux
-         AqZTwwn97vjR/haLkfwzldKZTAOa9ur90f3SDEo3RSAG7hwYNRnB5UEQ7T7Uwaix2p5c
-         UKmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bqd0enkhMSxrfL/Adcye9oJBjo0l5uHXN5shg57c40Q=;
-        b=jqKXnOhW0FsFj+vQwv147XoEJqCMZiVllZToHgwSimZj66U0vwSrUPQlaSKRy6oaeE
-         PR10NwG/JfUOXLsMsWy8qdb/i24jWfNz5e9NBl32T1dyd3xTUlTD4Hed7qtVU6EfVOBn
-         DobwN1tFnC5wXfZ9aW6MAPjvsnNrF0if6673La2jgvVKoasbBzpudcbENBebIYF6j6Fq
-         ky2yOPXSIQpEncIaDwU8FuAFyGOPMK8mUF01fPmch+s/h8MMiIU3vVzozfBuY8CpufVB
-         YVAzi86v5zcDgGDFzrBauTVHAK82SWAH6s6b6/qBHVdApp+6KagHxyfD+jEIFoHTDV3z
-         k68A==
-X-Gm-Message-State: AOAM530Y9yp2lKxn3mQ/r7tOPKq4nnBXVXsvAJfFmtWruY946tkL4mmw
-        Xn5i66YojjyP7MBOA7al85O/1fOHHJTTFI2PIEkaOw==
-X-Google-Smtp-Source: ABdhPJxGNWHXZNvqlyumtWXkLaf15V37wf/nGmXq8e/yBOtYkmcQWkrDo0RM0gQNHfQtWAZH+nvoHBy8Tzu7zdbNZX8=
-X-Received: by 2002:a25:3182:: with SMTP id x124mr7777499ybx.324.1589478900332;
- Thu, 14 May 2020 10:55:00 -0700 (PDT)
+        Thu, 14 May 2020 13:55:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53852 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725965AbgENRzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 13:55:43 -0400
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9689206DC;
+        Thu, 14 May 2020 17:55:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589478943;
+        bh=YuV4JmNCFxZTXRRZDTourQqWeIzvbe4ZSXIszNZz9GA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qk0qfM6N9/BYlt8vhnlziu5fJ2+hOhGJEWF6m2LEC+7om7iytJH/k4q2cTG4oZN8n
+         yiW6yUweL151sXQTBt7Y8q6ov+iS15+MQ+V14DHZXd5ADbc5rs4SmsQNlarrP1H9/Y
+         y1CXJBHRie4MdgEjWs7rJ+63hfpeKuin7pqCfZw8=
+Received: by mail-oo1-f43.google.com with SMTP id u190so905177ooa.10;
+        Thu, 14 May 2020 10:55:42 -0700 (PDT)
+X-Gm-Message-State: AOAM530ZM0MnjH73JLF5vIDzMut9GkB9GDiClqS27X6zj3CiuIPvSVc4
+        DSiECRVRIDDfXa6lNrygk2aXL9/JhDtl55/thA==
+X-Google-Smtp-Source: ABdhPJyYQ1f7xwVyNWr/S3JB/4XJ/2dszYIEcPkkumlKlHYG1FOqs0/y0vGXRbvvDqR04i1DfUOOMXv5SZ6p1Vso3BA=
+X-Received: by 2002:a4a:894d:: with SMTP id g13mr4522354ooi.81.1589478941954;
+ Thu, 14 May 2020 10:55:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200306071110.130202-1-irogers@google.com> <20200306071110.130202-4-irogers@google.com>
- <20200514150447.GA29968@kernel.org>
-In-Reply-To: <20200514150447.GA29968@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 14 May 2020 10:54:49 -0700
-Message-ID: <CAP-5=fU+RYa3GF_xfjCPFGRKi5-zNuY7bm+9wqAnrAo2NqJ+oQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] tools/perf: build fixes for arch_errno_names.sh
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+References: <1588756279-17289-1-git-send-email-christophe.kerello@st.com>
+ <1588756279-17289-7-git-send-email-christophe.kerello@st.com>
+ <20200514150028.GB28489@bogus> <9ffc04cf-137f-5ee5-57ff-39a876abfb34@st.com>
+In-Reply-To: <9ffc04cf-137f-5ee5-57ff-39a876abfb34@st.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 14 May 2020 12:55:30 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLTyDHBHncrQqtPdkCNgKDkEbp+ts7BOeqWmGv64kcAsg@mail.gmail.com>
+Message-ID: <CAL_JsqLTyDHBHncrQqtPdkCNgKDkEbp+ts7BOeqWmGv64kcAsg@mail.gmail.com>
+Subject: Re: [PATCH v4 06/10] dt-bindings: mtd: update STM32 FMC2 NAND
+ controller documentation
+To:     Christophe Kerello <christophe.kerello@st.com>
+Cc:     =?UTF-8?Q?Miqu=C3=A8l_Raynal?= <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh R <vigneshr@ti.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wei Li <liwei391@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        devicetree@vger.kernel.org,
+        =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex@denx.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 8:04 AM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
+On Thu, May 14, 2020 at 11:35 AM Christophe Kerello
+<christophe.kerello@st.com> wrote:
 >
-> Em Thu, Mar 05, 2020 at 11:11:10PM -0800, Ian Rogers escreveu:
-> > Allow the CC compiler to accept a CFLAGS environment variable.
-> > Make the architecture test directory agree with the code comment.
-> > This doesn't change the code generated but makes it easier to integrate
-> > running the shell script in build systems like bazel.
+> Hi Rob,
 >
-> I've looked at this and split this part in a separate patch, and applied
-> it locally, please take a look, now looking at the other bit of the
-> patch.
-
-
-This bit looks good. The CFLAGS change is something I need to deal
-with a directory layout change in our build system.
-
-Thanks,
-Ian
-
-> - Arnaldo
->
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/trace/beauty/arch_errno_names.sh | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> On 5/14/20 5:00 PM, Rob Herring wrote:
+> > On Wed, May 06, 2020 at 11:11:15AM +0200, Christophe Kerello wrote:
+> >> These bindings can be used on SOCs where the FMC2 NAND controller is
+> >> in standalone. In case that the FMC2 embeds 2 controllers (an external
+> >> bus controller and a raw NAND controller), the register base and the
+> >> clock will be defined in the parent node. It is the reason why the
+> >> register base address and the clock are now optional.
+> >>
+> >> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+> >> ---
+> >>   .../devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml   | 19 ++++++++++---------
+> >>   1 file changed, 10 insertions(+), 9 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
+> >> index b059267..68fac1a 100644
+> >> --- a/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
+> >> +++ b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
+> >> @@ -18,13 +18,15 @@ properties:
+> >>
+> >>     reg:
+> >>       items:
+> >> -      - description: Registers
+> >> +      - description: Registers (optional)
 > >
-> > diff --git a/tools/perf/trace/beauty/arch_errno_names.sh b/tools/perf/trace/beauty/arch_errno_names.sh
-> > index 22c9fc900c84..9f9ea45cddc4 100755
-> > --- a/tools/perf/trace/beauty/arch_errno_names.sh
-> > +++ b/tools/perf/trace/beauty/arch_errno_names.sh
-> > @@ -91,7 +91,7 @@ EoHEADER
-> >  # in tools/perf/arch
-> >  archlist=""
-> >  for arch in $(find $toolsdir/arch -maxdepth 1 -mindepth 1 -type d -printf "%f\n" | grep -v x86 | sort); do
-> > -     test -d arch/$arch && archlist="$archlist $arch"
-> > +     test -d $toolsdir/perf/arch/$arch && archlist="$archlist $arch"
-> >  done
+> > The only thing that can be optional are the last entries. You have to do
+> > a 'oneOf' with 6 entries and 7 entries.
+>
+> Ok, so the way to describe the reg property in my case should be:
+>         reg:
+>           oneOf:
+>             - description: FMC2 embeds the NFC controller in standalone.
+>               items:
+>                 - description: Registers
+>                 - description: Chip select 0 data
+>                 - description: Chip select 0 command
+>                 - description: Chip select 0 address space
+>                 - description: Chip select 1 data
+>                 - description: Chip select 1 command
+>                 - description: Chip select 1 address space
+>
+>             - description: FMC2 embeds the NFC controller and the EBI
+>                 controller.
+>               items:
+>                 - description: Chip select 0 data
+>                 - description: Chip select 0 command
+>                 - description: Chip select 0 address space
+>                 - description: Chip select 1 data
+>                 - description: Chip select 1 command
+>                 - description: Chip select 1 address space
+>
 > >
-> >  for arch in x86 $archlist generic; do
-> > --
-> commit 1b59e3b7bfc6183d3dc9f119e1875f9607d29d96
-> Author: Ian Rogers <irogers@google.com>
-> Date:   Thu Mar 5 23:11:10 2020 -0800
+> > And where's your new compatible string for this different h/w?
 >
->     perf trace: Fix the selection for architectures to generate the errno name tables
->
->     Make the architecture test directory agree with the code comment.
->
->     Committer notes:
->
->     This was split from a larger patch.
->
->     The code was assuming the developer always worked from tools/perf/, so make sure we
->     do the test -d having $toolsdir/perf/arch/$arch, to match the intent expressed in the comment,
->     just above that loop.
->
->     Signed-off-by: Ian Rogers <irogers@google.com>
->     Cc: Adrian Hunter <adrian.hunter@intel.com>
->     Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->     Cc: Alexios Zavras <alexios.zavras@intel.com>
->     Cc: Andi Kleen <ak@linux.intel.com>
->     Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->     Cc: Igor Lubashev <ilubashe@akamai.com>
->     Cc: Jiri Olsa <jolsa@redhat.com>
->     Cc: Kan Liang <kan.liang@linux.intel.com>
->     Cc: Mark Rutland <mark.rutland@arm.com>
->     Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
->     Cc: Namhyung Kim <namhyung@kernel.org>
->     Cc: Nick Desaulniers <ndesaulniers@google.com>
->     Cc: Peter Zijlstra <peterz@infradead.org>
->     Cc: Stephane Eranian <eranian@google.com>
->     Cc: Thomas Gleixner <tglx@linutronix.de>
->     Cc: Wei Li <liwei391@huawei.com>
->     Link: http://lore.kernel.org/lkml/20200306071110.130202-4-irogers@google.com
->     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
->
-> diff --git a/tools/perf/trace/beauty/arch_errno_names.sh b/tools/perf/trace/beauty/arch_errno_names.sh
-> index 22c9fc900c84..f8c44a85650b 100755
-> --- a/tools/perf/trace/beauty/arch_errno_names.sh
-> +++ b/tools/perf/trace/beauty/arch_errno_names.sh
-> @@ -91,7 +91,7 @@ EoHEADER
->  # in tools/perf/arch
->  archlist=""
->  for arch in $(find $toolsdir/arch -maxdepth 1 -mindepth 1 -type d -printf "%f\n" | grep -v x86 | sort); do
-> -       test -d arch/$arch && archlist="$archlist $arch"
-> +       test -d $toolsdir/perf/arch/$arch && archlist="$archlist $arch"
->  done
->
->  for arch in x86 $archlist generic; do
+>  From NFC controller point of view, it is the same HW.
+
+That's what everyone says until they have some quirk or integration
+difference to handle.
+
+> In the case that we have 2 controllers embedded, the register base is
+> shared.
+> The NFC driver will check at probe time the compatible string of its
+> parent node.
+> In case that it is "st,stm32mp1-fmc2-ebi", then the driver will find the
+> register base in the parent node (EBI node), otherwise it will find it
+> in the NFC node.
+> Is it better to have 2 compatible strings (one for each reg description)
+> than checking the parent's compatible string and have only one
+> compatible string?
+
+Why not just put the register base into the child node too? While
+overlapping 'reg' regions for siblings is bad, it's fine for child
+nodes. I guess since there are chip selects for the child nodes that
+may not work here.
+
+It doesn't hurt to have another compatible. You can always make the
+old one a fallback. With different compatibles you can make sure reg
+has the right number of entries.
+
+Rob
