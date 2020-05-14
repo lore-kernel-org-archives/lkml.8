@@ -2,85 +2,69 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 504DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B44AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AA88206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9001F206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:14:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgENLMn (ORCPT
+        id S1726140AbgENLOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 07:12:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58224 "EHLO mx2.suse.de"
+        Thu, 14 May 2020 07:14:46 -0400
+Received: from verein.lst.de ([213.95.11.211]:51366 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726015AbgENLMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 07:12:43 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 54691B04F;
-        Thu, 14 May 2020 11:12:44 +0000 (UTC)
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] MIPS: Fix builds for VR41xx platforms
-Date:   Thu, 14 May 2020 13:12:34 +0200
-Message-Id: <20200514111235.58459-1-tsbogend@alpha.franken.de>
-X-Mailer: git-send-email 2.16.4
+        id S1725955AbgENLOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 07:14:46 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 951B268BEB; Thu, 14 May 2020 13:14:42 +0200 (CEST)
+Date:   Thu, 14 May 2020 13:14:42 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jeremy Linton <jeremy.linton@arm.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+353be47c9ce21b68b7ed@syzkaller.appspotmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, x86@kernel.org
+Subject: Re: Validating dma_mmap_coherent() parameters before calling (was
+ Re: WARNING in memtype_reserve)
+Message-ID: <20200514111442.GA13813@lst.de>
+References: <000000000000f0d8d205a531f1a3@google.com> <20200509074507.GC1831917@kroah.com> <87wo5l4ecm.fsf@nanos.tec.linutronix.de> <20200513124445.GA1082735@kroah.com> <87zhab249p.fsf@nanos.tec.linutronix.de> <20200514035458.14760-1-hdanton@sina.com> <20200514061417.GA8367@lst.de> <20200514062750.GA1488715@kroah.com> <20200514063158.GA8780@lst.de> <8bdb3488-59d0-67ce-4822-e25dbd0dc42a@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8bdb3488-59d0-67ce-4822-e25dbd0dc42a@arm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changing inclusion of Platform files, broke VR41xx platforms. Add Makefile
-to vr41xx directory and traverse subdirs from it.
+On Thu, May 14, 2020 at 06:10:03AM -0500, Jeremy Linton wrote:
+>> I only need to look at the commit for 3 seconds to tell you that it is
+>> completely buggy.  While using dma_mmap_coherent is fundamentally the
+>> right thing and absolutely required for dma_alloc_* allocations, USB
+>> also uses it's own local gen pool allocator or plain kmalloc for not
+>> DMA capable controller.  This need to use remap_pfn_range.  I'm pretty
+>> sure you hit one of those cases.
+>
+> ? The code path in question is usbdev_mmap() and the allocation is done ~13 
+> lines lines before as a usb_alloc_coherent().
 
-Fixes: 26bff9eb49201aeb ("MIPS: Only include the platformfile needed")
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
----
- arch/mips/vr41xx/Makefile | 5 +++++
- arch/mips/vr41xx/Platform | 3 ---
- 2 files changed, 5 insertions(+), 3 deletions(-)
- create mode 100644 arch/mips/vr41xx/Makefile
+And did you take a look at how usb_alloc_coherent is implemented?  That
+should make it completely obvious that not all allocations come
+from dma_alloc_*.
 
-diff --git a/arch/mips/vr41xx/Makefile b/arch/mips/vr41xx/Makefile
-new file mode 100644
-index 000000000000..765020d5ee4d
---- /dev/null
-+++ b/arch/mips/vr41xx/Makefile
-@@ -0,0 +1,5 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+obj-$(CONFIG_MACH_VR41XX)	+= common/
-+obj-$(CONFIG_CASIO_E55)		+= casio-e55/
-+obj-$(CONFIG_IBM_WORKPAD)	+= ibm-workpad/
-diff --git a/arch/mips/vr41xx/Platform b/arch/mips/vr41xx/Platform
-index b6c8d5c08ddb..3f593a3e5678 100644
---- a/arch/mips/vr41xx/Platform
-+++ b/arch/mips/vr41xx/Platform
-@@ -1,19 +1,16 @@
- #
- # NEC VR4100 series based machines
- #
--platform-$(CONFIG_MACH_VR41XX)	+= vr41xx/common/
- cflags-$(CONFIG_MACH_VR41XX)	+= -I$(srctree)/arch/mips/include/asm/mach-vr41xx
- 
- #
- # CASIO CASSIPEIA E-55/65 (VR4111)
- #
--platform-$(CONFIG_CASIO_E55)	+= vr41xx/casio-e55/
- load-$(CONFIG_CASIO_E55)	+= 0xffffffff80004000
- 
- #
- # IBM WorkPad z50 (VR4121)
- #
--platform-$(CONFIG_IBM_WORKPAD)	+= vr41xx/ibm-workpad/
- load-$(CONFIG_IBM_WORKPAD)	+= 0xffffffff80004000
- 
- #
--- 
-2.16.4
+> That sort of makes sense, except for the above, and the fact that I would 
+> imagine the dma_mmap_coherent should be dealing with that case. I'm not 
+> really clear about the details of the GCE usb device here, but my first 
+> guess at this was the dma_pgprot() in dma_direct_mmap() is incorrectly 
+> picking a pgprot...
 
+No, dma_mmap_* / dma_direct_mmap has absolutely no business dealing
+with memory that did not come from the DMA allocator.
