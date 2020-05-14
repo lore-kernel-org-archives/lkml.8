@@ -2,126 +2,138 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFDDCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C17C2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81EAC2065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A321D206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:09:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="VANDckqb"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="lBQzs4Ok"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726108AbgENIJa (ORCPT
+        id S1726124AbgENIJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 04:09:30 -0400
-Received: from smtp1.axis.com ([195.60.68.17]:8269 "EHLO smtp1.axis.com"
+        Thu, 14 May 2020 04:09:56 -0400
+Received: from ozlabs.org ([203.11.71.1]:33443 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbgENIJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 04:09:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=1901; q=dns/txt; s=axis-central1;
-  t=1589443769; x=1620979769;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-transfer-encoding;
-  bh=lawWfUyOQrdLpw+zeoVZeDBdYrpx8vxSo3sYmVlA0eI=;
-  b=VANDckqbsEk1onDomGvg6eFYIZCSSnq9E8DhAIaCSQ4XM4k+3/Uh8xS/
-   7f+34tOxYYAI0Q4KMpESbQiBc/AK6X61WTnQ57iQrBdhc3MwhpVQ2ydi0
-   yAF5iliz02anJ16EB2/HfgcW8D/Ea0X9XKpxS4Hxfwad/Hytt8Pubbg8n
-   clT3mise1hBkA5QDNRWkoevOIhBjwzaruzobDGwOU+57CNRD3TCCykvUe
-   +OVisK8Ketr7ZyfmIOs0i5DZ6ypyIveYuOpWtofkxk7jCajJkENYWPJUD
-   p2jhET++gDz6E9S2FAmVh4n+nQoGRzUi2LcQEbSQ07L8we3ul+zo62V2x
-   Q==;
-IronPort-SDR: 0Y3Pv7UCp3mAT5TEROn3U+48T2Mv/N55yt1fR9rJQRmJlK/PMkWzNEGKvJysBdH929zw56q+Jy
- N7QO8c+FdD2bF5b7dpsE62No91JOJpywRYEMMESqLi2y1RQ90MnAKtCckp4RBFCTA7ttAepP5/
- 0bAwdvgvngpCTIr7RzS0YSFqJAVJ3M/VnXbs4vJW0yjhm2D7k24LETC3/qvfRVQ9MVTTl4Phfh
- SQcT8z4jiQSK6sfC+bQVbgvZhoNFCRFXCepH8H0QdPtKWRc2D2Xd3gJUEqERAsMM7B2xGFEzFz
- IRg=
-X-IronPort-AV: E=Sophos;i="5.73,390,1583190000"; 
-   d="scan'208";a="8713783"
-Date:   Thu, 14 May 2020 10:09:23 +0200
-From:   Ricard Wanderlof <ricardw@axis.com>
-X-X-Sender: ricardw@lnxricardw1.se.axis.com
-To:     Dan Murphy <dmurphy@ti.com>
-CC:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>, Rob Herring <robh@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] ASoC: tlv320adcx140: Add device tree property
- for PDM edges
-In-Reply-To: <20200513200549.12213-2-dmurphy@ti.com>
-Message-ID: <alpine.DEB.2.20.2005141006450.30387@lnxricardw1.se.axis.com>
-References: <20200513200549.12213-1-dmurphy@ti.com> <20200513200549.12213-2-dmurphy@ti.com>
-User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
+        id S1725886AbgENIJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 04:09:55 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49N42n4fVfz9sV7;
+        Thu, 14 May 2020 18:09:53 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589443793;
+        bh=4aGWmO0/dUYLpFjFgNKfhytFTVAq3ckc61Jr4U5Y99o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lBQzs4OkNobWyzWWr36uaXvOsLw0a3DT4jOgIdL8Ce6scd3BrflCJ+Np9lYaGAz2D
+         8TKI4g/3aIqzOtlwnwHV4VBpkLTBFc3DOAlFObPzeBo74Rbi46Tjv0nVoHIaJ+QQ3N
+         2KUqYXoo19gYcMzmKn32KeQjEi6yfnG/MHtnru1SbQZulkrWiixWngUWkGqmj/RnJ1
+         xeUbvc4kdFRqEkycAMTzo54uUyQOGE8Q3roCyUPDJYDJaGBpE8O7ucXoMo7e7ZYdHN
+         e38ROCoYhr6UfResuP0PKm8w4ZlL+GoSAS3X8KFJBttmsZzuM716AYWKA7QXZFIQJU
+         CBSDP1iyLzycQ==
+Date:   Thu, 14 May 2020 18:09:48 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Howells <dhowells@redhat.com>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the fsinfo tree with the kbuild
+ tree
+Message-ID: <20200514180948.5d5b38a5@canb.auug.org.au>
+In-Reply-To: <20200512190614.1bebd8ba@canb.auug.org.au>
+References: <20200512190614.1bebd8ba@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.0.5.60]
-X-ClientProxiedBy: XBOX03.axis.com (10.0.5.17) To XBOX03.axis.com (10.0.5.17)
+Content-Type: multipart/signed; boundary="Sig_/Yqm7nm8mU2ZpmaDp9lVNewB";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/Yqm7nm8mU2ZpmaDp9lVNewB
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 13 May 2020, Dan Murphy wrote:
+Hi all,
 
-> Add a device tree property to configure the PDM sampling edge for each
-> digital microphone.
-> 
-> CC: Rob Herring <robh@kernel.org>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  .../devicetree/bindings/sound/tlv320adcx140.yaml   | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
-> b/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
-> index ab2268c0ee67..55668c7d261d 100644
-> --- a/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
-> +++ b/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
-> @@ -63,6 +63,19 @@ properties:
->        - $ref: /schemas/types.yaml#/definitions/uint32
->        - enum: [0, 1, 2]
->  
-> +  ti,pdm-edge-select:
-> +    description: |
-> +       Defines the sampling edge configuration for the PDM inputs.  This is
-> an
-> +       array defined as <PDMIN1 PDMIN2 PDMIN3 PDMIN4>. 0 (default) is
-> negative
-> +       sampling edge and 1 is positive sampling edge.
+On Tue, 12 May 2020 19:06:14 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the fsinfo tree got a conflict in:
+>=20
+>   samples/vfs/Makefile
+>=20
+> between commit:
+>=20
+>   757172f3d6f9 ("samples: vfs: build sample programs for target architect=
+ure")
+>=20
+> from the kbuild tree and commits:
+>=20
+>   51d01aee410b ("fsinfo: Add fsinfo() syscall to query filesystem informa=
+tion")
+>   d3ee0e9da65d ("fsinfo: sample: Mount listing program")
+>=20
+> from the fsinfo tree.
+>=20
+> I fixed it up (I think - see below) and can carry the fix as necessary.
+> This is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
 
-A bit of a nitpick, but I would think of the edges as 
-negative-going/positive-going, or rising/falling. Not sure if anyone would 
-misunderstand 'negative edge' in practice though.
+The new resolution is below.
 
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +      - minItems: 1
-> +        maxItems: 4
-> +        items:
-> +          maximum: 1
-> +        default: [0, 0, 0, 0]
-> +
->  required:
->    - compatible
->    - reg
-> @@ -77,6 +90,7 @@ examples:
->          compatible = "ti,tlv320adc5140";
->          reg = <0x4c>;
->          ti,mic-bias-source = <6>;
-> +        ti,pdm-edge-select = < 0 1 0 1>;
+--=20
+Cheers,
+Stephen Rothwell
 
-Should there really be a space between < and 0 ?
+diff --cc samples/vfs/Makefile
+index 00b6824f9237,4a6e3058812e..000000000000
+--- a/samples/vfs/Makefile
++++ b/samples/vfs/Makefile
+@@@ -1,5 -1,15 +1,5 @@@
+  # SPDX-License-Identifier: GPL-2.0-only
+- userprogs :=3D test-fsmount test-statx
+ -# List of programs to build
+++userprogs :=3D test-fsinfo test-fsmount test-mntinfo test-statx
+ +always-y :=3D $(userprogs)
+ =20
+ -hostprogs :=3D \
+ -	test-fsinfo \
+ -	test-fsmount \
+ -	test-mntinfo \
+ -	test-statx
+ -
+ -always-y :=3D $(hostprogs)
+ -
+ -HOSTCFLAGS_test-fsinfo.o +=3D -I$(objtree)/usr/include
+ -HOSTCFLAGS_test-fsmount.o +=3D -I$(objtree)/usr/include
+ -HOSTCFLAGS_test-mntinfo.o +=3D -I$(objtree)/usr/include
+ -HOSTCFLAGS_test-statx.o +=3D -I$(objtree)/usr/include
+ +userccflags +=3D -I usr/include
 
-/Ricard
--- 
-Ricard Wolf Wanderlof                           ricardw(at)axis.com
-Axis Communications AB, Lund, Sweden            www.axis.com
-Phone +46 46 272 2016                           Fax +46 46 13 61 30
+--Sig_/Yqm7nm8mU2ZpmaDp9lVNewB
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl68/MwACgkQAVBC80lX
+0GxN7QgAh5CmfDufNHqbspJYg3AuK7g7M1KLotEQtxFMdk94uW0KiGHVizHi/5cp
+hImffKDwEomGTE9g4x36jQBN/q3BSuIk9eMr6DfUgstyOrGOJYUnM8rmpHC7bdu+
+3AobbZ5naazNw8NFc0bwUcU6hOkrMYRa388Vx9slj5xvROFBm1Zxj1pNbKd7+Cer
+BwOLUXTLna5KiwwesRMaM/6BaN73yUPJSHa9UVqYCbCvuT+BN/P9cli1PKFNm0Z5
+GZMDMHOwudfNw6vL4RvyrrxZFQvw+g83pNlDD5eD2XDgjvDQVBf2Evxgo1Hqsi0c
+m09XWFmnAoBWF1KiQyiVxCAZNwmZXQ==
+=4tFB
+-----END PGP SIGNATURE-----
+
+--Sig_/Yqm7nm8mU2ZpmaDp9lVNewB--
