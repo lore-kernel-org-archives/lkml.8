@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A86CC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD585C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29DB620826
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB979207ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:56:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482571;
-	bh=iLuAsSJvE6i3GAu2VngpWHDKjlxZjjxJRO/i/Yfus+U=;
+	s=default; t=1589482578;
+	bh=HFAswY58QVMy+ZlOL6ETdXJNak7GLAW3Bl0hMPqHTPs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GWWzfHoICf6KfhvANHFUnug5w7ZdXL1At2OY1on/XFkpfz8LCYWIuY7qQlS9HAyQR
-	 vCjdaGiRW1G2e3oH9Jgyma8VFeZoIFIEVAhKo0DeSpga6O5MPGVOPwg8hDfHy1AKKe
-	 E3HGwYe759uV6bL6ACHAh9hyWo8vB1QRehEdqyQw=
+	b=hweZ26AwWgzLUWLZ2SYU4bjR0fHfacillc/41HHN6/JEHb2e1EMRChxnMhxXRLMzD
+	 G64xQjbgwn9LoXjEnr7QNTNxw69w8WKe9OJHVFMWjbccdqqNFdWRRBvYqq6kVp97l8
+	 JbNiP4yFdbd+MLVEKIYiKG7nO7LUR94mhtzFQpi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729603AbgENS4K (ORCPT
+        id S1729659AbgENS4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:56:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56634 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:56:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727977AbgENSzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:55:54 -0400
+        id S1728373AbgENS4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:56:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80FCA2076A;
-        Thu, 14 May 2020 18:55:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D96F20809;
+        Thu, 14 May 2020 18:56:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482554;
-        bh=iLuAsSJvE6i3GAu2VngpWHDKjlxZjjxJRO/i/Yfus+U=;
+        s=default; t=1589482563;
+        bh=HFAswY58QVMy+ZlOL6ETdXJNak7GLAW3Bl0hMPqHTPs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dbr7vXoLkyHmv5ArR5OGfwuqz69D1L+BJb8aMpt3eAKpGBFQVfjfN7dUX26pQQhct
-         6iOByCrXVfSCgEv6oH2CsRetLIeu4NTJLcIJ5lW2IKDIyJLxBEZ2ku/sKCbCCGl+y2
-         tv9RQKFLCDuYEOlNPdYFRJ2JL2XaIXeAXsG1kQU8=
+        b=sralPgH1Jz28iISEvuSCU+3Mgvg6j+1j8zWpERARBzPSu8m8cWkP7pXFuuA/9CT5V
+         KYN5ITblw8X/NAaUX2qWH0A26h/HP5QgGlhQIe0KmqIfJLN0Fo3xw5hRJEpC3/0HA/
+         QtXIaUEplkp1imSFtgZIj1DTQI8BKE/p23NPiOkI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 03/27] HID: multitouch: add eGalaxTouch P80H84 support
-Date:   Thu, 14 May 2020 14:55:26 -0400
-Message-Id: <20200514185550.21462-3-sashal@kernel.org>
+Cc:     Michael Chan <michael.chan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 10/27] bnxt_en: Fix VLAN acceleration handling in bnxt_fix_features().
+Date:   Thu, 14 May 2020 14:55:33 -0400
+Message-Id: <20200514185550.21462-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185550.21462-1-sashal@kernel.org>
 References: <20200514185550.21462-1-sashal@kernel.org>
@@ -59,51 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit f9e82295eec141a0569649d400d249333d74aa91 ]
+[ Upstream commit c72cb303aa6c2ae7e4184f0081c6d11bf03fb96b ]
 
-Add support for P80H84 touchscreen from eGalaxy:
+The current logic in bnxt_fix_features() will inadvertently turn on both
+CTAG and STAG VLAN offload if the user tries to disable both.  Fix it
+by checking that the user is trying to enable CTAG or STAG before
+enabling both.  The logic is supposed to enable or disable both CTAG and
+STAG together.
 
-  idVendor           0x0eef D-WAV Scientific Co., Ltd
-  idProduct          0xc002
-  iManufacturer           1 eGalax Inc.
-  iProduct                2 eGalaxTouch P80H84 2019 vDIVA_1204_T01 k4.02.146
-
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Fixes: 5a9f6b238e59 ("bnxt_en: Enable and disable RX CTAG and RX STAG VLAN acceleration together.")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h        | 1 +
- drivers/hid/hid-multitouch.c | 3 +++
- 2 files changed, 4 insertions(+)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 25c0063381008..4630b58634d87 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -353,6 +353,7 @@
- #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_7349	0x7349
- #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_73F7	0x73f7
- #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001	0xa001
-+#define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002	0xc002
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 736e550163e10..bbf382439a8b9 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -5997,6 +5997,7 @@ static netdev_features_t bnxt_fix_features(struct net_device *dev,
+ 					   netdev_features_t features)
+ {
+ 	struct bnxt *bp = netdev_priv(dev);
++	netdev_features_t vlan_features;
  
- #define USB_VENDOR_ID_ELAN		0x04f3
- 
-diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-index fba655d639af1..1207102823de3 100644
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -1332,6 +1332,9 @@ static const struct hid_device_id mt_devices[] = {
- 	{ .driver_data = MT_CLS_EGALAX_SERIAL,
- 		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
- 			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001) },
-+	{ .driver_data = MT_CLS_EGALAX,
-+		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
-+			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002) },
- 
- 	/* Elitegroup panel */
- 	{ .driver_data = MT_CLS_SERIAL,
+ 	if ((features & NETIF_F_NTUPLE) && !bnxt_rfs_capable(bp))
+ 		features &= ~NETIF_F_NTUPLE;
+@@ -6004,12 +6005,14 @@ static netdev_features_t bnxt_fix_features(struct net_device *dev,
+ 	/* Both CTAG and STAG VLAN accelaration on the RX side have to be
+ 	 * turned on or off together.
+ 	 */
+-	if ((features & (NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_HW_VLAN_STAG_RX)) !=
+-	    (NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_HW_VLAN_STAG_RX)) {
++	vlan_features = features & (NETIF_F_HW_VLAN_CTAG_RX |
++				    NETIF_F_HW_VLAN_STAG_RX);
++	if (vlan_features != (NETIF_F_HW_VLAN_CTAG_RX |
++			      NETIF_F_HW_VLAN_STAG_RX)) {
+ 		if (dev->features & NETIF_F_HW_VLAN_CTAG_RX)
+ 			features &= ~(NETIF_F_HW_VLAN_CTAG_RX |
+ 				      NETIF_F_HW_VLAN_STAG_RX);
+-		else
++		else if (vlan_features)
+ 			features |= NETIF_F_HW_VLAN_CTAG_RX |
+ 				    NETIF_F_HW_VLAN_STAG_RX;
+ 	}
 -- 
 2.20.1
 
