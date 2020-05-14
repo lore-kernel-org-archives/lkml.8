@@ -2,179 +2,86 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F55C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B711DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9622C2053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:21:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bu8l9OVt"
+	by mail.kernel.org (Postfix) with ESMTP id 7B3C82053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:22:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgENSVp (ORCPT
+        id S1726948AbgENSWC convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:21:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43600 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726075AbgENSVp (ORCPT
+        Thu, 14 May 2020 14:22:02 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36167 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbgENSWC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:21:45 -0400
-Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A4D9C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 11:21:45 -0700 (PDT)
-Received: by mail-vk1-xa42.google.com with SMTP id 134so1040060vky.2
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 11:21:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gJSIP+0eqqWilJF7ZA2rg5bve/1TAei35i2SbwZD4Bs=;
-        b=bu8l9OVt14njQprs5kzcvxA6818I+95hsh8B/huC4fowfeyldDzvj64XeryyaxpQyY
-         BBjGSN72DzjaustBIY5HSR/8qQAYDAm5djubj+Xrlw5Kx/b69hcBuWdDSoOlRx5ky/4M
-         KHaOPCgkkaWDYAz/ruVVsoPmZ7+/xWOp1SEx0=
+        Thu, 14 May 2020 14:22:02 -0400
+Received: by mail-wm1-f67.google.com with SMTP id w19so19337584wmc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 11:22:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gJSIP+0eqqWilJF7ZA2rg5bve/1TAei35i2SbwZD4Bs=;
-        b=n1xTrWemuVDL/nT97lJleEouzHL4BeKTjTzlDhGMAN0QgQNYv2oK6irlp2vaT+k0kO
-         klPBqQ3FyvMBU7Qes2w4JsRc6hz1K4xTYQ7P0gaWrIZnM+PwUuwWMkoHrDEXtQCiU3jX
-         fYh9Rk8sDDr9T9SO2n5o34pArlOCneiqGcak1njbjavxgrDIqQW478kHuOgwwJQoVIMg
-         WfyF7zKV3dfZ2Z8z3jrWfG9PaCq7CjAGvrffCIYAyYShDZ8z0Zr3kx1KDTHzSoLE5NhX
-         gWlVgEgKskS7M6CC4JVDerhTtgRQ/dTPRwR8eL38eQCxt9+vbWloVsOVcy4Kjeid70dG
-         vK/w==
-X-Gm-Message-State: AOAM5309s9gxunUpmMAT9OqE+p1NN/IJ4gquAS9JMql2zqlI7GgK9SUv
-        LM4NfxX/1IAlGYfEOnNyirOgrnrGY6I=
-X-Google-Smtp-Source: ABdhPJy54gKVnmDFSKo5TGtN24l9MV+jXRXBZp5VoazrXVj6DPMSEHNaqLBKQuHhsbrV0ltkGC2gxg==
-X-Received: by 2002:a1f:54c5:: with SMTP id i188mr3367725vkb.4.1589480503788;
-        Thu, 14 May 2020 11:21:43 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id h23sm874285uap.7.2020.05.14.11.21.42
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=IC3XDAaXwRIF534HLzVFyxJuQdymZeHXyo2fYM9SygA=;
+        b=DdUR+1pLAj3x93jDf8OkYUjedrzGRZkU5gTIUoeUjPu9wedzt82feHqDyQl1/QsAFp
+         m6xrvXe2sBKmqHMxQqH3N2icEkCW++czIQ+qfa5UAQE/qkZZxXhesOIhAx3L/K3F3QOI
+         S3QjabdlgpBjJELN0uc4NJ/FIJhPO3NHygeVZ8CyndP8aRjTT45pFmYoTa21HzkHbyZG
+         3LFZ7LLM4O/loSF3Q78WHx+m5rCRkQfAGU9JEVc5NMjUDy8uQsFTIY296OSEUcC5G4uE
+         jxZ6S+S4KCAZdy6ujpQVKketJvuZPdbP6yV/2Pj+I/aJKF8c6dxjIsOG/ssdFEEm+48N
+         9R3Q==
+X-Gm-Message-State: AOAM533b6K8mlnXg44kTYq5smRtrUhiqcSV5eXxAfyPy/zPyZ3RjRZV9
+        pPdC7jmVVT73W8Ok3VBH+3rxnHHu7es=
+X-Google-Smtp-Source: ABdhPJw+boPryPkzkMQnYp4TNVvqlRiyqRg0ebKNi901yuRPu3ewuRWeIUW+/wRAAVXw+T/1Lj2qvQ==
+X-Received: by 2002:a1c:9694:: with SMTP id y142mr13856371wmd.52.1589480520347;
+        Thu, 14 May 2020 11:22:00 -0700 (PDT)
+Received: from ?IPv6:2a00:20:401e:4388:1d59:5442:feba:f46c? ([2a00:20:401e:4388:1d59:5442:feba:f46c])
+        by smtp.gmail.com with ESMTPSA id v205sm23921663wmg.11.2020.05.14.11.21.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 May 2020 11:21:42 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id a7so1507613uak.2
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 11:21:42 -0700 (PDT)
-X-Received: by 2002:ab0:69cc:: with SMTP id u12mr5012954uaq.22.1589480501535;
- Thu, 14 May 2020 11:21:41 -0700 (PDT)
+        Thu, 14 May 2020 11:21:59 -0700 (PDT)
+Date:   Thu, 14 May 2020 20:21:57 +0200
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAHk-=wjpb-h9Z6O6o_7GkqCV1N-qQhagVJxpYZurYQR+eLkuEg@mail.gmail.com>
+References: <20200514170451.1821723-1-christian.brauner@ubuntu.com> <CAHk-=wjpb-h9Z6O6o_7GkqCV1N-qQhagVJxpYZurYQR+eLkuEg@mail.gmail.com>
 MIME-Version: 1.0
-References: <1589307480-27508-1-git-send-email-rbokka@codeaurora.org>
- <CAD=FV=VReEUiJY0yDgMkegMnKJ-Fc_c=4_f7_K7g-PG0UVjH5g@mail.gmail.com> <fb7f601f-388f-8a77-bb22-e1398f90326f@codeaurora.org>
-In-Reply-To: <fb7f601f-388f-8a77-bb22-e1398f90326f@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 14 May 2020 11:21:30 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UTB+i_w-z1sYVOrqSP8TFzHa1fovrSU9RX7dBD5WB-ug@mail.gmail.com>
-Message-ID: <CAD=FV=UTB+i_w-z1sYVOrqSP8TFzHa1fovrSU9RX7dBD5WB-ug@mail.gmail.com>
-Subject: Re: [RFC v1 0/3] Add QTI QFPROM-Efuse driver support
-To:     "Ravi Kumar Bokka (Temp)" <rbokka@codeaurora.org>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        dhavalp@codeaurora.org, mturney@codeaurora.org,
-        sparate@codeaurora.org, c_rbokka@codeaurora.org,
-        mkurumel@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Subject: Re: [GIT PULL] thread fixes v5.7-rc5
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+Message-ID: <1C5DBE84-3E8F-4478-8188-8A09A527B195@ubuntu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On May 14, 2020 8:07:59 PM GMT+02:00, Linus Torvalds <torvalds@linux-foundation.org> wrote:
+>On Thu, May 14, 2020 at 10:05 AM Christian Brauner
+><christian.brauner@ubuntu.com> wrote:
+>>
+>> This contains a single fix for all exported legacy fork helpers to
+>block
+>> accidental access to clone3() features in the upper 32 bits of their
+>> respective flags arguments.
+>
+>I've taken this pull, but I really think the minimal and more
+>straightforward fix would have been to just make do_fork(),
+>kernel_thread() and clone() change the flags field from "unsigned
+>long" to "unsigned int".
+>
+>I don't see why that wouldn't have fixed things, and it would have
+>been simpler and more obvious, I think.
+>
+>Doesn't matter, I guess.
+>
+>                   Linus
 
-On Wed, May 13, 2020 at 8:35 PM Ravi Kumar Bokka (Temp)
-<rbokka@codeaurora.org> wrote:
->
-> Hi doug,
->
-> Thanks for your feedback. Please find below inline comments.
+Seemed weird to me to change something that's been exposed to userspace for that long.
 
-Probably the mailing list didn't see them.  You responded with HTML
-mail.  Please be careful to only respond in plain text.
-
-
-> Regards,
->
-> Ravi Kumar.B
->
->
->
-> On 5/13/2020 4:33 AM, Doug Anderson wrote:
->
-> Hi,
->
-> On Tue, May 12, 2020 at 11:18 AM Ravi Kumar Bokka <rbokka@codeaurora.org>=
- wrote:
->
-> This patch series adds qfprom-efuse controller driver support.
->
-> This driver can access the raw qfprom regions for fuse blowing.
->
-> The current existed qfprom driver is only supports for cpufreq, thermal s=
-ensors
-> drivers by read out calibration data, speed bins..etc which is stored by
-> qfprom efuses.
->
-> I don't understand the interaction between this driver and the
-> existing "qcom,qfprom" driver.  Can you please explain?  Are they both
-> acting on the same values and this one has write access?  Are there
-> two instances of the same hardware block and you're managing one of
-> them with this new driver and one with thue old driver?  Something
-> else?
->
-> [Ravi] Existing QFPROM driver in upstream kernel has limited support whic=
-h is some hard coded mapping of id vs set of fuses and user can read those =
-fuse with those id-bucket.
-> That is simply reading Hw-registers and it doesn't involve any hardware p=
-rogramming sequence etc. Based on information given to us by QC-kernel team=
-, existing driver was created to read calibration/sensor fuses and it is ve=
-ry basic/limited/fixed in functionalities and orthogonal to what we need to=
- on Trogdor.
->
-> Requirement for Trogdor fuse blow driver is different which allows to rea=
-d/write almost whole fuse block and requires to follow HW programming guide=
-. Both are completely separate and has no overlapping in terms of functiona=
-lities and capability. Please ignore the similarity of names of drivers, th=
-ey are different in terms of functionalities and driver internals etc.
-
-If they are targeting the same type of hardware IP block then, in the
-very least, the bindings need to be the same.  The bindings are
-supposed to be describing the hardware.
-
-Presumably if the underlying hardware is the same you should be able
-to write one driver and it can just operate in some sort of
-"read-only" mode if it's running somewhere it doesn't have access
-permissions to actually change the fuses.
-
-
-
-
-> Ravi Kumar Bokka (3):
->   dt-bindings: nvmem: Add devicetree bindings for qfprom-efuse
->   drivers: nvmem: Add driver for QTI qfprom-efuse support
->   arm64: dts: qcom: sc7180: Add qfprom-efuse
->
->  .../devicetree/bindings/nvmem/qfprom-efuse.yaml    |  40 ++
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts            |   4 +
->  arch/arm64/boot/dts/qcom/sc7180.dtsi               |   9 +
->  drivers/nvmem/Kconfig                              |  10 +
->  drivers/nvmem/Makefile                             |   2 +
->  drivers/nvmem/qfprom-efuse.c                       | 476 +++++++++++++++=
-++++++
->  6 files changed, 541 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nvmem/qfprom-efuse.=
-yaml
->  create mode 100644 drivers/nvmem/qfprom-efuse.c
->
-> --
-> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member=
- of the Code Aurora Forum, hosted by the Linux Foundation.
->
+Christian
