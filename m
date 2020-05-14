@@ -2,94 +2,135 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C91C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D57AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93D4720675
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0408F20643
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:06:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483199;
-	bh=zXCaOajhk9KlXAROY8NeIt77dzcPCugMr2Ks9WmjM04=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BDWbHC8DUSDNdkIYJj+hlNj1k8SFBe8EtRnEK2mr+2PQrfeJs0ZxIoNYuRFdbjMVB
-	 HKAlft2cQ3GVncnwD71C65GBO84Th/83blWp9ljomRW6+FA3EnosUaRX9E2k1KeRx2
-	 2fv5f/Xq0rd48hmOco4BVIQMrE+8GcqlpuIHVjcs=
+	s=default; t=1589483204;
+	bh=VvY+ujRl3TLq3Uz/F5rbZuZ+SLUdj4ESsX6KnnzePJI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XYqYpQUZVEoaDX58u7/2iIFHO2LgnPIjZb4ynqmkHs7gAzOdF2xdhEEH2iO003g52
+	 m0HmJHSlIM1gj5MI3NLQdJ9Xj9YbKx3btTAXCzAt5ezK0vqumsGx0sHTwxbJ8o4aB0
+	 lLNMjVZpfixGCbDe55WpAmBr7N6WGY9wmdtPtRBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbgENSxo (ORCPT
+        id S1730067AbgENTGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:53:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728706AbgENSx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:53:28 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 282062065F;
-        Thu, 14 May 2020 18:53:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482407;
-        bh=zXCaOajhk9KlXAROY8NeIt77dzcPCugMr2Ks9WmjM04=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R4YGV2fXqwGqiWUSkiqVCygSBMmXG7tyNMnEB0yXt6rbCXU6LJYX3fFMHTqKTCFfp
-         2krPmHKnVYudDJ8XPnfZjghobMV85KoOumSchYpI96vHxPVe82zFMNAg5BEZTHIM7y
-         tYTEpu8HwKvIcswUjdEk/nRCXNH+DOuFxbPW0AXU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Richard Clark <richard.xnu.clark@gmail.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 13/49] aquantia: Fix the media type of AQC100 ethernet controller in the driver
-Date:   Thu, 14 May 2020 14:52:34 -0400
-Message-Id: <20200514185311.20294-13-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200514185311.20294-1-sashal@kernel.org>
-References: <20200514185311.20294-1-sashal@kernel.org>
+        Thu, 14 May 2020 15:06:42 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39394 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728840AbgENTGg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 15:06:36 -0400
+Received: by mail-oi1-f196.google.com with SMTP id s198so1674769oie.6;
+        Thu, 14 May 2020 12:06:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DpxmqheKh5hWBkROUkM/LZbskUu+jI9OekkxfEH2TJU=;
+        b=jKy7Tet+7kDtJP9R6aI+d8Svebs+UjREUdZ4tc2TdAvfvztTuKXHjAmyRSN0CBV1Q/
+         dxvG/6SUt6irrsNnl6a0dPCzvcj4TdC5IMnDOtDFVUJadbHI68V2GPc/9f05cZniOtzK
+         r9C+YtaerxaUcO9+HPJlpz4nIAPTWxRRCcG4zaicP583zNnhEq7PXGRURF1C3vEMx4mi
+         hgO0UABInDxKiWNjWhBYll3gpmk/LJv70q5UuGcPnC5tHfGGYPzuu2DR2bI6P1sBxkNt
+         E8YRkhn/S554bIy5Z6oAdajQqlzO3/aGo24ltCKJg7mCc5yBgKMGMa11x9bgNBkD9eth
+         1jIQ==
+X-Gm-Message-State: AGi0PuY1Gl5VTAaxaKzDUO2jOMhYMI2HC5m9TVwbAco1zgpzuVr8zFSy
+        kuocz8Wlg9I/fG8v2+Igug==
+X-Google-Smtp-Source: APiQypIbLInN8eILN1YNFZkdZUWzlrI5ZKISbq/8Sj2LCEhqvwhh/jfweZsVFtDXqGRZI3Q/OW8ccg==
+X-Received: by 2002:aca:3254:: with SMTP id y81mr11673521oiy.172.1589483194829;
+        Thu, 14 May 2020 12:06:34 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 130sm3531979oid.43.2020.05.14.12.06.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 12:06:33 -0700 (PDT)
+Received: (nullmailer pid 10001 invoked by uid 1000);
+        Thu, 14 May 2020 19:06:32 -0000
+Date:   Thu, 14 May 2020 14:06:32 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-rtc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Paul Burton <paulburton@kernel.org>
+Subject: Re: [PATCH v3 3/7] dt-bindings: interrupt-controller: Convert
+ mti,gic to DT schema
+Message-ID: <20200514190632.GA9943@bogus>
+References: <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506214107.25956-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506214107.25956-4-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506214107.25956-4-Sergey.Semin@baikalelectronics.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Clark <richard.xnu.clark@gmail.com>
+On Thu, 7 May 2020 00:41:03 +0300, Serge Semin wrote:
+> Modern device tree bindings are supposed to be created as YAML-files
+> in accordance with DT schema. This commit replaces MIPS GIC legacy bare
+> text binding with YAML file. As before the binding file states that the
+> corresponding dts node is supposed to be compatible with MIPS Global
+> Interrupt Controller indicated by the "mti,gic" compatible string and
+> to provide a mandatory interrupt-controller and '#interrupt-cells'
+> properties. There might be optional registers memory range,
+> "mti,reserved-cpu-vectors" and "mti,reserved-ipi-vectors" properties
+> specified.
+> 
+> MIPS GIC also includes a free-running global timer, per-CPU count/compare
+> timers, and a watchdog. Since currently the GIC Timer is only supported the
+> DT schema expects an IRQ and clock-phandler charged timer sub-node with
+> "mti,mips-gic-timer" compatible string.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Alessandro Zummo <a.zummo@towertech.it>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: linux-mips@vger.kernel.org
+> Cc: linux-rtc@vger.kernel.org
+> 
+> ---
+> 
+> I don't really know who is the corresponding driver maintainer, so I
+> added Paul to the maintainers property since he used to be looking for the
+> MIPS arch and Thomas looking after it now. Any idea what email should be
+> specified there instead?
+> 
+> Changelog v3:
+> - Since timer sub-node has no unit-address, the node shouldn't be named
+>   with one. So alter the MIPS GIC bindings to have a pure "timer"
+>   sub-node.
+> - Discard allOf: [ $ref: /schemas/interrupt-controller.yaml# ].
+> - Since it's a conversion patch use GPL-2.0-only SPDX header.
+> ---
+>  .../interrupt-controller/mips-gic.txt         |  67 --------
+>  .../interrupt-controller/mti,gic.yaml         | 148 ++++++++++++++++++
+>  2 files changed, 148 insertions(+), 67 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/mips-gic.txt
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mti,gic.yaml
+> 
 
-[ Upstream commit 6de556c31061e3b9c36546ffaaac5fdb679a2f14 ]
-
-The Aquantia AQC100 controller enables a SFP+ port, so the driver should
-configure the media type as '_TYPE_FIBRE' instead of '_TYPE_TP'.
-
-Signed-off-by: Richard Clark <richard.xnu.clark@gmail.com>
-Cc: Igor Russkikh <irusskikh@marvell.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Acked-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
-index 74b9f3f1da813..0e8264c0b3082 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
-@@ -56,7 +56,7 @@ static const struct aq_board_revision_s hw_atl_boards[] = {
- 	{ AQ_DEVICE_ID_D108,	AQ_HWREV_2,	&hw_atl_ops_b0, &hw_atl_b0_caps_aqc108, },
- 	{ AQ_DEVICE_ID_D109,	AQ_HWREV_2,	&hw_atl_ops_b0, &hw_atl_b0_caps_aqc109, },
- 
--	{ AQ_DEVICE_ID_AQC100,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc107, },
-+	{ AQ_DEVICE_ID_AQC100,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc100, },
- 	{ AQ_DEVICE_ID_AQC107,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc107, },
- 	{ AQ_DEVICE_ID_AQC108,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc108, },
- 	{ AQ_DEVICE_ID_AQC109,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc109, },
--- 
-2.20.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
