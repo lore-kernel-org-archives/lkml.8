@@ -2,100 +2,151 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B410C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D09C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF06920643
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:27:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BxGiiWoW"
+	by mail.kernel.org (Postfix) with ESMTP id 64AFA20643
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:28:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728210AbgENT1t (ORCPT
+        id S1728240AbgENT2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:27:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57570 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725975AbgENT1s (ORCPT
+        Thu, 14 May 2020 15:28:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54026 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726132AbgENT2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 15:27:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589484467;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=y5h6nPrhEzpYCzdipFANUUrKCuB7CVP+YlT+ibTkEPU=;
-        b=BxGiiWoWe55Isd6mrnI+QloqX4KFZv67wN8+pGBiWVheoau7Ls96ivT2Omm9gYgsW2YkoI
-        lonMKXWNcxZL7RiIaHYCSonQ/mnYHHB2lRw5sPDfiuxOLJz+qVRqIsyDfQ6r1CMssR0R1N
-        oZnT8ik+A4cBTX7JMeL5va6r+9zlXa4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-171--HXsfovRPfaR3hf9MfvoDg-1; Thu, 14 May 2020 15:27:43 -0400
-X-MC-Unique: -HXsfovRPfaR3hf9MfvoDg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B8948107ACCD;
-        Thu, 14 May 2020 19:27:41 +0000 (UTC)
-Received: from treble (ovpn-117-14.rdu2.redhat.com [10.10.117.14])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 15E6C5D9CA;
-        Thu, 14 May 2020 19:27:39 +0000 (UTC)
-Date:   Thu, 14 May 2020 14:27:38 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Miroslav Benes <mbenes@suse.cz>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
-        Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>
-Subject: Re: [PATCH 4.19 37/48] x86/entry/64: Fix unwind hints in register
- clearing code
-Message-ID: <20200514192738.nolajgjg56of4nat@treble>
-References: <20200513094351.100352960@linuxfoundation.org>
- <20200513094401.325580400@linuxfoundation.org>
- <20200513214856.GA27858@amd>
+        Thu, 14 May 2020 15:28:19 -0400
+Received: from smtp-8fad.mail.infomaniak.ch (smtp-8fad.mail.infomaniak.ch [IPv6:2001:1600:3:17::8fad])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09427C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 12:28:19 -0700 (PDT)
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49NM5Y60DmzlhGVS;
+        Thu, 14 May 2020 21:28:17 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 49NM5X23j6zljVWn;
+        Thu, 14 May 2020 21:28:16 +0200 (CEST)
+Subject: Re: [RFC PATCH v3 00/12] Integrity Policy Enforcement LSM (IPE)
+To:     Deven Bowers <deven.desai@linux.microsoft.com>, agk@redhat.com,
+        axboe@kernel.dk, snitzer@redhat.com, jmorris@namei.org,
+        serge@hallyn.com, zohar@linux.ibm.com,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, jannh@google.com
+Cc:     tyhicks@linux.microsoft.com, pasha.tatashin@soleen.com,
+        sashal@kernel.org, jaskarankhurana@linux.microsoft.com,
+        nramas@linux.microsoft.com, mdsakib@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, corbet@lwn.net
+References: <20200415162550.2324-1-deven.desai@linux.microsoft.com>
+ <b07ac7e1-7cf5-92c9-81d0-64174c3d5024@digikod.net>
+ <0001755a-6b2a-b13b-960c-eb0b065c8e3c@linux.microsoft.com>
+ <8ba7b15f-de91-40f7-fc95-115228345fce@linux.microsoft.com>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <44fb36ae-959d-4ff7-ed1f-ccfc2e292232@digikod.net>
+Date:   Thu, 14 May 2020 21:28:15 +0200
+User-Agent: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200513214856.GA27858@amd>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <8ba7b15f-de91-40f7-fc95-115228345fce@linux.microsoft.com>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 11:48:56PM +0200, Pavel Machek wrote:
-> On Wed 2020-05-13 11:45:03, Greg Kroah-Hartman wrote:
-> > From: Josh Poimboeuf <jpoimboe@redhat.com>
-> > 
-> > commit 06a9750edcffa808494d56da939085c35904e618 upstream.
-> > 
-> > The PUSH_AND_CLEAR_REGS macro zeroes each register immediately after
-> > pushing it.  If an NMI or exception hits after a register is cleared,
-> > but before the UNWIND_HINT_REGS annotation, the ORC unwinder will
-> > wrongly think the previous value of the register was zero.  This can
-> > confuse the unwinding process and cause it to exit early.
-> > 
-> > Because ORC is simpler than DWARF, there are a limited number of unwind
-> > annotation states, so it's not possible to add an individual unwind hint
-> > after each push/clear combination.  Instead, the register clearing
-> > instructions need to be consolidated and moved to after the
-> > UNWIND_HINT_REGS annotation.
+
+On 12/05/2020 22:46, Deven Bowers wrote:
 > 
-> This actually makes kernel entry/exit slower, due to poor instruction
-> scheduling. And that is a bit of hot path... Is it strictly
-> neccessary? Not everyone needs ORC scheduler. Should it be somehow
-> optional?
+> 
+> On 5/11/2020 11:03 AM, Deven Bowers wrote:
+>>
+>>
+>> On 5/10/2020 2:28 AM, Mickaël Salaün wrote:
+>>
+>> [...snip]
+>>
+>>>>
+>>>> Additionally, rules are evaluated top-to-bottom. As a result, any
+>>>> revocation rules, or denies should be placed early in the file to
+>>>> ensure
+>>>> that these rules are evaluated before a rule with "action=ALLOW" is
+>>>> hit.
+>>>>
+>>>> IPE policy is designed to be forward compatible and backwards
+>>>> compatible,
+>>>> thus any failure to parse a rule will result in the line being ignored,
+>>>> and a warning being emitted. If backwards compatibility is not
+>>>> required,
+>>>> the kernel commandline parameter and sysctl, ipe.strict_parse can be
+>>>> enabled, which will cause these warnings to be fatal.
+>>>
+>>> Ignoring unknown command may lead to inconsistent beaviors. To achieve
+>>> forward compatibility, I think it would be better to never ignore
+>>> unknown rule but to give a way to userspace to known what is the current
+>>> kernel ABI. This could be done with a securityfs file listing the
+>>> current policy grammar.
+>>>
+>>
+>> That's a fair point. From a manual perspective, I think this is fine.
+>> A human-user can interpret a grammar successfully on their own when new
+>> syntax is introduced.
+>>
+>>  From a producing API perspective, I'd have to think about it a bit
+>> more. Ideally, the grammar would be structured in such a way that the
+>> userland
+>> interpreter of this grammar would not have to be updated once new syntax
+>> is introduced, avoiding the need to update the userland binary. To do so
+>> generically ("op=%s") is easy, but doesn't necessarily convey sufficient
+>> information (what happens when a new "op" token is introduced?). I think
+>> this may come down to regular expression representations of valid values
+>> for these tokens, which worries me as regular expressions are incredibly
+>> error-prone[1].
+>>
+>> I'll see what I can come up with regarding this.
+> 
+> I have not found a way that I like to expose some kind of grammar
+> through securityfs that can be understood by usermode to parse the
+> policy. Here's what I propose as a compromise:
+> 
+>     1. I remove the unknown command behavior. This address your
+> first point about inconsistent behaviors, and effectively removes the
+> strict_parse sysctl (as it is always enabled).
+> 
+>     2. I introduce a versioning system for the properties
+> themselves. The valid set of properties and their versions
+> can be found in securityfs, under say, ipe/config in a key=value
+> format where `key` indicates the understood token, and `value`
+> indicates their current version. For example:
+> 
+>     $ cat $SECURITYFS/ipe/config
+>     op=1
+>     action=1
+>     policy_name=1
+>     policy_version=1
+>     dmverity_signature=1
+>     dmverity_roothash=1
+>     boot_verified=1
 
-I didn't measure a difference beyond the noise level, did you?
+The name ipe/config sounds like a file to configure IPE. Maybe something
+like ipe/config_abi or ipe/config_grammar?
 
--- 
-Josh
+> 
+> if new syntax is introduced, the version number is increased.
+> 
+>     3. The format of those versions are documented as part of
+> the admin-guide around IPE. If user-mode at that point wants to rip
+> the documentation formats and correlate with the versioning, then
+> it fulfills the same functionality as above, with out the complexity
+> around exposing a parsing grammar and interpreting it on-the-fly.
+> Many of these are unlikely to move past version 1, however.
+> 
+> Thoughts?
+> 
 
+That seems reasonable.
