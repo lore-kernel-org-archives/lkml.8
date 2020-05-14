@@ -2,148 +2,132 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DAB5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E21AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E91B1206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483127;
-	bh=fBpP8X/WaYW2HyxOaplXw8jXhd39XlGZggiJ4YE3d/8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NlsLNWX5RwvY+MhvGAw3z5e+mTLMCsGLv9mon5/j9vpzLVfc9xtIMbFD4ZHmLEOzm
-	 YrXhovq4SDT2TQU5Z5iJJyHZfMTN+QPgBjBLYtqFluMLDewHjB7cYvDzhKbfawSfPb
-	 4DyFr1A35Sk15HxiH7ke904JinnccwLuYZfLLfr0=
+	by mail.kernel.org (Postfix) with ESMTP id 34D9E2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729715AbgENTF0 (ORCPT
+        id S1728304AbgENTFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:05:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53978 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728958AbgENSyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:54:09 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05B1C2065F;
-        Thu, 14 May 2020 18:54:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482448;
-        bh=fBpP8X/WaYW2HyxOaplXw8jXhd39XlGZggiJ4YE3d/8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bd5Y9axaUgqo8oVcs3hCDHSqV5K2IZ5dJWt3rnYDz0tAmEsPg/92Sg/GQmOO5+Imy
-         e9f6vx4C/lRaKzay7eFo3B25KEHHY3VcoHcMPIcWAzOvp3MZ30RMEuQ4+zAXPMSM2v
-         gufRdkQ85bp6Fl6Ge2RcbcyW1QcUKZP+WYu01j5M=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 47/49] crypto: lrw - simplify error handling in create()
-Date:   Thu, 14 May 2020 14:53:08 -0400
-Message-Id: <20200514185311.20294-47-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200514185311.20294-1-sashal@kernel.org>
-References: <20200514185311.20294-1-sashal@kernel.org>
+        Thu, 14 May 2020 15:05:32 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20684 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729644AbgENTF1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 15:05:27 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04EJ4SMe069982;
+        Thu, 14 May 2020 15:04:59 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3111w8w6aa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 May 2020 15:04:58 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04EJ4WT0070393;
+        Thu, 14 May 2020 15:04:58 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3111w8w69w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 May 2020 15:04:58 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04EJ3PVR027513;
+        Thu, 14 May 2020 19:04:57 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma04wdc.us.ibm.com with ESMTP id 3100ubrxqa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 May 2020 19:04:57 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04EJ4uQh20709730
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 May 2020 19:04:56 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 31AFAC6057;
+        Thu, 14 May 2020 19:04:56 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E4DD1C605A;
+        Thu, 14 May 2020 19:04:55 +0000 (GMT)
+Received: from localhost (unknown [9.85.205.196])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 14 May 2020 19:04:55 +0000 (GMT)
+From:   Nathan Lynch <nathanl@linux.ibm.com>
+To:     Leonardo Bras <leonardo@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Nadav Amit <namit@vmware.com>
+Subject: Re: [PATCH 1/1] powerpc/rtas: Implement reentrant rtas call
+In-Reply-To: <ba97d52df60ac9c4a4afc2c03121a8c263aa5a15.camel@linux.ibm.com>
+References: <20200408223901.760733-1-leonardo@linux.ibm.com> <87ftdb87jf.fsf@linux.ibm.com> <ba97d52df60ac9c4a4afc2c03121a8c263aa5a15.camel@linux.ibm.com>
+Date:   Thu, 14 May 2020 14:04:55 -0500
+Message-ID: <875zcy2v8o.fsf@linux.ibm.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-14_07:2020-05-14,2020-05-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 spamscore=0 priorityscore=1501 impostorscore=0
+ cotscore=-2147483648 clxscore=1015 mlxscore=0 malwarescore=0
+ mlxlogscore=999 phishscore=0 adultscore=0 suspectscore=1 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005140163
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+Hi Leonardo,
 
-[ Upstream commit d57063103332b95eac9c118900f35700a491da08 ]
+Leonardo Bras <leonardo@linux.ibm.com> writes:
+> Hello Nathan, thanks for the feedback!
+>
+> On Fri, 2020-04-10 at 14:28 -0500, Nathan Lynch wrote:
+>> Leonardo Bras <leonardo@linux.ibm.com> writes:
+>> > Implement rtas_call_reentrant() for reentrant rtas-calls:
+>> > "ibm,int-on", "ibm,int-off",ibm,get-xive" and  "ibm,set-xive".
+>> > 
+>> > On LoPAPR Version 1.1 (March 24, 2016), from 7.3.10.1 to 7.3.10.4,
+>> > items 2 and 3 say:
+>> > 
+>> > 2 - For the PowerPC External Interrupt option: The * call must be
+>> > reentrant to the number of processors on the platform.
+>> > 3 - For the PowerPC External Interrupt option: The * argument call
+>> > buffer for each simultaneous call must be physically unique.
+>> > 
+>> > So, these rtas-calls can be called in a lockless way, if using
+>> > a different buffer for each call.
+>> > 
+>
+>> From the language in the spec it's clear that these calls are intended
+>> to be reentrant with respect to themselves, but it's less clear to me
+>> that they are safe to call simultaneously with respect to each other or
+>> arbitrary other RTAS methods.
+>
+> In my viewpoint, being reentrant to themselves, without being reentrant
+> to others would be very difficult to do, considering the way the
+> rtas_call is crafted to work.
+>
+> I mean, I have no experience in rtas code, it's my viewpoint. In my
+> thoughts there is something like this:
+>
+> common_path -> selects function by token -> reentrant function
+> 					|-> non-reentrant function
+>
+> If there is one function that is reentrant, it means the common_path
+> and function selection by token would need to be reentrant too.
 
-Simplify the error handling in the LRW template's ->create() function by
-taking advantage of crypto_drop_skcipher() now accepting (as a no-op) a
-spawn that hasn't been grabbed yet.
-
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- crypto/lrw.c | 28 +++++++++++-----------------
- 1 file changed, 11 insertions(+), 17 deletions(-)
-
-diff --git a/crypto/lrw.c b/crypto/lrw.c
-index be829f6afc8e5..fda9414890865 100644
---- a/crypto/lrw.c
-+++ b/crypto/lrw.c
-@@ -344,15 +344,15 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
- 
- 	err = -EINVAL;
- 	if (alg->base.cra_blocksize != LRW_BLOCK_SIZE)
--		goto err_drop_spawn;
-+		goto err_free_inst;
- 
- 	if (crypto_skcipher_alg_ivsize(alg))
--		goto err_drop_spawn;
-+		goto err_free_inst;
- 
- 	err = crypto_inst_setname(skcipher_crypto_instance(inst), "lrw",
- 				  &alg->base);
- 	if (err)
--		goto err_drop_spawn;
-+		goto err_free_inst;
- 
- 	err = -EINVAL;
- 	cipher_name = alg->base.cra_name;
-@@ -365,20 +365,20 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
- 
- 		len = strlcpy(ecb_name, cipher_name + 4, sizeof(ecb_name));
- 		if (len < 2 || len >= sizeof(ecb_name))
--			goto err_drop_spawn;
-+			goto err_free_inst;
- 
- 		if (ecb_name[len - 1] != ')')
--			goto err_drop_spawn;
-+			goto err_free_inst;
- 
- 		ecb_name[len - 1] = 0;
- 
- 		if (snprintf(inst->alg.base.cra_name, CRYPTO_MAX_ALG_NAME,
- 			     "lrw(%s)", ecb_name) >= CRYPTO_MAX_ALG_NAME) {
- 			err = -ENAMETOOLONG;
--			goto err_drop_spawn;
-+			goto err_free_inst;
- 		}
- 	} else
--		goto err_drop_spawn;
-+		goto err_free_inst;
- 
- 	inst->alg.base.cra_flags = alg->base.cra_flags & CRYPTO_ALG_ASYNC;
- 	inst->alg.base.cra_priority = alg->base.cra_priority;
-@@ -404,17 +404,11 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
- 	inst->free = free;
- 
- 	err = skcipher_register_instance(tmpl, inst);
--	if (err)
--		goto err_drop_spawn;
--
--out:
--	return err;
--
--err_drop_spawn:
--	crypto_drop_skcipher(spawn);
-+	if (err) {
- err_free_inst:
--	kfree(inst);
--	goto out;
-+		free(inst);
-+	}
-+	return err;
- }
- 
- static struct crypto_template crypto_tmpl = {
--- 
-2.20.1
+I checked with partition firmware development and these calls can be
+used concurrently with arbitrary other RTAS calls, which confirms your
+interpretation. Thanks for bearing with me.
 
