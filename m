@@ -2,116 +2,181 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 02:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E15C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 02:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AEA120722
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 02:09:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P3DlHD88"
+	by mail.kernel.org (Postfix) with ESMTP id 1944A20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 02:09:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbgENCJG (ORCPT
+        id S1728546AbgENCJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 22:09:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32934 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725952AbgENCJG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 22:09:06 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EF43C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 19:09:04 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id v15so965227qvr.8
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 19:09:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iwY0Acbl9lzYaC/I7H5xpC4oYprSXfs6U4SArioBGuQ=;
-        b=P3DlHD88DQf0dE0yDif2sw8Rynd10kLlNJTPW+b9QzdH57TyxXfF5ZNS/0Fw6PFJCG
-         QW3kwdavSpCzJ1MTCu5QDGOqFbkR1lWztvohYFPSV6iT0JGQlY5iifKdUt621KTCAsGm
-         9eeWjr+VlkkDTRsgo5ySgNBAgv+vYZS8h+BUs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iwY0Acbl9lzYaC/I7H5xpC4oYprSXfs6U4SArioBGuQ=;
-        b=fh/IyUJENvykGPY2Mq8haOzSfcpyTw1cESslHLtAbzY+OI5/z0YWk2nqfgPZvGb0sY
-         0uHBk2pQiyJ3Q7nyX4E73cwUWGd3pTz/xfOuy65J43AMK2DvfYGV+OduIEIXBcqIc88c
-         1k5ySc4zp5LJuKOpJnyFGhEK56dXFG0kizAIa60V25Ko57iSbYeAV6ctz7eRskdX9MFQ
-         j/OVRtCZXxkk33Xbp/BjeNkyg6HpAmfrZtwWhzs2WFvRUSKxuAwIc/sAHP2F99wNEKLF
-         i9pb6Ob0RajdnF4l5UEZcZ1EKXqgUDI2Uvi8dKGrFNpNVSEq6neNpuel/s32ir0KUNKZ
-         V2Uw==
-X-Gm-Message-State: AOAM532yKk5Qm8PSHrWgn/RDm4VV/NmrPL/534bEtfwIzXr0ftchwdEr
-        RZ0lR0jM3a+UkVBCePANQENrXKiU7WhEyS7yYedS+w==
-X-Google-Smtp-Source: ABdhPJx+twxQTtW8B+vhkz+0GPec5WaIV3J1v01kZlo95nTGu9ZPy4033fzgt5ebh+V0OgPHFEM+9syC1+lXQmTric4=
-X-Received: by 2002:a05:6214:506:: with SMTP id v6mr2657680qvw.70.1589422143646;
- Wed, 13 May 2020 19:09:03 -0700 (PDT)
+        Wed, 13 May 2020 22:09:47 -0400
+Received: from mga05.intel.com ([192.55.52.43]:7777 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725952AbgENCJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 22:09:47 -0400
+IronPort-SDR: iYSxrszNNb2InA4ZHUKwuaqf0QcMFNQObzD6sSI0FHUIsI+HEyjo7ATsMN80Lvrgz41JvGe/d/
+ NWL6wGMmBoJw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 19:09:46 -0700
+IronPort-SDR: ZxfsolDVixpty+MjFPwQNL8WnPgnIDAqa41NviXNq24lofJOGf4bOMa+mqw07W36MPhh7wn0mm
+ pSLLjUrjGTBQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,389,1583222400"; 
+   d="scan'208";a="297863138"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 13 May 2020 19:09:45 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jZ3Jg-0009oy-SS; Thu, 14 May 2020 10:09:44 +0800
+Date:   Thu, 14 May 2020 10:09:23 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ e2938f0f997b5bb37e32b2679afc2ad101065df4
+Message-ID: <5ebca853.7LwrvnthwMycIeH3%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20200311112004.47138-1-stevensd@chromium.org> <20200311112004.47138-2-stevensd@chromium.org>
- <CAKMK7uHFgiHLe9oiFBr-VR-6rU9-hLTpBTEVNh0ezyj54u70jw@mail.gmail.com>
-In-Reply-To: <CAKMK7uHFgiHLe9oiFBr-VR-6rU9-hLTpBTEVNh0ezyj54u70jw@mail.gmail.com>
-From:   David Stevens <stevensd@chromium.org>
-Date:   Thu, 14 May 2020 11:08:52 +0900
-Message-ID: <CAD=HUj6d9gdZegTGad6thKdHv5b+qOZnkCv5VcWo9AcHifR9uA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] dma-buf: add support for virtio exported objects
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Tomasz Figa <tfiga@chromium.org>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:VIRTIO CORE, NET..." 
-        <virtualization@lists.linux-foundation.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>, virtio-dev@lists.oasis-open.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 12:45 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> On Wed, Mar 11, 2020 at 12:20 PM David Stevens <stevensd@chromium.org> wrote:
-> >
-> > This change adds a new dma-buf operation that allows dma-bufs to be used
-> > by virtio drivers to share exported objects. The new operation allows
-> > the importing driver to query the exporting driver for the UUID which
-> > identifies the underlying exported object.
-> >
-> > Signed-off-by: David Stevens <stevensd@chromium.org>
->
-> Adding Tomasz Figa, I've discussed this with him at elce last year I
-> think. Just to make sure.
->
-> Bunch of things:
-> - obviously we need the users of this in a few drivers, can't really
-> review anything stand-alone
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
+branch HEAD: e2938f0f997b5bb37e32b2679afc2ad101065df4  Merge branch 'core/kprobes'
 
-Here is a link to the usage of this feature by the currently under
-development virtio-video driver:
-https://markmail.org/thread/j4xlqaaim266qpks
+elapsed time: 923m
 
-> - adding very specific ops to the generic interface is rather awkward,
-> eventually everyone wants that and we end up in a mess. I think the
-> best solution here would be if we create a struct virtio_dma_buf which
-> subclasses dma-buf, add a (hopefully safe) runtime upcasting
-> functions, and then a virtio_dma_buf_get_uuid() function. Just storing
-> the uuid should be doable (assuming this doesn't change during the
-> lifetime of the buffer), so no need for a callback.
+configs tested: 114
+configs skipped: 5
 
-So you would prefer a solution similar to the original version of this
-patchset? https://markmail.org/message/z7if4u56q5fmaok4
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                               allnoconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+sparc                            allyesconfig
+mips                          rm200_defconfig
+riscv                    nommu_virt_defconfig
+mips                      pistachio_defconfig
+xtensa                           alldefconfig
+sh                           se7722_defconfig
+openrisc                         alldefconfig
+arm                        cerfcube_defconfig
+arm                         assabet_defconfig
+sh                ecovec24-romimage_defconfig
+arc                            hsdk_defconfig
+arm                          iop32x_defconfig
+riscv                             allnoconfig
+c6x                                 defconfig
+sh                            titan_defconfig
+mips                       capcella_defconfig
+arm                       spear13xx_defconfig
+arc                        nsimosci_defconfig
+m68k                       m5475evb_defconfig
+arm                         s3c2410_defconfig
+sh                   rts7751r2dplus_defconfig
+arm                         shannon_defconfig
+nios2                            alldefconfig
+arm                           corgi_defconfig
+arm                         lpc32xx_defconfig
+mips                      loongson3_defconfig
+arm                        clps711x_defconfig
+powerpc                    adder875_defconfig
+parisc                generic-64bit_defconfig
+arm                        vexpress_defconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                              allnoconfig
+m68k                           sun3_defconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nios2                            allyesconfig
+openrisc                            defconfig
+c6x                              allyesconfig
+c6x                               allnoconfig
+openrisc                         allyesconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                             allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+h8300                            allmodconfig
+xtensa                              defconfig
+arc                                 defconfig
+arc                              allyesconfig
+sh                               allmodconfig
+sh                                allnoconfig
+microblaze                        allnoconfig
+mips                             allyesconfig
+mips                              allnoconfig
+mips                             allmodconfig
+parisc                            allnoconfig
+parisc                              defconfig
+parisc                           allyesconfig
+parisc                           allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          rhel-kconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a005-20200513
+x86_64               randconfig-a003-20200513
+x86_64               randconfig-a006-20200513
+x86_64               randconfig-a004-20200513
+x86_64               randconfig-a001-20200513
+x86_64               randconfig-a002-20200513
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                            allmodconfig
+s390                             allyesconfig
+s390                              allnoconfig
+s390                             allmodconfig
+s390                                defconfig
+x86_64                              defconfig
+sparc                               defconfig
+sparc64                             defconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                          allmodconfig
+um                               allmodconfig
+um                                allnoconfig
+um                               allyesconfig
+um                                  defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                    rhel-7.6-kselftests
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
+x86_64                              fedora-25
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
