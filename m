@@ -4,127 +4,183 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D290CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B95A5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1FDE20657
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98CE420657
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:39:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uyVvJKrr"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pGr4BBQI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbgENSjU (ORCPT
+        id S1727779AbgENSjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:39:20 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:60834 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726188AbgENSjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:39:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=gupvsLoI2EPTbCeDlomiVkEb9QRYW3zBFnUQWK4fPE4=; b=uyVvJKrrD/p1T/m5Bb74qBnCzQ
-        auVHibpRub8C3s343/Oc3+N1Jsnbmy9fV5yfn7yMhB6GnTyOsCJyHzcFYntm0Na8w22GXjC9JI3nJ
-        WhvkjmIm92B3rIlwXuBTkoLdR/1d1CbW4cM3BjKP+5GRdNjdLEaJ1kEGadEz2rnXSLtk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jZIlE-002JT7-AS; Thu, 14 May 2020 20:39:12 +0200
-Date:   Thu, 14 May 2020 20:39:12 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
-        robh@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH net-next 1/2] dt-bindings: net: dp83822: Add TI dp83822
- phy
-Message-ID: <20200514183912.GW499265@lunn.ch>
-References: <20200514173055.15013-1-dmurphy@ti.com>
- <20200514173055.15013-2-dmurphy@ti.com>
+        Thu, 14 May 2020 14:39:36 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:29401 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726948AbgENSjf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:39:35 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589481574; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=GGdwcTBM4BOYqS3NJ4QzufQIMTIAR3b8muj5z/wqzWc=;
+ b=pGr4BBQInyqXQueDbBF0IeRCpn9UwlkNChoMEYHRQpruIJZJWDzhTGq2F1A65DmZSkGmEhmR
+ CD78DtuuAEvWkqP0KxnOM16sK3hw2Ok5E+MPd0WCL92bbA8MDZP9B1lpb9hmXBGM7v8RXGdK
+ 5XraFo9MbCj6vpNRVU/kSdavZZA=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebd905f.7ff1a617fed8-smtp-out-n04;
+ Thu, 14 May 2020 18:39:27 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 41333C433F2; Thu, 14 May 2020 18:39:26 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D48C7C4478C;
+        Thu, 14 May 2020 18:39:23 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200514173055.15013-2-dmurphy@ti.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 15 May 2020 00:09:23 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Tingwei Zhang <tingwei@codeaurora.org>,
+        coresight@lists.linaro.org
+Subject: Re: [PATCH] coresight: etm4x: Add support to disable trace unit power
+ up
+In-Reply-To: <20200514180055.GA29384@xps15>
+References: <20200514105915.27516-1-saiprakash.ranjan@codeaurora.org>
+ <20200514180055.GA29384@xps15>
+Message-ID: <2c932d57288508cc72a6ee323cf5595e@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 12:30:54PM -0500, Dan Murphy wrote:
-> Add a dt binding for the TI dp83822 ethernet phy device.
+Hi Mathieu,
+
+On 2020-05-14 23:30, Mathieu Poirier wrote:
+> Good morning Sai,
 > 
-> CC: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  .../devicetree/bindings/net/ti,dp83822.yaml   | 49 +++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/ti,dp83822.yaml
+> On Thu, May 14, 2020 at 04:29:15PM +0530, Sai Prakash Ranjan wrote:
+>> From: Tingwei Zhang <tingwei@codeaurora.org>
+>> 
+>> On some Qualcomm Technologies Inc. SoCs like SC7180, there
+>> exists a hardware errata where the APSS (Application Processor
+>> SubSystem)/CPU watchdog counter is stopped when ETM register
+>> TRCPDCR.PU=1.
 > 
-> diff --git a/Documentation/devicetree/bindings/net/ti,dp83822.yaml b/Documentation/devicetree/bindings/net/ti,dp83822.yaml
-> new file mode 100644
-> index 000000000000..60afd43ad3b6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/ti,dp83822.yaml
-> @@ -0,0 +1,49 @@
-> +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
-> +# Copyright (C) 2020 Texas Instruments Incorporated
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/net/ti,dp83822.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: TI DP83822 ethernet PHY
-> +
-> +allOf:
-> +  - $ref: "ethernet-controller.yaml#"
-> +
-> +maintainers:
-> +  - Dan Murphy <dmurphy@ti.com>
-> +
-> +description: |
-> +  The DP83822 is a low-power, single-port, 10/100 Mbps Ethernet PHY. It
-> +  provides all of the physical layer functions needed to transmit and receive
-> +  data over standard, twisted-pair cables or to connect to an external,
-> +  fiber-optic transceiver. Additionally, the DP83822 provides flexibility to
-> +  connect to a MAC through a standard MII, RMII, or RGMII interface
+> Fun stuff...
+> 
 
-Hi Dan
+Yes :)
 
-You say 10/100 Mbps Ethernet PHY, but then list RGMII?
+>> Since the ETMs share the same power domain as
+>> that of respective CPU cores, they are powered on when the
+>> CPU core is powered on. So we can disable powering up of the
+>> trace unit after checking for this errata via new property
+>> called "qcom,tupwr-disable".
+>> 
+>> Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
+>> Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> 
+> Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
+> 
 
-> +
-> +  Specifications about the charger can be found at:
-> +    http://www.ti.com/lit/ds/symlink/dp83822i.pdf
-> +
-> +properties:
-> +  reg:
-> +    maxItems: 1
-> +
-> +  ti,signal-polarity-low:
-> +    type: boolean
-> +    description: |
-> +       DP83822 PHY in Fiber mode only.
-> +       Sets the DP83822 to detect a link drop condition when the signal goes
-> +       high.  If not set then link drop will occur when the signal goes low.
+Tingwei is the author, so if I understand correctly, his signed-off-by
+should appear first, am I wrong?
 
-Are we talking about the LOS line from the SFP cage? In the SFF/SFP
-binding we have:
+>> ---
+>>  .../devicetree/bindings/arm/coresight.txt     |  6 ++++
+>>  drivers/hwtracing/coresight/coresight-etm4x.c | 29 
+>> ++++++++++++-------
+> 
+> Please split in two patches.
+> 
 
-- los-gpios : GPIO phandle and a specifier of the Receiver Loss of Signal
-  Indication input gpio signal, active (signal lost) high
+Sure, I will split the dt-binding into separate patch, checkpatch did 
+warn.
 
-It would be nice to have a consistent naming.
+>>  2 files changed, 25 insertions(+), 10 deletions(-)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt 
+>> b/Documentation/devicetree/bindings/arm/coresight.txt
+>> index 846f6daae71b..d2030128fe46 100644
+>> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+>> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+>> @@ -108,6 +108,12 @@ its hardware characteristcs.
+>>  	* arm,cp14: must be present if the system accesses ETM/PTM 
+>> management
+>>  	  registers via co-processor 14.
+>> 
+>> +	* qcom,tupwr-disable: boolean. Indicates that trace unit power up 
+>> can
+>> +	  be disabled on Qualcomm Technologies Inc. systems where ETMs are 
+>> in
+>> +	  the same power domain as their CPU cores. This property is 
+>> required
+>> +	  to identify such systems with hardware errata where the CPU 
+>> watchdog
+>> +	  counter is stopped when TRCPDCR.PU=1.
+>> +
+> 
+> I think something like "qcom,skip-power-up" would be clearer.
+> 
+> Also, a better choice of words is that TRCPDCR.PU does not have to be 
+> set on
+> Qualcomm...
+> 
 
-Is it required the LOS signal is connected to the PHY? Russell King
-has some patches which allows the Marvell PHY to be used as a media
-converter. In that setting, i think the SFP signals are connected to
-GPIOs not the PHY. The SFP core can then control the transmit disable,
-module insertion detection etc. So i'm wondering if you need a
-property to indicate the LOS is not connected to the PHY?
+Yes "qcom,skip-power-up" is a lot better, thanks. Also will use 
+something as
+you suggested for description.
 
-	 Andrew
+>>  * Optional property for TMC:
+>> 
+>>  	* arm,buffer-size: size of contiguous buffer space for TMC ETR
+>> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c 
+>> b/drivers/hwtracing/coresight/coresight-etm4x.c
+>> index fb0f5f4f3a91..6886b44f6947 100644
+>> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
+>> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+>> @@ -104,6 +104,11 @@ struct etm4_enable_arg {
+>>  	int rc;
+>>  };
+>> 
+>> +static inline bool etm4_can_disable_tupwr(struct device *dev)
+>> +{
+>> +	return fwnode_property_present(dev_fwnode(dev), 
+>> "qcom,tupwr-disable");
+>> +}
+>> +
+> 
+> Please call fwnode_property_present() at initialisation time to set a 
+> new
+> drvdata::skip_power_up variable.  From there just switch on that in
+> etm4_enable/disable_hw().
+> 
+
+Will do, thanks.
+
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
