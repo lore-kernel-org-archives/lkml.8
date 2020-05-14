@@ -2,110 +2,85 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA4CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 504DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63A7C206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA88206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:12:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgENLLj convert rfc822-to-8bit (ORCPT
+        id S1726528AbgENLMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 07:11:39 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:45691 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726010AbgENLLj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 07:11:39 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-265-AUtpnFh1OOqNFr-2xQZocg-1; Thu, 14 May 2020 12:11:35 +0100
-X-MC-Unique: AUtpnFh1OOqNFr-2xQZocg-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 14 May 2020 12:11:34 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 14 May 2020 12:11:34 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Christoph Hellwig' <hch@lst.de>
-CC:     'Joe Perches' <joe@perches.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "Alexey Kuznetsov" <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>,
-        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
-        "cluster-devel@redhat.com" <cluster-devel@redhat.com>,
-        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: RE: remove kernel_setsockopt and kernel_getsockopt
-Thread-Topic: remove kernel_setsockopt and kernel_getsockopt
-Thread-Index: AQHWKU15LJmP4mOGDE2/GHhLszFt9KinP7aQgAAO/ACAABIowP//8l8AgAAaF3A=
-Date:   Thu, 14 May 2020 11:11:34 +0000
-Message-ID: <c2034daa0a23454abb5e5c5714807735@AcuMS.aculab.com>
-References: <20200513062649.2100053-1-hch@lst.de>
- <ecc165c33962d964d518c80de605af632eee0474.camel@perches.com>
- <756758e8f0e34e2e97db470609f5fbba@AcuMS.aculab.com>
- <20200514101838.GA12548@lst.de>
- <a76440f7305c4653877ff2abff499f4e@AcuMS.aculab.com>
- <20200514103450.GA12901@lst.de>
-In-Reply-To: <20200514103450.GA12901@lst.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        Thu, 14 May 2020 07:12:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58224 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726015AbgENLMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 07:12:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 54691B04F;
+        Thu, 14 May 2020 11:12:44 +0000 (UTC)
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] MIPS: Fix builds for VR41xx platforms
+Date:   Thu, 14 May 2020 13:12:34 +0200
+Message-Id: <20200514111235.58459-1-tsbogend@alpha.franken.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: 'Christoph Hellwig'
-> Sent: 14 May 2020 11:35
-> On Thu, May 14, 2020 at 10:26:41AM +0000, David Laight wrote:
-> > From: Christoph Hellwig
-> > > Only for those were we have users, and all those are covered.
-> >
-> > What do we tell all our users when our kernel SCTP code
-> > no longer works?
-> 
-> We only care about in-tree modules, just like for every other interface
-> in the kernel.
+Changing inclusion of Platform files, broke VR41xx platforms. Add Makefile
+to vr41xx directory and traverse subdirs from it.
 
-Even if our management agreed to release the code and the code
-layout matched the kernel guidelines you still wouldn't want
-two large drivers that implement telephony functionality
-for hardware that very few people actually have.
+Fixes: 26bff9eb49201aeb ("MIPS: Only include the platformfile needed")
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+---
+ arch/mips/vr41xx/Makefile | 5 +++++
+ arch/mips/vr41xx/Platform | 3 ---
+ 2 files changed, 5 insertions(+), 3 deletions(-)
+ create mode 100644 arch/mips/vr41xx/Makefile
 
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+diff --git a/arch/mips/vr41xx/Makefile b/arch/mips/vr41xx/Makefile
+new file mode 100644
+index 000000000000..765020d5ee4d
+--- /dev/null
++++ b/arch/mips/vr41xx/Makefile
+@@ -0,0 +1,5 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++obj-$(CONFIG_MACH_VR41XX)	+= common/
++obj-$(CONFIG_CASIO_E55)		+= casio-e55/
++obj-$(CONFIG_IBM_WORKPAD)	+= ibm-workpad/
+diff --git a/arch/mips/vr41xx/Platform b/arch/mips/vr41xx/Platform
+index b6c8d5c08ddb..3f593a3e5678 100644
+--- a/arch/mips/vr41xx/Platform
++++ b/arch/mips/vr41xx/Platform
+@@ -1,19 +1,16 @@
+ #
+ # NEC VR4100 series based machines
+ #
+-platform-$(CONFIG_MACH_VR41XX)	+= vr41xx/common/
+ cflags-$(CONFIG_MACH_VR41XX)	+= -I$(srctree)/arch/mips/include/asm/mach-vr41xx
+ 
+ #
+ # CASIO CASSIPEIA E-55/65 (VR4111)
+ #
+-platform-$(CONFIG_CASIO_E55)	+= vr41xx/casio-e55/
+ load-$(CONFIG_CASIO_E55)	+= 0xffffffff80004000
+ 
+ #
+ # IBM WorkPad z50 (VR4121)
+ #
+-platform-$(CONFIG_IBM_WORKPAD)	+= vr41xx/ibm-workpad/
+ load-$(CONFIG_IBM_WORKPAD)	+= 0xffffffff80004000
+ 
+ #
+-- 
+2.16.4
 
