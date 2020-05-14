@@ -2,114 +2,106 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4946AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB842C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DF342065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4E4D2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:29:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="JHUqTEYZ"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jJHv4dkn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728504AbgENWYS (ORCPT
+        id S1728612AbgENW3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 18:24:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53344 "EHLO
+        Thu, 14 May 2020 18:29:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728468AbgENWYR (ORCPT
+        by vger.kernel.org with ESMTP id S1728482AbgENW3l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 18:24:17 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1C22C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 15:24:17 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id i5so550227qkl.12
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 15:24:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=p6gJR0Sy3H0/XrBYi8uAvN59tWwDOSIM+GynOKet6WU=;
-        b=JHUqTEYZp+HqW1JBxgtnjxP4djlGHQPkmUyH2Wjj5jM9ZprnKhIN8x0G1Kdrwwyfy3
-         1PyW+F6sVeccUBertkUhBvYIgiiX/XngYQ6SzG+6abkuBE7xoaxU1ZpC0sKKDYo0YV8W
-         orOdC1CexbE0pS1bb4xNIbVLo3LEnrFrRF2NYGCVkA4oKOds5T/k2sIfbf9tAelRhVzS
-         vLsDrzLAD2u39msc3xMftQVshOM3NFpcmFH1pryFpeaaQg4wVVLXPMA5KqrLaVSpBv3G
-         /F2+NulO0IAFnv4LRNcljRsce4ozcOy5up8dE4Pi3ok4Hnk6pWgKSmq833UfRxpsgUZr
-         Agjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=p6gJR0Sy3H0/XrBYi8uAvN59tWwDOSIM+GynOKet6WU=;
-        b=GKdj93NNbOZtRp7z7CXKs1srau4qwgYePCdZ6FvpP9qitw2bpX1sjGJfa0v8BATYs6
-         6VLQpz+oPZItdF0wsDwA9yoce1QH7Lq0UZSTFpfV1ngBwiESWO34W1yRJFgT4NiJhvNg
-         cL5dqUaEcJjP/zA2WIn2qS5783Kn8jyyg2Xp6qYE98855UPn2gYhMeFINK3A5HbKl/3t
-         5y8I2E5f0GNzQZU5Tdx5K+x4vrXZALWo3PY6AjfH/eIZ+PJd7q24+RfhjLYgCKUXs7jr
-         nrTM69zqEv5WN/JQ7HvzzZ/ST4q3HzjBI5sf1mrte6jcejG1kS2cx81jWxmRzsX3osRk
-         1Xsw==
-X-Gm-Message-State: AOAM531A5n6voFoxHKYWJPDQM+yVNaHzOCypm48qC+KsyfaPShaJbKuA
-        Xh5hqaGVYhHlXWRGFF9WXaOl7A==
-X-Google-Smtp-Source: ABdhPJwsz6wMRxc1JF8iiotnhQJugDFi5kwnJZK7l9SB8eVt2lnxnmiiN6ML2U+E04O+xdaryGmPuA==
-X-Received: by 2002:a37:8d3:: with SMTP id 202mr594916qki.237.1589495056702;
-        Thu, 14 May 2020 15:24:16 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id g66sm173662qkb.122.2020.05.14.15.24.16
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 May 2020 15:24:16 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jZMH1-0006WK-Mo; Thu, 14 May 2020 19:24:15 -0300
-Date:   Thu, 14 May 2020 19:24:15 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, cohuck@redhat.com
-Subject: Re: [PATCH 0/2] vfio/type1/pci: IOMMU PFNMAP invalidation
-Message-ID: <20200514222415.GA24575@ziepe.ca>
-References: <158947414729.12590.4345248265094886807.stgit@gimli.home>
- <20200514212538.GB449815@xz-x1>
- <20200514161712.14b34984@w520.home>
+        Thu, 14 May 2020 18:29:41 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC56EC061A0C;
+        Thu, 14 May 2020 15:29:40 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49NR6n70DLz9sTD;
+        Fri, 15 May 2020 08:29:37 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589495378;
+        bh=JeunvOBzj/nn3DzNyB3xTBnP1+Ir5YCeDPCehLP/7j0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=jJHv4dknuh4xybfYrlLlbHfRKcaTvQAfjiPv9EcobAtPFMcviu14hy8kNAscycqQc
+         WFIQaNbFbO/PVx8d5HpEwWV2hLjOun9bySAOLaA9enmuqrA5kLuVsN8+aFs0fJvse0
+         SvfN2MdxFAyVdivQLBOHsLefWftQlUHgHgduSBhYOMmCvEz8E59pQ2KsEb3GW2AQwD
+         3TXo+7v/MGYFsJkyDn/3FJoAe3I7BP/6LZuCcS3QdFc+IYh+jW6U1MaT5qkeU5Y60q
+         sJX8h1jzvUceS1lo47EuShPGzSjfY65EnXdcY5g23WlzNjbKpewxz9awef6UHhJx7c
+         9cwfs8CEKI8bQ==
+Date:   Fri, 15 May 2020 08:29:34 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mimi Zohar <zohar@linux.vnet.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: linux-next: Fixes tag needs some work in the integrity-fixes tree
+Message-ID: <20200515082934.7a8ebec5@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200514161712.14b34984@w520.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; boundary="Sig_/gjVtG1tEKHExZV1K3=CuFBa";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 04:17:12PM -0600, Alex Williamson wrote:
+--Sig_/gjVtG1tEKHExZV1K3=CuFBa
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> that much.  I think this would also address Jason's primary concern.
-> It's better to get an IOMMU fault from the user trying to access those
-> mappings than it is to leave them in place.
+Hi all,
 
-Yes, there are few options here - if the pages are available for use
-by the IOMMU and *asynchronously* someone else revokes them, then the
-only way to protect the kernel is to block them from the IOMMUU.
+In commit
 
-For this to be sane the revokation must be under complete control of
-the VFIO user. ie if a user decides to disable MMIO traffic then of
-course the IOMMU should block P2P transfer to the MMIO bar. It is user
-error to have not disabled those transfers in the first place.
+  f438e9598695 ("evm: Fix a small race in init_desc()")
 
-When this is all done inside a guest the whole logic applies. On bare
-metal you might get some AER or crash or MCE. In virtualization you'll
-get an IOMMU fault.
+Fixes tag
 
-> due to the memory enable bit.  If we could remap the range to a kernel
-> page we could maybe avoid the IOMMU fault and maybe even have a crude
-> test for whether any data was written to the page while that mapping
-> was in place (ie. simulating more restricted error handling, though
-> more asynchronous than done at the platform level).  
+  Fixes: 53de3b080d5e: "evm: Check also if *tfm is an error pointer in init=
+_desc()"
 
-I'm not if this makes sense, can't we arrange to directly trap the
-IOMMU failure and route it into qemu if that is what is desired?
+has these problem(s):
 
-I'll try to look at this next week, swamped right now
+  - missing space between the SHA1 and the subject
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
 
-Thanks,
-Jason
+So
+
+Fixes: 53de3b080d5e ("evm: Check also if *tfm is an error pointer in init_d=
+esc()")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/gjVtG1tEKHExZV1K3=CuFBa
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl69xk4ACgkQAVBC80lX
+0Gz8gQf/XSXD6YMSUC4GVhv8Myotbghpumgq0plm4JphQ41inYUn1ZJUi10Uq+93
+p5twZ4HGoldEr1TMUKykK2cyZ2F4H0TqrYv1lFdGR5M3h6UNWNF7Tvx8kAjj5zvK
+fsX4cVNn1pLPOBFaSNdd6kG7Qxop2lZDayZxhdzFwmqAB6geqlFs9uSknMF+eCsU
+qSEMSmqhG79f8b5fcu7iI8uFkngAztixcesl7qZ4cO9xMRUKxv2iVr1p+A8V+FTK
+EP/TY1S2sUvLY8CG1VgrMh8c2jV0rmR/ug3jwNTxW5sCOGk41VwjOGcrf40V5/TD
+W3tEI3c1UMqRUaSsG8bueMu1PeeswQ==
+=Y8ol
+-----END PGP SIGNATURE-----
+
+--Sig_/gjVtG1tEKHExZV1K3=CuFBa--
