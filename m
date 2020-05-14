@@ -4,54 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69933C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1F2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4365D2065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:02:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2592C2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:02:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482927;
-	bh=h4EElps5DA9Uos16bxkRxKXAW9NmSLYfWK3tS5sJhzw=;
+	s=default; t=1589482934;
+	bh=3e7nlEZf4wtghonZNXnreoWirReVHuM9IZL5Wh0xp/8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SN7ydj4tXWofd6ZERsg5pRqw/kh5PJJFota8HCQ4VamR0gkkOUYBEuquxQoUpvf9e
-	 SA92Qds+ZXmAdXzQOJreXbESZhbArYflzBnmQpHuCc+S90ceIqUxVsXPbHwdL5AO1o
-	 u55E8ySmLjPxV/R8oGXomXOYtTHDUGjpNfqaoWPI=
+	b=0QAAd7DWDnNLX2aKJML73VBTiSjkh4OJQBs9VGFC2o0YOh5Oq0V2fk8IExvuOsii4
+	 DKubXjLRrOSZ/n/ZCzzFTuyQMEoyyUALNSjZDB8PxewZJSRWQrFfAZXhVEgR2DkhEA
+	 4pSndEMu9859BsAcX8PXaDa9VsYc+0FhdSahnOpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729910AbgENTCG (ORCPT
+        id S1729983AbgENTCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:02:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55794 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:02:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729333AbgENSzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:55:16 -0400
+        id S1729318AbgENSzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:55:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA8D82076A;
-        Thu, 14 May 2020 18:55:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A78820767;
+        Thu, 14 May 2020 18:55:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482516;
-        bh=h4EElps5DA9Uos16bxkRxKXAW9NmSLYfWK3tS5sJhzw=;
+        s=default; t=1589482510;
+        bh=3e7nlEZf4wtghonZNXnreoWirReVHuM9IZL5Wh0xp/8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xDkoKVbeCKMc72kXP9Bha1JLP7f+hT+wmacBvo15p4CvtZSvRPjrhUSsNncpSS2N6
-         K7Js71dzrfV+VHUwby3pEGIDUIy3YAF/lKN4FPZ0eU1XdGOHBTQDTLf8NRkWi5dV9d
-         nvQh6yKKu4fqtJvxiZM6TWRZxJAgnIcjaAcR0GfQ=
+        b=1B26N3A77WedwB3CGNueqSweF2DYC/duhb/TsJVTIRoaZK7/4yORPHsmdy4QkDBrC
+         IM4A8WQ1DXDfohwfksV2q7lEgxa7+1NWpByxuzcKJ1Z06N0WF7ueTa47Ds1LnHIA+a
+         kAReV7mNiAreB9Pumbsi1JIlqQrgkYLk5/GNc3F4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jann Horn <jannh@google.com>, Miroslav Benes <mbenes@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Dave Jones <dsj@fb.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Vegard Nossum <vegard.nossum@oracle.com>,
+        Joe Mario <jmario@redhat.com>, Miroslav Benes <mbenes@suse.cz>,
         Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Jann Horn <jannh@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 13/39] x86/entry/64: Fix unwind hints in rewind_stack_do_exit()
-Date:   Thu, 14 May 2020 14:54:30 -0400
-Message-Id: <20200514185456.21060-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 10/39] objtool: Fix stack offset tracking for indirect CFAs
+Date:   Thu, 14 May 2020 14:54:27 -0400
+Message-Id: <20200514185456.21060-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185456.21060-1-sashal@kernel.org>
 References: <20200514185456.21060-1-sashal@kernel.org>
@@ -64,43 +67,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[ Upstream commit f977df7b7ca45a4ac4b66d30a8931d0434c394b1 ]
+[ Upstream commit d8dd25a461e4eec7190cb9d66616aceacc5110ad ]
 
-The LEAQ instruction in rewind_stack_do_exit() moves the stack pointer
-directly below the pt_regs at the top of the task stack before calling
-do_exit(). Tell the unwinder to expect pt_regs.
+When the current frame address (CFA) is stored on the stack (i.e.,
+cfa->base == CFI_SP_INDIRECT), objtool neglects to adjust the stack
+offset when there are subsequent pushes or pops.  This results in bad
+ORC data at the end of the ENTER_IRQ_STACK macro, when it puts the
+previous stack pointer on the stack and does a subsequent push.
 
-Fixes: 8c1f75587a18 ("x86/entry/64: Add unwind hint annotations")
+This fixes the following unwinder warning:
+
+  WARNING: can't dereference registers at 00000000f0a6bdba for ip interrupt_entry+0x9f/0xa0
+
+Fixes: 627fce14809b ("objtool: Add ORC unwind table generation")
+Reported-by: Vince Weaver <vincent.weaver@maine.edu>
+Reported-by: Dave Jones <dsj@fb.com>
+Reported-by: Steven Rostedt <rostedt@goodmis.org>
+Reported-by: Vegard Nossum <vegard.nossum@oracle.com>
+Reported-by: Joe Mario <jmario@redhat.com>
 Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: Jann Horn <jannh@google.com>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Jones <dsj@fb.com>
+Cc: Jann Horn <jannh@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lore.kernel.org/r/68c33e17ae5963854916a46f522624f8e1d264f2.1587808742.git.jpoimboe@redhat.com
+Link: https://lore.kernel.org/r/853d5d691b29e250333332f09b8e27410b2d9924.1587808742.git.jpoimboe@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/entry/entry_64.S | 2 +-
+ tools/objtool/check.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index d4d72c84d9eb4..f24974bddfc96 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1649,7 +1649,7 @@ ENTRY(rewind_stack_do_exit)
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 04fc04b4ab67e..5685fe2c7a7d3 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -1291,7 +1291,7 @@ static int update_insn_state_regs(struct instruction *insn, struct insn_state *s
+ 	struct cfi_reg *cfa = &state->cfa;
+ 	struct stack_op *op = &insn->stack_op;
  
- 	movq	PER_CPU_VAR(cpu_current_top_of_stack), %rax
- 	leaq	-PTREGS_SIZE(%rax), %rsp
--	UNWIND_HINT_FUNC sp_offset=PTREGS_SIZE
-+	UNWIND_HINT_REGS
+-	if (cfa->base != CFI_SP)
++	if (cfa->base != CFI_SP && cfa->base != CFI_SP_INDIRECT)
+ 		return 0;
  
- 	call	do_exit
- END(rewind_stack_do_exit)
+ 	/* push */
 -- 
 2.20.1
 
