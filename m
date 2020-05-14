@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA11EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BD7C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 814B620727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:58:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C140420727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:58:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482725;
-	bh=D7ZT3DtQwy5V14UoU3ySOFYsTs2UdOQ7++/hr78Jk/s=;
+	s=default; t=1589482734;
+	bh=V35YNjbOdGZXgdd3JuMWahHuUK6bn++dc51WjtobLbY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=caXC/VVUwnHWVVb573L4v0JhFgC0lrvOQeuzXz7GX00MidQJ7N7UXhFyAhUn2aTvv
-	 xHUErwuxAmmmsXYV57Rl6DcGAkAiUf5eGQn06/T9AWrIsGTLhEgTDgWDiIWn5cAR1+
-	 PUd277r24TmnRdNwpfLxxjs+v6DC9YBkeSQCShCo=
+	b=1pZFa702Cd98ewo9uvj3SV4ryxm4RWlE/wWXj2emzhoTBA3dIFWw9AyzqbwVK00Pe
+	 wwYL1fF5YdcikI3fZYKj6llBO32nAcn+jk+tqDWszxpPVdAZcZZ/FjBH+KGN+GL4po
+	 ej5OjMPmKNBTTcArbLIpFyEkk0jwFO3WJbBRL3pY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729911AbgENS6o (ORCPT
+        id S1729430AbgENS6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:58:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57292 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:58:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728410AbgENS4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:56:22 -0400
+        id S1728373AbgENS4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:56:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B92120727;
-        Thu, 14 May 2020 18:56:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED01920727;
+        Thu, 14 May 2020 18:56:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482581;
-        bh=D7ZT3DtQwy5V14UoU3ySOFYsTs2UdOQ7++/hr78Jk/s=;
+        s=default; t=1589482578;
+        bh=V35YNjbOdGZXgdd3JuMWahHuUK6bn++dc51WjtobLbY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wwdk9y51f+F/NHXTtchEs4ucn6vWeZketWsgphg4+TH//2TMzF/hbwtlEBtPFj2ld
-         i/wxn9btVKGWOUuqhw1UFKImZR9FBXP5iKcOrl5QYL3BtqQureEFBvWRZv6KuPVINI
-         0l+yo1HXEeW0bBp5AAFo1AclHjghi1I1P/pbtz/E=
+        b=qA1aQWW3K7+CkABAAoNjjp9126LkpQkIz7mmqcejdUWCd5aLX7N6TY4GTWEwy5FQP
+         RIJQPpm5WjOVnXbBF2dBoIHBrZoak/b+yktLzCah5nhMtPQ7nrYZxxcSQXgwBpF2AR
+         cwdpGdeWh52T8fD34HL7BCNQN/BAosIvqi1RgnF0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 25/27] platform/x86: asus-nb-wmi: Do not load on Asus T100TA and T200TA
-Date:   Thu, 14 May 2020 14:55:48 -0400
-Message-Id: <20200514185550.21462-25-sashal@kernel.org>
+Cc:     Wu Bo <wubo40@huawei.com>, "Yan, Zheng" <zyan@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 22/27] ceph: fix double unlock in handle_cap_export()
+Date:   Thu, 14 May 2020 14:55:45 -0400
+Message-Id: <20200514185550.21462-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185550.21462-1-sashal@kernel.org>
 References: <20200514185550.21462-1-sashal@kernel.org>
@@ -61,70 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Wu Bo <wubo40@huawei.com>
 
-[ Upstream commit 3bd12da7f50b8bc191fcb3bab1f55c582234df59 ]
+[ Upstream commit 4d8e28ff3106b093d98bfd2eceb9b430c70a8758 ]
 
-asus-nb-wmi does not add any extra functionality on these Asus
-Transformer books. They have detachable keyboards, so the hotkeys are
-send through a HID device (and handled by the hid-asus driver) and also
-the rfkill functionality is not used on these devices.
+If the ceph_mdsc_open_export_target_session() return fails, it will
+do a "goto retry", but the session mutex has already been unlocked.
+Re-lock the mutex in that case to ensure that we don't unlock it
+twice.
 
-Besides not adding any extra functionality, initializing the WMI interface
-on these devices actually has a negative side-effect. For some reason
-the \_SB.ATKD.INIT() function which asus_wmi_platform_init() calls drives
-GPO2 (INT33FC:02) pin 8, which is connected to the front facing webcam LED,
-high and there is no (WMI or other) interface to drive this low again
-causing the LED to be permanently on, even during suspend.
-
-This commit adds a blacklist of DMI system_ids on which not to load the
-asus-nb-wmi and adds these Transformer books to this list. This fixes
-the webcam LED being permanently on under Linux.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Wu Bo <wubo40@huawei.com>
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/asus-nb-wmi.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ fs/ceph/caps.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 0fd7e40b86a0d..8137aa3437068 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -561,9 +561,33 @@ static struct asus_wmi_driver asus_nb_wmi_driver = {
- 	.detect_quirks = asus_nb_wmi_quirks,
- };
- 
-+static const struct dmi_system_id asus_nb_wmi_blacklist[] __initconst = {
-+	{
-+		/*
-+		 * asus-nb-wm adds no functionality. The T100TA has a detachable
-+		 * USB kbd, so no hotkeys and it has no WMI rfkill; and loading
-+		 * asus-nb-wm causes the camera LED to turn and _stay_ on.
-+		 */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100TA"),
-+		},
-+	},
-+	{
-+		/* The Asus T200TA has the same issue as the T100TA */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T200TA"),
-+		},
-+	},
-+	{} /* Terminating entry */
-+};
- 
- static int __init asus_nb_wmi_init(void)
- {
-+	if (dmi_check_system(asus_nb_wmi_blacklist))
-+		return -ENODEV;
-+
- 	return asus_wmi_register_driver(&asus_nb_wmi_driver);
- }
+diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+index 617e9ae67f506..e11aacb35d6b5 100644
+--- a/fs/ceph/caps.c
++++ b/fs/ceph/caps.c
+@@ -3394,6 +3394,7 @@ static void handle_cap_export(struct inode *inode, struct ceph_mds_caps *ex,
+ 		WARN_ON(1);
+ 		tsession = NULL;
+ 		target = -1;
++		mutex_lock(&session->s_mutex);
+ 	}
+ 	goto retry;
  
 -- 
 2.20.1
