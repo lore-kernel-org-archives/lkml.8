@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23697C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A16C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0494C207D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBD0220767
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482493;
-	bh=bsYcT8JiPDhIBsZuaVXAJO1Imuu7VGtgX6r0kBxOEec=;
+	s=default; t=1589482498;
+	bh=8KlB2x7zdgWe+41cQlvrcNbGg18v0TILNkAfbnWJb+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fPNwlsARBnT0poYpCSeC5Zg7cK42zSu3R6zouDMQxnMxwO3mGORCB3F3+yEo9seWT
-	 zznf8y6aNqnCMakFFcjPuja+7748wxd55taOd2AkaFN5FR+BYc7MbrnMBEAZ7Cn6+R
-	 jSl1f12cpBVDALgrp46WTcE+Z7O39vybiQ0cd1aE=
+	b=gonr7EwelurpttGkACdvnZLdYizd0wMD0ZSvWpuW5Vf2h8T4jfTjfVKREpOLdMrYE
+	 hGM3KA5c+Vn6kKQYlC+F6ecndZo6jKeOlEpUitD3FermI1MnJyVfB1fAPfZiHBRs2M
+	 7ec6zrvGX1GctinT9F4vSsVBykjzgNCLvcvou2xc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729233AbgENSyv (ORCPT
+        id S1729256AbgENSy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:54:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54652 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:54:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729096AbgENSyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:54:33 -0400
+        id S1729159AbgENSyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:54:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B012B20767;
-        Thu, 14 May 2020 18:54:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35FEC207C3;
+        Thu, 14 May 2020 18:54:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482472;
-        bh=bsYcT8JiPDhIBsZuaVXAJO1Imuu7VGtgX6r0kBxOEec=;
+        s=default; t=1589482481;
+        bh=8KlB2x7zdgWe+41cQlvrcNbGg18v0TILNkAfbnWJb+g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Asf0qUbOsaZdj3K8gv0F7qNB+mMMIe/xobFdEyd51l555bbWJgmWXCZZgl+VI1O6h
-         NgbOOhtKowEbYSmHBheU2moFTySimws6mbjaYtQBgCxLWzcRjAEIUoCYKyP4MUJruG
-         LKIZXV8dkQLGwmD148f6U7TDLy+z1fG3JzMBp49A=
+        b=mDG88Ryybolc8kJMG69COUJ7S2JuOAF0zuYQCS6gn4Zr8S2X6/nwCrbIP7ZvKi25k
+         Q+S1gtDg7E895N54iGogcghYuUtwn2KuR4ozUe3Legpzon42X2IZdzQ18osDiaB2D6
+         zVsS3TelbDOu8ysa1St8iHr7F70jCLsNhEbfCmWY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 15/31] scsi: ibmvscsi: Fix WARN_ON during event pool release
-Date:   Thu, 14 May 2020 14:53:57 -0400
-Message-Id: <20200514185413.20755-15-sashal@kernel.org>
+Cc:     Yoshiyuki Kurauchi <ahochauwaaaaa@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        osmocom-net-gprs@lists.osmocom.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 21/31] gtp: set NLM_F_MULTI flag in gtp_genl_dump_pdp()
+Date:   Thu, 14 May 2020 14:54:03 -0400
+Message-Id: <20200514185413.20755-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185413.20755-1-sashal@kernel.org>
 References: <20200514185413.20755-1-sashal@kernel.org>
@@ -60,92 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyrel Datwyler <tyreld@linux.ibm.com>
+From: Yoshiyuki Kurauchi <ahochauwaaaaa@gmail.com>
 
-[ Upstream commit b36522150e5b85045f868768d46fbaaa034174b2 ]
+[ Upstream commit 846c68f7f1ac82c797a2f1db3344a2966c0fe2e1 ]
 
-While removing an ibmvscsi client adapter a WARN_ON like the following is
-seen in the kernel log:
+In drivers/net/gtp.c, gtp_genl_dump_pdp() should set NLM_F_MULTI
+flag since it returns multipart message.
+This patch adds a new arg "flags" in gtp_genl_fill_info() so that
+flags can be set by the callers.
 
-drmgr: drmgr: -r -c slot -s U9080.M9S.783AEC8-V11-C11 -w 5 -d 1
-WARNING: CPU: 9 PID: 24062 at ../kernel/dma/mapping.c:311 dma_free_attrs+0x78/0x110
-Supported: No, Unreleased kernel
-CPU: 9 PID: 24062 Comm: drmgr Kdump: loaded Tainted: G               X 5.3.18-12-default
-NIP:  c0000000001fa758 LR: c0000000001fa744 CTR: c0000000001fa6e0
-REGS: c0000002173375d0 TRAP: 0700   Tainted: G               X (5.3.18-12-default)
-MSR:  8000000000029033 <SF,EE,ME,IR,DR,RI,LE>  CR: 28088282  XER: 20000000
-CFAR: c0000000001fbf0c IRQMASK: 1
-GPR00: c0000000001fa744 c000000217337860 c00000000161ab00 0000000000000000
-GPR04: 0000000000000000 c000011e12250000 0000000018010000 0000000000000000
-GPR08: 0000000000000000 0000000000000001 0000000000000001 c0080000190f4fa8
-GPR12: c0000000001fa6e0 c000000007fc2a00 0000000000000000 0000000000000000
-GPR16: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
-GPR20: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
-GPR24: 000000011420e310 0000000000000000 0000000000000000 0000000018010000
-GPR28: c00000000159de50 c000011e12250000 0000000000006600 c000011e5c994848
-NIP [c0000000001fa758] dma_free_attrs+0x78/0x110
-LR [c0000000001fa744] dma_free_attrs+0x64/0x110
-Call Trace:
-[c000000217337860] [000000011420e310] 0x11420e310 (unreliable)
-[c0000002173378b0] [c0080000190f0280] release_event_pool+0xd8/0x120 [ibmvscsi]
-[c000000217337930] [c0080000190f3f74] ibmvscsi_remove+0x6c/0x160 [ibmvscsi]
-[c000000217337960] [c0000000000f3cac] vio_bus_remove+0x5c/0x100
-[c0000002173379a0] [c00000000087a0a4] device_release_driver_internal+0x154/0x280
-[c0000002173379e0] [c0000000008777cc] bus_remove_device+0x11c/0x220
-[c000000217337a60] [c000000000870fc4] device_del+0x1c4/0x470
-[c000000217337b10] [c0000000008712a0] device_unregister+0x30/0xa0
-[c000000217337b80] [c0000000000f39ec] vio_unregister_device+0x2c/0x60
-[c000000217337bb0] [c00800001a1d0964] dlpar_remove_slot+0x14c/0x250 [rpadlpar_io]
-[c000000217337c50] [c00800001a1d0bcc] remove_slot_store+0xa4/0x110 [rpadlpar_io]
-[c000000217337cd0] [c000000000c091a0] kobj_attr_store+0x30/0x50
-[c000000217337cf0] [c00000000057c934] sysfs_kf_write+0x64/0x90
-[c000000217337d10] [c00000000057be10] kernfs_fop_write+0x1b0/0x290
-[c000000217337d60] [c000000000488c4c] __vfs_write+0x3c/0x70
-[c000000217337d80] [c00000000048c648] vfs_write+0xd8/0x260
-[c000000217337dd0] [c00000000048ca8c] ksys_write+0xdc/0x130
-[c000000217337e20] [c00000000000b488] system_call+0x5c/0x70
-Instruction dump:
-7c840074 f8010010 f821ffb1 20840040 eb830218 7c8407b4 48002019 60000000
-2fa30000 409e003c 892d0988 792907e0 <0b090000> 2fbd0000 419e0028 2fbc0000
----[ end trace 5955b3c0cc079942 ]---
-rpadlpar_io: slot U9080.M9S.783AEC8-V11-C11 removed
-
-This is tripped as a result of irqs being disabled during the call to
-dma_free_coherent() by release_event_pool(). At this point in the code path
-we have quiesced the adapter and it is overly paranoid to be holding the
-host lock.
-
-[mkp: fixed build warning reported by sfr]
-
-Link: https://lore.kernel.org/r/1588027793-17952-1-git-send-email-tyreld@linux.ibm.com
-Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Yoshiyuki Kurauchi <ahochauwaaaaa@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ibmvscsi/ibmvscsi.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/net/gtp.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/ibmvscsi/ibmvscsi.c b/drivers/scsi/ibmvscsi/ibmvscsi.c
-index e60822f07653e..b99ded6b9e0bb 100644
---- a/drivers/scsi/ibmvscsi/ibmvscsi.c
-+++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
-@@ -2296,16 +2296,12 @@ static int ibmvscsi_probe(struct vio_dev *vdev, const struct vio_device_id *id)
- static int ibmvscsi_remove(struct vio_dev *vdev)
+diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
+index eab9984f73a88..d73850ebb671f 100644
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -1177,11 +1177,11 @@ static int gtp_genl_del_pdp(struct sk_buff *skb, struct genl_info *info)
+ static struct genl_family gtp_genl_family;
+ 
+ static int gtp_genl_fill_info(struct sk_buff *skb, u32 snd_portid, u32 snd_seq,
+-			      u32 type, struct pdp_ctx *pctx)
++			      int flags, u32 type, struct pdp_ctx *pctx)
  {
- 	struct ibmvscsi_host_data *hostdata = dev_get_drvdata(&vdev->dev);
--	unsigned long flags;
+ 	void *genlh;
  
- 	srp_remove_host(hostdata->host);
- 	scsi_remove_host(hostdata->host);
+-	genlh = genlmsg_put(skb, snd_portid, snd_seq, &gtp_genl_family, 0,
++	genlh = genlmsg_put(skb, snd_portid, snd_seq, &gtp_genl_family, flags,
+ 			    type);
+ 	if (genlh == NULL)
+ 		goto nlmsg_failure;
+@@ -1235,8 +1235,8 @@ static int gtp_genl_get_pdp(struct sk_buff *skb, struct genl_info *info)
+ 		goto err_unlock;
+ 	}
  
- 	purge_requests(hostdata, DID_ERROR);
--
--	spin_lock_irqsave(hostdata->host->host_lock, flags);
- 	release_event_pool(&hostdata->pool, hostdata);
--	spin_unlock_irqrestore(hostdata->host->host_lock, flags);
+-	err = gtp_genl_fill_info(skb2, NETLINK_CB(skb).portid,
+-				 info->snd_seq, info->nlhdr->nlmsg_type, pctx);
++	err = gtp_genl_fill_info(skb2, NETLINK_CB(skb).portid, info->snd_seq,
++				 0, info->nlhdr->nlmsg_type, pctx);
+ 	if (err < 0)
+ 		goto err_unlock_free;
  
- 	ibmvscsi_release_crq_queue(&hostdata->queue, hostdata,
- 					max_events);
+@@ -1279,6 +1279,7 @@ static int gtp_genl_dump_pdp(struct sk_buff *skb,
+ 				    gtp_genl_fill_info(skb,
+ 					    NETLINK_CB(cb->skb).portid,
+ 					    cb->nlh->nlmsg_seq,
++					    NLM_F_MULTI,
+ 					    cb->nlh->nlmsg_type, pctx)) {
+ 					cb->args[0] = i;
+ 					cb->args[1] = j;
 -- 
 2.20.1
 
