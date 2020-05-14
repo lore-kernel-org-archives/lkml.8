@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F7CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7921E20643
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D07220675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483387;
-	bh=Vl6X23xBoHqMoNR2/6ScvTgq2jadKK1uO7HHSis+OX4=;
+	s=default; t=1589483391;
+	bh=XvvQGQi6rNHp7yIor6r2pjt4T0oppQ/D8dKBL0zMt+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PW/Q6wHkfUZisM3C1YpLVAH02dFuO1CaDpLEbuF57eKMKEa1GpziV5BJfK4TkdCmT
-	 Z/9293Vomilj2qLgem1vu3zs7hySd0lQc/7Ugb6+FVL7xoOsyPapZF+Cda7QIIRO92
-	 MfqlV3YphbZF4sL6F0+leIeWYHae0DEQgKHuchz0=
+	b=MEG4ijRy4glkhkK8DzNSa+yTgXAXiIlZZhUYxxp0l7d10zeTUjFScXffV/nRv0pFQ
+	 IkQ6tJXsZO9GLjw3vt+lvoI8XRj9T7fpNejxq/AqC+1+FkZP/a2OrXD0drlvsmevCA
+	 KfuABNeIWX81/oxJys+hvG0F6FtLVIZalUrxny9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgENTJq (ORCPT
+        id S1729860AbgENTJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:09:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51040 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:09:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728432AbgENSwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:52:43 -0400
+        id S1728419AbgENSwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:52:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0EA4207C3;
-        Thu, 14 May 2020 18:52:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA6F32074A;
+        Thu, 14 May 2020 18:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482363;
-        bh=Vl6X23xBoHqMoNR2/6ScvTgq2jadKK1uO7HHSis+OX4=;
+        s=default; t=1589482362;
+        bh=XvvQGQi6rNHp7yIor6r2pjt4T0oppQ/D8dKBL0zMt+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bzh/9U/bFWZ/XuSTihY7yN6xp5hQzC/t+Ghbd1xLBXHNEdnO2HSA1k9AO3Dm59Jv3
-         3TitTuNB4dZ5wnIA4VqwiMkxH+iBXUWFRyrf6fbIB4hP63fyhw+46tqSOyYjsmXS2h
-         fDsVDD6CQR/itRpuS3Cb7hG92qrDhz22paknGx9E=
+        b=X6mICxrbQF4fiMOqRgcKfKf9FCeaSUwWBWqaHmNst4gE4V2LZXIIa6gJyNKwsbFBq
+         T+TyxNtC7smtm27TevAYNw1gWo+7BnXFna+X3fleQ5IHAg0Pfiv0u4SeG7KZTEH+lF
+         p2g5rO+hLOVDEKu+XPOVJZzbMP7reSG9h5PdDUHE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Joerg Roedel <jroedel@suse.de>, Qian Cai <cai@lca.pw>,
         Sasha Levin <sashal@kernel.org>,
         iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.6 43/62] iommu/amd: Update Device Table in increase_address_space()
-Date:   Thu, 14 May 2020 14:51:28 -0400
-Message-Id: <20200514185147.19716-43-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 42/62] iommu/amd: Call domain_flush_complete() in update_domain()
+Date:   Thu, 14 May 2020 14:51:27 -0400
+Message-Id: <20200514185147.19716-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185147.19716-1-sashal@kernel.org>
 References: <20200514185147.19716-1-sashal@kernel.org>
@@ -61,138 +61,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-[ Upstream commit 19c6978fba68a2cdedee7d55fb8c3063d47982d9 ]
+[ Upstream commit f44a4d7e4f1cdef73c90b1dc749c4d8a7372a8eb ]
 
-The Device Table needs to be updated before the new page-table root
-can be published in domain->pt_root. Otherwise a concurrent call to
-fetch_pte might fetch a PTE which is not reachable through the Device
-Table Entry.
+The update_domain() function is expected to also inform the hardware
+about domain changes. This needs a COMPLETION_WAIT command to be sent
+to all IOMMUs which use the domain.
 
-Fixes: 92d420ec028d ("iommu/amd: Relax locking in dma_ops path")
-Reported-by: Qian Cai <cai@lca.pw>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Tested-by: Qian Cai <cai@lca.pw>
-Link: https://lore.kernel.org/r/20200504125413.16798-5-joro@8bytes.org
+Link: https://lore.kernel.org/r/20200504125413.16798-4-joro@8bytes.org
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu.c | 49 ++++++++++++++++++++++++++++-----------
- 1 file changed, 36 insertions(+), 13 deletions(-)
+ drivers/iommu/amd_iommu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index d2499c86d395c..2ae1daac888a0 100644
+index 68da484a69dd0..d2499c86d395c 100644
 --- a/drivers/iommu/amd_iommu.c
 +++ b/drivers/iommu/amd_iommu.c
-@@ -101,6 +101,8 @@ struct kmem_cache *amd_iommu_irq_cache;
- static void update_domain(struct protection_domain *domain);
- static int protection_domain_init(struct protection_domain *domain);
- static void detach_device(struct device *dev);
-+static void update_and_flush_device_table(struct protection_domain *domain,
-+					  struct domain_pgtable *pgtable);
+@@ -2321,6 +2321,7 @@ static void update_domain(struct protection_domain *domain)
  
- /****************************************************************************
-  *
-@@ -1461,8 +1463,16 @@ static bool increase_address_space(struct protection_domain *domain,
- 
- 	*pte = PM_LEVEL_PDE(pgtable.mode, iommu_virt_to_phys(pgtable.root));
- 
--	root = amd_iommu_domain_encode_pgtable(pte, pgtable.mode + 1);
-+	pgtable.root  = pte;
-+	pgtable.mode += 1;
-+	update_and_flush_device_table(domain, &pgtable);
-+	domain_flush_complete(domain);
- 
-+	/*
-+	 * Device Table needs to be updated and flushed before the new root can
-+	 * be published.
-+	 */
-+	root = amd_iommu_domain_encode_pgtable(pte, pgtable.mode);
- 	atomic64_set(&domain->pt_root, root);
- 
- 	ret = true;
-@@ -1893,19 +1903,17 @@ static bool dma_ops_domain(struct protection_domain *domain)
- }
- 
- static void set_dte_entry(u16 devid, struct protection_domain *domain,
-+			  struct domain_pgtable *pgtable,
- 			  bool ats, bool ppr)
- {
--	struct domain_pgtable pgtable;
- 	u64 pte_root = 0;
- 	u64 flags = 0;
- 	u32 old_domid;
- 
--	amd_iommu_domain_get_pgtable(domain, &pgtable);
-+	if (pgtable->mode != PAGE_MODE_NONE)
-+		pte_root = iommu_virt_to_phys(pgtable->root);
- 
--	if (pgtable.mode != PAGE_MODE_NONE)
--		pte_root = iommu_virt_to_phys(pgtable.root);
--
--	pte_root |= (pgtable.mode & DEV_ENTRY_MODE_MASK)
-+	pte_root |= (pgtable->mode & DEV_ENTRY_MODE_MASK)
- 		    << DEV_ENTRY_MODE_SHIFT;
- 	pte_root |= DTE_FLAG_IR | DTE_FLAG_IW | DTE_FLAG_V | DTE_FLAG_TV;
- 
-@@ -1978,6 +1986,7 @@ static void clear_dte_entry(u16 devid)
- static void do_attach(struct iommu_dev_data *dev_data,
- 		      struct protection_domain *domain)
- {
-+	struct domain_pgtable pgtable;
- 	struct amd_iommu *iommu;
- 	bool ats;
- 
-@@ -1993,7 +2002,9 @@ static void do_attach(struct iommu_dev_data *dev_data,
- 	domain->dev_cnt                 += 1;
- 
- 	/* Update device table */
--	set_dte_entry(dev_data->devid, domain, ats, dev_data->iommu_v2);
-+	amd_iommu_domain_get_pgtable(domain, &pgtable);
-+	set_dte_entry(dev_data->devid, domain, &pgtable,
-+		      ats, dev_data->iommu_v2);
- 	clone_aliases(dev_data->pdev);
- 
- 	device_flush_dte(dev_data);
-@@ -2304,22 +2315,34 @@ static int amd_iommu_domain_get_attr(struct iommu_domain *domain,
-  *
-  *****************************************************************************/
- 
--static void update_device_table(struct protection_domain *domain)
-+static void update_device_table(struct protection_domain *domain,
-+				struct domain_pgtable *pgtable)
- {
- 	struct iommu_dev_data *dev_data;
- 
- 	list_for_each_entry(dev_data, &domain->dev_list, list) {
--		set_dte_entry(dev_data->devid, domain, dev_data->ats.enabled,
--			      dev_data->iommu_v2);
-+		set_dte_entry(dev_data->devid, domain, pgtable,
-+			      dev_data->ats.enabled, dev_data->iommu_v2);
- 		clone_aliases(dev_data->pdev);
- 	}
- }
- 
-+static void update_and_flush_device_table(struct protection_domain *domain,
-+					  struct domain_pgtable *pgtable)
-+{
-+	update_device_table(domain, pgtable);
-+	domain_flush_devices(domain);
-+}
-+
- static void update_domain(struct protection_domain *domain)
- {
--	update_device_table(domain);
-+	struct domain_pgtable pgtable;
- 
--	domain_flush_devices(domain);
-+	/* Update device table */
-+	amd_iommu_domain_get_pgtable(domain, &pgtable);
-+	update_and_flush_device_table(domain, &pgtable);
-+
-+	/* Flush domain TLB(s) and wait for completion */
+ 	domain_flush_devices(domain);
  	domain_flush_tlb_pde(domain);
- 	domain_flush_complete(domain);
++	domain_flush_complete(domain);
  }
+ 
+ int __init amd_iommu_init_api(void)
 -- 
 2.20.1
 
