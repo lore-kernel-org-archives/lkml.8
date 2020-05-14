@@ -4,55 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C29C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B385BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 527CF20727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E63C2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:00:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482807;
-	bh=IdxDJ4cILLHt9n5npaAJu5uSTm4NIboZYU9S0usFxPI=;
+	s=default; t=1589482820;
+	bh=+LKZG9LSuFijEBrU+nF23DPHydaXVUmj3LMpIiofhBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mHIFp7glrx49wVdY6yCDiQrcly/DbWJg6GlFPp+WPaJqWPESKaotp0xEh2SR/tSlq
-	 7pG+tq84T++0xHTzvE+BGmszSxxVH+Z6v23USjzHWPj7vHQtmprokWBJOcvf4woMR1
-	 aozPB4bwc5rVaWhIQFXnTATB0RTYb9PWOYXANfdA=
+	b=k6VKXhGoW7tU8MxgvqNX+V7KXQdlNOP0+rwtM6UZA4/uQXVyQChgt1GSLp3CI8GmL
+	 nE9e87tBZkTI642GlMUicUEhfszUk+i/hrEaS7JDgE1Z9Wprzydc76Jdoz0SUJVmqp
+	 FkqEgcFx+ju9pzRX0hg9vZFgyfphjiVOFV5zwaNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729937AbgENTAG (ORCPT
+        id S1729501AbgENSzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:00:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56790 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:55:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729541AbgENSz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:55:59 -0400
+        id S1729415AbgENSzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:55:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5ABBB207F9;
-        Thu, 14 May 2020 18:55:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A27B20727;
+        Thu, 14 May 2020 18:55:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482558;
-        bh=IdxDJ4cILLHt9n5npaAJu5uSTm4NIboZYU9S0usFxPI=;
+        s=default; t=1589482535;
+        bh=+LKZG9LSuFijEBrU+nF23DPHydaXVUmj3LMpIiofhBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rDJNivmpaI9nH0Eqh1NA92+M3cpyXgLRsZAJ2++p7N7MWTAWMmL2ya50f9tghtIAQ
-         NhWMN19HiQTPUFCEL1/BoPscyu/a6OyRIyKYtCgzhEhXIK7Bt3CgLvn+8MtVzvZDqz
-         BsK9R7Kc5mhFNgQEikWv2knXEdFS0NWD5lbIpUaA=
+        b=OGCBC2KzsfCOFNiD39oH7PP6F2gJckV3NM0AAJk6fslQfwSNo3xuOANWWZJJnCnil
+         ZvKGHmSEiUZRfLJ5uZ53Y/ksyb/IZsNvb3FsZjMx7DNMkcwwEUEdvx3zzymhLTrTV7
+         U6Q5oPLOCi0jhe3TdTas5aeVgUk1e5asy3oPncnw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>,
-        b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 06/27] batman-adv: Fix refcnt leak in batadv_store_throughput_override
-Date:   Thu, 14 May 2020 14:55:29 -0400
-Message-Id: <20200514185550.21462-6-sashal@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Leon Romanovsky <leon@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 29/39] x86/apic: Move TSC deadline timer debug printk
+Date:   Thu, 14 May 2020 14:54:46 -0400
+Message-Id: <20200514185456.21060-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200514185550.21462-1-sashal@kernel.org>
-References: <20200514185550.21462-1-sashal@kernel.org>
+In-Reply-To: <20200514185456.21060-1-sashal@kernel.org>
+References: <20200514185456.21060-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,48 +59,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit 6107c5da0fca8b50b4d3215e94d619d38cc4a18c ]
+[ Upstream commit c84cb3735fd53c91101ccdb191f2e3331a9262cb ]
 
-batadv_show_throughput_override() invokes batadv_hardif_get_by_netdev(),
-which gets a batadv_hard_iface object from net_dev with increased refcnt
-and its reference is assigned to a local pointer 'hard_iface'.
+Leon reported that the printk_once() in __setup_APIC_LVTT() triggers a
+lockdep splat due to a lock order violation between hrtimer_base::lock and
+console_sem, when the 'once' condition is reset via
+/sys/kernel/debug/clear_warn_once after boot.
 
-When batadv_store_throughput_override() returns, "hard_iface" becomes
-invalid, so the refcount should be decreased to keep refcount balanced.
+The initial printk cannot trigger this because that happens during boot
+when the local APIC timer is set up on the boot CPU.
 
-The issue happens in one error path of
-batadv_store_throughput_override(). When batadv_parse_throughput()
-returns NULL, the refcnt increased by batadv_hardif_get_by_netdev() is
-not decreased, causing a refcnt leak.
+Prevent it by moving the printk to a place which is guaranteed to be only
+called once during boot.
 
-Fix this issue by jumping to "out" label when batadv_parse_throughput()
-returns NULL.
+Mark the deadline timer check related functions and data __init while at
+it.
 
-Fixes: 0b5ecc6811bd ("batman-adv: add throughput override attribute to hard_ifaces")
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Reported-by: Leon Romanovsky <leon@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/87y2qhoshi.fsf@nanos.tec.linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/sysfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/apic/apic.c | 27 ++++++++++++++-------------
+ 1 file changed, 14 insertions(+), 13 deletions(-)
 
-diff --git a/net/batman-adv/sysfs.c b/net/batman-adv/sysfs.c
-index d3fb5396f9473..121e9e7d28cc5 100644
---- a/net/batman-adv/sysfs.c
-+++ b/net/batman-adv/sysfs.c
-@@ -1087,7 +1087,7 @@ static ssize_t batadv_store_throughput_override(struct kobject *kobj,
- 	ret = batadv_parse_throughput(net_dev, buff, "throughput_override",
- 				      &tp_override);
- 	if (!ret)
--		return count;
-+		goto out;
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 6415b4aead546..48ab5fdd10442 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -353,8 +353,6 @@ static void __setup_APIC_LVTT(unsigned int clocks, int oneshot, int irqen)
+ 		 * According to Intel, MFENCE can do the serialization here.
+ 		 */
+ 		asm volatile("mfence" : : : "memory");
+-
+-		printk_once(KERN_DEBUG "TSC deadline timer enabled\n");
+ 		return;
+ 	}
  
- 	old_tp_override = atomic_read(&hard_iface->bat_v.throughput_override);
- 	if (old_tp_override == tp_override)
+@@ -553,7 +551,7 @@ static DEFINE_PER_CPU(struct clock_event_device, lapic_events);
+ #define DEADLINE_MODEL_MATCH_REV(model, rev)	\
+ 	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, (unsigned long)rev }
+ 
+-static u32 hsx_deadline_rev(void)
++static __init u32 hsx_deadline_rev(void)
+ {
+ 	switch (boot_cpu_data.x86_stepping) {
+ 	case 0x02: return 0x3a; /* EP */
+@@ -563,7 +561,7 @@ static u32 hsx_deadline_rev(void)
+ 	return ~0U;
+ }
+ 
+-static u32 bdx_deadline_rev(void)
++static __init u32 bdx_deadline_rev(void)
+ {
+ 	switch (boot_cpu_data.x86_stepping) {
+ 	case 0x02: return 0x00000011;
+@@ -575,7 +573,7 @@ static u32 bdx_deadline_rev(void)
+ 	return ~0U;
+ }
+ 
+-static u32 skx_deadline_rev(void)
++static __init u32 skx_deadline_rev(void)
+ {
+ 	switch (boot_cpu_data.x86_stepping) {
+ 	case 0x03: return 0x01000136;
+@@ -588,7 +586,7 @@ static u32 skx_deadline_rev(void)
+ 	return ~0U;
+ }
+ 
+-static const struct x86_cpu_id deadline_match[] = {
++static const struct x86_cpu_id deadline_match[] __initconst = {
+ 	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_HASWELL_X,	hsx_deadline_rev),
+ 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_BROADWELL_X,	0x0b000020),
+ 	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_BROADWELL_XEON_D,	bdx_deadline_rev),
+@@ -610,18 +608,19 @@ static const struct x86_cpu_id deadline_match[] = {
+ 	{},
+ };
+ 
+-static void apic_check_deadline_errata(void)
++static __init bool apic_validate_deadline_timer(void)
+ {
+ 	const struct x86_cpu_id *m;
+ 	u32 rev;
+ 
+-	if (!boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER) ||
+-	    boot_cpu_has(X86_FEATURE_HYPERVISOR))
+-		return;
++	if (!boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER))
++		return false;
++	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
++		return true;
+ 
+ 	m = x86_match_cpu(deadline_match);
+ 	if (!m)
+-		return;
++		return true;
+ 
+ 	/*
+ 	 * Function pointers will have the MSB set due to address layout,
+@@ -633,11 +632,12 @@ static void apic_check_deadline_errata(void)
+ 		rev = (u32)m->driver_data;
+ 
+ 	if (boot_cpu_data.microcode >= rev)
+-		return;
++		return true;
+ 
+ 	setup_clear_cpu_cap(X86_FEATURE_TSC_DEADLINE_TIMER);
+ 	pr_err(FW_BUG "TSC_DEADLINE disabled due to Errata; "
+ 	       "please update microcode to version: 0x%x (or later)\n", rev);
++	return false;
+ }
+ 
+ /*
+@@ -1914,7 +1914,8 @@ void __init init_apic_mappings(void)
+ {
+ 	unsigned int new_apicid;
+ 
+-	apic_check_deadline_errata();
++	if (apic_validate_deadline_timer())
++		pr_debug("TSC deadline timer available\n");
+ 
+ 	if (x2apic_mode) {
+ 		boot_cpu_physical_apicid = read_apic_id();
 -- 
 2.20.1
 
