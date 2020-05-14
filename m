@@ -2,47 +2,66 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEF3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAD2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73257206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EA65206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:06:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589439965;
+	bh=zoMZaEVVVEIwmZ+S1/itjB0dnqs+eSv+WZKePqF91qk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=WLkG4frgixvLgudInXTltd4qMOFlVHboPas6uayQg3RyjN0NNq0a6s91IMbxs4YCA
+	 FEeu8QKlMh5sJQVqcEdpQh2DYTG8OHVMM+n7jZSZJX85lG1HHEUp4c8lVZ7YhDXH/+
+	 LF+OkfqMLpeemjjXYxU25gnSs0mRxgrLkeiIEZQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbgENHFI (ORCPT
+        id S1726149AbgENHGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 03:05:08 -0400
-Received: from mga09.intel.com ([134.134.136.24]:52283 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725866AbgENHFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 03:05:08 -0400
-IronPort-SDR: yOwaPq8LQYrkcG0HNDsiYD4Ld3+y6wYsdtWBDr02HnkbTQAJBdT2GJlLyc1HR2zZmFhASlKg1g
- 5DyjBdrhFpYA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 00:05:07 -0700
-IronPort-SDR: 6FVzJxd1jEXGZrJHw+CDmJpWFALfuA+k3nIje0Xr3qyJy3EMB35Gc/KTRKZNG/QA0kFqTnPoAs
- +RMw1oudHNAw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,390,1583222400"; 
-   d="scan'208";a="409968776"
-Received: from unknown (HELO yhuang-mobile.sh.intel.com) ([10.238.6.207])
-  by orsmga004.jf.intel.com with ESMTP; 14 May 2020 00:05:02 -0700
-From:   Huang Ying <ying.huang@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Huang Ying <ying.huang@intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Hugh Dickins <hughd@google.com>
-Subject: [PATCH] swap: Add percpu cluster_next to reduce lock contention on swap cache
-Date:   Thu, 14 May 2020 15:04:24 +0800
-Message-Id: <20200514070424.16017-1-ying.huang@intel.com>
+        Thu, 14 May 2020 03:06:04 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33970 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbgENHGD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 03:06:03 -0400
+Received: by mail-lf1-f67.google.com with SMTP id s9so1696137lfp.1
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 00:06:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AkkqkBerykie1YrDXFBzsGueOMJwtySKBnmKIyb/rqw=;
+        b=WE+klpoKcOXD3a4VUHFmT0tEl2b2PVW8Vr/ynoKAqm7nZcJST5xNNN5GYuJC5klXsa
+         0liRidKyEhe3OcZyBDqucwoq21qPwctSdLtITsP4juf0zwpV3fnm/9uxxnptklXF7kTX
+         aVadQ2d0s/nA0AI8HIw2sSzBqiaRMpmBCUeZkSUedLnBIsd0ZNlbvmkDq2HQShOeIGlA
+         Z3pTEh7RvwsBoOkXPxMPTtdTxdPB4QC/L4re0MTMTwkU0AD3v5UtZ/g2AWZ/rcD/8VX0
+         mCafuBL+eMMqsXJ8wJK9/o8FDWwqUsVQMLbTWLnF6QiW079csTs7LcI2uH54ivofgSzX
+         hPFw==
+X-Gm-Message-State: AOAM531oyE2u55zKIlCagmlVjTvoAnopiUKFApjvyx+RbWFcgiCvLGxr
+        7H1PuKGUNmd+PpIxjcxcR+Q=
+X-Google-Smtp-Source: ABdhPJz8HCH9ZpQl9l+RruScNIJF1fFDO1Ykv1t0+vZomr5Soo9N7qsIOBMEwdNO/Dwx0UEqrebWGQ==
+X-Received: by 2002:a19:ad49:: with SMTP id s9mr2292027lfd.9.1589439961465;
+        Thu, 14 May 2020 00:06:01 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id k24sm911175ljg.92.2020.05.14.00.06.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 00:06:00 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@xi.terra>)
+        id 1jZ7wQ-0001AB-Ut; Thu, 14 May 2020 09:06:03 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     David Lin <dtwlin@gmail.com>, Johan Hovold <johan@kernel.org>,
+        Alex Elder <elder@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: greybus: uart: replace driver line-coding struct
+Date:   Thu, 14 May 2020 09:05:48 +0200
+Message-Id: <20200514070548.4423-1-johan@kernel.org>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -51,148 +70,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In some swap scalability test, it is found that there are heavy lock
-contention on swap cache even if we have split one swap cache radix
-tree per swap device to one swap cache radix tree every 64 MB trunk in
-commit 4b3ef9daa4fc ("mm/swap: split swap cache into 64MB trunks").
+Drop the driver version of the line-coding request and use the protocol
+definition directly as was originally intended instead.
 
-The reason is as follow.  After the swap device becomes fragmented so
-that there's no free swap cluster, the swap device will be scanned
-linearly to find the free swap slots.  swap_info_struct->cluster_next
-is the next scanning base that is shared by all CPUs.  So nearby free
-swap slots will be allocated for different CPUs.  The probability for
-multiple CPUs to operate on the same 64 MB trunk is high.  This causes
-the lock contention on the swap cache.
+This specifically avoids having the two versions of what is supposed to
+be the same struct ever getting out of sync.
 
-To solve the issue, in this patch, for SSD swap device, a percpu
-version next scanning base (cluster_next_cpu) is added.  Every CPU
-will use its own next scanning base.  So the probability for multiple
-CPUs to operate on the same 64 MB trunk is reduced greatly.  Thus the
-lock contention is reduced too.  For HDD, because sequential access is
-more important for IO performance, the original shared next scanning
-base is used.
+Note that this has in fact already happened once when the protocol
+definition had its implicit padding removed while the driver struct
+wasn't updated. The fact that we used the size of the then larger driver
+struct when memcpying its content to the stack didn't exactly make
+things better. A later addition of a flow-control field incidentally
+made the structures match again.
 
-To test the patch, we have run 16-process pmbench memory benchmark on
-a 2-socket server machine with 48 cores.  One ram disk is configured
-as the swap device per socket.  The pmbench working-set size is much
-larger than the available memory so that swapping is triggered.  The
-memory read/write ratio is 80/20 and the accessing pattern is random.
-In the original implementation, the lock contention on the swap cache
-is heavy.  The perf profiling data of the lock contention code path is
-as following,
-
-_raw_spin_lock_irq.add_to_swap_cache.add_to_swap.shrink_page_list:      7.93
-_raw_spin_lock_irqsave.__remove_mapping.shrink_page_list: 		7.03
-_raw_spin_lock_irq.mem_cgroup_commit_charge.do_swap_page: 		3.7
-_raw_spin_lock.swapcache_free_entries.free_swap_slot.__swap_entry_free: 2.9
-_raw_spin_lock_irq.shrink_inactive_list.shrink_lruvec.shrink_node:	1.32
-_raw_spin_lock.free_pcppages_bulk.drain_pages_zone.drain_pages: 	1.01
-_raw_spin_lock_irq.shrink_active_list.shrink_lruvec.shrink_node: 	0.87
-
-After applying this patch, it becomes,
-
-_raw_spin_lock_irq.mem_cgroup_commit_charge.do_swap_page:		3.99
-_raw_spin_lock.swapcache_free_entries.free_swap_slot.__swap_entry_free: 3.0
-_raw_spin_lock_irq.shrink_inactive_list.shrink_lruvec.shrink_node:      1.47
-_raw_spin_lock_irq.shrink_active_list.shrink_lruvec.shrink_node: 	1.31
-_raw_spin_lock.free_pcppages_bulk.drain_pages_zone.drain_pages: 	0.88
-_raw_spin_lock.scan_swap_map_slots.get_swap_pages.get_swap_page: 	0.76
-_raw_spin_lock_irq.add_to_swap_cache.add_to_swap.shrink_page_list:      0.53
-
-The lock contention on the swap cache is almost eliminated.
-
-And the pmbench score increases 15.9%.  The swapin throughput
-increases 16.2% from 2.84 GB/s to 3.3 GB/s.  While the swapout
-throughput increases 16.1% from 2.87 GB/s to 3.33 GB/s.
-
-Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Hugh Dickins <hughd@google.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- include/linux/swap.h |  1 +
- mm/swapfile.c        | 27 +++++++++++++++++++++++++--
- 2 files changed, 26 insertions(+), 2 deletions(-)
+ drivers/staging/greybus/uart.c | 19 ++++---------------
+ 1 file changed, 4 insertions(+), 15 deletions(-)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index b42fb47d8cbe..e96820fb7472 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -252,6 +252,7 @@ struct swap_info_struct {
- 	unsigned int inuse_pages;	/* number of those currently in use */
- 	unsigned int cluster_next;	/* likely index for next allocation */
- 	unsigned int cluster_nr;	/* countdown to next cluster search */
-+	unsigned int __percpu *cluster_next_cpu; /*percpu index for next allocation */
- 	struct percpu_cluster __percpu *percpu_cluster; /* per cpu's swap location */
- 	struct rb_root swap_extent_root;/* root of the swap extent rbtree */
- 	struct block_device *bdev;	/* swap device or bdev of swap file */
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 35be7a7271f4..9f1343b066c1 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -746,7 +746,16 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
- 	 */
+diff --git a/drivers/staging/greybus/uart.c b/drivers/staging/greybus/uart.c
+index 55c51143bb09..84de56800a21 100644
+--- a/drivers/staging/greybus/uart.c
++++ b/drivers/staging/greybus/uart.c
+@@ -40,14 +40,6 @@
+ #define GB_UART_FIRMWARE_CREDITS	4096
+ #define GB_UART_CREDIT_WAIT_TIMEOUT_MSEC	10000
  
- 	si->flags += SWP_SCANNING;
--	scan_base = offset = si->cluster_next;
-+	/*
-+	 * Use percpu scan base for SSD to reduce lock contention on
-+	 * cluster and swap cache.  For HDD, sequential access is more
-+	 * important.
-+	 */
-+	if (si->flags & SWP_SOLIDSTATE)
-+		scan_base = this_cpu_read(*si->cluster_next_cpu);
-+	else
-+		scan_base = si->cluster_next;
-+	offset = scan_base;
+-struct gb_tty_line_coding {
+-	__le32	rate;
+-	__u8	format;
+-	__u8	parity;
+-	__u8	data_bits;
+-	__u8	flow_control;
+-};
+-
+ struct gb_tty {
+ 	struct gbphy_device *gbphy_dev;
+ 	struct tty_port port;
+@@ -66,7 +58,7 @@ struct gb_tty {
+ 	struct mutex mutex;
+ 	u8 ctrlin;	/* input control lines */
+ 	u8 ctrlout;	/* output control lines */
+-	struct gb_tty_line_coding line_coding;
++	struct gb_uart_set_line_coding_request line_coding;
+ 	struct work_struct tx_work;
+ 	struct kfifo write_fifo;
+ 	bool close_pending;
+@@ -288,12 +280,9 @@ static void  gb_uart_tx_write_work(struct work_struct *work)
  
- 	/* SSD algorithm */
- 	if (si->cluster_info) {
-@@ -835,7 +844,10 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
- 	unlock_cluster(ci);
+ static int send_line_coding(struct gb_tty *tty)
+ {
+-	struct gb_uart_set_line_coding_request request;
+-
+-	memcpy(&request, &tty->line_coding,
+-	       sizeof(tty->line_coding));
+ 	return gb_operation_sync(tty->connection, GB_UART_TYPE_SET_LINE_CODING,
+-				 &request, sizeof(request), NULL, 0);
++				 &tty->line_coding, sizeof(tty->line_coding),
++				 NULL, 0);
+ }
  
- 	swap_range_alloc(si, offset, 1);
--	si->cluster_next = offset + 1;
-+	if (si->flags & SWP_SOLIDSTATE)
-+		this_cpu_write(*si->cluster_next_cpu, offset + 1);
-+	else
-+		si->cluster_next = offset + 1;
- 	slots[n_ret++] = swp_entry(si->type, offset);
+ static int send_control(struct gb_tty *gb_tty, u8 control)
+@@ -493,9 +482,9 @@ static int gb_tty_break_ctl(struct tty_struct *tty, int state)
+ static void gb_tty_set_termios(struct tty_struct *tty,
+ 			       struct ktermios *termios_old)
+ {
++	struct gb_uart_set_line_coding_request newline;
+ 	struct gb_tty *gb_tty = tty->driver_data;
+ 	struct ktermios *termios = &tty->termios;
+-	struct gb_tty_line_coding newline;
+ 	u8 newctrl = gb_tty->ctrlout;
  
- 	/* got enough slots or reach max slots? */
-@@ -2828,6 +2840,11 @@ static struct swap_info_struct *alloc_swap_info(void)
- 	p = kvzalloc(struct_size(p, avail_lists, nr_node_ids), GFP_KERNEL);
- 	if (!p)
- 		return ERR_PTR(-ENOMEM);
-+	p->cluster_next_cpu = alloc_percpu(unsigned int);
-+	if (!p->cluster_next_cpu) {
-+		kvfree(p);
-+		return ERR_PTR(-ENOMEM);
-+	}
- 
- 	spin_lock(&swap_lock);
- 	for (type = 0; type < nr_swapfiles; type++) {
-@@ -2962,6 +2979,8 @@ static unsigned long read_swap_header(struct swap_info_struct *p,
- 
- 	p->lowest_bit  = 1;
- 	p->cluster_next = 1;
-+	for_each_possible_cpu(i)
-+		per_cpu(*p->cluster_next_cpu, i) = 1;
- 	p->cluster_nr = 0;
- 
- 	maxpages = max_swapfile_size();
-@@ -3204,6 +3223,10 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
- 		 * SSD
- 		 */
- 		p->cluster_next = 1 + prandom_u32_max(p->highest_bit);
-+		for_each_possible_cpu(cpu) {
-+			per_cpu(*p->cluster_next_cpu, cpu) =
-+				1 + prandom_u32_max(p->highest_bit);
-+		}
- 		nr_cluster = DIV_ROUND_UP(maxpages, SWAPFILE_CLUSTER);
- 
- 		cluster_info = kvcalloc(nr_cluster, sizeof(*cluster_info),
+ 	newline.rate = cpu_to_le32(tty_get_baud_rate(tty));
 -- 
 2.26.2
 
