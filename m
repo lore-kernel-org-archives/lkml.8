@@ -6,126 +6,105 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC5CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D77FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B62AB2065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35105206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:20:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a3xqgdqL"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PceZRpeH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgENKTi (ORCPT
+        id S1726341AbgENKUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 06:19:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52878 "EHLO
+        Thu, 14 May 2020 06:20:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726105AbgENKTh (ORCPT
+        with ESMTP id S1725955AbgENKUT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 06:19:37 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DD66C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 03:19:36 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id 21so187813vkq.6
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 03:19:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F9G3dflweaHDPQ+DS1CDjH+ihEsjNaelVa9NdojUt1E=;
-        b=a3xqgdqLwtQ2GtV4uxSscMi3XPr4JXvwBDE9qNvMFMDrFxbMEMFHXxxmX2ScvvYnW2
-         mgpfQbZLAERGYpSvOdPbdKx5bWFfrQcTSAbIjLBLFFo8Ck8sw/im0O/73LKOcLecUY0X
-         7VEMA0I3XKJUVkSmUWj3sY36IYpvgkvUZAzgxsM1ipfsnyLHEt881StGmwi8uXBaENG8
-         Qr8Mkv+u+Dje+bWINIQg+P1uQGZPJ9t5SJwa4wuX0+kO2b+fa3/3OT5haesXj2AXxUDD
-         cZEADroHyXXkmQA8yln7dwFDwWbwAIAqovrj9RXf4wUOZREniJ9FTo7JbDwL/ceRUL/q
-         QDRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F9G3dflweaHDPQ+DS1CDjH+ihEsjNaelVa9NdojUt1E=;
-        b=C7XM/csy1kO0UvEY94peuqC6WILYQZ2aQ/koSLMtRHGDAsJQMmJlNFmVfWEBnXQ3N3
-         hg7lzJmAjZ9/im0ZAPX1x2KiHIM5IjOLG3PRUVXyreSSvLPZ+5AKUzSxdEhtayaM76w6
-         BWG6h94DlDtLzbd8ZYgYaDRSE6xH2/Ql8gcZ3H9EQDPR4ARWozFQYBCG5yFehBc+hngN
-         FX7HqEH43HhK+CB0zENYt9PDKTEOKqomqHQ26WyTXgzVuhaJHAIcSizRQRngeUUQrD0O
-         1R7zz+aIq+AmAH3Tsy5gL/QR/TWH89CiN0v1w+zZvpBShiaLxEbctexwViN7UWeIr4ud
-         lajw==
-X-Gm-Message-State: AOAM530bNGGrmJy/UP0XrR4KsGjC1yK9lqN+TlaEqn7yUDtygs6yePgW
-        cgS9EfW+DC1RVmxjj/aHUVTF/ni/pDsqJzv+g7GLFA==
-X-Google-Smtp-Source: ABdhPJw/cbscMUafVNEDWx0LEt3Ufyo0rEx2MYE2HsdQpv4OQkUp3OpkBIOV7zGBHKw2YpLTymVJKWt7oI5hIJIImhs=
-X-Received: by 2002:a1f:25d7:: with SMTP id l206mr2770124vkl.53.1589451575120;
- Thu, 14 May 2020 03:19:35 -0700 (PDT)
+        Thu, 14 May 2020 06:20:19 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3C1DC061A0C;
+        Thu, 14 May 2020 03:20:18 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49N6xB09F8z9sPF;
+        Thu, 14 May 2020 20:20:13 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589451615;
+        bh=noRZRjnnfbp+mfKpOGnMryo185orbohoJJNVrTEq25U=;
+        h=Date:From:To:Cc:Subject:From;
+        b=PceZRpeH0EsBAFKbImCABDJCfQFay6IENMjwJBJubtdrbnj0Wal/duC+69EeUIO/w
+         oLKT9awK0whO1aaflQSow1MMSyLQH5RMUxgq+zHn/n0mAN0WqZETfgY7CHAO8VwyaD
+         oXTlCKYY6EazyoRd/T+bSxdo2k6EZfpc526/YWlzYJOAfcxbSNWx8+J9GPL0uAxf7v
+         4osbEt/P7USi9JvL/HBVgkKqciNdBGgki4zIM6fA0hj6DKkdGNAD3d4TjVK2bWK78r
+         /JVAIiVujTHFWsRYTfGpCJM1qyWGTVVL4ZInNE33XmJ44bK9XlFx63SklsMmMzJJaB
+         5nFrFfSwY3B6g==
+Date:   Thu, 14 May 2020 20:20:08 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Guo Ren <ren_guo@c-sky.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dmitry Safonov <dima@arista.com>
+Subject: linux-next: manual merge of the akpm tree with the csky tree
+Message-ID: <20200514202008.5ba89194@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200513174706.3eeddb2b@xhacker.debian> <CAPDyKFpE_uqiNQ22Fq9hDfb5pzMBdgmwgUbasEsEdXFkEOmq6A@mail.gmail.com>
- <20200514134507.54c17936@xhacker.debian>
-In-Reply-To: <20200514134507.54c17936@xhacker.debian>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 14 May 2020 12:18:58 +0200
-Message-ID: <CAPDyKFpUv=HGBAEchH25tdnRdUSAvbCgGGCgN8uuvPCQ92xwZg@mail.gmail.com>
-Subject: Re: [PATCH] Revert "mmc: sdhci-xenon: add runtime pm support and
- reimplement standby"
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/0=mb1Ei=9Nc4ZXKGQq3j9B3";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 May 2020 at 07:45, Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
->
-> On Wed, 13 May 2020 14:15:21 +0200 Ulf Hansson wrote:
->
-> >
-> >
-> > On Wed, 13 May 2020 at 11:47, Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
-> > >
-> > > This reverts commit a027b2c5fed78851e69fab395b02d127a7759fc7.
-> > >
-> > > The HW supports auto clock gating, so it's useless to do runtime pm
-> > > in software.
-> >
-> > Runtime PM isn't soley about clock gating. Moreover it manages the
->
-> Per my understanding, current xenon rpm implementation is just clock gating.
->
-> > "pltfm_host->clk", which means even if the controller supports auto
-> > clock gating, gating/ungating the externally provided clock still
-> > makes sense.
->
->        clock -----------  xenon IP
->       |___ rpm           |__ HW Auto clock gate
->
-> Per my understanding, with rpm, both clock and IP is clock gated; while with
-> Auto clock gate, the IP is clock gated. So the only difference is clock itself.
-> Considering the gain(suspect we have power consumption gain, see below), the
-> pay -- 56 LoCs and latency doesn't deserve gain.
->
-> Even if considering from power consumption POV, sdhci_runtime_suspend_host(),
-> sdhci_runtime_resume_host(), and the retune process could be more than the clock
-> itself.
+--Sig_/0=mb1Ei=9Nc4ZXKGQq3j9B3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Right.
+Hi all,
 
-The re-tune may be costly, yes. However, whether the re-tune is
-*really* needed actually varies depending on the sdhci variant and the
-SoC. Additionally, re-tune isn't done for all types of (e)MMC/SD/SDIO
-cards.
+Today's linux-next merge of the akpm tree got a conflict in:
 
-I see a few options that you can explore.
+  arch/csky/kernel/dumpstabkc.c
 
-1. There is no requirement to call sdhci_runtime_suspend|resume_host()
-from sdhci-xenon's ->runtime_suspend|resume() callbacks - if that's
-not explicitly needed. The point is, you can do other things there,
-that suits your variant/SoC better.
+between commit:
 
-2. Perhaps for embedded eMMCs, with a non-removable slot, the
-re-tuning is costly. If you want to prevent the device from entering
-runtime suspend for that slot, for example, just do an additional
-pm_runtime_get_noresume() during ->probe().
+  18c07d23da5a ("csky: Fixup calltrace panic")
 
-[...]
+from the csky tree and patches:
 
-Kind regards
-Uffe
+  "csky: add show_stack_loglvl()"
+  "kernel: rename show_stack_loglvl() =3D> show_stack()"
+
+from the akpm tree.
+
+I fixed it up (that file was removed by the former commit and show_stack
+was moved, so I applied a patch similar to that used for riscv) and can
+carry the fix as necessary. This is now fixed as far as linux-next is
+concerned, but any non trivial conflicts should be mentioned to your
+upstream maintainer when your tree is submitted for merging.  You may
+also want to consider cooperating with the maintainer of the conflicting
+tree to minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/0=mb1Ei=9Nc4ZXKGQq3j9B3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl69G1gACgkQAVBC80lX
+0GzXqAf/VXDEKhbkNiunaHtlqmaVdfM+eqatoJeJgbpX4MkOodG9hdkys/pb9J/V
+gluYirmQ13G2I7vLlU9OsnxCFdGrkkhDaxBwZyRenlEHNrlBbynxtxfinPXp6fJh
+V0PMqXf0lcTcUZ5/K8d3PgDvvJhUtehbLrmlWUt7fcoJftETyBD+dcafsxcaRHMj
+XcKxU9fNugjTwKqJN0W/zMDxL4u/OYNgKsHWxiYAR0eDPddUWyaP+G89iHb3j6xe
+Divq6jiNC36qFjQGjum1D8egezVKCngUbHwiORLMHbQ1SRbrdGHmmqf3znh6nZ5n
+byzP+PIo9CPDC0upf69mGbNtXcv/6w==
+=z3VA
+-----END PGP SIGNATURE-----
+
+--Sig_/0=mb1Ei=9Nc4ZXKGQq3j9B3--
