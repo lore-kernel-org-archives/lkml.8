@@ -2,153 +2,138 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB74C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D661C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 513D52065C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A38C2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:47:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YjE6uPBG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SEYPs998"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbgENXpJ (ORCPT
+        id S1726227AbgENXrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 19:45:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37662 "EHLO
+        Thu, 14 May 2020 19:47:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbgENXpI (ORCPT
+        with ESMTP id S1726067AbgENXrX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 19:45:08 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 651D6C05BD09
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 16:45:08 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id p21so98491pgm.13
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 16:45:08 -0700 (PDT)
+        Thu, 14 May 2020 19:47:23 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9E35C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 16:47:21 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t16so182184plo.7
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 16:47:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TS6m3tA7iP1dUmXkdet+rM4d6JbY2zF/WsqwIammF8E=;
-        b=YjE6uPBGNr4Xe2rTD6hCoXF0Vo9fHrPRc8MeseKVAqIDzm93Jk/d4QULhMOfJ8ilHN
-         Zi+1iu5vNwfDcdCueh1FAVNZq4QKsfXe4HeVxZ3O4Sm3d4u9KQh5EYd4GWvVNH8cfzkT
-         qmyscxwZ7Tq16XPqH5qqJR6toOuYAZyl+KBnU=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KJ319p+W05TbtIHodnmslKmxvaislCF8XQX/X/cRrWQ=;
+        b=SEYPs998J8EWU2hjALQreAwc4NjDwFAysfzWzr7uoSSmx1pwv4YS8tlO+w7px5ULBR
+         yPya5dHOQxFl1ZrOtUtt4b9B9m2829UCEKeaZ37Vy9c9iFEDaBiUgjQrpp2O6xbMLhrg
+         WUTOJp9bWCZJOen7ErMBngCbfg6dTJNg+Lhqg9uGcZk/yOkZsIeA0lW1uDXjYc7g4CPU
+         G349CKzFMb5bfTgpKZdYsgZ4RJcuvoOIGDnE+JAh63lVUC3nBVNRg4VsP6Fpk1dyovS7
+         /Ic3oOUdhGqMqv++U6LU669vxzuxBBWyCSZirc1YtzBwPIo8VLhUfaNz1NZZxZgmw7xk
+         BYDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TS6m3tA7iP1dUmXkdet+rM4d6JbY2zF/WsqwIammF8E=;
-        b=D3RWO8mUXiA0J3r1EqnJFVUov0ZD64VkFkYxIsHdPbdM67GeaITKYabryI7Zk4GyWi
-         yMirFHijQ5/iNa7ud9Juv7BR8Ha5tPSBVsaafFVmUpeWTN8jKDwPT00q7N2XwRmcQhCd
-         /k3x5Xk/ytBnK373CY6hujJuTjxzh4dRhcOR3Ka9nHZ3E2aSJzUiDmeaIVNSYKkaWCga
-         wlahrDNb/jYNph1HGRIzznqVLndjXunDXZzBs/dk3Oade64ufuJbuhg33oKvWWuVBP4V
-         +frlIRP98qyJ9N9BePbpwt0tPCkylAn0MiaODn4PIfmKdfFaGt373HyFoj6Y7j2yy07I
-         ii/Q==
-X-Gm-Message-State: AOAM530b1zwZ5kT9ktxCkjfbIdw7oslq+GHWFTUOdvfWQXdXCsE5i80I
-        VC8ETiEl7mmwKhwQRe8m1qWCLA==
-X-Google-Smtp-Source: ABdhPJx4mHQv2BFmu1UqFEL0Rzavx5iPrdT2xRUY4noa8VccK+9T65lv35xK9Ign6IhTDiC7W+uE/Q==
-X-Received: by 2002:a63:1845:: with SMTP id 5mr519761pgy.69.1589499907739;
-        Thu, 14 May 2020 16:45:07 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id w84sm265543pfc.116.2020.05.14.16.45.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 May 2020 16:45:07 -0700 (PDT)
-Date:   Thu, 14 May 2020 16:45:06 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Sharat Masetty <smasetty@codeaurora.org>
-Cc:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
-        georgi.djakov@linaro.org
-Subject: Re: [PATCH 2/6] arm64: dts: qcom: sc7180: Add opp-peak-kBps to GPU
- opp
-Message-ID: <20200514234506.GS4525@google.com>
-References: <1589453659-27581-1-git-send-email-smasetty@codeaurora.org>
- <1589453659-27581-3-git-send-email-smasetty@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KJ319p+W05TbtIHodnmslKmxvaislCF8XQX/X/cRrWQ=;
+        b=G4dLb1rhe8tAf8QaXbbrbwivEU6I9Am3hIJYtZr8OdwJn6sFYDXERwZbvxcQ6xrfks
+         E/nAguuAFapDlhivspSYETSKZAp0C7zuZFsK/uXi2nSdhWr1qFeZ2RjN3hSzWh9GmefB
+         1G1zJIbjP5KmdYlsSUvw2yJZhrNubxwDCCl/jTnHvpAdCfgEg4Yi+uRRq7k3cjCva+TC
+         /gbM9gqsBjG08pYmHZ0Sk//O58DwakPe98fKSFNjv1JKtyvVuqWbN/bCVlRoBD9ZfvrH
+         7TtHo/UXwoSTIJdiPHYyvYm1lZfSdFNT/60LANRNOQn/bW7mwgWOA8ZhGyCRUKWW+hfw
+         3tXg==
+X-Gm-Message-State: AOAM532rHW1hWlfdybb7J/ezdpOpgr7PKhAEu//IdapawNoyYyQ7Roby
+        vcK+9b3eI80qwQkz/AeW4A9WA8oBuTN8+bwPBan74A==
+X-Google-Smtp-Source: ABdhPJz17XodqRPhi9pi5lxUK762RIT74/Y0FHO9sf4tNUhHNegjqQggEcRgmlnLHME079dP6RCEBi4Afxi+QYxidQU=
+X-Received: by 2002:a17:902:c3c1:: with SMTP id j1mr960276plj.179.1589500040518;
+ Thu, 14 May 2020 16:47:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1589453659-27581-3-git-send-email-smasetty@codeaurora.org>
+References: <20200508182835.228107-1-ndesaulniers@google.com>
+ <20200508183230.229464-1-ndesaulniers@google.com> <CAMzpN2hUQwGoYQnsKZJHFY=p-=-zXTwhRnCejhoztCvPX8e=CA@mail.gmail.com>
+In-Reply-To: <CAMzpN2hUQwGoYQnsKZJHFY=p-=-zXTwhRnCejhoztCvPX8e=CA@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 14 May 2020 16:47:08 -0700
+Message-ID: <CAKwvOdmPEVAVkKUYwojnvANCFJ27WF8Z3W75fC3OaWMDBL=7-g@mail.gmail.com>
+Subject: Re: [PATCH v5] x86: bitops: fix build regression
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        "kernelci . org bot" <bot@kernelci.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Daniel Axtens <dja@axtens.net>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Brian Gerst <brgerst@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 04:24:15PM +0530, Sharat Masetty wrote:
+Bumping for this to get reviewed+picked up.  Fixes a regression I
+would prefer didn't ship in 5.7.
 
-> Subject: arm64: dts: qcom: sc7180: Add opp-peak-kBps to GPU opp
-
-nit: s/opp/OPPs/
-
+On Mon, May 11, 2020 at 11:52 AM Brian Gerst <brgerst@gmail.com> wrote:
 >
-> Add opp-peak-kBps bindings to the GPU opp table, listing the peak
-> GPU -> DDR bandwidth requirement for each opp level. This will be
-> used to scale the DDR bandwidth along with the GPU frequency dynamically.
-> 
-> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 0ce9921..89f7767 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -1392,36 +1392,43 @@
->  				opp-800000000 {
->  					opp-hz = /bits/ 64 <800000000>;
->  					opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
-> +					opp-peak-kBps = <8532000>;
->  				};
-> 
->  				opp-650000000 {
->  					opp-hz = /bits/ 64 <650000000>;
->  					opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-> +					opp-peak-kBps = <7216000>;
->  				};
-> 
->  				opp-565000000 {
->  					opp-hz = /bits/ 64 <565000000>;
->  					opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-> +					opp-peak-kBps = <5412000>;
->  				};
-> 
->  				opp-430000000 {
->  					opp-hz = /bits/ 64 <430000000>;
->  					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-> +					opp-peak-kBps = <5412000>;
-
-I suppose it's intentional that the bandwidth is the same as for opp-565000000,
-just want to mention it for if it's a C&P error.
+> On Fri, May 8, 2020 at 2:32 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
+> >
+> > This is easily reproducible via CC=clang+CONFIG_STAGING=y+CONFIG_VT6656=m.
+> >
+> > It turns out that if your config tickles __builtin_constant_p via
+> > differences in choices to inline or not, these statements produce
+> > invalid assembly:
+> >
+> > $ cat foo.c
+> > long a(long b, long c) {
+> >   asm("orb\t%1, %0" : "+q"(c): "r"(b));
+> >   return c;
+> > }
+> > $ gcc foo.c
+> > foo.c: Assembler messages:
+> > foo.c:2: Error: `%rax' not allowed with `orb'
+> >
+> > Use the `%b` "x86 Operand Modifier" to instead force register allocation
+> > to select a lower-8-bit GPR operand.
+> >
+> > The "q" constraint only has meaning on -m32 otherwise is treated as
+> > "r". Not all GPRs have low-8-bit aliases for -m32.
+> >
+> > Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/961
+> > Link: https://lore.kernel.org/lkml/20200504193524.GA221287@google.com/
+> > Link: https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#x86Operandmodifiers
+> > Fixes: 1651e700664b4 ("x86: Fix bitops.h warning with a moved cast")
+> > Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > Reported-by: kernelci.org bot <bot@kernelci.org>
+> > Suggested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> > Suggested-by: Brian Gerst <brgerst@gmail.com>
+> > Suggested-by: H. Peter Anvin <hpa@zytor.com>
+> > Suggested-by: Ilie Halip <ilie.halip@gmail.com>
+> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+>
+> Reviewed-By: Brian Gerst <brgerst@gmail.com>
 
 
->  				};
-> 
->  				opp-355000000 {
->  					opp-hz = /bits/ 64 <355000000>;
->  					opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-> +					opp-peak-kBps = <3072000>;
->  				};
-> 
->  				opp-267000000 {
->  					opp-hz = /bits/ 64 <267000000>;
->  					opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-> +					opp-peak-kBps = <3072000>;
->  				};
 
-ditto
-
->  				opp-180000000 {
->  					opp-hz = /bits/ 64 <180000000>;
->  					opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-> +					opp-peak-kBps = <1804000>;
->  				};
->  			};
->  		};
-
-assuming the repeated bandwidths are indeed intentional:
-
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+-- 
+Thanks,
+~Nick Desaulniers
