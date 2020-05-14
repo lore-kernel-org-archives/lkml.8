@@ -2,331 +2,176 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 156ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5D7C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8FBE2065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CE622065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:06:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dKFzXWJV"
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="cIak28l6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgENSGR (ORCPT
+        id S1727803AbgENSG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:06:17 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59475 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727076AbgENSGO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:06:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589479571;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9TK8WFPkdk8VSFKQFIRbDIrSoiWw6GVst5VMvRtYlnY=;
-        b=dKFzXWJVsaYvwVWyYxf9FT6HgwWR/L0KQ5mfILr0/OLUATEy2eWF245zHZDcOsYs+QjaL+
-        m6lVjHwPt3UfYD2rAGR/GKBa045LudxJOkyKNWDGIX9J7ErhVaEzhk28RCw6NPEZBdmsMl
-        mmXcFhKZJ1RBlJAnFcpm60Mf6vxioms=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-190-Tb8S-j2ePW6aAVNMtXSDPA-1; Thu, 14 May 2020 14:06:09 -0400
-X-MC-Unique: Tb8S-j2ePW6aAVNMtXSDPA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 30A1153;
-        Thu, 14 May 2020 18:06:08 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.40.195.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EA8E05D9CA;
-        Thu, 14 May 2020 18:06:01 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Michael Tsirkin <mst@redhat.com>,
-        Julia Suvorova <jsuvorov@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, x86@kernel.org
-Subject: [PATCH RFC 5/5] KVM: selftests: add KVM_MEM_ALLONES test
-Date:   Thu, 14 May 2020 20:05:40 +0200
-Message-Id: <20200514180540.52407-6-vkuznets@redhat.com>
-In-Reply-To: <20200514180540.52407-1-vkuznets@redhat.com>
-References: <20200514180540.52407-1-vkuznets@redhat.com>
+        Thu, 14 May 2020 14:06:29 -0400
+Received: from mail-eopbgr700111.outbound.protection.outlook.com ([40.107.70.111]:35808
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726532AbgENSG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:06:29 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nZYDIa9RGcsygjERWaks79YU4vKGKCBS6W9WxURX6wzym8NnQ3ysalUFNLYoAYMY96mKCXZWe2IZFF6AVoeOnmCGarw1DXreTevwSxiiZtFY3EemPP654Z6SMfhqkLd7xOA7bx4yixmAKoUV4QdlKdCNyXUgztAAYZxxoTursSJf/QbQNTlzQUvrynTYMaaS3BHA0TPgdtXecnwM+xTzoeBT28BoxPVBBht8dnwtAabu1U652K7wwCaiRRrAH3MUOII1I7qCmJRm1ZE2FGfydu/iyi5GoisbiDv6fj7fDooC2gjS7ZeJCTDJbRGrKiuKp4f0mTnLtZmsXJ9p05o+fQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4KfRNUXVG1i7Vh/m4idbgjqZl6w++6Pk5t5TRDb2qmo=;
+ b=HVTAjIWYC58MbtdVOiGtxfhEW83zAyKGVlW5ELlC/ByzPizspPK8JSsCRHCOVJpy57p5fSQ3zoJfnepK93gw8qGuASeWzm+ZHkkksz35iIXG/+MyrNmI9J9T9b1P9qKIC1T/CMxGAgNdJgCrgQ7WgGvMSkWdGJdj41/yjwVgi1cqrWbbQl2uZqZTKGutMG6l4htk7OLRI0EM7bMdveBYTSy7vc8HIhJPVOoUig6iq0Um0oALFjDKot5cdwqno/NNWxAbbZFr5JWNVxMLR3ZwtoDcAeA8tXwYt171hlcKdGhSQegnCzKIA5UshG4Xx8Yci+em0dbEOiK9u3Rd7Nuu2g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=amperemail.onmicrosoft.com; dkim=pass
+ header.d=amperemail.onmicrosoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4KfRNUXVG1i7Vh/m4idbgjqZl6w++6Pk5t5TRDb2qmo=;
+ b=cIak28l6V7HZeUhsj69IZTeiFwG46309u9halPRLZBcp4OCN8smt6n2qiHp8anXN6FY4m6WupHWEdA5RTY+uF2WXxagYrAg5+L8xPvZvwNQbHOAq+eVXskNiTpxwC0QSRInDPI5KHRvGcQPghsE+e8sOVW9OUd1jwFc/amDuMjY=
+Authentication-Results: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none
+ header.from=amperemail.onmicrosoft.com;
+Received: from BYAPR01MB4598.prod.exchangelabs.com (2603:10b6:a03:8a::18) by
+ BYAPR01MB4325.prod.exchangelabs.com (2603:10b6:a03:99::28) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2979.35; Thu, 14 May 2020 18:06:24 +0000
+Received: from BYAPR01MB4598.prod.exchangelabs.com
+ ([fe80::296c:b848:8bf0:6f2c]) by BYAPR01MB4598.prod.exchangelabs.com
+ ([fe80::296c:b848:8bf0:6f2c%5]) with mapi id 15.20.2979.033; Thu, 14 May 2020
+ 18:06:24 +0000
+Content-Type: text/plain;
+        charset=us-ascii
+Subject: Re: [PATCH v3] ACPI/IORT: Fix PMCG node always look for a single ID
+ mapping.
+From:   Tuan Phan <tuanphan@amperemail.onmicrosoft.com>
+In-Reply-To: <20200514092944.GA18032@e121166-lin.cambridge.arm.com>
+Date:   Thu, 14 May 2020 11:06:19 -0700
+Cc:     Tuan Phan <tuanphan@os.amperecomputing.com>,
+        patches@amperecomputing.com, Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Neil Leeder <nleeder@codeaurora.org>,
+        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <1935E7D8-3807-40D0-A07B-28D5036F8489@amperemail.onmicrosoft.com>
+References: <1589415122-5899-1-git-send-email-tuanphan@os.amperecomputing.com>
+ <20200514092944.GA18032@e121166-lin.cambridge.arm.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-ClientProxiedBy: CY4PR04CA0037.namprd04.prod.outlook.com
+ (2603:10b6:903:c6::23) To BYAPR01MB4598.prod.exchangelabs.com
+ (2603:10b6:a03:8a::18)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.0.173] (73.151.56.145) by CY4PR04CA0037.namprd04.prod.outlook.com (2603:10b6:903:c6::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.25 via Frontend Transport; Thu, 14 May 2020 18:06:21 +0000
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
+X-Originating-IP: [73.151.56.145]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4f5975de-9f2d-457a-d92a-08d7f8318353
+X-MS-TrafficTypeDiagnostic: BYAPR01MB4325:|BYAPR01MB4325:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR01MB43253E15B25C1FD3F3FD44D0E0BC0@BYAPR01MB4325.prod.exchangelabs.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 040359335D
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ud1S7jujg5xE2gchwOEt7ZuNoFqTavbZPE4/hPhH2KJgKaJEhcI2uDdfd9TpgiKd2H7fMh/fEM63PziBEP1THPBk5tS7FN4Py1aowZ1kh5EuqxDWMTTUZHIea6smPKZku0NS0KCf3J7HgGzW1s7gQScPFWO7LM+iyRRZQ9atGGNu6A30hnWAaXSXY8hO+ZUK7QbvSeQUJHfmiX9RHR4LhMmzNQ4Emiv6ZfbVVtK4f3a6Bvncmrep6OtBko8pMn1k0K47iYgwktzLvmhYpHdFEjB20ghAZeFYMJxKbw+5i1IxpXPYo0Ne2Cd1waJwraHYaCdofyot8myvF2bNlhgHysQoQyvo2XeQ9Od0BN4i3fICfPdSfUCsfcf+bazxsgJ85arSUkFEhnBJEKs1D/PHB0c8pNxeHFa4cQg0IMSZlmRQYtSlHAUn9cr4xcBe1jzV
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR01MB4598.prod.exchangelabs.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39850400004)(346002)(396003)(136003)(366004)(376002)(186003)(8676002)(52116002)(8936002)(478600001)(66946007)(4326008)(5660300002)(66556008)(83170400001)(33656002)(66476007)(2906002)(16526019)(6486002)(54906003)(42882007)(2616005)(7416002)(53546011)(6916009)(16576012)(26005)(316002)(956004);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: ZkXXluDDzfJgpsv6Ctda8ZoK1rh57+sjk5viAMC4DqinVhmCATm+f4CWVtbotVJSrmaH3P+8L4rlGuw/1eJ4U2TPv0dgqrqXq/MbeAAXx6mnuLlK2+0RzXgkMDu2HpNcMMl5LmJpXeelo0FR/k8zRdXg68JrUNNDIf1yBT6nnDzFsoV5I/FBw8ISthCsFJCPur3jGpSdr+FD7wjV7m5drpSJzk3cqIT+B7fQ+O2GfrMAdfx+wyEnZohxB0GfaeKFjZ5c10ES4slMaG02/0vfgzj3NUiyVMQZWaozPXKbe4xHlIrHMD6p6jNvXnZTB0F+jXRAsrWCwha+/FFf7YuHGNSWnkjydAeICt24LKCHtfj5LjbvSasgNWcprtydEfCNAi7Y1IC7T5x6eC+RA1QLMmkkyk6XL5xRmNmcc+rBGLjat849/LtSMej3tMeVoVhfgRLuiftZLmnNJNKhapUJlvvDAddU4MISksnwwrZNAdo=
+X-OriginatorOrg: amperemail.onmicrosoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f5975de-9f2d-457a-d92a-08d7f8318353
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2020 18:06:23.9690
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: efurKfNZGId4TwV5hFMbo+l+etcOkaAhQbeqfdJzWA3Ta9g3KvyuX1aDugYUbGS7tS65J9VOMQuk5IVEpDLsIOOST6Nqdw4CoBRRywjbNlt2X5mZHsyQAdqj0aT+d9Ct
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR01MB4325
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Test the newly introduced KVM_MEM_ALLONES memslots:
-- Reads from all pages return '0xff'
-- Writes to all pages cause KVM_EXIT_MMIO
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- tools/testing/selftests/kvm/Makefile          |   1 +
- .../testing/selftests/kvm/include/kvm_util.h  |   1 +
- tools/testing/selftests/kvm/lib/kvm_util.c    |  81 +++++++------
- .../kvm/x86_64/memory_region_allones.c        | 112 ++++++++++++++++++
- 4 files changed, 162 insertions(+), 33 deletions(-)
- create mode 100644 tools/testing/selftests/kvm/x86_64/memory_region_allones.c
 
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index 7af62030c12f..0c9aff445755 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -15,6 +15,7 @@ LIBKVM_s390x = lib/s390x/processor.c lib/s390x/ucall.c
- TEST_GEN_PROGS_x86_64 = x86_64/cr4_cpuid_sync_test
- TEST_GEN_PROGS_x86_64 += x86_64/evmcs_test
- TEST_GEN_PROGS_x86_64 += x86_64/hyperv_cpuid
-+TEST_GEN_PROGS_x86_64 += x86_64/memory_region_allones
- TEST_GEN_PROGS_x86_64 += x86_64/mmio_warning_test
- TEST_GEN_PROGS_x86_64 += x86_64/platform_info_test
- TEST_GEN_PROGS_x86_64 += x86_64/set_sregs_test
-diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-index 53b11d725d81..8f5ebc8520b8 100644
---- a/tools/testing/selftests/kvm/include/kvm_util.h
-+++ b/tools/testing/selftests/kvm/include/kvm_util.h
-@@ -59,6 +59,7 @@ enum vm_mem_backing_src_type {
- 	VM_MEM_SRC_ANONYMOUS,
- 	VM_MEM_SRC_ANONYMOUS_THP,
- 	VM_MEM_SRC_ANONYMOUS_HUGETLB,
-+	VM_MEM_SRC_NONE,
- };
- 
- int kvm_check_cap(long cap);
-diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index 33ab0a36d230..232b63ba0b4b 100644
---- a/tools/testing/selftests/kvm/lib/kvm_util.c
-+++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -446,8 +446,11 @@ static void __vm_mem_region_delete(struct kvm_vm *vm,
- 		    "rc: %i errno: %i", ret, errno);
- 
- 	sparsebit_free(&region->unused_phy_pages);
--	ret = munmap(region->mmap_start, region->mmap_size);
--	TEST_ASSERT(ret == 0, "munmap failed, rc: %i errno: %i", ret, errno);
-+	if (region->mmap_start) {
-+		ret = munmap(region->mmap_start, region->mmap_size);
-+		TEST_ASSERT(ret == 0, "munmap failed, rc: %i errno: %i", ret,
-+			    errno);
-+	}
- 
- 	free(region);
- }
-@@ -636,34 +639,42 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
- 	alignment = 1;
- #endif
- 
--	if (src_type == VM_MEM_SRC_ANONYMOUS_THP)
--		alignment = max(huge_page_size, alignment);
--
--	/* Add enough memory to align up if necessary */
--	if (alignment > 1)
--		region->mmap_size += alignment;
--
--	region->mmap_start = mmap(NULL, region->mmap_size,
--				  PROT_READ | PROT_WRITE,
--				  MAP_PRIVATE | MAP_ANONYMOUS
--				  | (src_type == VM_MEM_SRC_ANONYMOUS_HUGETLB ? MAP_HUGETLB : 0),
--				  -1, 0);
--	TEST_ASSERT(region->mmap_start != MAP_FAILED,
--		    "test_malloc failed, mmap_start: %p errno: %i",
--		    region->mmap_start, errno);
--
--	/* Align host address */
--	region->host_mem = align(region->mmap_start, alignment);
--
--	/* As needed perform madvise */
--	if (src_type == VM_MEM_SRC_ANONYMOUS || src_type == VM_MEM_SRC_ANONYMOUS_THP) {
--		ret = madvise(region->host_mem, npages * vm->page_size,
--			     src_type == VM_MEM_SRC_ANONYMOUS ? MADV_NOHUGEPAGE : MADV_HUGEPAGE);
--		TEST_ASSERT(ret == 0, "madvise failed,\n"
--			    "  addr: %p\n"
--			    "  length: 0x%lx\n"
--			    "  src_type: %x",
--			    region->host_mem, npages * vm->page_size, src_type);
-+	if (src_type != VM_MEM_SRC_NONE) {
-+		if (src_type == VM_MEM_SRC_ANONYMOUS_THP)
-+			alignment = max(huge_page_size, alignment);
-+
-+		/* Add enough memory to align up if necessary */
-+		if (alignment > 1)
-+			region->mmap_size += alignment;
-+
-+		region->mmap_start = mmap(NULL, region->mmap_size,
-+			  PROT_READ | PROT_WRITE,
-+			  MAP_PRIVATE | MAP_ANONYMOUS
-+			  | (src_type == VM_MEM_SRC_ANONYMOUS_HUGETLB ?
-+			     MAP_HUGETLB : 0), -1, 0);
-+		TEST_ASSERT(region->mmap_start != MAP_FAILED,
-+			    "test_malloc failed, mmap_start: %p errno: %i",
-+			    region->mmap_start, errno);
-+
-+		/* Align host address */
-+		region->host_mem = align(region->mmap_start, alignment);
-+
-+		/* As needed perform madvise */
-+		if (src_type == VM_MEM_SRC_ANONYMOUS ||
-+		    src_type == VM_MEM_SRC_ANONYMOUS_THP) {
-+			ret = madvise(region->host_mem, npages * vm->page_size,
-+				      src_type == VM_MEM_SRC_ANONYMOUS ?
-+				      MADV_NOHUGEPAGE : MADV_HUGEPAGE);
-+			TEST_ASSERT(ret == 0, "madvise failed,\n"
-+				    "  addr: %p\n"
-+				    "  length: 0x%lx\n"
-+				    "  src_type: %x",
-+				    region->host_mem, npages * vm->page_size,
-+				    src_type);
-+		}
-+	} else {
-+		region->mmap_start = NULL;
-+		region->host_mem = NULL;
- 	}
- 
- 	region->unused_phy_pages = sparsebit_alloc();
-@@ -1069,9 +1080,13 @@ void *addr_gpa2hva(struct kvm_vm *vm, vm_paddr_t gpa)
- 	list_for_each_entry(region, &vm->userspace_mem_regions, list) {
- 		if ((gpa >= region->region.guest_phys_addr)
- 			&& (gpa <= (region->region.guest_phys_addr
--				+ region->region.memory_size - 1)))
--			return (void *) ((uintptr_t) region->host_mem
--				+ (gpa - region->region.guest_phys_addr));
-+				+ region->region.memory_size - 1))) {
-+			if (region->host_mem)
-+				return (void *) ((uintptr_t) region->host_mem
-+				 + (gpa - region->region.guest_phys_addr));
-+			else
-+				return NULL;
-+		}
- 	}
- 
- 	TEST_FAIL("No vm physical memory at 0x%lx", gpa);
-diff --git a/tools/testing/selftests/kvm/x86_64/memory_region_allones.c b/tools/testing/selftests/kvm/x86_64/memory_region_allones.c
-new file mode 100644
-index 000000000000..23fec4873422
---- /dev/null
-+++ b/tools/testing/selftests/kvm/x86_64/memory_region_allones.c
-@@ -0,0 +1,112 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#define _GNU_SOURCE /* for program_invocation_short_name */
-+#include <fcntl.h>
-+#include <pthread.h>
-+#include <sched.h>
-+#include <signal.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/ioctl.h>
-+
-+#include <linux/compiler.h>
-+
-+#include <test_util.h>
-+#include <kvm_util.h>
-+#include <processor.h>
-+
-+#define VCPU_ID 0
-+
-+#define MEM_REGION_GPA		0xc0000000
-+#define MEM_REGION_SIZE		0x4000
-+#define MEM_REGION_SLOT		10
-+
-+static void guest_code(void)
-+{
-+	uint8_t val;
-+
-+	/* First byte in the first page */
-+	val = READ_ONCE(*((uint8_t *)MEM_REGION_GPA));
-+	GUEST_ASSERT(val == 0xff);
-+
-+	GUEST_SYNC(1);
-+
-+	/* Random byte in the second page */
-+	val = READ_ONCE(*((uint8_t *)MEM_REGION_GPA + 5000));
-+	GUEST_ASSERT(val == 0xff);
-+
-+	GUEST_SYNC(2);
-+
-+	/* Write to the first page */
-+	WRITE_ONCE(*((uint64_t *)MEM_REGION_GPA + 1024/8), 0xdeafbeef);
-+
-+	GUEST_SYNC(3);
-+
-+	/* Write to the second page */
-+	WRITE_ONCE(*((uint64_t *)MEM_REGION_GPA + 8000/8), 0xdeafbeef);
-+
-+	GUEST_SYNC(4);
-+
-+	GUEST_DONE();
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	struct kvm_vm *vm;
-+	struct kvm_run *run;
-+	struct ucall uc;
-+	int stage, rv;
-+
-+	rv = kvm_check_cap(KVM_CAP_ALLONES_MEM);
-+	if (!rv) {
-+		print_skip("KVM_CAP_ALLONES_MEM not supported");
-+		exit(KSFT_SKIP);
-+	}
-+
-+	vm = vm_create_default(VCPU_ID, 0, guest_code);
-+
-+	run = vcpu_state(vm, VCPU_ID);
-+
-+	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
-+
-+	vm_userspace_mem_region_add(vm, VM_MEM_SRC_NONE,
-+				    MEM_REGION_GPA, MEM_REGION_SLOT,
-+				    MEM_REGION_SIZE / getpagesize(),
-+				    KVM_MEM_ALLONES);
-+
-+	virt_map(vm, MEM_REGION_GPA, MEM_REGION_GPA,
-+		 MEM_REGION_SIZE / getpagesize(), 0);
-+
-+	for (stage = 1;; stage++) {
-+		_vcpu_run(vm, VCPU_ID);
-+
-+		if (stage == 3 || stage == 5) {
-+			TEST_ASSERT(run->exit_reason == KVM_EXIT_MMIO,
-+			    "Write to ALLONES page should cause KVM_EXIT_MMIO");
-+			continue;
-+		}
-+
-+		TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
-+			    "Stage %d: unexpected exit reason: %u (%s),\n",
-+			    stage, run->exit_reason,
-+			    exit_reason_str(run->exit_reason));
-+
-+		switch (get_ucall(vm, VCPU_ID, &uc)) {
-+		case UCALL_ABORT:
-+			TEST_FAIL("%s at %s:%ld", (const char *)uc.args[0],
-+				  __FILE__, uc.args[1]);
-+			/* NOT REACHED */
-+		case UCALL_SYNC:
-+			break;
-+		case UCALL_DONE:
-+			goto done;
-+		default:
-+			TEST_FAIL("Unknown ucall %lu", uc.cmd);
-+		}
-+	}
-+
-+done:
-+	kvm_vm_free(vm);
-+
-+	return 0;
-+}
--- 
-2.25.4
+> On May 14, 2020, at 2:29 AM, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com=
+> wrote:
+>=20
+> Please update the subject:
+>=20
+> Subject: "ACPI/IORT: Fix PMCG node single ID mapping handling"
+>=20
+> On Wed, May 13, 2020 at 05:12:02PM -0700, Tuan Phan wrote:
+>> PMCG node can have zero ID mapping if its overflow interrupt
+>> is wire based. The code to parse PMCG node can not assume it will
+>> have a single ID mapping.
+>=20
+> "An IORT PMCG node can have no ID mapping if its overflow interrupt is
+> wire based therefore the code that parses the PMCG node can not assume
+> the node will always have a single mapping present at index 0.
+>=20
+> Fix iort_get_id_mapping_index() by checking for an overflow interrupt
+> and mapping count."
+
+Thanks for the correction. Will update it.
+>=20
+>> Fixes: 24e516049360 ("ACPI/IORT: Add support for PMCG")
+>> Reviewed-by: Hanjun Guo <guoahanjun@huawei.com>
+>> Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
+>> ---
+>> v1 -> v2:
+>> - Use pmcg node to detect wired base overflow interrupt.
+>>=20
+>> v2 -> v3:
+>> - Address Hanjun and Robin's comments.
+>>=20
+>> drivers/acpi/arm64/iort.c | 5 +++++
+>> 1 file changed, 5 insertions(+)
+>=20
+> Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+>=20
+>> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+>> index ed3d2d1..12bb70e 100644
+>> --- a/drivers/acpi/arm64/iort.c
+>> +++ b/drivers/acpi/arm64/iort.c
+>> @@ -414,6 +414,7 @@ static struct acpi_iort_node *iort_node_get_id(struc=
+t acpi_iort_node *node,
+>> static int iort_get_id_mapping_index(struct acpi_iort_node *node)
+>> {
+>> 	struct acpi_iort_smmu_v3 *smmu;
+>> +	struct acpi_iort_pmcg *pmcg;
+>>=20
+>> 	switch (node->type) {
+>> 	case ACPI_IORT_NODE_SMMU_V3:
+>> @@ -441,6 +442,10 @@ static int iort_get_id_mapping_index(struct acpi_io=
+rt_node *node)
+>>=20
+>> 		return smmu->id_mapping_index;
+>> 	case ACPI_IORT_NODE_PMCG:
+>> +		pmcg =3D (struct acpi_iort_pmcg *)node->node_data;
+>> +		if (pmcg->overflow_gsiv || node->mapping_count =3D=3D 0)
+>> +			return -EINVAL;
+>> +
+>> 		return 0;
+>> 	default:
+>> 		return -EINVAL;
+>> --=20
+>> 2.7.4
+>>=20
 
