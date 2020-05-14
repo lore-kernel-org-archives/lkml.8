@@ -2,154 +2,246 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BCAC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A1CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A521A2065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:24:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589462682;
-	bh=C7NAO11aE0r2LgHOJkaFdjJFZKOV8MUBP8uh8MfpQyE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VYo3O1eU8zJ8jW8+LKZBgRry7UhFXULkbhZxTSm2eTqaHUvZ1fBcWcgn8K3MkC9tF
-	 ZPM6rZS6CmpQIXGaSOe7S/B+tqfNIybC6a1n0IV+t21HuByd6xhZUcKk4nyOgrSfB2
-	 kan+Civbau0XlMSiLdO3cEIaqwWnbwSs3eUzjxsQ=
+	by mail.kernel.org (Postfix) with ESMTP id 3B3C720734
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:27:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Cw5b4Kt0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbgENNYm (ORCPT
+        id S1726316AbgENN1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:24:42 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36143 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726011AbgENNYl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:24:41 -0400
-Received: by mail-oi1-f195.google.com with SMTP id x7so23585945oic.3;
-        Thu, 14 May 2020 06:24:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mV1gDXAu3PHj2qz8NxRMN80UJwMB7imwalApGyVK3E0=;
-        b=rDlcZMRT8ZFy0X7uHFdkSZKCNdaDLNy4xKlFadQg8bTr9KP1Y/pRZppJJFHf3UZHB+
-         EefEkFnSRzjkCjP0zJheirTviEGXaOhqNho41j3Dh1xKGW+sYY26D+2hpjt8Z49ghSuy
-         Q79AeKDseVuWDnyy0y8xuqvAiPwFSmqnB4jyRpuM8aIB6180vF9BCxESJv2sXxE2x4l4
-         3SlviqGS7yYxKEqoCkX0EJd7JuwIzq8MZQwjBg6xTSce06n3UXN38DLXahBKUpO5hLMn
-         zf7iybh3381wdNvPflCKLUtc8e8SMEBqhPFhvxIfGzh1buRNxt3AqaZJHArhW7B5pmgv
-         pvPg==
-X-Gm-Message-State: AOAM533bHrwdkXsOuS+EzAlgXw4YuYIYe5DG+Q0Su5qaPDEShdOtWHQF
-        qnhzETBG41zaxdvPve+Jmw==
-X-Google-Smtp-Source: ABdhPJzvIYVfE92YPp93du6vUI1pwaY/vFWHWgAMhu5qICOSPCQPcgESncNedDAP0dRa0QJKVz0y2A==
-X-Received: by 2002:aca:cdc6:: with SMTP id d189mr809229oig.19.1589462680705;
-        Thu, 14 May 2020 06:24:40 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l196sm1634201oih.25.2020.05.14.06.24.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 06:24:39 -0700 (PDT)
-Received: (nullmailer pid 14823 invoked by uid 1000);
-        Thu, 14 May 2020 13:24:39 -0000
-Date:   Thu, 14 May 2020 08:24:39 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     TY Chang <tychang@realtek.com>
-Cc:     linux-realtek-soc@lists.infradead.org, afaerber@suse.de,
-        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/7] dt-bindings: pinctrl: realtek: Add Realtek DHC SoC
- rtd1195 and rtd1295.
-Message-ID: <20200514132439.GB23147@bogus>
-References: <20200514092125.6875-1-tychang@realtek.com>
- <20200514092125.6875-5-tychang@realtek.com>
+        Thu, 14 May 2020 09:27:14 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:43670 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726011AbgENN1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 09:27:14 -0400
+Received: from zn.tnic (p200300EC2F0BBD00DC45039F589BC722.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:bd00:dc45:39f:589b:c722])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2CDB61EC0377;
+        Thu, 14 May 2020 15:27:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1589462832;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/gUNpFf2J8YxXc2dc4jvcIV4nSmrVfwfJRbIw3Hp9zA=;
+        b=Cw5b4Kt0phDez6vovuoDcELNE1rn2Rb0qgYhKo7jNCZmoqvQWGaDSBduPb+thltajNRdgz
+        clbAbfOLrwUM+npRa7Mj3sXbe/4A5yzpF3a2wAUbHKrmt81x2u4t6MumqmAMrvvvAgBfPN
+        765zESrOT7yfhbY4p4wvG2NH/A7RFEk=
+Date:   Thu, 14 May 2020 15:27:06 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Matz <matz@suse.de>,
+        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
+        Jakub Jelinek <jakub@redhat.com>
+Subject: [PATCH] x86: Fix early boot crash on gcc-10, third try
+Message-ID: <20200514132706.GB9266@zn.tnic>
+References: <20200513222038.GC6733@zn.tnic>
+ <CAHk-=wgybuOF+Jp2XYWqM7Xn1CW6szWQw_FgVoFh5jx_4YoCVw@mail.gmail.com>
+ <20200513233616.GD6733@zn.tnic>
+ <CAHk-=wjZXFe08MiNRevJFGDvX0O6kcQTiK8GFBS7hwUAzB+LQw@mail.gmail.com>
+ <CAKwvOd=o_wuiVpw5KVzLEt25W-A9Ah9fzftPZLG+yutqJmWbOg@mail.gmail.com>
+ <CAHk-=wg6G+p1RRjR6UZBEuSCDs9=iWBsxrDPTEwqh+y5RayqKA@mail.gmail.com>
+ <CALCETrUYA60fWu+=MviKx0NmW+_ppsOcv-ShUXdbyM4EjyfzHQ@mail.gmail.com>
+ <CAHk-=wgiGxRgJGS-zyer1C_x2MQUVo6iZn0=aJyuFTqJWk-mpA@mail.gmail.com>
+ <20200514052234.GA1894416@rani.riverdale.lan>
+ <CAK8P3a1Cfzu7L30bFP-Sf2_GbkN_10CCJsbefTXyfnGF16uHMA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200514092125.6875-5-tychang@realtek.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK8P3a1Cfzu7L30bFP-Sf2_GbkN_10CCJsbefTXyfnGF16uHMA@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 05:21:22PM +0800, TY Chang wrote:
-> Add compatible string for RTD1195 and RTD1295.
-> 
-> Signed-off-by: TY Chang <tychang@realtek.com>
-> ---
->  .../bindings/pinctrl/realtek,rtd-pinctrl.yaml | 59 +++++++++++++++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..5af5fc8fe633
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.yaml
-> @@ -0,0 +1,59 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/realtek,rtd-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Realtek DHC pin control
-> +
-> +maintainers:
-> +  - Andreas Farber <afaerber@suse.de>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - realtek,rtd1195-iso-pinctrl
-> +      - realtek,rtd1195-crt-pinctrl
-> +      - realtek,rtd1295-iso-pinctrl
-> +      - realtek,rtd1295-sb2-pinctrl
-> +      - realtek,rtd1295-disp-pinctrl
-> +      - realtek,rtd1295-cr-pinctrl
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    iso_pinctrl: pinctrl@300 {
-> +        compatible = "realtek,rtd1195-iso-pinctrl";
-> +        reg = <0x300 0x14>;
+Ok,
 
-Aren't there child nodes with pin settings? They need to be documented.
+here's the new version. Changes are:
 
-> +    }
-> +  - |
-> +    crt_pinctrl: pinctrl@300 {
-> +        compatible = "realtek,rtd1195-crt-pinctrl";
-> +        reg = <0x300 0x78>;
-> +    }
-> +  - |
-> +    iso_pinctrl: pinctrl@300 {
-> +        compatible = "realtek,rtd1295-iso-pinctrl";
-> +        reg = <0x300 0x24>;
-> +    }
-> +  - |
-> +    sb2_pinctrl: pinctrl@900 {
-> +        compatible = "realtek,rtd1295-sb2-pinctrl";
-> +        reg = <0x900 0x100>;
-> +    }
-> +  - |
-> +    disp_pinctrl: pinctrl@4d000 {
-> +        compatible = "realtek,rtd1295-disp-pinctrl";
-> +        reg = <0x4d000 0x100>;
-> +    };
-> +  - |
-> +    cr_pinctrl: pinctrl@12600 {
-> +        compatible = "realtek,rtd1295-cr-pinctrl";
-> +        reg = <0x12600 0x100>;
-> +    };
-> +
-> -- 
-> 2.26.2
-> 
+- It does mb() now (Linus).
+- I've added a call to prevent_tail_call_optimization() in init/main.c
+  because it does generate the stack canary there too. This is a
+  future-proof thing. (Arvind).
+- Dropped Reviewed-by tags.
+- Dropped compiler checking from the branch (Linus).
+- Added Cc:stable because gcc10 has released already, apparently.
+
+Testing with gcc10 passes after making sure that without it it would
+cause the tailcall optimization and fail stack check.
+
+Plan is to send it to Linus on the weekend so that it makes it into 5.7.
+
+Thx.
+
+---
+From: Borislav Petkov <bp@suse.de>
+
+... or the odyssey of trying to disable the stack protector for the
+function which generates the stack canary value.
+
+The whole story started with Sergei reporting a boot crash with a kernel
+built with gcc-10:
+
+  Kernel panic — not syncing: stack-protector: Kernel stack is corrupted in: start_secondary
+  CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.6.0-rc5—00235—gfffb08b37df9 #139
+  Hardware name: Gigabyte Technology Co., Ltd. To be filled by O.E.M./H77M—D3H, BIOS F12 11/14/2013
+  Call Trace:
+    dump_stack
+    panic
+    ? start_secondary
+    __stack_chk_fail
+    start_secondary
+    secondary_startup_64
+  -—-[ end Kernel panic — not syncing: stack—protector: Kernel stack is corrupted in: start_secondary
+
+This happens because gcc-10 tail-call optimizes the last function call
+in start_secondary() - cpu_startup_entry() - and thus emits a stack
+canary check which fails because the canary value changes after the
+boot_init_stack_canary() call.
+
+To fix that, the initial attempt was to mark the one function which
+generates the stack canary with:
+
+  __attribute__((optimize("-fno-stack-protector"))) ... start_secondary(void *unused)
+
+however, using the optimize attribute doesn't work cumulatively
+as the attribute does not add to but rather replaces previously
+supplied optimization options - roughly all -fxxx options.
+
+The key one among them being -fno-omit-frame-pointer and thus leading to
+not present frame pointer - frame pointer which the kernel needs.
+
+The next attempt to prevent compilers from tail-call optimizing
+the last function call cpu_startup_entry(), shy of carving out
+start_secondary() into a separate compilation unit and building it with
+-fno-stack-protector, was to add an empty asm("").
+
+This current solution was short and sweet, and reportedly, is supported
+by both compilers but we didn't get very far this time: future (LTO?)
+optimization passes could potentially eliminate this, which leads us
+to the third attempt: having an actual memory barrier there which the
+compiler cannot ignore or move around etc.
+
+That should hold for a long time, but hey we said that about the other
+two solutions too so...
+
+Reported-by: Sergei Trofimovich <slyfox@gentoo.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20200314164451.346497-1-slyfox@gentoo.org
+---
+ arch/x86/include/asm/stackprotector.h | 7 ++++++-
+ arch/x86/kernel/smpboot.c             | 8 ++++++++
+ arch/x86/xen/smp_pv.c                 | 1 +
+ include/linux/compiler.h              | 6 ++++++
+ init/main.c                           | 2 ++
+ 5 files changed, 23 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/include/asm/stackprotector.h b/arch/x86/include/asm/stackprotector.h
+index 91e29b6a86a5..9804a7957f4e 100644
+--- a/arch/x86/include/asm/stackprotector.h
++++ b/arch/x86/include/asm/stackprotector.h
+@@ -55,8 +55,13 @@
+ /*
+  * Initialize the stackprotector canary value.
+  *
+- * NOTE: this must only be called from functions that never return,
++ * NOTE: this must only be called from functions that never return
+  * and it must always be inlined.
++ *
++ * In addition, it should be called from a compilation unit for which
++ * stack protector is disabled. Alternatively, the caller should not end
++ * with a function call which gets tail-call optimized as that would
++ * lead to checking a modified canary value.
+  */
+ static __always_inline void boot_init_stack_canary(void)
+ {
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index fe3ab9632f3b..4f275ac7830b 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -266,6 +266,14 @@ static void notrace start_secondary(void *unused)
+ 
+ 	wmb();
+ 	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
++
++	/*
++	 * Prevent tail call to cpu_startup_entry() because the stack protector
++	 * guard has been changed a couple of function calls up, in
++	 * boot_init_stack_canary() and must not be checked before tail calling
++	 * another function.
++	 */
++	prevent_tail_call_optimization();
+ }
+ 
+ /**
+diff --git a/arch/x86/xen/smp_pv.c b/arch/x86/xen/smp_pv.c
+index 8fb8a50a28b4..f2adb63b2d7c 100644
+--- a/arch/x86/xen/smp_pv.c
++++ b/arch/x86/xen/smp_pv.c
+@@ -93,6 +93,7 @@ asmlinkage __visible void cpu_bringup_and_idle(void)
+ 	cpu_bringup();
+ 	boot_init_stack_canary();
+ 	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
++	prevent_tail_call_optimization();
+ }
+ 
+ void xen_smp_intr_free_pv(unsigned int cpu)
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 034b0a644efc..448c91bf543b 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -356,4 +356,10 @@ static inline void *offset_to_ptr(const int *off)
+ /* &a[0] degrades to a pointer: a different type from an array */
+ #define __must_be_array(a)	BUILD_BUG_ON_ZERO(__same_type((a), &(a)[0]))
+ 
++/*
++ * This is needed in functions which generate the stack canary, see
++ * arch/x86/kernel/smpboot.c::start_secondary() for an example.
++ */
++#define prevent_tail_call_optimization()	mb()
++
+ #endif /* __LINUX_COMPILER_H */
+diff --git a/init/main.c b/init/main.c
+index a48617f2e5e5..74ac7e48ce02 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -1001,6 +1001,8 @@ asmlinkage __visible void __init start_kernel(void)
+ 
+ 	/* Do the rest non-__init'ed, we're now alive */
+ 	arch_call_rest_init();
++
++	prevent_tail_call_optimization();
+ }
+ 
+ /* Call all constructor functions linked into the kernel. */
+-- 
+2.21.0
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
