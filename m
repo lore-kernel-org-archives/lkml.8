@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C2CC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E6BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9242F2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0B1F2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483108;
-	bh=vsTKuHrKkE/7x8B7/4x31pbZ2FUZOb26c9ExD8o/O/0=;
+	s=default; t=1589483113;
+	bh=dI6E9BtFZXihxAb90DGuTg/JK1pbhVNFfmOLycUnEE8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GaVjUf5f37VulTzMnDMZ6/anZSHQyq0Xny75y2wjLo4P/qZ2n9u0NN8zAWaHjB2IV
-	 fQuHfYifrHEQ4QD2HM4Oe/tCDp5sy8q286uN1fLr4CDeY3367d1fa2H0fQUOnRyA4E
-	 4vB8i9Uor45QmWz+4tEpopVamsE+Vx+u6AFzyMDg=
+	b=A6SqF2EKsPzDnm3iILyssfjdYbWln1T8OOnf711kmbZCLkWUTASi5IeZAtt/1mPho
+	 JWPYRgWDXZed/XIoet/1rWOx2JVQA0WY1ENmcih6IMDH4ypiM6vS6mhZ6HN6p2VTf7
+	 luv6UghFRW6aZLJ2uTIXLVlT9WeLLqCfLG0/tsQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbgENSyV (ORCPT
+        id S1729915AbgENTFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:54:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53846 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:05:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728931AbgENSyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:54:04 -0400
+        id S1729009AbgENSyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:54:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 099E320767;
-        Thu, 14 May 2020 18:54:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6F5C2065F;
+        Thu, 14 May 2020 18:54:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482443;
-        bh=vsTKuHrKkE/7x8B7/4x31pbZ2FUZOb26c9ExD8o/O/0=;
+        s=default; t=1589482459;
+        bh=dI6E9BtFZXihxAb90DGuTg/JK1pbhVNFfmOLycUnEE8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=daH3/IOJ/sktMQkrqDozZKh6tpkwFbXd1cbfWFKBOMXNGBATHgeNofJlZoIknJGA1
-         oQ6uB07IFj5/Gm58KiXJrGjcbd4XorsBo/XUDNiL2hLV3rdCk29HQrAKjWz7XNsY1G
-         uzZibnFFalnmd3WkP4drQQVsdBl1BNa1F3CAIcNo=
+        b=WuSB1KXoSEUK2/YysQIWWtLj2bjpAQ2YqMgQ9H+BUrbsfYdKjMGNmhzeEJfMQW5jw
+         YY148muwdliAJJSFzcrZWlxv5hXudFixBi3z+W9qz+GosUw5ZUIpMBQPG9tq/yl/bU
+         LgFOT122T3TYeYUW2HNsDmMlAnqs5slLkl5QlXak=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 42/49] gcc-10: disable 'zero-length-bounds' warning for now
-Date:   Thu, 14 May 2020 14:53:03 -0400
-Message-Id: <20200514185311.20294-42-sashal@kernel.org>
+Cc:     Artem Borisov <dedsa2002@gmail.com>, Jiri Kosina <jkosina@suse.cz>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 04/31] HID: alps: Add AUI1657 device ID
+Date:   Thu, 14 May 2020 14:53:46 -0400
+Message-Id: <20200514185413.20755-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200514185311.20294-1-sashal@kernel.org>
-References: <20200514185311.20294-1-sashal@kernel.org>
+In-Reply-To: <20200514185413.20755-1-sashal@kernel.org>
+References: <20200514185413.20755-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,44 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Artem Borisov <dedsa2002@gmail.com>
 
-[ Upstream commit 5c45de21a2223fe46cf9488c99a7fbcf01527670 ]
+[ Upstream commit 640e403b1fd24e7f31ac6f29f0b6a21d285ed729 ]
 
-This is a fine warning, but we still have a number of zero-length arrays
-in the kernel that come from the traditional gcc extension.  Yes, they
-are getting converted to flexible arrays, but in the meantime the gcc-10
-warning about zero-length bounds is very verbose, and is hiding other
-issues.
+This device is used on Lenovo V130-15IKB variants and uses
+the same registers as U1.
 
-I missed one actual build failure because it was hidden among hundreds
-of lines of warning.  Thankfully I caught it on the second go before
-pushing things out, but it convinced me that I really need to disable
-the new warnings for now.
-
-We'll hopefully be all done with our conversion to flexible arrays in
-the not too distant future, and we can then re-enable this warning.
-
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Artem Borisov <dedsa2002@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/hid/hid-alps.c | 1 +
+ drivers/hid/hid-ids.h  | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index 68708ae07fbd3..49c74e8b55df4 100644
---- a/Makefile
-+++ b/Makefile
-@@ -857,6 +857,9 @@ KBUILD_CFLAGS += -Wno-pointer-sign
- # disable stringop warnings in gcc 8+
- KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
+diff --git a/drivers/hid/hid-alps.c b/drivers/hid/hid-alps.c
+index 895f49b565ee1..28ca21014bbe4 100644
+--- a/drivers/hid/hid-alps.c
++++ b/drivers/hid/hid-alps.c
+@@ -806,6 +806,7 @@ static int alps_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ 		break;
+ 	case HID_DEVICE_ID_ALPS_U1_DUAL:
+ 	case HID_DEVICE_ID_ALPS_U1:
++	case HID_DEVICE_ID_ALPS_1657:
+ 		data->dev_type = U1;
+ 		break;
+ 	default:
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index ae145bdcd83d5..53ac5e1ab4bc5 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -83,7 +83,7 @@
+ #define HID_DEVICE_ID_ALPS_U1		0x1215
+ #define HID_DEVICE_ID_ALPS_T4_BTNLESS	0x120C
+ #define HID_DEVICE_ID_ALPS_1222		0x1222
+-
++#define HID_DEVICE_ID_ALPS_1657         0x121E
  
-+# We'll want to enable this eventually, but it's not going away for 5.7 at least
-+KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
-+
- # Enabled with W=2, disabled by default as noisy
- KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
- 
+ #define USB_VENDOR_ID_AMI		0x046b
+ #define USB_DEVICE_ID_AMI_VIRT_KEYBOARD_AND_MOUSE	0xff10
 -- 
 2.20.1
 
