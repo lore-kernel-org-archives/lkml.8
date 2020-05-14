@@ -2,188 +2,111 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99228C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FDBB206F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7081D20709
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:09:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kXSrc44W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m2eydK5T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbgENVH1 (ORCPT
+        id S1728000AbgENVJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 17:07:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41304 "EHLO
+        Thu, 14 May 2020 17:09:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726201AbgENVH0 (ORCPT
+        by vger.kernel.org with ESMTP id S1726201AbgENVJk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 17:07:26 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35E30C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 14:07:26 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t7so44869plr.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 14:07:26 -0700 (PDT)
+        Thu, 14 May 2020 17:09:40 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1226C061A0E;
+        Thu, 14 May 2020 14:09:39 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id o14so5124383ljp.4;
+        Thu, 14 May 2020 14:09:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NykzObPbt09vQkb419M6Erv1hx3UgyLf17JiOqHvK80=;
-        b=kXSrc44WFSLsjXyR3bgvdMCGXo3k3C3Oij9xGZlXBwp42VEUZCNCMZLCnI9OGne/vC
-         mr0ZoWsu3K9OxnagSQTufjXCYNBsmgnKknQ/+TAAJ4umAqRSc9biOadFDWGedTwyxZNl
-         u25qF/rQIzI3UjGyszM1Ldeb8Z0rLmX5nVR8c=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=FmoIa0AdudNDzlTpZ0uiZDtdJ4Pgj1/DLge9mABr+4w=;
+        b=m2eydK5TfbDdgIiR1qoaJyWjU/1xapfTY6oGjlexVUmxSSabO9gqLc9WTMyzQJpITB
+         fWA7uSBy+kRiov7VdhjnIW/G7XIqLPg8vnRdwu8Ek6AAJcy1dBZAVNUIze8IwrxyMUx/
+         Z4H0/SHYEfA6t9h4V0l+x56uowOHydj3fNFi8H+ysFas5VSU0QKAx3TjU+c5NkLpz3qj
+         4nuAFNKkmzLiBBFrtsi4WRfpKI0w25q5MWlbx72LOqGAM90A1UMtfkUE/jE0H6jNkhEU
+         nMEEL50QIXSspUMDfIHZnaf4KySCpup3aAZXd4Sfkt+Yd34s+4IoW5dW82APBhehs77j
+         6Gjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NykzObPbt09vQkb419M6Erv1hx3UgyLf17JiOqHvK80=;
-        b=sMbqvd1XGV/P+ADZcBR+ckgxgMvLNvMw7n/xmvxoRZPKJaxQptiqXrv1zHomU2nDjJ
-         ELSIv8vMG2iQNTNk1s2fSFMmFJceS23redir2T00IeQamk7bF5kKSYgZtEGiHSr/p8U/
-         y+in1KUSYJ5PgD/t5P+mxu2N+App/jjbHVRdmT04I9VjY6QJfQtOBjxQlbTr+hzaQ6Bs
-         2ugj42J0I3etOurYI85wGMNB4OJOjXeo1viw/ooF2up+kE2N1FZ5wCo03CWIBBlyN54b
-         gkz8ARlOzPDnRnGrie4X+wWSEAi0Z155PpM9Rmo62702+WEKazEkEX2nERu/s380Gniw
-         9eAA==
-X-Gm-Message-State: AOAM5318eZMWnj1Y8T1LC2OnOfr0ElHU5EmmBoxOyoNfopFlVXvHQClu
-        yErzcvGYE/To3h7COdIUCCzrZA==
-X-Google-Smtp-Source: ABdhPJwQKxTyIK1X8Xl6+Pi/MwcWTTTthijbO2mFHfEyCX0DhQONIsHerCdGZtFoUmB1727GR2qgVw==
-X-Received: by 2002:a17:902:bd81:: with SMTP id q1mr501366pls.46.1589490445695;
-        Thu, 14 May 2020 14:07:25 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id w192sm104707pff.126.2020.05.14.14.07.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 May 2020 14:07:25 -0700 (PDT)
-Date:   Thu, 14 May 2020 14:07:24 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Cc:     linux-bluetooth@vger.kernel.org, bgodavar@codeaurora.org,
-        alainm@chromium.org, marcel@holtmann.org,
-        chromeos-bluetooth-upstreaming@chromium.org,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] Bluetooth: hci_qca: Enable WBS support for wcn3991
-Message-ID: <20200514210724.GQ4525@google.com>
-References: <20200514131338.v2.1.I68404fc395a3dbc57c8a89ca02490013e8003a87@changeid>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=FmoIa0AdudNDzlTpZ0uiZDtdJ4Pgj1/DLge9mABr+4w=;
+        b=q992gi1cbTH+TBpkLOVMQG3b0c1qklVOrx/ddj7z1uJSO8I4AY/fgO3b2YAr34LzFU
+         0+tXeMduRSE5hJg8dtYJSKP8eLzfzAnmaFlqLcO80xSu8xgpHNXJx9vC3jbhYxtF5Bk6
+         yhKu8n2CV+kHEm+MsAh6dtCnt4sfrUo8zdf9Zjf/dFzQGp5/L4GL/v+D/j4jFGGVA1mD
+         2zNqDLJzFacQy0Puo6HGsurTHJePE9ktZxxZK4Pid1T0lC7LD+GJdjapk1Z4IIoNbOFq
+         lAeIeIXfJxhY0zztS/87Zu17a6+X4/FEPUiE+yrH2J08FfgfaGymsxq05HdHsdrMlsgr
+         y06w==
+X-Gm-Message-State: AOAM532OluziO9Yy/dQbppRVkrReD2/7z8C6L7Z/35D0goFwVLbqXKfh
+        VaC5+pEsJup0mQAKv9sx73E=
+X-Google-Smtp-Source: ABdhPJw3+tg4ZIkP0KD8isuSzsxGILoMKI+AxadyW6yCzc0e0wn6qyD7t0c7jWNSG1OzLhiEzNd/Bg==
+X-Received: by 2002:a2e:6c08:: with SMTP id h8mr134750ljc.48.1589490578217;
+        Thu, 14 May 2020 14:09:38 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.gmail.com with ESMTPSA id g3sm45215ljk.27.2020.05.14.14.09.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 14:09:37 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/4] media: staging: tegra-vde: Balance runtime PM use-count on resume failure
+Date:   Fri, 15 May 2020 00:08:44 +0300
+Message-Id: <20200514210847.9269-2-digetx@gmail.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200514210847.9269-1-digetx@gmail.com>
+References: <20200514210847.9269-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200514131338.v2.1.I68404fc395a3dbc57c8a89ca02490013e8003a87@changeid>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Abhishek,
+The RPM's use-count is getting incremented regardless of
+pm_runtime_get_sync() success or fail. It's up to a driver how to
+handle the failed RPM. In the case of VDE driver, the RPM's use-count
+should be restored if runtime-resume fails.
 
-On Thu, May 14, 2020 at 01:14:04PM -0700, Abhishek Pandit-Subedi wrote:
-> WCN3991 supports transparent WBS (host encoded mSBC). Add a flag to the
-> device match data to show WBS is supported.
-> 
-> This requires the matching firmware for WCN3991 in linux-firmware:
->         1a8b0dc00f77 (qca: Enable transparent WBS for WCN3991)
-> 
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> ---
-> 
-> Changes in v2:
-> - Rename struct to qca_capabilities and fix enum naming
-> 
->  drivers/bluetooth/hci_qca.c | 23 +++++++++++++++++------
->  1 file changed, 17 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index b3fd07a6f8127..96799644f0933 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -75,6 +75,9 @@ enum qca_flags {
->  	QCA_HW_ERROR_EVENT
->  };
->  
-> +enum qca_capabilities {
-> +	QCA_CAP_WIDEBAND_SPEECH_SUPPORTED = BIT(0),
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/staging/media/tegra-vde/vde.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-nit: the '_SUPPORTED' suffix seems somewhat redundant, given that this
-is a capability (as 'CAP' indicates). Up to you if you want to keep it.
+diff --git a/drivers/staging/media/tegra-vde/vde.c b/drivers/staging/media/tegra-vde/vde.c
+index d3e63512a765..803e5dda4bb5 100644
+--- a/drivers/staging/media/tegra-vde/vde.c
++++ b/drivers/staging/media/tegra-vde/vde.c
+@@ -776,8 +776,10 @@ static int tegra_vde_ioctl_decode_h264(struct tegra_vde *vde,
+ 		goto release_dpb_frames;
+ 
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_noidle(dev);
+ 		goto unlock;
++	}
+ 
+ 	/*
+ 	 * We rely on the VDE registers reset value, otherwise VDE
+-- 
+2.26.0
 
-> +};
->  
->  /* HCI_IBS transmit side sleep protocol states */
->  enum tx_ibs_states {
-> @@ -187,10 +190,11 @@ struct qca_vreg {
->  	unsigned int load_uA;
->  };
->  
-> -struct qca_vreg_data {
-> +struct qca_device_data {
->  	enum qca_btsoc_type soc_type;
->  	struct qca_vreg *vregs;
->  	size_t num_vregs;
-> +	uint32_t capabilities;
->  };
->  
->  /*
-> @@ -1691,7 +1695,7 @@ static const struct hci_uart_proto qca_proto = {
->  	.dequeue	= qca_dequeue,
->  };
->  
-> -static const struct qca_vreg_data qca_soc_data_wcn3990 = {
-> +static const struct qca_device_data qca_soc_data_wcn3990 = {
->  	.soc_type = QCA_WCN3990,
->  	.vregs = (struct qca_vreg []) {
->  		{ "vddio", 15000  },
-> @@ -1702,7 +1706,7 @@ static const struct qca_vreg_data qca_soc_data_wcn3990 = {
->  	.num_vregs = 4,
->  };
->  
-> -static const struct qca_vreg_data qca_soc_data_wcn3991 = {
-> +static const struct qca_device_data qca_soc_data_wcn3991 = {
->  	.soc_type = QCA_WCN3991,
->  	.vregs = (struct qca_vreg []) {
->  		{ "vddio", 15000  },
-> @@ -1711,9 +1715,10 @@ static const struct qca_vreg_data qca_soc_data_wcn3991 = {
->  		{ "vddch0", 450000 },
->  	},
->  	.num_vregs = 4,
-> +	.capabilities = QCA_CAP_WIDEBAND_SPEECH_SUPPORTED,
->  };
->  
-> -static const struct qca_vreg_data qca_soc_data_wcn3998 = {
-> +static const struct qca_device_data qca_soc_data_wcn3998 = {
->  	.soc_type = QCA_WCN3998,
->  	.vregs = (struct qca_vreg []) {
->  		{ "vddio", 10000  },
-> @@ -1724,7 +1729,7 @@ static const struct qca_vreg_data qca_soc_data_wcn3998 = {
->  	.num_vregs = 4,
->  };
->  
-> -static const struct qca_vreg_data qca_soc_data_qca6390 = {
-> +static const struct qca_device_data qca_soc_data_qca6390 = {
->  	.soc_type = QCA_QCA6390,
->  	.num_vregs = 0,
->  };
-> @@ -1860,7 +1865,7 @@ static int qca_serdev_probe(struct serdev_device *serdev)
->  {
->  	struct qca_serdev *qcadev;
->  	struct hci_dev *hdev;
-> -	const struct qca_vreg_data *data;
-> +	const struct qca_device_data *data;
->  	int err;
->  	bool power_ctrl_enabled = true;
->  
-> @@ -1948,6 +1953,12 @@ static int qca_serdev_probe(struct serdev_device *serdev)
->  		hdev->shutdown = qca_power_off;
->  	}
->  
-> +	/* Wideband speech support must be set per driver since it can't be
-> +	 * queried via hci.
-> +	 */
-> +	if (data && (data->capabilities & QCA_CAP_WIDEBAND_SPEECH_SUPPORTED))
-> +		set_bit(HCI_QUIRK_WIDEBAND_SPEECH_SUPPORTED, &hdev->quirks);
-> +
->  	return 0;
->  }
-
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
