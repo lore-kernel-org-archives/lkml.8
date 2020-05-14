@@ -2,120 +2,139 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5479C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5EA0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9577720727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:03:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="orITDQkI"
+	by mail.kernel.org (Postfix) with ESMTP id A1359207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:05:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbgENXDB (ORCPT
+        id S1729026AbgENXFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 19:03:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59368 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728915AbgENXDB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 19:03:01 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08419C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 16:03:01 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id i16so130065ybq.9
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 16:03:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O3giVcb0q9LiDqtRCOl7tUI8tTD6PNV0NlsSPJaM/o8=;
-        b=orITDQkIHJz7agF18bRRT4E3e/2q11s5ptgnEhfqFThw8QO0lSas8iZeBxNR6DcNLY
-         4KJtOTSPbFuuJoCyGY+C4j/w9qS4T10e7WM4ZwVVYGNxtQQlUDkumxEOTkmmJPtUlcTO
-         BvbqjsqqujRjn55ldkRKlfKhZMVdco/U3CUOl8iJdh70apev73J6jnMYP0hmN2xZsD+3
-         99anueQoVXUZ5WfpLhsYic3hPlPdk33V3rH1/mQg/NCPE4C5zULkeLJO43mDW2r6SsjC
-         XKnClmdxt5mTh8SsvsmbifFnJhYzUZg8xgYIWMOVFVF3EVTnYUFk5DoCAaGvXtJ4YUpW
-         2A5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O3giVcb0q9LiDqtRCOl7tUI8tTD6PNV0NlsSPJaM/o8=;
-        b=aBRDM6CfRXApuj6c7wDAT0+gv7HooSBeEWi/iHmHVsWxHeyDhOOrPlVy/JVVPnXn2N
-         f1krABW7Enamuh8w2z33HbWBZNQAall2/Hx+0JO/1qfdlDxO98VelrpaOpA7d1cKUHEC
-         BPJLbffxYZcNSchKjdHAT6Zur3Dg+6Ikg1Dm9w8IwkLPCM0Aw4pxOdgKeSh+F49DJcbK
-         2g63veaRCgv9kL9wbpvE+cWZpibLswHqS3Q7FFWtR6yPDGiitjsqscsEXEx2MzNuKQjs
-         uO84juREMzdHfd5wY6zOJ3zEplNESeyTi1gu7OJ77UdtpLjX3W2gIolhE+gkT6KqlBHQ
-         FdeQ==
-X-Gm-Message-State: AOAM530DHAaGxe5LHQu6+etwKQw4l3GOK9h/a71psuuQJGTanh3tIZyj
-        pyJzOJJZSFJ5qvYggWs76dmpWVuMomU/jVDy93oDpw==
-X-Google-Smtp-Source: ABdhPJz8rCWbTAdxMRGS+MTPdcYDEFMFFSGPx580u6+EgNONRsA8f4cpvMWI3FAq5LGVXHQKphchtKJfYRAxmU9bfO8=
-X-Received: by 2002:a25:3182:: with SMTP id x124mr1053657ybx.324.1589497380051;
- Thu, 14 May 2020 16:03:00 -0700 (PDT)
+        Thu, 14 May 2020 19:05:07 -0400
+Received: from mail-dm6nam12olkn2048.outbound.protection.outlook.com ([40.92.22.48]:47424
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728508AbgENXFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 19:05:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gdYG3GM2E6DZNF3aoaeD39O3T4OfsV5XN9Zzc9TLdMfAY/BKisbC46jkvT7qgDGIPFlIA2sL7QE1FVmzhwaeV235nwpWVX3WggkX4EEm/IHceCtB5xifFos7vNwFoRtP170S+Z1pLZt1s0RO5eobHwLT4gjFTka5HzqmmreQpx6FwrlJXs1knWsScuKqQYOcJaEn6fk/1EbLfmGpxOQ54n4K6IelNXhzdGQYsYeZo7z8ffi36SIEgaAr64S6DxeqwkND/iG8+O/BgrSn5kAiI7/OvrE6da0FUV8VRI6iAKToYXOpd3rcfFrRaCLxcym4whh0/CGHgwF8B1zn+qkRsQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u8Z4mUac3jNXx26SHqo2XYSo2AyvhLsfSPKAt2qH4nM=;
+ b=B9Zs7TvD+lex5/QF9NzXp51hsYled7lTeKOSGUQMNfAMw9JmcpprwyycnwKKhe7qySUNpU9I69GbJ6O+Y18ZkkAAiUbILHqga4c/Y1ToSO1UPDU944UX3/4zIgejnH8Cp6ZajRFa1Ahp3i9oyK68lJBJVuNQfWEeWTvDXjhEkhWEs4YB2uKgP7xpabnE+pJPohg13KoAz7C/G+ZSs5N4kKjhUzTZnLHz+eFti1s1Ray70RUrCEluyCQ+WgFr77L06SFM4MBTi72KIEVt0PrgJz1UhLg/hI+QJRbXh17NYTIr05+zxuTrYqBsvOGExqeRS6ZWQWPl3/DH27DteY7w0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=live.ca; dmarc=pass action=none header.from=live.ca; dkim=pass
+ header.d=live.ca; arc=none
+Received: from MW2NAM12FT003.eop-nam12.prod.protection.outlook.com
+ (2a01:111:e400:fc65::48) by
+ MW2NAM12HT221.eop-nam12.prod.protection.outlook.com (2a01:111:e400:fc65::279)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.11; Thu, 14 May
+ 2020 23:05:04 +0000
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ (2a01:111:e400:fc65::44) by MW2NAM12FT003.mail.protection.outlook.com
+ (2a01:111:e400:fc65::70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.11 via Frontend
+ Transport; Thu, 14 May 2020 23:05:04 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:2B908F33ADF082C81FC1E0FCB353C2A7DCA76E6AA8734CB8F5D9CE6A53963CFD;UpperCasedChecksum:74C0D38BCB1EA9186C10664C7F62431CC02EA446E510634877E7D9DA5FB97A8B;SizeAsReceived:7743;Count:48
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc]) by BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::ad10:4127:4bc8:76fc%6]) with mapi id 15.20.3000.022; Thu, 14 May 2020
+ 23:05:04 +0000
+From:   Jonathan Bakker <xc-racer2@live.ca>
+To:     sre@kernel.org, krzk@kernel.org, jonghwa3.lee@samsung.com,
+        tglx@linutronix.de, kstewart@linuxfoundation.org,
+        baolin.wang7@gmail.com, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jonathan Bakker <xc-racer2@live.ca>
+Subject: [PATCH 00/10] power: supply: Charger-manager improvements
+Date:   Thu, 14 May 2020 16:04:25 -0700
+Message-ID: <BN6PR04MB06603115D277DF264D9380E8A3BC0@BN6PR04MB0660.namprd04.prod.outlook.com>
+X-Mailer: git-send-email 2.20.1
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MWHPR22CA0040.namprd22.prod.outlook.com
+ (2603:10b6:300:69::26) To BN6PR04MB0660.namprd04.prod.outlook.com
+ (2603:10b6:404:d9::21)
+X-Microsoft-Original-Message-ID: <20200514230435.11798-1-xc-racer2@live.ca>
 MIME-Version: 1.0
-References: <20200513062236.854-1-irogers@google.com> <20200513062236.854-2-irogers@google.com>
- <ac88604a-56c2-b632-57c2-3bee316dcea7@huawei.com> <CAP-5=fVkD+0wCMcBBHWM8djsnn2KsshOyK_XcjNDTsiVo04vwQ@mail.gmail.com>
- <5264e16c-fb1a-4bbc-96b5-1d867e38902e@huawei.com>
-In-Reply-To: <5264e16c-fb1a-4bbc-96b5-1d867e38902e@huawei.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 14 May 2020 16:02:49 -0700
-Message-ID: <CAP-5=fWt58UVTTj_qvirMhMOaUbur+HzxrTi5u1qvCA1ft9BEw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf test: Improve pmu event metric testing
-To:     John Garry <john.garry@huawei.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Paul Clarke <pc@us.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from jon-hp-6570b.telus (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR22CA0040.namprd22.prod.outlook.com (2603:10b6:300:69::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26 via Frontend Transport; Thu, 14 May 2020 23:05:02 +0000
+X-Mailer: git-send-email 2.20.1
+X-Microsoft-Original-Message-ID: <20200514230435.11798-1-xc-racer2@live.ca>
+X-TMN:  [LHc+2olohFnXGtQZ9kDZurzcUck2jh1xjDnxFJJ2eRRV/Kohx+25bz1VVfCpu2qV]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 48
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: f984340d-8d2c-46d8-a3fd-08d7f85b3c3e
+X-MS-TrafficTypeDiagnostic: MW2NAM12HT221:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zEK1vFgZqFPbxQudR2BGPp2pdGOL30XDE/H1APDQuD9mJ69a0uXXwI+2yAT5GB1qE4MO1SLmRoWyZUKDUyis7OLV9UTujY53etGoA3k/Cop7FZNsUhGvz799uhS1ozt9xMDAUHMBYQI0gYnNxkS2YXftPMdndAMUa5H2pRe71A8G5ULXXnCXJRhQcI+rJnavPuD7gCo7RjpqDQStVXTW192wwK/Y8QxmYfB7EX9LjfnCUMzvEAb/L2PyG2jPIC5f
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR04MB0660.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
+X-MS-Exchange-AntiSpam-MessageData: TIXwLDbwsqF2yzraKILd15S/al3pSAZhOVLabJc8h/79+Gm4GfDdB13jP2gCM6zZOglCXdVdoMUkNsnnyI31AXbKQLlBuHGkhEZGNg2EU3ctyo2XbrZmUfdqI+abgknkLGjJqiMKU0eIHedbdXtyeh1u2L58kMPsybIVH6D4wkyYaEr22pU3dWdFb/a40SxdhpH/GI+Pogb+PZyc+nwFow==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f984340d-8d2c-46d8-a3fd-08d7f85b3c3e
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2020 23:05:03.8852
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2NAM12HT221
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 2:00 AM John Garry <john.garry@huawei.com> wrote:
->
-> On 13/05/2020 17:10, Ian Rogers wrote:
-> >> Out of interest, if we could move the validation of metrics to jevents,
-> >> how much functionality would we still have here?
-> > If we add checking to jevents then the MetricExpr would be known to be
-> > valid, however, the events (aka ids) within the expression could be
-> > invalid.
->
-> So I think that has some value. I mean, just to detect syntax errors,
-> like those remedied in "perf metrics: fix parse errors in power8 metrics".
->
-> > I'm not sure we could realistically check the events at
-> > jevents (build) time as there is no guarantee that the machine we run
-> > on is the same as the one we compile on.
->
-> But we could at least check that there are event aliases for that CPU,
-> right? (by examining the JSONs for that cpu). If the event alias does
-> not actually match on the target CPU, then that can't be helped.
+Charger-manager is a virtual driver for unifying chargers, fuel gauges,
+extcon devices, and a thermal device into a battery management system.
 
-Agreed, I think there will be some cases where something more can be
-done. Jiri has proposed fake pmus as well:
-https://www.spinics.net/lists/linux-perf-users/msg11760.html
-I don't know how much sense it makes trying to get this in jevents, as
-long as 'perf test' is run.
+Unfortunately, it has been broken since commit 830ae442202e ("extcon:
+Remove the deprecated extcon functions") when the extcon internal API
+was changed but some drivers were not updated.  Additionally, it had
+some race conditions and was unnecessarily complex.
 
-Thanks,
-Ian
+A number of these patches come from a Tizen git tree(1); they have been
+rebased and the commit messages cleaned up.
 
-> Cheers,
-> John
->
+These changes have been tested on a couple of first-gen Galaxy S devices
+based on s5pv210 with a modified max8998 driver so that a charger
+regulator is exposed.  In addition to the max8998, this hardware has
+a max17040 fuel gauge, fsa9480 extcon, and a generic thermal resistor
+for temperature sensing.
+
+1) https://git.tizen.org/cgit/platform/kernel/linux-exynos/log/drivers/power/charger-manager.c?h=tizen_5.0
+
+Jonathan Bakker (4):
+  power: supply: charger-manager: Always use POWER_SUPPLY_PROP_TEMP
+  power: supply: charger-manager: Update extcon functions
+  power: supply: charger-manager: Count cm-chargers property directly
+  dt-bindings: power: supply: Cleanup charger-manager bindings
+
+Jonghwa Lee (6):
+  power: supply: charger-manager: Swap private uevent for
+    power_supply_changed
+  power: supply: charger-manager: Remove cm_notify_event function
+  power: supply: charger-manager: Correct usage of CHARGE_NOW/FULL
+  power: supply: charger-manager:  Collect all power_supply_changed()
+    calls
+  power: supply: charger-manager: Make decisions focussed on battery
+    status
+  power: supply: charger-manager: Don't start charging in cable
+    nofitication
+
+ .../bindings/power/supply/charger-manager.txt |  30 +-
+ drivers/power/supply/charger-manager.c        | 571 +++++-------------
+ include/linux/power/charger-manager.h         |  41 +-
+ 3 files changed, 175 insertions(+), 467 deletions(-)
+
+-- 
+2.20.1
+
