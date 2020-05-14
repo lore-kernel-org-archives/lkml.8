@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D686C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E197C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EBA42065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 307A72065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:54:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482473;
-	bh=6LSTh6Jz142Cw16FwoeYYoL+hbnrbkU/L7NgiAS1tzw=;
+	s=default; t=1589482477;
+	bh=SnUz04ty+5J5f6STJXs9ZUb8m5aBjjSxuJ03NHZI1hA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=akbldwO07OOpttDhZXi+wEQpQv/vxjaQzWF4VRl0dM+ts1WciryZ8Gf9olffI5GaF
-	 +Wog25tJEnN1naglFFDNty2L63bQ173LqI9qTN0otBvAZfH/YrB0SppBQHuKZgLNr4
-	 7MyLaOI6VDHf/JcAXADuCFLKXOIwwt9SxiAqKf9M=
+	b=QOxbHBkSQOcDrlEWWWDSTG6Fm76PkG1ywrAX/FPza2boqMx8T7OPwIUM7thjyNWxz
+	 BUcHkLNkm4Sn0kDFalkKDvux72V8JrUorl+DBgjjDAraM5LQ4XvIsCHDlhTHPrCTvg
+	 18LWwFbwd5i/kbDNvOPz8uoOuUhHNxvMSJGBd4pw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729094AbgENSyc (ORCPT
+        id S1729136AbgENSyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:54:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54060 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:54:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728967AbgENSyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:54:11 -0400
+        id S1729006AbgENSyS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:54:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E25C206DC;
-        Thu, 14 May 2020 18:54:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87C5220727;
+        Thu, 14 May 2020 18:54:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482450;
-        bh=6LSTh6Jz142Cw16FwoeYYoL+hbnrbkU/L7NgiAS1tzw=;
+        s=default; t=1589482458;
+        bh=SnUz04ty+5J5f6STJXs9ZUb8m5aBjjSxuJ03NHZI1hA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VtkWud7DSt/9+DJeroDRsITkNd/BqPJXnd+dhJDYAmeivdbde/LeVoIeSqAwtoH3y
-         Izt5n9ZuS4njtTgTDC8tBWMbln48HUvDl4QBDjTbuDR7c5ZF95TkZUFzyw7ZQfSYH1
-         yIf3p18LetGv+2LT2N+2BJZVeWZ3iPDgMt/HPn3Q=
+        b=MuyNCAkiEWQDLznCTE2fy9LVnlcWJdw4hwb5lr6SvdqZEKvRvynKmeskc4YeDkcxT
+         KIx/Pp8LslhPgKFJV7zWTsJdaCITSueeNxl8odYwSvcIEukiyHsYroEQRcSJ79exkT
+         UEE8zwG1CJdZMNXAVdcqMFVgM0dCELEJ+QB/+tI4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 49/49] gcc-10: avoid shadowing standard library 'free()' in crypto
-Date:   Thu, 14 May 2020 14:53:10 -0400
-Message-Id: <20200514185311.20294-49-sashal@kernel.org>
+Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 03/31] HID: multitouch: add eGalaxTouch P80H84 support
+Date:   Thu, 14 May 2020 14:53:45 -0400
+Message-Id: <20200514185413.20755-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200514185311.20294-1-sashal@kernel.org>
-References: <20200514185311.20294-1-sashal@kernel.org>
+In-Reply-To: <20200514185413.20755-1-sashal@kernel.org>
+References: <20200514185413.20755-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,100 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-[ Upstream commit 1a263ae60b04de959d9ce9caea4889385eefcc7b ]
+[ Upstream commit f9e82295eec141a0569649d400d249333d74aa91 ]
 
-gcc-10 has started warning about conflicting types for a few new
-built-in functions, particularly 'free()'.
+Add support for P80H84 touchscreen from eGalaxy:
 
-This results in warnings like:
+  idVendor           0x0eef D-WAV Scientific Co., Ltd
+  idProduct          0xc002
+  iManufacturer           1 eGalax Inc.
+  iProduct                2 eGalaxTouch P80H84 2019 vDIVA_1204_T01 k4.02.146
 
-   crypto/xts.c:325:13: warning: conflicting types for built-in function ‘free’; expected ‘void(void *)’ [-Wbuiltin-declaration-mismatch]
-
-because the crypto layer had its local freeing functions called
-'free()'.
-
-Gcc-10 is in the wrong here, since that function is marked 'static', and
-thus there is no chance of confusion with any standard library function
-namespace.
-
-But the simplest thing to do is to just use a different name here, and
-avoid this gcc mis-feature.
-
-[ Side note: gcc knowing about 'free()' is in itself not the
-  mis-feature: the semantics of 'free()' are special enough that a
-  compiler can validly do special things when seeing it.
-
-  So the mis-feature here is that gcc thinks that 'free()' is some
-  restricted name, and you can't shadow it as a local static function.
-
-  Making the special 'free()' semantics be a function attribute rather
-  than tied to the name would be the much better model ]
-
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/lrw.c | 6 +++---
- crypto/xts.c | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/hid/hid-ids.h        | 1 +
+ drivers/hid/hid-multitouch.c | 3 +++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/crypto/lrw.c b/crypto/lrw.c
-index fda9414890865..1a47ff9dc5ea1 100644
---- a/crypto/lrw.c
-+++ b/crypto/lrw.c
-@@ -289,7 +289,7 @@ static void exit_tfm(struct crypto_skcipher *tfm)
- 	crypto_free_skcipher(ctx->child);
- }
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index b2fff44c8109a..ae145bdcd83d5 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -378,6 +378,7 @@
+ #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_7349	0x7349
+ #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_73F7	0x73f7
+ #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001	0xa001
++#define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002	0xc002
  
--static void free(struct skcipher_instance *inst)
-+static void free_inst(struct skcipher_instance *inst)
- {
- 	crypto_drop_skcipher(skcipher_instance_ctx(inst));
- 	kfree(inst);
-@@ -401,12 +401,12 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
- 	inst->alg.encrypt = encrypt;
- 	inst->alg.decrypt = decrypt;
+ #define USB_VENDOR_ID_ELAN		0x04f3
+ #define USB_DEVICE_ID_TOSHIBA_CLICK_L9W	0x0401
+diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+index 19dfd8acd0dab..8baf10beb1d5d 100644
+--- a/drivers/hid/hid-multitouch.c
++++ b/drivers/hid/hid-multitouch.c
+@@ -1909,6 +1909,9 @@ static const struct hid_device_id mt_devices[] = {
+ 	{ .driver_data = MT_CLS_EGALAX_SERIAL,
+ 		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
+ 			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001) },
++	{ .driver_data = MT_CLS_EGALAX,
++		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
++			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002) },
  
--	inst->free = free;
-+	inst->free = free_inst;
- 
- 	err = skcipher_register_instance(tmpl, inst);
- 	if (err) {
- err_free_inst:
--		free(inst);
-+		free_inst(inst);
- 	}
- 	return err;
- }
-diff --git a/crypto/xts.c b/crypto/xts.c
-index 73c648c373595..eead546d3124d 100644
---- a/crypto/xts.c
-+++ b/crypto/xts.c
-@@ -328,7 +328,7 @@ static void exit_tfm(struct crypto_skcipher *tfm)
- 	crypto_free_cipher(ctx->tweak);
- }
- 
--static void free(struct skcipher_instance *inst)
-+static void free_inst(struct skcipher_instance *inst)
- {
- 	crypto_drop_skcipher(skcipher_instance_ctx(inst));
- 	kfree(inst);
-@@ -439,12 +439,12 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
- 	inst->alg.encrypt = encrypt;
- 	inst->alg.decrypt = decrypt;
- 
--	inst->free = free;
-+	inst->free = free_inst;
- 
- 	err = skcipher_register_instance(tmpl, inst);
- 	if (err) {
- err_free_inst:
--		free(inst);
-+		free_inst(inst);
- 	}
- 	return err;
- }
+ 	/* Elitegroup panel */
+ 	{ .driver_data = MT_CLS_SERIAL,
 -- 
 2.20.1
 
