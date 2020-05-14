@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 751FBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDFBC433E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44692206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97B0520767
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:52:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482368;
-	bh=UOZjw9GCTUkY7R7Iv/y8lPuVl0phoLjrNXJzRZAJgM0=;
+	s=default; t=1589482375;
+	bh=a4jLj5YoajADdtK8+YqM4haJAzib1te6w43IqWap+Bs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R8zCDANrUWLfJp87f2ozaY4f5fQmsUSZ4X8oxM0mEYuOW0/wyDx9nw5CR//y3Cq0+
-	 q055Cm6A8i5D8EqUm7HKmghk5j+moj4FTKtljNKzu2hB+K2nndYehsuOg5M1nhewrZ
-	 mX6m7sn4UGKGIAb8Gxk2GD8uruuw8uMgj9NuHD7o=
+	b=zI2RLFtCDwea/dKAcgJ6cgzfGWzYUDnNQcWs5Y7ezW1FtB3ta8RqaJJidACYI677y
+	 Vd3T2RZNBg9/+IRGNikyfetkQSX0QxgGfGZEEBUrZG8Y6Sx15+Dlo6nUEnM0Jo0R5+
+	 W7zF5CEHzmHenChRjkpK6yCEhaM26zH3xwoW0duE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbgENSwr (ORCPT
+        id S1728493AbgENSwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:52:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51054 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:52:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728395AbgENSwl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:52:41 -0400
+        id S1728475AbgENSwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:52:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CBBB207C3;
-        Thu, 14 May 2020 18:52:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19E77206A5;
+        Thu, 14 May 2020 18:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482360;
-        bh=UOZjw9GCTUkY7R7Iv/y8lPuVl0phoLjrNXJzRZAJgM0=;
+        s=default; t=1589482369;
+        bh=a4jLj5YoajADdtK8+YqM4haJAzib1te6w43IqWap+Bs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rxXGMWgLa32jD75EdT3CvhKv7Ow5BwgLsxhyfuhLy+RWzwZBesGqQy4Q1CK7CbgsQ
-         wrRK1ROsGQVkPSEA+vvkn97eOsN7ZdsukhlOy+MYgArhcSogcqIrWEMcYzjM0gXhpr
-         klnA74UA9F3XC8aIVvsPE4uh88a7cp0Iw+zx/d7c=
+        b=F+ZbK25Zsq4Hj4iZoFcyFs2mpXjzwAprdg6UZjRlFiRr+U/2zwlyX1ntg9sRI+YQ5
+         ZOeEoZObmQ9uPQd8VU5B1h8aXHtEjfVj4jyRTJyRL2o3TIs3XC8H9GlRB9R+REpcR7
+         Ao+95IlO1+JwDsp1AGqTMakA5JZx26H/etF2+mnw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Joerg Roedel <jroedel@suse.de>, Qian Cai <cai@lca.pw>,
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
         Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.6 40/62] iommu/amd: Fix race in increase_address_space()/fetch_pte()
-Date:   Thu, 14 May 2020 14:51:25 -0400
-Message-Id: <20200514185147.19716-40-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 48/62] ARM: futex: Address build warning
+Date:   Thu, 14 May 2020 14:51:33 -0400
+Message-Id: <20200514185147.19716-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185147.19716-1-sashal@kernel.org>
 References: <20200514185147.19716-1-sashal@kernel.org>
@@ -59,391 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit eb791aa70b90c559eeb371d807c8813d569393f0 ]
+[ Upstream commit 8101b5a1531f3390b3a69fa7934c70a8fd6566ad ]
 
-The 'pt_root' and 'mode' struct members of 'struct protection_domain'
-need to be get/set atomically, otherwise the page-table of the domain
-can get corrupted.
+Stephen reported the following build warning on a ARM multi_v7_defconfig
+build with GCC 9.2.1:
 
-Merge the fields into one atomic64_t struct member which can be
-get/set atomically.
+kernel/futex.c: In function 'do_futex':
+kernel/futex.c:1676:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
+ 1676 |   return oldval == cmparg;
+      |          ~~~~~~~^~~~~~~~~
+kernel/futex.c:1652:6: note: 'oldval' was declared here
+ 1652 |  int oldval, ret;
+      |      ^~~~~~
 
-Fixes: 92d420ec028d ("iommu/amd: Relax locking in dma_ops path")
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Tested-by: Qian Cai <cai@lca.pw>
-Link: https://lore.kernel.org/r/20200504125413.16798-2-joro@8bytes.org
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+introduced by commit a08971e9488d ("futex: arch_futex_atomic_op_inuser()
+calling conventions change").
+
+While that change should not make any difference it confuses GCC which
+fails to work out that oldval is not referenced when the return value is
+not zero.
+
+GCC fails to properly analyze arch_futex_atomic_op_inuser(). It's not the
+early return, the issue is with the assembly macros. GCC fails to detect
+that those either set 'ret' to 0 and set oldval or set 'ret' to -EFAULT
+which makes oldval uninteresting. The store to the callsite supplied oldval
+pointer is conditional on ret == 0.
+
+The straight forward way to solve this is to make the store unconditional.
+
+Aside of addressing the build warning this makes sense anyway because it
+removes the conditional from the fastpath. In the error case the stored
+value is uninteresting and the extra store does not matter at all.
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/87pncao2ph.fsf@nanos.tec.linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu.c       | 140 ++++++++++++++++++++++++--------
- drivers/iommu/amd_iommu_types.h |   9 +-
- 2 files changed, 112 insertions(+), 37 deletions(-)
+ arch/arm/include/asm/futex.h | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 20cce366e9518..28229a38af4d2 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -151,6 +151,26 @@ static struct protection_domain *to_pdomain(struct iommu_domain *dom)
- 	return container_of(dom, struct protection_domain, domain);
+diff --git a/arch/arm/include/asm/futex.h b/arch/arm/include/asm/futex.h
+index 83c391b597d45..fdc4ae3e7378d 100644
+--- a/arch/arm/include/asm/futex.h
++++ b/arch/arm/include/asm/futex.h
+@@ -164,8 +164,13 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
+ 	preempt_enable();
+ #endif
+ 
+-	if (!ret)
+-		*oval = oldval;
++	/*
++	 * Store unconditionally. If ret != 0 the extra store is the least
++	 * of the worries but GCC cannot figure out that __futex_atomic_op()
++	 * is either setting ret to -EFAULT or storing the old value in
++	 * oldval which results in a uninitialized warning at the call site.
++	 */
++	*oval = oldval;
+ 
+ 	return ret;
  }
- 
-+static void amd_iommu_domain_get_pgtable(struct protection_domain *domain,
-+					 struct domain_pgtable *pgtable)
-+{
-+	u64 pt_root = atomic64_read(&domain->pt_root);
-+
-+	pgtable->root = (u64 *)(pt_root & PAGE_MASK);
-+	pgtable->mode = pt_root & 7; /* lowest 3 bits encode pgtable mode */
-+}
-+
-+static u64 amd_iommu_domain_encode_pgtable(u64 *root, int mode)
-+{
-+	u64 pt_root;
-+
-+	/* lowest 3 bits encode pgtable mode */
-+	pt_root = mode & 7;
-+	pt_root |= (u64)root;
-+
-+	return pt_root;
-+}
-+
- static struct iommu_dev_data *alloc_dev_data(u16 devid)
- {
- 	struct iommu_dev_data *dev_data;
-@@ -1397,13 +1417,18 @@ static struct page *free_sub_pt(unsigned long root, int mode,
- 
- static void free_pagetable(struct protection_domain *domain)
- {
--	unsigned long root = (unsigned long)domain->pt_root;
-+	struct domain_pgtable pgtable;
- 	struct page *freelist = NULL;
-+	unsigned long root;
-+
-+	amd_iommu_domain_get_pgtable(domain, &pgtable);
-+	atomic64_set(&domain->pt_root, 0);
- 
--	BUG_ON(domain->mode < PAGE_MODE_NONE ||
--	       domain->mode > PAGE_MODE_6_LEVEL);
-+	BUG_ON(pgtable.mode < PAGE_MODE_NONE ||
-+	       pgtable.mode > PAGE_MODE_6_LEVEL);
- 
--	freelist = free_sub_pt(root, domain->mode, freelist);
-+	root = (unsigned long)pgtable.root;
-+	freelist = free_sub_pt(root, pgtable.mode, freelist);
- 
- 	free_page_list(freelist);
- }
-@@ -1417,24 +1442,28 @@ static bool increase_address_space(struct protection_domain *domain,
- 				   unsigned long address,
- 				   gfp_t gfp)
- {
-+	struct domain_pgtable pgtable;
- 	unsigned long flags;
- 	bool ret = false;
--	u64 *pte;
-+	u64 *pte, root;
- 
- 	spin_lock_irqsave(&domain->lock, flags);
- 
--	if (address <= PM_LEVEL_SIZE(domain->mode) ||
--	    WARN_ON_ONCE(domain->mode == PAGE_MODE_6_LEVEL))
-+	amd_iommu_domain_get_pgtable(domain, &pgtable);
-+
-+	if (address <= PM_LEVEL_SIZE(pgtable.mode) ||
-+	    WARN_ON_ONCE(pgtable.mode == PAGE_MODE_6_LEVEL))
- 		goto out;
- 
- 	pte = (void *)get_zeroed_page(gfp);
- 	if (!pte)
- 		goto out;
- 
--	*pte             = PM_LEVEL_PDE(domain->mode,
--					iommu_virt_to_phys(domain->pt_root));
--	domain->pt_root  = pte;
--	domain->mode    += 1;
-+	*pte = PM_LEVEL_PDE(pgtable.mode, iommu_virt_to_phys(pgtable.root));
-+
-+	root = amd_iommu_domain_encode_pgtable(pte, pgtable.mode + 1);
-+
-+	atomic64_set(&domain->pt_root, root);
- 
- 	ret = true;
- 
-@@ -1451,16 +1480,22 @@ static u64 *alloc_pte(struct protection_domain *domain,
- 		      gfp_t gfp,
- 		      bool *updated)
- {
-+	struct domain_pgtable pgtable;
- 	int level, end_lvl;
- 	u64 *pte, *page;
- 
- 	BUG_ON(!is_power_of_2(page_size));
- 
--	while (address > PM_LEVEL_SIZE(domain->mode))
-+	amd_iommu_domain_get_pgtable(domain, &pgtable);
-+
-+	while (address > PM_LEVEL_SIZE(pgtable.mode)) {
- 		*updated = increase_address_space(domain, address, gfp) || *updated;
-+		amd_iommu_domain_get_pgtable(domain, &pgtable);
-+	}
-+
- 
--	level   = domain->mode - 1;
--	pte     = &domain->pt_root[PM_LEVEL_INDEX(level, address)];
-+	level   = pgtable.mode - 1;
-+	pte     = &pgtable.root[PM_LEVEL_INDEX(level, address)];
- 	address = PAGE_SIZE_ALIGN(address, page_size);
- 	end_lvl = PAGE_SIZE_LEVEL(page_size);
- 
-@@ -1536,16 +1571,19 @@ static u64 *fetch_pte(struct protection_domain *domain,
- 		      unsigned long address,
- 		      unsigned long *page_size)
- {
-+	struct domain_pgtable pgtable;
- 	int level;
- 	u64 *pte;
- 
- 	*page_size = 0;
- 
--	if (address > PM_LEVEL_SIZE(domain->mode))
-+	amd_iommu_domain_get_pgtable(domain, &pgtable);
-+
-+	if (address > PM_LEVEL_SIZE(pgtable.mode))
- 		return NULL;
- 
--	level	   =  domain->mode - 1;
--	pte	   = &domain->pt_root[PM_LEVEL_INDEX(level, address)];
-+	level	   =  pgtable.mode - 1;
-+	pte	   = &pgtable.root[PM_LEVEL_INDEX(level, address)];
- 	*page_size =  PTE_LEVEL_PAGE_SIZE(level);
- 
- 	while (level > 0) {
-@@ -1806,6 +1844,7 @@ static void dma_ops_domain_free(struct protection_domain *domain)
- static struct protection_domain *dma_ops_domain_alloc(void)
- {
- 	struct protection_domain *domain;
-+	u64 *pt_root, root;
- 
- 	domain = kzalloc(sizeof(struct protection_domain), GFP_KERNEL);
- 	if (!domain)
-@@ -1814,12 +1853,14 @@ static struct protection_domain *dma_ops_domain_alloc(void)
- 	if (protection_domain_init(domain))
- 		goto free_domain;
- 
--	domain->mode = PAGE_MODE_3_LEVEL;
--	domain->pt_root = (void *)get_zeroed_page(GFP_KERNEL);
--	domain->flags = PD_DMA_OPS_MASK;
--	if (!domain->pt_root)
-+	pt_root = (void *)get_zeroed_page(GFP_KERNEL);
-+	if (!pt_root)
- 		goto free_domain;
- 
-+	root = amd_iommu_domain_encode_pgtable(pt_root, PAGE_MODE_3_LEVEL);
-+	atomic64_set(&domain->pt_root, root);
-+	domain->flags = PD_DMA_OPS_MASK;
-+
- 	if (iommu_get_dma_cookie(&domain->domain) == -ENOMEM)
- 		goto free_domain;
- 
-@@ -1843,14 +1884,17 @@ static bool dma_ops_domain(struct protection_domain *domain)
- static void set_dte_entry(u16 devid, struct protection_domain *domain,
- 			  bool ats, bool ppr)
- {
-+	struct domain_pgtable pgtable;
- 	u64 pte_root = 0;
- 	u64 flags = 0;
- 	u32 old_domid;
- 
--	if (domain->mode != PAGE_MODE_NONE)
--		pte_root = iommu_virt_to_phys(domain->pt_root);
-+	amd_iommu_domain_get_pgtable(domain, &pgtable);
-+
-+	if (pgtable.mode != PAGE_MODE_NONE)
-+		pte_root = iommu_virt_to_phys(pgtable.root);
- 
--	pte_root |= (domain->mode & DEV_ENTRY_MODE_MASK)
-+	pte_root |= (pgtable.mode & DEV_ENTRY_MODE_MASK)
- 		    << DEV_ENTRY_MODE_SHIFT;
- 	pte_root |= DTE_FLAG_IR | DTE_FLAG_IW | DTE_FLAG_V | DTE_FLAG_TV;
- 
-@@ -2375,6 +2419,7 @@ static struct protection_domain *protection_domain_alloc(void)
- static struct iommu_domain *amd_iommu_domain_alloc(unsigned type)
- {
- 	struct protection_domain *pdomain;
-+	u64 *pt_root, root;
- 
- 	switch (type) {
- 	case IOMMU_DOMAIN_UNMANAGED:
-@@ -2382,13 +2427,15 @@ static struct iommu_domain *amd_iommu_domain_alloc(unsigned type)
- 		if (!pdomain)
- 			return NULL;
- 
--		pdomain->mode    = PAGE_MODE_3_LEVEL;
--		pdomain->pt_root = (void *)get_zeroed_page(GFP_KERNEL);
--		if (!pdomain->pt_root) {
-+		pt_root = (void *)get_zeroed_page(GFP_KERNEL);
-+		if (!pt_root) {
- 			protection_domain_free(pdomain);
- 			return NULL;
- 		}
- 
-+		root = amd_iommu_domain_encode_pgtable(pt_root, PAGE_MODE_3_LEVEL);
-+		atomic64_set(&pdomain->pt_root, root);
-+
- 		pdomain->domain.geometry.aperture_start = 0;
- 		pdomain->domain.geometry.aperture_end   = ~0ULL;
- 		pdomain->domain.geometry.force_aperture = true;
-@@ -2406,7 +2453,7 @@ static struct iommu_domain *amd_iommu_domain_alloc(unsigned type)
- 		if (!pdomain)
- 			return NULL;
- 
--		pdomain->mode = PAGE_MODE_NONE;
-+		atomic64_set(&pdomain->pt_root, PAGE_MODE_NONE);
- 		break;
- 	default:
- 		return NULL;
-@@ -2418,6 +2465,7 @@ static struct iommu_domain *amd_iommu_domain_alloc(unsigned type)
- static void amd_iommu_domain_free(struct iommu_domain *dom)
- {
- 	struct protection_domain *domain;
-+	struct domain_pgtable pgtable;
- 
- 	domain = to_pdomain(dom);
- 
-@@ -2435,7 +2483,9 @@ static void amd_iommu_domain_free(struct iommu_domain *dom)
- 		dma_ops_domain_free(domain);
- 		break;
- 	default:
--		if (domain->mode != PAGE_MODE_NONE)
-+		amd_iommu_domain_get_pgtable(domain, &pgtable);
-+
-+		if (pgtable.mode != PAGE_MODE_NONE)
- 			free_pagetable(domain);
- 
- 		if (domain->flags & PD_IOMMUV2_MASK)
-@@ -2518,10 +2568,12 @@ static int amd_iommu_map(struct iommu_domain *dom, unsigned long iova,
- 			 gfp_t gfp)
- {
- 	struct protection_domain *domain = to_pdomain(dom);
-+	struct domain_pgtable pgtable;
- 	int prot = 0;
- 	int ret;
- 
--	if (domain->mode == PAGE_MODE_NONE)
-+	amd_iommu_domain_get_pgtable(domain, &pgtable);
-+	if (pgtable.mode == PAGE_MODE_NONE)
- 		return -EINVAL;
- 
- 	if (iommu_prot & IOMMU_READ)
-@@ -2541,8 +2593,10 @@ static size_t amd_iommu_unmap(struct iommu_domain *dom, unsigned long iova,
- 			      struct iommu_iotlb_gather *gather)
- {
- 	struct protection_domain *domain = to_pdomain(dom);
-+	struct domain_pgtable pgtable;
- 
--	if (domain->mode == PAGE_MODE_NONE)
-+	amd_iommu_domain_get_pgtable(domain, &pgtable);
-+	if (pgtable.mode == PAGE_MODE_NONE)
- 		return 0;
- 
- 	return iommu_unmap_page(domain, iova, page_size);
-@@ -2553,9 +2607,11 @@ static phys_addr_t amd_iommu_iova_to_phys(struct iommu_domain *dom,
- {
- 	struct protection_domain *domain = to_pdomain(dom);
- 	unsigned long offset_mask, pte_pgsize;
-+	struct domain_pgtable pgtable;
- 	u64 *pte, __pte;
- 
--	if (domain->mode == PAGE_MODE_NONE)
-+	amd_iommu_domain_get_pgtable(domain, &pgtable);
-+	if (pgtable.mode == PAGE_MODE_NONE)
- 		return iova;
- 
- 	pte = fetch_pte(domain, iova, &pte_pgsize);
-@@ -2708,16 +2764,26 @@ EXPORT_SYMBOL(amd_iommu_unregister_ppr_notifier);
- void amd_iommu_domain_direct_map(struct iommu_domain *dom)
- {
- 	struct protection_domain *domain = to_pdomain(dom);
-+	struct domain_pgtable pgtable;
- 	unsigned long flags;
-+	u64 pt_root;
- 
- 	spin_lock_irqsave(&domain->lock, flags);
- 
-+	/* First save pgtable configuration*/
-+	amd_iommu_domain_get_pgtable(domain, &pgtable);
-+
- 	/* Update data structure */
--	domain->mode    = PAGE_MODE_NONE;
-+	pt_root = amd_iommu_domain_encode_pgtable(NULL, PAGE_MODE_NONE);
-+	atomic64_set(&domain->pt_root, pt_root);
- 
- 	/* Make changes visible to IOMMUs */
- 	update_domain(domain);
- 
-+	/* Restore old pgtable in domain->ptroot to free page-table */
-+	pt_root = amd_iommu_domain_encode_pgtable(pgtable.root, pgtable.mode);
-+	atomic64_set(&domain->pt_root, pt_root);
-+
- 	/* Page-table is not visible to IOMMU anymore, so free it */
- 	free_pagetable(domain);
- 
-@@ -2908,9 +2974,11 @@ static u64 *__get_gcr3_pte(u64 *root, int level, int pasid, bool alloc)
- static int __set_gcr3(struct protection_domain *domain, int pasid,
- 		      unsigned long cr3)
- {
-+	struct domain_pgtable pgtable;
- 	u64 *pte;
- 
--	if (domain->mode != PAGE_MODE_NONE)
-+	amd_iommu_domain_get_pgtable(domain, &pgtable);
-+	if (pgtable.mode != PAGE_MODE_NONE)
- 		return -EINVAL;
- 
- 	pte = __get_gcr3_pte(domain->gcr3_tbl, domain->glx, pasid, true);
-@@ -2924,9 +2992,11 @@ static int __set_gcr3(struct protection_domain *domain, int pasid,
- 
- static int __clear_gcr3(struct protection_domain *domain, int pasid)
- {
-+	struct domain_pgtable pgtable;
- 	u64 *pte;
- 
--	if (domain->mode != PAGE_MODE_NONE)
-+	amd_iommu_domain_get_pgtable(domain, &pgtable);
-+	if (pgtable.mode != PAGE_MODE_NONE)
- 		return -EINVAL;
- 
- 	pte = __get_gcr3_pte(domain->gcr3_tbl, domain->glx, pasid, false);
-diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
-index ca8c4522045b3..7a8fdec138bd1 100644
---- a/drivers/iommu/amd_iommu_types.h
-+++ b/drivers/iommu/amd_iommu_types.h
-@@ -468,8 +468,7 @@ struct protection_domain {
- 				       iommu core code */
- 	spinlock_t lock;	/* mostly used to lock the page table*/
- 	u16 id;			/* the domain id written to the device table */
--	int mode;		/* paging mode (0-6 levels) */
--	u64 *pt_root;		/* page table root pointer */
-+	atomic64_t pt_root;	/* pgtable root and pgtable mode */
- 	int glx;		/* Number of levels for GCR3 table */
- 	u64 *gcr3_tbl;		/* Guest CR3 table */
- 	unsigned long flags;	/* flags to find out type of domain */
-@@ -477,6 +476,12 @@ struct protection_domain {
- 	unsigned dev_iommu[MAX_IOMMUS]; /* per-IOMMU reference count */
- };
- 
-+/* For decocded pt_root */
-+struct domain_pgtable {
-+	int mode;
-+	u64 *root;
-+};
-+
- /*
-  * Structure where we save information about one hardware AMD IOMMU in the
-  * system.
 -- 
 2.20.1
 
