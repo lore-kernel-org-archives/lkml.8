@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD253C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EB9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 913F520675
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D1D520675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:11:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483476;
-	bh=OePKM7A1K0XYiRWplDYUiamyPrsd/Yopn1WWNiCHw9c=;
+	s=default; t=1589483479;
+	bh=P3vnlNl2kfwRlE3gX2+SClcTGmFVrHC5ebGzq7c4wOo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WNDPpBCwiPA9sQSXByR6vt0TLCqiZHkOYjWO36VObi57hoXkclD0CrL8kvgo2rQZz
-	 RCnJx3GfSRhFMFYAvI82iI0Uro0mcgDjBLuwinziol4sq2YV9ZAG+2itIiM31PMJnA
-	 BVZSotz1pHXhG3/KLuvbrI+IQA8PXyyi9vZZs7uM=
+	b=mOBieLmEB7fh9wErP7DjgWSSxpXuLmvetWPK5/VjnIuWkFwFtp143DQsNqu4bDh8i
+	 W3fU54vA7Yb72S48LzA28qY4rAyaclSVdO1sqLiT5txN00jkn28s7hhUdyi/v7epRR
+	 pJECut5ko5KUSIqvpYpqZL62Alhk/gAH7zEJZyUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730344AbgENTLP (ORCPT
+        id S1730333AbgENTLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:11:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50456 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:11:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728277AbgENSwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728272AbgENSwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 14 May 2020 14:52:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 450A820675;
-        Thu, 14 May 2020 18:52:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A6D82065F;
+        Thu, 14 May 2020 18:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482339;
-        bh=OePKM7A1K0XYiRWplDYUiamyPrsd/Yopn1WWNiCHw9c=;
+        s=default; t=1589482338;
+        bh=P3vnlNl2kfwRlE3gX2+SClcTGmFVrHC5ebGzq7c4wOo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OSwTrSoH8xm9vqUG8zHoUosGkMrIpFzSJCegn7Q20PbRdBALuTvW5ihszcY5c4tAE
-         X64LQB9+wpp9VLg1je03SiZ46AY0C4ImCpYinuEaww904XwSH+0UCpVrf08Owzbf/O
-         yU+LX5rpUnPmhmPifCuj9rUAjXm5z8jsoCXX0s28=
+        b=YPFph8CwrlFqVgu9IDDHSXFMzEkAdluKJdb3Jjhf9FlBXh4p+hV9lOFpbAlN9ODPt
+         wn9xQdkxJYctgVJyEj97c7SAxGMu5CRGBR3epu8JN/F2uxfJLgOMWaPMCptA3FdkOS
+         MpchYoJqiS6BdY6r8RteVU63Oq6tDkb+l18QC524=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+Cc:     Alex Elder <elder@linaro.org>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 24/62] net: moxa: Fix a potential double 'free_irq()'
-Date:   Thu, 14 May 2020 14:51:09 -0400
-Message-Id: <20200514185147.19716-24-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 23/62] net: ipa: fix a bug in ipa_endpoint_stop()
+Date:   Thu, 14 May 2020 14:51:08 -0400
+Message-Id: <20200514185147.19716-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185147.19716-1-sashal@kernel.org>
 References: <20200514185147.19716-1-sashal@kernel.org>
@@ -59,34 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Alex Elder <elder@linaro.org>
 
-[ Upstream commit ee8d2267f0e39a1bfd95532da3a6405004114b27 ]
+[ Upstream commit 713b6ebb4c376b3fb65fdceb3b59e401c93248f9 ]
 
-Should an irq requested with 'devm_request_irq' be released explicitly,
-it should be done by 'devm_free_irq()', not 'free_irq()'.
+In ipa_endpoint_stop(), for TX endpoints we set the number of retries
+to 0.  When we break out of the loop, retries being 0 means we return
+EIO rather than the value of ret (which should be 0).
 
-Fixes: 6c821bd9edc9 ("net: Add MOXA ART SoCs ethernet driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Fix this by using a non-zero retry count for both RX and TX
+channels, and just break out of the loop after calling
+gsi_channel_stop() for TX channels.  This way only RX channels
+will retry, and the retry count will be non-zero at the end
+for TX channels (so the proper value gets returned).
+
+Signed-off-by: Alex Elder <elder@linaro.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/moxa/moxart_ether.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ipa/ipa_endpoint.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/moxa/moxart_ether.c b/drivers/net/ethernet/moxa/moxart_ether.c
-index e1651756bf9da..f70bb81e1ed65 100644
---- a/drivers/net/ethernet/moxa/moxart_ether.c
-+++ b/drivers/net/ethernet/moxa/moxart_ether.c
-@@ -564,7 +564,7 @@ static int moxart_remove(struct platform_device *pdev)
- 	struct net_device *ndev = platform_get_drvdata(pdev);
+diff --git a/drivers/net/ipa/ipa_endpoint.c b/drivers/net/ipa/ipa_endpoint.c
+index 915b4cd05dd29..78ed431e6eb86 100644
+--- a/drivers/net/ipa/ipa_endpoint.c
++++ b/drivers/net/ipa/ipa_endpoint.c
+@@ -1284,7 +1284,7 @@ static int ipa_endpoint_stop_rx_dma(struct ipa *ipa)
+  */
+ int ipa_endpoint_stop(struct ipa_endpoint *endpoint)
+ {
+-	u32 retries = endpoint->toward_ipa ? 0 : IPA_ENDPOINT_STOP_RX_RETRIES;
++	u32 retries = IPA_ENDPOINT_STOP_RX_RETRIES;
+ 	int ret;
  
- 	unregister_netdev(ndev);
--	free_irq(ndev->irq, ndev);
-+	devm_free_irq(&pdev->dev, ndev->irq, ndev);
- 	moxart_mac_free_memory(ndev);
- 	free_netdev(ndev);
+ 	do {
+@@ -1292,12 +1292,9 @@ int ipa_endpoint_stop(struct ipa_endpoint *endpoint)
+ 		struct gsi *gsi = &ipa->gsi;
  
+ 		ret = gsi_channel_stop(gsi, endpoint->channel_id);
+-		if (ret != -EAGAIN)
++		if (ret != -EAGAIN || endpoint->toward_ipa)
+ 			break;
+ 
+-		if (endpoint->toward_ipa)
+-			continue;
+-
+ 		/* For IPA v3.5.1, send a DMA read task and check again */
+ 		if (ipa->version == IPA_VERSION_3_5_1) {
+ 			ret = ipa_endpoint_stop_rx_dma(ipa);
 -- 
 2.20.1
 
