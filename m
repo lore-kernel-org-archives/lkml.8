@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0F9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7165DC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3C78206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42E99206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482523;
-	bh=ryExQOqJfowyk+yxGk4cWSfxd7KEFPZqFSFmovtxKUI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dPRRbJzGj784mzRKBICJsTwpESTQ7VAEI0XGfLBl1FT/i51gOyAGxcycS6/tqgUG6
-	 fcOCS8hmX+nhEUna8v1hrcgY1irnw+hPITWqh2Wnns4oxImNJlKE+CBw4Yn0EZZlP7
-	 eNaAt45kwocljFm/iQqVuxVmXJQMfrZ7PbbXvqvs=
+	s=default; t=1589482520;
+	bh=1d8ZgMWN6ZEhgoBrcrWBKRUBc0Ej2Pt8eXGGB4ddCbg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Z6LMQh29TyoNteN1oZ3/Q+AARyMWkpnMEqwGawPkjqlFo7SadKE6nMAjSFpWl0lfL
+	 nROjxB64WGKwxRp1MiXsSmKmYm/rBLtbTEE09F21D9dQZNAOjwmk6c7EheBkvHupVS
+	 ej3w4TDuBUGSybgV8pIDzpeXX9QbTBt77r4vDKk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729356AbgENSzV (ORCPT
+        id S1729348AbgENSzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:55:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55284 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:55:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729265AbgENSzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:55:01 -0400
+        id S1729159AbgENSy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:54:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB8BF206F1;
-        Thu, 14 May 2020 18:54:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 638BE206F1;
+        Thu, 14 May 2020 18:54:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482500;
-        bh=ryExQOqJfowyk+yxGk4cWSfxd7KEFPZqFSFmovtxKUI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vmSORFkyXNoIDDcgHdYF9Y7VdGe9Akq4aQId32J4QrWYUxromnv2MOh9Il6ONLuwd
-         MBxj6sNcIJEdoz3vWyQ9zbBOKnA7MzYUVzTowwJ1VoxsmXRpLr9zwmnO6EDbYS6ykb
-         j6h9xMocEkjwaa9w3cBCKlWLJg/rXx3vMG9uILbc=
+        s=default; t=1589482498;
+        bh=1d8ZgMWN6ZEhgoBrcrWBKRUBc0Ej2Pt8eXGGB4ddCbg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=glZuu0oZo5xsuu6ZceIKbGA87WIz7Itx60PE5MMApzy3KgsB2PyrpV5ycihBkBzUk
+         SvOkmnTAhfYBfx+wezRvNBMo3y7Aw5borXO4w9dYSADplyTCZjwt0iorDEKSDFxc1g
+         hgbU6yciifXv1Aa+KWUvTqXl4OTtKEFchiu1nKao=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 03/39] HID: multitouch: add eGalaxTouch P80H84 support
-Date:   Thu, 14 May 2020 14:54:20 -0400
-Message-Id: <20200514185456.21060-3-sashal@kernel.org>
+Cc:     Sergei Trofimovich <slyfox@gentoo.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 01/39] Makefile: disallow data races on gcc-10 as well
+Date:   Thu, 14 May 2020 14:54:18 -0400
+Message-Id: <20200514185456.21060-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200514185456.21060-1-sashal@kernel.org>
-References: <20200514185456.21060-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,51 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
+From: Sergei Trofimovich <slyfox@gentoo.org>
 
-[ Upstream commit f9e82295eec141a0569649d400d249333d74aa91 ]
+[ Upstream commit b1112139a103b4b1101d0d2d72931f2d33d8c978 ]
 
-Add support for P80H84 touchscreen from eGalaxy:
+gcc-10 will rename --param=allow-store-data-races=0
+to -fno-allow-store-data-races.
 
-  idVendor           0x0eef D-WAV Scientific Co., Ltd
-  idProduct          0xc002
-  iManufacturer           1 eGalax Inc.
-  iProduct                2 eGalaxTouch P80H84 2019 vDIVA_1204_T01 k4.02.146
+The flag change happened at https://gcc.gnu.org/PR92046.
 
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sergei Trofimovich <slyfox@gentoo.org>
+Acked-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h        | 1 +
- drivers/hid/hid-multitouch.c | 3 +++
- 2 files changed, 4 insertions(+)
+ Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 9d372fa7c298c..a1e5e0529545b 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -369,6 +369,7 @@
- #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_7349	0x7349
- #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_73F7	0x73f7
- #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001	0xa001
-+#define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002	0xc002
+diff --git a/Makefile b/Makefile
+index 525565f44b171..35640d40a7845 100644
+--- a/Makefile
++++ b/Makefile
+@@ -670,6 +670,7 @@ KBUILD_CFLAGS += $(call cc-ifversion, -lt, 0409, \
  
- #define USB_VENDOR_ID_ELAN		0x04f3
+ # Tell gcc to never replace conditional load with a non-conditional one
+ KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
++KBUILD_CFLAGS	+= $(call cc-option,-fno-allow-store-data-races)
  
-diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-index 07d92d4a9f7c8..db29bf539a4b2 100644
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -1550,6 +1550,9 @@ static const struct hid_device_id mt_devices[] = {
- 	{ .driver_data = MT_CLS_EGALAX_SERIAL,
- 		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
- 			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001) },
-+	{ .driver_data = MT_CLS_EGALAX,
-+		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
-+			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002) },
- 
- 	/* Elitegroup panel */
- 	{ .driver_data = MT_CLS_SERIAL,
+ # check for 'asm goto'
+ ifeq ($(shell $(CONFIG_SHELL) $(srctree)/scripts/gcc-goto.sh $(CC) $(KBUILD_CFLAGS)), y)
 -- 
 2.20.1
 
