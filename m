@@ -2,135 +2,159 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5785AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3482CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32DD42065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:59:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="B3UIZ7fC"
+	by mail.kernel.org (Postfix) with ESMTP id 1D4022065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:59:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbgENL7a (ORCPT
+        id S1727030AbgENL7u convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 07:59:30 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:63304 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725955AbgENL7a (ORCPT
+        Thu, 14 May 2020 07:59:50 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45233 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbgENL7t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 07:59:30 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589457569; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=GWge08NUpx9hYk85PE+U6cP3rNMxXJ52WIEvWFBmNxA=; b=B3UIZ7fCnhcpHa+WJIcTpIAA/QdBu/6UFqr0TkLwsdA3RlhfQrA891uhLbMaPX88GK8eRqy/
- ZJTpDa55Qf+42ZpmeggG0+gGRl+tSoogeZJohqAFLtOh8MZnO9TlbApwRXsR1AqYrGzXM5f7
- S0gpy9YXMC822l+qFpemfCwX6rA=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ebd32a1.7fa3df0c8ce0-smtp-out-n05;
- Thu, 14 May 2020 11:59:29 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0195AC433F2; Thu, 14 May 2020 11:59:29 +0000 (UTC)
-Received: from charante-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: charante)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B1A7DC433D2;
-        Thu, 14 May 2020 11:59:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B1A7DC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
-From:   Charan Teja Reddy <charante@codeaurora.org>
-To:     akpm@linux-foundation.org, linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org, vinmenon@codeaurora.org,
-        Charan Teja Reddy <charante@codeaurora.org>
-Subject: [PATCH v2] mm, page_alloc: reset the zone->watermark_boost early
-Date:   Thu, 14 May 2020 17:28:31 +0530
-Message-Id: <1589457511-4255-1-git-send-email-charante@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Thu, 14 May 2020 07:59:49 -0400
+Received: by mail-oi1-f193.google.com with SMTP id d191so3996461oib.12;
+        Thu, 14 May 2020 04:59:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=jEYL14eESp80nRZi1JF+P2foLyJj6Mx55wfqANlAKcc=;
+        b=mOZzvlhKhc0E1a3RCsWPGY0HNbNz76iDOisqeGPJ9V9V4Wivspi+cQYF3H7WaxSWqr
+         45uvZzoGOPfKCeDuJZNOkUTLRAux98P1OShpPNZV1K7AqsgTbv+HzEz/jIQyqhsLSZaY
+         0cjxrRws5A2pt8hq0bdagJ8RVZBms4ySMuwLOaen7cz2dF42SYvuklXoDeNcd1mWFRlM
+         gN03DbCaJRlnIFbC5j0ZDn0ReBFQuOe54wO5DDskCoMr4NSjjXxTeR29wCAJQaAaBOfP
+         gaBRUW6YUv6mInUmSdCz6O45ubel2OOCzPZ3u3Y5nGWXAQrG1kF5RVCmoDQOXd6oFLIM
+         mYLA==
+X-Gm-Message-State: AOAM530ICIdY2081pi8mgQqje1ppQHO5GW7qDiuzndKaRWTVK8uS9vGd
+        9EdRkhP/Rt49PEFiXrelQYMOUbh3ZZsw25X6xxU=
+X-Google-Smtp-Source: ABdhPJz88z3dxpOcoyTxa6ill55+uwbWotEXoYTdXICFz750JcG4sRlNn03GSjnTbn3iwd1O8UNJSvWqVG3FrE6YzlA=
+X-Received: by 2002:aca:895:: with SMTP id 143mr3197679oii.153.1589457587072;
+ Thu, 14 May 2020 04:59:47 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200512155105.1068064-1-kieran.bingham+renesas@ideasonboard.com>
+ <20200512155105.1068064-3-kieran.bingham+renesas@ideasonboard.com>
+ <20200512181706.GA21014@Mani-XPS-13-9360> <11aca587-9438-4fba-081c-b82631e96989@ideasonboard.com>
+ <20200514101356.GF2877@Mani-XPS-13-9360> <d492cbcb-3b13-82b8-8e5d-0f49320170a2@ideasonboard.com>
+In-Reply-To: <d492cbcb-3b13-82b8-8e5d-0f49320170a2@ideasonboard.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 14 May 2020 13:59:35 +0200
+Message-ID: <CAMuHMdWSEY2q1f1iobrSXHYWzweV9yjk4i1ROj2Yde7DJMiabQ@mail.gmail.com>
+Subject: Re: [PATCH v9 2/4] media: i2c: Add MAX9286 driver
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Hyun Kwon <hyunk@xilinx.com>, Rob Herring <robh+dt@kernel.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Updating the zone watermarks by any means, like min_free_kbytes,
-water_mark_scale_factor e.t.c, when ->watermark_boost is set will result
-into the higher low and high watermarks than the user asked.
+Hi Kieran,
 
-Below are the steps pursued to reproduce the problem on system setup
-of Android kernel running on Snapdragon hardware.
-1) Default settings of the system are as below:
-   #cat /proc/sys/vm/min_free_kbytes = 5162
-   #cat /proc/zoneinfo | grep -e boost -e low -e "high " -e min -e Node
-	Node 0, zone   Normal
-		min      797
-		low      8340
-		high     8539
+On Thu, May 14, 2020 at 1:47 PM Kieran Bingham
+<kieran.bingham+renesas@ideasonboard.com> wrote:
+> On 14/05/2020 11:13, Manivannan Sadhasivam wrote:
+> > On Thu, May 14, 2020 at 11:02:53AM +0100, Kieran Bingham wrote:
+> >> On 12/05/2020 19:17, Manivannan Sadhasivam wrote:
+> >>> On Tue, May 12, 2020 at 04:51:03PM +0100, Kieran Bingham wrote:
+> >>>> The MAX9286 is a 4-channel GMSL deserializer with coax or STP input and
+> >>>> CSI-2 output. The device supports multicamera streaming applications,
+> >>>> and features the ability to synchronise the attached cameras.
+> >>>>
+> >>>> CSI-2 output can be configured with 1 to 4 lanes, and a control channel
+> >>>> is supported over I2C, which implements an I2C mux to facilitate
+> >>>> communications with connected cameras across the reverse control
+> >>>> channel.
+> >>>>
+> >>>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> >>>> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> >>>> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> >>>> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-2) Monitor the zone->watermark_boost(by adding a debug print in
-the kernel) and whenever it is greater than zero value, write the
-same value of min_free_kbytes obtained from step 1.
-   #echo 5162 > /proc/sys/vm/min_free_kbytes
+> >>>> --- /dev/null
+> >>>> +++ b/drivers/media/i2c/max9286.c
 
-3) Then read the zone watermarks in the system while the
-->watermark_boost is zero. This should show the same values of
-watermarks as step 1 but shown a higher values than asked.
-   #cat /proc/zoneinfo | grep -e boost -e low -e "high " -e min -e Node
-	Node 0, zone   Normal
-		min      797
-		low      21148
-		high     21347
+> >>>> +static int max9286_register_gpio(struct max9286_priv *priv)
+> >>>> +{
+> >>>> +  struct device *dev = &priv->client->dev;
+> >>>> +  struct gpio_chip *gpio = &priv->gpio;
+> >>>> +  int ret;
+> >>>> +
+> >>>> +  static const char * const names[] = {
+> >>>> +          "GPIO0OUT",
+> >>>> +          "GPIO1OUT",
+> >>>> +  };
+> >>>> +
+> >>>> +  /* Configure the GPIO */
+> >>>> +  gpio->label = dev_name(dev);
+> >>>
+> >>> So if you have more than one MAX9286 in a system, all gpiochips will appear
+> >>> with the same name. I'd recommend to append the index to distinguish properly.
+> >>
+> >> Ah yes, that's a good point, and I think I've even seen that.
+> >>
+> >> I'll fix it now.
+>
+> Oh, in fact actually this doesn't.
+>
+> gpiodetect prints:
+>
+> gpiochip10 [4-004c] (2 lines)
+> gpiochip11 [4-006c] (2 lines)
+>
+> and mostly references them as gpiochip10 and gpiochip11.
 
-These higher values are because of updating the zone watermarks using
-the macro min_wmark_pages(zone) which also adds the
-zone->watermark_boost.
-	#define min_wmark_pages(z) (z->_watermark[WMARK_MIN] +
-					z->watermark_boost)
+Indeed, dev_name() should be different for each instance.
 
-So the steps that lead to the issue is like below:
-1) On the extfrag event, watermarks are boosted by storing the required
-value in ->watermark_boost.
+> However,
+>
+> > [    2.318533] gpio gpiochip11: Detected name collision for GPIO name 'GPIO0OUT'
+> > [    2.325739] gpio gpiochip11: Detected name collision for GPIO name 'GPIO1OUT'
+>
+> That seems to be more of a problem for the gpio library, so I think I'll
+> just drop the const names. I don't think they add much value.
 
-2) User tries to update the zone watermarks level in the system through
-min_free_kbytes or watermark_scale_factor.
+These are the line names.  If they're not unique, a warning is printed,
+but they are still registered.
+So probably you want to use kasprintf("%s.%s", dev_name(dev), names[i]) to
+generate names.
 
-3) Later, when kswapd woke up, it resets the zone->watermark_boost to
-zero.
+See "[PATCH] gpiolib: Document that GPIO line names are not globally unique"
+(https://lore.kernel.org/linux-gpio/20200511101828.30046-1-geert+renesas@glider.be/)
+to clear up the details.
 
-In step 2), we use the min_wmark_pages() macro to store the watermarks
-in the zone structure thus the values are always offsetted by
-->watermark_boost value. This can be avoided by resetting the
-->watermark_boost to zero before it is used.
+Gr{oetje,eeting}s,
 
-Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
----
+                        Geert
 
-v2: Improve the commit message
-
-v1: (https://patchwork.kernel.org/patch/11540751/)
-
- mm/page_alloc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index cef05d3..d001d61 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -7761,9 +7761,9 @@ static void __setup_per_zone_wmarks(void)
- 			    mult_frac(zone_managed_pages(zone),
- 				      watermark_scale_factor, 10000));
- 
-+		zone->watermark_boost = 0;
- 		zone->_watermark[WMARK_LOW]  = min_wmark_pages(zone) + tmp;
- 		zone->_watermark[WMARK_HIGH] = min_wmark_pages(zone) + tmp * 2;
--		zone->watermark_boost = 0;
- 
- 		spin_unlock_irqrestore(&zone->lock, flags);
- 	}
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-member of the Code Aurora Forum, hosted by The Linux Foundation
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
