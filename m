@@ -2,105 +2,86 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C28BCC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E2EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A13BC205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87651205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:07:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JCwey/k0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727917AbgENPGi (ORCPT
+        id S1727935AbgENPHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 11:06:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41224 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727891AbgENPGh (ORCPT
+        Thu, 14 May 2020 11:07:11 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:38075 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726240AbgENPHL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 11:06:37 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10648C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 08:06:37 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jZFR1-0001aM-NT; Thu, 14 May 2020 17:06:07 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id F1E031004CE; Thu, 14 May 2020 17:06:06 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [patch V4 part 4 02/24] x86/int3: Avoid atomic instrumentation
-In-Reply-To: <20200514131530.GQ2957@hirez.programming.kicks-ass.net>
-References: <20200505134926.578885807@linutronix.de> <20200505135313.517429268@linutronix.de> <CALCETrXVQsdPafvH56_nF+CKU94wgq-T71=EB6eSBnz70Cd0Rw@mail.gmail.com> <20200514093257.GT2978@hirez.programming.kicks-ass.net> <87h7wiznl7.fsf@nanos.tec.linutronix.de> <20200514131530.GQ2957@hirez.programming.kicks-ass.net>
-Date:   Thu, 14 May 2020 17:06:06 +0200
-Message-ID: <878shuzhcx.fsf@nanos.tec.linutronix.de>
+        Thu, 14 May 2020 11:07:11 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589468830; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=DFRVjWCIQJsNiVGUyOtnTBjUkzfiysrPdG8Xba06vLk=; b=JCwey/k0Z2nZICGFtcrmSnNp3WokPdrRhpY7iujQKgBVQnZnSz0oZukGnfQtBh7R4iCqjNaj
+ fSPh/JRX8gZULxpwGOqee6Mj6CFhH/tKFZZI11SzhG6xY7FFt3SJ4EYWL071ta/r5eIl5AZ3
+ Hb4GqCTjzuKV1YGRycy/5q6q8hA=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebd5e91.7f4d250794c8-smtp-out-n01;
+ Thu, 14 May 2020 15:06:57 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 31973C433D2; Thu, 14 May 2020 15:06:57 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D1D9CC433F2;
+        Thu, 14 May 2020 15:06:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D1D9CC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [RFC PATCH 5/8] qaic: Implement data path
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     arnd@arndb.de, manivannan.sadhasivam@linaro.org,
+        bjorn.andersson@linaro.org, wufan@codeaurora.org,
+        pratanan@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1589465266-20056-1-git-send-email-jhugo@codeaurora.org>
+ <1589465266-20056-6-git-send-email-jhugo@codeaurora.org>
+ <20200514141403.GB2643665@kroah.com>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <2e569e9e-2e5f-a99e-384c-1aaf34d9999e@codeaurora.org>
+Date:   Thu, 14 May 2020 09:06:53 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20200514141403.GB2643665@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> writes:
-> On Thu, May 14, 2020 at 02:51:32PM +0200, Thomas Gleixner wrote:
->> Peter Zijlstra <peterz@infradead.org> writes:
->> > On Wed, May 13, 2020 at 09:57:52PM -0700, Andy Lutomirski wrote:
->> >> On Tue, May 5, 2020 at 7:15 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->> >> >
->> >> > From: Peter Zijlstra <peterz@infradead.org>
->> >> >
->> >> > Use arch_atomic_*() and READ_ONCE_NOCHECK() to ensure nothing untoward
->> >> > creeps in and ruins things.
->> >> >
->> >> > That is; this is the INT3 text poke handler, strictly limit the code
->> >> > that runs in it, lest it inadvertenly hits yet another INT3.
->> >> 
->> >> 
->> >> Acked-by: Andy Lutomirski <luto@kernel.org>
->> >> 
->> >> Does objtool catch this error?
->> >
->> > It does not. I'll put it on the (endless) todo list..
->> 
->> Well, at least it detects when that code calls out into something which
->> is not in the non-instrumentable section.
->
-> True, but the more specific problem is that noinstr code can use
-> jump_label/static_call just fine.
->
-> So a more specific test is validating none of that happens in the INT3
-> handler before poke_int3_handler(). Which is what I think Andy was
-> after.
+On 5/14/2020 8:14 AM, Greg KH wrote:
+> On Thu, May 14, 2020 at 08:07:43AM -0600, Jeffrey Hugo wrote:
+>> +struct qaic_execute {
+>> +	__u16		ver;    /* struct version, must be 1 */
+> 
+> No need for structures to be versioned.  If you change something, then
+> add a new ioctl if you really needed it.
 
-Indeed. Forgot about that one.
+Huh.  We had thought the botching ioctls document advised having a 
+version, but as I double check that document, it infact does not.
 
-Hmm, alternatives and jumplabel patch locations in entry.text and
-noinstr.text can be valid at least during early boot where we know that
-we don't run those code pathes...
+Will remove.
 
-Thanks,
-
-        tglx
+-- 
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
