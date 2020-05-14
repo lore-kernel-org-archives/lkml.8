@@ -2,119 +2,251 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2069CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BBEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5CBE2065C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:53:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6294A20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:55:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ev2F/CLB"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="P1QCTNzQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbgENUxQ (ORCPT
+        id S1727976AbgENUzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 16:53:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39110 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727123AbgENUxP (ORCPT
+        Thu, 14 May 2020 16:55:49 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:47288 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbgENUzt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 16:53:15 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44ADAC061A0C;
-        Thu, 14 May 2020 13:53:15 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id 82so2312312lfh.2;
-        Thu, 14 May 2020 13:53:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8ZX5aSRmz5jYRhVNI33JYSnsQRmUFYEKnhmSj7lgJyc=;
-        b=Ev2F/CLB7pA3dHkEJLfIS7zf50ZpNLO1iAl80R2/Mb9S7RrglW/0daTX5jfR9qa2Ss
-         K6GevTqJ7CRO8I4Q7o8Y1HLw+S0jQ6ft0fcXig0YGSrIiGwrs1WFFuDF+cqTc2go+9fY
-         TcVCCn65Ee+CwmfUtxtQzqpdX4/XC+7x6rYBIasvwmO1r5maTMJ9Zy3qlnWbYMob7R0c
-         AIwrgBztPPi9Ve1ypwm7WADLnruDN5yoyb2YUpeUbRTJo20T3n8LOimnq/GnNbcn4NSF
-         PZtUvliwv3n0w22iWpTbIIvOy1fQdEDM+1S3ZUox8EF0gn3hIh3g34eGQODp1nBB/0E9
-         VV/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8ZX5aSRmz5jYRhVNI33JYSnsQRmUFYEKnhmSj7lgJyc=;
-        b=TXPy8ByOfrokzHdTaegMCnfYXSM8lAfHOgJUXNNEETyaCDx0Q7D8wXNSNaHEywPgms
-         AD9RrJqrWzXLYFo0wSYLK6UCcLC+oWSWuIzBcrcRavVHItTUZsG2VCbeo+UFc1puyQJW
-         Tl/CRC26ynRI7oO6WOLvVFGpxxy/wFEuCywM2voC4KzVZcAntd0RpZTk5iLz+XR/a/8H
-         Wkb2vLIUvkI7Vu9s6UivXMZETf/xqnJDnXtWnIeuYjk6qsmCx06OCxVmhSYK45qUK3r2
-         Z9SrwctRbbjH+34tx3GcU6DxgezU5Ujl2jKPLLzrZggE4MHPtczY2PrLKxsPlipHIGD7
-         zknQ==
-X-Gm-Message-State: AOAM5310KD7kBtutsKbdVamo27pq1NDli2sGPkxwMepev1VVY0d6zmvG
-        Epy9+nNscVbUaHPJUSOheYU=
-X-Google-Smtp-Source: ABdhPJwdhEYSKRvj3P/XNm29+bPUFCqmQUpncZwquIfbD0KmklXjKtbyavR9lREmIkPlSXuOsdSiNg==
-X-Received: by 2002:ac2:5199:: with SMTP id u25mr39844lfi.80.1589489593816;
-        Thu, 14 May 2020 13:53:13 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id m20sm17612ljb.23.2020.05.14.13.53.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 13:53:13 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Zack Pearsall <zpearsall@yahoo.com>
-Cc:     linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1] mfd: tps65910: Correct power-off programming sequence
-Date:   Thu, 14 May 2020 23:50:21 +0300
-Message-Id: <20200514205022.7024-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
+        Thu, 14 May 2020 16:55:49 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4ADC626A;
+        Thu, 14 May 2020 22:55:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1589489745;
+        bh=f29cqelK5HHkGqAU0L84jjLxU3fDawEizqrCRSurEdI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=P1QCTNzQ/5H4u975GU1Ru/r7SadP8ZL0Iq1SFP9RpeARgWRAF8Z9vfAFjneDmM+88
+         aWK2GQgKb7lheaTULZrinb/L+Z+5BpM/KVdcFoqz9PRJxIv5XVn4jgifBABKRT8j39
+         YUOzvsR02Ih71Rt6++i4PDoRTscbaStUfcmylNBs=
+Date:   Thu, 14 May 2020 23:55:36 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Enric Balletbo Serra <eballetbo@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v4 7/7] drm/mediatek: mtk_dsi: Create connector for
+ bridges
+Message-ID: <20200514205536.GN5955@pendragon.ideasonboard.com>
+References: <20200501152335.1805790-1-enric.balletbo@collabora.com>
+ <20200501152335.1805790-8-enric.balletbo@collabora.com>
+ <CAFqH_53h=3OXzwLnw1XT3rHYkMPOPNFBdQdPeFmNubN9qq_Twg@mail.gmail.com>
+ <CAAOTY_-pOUuM7LQ1jm6gqpg8acMqDWOHxGucY5XOjq0ctGUkzA@mail.gmail.com>
+ <53683f2d-23c7-57ab-2056-520c50795ffe@collabora.com>
+ <CAAOTY__b6V12fS2xTKGjB1fQTfRjX7AQyBqDPXzshfhkjjSkeQ@mail.gmail.com>
+ <37191700-5832-2931-5764-7f7fddd023b9@collabora.com>
+ <e1ac7d75-c46a-445a-5fcf-5253548f2707@collabora.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <e1ac7d75-c46a-445a-5fcf-5253548f2707@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes system shutdown on a devices that use TPS65910 as a
-system's power controller. In accordance to the TPS65910 datasheet, the
-PMIC's state-machine transitions into the OFF state only when DEV_OFF
-bit of DEVCTRL_REG is set. The ON / SLEEP states also should be cleared,
-otherwise PMIC won't get into a proper state on shutdown. Devices like
-Nexus 7 tablet and Ouya game console are now shutting down properly.
+Hi Enric,
 
-Tested-by: Zack Pearsall <zpearsall@yahoo.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/mfd/tps65910.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+On Thu, May 14, 2020 at 07:35:33PM +0200, Enric Balletbo i Serra wrote:
+> On 14/5/20 19:12, Enric Balletbo i Serra wrote:
+> > On 14/5/20 18:44, Chun-Kuang Hu wrote:
+> >> Enric Balletbo i Serra <enric.balletbo@collabora.com> 於 2020年5月14日 週四 下午11:42寫道：
+> >>> On 14/5/20 16:28, Chun-Kuang Hu wrote:
+> >>>> Enric Balletbo Serra <eballetbo@gmail.com> 於 2020年5月14日 週四 上午12:41寫道：
+> >>>>> Missatge de Enric Balletbo i Serra <enric.balletbo@collabora.com> del
+> >>>>> dia dv., 1 de maig 2020 a les 17:25:
+> >>>>>>
+> >>>>>> Use the drm_bridge_connector helper to create a connector for pipelines
+> >>>>>> that use drm_bridge. This allows splitting connector operations across
+> >>>>>> multiple bridges when necessary, instead of having the last bridge in
+> >>>>>> the chain creating the connector and handling all connector operations
+> >>>>>> internally.
+> >>>>>>
+> >>>>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> >>>>>> Acked-by: Sam Ravnborg <sam@ravnborg.org>
+> >>>>>
+> >>>>> A gentle ping on this, I think that this one is the only one that
+> >>>>> still needs a review in the series.
+> >>>>
+> >>>> This is what I reply in patch v3:
+> >>>
+> >>> Sorry for missing this.
+> >>>
+> >>>> I think the panel is wrapped into next_bridge here,
+> >>>
+> >>> Yes, you can have for example:
+> >>>
+> >>> 1. drm_bridge (mtk_dsi) -> drm_bridge (ps8640 - dsi-to-edp) -> drm_panel_bridge
+> >>> (edp panel)
+> >>>
+> >>> or a
+> >>>
+> >>> 2. drm_bridge (mtk_dsi)-> drm_panel_bridge (dsi panel)
+> >>>
+> >>> The _first_ one is my use case
+> >>>
+> >>>> if (panel) {
+> >>>
+> >>> This handles the second case, where you attach a dsi panel.
+> >>>
+> >>>>     dsi->next_bridge = devm_drm_panel_bridge_add(dev, panel);
+> >>>>
+> >>>> so the next_bridge is a panel_bridge, in its attach function
+> >>>> panel_bridge_attach(),
+> >>>> according to the flag DRM_BRIDGE_ATTACH_NO_CONNECTOR, if not exist,
+> >>>> it would create connector and attach connector to panel.
+> >>>>
+> >>>> I'm not sure this flag would exist or not, but for both case, it's strange.
+> >>>> If exist, you create connector in this patch but no where to attach
+> >>>> connector to panel.
+> >>>
+> >>> Yes, in fact, this is transitional patch needed, as once I converted mtk_dpi,
+> >>> mtk_dsi and mtk_hdmi to the new drm_bridge API the drm_bridge_connector_init()
+> >>> will be done in mtk_drm_drv. We will need to call drm_bridge_connector_init for
+> >>> dpi and dsi pipes and remove that call from mtk_dsi and mtk_dpi drivers. The
+> >>> graphic controller driver should create connectors and CRTCs, as example you can
+> >>> take a look at drivers/gpu/drm/omapdrm/omap_drv.c
+> >>
+> >> I have such question because I've reviewed omap's driver. In omap's
+> >> driver, after it call drm_bridge_connector_init(), it does this:
+> >>
+> >> if (pipe->output->panel) {
+> >> ret = drm_panel_attach(pipe->output->panel,
+> >>       pipe->connector);
+> >> if (ret < 0)
+> >> return ret;
+> >> }
+> >>
+> >> In this patch, you does not do this.
+> >>
+> > 
+> > I see, so yes, I am probably missing call drm_panel_attach in case there is a
+> > direct panel attached. Thanks for pointing it.
+> > 
+> > I'll send a new version adding the drm_panel_attach call.
+> > 
+> 
+> Wait, shouldn't panel be attached on the call of mtk_dsi_bridge_attach as
+> next_bridge points to a bridge or a panel?
+> 
+> static int mtk_dsi_bridge_attach(struct drm_bridge *bridge,
+> 				 enum drm_bridge_attach_flags flags)
+> {
+> 	struct mtk_dsi *dsi = bridge_to_dsi(bridge);
+> 
+> 	/* Attach the panel or bridge to the dsi bridge */
+> 	return drm_bridge_attach(bridge->encoder, dsi->next_bridge,
+> 				 &dsi->bridge, flags);
+> }
+> 
+> Or I am continuing misunderstanding all this?
 
-diff --git a/drivers/mfd/tps65910.c b/drivers/mfd/tps65910.c
-index 11959021b50a..22116cee411d 100644
---- a/drivers/mfd/tps65910.c
-+++ b/drivers/mfd/tps65910.c
-@@ -440,8 +440,16 @@ static void tps65910_power_off(void)
- 			DEVCTRL_PWR_OFF_MASK) < 0)
- 		return;
- 
--	tps65910_reg_clear_bits(tps65910, TPS65910_DEVCTRL,
--			DEVCTRL_DEV_ON_MASK);
-+	if (tps65910_reg_clear_bits(tps65910, TPS65910_DEVCTRL,
-+			DEVCTRL_DEV_SLP_MASK) < 0)
-+		return;
-+
-+	if (tps65910_reg_clear_bits(tps65910, TPS65910_DEVCTRL,
-+			DEVCTRL_DEV_ON_MASK) < 0)
-+		return;
-+
-+	tps65910_reg_set_bits(tps65910, TPS65910_DEVCTRL,
-+			DEVCTRL_DEV_OFF_MASK);
- }
- 
- static int tps65910_i2c_probe(struct i2c_client *i2c,
+Panels should always be wrapped in a drm_bridge, so I think you're doing
+right. I believe the call to drm_panel_attach() in omapdrm is a leftover
+that can be removed. I'll have a look at it.
+
+> >>>> If not exist, the next_brige would create one connector and this brige
+> >>>> would create another connector.
+> >>>>
+> >>>> I think in your case, mtk_dsi does not directly connect to a panel, so
+> >>>
+> >>> Exactly
+> >>>
+> >>>> I need a exact explain. Or someone could test this on a
+> >>>> directly-connect-panel platform.
+> >>>
+> >>> I don't think I am breaking this use case but AFAICS there is no users in
+> >>> mainline that directly connect a panel using the mediatek driver. As I said my
+> >>> use case is the other so I can't really test. Do you know anyone that can test this?
+> >>
+> >> I'm not sure who can test this, but [1], which is sent by YT Shen in a
+> >> series, is a patch to support dsi command mode so dsi could directly
+> >> connect to panel.
+> >>
+> >> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/gpu/drm/mediatek?h=v5.7-rc5&id=21898816831fc60c92dd634ab4316a24da7eb4af
+> >>
+> >> It's better that someone could test this case, but if no one would
+> >> test this, I could also accept a good-look patch.
+> >>
+> >>>>>> Changes in v4: None
+> >>>>>> Changes in v3:
+> >>>>>> - Move the bridge.type line to the patch that adds drm_bridge support. (Laurent Pinchart)
+> >>>>>>
+> >>>>>> Changes in v2: None
+> >>>>>>
+> >>>>>>  drivers/gpu/drm/mediatek/mtk_dsi.c | 13 ++++++++++++-
+> >>>>>>  1 file changed, 12 insertions(+), 1 deletion(-)
+> >>>>>>
+> >>>>>> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> >>>>>> index 4f3bd095c1ee..471fcafdf348 100644
+> >>>>>> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> >>>>>> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> >>>>>> @@ -17,6 +17,7 @@
+> >>>>>>
+> >>>>>>  #include <drm/drm_atomic_helper.h>
+> >>>>>>  #include <drm/drm_bridge.h>
+> >>>>>> +#include <drm/drm_bridge_connector.h>
+> >>>>>>  #include <drm/drm_mipi_dsi.h>
+> >>>>>>  #include <drm/drm_of.h>
+> >>>>>>  #include <drm/drm_panel.h>
+> >>>>>> @@ -183,6 +184,7 @@ struct mtk_dsi {
+> >>>>>>         struct drm_encoder encoder;
+> >>>>>>         struct drm_bridge bridge;
+> >>>>>>         struct drm_bridge *next_bridge;
+> >>>>>> +       struct drm_connector *connector;
+> >>>>>>         struct phy *phy;
+> >>>>>>
+> >>>>>>         void __iomem *regs;
+> >>>>>> @@ -977,10 +979,19 @@ static int mtk_dsi_encoder_init(struct drm_device *drm, struct mtk_dsi *dsi)
+> >>>>>>          */
+> >>>>>>         dsi->encoder.possible_crtcs = 1;
+> >>>>>>
+> >>>>>> -       ret = drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL, 0);
+> >>>>>> +       ret = drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL,
+> >>>>>> +                               DRM_BRIDGE_ATTACH_NO_CONNECTOR);
+> >>>>>>         if (ret)
+> >>>>>>                 goto err_cleanup_encoder;
+> >>>>>>
+> >>>>>> +       dsi->connector = drm_bridge_connector_init(drm, &dsi->encoder);
+> >>>>>> +       if (IS_ERR(dsi->connector)) {
+> >>>>>> +               DRM_ERROR("Unable to create bridge connector\n");
+> >>>>>> +               ret = PTR_ERR(dsi->connector);
+> >>>>>> +               goto err_cleanup_encoder;
+> >>>>>> +       }
+> >>>>>> +       drm_connector_attach_encoder(dsi->connector, &dsi->encoder);
+> >>>>>> +
+> >>>>>>         return 0;
+> >>>>>>
+> >>>>>>  err_cleanup_encoder:
+
 -- 
-2.26.0
+Regards,
 
+Laurent Pinchart
