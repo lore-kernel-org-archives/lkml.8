@@ -2,119 +2,128 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3299CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BE5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 107212065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F4502065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:08:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p6ePzTd2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DjVE1iKE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726010AbgENIIO (ORCPT
+        id S1726073AbgENIIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 04:08:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60500 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725925AbgENIIN (ORCPT
+        Thu, 14 May 2020 04:08:46 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52842 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726024AbgENIIo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 04:08:13 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4DFEC061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:08:12 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id y24so31375012wma.4
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:08:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+dBTttPdObnoAHm8o3XOpB6wiom9rFH5IVHvtwcE0HI=;
-        b=p6ePzTd27zTHt8YXadOh+yoHGm+Jq5Ilo3RFJ0ldQcG6r0KUmypuXk5qeszLRta7cQ
-         y8Mk/1VZCW+nO+tGbNExaZIOLHdDrvGHs5SuUwYqtIFvLaJzyIWWxVfLJUEu0iduxz0v
-         mDl2sk29sX7F8ZHh/tR9P7FwKia5yfSQyzT2g5ExKjASfyYsNho75mLvE60R39UKSgSO
-         Lu6eTJNxpQOQ+9+BaCWnmo6uKWNLDmBWIGP7hWAxe/jlo+ZiIH03E/m99g1EM/2Nh0bB
-         Mt61DMfCMIYUXvLKb/muchhMzPavtv8rY52o0c5ykqUWGZUvJn7fwDsSB6oLa29h2yDX
-         dbTw==
+        Thu, 14 May 2020 04:08:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589443723;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=cOdfBW82qWXPUyvO4VieSyh6O7YUpxTbdcA3Up+HDqM=;
+        b=DjVE1iKEB1GGJwA8uSomAe/1RAi3ydMMQT/kI74QBklshxnjUGB3JSuZQ8/MJItrtq+yPA
+        lqYwlxJRApUpEp1yCtOomV+W/3YM+jLC17qLt3xGTjesjXjPgISb8yg4fjBCXrJbQVxXJO
+        V8EvUpjAcO2DO5Sl4sZpl3MtAks+87c=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-315-jONsEYa3MSynmjCS04UlkQ-1; Thu, 14 May 2020 04:08:41 -0400
+X-MC-Unique: jONsEYa3MSynmjCS04UlkQ-1
+Received: by mail-wm1-f72.google.com with SMTP id k17so3777730wmi.4
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:08:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+dBTttPdObnoAHm8o3XOpB6wiom9rFH5IVHvtwcE0HI=;
-        b=EfDWyk2mqjL3fAM30woXHlQe5NAjcaXEEGkK5U7/A36LC+2bLkB1WabMO00Uj97IbW
-         f7WMFP7cEBpyiw78VrCybDwV9UVP+qrCY38xHCD3EqzgBzEsuKLtq9FBDwerYfxpejAd
-         YCYbyC8iGjrtMJDNgO2S/AwyEZ4QkLkgAhN59nqYulqirER0A/F2fKAqDPaUhO09WVui
-         zGj90v5BO1kYbS2D8YoCKMDOz8IqUmXK8Ji/fgbce3c8wig3TLgIhj5ZoHg8+S16oChX
-         UWGuIKVEnqaRyK+jSZVH/pC8XgTPekzSKwW2TEXKZ3KzHVazunuDEWXl6HQ68GyyMENR
-         5QuQ==
-X-Gm-Message-State: AOAM533CkGpBLXw0owaW2MrwhCcdR+Cxvhz5FQaMAXkihO/rkAIlDCHW
-        D9lSNycZmO+jBKQ5DRSfBR4UKg==
-X-Google-Smtp-Source: ABdhPJxp4IlgGcuqBONSjUjvyjF5xuOobYyR62/UafK9OpqwbPrMPajEW49YlhsRquv+6SOQWVf3iA==
-X-Received: by 2002:a1c:4806:: with SMTP id v6mr1080870wma.20.1589443691089;
-        Thu, 14 May 2020 01:08:11 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:ddb0:8d90:9d95:ff51? ([2a01:e34:ed2f:f020:ddb0:8d90:9d95:ff51])
-        by smtp.googlemail.com with ESMTPSA id g187sm10106409wmf.30.2020.05.14.01.08.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 May 2020 01:08:10 -0700 (PDT)
-Subject: Re: [v4,7/7] thermal: mediatek: use spinlock to protect PTPCORESEL
-To:     Michael Kao <michael.kao@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, hsinyi@chromium.org,
-        linux-pm@vger.kernel.org, srv_heupstream@mediatek.com,
-        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20200323121537.22697-1-michael.kao@mediatek.com>
- <20200323121537.22697-8-michael.kao@mediatek.com>
- <1589439322.11120.2.camel@mtksdccf07>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <09278638-aa39-c130-95ff-7e9de34cc4eb@linaro.org>
-Date:   Thu, 14 May 2020 10:08:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=cOdfBW82qWXPUyvO4VieSyh6O7YUpxTbdcA3Up+HDqM=;
+        b=W9mbl/HBLVpCjMQpfVlgYEvr6kU+Ra6/QODyNjqwRMzy0T6SprGmL5Z5U5wPCWvzo6
+         WGCiSsf2e4+AEI3sQap08wdPiQR7btqNpjGI5X3LNmyXEr5UrfFJUDLhj8zVitXLxcx2
+         8W0BKIpJsV86eSMcZlqHu628bNs4ayMRJ64hVhsFOX2hVL7jIQKsL+9jr9Dp3DZWN/zB
+         pzNERi6V/tRICkEexENrzLEOqeobwciyIKoTahUPCQLBI9ceBu1YS1rCvEMt+GcLd4U6
+         GZrEG3qvxOVEH9VEustUxetFGO6IEfK6OBKmC5nlK4sYzXikBpvHHG+k5PoJOasDg9JP
+         py9A==
+X-Gm-Message-State: AOAM530h9vE2QNyJhRrFI+M+e7Ik30GKTRjwhAfauRx+bWrqh21Zhqxx
+        TqB04Qje9BWp5BT5iSJyESkcZa+8WzdGQxxqfQ7Ff8Jyp78CRJyJkyL5SpTWfQCo62k0LIsmpl5
+        9SqFgssolztHmsBAv4IEuhVf3
+X-Received: by 2002:adf:e7cb:: with SMTP id e11mr3781921wrn.145.1589443720510;
+        Thu, 14 May 2020 01:08:40 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyxWvR5OzaMV5kvMXVgfd5dF9p4W8++O/sutBCgKyZ2mU/1rmv9IjNsOFC+/o4Jqnay1RbHXA==
+X-Received: by 2002:adf:e7cb:: with SMTP id e11mr3781898wrn.145.1589443720313;
+        Thu, 14 May 2020 01:08:40 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id 77sm2987286wrc.6.2020.05.14.01.08.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 01:08:39 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     kvm@vger.kernel.org, x86@kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Gavin Shan <gshan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/8] KVM: x86: interrupt based APF page-ready event delivery
+In-Reply-To: <20200513184641.GF173965@redhat.com>
+References: <20200511164752.2158645-1-vkuznets@redhat.com> <20200511164752.2158645-5-vkuznets@redhat.com> <20200512142411.GA138129@redhat.com> <87lflxm9sy.fsf@vitty.brq.redhat.com> <20200512180704.GE138129@redhat.com> <877dxgmcjv.fsf@vitty.brq.redhat.com> <20200513135350.GB173965@redhat.com> <87ftc3lxqc.fsf@vitty.brq.redhat.com> <20200513184641.GF173965@redhat.com>
+Date:   Thu, 14 May 2020 10:08:37 +0200
+Message-ID: <87zhabdjlm.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1589439322.11120.2.camel@mtksdccf07>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/05/2020 08:55, Michael Kao wrote:
-> On Mon, 2020-03-23 at 20:15 +0800, Michael Kao wrote:
->> From: "michael.kao" <michael.kao@mediatek.com>
->>
->> The driver of thermal and svs will use the
->> same register for the project which should select
->> bank before reading sensor value.
->>
->> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
->> ---
->>  drivers/thermal/mtk_thermal.c | 9 ++++-----
->>  1 file changed, 4 insertions(+), 5 deletions(-)
->>
+Vivek Goyal <vgoyal@redhat.com> writes:
 
-[ ... ]
+> On Wed, May 13, 2020 at 04:23:55PM +0200, Vitaly Kuznetsov wrote:
+>
+> [..]
+>> >> Also,
+>> >> kdump kernel may not even support APF so it will get very confused when
+>> >> APF events get delivered.
+>> >
+>> > New kernel can just ignore these events if it does not support async
+>> > pf? 
+>> >
+>> > This is somewhat similar to devices still doing interrupts in new
+>> > kernel. And solution for that seemed to be doing a "reset" of devices
+>> > in new kernel. We probably need similar logic where in new kernel
+>> > we simply disable "async pf" so that we don't get new notifications.
+>> 
+>> Right and that's what we're doing - just disabling new notifications.
+>
+> Nice.
+>
+> So why there is a need to deliver "page ready" notifications
+> to guest after guest has disabled async pf. Atleast kdump does not
+> seem to need it. It will boot into second kernel anyway, irrespective
+> of the fact whether it receives page ready or not.
 
-> Hi Matthias,
-
-Those patches fall under the thermal framework umbrella.
-
-Thanks
-  -- Daniel
-
+We don't deliver anything to the guest after it disables APF (neither
+'page ready' for what was previously missing, nor 'page not ready' for
+new faults), kvm_arch_can_inject_async_page_present() is just another
+misnomer, it should be named something like
+'kvm_arch_can_unqueue_async_page_present()' meaning that 'page ready'
+notification can be 'unqueued' from internal KVM queue. We will either
+deliver it (when guest has APF enabled) or just drop it (when guest has
+APF disabled). The only case when it has to stay in the queue is when
+guest has APF enabled and the slot is still busy (so it didn't get to
+process a previously delivered notification). We will try to deliver it
+again after guest writes to MSR_KVM_ASYNC_PF_ACK.
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Vitaly
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
