@@ -2,53 +2,52 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4164C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0184C433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76F92207C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F1B1207C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:52:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482353;
-	bh=KCg1yyOVD4K2OKUGu9sfernH4qKqFq5o9U83i/HgAkU=;
+	s=default; t=1589482356;
+	bh=LvPy3ZUZW395v2scQQE6nsESxP9LSQp4TMkD220vAyc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LtoqwEOf2D6UdrAOVBXCx8aquWyjk8rkQ1gsvWZPrIkwPfWfEjUTWY0VkQLjIXg2X
-	 cwxBn7Pe1QHzmnojmTJ2Fnj6dJkXIhv+IgB0L5ZVzioOPvBuEwZxQp7SeuRxZf9UjG
-	 90D1MaXMlLzWcbtjB/r+pzl55bxw/qGiZa1lS/Q8=
+	b=WwvH3Pc5q1R8gSnDkentKt+Rlj7r3ZBvIcl7E17dBzlU1jN7Oo2oTLqsL3AVyUcmb
+	 GdJHeqszTOxToUMW38SO4Z72+ELGpsLlnCWrHvh+Shn/G5pgAwzoGKK28A/SglLpND
+	 MexxVgEwA+wMRE2gpsDm090wWklMzI02hwqORlr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbgENSwc (ORCPT
+        id S1728373AbgENSwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:52:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50628 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:52:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727770AbgENSw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:52:26 -0400
+        id S1728324AbgENSw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:52:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 046F720722;
-        Thu, 14 May 2020 18:52:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69EFF20787;
+        Thu, 14 May 2020 18:52:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482345;
-        bh=KCg1yyOVD4K2OKUGu9sfernH4qKqFq5o9U83i/HgAkU=;
+        s=default; t=1589482349;
+        bh=LvPy3ZUZW395v2scQQE6nsESxP9LSQp4TMkD220vAyc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2i4blJ5i6CdBC/iFc83/xlv8bViMDHHE+Ah3C6iWWfXMYczuvxUt6co/cyd3rCqGl
-         4vWP+oI/2oqz7N4tLBV/V5wmqB5juqLV3sLVceIZRDLI6hPw5EssQG96n1yoaEgMjY
-         s7Zjo7rHDD2OvGRwuUEZpEWPrCJQkE3jtBLk35wo=
+        b=aiMdnRVEJ4SdNkIo6dSM69EUJI+ro/elzxaV4eLo6VtxPtKSLvbs34E8maLt/jEI8
+         nUw5+NUsPhxQ1bregFS1Nl/kpyaSIAgF9nThdu6cObhn7D8/lD5vMx12ov6Phh9REy
+         rzyP3GvTkXNV7lJ9mvFH/9saS7xJJCiN6AcBRvko=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+Cc:     Yoshiyuki Kurauchi <ahochauwaaaaa@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.6 29/62] hv_netvsc: Fix netvsc_start_xmit's return type
-Date:   Thu, 14 May 2020 14:51:14 -0400
-Message-Id: <20200514185147.19716-29-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        osmocom-net-gprs@lists.osmocom.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 31/62] gtp: set NLM_F_MULTI flag in gtp_genl_dump_pdp()
+Date:   Thu, 14 May 2020 14:51:16 -0400
+Message-Id: <20200514185147.19716-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185147.19716-1-sashal@kernel.org>
 References: <20200514185147.19716-1-sashal@kernel.org>
@@ -61,101 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Yoshiyuki Kurauchi <ahochauwaaaaa@gmail.com>
 
-[ Upstream commit 7fdc66debebc6a7170a37c8c9b0d9585a9788fb4 ]
+[ Upstream commit 846c68f7f1ac82c797a2f1db3344a2966c0fe2e1 ]
 
-netvsc_start_xmit is used as a callback function for the ndo_start_xmit
-function pointer. ndo_start_xmit's return type is netdev_tx_t but
-netvsc_start_xmit's return type is int.
+In drivers/net/gtp.c, gtp_genl_dump_pdp() should set NLM_F_MULTI
+flag since it returns multipart message.
+This patch adds a new arg "flags" in gtp_genl_fill_info() so that
+flags can be set by the callers.
 
-This causes a failure with Control Flow Integrity (CFI), which requires
-function pointer prototypes and callback function definitions to match
-exactly. When CFI is in enforcing, the kernel panics. When booting a
-CFI kernel with WSL 2, the VM is immediately terminated because of this.
-
-The splat when CONFIG_CFI_PERMISSIVE is used:
-
-[    5.916765] CFI failure (target: netvsc_start_xmit+0x0/0x10):
-[    5.916771] WARNING: CPU: 8 PID: 0 at kernel/cfi.c:29 __cfi_check_fail+0x2e/0x40
-[    5.916772] Modules linked in:
-[    5.916774] CPU: 8 PID: 0 Comm: swapper/8 Not tainted 5.7.0-rc3-next-20200424-microsoft-cbl-00001-ged4eb37d2c69-dirty #1
-[    5.916776] RIP: 0010:__cfi_check_fail+0x2e/0x40
-[    5.916777] Code: 48 c7 c7 70 98 63 a9 48 c7 c6 11 db 47 a9 e8 69 55 59 00 85 c0 75 02 5b c3 48 c7 c7 73 c6 43 a9 48 89 de 31 c0 e8 12 2d f0 ff <0f> 0b 5b c3 00 00 cc cc 00 00 cc cc 00 00 cc cc 00 00 85 f6 74 25
-[    5.916778] RSP: 0018:ffffa803c0260b78 EFLAGS: 00010246
-[    5.916779] RAX: 712a1af25779e900 RBX: ffffffffa8cf7950 RCX: ffffffffa962cf08
-[    5.916779] RDX: ffffffffa9c36b60 RSI: 0000000000000082 RDI: ffffffffa9c36b5c
-[    5.916780] RBP: ffff8ffc4779c2c0 R08: 0000000000000001 R09: ffffffffa9c3c300
-[    5.916781] R10: 0000000000000151 R11: ffffffffa9c36b60 R12: ffff8ffe39084000
-[    5.916782] R13: ffffffffa8cf7950 R14: ffffffffa8d12cb0 R15: ffff8ffe39320140
-[    5.916784] FS:  0000000000000000(0000) GS:ffff8ffe3bc00000(0000) knlGS:0000000000000000
-[    5.916785] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    5.916786] CR2: 00007ffef5749408 CR3: 00000002f4f5e000 CR4: 0000000000340ea0
-[    5.916787] Call Trace:
-[    5.916788]  <IRQ>
-[    5.916790]  __cfi_check+0x3ab58/0x450e0
-[    5.916793]  ? dev_hard_start_xmit+0x11f/0x160
-[    5.916795]  ? sch_direct_xmit+0xf2/0x230
-[    5.916796]  ? __dev_queue_xmit.llvm.11471227737707190958+0x69d/0x8e0
-[    5.916797]  ? neigh_resolve_output+0xdf/0x220
-[    5.916799]  ? neigh_connected_output.cfi_jt+0x8/0x8
-[    5.916801]  ? ip6_finish_output2+0x398/0x4c0
-[    5.916803]  ? nf_nat_ipv6_out+0x10/0xa0
-[    5.916804]  ? nf_hook_slow+0x84/0x100
-[    5.916807]  ? ip6_input_finish+0x8/0x8
-[    5.916807]  ? ip6_output+0x6f/0x110
-[    5.916808]  ? __ip6_local_out.cfi_jt+0x8/0x8
-[    5.916810]  ? mld_sendpack+0x28e/0x330
-[    5.916811]  ? ip_rt_bug+0x8/0x8
-[    5.916813]  ? mld_ifc_timer_expire+0x2db/0x400
-[    5.916814]  ? neigh_proxy_process+0x8/0x8
-[    5.916816]  ? call_timer_fn+0x3d/0xd0
-[    5.916817]  ? __run_timers+0x2a9/0x300
-[    5.916819]  ? rcu_core_si+0x8/0x8
-[    5.916820]  ? run_timer_softirq+0x14/0x30
-[    5.916821]  ? __do_softirq+0x154/0x262
-[    5.916822]  ? native_x2apic_icr_write+0x8/0x8
-[    5.916824]  ? irq_exit+0xba/0xc0
-[    5.916825]  ? hv_stimer0_vector_handler+0x99/0xe0
-[    5.916826]  ? hv_stimer0_callback_vector+0xf/0x20
-[    5.916826]  </IRQ>
-[    5.916828]  ? hv_stimer_global_cleanup.cfi_jt+0x8/0x8
-[    5.916829]  ? raw_setsockopt+0x8/0x8
-[    5.916830]  ? default_idle+0xe/0x10
-[    5.916832]  ? do_idle.llvm.10446269078108580492+0xb7/0x130
-[    5.916833]  ? raw_setsockopt+0x8/0x8
-[    5.916833]  ? cpu_startup_entry+0x15/0x20
-[    5.916835]  ? cpu_hotplug_enable.cfi_jt+0x8/0x8
-[    5.916836]  ? start_secondary+0x188/0x190
-[    5.916837]  ? secondary_startup_64+0xa5/0xb0
-[    5.916838] ---[ end trace f2683fa869597ba5 ]---
-
-Avoid this by using the right return type for netvsc_start_xmit.
-
-Fixes: fceaf24a943d8 ("Staging: hv: add the Hyper-V virtual network driver")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1009
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: Yoshiyuki Kurauchi <ahochauwaaaaa@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/netvsc_drv.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/gtp.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 2c0a24c606fc7..28a5d46ad5266 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -710,7 +710,8 @@ static int netvsc_xmit(struct sk_buff *skb, struct net_device *net, bool xdp_tx)
- 	goto drop;
- }
+diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
+index 672cd2caf2fbe..21640a035d7df 100644
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -1169,11 +1169,11 @@ static int gtp_genl_del_pdp(struct sk_buff *skb, struct genl_info *info)
+ static struct genl_family gtp_genl_family;
  
--static int netvsc_start_xmit(struct sk_buff *skb, struct net_device *ndev)
-+static netdev_tx_t netvsc_start_xmit(struct sk_buff *skb,
-+				     struct net_device *ndev)
+ static int gtp_genl_fill_info(struct sk_buff *skb, u32 snd_portid, u32 snd_seq,
+-			      u32 type, struct pdp_ctx *pctx)
++			      int flags, u32 type, struct pdp_ctx *pctx)
  {
- 	return netvsc_xmit(skb, ndev, false);
- }
+ 	void *genlh;
+ 
+-	genlh = genlmsg_put(skb, snd_portid, snd_seq, &gtp_genl_family, 0,
++	genlh = genlmsg_put(skb, snd_portid, snd_seq, &gtp_genl_family, flags,
+ 			    type);
+ 	if (genlh == NULL)
+ 		goto nlmsg_failure;
+@@ -1227,8 +1227,8 @@ static int gtp_genl_get_pdp(struct sk_buff *skb, struct genl_info *info)
+ 		goto err_unlock;
+ 	}
+ 
+-	err = gtp_genl_fill_info(skb2, NETLINK_CB(skb).portid,
+-				 info->snd_seq, info->nlhdr->nlmsg_type, pctx);
++	err = gtp_genl_fill_info(skb2, NETLINK_CB(skb).portid, info->snd_seq,
++				 0, info->nlhdr->nlmsg_type, pctx);
+ 	if (err < 0)
+ 		goto err_unlock_free;
+ 
+@@ -1271,6 +1271,7 @@ static int gtp_genl_dump_pdp(struct sk_buff *skb,
+ 				    gtp_genl_fill_info(skb,
+ 					    NETLINK_CB(cb->skb).portid,
+ 					    cb->nlh->nlmsg_seq,
++					    NLM_F_MULTI,
+ 					    cb->nlh->nlmsg_type, pctx)) {
+ 					cb->args[0] = i;
+ 					cb->args[1] = j;
 -- 
 2.20.1
 
