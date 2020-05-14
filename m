@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BE2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D220C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F9A42074A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EEDF207F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482528;
-	bh=jQoFJSWE+b5sWXK1XaHTPQsUf+lErTrt/chz9Uz3FYY=;
+	s=default; t=1589482541;
+	bh=zd6aUnCIA4Yjpf84Uurs8gQ29QfEltSX3ZdTt+vzEJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VFmMmaaXGgfykOaa/yJNom9un8aTq39qXF1/BdPCYhAa+/eBI7fdJu11OnOYhMcdP
-	 vaMtWt6rakp4tfB8jtLVDGbCwdrBcxHZ/NJGvNFGqoUyI0v3MphvZoE7Xmv4wimU0U
-	 XK7TtBkvO3E0I2+UnQffrCQOD1MI5BwIHm3+QphE=
+	b=NLECab1L+vFwTTr6FC+oY05UpesEt2xqCuwCzQ8UAhDZMlSJTfxIEuYy0A/dIbO1+
+	 zbX++Bi9aqrvOinwfTGzQoQ8IkS+jaZnohqQNG9mSHUs2rpge2zKpb0l+JtuOBGz6+
+	 Iu3dNroEp+XixAhdllPgkOSXQvYVjnKaQUnB3J4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728497AbgENSz1 (ORCPT
+        id S1729443AbgENSzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:55:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55332 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:55:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728456AbgENSzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:55:02 -0400
+        id S1729358AbgENSzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:55:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F21B52078C;
-        Thu, 14 May 2020 18:55:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D466B206F1;
+        Thu, 14 May 2020 18:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482501;
-        bh=jQoFJSWE+b5sWXK1XaHTPQsUf+lErTrt/chz9Uz3FYY=;
+        s=default; t=1589482521;
+        bh=zd6aUnCIA4Yjpf84Uurs8gQ29QfEltSX3ZdTt+vzEJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2N/1yElKaywmwGi95IeNn/SJGpRTg+fP6zRJU3bzoGGlmB3FnurJurOO+giCOT16z
-         3ghCiDLTkAeu+qn67qJXUTkCOIBg8pv5K2bR2MZ7ajHnmA/kyoj0BtuVBl2NfksS6O
-         gh5854TdoYGOZuJigyjuB6M7xYLYq5wxOihlpEdQ=
+        b=dyAHURI/N4hxKjyZ+1X4x6tTUtRCjfmgi7FbXpxM7HReZPDrMa332Z1GBxHwPZWoe
+         rexCfxf5F/4WjHq0gJJYw2XZNlkA2WZha8DtQiXLhri+j1EIn9S43WCbPC3Pa5z20t
+         vtK03FV7WAYVCIBry/aaHHZvZpI8KkeA18nZfQOY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     George Spelvin <lkml@sdf.org>, Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>,
-        b.a.t.m.a.n@lists.open-mesh.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 04/39] batman-adv: fix batadv_nc_random_weight_tq
-Date:   Thu, 14 May 2020 14:54:21 -0400
-Message-Id: <20200514185456.21060-4-sashal@kernel.org>
+Cc:     Stefano Garzarella <sgarzare@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 17/39] vhost/vsock: fix packet delivery order to monitoring devices
+Date:   Thu, 14 May 2020 14:54:34 -0400
+Message-Id: <20200514185456.21060-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185456.21060-1-sashal@kernel.org>
 References: <20200514185456.21060-1-sashal@kernel.org>
@@ -60,68 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: George Spelvin <lkml@sdf.org>
+From: Stefano Garzarella <sgarzare@redhat.com>
 
-[ Upstream commit fd0c42c4dea54335967c5a86f15fc064235a2797 ]
+[ Upstream commit 107bc0766b9feb5113074c753735a3f115c2141f ]
 
-and change to pseudorandom numbers, as this is a traffic dithering
-operation that doesn't need crypto-grade.
+We want to deliver packets to monitoring devices before it is
+put in the virtqueue, to avoid that replies can appear in the
+packet capture before the transmitted packet.
 
-The previous code operated in 4 steps:
-
-1. Generate a random byte 0 <= rand_tq <= 255
-2. Multiply it by BATADV_TQ_MAX_VALUE - tq
-3. Divide by 255 (= BATADV_TQ_MAX_VALUE)
-4. Return BATADV_TQ_MAX_VALUE - rand_tq
-
-This would apperar to scale (BATADV_TQ_MAX_VALUE - tq) by a random
-value between 0/255 and 255/255.
-
-But!  The intermediate value between steps 3 and 4 is stored in a u8
-variable.  So it's truncated, and most of the time, is less than 255, after
-which the division produces 0.  Specifically, if tq is odd, the product is
-always even, and can never be 255.  If tq is even, there's exactly one
-random byte value that will produce a product byte of 255.
-
-Thus, the return value is 255 (511/512 of the time) or 254 (1/512
-of the time).
-
-If we assume that the truncation is a bug, and the code is meant to scale
-the input, a simpler way of looking at it is that it's returning a random
-value between tq and BATADV_TQ_MAX_VALUE, inclusive.
-
-Well, we have an optimized function for doing just that.
-
-Fixes: 3c12de9a5c75 ("batman-adv: network coding - code and transmit packets if possible")
-Signed-off-by: George Spelvin <lkml@sdf.org>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/network-coding.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ drivers/vhost/vsock.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/net/batman-adv/network-coding.c b/net/batman-adv/network-coding.c
-index 7a7dcac205667..7aacec24958eb 100644
---- a/net/batman-adv/network-coding.c
-+++ b/net/batman-adv/network-coding.c
-@@ -1017,15 +1017,8 @@ static struct batadv_nc_path *batadv_nc_get_path(struct batadv_priv *bat_priv,
-  */
- static u8 batadv_nc_random_weight_tq(u8 tq)
- {
--	u8 rand_val, rand_tq;
--
--	get_random_bytes(&rand_val, sizeof(rand_val));
--
- 	/* randomize the estimated packet loss (max TQ - estimated TQ) */
--	rand_tq = rand_val * (BATADV_TQ_MAX_VALUE - tq);
--
--	/* normalize the randomized packet loss */
--	rand_tq /= BATADV_TQ_MAX_VALUE;
-+	u8 rand_tq = prandom_u32_max(BATADV_TQ_MAX_VALUE + 1 - tq);
+diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+index 834e88e20550f..3f2f34ebf51f5 100644
+--- a/drivers/vhost/vsock.c
++++ b/drivers/vhost/vsock.c
+@@ -182,14 +182,14 @@ vhost_transport_do_send_pkt(struct vhost_vsock *vsock,
+ 			break;
+ 		}
  
- 	/* convert to (randomized) estimated tq again */
- 	return BATADV_TQ_MAX_VALUE - rand_tq;
+-		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
+-		added = true;
+-
+-		/* Deliver to monitoring devices all correctly transmitted
+-		 * packets.
++		/* Deliver to monitoring devices all packets that we
++		 * will transmit.
+ 		 */
+ 		virtio_transport_deliver_tap_pkt(pkt);
+ 
++		vhost_add_used(vq, head, sizeof(pkt->hdr) + payload_len);
++		added = true;
++
+ 		pkt->off += payload_len;
+ 		total_len += payload_len;
+ 
 -- 
 2.20.1
 
