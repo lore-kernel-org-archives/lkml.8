@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D772EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE7CC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B322C20643
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D896B20643
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:08:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483320;
-	bh=iYOKdNcutYidCxHGWJIfBepkfclK6/2LI0QUfCIk4Pg=;
+	s=default; t=1589483323;
+	bh=soRgXhcKTdcEJSOkgZmtOz+brcKNV0jmvZTIADF0urs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W7GqZxYz2XD4PjUbcHjLTVjF8+XvUGgBdGA2GzGKg36KrJGxY3GgUQtoJiExaCZiL
-	 6IvevPrbHVmqO7r8yweg29YIohr35vwdcogohVStnVp9EzwyBA0L65oNQwNrMFvbdK
-	 Vb17ekTDt0MLdgNhT9/FDtvItmUqqjczsx9tN81c=
+	b=MupNLwcfl0OYl/jV4uz0e4ZjORaMinMpTKQoYQZy6r/G5kK0J9HM1BzxUuSOQO+oF
+	 vgUjRJFwOXjRs8Q20OMRQdbKlKqR3ylnu5stDm04hg6LZqOrahrbSDiL/7ugKp8zti
+	 Ojmde06WgEuBPVWLtG+37uGvqfDqJxYuX5NBDIjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbgENSxG (ORCPT
+        id S1728818AbgENTIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:53:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51800 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:08:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728510AbgENSw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:52:58 -0400
+        id S1728582AbgENSxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:53:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 012B52065F;
-        Thu, 14 May 2020 18:52:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18F8D20675;
+        Thu, 14 May 2020 18:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482377;
-        bh=iYOKdNcutYidCxHGWJIfBepkfclK6/2LI0QUfCIk4Pg=;
+        s=default; t=1589482385;
+        bh=soRgXhcKTdcEJSOkgZmtOz+brcKNV0jmvZTIADF0urs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ieHITNlybZun7CQFpZ6tdKFstkC1PNZDpa7J4UlV78UEFK5YZ8q/NmwtroQikswKd
-         6Uktq6pCEScgRlzWgluBL1p60dPbRuvRFdyDCrhbNCGx6sKVi+EOlV+UubqvJdWc3d
-         lt7NGcUNLluvaZ+pAcej2ugfqSkO23XureBNyVpc=
+        b=gMMValtfXCyWBRIVollkbTowh5uE6pHj6OFcRvnC0m4EQqUOfEKhTGwje7v2HbNa9
+         HjGucjpgs9l6anLmX+GrXh+I3Bv5qjS03NLDj9LBxcPATJ77uWIsuq7sRp/SWEpZCr
+         9cT0Cs0r4AP9TaongtKPgk7gEX14fP9Aj8VrKvxI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 54/62] Stop the ad-hoc games with -Wno-maybe-initialized
-Date:   Thu, 14 May 2020 14:51:39 -0400
-Message-Id: <20200514185147.19716-54-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 62/62] gcc-10: avoid shadowing standard library 'free()' in crypto
+Date:   Thu, 14 May 2020 14:51:47 -0400
+Message-Id: <20200514185147.19716-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185147.19716-1-sashal@kernel.org>
 References: <20200514185147.19716-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,120 +61,98 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 78a5255ffb6a1af189a83e493d916ba1c54d8c75 ]
+[ Upstream commit 1a263ae60b04de959d9ce9caea4889385eefcc7b ]
 
-We have some rather random rules about when we accept the
-"maybe-initialized" warnings, and when we don't.
+gcc-10 has started warning about conflicting types for a few new
+built-in functions, particularly 'free()'.
 
-For example, we consider it unreliable for gcc versions < 4.9, but also
-if -O3 is enabled, or if optimizing for size.  And then various kernel
-config options disabled it, because they know that they trigger that
-warning by confusing gcc sufficiently (ie PROFILE_ALL_BRANCHES).
+This results in warnings like:
 
-And now gcc-10 seems to be introducing a lot of those warnings too, so
-it falls under the same heading as 4.9 did.
+   crypto/xts.c:325:13: warning: conflicting types for built-in function ‘free’; expected ‘void(void *)’ [-Wbuiltin-declaration-mismatch]
 
-At the same time, we have a very straightforward way to _enable_ that
-warning when wanted: use "W=2" to enable more warnings.
+because the crypto layer had its local freeing functions called
+'free()'.
 
-So stop playing these ad-hoc games, and just disable that warning by
-default, with the known and straight-forward "if you want to work on the
-extra compiler warnings, use W=123".
+Gcc-10 is in the wrong here, since that function is marked 'static', and
+thus there is no chance of confusion with any standard library function
+namespace.
 
-Would it be great to have code that is always so obvious that it never
-confuses the compiler whether a variable is used initialized or not?
-Yes, it would.  In a perfect world, the compilers would be smarter, and
-our source code would be simpler.
+But the simplest thing to do is to just use a different name here, and
+avoid this gcc mis-feature.
 
-That's currently not the world we live in, though.
+[ Side note: gcc knowing about 'free()' is in itself not the
+  mis-feature: the semantics of 'free()' are special enough that a
+  compiler can validly do special things when seeing it.
+
+  So the mis-feature here is that gcc thinks that 'free()' is some
+  restricted name, and you can't shadow it as a local static function.
+
+  Making the special 'free()' semantics be a function attribute rather
+  than tied to the name would be the much better model ]
 
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile             |  7 +++----
- init/Kconfig         | 18 ------------------
- kernel/trace/Kconfig |  1 -
- 3 files changed, 3 insertions(+), 23 deletions(-)
+ crypto/lrw.c | 6 +++---
+ crypto/xts.c | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 744245f0c96cf..d226ec8bd167f 100644
---- a/Makefile
-+++ b/Makefile
-@@ -708,10 +708,6 @@ else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
- KBUILD_CFLAGS += -Os
- endif
+diff --git a/crypto/lrw.c b/crypto/lrw.c
+index 376d7ed3f1f87..3c734b81b3a20 100644
+--- a/crypto/lrw.c
++++ b/crypto/lrw.c
+@@ -287,7 +287,7 @@ static void exit_tfm(struct crypto_skcipher *tfm)
+ 	crypto_free_skcipher(ctx->child);
+ }
  
--ifdef CONFIG_CC_DISABLE_WARN_MAYBE_UNINITIALIZED
--KBUILD_CFLAGS   += -Wno-maybe-uninitialized
--endif
--
- # Tell gcc to never replace conditional load with a non-conditional one
- KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
- KBUILD_CFLAGS	+= $(call cc-option,-fno-allow-store-data-races)
-@@ -862,6 +858,9 @@ KBUILD_CFLAGS += -Wno-pointer-sign
- # disable stringop warnings in gcc 8+
- KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
+-static void free(struct skcipher_instance *inst)
++static void free_inst(struct skcipher_instance *inst)
+ {
+ 	crypto_drop_skcipher(skcipher_instance_ctx(inst));
+ 	kfree(inst);
+@@ -400,12 +400,12 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
+ 	inst->alg.encrypt = encrypt;
+ 	inst->alg.decrypt = decrypt;
  
-+# Enabled with W=2, disabled by default as noisy
-+KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
-+
- # disable invalid "can't wrap" optimizations for signed / pointers
- KBUILD_CFLAGS	+= $(call cc-option,-fno-strict-overflow)
+-	inst->free = free;
++	inst->free = free_inst;
  
-diff --git a/init/Kconfig b/init/Kconfig
-index 4f717bfdbfe2d..ef59c5c36cdb5 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -36,22 +36,6 @@ config TOOLS_SUPPORT_RELR
- config CC_HAS_ASM_INLINE
- 	def_bool $(success,echo 'void foo(void) { asm inline (""); }' | $(CC) -x c - -c -o /dev/null)
+ 	err = skcipher_register_instance(tmpl, inst);
+ 	if (err) {
+ err_free_inst:
+-		free(inst);
++		free_inst(inst);
+ 	}
+ 	return err;
+ }
+diff --git a/crypto/xts.c b/crypto/xts.c
+index dbdd8af629e69..6d8cea94b3cfb 100644
+--- a/crypto/xts.c
++++ b/crypto/xts.c
+@@ -322,7 +322,7 @@ static void exit_tfm(struct crypto_skcipher *tfm)
+ 	crypto_free_cipher(ctx->tweak);
+ }
  
--config CC_HAS_WARN_MAYBE_UNINITIALIZED
--	def_bool $(cc-option,-Wmaybe-uninitialized)
--	help
--	  GCC >= 4.7 supports this option.
--
--config CC_DISABLE_WARN_MAYBE_UNINITIALIZED
--	bool
--	depends on CC_HAS_WARN_MAYBE_UNINITIALIZED
--	default CC_IS_GCC && GCC_VERSION < 40900  # unreliable for GCC < 4.9
--	help
--	  GCC's -Wmaybe-uninitialized is not reliable by definition.
--	  Lots of false positive warnings are produced in some cases.
--
--	  If this option is enabled, -Wno-maybe-uninitialzed is passed
--	  to the compiler to suppress maybe-uninitialized warnings.
--
- config CONSTRUCTORS
- 	bool
- 	depends on !UML
-@@ -1249,14 +1233,12 @@ config CC_OPTIMIZE_FOR_PERFORMANCE
- config CC_OPTIMIZE_FOR_PERFORMANCE_O3
- 	bool "Optimize more for performance (-O3)"
- 	depends on ARC
--	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
- 	help
- 	  Choosing this option will pass "-O3" to your compiler to optimize
- 	  the kernel yet more for performance.
+-static void free(struct skcipher_instance *inst)
++static void free_inst(struct skcipher_instance *inst)
+ {
+ 	crypto_drop_skcipher(skcipher_instance_ctx(inst));
+ 	kfree(inst);
+@@ -434,12 +434,12 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
+ 	inst->alg.encrypt = encrypt;
+ 	inst->alg.decrypt = decrypt;
  
- config CC_OPTIMIZE_FOR_SIZE
- 	bool "Optimize for size (-Os)"
--	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
- 	help
- 	  Choosing this option will pass "-Os" to your compiler resulting
- 	  in a smaller kernel.
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index 402eef84c859a..743647005f64e 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -466,7 +466,6 @@ config PROFILE_ANNOTATED_BRANCHES
- config PROFILE_ALL_BRANCHES
- 	bool "Profile all if conditionals" if !FORTIFY_SOURCE
- 	select TRACE_BRANCH_PROFILING
--	imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
- 	help
- 	  This tracer profiles all branch conditions. Every if ()
- 	  taken in the kernel is recorded whether it hit or miss.
+-	inst->free = free;
++	inst->free = free_inst;
+ 
+ 	err = skcipher_register_instance(tmpl, inst);
+ 	if (err) {
+ err_free_inst:
+-		free(inst);
++		free_inst(inst);
+ 	}
+ 	return err;
+ }
 -- 
 2.20.1
 
