@@ -2,94 +2,101 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EA0C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 578EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CA082074A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26A002074A
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482686;
-	bh=5x3QQ0e2UkWENL6GljWmqxUP3OcCMZkZBDtwURmupAg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=prdf2sr+c16uZIQxPU3QqACzTtzeEWAaWh5+LhPJEI2rFo6UG1RXUVl0PF/gJ+Vfb
-	 LqYGGT1d99dSr1bVXCHBr+lqUDotQuQjdl4VPnfrAvyUbbyhXFsjXlRNvNWP1x5UNc
-	 4xSO5a1d1Km1dfjC6YALm4vHsEwEjg4xcsYuNAe0=
+	s=default; t=1589482690;
+	bh=esz7BT1XGLXX2e6/WkVawj94qo0wZmL2+OqiuqTZVbk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wACt5MmuIUFygK2qGkDxSx4NSaJ3N7Q5Lyj6FhRxqXtH2uiMeWwZjq0xGpG6bvxNd
+	 OfNx6ok6XeT7YLvLvagVuUPPBRyUTMRmOkpIZwn8eS5yOyCuPkuMxY4QbbVvy2wSZg
+	 tgVAwTHkgnaUF1v0J3zk2UOEBvPVMVg9O3QxBvJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729864AbgENS6E (ORCPT
+        id S1729872AbgENS6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 14 May 2020 14:58:09 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41966 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729861AbgENS6E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 14 May 2020 14:58:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57530 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727117AbgENS4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:56:32 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2D2620801;
-        Thu, 14 May 2020 18:56:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482591;
-        bh=5x3QQ0e2UkWENL6GljWmqxUP3OcCMZkZBDtwURmupAg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xpTEdIXFqTFVMCbjZgFOG12vVljUkDnuPgcjNjj054SBzdfRi4eYJwt1zgzB4lr6Q
-         8NG6dzu/OryYZypp37FAKJYBC+R9Fuctbke7fnLKd2eideKLdzSMSsbKY6VSWHjO6M
-         LWiEWZPsh+j32i4tjAi3VwDuKkCb2l6ZD3cAOwv4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julia Lawall <Julia.Lawall@inria.fr>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 05/14] dp83640: reverse arguments to list_add_tail
-Date:   Thu, 14 May 2020 14:56:16 -0400
-Message-Id: <20200514185625.21753-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200514185625.21753-1-sashal@kernel.org>
-References: <20200514185625.21753-1-sashal@kernel.org>
+Received: by mail-oi1-f196.google.com with SMTP id 19so25472576oiy.8;
+        Thu, 14 May 2020 11:58:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5Jeu+pUdvy7geYpROrsQEfwRIHXKYojtjQhLqBTcP6M=;
+        b=B1pR1xaZBqyoPaTcQfH2ffNG5jhdOyboQSOCeU6a3znZSA0xbfp6IWb6Pg0QsHdVIy
+         27xEf+YQODcdryS4NaMl6CkNgpwphAPSs324ME+OHEcGkYKqXUNpQtuTCxEPjOVWT0TH
+         2VjABZYqhYWRExQzQ0k3FtSiktTQ+c8sYm97t9E85hoz73uiMZwsfYICFMci785gFtVd
+         gN/A7v1L7NSU92yJ1fhsp+Jnk0UbUzyaTsaSHA56hsLytJsX3Znyud1SmNKArV9k6cpv
+         eOfAouU/nTFcNer5PVRtZgW1hyksNnVS6LIl8zgKNLINk2+PLU/uKh3wQUrnUkRCPJ6p
+         TCZw==
+X-Gm-Message-State: AGi0PuZ9HfFfjB5JovXjAPaVnPUY5fLP3hlELlkZvc2YgtS1vk+hWlaU
+        EuMYElc7KSUTPVJ5JGVHzQ==
+X-Google-Smtp-Source: APiQypKgvewB8Pvp5nCvCQGDx9kDR5Wg6rNaAAicjD+8CjJNf/8fTMB3InWXqRqr3Bxm9acLcN3WDQ==
+X-Received: by 2002:aca:4f02:: with SMTP id d2mr31586078oib.88.1589482682702;
+        Thu, 14 May 2020 11:58:02 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id b6sm973167ooa.47.2020.05.14.11.58.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 11:58:02 -0700 (PDT)
+Received: (nullmailer pid 29984 invoked by uid 1000);
+        Thu, 14 May 2020 18:58:01 -0000
+Date:   Thu, 14 May 2020 13:58:01 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     linux-gpio@vger.kernel.org, Prabhakar <prabhakar.csengg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-renesas-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v2 5/9] dt-bindings: serial: renesas,scifb: Document
+ r8a7742 bindings
+Message-ID: <20200514185801.GA29933@bogus>
+References: <1588794695-27852-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588794695-27852-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588794695-27852-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julia Lawall <Julia.Lawall@inria.fr>
+On Wed,  6 May 2020 20:51:31 +0100, Lad Prabhakar wrote:
+> RZ/G1H (R8A7742) SoC also has the R-Car gen2 compatible SCIFB ports,
+> so document the SoC specific bindings.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v1->v2:
+> * No change
+> ---
+> 
+>  Documentation/devicetree/bindings/serial/renesas,scifb.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-[ Upstream commit 865308373ed49c9fb05720d14cbf1315349b32a9 ]
-
-In this code, it appears that phyter_clocks is a list head, based on
-the previous list_for_each, and that clock->list is intended to be a
-list element, given that it has just been initialized in
-dp83640_clock_init.  Accordingly, switch the arguments to
-list_add_tail, which takes the list head as the second argument.
-
-Fixes: cb646e2b02b27 ("ptp: Added a clock driver for the National Semiconductor PHYTER.")
-Signed-off-by: Julia Lawall <Julia.Lawall@inria.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/phy/dp83640.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/phy/dp83640.c b/drivers/net/phy/dp83640.c
-index e6f564d50663b..847c9fc10f9a9 100644
---- a/drivers/net/phy/dp83640.c
-+++ b/drivers/net/phy/dp83640.c
-@@ -1107,7 +1107,7 @@ static struct dp83640_clock *dp83640_clock_get_bus(struct mii_bus *bus)
- 		goto out;
- 	}
- 	dp83640_clock_init(clock, bus);
--	list_add_tail(&phyter_clocks, &clock->list);
-+	list_add_tail(&clock->list, &phyter_clocks);
- out:
- 	mutex_unlock(&phyter_clocks_lock);
- 
--- 
-2.20.1
-
+Applied, thanks!
