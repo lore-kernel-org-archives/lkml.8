@@ -2,169 +2,102 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E8AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E706C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0F812065C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BB2F2065C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:44:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="c5o3x+2Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KZYUKUu/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728416AbgENTnY (ORCPT
+        id S1728461AbgENToG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:43:24 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:40444 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727769AbgENTnX (ORCPT
+        Thu, 14 May 2020 15:44:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727794AbgENToG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 15:43:23 -0400
-Received: by linux.microsoft.com (Postfix, from userid 1001)
-        id 8740120B717B; Thu, 14 May 2020 12:43:22 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8740120B717B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1589485402;
-        bh=CJJ+sOkxdWfr6O8hmWNrk7EaS+VUkJF7il2uw19u0gs=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=c5o3x+2QFTsrYiBRb9pjAfHPLzqiQrZo6fMZ9dNLbStilKd8++OGSnFuZlOLrJf0/
-         LSohna5CO+XRKRHEsq1FCANuvmaLSBv6SJJzcksJzIhyau5BdUXqoAIA429Y7PHfdU
-         kJhZd5pgzIN9QG7zsEKxDyxut/V0obeAu1ZOG04g=
-Received: from localhost (localhost [127.0.0.1])
-        by linux.microsoft.com (Postfix) with ESMTP id 83BD930705DA;
-        Thu, 14 May 2020 12:43:22 -0700 (PDT)
-Date:   Thu, 14 May 2020 12:43:22 -0700 (PDT)
-From:   James Morris <jamorris@linux.microsoft.com>
-X-X-Sender: jamorris@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-cc:     Anders Roxell <anders.roxell@linaro.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] security: fix the default value of secid_to_secctx
- hook
-In-Reply-To: <CAADnVQK6cka9i_GGz3OcjaNiEQEZYwgCLsn-S_Bkm-OWPJZb_w@mail.gmail.com>
-Message-ID: <alpine.LRH.2.21.2005141243120.53197@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
-References: <20200512174607.9630-1-anders.roxell@linaro.org> <CAADnVQK6cka9i_GGz3OcjaNiEQEZYwgCLsn-S_Bkm-OWPJZb_w@mail.gmail.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Thu, 14 May 2020 15:44:06 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44754C061A0C;
+        Thu, 14 May 2020 12:44:05 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id 202so210523lfe.5;
+        Thu, 14 May 2020 12:44:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BMdjGqJJ8ssmFnmYzHxNscWHpY/RONcr7JQJoulgYjI=;
+        b=KZYUKUu/8Tkdkzh69ywETAYQUBPnp9MPKTcz+dyyV+ArC3oijPVh2o5ZJ/mmUhIajq
+         cmO+Lpav++xun9s8fNG1Exb1bSETkJw5jKfVEv0KGtHFJBAqkz8yuZ4nPMwdL6PYb8cH
+         HKpr8RhBdGaJsSCAMEvcaeu0NuJidn4djo6PCjQSr1uY8Vf+2pHj7nZLfIsh2z8wnWIq
+         kCZF3kDM1NQ/8RemewbQsGG0uUxNl8hvy5MMjeriRqEomiprDwMaKoD1+6Gs8jqlyI+b
+         /NFoplWonx+XNCumbv9vWSHBA2W3W53xR1pVqJDDOeTS3qBDq6GNf6RvIG5l//GY+ivc
+         gRVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BMdjGqJJ8ssmFnmYzHxNscWHpY/RONcr7JQJoulgYjI=;
+        b=ED2qHzifLur5m8PhtAbc9wbxudZBUoyMFUMV8pfVlJolwWzvLPfxMt58djpeUw0zhP
+         zNRyz1Azd3ajMcWWpk50O6W3/Jao80/WFxoNwHnecTI82MlKOl8EomPK/QTH/RNT08EG
+         iPfESK7Sv3YYBVSWXa0a/EeylrNkAVDFG5Ojt2ebQDP4+MdiiOdA1f/GsOS/5Ogw81B5
+         NubNUAnb2whDRvmmeryQCS0poq7XN1t8jRGEIMayJqzBXy04YYmTjCJkwn+XhQfcFapT
+         KjEiu7GQgP2DHq0Fl5zAKirotHlRZLXy3tU+tbKzHJ0kmwFey7APovo9ZjcFEv65K28k
+         9w/Q==
+X-Gm-Message-State: AOAM531e5eyBffeZy1mM5KSJ/H8muoBi/L5IQX1bhRemfut2VARjY3ri
+        XhGHb0AcCS+Q22CzGV7dnPkvQRe7
+X-Google-Smtp-Source: ABdhPJyu22xVU0I89ReSZT3aNK9UsV93o7/8h2UhjxQWejmC0P0POzC4pPB2E137f99YjKU4Cq0jdg==
+X-Received: by 2002:a19:bc4:: with SMTP id 187mr2547325lfl.211.1589485443545;
+        Thu, 14 May 2020 12:44:03 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id 192sm1995664ljj.41.2020.05.14.12.44.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 May 2020 12:44:00 -0700 (PDT)
+Subject: Re: [PATCH v5 05/10] input: elants: refactor
+ elants_i2c_execute_command()
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Rob Herring <robh+dt@kernel.org>,
+        Scott Liu <scott.liu@emc.com.tw>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1587923061.git.mirq-linux@rere.qmqm.pl>
+ <6c576f688b385235c65b461410a917080d27e825.1587923061.git.mirq-linux@rere.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <4d99b640-6e22-7a81-62ef-4097c43c5bbc@gmail.com>
+Date:   Thu, 14 May 2020 22:43:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <6c576f688b385235c65b461410a917080d27e825.1587923061.git.mirq-linux@rere.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020, Alexei Starovoitov wrote:
-
-> James,
+26.04.2020 20:47, Michał Mirosław пишет:
+> Apply some DRY-ing to elants_i2c_execute_command() callers.  This pulls
+> polling and error printk()s into a single function.
 > 
-> since you took the previous similar patch are you going to pick this
-> one up as well?
-> Or we can route it via bpf tree to Linus asap.
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> ---
+> v4: return 0 on success; use %pe for error code
+> ---
 
-Routing via your tree is fine.
+Hello Michał,
 
-> 
-> Thanks
-> 
-> On Tue, May 12, 2020 at 10:46 AM Anders Roxell <anders.roxell@linaro.org> wrote:
-> >
-> > security_secid_to_secctx is called by the bpf_lsm hook and a successful
-> > return value (i.e 0) implies that the parameter will be consumed by the
-> > LSM framework. The current behaviour return success when the pointer
-> > isn't initialized when CONFIG_BPF_LSM is enabled, with the default
-> > return from kernel/bpf/bpf_lsm.c.
-> >
-> > This is the internal error:
-> >
-> > [ 1229.341488][ T2659] usercopy: Kernel memory exposure attempt detected from null address (offset 0, size 280)!
-> > [ 1229.374977][ T2659] ------------[ cut here ]------------
-> > [ 1229.376813][ T2659] kernel BUG at mm/usercopy.c:99!
-> > [ 1229.378398][ T2659] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-> > [ 1229.380348][ T2659] Modules linked in:
-> > [ 1229.381654][ T2659] CPU: 0 PID: 2659 Comm: systemd-journal Tainted: G    B   W         5.7.0-rc5-next-20200511-00019-g864e0c6319b8-dirty #13
-> > [ 1229.385429][ T2659] Hardware name: linux,dummy-virt (DT)
-> > [ 1229.387143][ T2659] pstate: 80400005 (Nzcv daif +PAN -UAO BTYPE=--)
-> > [ 1229.389165][ T2659] pc : usercopy_abort+0xc8/0xcc
-> > [ 1229.390705][ T2659] lr : usercopy_abort+0xc8/0xcc
-> > [ 1229.392225][ T2659] sp : ffff000064247450
-> > [ 1229.393533][ T2659] x29: ffff000064247460 x28: 0000000000000000
-> > [ 1229.395449][ T2659] x27: 0000000000000118 x26: 0000000000000000
-> > [ 1229.397384][ T2659] x25: ffffa000127049e0 x24: ffffa000127049e0
-> > [ 1229.399306][ T2659] x23: ffffa000127048e0 x22: ffffa000127048a0
-> > [ 1229.401241][ T2659] x21: ffffa00012704b80 x20: ffffa000127049e0
-> > [ 1229.403163][ T2659] x19: ffffa00012704820 x18: 0000000000000000
-> > [ 1229.405094][ T2659] x17: 0000000000000000 x16: 0000000000000000
-> > [ 1229.407008][ T2659] x15: 0000000000000000 x14: 003d090000000000
-> > [ 1229.408942][ T2659] x13: ffff80000d5b25b2 x12: 1fffe0000d5b25b1
-> > [ 1229.410859][ T2659] x11: 1fffe0000d5b25b1 x10: ffff80000d5b25b1
-> > [ 1229.412791][ T2659] x9 : ffffa0001034bee0 x8 : ffff00006ad92d8f
-> > [ 1229.414707][ T2659] x7 : 0000000000000000 x6 : ffffa00015eacb20
-> > [ 1229.416642][ T2659] x5 : ffff0000693c8040 x4 : 0000000000000000
-> > [ 1229.418558][ T2659] x3 : ffffa0001034befc x2 : d57a7483a01c6300
-> > [ 1229.420610][ T2659] x1 : 0000000000000000 x0 : 0000000000000059
-> > [ 1229.422526][ T2659] Call trace:
-> > [ 1229.423631][ T2659]  usercopy_abort+0xc8/0xcc
-> > [ 1229.425091][ T2659]  __check_object_size+0xdc/0x7d4
-> > [ 1229.426729][ T2659]  put_cmsg+0xa30/0xa90
-> > [ 1229.428132][ T2659]  unix_dgram_recvmsg+0x80c/0x930
-> > [ 1229.429731][ T2659]  sock_recvmsg+0x9c/0xc0
-> > [ 1229.431123][ T2659]  ____sys_recvmsg+0x1cc/0x5f8
-> > [ 1229.432663][ T2659]  ___sys_recvmsg+0x100/0x160
-> > [ 1229.434151][ T2659]  __sys_recvmsg+0x110/0x1a8
-> > [ 1229.435623][ T2659]  __arm64_sys_recvmsg+0x58/0x70
-> > [ 1229.437218][ T2659]  el0_svc_common.constprop.1+0x29c/0x340
-> > [ 1229.438994][ T2659]  do_el0_svc+0xe8/0x108
-> > [ 1229.440587][ T2659]  el0_svc+0x74/0x88
-> > [ 1229.441917][ T2659]  el0_sync_handler+0xe4/0x8b4
-> > [ 1229.443464][ T2659]  el0_sync+0x17c/0x180
-> > [ 1229.444920][ T2659] Code: aa1703e2 aa1603e1 910a8260 97ecc860 (d4210000)
-> > [ 1229.447070][ T2659] ---[ end trace 400497d91baeaf51 ]---
-> > [ 1229.448791][ T2659] Kernel panic - not syncing: Fatal exception
-> > [ 1229.450692][ T2659] Kernel Offset: disabled
-> > [ 1229.452061][ T2659] CPU features: 0x240002,20002004
-> > [ 1229.453647][ T2659] Memory Limit: none
-> > [ 1229.455015][ T2659] ---[ end Kernel panic - not syncing: Fatal exception ]---
-> >
-> > Rework the so the default return value is -EOPNOTSUPP.
-> >
-> > There are likely other callbacks such as security_inode_getsecctx() that
-> > may have the same problem, and that someone that understand the code
-> > better needs to audit them.
-> >
-> > Thank you Arnd for helping me figure out what went wrong.
-> >
-> > CC: Arnd Bergmann <arnd@arndb.de>
-> > Fixes: 98e828a0650f ("security: Refactor declaration of LSM hooks")
-> > Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-> > ---
-> >  include/linux/lsm_hook_defs.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-> > index b9e73d736e13..31eb3381e54b 100644
-> > --- a/include/linux/lsm_hook_defs.h
-> > +++ b/include/linux/lsm_hook_defs.h
-> > @@ -243,7 +243,7 @@ LSM_HOOK(int, -EINVAL, getprocattr, struct task_struct *p, char *name,
-> >          char **value)
-> >  LSM_HOOK(int, -EINVAL, setprocattr, const char *name, void *value, size_t size)
-> >  LSM_HOOK(int, 0, ismaclabel, const char *name)
-> > -LSM_HOOK(int, 0, secid_to_secctx, u32 secid, char **secdata,
-> > +LSM_HOOK(int, -EOPNOTSUPP, secid_to_secctx, u32 secid, char **secdata,
-> >          u32 *seclen)
-> >  LSM_HOOK(int, 0, secctx_to_secid, const char *secdata, u32 seclen, u32 *secid)
-> >  LSM_HOOK(void, LSM_RET_VOID, release_secctx, char *secdata, u32 seclen)
-> > --
-> > 2.20.1
-> >
-> 
-
-
--- 
-James Morris
-<jamorris@linux.microsoft.com>
+This patch needs to be rebased on a newer linux-next once again :)
