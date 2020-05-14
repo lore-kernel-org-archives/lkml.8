@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA581C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F31972065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:06:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A4B020675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:06:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483192;
-	bh=gmJHuoKP4vuZXIRcNdIkm9jGlWqb1LToHSB1kWzEJSk=;
+	s=default; t=1589483195;
+	bh=luYS6nZhnYfPoPuRBeriezK2WomVKbkolapMTsl/qas=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wnRKXnAj16PfNjl9TMoZczg5MhfOG1swn/vgqbBQa40XWJahoE74jT+d/76TVqg01
-	 5yhRF+e90ZdKZl15Pk90xv9VeTuNcAlb9BRRd3nbAHaWqt1J1bpMPwRRSpHscBWshj
-	 XhGAeH6DHRWkxFQqGFLYHi1KTxhtUftUTGyBw01s=
+	b=TBkSmtO+yDA90OCPmsF6XDnimiREMpglzfek+8L6S/hLOnj7V4Wrr9ac9cWH1R9P+
+	 3PqSMhH6BDMHFUWkXzkKIPiQ272RQ3MA5fGWCa3kumVsD/t2Tz3O0mwccEPFYJMfPf
+	 xElPViCF1s5QOApsgMek7rd0/OUwRm2WpynbenRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbgENSxs (ORCPT
+        id S1729973AbgENTGe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:53:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52882 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:06:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728736AbgENSxd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:53:33 -0400
+        id S1728840AbgENSxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:53:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8BF42078C;
-        Thu, 14 May 2020 18:53:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E12A7207D8;
+        Thu, 14 May 2020 18:53:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482412;
-        bh=gmJHuoKP4vuZXIRcNdIkm9jGlWqb1LToHSB1kWzEJSk=;
+        s=default; t=1589482428;
+        bh=luYS6nZhnYfPoPuRBeriezK2WomVKbkolapMTsl/qas=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pG2Dp1DYlDFTGW+3TyFYytkgfY0UA4Jr19c5t4LguOvcLY31igehy8afPuLZ+YVTZ
-         1akwvmoktYn3RT/u/2CPMLrXLwoZ6PnUPqxrRfLv19KURCldXbDYOP9oOEzPX5KNvt
-         gbgv+ViFpFn5uODSGa+14JZSO3229OIWSrzqGrnI=
+        b=JooYJbpa2TyUhzzTsMOMAYPwYDo329IsoZStk9c8pBWLpZ0MFVbOOOiWstnPJV3aK
+         CXhGUE7fOhqzX5G/UZ7qpqzWtyArT9tVoGy+zSPBQyj4bLy+r4IcZXio2EGKsuBITk
+         Olb1h+iFTixkqfzK0CDWF9m8PiAouQT86nAuQFMI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gavin Shan <gshan@redhat.com>, Shay Agroskin <shayagr@amazon.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 17/49] net/ena: Fix build warning in ena_xdp_set()
-Date:   Thu, 14 May 2020 14:52:38 -0400
-Message-Id: <20200514185311.20294-17-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 30/49] HID: quirks: Add HID_QUIRK_NO_INIT_REPORTS quirk for Dell K12A keyboard-dock
+Date:   Thu, 14 May 2020 14:52:51 -0400
+Message-Id: <20200514185311.20294-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185311.20294-1-sashal@kernel.org>
 References: <20200514185311.20294-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,46 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gavin Shan <gshan@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit caec66198d137c26f0d234abc498866a58c64150 ]
+[ Upstream commit 1e189f267015a098bdcb82cc652d13fbf2203fa0 ]
 
-This fixes the following build warning in ena_xdp_set(), which is
-observed on aarch64 with 64KB page size.
+Add a HID_QUIRK_NO_INIT_REPORTS quirk for the Dell K12A keyboard-dock,
+which can be used with various Dell Venue 11 models.
 
-   In file included from ./include/net/inet_sock.h:19,
-      from ./include/net/ip.h:27,
-      from drivers/net/ethernet/amazon/ena/ena_netdev.c:46:
-   drivers/net/ethernet/amazon/ena/ena_netdev.c: In function         \
-   ‘ena_xdp_set’:                                                    \
-   drivers/net/ethernet/amazon/ena/ena_netdev.c:557:6: warning:      \
-   format ‘%lu’                                                      \
-   expects argument of type ‘long unsigned int’, but argument 4      \
-   has type ‘int’                                                    \
-   [-Wformat=] "Failed to set xdp program, the current MTU (%d) is   \
-   larger than the maximum allowed MTU (%lu) while xdp is on",
+Without this quirk the keyboard/touchpad combo works fine when connected
+at boot, but when hotplugged 9 out of 10 times it will not work properly.
+Adding the quirk fixes this.
 
-Signed-off-by: Gavin Shan <gshan@redhat.com>
-Acked-by: Shay Agroskin <shayagr@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Mario Limonciello <mario.limonciello@dell.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_netdev.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hid-ids.h    | 1 +
+ drivers/hid/hid-quirks.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.h b/drivers/net/ethernet/amazon/ena/ena_netdev.h
-index dc02950a96b8d..28412f11a9ca0 100644
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.h
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.h
-@@ -68,7 +68,7 @@
-  * 16kB.
-  */
- #if PAGE_SIZE > SZ_16K
--#define ENA_PAGE_SIZE SZ_16K
-+#define ENA_PAGE_SIZE (_AC(SZ_16K, UL))
- #else
- #define ENA_PAGE_SIZE PAGE_SIZE
- #endif
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 3341133df3a8d..13b7222ef2c91 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -1106,6 +1106,7 @@
+ #define USB_DEVICE_ID_SYNAPTICS_LTS2	0x1d10
+ #define USB_DEVICE_ID_SYNAPTICS_HD	0x0ac3
+ #define USB_DEVICE_ID_SYNAPTICS_QUAD_HD	0x1ac3
++#define USB_DEVICE_ID_SYNAPTICS_DELL_K12A	0x2819
+ #define USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012	0x2968
+ #define USB_DEVICE_ID_SYNAPTICS_TP_V103	0x5710
+ #define USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5	0x81a7
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index ae64a286a68f4..90ec2390ef688 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -163,6 +163,7 @@ static const struct hid_device_id hid_quirks[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_LTS2), HID_QUIRK_NO_INIT_REPORTS },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_QUAD_HD), HID_QUIRK_NO_INIT_REPORTS },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_TP_V103), HID_QUIRK_NO_INIT_REPORTS },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_DELL_K12A), HID_QUIRK_NO_INIT_REPORTS },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_TOPMAX, USB_DEVICE_ID_TOPMAX_COBRAPAD), HID_QUIRK_BADPAD },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_TOUCHPACK, USB_DEVICE_ID_TOUCHPACK_RTS), HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_TPV, USB_DEVICE_ID_TPV_OPTICAL_TOUCHSCREEN_8882), HID_QUIRK_NOGET },
 -- 
 2.20.1
 
