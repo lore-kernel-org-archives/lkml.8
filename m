@@ -2,98 +2,240 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 184A1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B688AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D73F8206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:35:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EwY0yvyg"
+	by mail.kernel.org (Postfix) with ESMTP id 9945520767
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:36:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgENUfj (ORCPT
+        id S1727858AbgENUgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 16:35:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36360 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725975AbgENUfi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 16:35:38 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 776FBC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 13:35:38 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id u38so4981339qtc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 13:35:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=9BiZrIIDw3M0g6PboTiYMY8t51GiXfniSm5hZD+98Oo=;
-        b=EwY0yvygObLAQJwen3HSpuK/TwLQp37GPVqfKdjuth79tibyNGSbR51A2V8fJJSWlF
-         lnm0DfnJlFiRYvY7h1cw2TpVpP7JH0A3okU0Et8/RTNYi5IhA300/rz5aEszLgdCQwOf
-         ZcaB6Iez+PU+yEm6mvxF3dIPNwQHK1G2RNiE4QsroDGTy0Bj8+sCAKezhW8LgZrfrSRo
-         1hf0cDrQ++vjZh/pLM7igbN1ArJgBqFY+Zi7+SEWZWjPT3iJuhEl+xukALmnoqJ/Kazf
-         1cGbN5Xr5HK/VCNwpdGpZ2wpwQf58u/I/OaAYsY3GXeWNWif7htHJueSXPoUCWuDCZwp
-         4vPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=9BiZrIIDw3M0g6PboTiYMY8t51GiXfniSm5hZD+98Oo=;
-        b=H+1iirLeZIRTQ16ah23bwQEL8cuJQLIdJ3BlgotEUkzGcQ6GrEPbc2vKdVoRLu94Kq
-         EktmAZv24dQGd5ePP7ebf7rr0L0rqXxfY3OpIlqTYUsAn5TSrKmfnJhXMb5kke+/uFJm
-         K0NgXArls2vheLCY8ZmxxLkP27ERh93qomFYdWMwGQ6nDsGk59lJG6HFj1MJS8Ixz3Hb
-         zG2BS51cHNJZekqUoLtCL6ZCgbgCPjeJM7oo00JKrKwynWOTtWDWGBhSSoGzSUuF4xmZ
-         aq3ysC3sOy+deFySc1wjGHPNAaDYxRELawRB7umniM601PsWlwjPWler6xLfP6HsKF58
-         oAog==
-X-Gm-Message-State: AOAM531ZfPVS+0p1MYbd04n4C7dwE6wathAEvocdm4EgBdmlQoyUCiX5
-        TFyfw+lpLdqfx9sg5dN88Y36nymLJYCWV7rT
-X-Google-Smtp-Source: ABdhPJzvf4EJtA2aien3OPVZDhyyMY/dMI2v7m8s7iY+rqrdouqJjQ7AjF3C8RswKPzEFY8is9MauS7O8ykCnK2O
-X-Received: by 2002:a0c:b492:: with SMTP id c18mr264585qve.139.1589488537513;
- Thu, 14 May 2020 13:35:37 -0700 (PDT)
-Date:   Thu, 14 May 2020 21:34:34 +0100
-Message-Id: <20200514203434.22274-1-lihaoliang@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be-goog
-Subject: [PATCH] doc: Update comment from rsp->rcu_gp_seq to rsp->gp_seq
-From:   Lihao Liang <lihaoliang@google.com>
-To:     paulmck@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Lihao Liang <lihaoliang@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 14 May 2020 16:36:19 -0400
+Received: from mga17.intel.com ([192.55.52.151]:51661 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725975AbgENUgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 16:36:18 -0400
+IronPort-SDR: Kr8moFJSQEHA3eT73cJVvDMQdPKfEOulGCaZX4vRYFninq45S8ekYOVD1j6Mt76olLOdz66f1i
+ KYGgblmuVZ6A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 13:36:10 -0700
+IronPort-SDR: HV+kHQ5Ogs960O8wFt2vPmpkBM5xDpfibolAbWTRvN3DWjKvI7fgnx1b4Qo59Fp4QlfNpthB3a
+ 2AK2fAtTDLFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,392,1583222400"; 
+   d="scan'208";a="307212706"
+Received: from aruizmcc-mobl2.amr.corp.intel.com (HELO [10.254.64.168]) ([10.254.64.168])
+  by FMSMGA003.fm.intel.com with ESMTP; 14 May 2020 13:36:09 -0700
+Subject: Re: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for
+ non-hotplug capable devices
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     bhelgaas@google.com, jay.vosburgh@canonical.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+References: <20200513224449.GA347443@bjorn-Precision-5520>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <7217c72f-d13c-9128-4824-ed73aebc8abc@linux.intel.com>
+Date:   Thu, 14 May 2020 13:36:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200513224449.GA347443@bjorn-Precision-5520>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Lihao Liang <lihaoliang@google.com>
----
- kernel/rcu/tree.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Hi Bjorn,
 
-diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-index 2d7fcb9bdd34..508c46421eb3 100644
---- a/kernel/rcu/tree.h
-+++ b/kernel/rcu/tree.h
-@@ -41,7 +41,7 @@ struct rcu_node {
- 	raw_spinlock_t __private lock;	/* Root rcu_node's lock protects */
- 					/*  some rcu_state fields as well as */
- 					/*  following. */
--	unsigned long gp_seq;	/* Track rsp->rcu_gp_seq. */
-+	unsigned long gp_seq;	/* Track rsp->gp_seq. */
- 	unsigned long gp_seq_needed; /* Track furthest future GP request. */
- 	unsigned long completedqs; /* All QSes done for this node. */
- 	unsigned long qsmask;	/* CPUs or groups that need to switch in */
-@@ -149,7 +149,7 @@ union rcu_noqs {
- /* Per-CPU data for read-copy update. */
- struct rcu_data {
- 	/* 1) quiescent-state and grace-period handling : */
--	unsigned long	gp_seq;		/* Track rsp->rcu_gp_seq counter. */
-+	unsigned long	gp_seq;		/* Track rsp->gp_seq counter. */
- 	unsigned long	gp_seq_needed;	/* Track furthest future GP request. */
- 	union rcu_noqs	cpu_no_qs;	/* No QSes yet for this CPU. */
- 	bool		core_needs_qs;	/* Core waits for quiesc state. */
--- 
-2.26.2.761.g0e0b3e54be-goog
+On 5/13/20 3:44 PM, Bjorn Helgaas wrote:
+> On Wed, May 06, 2020 at 08:32:59PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>
+>> If there are non-hotplug capable devices connected to a given
+>> port, then during the fatal error recovery(triggered by DPC or
+>> AER), after calling reset_link() function, we cannot rely on
+>> hotplug handler to detach and re-enumerate the device drivers
+>> in the affected bus. Instead, we will have to let the error
+>> recovery handler call report_slot_reset() for all devices in
+>> the bus to notify about the reset operation. Although this is
+>> only required for non hot-plug capable devices, doing it for
+>> hotplug capable devices should not affect the functionality.
+> 
+> Apparently this fixes a bug.  Can you include a link to a problem
+> report?  The above is a description of a *solution*, but it's hard to
+> understand without starting with the problem itself.
 
+Let me add the problem description to the commit log in next version.
+
+Adding it here for discussion.
+
+Current pcie_do_recovery() implementation has following three issues:
+
+1. Fatal (DPC) error recovery is currently broken for non-hotplug
+capable devices. Current DPC recovery implementation relies on hotplug
+handler for detaching/re-enumerating the affected devices/drivers on
+DLLSC state changes. So when dealing with non-hotplug capable devices,
+recovery code does not restore the state of the affected devices
+correctly. Correct implementation should call report_mmio_enabled() and
+report_slot_reset() functions after reseting the link/device which is
+currently missing.
+
+2. For non-fatal errors if report_error_detected() or
+report_mmio_enabled() functions requests PCI_ERS_RESULT_NEED_RESET then
+current pcie_do_recovery() implementation does not do the requested
+explicit device reset, instead just calls the report_slot_reset() on all
+affected devices. Notifying about the reset via report_slot_reset()
+without doing the actual device reset is incorrect.
+
+3. For fatal errors, pcie_do_recovery() function currently completely
+ignores the status result of report_error_detected() call. After calling
+reset_link() function then status value gets updated to either
+PCI_ERS_RESULT_DISCONNECT or PCI_ERS_RESULT_RECOVERED, and the initial
+value returned from report_error_detected() is totally ignored. For
+solving the issue # 1, we need to update the status only if reset_link()
+call failed and returns PCI_ERS_RESULT_DISCONNECT. Otherwise recovery
+handler should proceed to call report_mmio_enabled() and
+report_slot_reset().
+
+
+> 
+> The above talks about reset_link(), which is only used in the
+> io_frozen case.  In that case, I think the only thing this patch
+> changes is that when reset_link() fails, we'll return with
+> PCI_ERS_RESULT_DISCONNECT instead of whatever reset_link()
+> returned.
+Yes, if reset_link() is successful then we let pcie_do_recovery()
+proceed to call report_slot_reset() with initial status value returned
+from report_error_detected() function call.
+> 
+> What this patch *does* change is that in the normal_detected case, we
+> previously never called reset_link() but now we will if an
+> .error_detected() callback requested it.
+yes, as highlighted in issue # 1 this patch adds support to call
+reset_link() if report_error_detected() function requests it.
+> 
+>> Along with above issue, this fix also applicable to following
+>> issue.
+>>
+>> Commit 6d2c89441571 ("PCI/ERR: Update error status after
+>> reset_link()") added support to store status of reset_link()
+>> call. Although this fixed the error recovery issue observed if
+>> the initial value of error status is PCI_ERS_RESULT_DISCONNECT
+>> or PCI_ERS_RESULT_NO_AER_DRIVER, it also discarded the status
+>> result from report_frozen_detected. This can cause a failure to
+>> recover if _NEED_RESET is returned by report_frozen_detected and
+>> report_slot_reset is not invoked.
+> 
+> Sorry, I'm not following this explanation.  IIUC this fixes a bug when
+> the channel is frozen and .error_detected() returns NEED_RESET.
+> 
+> In that case, the current code does:
+> 
+>    * state == io_frozen
+>    * .error_detected() returns status == NEED_RESET
+>    * status = reset_link()
+>    * if status != RECOVERED, we return status
+>    * otherwise status == RECOVERED
+>    * we do not call report_slot_reset()
+>    * we return RECOVERED
+> 
+> It does seem like we *should* call the .slot_reset() callbacks, but
+> the only time we return recovery failure is if reset_link() failed.
+> 
+> I can certainly understand if drivers don't recover when we reset
+> their device but don't call their .slot_reset() callback.  Is that
+> what this fixes?
+> 
+> After the patch,
+> 
+>    * state == io_frozen
+>    * .error_detected() returns status == NEED_RESET
+>    * we set status = NEED_RESET (doesn't change anything in this case)
+>    * we call reset_link()
+>    * if reset_link() failed, we return DISCONNECT
+>    * otherwise continue with status == NEED_RESET
+>    * we *do* call report_slot_reset()
+>    * we return whatever .slot_reset() returned
+> 
+> I think the change to call .slot_reset() makes sense, but that's not
+> at all clear from the commit log.  Am I understanding the behavior
+> correctly?
+Yes, your understanding is correct. I hope above mentioned error
+description clarifies it.
+> 
+>> Such an event can be induced for testing purposes by reducing the
+>> Max_Payload_Size of a PCIe bridge to less than that of a device
+>> downstream from the bridge, and then initiating I/O through the
+>> device, resulting in oversize transactions.  In the presence of DPC,
+>> this results in a containment event and attempted reset and recovery
+>> via pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not
+>> invoked, and the device does not recover.
+> 
+> Use "pcie_do_recovery()" and "report_slot_reset()" (including the
+> parentheses) to follow convention.  Also fix other occurrences above.
+will fix it in next version.
+> 
+>> [original patch is from jay.vosburgh@canonical.com]
+>> [original patch link https://lore.kernel.org/linux-pci/18609.1588812972@famine/]
+>> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+>> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>> ---
+>>   drivers/pci/pcie/err.c | 19 +++++++++++++++----
+>>   1 file changed, 15 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+>> index 14bb8f54723e..db80e1ecb2dc 100644
+>> --- a/drivers/pci/pcie/err.c
+>> +++ b/drivers/pci/pcie/err.c
+>> @@ -165,13 +165,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>>   	pci_dbg(dev, "broadcast error_detected message\n");
+>>   	if (state == pci_channel_io_frozen) {
+>>   		pci_walk_bus(bus, report_frozen_detected, &status);
+>> -		status = reset_link(dev);
+>> -		if (status != PCI_ERS_RESULT_RECOVERED) {
+>> +		status = PCI_ERS_RESULT_NEED_RESET;
+>> +	} else {
+>> +		pci_walk_bus(bus, report_normal_detected, &status);
+>> +	}
+>> +
+>> +	if (status == PCI_ERS_RESULT_NEED_RESET) {
+>> +		if (reset_link) {
+>> +			if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
+>> +				status = PCI_ERS_RESULT_DISCONNECT;
+>> +		} else {
+>> +			if (pci_bus_error_reset(dev))
+>> +				status = PCI_ERS_RESULT_DISCONNECT;
+> 
+> As far as I can tell, there is no caller of pcie_do_recovery() where
+> reset_link is NULL, so this call of pci_bus_error_reset() looks like
+> dead code.
+Yes, I will remove the if (reset_link) check.
+> 
+> We did not previously check whether reset_link was NULL, and this
+> patch changes nothing that could result in it being NULL.
+> 
+>> +		}
+>> +
+>> +		if (status == PCI_ERS_RESULT_DISCONNECT) {
+>>   			pci_warn(dev, "link reset failed\n");
+>>   			goto failed;
+>>   		}
+>> -	} else {
+>> -		pci_walk_bus(bus, report_normal_detected, &status);
+>>   	}
+>>   
+>>   	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+>> -- 
+>> 2.17.1
+>>
