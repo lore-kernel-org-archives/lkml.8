@@ -2,114 +2,84 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E813C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC415C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24BC320734
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:03:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589461436;
-	bh=3bIZOzLSNAE/EGch6NutsDyhByrv9G1g20b34R7O++c=;
-	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
-	 From;
-	b=sWLrctDH5VzwhEqdKZCqu+43bxPLJ8zi0ybUglKR96UJc01XYOqP2DcCjUOoPcmRp
-	 SqPJjRtCCHA5JbqsYKKv8D+XSwBrkJwG19YkNVJcq+Lv/hGYlT7b5liAinabYFb6yh
-	 HJQjeJEyjZD2OoZU4YwwaZ0ep/GYJGYnOqQ9jEYk=
+	by mail.kernel.org (Postfix) with ESMTP id B88A120727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:04:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgENNDz (ORCPT
+        id S1727788AbgENNEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:03:55 -0400
-Received: from mail-oo1-f67.google.com ([209.85.161.67]:42094 "EHLO
-        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbgENNDz (ORCPT
+        Thu, 14 May 2020 09:04:15 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:58910 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726056AbgENNEO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:03:55 -0400
-Received: by mail-oo1-f67.google.com with SMTP id a83so692284oob.9;
-        Thu, 14 May 2020 06:03:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BQlGy1003OHhQDoA039YQUlM3pD9hZvmAohGgf3kvn4=;
-        b=O75EE9Wfl290v9u4EM0BOhEZvXnoj4BqbCOWWiOpxDMhftp5riVsr0v4/RsXdlzGPn
-         K54gU8sLhlAicSWafHUQshXGO3EQp3riJm8BcnnSmXuPthoymMfJ1N4r3q+RU7CpWv5P
-         /7Clu6YUIw2UXWKlAaKVkIVBl+9PXBxY7vpSC3AS+OTKA3UOK0C+GK2imxf9vc927OE+
-         8YtquOnaa8Mw9/ip9csNnVV+ia4WjusDLU1HLi4/JgKwAh9SAapRwdKCHQcBNzJRh0ew
-         FMKaD4nIc9KZFSpe0qRhdiWHHBVw6Q/lQRGerdbCeunouhAW1iw5Hq9aQ+VkYP73sz3S
-         1maw==
-X-Gm-Message-State: AOAM531sgT9EluGnyc4UUneHqClUdUTPd2aZf4NcKYdsqNwurBsTOTFx
-        LT+iOSX4nYURJ2zfuZXjOjiLFmw=
-X-Google-Smtp-Source: ABdhPJxYFBjlqFYAj1GqfM1gMHAmeTVKS1xzDLOHNBWjxWUb+onZgcIBtfAiY2GmmiFtwefYIt7M5A==
-X-Received: by 2002:a4a:1a42:: with SMTP id 63mr1040493oof.16.1589461432786;
-        Thu, 14 May 2020 06:03:52 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q68sm755657ooa.29.2020.05.14.06.03.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 06:03:52 -0700 (PDT)
-Received: (nullmailer pid 18205 invoked by uid 1000);
-        Thu, 14 May 2020 13:03:51 -0000
-Date:   Thu, 14 May 2020 08:03:51 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Lars Povlsen <lars.povlsen@microchip.com>
+        Thu, 14 May 2020 09:04:14 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 4DA46803087B;
+        Thu, 14 May 2020 13:04:09 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 1H7tDBhNpUNg; Thu, 14 May 2020 16:04:08 +0300 (MSK)
+Date:   Thu, 14 May 2020 16:04:07 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Mark Brown <broonie@kernel.org>
 List-Id: <soc.lore.kernel.org>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org, SoC Team <soc@kernel.org>,
-        linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-kernel@vger.kernel.org,
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        SoC Team <soc@kernel.org>,
         Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        devicetree@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: mmc: Add Sparx5 SDHCI controller
- bindings
-Message-ID: <20200514130351.GA17797@bogus>
-References: <20200513133122.25121-1-lars.povlsen@microchip.com>
- <20200513133122.25121-2-lars.povlsen@microchip.com>
+        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 01/10] spi: dw: Add support for polled operation via no
+ IRQ specified in DT
+Message-ID: <20200514130407.guyk3r4ltjvszy5s@mobilestation>
+References: <20200513140031.25633-1-lars.povlsen@microchip.com>
+ <20200513140031.25633-2-lars.povlsen@microchip.com>
+ <20200513142050.GH4803@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200513133122.25121-2-lars.povlsen@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200513142050.GH4803@sirena.org.uk>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020 15:31:20 +0200, Lars Povlsen wrote:
-> The Sparx5 SDHCI controller is based on the Designware controller IP.
+Hi Mark
+
+On Wed, May 13, 2020 at 03:20:50PM +0100, Mark Brown wrote:
+> On Wed, May 13, 2020 at 04:00:22PM +0200, Lars Povlsen wrote:
+> > With this change a SPI controller can be added without having a IRQ
+> > associated, and causing all transfers to be polled. For SPI controllers
+> > without DMA, this can significantly improve performance by less
+> > interrupt handling overhead.
 > 
-> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
-> ---
->  .../mmc/microchip,dw-sparx5-sdhci.yaml        | 57 +++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
-> 
+> This overlaps substantially with some work that Serge Semin (CCed) has
+> in progress, please coordinate with him.
 
+Thanks for copying me these mails. I haven't been Cc'ed in the series and
+hasn't been subscribed to the SPI mailing list, so I would have definitely
+missed that.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+I would like to coordinate my efforts with Lars. I'll have the patchset reviewed
+soon in addition providing my comments/suggestions of how to make it useful for
+both mine and Lars solution.
 
-Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.example.dts:20:18: fatal error: dt-bindings/clock/microchip,sparx5.h: No such file or directory
-         #include <dt-bindings/clock/microchip,sparx5.h>
-                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-Makefile:1300: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+One thing I can tell about the mem_ops he implemented, is that they aren't
+mem_ops, but dirmap (as you remember it's also implemented in my code, but with
+alignment specific), and the exec_mem_op partly consists of a code, which belong
+to the supports_op() callback. The rest of my comments will be inlined in the
+patches.
 
-See https://patchwork.ozlabs.org/patch/1289290
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+-Sergey
