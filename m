@@ -2,76 +2,149 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 319A5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FEC0C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 037382065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1D92206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:17:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T5HS0B1f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726060AbgENQQB (ORCPT
+        id S1726147AbgENQRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 12:16:01 -0400
-Received: from mga06.intel.com ([134.134.136.31]:47271 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725926AbgENQQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 12:16:00 -0400
-IronPort-SDR: Rv5SbDg54T7mKaNTGDo55y+40Z8dFHOXPzgM9yE004zB4Fzbh25EBYxYwyUyk9lgNWxmCc9BAQ
- i22EHzHHsf/g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 09:16:00 -0700
-IronPort-SDR: VEUTrlChGIZsTXXvAg7bA39pEQpzc9TVeV2C+0RdmxvXui37N5FZYOVkZXxrrKWZMSdjV1lwtP
- dQVSwDwazCaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,392,1583222400"; 
-   d="scan'208";a="464394342"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga005.fm.intel.com with ESMTP; 14 May 2020 09:15:59 -0700
-Date:   Thu, 14 May 2020 09:15:59 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     "Dr. Greg" <greg@enjellic.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-sgx@vger.kernel.org,
-        akpm@linux-foundation.org, dave.hansen@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, kai.svahn@intel.com,
-        bp@alien8.de, josh@joshtriplett.org, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        puiterwijk@redhat.com
-Subject: Re: [PATCH v29 00/20] Intel SGX foundations
-Message-ID: <20200514161559.GA15603@linux.intel.com>
-References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
- <20200426165753.GA11046@wind.enjellic.com>
- <87d07gk24l.fsf@nanos.tec.linutronix.de>
- <20200508190226.GA31465@wind.enjellic.com>
- <20200508195635.GR27052@linux.intel.com>
- <20200514091637.GA25156@wind.enjellic.com>
+        Thu, 14 May 2020 12:17:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726125AbgENQRa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 12:17:30 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92A3CC061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 09:17:30 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id b6so1342381uak.6
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 09:17:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OqjZEsENiuJ7Z2+zCW9pzRm/SY0vcINZf6TSPb9wFL8=;
+        b=T5HS0B1fvJofutv3NJqUrbAvHVxEP8Z/4pbg8rWnyUbriguTHHrLowQ8XSkvu1D4nb
+         CKxxadhSnrOhka8fhDtg4GRuLt/M9djey/HD7gL8AniRdx98Ev//amZicIk25BLCfDDp
+         gSMyC2uil/ZYl+myPhupP0IWuS1OqIEI9X8ZY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OqjZEsENiuJ7Z2+zCW9pzRm/SY0vcINZf6TSPb9wFL8=;
+        b=Q0x1sVbkF1oFWmrm0cdGouNK+XA9uZcG0YM48aVv162kUqPaoXw55iWCAv5N6nwh48
+         V+/HQHh5dBhqnav42T2LTSAn09l8ipvVrWJjX4WaMVxxBVdgpvss2+aeevL+KyFOHXX5
+         DrXR3O11+P89VPlUSjWRHY50oy8l8RA0I62z+1u4R8FVzkcWcfCsocR0X+yZMwALm4EY
+         0ZZ6vItDOrLqLRzUMhcFtVzVWvFaWI5YKk6DCLE3yxjMyFFUeraFeQFgq0MY0lSrmefW
+         fQ8rR+V8R5MNgEyen5hf0r8PEsHekZCltTqhygnKaAQTHSh+pBGmUB2Flsseof6DtrJi
+         V39w==
+X-Gm-Message-State: AOAM531OWdMCDeb5HE49rSTnHEzEB9qonMdVU92u0uVWEDSiIOOJv+cQ
+        6w/laFaWuaB6UIGITLAyahFIrHHUg8Q=
+X-Google-Smtp-Source: ABdhPJwyfUhdi8hrTD1u8Gx5bvRsc1ngtSFCLNqpCo+ptsRqio+ieb/CThuqaK+gh9XvVP9u9tXKNw==
+X-Received: by 2002:ab0:5642:: with SMTP id z2mr4858228uaa.6.1589473049330;
+        Thu, 14 May 2020 09:17:29 -0700 (PDT)
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com. [209.85.221.181])
+        by smtp.gmail.com with ESMTPSA id e27sm826153vkn.14.2020.05.14.09.17.27
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 May 2020 09:17:27 -0700 (PDT)
+Received: by mail-vk1-f181.google.com with SMTP id s85so908830vks.11
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 09:17:27 -0700 (PDT)
+X-Received: by 2002:a1f:9605:: with SMTP id y5mr4360665vkd.75.1589473046623;
+ Thu, 14 May 2020 09:17:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200514091637.GA25156@wind.enjellic.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <1588339863-1322-1-git-send-email-kalyan_t@codeaurora.org>
+In-Reply-To: <1588339863-1322-1-git-send-email-kalyan_t@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 14 May 2020 09:17:15 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=UJGivCyp=t0J++1DbSFDVf+5zSCcXgh83VZtssBmavjg@mail.gmail.com>
+Message-ID: <CAD=FV=UJGivCyp=t0J++1DbSFDVf+5zSCcXgh83VZtssBmavjg@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm/dpu: ensure device suspend happens during PM sleep
+To:     Kalyan Thota <kalyan_t@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        mkrishn@codeaurora.org, travitej@codeaurora.org,
+        nganji@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 04:16:37AM -0500, Dr. Greg wrote:
-> What we would recommend at this point is that you and Jarkko do the
-> Linux community and beyond a favor and wire up a simple kernel
-> command-line parameter that controls the ability of the driver to be
-> used, ie. enables/disables access to /dev/sgx/enclave.
+Hi,
 
-I'm not opposed to adding a kernel param to disable SGX.  At one point
-there was a proposal to extend clearcpuid to allow disabling multiple
-feature bits, but it looks like that went the way of the dodo.
+On Fri, May 1, 2020 at 6:31 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
+>
+> "The PM core always increments the runtime usage counter
+> before calling the ->suspend() callback and decrements it
+> after calling the ->resume() callback"
+>
+> DPU and DSI are managed as runtime devices. When
+> suspend is triggered, PM core adds a refcount on all the
+> devices and calls device suspend, since usage count is
+> already incremented, runtime suspend was not getting called
+> and it kept the clocks on which resulted in target not
+> entering into XO shutdown.
+>
+> Add changes to force suspend on runtime devices during pm sleep.
+>
+> Changes in v1:
+>  - Remove unnecessary checks in the function
+>     _dpu_kms_disable_dpu (Rob Clark).
+>
+> Changes in v2:
+>  - Avoid using suspend_late to reset the usagecount
+>    as suspend_late might not be called during suspend
+>    call failures (Doug).
+>
+> Changes in v3:
+>  - Use force suspend instead of managing device usage_count
+>    via runtime put and get API's to trigger callbacks (Doug).
+>
+> Changes in v4:
+>  - Check the return values of pm_runtime_force_suspend and
+>    pm_runtime_force_resume API's and pass appropriately (Doug).
+>
+> Changes in v5:
 
-Note, such a param would disable SGX entirely, e.g. clear the feature bit
-in /proc/cpuinfo and prevent any in-kernel SGX code from running.
+Can you please put the version number properly in your subject?  It's
+really hard to tell one version of your patch from another.
+
+
+>  - With v4 patch, test cycle has uncovered issues in device resume.
+>
+>    On bubs: cmd tx failures were seen as SW is sending panel off
+>    commands when the dsi resources are turned off.
+>
+>    Upon suspend, DRM driver will issue a NULL composition to the
+>    dpu, followed by turning off all the HW blocks.
+>
+>    v5 changes will serialize the NULL commit and resource unwinding
+>    by handling them under PM prepare and PM complete phases there by
+>    ensuring that clks are on when panel off commands are being
+>    processed.
+
+I'm still most definitely not an expert in how all the DRM pieces all
+hook up together, but the solution you have in this patch seems wrong
+to me.  As far as I can tell the "prepare" state isn't supposed to be
+actually doing the suspend work and here that's exactly what you're
+doing.  I think you should find a different solution to ensure
+ordering is correct.
+
+-Doug
