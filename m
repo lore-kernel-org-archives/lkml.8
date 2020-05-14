@@ -2,71 +2,81 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54526C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDA7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36327205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FB2B20671
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:56:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W89jninm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgENNzH (ORCPT
+        id S1726948AbgENN4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:55:07 -0400
-Received: from cmccmta2.chinamobile.com ([221.176.66.80]:8080 "EHLO
-        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgENNzH (ORCPT
+        Thu, 14 May 2020 09:56:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58424 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726117AbgENN4X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:55:07 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.11]) by rmmx-syy-dmz-app08-12008 (RichMail) with SMTP id 2ee85ebd4da51e7-ea7f2; Thu, 14 May 2020 21:54:45 +0800 (CST)
-X-RM-TRANSID: 2ee85ebd4da51e7-ea7f2
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from [192.168.0.101] (unknown[112.1.172.85])
-        by rmsmtp-syy-appsvr06-12006 (RichMail) with SMTP id 2ee65ebd4da1bca-3a1cb;
-        Thu, 14 May 2020 21:54:44 +0800 (CST)
-X-RM-TRANSID: 2ee65ebd4da1bca-3a1cb
-Subject: Re: [PATCH v3] ipmi:bt-bmc: Fix error handling and status check
-To:     minyard@acm.org
-Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org,
-        Shengju Zhang <zhangshengju@cmss.chinamobile.com>
-References: <20200505102906.17196-1-tangbin@cmss.chinamobile.com>
- <20200505114907.GK9902@minyard.net>
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-Message-ID: <bfb981ec-eedc-3635-007c-4921c9307072@cmss.chinamobile.com>
-Date:   Thu, 14 May 2020 21:55:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 14 May 2020 09:56:23 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DB41C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:56:23 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id p127so5097269oia.13
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:56:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0QaeCjNYyNaLWwCKtPQuE5dOCmpyD933kyEEJ8XGmdc=;
+        b=W89jninmD4jOMGWH9hNe8p2EZhmo5dVOszViIBZWspw84gJP1EyDd+q+vUO5zEoICL
+         byga9phhsYgE8NWn2fi86exAJ4VhIXMM+72mYsp2tuVToKiKmhunIM2sUhoGk/F+x+77
+         DYN/ujPfV6em1l32FGCMfOKp44sYzrI6HIwLJJh5Q7G19RwiWFcWgzMN51ooCqPNz0+J
+         iexVE1WnyER0TrCIFyYScYUPUWsXbN78TTQiidPPbjneD7wJfL2rnRXHzgvRwe7nCvas
+         7/q250rThqM8ZM0o/P6pFxVXvl3GGfdosyuRlHGUkLkOqdroZIvBKjC0UzURDUdsRcAq
+         srbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0QaeCjNYyNaLWwCKtPQuE5dOCmpyD933kyEEJ8XGmdc=;
+        b=XqaxrG8dSAXgA82TTWDDytxBJWrC3LYgayg+imL8yU7XW8o4wWbj0AInj2pxRJ8r1w
+         8xDaQZzB+uE/Mxu4O7NFG3AWjINhu93MFvVrywOsxaQy6+UBDUxw0uyiU64aGctpmrHi
+         Od6CpAg9IzsbQ74MYmffrH3/M4A5jgfrKET+QvXAylfOgDtgAb1zQb7oPf5IUa+hjvEe
+         hJx/9g/zRxsuwIEZPZ/gV2fqhCtRP5gsmZfmbLLaEtLPmuUjfiuVI6QtUTRfBr1Bu69l
+         G+kjOLcUcnmc30M4UuY/WURHZyFqxyh9s1HEmrwooposMRFiXkSMI6El7MU3R/Xy/fvh
+         rUcg==
+X-Gm-Message-State: AGi0PuaZ0i94yC2xTSLTWIng851irvDlJeG8kROHqRvDbFPlVqbFP6z1
+        OecPrmiPWqTyS++UMWiydcJVROoigXEOE3/FZkEw4w==
+X-Google-Smtp-Source: APiQypLwISt71xgIY2WR9s+KHLTS/yR4PmkFamPn/Ls5oRdriazJm8RLebvh62tDs2EjkF/bm5ERMgFesmc1OkzyN2E=
+X-Received: by 2002:aca:f146:: with SMTP id p67mr32413451oih.56.1589464582979;
+ Thu, 14 May 2020 06:56:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200505114907.GK9902@minyard.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200406060049.227029-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20200406060049.227029-1-bjorn.andersson@linaro.org>
+From:   Robert Foss <robert.foss@linaro.org>
+Date:   Thu, 14 May 2020 15:56:11 +0200
+Message-ID: <CAG3jFythh_34wujTUKpuS1DbEsihNS0C5oPYXKgBgaSVhiakyg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: c630: Specify UFS device reset
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Corey：
+On Mon, 6 Apr 2020 at 08:03, Bjorn Andersson <bjorn.andersson@linaro.org> wrote:
+>
+> On some device the reset line for the UFS memory needs to be tickled in
+> order for UFS to initialize properly, add this to the ufs_mem_hc node.
+>
 
-On 2020/5/5 19:49, Corey Minyard wrote:
-> On Tue, May 05, 2020 at 06:29:06PM +0800, Tang Bin wrote:
-> Ok, this is included in my tree.
-
-I just checked that this patch has been merged into the linux-next 
-branch, and I saw the modification of you
-
-by this patch.  I have learned a lot from you through communication.
-
-Thank you again!
-
-Tang Bin
-
-
-
-
-
+Reviewed-by: Robert Foss <robert.foss@linaro.org>
