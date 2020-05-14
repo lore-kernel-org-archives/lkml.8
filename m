@@ -2,105 +2,105 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7556C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACEFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C850720748
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:24:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OXJCh5GL"
+	by mail.kernel.org (Postfix) with ESMTP id 57FA82065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:24:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbgENOYX (ORCPT
+        id S1727890AbgENOYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:24:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26351 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726582AbgENOYW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:24:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589466261;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fGWHZrRoLExAS3mHwk8ufZ/s4MYBxFdJolCaEnLqA8M=;
-        b=OXJCh5GLUPv3k4SUBHt3EOoS6pcj0UXeOEj+luCmjZqmh9udrIAukKWN4wRIXhrk8SZgiq
-        3qezn7J2Rtb6PtKX5HRY5eYO4PDubZpacgbGxZhxmrzkcmCnLbqDe1mMnzi5ohEH16meoJ
-        HQgq42UtuWxXzvF1jYtaWz6pjKjh7EM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-187-gDkumX-iOmOMry4mSLa6sw-1; Thu, 14 May 2020 10:24:17 -0400
-X-MC-Unique: gDkumX-iOmOMry4mSLa6sw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B5F8800053;
-        Thu, 14 May 2020 14:24:13 +0000 (UTC)
-Received: from redhat.com (null.msp.redhat.com [10.15.80.136])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E42045D9CA;
-        Thu, 14 May 2020 14:24:04 +0000 (UTC)
-Date:   Thu, 14 May 2020 09:24:03 -0500
-From:   David Teigland <teigland@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Christine Caulfield <ccaulfie@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Vlad Yasevich <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org,
-        target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-cifs@vger.kernel.org, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, netdev@vger.kernel.org,
-        linux-sctp@vger.kernel.org, ceph-devel@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org
-Subject: Re: is it ok to always pull in sctp for dlm, was: Re: [PATCH 27/33]
- sctp: export sctp_setsockopt_bindx
-Message-ID: <20200514142403.GA1447@redhat.com>
-References: <20200513062649.2100053-1-hch@lst.de>
- <20200513062649.2100053-28-hch@lst.de>
- <20200513180058.GB2491@localhost.localdomain>
- <20200514104040.GA12979@lst.de>
+        Thu, 14 May 2020 10:24:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:37476 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726056AbgENOYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 10:24:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CE441FB;
+        Thu, 14 May 2020 07:24:47 -0700 (PDT)
+Received: from bogus (unknown [10.37.8.154])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 636883F71E;
+        Thu, 14 May 2020 07:24:45 -0700 (PDT)
+Date:   Thu, 14 May 2020 15:24:42 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Etienne Carriere <etienne.carriere@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        lorenzo.pieralisi@arm.com, maz@kernel.org, steven.price@arm.com,
+        alexios.zavras@intel.com, tglx@linutronix.de, will@kernel.org,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/2] firmware: psci: support SMCCC v1.2 for SMCCC conduit
+Message-ID: <20200514142442.GB23401@bogus>
+References: <20200514082109.27573-1-etienne.carriere@linaro.org>
+ <20200514082109.27573-2-etienne.carriere@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200514104040.GA12979@lst.de>
-User-Agent: Mutt/1.8.3 (2017-05-23)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200514082109.27573-2-etienne.carriere@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 12:40:40PM +0200, Christoph Hellwig wrote:
-> On Wed, May 13, 2020 at 03:00:58PM -0300, Marcelo Ricardo Leitner wrote:
-> > On Wed, May 13, 2020 at 08:26:42AM +0200, Christoph Hellwig wrote:
-> > > And call it directly from dlm instead of going through kernel_setsockopt.
-> > 
-> > The advantage on using kernel_setsockopt here is that sctp module will
-> > only be loaded if dlm actually creates a SCTP socket.  With this
-> > change, sctp will be loaded on setups that may not be actually using
-> > it. It's a quite big module and might expose the system.
-> > 
-> > I'm okay with the SCTP changes, but I'll defer to DLM folks to whether
-> > that's too bad or what for DLM.
+On Thu, May 14, 2020 at 10:21:09AM +0200, Etienne Carriere wrote:
+> Update PSCI driver to support SMCCC v1.2 reported by secure firmware
+> and indirectly make SMCCC conduit properly set when so. TF-A release
+> v2.3 implements and reports SMCCC v1.2 since commit [1].
 > 
-> So for ipv6 I could just move the helpers inline as they were trivial
-> and avoid that issue.  But some of the sctp stuff really is way too
-> big for that, so the only other option would be to use symbol_get.
+> Link: [1] https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git/commit/?id=e34cc0cedca6e229847c232fe58d37fad2610ce9
+> Signed-off-by: Etienne Carriere <etienne.carriere@linaro.org>
+> ---
+>  drivers/firmware/psci/psci.c | 14 ++++++++++----
+>  include/linux/psci.h         |  1 +
+>  2 files changed, 11 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+> index 2937d44b5df4..80cf73bea4b0 100644
+> --- a/drivers/firmware/psci/psci.c
+> +++ b/drivers/firmware/psci/psci.c
+> @@ -409,11 +409,17 @@ static void __init psci_init_smccc(void)
+>  	feature = psci_features(ARM_SMCCC_VERSION_FUNC_ID);
+>  
+>  	if (feature != PSCI_RET_NOT_SUPPORTED) {
+> -		u32 ret;
+> -		ret = invoke_psci_fn(ARM_SMCCC_VERSION_FUNC_ID, 0, 0, 0);
+> -		if (ret == ARM_SMCCC_VERSION_1_1) {
+> +		ver = invoke_psci_fn(ARM_SMCCC_VERSION_FUNC_ID, 0, 0, 0);
+> +
+> +		switch (ver) {
+> +		case ARM_SMCCC_VERSION_1_1:
+>  			psci_ops.smccc_version = SMCCC_VERSION_1_1;
+> -			ver = ret;
+> +			break;
+> +		case ARM_SMCCC_VERSION_1_2:
+> +			psci_ops.smccc_version = SMCCC_VERSION_1_2;
+> +			break;
+> +		default:
+> +			break;
+>  		}
+>  	}
+>  
+> diff --git a/include/linux/psci.h b/include/linux/psci.h
+> index a67712b73b6c..c7d99b7f34ed 100644
+> --- a/include/linux/psci.h
+> +++ b/include/linux/psci.h
+> @@ -24,6 +24,7 @@ bool psci_has_osi_support(void);
+>  enum smccc_version {
+>  	SMCCC_VERSION_1_0,
+>  	SMCCC_VERSION_1_1,
+> +	SMCCC_VERSION_1_2,
 
-Let's try symbol_get, having the sctp module always loaded caused problems
-last time it happened (almost nobody uses dlm with it.)
-Dave 
+I took approach to kill this completely [1] instead of having to keep
+expanding it for ever.
 
+-- 
+Regards,
+Sudeep
+
+[1] https://lore.kernel.org/linux-arm-kernel/20200506164411.3284-5-sudeep.holla@arm.com/
