@@ -2,152 +2,345 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E54C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82A892065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5359320575
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:54:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbgENHxz (ORCPT
+        id S1726101AbgENHyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 03:53:55 -0400
-Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:47987 "EHLO
-        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726035AbgENHxz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 03:53:55 -0400
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.93)
-          with esmtps (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1jZ8gg-001z41-4Z; Thu, 14 May 2020 09:53:50 +0200
-Received: from p5b13a426.dip0.t-ipconnect.de ([91.19.164.38] helo=[192.168.178.139])
-          by inpost2.zedat.fu-berlin.de (Exim 4.93)
-          with esmtpsa (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1jZ8gf-001s5e-Th; Thu, 14 May 2020 09:53:50 +0200
-Subject: Re: [PATCH] ia64: enable HAVE_COPY_THREAD_TLS, switch to
- kernel_clone_args
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     "Luck, Tony" <tony.luck@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200513204848.1208864-1-christian.brauner@ubuntu.com>
- <3908561D78D1C84285E8C5FCA982C28F7F6266E0@ORSMSX115.amr.corp.intel.com>
- <79e58d9b-5a39-390c-2f0c-0d87b63442b4@physik.fu-berlin.de>
- <20200514074606.vkc35syhdep23rzh@wittgenstein>
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
- 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
- scOkTAZQGVpD/8AaLH4v1w==
-Message-ID: <6b298416-1e64-eee7-0bb4-3b1f7f67adc6@physik.fu-berlin.de>
-Date:   Thu, 14 May 2020 09:53:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200514074606.vkc35syhdep23rzh@wittgenstein>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-Originating-IP: 91.19.164.38
+        Thu, 14 May 2020 03:54:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49706 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725911AbgENHyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 03:54:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C0F69AEDE;
+        Thu, 14 May 2020 07:54:31 +0000 (UTC)
+Date:   Thu, 14 May 2020 09:54:28 +0200
+Message-ID: <s5hk11frlxn.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     CJ Lee <changjoon.lee@lgepartner.com>
+Cc:     alsa-devel@alsa-project.org, linux@endlessm.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] Updated negative return values for documentation update.
+In-Reply-To: <323558A8-0209-42EF-8E02-43F76D3AB6A5@lgepartner.com>
+References: <20200512090547.76991-1-changjoon.lee@lge.com>
+        <20200512090547.76991-2-changjoon.lee@lge.com>
+        <323558A8-0209-42EF-8E02-43F76D3AB6A5@lgepartner.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christian!
-
-On 5/14/20 9:46 AM, Christian Brauner wrote:
->>> My last functional ia64 machine no longer powers on. Unclear if it's just
->>> a broken power supply or something more serious. With almost nobody
->>> in offices/labs anymore my search for another machine is proceeding
->>> slowly.
->>
->> I could test it.
+On Thu, 14 May 2020 04:47:08 +0200,
+CJ Lee wrote:
 > 
-> Hey Adrian,
+> Dear Tiwai san,
 > 
-> That would be excellent and much appreciated.
-> Do you think you can get it tested soon?
-
-The kernel is currently building, you should get it by the evening (CEST).
-
-The machine also serves as a Debian buildd which is why it's a bit more
-busy than other servers.
-
->> As for getting a working cross-compiler for ia64 in Debian, this has
->> been on my TODO list for a while now. Building a cross-compiler for
->> ia64 is a bit more tricky due to it's dependency on the external
->> libunwind.
+> First of all, thank you very much all those years you contributed on ALSA.
 > 
-> I hit that roadblock as well but yeah, a cross-compiler would be
-> helpful.
+> Couple of days ago I emailed you over updating remark fields.
+> The purpose of edit was providing more error and meaning to application engineers.
+> 
+> For example, when snd_pcm_writei returned -EIO, application engineer didn’t understand what it means because the documentation didn’t include -EIO comment.
+> 
+> Would you please let me know if I need to do something to apply these changes?
+> I’m very new to linux community, and I thought create a patch and email to relevant recipients.
+> However, it looks like I’m missing something here. :)
 
-It's not difficult, it's just a bit of annoying package work including
-some trial and error testing.
+It just took some time to start reviewing patches, don't worry.
 
-Once the cross-compiler is in Debian, it will be available in Ubuntu as well.
+Through a quick glance, the code changes look good, and such updates
+are really appreciated.  However, the patches have no description at
+all and it alone is suspicious.  At least, please give why you added
+those.  Also the error codes are not comprehensive, so they must have
+been chosen ones; a reason to why those are chosen would be another
+thing to be written down, too, for example.
 
-Adrian
+Could you resubmit with that change?
 
--- 
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer - glaubitz@debian.org
-`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+
+thanks,
+
+Takashi
+
+> 
+> FYI, I have not changed any code. 
+> 
+> Thank you.
+> 
+> Best regards,
+> CJ Lee
+> 
+> 
+> > 2020. 5. 12. 오후 6:05, changjoon.lee@lge.com 작성:
+> > 
+> > From: ChangJoon Lee <changjoon.lee@lge.com>
+> > 
+> > Signed-off-by: ChangJoon Lee <changjoon.lee@lge.com>
+> > ---
+> > src/pcm/pcm.c | 57 ++++++++++++++++++++++++++++++++++++++++++++++++---
+> > 1 file changed, 54 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/src/pcm/pcm.c b/src/pcm/pcm.c
+> > index 1064044c..b53797a6 100644
+> > --- a/src/pcm/pcm.c
+> > +++ b/src/pcm/pcm.c
+> > @@ -820,6 +820,7 @@ int snd_pcm_nonblock(snd_pcm_t *pcm, int nonblock)
+> >  * \param sig Signal to raise: < 0 disable, 0 default (SIGIO)
+> >  * \param pid Process ID to signal: 0 current
+> >  * \return 0 on success otherwise a negative error code
+> > + * \return -ENOSYS Async is not supported on this PCM
+> >  *
+> >  * A signal is raised every period.
+> >  */
+> > @@ -850,6 +851,7 @@ int snd_pcm_async(snd_pcm_t *pcm, int sig, pid_t pid)
+> >  * \param pcm PCM handle
+> >  * \param info Information container
+> >  * \return 0 on success otherwise a negative error code
+> > + * \return -ENOSYS Info is not supported on this PCM
+> >  */
+> > int snd_pcm_info(snd_pcm_t *pcm, snd_pcm_info_t *info)
+> > {
+> > @@ -867,6 +869,7 @@ int snd_pcm_info(snd_pcm_t *pcm, snd_pcm_info_t *info)
+> >  * \param pcm PCM handle
+> >  * \param params Configuration space definition container
+> >  * \return 0 on success otherwise a negative error code
+> > + * \return -EBADFD PCM has not been setup (PCM isn't configured yet, or lifecycle of PCM has been ended)
+> >  */
+> > int snd_pcm_hw_params_current(snd_pcm_t *pcm, snd_pcm_hw_params_t *params)
+> > {
+> > @@ -933,6 +936,7 @@ int snd_pcm_hw_params(snd_pcm_t *pcm, snd_pcm_hw_params_t *params)
+> > /** \brief Remove PCM hardware configuration and free associated resources
+> >  * \param pcm PCM handle
+> >  * \return 0 on success otherwise a negative error code
+> > + * \return -ENOSYS Hw_free is not supported on this PCM
+> >  */
+> > int snd_pcm_hw_free(snd_pcm_t *pcm)
+> > {
+> > @@ -960,7 +964,9 @@ int snd_pcm_hw_free(snd_pcm_t *pcm)
+> >  * \param pcm PCM handle
+> >  * \param params Configuration container
+> >  * \return 0 on success otherwise a negative error code
+> > - *
+> > + * \retval -EIO PCM has not been setup (PCM isn't configured yet, or lifecycle of PCM has been ended)
+> > + * \retval -EINVAL Incorrect parameter, avail_min cannot be 0
+> > + * 
+> >  * The software parameters can be changed at any time.
+> >  * The hardware parameters cannot be changed when the stream is
+> >  * running (active).
+> > @@ -1017,6 +1023,7 @@ int snd_pcm_sw_params(snd_pcm_t *pcm, snd_pcm_sw_params_t *params)
+> >  * \param pcm PCM handle
+> >  * \param status Status container
+> >  * \return 0 on success otherwise a negative error code
+> > + * \return -ENOSYS Status is not supported on this PCM
+> >  *
+> >  * The function is thread-safe when built with the proper option.
+> >  */
+> > @@ -1060,7 +1067,8 @@ snd_pcm_state_t snd_pcm_state(snd_pcm_t *pcm)
+> >  * \brief (DEPRECATED) Synchronize stream position with hardware
+> >  * \param pcm PCM handle
+> >  * \return 0 on success otherwise a negative error code
+> > - *
+> > + * \retval -EIO PCM has not been setup (PCM isn't configured yet, or lifecycle of PCM has been ended)
+> > + * 
+> >  * Note this function does not update the actual r/w pointer
+> >  * for applications. The function #snd_pcm_avail_update()
+> >  * have to be called before any mmap begin+commit operation.
+> > @@ -1089,6 +1097,7 @@ int snd_pcm_hwsync(snd_pcm_t *pcm)
+> >  * \param pcm PCM handle
+> >  * \param delayp Returned delay in frames
+> >  * \return 0 on success otherwise a negative error code
+> > + * \retval -EIO PCM has not been setup (PCM isn't configured yet, or lifecycle of PCM has been ended)
+> >  *
+> >  * For playback the delay is defined as the time that a frame that is written
+> >  * to the PCM stream shortly after this call will take to be actually
+> > @@ -1133,6 +1142,7 @@ int snd_pcm_delay(snd_pcm_t *pcm, snd_pcm_sframes_t *delayp)
+> >  * \brief Resume from suspend, no samples are lost
+> >  * \param pcm PCM handle
+> >  * \return 0 on success otherwise a negative error code
+> > + * \retval -EIO    PCM has not been setup (PCM isn't configured yet, or lifecycle of PCM has been ended)
+> >  * \retval -EAGAIN resume can't be proceed immediately (audio hardware is probably still suspended)
+> >  * \retval -ENOSYS hardware doesn't support this feature
+> >  *
+> > @@ -1166,6 +1176,8 @@ int snd_pcm_resume(snd_pcm_t *pcm)
+> >  * \param avail Number of available frames when timestamp was grabbed
+> >  * \param tstamp Hi-res timestamp
+> >  * \return 0 on success otherwise a negative error code
+> > + * \retval -EIO    PCM has not been setup (PCM isn't configured yet, or lifecycle of PCM has been ended)
+> > + * \retval -ENOSYS Hi-res timestamp is not supported on this system.
+> >  *
+> >  * Note this function does not update the actual r/w pointer
+> >  * for applications.
+> > @@ -1194,6 +1206,9 @@ int snd_pcm_htimestamp(snd_pcm_t *pcm, snd_pcm_uframes_t *avail, snd_htimestamp_
+> >  * \brief Prepare PCM for use
+> >  * \param pcm PCM handle
+> >  * \return 0 on success otherwise a negative error code
+> > + * \retval -EIO    PCM has not been setup (PCM isn't configured yet, or lifecycle of PCM has been ended)
+> > + * \retval -ENOSYS Prepare is not supported on this PCM
+> > + * \retval -EBADFD PCM is not in the right state (#SND_PCM_STATE_DISCONNECTED)
+> >  *
+> >  * The function is thread-safe when built with the proper option.
+> >  */
+> > @@ -1222,6 +1237,8 @@ int snd_pcm_prepare(snd_pcm_t *pcm)
+> >  * \brief Reset PCM position
+> >  * \param pcm PCM handle
+> >  * \return 0 on success otherwise a negative error code
+> > + * \retval -EIO    PCM has not been setup (PCM isn't configured yet, or lifecycle of PCM has been ended)
+> > + * \retval -ENOSYS Reset is not supported on this PCM
+> >  *
+> >  * Reduce PCM delay to 0.
+> >  *
+> > @@ -1249,6 +1266,8 @@ int snd_pcm_reset(snd_pcm_t *pcm)
+> >  * \brief Start a PCM
+> >  * \param pcm PCM handle
+> >  * \return 0 on success otherwise a negative error code
+> > + * \retval -EIO    PCM has not been setup (PCM isn't configured yet, or lifecycle of PCM has been ended)
+> > + * \retval -EBADFD PCM is not in the right state (#SND_PCM_STATE_PREPARED)
+> >  *
+> >  * The function is thread-safe when built with the proper option.
+> >  */
+> > @@ -1274,6 +1293,8 @@ int snd_pcm_start(snd_pcm_t *pcm)
+> >  * \brief Stop a PCM dropping pending frames
+> >  * \param pcm PCM handle
+> >  * \return 0 on success otherwise a negative error code
+> > + * \retval -EIO    PCM has not been setup (PCM isn't configured yet, or lifecycle of PCM has been ended)
+> > + * \retval -EBADFD PCM is not in the right state (Should be PREPARED,RUNNING,XRUN,PAUSED,DRAINING,SETUP or SUSPENDED)
+> >  *
+> >  * This function stops the PCM <i>immediately</i>.
+> >  * The pending samples on the buffer are ignored.
+> > @@ -1309,7 +1330,10 @@ int snd_pcm_drop(snd_pcm_t *pcm)
+> >  * \brief Stop a PCM preserving pending frames
+> >  * \param pcm PCM handle
+> >  * \return 0 on success otherwise a negative error code
+> > + * \retval -EIO    PCM has not been setup (PCM isn't configured yet, or lifecycle of PCM has been ended)
+> > + * \retval -EBADFD PCM is not in the right state (Should be PREPARED,RUNNING,XRUN,PAUSED or DRAINING,SETUP or SUSPENDED)
+> >  * \retval -ESTRPIPE a suspend event occurred
+> > + * \retval -ENOSYS Drain is not supported on this PCM
+> >  *
+> >  * For playback wait for all pending frames to be played and then stop
+> >  * the PCM.
+> > @@ -1345,6 +1369,10 @@ int snd_pcm_drain(snd_pcm_t *pcm)
+> >  * \param pcm PCM handle
+> >  * \param enable 0 = resume, 1 = pause
+> >  * \return 0 on success otherwise a negative error code
+> > + * \retval -EIO    PCM has not been setup (PCM isn't configured yet, or lifecycle of PCM has been ended)
+> > + * \retval -EBADFD PCM is not in the right state (Should be PREPARED,RUNNING,XRUN,PAUSED or DRAINING)
+> > + * \retval -ESTRPIPE a suspend event occurred
+> > + * \retval -ENOSYS Pause is not supported on this PCM
+> >  *
+> >  * Note that this function works only on the hardware which supports
+> >  * pause feature.  You can check it via \link ::snd_pcm_hw_params_can_pause() \endlink
+> > @@ -1377,6 +1405,10 @@ int snd_pcm_pause(snd_pcm_t *pcm, int enable)
+> >  * \brief Get safe count of frames which can be rewinded
+> >  * \param pcm PCM handle
+> >  * \return a positive number of frames or negative error code
+> > + * \retval -EIO    PCM has not been setup (PCM isn't configured yet, or lifecycle of PCM has been ended)
+> > + * \retval -EBADFD PCM is not in the right state (Should be PREPARED,RUNNING,XRUN,PAUSED or DRAINING)
+> > + * \retval -ESTRPIPE a suspend event occurred
+> > + * \retval -ENOSYS Rewindable is not supported on this PCM
+> >  *
+> >  * Note: The snd_pcm_rewind() can accept bigger value than returned
+> >  * by this function. But it is not guaranteed that output stream
+> > @@ -1412,6 +1444,9 @@ snd_pcm_sframes_t snd_pcm_rewindable(snd_pcm_t *pcm)
+> >  * \param frames wanted displacement in frames
+> >  * \return a positive number for actual displacement otherwise a
+> >  * negative error code
+> > + * \retval -EIO    PCM has not been setup (PCM isn't configured yet, or lifecycle of PCM has been ended)
+> > + * \retval -EBADFD PCM is not in the right state (Should be PREPARED,RUNNING,XRUN,PAUSED or DRAINING)
+> > + * \retval -ENOSYS Rewind is not supported on this PCM
+> >  *
+> >  * The function is thread-safe when built with the proper option.
+> >  */
+> > @@ -1443,6 +1478,9 @@ snd_pcm_sframes_t snd_pcm_rewind(snd_pcm_t *pcm, snd_pcm_uframes_t frames)
+> >  * \brief Get safe count of frames which can be forwarded
+> >  * \param pcm PCM handle
+> >  * \return a positive number of frames or negative error code
+> > + * \retval -EIO    PCM has not been setup (PCM isn't configured yet, or lifecycle of PCM has been ended)
+> > + * \retval -EBADFD PCM is not in the right state (Should be PREPARED,RUNNING,XRUN,PAUSED or DRAINING)
+> > + * \retval -ENOSYS Forwardable is not supported on this PCM
+> >  *
+> >  * Note: The snd_pcm_forward() can accept bigger value than returned
+> >  * by this function. But it is not guaranteed that output stream
+> > @@ -1478,6 +1516,9 @@ snd_pcm_sframes_t snd_pcm_forwardable(snd_pcm_t *pcm)
+> >  * \param frames wanted skip in frames
+> >  * \return a positive number for actual skip otherwise a negative error code
+> >  * \retval 0 means no action
+> > + * \retval -EIO    PCM has not been setup (PCM isn't configured yet, or lifecycle of PCM has been ended)
+> > + * \retval -EBADFD PCM is not in the right state (Should be PREPARED,RUNNING,XRUN,PAUSED or DRAINING)
+> > + * \retval -ENOSYS Forward is not supported on this PCM
+> >  *
+> >  * The function is thread-safe when built with the proper option.
+> >  */
+> > @@ -1517,6 +1558,8 @@ use_default_symbol_version(__snd_pcm_forward, snd_pcm_forward, ALSA_0.9.0rc8);
+> >  * \param size frames to be written
+> >  * \return a positive number of frames actually written otherwise a
+> >  * negative error code
+> > + * \retval -EIO    PCM has not been setup (PCM isn't configured yet, or lifecycle of PCM has been ended)
+> > + * \retval -EINVAL Access type is not Interleave type.
+> >  * \retval -EBADFD PCM is not in the right state (#SND_PCM_STATE_PREPARED or #SND_PCM_STATE_RUNNING)
+> >  * \retval -EPIPE an underrun occurred
+> >  * \retval -ESTRPIPE a suspend event occurred (stream is suspended and waiting for an application recovery)
+> > @@ -1556,6 +1599,8 @@ snd_pcm_sframes_t snd_pcm_writei(snd_pcm_t *pcm, const void *buffer, snd_pcm_ufr
+> >  * \param size frames to be written
+> >  * \return a positive number of frames actually written otherwise a
+> >  * negative error code
+> > + * \retval -EIO    PCM has not been setup (PCM isn't configured yet, or lifecycle of PCM has been ended)
+> > + * \retval -EINVAL Access type is not Non-Interleave type.
+> >  * \retval -EBADFD PCM is not in the right state (#SND_PCM_STATE_PREPARED or #SND_PCM_STATE_RUNNING)
+> >  * \retval -EPIPE an underrun occurred
+> >  * \retval -ESTRPIPE a suspend event occurred (stream is suspended and waiting for an application recovery)
+> > @@ -1595,6 +1640,8 @@ snd_pcm_sframes_t snd_pcm_writen(snd_pcm_t *pcm, void **bufs, snd_pcm_uframes_t
+> >  * \param size frames to be read
+> >  * \return a positive number of frames actually read otherwise a
+> >  * negative error code
+> > + * \retval -EIO PCM has not been setup (PCM isn't configured yet, or lifecycle of PCM has been ended)
+> > + * \retval -EINVAL Access type is not Interleave type.
+> >  * \retval -EBADFD PCM is not in the right state (#SND_PCM_STATE_PREPARED or #SND_PCM_STATE_RUNNING)
+> >  * \retval -EPIPE an overrun occurred
+> >  * \retval -ESTRPIPE a suspend event occurred (stream is suspended and waiting for an application recovery)
+> > @@ -1634,6 +1681,8 @@ snd_pcm_sframes_t snd_pcm_readi(snd_pcm_t *pcm, void *buffer, snd_pcm_uframes_t
+> >  * \param size frames to be read
+> >  * \return a positive number of frames actually read otherwise a
+> >  * negative error code
+> > + * \retval -EIO PCM has not been setup (PCM isn't configured yet, or lifecycle of PCM has been ended)
+> > + * \retval -EINVAL Access type is not Non-Interleave type.
+> >  * \retval -EBADFD PCM is not in the right state (#SND_PCM_STATE_PREPARED or #SND_PCM_STATE_RUNNING)
+> >  * \retval -EPIPE an overrun occurred
+> >  * \retval -ESTRPIPE a suspend event occurred (stream is suspended and waiting for an application recovery)
+> > @@ -1669,8 +1718,9 @@ snd_pcm_sframes_t snd_pcm_readn(snd_pcm_t *pcm, void **bufs, snd_pcm_uframes_t s
+> > /**
+> >  * \brief Link two PCMs
+> >  * \param pcm1 first PCM handle
+> > - * \param pcm2 first PCM handle
+> > + * \param pcm2 second PCM handle
+> >  * \return 0 on success otherwise a negative error code
+> > + * \retval -ENOSYS Link is not supported on pcm1
+> >  *
+> >  * The two PCMs will start/stop/prepare in sync.
+> >  */ 
+> > @@ -1691,6 +1741,7 @@ int snd_pcm_link(snd_pcm_t *pcm1, snd_pcm_t *pcm2)
+> >  * \brief Remove a PCM from a linked group
+> >  * \param pcm PCM handle
+> >  * \return 0 on success otherwise a negative error code
+> > + * \retval -ENOSYS Unlink is not supported on this PCM.
+> >  */
+> > int snd_pcm_unlink(snd_pcm_t *pcm)
+> > {
+> > -- 
+> > 2.26.2
+> > 
+> 
