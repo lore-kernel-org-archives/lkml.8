@@ -2,141 +2,101 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC73C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89232C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B626120722
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:22:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i5amiZT4"
+	by mail.kernel.org (Postfix) with ESMTP id 6E78220722
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:22:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbgENMWN (ORCPT
+        id S1727922AbgENMWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 08:22:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43702 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725955AbgENMWM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 08:22:12 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67EA2C061A0C;
-        Thu, 14 May 2020 05:22:12 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id 19so24335479oiy.8;
-        Thu, 14 May 2020 05:22:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nF6vAAaP1cfceYeXNm1y8xNSuJkqKIzjNDIfaM3hC6U=;
-        b=i5amiZT4SYTxnRSl42OFApQUVQWMEMCzpzva6IzJpZUA8ComrOQCQAsHjrgthqm5Ti
-         GtsNDdoRqE46Qt9PLanUT5TY2Bl0VFqUiHu5M0QIg6duIlNkLuQe8qJr+kir6XgqdVfD
-         5/SOQWjTz2Km5dz+pfxkh7zPj9KPJ94r2/Ag3If3AMmreLm/vSOzM8UVd2wlUJy4XxrC
-         Y3Y61W6yaKPCDHY9edStqeGLglJrTL68OjZ0vcd54XZi+j9Fq2kDYMrFFSRcy9rIFy7A
-         nX7z+uQKUg5PTswBiYuT5Cmq5JDIibyvxwL2OfL1jJvso9rIPZInZKoazLpB6dSHSd6h
-         W5UA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nF6vAAaP1cfceYeXNm1y8xNSuJkqKIzjNDIfaM3hC6U=;
-        b=MQ39zqs14DLM3VQ7p9t3vbeDNtDHsjP6cG6wPaQU5ko4EVj8OPCrHURZVqvqJZQEjR
-         xYFgZ2IHvhWma5FQqpAnV/Auyzgc7ILvAQ2nYevjUrnzWr/cDAFGtbYUolo+E2j01GUF
-         e2lEpZ1KrfPvlD2e8f+bP65sGvaKS8+UQXWTLK84mbeOFHgRVE85XxbCHGCGzw30CWQh
-         yem5UVEt62yF1arUIeUNjmwpGPXKLro6CufBLwA7cdv6uv9WHGj+12gpUkNgD4nFIfRI
-         tvMv5eZYLJjVeYeA9Ju67ZOnuNEUz6W8Y2//VKgFgMoCUex96nprviL315pGovXOm5lq
-         XTYg==
-X-Gm-Message-State: AGi0PuaX/OaN7e36MsaFOlucejx2OLsJjDL54UsicGOfEsLCxRv7i0Jl
-        Lm++Po43m1hTJZZDxaSx5Ys41VLkHD7tOIKyJK4=
-X-Google-Smtp-Source: APiQypKvnbVkSBLslf8tuVKDqGZ9R3qBIciw1yU8Il1eGXOPA175sNtg+n/Z5A2Hq8fDCIabdLt9q9wcWPA/Ns3WUPQ=
-X-Received: by 2002:aca:5e0b:: with SMTP id s11mr28839792oib.160.1589458931895;
- Thu, 14 May 2020 05:22:11 -0700 (PDT)
+        Thu, 14 May 2020 08:22:18 -0400
+Received: from mga12.intel.com ([192.55.52.136]:34995 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725955AbgENMWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 08:22:17 -0400
+IronPort-SDR: jq2G9j4l+MtmXiBskeawpsxih7yy4UmJ+LGfE9+Lk1E9tY6Q3W5xMH79i5d4wHG7PLmfYN7wg4
+ t4Z3FDFHyuyg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 05:22:17 -0700
+IronPort-SDR: g4YTAvFTxqNPtU0jkIbc5r78CO9/Y4ylYkQmK+EhgU7xCpQhcG80N1AgmABpc/Vg8MOpmJRO+L
+ MmVc/XiEeHqQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,391,1583222400"; 
+   d="scan'208";a="464312030"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 14 May 2020 05:22:12 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jZCsQ-006cUm-3m; Thu, 14 May 2020 15:22:14 +0300
+Date:   Thu, 14 May 2020 15:22:14 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Allison Randal <allison@lohutok.net>,
+        Gareth Williams <gareth.williams.jx@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        "wuxu.wu" <wuxu.wu@huawei.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 11/17] spi: dw: Fix native CS being unset
+Message-ID: <20200514122214.GC185537@smile.fi.intel.com>
+References: <20200508132943.9826-1-Sergey.Semin@baikalelectronics.ru>
+ <20200508132943.9826-12-Sergey.Semin@baikalelectronics.ru>
+ <CACRpkdY=wkgnYPcqSzyzNpS6ckJZs-9kXfTfdwa1E+POzOBQGA@mail.gmail.com>
+ <20200513001347.dyt357erev7vzy3l@mobilestation>
+ <CACRpkdZTH1DNHvi4r48nLNWp4rqyYDZTzT12hw0eTNcYmgSr3Q@mail.gmail.com>
+ <20200514115558.e6cqnuxqyqkysfn7@mobilestation>
 MIME-Version: 1.0
-References: <20200505153156.925111-1-mic@digikod.net> <20200505153156.925111-4-mic@digikod.net>
- <CAEjxPJ7y2G5hW0WTH0rSrDZrorzcJ7nrQBjfps2OWV5t1BUYHw@mail.gmail.com>
- <202005131525.D08BFB3@keescook> <202005132002.91B8B63@keescook>
-In-Reply-To: <202005132002.91B8B63@keescook>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Thu, 14 May 2020 08:22:01 -0400
-Message-ID: <CAEjxPJ7WjeQAz3XSCtgpYiRtH+Jx-UkSTaEcnVyz_jwXKE3dkw@mail.gmail.com>
-Subject: Re: [PATCH v5 3/6] fs: Enable to enforce noexec mounts or file exec
- through O_MAYEXEC
-To:     Kees Cook <keescook@chromium.org>
-Cc:     =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=C3=A9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514115558.e6cqnuxqyqkysfn7@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 11:05 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Wed, May 13, 2020 at 04:27:39PM -0700, Kees Cook wrote:
-> > Like, couldn't just the entire thing just be:
-> >
-> > diff --git a/fs/namei.c b/fs/namei.c
-> > index a320371899cf..0ab18e19f5da 100644
-> > --- a/fs/namei.c
-> > +++ b/fs/namei.c
-> > @@ -2849,6 +2849,13 @@ static int may_open(const struct path *path, int acc_mode, int flag)
-> >               break;
-> >       }
-> >
-> > +     if (unlikely(mask & MAY_OPENEXEC)) {
-> > +             if (sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_MOUNT &&
-> > +                 path_noexec(path))
-> > +                     return -EACCES;
-> > +             if (sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_FILE)
-> > +                     acc_mode |= MAY_EXEC;
-> > +     }
-> >       error = inode_permission(inode, MAY_OPEN | acc_mode);
-> >       if (error)
-> >               return error;
-> >
->
-> FYI, I've confirmed this now. Effectively with patch 2 dropped, patch 3
-> reduced to this plus the Kconfig and sysctl changes, the self tests
-> pass.
->
-> I think this makes things much cleaner and correct.
+On Thu, May 14, 2020 at 02:55:58PM +0300, Serge Semin wrote:
+> On Thu, May 14, 2020 at 10:31:13AM +0200, Linus Walleij wrote:
+> > On Wed, May 13, 2020 at 2:13 AM Serge Semin
+> > <Sergey.Semin@baikalelectronics.ru> wrote:
 
-I think that covers inode-based security modules but not path-based
-ones (they don't implement the inode_permission hook).  For those, I
-would tentatively guess that we need to make sure FMODE_EXEC is set on
-the open file and then they need to check for that in their file_open
-hooks.
+> BTW I experience a problem with vger.kernel.org. For some reason a few days ago
+> it started bouncing my emails back sent to the GPIO/MIPS/SPI/kernel mailing lists.
+> I've sent multiple backward messages to the postmaster (postmaster (dog) vger.kernel.org)
+> with the bounce text, but still with no response. Could you tell me who should I
+> bother with this problem to get a help with its solution? 
+
+Perhaps, helpdesk@kernel.org ?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
