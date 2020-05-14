@@ -2,242 +2,163 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C09E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F49C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9689D2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7476D205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:57:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cCvY9KI1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GLOnAciQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbgENN4v (ORCPT
+        id S1726551AbgENN5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:56:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58498 "EHLO
+        Thu, 14 May 2020 09:57:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726050AbgENN4u (ORCPT
+        by vger.kernel.org with ESMTP id S1726073AbgENN5d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:56:50 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CFCAC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:56:50 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id l3so2410287edq.13
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:56:50 -0700 (PDT)
+        Thu, 14 May 2020 09:57:33 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D485C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:57:33 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id d184so1352216pfd.4
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:57:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9+xHuZjo6KNAs+z1Fg1etYI0ZDPjZlGNVfRX79r5Asc=;
-        b=cCvY9KI1FbDobXpMhhwl2WwnN+EsPPvgYyEiMrAD4glHm4KzFVHDgnlpwH37j9MbtK
-         gsz+qcsUAu91xC+geISjhtgZCIITvJyxIKBcGKcQVJ6Prl/fFp/FbXWswxx02m7W+csz
-         MgUq4qq4DY+8xNKuJ9jUCctr9J3PgoS/G2Xp1OrUYl5zn0Qlk6zcNjmQct511eDI4jUT
-         VTY7VOEovgUg+2H1srBFRhwLrVwDN0ZEuAdUzpToBpUnbOEgh4xfp5CCiUURCb8jldco
-         Gv+Ep+w8U2OBvonD0rlxnLdQaZl48WqN9Jx8G0EvYnSF7hRSu9QihEAasn2+QNyaRX/2
-         tK9Q==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GqYiH+VZrEFE/4Bke7hJw678bo+ME1oNIhgtpxt66To=;
+        b=GLOnAciQbNb0HdK3JXKhpQq3JT9fJe2X9eCvLqzKyG/QiVAnAvlnhQuicAAjKHv8TJ
+         S95azhHwl+I2LHx9a+0KbCA/C2DIReQ7HIvy6ghaGru+2EOkh9WN8ap0LRd2rezdzkF1
+         KswYo2ef+5oonlA4pE78CdceA8Iml+rbTmTUDJfJHYTm2Qb7UCK/mv44DoF2T6gSyJeL
+         6q8OnrUaaPV5Gb8sYykwYOST5ZK+UOfOSFJTPRil/RgTkL5e8TIhIjzuHxct5AkX59fL
+         zV65xs1bfu06JmC5yN52tPY3ADCpK61sIvAF+bMxtJukgD6rh3Xttjgv8kLKHLdAENH6
+         vM7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9+xHuZjo6KNAs+z1Fg1etYI0ZDPjZlGNVfRX79r5Asc=;
-        b=QfQr+COAFFeh+76wL9JW49Pc1FDVGQNrlQRxohfEbRAPXPJ1WW2TLVByreIT/diEH0
-         dKrXAKfoI4VIjttxmShEPFH4kfqlSuQapcmMhKN4YgdEoavOMfXDv08CxoOQZ9C0GMOl
-         Z6oz+4oOIEWOciI4+E1cX0qyEx+PbUzAwTFeyD5kaQg+xs4OdvXHGrC6blKcUQRGAzzz
-         JQIGKoxoa+lRaBkjCTTFUzDDP7zVl0CN0Ths6G8S2GbZZYmll29y+Y8WurSCwzlfjbT9
-         j3lGmobp6xuXktMaxOUBo3L2MGvXZdtrX0iVA0deBfzMeUqF/pV/4q5FP3iY2IkvdbaS
-         p+rA==
-X-Gm-Message-State: AOAM530YD6fVMGD6jiplI6/38k5f/6EtvaOLPxRSXhaOdCh7uMST1WNV
-        R2wNc6oNXVpiFpxt+eDL1fTaJF6AbXwR19AqH7cgag==
-X-Google-Smtp-Source: ABdhPJzLytZIaO6j2t1SQtOpGH2XKnaKhB4wQijwQhHx46ZVuOyc8LUGd/+MDixW4mNEUlzsubRKAWvH6kxi4Uogno8=
-X-Received: by 2002:aa7:d90f:: with SMTP id a15mr342636edr.52.1589464608820;
- Thu, 14 May 2020 06:56:48 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GqYiH+VZrEFE/4Bke7hJw678bo+ME1oNIhgtpxt66To=;
+        b=GF4qdnqZ9PUUGd8hEnVejzp821hp82JH9YTuZ8ZALOo2xexSQHoTZdrsuy/+2vcvBa
+         MYvFJ1p4t9vJ8+o3SH6C1t2YRDz6XopmTcj4VAzqBLxw00pSdOKqOGCjVD6pAX9qFxYg
+         V8Zg9TM5Hf5MLXev5sWolURJaE5eaMmpeYTl2PiifIDi1Zfw23nXHSxOvnPsgtWlZZiK
+         KfCSrL0geyoJgPgQ2X12X7mhGGOrI2JZ8nxMeZ56/zP3DXD7SEDrw7LqPtvMIBmWbMva
+         xbnINiHg2WjaOtpE219LRqX1rGoUTZaHJGyMwdIBnf7jGEj3qoJnqkRX3u1I4e+oHLVd
+         w6bw==
+X-Gm-Message-State: AOAM532foXYsEs7YkJ0fddgiP0dSEpDpw5KuXIBpiV30D1mZX0ijYqwz
+        pIO0bDW9dSP9i45N+lEtVU8wQA==
+X-Google-Smtp-Source: ABdhPJzc+/MZVVljv3fDoixtlxn6rODPGLabMeEYFLm1Mq6UZO49T7Fo/gZ46zRg57ca6oYy4r7G9w==
+X-Received: by 2002:a63:7c50:: with SMTP id l16mr4179481pgn.59.1589464652579;
+        Thu, 14 May 2020 06:57:32 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id v10sm16179337pjy.48.2020.05.14.06.57.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 06:57:31 -0700 (PDT)
+Date:   Thu, 14 May 2020 06:56:02 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        agross@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: db820c: fix audio configuration
+Message-ID: <20200514135602.GT2165@builder.lan>
+References: <20200417092327.7341-1-srinivas.kandagatla@linaro.org>
+ <20200514134353.GT14092@vkoul-mobl>
 MIME-Version: 1.0
-References: <20200513192020.544928-1-lma@semihalf.com> <52ab4557-e551-ce20-247c-681c2a0d1ad1@linux.intel.com>
-In-Reply-To: <52ab4557-e551-ce20-247c-681c2a0d1ad1@linux.intel.com>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Thu, 14 May 2020 06:56:37 -0700
-Message-ID: <CABXOdTeqjRh7st_fWYCZD0d8iuVJV+g+4ukoVHKEkOL4RmqQhg@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: Intel: kbl_rt5663_rt5514_max98927: Split
- be_hw_params_fixup function
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Lukasz Majczak <lma@semihalf.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        alsa-devel@alsa-project.org, Radoslaw Biernacki <rad@semihalf.com>,
-        Ross Zwisler <zwisler@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bob Brandt <brndt@google.com>, Marcin Wojtas <mw@semihalf.com>,
-        Alex Levin <levinale@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514134353.GT14092@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 5:47 AM Pierre-Louis Bossart
-<pierre-louis.bossart@linux.intel.com> wrote:
->
->
->
-> On 5/13/20 2:20 PM, Lukasz Majczak wrote:
-> > Split be_hw_params_fixup function for different codecs as current common
-> > function, leads to crash while trying to get snd_soc_dpcm with
-> > container_of() macro in kabylake_ssp_fixup().
-> > The crash call path looks as below:
-> > soc_pcm_hw_params()
-> > snd_soc_dai_hw_params(codec_dai, substream, &codec_params);
-> > rtd->dai_link->be_hw_params_fixup(rtd, params)
-> > kabylake_ssp_fixup()
-> > In this case, codec_params is just a copy of an internal structure and is
-> > not embedded into struct snd_soc_dpcm thus we cannot use
-> > container_of() on it.
->
-> This looks like a nice/welcome change, we've had these unexplained
-> crashes on KBL since 4.19 (reported by Guenter and me). I thought they
-> were topology related.
->
+On Thu 14 May 06:43 PDT 2020, Vinod Koul wrote:
 
-Not entirely unexplained. See
-https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1600868,
-which fixes the problem for all three affected drivers.
+> On 17-04-20, 10:23, Srinivas Kandagatla wrote:
+> > After patch f864edff110d ("ASoC: qdsp6: q6routing: remove default routing")
+> > and 9b60441692d9 ("ASoC: qdsp6: q6asm-dai: only enable dais from device tree")
+> > asm dais and routing needs to be properly specified at device tree level.
+> > 
+> > This patch fixes this.
+> 
+> Can we add the Fixes tag here please?
+> 
 
-Someone had told me, though, that the problem is no longer seen. Guess
-that was wrong.
+Yes, I added that and picked this patch for 5.7-rc and sent out a pull
+request. Unfortunately this does not seem to have been picked up yet.
 
-Guenter
+> Other than that lgtm:
+> 
+> Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
-> If indeed this fixes the issue, it might be worth applying in to all
-> stable releases?
->
-> Since we have the same code structure for the other kbl drivers, would
-> it also make sense to apply the same fixes there:
->
-> kbl_da7219_max98927.c:  struct snd_soc_dpcm *dpcm = container_of(
-> kbl_rt5663_max98927.c:  struct snd_soc_dpcm *dpcm = container_of(
->
->
-> >
-> > Signed-off-by: Lukasz Majczak <lma@semihalf.com>
+Thanks
+
+Regards,
+Bjorn
+
+> > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > > ---
-> >   .../intel/boards/kbl_rt5663_rt5514_max98927.c | 68 +++++++++++--------
-> >   1 file changed, 39 insertions(+), 29 deletions(-)
-> >
-> > diff --git a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-> > index 1b1f8d7a4ea3..2e0ae724122c 100644
-> > --- a/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-> > +++ b/sound/soc/intel/boards/kbl_rt5663_rt5514_max98927.c
-> > @@ -328,46 +328,55 @@ static const struct snd_soc_ops kabylake_rt5663_fe_ops = {
-> >       .startup = kbl_fe_startup,
-> >   };
-> >
-> > -static int kabylake_ssp_fixup(struct snd_soc_pcm_runtime *rtd,
-> > -                                     struct snd_pcm_hw_params *params)
-> > +static void kabylake_ssp_fixup(struct snd_soc_pcm_runtime *rtd,
-> > +     struct snd_pcm_hw_params *params, snd_pcm_format_t pcm_fmt)
-> >   {
-> >       struct snd_interval *rate = hw_param_interval(params,
-> >                       SNDRV_PCM_HW_PARAM_RATE);
-> > -     struct snd_interval *chan = hw_param_interval(params,
-> > +     struct snd_interval *channels = hw_param_interval(params,
-> >                       SNDRV_PCM_HW_PARAM_CHANNELS);
-> >       struct snd_mask *fmt = hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT);
-> > -     struct snd_soc_dpcm *dpcm = container_of(
-> > -                     params, struct snd_soc_dpcm, hw_params);
-> > -     struct snd_soc_dai_link *fe_dai_link = dpcm->fe->dai_link;
-> > -     struct snd_soc_dai_link *be_dai_link = dpcm->be->dai_link;
-> >
-> >       /*
-> >        * The ADSP will convert the FE rate to 48k, stereo, 24 bit
-> >        */
-> > -     if (!strcmp(fe_dai_link->name, "Kbl Audio Port") ||
-> > -         !strcmp(fe_dai_link->name, "Kbl Audio Headset Playback") ||
-> > -         !strcmp(fe_dai_link->name, "Kbl Audio Capture Port")) {
-> > -             rate->min = rate->max = 48000;
-> > -             chan->min = chan->max = 2;
-> > -             snd_mask_none(fmt);
-> > -             snd_mask_set_format(fmt, SNDRV_PCM_FORMAT_S24_LE);
-> > -     } else if (!strcmp(fe_dai_link->name, "Kbl Audio DMIC cap")) {
-> > -             if (params_channels(params) == 2 ||
-> > -                             DMIC_CH(dmic_constraints) == 2)
-> > -                     chan->min = chan->max = 2;
-> > -             else
-> > -                     chan->min = chan->max = 4;
-> > -     }
-> > -     /*
-> > -      * The speaker on the SSP0 supports S16_LE and not S24_LE.
-> > -      * thus changing the mask here
-> > -      */
-> > -     if (!strcmp(be_dai_link->name, "SSP0-Codec"))
-> > -             snd_mask_set_format(fmt, SNDRV_PCM_FORMAT_S16_LE);
-> >
-> > +     rate->min = rate->max = 48000;
-> > +     channels->min = channels->max = 2;
+> >  arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 22 +++++++++++++++++++-
+> >  arch/arm64/boot/dts/qcom/msm8996.dtsi        |  2 ++
+> >  2 files changed, 23 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+> > index 4692b7ad16b7..cf217b6b2b39 100644
+> > --- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
+> > @@ -908,10 +908,30 @@
+> >  	status = "okay";
+> >  };
+> >  
+> > +&q6asmdai {
+> > +	dai@0 {
+> > +		reg = <0>;
+> > +		direction = <2>;
+> > +	};
 > > +
-> > +     snd_mask_none(fmt);
-> > +     snd_mask_set_format(fmt, pcm_fmt);
-> > +}
+> > +	dai@1 {
+> > +		reg = <1>;
+> > +		direction = <2>;
+> > +	};
 > > +
-> > +static int kabylake_ssp0_fixup(struct snd_soc_pcm_runtime *rtd,
-> > +     struct snd_pcm_hw_params *params)
-> > +{
-> > +     kabylake_ssp_fixup(rtd, params, SNDRV_PCM_FORMAT_S16_LE);
-> >       return 0;
-> >   }
-> >
-> > +static int kabylake_ssp1_fixup(struct snd_soc_pcm_runtime *rtd,
-> > +     struct snd_pcm_hw_params *params)
-> > +{
+> > +	dai@2 {
+> > +		reg = <2>;
+> > +		direction = <1>;
+> > +	};
+> > +};
 > > +
-> > +     kabylake_ssp_fixup(rtd, params, SNDRV_PCM_FORMAT_S24_LE);
-> > +     return 0;
-> > +}
-> > +
-> > +static int kabylake_dmic_cap_fixup(struct snd_soc_pcm_runtime *rtd,
-> > +     struct snd_pcm_hw_params *params)
-> > +{
-> > +     struct snd_interval *channels = hw_param_interval(params,
-> > +                     SNDRV_PCM_HW_PARAM_CHANNELS);
-> > +
-> > +     if (params_channels(params) == 2 ||
-> > +                     DMIC_CH(dmic_constraints) == 2)
-> > +             channels->min = channels->max = 2;
-> > +     else
-> > +             channels->min = channels->max = 4;
-> > +
-> > +     return 0;
-> > +}
-> >   static int kabylake_rt5663_hw_params(struct snd_pcm_substream *substream,
-> >       struct snd_pcm_hw_params *params)
-> >   {
-> > @@ -582,6 +591,7 @@ static struct snd_soc_dai_link kabylake_dais[] = {
-> >               .dpcm_capture = 1,
-> >               .nonatomic = 1,
-> >               .dynamic = 1,
-> > +             .be_hw_params_fixup = kabylake_dmic_cap_fixup,
-> >               .ops = &kabylake_dmic_ops,
-> >               SND_SOC_DAILINK_REG(dmic, dummy, platform),
-> >       },
-> > @@ -618,7 +628,7 @@ static struct snd_soc_dai_link kabylake_dais[] = {
-> >                       SND_SOC_DAIFMT_NB_NF |
-> >                       SND_SOC_DAIFMT_CBS_CFS,
-> >               .ignore_pmdown_time = 1,
-> > -             .be_hw_params_fixup = kabylake_ssp_fixup,
-> > +             .be_hw_params_fixup = kabylake_ssp0_fixup,
-> >               .dpcm_playback = 1,
-> >               .dpcm_capture = 1,
-> >               .ops = &kabylake_ssp0_ops,
-> > @@ -632,7 +642,7 @@ static struct snd_soc_dai_link kabylake_dais[] = {
-> >               .dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-> >                       SND_SOC_DAIFMT_CBS_CFS,
-> >               .ignore_pmdown_time = 1,
-> > -             .be_hw_params_fixup = kabylake_ssp_fixup,
-> > +             .be_hw_params_fixup = kabylake_ssp1_fixup,
-> >               .ops = &kabylake_rt5663_ops,
-> >               .dpcm_playback = 1,
-> >               .dpcm_capture = 1,
-> >
+> >  &sound {
+> >  	compatible = "qcom,apq8096-sndcard";
+> >  	model = "DB820c";
+> > -	audio-routing =	"RX_BIAS", "MCLK";
+> > +	audio-routing =	"RX_BIAS", "MCLK",
+> > +		"MM_DL1",  "MultiMedia1 Playback",
+> > +		"MM_DL2",  "MultiMedia2 Playback",
+> > +		"MultiMedia3 Capture", "MM_UL3";
+> >  
+> >  	mm1-dai-link {
+> >  		link-name = "MultiMedia1";
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> > index 14827adebd94..98634d5c4440 100644
+> > --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> > @@ -2066,6 +2066,8 @@
+> >  						reg = <APR_SVC_ASM>;
+> >  						q6asmdai: dais {
+> >  							compatible = "qcom,q6asm-dais";
+> > +							#address-cells = <1>;
+> > +							#size-cells = <0>;
+> >  							#sound-dai-cells = <1>;
+> >  							iommus = <&lpass_q6_smmu 1>;
+> >  						};
+> > -- 
+> > 2.21.0
+> 
+> -- 
+> ~Vinod
