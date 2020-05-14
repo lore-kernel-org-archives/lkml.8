@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CB5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3FBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F13CF206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F9FC206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483551;
-	bh=g/Kuj3iIyO8kDN4cmTyXiRn1HMqDROk+couMxyMzf6U=;
+	s=default; t=1589483557;
+	bh=D0FuQN9EpjPbRLYbRTMAW25f4Tum4yNNVfrXcRSi5h8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tiGgJpBby8DhgdKm3bAUVJCmhWk6uwMtkFYj19QKtgsrpTfRUozubTvaZnXJlfVcf
-	 yyQXWt8lvH12azi6v9Iv5+Uiy28cjuHPLuFgUjamOdbiDdOaNqaiIONgv3UmQz831m
-	 GUXOya6F++NnNhNH250qBb1oKJ3690TXBSsoaK0c=
+	b=VjpwY+4/dIgAzYxt8f4b9spV8LCjHc8k2Mu22gwWshGIN2JOK+smR1wLLWbwlZUwE
+	 NL5MM/yXqQVRAV9EYxFiG3cpEk4sfHdoV3FGZnu9muiTYhJt/THe22ec0zNSPn0Cnp
+	 GJJwBhL/EbrYQT9CExeHlO+W+2K1SqMOfXDwg8TE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730381AbgENTMa (ORCPT
+        id S1728073AbgENSwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:12:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50032 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:52:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728097AbgENSwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:52:04 -0400
+        id S1728040AbgENSv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:51:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA34420675;
-        Thu, 14 May 2020 18:52:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2085206F1;
+        Thu, 14 May 2020 18:51:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482323;
-        bh=g/Kuj3iIyO8kDN4cmTyXiRn1HMqDROk+couMxyMzf6U=;
+        s=default; t=1589482318;
+        bh=D0FuQN9EpjPbRLYbRTMAW25f4Tum4yNNVfrXcRSi5h8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tDHlsWN6eXU6+LkvLzX9lcluO2oWW8NoC+j9rnjrF9HFoZIELx1udOjBXXltCwS/t
-         QPu/12AwAj6f4DrOuJuY0VwiqZOX0NmuH32gflIDjE7tO0dD5eNTzTnH70+IMAt4nP
-         WL4iUjTmySFBQatA0ADZfqT7dIGGQWN5i7ZIDCYE=
+        b=Skj8nNNugWuPxJGsYh8CBM+DRrG6cOjUgk0wlLusY43RTTlrM0rMtPsIkUY/ncaZF
+         IDyvuT+U4Ipe31s/3cz0OMjb86kfC4anfccoV8qQLJ4NjTrKTf1KWvTUD3v0uDIWvO
+         5s+YoixTcOaZQAxCoBeqUAGm5EgDQ5kpPkaNw7rY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <himanshu.madhani@oracle.com>,
-        Nilesh Javali <njavali@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 11/62] scsi: qla2xxx: Delete all sessions before unregister local nvme port
-Date:   Thu, 14 May 2020 14:50:56 -0400
-Message-Id: <20200514185147.19716-11-sashal@kernel.org>
+Cc:     Artem Borisov <dedsa2002@gmail.com>, Jiri Kosina <jkosina@suse.cz>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 07/62] HID: alps: Add AUI1657 device ID
+Date:   Thu, 14 May 2020 14:50:52 -0400
+Message-Id: <20200514185147.19716-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185147.19716-1-sashal@kernel.org>
 References: <20200514185147.19716-1-sashal@kernel.org>
@@ -61,64 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Artem Borisov <dedsa2002@gmail.com>
 
-[ Upstream commit c48f849d3f7a4ec1025105f446e29d395c4dcc2f ]
+[ Upstream commit 640e403b1fd24e7f31ac6f29f0b6a21d285ed729 ]
 
-Delete all sessions before unregistering local nvme port.  This allows nvme
-layer to decrement all active rport count down to zero.  Once the count is
-down to zero, nvme would call qla to continue with the npiv port deletion.
+This device is used on Lenovo V130-15IKB variants and uses
+the same registers as U1.
 
-PID: 27448  TASK: ffff9e34b777c1c0  CPU: 0   COMMAND: "qaucli"
- 0 [ffff9e25e84abbd8] __schedule at ffffffff977858ca
- 1 [ffff9e25e84abc68] schedule at ffffffff97785d79
- 2 [ffff9e25e84abc78] schedule_timeout at ffffffff97783881
- 3 [ffff9e25e84abd28] wait_for_completion at ffffffff9778612d
- 4 [ffff9e25e84abd88] qla_nvme_delete at ffffffffc0e3024e [qla2xxx]
- 5 [ffff9e25e84abda8] qla24xx_vport_delete at ffffffffc0e024b9 [qla2xxx]
- 6 [ffff9e25e84abdf0] fc_vport_terminate at ffffffffc011c247 [scsi_transport_fc]
- 7 [ffff9e25e84abe28] store_fc_host_vport_delete at ffffffffc011cd94 [scsi_transport_fc]
- 8 [ffff9e25e84abe70] dev_attr_store at ffffffff974b376b
- 9 [ffff9e25e84abe80] sysfs_kf_write at ffffffff972d9a92
-10 [ffff9e25e84abe90] kernfs_fop_write at ffffffff972d907b
-11 [ffff9e25e84abec8] vfs_write at ffffffff9724c790
-12 [ffff9e25e84abf08] sys_write at ffffffff9724d55f
-13 [ffff9e25e84abf50] system_call_fastpath at ffffffff97792ed2
-    RIP: 00007fc0bd81a6fd  RSP: 00007ffff78d9648  RFLAGS: 00010202
-    RAX: 0000000000000001  RBX: 0000000000000022  RCX: 00007ffff78d96e0
-    RDX: 0000000000000022  RSI: 00007ffff78d94e0  RDI: 0000000000000008
-    RBP: 00007ffff78d9440   R8: 0000000000000000   R9: 00007fc0bd48b2cd
-    R10: 0000000000000017  R11: 0000000000000293  R12: 0000000000000000
-    R13: 00005624e4dac840  R14: 00005624e4da9a10  R15: 0000000000000000
-    ORIG_RAX: 0000000000000001  CS: 0033  SS: 002b
-
-Link: https://lore.kernel.org/r/20200331104015.24868-4-njavali@marvell.com
-Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Nilesh Javali <njavali@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Artem Borisov <dedsa2002@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_attr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hid-alps.c | 1 +
+ drivers/hid/hid-ids.h  | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_attr.c b/drivers/scsi/qla2xxx/qla_attr.c
-index d7e7043f9eab2..9556392652e33 100644
---- a/drivers/scsi/qla2xxx/qla_attr.c
-+++ b/drivers/scsi/qla2xxx/qla_attr.c
-@@ -2928,11 +2928,11 @@ qla24xx_vport_delete(struct fc_vport *fc_vport)
- 	    test_bit(FCPORT_UPDATE_NEEDED, &vha->dpc_flags))
- 		msleep(1000);
+diff --git a/drivers/hid/hid-alps.c b/drivers/hid/hid-alps.c
+index fa704153cb00d..c2a2bd5288906 100644
+--- a/drivers/hid/hid-alps.c
++++ b/drivers/hid/hid-alps.c
+@@ -802,6 +802,7 @@ static int alps_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ 		break;
+ 	case HID_DEVICE_ID_ALPS_U1_DUAL:
+ 	case HID_DEVICE_ID_ALPS_U1:
++	case HID_DEVICE_ID_ALPS_1657:
+ 		data->dev_type = U1;
+ 		break;
+ 	default:
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 40697af0ca358..7d769ca864a7f 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -81,7 +81,7 @@
+ #define HID_DEVICE_ID_ALPS_U1		0x1215
+ #define HID_DEVICE_ID_ALPS_T4_BTNLESS	0x120C
+ #define HID_DEVICE_ID_ALPS_1222		0x1222
+-
++#define HID_DEVICE_ID_ALPS_1657         0x121E
  
--	qla_nvme_delete(vha);
- 
- 	qla24xx_disable_vp(vha);
- 	qla2x00_wait_for_sess_deletion(vha);
- 
-+	qla_nvme_delete(vha);
- 	vha->flags.delete_progress = 1;
- 
- 	qlt_remove_target(ha, vha);
+ #define USB_VENDOR_ID_AMI		0x046b
+ #define USB_DEVICE_ID_AMI_VIRT_KEYBOARD_AND_MOUSE	0xff10
 -- 
 2.20.1
 
