@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C40AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA019C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EECE8207D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B28B120727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482538;
-	bh=umsyuoNpLQ17v3hGaAHM5Ts4XabLpMvGpymU0+W+YQY=;
+	s=default; t=1589482543;
+	bh=HyYP/wOosNvn+zL16+yWrZlgCfA669VtlRgAiGh5Qjk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mXHTVvndEzGj6I/Oa9JDW4T5dQWpP8qAGMUllMqCjBEFUsX8/QR7D4nkQ+Z3xC8Tt
-	 28G9tvexZsgYQvENIVjk8xmkOfP9PTWb8o/era1F0JiCyc1tWGAxD2rtVexgGF0kBQ
-	 ZdpR8P9+yB1WB3xKx6Yss6z6OhFdh5GTA3lby43E=
+	b=j8+/1EnN8YX7KxUhIwnOmGoqiver6F5+HYgb5gNc9wiSt5onyab0d1eQC5Qy7jTBz
+	 nvsZDoAWjOrLDapwtvggpDe2C+2FvphmE3DdUjsMQSUg1n0fleFL4RXFN3624L38VF
+	 ip6TeDX2JOrIBhE/G5RqxjvoVFfEqsGEkbvr2aJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729429AbgENSzh (ORCPT
+        id S1729460AbgENSzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:55:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55918 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:55:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729352AbgENSzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:55:20 -0400
+        id S1729373AbgENSzY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:55:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6C19207F9;
-        Thu, 14 May 2020 18:55:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69470207D0;
+        Thu, 14 May 2020 18:55:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482520;
-        bh=umsyuoNpLQ17v3hGaAHM5Ts4XabLpMvGpymU0+W+YQY=;
+        s=default; t=1589482524;
+        bh=HyYP/wOosNvn+zL16+yWrZlgCfA669VtlRgAiGh5Qjk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2SF6qLM/CJ+yqNDu3yauP0EMsdLVPUfCMa/irQNLWB3vOAP38W+qbUH52E1F95Z0v
-         PxEBq2u8ush6X2SnDtBdPmeJN3h2lIr3p4SZSRfPEyOqjv5a+IlQFb9HwrxBOSDlnk
-         qlQiZ5Lju3JhqvwlRhXfDOCv+6u1VGYz0kFYbSII=
+        b=TjIaRVQc1LOn2zxRRa12GGj4Gp+c48zeQUQwapbIo++yuMv3xVMnNV8TvRRX/yVwc
+         504a0yjv5VsYfZCmo1fsNzIOX2Zaf+2YMJSf6HER2wn1SDp44pv+CzmtjI50EZ7H7e
+         vI8xqweyzgyYIpFE8dpLUf2fCDYjwnZv+hByHYrA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>, Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 16/39] configfs: fix config_item refcnt leak in configfs_rmdir()
-Date:   Thu, 14 May 2020 14:54:33 -0400
-Message-Id: <20200514185456.21060-16-sashal@kernel.org>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 19/39] net/sonic: Fix a resource leak in an error handling path in 'jazz_sonic_probe()'
+Date:   Thu, 14 May 2020 14:54:36 -0400
+Message-Id: <20200514185456.21060-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185456.21060-1-sashal@kernel.org>
 References: <20200514185456.21060-1-sashal@kernel.org>
@@ -59,45 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 8aebfffacfa379ba400da573a5bf9e49634e38cb ]
+[ Upstream commit 10e3cc180e64385edc9890c6855acf5ed9ca1339 ]
 
-configfs_rmdir() invokes configfs_get_config_item(), which returns a
-reference of the specified config_item object to "parent_item" with
-increased refcnt.
+A call to 'dma_alloc_coherent()' is hidden in 'sonic_alloc_descriptors()',
+called from 'sonic_probe1()'.
 
-When configfs_rmdir() returns, local variable "parent_item" becomes
-invalid, so the refcount should be decreased to keep refcount balanced.
+This is correctly freed in the remove function, but not in the error
+handling path of the probe function.
+Fix it and add the missing 'dma_free_coherent()' call.
 
-The reference counting issue happens in one exception handling path of
-configfs_rmdir(). When down_write_killable() fails, the function forgets
-to decrease the refcnt increased by configfs_get_config_item(), causing
-a refcnt leak.
+While at it, rename a label in order to be slightly more informative.
 
-Fix this issue by calling config_item_put() when down_write_killable()
-fails.
-
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/configfs/dir.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/natsemi/jazzsonic.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
-index c2ef617d2f97d..c875f246cb0e9 100644
---- a/fs/configfs/dir.c
-+++ b/fs/configfs/dir.c
-@@ -1537,6 +1537,7 @@ static int configfs_rmdir(struct inode *dir, struct dentry *dentry)
- 		spin_lock(&configfs_dirent_lock);
- 		configfs_detach_rollback(dentry);
- 		spin_unlock(&configfs_dirent_lock);
-+		config_item_put(parent_item);
- 		return -EINTR;
- 	}
- 	frag->frag_dead = true;
+diff --git a/drivers/net/ethernet/natsemi/jazzsonic.c b/drivers/net/ethernet/natsemi/jazzsonic.c
+index d5b28884e21eb..9a6c91c9d111c 100644
+--- a/drivers/net/ethernet/natsemi/jazzsonic.c
++++ b/drivers/net/ethernet/natsemi/jazzsonic.c
+@@ -247,13 +247,15 @@ static int jazz_sonic_probe(struct platform_device *pdev)
+ 		goto out;
+ 	err = register_netdev(dev);
+ 	if (err)
+-		goto out1;
++		goto undo_probe1;
+ 
+ 	printk("%s: MAC %pM IRQ %d\n", dev->name, dev->dev_addr, dev->irq);
+ 
+ 	return 0;
+ 
+-out1:
++undo_probe1:
++	dma_free_coherent(lp->device, SIZEOF_SONIC_DESC * SONIC_BUS_SCALE(lp->dma_bitmode),
++			  lp->descriptors, lp->descriptors_laddr);
+ 	release_mem_region(dev->base_addr, SONIC_MEM_SIZE);
+ out:
+ 	free_netdev(dev);
 -- 
 2.20.1
 
