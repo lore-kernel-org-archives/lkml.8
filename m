@@ -2,128 +2,101 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F64C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C44E8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72D99206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:31:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CBSyHBzo"
+	by mail.kernel.org (Postfix) with ESMTP id 9ACD020787
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:31:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgENRbK (ORCPT
+        id S1726332AbgENRbu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 13:31:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35690 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725975AbgENRbI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 13:31:08 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3133DC061A0C;
-        Thu, 14 May 2020 10:31:07 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id e16so5339007wra.7;
-        Thu, 14 May 2020 10:31:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jbm1Q8qOMwQUuSc9bppb6Dmdqv2iLCl+uaey6+wjuLA=;
-        b=CBSyHBzo3+idV0W5j/UzuaOb571oSX7gRIjsHziTEHZTJzLvXm5UvSkaqlEa9l6otn
-         VhmJAnGwa40khADvJdzsxqwhzShrOtg8LTxZdP45OnxMoJKihbob8jf79R2sISJRLhVs
-         l7hnX07Ep2A2VHETcFN/ZuSe3IlpgAOulB4KczwUyt7K3sdY6dkjzdFa8FSdSRn++tGt
-         R62ouWnAwKmICRNR2fy6TVhVdRmi9yKVV/lVlo0EXfZz1mwdiC2HVNAeHPb1lBXe9EPC
-         MUlqEn9q/kEYoPpPqFJ7/sMoUQJ8ebKuuKA5gQXEES4UWwYIEguDZCnlPHnTTvJetPFb
-         bhzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jbm1Q8qOMwQUuSc9bppb6Dmdqv2iLCl+uaey6+wjuLA=;
-        b=iOXFisr7LdUc/KbGrU2V9iihBQyr9aBUGflz9LxUzk570R4oOa+yxJ2vtScgkDEJe2
-         l5OZNjKkJfd7AT3Kik4+aGoJ+ruwY90dL/FJgi/KVPqmunyOaTn1oj3UWVrj/n2WbUw6
-         Itwiw2PaSWHiNRAFMCIM3fyZrwQQNy2I+95uo5qmab/59gAstvkp+TUUSxchzWKqcv8z
-         GSBm5pM6H9/lyS5jv1Y3bm1t8hh9Cxu2damG/1kqYpBHBzFFxT2Cxs/WoXFzZXb4s3CT
-         7PfwBonL/dIefRNh1JSxb/gFIO14jYhSa+irdl0+yua06CUIM0PWlcS+Up9iwBLj4Rdz
-         4j6A==
-X-Gm-Message-State: AOAM532ouAyu1DZVKfNzVi9Iyb0Q7NYboPiU9UJSOwcyeLDBQHXNQFkt
-        VNlKe901xcTB3rKCsRmMDHQ=
-X-Google-Smtp-Source: ABdhPJxoW+C6Nkoo2+TRu4kQe6smgRYVIMJOTSp166sZd8TRlyHyMwXBCmkHtlSyHAKdGY1DMi0beQ==
-X-Received: by 2002:adf:fe90:: with SMTP id l16mr6569637wrr.222.1589477465916;
-        Thu, 14 May 2020 10:31:05 -0700 (PDT)
-Received: from [10.230.188.43] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id u127sm41495846wme.8.2020.05.14.10.31.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 May 2020 10:31:05 -0700 (PDT)
-Subject: Re: [PATCH] net: phy: mdio-moxart: remove unneeded include
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20200514165938.21725-1-brgl@bgdev.pl>
- <8fc8ea34-a68c-8fbd-3821-d073c08444f8@gmail.com>
- <CAMRc=Mcp89E7f+PeVfhJ8iXXRZdG9c28_CzCeMpSJj=n5Gwo+w@mail.gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <283dd0f5-74d1-d0e6-c521-dbad6da5e446@gmail.com>
-Date:   Thu, 14 May 2020 10:31:02 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.8.0
+        Thu, 14 May 2020 13:31:50 -0400
+Received: from muru.com ([72.249.23.125]:54564 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726027AbgENRbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 13:31:49 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 1AD9380C0;
+        Thu, 14 May 2020 17:32:37 +0000 (UTC)
+Date:   Thu, 14 May 2020 10:31:44 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCHv8 0/6] n_gsm serdev support and GNSS driver for droid4
+Message-ID: <20200514173144.GP37466@atomide.com>
+References: <20200512214713.40501-1-tony@atomide.com>
+ <20200513190942.GA2626@duo.ucw.cz>
 MIME-Version: 1.0
-In-Reply-To: <CAMRc=Mcp89E7f+PeVfhJ8iXXRZdG9c28_CzCeMpSJj=n5Gwo+w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513190942.GA2626@duo.ucw.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/14/2020 10:20 AM, Bartosz Golaszewski wrote:
-> czw., 14 maj 2020 o 19:13 Florian Fainelli <f.fainelli@gmail.com> napisał(a):
->>
->>
->>
->> On 5/14/2020 9:59 AM, Bartosz Golaszewski wrote:
->>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>>
->>> mdio-moxart doesn't use regulators in the driver code. We can remove
->>> the regulator include.
->>>
->>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>
->> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
->> --
->> Florian
+* Pavel Machek <pavel@denx.de> [200513 19:10]:
+> Hi!
 > 
-> Hi Andrew, Florian,
+> > Here's the updated set of these patches fixed up for Johan's and
+> > Pavel's earlier comments.
+> > 
+> > This series does the following:
+> > 
+> > 1. Adds functions to n_gsm.c for serdev-ngsm.c driver to use
+> > 
+> > 2. Adds a generic serdev-ngsm.c driver that brings up the TS 27.010
+> >    TTY ports configured in devicetree with help of n_gsm.c
+> > 
+> > 3. Allows the use of standard Linux device drivers for dedicated
+> >    TS 27.010 channels for devices like GNSS and ALSA found on some
+> >    modems for example
 > 
-> I noticed this by accident when I was looking at the PHY drivers to
-> see how they handle regulators supplying PHYs. In the case of the
-> MediaTek Pumpkin board I'm working on - the PHY is a Realtek RTL8201F
-> and it's supplied by a regulator that's enabled on boot by the
-> relevant PMIC driver. I'd like to model it in the device-tree but I'm
-> not sure what the correct approach is. Some ethernet drivers have a
-> phy-supply property but it looks wrong to me - IMO this should be
-> handled at the PHY driver level. Is it fine if I add a probe()
-> callback to the realtek driver and retrieve the "phy-supply" there?
+> > 4. Adds a gnss-motmdm consumer driver for the GNSS device found on
+> >    the Motorola Mapphone MDM6600 modem on devices like droid4
+> 
+> It does one thing ... it turns Droid 4 into useful phone! 
 
-Don't you need to do this earlier than probe() though? If the PHY device
-is powered down, then surely get_phy_id() won't be able to read its
-registers and bind the device to the driver.
+Right, a minor detail I forgot :)
 
-This should be dealt the same way that resets are being dealt with,
-which is prior to the MDIO bus scan.
--- 
-Florian
+> Thanks a lot. I believe these are same patches as in
+> droid4-pending-v5.7 branch, so whole series is
+> 
+> Tested-by: Pavel Machek <pavel@ucw.cz>
+> 
+> Getting this into 5.8 would be nice :-).
+> 
+> > Now without the chardev support, the /dev/gsmtty* using apps need
+> > to use "U1234AT+CFUN?" format for the packets. The advantage is
+> > less kernel code, and we keep the existing /dev/gsmtty* interface.
+> > 
+> > If we still really need the custom chardev support, that can now
+> > be added as needed with the channel specific consumer driver(s),
+> > but looks like this won't be needed based on Pavel's ofono work.
+> 
+> These work for me, and I have patched ofono with basic
+> functionality. It is no longer possible to use minicom for debugging,
+> but printf can be used instead, so that's not much of a problem.
+> 
+> I have adjusted ofono code, and moved away from normal AT support
+> code. More API changes would not be welcome :-).
+
+There is no need for a new API or API changes as we now use the
+existing n_gsm tty interface for /dev/gsmtty* devices that have
+been around for years.
+
+Regards,
+
+Tony
+
