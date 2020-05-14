@@ -2,215 +2,114 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9268BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E813C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6653920727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24BC320734
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:03:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589461407;
-	bh=SuLpaZFpGQ8WM/6iQie50DkPQircPDfzdXDRDkqRnFM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OsXK2iMSuMTo6yuj+GGeKuCzGSNIaxzrMHENqjNvRPvPp4q014wDNuXBOpNkbGWOs
-	 Mr3dEnki6GIvctEcIg+P8GM2mm7/Nx61WNb4po4xWAcpcJsKREH/aaz+Q6zmXj759J
-	 tdowK5aa0I3TVhrlx4CEScL6ZxPIK8rIdHNamJfQ=
+	s=default; t=1589461436;
+	bh=3bIZOzLSNAE/EGch6NutsDyhByrv9G1g20b34R7O++c=;
+	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=sWLrctDH5VzwhEqdKZCqu+43bxPLJ8zi0ybUglKR96UJc01XYOqP2DcCjUOoPcmRp
+	 SqPJjRtCCHA5JbqsYKKv8D+XSwBrkJwG19YkNVJcq+Lv/hGYlT7b5liAinabYFb6yh
+	 HJQjeJEyjZD2OoZU4YwwaZ0ep/GYJGYnOqQ9jEYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgENND0 (ORCPT
+        id S1727123AbgENNDz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:03:26 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:32791 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbgENND0 (ORCPT
+        Thu, 14 May 2020 09:03:55 -0400
+Received: from mail-oo1-f67.google.com ([209.85.161.67]:42094 "EHLO
+        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726056AbgENNDz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:03:26 -0400
-Received: by mail-ot1-f68.google.com with SMTP id v17so2281155ote.0;
-        Thu, 14 May 2020 06:03:25 -0700 (PDT)
+        Thu, 14 May 2020 09:03:55 -0400
+Received: by mail-oo1-f67.google.com with SMTP id a83so692284oob.9;
+        Thu, 14 May 2020 06:03:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PAAq3M4gzQu8HSRZbaaHX+1SesRsxaYoIJArKgrswws=;
-        b=Yfe0/3is/dHKayOCHp7iYgLjtCjQhBpv/lsLMOALJW0MqY8FybHkesUjTP3KYlkYR7
-         lFq/YesSZtNLvn73W+r83GK2NqI/oWm4bKwaAvBkHuKNqldOkOv94Mx8aR6n0bOvlDwT
-         pua6xjDxzCCXUYZmYou5QHvChfdfyi2vwoYF+bTbT88DLtj4uFyIKnNFKKIzNMmLvaxD
-         bPZnP4/84rCDodtUJWq4PosUQjwn1vdXdYWETRhxHojEP51mllMIDcfzfUWHAgRzsOp2
-         2mfHcTrDBqtbbEpIcy/gS0aL3F3iWEwfXaFCrB/NIz3dYBsqL+r23/1vDeNBC3oHsyv6
-         MNpg==
-X-Gm-Message-State: AOAM532CK8GeOHPH4KRkmk8vjCL5HHd/dHmUvgb7eCgAlWZruPrtXFb/
-        xu0NG/JbduVeGMIRGfZ6+w==
-X-Google-Smtp-Source: ABdhPJxcpuhv/1AydK5IH3eeNpW2zbl+DpIvij7siBl4sEeht7w7E4i0Oo7cKTz9Uzccd2FBgUw8Gw==
-X-Received: by 2002:a9d:7343:: with SMTP id l3mr3144827otk.276.1589461403791;
-        Thu, 14 May 2020 06:03:23 -0700 (PDT)
+        bh=BQlGy1003OHhQDoA039YQUlM3pD9hZvmAohGgf3kvn4=;
+        b=O75EE9Wfl290v9u4EM0BOhEZvXnoj4BqbCOWWiOpxDMhftp5riVsr0v4/RsXdlzGPn
+         K54gU8sLhlAicSWafHUQshXGO3EQp3riJm8BcnnSmXuPthoymMfJ1N4r3q+RU7CpWv5P
+         /7Clu6YUIw2UXWKlAaKVkIVBl+9PXBxY7vpSC3AS+OTKA3UOK0C+GK2imxf9vc927OE+
+         8YtquOnaa8Mw9/ip9csNnVV+ia4WjusDLU1HLi4/JgKwAh9SAapRwdKCHQcBNzJRh0ew
+         FMKaD4nIc9KZFSpe0qRhdiWHHBVw6Q/lQRGerdbCeunouhAW1iw5Hq9aQ+VkYP73sz3S
+         1maw==
+X-Gm-Message-State: AOAM531sgT9EluGnyc4UUneHqClUdUTPd2aZf4NcKYdsqNwurBsTOTFx
+        LT+iOSX4nYURJ2zfuZXjOjiLFmw=
+X-Google-Smtp-Source: ABdhPJxYFBjlqFYAj1GqfM1gMHAmeTVKS1xzDLOHNBWjxWUb+onZgcIBtfAiY2GmmiFtwefYIt7M5A==
+X-Received: by 2002:a4a:1a42:: with SMTP id 63mr1040493oof.16.1589461432786;
+        Thu, 14 May 2020 06:03:52 -0700 (PDT)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i10sm765855oos.28.2020.05.14.06.03.22
+        by smtp.gmail.com with ESMTPSA id q68sm755657ooa.29.2020.05.14.06.03.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 06:03:23 -0700 (PDT)
-Received: (nullmailer pid 17389 invoked by uid 1000);
-        Thu, 14 May 2020 13:03:21 -0000
-Date:   Thu, 14 May 2020 08:03:21 -0500
+        Thu, 14 May 2020 06:03:52 -0700 (PDT)
+Received: (nullmailer pid 18205 invoked by uid 1000);
+        Thu, 14 May 2020 13:03:51 -0000
+Date:   Thu, 14 May 2020 08:03:51 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
-        brendanhiggins@google.com, tglx@linutronix.de,
-        boris.brezillon@collabora.com, anders.roxell@linaro.org,
-        masonccyang@mxic.com.tw, linux-mips@vger.kernel.org,
-        hauke.mehrtens@intel.com, andriy.shevchenko@intel.com,
-        qi-ming.wu@intel.com, cheol.yong.kim@intel.com
-Subject: Re: [PATCH v6 1/2] dt-bindings: mtd: Add Nand Flash Controller
- support for Intel LGM SoC
-Message-ID: <20200514130321.GB8436@bogus>
-References: <20200513104615.7905-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200513104615.7905-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org, SoC Team <soc@kernel.org>,
+        linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        devicetree@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: mmc: Add Sparx5 SDHCI controller
+ bindings
+Message-ID: <20200514130351.GA17797@bogus>
+References: <20200513133122.25121-1-lars.povlsen@microchip.com>
+ <20200513133122.25121-2-lars.povlsen@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513104615.7905-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+In-Reply-To: <20200513133122.25121-2-lars.povlsen@microchip.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 06:46:14PM +0800, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On Wed, 13 May 2020 15:31:20 +0200, Lars Povlsen wrote:
+> The Sparx5 SDHCI controller is based on the Designware controller IP.
 > 
-> Add YAML file for dt-bindings to support NAND Flash Controller
-> on Intel's Lightning Mountain SoC.
-> 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 > ---
->  .../devicetree/bindings/mtd/intel,lgm-nand.yaml    | 83 ++++++++++++++++++++++
->  1 file changed, 83 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+>  .../mmc/microchip,dw-sparx5-sdhci.yaml        | 57 +++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
-> new file mode 100644
-> index 000000000000..d9e0df8553fa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
-> @@ -0,0 +1,83 @@
-> +# SPDX-License-Identifier: GPL-2.0
 
-Dual license new bindings please:
 
-(GPL-2.0-only OR BSD-2-Clause)
+My bot found errors running 'make dt_binding_check' on your patch:
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mtd/intel,lgm-nand.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Intel LGM SoC NAND Controller Device Tree Bindings
-> +
-> +allOf:
-> +  - $ref: "nand-controller.yaml"
-> +
-> +maintainers:
-> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: intel,lgm-nand-controller
-> +
-> +  reg:
-> +    maxItems: 1
+Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.example.dts:20:18: fatal error: dt-bindings/clock/microchip,sparx5.h: No such file or directory
+         #include <dt-bindings/clock/microchip,sparx5.h>
+                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+Makefile:1300: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-Looks like you have 4 or 6 entries, not 1. Need to define what each one 
-is.
+See https://patchwork.ozlabs.org/patch/1289290
 
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  dmas:
-> +    maxItems: 2
-> +
-> +  dma-names:
-> +    enum:
-> +      - rx
-> +      - tx
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
 
-This defines a single entry. I believe you want:
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
 
-items:
-  - const: tx
-  - const: rx
+Please check and re-submit.
 
-> +
-> +  pinctrl-names: true
-
-No need for this. Tools add pinctrl properties.
-
-> +
-> +patternProperties:
-> +  "^nand@[a-f0-9]+$":
-> +    type: object
-> +    properties:
-> +      reg:
-> +        minimum: 0
-> +        maximum: 7
-> +
-> +      nand-ecc-mode: true
-> +
-> +      nand-ecc-algo:
-> +        const: hw
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - dmas
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    nand-controller@e0f00000 {
-> +      compatible = "intel,nand-controller";
-
-Doesn't match the schema.
-
-> +      reg = <0xe0f00000 0x100>,
-> +            <0xe1000000 0x300>,
-> +            <0xe1400000 0x8000>,
-> +            <0xe1c00000 0x1000>;
-
-Is it 4 or 6 entries?
-
-> +      reg-names = "ebunand", "hsnand", "nand_cs0", "nand_cs1",
-> +        "addr_sel0","addr_sel1";
-
-Not documented.
-
-> +      clocks = <&cgu0 125>;
-> +      dma-names = "tx", "rx";
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +      #clock-cells = <1>;
-
-This is a clock provider too?
-
-> +
-> +      nand@0 {
-> +        reg = <0>;
-> +        nand-on-flash-bbt;
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +      };
-> +    };
-> +
-> +...
-> -- 
-> 2.11.0
-> 
