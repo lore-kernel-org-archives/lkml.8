@@ -2,157 +2,288 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47651C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0464C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 199262065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:51:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1CqEws0"
+	by mail.kernel.org (Postfix) with ESMTP id 949BA2065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:54:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728656AbgENTvE (ORCPT
+        id S1728672AbgENTys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:51:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57628 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727833AbgENTvD (ORCPT
+        Thu, 14 May 2020 15:54:48 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:60826 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727777AbgENTyr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 15:51:03 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BAABC061A0C;
-        Thu, 14 May 2020 12:51:03 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id l18so207893wrn.6;
-        Thu, 14 May 2020 12:51:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GHAkvo3C1Root8SQChzVWlpWixRXLm7GQ8ZrDiIy7bo=;
-        b=l1CqEws0Bp07cLGIXwGNWUY3YaJjMynyz9gjJqGWB5B41vzHwIJD04UIqEXrbsjRrS
-         AvRQbwJqBgoDl1Y/XHWGRKYHKEd8AfnhfEiJ5U2BUjgF2/1fIskg3uUa+UCUITmheHnQ
-         Hp2vtby50vW0U9r0/ACSuP8PC4qj2eHmNFjsCg9gRpiXp+nzNIusXLep0XUIZKtwNin0
-         pyA+BXUFCmPUjoiDQ8aUwRL0XGyPPrCIEWzW+jF+Kbc2C5F7DVVOtYkWhu/gKevztS51
-         TwCozh+M+YOXu91yYW91fVur5k5qkbjumy60sM7j0RHMojK2hAqDD9wah0RAWLmpsLMO
-         rOBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GHAkvo3C1Root8SQChzVWlpWixRXLm7GQ8ZrDiIy7bo=;
-        b=PV6OLzMmheyBTv0xOaoNs5iM3wFxIJQ3tMsMCv1DsaPi/zleMB893zoZrrez9KuOfx
-         GMJogwwI4PXz5gv7oHNzHzU2yjLGzw0Jhj9mcdrdeYK3t+iNrQrZ9HJJ5jmgbxG7qzCS
-         wGIbaydD09Sw2k0khJtXVqnYAlv5Gr70GiPY6+w8XHaPutrT0cwmYfMHWa84ehBSzQGy
-         z30HMnNnC33yG0DrVUQ7uqVO5s6qIvJJBB1/85Xuu0NBvBwMb2jW+Vdua15hrOXeZeqG
-         ZpWfbg+X23KafXKpOMsNwK9ABdMy1CnwfldQbFJ13LW8bgv6dX+QrQ/slm+x6lWXr5ac
-         /msw==
-X-Gm-Message-State: AOAM530TMhS4H9LT/kOeO6Ifk1KvwcwylG4zTB9yb3no5yJZNfaAHlrG
-        F6lPibynCM2Lnb7h09MCZYsmrBvn
-X-Google-Smtp-Source: ABdhPJxrrxPCczNT+mmqxUAK57nR7ttXGCVNCAdgaM8QbeOlojyvMplYV40gRmPb1n9P9jFfhMPh5w==
-X-Received: by 2002:adf:decb:: with SMTP id i11mr102252wrn.172.1589485861980;
-        Thu, 14 May 2020 12:51:01 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f28:5200:44a3:4c94:7927:e2e6? (p200300EA8F28520044A34C947927E2E6.dip0.t-ipconnect.de. [2003:ea:8f28:5200:44a3:4c94:7927:e2e6])
-        by smtp.googlemail.com with ESMTPSA id c125sm161823wma.23.2020.05.14.12.51.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 May 2020 12:51:01 -0700 (PDT)
-Subject: Re: [PATCH] net: phy: realtek: clear interrupt during init for
- rtl8211f
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200512184601.40b1758a@xhacker.debian>
- <7735a257-21ff-e6c0-acdc-f5ee187b1f57@gmail.com>
- <20200513145151.04a6ee46@xhacker.debian>
- <a0aac85d-064f-2672-370b-404fd83e83f3@gmail.com>
- <20200514142537.63b478fd@xhacker.debian>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <bbb70281-d477-d227-d1d2-aeecffdb6299@gmail.com>
-Date:   Thu, 14 May 2020 21:50:53 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 14 May 2020 15:54:47 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id C6472803089C;
+        Thu, 14 May 2020 19:54:41 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id BbbTUiaU5uDB; Thu, 14 May 2020 22:54:37 +0300 (MSK)
+Date:   Thu, 14 May 2020 22:54:36 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Arnd Bergmann <arnd@arndb.de>, <linux-mips@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: clk: Add Baikal-T1 CCU PLLs binding
+Message-ID: <20200514195436.yvocpit7xrmygq3r@mobilestation>
+References: <20200306130053.BCBFC803078F@mail.baikalelectronics.ru>
+ <20200506222300.30895-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506222300.30895-2-Sergey.Semin@baikalelectronics.ru>
+ <20200514191318.GA10192@bogus>
 MIME-Version: 1.0
-In-Reply-To: <20200514142537.63b478fd@xhacker.debian>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200514191318.GA10192@bogus>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14.05.2020 08:25, Jisheng Zhang wrote:
-> On Wed, 13 May 2020 20:45:13 +0200 Heiner Kallweit wrote:
+On Thu, May 14, 2020 at 02:13:18PM -0500, Rob Herring wrote:
+> On Thu, May 07, 2020 at 01:22:57AM +0300, Serge Semin wrote:
+> > Baikal-T1 Clocks Control Unit is responsible for transformation of a
+> > signal coming from an external oscillator into clocks of various
+> > frequencies to propagate them then to the corresponding clocks
+> > consumers (either individual IP-blocks or clock domains). In order
+> > to create a set of high-frequency clocks the external signal is
+> > firstly handled by the embedded into CCU PLLs. So the corresponding
+> > dts-node is just a normal clock-provider node with standard set of
+> > properties. Note as being part of the Baikal-T1 System Controller its
+> > DT node is supposed to be a child the system controller node.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: linux-mips@vger.kernel.org
+> > 
+> > ---
+> > 
+> > Changelog v2:
+> > - Rearrange the SoBs.
+> > - Discard comments in the bindings file header.
+> > - Add dual GPL/BSD license.
+> > - Add spaces around the ASCII-graphics in the binding description.
+> > - Remove reference to Documentation/devicetree/bindings/clock/clock-bindings.txt
+> >   file.
+> > - Discard redundant object check against "/schemas/clock/clock.yaml#" schema.
+> > - Discard redundant descriptions of the "#clock-cells" property.
+> > - Remove "reg" property since from now the clock DT node is supposed to be
+> >   a child of the syscon-compatible system controller node.
+> > - Remove "clock-output-names" property support.
+> > - Replace "additionalProperties: false" with "unevaluatedProperties: false".
+> > - Lowercase the nodes name in the examples.
+> > - Use "clock-controller" node name suffix in the examples.
+> > - Remove unnecessary comments in the clocks dt-bindings header file.
+> > ---
+> >  .../bindings/clock/baikal,bt1-ccu-pll.yaml    | 127 ++++++++++++++++++
+> >  include/dt-bindings/clock/bt1-ccu.h           |  16 +++
+> >  2 files changed, 143 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml
+> >  create mode 100644 include/dt-bindings/clock/bt1-ccu.h
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml b/Documentation/devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml
+> > new file mode 100644
+> > index 000000000000..571181758ef2
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml
+> > @@ -0,0 +1,127 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +# Copyright (C) 2020 BAIKAL ELECTRONICS, JSC
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/clock/baikal,bt1-ccu-pll.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Baikal-T1 Clock Control Unit PLL
+> > +
+> > +maintainers:
+> > +  - Serge Semin <fancer.lancer@gmail.com>
+> > +
+> > +description: |
+> > +  Clocks Control Unit is the core of Baikal-T1 SoC System Controller
+> > +  responsible for the chip subsystems clocking and resetting. The CCU is
+> > +  connected with an external fixed rate oscillator, which signal is transformed
+> > +  into clocks of various frequencies and then propagated to either individual
+> > +  IP-blocks or to groups of blocks (clock domains). The transformation is done
+> > +  by means of PLLs and gateable/non-gateable dividers embedded into the CCU.
+> > +  It's logically divided into the next components:
+> > +  1) External oscillator (normally XTAL's 25 MHz crystal oscillator, but
+> > +     in general can provide any frequency supported by the CCU PLLs).
+> > +  2) PLLs clocks generators (PLLs) - described in this binding file.
+> > +  3) AXI-bus clock dividers (AXI).
+> > +  4) System devices reference clock dividers (SYS).
+> > +  which are connected with each other as shown on the next figure:
+> > +
+> > +          +---------------+
+> > +          | Baikal-T1 CCU |
+> > +          |   +----+------|- MIPS P5600 cores
+> > +          | +-|PLLs|------|- DDR controller
+> > +          | | +----+      |
+> > +  +----+  | |  |  |       |
+> > +  |XTAL|--|-+  |  | +---+-|
+> > +  +----+  | |  |  +-|AXI|-|- AXI-bus
+> > +          | |  |    +---+-|
+> > +          | |  |          |
+> > +          | |  +----+---+-|- APB-bus
+> > +          | +-------|SYS|-|- Low-speed Devices
+> > +          |         +---+-|- High-speed Devices
+> > +          +---------------+
 > 
->>
->> On 13.05.2020 08:51, Jisheng Zhang wrote:
->>> Hi,
->>>
->>> On Tue, 12 May 2020 20:43:40 +0200 Heiner Kallweit wrote:
->>>  
->>>>
->>>>
->>>> On 12.05.2020 12:46, Jisheng Zhang wrote:  
->>>>> The PHY Register Accessible Interrupt is enabled by default, so
->>>>> there's such an interrupt during init. In PHY POLL mode case, the
->>>>> INTB/PMEB pin is alway active, it is not good. Clear the interrupt by
->>>>> calling rtl8211f_ack_interrupt().  
->>>>
->>>> As you say "it's not good" w/o elaborating a little bit more on it:
->>>> Do you face any actual issue? Or do you just think that it's not nice?  
->>>
->>>
->>> The INTB/PMEB pin can be used in two different modes:
->>> INTB: used for interrupt
->>> PMEB: special mode for Wake-on-LAN
->>>
->>> The PHY Register Accessible Interrupt is enabled by
->>> default, there's always such an interrupt during the init. In PHY POLL mode
->>> case, the pin is always active. If platforms plans to use the INTB/PMEB pin
->>> as WOL, then the platform will see WOL active. It's not good.
->>>  
->> The platform should listen to this pin only once WOL has been configured and
->> the pin has been switched to PMEB function. For the latter you first would
->> have to implement the set_wol callback in the PHY driver.
->> Or where in which code do you plan to switch the pin function to PMEB?
-> 
-> I think it's better to switch the pin function in set_wol callback. But this
-> is another story. No matter WOL has been configured or not, keeping the
-> INTB/PMEB pin active is not good. what do you think?
-> 
+> Are you going to just duplicate all this for each sub-block? 
 
-It shouldn't hurt (at least it didn't hurt for the last years), because no
-listener should listen to the pin w/o having it configured before.
-So better extend the PHY driver first (set_wol, ..), and then do the follow-up
-platform changes (e.g. DT config of a connected GPIO).
+Apparently yes. Since the bindings are placed in different files it would be
+good to have the CCU diagram in each of them so the user would see what part of
+CCU this binding describes without need to open the other file. Additionally
+they don't completely match. Here I signify that the binding file is about PLLs.
+The text in another file says that its about the clock dividers.
 
->> One more thing to consider when implementing set_wol would be that the PHY
->> supports two WOL options:
->> 1. INT/PMEB configured as PMEB
->> 2. INT/PMEB configured as INT and WOL interrupt source active
->>
->>>  
->>>> I'm asking because you don't provide a Fixes tag and you don't
->>>> annotate your patch as net or net-next.  
->>>
->>> should be Fixes: 3447cf2e9a11 ("net/phy: Add support for Realtek RTL8211F")
->>>  
->>>> Once you provide more details we would also get an idea whether a
->>>> change would have to be made to phylib, because what you describe
->>>> doesn't seem to be specific to this one PHY model.  
->>>
->>> Nope, we don't need this change in phylib, this is specific to rtl8211f
->>>
->>> Thanks,
->>> Jisheng
->>>  
->> Heiner
 > 
+> > +
+> > +  Each CCU sub-block is represented as a separate dts-node and has an
+> > +  individual driver to be bound with.
+> > +
+> > +  In order to create signals of wide range frequencies the external oscillator
+> > +  output is primarily connected to a set of CCU PLLs. There are five PLLs
+> > +  to create a clock for the MIPS P5600 cores, the embedded DDR controller,
+> > +  SATA, Ethernet and PCIe domains. The last three domains though named by the
+> > +  biggest system interfaces in fact include nearly all of the rest SoC
+> > +  peripherals. Each of the PLLs is based on True Circuits TSMC CLN28HPM core
+> > +  with an interface wrapper (so called safe PLL' clocks switcher) to simplify
+> > +  the PLL configuration procedure. The PLLs work as depicted on the next
+> > +  diagram:
+> > +
+> > +      +--------------------------+
+> > +      |                          |
+> > +      +-->+---+    +---+   +---+ |  +---+   0|\
+> > +  CLKF--->|/NF|--->|PFD|...|VCO|-+->|/OD|--->| |
+> > +          +---+ +->+---+   +---+ /->+---+    | |--->CLKOUT
+> > +  CLKOD---------C----------------+          1| |
+> > +       +--------C--------------------------->|/
+> > +       |        |                             ^
+> > +  Rclk-+->+---+ |                             |
+> > +  CLKR--->|/NR|-+                             |
+> > +          +---+                               |
+> > +  BYPASS--------------------------------------+
+> > +  BWADJ--->
+> > +
+> > +  where Rclk is the reference clock coming  from XTAL, NR - reference clock
+> > +  divider, NF - PLL clock multiplier, OD - VCO output clock divider, CLKOUT -
+> > +  output clock, BWADJ is the PLL bandwidth adjustment parameter. At this moment
+> > +  the binding supports the PLL dividers configuration in accordance with a
+> > +  requested rate, while bypassing and bandwidth adjustment settings can be
+> > +  added in future if it gets to be necessary.
+> > +
+> > +  The PLLs CLKOUT is then either directly connected with the corresponding
+> > +  clocks consumer (like P5600 cores or DDR controller) or passed over a CCU
+> > +  divider to create a signal required for the clock domain.
+> > +
+> > +  The CCU PLL dts-node uses the common clock bindings with no custom
+> > +  parameters. The list of exported clocks can be found in
+> > +  'include/dt-bindings/clock/bt1-ccu.h'. Since CCU PLL is a part of the
+> > +  Baikal-T1 SoC System Controller its DT node is supposed to be a child of
+> > +  later one.
+> 
+> The schema can and should express this. IOW, either move this into the 
+> system controller schema or reference this ($ref) from it.
 
+Ok. I'll make use of $ref approach because otherwise the system controller DT
+binding would be overwhelmed with various properties.
+
+> 
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: baikal,bt1-ccu-pll
+> > +
+> > +  "#clock-cells":
+> > +    const: 1
+> > +
+> > +  clocks:
+> > +    description: External reference clock
+> > +    maxItems: 1
+> > +
+> > +  clock-names:
+> > +    const: ref_clk
+> > +
+> > +unevaluatedProperties: false
+> > +
+> > +required:
+> > +  - compatible
+> > +  - "#clock-cells"
+> > +  - clocks
+> > +  - clock-names
+> > +
+> > +examples:
+> > +  # Clock Control Unit PLL node:
+> > +  - |
+> > +    clock-controller-pll {
+> > +      compatible = "baikal,bt1-ccu-pll";
+> > +      #clock-cells = <1>;
+> > +
+> > +      clocks = <&clk25m>;
+> > +      clock-names = "ref_clk";
+> 
+> If there's a register range within the system controller for the pll, 
+> then add 'reg' even if Linux doesn't use it.
+
+Yes, there is. Shall I add the optional reg property to the binding too and use
+the reg value in the unit-name like clock-controller@1F04D000?
+
+-Sergey
+
+> 
+> > +    };
+> > +  # Required external oscillator:
+> > +  - |
+> > +    clk25m: clock-oscillator-25m {
+> > +      compatible = "fixed-clock";
+> > +      #clock-cells = <0>;
+> > +      clock-frequency  = <25000000>;
+> > +      clock-output-names = "clk25m";
+> > +    };
+> > +...
+> > diff --git a/include/dt-bindings/clock/bt1-ccu.h b/include/dt-bindings/clock/bt1-ccu.h
+> > new file mode 100644
+> > index 000000000000..931a4bea67c0
+> > --- /dev/null
+> > +++ b/include/dt-bindings/clock/bt1-ccu.h
+> > @@ -0,0 +1,16 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > +/*
+> > + * Copyright (C) 2020 BAIKAL ELECTRONICS, JSC
+> > + *
+> > + * Baikal-T1 CCU clock indices
+> > + */
+> > +#ifndef __DT_BINDINGS_CLOCK_BT1_CCU_H
+> > +#define __DT_BINDINGS_CLOCK_BT1_CCU_H
+> > +
+> > +#define CCU_CPU_PLL			0
+> > +#define CCU_SATA_PLL			1
+> > +#define CCU_DDR_PLL			2
+> > +#define CCU_PCIE_PLL			3
+> > +#define CCU_ETH_PLL			4
+> > +
+> > +#endif /* __DT_BINDINGS_CLOCK_BT1_CCU_H */
+> > -- 
+> > 2.25.1
+> > 
