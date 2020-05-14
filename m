@@ -2,138 +2,102 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 962A5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 108DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7341D20643
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:51:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nplF2gXe"
+	by mail.kernel.org (Postfix) with ESMTP id DFDA8206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:51:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589467882;
+	bh=E0a+apJr31FkSRWpqsCDpRfntjbRBD8yeqKP6BnYfGA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=flmnn1MEEjP/xfXaAXh9bBx7r9iGYF+RYBikabxHmhQVcOq51lcFzrznwHi4mbPHo
+	 bIVYaWIy1KHcs40mSoKY2t4BgzVe+tAOh0iCI9/7uTp7dCmAxdywr9+0yuG2hbJme/
+	 MMIGdBcsLtm0E7V9jB+zE0y9bo+hqXxCSutkzJG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgENOvS (ORCPT
+        id S1728046AbgENOvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:51:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38840 "EHLO
+        Thu, 14 May 2020 10:51:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbgENOvP (ORCPT
+        with ESMTP id S1726763AbgENOvT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:51:15 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8780FC061A0C;
+        Thu, 14 May 2020 10:51:19 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98C78C061A0C;
+        Thu, 14 May 2020 07:51:17 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id l3so1788038qvo.7;
+        Thu, 14 May 2020 07:51:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=aNtTa2d+n4621gDfYTPbcUqqYbeIm8uB0/qear6cWpg=;
+        b=QeELnO1WNJbZma6EEnHeMi9LPg6qMoJehC+wk+8XY7BwCHhBJHE3zUOcgdbrSSnsxE
+         hszjO+n7oLZR3ozCX/Frm7E5wqFeNhikXHOg0kZDTUEUTjbcqvWlCOh/B6ncBE62iIjZ
+         QfCSBa5O0hsIhlEHRBPV2+XpEaoZSKpM4XFSe8TU2dV2Sw4bY7I3SYMEYWG8kgpjbHjQ
+         BwUWXlmwGLeuAgz1kvr3rZwFnblqwDY789h3F2COPvbxYxOeS0iwb2zXrKRFnqUpCYA8
+         hGASsSrtmA0K9nRnOyT3+NrQIjXbvfAZyRW4PjnyM3hMyl0zypiqiYHiNPDqlCUCH1zK
+         mG1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=aNtTa2d+n4621gDfYTPbcUqqYbeIm8uB0/qear6cWpg=;
+        b=k5L7s3Z1Yge/Ezwv0xALbKehSy0EGxCnNk04ZX3+Af8EF2kjD1mIvzOxvc7oVtGLnj
+         aQ1ARNEhGz++HQuzPUJ6HZFQnZmWMcjE7DGnRB5T2BaLiNr/0524ysLpuKPEJseVkSvX
+         Q6A5ChlqwtaxuUpKGMVyzymgyJL0p52N4jmrVjlhhRrHoySLazFRZTZVmMWxNpgQ3b/C
+         3KV6yoBfoaftDRNdcR9CAb28fX9Pl9CT9G+zL9LN65OrANJTrWRFEy3MvNt6zEUi94Vr
+         btvhktMLssROj9jobSn952uiSEf/jUuY8VCDLLCFFWuTqXZrA02AVj8daG+tRoABZYsh
+         /GDg==
+X-Gm-Message-State: AOAM5337O9XV68aM83oo4ZJy5rrGFEGUwjY4W7X7+s/iYqfEiqo6dYqI
+        K6ijOFWFLxSGPrr7frO6/q5mC/9EnD8=
+X-Google-Smtp-Source: ABdhPJw7cclIwTgpzaD7MAC6RXRqYWlqzeZnNk0O3UghwCaxqW1QxUitfWlT15ZSc2SfonojOLuZXw==
+X-Received: by 2002:a05:6214:1543:: with SMTP id t3mr3002030qvw.122.1589467876536;
+        Thu, 14 May 2020 07:51:16 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:97a6])
+        by smtp.gmail.com with ESMTPSA id n20sm2623277qtk.89.2020.05.14.07.51.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 14 May 2020 07:51:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=g3yEEkwwk4Q3j5s04IMTk/eTfXLS0xuwowPPt0s7L98=; b=nplF2gXenKKVcqt+1wEdBUqj7v
-        Loe8nt/+DW1iGJ7jhXvkukFBLmvY/rM0giFPOjt3RMSkIIgWuw7OjznSnNWVNLgPcoLHjhqJ9gmSG
-        BPKe+Xx/pJHbr6UURqoOlBVJZWFUSpGhfj4Hh8aAILxyXtU/1jufGJzpLyvZCo0hJsML3xE2wmfIi
-        kWUXF1h8kfdnF2Rn+pFW5i3+Xsccz8wEXC7H8eCv5dRNNEzlVC6vWCDnzyui6Lp16VtcvfamREUBs
-        tmeGi3X6/+LUsCx/kQ4+nokVaKMfQAbovxmAQO2KwUNGY4m+JSc47xyNwJu6+Ai1aVSdotj5Rdd6y
-        H0aw5AqQ==;
-Received: from [2001:4bb8:188:1506:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZFCa-0007uA-PK; Thu, 14 May 2020 14:51:13 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] ipv4: use symbol_get to access ipip symbols
-Date:   Thu, 14 May 2020 16:51:00 +0200
-Message-Id: <20200514145101.3000612-4-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200514145101.3000612-1-hch@lst.de>
-References: <20200514145101.3000612-1-hch@lst.de>
+Date:   Thu, 14 May 2020 10:51:14 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, newella@fb.com
+Subject: Re: [PATCH block/for-linus] iocost: don't let vrate run wild while
+ there's no saturation signal
+Message-ID: <20200514145114.GG16815@mtj.duckdns.org>
+References: <20191015001811.GI18794@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191015001811.GI18794@devbig004.ftw2.facebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of going through the ioctl handler from kernel space, use
-symbol_get to access the ip_tunnel_ioctl directly.
+On Mon, Oct 14, 2019 at 05:18:11PM -0700, Tejun Heo wrote:
+> When the QoS targets are met and nothing is being throttled, there's
+> no way to tell how saturated the underlying device is - it could be
+> almost entirely idle, at the cusp of saturation or anywhere inbetween.
+> Given that there's no information, it's best to keep vrate as-is in
+> this state.  Before 7cd806a9a953 ("iocost: improve nr_lagging
+> handling"), this was the case - if the device isn't missing QoS
+> targets and nothing is being throttled, busy_level was reset to zero.
+...
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Reported-by: Andy Newell <newella@fb.com>
+> Fixes: 7cd806a9a953 ("iocost: improve nr_lagging handling")
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- net/ipv4/ipmr.c | 28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+Jens, this one fell through the cracks. It still applies with only a small
+offset. Can you please apply?
 
-diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
-index 6bf2a88abe86e..3780ab694c574 100644
---- a/net/ipv4/ipmr.c
-+++ b/net/ipv4/ipmr.c
-@@ -438,10 +438,9 @@ static bool ipmr_init_vif_indev(const struct net_device *dev)
- 
- static struct net_device *ipmr_new_tunnel(struct net *net, struct vifctl *v)
- {
--	mm_segment_t oldfs = get_fs();
-+	int (*tunnel_ctl)(struct net_device *, struct ip_tunnel_parm *, int);
- 	struct net_device *tunnel_dev, *new_dev;
- 	struct ip_tunnel_parm p = { };
--	struct ifreq ifr;
- 	int err;
- 
- 	tunnel_dev = __dev_get_by_name(net, "tunl0");
-@@ -454,21 +453,17 @@ static struct net_device *ipmr_new_tunnel(struct net *net, struct vifctl *v)
- 	p.iph.ihl = 5;
- 	p.iph.protocol = IPPROTO_IPIP;
- 	sprintf(p.name, "dvmrp%d", v->vifc_vifi);
--	ifr.ifr_ifru.ifru_data = (__force void __user *)&p;
- 
--	if (!tunnel_dev->netdev_ops->ndo_do_ioctl)
--		goto out;
-+	tunnel_ctl = symbol_get(ip_tunnel_ioctl);
-+	if (!tunnel_ctl)
-+		return ERR_PTR(-ENOBUFS);
- 
--	set_fs(KERNEL_DS);
--	err = tunnel_dev->netdev_ops->ndo_do_ioctl(tunnel_dev, &ifr,
--			SIOCADDTUNNEL);
--	set_fs(oldfs);
--	if (err)
--		goto out;
-+	if (tunnel_ctl(tunnel_dev, &p, SIOCADDTUNNEL))
-+		goto out_symbol_put;
- 
- 	new_dev = __dev_get_by_name(net, p.name);
- 	if (!new_dev)
--		goto out;
-+		goto out_symbol_put;
- 
- 	new_dev->flags |= IFF_MULTICAST;
- 	if (!ipmr_init_vif_indev(new_dev))
-@@ -479,17 +474,18 @@ static struct net_device *ipmr_new_tunnel(struct net *net, struct vifctl *v)
- 	err = dev_set_allmulti(new_dev, 1);
- 	if (err) {
- 		dev_close(new_dev);
--		set_fs(KERNEL_DS);
--		tunnel_dev->netdev_ops->ndo_do_ioctl(tunnel_dev, &ifr,
--				SIOCDELTUNNEL);
--		set_fs(oldfs);
-+		tunnel_ctl(tunnel_dev, &p, SIOCDELTUNNEL);
- 		dev_put(new_dev);
- 		new_dev = ERR_PTR(err);
- 	}
-+
-+	symbol_put(ip_tunnel_ioctl);
- 	return new_dev;
- 
- out_unregister:
- 	unregister_netdevice(new_dev);
-+out_symbol_put:
-+	symbol_put(ipmr_new_tunnel);
- out:
- 	return ERR_PTR(-ENOBUFS);
- }
+Thanks.
+
 -- 
-2.26.2
-
+tejun
