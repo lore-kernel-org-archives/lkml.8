@@ -2,72 +2,83 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7A3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33500C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF0BA2065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 133AA2065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:58:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589486320;
+	bh=MqSN7QHFyQEafBDnt8AwfxRV+94S5EpjM/lhqzR0XM0=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=kHDAOLANKsSIA6x8JGLZIqODz6RrQf2+tEn8wEDJqr/f6PvO/kOVSlhFSefFJEjXr
+	 twTtfKPYkuNjDLaitwiwaHOZ88dAjh1Qtg/ZyY7wLlarg4P0/7UvLz9e//pRYWDeSi
+	 o3NHFX8dU5DIZKm/O3ImzpeX5l83TnhM7XpaIvWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbgENT55 (ORCPT
+        id S1729000AbgENT6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:57:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58688 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727117AbgENT5y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 15:57:54 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75B77C061A0C;
-        Thu, 14 May 2020 12:57:54 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7E265128D325E;
-        Thu, 14 May 2020 12:57:52 -0700 (PDT)
-Date:   Thu, 14 May 2020 12:57:51 -0700 (PDT)
-Message-Id: <20200514.125751.2175402701800030395.davem@davemloft.net>
-To:     David.Laight@ACULAB.COM
-Cc:     joe@perches.com, hch@lst.de, kuba@kernel.org, edumazet@google.com,
-        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, vyasevich@gmail.com,
-        nhorman@tuxdriver.com, marcelo.leitner@gmail.com,
-        jmaloy@redhat.com, ying.xue@windriver.com,
-        drbd-dev@lists.linbit.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-nvme@lists.infradead.org, target-devel@vger.kernel.org,
-        linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
-        netdev@vger.kernel.org, linux-sctp@vger.kernel.org,
-        ceph-devel@vger.kernel.org, rds-devel@oss.oracle.com,
-        linux-nfs@vger.kernel.org
-Subject: Re: remove kernel_setsockopt and kernel_getsockopt
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <756758e8f0e34e2e97db470609f5fbba@AcuMS.aculab.com>
-References: <20200513062649.2100053-1-hch@lst.de>
-        <ecc165c33962d964d518c80de605af632eee0474.camel@perches.com>
-        <756758e8f0e34e2e97db470609f5fbba@AcuMS.aculab.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 14 May 2020 12:57:53 -0700 (PDT)
+        Thu, 14 May 2020 15:58:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49360 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728000AbgENT6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 15:58:38 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E71F52065C;
+        Thu, 14 May 2020 19:58:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589486318;
+        bh=MqSN7QHFyQEafBDnt8AwfxRV+94S5EpjM/lhqzR0XM0=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=QsZINdZ5MhLPeWd+wF0h7gyWq4H237d+G5WbO3wZ2wAMT/UGQjhzhvD6KJj8M9Lr4
+         sJb0X5xtv7ZaJoLRdpGDMYAtV5XfJAtBZI7TS6q88bXNMGkgzhFoUrMR4Ck5CtY4v+
+         QrudU9IfTko9AyQPIGcCemZo+NKw2sCnjXiyvhCc=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200417153342.GP37466@atomide.com>
+References: <20200417073523.42520-1-yanaijie@huawei.com> <20200417153342.GP37466@atomide.com>
+Subject: Re: [PATCH] clk: ti: dra7: remove two unused symbols
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Jason Yan <yanaijie@huawei.com>, mturquette@baylibre.com,
+        linux-omap@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Hulk Robot <hulkci@huawei.com>
+To:     Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>
+Date:   Thu, 14 May 2020 12:58:37 -0700
+Message-ID: <158948631725.215346.11486245758636089798@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Laight <David.Laight@ACULAB.COM>
-Date: Thu, 14 May 2020 08:29:30 +0000
+Quoting Tony Lindgren (2020-04-17 08:33:42)
+> Tero,
+>=20
+> * Jason Yan <yanaijie@huawei.com> [200417 07:09]:
+> > Fix the following gcc warning:
+> >=20
+> > drivers/clk/ti/clk-7xx.c:320:43: warning: \u2018dra7_gpu_sys_clk_data\u=
+2019
+> > defined but not used [-Wunused-const-variable=3D]
+> >  static const struct omap_clkctrl_div_data dra7_gpu_sys_clk_data
+> > __initconst =3D {
+> >                                            ^~~~~~~~~~~~~~~~~~~~~
+> > drivers/clk/ti/clk-7xx.c:315:27: warning: \u2018dra7_gpu_sys_clk_parent=
+s\u2019
+> > defined but not used [-Wunused-const-variable=3D]
+> >  static const char * const dra7_gpu_sys_clk_parents[] __initconst =3D {
+> >                            ^~~~~~~~~~~~~~~~~~~~~~~~
+>=20
+> Looks like this started happening with commit 957ad44ff5f2
+> ("clk: ti: add clkctrl data dra7 sgx") as I did it based on
+> omap5. But the clocks seem slightly different, care to check
+> sgx clocking against the TRM in case I also messed up something
+> else?
 
-> You need to export functions that do most of the socket options
-> for all protocols.
-
-If all in-tree users of this stuff are converted, there is no argument
-for keeping these routines.
-
-You seemed to be concerned about out of tree stuff.  If so, that's not
-of our concern.
+Is that an ack?
