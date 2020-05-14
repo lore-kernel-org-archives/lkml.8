@@ -2,111 +2,92 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F6BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED5CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C571206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:16:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852C520760
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:17:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K1nuKyO9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="gXvAIxvL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbgENNQL (ORCPT
+        id S1727124AbgENNRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:16:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52140 "EHLO
+        Thu, 14 May 2020 09:17:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726037AbgENNQK (ORCPT
+        by vger.kernel.org with ESMTP id S1726073AbgENNRG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:16:10 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DF0FC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:16:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=TpLw4BdJT0JveDtO4r1F8bJeWxiAnJbyCG4f/8DEh+w=; b=K1nuKyO9v7e/WFY//uVAMPcEwp
-        WJkX8ripvNzw4cpzMXS5ArXCwZKrcYEs+sIWd8kzPYCTpBQEcsHezZ9EFkUv9VaH5DGHTxgV1b8tg
-        Du61eFF8etGcz5sT5bqOP41re+HBV9eAHnLjCT1i9o86+/WDGiGzMF4zyi8tv6JeUbZVoROf7UU09
-        GbARtX6P6qoiashn9XcLC5gaWETrYhjFms99a4VN8BRR6U5j7nxyXNe8LajLnj4syY4u+V9LLbhBJ
-        VfuRY7tK5GvuFMSARfBklSW14Kn8h6cHwCBxoM8z0NEnXd0CrMGI5h+A9bpD+b1t+mzZKUoam7qHu
-        88SUcd/g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZDi0-0007nQ-O6; Thu, 14 May 2020 13:15:32 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 166C4300455;
-        Thu, 14 May 2020 15:15:30 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C62A6213C8B61; Thu, 14 May 2020 15:15:30 +0200 (CEST)
-Date:   Thu, 14 May 2020 15:15:30 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [patch V4 part 4 02/24] x86/int3: Avoid atomic instrumentation
-Message-ID: <20200514131530.GQ2957@hirez.programming.kicks-ass.net>
-References: <20200505134926.578885807@linutronix.de>
- <20200505135313.517429268@linutronix.de>
- <CALCETrXVQsdPafvH56_nF+CKU94wgq-T71=EB6eSBnz70Cd0Rw@mail.gmail.com>
- <20200514093257.GT2978@hirez.programming.kicks-ass.net>
- <87h7wiznl7.fsf@nanos.tec.linutronix.de>
+        Thu, 14 May 2020 09:17:06 -0400
+Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81B50C061A0C;
+        Thu, 14 May 2020 06:17:06 -0700 (PDT)
+Received: from localhost.localdomain (unknown [142.147.94.151])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id DC1E3204A0;
+        Thu, 14 May 2020 13:17:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1589462224; bh=eJnR5u9wxpZzi1TozIj3O/mYN+6KO3jlz58PZP+YVW4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gXvAIxvLBuHh696jacAGYaWXey/BbIiqdtCmSYadB42UAMhSyLWCMnk2xz+0LMbl7
+         ODin41yuW7vVdp8+oir6nwnlm2nzvxTxZtS8ss6CYFy5zRzfjr6XQ+Queylt/AXK0C
+         GjQ/wbM3diHotnI8KcyQE9mt5Qg3HdhkYOVPZI6re8Krxsp1ao5iS967GBMm7Rt/mz
+         YCysd8z+ztESRmBIvQ8O0iEOqZsgJb/9Hw7sRg1WeAVhJWd7xUFXaL7c3ZNXgkEgxx
+         gb3JA3PNowlHbesLYNcld8YbqyOtR2xTSdaytO7XM9cVmQiYC070eJjCXmGyDgSKJu
+         o0j0c0GZsRRFA==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-pci@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Paul Burton <paulburton@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: [PATCH v10 1/5] PCI: Don't disable decoding when mmio_always_on is set
+Date:   Thu, 14 May 2020 21:16:37 +0800
+Message-Id: <20200514131650.3587281-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
+References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87h7wiznl7.fsf@nanos.tec.linutronix.de>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 02:51:32PM +0200, Thomas Gleixner wrote:
-> Peter Zijlstra <peterz@infradead.org> writes:
-> > On Wed, May 13, 2020 at 09:57:52PM -0700, Andy Lutomirski wrote:
-> >> On Tue, May 5, 2020 at 7:15 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >> >
-> >> > From: Peter Zijlstra <peterz@infradead.org>
-> >> >
-> >> > Use arch_atomic_*() and READ_ONCE_NOCHECK() to ensure nothing untoward
-> >> > creeps in and ruins things.
-> >> >
-> >> > That is; this is the INT3 text poke handler, strictly limit the code
-> >> > that runs in it, lest it inadvertenly hits yet another INT3.
-> >> 
-> >> 
-> >> Acked-by: Andy Lutomirski <luto@kernel.org>
-> >> 
-> >> Does objtool catch this error?
-> >
-> > It does not. I'll put it on the (endless) todo list..
-> 
-> Well, at least it detects when that code calls out into something which
-> is not in the non-instrumentable section.
+Don't disable MEM/IO decoding when a device have both non_compliant_bars
+and mmio_always_on.
 
-True, but the more specific problem is that noinstr code can use
-jump_label/static_call just fine.
+That would allow us quirk devices with junk in BARs but can't disable
+their decoding.
 
-So a more specific test is validating none of that happens in the INT3
-handler before poke_int3_handler(). Which is what I think Andy was
-after.
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Acked-by: Bjorn Helgaas <helgaas@kernel.org>
+---
+ drivers/pci/probe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 77b8a145c39b..d9c2c3301a8a 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1822,7 +1822,7 @@ int pci_setup_device(struct pci_dev *dev)
+ 	/* Device class may be changed after fixup */
+ 	class = dev->class >> 8;
+ 
+-	if (dev->non_compliant_bars) {
++	if (dev->non_compliant_bars && !dev->mmio_always_on) {
+ 		pci_read_config_word(dev, PCI_COMMAND, &cmd);
+ 		if (cmd & (PCI_COMMAND_IO | PCI_COMMAND_MEMORY)) {
+ 			pci_info(dev, "device has non-compliant BARs; disabling IO/MEM decoding\n");
+-- 
+2.26.2
+
