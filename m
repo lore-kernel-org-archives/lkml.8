@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B01C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83091C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA9F20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A38520675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:03:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482992;
-	bh=39JQOiKDe87OkHljTMEZNJW5VgFu4fdf8O+cgyKTnZ0=;
+	s=default; t=1589482998;
+	bh=CafyCkG01H8sYqPXCa9ZdMH7mk6CJfDWWHscVq1dCSQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xDCu4y4Fo8nxy777vC2jvlwDueogfmJCWPs0PoRwCylMK9KRvDGdTqGq0y7RUSpkS
-	 pr2X29qIzUfCnZjnLp7OWpOVjLcOUbDHV42oJLpmMKXTkoibKU7kBOWTmIp5vmGfVS
-	 +IdVb6/4v2Z9GuRj/wveyXljyYqfbq4ZhIW7XBhI=
+	b=YJrC2tecO+bOxm8LFkchcIJkXkf4UmKqEE4tpb21qGYaynvpWcu0oP96fXKPsC1RY
+	 M4VM40cKORq6Vyl417EeduRDEeX+AC3FNcTavKPYtPQ6mU4h/Uh7MWy8bB3BXaAcVU
+	 tJktKmVRddAvaiHAQv7WmNEucXRimi48jPU7zECg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbgENSyz (ORCPT
+        id S1729933AbgENTDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:54:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54820 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:03:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729144AbgENSyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:54:40 -0400
+        id S1729239AbgENSyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:54:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3408320767;
-        Thu, 14 May 2020 18:54:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40C39207BB;
+        Thu, 14 May 2020 18:54:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482479;
-        bh=39JQOiKDe87OkHljTMEZNJW5VgFu4fdf8O+cgyKTnZ0=;
+        s=default; t=1589482492;
+        bh=CafyCkG01H8sYqPXCa9ZdMH7mk6CJfDWWHscVq1dCSQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q1Cyv3WQ6+qRS2fI/z/4hFIPcA+cA6A9BgykrzkAFtiVnpA7lpgHYEdZAdV8heolb
-         gA+uziEQeXXXbwBaUjqrDxaAPMIpZn34okfLMpXkdIXfI6mA9+c7dGdo11/aekEHDe
-         4vBh6wiA/MZLOuhJwQApPDJE1Dd2ts5poH9G35Ug=
+        b=MxGGUOFqsyZEysNx52aO5lCqBHCREUDtzeAt9Ozqyq80roKZSMOL1zuVkJy3ZzhKw
+         xA5wVq2izSZIEldSq8s6pbQxZU0QwfrLDEOQD0yphw+r43Deq7TZ87b9Fa8wGVu7q3
+         x08xyI98HsCgiXr8NbLlm1Q+dR0JOEot+yV1aJEc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Leon Romanovsky <leon@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 20/31] x86/apic: Move TSC deadline timer debug printk
-Date:   Thu, 14 May 2020 14:54:02 -0400
-Message-Id: <20200514185413.20755-20-sashal@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 31/31] gcc-10: avoid shadowing standard library 'free()' in crypto
+Date:   Thu, 14 May 2020 14:54:13 -0400
+Message-Id: <20200514185413.20755-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185413.20755-1-sashal@kernel.org>
 References: <20200514185413.20755-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,130 +59,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit c84cb3735fd53c91101ccdb191f2e3331a9262cb ]
+[ Upstream commit 1a263ae60b04de959d9ce9caea4889385eefcc7b ]
 
-Leon reported that the printk_once() in __setup_APIC_LVTT() triggers a
-lockdep splat due to a lock order violation between hrtimer_base::lock and
-console_sem, when the 'once' condition is reset via
-/sys/kernel/debug/clear_warn_once after boot.
+gcc-10 has started warning about conflicting types for a few new
+built-in functions, particularly 'free()'.
 
-The initial printk cannot trigger this because that happens during boot
-when the local APIC timer is set up on the boot CPU.
+This results in warnings like:
 
-Prevent it by moving the printk to a place which is guaranteed to be only
-called once during boot.
+   crypto/xts.c:325:13: warning: conflicting types for built-in function ‘free’; expected ‘void(void *)’ [-Wbuiltin-declaration-mismatch]
 
-Mark the deadline timer check related functions and data __init while at
-it.
+because the crypto layer had its local freeing functions called
+'free()'.
 
-Reported-by: Leon Romanovsky <leon@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/87y2qhoshi.fsf@nanos.tec.linutronix.de
+Gcc-10 is in the wrong here, since that function is marked 'static', and
+thus there is no chance of confusion with any standard library function
+namespace.
+
+But the simplest thing to do is to just use a different name here, and
+avoid this gcc mis-feature.
+
+[ Side note: gcc knowing about 'free()' is in itself not the
+  mis-feature: the semantics of 'free()' are special enough that a
+  compiler can validly do special things when seeing it.
+
+  So the mis-feature here is that gcc thinks that 'free()' is some
+  restricted name, and you can't shadow it as a local static function.
+
+  Making the special 'free()' semantics be a function attribute rather
+  than tied to the name would be the much better model ]
+
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/apic.c | 27 ++++++++++++++-------------
- 1 file changed, 14 insertions(+), 13 deletions(-)
+ crypto/lrw.c | 6 +++---
+ crypto/xts.c | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 1ca76ca944bad..53dc8492f02ff 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -345,8 +345,6 @@ static void __setup_APIC_LVTT(unsigned int clocks, int oneshot, int irqen)
- 		 * According to Intel, MFENCE can do the serialization here.
- 		 */
- 		asm volatile("mfence" : : : "memory");
--
--		printk_once(KERN_DEBUG "TSC deadline timer enabled\n");
- 		return;
+diff --git a/crypto/lrw.c b/crypto/lrw.c
+index 11d079c44cafc..871664158c161 100644
+--- a/crypto/lrw.c
++++ b/crypto/lrw.c
+@@ -453,7 +453,7 @@ static void exit_tfm(struct crypto_skcipher *tfm)
+ 	crypto_free_skcipher(ctx->child);
+ }
+ 
+-static void free(struct skcipher_instance *inst)
++static void free_inst(struct skcipher_instance *inst)
+ {
+ 	crypto_drop_skcipher(skcipher_instance_ctx(inst));
+ 	kfree(inst);
+@@ -565,12 +565,12 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
+ 	inst->alg.encrypt = encrypt;
+ 	inst->alg.decrypt = decrypt;
+ 
+-	inst->free = free;
++	inst->free = free_inst;
+ 
+ 	err = skcipher_register_instance(tmpl, inst);
+ 	if (err) {
+ err_free_inst:
+-		free(inst);
++		free_inst(inst);
  	}
- 
-@@ -545,7 +543,7 @@ static DEFINE_PER_CPU(struct clock_event_device, lapic_events);
- #define DEADLINE_MODEL_MATCH_REV(model, rev)	\
- 	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, (unsigned long)rev }
- 
--static u32 hsx_deadline_rev(void)
-+static __init u32 hsx_deadline_rev(void)
- {
- 	switch (boot_cpu_data.x86_stepping) {
- 	case 0x02: return 0x3a; /* EP */
-@@ -555,7 +553,7 @@ static u32 hsx_deadline_rev(void)
- 	return ~0U;
+ 	return err;
+ }
+diff --git a/crypto/xts.c b/crypto/xts.c
+index a19965a0fe932..6f51052039837 100644
+--- a/crypto/xts.c
++++ b/crypto/xts.c
+@@ -393,7 +393,7 @@ static void exit_tfm(struct crypto_skcipher *tfm)
+ 	crypto_free_cipher(ctx->tweak);
  }
  
--static u32 bdx_deadline_rev(void)
-+static __init u32 bdx_deadline_rev(void)
+-static void free(struct skcipher_instance *inst)
++static void free_inst(struct skcipher_instance *inst)
  {
- 	switch (boot_cpu_data.x86_stepping) {
- 	case 0x02: return 0x00000011;
-@@ -567,7 +565,7 @@ static u32 bdx_deadline_rev(void)
- 	return ~0U;
+ 	crypto_drop_skcipher(skcipher_instance_ctx(inst));
+ 	kfree(inst);
+@@ -504,12 +504,12 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
+ 	inst->alg.encrypt = encrypt;
+ 	inst->alg.decrypt = decrypt;
+ 
+-	inst->free = free;
++	inst->free = free_inst;
+ 
+ 	err = skcipher_register_instance(tmpl, inst);
+ 	if (err) {
+ err_free_inst:
+-		free(inst);
++		free_inst(inst);
+ 	}
+ 	return err;
  }
- 
--static u32 skx_deadline_rev(void)
-+static __init u32 skx_deadline_rev(void)
- {
- 	switch (boot_cpu_data.x86_stepping) {
- 	case 0x03: return 0x01000136;
-@@ -580,7 +578,7 @@ static u32 skx_deadline_rev(void)
- 	return ~0U;
- }
- 
--static const struct x86_cpu_id deadline_match[] = {
-+static const struct x86_cpu_id deadline_match[] __initconst = {
- 	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_HASWELL_X,	hsx_deadline_rev),
- 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_BROADWELL_X,	0x0b000020),
- 	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_BROADWELL_XEON_D,	bdx_deadline_rev),
-@@ -602,18 +600,19 @@ static const struct x86_cpu_id deadline_match[] = {
- 	{},
- };
- 
--static void apic_check_deadline_errata(void)
-+static __init bool apic_validate_deadline_timer(void)
- {
- 	const struct x86_cpu_id *m;
- 	u32 rev;
- 
--	if (!boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER) ||
--	    boot_cpu_has(X86_FEATURE_HYPERVISOR))
--		return;
-+	if (!boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER))
-+		return false;
-+	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-+		return true;
- 
- 	m = x86_match_cpu(deadline_match);
- 	if (!m)
--		return;
-+		return true;
- 
- 	/*
- 	 * Function pointers will have the MSB set due to address layout,
-@@ -625,11 +624,12 @@ static void apic_check_deadline_errata(void)
- 		rev = (u32)m->driver_data;
- 
- 	if (boot_cpu_data.microcode >= rev)
--		return;
-+		return true;
- 
- 	setup_clear_cpu_cap(X86_FEATURE_TSC_DEADLINE_TIMER);
- 	pr_err(FW_BUG "TSC_DEADLINE disabled due to Errata; "
- 	       "please update microcode to version: 0x%x (or later)\n", rev);
-+	return false;
- }
- 
- /*
-@@ -2023,7 +2023,8 @@ void __init init_apic_mappings(void)
- {
- 	unsigned int new_apicid;
- 
--	apic_check_deadline_errata();
-+	if (apic_validate_deadline_timer())
-+		pr_debug("TSC deadline timer available\n");
- 
- 	if (x2apic_mode) {
- 		boot_cpu_physical_apicid = read_apic_id();
 -- 
 2.20.1
 
