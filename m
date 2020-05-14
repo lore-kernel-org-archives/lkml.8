@@ -4,58 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD96DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 325E0C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BACCC206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 027882065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:02:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482937;
-	bh=4xMj5rnI4Scg/R/q3gQ+zsinkyURzzXl/HRZSA+oI00=;
+	s=default; t=1589482943;
+	bh=Uiy3VQeypLsAQY+/YaG/683+rhD9rnz4IxkD2LlG6TI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JTQjPNLWLQuatog3gvRmWZC0py/HCcyATtZxCYO5NVowcgZpl4YIbp64NAOu1KLAn
-	 hy0o29d6UiTX6PWJO9MGe1mEvDi1db1Mssw882wr6Tuk9RdRMSBVLXeAxmKsGgiCJI
-	 POOLLWv5+S9qLxirFSvel2l+LGSeOK9ENBb7xdXY=
+	b=J8QKbMMQpc4r9ROiVT1xlb3JLmyi13HrX9OpxiXNwl5yXeNQtSWzhw5iwUWA6xtF1
+	 VkvwU++Ymw9OXpyn88kYih7px185uVWSVWQ+whLOez3IAUm4FATcHsMTgrd/FdHx+2
+	 0gPoOP2Y2m/Oftk6Ou2RUtKAKSzg3EzyoRcKr9Tw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgENTCL (ORCPT
+        id S1729547AbgENTCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:02:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55712 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:02:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729328AbgENSzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:55:14 -0400
+        id S1729306AbgENSzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:55:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB7A42074A;
-        Thu, 14 May 2020 18:55:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3D4920820;
+        Thu, 14 May 2020 18:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482514;
-        bh=4xMj5rnI4Scg/R/q3gQ+zsinkyURzzXl/HRZSA+oI00=;
+        s=default; t=1589482508;
+        bh=Uiy3VQeypLsAQY+/YaG/683+rhD9rnz4IxkD2LlG6TI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=18+tB5nvdv8JhRhLASdLcQU8O3y88nLIaNhg3tMSPI/MlYoZNsP49lo/3eoPRks1P
-         EQDhEEXLFZSU2zVWOvuSSVnZyjEzi3x7eiEY/jxdEMI8w7BwQ5thnLIdpJG1yL9Jgp
-         ZbOkkFvE8B0wwjeL7ZmRnSj58ujXM0BejgOy7c50=
+        b=vSL0wf+R8MUQlQqSioDFVNjlYMZoQXv21UVx+3B7OcbGqoB6eZx2p6f1Xt0nqniBS
+         q44awcLG/0Dzan2H4YRGMiffLIxMIz+BC3xlaol36P0tdnLy2fhdMusQEOk0FARksL
+         otb1ZraeK/3RmM2vHUPVtFyBmLou66b0Y2Z2Z4+o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Dave Jones <dsj@fb.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Joe Mario <jmario@redhat.com>, Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 12/39] x86/entry/64: Fix unwind hints in kernel exit path
-Date:   Thu, 14 May 2020 14:54:29 -0400
-Message-Id: <20200514185456.21060-12-sashal@kernel.org>
+Cc:     Arun Easi <aeasi@marvell.com>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 09/39] scsi: qla2xxx: Fix hang when issuing nvme disconnect-all in NPIV
+Date:   Thu, 14 May 2020 14:54:26 -0400
+Message-Id: <20200514185456.21060-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185456.21060-1-sashal@kernel.org>
 References: <20200514185456.21060-1-sashal@kernel.org>
@@ -68,71 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Arun Easi <aeasi@marvell.com>
 
-[ Upstream commit 1fb143634a38095b641a3a21220774799772dc4c ]
+[ Upstream commit 45a76264c26fd8cfd0c9746196892d9b7e2657ee ]
 
-In swapgs_restore_regs_and_return_to_usermode, after the stack is
-switched to the trampoline stack, the existing UNWIND_HINT_REGS hint is
-no longer valid, which can result in the following ORC unwinder warning:
+In NPIV environment, a NPIV host may use a queue pair created by base host
+or other NPIVs, so the check for a queue pair created by this NPIV is not
+correct, and can cause an abort to fail, which in turn means the NVME
+command not returned.  This leads to hang in nvme_fc layer in
+nvme_fc_delete_association() which waits for all I/Os to be returned, which
+is seen as hang in the application.
 
-  WARNING: can't dereference registers at 000000003aeb0cdd for ip swapgs_restore_regs_and_return_to_usermode+0x93/0xa0
-
-For full correctness, we could try to add complicated unwind hints so
-the unwinder could continue to find the registers, but when when it's
-this close to kernel exit, unwind hints aren't really needed anymore and
-it's fine to just use an empty hint which tells the unwinder to stop.
-
-For consistency, also move the UNWIND_HINT_EMPTY in
-entry_SYSCALL_64_after_hwframe to a similar location.
-
-Fixes: 3e3b9293d392 ("x86/entry/64: Return to userspace from the trampoline stack")
-Reported-by: Vince Weaver <vincent.weaver@maine.edu>
-Reported-by: Dave Jones <dsj@fb.com>
-Reported-by: Dr. David Alan Gilbert <dgilbert@redhat.com>
-Reported-by: Joe Mario <jmario@redhat.com>
-Reported-by: Jann Horn <jannh@google.com>
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/60ea8f562987ed2d9ace2977502fe481c0d7c9a0.1587808742.git.jpoimboe@redhat.com
+Link: https://lore.kernel.org/r/20200331104015.24868-3-njavali@marvell.com
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Arun Easi <aeasi@marvell.com>
+Signed-off-by: Nilesh Javali <njavali@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/entry/entry_64.S | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_mbx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 5ec66fafde4e4..d4d72c84d9eb4 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -302,7 +302,6 @@ GLOBAL(entry_SYSCALL_64_after_hwframe)
- 	 */
- syscall_return_via_sysret:
- 	/* rcx and r11 are already restored (see code above) */
--	UNWIND_HINT_EMPTY
- 	POP_REGS pop_rdi=0 skip_r11rcx=1
+diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
+index 5e8ae510aef80..9d9737114dcf0 100644
+--- a/drivers/scsi/qla2xxx/qla_mbx.c
++++ b/drivers/scsi/qla2xxx/qla_mbx.c
+@@ -2998,7 +2998,7 @@ qla24xx_abort_command(srb_t *sp)
+ 	ql_dbg(ql_dbg_mbx + ql_dbg_verbose, vha, 0x108c,
+ 	    "Entered %s.\n", __func__);
  
- 	/*
-@@ -311,6 +310,7 @@ syscall_return_via_sysret:
- 	 */
- 	movq	%rsp, %rdi
- 	movq	PER_CPU_VAR(cpu_tss_rw + TSS_sp0), %rsp
-+	UNWIND_HINT_EMPTY
+-	if (vha->flags.qpairs_available && sp->qpair)
++	if (sp->qpair)
+ 		req = sp->qpair->req;
  
- 	pushq	RSP-RDI(%rdi)	/* RSP */
- 	pushq	(%rdi)		/* RDI */
-@@ -606,6 +606,7 @@ GLOBAL(swapgs_restore_regs_and_return_to_usermode)
- 	 */
- 	movq	%rsp, %rdi
- 	movq	PER_CPU_VAR(cpu_tss_rw + TSS_sp0), %rsp
-+	UNWIND_HINT_EMPTY
- 
- 	/* Copy the IRET frame to the trampoline stack. */
- 	pushq	6*8(%rdi)	/* SS */
+ 	if (ql2xasynctmfenable)
 -- 
 2.20.1
 
