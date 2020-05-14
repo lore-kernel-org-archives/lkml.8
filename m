@@ -2,170 +2,78 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86900C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F963C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 526AA20748
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:28:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BMf5ILAu"
+	by mail.kernel.org (Postfix) with ESMTP id F14102070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:29:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbgENO25 (ORCPT
+        id S1727893AbgENO33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:28:57 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1175 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726051AbgENO25 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:28:57 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ebd551f0000>; Thu, 14 May 2020 07:26:39 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 14 May 2020 07:28:56 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 14 May 2020 07:28:56 -0700
-Received: from [10.2.172.156] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 14 May
- 2020 14:28:55 +0000
-From:   Zi Yan <ziy@nvidia.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-CC:     <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] mm/vmstat: Add events for THP migration without split
-Date:   Thu, 14 May 2020 10:28:53 -0400
-X-Mailer: MailMate (1.13.1r5685)
-Message-ID: <67C72AD3-120C-4825-B67B-AECD4245EC4E@nvidia.com>
-In-Reply-To: <1589257372-29576-1-git-send-email-anshuman.khandual@arm.com>
-References: <1589257372-29576-1-git-send-email-anshuman.khandual@arm.com>
+        Thu, 14 May 2020 10:29:29 -0400
+Received: from foss.arm.com ([217.140.110.172]:37622 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726056AbgENO32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 10:29:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3AEC51FB;
+        Thu, 14 May 2020 07:29:28 -0700 (PDT)
+Received: from bogus (unknown [10.37.8.154])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4FF223F71E;
+        Thu, 14 May 2020 07:29:27 -0700 (PDT)
+Date:   Thu, 14 May 2020 15:29:24 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Etienne Carriere <etienne.carriere@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH] firmware: arm_scmi: fix SMCCC_RET_NOT_SUPPORTED
+ management
+Message-ID: <20200514142924.GC23401@bogus>
+References: <20200514082428.27864-1-etienne.carriere@linaro.org>
 MIME-Version: 1.0
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: multipart/signed;
-        boundary="=_MailMate_CCB29A76-A65E-4F13-92D6-59BC5B189DEC_=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589466399; bh=OGgSR5gx2J6NyZmuHH/rWO4iXUFj+kkkfJWi2YkP9jc=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
-         In-Reply-To:References:MIME-Version:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type;
-        b=BMf5ILAuRsX0OduG1sqZnhNAIRPq1gAK1FJmBU6AkOJDFqFpdysAFRk5LMLrximJz
-         bNAVrYKUNUd9/TgCA8H7a7ymoz4xHMyvAj0mjdvdENTPaAqtBCS7jBDtGA2XyzQjmc
-         Gve5RYhNIrk7MAlWrFsXXAd1AVdjZ1BKhf+5z23Nco78hdzfLP5V0bX3nkqHvppgbV
-         08qFzgs7ESSHJ96c9saFbak8wCbVzv/EuICxTYBe8P5Rx7GRRMaFsVW2FLgAlisEcU
-         vrWHm6SPC1YcNl0/dXyr/Akr/UP29fUQOAm51uP05es0C1c9bLw8l4z3Bc1BVvpihZ
-         G2sfTbUi93b9g==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514082428.27864-1-etienne.carriere@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=_MailMate_CCB29A76-A65E-4F13-92D6-59BC5B189DEC_=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On 12 May 2020, at 0:22, Anshuman Khandual wrote:
-
-> Add the following new trace events which will help in validating migrat=
-ion
-> events involving PMD based THP pages.
+On Thu, May 14, 2020 at 10:24:28AM +0200, Etienne Carriere wrote:
+> Fix management of argument a0 output value of arm_smccc_1_1_invoke() that
+> should consider only SMCCC_RET_NOT_SUPPORTED as reporting an unsupported
+> function ID as correctly stated in the inline comment.
 >
-> 1. THP_PMD_MIGRATION_ENTRY_SET
-> 2. THP_PMD_MIGRATION_ENTRY_REMOVE
->
-> There are no clear method to confirm whether a THP migration happened w=
-ith
-> out involving it's split. These trace events along with PGMIGRATE_SUCCE=
-SS
-> and PGMIGRATE_FAILURE will provide additional insights. After this chan=
-ge,
->
-> A single 2M THP (2K base page) when migrated
->
-> 1. Without split
->
-> ................
-> pgmigrate_success 1
-> pgmigrate_fail 0
-> ................
-> thp_pmd_migration_entry_set 1
-> thp_pmd_migration_entry_remove 1
-> ................
->
-> 2. With split
->
-> ................
-> pgmigrate_success 512
-> pgmigrate_fail 0
-> ................
-> thp_pmd_migration_entry_set 0
-> thp_pmd_migration_entry_remove 0
-> ................
->
-> pgmigrate_success as 1 instead of 512, provides a hint for possible THP=
 
-> migration event. But then it gets mixed with normal page migrations ove=
-r
-> time. These additional trace events provide required co-relation.
+I agree on the comment part, but ...
 
-To track successful THP migrations, the code below should work, right?
+> Signed-off-by: Etienne Carriere <etienne.carriere@linaro.org>
+> ---
+>  drivers/firmware/arm_scmi/smc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/firmware/arm_scmi/smc.c b/drivers/firmware/arm_scmi/smc.c
+> index 49bc4b0e8428..637ad439545f 100644
+> --- a/drivers/firmware/arm_scmi/smc.c
+> +++ b/drivers/firmware/arm_scmi/smc.c
+> @@ -115,7 +115,7 @@ static int smc_send_message(struct scmi_chan_info *cinfo,
+>  	mutex_unlock(&scmi_info->shmem_lock);
+>  
+>  	/* Only SMCCC_RET_NOT_SUPPORTED is valid error code */
+> -	if (res.a0)
+> +	if (res.a0 == SMCCC_RET_NOT_SUPPORTED)
+>  		return -EOPNOTSUPP;
 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index b1092876e537..d394f5331288 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -1220,6 +1220,8 @@ static ICE_noinline int unmap_and_move(new_page_t g=
-et_new_page,
-         * we want to retry.
-         */
-        if (rc =3D=3D MIGRATEPAGE_SUCCESS) {
-+               if (PageTransHuge(newpage))
-+                       count_vm_event(THP_PMD_MIGRATION_SUCCESS);
-                put_page(page);
-                if (reason =3D=3D MR_MEMORY_FAILURE) {
-                        /*
+Now this will return 0 for all values other than SMCCC_RET_NOT_SUPPORTED.
+Is that what we need ? Or do you see non-zero res.a0 for a success case ?
+If later, we need some fixing, otherwise it is safer to leave it as is
+IMO.
 
-Maybe you could give more details on why you want to add the THP migratio=
-n event and
-how you are going to use the event in your use case. That would be very h=
-elpful to this
-code review. Are you going to do anything if you see THP migration failur=
-es?
-
-Thanks.
-
-=E2=80=94
-Best Regards,
-Yan Zi
-
---=_MailMate_CCB29A76-A65E-4F13-92D6-59BC5B189DEC_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJDBAEBCgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl69VaUPHHppeUBudmlk
-aWEuY29tAAoJEJ2yUfNrYfqKl+kP/RvAsnjpBdzFa4nok58lz5bwn+wwXw+LmbBm
-qXOUo6mTy5zfB7MpB07loMJm9rh9PsBGbmMlUL3fuchA2UofWs6PU0VwydJUto6v
-YDyxj3/Wd5gd65wkEtNjQziQ5y2t5dEXDDX63HW5drbJPG6VR1AKAAwxhYfRw5Ao
-cjeJS1hFvplf/SX4sZEOaqoc/b72V5mq4fJ4eDQk0h2GKDI0S4rkYn1MYvYFziuc
-vScp76N6tFP3k7LRxoWNftW7iE8xP3oIE98xS0k7lPr1TCIo0s9SDf/wwJTMp2+p
-UvmTemGIwGuIkTqTjsNEmyeoEYv0dC4xl71i8fAJX0ms3VEy+apKxH2RNGGfKIxG
-M5iRuM1Ar+4b+S17GCKUgkb6BgbTsm1kiKa8+9V6B10M7LKLFpRQNioeidv+77qi
-yqs+d38Y75b1w8ZklJ3b2mKHSukbmsPs0F8MiKlgr3USxGx6XqNRa6ZNBFgyddVj
-BTkSrsyPPcWabYkwt4gGTd9RRKM4NHgeLG9FDAm+QK2bZJLrTpZgMivYbKfjkUct
-zqzQHIthMrkXQ7kTWCHhO1BE6wLdW2naClzkIvQMxjDPeoxlKuaB0Xj0q3EKfR3K
-0sUkRyOJ0BMc22frfiDR0QQgouTIevQg94meTIic5nqNDU+fB6W97f1ksL/cU2cO
-CtfSXJlC
-=iRZb
------END PGP SIGNATURE-----
-
---=_MailMate_CCB29A76-A65E-4F13-92D6-59BC5B189DEC_=--
+-- 
+Regards,
+Sudeep
