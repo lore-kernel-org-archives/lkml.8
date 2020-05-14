@@ -2,113 +2,75 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5016DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 910B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1189B2065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E2EA20671
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:13:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgENSNU (ORCPT
+        id S1727067AbgENSNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:13:20 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:60590 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbgENSNU (ORCPT
+        Thu, 14 May 2020 14:13:38 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:51299 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbgENSNi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:13:20 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 642128030791;
-        Thu, 14 May 2020 18:13:17 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id lEBMcDfl1RDh; Thu, 14 May 2020 21:13:12 +0300 (MSK)
-Date:   Thu, 14 May 2020 21:13:11 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>, <linux-mips@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 03/20] dt-bindings: Add vendor prefix for Baikal
- Electronics, JSC
-Message-ID: <20200514181311.anmxmujqg2wlqimp@mobilestation>
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
- <20200506174238.15385-4-Sergey.Semin@baikalelectronics.ru>
+        Thu, 14 May 2020 14:13:38 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jZIML-0002uD-Qq; Thu, 14 May 2020 18:13:29 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ping-Ke Shih <pkshih@realtek.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] rtw88: 8723d: fix incorrect setting of ldo_pwr
+Date:   Thu, 14 May 2020 19:13:29 +0100
+Message-Id: <20200514181329.16292-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200506174238.15385-4-Sergey.Semin@baikalelectronics.ru>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob,
+From: Colin Ian King <colin.king@canonical.com>
 
-Could you also take a look at this patch? There are several patchsets I've sent
-which depend on the vendor-prefix it defines. So when you get to check those
-patchsets DT files, the dt_binding_check will fail without it. Is it possible
-somehow to pick this patch up from here and apply it before checking those
-Baikal-T1-specific binding files?
+Currently ldo_pwr has the LDO25 voltage bits set to zero and then
+it is overwritten with the new voltage setting. The assignment
+looks incorrect, it should be bit-wise or'ing in the new voltage
+setting rather than a direct assignment.
 
--Sergey
+Addresses-Coverity: ("Unused value")
+Fixes: 1afb5eb7a00d ("rtw88: 8723d: Add cfg_ldo25 to control LDO25")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/net/wireless/realtek/rtw88/rtw8723d.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Wed, May 06, 2020 at 08:42:21PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> 
-> Add "BAIKAL ELECTRONICS, JSC" to the list of devicetree vendor prefixes
-> as "baikal".
-> 
-> Website: http://www.baikalelectronics.com
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: linux-mips@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> 
-> ---
-> 
-> Changelog v2:
-> - Fix author and SoB emails mismatch.
-> - Add 'baikal' vendor prefix instead of ambiguous 'be'.
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> index d3891386d671..674c0d07c0ad 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> @@ -139,6 +139,8 @@ patternProperties:
->      description: Azoteq (Pty) Ltd
->    "^azw,.*":
->      description: Shenzhen AZW Technology Co., Ltd.
-> +  "^baikal,.*":
-> +    description: BAIKAL ELECTRONICS, JSC
->    "^bananapi,.*":
->      description: BIPAI KEJI LIMITED
->    "^beacon,.*":
-> -- 
-> 2.25.1
-> 
+diff --git a/drivers/net/wireless/realtek/rtw88/rtw8723d.c b/drivers/net/wireless/realtek/rtw88/rtw8723d.c
+index b517af417e0e..2c6e417c5bca 100644
+--- a/drivers/net/wireless/realtek/rtw88/rtw8723d.c
++++ b/drivers/net/wireless/realtek/rtw88/rtw8723d.c
+@@ -561,7 +561,7 @@ static void rtw8723d_cfg_ldo25(struct rtw_dev *rtwdev, bool enable)
+ 	ldo_pwr = rtw_read8(rtwdev, REG_LDO_EFUSE_CTRL + 3);
+ 	if (enable) {
+ 		ldo_pwr &= ~BIT_MASK_LDO25_VOLTAGE;
+-		ldo_pwr = (BIT_LDO25_VOLTAGE_V25 << 4) | BIT_LDO25_EN;
++		ldo_pwr |= (BIT_LDO25_VOLTAGE_V25 << 4) | BIT_LDO25_EN;
+ 	} else {
+ 		ldo_pwr &= ~BIT_LDO25_EN;
+ 	}
+-- 
+2.25.1
+
