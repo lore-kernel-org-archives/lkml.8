@@ -2,139 +2,109 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B7B7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F22DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1414D206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE032206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:41:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726119AbgENIkd (ORCPT
+        id S1726143AbgENIlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 04:40:33 -0400
-Received: from m176149.mail.qiye.163.com ([59.111.176.149]:31346 "EHLO
-        m176149.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgENIkc (ORCPT
+        Thu, 14 May 2020 04:41:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725925AbgENIlB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 04:40:32 -0400
-X-Greylist: delayed 447 seconds by postgrey-1.27 at vger.kernel.org; Thu, 14 May 2020 04:40:30 EDT
-Received: from vivo.com (wm-9.qy.internal [127.0.0.1])
-        by m176149.mail.qiye.163.com (Hmail) with ESMTP id 28275282644;
-        Thu, 14 May 2020 16:32:59 +0800 (CST)
+        Thu, 14 May 2020 04:41:01 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71EB2C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:41:01 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1jZ9QJ-0004ZI-Cl; Thu, 14 May 2020 10:40:59 +0200
+Message-ID: <ab384507b90474b0030d8ce64fdcfe868b52c3cb.camel@pengutronix.de>
+Subject: Re: [PATCH 2/3] drm/etnaviv: Don't ignore errors on getting clocks
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Fabio Estevam <festevam@gmail.com>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        The etnaviv authors <etnaviv@lists.freedesktop.org>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>
+Date:   Thu, 14 May 2020 10:40:58 +0200
+In-Reply-To: <20200514082755.GN1551@shell.armlinux.org.uk>
+References: <20200513150007.1315395-1-lkundrak@v3.sk>
+         <20200513150007.1315395-3-lkundrak@v3.sk>
+         <CAOMZO5B582=tZ_YBCyVYFtGh=z5hZKFxP7XoUHEmH3jZsk2uYQ@mail.gmail.com>
+         <CAOMZO5BdiXCVXs+8jP7PoRvgKd1sxCu4KhjvJBvL=Qig2WOs4g@mail.gmail.com>
+         <1e15be39906034a95b86c026e060ed9866586d94.camel@pengutronix.de>
+         <20200514082755.GN1551@shell.armlinux.org.uk>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Message-ID: <APkAOQB-CI1Ksc35Em0ifKrK.3.1589445179140.Hmail.wenhu.wang@vivo.com>
-To:     Wang Wenhu <wenhu.wang@vivo.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@vivo.com
-Subject: =?UTF-8?B?UmU6W1BBVENIXSBzb2M6IHFtaTogbW92ZSB0bHYtbWljcm9zIHRvIGhlYWRlciBmaWxl?=
-X-Priority: 3
-X-Mailer: HMail Webmail Server V2.0 Copyright (c) 2016-163.com
-X-Originating-IP: 58.251.74.227
-In-Reply-To: <20200413035758.60238-1-wenhu.wang@vivo.com>
+User-Agent: Evolution 3.36.1 (3.36.1-1.fc32) 
 MIME-Version: 1.0
-Received: from wenhu.wang@vivo.com( [58.251.74.227) ] by ajax-webmail ( [127.0.0.1] ) ; Thu, 14 May 2020 16:32:59 +0800 (GMT+08:00)
-From:   =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>
-Date:   Thu, 14 May 2020 16:32:59 +0800 (GMT+08:00)
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VMSU9CQkJCS09NSElOTFlXWShZQU
-        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
-X-HM-Sender-Digest: e1kJHlYWEh9ZQUhMSkJNT0pMTUxIN1dZDB4ZWUEPCQ4eV1kSHx4VD1lB
-        WUc6KxA6NCo5VjgySjAIGEhOPhZLEh0wCTBVSFVKTkNCT09OSkNKSU9MVTMWGhIXVQweFRMOVQwa
-        FRw7DRINFFUYFBZFWVdZEgtZQVlOQ1VJTkpVTE9VSUlMWVdZCAFZQUNPQkg3Bg++
-X-HM-Tid: 0a721250b7269395kuws28275282644
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgYWxsLApBbnkgY29tbWVudHMgaGVyZT8KClJlZ2FyZHMsCldlbmh1Cgo+SXQncyBoaWdobHkg
-aGVscGZ1bCB0byBtb3ZlIHRoZSBkZWZpbml0aW9ucyBvZiBUTFYgcmVsYXRlZCBtaWNyb3MKPmlu
-dG8gaGVhZGVyIGZpbGUgZm9yIHVzZXIgcmVmZXJlbmNlLiBUaGUgT1BUSU9OQUxfVExWX1RZUEVf
-U1RBUlQKPnNob3VsZCBiZSBrbm93biB0byBhbnkgdXNlciB0aGF0IG1pZ2h0IGRlZmluZSBtZXNz
-YWdlcyBjb250YWluaW5nCj5vcHRpb25hbCBmaWVsZHMuIFNJWkUgZmllbGRzIGFyZSB0aGUgc2Ft
-ZSwgZm9yIHVzZXJzIHRvIGNhbGN1bGF0ZQo+bWVzc2FnZSBidWZmZXIgbGVuZ3RoLgo+Cj5XaGls
-ZSBlbmNvZGluZyBtZXNzYWdlcywgVHlwZSBhbHdheXMgb2NjdXJzIHRvZ2V0aGVyIHdpdGggTGVu
-Z3RoLgo+U28gdGhlIGJldHRlciB3YXkgaXMgdG8gdXNlIFRMX1NJWkUsIHJhdGhlciB0aGFuIChU
-X1NJWkUgKyBMX1NJWkUpLgo+Cj5TaWduZWQtb2ZmLWJ5OiBXYW5nIFdlbmh1IDx3ZW5odS53YW5n
-QHZpdm8uY29tPgo+LS0tCj4gZHJpdmVycy9zb2MvcWNvbS9xbWlfZW5jZGVjLmMgfCAyOCArKysr
-KysrKysrKystLS0tLS0tLS0tLS0tLS0tCj4gaW5jbHVkZS9saW51eC9zb2MvcWNvbS9xbWkuaCAg
-fCAgNSArKysrKwo+IDIgZmlsZXMgY2hhbmdlZCwgMTcgaW5zZXJ0aW9ucygrKSwgMTYgZGVsZXRp
-b25zKC0pCj4KPmRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9xY29tL3FtaV9lbmNkZWMuYyBiL2Ry
-aXZlcnMvc29jL3Fjb20vcW1pX2VuY2RlYy5jCj5pbmRleCAzYWFhYjcxZDFiMmMuLmE2NzRjNjhl
-ZmFiMiAxMDA2NDQKPi0tLSBhL2RyaXZlcnMvc29jL3Fjb20vcW1pX2VuY2RlYy5jCj4rKysgYi9k
-cml2ZXJzL3NvYy9xY29tL3FtaV9lbmNkZWMuYwo+QEAgLTUzLDEwICs1Myw2IEBAIGRvIHsgXAo+
-IAlkZWNvZGVkX2J5dGVzICs9IHJjOyBcCj4gfSB3aGlsZSAoMCkKPiAKPi0jZGVmaW5lIFRMVl9M
-RU5fU0laRSBzaXplb2YodTE2KQo+LSNkZWZpbmUgVExWX1RZUEVfU0laRSBzaXplb2YodTgpCj4t
-I2RlZmluZSBPUFRJT05BTF9UTFZfVFlQRV9TVEFSVCAweDEwCj4tCj4gc3RhdGljIGludCBxbWlf
-ZW5jb2RlKHN0cnVjdCBxbWlfZWxlbV9pbmZvICplaV9hcnJheSwgdm9pZCAqb3V0X2J1ZiwKPiAJ
-CSAgICAgIGNvbnN0IHZvaWQgKmluX2Nfc3RydWN0LCB1MzIgb3V0X2J1Zl9sZW4sCj4gCQkgICAg
-ICBpbnQgZW5jX2xldmVsKTsKPkBAIC0xNDIsNyArMTM4LDcgQEAgc3RhdGljIGludCBxbWlfY2Fs
-Y19taW5fbXNnX2xlbihzdHJ1Y3QgcW1pX2VsZW1faW5mbyAqZWlfYXJyYXksCj4gCQkgKiBuZXN0
-ZWQgc3RydWN0dXJlLgo+IAkJICovCj4gCQlpZiAobGV2ZWwgPT0gMSkKPi0JCQltaW5fbXNnX2xl
-biArPSAoVExWX1RZUEVfU0laRSArIFRMVl9MRU5fU0laRSk7Cj4rCQkJbWluX21zZ19sZW4gKz0g
-UU1JX1RMVl9UTF9TSVpFOwo+IAl9Cj4gCj4gCXJldHVybiBtaW5fbXNnX2xlbjsKPkBAIC0yNTMs
-OCArMjQ5LDcgQEAgc3RhdGljIGludCBxbWlfZW5jb2RlX3N0cmluZ19lbGVtKHN0cnVjdCBxbWlf
-ZWxlbV9pbmZvICplaV9hcnJheSwKPiAJfQo+IAo+IAlpZiAoZW5jX2xldmVsID09IDEpIHsKPi0J
-CWlmIChzdHJpbmdfbGVuICsgVExWX0xFTl9TSVpFICsgVExWX1RZUEVfU0laRSA+Cj4tCQkgICAg
-b3V0X2J1Zl9sZW4pIHsKPisJCWlmIChzdHJpbmdfbGVuICsgUU1JX1RMVl9UTF9TSVpFID4gb3V0
-X2J1Zl9sZW4pIHsKPiAJCQlwcl9lcnIoIiVzOiBPdXRwdXQgbGVuICVkID4gT3V0IEJ1ZiBsZW4g
-JWRcbiIsCj4gCQkJICAgICAgIF9fZnVuY19fLCBzdHJpbmdfbGVuLCBvdXRfYnVmX2xlbik7Cj4g
-CQkJcmV0dXJuIC1FVE9PU01BTEw7Cj5AQCAtMzExLDcgKzMwNiw3IEBAIHN0YXRpYyBpbnQgcW1p
-X2VuY29kZShzdHJ1Y3QgcW1pX2VsZW1faW5mbyAqZWlfYXJyYXksIHZvaWQgKm91dF9idWYsCj4g
-CXRsdl9wb2ludGVyID0gYnVmX2RzdDsKPiAJdGx2X2xlbiA9IDA7Cj4gCWlmIChlbmNfbGV2ZWwg
-PT0gMSkKPi0JCWJ1Zl9kc3QgPSBidWZfZHN0ICsgKFRMVl9MRU5fU0laRSArIFRMVl9UWVBFX1NJ
-WkUpOwo+KwkJYnVmX2RzdCA9IGJ1Zl9kc3QgKyBRTUlfVExWX1RMX1NJWkU7Cj4gCj4gCXdoaWxl
-ICh0ZW1wX2VpLT5kYXRhX3R5cGUgIT0gUU1JX0VPVEkpIHsKPiAJCWJ1Zl9zcmMgPSBpbl9jX3N0
-cnVjdCArIHRlbXBfZWktPm9mZnNldDsKPkBAIC0zNDIsOCArMzM3LDggQEAgc3RhdGljIGludCBx
-bWlfZW5jb2RlKHN0cnVjdCBxbWlfZWxlbV9pbmZvICplaV9hcnJheSwgdm9pZCAqb3V0X2J1ZiwK
-PiAJCQlkYXRhX2xlbl9zeiA9IHRlbXBfZWktPmVsZW1fc2l6ZSA9PSBzaXplb2YodTgpID8KPiAJ
-CQkJCXNpemVvZih1OCkgOiBzaXplb2YodTE2KTsKPiAJCQkvKiBDaGVjayB0byBhdm9pZCBvdXQg
-b2YgcmFuZ2UgYnVmZmVyIGFjY2VzcyAqLwo+LQkJCWlmICgoZGF0YV9sZW5fc3ogKyBlbmNvZGVk
-X2J5dGVzICsgVExWX0xFTl9TSVpFICsKPi0JCQkgICAgVExWX1RZUEVfU0laRSkgPiBvdXRfYnVm
-X2xlbikgewo+KwkJCWlmICgoZGF0YV9sZW5fc3ogKyBlbmNvZGVkX2J5dGVzICsgUU1JX1RMVl9U
-TF9TSVpFKSA+Cj4rCQkJICAgIG91dF9idWZfbGVuKSB7Cj4gCQkJCXByX2VycigiJXM6IFRvbyBT
-bWFsbCBCdWZmZXIgQERBVEFfTEVOXG4iLAo+IAkJCQkgICAgICAgX19mdW5jX18pOwo+IAkJCQly
-ZXR1cm4gLUVUT09TTUFMTDsKPkBAIC0zNjcsNyArMzYyLDcgQEAgc3RhdGljIGludCBxbWlfZW5j
-b2RlKHN0cnVjdCBxbWlfZWxlbV9pbmZvICplaV9hcnJheSwgdm9pZCAqb3V0X2J1ZiwKPiAJCWNh
-c2UgUU1JX1NJR05FRF80X0JZVEVfRU5VTToKPiAJCQkvKiBDaGVjayB0byBhdm9pZCBvdXQgb2Yg
-cmFuZ2UgYnVmZmVyIGFjY2VzcyAqLwo+IAkJCWlmICgoKGRhdGFfbGVuX3ZhbHVlICogdGVtcF9l
-aS0+ZWxlbV9zaXplKSArCj4tCQkJICAgIGVuY29kZWRfYnl0ZXMgKyBUTFZfTEVOX1NJWkUgKyBU
-TFZfVFlQRV9TSVpFKSA+Cj4rCQkJICAgIGVuY29kZWRfYnl0ZXMgKyBRTUlfVExWX1RMX1NJWkUp
-ID4KPiAJCQkgICAgb3V0X2J1Zl9sZW4pIHsKPiAJCQkJcHJfZXJyKCIlczogVG9vIFNtYWxsIEJ1
-ZmZlciBAZGF0YV90eXBlOiVkXG4iLAo+IAkJCQkgICAgICAgX19mdW5jX18sIHRlbXBfZWktPmRh
-dGFfdHlwZSk7Cj5AQCAtNDEwLDEwICs0MDUsMTAgQEAgc3RhdGljIGludCBxbWlfZW5jb2RlKHN0
-cnVjdCBxbWlfZWxlbV9pbmZvICplaV9hcnJheSwgdm9pZCAqb3V0X2J1ZiwKPiAKPiAJCWlmIChl
-bmNvZGVfdGx2ICYmIGVuY19sZXZlbCA9PSAxKSB7Cj4gCQkJUU1JX0VOQ0RFQ19FTkNPREVfVExW
-KHRsdl90eXBlLCB0bHZfbGVuLCB0bHZfcG9pbnRlcik7Cj4tCQkJZW5jb2RlZF9ieXRlcyArPSAo
-VExWX1RZUEVfU0laRSArIFRMVl9MRU5fU0laRSk7Cj4rCQkJZW5jb2RlZF9ieXRlcyArPSBRTUlf
-VExWX1RMX1NJWkU7Cj4gCQkJdGx2X3BvaW50ZXIgPSBidWZfZHN0Owo+IAkJCXRsdl9sZW4gPSAw
-Owo+LQkJCWJ1Zl9kc3QgPSBidWZfZHN0ICsgVExWX0xFTl9TSVpFICsgVExWX1RZUEVfU0laRTsK
-PisJCQlidWZfZHN0ID0gYnVmX2RzdCArIFFNSV9UTFZfVExfU0laRTsKPiAJCQllbmNvZGVfdGx2
-ID0gMDsKPiAJCX0KPiAJfQo+QEAgLTYxMywxMCArNjA4LDExIEBAIHN0YXRpYyBpbnQgcW1pX2Rl
-Y29kZShzdHJ1Y3QgcW1pX2VsZW1faW5mbyAqZWlfYXJyYXksIHZvaWQgKm91dF9jX3N0cnVjdCwK
-PiAJCQl0bHZfcG9pbnRlciA9IGJ1Zl9zcmM7Cj4gCQkJUU1JX0VOQ0RFQ19ERUNPREVfVExWKCZ0
-bHZfdHlwZSwKPiAJCQkJCSAgICAgICZ0bHZfbGVuLCB0bHZfcG9pbnRlcik7Cj4tCQkJYnVmX3Ny
-YyArPSAoVExWX1RZUEVfU0laRSArIFRMVl9MRU5fU0laRSk7Cj4tCQkJZGVjb2RlZF9ieXRlcyAr
-PSAoVExWX1RZUEVfU0laRSArIFRMVl9MRU5fU0laRSk7Cj4rCQkJYnVmX3NyYyArPSBRTUlfVExW
-X1RMX1NJWkU7Cj4rCQkJZGVjb2RlZF9ieXRlcyArPSBRTUlfVExWX1RMX1NJWkU7Cj4gCQkJdGVt
-cF9laSA9IGZpbmRfZWkoZWlfYXJyYXksIHRsdl90eXBlKTsKPi0JCQlpZiAoIXRlbXBfZWkgJiYg
-dGx2X3R5cGUgPCBPUFRJT05BTF9UTFZfVFlQRV9TVEFSVCkgewo+KwkJCWlmICghdGVtcF9laSAm
-JiB0bHZfdHlwZSA8Cj4rCQkJICAgIFFNSV9PUFRJT05BTF9UTFZfVFlQRV9TVEFSVCkgewo+IAkJ
-CQlwcl9lcnIoIiVzOiBJbnZhbCBlbGVtZW50IGluZm9cbiIsIF9fZnVuY19fKTsKPiAJCQkJcmV0
-dXJuIC1FSU5WQUw7Cj4gCQkJfSBlbHNlIGlmICghdGVtcF9laSkgewo+ZGlmZiAtLWdpdCBhL2lu
-Y2x1ZGUvbGludXgvc29jL3Fjb20vcW1pLmggYi9pbmNsdWRlL2xpbnV4L3NvYy9xY29tL3FtaS5o
-Cj5pbmRleCBlNzEyZjk0Yjg5ZmMuLmViNTNhZWJkZjQ1ZSAxMDA2NDQKPi0tLSBhL2luY2x1ZGUv
-bGludXgvc29jL3Fjb20vcW1pLmgKPisrKyBiL2luY2x1ZGUvbGludXgvc29jL3Fjb20vcW1pLmgK
-PkBAIC0zNCw2ICszNCwxMSBAQCBzdHJ1Y3QgcW1pX2hlYWRlciB7Cj4gI2RlZmluZSBRTUlfSU5E
-SUNBVElPTgk0Cj4gCj4gI2RlZmluZSBRTUlfQ09NTU9OX1RMVl9UWVBFIDAKPisjZGVmaW5lIFFN
-SV9PUFRJT05BTF9UTFZfVFlQRV9TVEFSVCAweDEwCj4rCj4rI2RlZmluZSBRTUlfVExWX0xFTl9T
-SVpFIHNpemVvZih1MTYpCj4rI2RlZmluZSBRTUlfVExWX1RZUEVfU0laRSBzaXplb2YodTgpCj4r
-I2RlZmluZSBRTUlfVExWX1RMX1NJWkUgKFFNSV9UTFZfTEVOX1NJWkUgKyBRTUlfVExWX1RZUEVf
-U0laRSkKPiAKPiBlbnVtIHFtaV9lbGVtX3R5cGUgewo+IAlRTUlfRU9USSwKPi0tIAo+Mi4xNy4x
-Cj4KDQoNCg==
+Am Donnerstag, den 14.05.2020, 09:27 +0100 schrieb Russell King - ARM Linux admin:
+> On Thu, May 14, 2020 at 10:18:02AM +0200, Lucas Stach wrote:
+> > Am Mittwoch, den 13.05.2020, 23:41 -0300 schrieb Fabio Estevam:
+> > > On Wed, May 13, 2020 at 2:09 PM Fabio Estevam <festevam@gmail.com> wrote:
+> > > 
+> > > > The binding doc Documentation/devicetree/bindings/gpu/vivante,gc.yaml
+> > > > says that only the 'reg' clock could be optional, the others are
+> > > > required.
+> > > 
+> > > arch/arm/boot/dts/dove.dtsi only uses the 'core' clock.
+> > > arch/arm/boot/dts/stm32mp157.dtsi uses 'bus' and 'core'
+> > > 
+> > > Maybe the binding needs to be updated and it seems that using
+> > > devm_clk_get_optional() like you propose is safe.
+> > 
+> > The binding is correct as-is. We want to require those clocks to be
+> > present, but the dove DT was added before the binding was finalized, so
+> > the driver still treats the clocks as optional to not break
+> > compatibility with old DTs. Maybe this warrants a comment in the
+> > code...
+> 
+> The binding doc in mainline says:
+> 
+>   clocks:
+>     items:
+>       - description: AXI/master interface clock
+>       - description: GPU core clock
+>       - description: Shader clock (only required if GPU has feature PIPE_3D)
+>       - description: AHB/slave interface clock (only required if GPU can gate slave interface independently)
+>     minItems: 1
+>     maxItems: 4
+> 
+>   clock-names:
+>     items:
+>       enum: [ bus, core, shader, reg ]
+>     minItems: 1
+>     maxItems: 4
+> 
+> which looks correct to me - and means that Dove is compliant with that.
+
+The YAML binding actually did loose something in translation here,
+which I didn't notice. Previously all those clocks were listed under
+"Required properties", with the exceptions listed in parenthesis. So
+the Dove GPU, which is a combined 2D/3D core should have axi, core and
+shader clocks specified.
+
+Regards,
+Lucas
+
