@@ -2,195 +2,122 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5822EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAE4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20FEB2065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:47:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589471277;
-	bh=x6s1E+XROP/HiuUxOMycOoCvxjDKnPS1UbGWfOMKnCA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=OKb48BWsH6kgFruoy6sFKaxfIHNqIn+1ORKEuI96/gAO5o7QbRZvdzaJja+tOHZZ9
-	 XqBMwfYpPbzJ1S8Sd+K2P9p50K/poAdpkgn0w2v5/i3XPFKdpHWVxSe5K8Ia5m4Y+j
-	 KT8ha0LwGUldfKrpE1tlKBbFqNMq6PutA6pLi7Pk=
+	by mail.kernel.org (Postfix) with ESMTP id 296422065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:49:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PiA5t1EC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgENPr4 (ORCPT
+        id S1727992AbgENPtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 11:47:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgENPrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 11:47:55 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1542420657;
-        Thu, 14 May 2020 15:47:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589471275;
-        bh=x6s1E+XROP/HiuUxOMycOoCvxjDKnPS1UbGWfOMKnCA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=b6Pi2ErAe9bOmJkaLrmAPcJV/MEsaEge68OojgxVidZNqp3v6d941ttkf9V/N+DnL
-         9mx2J0Ar/r5sW+TqTaJmPuJ20qDq7e3FFx1Mx/aiuydUxT/W3hK94xQVKAqWIkt4oz
-         X8NV94wCAjwP+7P6W0IKQUcuHp0CaYpB2t4LNHFk=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id F1BF335229C5; Thu, 14 May 2020 08:47:54 -0700 (PDT)
-Date:   Thu, 14 May 2020 08:47:54 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Josh Triplett <josh@joshtriplett.org>
-Subject: Re: [PATCH 04/10] rcu: Implement rcu_segcblist_is_offloaded() config
- dependent
-Message-ID: <20200514154754.GM2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200513164714.22557-1-frederic@kernel.org>
- <20200513164714.22557-5-frederic@kernel.org>
- <20200513182029.GT2869@paulmck-ThinkPad-P72>
- <20200513230330.GB18303@lenoir>
+        Thu, 14 May 2020 11:49:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47978 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbgENPs7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 11:48:59 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99DBEC061A0F
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 08:48:59 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id n15so1190173pjt.4
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 08:48:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xc0xMz/yvwFH4+2sZUX9Mzn97it6v0pR0LQRUSS/E70=;
+        b=PiA5t1ECMRuuR+HXKMfA3cTte/yc0Jb2wZpjTuONoyQT8+eOxJ6lAv6xWFVheYAPQX
+         mop7QRaUoUv6SEjqXRjbU5K99Kz3EUrsQLuoTiltzApmHSCKH5G+nrxw8ti9nhdb7fqe
+         jWfLI5KiJD47MHevRL9KAaQDdLmDrDUpw7Tiw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xc0xMz/yvwFH4+2sZUX9Mzn97it6v0pR0LQRUSS/E70=;
+        b=h0O7+PQLxXrb/pDhRU9zeBUPYuFX8yHrooOUF932gfowJFvWZm9X+SG87TbfW2n827
+         XdBkvhOAWh2scm9AR5IgYBf9bKY+s0UjaQBsgwR3NuZ+RhmeprQtisVj524Swrv6XztI
+         rIaTaEoCw/AYufnR/DK70HWPdsP6YXMtQTXN2/kh89wLsvviY5kThFV2/4LFX/tC9Rq2
+         NZ/7zcsDLSjhdUKk4FfBMkAS+iv4SDcsCS66TGp3Wa8feNWvv0dWoDC4EL6lw9NXf1W9
+         wqd+N13eneh0pOMuEON6EvqtO2MpaFwQt4meg/c7H/btTGDXUZX9wTR5h3aPqDtuLV1w
+         OWOg==
+X-Gm-Message-State: AGi0PuZHAkYUReXEY1OoxZ21+Cz1Mri5ngsTbJslFxqoEl2tJmMatX1/
+        2rv7HpbrNkiPIq/SyUfSKbming==
+X-Google-Smtp-Source: APiQypLdE3XgkOQdsZ7skOwgbr0+jpPDHHkYRGIHpuO9kIkbSs8cT1F1ifdldVqKmAC4ik2usLfWlA==
+X-Received: by 2002:a17:90a:f995:: with SMTP id cq21mr39335143pjb.56.1589471339202;
+        Thu, 14 May 2020 08:48:59 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id cx11sm2467105pjb.36.2020.05.14.08.48.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 08:48:58 -0700 (PDT)
+Date:   Thu, 14 May 2020 08:48:57 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Lev R. Oshvang ." <levonshe@gmail.com>
+Cc:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v5 2/6] fs: Add a MAY_EXECMOUNT flag to infer the noexec
+ mount property
+Message-ID: <202005140845.16F1CDC@keescook>
+References: <20200505153156.925111-1-mic@digikod.net>
+ <20200505153156.925111-3-mic@digikod.net>
+ <202005121407.A339D31A@keescook>
+ <CAP22eLEWW+KjD5rHosZV8vSuBB4YBLh0BQ=4-=kJQt9o=Fx1ig@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513230330.GB18303@lenoir>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAP22eLEWW+KjD5rHosZV8vSuBB4YBLh0BQ=4-=kJQt9o=Fx1ig@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 01:03:31AM +0200, Frederic Weisbecker wrote:
-> On Wed, May 13, 2020 at 11:20:29AM -0700, Paul E. McKenney wrote:
-> > On Wed, May 13, 2020 at 06:47:08PM +0200, Frederic Weisbecker wrote:
-> > > This simplify the usage of this API and avoid checking the kernel
-> > > config from the callers.
-> > > 
-> > > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> > > Cc: Paul E. McKenney <paulmck@kernel.org>
-> > > Cc: Josh Triplett <josh@joshtriplett.org>
-> > > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> > > Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-> > > Cc: Joel Fernandes <joel@joelfernandes.org>
-> > > ---
-> > >  include/linux/rcu_segcblist.h |  2 ++
-> > >  kernel/rcu/rcu_segcblist.c    |  2 ++
-> > >  kernel/rcu/rcu_segcblist.h    |  6 ++++++
-> > >  kernel/rcu/tree.c             | 21 +++++++--------------
-> > >  4 files changed, 17 insertions(+), 14 deletions(-)
-> > > 
-> > > diff --git a/include/linux/rcu_segcblist.h b/include/linux/rcu_segcblist.h
-> > > index b36afe7b22c9..0ced0a0ecbcf 100644
-> > > --- a/include/linux/rcu_segcblist.h
-> > > +++ b/include/linux/rcu_segcblist.h
-> > > @@ -73,7 +73,9 @@ struct rcu_segcblist {
-> > >  	long len;
-> > >  #endif
-> > >  	u8 enabled;
-> > > +#ifdef CONFIG_RCU_NOCB_CPU
-> > >  	u8 offloaded;
-> > > +#endif
-> > 
-> > Given that this is only one byte and that removing it won't actually
-> > save any memory on most architectures, why not just leave it and
-> > adjust as shown below?
-> 
-> Right, the point was to make it private to that config and trigger
-> a build error otherwise. But if we have an off case that's fine.
-> 
-> > 
-> > >  };
-> > >  
-> > >  #define RCU_SEGCBLIST_INITIALIZER(n) \
-> > > diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
-> > > index 9a0f66133b4b..d8ea2bef5574 100644
-> > > --- a/kernel/rcu/rcu_segcblist.c
-> > > +++ b/kernel/rcu/rcu_segcblist.c
-> > > @@ -166,6 +166,7 @@ void rcu_segcblist_disable(struct rcu_segcblist *rsclp)
-> > >  	rsclp->enabled = 0;
-> > >  }
-> > >  
-> > > +#ifdef CONFIG_RCU_NOCB_CPU
-> > >  /*
-> > >   * Mark the specified rcu_segcblist structure as offloaded.  This
-> > >   * structure must be empty.
-> > > @@ -174,6 +175,7 @@ void rcu_segcblist_offload(struct rcu_segcblist *rsclp)
-> > >  {
-> > >  	rsclp->offloaded = 1;
-> > >  }
-> > > +#endif
-> > 
-> > Leave this unconditional, as it is nowhere near a fastpath.
-> 
-> The point was to not raise false hopes to those who want to
-> offload when it's not supported.
-> 
-> Let's perhaps have at least a WARN_ON_ONCE(1) if it is called
-> when !CONFIG_RCU_NOCB_CPU ?
+On Thu, May 14, 2020 at 11:14:04AM +0300, Lev R. Oshvang . wrote:
+> New sysctl is indeed required to allow userspace that places scripts
+> or libs under noexec mounts.
 
-Sounds like a good choice to me!
+But since this is a not-uncommon environment, we must have the sysctl
+otherwise this change would break those systems.
 
-> > >  /*
-> > >   * Does the specified rcu_segcblist structure contain callbacks that
-> > > diff --git a/kernel/rcu/rcu_segcblist.h b/kernel/rcu/rcu_segcblist.h
-> > > index 5c293afc07b8..4c1503a82492 100644
-> > > --- a/kernel/rcu/rcu_segcblist.h
-> > > +++ b/kernel/rcu/rcu_segcblist.h
-> > > @@ -62,7 +62,11 @@ static inline bool rcu_segcblist_is_enabled(struct rcu_segcblist *rsclp)
-> > >  /* Is the specified rcu_segcblist offloaded?  */
-> > >  static inline bool rcu_segcblist_is_offloaded(struct rcu_segcblist *rsclp)
-> > >  {
-> > > +#ifdef CONFIG_RCU_NOCB_CPU
-> > >  	return rsclp->offloaded;
-> > > +#else
-> > > +	return false;
-> > > +#endif
-> > >  }
-> > 
-> > Then this can just be:
-> > 
-> > 	return IS_ENABLED(CONFIG_RCU_NOCB_CPU) && rsclp->offloaded;
-> 
-> Ok.
-> 
-> > > @@ -1401,8 +1401,7 @@ static bool __note_gp_changes(struct rcu_node *rnp, struct rcu_data *rdp)
-> > >  {
-> > >  	bool ret = false;
-> > >  	bool need_qs;
-> > > -	const bool offloaded = IS_ENABLED(CONFIG_RCU_NOCB_CPU) &&
-> > > -			       rcu_segcblist_is_offloaded(&rdp->cblist);
-> > > +	const bool offloaded = rcu_segcblist_is_offloaded(&rdp->cblist);
-> > 
-> > The adjustment to rcu_segcblist_is_offloaded() allows this (welcome!)
-> > simplification to remain.
-> 
-> Ok thanks!
-> 
-> > > @@ -3243,8 +3237,7 @@ static int rcu_pending(int user)
-> > >  
-> > >  	/* Has RCU gone idle with this CPU needing another grace period? */
-> > >  	if (!gp_in_progress && rcu_segcblist_is_enabled(&rdp->cblist) &&
-> > > -	    (!IS_ENABLED(CONFIG_RCU_NOCB_CPU) ||
-> > > -	     !rcu_segcblist_is_offloaded(&rdp->cblist)) &&
-> > > +	    !rcu_segcblist_is_offloaded(&rdp->cblist) &&
-> > 
-> > Ditto.
-> > 
-> > As in "Why didn't I do it that way to start with???"  ;-)
-> 
-> You say that to someone who's too lazy to script short commands typed
-> 100 times a day ;-)
+> fs.mnt_noexec_strict =0 (allow, e) , 1 (deny any file with --x
+> permission), 2 (deny when O_MAYEXEC absent), for any file with ---x
+> permissions)
 
-;-) ;-) ;-)
+I don't think we want another mount option -- this is already fully
+expressed with noexec and the system-wide sysctl.
 
-							Thanx, Paul
+-- 
+Kees Cook
