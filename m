@@ -2,92 +2,123 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E22E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 04:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFB0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 04:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7718205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 04:58:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589432326;
-	bh=1bJl5V9rIa6F/KokSx6T9TyYU8drhQZpBwxhsnGNptA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WfgekHtSJIW5CZAQaNfkK/T0c3VreZuqBK27D3+DywGefIqQi37VWcDYGMqxB2taL
-	 wH3fJZQ13k7bEHU93EcLOY58KfPlHlwpGnglanukgRjtx+DjeNvI2J1PMCib+3qYrK
-	 um9WTKmxMcQVg35OS7NoW4eutpWcJWK4sloy0DjI=
+	by mail.kernel.org (Postfix) with ESMTP id 9A523205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 04:58:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wjDd6XVS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725976AbgENE6p (ORCPT
+        id S1726070AbgENE64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 00:58:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725788AbgENE6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 00:58:45 -0400
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98C41205CB
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 04:58:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589432324;
-        bh=1bJl5V9rIa6F/KokSx6T9TyYU8drhQZpBwxhsnGNptA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vQn/dP/iLKrrTc2XC0HKokLn2gw7p2FQgRjMrt8Vhb5zQaHAITfYtp9YyCtZq8K2E
-         k4D0iTEchW19nbbgb/BkolyE/V1Gx6/T2Pj+XokOwXlQ3KLS6agVpSrBlbdaYlCpra
-         BxWo9ABd6mExWlGvrt7ljJm/dkURGp8OUNM1l3BU=
-Received: by mail-wr1-f50.google.com with SMTP id y16so2154486wrs.3
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 21:58:44 -0700 (PDT)
-X-Gm-Message-State: AOAM533C/XH0Kt02ih6JHyq2t3AmBCREoP/VJqO+DYmQeR9EFSdT0BFf
-        PDo/N2FI4ZLgwBgBHFjtFnzqggkWCB9AqggBi16Ybw==
-X-Google-Smtp-Source: ABdhPJwSupgk0tJFS3rmq6v6FMlkcjjT9kwiAmtqx6+k291nr5Bxt+2tOY/v1qQ3jotcVLnQO2vKDcyeqys9J4y/rlc=
-X-Received: by 2002:adf:a389:: with SMTP id l9mr3227189wrb.18.1589432323046;
- Wed, 13 May 2020 21:58:43 -0700 (PDT)
+        Thu, 14 May 2020 00:58:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59196 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725977AbgENE64 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 00:58:56 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E55FC061A0E
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 21:58:56 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id u5so760503pgn.5
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 21:58:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=XB9iR1Wtni03RNsjVOMYUq9aoFsWINR5LTN8xhVnTBE=;
+        b=wjDd6XVS335MCJz9fDAbV1AJWTNo6NfWf4m+5LBZrK5OZvhYRFS7xdg7rvVKwsStr0
+         0GZKzpEEeDPKMlo6yRynvB1Py/hJpE7BdKPYvhOHlY5iZPRmTLVKPxDGadQrq9288OTD
+         bXmo47fVNu8lfa0j4e6PZ6phtHOTmgKaLvm7kUcLeS3nehSQ3dQXUoRyj+jvBcbrhnAN
+         g7OSwaQxYwqJT54/+bQeyy/xEm0H8osNIoLSNDpPu5bGko684DCE+LjlRJNHZZ3Ydo5X
+         fc4G9VljKI/7ZhlOFs+YM4Zf/bGUyIaMxZlmd0kHF0AdrH2gQKMoDs5ixQv/638Quu5V
+         Eycw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XB9iR1Wtni03RNsjVOMYUq9aoFsWINR5LTN8xhVnTBE=;
+        b=BtKW4DY0VlIUNuD+J5aRuZK1hIEGZJb9qDNSxqKlXQvjEbtDOaEpc0wk+v+MchdDvB
+         DK5zKFAZnGojNsBPnzJr/5a0oVlo/Dg1fGoL0IVMjS/a0FnJzlxo/1onozwn0gHywi2A
+         mBEmiOguV8VRRT+3pZGvswdp6OWzds+twJJU/tpnmbx2rxNpK87uPqHcKdzAeY/gWTfX
+         gHDbW4uSMyBAvRBEosGB/EQPIcd/FHloQXRF/ltrsfUd/xIA+KVHcGOshvCw6lqheT//
+         HWA2CJdduk4dsg2QkXscK1NlvjJk5P3Rt/8qH7KT60ZUmkoK/YV8aJ+yY1AyrDF/w+tC
+         /Mbw==
+X-Gm-Message-State: AOAM532xVgYF18kfeYdr67llkjYlB6QEFbu/oM6Vho+oqeQn396RUEKC
+        eSPhFnx2SAsZ68SdODhMgV2CYg==
+X-Google-Smtp-Source: ABdhPJwtJMENg8lvG2CR/fcdWf8E4zka+8LBZfgW9TaUXTChBfsuSaci4EXXRp2CUpbC+jWVbtUTAg==
+X-Received: by 2002:a63:1557:: with SMTP id 23mr2564283pgv.104.1589432335637;
+        Wed, 13 May 2020 21:58:55 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id d203sm1052337pfd.79.2020.05.13.21.58.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 21:58:55 -0700 (PDT)
+Date:   Wed, 13 May 2020 21:57:24 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     ohad@wizery.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, loic.pallardy@st.com,
+        arnaud.pouliquen@st.com, linux-remoteproc@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 02/12] remoteproc: stm32: Request IRQ with platform
+ device
+Message-ID: <20200514045724.GH16107@builder.lan>
+References: <20200424202505.29562-1-mathieu.poirier@linaro.org>
+ <20200424202505.29562-3-mathieu.poirier@linaro.org>
 MIME-Version: 1.0
-References: <20200505134926.578885807@linutronix.de> <20200505135313.624443814@linutronix.de>
-In-Reply-To: <20200505135313.624443814@linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 13 May 2020 21:58:31 -0700
-X-Gmail-Original-Message-ID: <CALCETrUkeDWw6c26GH_AdBr40QUCBdvy6WDtgh0GsZB3VqmNgA@mail.gmail.com>
-Message-ID: <CALCETrUkeDWw6c26GH_AdBr40QUCBdvy6WDtgh0GsZB3VqmNgA@mail.gmail.com>
-Subject: Re: [patch V4 part 4 03/24] lib/bsearch: Provide __always_inline variant
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200424202505.29562-3-mathieu.poirier@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 5, 2020 at 7:15 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> From: Peter Zijlstra <peterz@infradead.org>
->
-> For code that needs the ultimate performance (it can inline the @cmp
-> function too) or simply needs to avoid calling external functions for
-> whatever reason, provide an __always_inline variant of bsearch().
+On Fri 24 Apr 13:24 PDT 2020, Mathieu Poirier wrote:
 
+> Request IRQ with platform device rather than remote proc in order to
+> call stm32_rproc_parse_dt() before rproc_alloc().  That way we can
+> know whether we need to synchronise with the MCU or not.
+> 
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Reviewed-by: Loic Pallardy <loic.pallardy@st.com>
 
-Acked-by: Andy Lutomirski <luto@kernel.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Although maybe a more explicit name (e.g. __inlined_bsearch()) would
-be more clear?
+> ---
+>  drivers/remoteproc/stm32_rproc.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
+> index 91fd59af0ffe..1ac90adba9b1 100644
+> --- a/drivers/remoteproc/stm32_rproc.c
+> +++ b/drivers/remoteproc/stm32_rproc.c
+> @@ -261,7 +261,8 @@ static int stm32_rproc_parse_fw(struct rproc *rproc, const struct firmware *fw)
+>  
+>  static irqreturn_t stm32_rproc_wdg(int irq, void *data)
+>  {
+> -	struct rproc *rproc = data;
+> +	struct platform_device *pdev = data;
+> +	struct rproc *rproc = platform_get_drvdata(pdev);
+>  
+>  	rproc_report_crash(rproc, RPROC_WATCHDOG);
+>  
+> @@ -553,7 +554,7 @@ static int stm32_rproc_parse_dt(struct platform_device *pdev)
+>  
+>  	if (irq > 0) {
+>  		err = devm_request_irq(dev, irq, stm32_rproc_wdg, 0,
+> -				       dev_name(dev), rproc);
+> +				       dev_name(dev), pdev);
+>  		if (err) {
+>  			dev_err(dev, "failed to request wdg irq\n");
+>  			return err;
+> -- 
+> 2.20.1
+> 
