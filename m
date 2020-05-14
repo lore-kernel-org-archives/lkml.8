@@ -2,146 +2,122 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47460C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14415C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56DFA205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DCB02065C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:12:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="vgZM8K82"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="nna48kqP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732986AbgENAMS (ORCPT
+        id S1733033AbgENAMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 20:12:18 -0400
-Received: from mail-bn7nam10on2120.outbound.protection.outlook.com ([40.107.92.120]:65056
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732871AbgENAMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 20:12:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HcGoiDRn6oHz62lpOmjwhnFE3fAh+I/gaHXU7iVhYMJ4UuGlE+Jz56B43uJHt2GE458uO51ljAqPHvcwAD88j3bs4gXURvgLemeXMh5RWhdT6oczuZlNI7TTYXheg0M5DAkrFvwvkgNIbt+8vg/hcmCZHHDmF8uWmu/Bmw4oKBByaM0ELp/FPC72bQUuSVskY15+6LPNc4UKdOlio1VeDh9NniwwagESt6Z/flEb4oufIyfbd1xEJuSIgs/E4SCVrcmIO/wJYYHcvuCSHIuqLO3k0qUxWt5vnckZTGhR727fAelDL6gWIK08l7aC2rpCaahl5JpTDPz+pNpoD7Ey8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Wx2jdNqVOv0BSQ94JD5tkM39/gGO37pcIhnpr6euQtA=;
- b=X7p8jz5xpaTcpP0QE+hK8LbdZi3nW/ju2v8JEmjcWAWo9t/zJhHhqRWpSFTDyYMcCojgRUOUQUTw3kp6AkvVu/elAg7DE1eIB6sGt6rG/azc8uTeLGtnMWbJIMQG/6ifhXr/sHDPsP+2gdiQN21B97+36TRZbIUgjesKEj0Bei+k6VqEfINaLnrcSLtGH1aROHxhgOVAp9sV7WV31uKCFytdoOf+/TSdxbL0q4RPCb8PPVw0ZwoF4sYWTROjya4HDA2QA6n4Zqc6jyTGYN5g1SvCti87WjGt86N5qmVKKOWQ2P+UbWVpsS/aujJHbJCBS+iUvIDS/ihKD1S7qoi9kw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Wx2jdNqVOv0BSQ94JD5tkM39/gGO37pcIhnpr6euQtA=;
- b=vgZM8K823F5ee0xMVTOBCrye9tmhwQAxh3csVrj0WQLUmcgRv9mdgSmJJE1Av7xRmKdM1JRu9yK4Paog/GGyQ2VHEBJEbqw8OhwKftuJSCJUjAkDKIrTFKxiUJ0FS0t5QHQzZk9QpV7rqeS5ylMCkqTtS11X1f+DEyoqlPDVTFk=
-Authentication-Results: amperecomputing.com; dkim=none (message not signed)
- header.d=none;amperecomputing.com; dmarc=none action=none
- header.from=os.amperecomputing.com;
-Received: from BYAPR01MB4598.prod.exchangelabs.com (2603:10b6:a03:8a::18) by
- BYAPR01MB4359.prod.exchangelabs.com (2603:10b6:a03:a1::25) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2979.29; Thu, 14 May 2020 00:12:11 +0000
-Received: from BYAPR01MB4598.prod.exchangelabs.com
- ([fe80::296c:b848:8bf0:6f2c]) by BYAPR01MB4598.prod.exchangelabs.com
- ([fe80::296c:b848:8bf0:6f2c%5]) with mapi id 15.20.2979.033; Thu, 14 May 2020
- 00:12:11 +0000
-From:   Tuan Phan <tuanphan@os.amperecomputing.com>
-Cc:     patches@amperecomputing.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Neil Leeder <nleeder@codeaurora.org>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] ACPI/IORT: Fix PMCG node always look for a single ID mapping.
-Date:   Wed, 13 May 2020 17:12:02 -0700
-Message-Id: <1589415122-5899-1-git-send-email-tuanphan@os.amperecomputing.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR06CA0005.namprd06.prod.outlook.com
- (2603:10b6:a03:d4::18) To BYAPR01MB4598.prod.exchangelabs.com
- (2603:10b6:a03:8a::18)
+        Wed, 13 May 2020 20:12:39 -0400
+Received: from mail.efficios.com ([167.114.26.124]:59312 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732871AbgENAMi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 20:12:38 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id D33082A01DD;
+        Wed, 13 May 2020 20:12:36 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id x1rj64-fNMHO; Wed, 13 May 2020 20:12:36 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 50A252A02E7;
+        Wed, 13 May 2020 20:12:36 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 50A252A02E7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1589415156;
+        bh=yKNNRZvL8dMTn7sIxUntqrp463iCqOUIAOlejog8k00=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=nna48kqPw9r2kqVBLYpY0skDMpDt3z/vv8AoHxlscGafJf3ZppQGzpJ9Xa2tmA8+F
+         fQXqrIytqTkIefiKQqb24KgZAAylc4L5mWrTXfSnq60nmxGBtnvLVk/B8b5VbuNRMx
+         RYnnvCfXktg7Q57+vVW4WWp3MKgsBzK1tvuXBa+N+pgluYEI+m8JRRcPNHpeoxE0j+
+         tYYP6KS2HTVSx2fmzROFpuovoKPeINT82pm/7XQkrRRwuZTL7Tmqyc2r7Pylz2D4D7
+         eR5MO4Vko4zUrvX/EpkzYlxRAnj09Cn+W4sIk0j2ExR3Sw3Uqrg8l9zObr9A9lZGnM
+         eLK1EYGRoip/Q==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 8AmOsT5E59SX; Wed, 13 May 2020 20:12:36 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 3E9BB2A0356;
+        Wed, 13 May 2020 20:12:36 -0400 (EDT)
+Date:   Wed, 13 May 2020 20:12:36 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
+        paulmck <paulmck@kernel.org>, Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>, rostedt <rostedt@goodmis.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Message-ID: <1443118821.20546.1589415156226.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200505134101.525508608@linutronix.de>
+References: <20200505131602.633487962@linutronix.de> <20200505134101.525508608@linutronix.de>
+Subject: Re: [patch V4 part 1 35/36] x86: Replace ist_enter() with
+ nmi_enter()
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from aptiov-dev-Latitude-E7470.amperecomputing.com (4.28.12.214) by BYAPR06CA0005.namprd06.prod.outlook.com (2603:10b6:a03:d4::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3000.20 via Frontend Transport; Thu, 14 May 2020 00:12:11 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [4.28.12.214]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 377d4864-272d-488a-d57d-08d7f79b72a8
-X-MS-TrafficTypeDiagnostic: BYAPR01MB4359:|BYAPR01MB4359:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR01MB4359C072EF6B9A06EF794F2AE0BC0@BYAPR01MB4359.prod.exchangelabs.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 040359335D
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: t1PqXy8f5ddNgqN0hQdGrRq3HtfjG4PZt2a6dceg6uIy+2Y1guonlHfNw1rVhqaHqfcEECoCnIdbFgoq2a1HUXxjS2ExnIj4RLmo8ua1Kd4VlIsuLS/RRHGU83oLGxbdgWk/gawAPrUshJSW7dWT2wYa93qz6S+v6RdIG+fz6t5GjJSDPMYKVCV0uAYQ9+HSurrnviZBDkqrNyuuQBH88NtNDjYzv/rBAGDPmW5jzm0asH8DwpUa8v7eQdkSupV1v4xSclCCJrEMzXfkTJsdl7Lf52Tl7vMY1EHOI2be/NtiI6FYpvvlSt5ntZwnGKOyQQhST5LU8SBCgcEmtGr+Z8NzOnO3oxIG6lGMAarsn51tPeK0nVweJafoQNIT6DPnyjB91vOqlcr7C3eQCLIoRZyKBdtqBREf4VHO0t3CTt4Z3qNuIhe4szeTUOKEcOiRoMWhk6GV14N42rCdwTqXY4AoiGA1MiQJcPbslZbzkLg=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR01MB4598.prod.exchangelabs.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(346002)(136003)(39850400004)(376002)(396003)(316002)(66946007)(8676002)(6512007)(16526019)(2906002)(2616005)(6666004)(186003)(956004)(6486002)(8936002)(54906003)(478600001)(52116002)(4326008)(66556008)(26005)(109986005)(7416002)(66476007)(6506007)(5660300002)(86362001)(266003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: B2IYuX9ryQaWnIy6Ir+f6APpfPT/97FysWgSykQeMW6IKe5scmvnZ5S2IHymuGRrn+ZUvGA/2MzIuSyKLd1Hy1u3bThqM67L0D/NqWPj5nb6M3qLfm71F3ePeTiKC6JzeFEx6sPvY6g5LKmaKt4ARpcnBn4MjfvxU7LAA6hQc899evzv95uui7cB98y738hS1h4GeRdPRVonfPeLQ6J2Zg6k73slA0SjcEAW/eNS95lCu0Rl0cZBPK8O3NpaZfNf5WOILLEN7180IWqLFydXEpyPOlNO0tTyvkdMdTXwYDlc68rAeydg5vOnWhDLFEMRVmMRUddw1tllH3wiaPXPAPH7cSxIpiewlKuZOmLYdqMLZI6Kg8LYDIrh+ME1h/xzn0eE+2mJi//H5oI+TqvpL7QOOaIl/ypg7wgx2orW8oZClCknPWICMtsO8RHG+xfo6+zOZmhrAu3nJun6q0yZKKKpyFBQo70LFJdu3TGTZ+E=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 377d4864-272d-488a-d57d-08d7f79b72a8
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 May 2020 00:12:11.6414
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: W0ib1MDl/qd0hQKmOocKr0dhAA7D4vQDvITkPxd24HQezSDngWvcRHer5vr0QJ47xuiE1aodx/pQnGt833vSS6aoUSqjCh6vhYaJMS4e8AoAd22be9BAt5fYYzrlwHJe
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR01MB4359
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF76 (Linux)/8.8.15_GA_3928)
+Thread-Topic: x86: Replace ist_enter() with nmi_enter()
+Thread-Index: 04pvHkpOjJdrPm9nbOo2wMfV0w97sQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PMCG node can have zero ID mapping if its overflow interrupt
-is wire based. The code to parse PMCG node can not assume it will
-have a single ID mapping.
+----- On May 5, 2020, at 9:16 AM, Thomas Gleixner tglx@linutronix.de wrote:
 
-Fixes: 24e516049360 ("ACPI/IORT: Add support for PMCG")
-Reviewed-by: Hanjun Guo <guoahanjun@huawei.com>
-Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
----
-v1 -> v2:
-- Use pmcg node to detect wired base overflow interrupt.
+> From: Peter Zijlstra <peterz@infradead.org>
+> 
+> A few exceptions (like #DB and #BP) can happen at any location in the code,
+> this then means that tracers should treat events from these exceptions as
+> NMI-like. The interrupted context could be holding locks with interrupts
+> disabled for instance.
+> 
+> Similarly, #MC is an actual NMI-like exception.
+> 
+> All of them use ist_enter() which only concerns itself with RCU, but does
+> not do any of the other setup that NMIs need. This means things like:
+> 
+>	printk()
+>	  raw_spin_lock_irq(&logbuf_lock);
+>	  <#DB/#BP/#MC>
+>	     printk()
+>	       raw_spin_lock_irq(&logbuf_lock);
+> 
+> are entirely possible (well, not really since printk tries hard to
+> play nice, but the concept stands).
+> 
+> So replace ist_enter() with nmi_enter(). Also observe that any nmi_enter()
+> caller must be both notrace and NOKPROBE, or in the noinstr text section.
 
-v2 -> v3:
-- Address Hanjun and Robin's comments.
+Are there similar issues with non-x86 architectures, or is this
+exception-behaves-like-an-interrupt issue specific to x86 ?
 
- drivers/acpi/arm64/iort.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Thanks,
 
-diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-index ed3d2d1..12bb70e 100644
---- a/drivers/acpi/arm64/iort.c
-+++ b/drivers/acpi/arm64/iort.c
-@@ -414,6 +414,7 @@ static struct acpi_iort_node *iort_node_get_id(struct acpi_iort_node *node,
- static int iort_get_id_mapping_index(struct acpi_iort_node *node)
- {
- 	struct acpi_iort_smmu_v3 *smmu;
-+	struct acpi_iort_pmcg *pmcg;
- 
- 	switch (node->type) {
- 	case ACPI_IORT_NODE_SMMU_V3:
-@@ -441,6 +442,10 @@ static int iort_get_id_mapping_index(struct acpi_iort_node *node)
- 
- 		return smmu->id_mapping_index;
- 	case ACPI_IORT_NODE_PMCG:
-+		pmcg = (struct acpi_iort_pmcg *)node->node_data;
-+		if (pmcg->overflow_gsiv || node->mapping_count == 0)
-+			return -EINVAL;
-+
- 		return 0;
- 	default:
- 		return -EINVAL;
+Mathieu
+
 -- 
-2.7.4
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
