@@ -2,58 +2,58 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29016C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB66C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0997E207E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CFE8207F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:18:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgENLSq (ORCPT
+        id S1727825AbgENLSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 07:18:46 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16840 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727067AbgENLSo (ORCPT
+        Thu, 14 May 2020 07:18:49 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63530 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727067AbgENLSr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 07:18:44 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04EB6pqN127499;
-        Thu, 14 May 2020 07:18:18 -0400
+        Thu, 14 May 2020 07:18:47 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04EB4cWo036826;
+        Thu, 14 May 2020 07:18:27 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3112s3v0xm-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 310ua7xx56-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 May 2020 07:18:18 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04EB7HI9128848;
-        Thu, 14 May 2020 07:18:18 -0400
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3112s3v0w3-1
+        Thu, 14 May 2020 07:18:26 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04EB4bKZ036809;
+        Thu, 14 May 2020 07:18:26 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 310ua7xx4c-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 May 2020 07:18:17 -0400
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04EBG98I024954;
-        Thu, 14 May 2020 11:18:16 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma01fra.de.ibm.com with ESMTP id 3100ubhe6p-1
+        Thu, 14 May 2020 07:18:25 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04EBFw6e015503;
+        Thu, 14 May 2020 11:18:24 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 3100ubbgsj-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 May 2020 11:18:16 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04EBID3C40960254
+        Thu, 14 May 2020 11:18:23 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04EBILs360686790
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 May 2020 11:18:13 GMT
+        Thu, 14 May 2020 11:18:21 GMT
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3DA104204C;
-        Thu, 14 May 2020 11:18:13 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 00C0C42047;
+        Thu, 14 May 2020 11:18:21 +0000 (GMT)
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BB9964204B;
-        Thu, 14 May 2020 11:18:09 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 9F5A04203F;
+        Thu, 14 May 2020 11:18:17 +0000 (GMT)
 Received: from bangoria.ibmuc.com (unknown [9.199.59.186])
         by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 14 May 2020 11:18:09 +0000 (GMT)
+        Thu, 14 May 2020 11:18:17 +0000 (GMT)
 From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 To:     mpe@ellerman.id.au, mikey@neuling.org
 Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
@@ -62,9 +62,9 @@ Cc:     apopple@linux.ibm.com, paulus@samba.org, npiggin@gmail.com,
         fweisbec@gmail.com, mingo@kernel.org,
         linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         ravi.bangoria@linux.ibm.com
-Subject: [PATCH v6 06/16] powerpc/watchpoint: Provide DAWR number to __set_breakpoint
-Date:   Thu, 14 May 2020 16:47:31 +0530
-Message-Id: <20200514111741.97993-7-ravi.bangoria@linux.ibm.com>
+Subject: [PATCH v6 08/16] powerpc/watchpoint: Disable all available watchpoints when !dawr_force_enable
+Date:   Thu, 14 May 2020 16:47:33 +0530
+Message-Id: <20200514111741.97993-9-ravi.bangoria@linux.ibm.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200514111741.97993-1-ravi.bangoria@linux.ibm.com>
 References: <20200514111741.97993-1-ravi.bangoria@linux.ibm.com>
@@ -72,175 +72,59 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-14_02:2020-05-13,2020-05-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
- spamscore=0 malwarescore=0 cotscore=-2147483648 bulkscore=0
- priorityscore=1501 clxscore=1015 mlxscore=0 suspectscore=0
- lowpriorityscore=0 phishscore=0 impostorscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005140095
+ definitions=2020-05-14_02:2020-05-14,2020-05-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
+ priorityscore=1501 suspectscore=0 clxscore=1015 lowpriorityscore=0
+ adultscore=0 bulkscore=0 phishscore=0 mlxlogscore=840 impostorscore=0
+ spamscore=0 mlxscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005140100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce new parameter 'nr' to __set_breakpoint() which indicates
-which DAWR should be programed. Also convert current_brk variable
-to an array.
+Instead of disabling only first watchpoint, disable all available
+watchpoints while clearing dawr_force_enable.
+
+Callback function is used only for disabling watchpoint, rename it
+to disable_dawrs_cb(). And null_brk parameter is not really required
+while disabling watchpoint, remove it.
 
 Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 Reviewed-by: Michael Neuling <mikey@neuling.org>
 ---
- arch/powerpc/include/asm/debug.h         |  2 +-
- arch/powerpc/include/asm/hw_breakpoint.h |  2 +-
- arch/powerpc/kernel/hw_breakpoint.c      |  8 ++++----
- arch/powerpc/kernel/process.c            | 14 +++++++-------
- arch/powerpc/kernel/signal.c             |  2 +-
- arch/powerpc/xmon/xmon.c                 |  2 +-
- 6 files changed, 15 insertions(+), 15 deletions(-)
+ arch/powerpc/kernel/dawr.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/debug.h b/arch/powerpc/include/asm/debug.h
-index 7756026b95ca..ec57daf87f40 100644
---- a/arch/powerpc/include/asm/debug.h
-+++ b/arch/powerpc/include/asm/debug.h
-@@ -45,7 +45,7 @@ static inline int debugger_break_match(struct pt_regs *regs) { return 0; }
- static inline int debugger_fault_handler(struct pt_regs *regs) { return 0; }
- #endif
- 
--void __set_breakpoint(struct arch_hw_breakpoint *brk);
-+void __set_breakpoint(int nr, struct arch_hw_breakpoint *brk);
- bool ppc_breakpoint_available(void);
- #ifdef CONFIG_PPC_ADV_DEBUG_REGS
- extern void do_send_trap(struct pt_regs *regs, unsigned long address,
-diff --git a/arch/powerpc/include/asm/hw_breakpoint.h b/arch/powerpc/include/asm/hw_breakpoint.h
-index 5b3b02834e0b..1120c7d9db58 100644
---- a/arch/powerpc/include/asm/hw_breakpoint.h
-+++ b/arch/powerpc/include/asm/hw_breakpoint.h
-@@ -85,7 +85,7 @@ static inline void hw_breakpoint_disable(void)
- 	brk.len = 0;
- 	brk.hw_len = 0;
- 	if (ppc_breakpoint_available())
--		__set_breakpoint(&brk);
-+		__set_breakpoint(0, &brk);
- }
- extern void thread_change_pc(struct task_struct *tsk, struct pt_regs *regs);
- int hw_breakpoint_handler(struct die_args *args);
-diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
-index 01f07d91df70..f5472402c06d 100644
---- a/arch/powerpc/kernel/hw_breakpoint.c
-+++ b/arch/powerpc/kernel/hw_breakpoint.c
-@@ -64,7 +64,7 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
- 	 * If so, DABR will be populated in single_step_dabr_instruction().
- 	 */
- 	if (current->thread.last_hit_ubp != bp)
--		__set_breakpoint(info);
-+		__set_breakpoint(0, info);
- 
+diff --git a/arch/powerpc/kernel/dawr.c b/arch/powerpc/kernel/dawr.c
+index 8114ad3a8574..500f52fa4711 100644
+--- a/arch/powerpc/kernel/dawr.c
++++ b/arch/powerpc/kernel/dawr.c
+@@ -50,9 +50,13 @@ int set_dawr(int nr, struct arch_hw_breakpoint *brk)
  	return 0;
  }
-@@ -222,7 +222,7 @@ void thread_change_pc(struct task_struct *tsk, struct pt_regs *regs)
  
- 	info = counter_arch_bp(tsk->thread.last_hit_ubp);
- 	regs->msr &= ~MSR_SE;
--	__set_breakpoint(info);
-+	__set_breakpoint(0, info);
- 	tsk->thread.last_hit_ubp = NULL;
+-static void set_dawr_cb(void *info)
++static void disable_dawrs_cb(void *info)
+ {
+-	set_dawr(0, info);
++	struct arch_hw_breakpoint null_brk = {0};
++	int i;
++
++	for (i = 0; i < nr_wp_slots(); i++)
++		set_dawr(i, &null_brk);
  }
  
-@@ -347,7 +347,7 @@ int hw_breakpoint_handler(struct die_args *args)
- 	if (!(info->type & HW_BRK_TYPE_EXTRANEOUS_IRQ))
- 		perf_bp_event(bp, regs);
+ static ssize_t dawr_write_file_bool(struct file *file,
+@@ -74,7 +78,7 @@ static ssize_t dawr_write_file_bool(struct file *file,
  
--	__set_breakpoint(info);
-+	__set_breakpoint(0, info);
- out:
- 	rcu_read_unlock();
+ 	/* If we are clearing, make sure all CPUs have the DAWR cleared */
+ 	if (!dawr_force_enable)
+-		smp_call_function(set_dawr_cb, &null_brk, 0);
++		smp_call_function(disable_dawrs_cb, NULL, 0);
+ 
  	return rc;
-@@ -380,7 +380,7 @@ static int single_step_dabr_instruction(struct die_args *args)
- 	if (!(info->type & HW_BRK_TYPE_EXTRANEOUS_IRQ))
- 		perf_bp_event(bp, regs);
- 
--	__set_breakpoint(info);
-+	__set_breakpoint(0, info);
- 	current->thread.last_hit_ubp = NULL;
- 
- 	/*
-diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-index dc161b0adc82..f303aea61794 100644
---- a/arch/powerpc/kernel/process.c
-+++ b/arch/powerpc/kernel/process.c
-@@ -637,7 +637,7 @@ void do_break (struct pt_regs *regs, unsigned long address,
  }
- #endif	/* CONFIG_PPC_ADV_DEBUG_REGS */
- 
--static DEFINE_PER_CPU(struct arch_hw_breakpoint, current_brk);
-+static DEFINE_PER_CPU(struct arch_hw_breakpoint, current_brk[HBP_NUM_MAX]);
- 
- #ifdef CONFIG_PPC_ADV_DEBUG_REGS
- /*
-@@ -714,7 +714,7 @@ EXPORT_SYMBOL_GPL(switch_booke_debug_regs);
- static void set_breakpoint(struct arch_hw_breakpoint *brk)
- {
- 	preempt_disable();
--	__set_breakpoint(brk);
-+	__set_breakpoint(0, brk);
- 	preempt_enable();
- }
- 
-@@ -800,13 +800,13 @@ static inline int set_breakpoint_8xx(struct arch_hw_breakpoint *brk)
- 	return 0;
- }
- 
--void __set_breakpoint(struct arch_hw_breakpoint *brk)
-+void __set_breakpoint(int nr, struct arch_hw_breakpoint *brk)
- {
--	memcpy(this_cpu_ptr(&current_brk), brk, sizeof(*brk));
-+	memcpy(this_cpu_ptr(&current_brk[nr]), brk, sizeof(*brk));
- 
- 	if (dawr_enabled())
- 		// Power8 or later
--		set_dawr(0, brk);
-+		set_dawr(nr, brk);
- 	else if (IS_ENABLED(CONFIG_PPC_8xx))
- 		set_breakpoint_8xx(brk);
- 	else if (!cpu_has_feature(CPU_FTR_ARCH_207S))
-@@ -1174,8 +1174,8 @@ struct task_struct *__switch_to(struct task_struct *prev,
-  * schedule DABR
-  */
- #ifndef CONFIG_HAVE_HW_BREAKPOINT
--	if (unlikely(!hw_brk_match(this_cpu_ptr(&current_brk), &new->thread.hw_brk)))
--		__set_breakpoint(&new->thread.hw_brk);
-+	if (unlikely(!hw_brk_match(this_cpu_ptr(&current_brk[0]), &new->thread.hw_brk)))
-+		__set_breakpoint(0, &new->thread.hw_brk);
- #endif /* CONFIG_HAVE_HW_BREAKPOINT */
- #endif
- 
-diff --git a/arch/powerpc/kernel/signal.c b/arch/powerpc/kernel/signal.c
-index a46c3fdb6853..8e29138a344a 100644
---- a/arch/powerpc/kernel/signal.c
-+++ b/arch/powerpc/kernel/signal.c
-@@ -272,7 +272,7 @@ static void do_signal(struct task_struct *tsk)
- 	 * triggered inside the kernel.
- 	 */
- 	if (tsk->thread.hw_brk.address && tsk->thread.hw_brk.type)
--		__set_breakpoint(&tsk->thread.hw_brk);
-+		__set_breakpoint(0, &tsk->thread.hw_brk);
- #endif
- 	/* Re-enable the breakpoints for the signal stack */
- 	thread_change_pc(tsk, tsk->thread.regs);
-diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
-index effb10c2e32f..30b3e3d99c0d 100644
---- a/arch/powerpc/xmon/xmon.c
-+++ b/arch/powerpc/xmon/xmon.c
-@@ -954,7 +954,7 @@ static void insert_cpu_bpts(void)
- 		brk.address = dabr.address;
- 		brk.type = (dabr.enabled & HW_BRK_TYPE_DABR) | HW_BRK_TYPE_PRIV_ALL;
- 		brk.len = DABR_MAX_LEN;
--		__set_breakpoint(&brk);
-+		__set_breakpoint(0, &brk);
- 	}
- 
- 	if (iabr)
 -- 
 2.26.2
 
