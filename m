@@ -2,118 +2,82 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB057C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E895BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC1ED20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:25:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="vgKyk2WV";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vQ2dab9d"
+	by mail.kernel.org (Postfix) with ESMTP id BCFB320675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:26:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgENIZq (ORCPT
+        id S1726050AbgENI06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 04:25:46 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:39501 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725935AbgENIZp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 04:25:45 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailout.nyi.internal (Postfix) with ESMTP id 435655C0221;
-        Thu, 14 May 2020 04:25:44 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Thu, 14 May 2020 04:25:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
-        /xysc5mZRRwSPhJfTdSoHNPvt4tx6ue/BYIZHaszruM=; b=vgKyk2WVbBTezi5J
-        KZZxhb5cZm9Y59EZs1jkDIEB3QN/51GbotXc56FPv7Xfcym56gv3O1qR+nljkg5u
-        9idmRjW8ePiEQlecNuBuJQMR4LbrOqBGXTBX0nE1nXFcEUdhaX57FmZCO4ejJA+J
-        Yhd88QhBv40BAsI1Uw7//IWhAdOnxk0Q1hU+xUGjlQRutLzOhGiVppZIn5WlmQyD
-        Wt0ryMujwkZVPejYBHC9M/ajKDJuwtJswUPv/MxVIas0AzIhh+strqXutV3caOqg
-        PBBB+ny9WUpKGb9ebSby/tJeHZOH3yKkcXhC0E4lF/15UEI2E3uNoEZMgFXPOQnU
-        RcxNuw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=/xysc5mZRRwSPhJfTdSoHNPvt4tx6ue/BYIZHaszr
-        uM=; b=vQ2dab9dHMuPMC/E2g2BRHkokaNfzXVMkruZHrf1jsACbLHGamb8VmNqE
-        P5ZMhljttd/zS6DTJl7pPkbGBq5pIdNs6F9L+H9NXWVaZBO/E5ezTCv5r4n8PfTn
-        vd6wIwoC+xrNjrmwgGSL04apsHcNpNL65tRPQsCT+TJUjv4g1hOkyGCcJZtzrS3H
-        GxdexL1hxNOW5HIFBTmpckbYeFUC/rVVBmsvfPKukng83zIWcsShNYxamcdefhnC
-        GOA11+klUWv8VNUT+ToY+DAEhUTixAU0HSzzWg+P0gDoXzDTQZ0lupWKqCnoPlvF
-        QS2xTtr/Z+jSUz7/eNmgrBk3ZPE8w==
-X-ME-Sender: <xms:hwC9Xo-am4RF6LNTv7m07mH48iDckWHKMZFJz4JNxG9SYk4P3qqlIA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrleeigddtudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
-    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnhepfe
-    efteetvdeguddvveefveeftedtffduudehueeihfeuvefgveehffeludeggfejnecukfhp
-    peduudekrddvtdekrddukeejrddvhedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomheprhgrvhgvnhesthhhvghmrgifrdhnvght
-X-ME-Proxy: <xmx:hwC9Xgtl5wjK72rTScXd71Y-TFGpnL1_uTrxuWn3nX2w28PKsMdFiw>
-    <xmx:hwC9XuA_0lZdHSpSDYw85PV35YMnEkEQa8qWZUpt-wi_mJk0mXcCFg>
-    <xmx:hwC9XofeS0RrUpnYeV3V6IFkhOLUBIv4FGnrR_tWrcfFjyCZx6PQ4A>
-    <xmx:iAC9XmaibCZ2K5m1rscL-SbvJiOKKfft5rL7AmEL5B5DeSmZEnf0bg>
-Received: from mickey.themaw.net (unknown [118.208.187.250])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BEA023060A88;
-        Thu, 14 May 2020 04:25:40 -0400 (EDT)
-Message-ID: <a98e32eb5ad4486fc58e5ce79700a20abecbd69b.camel@themaw.net>
-Subject: Re: [PATCH 02/14] autofs: switch to kernel_write
-From:   Ian Kent <raven@themaw.net>
-To:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>
-Cc:     David Howells <dhowells@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        netfilter-devel@vger.kernel.org
-Date:   Thu, 14 May 2020 16:25:36 +0800
-In-Reply-To: <20200513065656.2110441-3-hch@lst.de>
-References: <20200513065656.2110441-1-hch@lst.de>
-         <20200513065656.2110441-3-hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Thu, 14 May 2020 04:26:58 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:42558 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725935AbgENI05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 04:26:57 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E33D99F0F89B7D0A6AE6;
+        Thu, 14 May 2020 16:26:54 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.93) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Thu, 14 May 2020
+ 16:26:46 +0800
+Subject: Re: [PATCH 05/10] riscv: Disable ARCH_HAS_DEBUG_WX if NOMMU
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>, <aou@eecs.berkeley.edu>,
+        <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <hulkci@huawei.com>
+References: <mhng-f65a8b91-0836-4927-a39f-8167cd3ec67f@palmerdabbelt-glaptop1>
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+Message-ID: <5d08390b-613a-516c-0091-0dc78fbc0ef8@huawei.com>
+Date:   Thu, 14 May 2020 16:26:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <mhng-f65a8b91-0836-4927-a39f-8167cd3ec67f@palmerdabbelt-glaptop1>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.166.215.93]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-05-13 at 08:56 +0200, Christoph Hellwig wrote:
-> While pipes don't really need sb_writers projection, __kernel_write
-> is an
-> interface better kept private, and the additional rw_verify_area does
-> not
-> hurt here.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Right, should be fine AFAICS.
-Acked-by: Ian Kent <raven@themaw.net>
-
-> ---
->  fs/autofs/waitq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/autofs/waitq.c b/fs/autofs/waitq.c
-> index b04c528b19d34..74c886f7c51cb 100644
-> --- a/fs/autofs/waitq.c
-> +++ b/fs/autofs/waitq.c
-> @@ -53,7 +53,7 @@ static int autofs_write(struct autofs_sb_info *sbi,
->  
->  	mutex_lock(&sbi->pipe_mutex);
->  	while (bytes) {
-> -		wr = __kernel_write(file, data, bytes, &file->f_pos);
-> +		wr = kernel_write(file, data, bytes, &file->f_pos);
->  		if (wr <= 0)
->  			break;
->  		data += wr;
+On 2020/5/14 5:14, Palmer Dabbelt wrote:
+> On Sun, 10 May 2020 19:19:56 PDT (-0700), wangkefeng.wang@huawei.com 
+> wrote:
+>> DEBUG_WX is only useful when MMU enabled, diable it if nommu
+>> and fix the build error.
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+>> ---
+>>  arch/riscv/Kconfig | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+>> index 78f30f2fdd51..7da0a36a8df0 100644
+>> --- a/arch/riscv/Kconfig
+>> +++ b/arch/riscv/Kconfig
+>> @@ -69,7 +69,7 @@ config RISCV
+>>      select HAVE_ARCH_KASAN if MMU && 64BIT
+>>      select HAVE_ARCH_KGDB
+>>      select HAVE_ARCH_KGDB_QXFER_PKT
+>> -    select ARCH_HAS_DEBUG_WX
+>> +    select ARCH_HAS_DEBUG_WX if MMU
+>>
+>>  config ARCH_MMAP_RND_BITS_MIN
+>>      default 18 if 64BIT
+>
+> Looks like this depends on something that isn't in any of my trees yet.
+as said in cover letter, the patch is based on linux-next, tag 
+next-20200508 :)
+>
+>
 
