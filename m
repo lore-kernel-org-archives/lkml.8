@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B09C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F979C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 568B3206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4746D2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:52:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482318;
-	bh=M9I9snCMy0j5jafEsffjRl5EqPZVeh41N/qn28Z08Vk=;
+	s=default; t=1589482325;
+	bh=6GqGiBkPk3MaQefo9yE73Qx5YLZ+nV2rg38obqNigOk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DZgqZHKUJvIeTkYp1cMZTy/QMndXGJ+vxkl3FtaIaF1s3+PzhBG25IJDDnSZo5227
-	 RjxoL/FC0RdsqFU0CS2nG0Td/D75bDP47t9TlpwMQw7ozlZ/JiHd0vFO2L2Pv3nUea
-	 XedM7Bp1NcGR+relLFMFR2FMbgIWuA0JxDemAVXs=
+	b=y8YYYZvFFRZoZQH1kFcgbbS0jNp7tiPuuDHpCl7SXV6PtSKoydGv/qn+NlRUVAIfR
+	 4Y/7p4J5NLncexAwR8yWUoM0HzNMlhnLD7a1kBBVTf3Rjh5frQnTXFrctOWnLB2swp
+	 IRUGkGSBR1QPoydL8HXAn0tHgPACoTq2gcdu9+9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgENSv5 (ORCPT
+        id S1728109AbgENSwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:51:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49754 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:52:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727983AbgENSvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:51:54 -0400
+        id S1727992AbgENSwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:52:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 129DE2065F;
-        Thu, 14 May 2020 18:51:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B2F3207BB;
+        Thu, 14 May 2020 18:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482313;
-        bh=M9I9snCMy0j5jafEsffjRl5EqPZVeh41N/qn28Z08Vk=;
+        s=default; t=1589482319;
+        bh=6GqGiBkPk3MaQefo9yE73Qx5YLZ+nV2rg38obqNigOk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BPPqrxTNJHUPB0zFjRAPfD38UlfrJswo4zBm9aJeZqcFYkDFmdph9T6pHfoW9nzWY
-         UcS4oZeBlneUrTVwvTxruom1k8Rs3I2oOpQah6hJuuELPIIxMspmOLyQ9Ag1OqvjxV
-         N56MZcbOZVCDSD9jxH+mAuXChYhLgN/F4m1OhoRI=
+        b=D8pZTPqg000a1rXkdFgTSjP6/7X8DYrhtAWkG63PwnYmpGanWMHTOOCV/FL/vu/cF
+         ntBjEKX/Z5tPpA0W/xfGAgKs/U4lnOdiOxXxfvnv6gKW3BN4hHixbdVFd7+MACEbbU
+         oD8CZGo/NryDoZoBQ+JJj3xaZDA/kz4upissI6U0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergei Trofimovich <slyfox@gentoo.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 03/62] Makefile: disallow data races on gcc-10 as well
-Date:   Thu, 14 May 2020 14:50:48 -0400
-Message-Id: <20200514185147.19716-3-sashal@kernel.org>
+Cc:     Jiri Kosina <jkosina@suse.cz>,
+        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 08/62] HID: alps: ALPS_1657 is too specific; use U1_UNICORN_LEGACY instead
+Date:   Thu, 14 May 2020 14:50:53 -0400
+Message-Id: <20200514185147.19716-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185147.19716-1-sashal@kernel.org>
 References: <20200514185147.19716-1-sashal@kernel.org>
@@ -60,35 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergei Trofimovich <slyfox@gentoo.org>
+From: Jiri Kosina <jkosina@suse.cz>
 
-[ Upstream commit b1112139a103b4b1101d0d2d72931f2d33d8c978 ]
+[ Upstream commit 185af3e775b693f773d9a4b5a8c3cda69fc8ca0f ]
 
-gcc-10 will rename --param=allow-store-data-races=0
-to -fno-allow-store-data-races.
+HID_DEVICE_ID_ALPS_1657 PID is too specific, as there are many other
+ALPS hardware IDs using this particular touchpad.
 
-The flag change happened at https://gcc.gnu.org/PR92046.
+Rename the identifier to HID_DEVICE_ID_ALPS_U1_UNICORN_LEGACY in order
+to describe reality better.
 
-Signed-off-by: Sergei Trofimovich <slyfox@gentoo.org>
-Acked-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Fixes: 640e403b1fd24 ("HID: alps: Add AUI1657 device ID")
+Reported-by: Xiaojian Cao <xiaojian.cao@cn.alps.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/hid/hid-alps.c | 2 +-
+ drivers/hid/hid-ids.h  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 6a8f0b278f1bb..744245f0c96cf 100644
---- a/Makefile
-+++ b/Makefile
-@@ -714,6 +714,7 @@ endif
+diff --git a/drivers/hid/hid-alps.c b/drivers/hid/hid-alps.c
+index c2a2bd5288906..b2ad319a74b9a 100644
+--- a/drivers/hid/hid-alps.c
++++ b/drivers/hid/hid-alps.c
+@@ -802,7 +802,7 @@ static int alps_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ 		break;
+ 	case HID_DEVICE_ID_ALPS_U1_DUAL:
+ 	case HID_DEVICE_ID_ALPS_U1:
+-	case HID_DEVICE_ID_ALPS_1657:
++	case HID_DEVICE_ID_ALPS_U1_UNICORN_LEGACY:
+ 		data->dev_type = U1;
+ 		break;
+ 	default:
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 7d769ca864a7f..b3cc26ca375fd 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -79,9 +79,9 @@
+ #define HID_DEVICE_ID_ALPS_U1_DUAL_PTP	0x121F
+ #define HID_DEVICE_ID_ALPS_U1_DUAL_3BTN_PTP	0x1220
+ #define HID_DEVICE_ID_ALPS_U1		0x1215
++#define HID_DEVICE_ID_ALPS_U1_UNICORN_LEGACY         0x121E
+ #define HID_DEVICE_ID_ALPS_T4_BTNLESS	0x120C
+ #define HID_DEVICE_ID_ALPS_1222		0x1222
+-#define HID_DEVICE_ID_ALPS_1657         0x121E
  
- # Tell gcc to never replace conditional load with a non-conditional one
- KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
-+KBUILD_CFLAGS	+= $(call cc-option,-fno-allow-store-data-races)
- 
- include scripts/Makefile.kcov
- include scripts/Makefile.gcc-plugins
+ #define USB_VENDOR_ID_AMI		0x046b
+ #define USB_DEVICE_ID_AMI_VIRT_KEYBOARD_AND_MOUSE	0xff10
 -- 
 2.20.1
 
