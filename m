@@ -4,23 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB5FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF287C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF0412065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:43:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC4982065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:43:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgENMnB (ORCPT
+        id S1727811AbgENMnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 08:43:01 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:59340 "EHLO huawei.com"
+        Thu, 14 May 2020 08:43:18 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:59348 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726117AbgENMnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 08:43:00 -0400
+        id S1726067AbgENMnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 08:43:01 -0400
 Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 108BAD8A4B1C2E6F9133;
+        by Forcepoint Email with ESMTP id 24A573C9E4C58D5F1E17;
         Thu, 14 May 2020 20:42:58 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
@@ -31,9 +32,9 @@ CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 5/5] net: hns3: remove unnecessary frag list checking in hns3_nic_net_xmit()
-Date:   Thu, 14 May 2020 20:41:26 +0800
-Message-ID: <1589460086-61130-6-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 3/5] net: hns3: modify an incorrect error log in hclge_mbx_handler()
+Date:   Thu, 14 May 2020 20:41:24 +0800
+Message-ID: <1589460086-61130-4-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1589460086-61130-1-git-send-email-tanhuazhong@huawei.com>
 References: <1589460086-61130-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,38 +47,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The skb_has_frag_list() in hns3_nic_net_xmit() is redundant, since
-skb_walk_frags() includes this checking implicitly.
+When handling HCLGE_MBX_GET_LINK_STATUS, PF will return the link
+status to the VF, so the error log of hclge_get_link_info() is
+incorrect.
 
-Reported-by: Yunsheng Lin <linyunsheng@huawei.com>
+Reported-by: Jian Shen <shenjian15@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index c79d6a3..9fe40c7 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1445,9 +1445,6 @@ netdev_tx_t hns3_nic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
- 
- 	bd_num += ret;
- 
--	if (!skb_has_frag_list(skb))
--		goto out;
--
- 	skb_walk_frags(skb, frag_skb) {
- 		ret = hns3_fill_skb_to_desc(ring, frag_skb,
- 					    DESC_TYPE_FRAGLIST_SKB);
-@@ -1456,7 +1453,7 @@ netdev_tx_t hns3_nic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
- 
- 		bd_num += ret;
- 	}
--out:
-+
- 	pre_ntu = ring->next_to_use ? (ring->next_to_use - 1) :
- 					(ring->desc_num - 1);
- 	ring->desc[pre_ntu].tx.bdtp_fe_sc_vld_ra_ri |=
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
+index ac70faf..0874ae4 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c
+@@ -742,7 +742,7 @@ void hclge_mbx_handler(struct hclge_dev *hdev)
+ 			ret = hclge_get_link_info(vport, req);
+ 			if (ret)
+ 				dev_err(&hdev->pdev->dev,
+-					"PF fail(%d) to get link stat for VF\n",
++					"failed to inform link stat to VF, ret = %d\n",
+ 					ret);
+ 			break;
+ 		case HCLGE_MBX_QUEUE_RESET:
 -- 
 2.7.4
 
