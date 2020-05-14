@@ -2,187 +2,164 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC25C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2930AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A82C206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F001E206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:53:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="RdSLSskx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726005AbgENGub (ORCPT
+        id S1725954AbgENGxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 02:50:31 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:59850 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725818AbgENGub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 02:50:31 -0400
-Received: from kvm-dev1.localdomain (unknown [10.2.5.134])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxL90t6rxe9Is0AA--.7S2;
-        Thu, 14 May 2020 14:50:22 +0800 (CST)
-From:   Bibo Mao <maobibo@loongson.cn>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: mm/memory.c: Add update local tlb for smp race
-Date:   Thu, 14 May 2020 14:50:21 +0800
-Message-Id: <1589439021-17005-1-git-send-email-maobibo@loongson.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: AQAAf9DxL90t6rxe9Is0AA--.7S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxXFW5Jw47Aw15GrWxtw1fWFg_yoWrur4xpF
-        yfCa1jqF4xXr1kAr4xXw1DZr13Za4rta48A3sxKw1Fvwnrtw4S9ay5G3yFvFWkAr95Gwsr
-        Jr4jqF48uay8Ww7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkFb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
-        C2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
-        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE-syl42xK82IY
-        c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
-        026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF
-        0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0x
-        vE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
-        jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07bOoGdUUUUU=
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+        Thu, 14 May 2020 02:53:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725831AbgENGxN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 02:53:13 -0400
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47E34C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 23:53:13 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id m18so492620vkk.9
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 23:53:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AD73/gyPw537Xp1vDJOYvLHr7JMtBDUrFsijP0WuRks=;
+        b=RdSLSskx2Wvw3alRl86UnDw5dnN1+ZHo+jEuOiDqNYvb3EfRrfuQ1fjHd8pEofVcmx
+         OSOsg5Ki+jgXdahzTq8BYmydYLkEp/D/1CWEiD9WIoLB/oyMT0/XdOe73UgI9Xo/PX8Z
+         vAsKTrb1XOhLWFCweUDfv5clUyY9/Ct0OqoS4jylDHfwnX2dZaBf96hPr9UjJyc9qJ54
+         LfhUMigof8LCnYdiDSe3krEkaZ0cdi5WNh7X76KkQjTeQbosgpRBGY0UM/FYTbyUC8gZ
+         fAmJrAfp1zGCiCU5/M/YWEfBTBFrgSdaXqABtBbjTfwTGLLBBjxmcCGYThD0EubKLklL
+         Y/WQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AD73/gyPw537Xp1vDJOYvLHr7JMtBDUrFsijP0WuRks=;
+        b=iYu+o5O8g2KJ5zIWSuOoNwwMrzoyUqHKrIlcOyuZvFceNll2tLytIwHbbHivDzYRWA
+         S2qlegQY+8fsyx6wehgjtoGGLE39xYmgOg4jHLEil/qnp8RITaKFOMToJzyjYDb0QERw
+         m+xrcaW/LXchzoxECSXOy9g+1/jxNTLnEST07WHPKQ+I3k/V9j+Ku9fQyuPQwGiU+ZCp
+         5FxP0n3zWFhSaF3c6lL33EdLJsTB9j5XfOshJJEy4RgiFn6qXUU3oLElV6g9nWlkas/x
+         Y6IZKY4RXBfMhdv1hdDimSxAIwMeuRvypgFmXoyAJuSBJNZAbnfCwLWIsLU/Un4hS+zw
+         ZYYA==
+X-Gm-Message-State: AOAM5315EGvrBkRhh3nv5yLnRSy68VDunyQoGbvIGfCTPjHjpnEOJXCq
+        e9m8RZMZ7OdgTCW6xJFRLqHmaPOieK/gwsFUJCjgkw==
+X-Google-Smtp-Source: ABdhPJwqOdHWX9G/Vc1PEWvZMXQ69dsTzV+tAJwC+UvjMCX5pJg7UnTD2qxWptjx7wEK5anGtRzdU/mrdZoXOnfLCtw=
+X-Received: by 2002:a1f:a786:: with SMTP id q128mr2448341vke.86.1589439192297;
+ Wed, 13 May 2020 23:53:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200514062836.190194-1-vkoul@kernel.org>
+In-Reply-To: <20200514062836.190194-1-vkoul@kernel.org>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Thu, 14 May 2020 12:22:33 +0530
+Message-ID: <CAHLCerN_pxkqJojJLL5ztbYCeFZ9Mco6oM-=0mdmh5iSydxrUg@mail.gmail.com>
+Subject: Re: [PATCH] net: stmmac: fix num_por initialization
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rahul Ankushrao Kawadgave <rahulak@qti.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If there are two threads hitting page fault at the address, one
-thread updates pte entry and local tlb, the other thread can update
-local tlb also, rather than give up and let page fault happening
-again.
+On Thu, May 14, 2020 at 11:59 AM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> Driver missed initializing num_por which is por values that driver
 
-	modified:   mm/memory.c
+Nit: s/is/is one of the/ ?
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- mm/memory.c | 30 ++++++++++++++++++++++--------
- 1 file changed, 22 insertions(+), 8 deletions(-)
+> configures to hardware. In order to get this values, add a new structure
 
-diff --git a/mm/memory.c b/mm/memory.c
-index f703fe8..3a741ce 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2436,11 +2436,10 @@ static inline bool cow_user_page(struct page *dst, struct page *src,
- 		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
- 			/*
- 			 * Other thread has already handled the fault
--			 * and we don't need to do anything. If it's
--			 * not the case, the fault will be triggered
--			 * again on the same address.
-+			 * and update local tlb only
- 			 */
- 			ret = false;
-+			update_mmu_cache(vma, addr, vmf->pte);
- 			goto pte_unlock;
- 		}
- 
-@@ -2463,8 +2462,9 @@ static inline bool cow_user_page(struct page *dst, struct page *src,
- 		vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr, &vmf->ptl);
- 		locked = true;
- 		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
--			/* The PTE changed under us. Retry page fault. */
-+			/* The PTE changed under us. update local tlb */
- 			ret = false;
-+			update_mmu_cache(vma, addr, vmf->pte);
- 			goto pte_unlock;
- 		}
- 
-@@ -2704,6 +2704,7 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
- 		}
- 		flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));
- 		entry = mk_pte(new_page, vma->vm_page_prot);
-+		entry = pte_mkyoung(entry);
- 		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
- 		/*
- 		 * Clear the pte entry and flush it first, before updating the
-@@ -2752,6 +2753,7 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
- 		new_page = old_page;
- 		page_copied = 1;
- 	} else {
-+		update_mmu_cache(vma, vmf->address, vmf->pte);
- 		mem_cgroup_cancel_charge(new_page, memcg, false);
- 	}
- 
-@@ -2812,6 +2814,7 @@ vm_fault_t finish_mkwrite_fault(struct vm_fault *vmf)
- 	 * pte_offset_map_lock.
- 	 */
- 	if (!pte_same(*vmf->pte, vmf->orig_pte)) {
-+		update_mmu_cache(vmf->vma, vmf->address, vmf->pte);
- 		pte_unmap_unlock(vmf->pte, vmf->ptl);
- 		return VM_FAULT_NOPAGE;
- 	}
-@@ -2936,6 +2939,7 @@ static vm_fault_t do_wp_page(struct vm_fault *vmf)
- 			vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
- 					vmf->address, &vmf->ptl);
- 			if (!pte_same(*vmf->pte, vmf->orig_pte)) {
-+				update_mmu_cache(vma, vmf->address, vmf->pte);
- 				unlock_page(vmf->page);
- 				pte_unmap_unlock(vmf->pte, vmf->ptl);
- 				put_page(vmf->page);
-@@ -3341,8 +3345,10 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
- 						vma->vm_page_prot));
- 		vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
- 				vmf->address, &vmf->ptl);
--		if (!pte_none(*vmf->pte))
-+		if (!pte_none(*vmf->pte)) {
-+			update_mmu_cache(vma, vmf->address, vmf->pte);
- 			goto unlock;
-+		}
- 		ret = check_stable_address_space(vma->vm_mm);
- 		if (ret)
- 			goto unlock;
-@@ -3373,13 +3379,16 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
- 	__SetPageUptodate(page);
- 
- 	entry = mk_pte(page, vma->vm_page_prot);
-+	entry = pte_mkyoung(entry);
- 	if (vma->vm_flags & VM_WRITE)
- 		entry = pte_mkwrite(pte_mkdirty(entry));
- 
- 	vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd, vmf->address,
- 			&vmf->ptl);
--	if (!pte_none(*vmf->pte))
-+	if (!pte_none(*vmf->pte)) {
-+		update_mmu_cache(vma, vmf->address, vmf->pte);
- 		goto release;
-+	}
- 
- 	ret = check_stable_address_space(vma->vm_mm);
- 	if (ret)
-@@ -3646,11 +3655,14 @@ vm_fault_t alloc_set_pte(struct vm_fault *vmf, struct mem_cgroup *memcg,
- 	}
- 
- 	/* Re-check under ptl */
--	if (unlikely(!pte_none(*vmf->pte)))
-+	if (unlikely(!pte_none(*vmf->pte))) {
-+		update_mmu_cache(vma, vmf->address, vmf->pte);
- 		return VM_FAULT_NOPAGE;
-+	}
- 
- 	flush_icache_page(vma, page);
- 	entry = mk_pte(page, vma->vm_page_prot);
-+	entry = pte_mkyoung(entry);
- 	if (write)
- 		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
- 	/* copy-on-write page */
-@@ -4224,8 +4236,10 @@ static vm_fault_t handle_pte_fault(struct vm_fault *vmf)
- 	vmf->ptl = pte_lockptr(vmf->vma->vm_mm, vmf->pmd);
- 	spin_lock(vmf->ptl);
- 	entry = vmf->orig_pte;
--	if (unlikely(!pte_same(*vmf->pte, entry)))
-+	if (unlikely(!pte_same(*vmf->pte, entry))) {
-+		update_mmu_cache(vmf->vma, vmf->address, vmf->pte);
- 		goto unlock;
-+	}
- 	if (vmf->flags & FAULT_FLAG_WRITE) {
- 		if (!pte_write(entry))
- 			return do_wp_page(vmf);
--- 
-1.8.3.1
+Nit: s/this/these
 
+> ethqos_emac_driver_data which holds por and num_por values and populate
+> that in driver probe.
+>
+> Fixes: a7c30e62d4b8 ("net: stmmac: Add driver for Qualcomm ethqos")
+> Reported-by: Rahul Ankushrao Kawadgave <rahulak@qti.qualcomm.com>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+
+Otherwise,
+
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+
+> ---
+>  .../ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
+> index e0a5fe83d8e0..bfc4a92f1d92 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
+> @@ -75,6 +75,11 @@ struct ethqos_emac_por {
+>         unsigned int value;
+>  };
+>
+> +struct ethqos_emac_driver_data {
+> +       const struct ethqos_emac_por *por;
+> +       unsigned int num_por;
+> +};
+> +
+>  struct qcom_ethqos {
+>         struct platform_device *pdev;
+>         void __iomem *rgmii_base;
+> @@ -171,6 +176,11 @@ static const struct ethqos_emac_por emac_v2_3_0_por[] = {
+>         { .offset = RGMII_IO_MACRO_CONFIG2,     .value = 0x00002060 },
+>  };
+>
+> +static const struct ethqos_emac_driver_data emac_v2_3_0_data = {
+> +       .por = emac_v2_3_0_por,
+> +       .num_por = ARRAY_SIZE(emac_v2_3_0_por),
+> +};
+> +
+>  static int ethqos_dll_configure(struct qcom_ethqos *ethqos)
+>  {
+>         unsigned int val;
+> @@ -442,6 +452,7 @@ static int qcom_ethqos_probe(struct platform_device *pdev)
+>         struct device_node *np = pdev->dev.of_node;
+>         struct plat_stmmacenet_data *plat_dat;
+>         struct stmmac_resources stmmac_res;
+> +       const struct ethqos_emac_driver_data *data;
+>         struct qcom_ethqos *ethqos;
+>         struct resource *res;
+>         int ret;
+> @@ -471,7 +482,9 @@ static int qcom_ethqos_probe(struct platform_device *pdev)
+>                 goto err_mem;
+>         }
+>
+> -       ethqos->por = of_device_get_match_data(&pdev->dev);
+> +       data = of_device_get_match_data(&pdev->dev);
+> +       ethqos->por = data->por;
+> +       ethqos->num_por = data->num_por;
+>
+>         ethqos->rgmii_clk = devm_clk_get(&pdev->dev, "rgmii");
+>         if (IS_ERR(ethqos->rgmii_clk)) {
+> @@ -526,7 +539,7 @@ static int qcom_ethqos_remove(struct platform_device *pdev)
+>  }
+>
+>  static const struct of_device_id qcom_ethqos_match[] = {
+> -       { .compatible = "qcom,qcs404-ethqos", .data = &emac_v2_3_0_por},
+> +       { .compatible = "qcom,qcs404-ethqos", .data = &emac_v2_3_0_data},
+>         { }
+>  };
+>  MODULE_DEVICE_TABLE(of, qcom_ethqos_match);
+> --
+> 2.25.4
+>
