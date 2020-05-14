@@ -2,72 +2,132 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 074AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 568F7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAE0E20727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:10:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FBAE2065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:17:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B9GUQaoL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbgENWKq (ORCPT
+        id S1728240AbgENWRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 18:10:46 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:54159 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726046AbgENWKp (ORCPT
+        Thu, 14 May 2020 18:17:21 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32112 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726046AbgENWRV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 18:10:45 -0400
-X-IronPort-AV: E=Sophos;i="5.73,392,1583161200"; 
-   d="scan'208";a="47110745"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 15 May 2020 07:10:44 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 052214106B54;
-        Fri, 15 May 2020 07:10:42 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Prabhakar Lad <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] arm64: defconfig: enable CONFIG_PCIE_RCAR_HOST
-Date:   Thu, 14 May 2020 23:10:38 +0100
-Message-Id: <1589494238-2933-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 14 May 2020 18:17:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589494639;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=82TddMEg4mqYZ099LI536goDZAY+X+1mxtBAUJ3Zp9g=;
+        b=B9GUQaoLnFrRxqkqN/DQI3/gCo4bTm/Cqdl/HwcvhGkLcGM9WWXbazZTj08bTaU9egEkbl
+        kG3AKv2zBgVn4yoh1hWE5Q+r0Bye9yxeQ6U34t2edQoypeIS1sYqW736qLvsYcLLyxAe4J
+        mDCx15wh9XzcZmUrRkP+YJqs4IMneGQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-347-GMJsk-wZMmaYpUcuBx_Htg-1; Thu, 14 May 2020 18:17:18 -0400
+X-MC-Unique: GMJsk-wZMmaYpUcuBx_Htg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1FEF28014D7;
+        Thu, 14 May 2020 22:17:17 +0000 (UTC)
+Received: from w520.home (ovpn-113-111.phx2.redhat.com [10.3.113.111])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A502C2C26A;
+        Thu, 14 May 2020 22:17:13 +0000 (UTC)
+Date:   Thu, 14 May 2020 16:17:12 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, jgg@ziepe.ca
+Subject: Re: [PATCH 0/2] vfio/type1/pci: IOMMU PFNMAP invalidation
+Message-ID: <20200514161712.14b34984@w520.home>
+In-Reply-To: <20200514212538.GB449815@xz-x1>
+References: <158947414729.12590.4345248265094886807.stgit@gimli.home>
+        <20200514212538.GB449815@xz-x1>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-config option PCIE_RCAR internally selects PCIE_RCAR_HOST which builds the
-same driver. So this patch renames CONFIG_PCIE_RCAR to
-CONFIG_PCIE_RCAR_HOST so that PCIE_RCAR can be safely dropped from Kconfig
-file.
+On Thu, 14 May 2020 17:25:38 -0400
+Peter Xu <peterx@redhat.com> wrote:
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- arch/arm64/configs/defconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> On Thu, May 14, 2020 at 10:51:46AM -0600, Alex Williamson wrote:
+> > This is a follow-on series to "vfio-pci: Block user access to disabled
+> > device MMIO"[1], which extends user access blocking of disabled MMIO
+> > ranges to include unmapping the ranges from the IOMMU.  The first patch
+> > adds an invalidation callback path, allowing vfio bus drivers to signal
+> > the IOMMU backend to unmap ranges with vma level granularity.  This
+> > signaling is done both when the MMIO range becomes inaccessible due to
+> > memory disabling, as well as when a vma is closed, making up for the
+> > lack of tracking or pinning for non-page backed vmas.  The second
+> > patch adds registration and testing interfaces such that the IOMMU
+> > backend driver can test whether a given PFNMAP vma is provided by a
+> > vfio bus driver supporting invalidation.  We can then implement more
+> > restricted semantics to only allow PFNMAP DMA mappings when we have
+> > such support, which becomes the new default.  
+> 
+> Hi, Alex,
+> 
+> IIUC we'll directly tearing down the IOMMU page table without telling the
+> userspace for those PFNMAP pages.  I'm thinking whether there be any side
+> effect on the userspace side when userspace cached these mapping information
+> somehow.  E.g., is there a way for userspace to know this event?
+> 
+> Currently, QEMU VT-d will maintain all the IOVA mappings for each assigned
+> device when used with vfio-pci.  In this case, QEMU will probably need to
+> depend some invalidations sent from the guest (either userspace or kernel)
+> device drivers to invalidate such IOVA mappings after they got removed from the
+> hardware IOMMU page table underneath.  I haven't thought deeper on what would
+> happen if the vIOMMU has got an inconsistent mapping of the real device.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 5b674a0..ccc0836 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -193,7 +193,7 @@ CONFIG_HOTPLUG_PCI=y
- CONFIG_HOTPLUG_PCI_ACPI=y
- CONFIG_PCI_AARDVARK=y
- CONFIG_PCI_TEGRA=y
--CONFIG_PCIE_RCAR=y
-+CONFIG_PCIE_RCAR_HOST=y
- CONFIG_PCI_HOST_GENERIC=y
- CONFIG_PCI_XGENE=y
- CONFIG_PCIE_ALTERA=y
--- 
-2.7.4
+Full disclosure, I haven't tested vIOMMU, there might be issues.  Let's
+puzzle through this.  Without a vIOMMU the vfio MemoryListener in QEMU
+makes use of address_space_memory, which is essentially the vCPU view
+of memory.  When the memory bit of a PCI device is disabled, QEMU
+correctly removes the MMIO regions of the device from this AddressSpace.
+When re-enabled, they get re-added.  In that case what we're doing here
+is a little bit redundant, the IOMMU mappings get dropped in response
+to the memory bit and the subsequent callback from the MemoryListener
+is effectively a no-op since the range is already unmapped.  When the
+memory bit is re-enabled, the AddressSpace gets updated, the
+MemoryListener fires and we re-fault the mmap as we're re-adding the
+IOMMU mapping.
+
+When we have a vIOMMU, the address_space_memory behavior should be the
+same as above; the vIOMMU isn't involved in vCPU to device access.  So
+I think our concern is explicit mappings, much like vfio itself makes.
+That feels like a gap.  When the vma is being closed, I think dropping
+those mappings out from under the user is probably still the right
+approach and I think this series would still be useful if we only did
+that much.  I think this would also address Jason's primary concern.
+It's better to get an IOMMU fault from the user trying to access those
+mappings than it is to leave them in place.
+
+OTOH, if we're dropping mappings in response to disabling the memory
+bit, we're changing a potential disabled MMIO access fault into an
+IOMMU fault, where the platform response might very well be fatal in
+either case.  Maybe we need to look at a more temporary invalidation
+due to the memory enable bit.  If we could remap the range to a kernel
+page we could maybe avoid the IOMMU fault and maybe even have a crude
+test for whether any data was written to the page while that mapping
+was in place (ie. simulating more restricted error handling, though
+more asynchronous than done at the platform level).  Let me look into
+it.  Thanks,
+
+Alex
 
