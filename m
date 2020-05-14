@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB34BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89F4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76997207D0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96CBA207D0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:56:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482564;
-	bh=QUFetR9UqtfJBD0l1eafaBNbAy+eu3AJDBGIyKjgDC4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TguY4Bazsdn4c1PEQGmdqfOa84UB2c7jXaoOgY3n1lD0+vnYtGoJ/6GVVHBeqFLvZ
-	 Xt8JS95ZH5i9lT/FUbNb/oLeBZWnuiajWkjR4ENomKbhEEFadscf1SHNi4oSokUFt3
-	 8XA6d5kYzKB0EunjReG1DPM/MfTg74/ydfYk1K70=
+	s=default; t=1589482566;
+	bh=4kPiZPVeQUl8TP3Xtfxjsm362Xey/pqo3zMNZweN9pg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=esfiuDWRdUNcyRiWNFLFNvugByMd8wL0ktPoyHGHvBArBP4ranobN65FWhpwRlZVj
+	 Snsc7WonJEHtljzJwuJ9lYsaPZ9f+siLCgRr5J281LBig69dXqMlsLNa3JRSoJGWI3
+	 NJmizyATvFKT8CUtDffBwkigJ3m1sd78oc0NCSpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728637AbgENS4D (ORCPT
+        id S1728446AbgENS4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:56:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56406 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:56:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728575AbgENSzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:55:45 -0400
+        id S1729512AbgENSzw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:55:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C10532076A;
-        Thu, 14 May 2020 18:55:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33920206DC;
+        Thu, 14 May 2020 18:55:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482544;
-        bh=QUFetR9UqtfJBD0l1eafaBNbAy+eu3AJDBGIyKjgDC4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lboxmf33XnHH2uOkDp+DG+yNUgazOZtnJOd3w+q+Q6Dp8IE0G8zz0Yk8HWrb4tKeF
-         KDChD78rnoWjFts2y1UdCbp2kosqhYNwuwABX3IBT/ObCwNq5kc+n/Guun6qUHzIaU
-         n8eAIBB57BULeDJ1UyKAflmKDjfAWlH0GiAtKQ7o=
+        s=default; t=1589482552;
+        bh=4kPiZPVeQUl8TP3Xtfxjsm362Xey/pqo3zMNZweN9pg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ZHqvUWMHHs7kDxgdpi3asEWNOk9K+VHkT6r8p1cIxxYAwRviNyLLlTpwW5YCUdj0m
+         t3zW6EJHcKlRcGnV0sQD+nlC2SrxoqKjqo8je+8QdxRUwMDPBXAyWyhoFLNuSR1d9F
+         JCLcFIhYsy25ahW93Mg+WmvAIuf5NN9yYHhRdGgU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 36/39] platform/x86: asus-nb-wmi: Do not load on Asus T100TA and T200TA
-Date:   Thu, 14 May 2020 14:54:53 -0400
-Message-Id: <20200514185456.21060-36-sashal@kernel.org>
+Cc:     Sergei Trofimovich <slyfox@gentoo.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 01/27] Makefile: disallow data races on gcc-10 as well
+Date:   Thu, 14 May 2020 14:55:24 -0400
+Message-Id: <20200514185550.21462-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200514185456.21060-1-sashal@kernel.org>
-References: <20200514185456.21060-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,71 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Sergei Trofimovich <slyfox@gentoo.org>
 
-[ Upstream commit 3bd12da7f50b8bc191fcb3bab1f55c582234df59 ]
+[ Upstream commit b1112139a103b4b1101d0d2d72931f2d33d8c978 ]
 
-asus-nb-wmi does not add any extra functionality on these Asus
-Transformer books. They have detachable keyboards, so the hotkeys are
-send through a HID device (and handled by the hid-asus driver) and also
-the rfkill functionality is not used on these devices.
+gcc-10 will rename --param=allow-store-data-races=0
+to -fno-allow-store-data-races.
 
-Besides not adding any extra functionality, initializing the WMI interface
-on these devices actually has a negative side-effect. For some reason
-the \_SB.ATKD.INIT() function which asus_wmi_platform_init() calls drives
-GPO2 (INT33FC:02) pin 8, which is connected to the front facing webcam LED,
-high and there is no (WMI or other) interface to drive this low again
-causing the LED to be permanently on, even during suspend.
+The flag change happened at https://gcc.gnu.org/PR92046.
 
-This commit adds a blacklist of DMI system_ids on which not to load the
-asus-nb-wmi and adds these Transformer books to this list. This fixes
-the webcam LED being permanently on under Linux.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sergei Trofimovich <slyfox@gentoo.org>
+Acked-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/asus-nb-wmi.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
-index 59f3a37a44d7a..8db2dc05b8cf2 100644
---- a/drivers/platform/x86/asus-nb-wmi.c
-+++ b/drivers/platform/x86/asus-nb-wmi.c
-@@ -517,9 +517,33 @@ static struct asus_wmi_driver asus_nb_wmi_driver = {
- 	.detect_quirks = asus_nb_wmi_quirks,
- };
+diff --git a/Makefile b/Makefile
+index 2a923301987e5..4ff8ea7d2835e 100644
+--- a/Makefile
++++ b/Makefile
+@@ -672,6 +672,7 @@ KBUILD_CFLAGS += $(call cc-ifversion, -lt, 0409, \
  
-+static const struct dmi_system_id asus_nb_wmi_blacklist[] __initconst = {
-+	{
-+		/*
-+		 * asus-nb-wm adds no functionality. The T100TA has a detachable
-+		 * USB kbd, so no hotkeys and it has no WMI rfkill; and loading
-+		 * asus-nb-wm causes the camera LED to turn and _stay_ on.
-+		 */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100TA"),
-+		},
-+	},
-+	{
-+		/* The Asus T200TA has the same issue as the T100TA */
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T200TA"),
-+		},
-+	},
-+	{} /* Terminating entry */
-+};
+ # Tell gcc to never replace conditional load with a non-conditional one
+ KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
++KBUILD_CFLAGS	+= $(call cc-option,-fno-allow-store-data-races)
  
- static int __init asus_nb_wmi_init(void)
- {
-+	if (dmi_check_system(asus_nb_wmi_blacklist))
-+		return -ENODEV;
-+
- 	return asus_wmi_register_driver(&asus_nb_wmi_driver);
- }
- 
+ # check for 'asm goto'
+ ifeq ($(shell $(CONFIG_SHELL) $(srctree)/scripts/gcc-goto.sh $(CC) $(KBUILD_CFLAGS)), y)
 -- 
 2.20.1
 
