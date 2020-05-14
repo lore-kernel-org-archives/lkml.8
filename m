@@ -2,207 +2,114 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3754BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE22C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC1452054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:29:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="maNq0y5Y"
+	by mail.kernel.org (Postfix) with ESMTP id 48FC82054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:31:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589481117;
+	bh=lTUj03v63iH1ao9L+hPlNAjXZaTpeM2w8inlsrO+Jz8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cITTwQhzSLAqaEX+H63diByLnZuJuyfeN4cZTD42rHCoYHLJQlLrOXvgec+dC+aW3
+	 tVnaIKWXtvqx7q52kk/1G7xgM8TmHB3vAUTofnpuJT+l1tIQDKtVZ/Qx6bf2isilQc
+	 UCrH3+6WLtY/xKMSiTd3dGHB1464/OH+2LiEdg8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgENS3Z (ORCPT
+        id S1726908AbgENSb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:29:25 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3075 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbgENS3Y (ORCPT
+        Thu, 14 May 2020 14:31:56 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38556 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbgENSb4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:29:24 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ebd8d7a0001>; Thu, 14 May 2020 11:27:06 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 14 May 2020 11:29:24 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 14 May 2020 11:29:24 -0700
-Received: from [10.2.88.73] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 14 May
- 2020 18:29:23 +0000
-Subject: Re: [RFC] mm/vmstat: Add events for THP migration without split
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, <linux-mm@kvack.org>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Zi Yan <ziy@nvidia.com>, <linux-kernel@vger.kernel.org>
-References: <1589257372-29576-1-git-send-email-anshuman.khandual@arm.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <8be2c517-ba87-400b-dfbe-461bd6065c2d@nvidia.com>
-Date:   Thu, 14 May 2020 11:29:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 14 May 2020 14:31:56 -0400
+Received: by mail-oi1-f196.google.com with SMTP id j145so3583990oib.5;
+        Thu, 14 May 2020 11:31:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/ZdOo8qTYydr7gpNlz9VEjrBle34EZ628Ie0y7qEL/0=;
+        b=ranJhHybyWIi9UvAbpb0MyY6TkhPGXR9JnqhNpFy5UYpe/JfZhv/3cRnFOe4cwiiuq
+         uyhIdQ1yPFzkOyInXsWU2/Zv0axUpMtGMbRiMYBuSddcYtLpwAbZ5mDkq4m6CU0gK16t
+         PZTRwJGdlofBFYwRChqM6brx9Rt2b0G5lv0B5CmQSWZYIP3WyANIhAWgDS0+sGNvD3qa
+         2tPBMr8LvkEjyRplMGWObSr6JS4AOE7uEy7T57dCSAua1Qn6rTLopW8sOFZVGoMJrCLq
+         /ezN1k+ZHr9rrI/Zmol/qHkUJEoZ3i5EDbJG5FtuSchZ1QlAI4xTgICKikvSMMIwWt0V
+         98eA==
+X-Gm-Message-State: AGi0PuYSbvU7PUZRQwwZ10SSQhVNyGzkcbgh3EANXOgTLV6ETwZc1M9h
+        SX08VAelHguj8+OGvfrXaw==
+X-Google-Smtp-Source: APiQypJb/IrkasWWL0KzBECbQGQmU9ovfrPx2nw3JgBo31OcpHjNbpKZH/E7kal8pID5YeWdCQI4Hg==
+X-Received: by 2002:aca:fd12:: with SMTP id b18mr32276044oii.158.1589481112173;
+        Thu, 14 May 2020 11:31:52 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h24sm978584otj.25.2020.05.14.11.31.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 11:31:51 -0700 (PDT)
+Received: (nullmailer pid 24946 invoked by uid 1000);
+        Thu, 14 May 2020 18:31:50 -0000
+Date:   Thu, 14 May 2020 13:31:50 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sergey.Semin@baikalelectronics.ru
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, linux-pm@vger.kernel.org,
+        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>,
+        Mark Brown <broonie@kernel.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 03/20] dt-bindings: Add vendor prefix for Baikal
+ Electronics, JSC
+Message-ID: <20200514183150.GA24713@bogus>
+References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
+ <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
+ <20200506174238.15385-4-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <1589257372-29576-1-git-send-email-anshuman.khandual@arm.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1589480826; bh=it1oMCn8dC/MVjc5q48LqltF3VvVRaM29QWnpwrpMPU=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=maNq0y5YePD1L5K6yg2TWQLsywK0aC25HynSPI6O9f0sjCsx4L2Oa9+Qxa9O3mV4T
-         Ry7b4v8DsqRsYHklDhMI5s3DskEPxObgCgotbGrE4D5gFItHlR4z7V5wTuNiIpHYs+
-         MJiX03W+gL0YpzRZAhCuiUfizQ57uwiZkCdhkN7cDVmGdWOVHqT7C3bwXf20RSt3BK
-         hsJRYRqizKAMZ1T0tW0dWSNnZmEJMxNp+rnep7U9TQlK33VA8fux0YY83Vu0fQy9Bi
-         uzEX35ZbUcFnpZCnsqDI9QkfeQYhUz81TYveX5hi6o3wbc1Z4MFsRHH4psTiHmeYS6
-         i18QVPz0x2lew==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200506174238.15385-4-Sergey.Semin@baikalelectronics.ru>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-11 21:22, Anshuman Khandual wrote:
-> Add the following new trace events which will help in validating migration
-> events involving PMD based THP pages.
+On Wed, 6 May 2020 20:42:21 +0300,  wrote:
+> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > 
-> 1. THP_PMD_MIGRATION_ENTRY_SET
-> 2. THP_PMD_MIGRATION_ENTRY_REMOVE
+> Add "BAIKAL ELECTRONICS, JSC" to the list of devicetree vendor prefixes
+> as "baikal".
 > 
-> There are no clear method to confirm whether a THP migration happened with
-> out involving it's split. These trace events along with PGMIGRATE_SUCCESS
-> and PGMIGRATE_FAILURE will provide additional insights. After this change,
+> Website: http://www.baikalelectronics.com
 > 
-
-
-Hi Anshuman,
-
-It's very nice to see this work, and I think that reporting a bit more
-about THP migration stats is going to make development and performance
-debugging a lot more efficient (and pleasant).
-
-
-> A single 2M THP (2K base page) when migrated
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Paul Burton <paulburton@kernel.org>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: linux-mips@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
 > 
-> 1. Without split
-> 
-> ................
-> pgmigrate_success 1
-> pgmigrate_fail 0
-> ................
-> thp_pmd_migration_entry_set 1
-> thp_pmd_migration_entry_remove 1
-> ................
-> 
-
-I do think we should decouple the trace event name(s) just a *little* more,
-from the mechanisms used to migrate THPs. In other words, let's report
-the number of THP migration successes, and name it accordingly--rather
-than "set" and "remove", which are pretty low-level and furthermore
-depend on today's exact code.
-
-Maybe Zi Yan's recommended name is exactly right, in fact:
-
-     THP_PMD_MIGRATION_SUCCESS
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-
-
-> 2. With split
-> 
-> ................
-> pgmigrate_success 512
-> pgmigrate_fail 0
-> ................
-> thp_pmd_migration_entry_set 0
-> thp_pmd_migration_entry_remove 0
-> ................
-> 
-> pgmigrate_success as 1 instead of 512, provides a hint for possible THP
-> migration event. But then it gets mixed with normal page migrations over
-> time. These additional trace events provide required co-relation.
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> Cc: Zi Yan <ziy@nvidia.com>
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 > ---
-> This is an indirect way for counting PMD migrations without split. Is there
-> a better method possible ? Just request for comments at the moment.
 > 
->   include/linux/vm_event_item.h | 4 ++++
->   mm/migrate.c                  | 1 +
->   mm/rmap.c                     | 1 +
->   mm/vmstat.c                   | 4 ++++
->   4 files changed, 10 insertions(+)
-> 
-> diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
-> index ffef0f279747..4b25102cf3ad 100644
-> --- a/include/linux/vm_event_item.h
-> +++ b/include/linux/vm_event_item.h
-> @@ -91,6 +91,10 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
->   		THP_ZERO_PAGE_ALLOC_FAILED,
->   		THP_SWPOUT,
->   		THP_SWPOUT_FALLBACK,
-> +#ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
-> +		THP_PMD_MIGRATION_ENTRY_SET,
-> +		THP_PMD_MIGRATION_ENTRY_REMOVE,
-> +#endif
->   #endif
->   #ifdef CONFIG_MEMORY_BALLOON
->   		BALLOON_INFLATE,
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index 7160c1556f79..8d50d55cbe97 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -228,6 +228,7 @@ static bool remove_migration_pte(struct page *page, struct vm_area_struct *vma,
->   		if (!pvmw.pte) {
->   			VM_BUG_ON_PAGE(PageHuge(page) || !PageTransCompound(page), page);
->   			remove_migration_pmd(&pvmw, new);
-> +			count_vm_event(THP_PMD_MIGRATION_ENTRY_REMOVE);
->   			continue;
->   		}
->   #endif
-> diff --git a/mm/rmap.c b/mm/rmap.c
-> index f79a206b271a..3c1fe3f45cb5 100644
-> --- a/mm/rmap.c
-> +++ b/mm/rmap.c
-> @@ -1418,6 +1418,7 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
->   			VM_BUG_ON_PAGE(PageHuge(page) || !PageTransCompound(page), page);
->   
->   			set_pmd_migration_entry(&pvmw, page);
-> +			count_vm_event(THP_PMD_MIGRATION_ENTRY_SET);
->   			continue;
->   		}
->   #endif
-> diff --git a/mm/vmstat.c b/mm/vmstat.c
-> index 96d21a792b57..a5254b7ee531 100644
-> --- a/mm/vmstat.c
-> +++ b/mm/vmstat.c
-> @@ -1274,6 +1274,10 @@ const char * const vmstat_text[] = {
->   	"thp_zero_page_alloc_failed",
->   	"thp_swpout",
->   	"thp_swpout_fallback",
-> +#ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
-> +	"thp_pmd_migration_entry_set",
-> +	"thp_pmd_migration_entry_remove",
-> +#endif
->   #endif
->   #ifdef CONFIG_MEMORY_BALLOON
->   	"balloon_inflate",
+> Changelog v2:
+> - Fix author and SoB emails mismatch.
+> - Add 'baikal' vendor prefix instead of ambiguous 'be'.
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
+Applied, thanks!
