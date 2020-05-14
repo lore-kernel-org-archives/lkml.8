@@ -6,103 +6,102 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E1AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C62C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3F73205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 127BB205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:33:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgENBcq (ORCPT
+        id S1728413AbgENBdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 21:32:46 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:47036 "EHLO huawei.com"
+        Wed, 13 May 2020 21:33:01 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4840 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725925AbgENBcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 21:32:45 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8766BF7CB335548C3F05;
-        Thu, 14 May 2020 09:32:43 +0800 (CST)
-Received: from [127.0.0.1] (10.166.215.101) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Thu, 14 May 2020
- 09:32:40 +0800
-Subject: Re: [PATCH] [media] tw686x: add a missing newline when printing
- parameter 'dma_mode'
-To:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <1589186626-17243-1-git-send-email-wangxiongfeng2@huawei.com>
- <CAAEAJfAzcRTLE3HWHJqWvuENYnPCU-E6TdaDWXc+WNHOaUqdyA@mail.gmail.com>
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Message-ID: <c8b781aa-da2b-5aa7-aadc-a1980c84bd0d@huawei.com>
-Date:   Thu, 14 May 2020 09:32:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1725925AbgENBdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 21:33:00 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 21B6A29B7E58DFE8DD60;
+        Thu, 14 May 2020 09:32:58 +0800 (CST)
+Received: from [127.0.0.1] (10.74.149.191) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Thu, 14 May 2020
+ 09:32:51 +0800
+Subject: Re: [PATCH net-next] net: phy: realtek: add loopback support for
+ RTL8211F
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <linux@armlinux.org.uk>, <davem@davemloft.net>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linuxarm@huawei.com>, <kuba@kernel.org>,
+        Yufeng Mo <moyufeng@huawei.com>,
+        Jian Shen <shenjian15@huawei.com>
+References: <1589358344-14009-1-git-send-email-tanhuazhong@huawei.com>
+ <20200513131226.GA499265@lunn.ch>
+From:   tanhuazhong <tanhuazhong@huawei.com>
+Message-ID: <e54083ee-ed3a-115f-0856-d943dac579a8@huawei.com>
+Date:   Thu, 14 May 2020 09:32:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.2
 MIME-Version: 1.0
-In-Reply-To: <CAAEAJfAzcRTLE3HWHJqWvuENYnPCU-E6TdaDWXc+WNHOaUqdyA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.166.215.101]
+In-Reply-To: <20200513131226.GA499265@lunn.ch>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.74.149.191]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ezequiel,
 
-Thanks for your reply !
 
-On 2020/5/14 3:32, Ezequiel Garcia wrote:
-> On Mon, 11 May 2020 at 05:49, Xiongfeng Wang <wangxiongfeng2@huawei.com> wrote:
+On 2020/5/13 21:12, Andrew Lunn wrote:
+> On Wed, May 13, 2020 at 04:25:44PM +0800, Huazhong Tan wrote:
+>> From: Yufeng Mo <moyufeng@huawei.com>
 >>
->> When I cat module parameter 'dma_mode' by sysfs, it displays as follows.
->> It is better to add a newline for easy reading.
+>> PHY loopback is already supported by genphy driver. This patch
+>> adds the set_loopback interface to RTL8211F PHY driver, so the PHY
+>> selftest can run properly on it.
 >>
->> [root@hulk-202 ~]# cat /sys/module/tw686x/parameters/dma_mode
->> memcpy[root@hulk-202 ~]#
->>
->> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+>> Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
+>> Signed-off-by: Jian Shen <shenjian15@huawei.com>
+>> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 > 
-> I don't mind this change, but I don't think this is standard.
-> The lack of newline follows what other drivers are doing.
-> 
-> # hexdump -c /sys/module/acpi/parameters/ec_event_clearing
-> 0000000   q   u   e   r   y
-> 0000005
-> 
-> Is it really an issue for you?
+> It took three people to write a 1 line patch?
 
-It's not an issue for me. It's just that if the result is in a separate line, it
-reads more easily. I am also planning to fix the parameters below
-'/sys/module/acpi/parameters'.
+Yufeng Mo is the author of this patch, since he has not right to send mail
+so I just help him to do than。 If necessary, Jian Shen could be deleted.
 
-Thanks,
-Xiongfeng
-
-> 
-> Thanks,
-> Ezequiel
 > 
 >> ---
->>  drivers/media/pci/tw686x/tw686x-core.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>   drivers/net/phy/realtek.c | 1 +
+>>   1 file changed, 1 insertion(+)
 >>
->> diff --git a/drivers/media/pci/tw686x/tw686x-core.c b/drivers/media/pci/tw686x/tw686x-core.c
->> index 74ae4f0..bfc61da 100644
->> --- a/drivers/media/pci/tw686x/tw686x-core.c
->> +++ b/drivers/media/pci/tw686x/tw686x-core.c
->> @@ -71,7 +71,7 @@ static const char *dma_mode_name(unsigned int mode)
->>
->>  static int tw686x_dma_mode_get(char *buffer, const struct kernel_param *kp)
->>  {
->> -       return sprintf(buffer, "%s", dma_mode_name(dma_mode));
->> +       return sprintf(buffer, "%s\n", dma_mode_name(dma_mode));
->>  }
->>
->>  static int tw686x_dma_mode_set(const char *val, const struct kernel_param *kp)
->> --
->> 1.7.12.4
->>
+>> diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
+>> index c7229d0..6c5918c 100644
+>> --- a/drivers/net/phy/realtek.c
+>> +++ b/drivers/net/phy/realtek.c
+>> @@ -615,6 +615,7 @@ static struct phy_driver realtek_drvs[] = {
+>>   		.resume		= genphy_resume,
+>>   		.read_page	= rtl821x_read_page,
+>>   		.write_page	= rtl821x_write_page,
+>> +		.set_loopback   = genphy_loopback,
+>>   	}, {
+>>   		.name		= "Generic FE-GE Realtek PHY",
+>>   		.match_phy_device = rtlgen_match_phy_device,
+> 
+> Do you have access to the data sheets? Can you check if the other PHYs
+> supported by this driver also support loopback in the standard way?
+> They probably do.
+> 
+> 	  Andrew
+> 
+
+We have checked the data sheet. Since we only have rtl8211f phy on our 
+hand, so only support loopback on this phy.
+
+Thanks:)
+
+> .
 > 
 
