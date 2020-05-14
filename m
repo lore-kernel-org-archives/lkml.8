@@ -2,69 +2,87 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B44AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF89C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9001F206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 943AD20727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:14:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbgENLOq (ORCPT
+        id S1726216AbgENLO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 07:14:46 -0400
-Received: from verein.lst.de ([213.95.11.211]:51366 "EHLO verein.lst.de"
+        Thu, 14 May 2020 07:14:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60090 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbgENLOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 07:14:46 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 951B268BEB; Thu, 14 May 2020 13:14:42 +0200 (CEST)
-Date:   Thu, 14 May 2020 13:14:42 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jeremy Linton <jeremy.linton@arm.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+353be47c9ce21b68b7ed@syzkaller.appspotmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, x86@kernel.org
-Subject: Re: Validating dma_mmap_coherent() parameters before calling (was
- Re: WARNING in memtype_reserve)
-Message-ID: <20200514111442.GA13813@lst.de>
-References: <000000000000f0d8d205a531f1a3@google.com> <20200509074507.GC1831917@kroah.com> <87wo5l4ecm.fsf@nanos.tec.linutronix.de> <20200513124445.GA1082735@kroah.com> <87zhab249p.fsf@nanos.tec.linutronix.de> <20200514035458.14760-1-hdanton@sina.com> <20200514061417.GA8367@lst.de> <20200514062750.GA1488715@kroah.com> <20200514063158.GA8780@lst.de> <8bdb3488-59d0-67ce-4822-e25dbd0dc42a@arm.com>
+        id S1725955AbgENLO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 07:14:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 60498B03E;
+        Thu, 14 May 2020 11:14:58 +0000 (UTC)
+Received: from localhost (webern.olymp [local])
+        by webern.olymp (OpenSMTPD) with ESMTPA id 5cfcdbe1;
+        Thu, 14 May 2020 12:14:53 +0100 (WEST)
+Date:   Thu, 14 May 2020 12:14:53 +0100
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Jeff Layton <jlayton@kernel.org>, Ilya Dryomov <idryomov@gmail.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ceph: don't return -ESTALE if there's still an open file
+Message-ID: <20200514111453.GA99187@suse.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8bdb3488-59d0-67ce-4822-e25dbd0dc42a@arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 06:10:03AM -0500, Jeremy Linton wrote:
->> I only need to look at the commit for 3 seconds to tell you that it is
->> completely buggy.  While using dma_mmap_coherent is fundamentally the
->> right thing and absolutely required for dma_alloc_* allocations, USB
->> also uses it's own local gen pool allocator or plain kmalloc for not
->> DMA capable controller.  This need to use remap_pfn_range.  I'm pretty
->> sure you hit one of those cases.
->
-> ? The code path in question is usbdev_mmap() and the allocation is done ~13 
-> lines lines before as a usb_alloc_coherent().
+Similarly to commit 03f219041fdb ("ceph: check i_nlink while converting
+a file handle to dentry"), this fixes another corner case with
+name_to_handle_at/open_by_handle_at.  The issue has been detected by
+xfstest generic/467, when doing:
 
-And did you take a look at how usb_alloc_coherent is implemented?  That
-should make it completely obvious that not all allocations come
-from dma_alloc_*.
+ - name_to_handle_at("/cephfs/myfile")
+ - open("/cephfs/myfile")
+ - unlink("/cephfs/myfile")
+ - open_by_handle_at()
 
-> That sort of makes sense, except for the above, and the fact that I would 
-> imagine the dma_mmap_coherent should be dealing with that case. I'm not 
-> really clear about the details of the GCE usb device here, but my first 
-> guess at this was the dma_pgprot() in dma_direct_mmap() is incorrectly 
-> picking a pgprot...
+The call to open_by_handle_at should not fail because the file still
+exists and we do have a valid handle to it.
 
-No, dma_mmap_* / dma_direct_mmap has absolutely no business dealing
-with memory that did not come from the DMA allocator.
+Signed-off-by: Luis Henriques <lhenriques@suse.com>
+---
+ fs/ceph/export.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+index 79dc06881e78..8556df9d94d0 100644
+--- a/fs/ceph/export.c
++++ b/fs/ceph/export.c
+@@ -171,12 +171,21 @@ struct inode *ceph_lookup_inode(struct super_block *sb, u64 ino)
+ 
+ static struct dentry *__fh_to_dentry(struct super_block *sb, u64 ino)
+ {
++	struct ceph_inode_info *ci;
+ 	struct inode *inode = __lookup_inode(sb, ino);
++
+ 	if (IS_ERR(inode))
+ 		return ERR_CAST(inode);
+ 	if (inode->i_nlink == 0) {
+-		iput(inode);
+-		return ERR_PTR(-ESTALE);
++		bool is_open;
++		ci = ceph_inode(inode);
++		spin_lock(&ci->i_ceph_lock);
++		is_open = __ceph_is_file_opened(ci);
++		spin_unlock(&ci->i_ceph_lock);
++		if (!is_open) {
++			iput(inode);
++			return ERR_PTR(-ESTALE);
++		}
+ 	}
+ 	return d_obtain_alias(inode);
+ }
