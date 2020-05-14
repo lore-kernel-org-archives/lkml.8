@@ -2,180 +2,188 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C96C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51FC320727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:06:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589490370;
-	bh=UY4fp0mnf5dW1wUh0nDLNnXc+3+KQou78sP+055n/7o=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=DUYYoAJG1rQcELMvJtpGJhpHD99Tsu+s5cNTOwHmYZSqCwiymxAEgxfsDeP+7QzhR
-	 QO7mK0W0X5fJYDcd+VJxn43yFrIMmMN8T8zq0oJKHW/IL1r8PdZFzYkR3OQ2i8s6FP
-	 P48HDu7I1AFJWVGm6yD2eYdZ6tlLBNS77z5FE5D8=
+	by mail.kernel.org (Postfix) with ESMTP id 8FDBB206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:07:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kXSrc44W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbgENVGJ (ORCPT
+        id S1728039AbgENVH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 17:06:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42248 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727942AbgENVGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 17:06:09 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36852206F1;
-        Thu, 14 May 2020 21:06:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589490368;
-        bh=UY4fp0mnf5dW1wUh0nDLNnXc+3+KQou78sP+055n/7o=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=iGkC1CT3zmGMq2uKjMheCCTkkAmJnKrHaH1Vcq/IXoUTAC4qgU+jRimYwS8hlmz7h
-         YUJ3vwEGdKVFhOoTI08Vy4zHsOq1emOLEwbBqZKOjr72brCADdK0sIpIp9aJj6PgpW
-         09KeR8l/UL60hPXHKOk6xLczM2j324/3jR1YkKjM=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 14 May 2020 17:07:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41304 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726201AbgENVH0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 17:07:26 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35E30C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 14:07:26 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t7so44869plr.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 14:07:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=NykzObPbt09vQkb419M6Erv1hx3UgyLf17JiOqHvK80=;
+        b=kXSrc44WFSLsjXyR3bgvdMCGXo3k3C3Oij9xGZlXBwp42VEUZCNCMZLCnI9OGne/vC
+         mr0ZoWsu3K9OxnagSQTufjXCYNBsmgnKknQ/+TAAJ4umAqRSc9biOadFDWGedTwyxZNl
+         u25qF/rQIzI3UjGyszM1Ldeb8Z0rLmX5nVR8c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NykzObPbt09vQkb419M6Erv1hx3UgyLf17JiOqHvK80=;
+        b=sMbqvd1XGV/P+ADZcBR+ckgxgMvLNvMw7n/xmvxoRZPKJaxQptiqXrv1zHomU2nDjJ
+         ELSIv8vMG2iQNTNk1s2fSFMmFJceS23redir2T00IeQamk7bF5kKSYgZtEGiHSr/p8U/
+         y+in1KUSYJ5PgD/t5P+mxu2N+App/jjbHVRdmT04I9VjY6QJfQtOBjxQlbTr+hzaQ6Bs
+         2ugj42J0I3etOurYI85wGMNB4OJOjXeo1viw/ooF2up+kE2N1FZ5wCo03CWIBBlyN54b
+         gkz8ARlOzPDnRnGrie4X+wWSEAi0Z155PpM9Rmo62702+WEKazEkEX2nERu/s380Gniw
+         9eAA==
+X-Gm-Message-State: AOAM5318eZMWnj1Y8T1LC2OnOfr0ElHU5EmmBoxOyoNfopFlVXvHQClu
+        yErzcvGYE/To3h7COdIUCCzrZA==
+X-Google-Smtp-Source: ABdhPJwQKxTyIK1X8Xl6+Pi/MwcWTTTthijbO2mFHfEyCX0DhQONIsHerCdGZtFoUmB1727GR2qgVw==
+X-Received: by 2002:a17:902:bd81:: with SMTP id q1mr501366pls.46.1589490445695;
+        Thu, 14 May 2020 14:07:25 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id w192sm104707pff.126.2020.05.14.14.07.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 May 2020 14:07:25 -0700 (PDT)
+Date:   Thu, 14 May 2020 14:07:24 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Cc:     linux-bluetooth@vger.kernel.org, bgodavar@codeaurora.org,
+        alainm@chromium.org, marcel@holtmann.org,
+        chromeos-bluetooth-upstreaming@chromium.org,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] Bluetooth: hci_qca: Enable WBS support for wcn3991
+Message-ID: <20200514210724.GQ4525@google.com>
+References: <20200514131338.v2.1.I68404fc395a3dbc57c8a89ca02490013e8003a87@changeid>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200511195534.1207927-2-lkundrak@v3.sk>
-References: <20200511195534.1207927-1-lkundrak@v3.sk> <20200511195534.1207927-2-lkundrak@v3.sk>
-Subject: Re: [PATCH 1/2] dt-bindings: sound: Add Marvell MMP Audio Clock Controller binding
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-To:     Lubomir Rintel <lkundrak@v3.sk>,
-        Michael Turquette <mturquette@baylibre.com>
-Date:   Thu, 14 May 2020 14:06:07 -0700
-Message-ID: <158949036750.215346.11234071140104055350@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200514131338.v2.1.I68404fc395a3dbc57c8a89ca02490013e8003a87@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Lubomir Rintel (2020-05-11 12:55:33)
-> diff --git a/Documentation/devicetree/bindings/clock/marvell,mmp2-audio-c=
-lock.yaml b/Documentation/devicetree/bindings/clock/marvell,mmp2-audio-cloc=
-k.yaml
-> new file mode 100644
-> index 000000000000..b86e9fbfa56d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.ya=
-ml
-> @@ -0,0 +1,73 @@
-> +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/marvell,mmp2-audio-clock.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Marvell MMP2 Audio Clock Controller
-> +
-> +maintainers:
-> +  - Lubomir Rintel <lkundrak@v3.sk>
-> +
-> +description: |
-> +  The audio clock controller generates and supplies the clocks to the au=
-dio
-> +  codec.
-> +
-> +  Each clock is assigned an identifier and client nodes use this identif=
-ier
-> +  to specify the clock which they consume.
-> +
-> +  All these identifiers could be found in <dt-bindings/clock/marvell,mmp=
-2.h>.
+Hi Abhishek,
 
-Is this right? The patch puts them in mmp2-audio.h
+On Thu, May 14, 2020 at 01:14:04PM -0700, Abhishek Pandit-Subedi wrote:
+> WCN3991 supports transparent WBS (host encoded mSBC). Add a flag to the
+> device match data to show WBS is supported.
+> 
+> This requires the matching firmware for WCN3991 in linux-firmware:
+>         1a8b0dc00f77 (qca: Enable transparent WBS for WCN3991)
+> 
+> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> ---
+> 
+> Changes in v2:
+> - Rename struct to qca_capabilities and fix enum naming
+> 
+>  drivers/bluetooth/hci_qca.c | 23 +++++++++++++++++------
+>  1 file changed, 17 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index b3fd07a6f8127..96799644f0933 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -75,6 +75,9 @@ enum qca_flags {
+>  	QCA_HW_ERROR_EVENT
+>  };
+>  
+> +enum qca_capabilities {
+> +	QCA_CAP_WIDEBAND_SPEECH_SUPPORTED = BIT(0),
 
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - marvell,mmp2-audio-clock
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Audio subsystem clock
-> +      - description: The crystal oscillator clock
-> +      - description: First I2S clock
-> +      - description: Second I2S clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: audio
-> +      - const: vctcxo
-> +      - const: i2s0
-> +      - const: i2s1
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - '#clock-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/marvell,mmp2.h>
-> +    #include <dt-bindings/power/marvell,mmp2.h>
-> +
-> +    clocks@d42a0c30 {
+nit: the '_SUPPORTED' suffix seems somewhat redundant, given that this
+is a capability (as 'CAP' indicates). Up to you if you want to keep it.
 
-clock-controller@d42a0c30
-
-> +      compatible =3D "marvell,mmp2-audio-clock";
-> +      reg =3D <0xd42a0c30 0x10>;
-
-That is a very specific and tiny region. Presumably this is part of a
-larger hardware block and thus shouldn't be described in DT this way.
-Instead there should be one clock-controller node and a driver that
-controls all the clks that it wants to inside that hardware block.
-
-> +      clock-names =3D "audio", "vctcxo", "i2s0", "i2s1";
-> +      clocks =3D <&soc_clocks MMP2_CLK_AUDIO>,
-> +               <&soc_clocks MMP2_CLK_VCTCXO>,
-> +               <&soc_clocks MMP2_CLK_I2S0>,
-> +               <&soc_clocks MMP2_CLK_I2S1>;
-> +      power-domains =3D <&soc_clocks MMP2_POWER_DOMAIN_AUDIO>;
-> +      #clock-cells =3D <1>;
-> +    };
-> diff --git a/include/dt-bindings/clock/marvell,mmp2-audio.h b/include/dt-=
-bindings/clock/marvell,mmp2-audio.h
-> new file mode 100644
-> index 000000000000..127b48ec0f0a
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/marvell,mmp2-audio.h
-> @@ -0,0 +1,8 @@
-> +/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause) */
-> +#ifndef __DT_BINDINGS_CLOCK_MARVELL_MMP2_AUDIO_H
-> +#define __DT_BINDINGS_CLOCK_MARVELL_MMP2_AUDIO_H
+> +};
+>  
+>  /* HCI_IBS transmit side sleep protocol states */
+>  enum tx_ibs_states {
+> @@ -187,10 +190,11 @@ struct qca_vreg {
+>  	unsigned int load_uA;
+>  };
+>  
+> -struct qca_vreg_data {
+> +struct qca_device_data {
+>  	enum qca_btsoc_type soc_type;
+>  	struct qca_vreg *vregs;
+>  	size_t num_vregs;
+> +	uint32_t capabilities;
+>  };
+>  
+>  /*
+> @@ -1691,7 +1695,7 @@ static const struct hci_uart_proto qca_proto = {
+>  	.dequeue	= qca_dequeue,
+>  };
+>  
+> -static const struct qca_vreg_data qca_soc_data_wcn3990 = {
+> +static const struct qca_device_data qca_soc_data_wcn3990 = {
+>  	.soc_type = QCA_WCN3990,
+>  	.vregs = (struct qca_vreg []) {
+>  		{ "vddio", 15000  },
+> @@ -1702,7 +1706,7 @@ static const struct qca_vreg_data qca_soc_data_wcn3990 = {
+>  	.num_vregs = 4,
+>  };
+>  
+> -static const struct qca_vreg_data qca_soc_data_wcn3991 = {
+> +static const struct qca_device_data qca_soc_data_wcn3991 = {
+>  	.soc_type = QCA_WCN3991,
+>  	.vregs = (struct qca_vreg []) {
+>  		{ "vddio", 15000  },
+> @@ -1711,9 +1715,10 @@ static const struct qca_vreg_data qca_soc_data_wcn3991 = {
+>  		{ "vddch0", 450000 },
+>  	},
+>  	.num_vregs = 4,
+> +	.capabilities = QCA_CAP_WIDEBAND_SPEECH_SUPPORTED,
+>  };
+>  
+> -static const struct qca_vreg_data qca_soc_data_wcn3998 = {
+> +static const struct qca_device_data qca_soc_data_wcn3998 = {
+>  	.soc_type = QCA_WCN3998,
+>  	.vregs = (struct qca_vreg []) {
+>  		{ "vddio", 10000  },
+> @@ -1724,7 +1729,7 @@ static const struct qca_vreg_data qca_soc_data_wcn3998 = {
+>  	.num_vregs = 4,
+>  };
+>  
+> -static const struct qca_vreg_data qca_soc_data_qca6390 = {
+> +static const struct qca_device_data qca_soc_data_qca6390 = {
+>  	.soc_type = QCA_QCA6390,
+>  	.num_vregs = 0,
+>  };
+> @@ -1860,7 +1865,7 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+>  {
+>  	struct qca_serdev *qcadev;
+>  	struct hci_dev *hdev;
+> -	const struct qca_vreg_data *data;
+> +	const struct qca_device_data *data;
+>  	int err;
+>  	bool power_ctrl_enabled = true;
+>  
+> @@ -1948,6 +1953,12 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+>  		hdev->shutdown = qca_power_off;
+>  	}
+>  
+> +	/* Wideband speech support must be set per driver since it can't be
+> +	 * queried via hci.
+> +	 */
+> +	if (data && (data->capabilities & QCA_CAP_WIDEBAND_SPEECH_SUPPORTED))
+> +		set_bit(HCI_QUIRK_WIDEBAND_SPEECH_SUPPORTED, &hdev->quirks);
 > +
-> +#define MMP2_CLK_AUDIO_SYSCLK          1
+>  	return 0;
+>  }
 
-Any reason to start at 1 vs. 0?
-
-> +#define MMP2_CLK_AUDIO_SSPA0           2
-> +#define MMP2_CLK_AUDIO_SSPA1           3
-> +#endif
-> --=20
-> 2.26.2
->
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
