@@ -2,183 +2,617 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70AE5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C05E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 470A12065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D65B206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:14:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="drwJkWAD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yeYcu0n9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726161AbgENKMt (ORCPT
+        id S1726169AbgENKOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 06:12:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40002 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726101AbgENKMs (ORCPT
+        Thu, 14 May 2020 06:14:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52038 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbgENKOJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 06:12:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589451166;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=7yxbm70qc/XVcNW7kG0AB87NH6jMbVBQFGM+wh9erBw=;
-        b=drwJkWADqbVPZKuHvzWKuMCvN6NIZ3wu2yGFnLo0AmDXLcEJsP+pst3YKqn8JAc/l7k9Qy
-        ls9aZhPF3tReEUyoL6TuWhMafBqDM5MOoPwQle7aJuxVb33zQajJW+hisjxly3eRlQHLPo
-        afWn++cf+VSOXf0GvGoYO9un07XQdcU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-460-CZaXdWWNOWyVIK6s7kqJJg-1; Thu, 14 May 2020 06:12:42 -0400
-X-MC-Unique: CZaXdWWNOWyVIK6s7kqJJg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 48B5D81CBE1;
-        Thu, 14 May 2020 10:12:38 +0000 (UTC)
-Received: from [10.36.114.168] (ovpn-114-168.ams2.redhat.com [10.36.114.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4D85D60BF1;
-        Thu, 14 May 2020 10:12:11 +0000 (UTC)
-Subject: Re: [virtio-dev] [PATCH v3 00/15] virtio-mem: paravirtualized memory
-To:     teawater <teawaterz@linux.alibaba.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        virtio-dev@lists.oasis-open.org,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        kvm@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        Samuel Ortiz <samuel.ortiz@intel.com>,
-        Robert Bradford <robert.bradford@intel.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Len Brown <lenb@kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Wei Yang <richard.weiyang@gmail.com>
-References: <20200507103119.11219-1-david@redhat.com>
- <7848642F-6AA7-4B5E-AE0E-DB0857C94A93@linux.alibaba.com>
- <31c5d2f9-c104-53e8-d9c8-cb45f7507c85@redhat.com>
- <A3BBAEEE-FBB9-4259-8BED-023CCD530021@linux.alibaba.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <389b6bdc-b196-e4b9-b6be-dcac57524fdf@redhat.com>
-Date:   Thu, 14 May 2020 12:12:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 14 May 2020 06:14:09 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CB2AC05BD43
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 03:14:09 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id u22so986742plq.12
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 03:14:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=QzkSb05Ld+R91BbFNbuiyfa1e3UinJI1YlcY571QNdI=;
+        b=yeYcu0n9P0UKl9l8mC/a/PHb6P/hpfXschRPHMNHwHAKecUIAP262uXxTMAqsRz1JR
+         Sn4UK3nZtD7gR9mDFA/iOaEVJ9fBbco5WqyOrxClchY6B+mQQLRkUEe3nSTFfnTgWunb
+         q71oJjkvdJKBNj3TRCNOkUlkC/e5Y5FVl/4OHTZ7cOQquJN1gQ+hYTQBQV/wZAt/xlyL
+         QWh77AIyxRYC+NEh+8T6VsHd9qQTgCaP36ykjr7mUmDXs+iAvlm65qG5pCRNsIajJPIF
+         kApoMO7YyMuNVYtPcCiA8/4T25pqKhoDDQ+DIwCQ5ox/VQQa5gOoV+HoeCj+ws6nK/Ja
+         HQ6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=QzkSb05Ld+R91BbFNbuiyfa1e3UinJI1YlcY571QNdI=;
+        b=E0nkKnRbE9UuesEaXL6Fv0/fW12zmDNPgTaPilmp+yyWNDUPupPNR5eCP5b6CBji9r
+         DBWahtnr5ushqglQb6yrtzdwJUvjtoRyYEGP/CNUxcPmKB09sAKxRi1S6O6Ofd4ky4r9
+         PNTm3Gw6qYkBpNVrVpS7CIzLfT/uYD8xtSl7opovfA7ZRdXxDEV62gUusxXRhgEO5SYW
+         j1ioL5MPi0iAD8o8hZ8KIszYkr75Eu+z1ht9e3BQ4aa/cdC+tn8y3OpXpLnu1wTXxN9S
+         hf7m4hTwkm64tVbHibEhqUAYCPY9Z/YcBOlpoonzBxFOB3lYTPhrm03gRlzUSUxfG+FX
+         2H7A==
+X-Gm-Message-State: AGi0PuaHZzsmmKeblMXBUuc5Up/B/QybxwtHP+q6vFeDA6DobHEZLKzM
+        rDT6m+K8fe1KsyYEYsPut0K0
+X-Google-Smtp-Source: APiQypIbmp9H09ycrxZjlaJKSumh2/Ir2zNYjsMWxj/98twREuaa8LpWANJtgRLlb18kBaFU9TAkdg==
+X-Received: by 2002:a17:90a:d086:: with SMTP id k6mr41276824pju.47.1589451248662;
+        Thu, 14 May 2020 03:14:08 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:406:efde:ac17:556c:1ce3:639f])
+        by smtp.gmail.com with ESMTPSA id h11sm1951254pfo.120.2020.05.14.03.13.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 14 May 2020 03:14:07 -0700 (PDT)
+Date:   Thu, 14 May 2020 15:43:56 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>, sakari.ailus@iki.fi,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Hyun Kwon <hyunk@xilinx.com>, Rob Herring <robh+dt@kernel.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>
+Subject: Re: [PATCH v9 2/4] media: i2c: Add MAX9286 driver
+Message-ID: <20200514101356.GF2877@Mani-XPS-13-9360>
+References: <20200512155105.1068064-1-kieran.bingham+renesas@ideasonboard.com>
+ <20200512155105.1068064-3-kieran.bingham+renesas@ideasonboard.com>
+ <20200512181706.GA21014@Mani-XPS-13-9360>
+ <11aca587-9438-4fba-081c-b82631e96989@ideasonboard.com>
 MIME-Version: 1.0
-In-Reply-To: <A3BBAEEE-FBB9-4259-8BED-023CCD530021@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <11aca587-9438-4fba-081c-b82631e96989@ideasonboard.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14.05.20 12:02, teawater wrote:
+Hi Kieran,
+
+On Thu, May 14, 2020 at 11:02:53AM +0100, Kieran Bingham wrote:
+> Hi Mani,
 > 
+> On 12/05/2020 19:17, Manivannan Sadhasivam wrote:
+> > On Tue, May 12, 2020 at 04:51:03PM +0100, Kieran Bingham wrote:
+> >> The MAX9286 is a 4-channel GMSL deserializer with coax or STP input and
+> >> CSI-2 output. The device supports multicamera streaming applications,
+> >> and features the ability to synchronise the attached cameras.
+> >>
+> >> CSI-2 output can be configured with 1 to 4 lanes, and a control channel
+> >> is supported over I2C, which implements an I2C mux to facilitate
+> >> communications with connected cameras across the reverse control
+> >> channel.
+> >>
+> >> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> >> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> >> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> >> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> >>
+> >> --
+> >> v2:
+> >>  - Fix MAINTAINERS entry
+> >>
+> >> This posting is released with the following modifications to work
+> >> without Sakari's VC developments:
+> >>  - max9286_g_mbus_config() re-instated
+> >>  - max9286_get_frame_desc() is not bus/csi aware
+> >>  - max9286_{get,set}_routing() removed
+> >>
+> >> v3:
+> >>  - Initialise notifier with v4l2_async_notifier_init
+> >>  - Update for new mbus csi2 format V4L2_MBUS_CSI2_DPHY
+> >>
+> >> v4: - Re-introduce required code to function with the VC series.
+> >>
+> >>  - Implement max9286_get_routing, max9286_set_routing
+> >>  - Remove max9286_g_mbus_config
+> >>
+> >> v5: (internal release)
+> >>  - Fix printk formatting for hex value
+> >>  - max9286->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE (add |)
+> >>  - MEDIA_ENT_F_PROC_VIDEO_PIXEL_FORMATTER -> MEDIA_ENT_F_VID_IF_BRIDGE
+> >>  - Remove 'device is bound' workaround
+> >>
+> >> v6:
+> >>  - v4l2_subdev_krouting instead of v4l2_subdev_routing separated
+> >>    to allow integration without the VC/V4L2-Mux series.
+> >>  - convert sd_to_max9286 to inline function
+> >>  - rename max9286_device to max9286_priv
+> >>  - Cleanup the v4l2_async_notifier
+> >>  - Extend MODULE_AUTHOR
+> >>  - Replace of_graph_get_endpoint_by_regs with fwnode_graph_get_endpoint_by_id
+> >>  - Pass default bus type when parsing fwnode endpoint (Manivannan Sadhasivam)
+> >>  - Use new YAML file reference in MAINTAINERS
+> >>  - Parse new i2c-mux node in max9286_get_i2c_by_id
+> >>    (This could/should be refactored to parse these separately first)
+> >>  - Spelling and calculation fixes in the FSYNC_LOCKED check comments
+> >>  - Identify each enabled i2c-mux channel in a single pass
+> >>  - max9286: Improve mux-state readbility [v2]
+> >>  - Fix frame sync lock durations
+> >>  - Add comment to describe /why/ we must open the mux in s_stream
+> >>  - use -EXDEV as return code for failed link synchronisation.
+> >>  - Fix reference counting of the dt nodeS
+> >>  - Convert to probe_new for I2C
+> >>  - Remove redundant max9286_i2c_mux_state
+> >>  - Provide optional enable-gpio (max9286-pwdn)
+> >>
+> >> v7:
+> >>  [Kieran]
+> >>  - Ensure powerdown lines are optional
+> >>  - Add a 4ms power-up delay
+> >>  - Add max9286_check_config_link() to core
+> >>  - Add GPIO chip controller for GPIO0OUT and GPIO1OUT
+> >>  - Fix GPIO registration
+> >>  - max9286: Split out async registration
+> >>    (fixes regulator -EPROBE_DEFERs failures)
+> >>  - Collect all V4L2 registrations
+> >>  - balance v4l2_async refcnting
+> >>  - Rename max9286_v4l2_async_ => max9286_v4l2_notifier_
+> >>
+> >>  [Jacopo]
+> >>  - Remove redundanct MAXIM_I2C_SPEED macros
+> >>  - Move notifiers operations
+> >>  - Add delay after reverse channel reconfiguration
+> >>  - Move link setup to completion
+> >>  - Fix up max9286_check_config_link() implementation
+> >>  - Remove redundant dual configuration of reverse channel
+> >>
+> >> v8:
+> >>
+> >> [Kieran]
+> >>  - Update the bound_sources mask on unbind
+> >>  - Convert probe kzalloc usage to devm_ variant
+> >>  - Fix up cleanup path from GPIO PowerDown registration
+> >>  - cleanup GPIO device registration fail path
+> >>  - Convert to use devm_regulator_get()
+> >>  - Fit max9286_parse_dt print on one line
+> >>  - Move multi-device workarounds out of upstream driver
+> >>  - Remove I2C mod-table
+> >>  - Lock format changes
+> >>  - Describe pad index usage
+> >>  - Remove poc_enabled workaround
+> >>  - Rename the max9286_gpio to be more explicit on it's actions.
+> >>  - Move max9286_init_format call
+> >>  - Rework probe sequence and simplify error paths.
+> >>  - Simplify i2c comments
+> >>  - Implement Pixelrate control
+> >>  - Disable overlap window
+> >>
+> >> [Jacopo]
+> >>  - Adapt Kconfig to latest upstream changes
+> >>  - Put of node on error
+> >>  - Calculate pixel rate
+> >>  - Simplify overlap window disablement
+> >>
+> >> v9:
+> >>
+> >> [Kieran]
+> >>  - Kconfig: Depend on OF
+> >>  - Re-sort addition to Makefile
+> >> ---
+> >>  MAINTAINERS                 |   10 +
+> >>  drivers/media/i2c/Kconfig   |   13 +
+> >>  drivers/media/i2c/Makefile  |    1 +
+> >>  drivers/media/i2c/max9286.c | 1332 +++++++++++++++++++++++++++++++++++
+> >>  4 files changed, 1356 insertions(+)
+> >>  create mode 100644 drivers/media/i2c/max9286.c
+> >>
+> >> diff --git a/MAINTAINERS b/MAINTAINERS
+> >> index a7bb6e22d5da..99e3bf7760fd 100644
+> >> --- a/MAINTAINERS
+> >> +++ b/MAINTAINERS
+> >> @@ -10274,6 +10274,16 @@ F:	Documentation/hwmon/max6697.rst
+> >>  F:	drivers/hwmon/max6697.c
+> >>  F:	include/linux/platform_data/max6697.h
+> >>  
+> >> +MAX9286 QUAD GMSL DESERIALIZER DRIVER
+> >> +M:	Jacopo Mondi <jacopo+renesas@jmondi.org>
+> >> +M:	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> >> +M:	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> >> +M:	Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+> >> +L:	linux-media@vger.kernel.org
+> >> +S:	Maintained
+> >> +F:	Documentation/devicetree/bindings/media/i2c/maxim,max9286.yaml
+> >> +F:	drivers/media/i2c/max9286.c
+> >> +
+> >>  MAX9860 MONO AUDIO VOICE CODEC DRIVER
+> >>  M:	Peter Rosin <peda@axentia.se>
+> >>  L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
+> >> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+> >> index 3abc80373ec0..2e390f41f6da 100644
+> >> --- a/drivers/media/i2c/Kconfig
+> >> +++ b/drivers/media/i2c/Kconfig
+> >> @@ -464,6 +464,19 @@ config VIDEO_VPX3220
+> >>  	  To compile this driver as a module, choose M here: the
+> >>  	  module will be called vpx3220.
+> >>  
+> >> +config VIDEO_MAX9286
+> >> +	tristate "Maxim MAX9286 GMSL deserializer support"
+> >> +	depends on I2C && I2C_MUX
+> >> +	depends on OF
+> >> +	select V4L2_FWNODE
+> >> +	select VIDEO_V4L2_SUBDEV_API
+> >> +	select MEDIA_CONTROLLER
+> >> +	help
+> >> +	  This driver supports the Maxim MAX9286 GMSL deserializer.
+> >> +
+> >> +	  To compile this driver as a module, choose M here: the
+> >> +	  module will be called max9286.
+> >> +
+> >>  comment "Video and audio decoders"
+> >>  
+> >>  config VIDEO_SAA717X
+> >> diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
+> >> index 77bf7d0b691f..f0b001ee4b05 100644
+> >> --- a/drivers/media/i2c/Makefile
+> >> +++ b/drivers/media/i2c/Makefile
+> >> @@ -117,6 +117,7 @@ obj-$(CONFIG_VIDEO_IMX274)	+= imx274.o
+> >>  obj-$(CONFIG_VIDEO_IMX290)	+= imx290.o
+> >>  obj-$(CONFIG_VIDEO_IMX319)	+= imx319.o
+> >>  obj-$(CONFIG_VIDEO_IMX355)	+= imx355.o
+> >> +obj-$(CONFIG_VIDEO_MAX9286)	+= max9286.o
+> >>  obj-$(CONFIG_VIDEO_ST_MIPID02) += st-mipid02.o
+> >>  
+> >>  obj-$(CONFIG_SDR_MAX2175) += max2175.o
+> >> diff --git a/drivers/media/i2c/max9286.c b/drivers/media/i2c/max9286.c
+> >> new file mode 100644
+> >> index 000000000000..481d65f2b51d
+> >> --- /dev/null
+> >> +++ b/drivers/media/i2c/max9286.c
+> >> @@ -0,0 +1,1332 @@
+> >> +// SPDX-License-Identifier: GPL-2.0+
+> >> +/*
+> >> + * Maxim MAX9286 GMSL Deserializer Driver
+> >> + *
+> >> + * Copyright (C) 2017-2019 Jacopo Mondi
+> >> + * Copyright (C) 2017-2019 Kieran Bingham
+> >> + * Copyright (C) 2017-2019 Laurent Pinchart
+> >> + * Copyright (C) 2017-2019 Niklas Söderlund
+> >> + * Copyright (C) 2016 Renesas Electronics Corporation
+> >> + * Copyright (C) 2015 Cogent Embedded, Inc.
+> >> + */
+> >> +
+> >> +#include <linux/delay.h>
+> >> +#include <linux/device.h>
+> >> +#include <linux/fwnode.h>
+> >> +#include <linux/gpio/consumer.h>
+> >> +#include <linux/gpio/driver.h>
+> >> +#include <linux/i2c.h>
+> >> +#include <linux/i2c-mux.h>
+> >> +#include <linux/module.h>
+> >> +#include <linux/mutex.h>
+> >> +#include <linux/of_graph.h>
+> >> +#include <linux/regulator/consumer.h>
+> >> +#include <linux/slab.h>
+> >> +
+> >> +#include <media/v4l2-async.h>
+> >> +#include <media/v4l2-ctrls.h>
+> >> +#include <media/v4l2-device.h>
+> >> +#include <media/v4l2-fwnode.h>
+> >> +#include <media/v4l2-subdev.h>
+> >> +
+> >> +/* Register 0x00 */
+> >> +#define MAX9286_MSTLINKSEL_AUTO		(7 << 5)
+> >> +#define MAX9286_MSTLINKSEL(n)		((n) << 5)
+> >> +#define MAX9286_EN_VS_GEN		BIT(4)
+> >> +#define MAX9286_LINKEN(n)		(1 << (n))
+> >> +/* Register 0x01 */
+> >> +#define MAX9286_FSYNCMODE_ECU		(3 << 6)
+> >> +#define MAX9286_FSYNCMODE_EXT		(2 << 6)
+> >> +#define MAX9286_FSYNCMODE_INT_OUT	(1 << 6)
+> >> +#define MAX9286_FSYNCMODE_INT_HIZ	(0 << 6)
+> >> +#define MAX9286_GPIEN			BIT(5)
+> >> +#define MAX9286_ENLMO_RSTFSYNC		BIT(2)
+> >> +#define MAX9286_FSYNCMETH_AUTO		(2 << 0)
+> >> +#define MAX9286_FSYNCMETH_SEMI_AUTO	(1 << 0)
+> >> +#define MAX9286_FSYNCMETH_MANUAL	(0 << 0)
+> >> +#define MAX9286_REG_FSYNC_PERIOD_L	0x06
+> >> +#define MAX9286_REG_FSYNC_PERIOD_M	0x07
+> >> +#define MAX9286_REG_FSYNC_PERIOD_H	0x08
+> >> +/* Register 0x0a */
+> >> +#define MAX9286_FWDCCEN(n)		(1 << ((n) + 4))
+> >> +#define MAX9286_REVCCEN(n)		(1 << (n))
+> >> +/* Register 0x0c */
+> >> +#define MAX9286_HVEN			BIT(7)
+> >> +#define MAX9286_EDC_6BIT_HAMMING	(2 << 5)
+> >> +#define MAX9286_EDC_6BIT_CRC		(1 << 5)
+> >> +#define MAX9286_EDC_1BIT_PARITY		(0 << 5)
+> >> +#define MAX9286_DESEL			BIT(4)
+> >> +#define MAX9286_INVVS			BIT(3)
+> >> +#define MAX9286_INVHS			BIT(2)
+> >> +#define MAX9286_HVSRC_D0		(2 << 0)
+> >> +#define MAX9286_HVSRC_D14		(1 << 0)
+> >> +#define MAX9286_HVSRC_D18		(0 << 0)
+> >> +/* Register 0x0f */
+> >> +#define MAX9286_0X0F_RESERVED		BIT(3)
+> >> +/* Register 0x12 */
+> >> +#define MAX9286_CSILANECNT(n)		(((n) - 1) << 6)
+> >> +#define MAX9286_CSIDBL			BIT(5)
+> >> +#define MAX9286_DBL			BIT(4)
+> >> +#define MAX9286_DATATYPE_USER_8BIT	(11 << 0)
+> >> +#define MAX9286_DATATYPE_USER_YUV_12BIT	(10 << 0)
+> >> +#define MAX9286_DATATYPE_USER_24BIT	(9 << 0)
+> >> +#define MAX9286_DATATYPE_RAW14		(8 << 0)
+> >> +#define MAX9286_DATATYPE_RAW11		(7 << 0)
+> >> +#define MAX9286_DATATYPE_RAW10		(6 << 0)
+> >> +#define MAX9286_DATATYPE_RAW8		(5 << 0)
+> >> +#define MAX9286_DATATYPE_YUV422_10BIT	(4 << 0)
+> >> +#define MAX9286_DATATYPE_YUV422_8BIT	(3 << 0)
+> >> +#define MAX9286_DATATYPE_RGB555		(2 << 0)
+> >> +#define MAX9286_DATATYPE_RGB565		(1 << 0)
+> >> +#define MAX9286_DATATYPE_RGB888		(0 << 0)
+> >> +/* Register 0x15 */
+> >> +#define MAX9286_VC(n)			((n) << 5)
+> >> +#define MAX9286_VCTYPE			BIT(4)
+> >> +#define MAX9286_CSIOUTEN		BIT(3)
+> >> +#define MAX9286_0X15_RESV		(3 << 0)
+> >> +/* Register 0x1b */
+> >> +#define MAX9286_SWITCHIN(n)		(1 << ((n) + 4))
+> >> +#define MAX9286_ENEQ(n)			(1 << (n))
+> >> +/* Register 0x27 */
+> >> +#define MAX9286_LOCKED			BIT(7)
+> >> +/* Register 0x31 */
+> >> +#define MAX9286_FSYNC_LOCKED		BIT(6)
+> >> +/* Register 0x34 */
+> >> +#define MAX9286_I2CLOCACK		BIT(7)
+> >> +#define MAX9286_I2CSLVSH_1046NS_469NS	(3 << 5)
+> >> +#define MAX9286_I2CSLVSH_938NS_352NS	(2 << 5)
+> >> +#define MAX9286_I2CSLVSH_469NS_234NS	(1 << 5)
+> >> +#define MAX9286_I2CSLVSH_352NS_117NS	(0 << 5)
+> >> +#define MAX9286_I2CMSTBT_837KBPS	(7 << 2)
+> >> +#define MAX9286_I2CMSTBT_533KBPS	(6 << 2)
+> >> +#define MAX9286_I2CMSTBT_339KBPS	(5 << 2)
+> >> +#define MAX9286_I2CMSTBT_173KBPS	(4 << 2)
+> >> +#define MAX9286_I2CMSTBT_105KBPS	(3 << 2)
+> >> +#define MAX9286_I2CMSTBT_84KBPS		(2 << 2)
+> >> +#define MAX9286_I2CMSTBT_28KBPS		(1 << 2)
+> >> +#define MAX9286_I2CMSTBT_8KBPS		(0 << 2)
+> >> +#define MAX9286_I2CSLVTO_NONE		(3 << 0)
+> >> +#define MAX9286_I2CSLVTO_1024US		(2 << 0)
+> >> +#define MAX9286_I2CSLVTO_256US		(1 << 0)
+> >> +#define MAX9286_I2CSLVTO_64US		(0 << 0)
+> >> +/* Register 0x3b */
+> >> +#define MAX9286_REV_TRF(n)		((n) << 4)
+> >> +#define MAX9286_REV_AMP(n)		((((n) - 30) / 10) << 1) /* in mV */
+> >> +#define MAX9286_REV_AMP_X		BIT(0)
+> >> +/* Register 0x3f */
+> >> +#define MAX9286_EN_REV_CFG		BIT(6)
+> >> +#define MAX9286_REV_FLEN(n)		((n) - 20)
+> >> +/* Register 0x49 */
+> >> +#define MAX9286_VIDEO_DETECT_MASK	0x0f
+> >> +/* Register 0x69 */
+> >> +#define MAX9286_LFLTBMONMASKED		BIT(7)
+> >> +#define MAX9286_LOCKMONMASKED		BIT(6)
+> >> +#define MAX9286_AUTOCOMBACKEN		BIT(5)
+> >> +#define MAX9286_AUTOMASKEN		BIT(4)
+> >> +#define MAX9286_MASKLINK(n)		((n) << 0)
+> >> +
+> >> +/*
+> >> + * The sink and source pads are created to match the OF graph port numbers so
+> >> + * that their indexes can be used interchangeably.
+> >> + */
+> >> +#define MAX9286_NUM_GMSL		4
+> >> +#define MAX9286_N_SINKS			4
+> >> +#define MAX9286_N_PADS			5
+> >> +#define MAX9286_SRC_PAD			4
+> >> +
+> >> +struct max9286_source {
+> >> +	struct v4l2_async_subdev asd;
+> >> +	struct v4l2_subdev *sd;
+> >> +	struct fwnode_handle *fwnode;
+> >> +};
+> >> +
+> >> +#define asd_to_max9286_source(_asd) \
+> >> +	container_of(_asd, struct max9286_source, asd)
+> >> +
+> >> +struct max9286_priv {
+> >> +	struct i2c_client *client;
+> >> +	struct gpio_desc *gpiod_pwdn;
+> >> +	struct v4l2_subdev sd;
+> >> +	struct media_pad pads[MAX9286_N_PADS];
+> >> +	struct regulator *regulator;
+> >> +
+> >> +	struct gpio_chip gpio;
+> >> +	u8 gpio_state;
+> >> +
+> >> +	struct i2c_mux_core *mux;
+> >> +	unsigned int mux_channel;
+> >> +	bool mux_open;
+> >> +
+> >> +	struct v4l2_ctrl_handler ctrls;
+> >> +	struct v4l2_ctrl *pixelrate;
+> >> +
+> >> +	struct v4l2_mbus_framefmt fmt[MAX9286_N_SINKS];
+> >> +
+> >> +	/* Protects controls and fmt structures */
+> >> +	struct mutex mutex;
+> >> +
+> >> +	unsigned int nsources;
+> >> +	unsigned int source_mask;
+> >> +	unsigned int route_mask;
+> >> +	unsigned int bound_sources;
+> >> +	unsigned int csi2_data_lanes;
+> >> +	struct max9286_source sources[MAX9286_NUM_GMSL];
+> >> +	struct v4l2_async_notifier notifier;
+> >> +};
+> >> +
+> > 
+> > [...]
+> > 
+> >> +static int max9286_register_gpio(struct max9286_priv *priv)
+> >> +{
+> >> +	struct device *dev = &priv->client->dev;
+> >> +	struct gpio_chip *gpio = &priv->gpio;
+> >> +	int ret;
+> >> +
+> >> +	static const char * const names[] = {
+> >> +		"GPIO0OUT",
+> >> +		"GPIO1OUT",
+> >> +	};
+> >> +
+> >> +	/* Configure the GPIO */
+> >> +	gpio->label = dev_name(dev);
+> > 
+> > So if you have more than one MAX9286 in a system, all gpiochips will appear
+> > with the same name. I'd recommend to append the index to distinguish properly.
 > 
->> 2020å¹´5æœˆ14æ—¥ 16:48ï¼ŒDavid Hildenbrand <david@redhat.com> å†™é“ï¼š
->>
->> On 14.05.20 08:44, teawater wrote:
->>> Hi David,
->>>
->>> I got a kernel warning with v2 and v3.
->>
->> Hi Hui,
->>
->> thanks for playing with the latest versions. Surprisingly, I can
->> reproduce even by hotplugging a DIMM instead as well - that's good, so
->> it's not related to virtio-mem, lol. Seems to be some QEMU setup issue
->> with older machine types.
->>
->> Can you switch to a newer qemu machine version, especially
->> pc-i440fx-5.0? Both, hotplugging DIMMs and virtio-mem works for me with
->> that QEMU machine just fine.
+> Ah yes, that's a good point, and I think I've even seen that.
 > 
-> I still could reproduce this issue with pc-i440fx-5.0 or pc.  Did I miss anything?
+> I'll fix it now.
+> 
+> > 
+> >> +	gpio->parent = dev;
+> >> +	gpio->owner = THIS_MODULE;
+> >> +	gpio->of_node = dev->of_node;
+> >> +	gpio->ngpio = 2;
+> >> +	gpio->base = -1;
+> >> +	gpio->set = max9286_gpio_set;
+> >> +	gpio->get = max9286_gpio_get;
+> >> +	gpio->can_sleep = true;
+> >> +	gpio->names = names;
+> >> +
+> >> +	/* GPIO values default to high */
+> >> +	priv->gpio_state = BIT(0) | BIT(1);
+> >> +
+> >> +	ret = devm_gpiochip_add_data(dev, gpio, priv);
+> >> +	if (ret)
+> >> +		dev_err(dev, "Unable to create gpio_chip\n");
+> >> +
+> >> +	return ret;
+> >> +}
+> >> +
+> > 
+> > [...]
+> > 
+> >> +static int max9286_parse_dt(struct max9286_priv *priv)
+> >> +{
+> >> +	struct device *dev = &priv->client->dev;
+> >> +	struct device_node *i2c_mux;
+> >> +	struct device_node *node = NULL;
+> >> +	unsigned int i2c_mux_mask = 0;
+> >> +
+> >> +	of_node_get(dev->of_node);
+> > 
+> > Why this is needed?
+> 
+> Hrm .. I recall adding it to solve dt reference balancing.
+> 
+> I wish I'd added a comment at the time ... as I can't recall the details
+> now.
+>
+
+I understand that it is for the refcount balancing but I certainly don't see
+a need for it.
+ 
+> >> +	i2c_mux = of_find_node_by_name(dev->of_node, "i2c-mux");
+> >> +	if (!i2c_mux) {
+> >> +		dev_err(dev, "Failed to find i2c-mux node\n");
+> >> +		of_node_put(dev->of_node);
+> >> +		return -EINVAL;
+> >> +	}
+> >> +
+[...]
+> > 
+> > [...]
+> > 
+> >> +static int max9286_remove(struct i2c_client *client)
+> >> +{
+> >> +	struct max9286_priv *priv = i2c_get_clientdata(client);
+> >> +
+> >> +	i2c_mux_del_adapters(priv->mux);
+> >> +
+> >> +	max9286_v4l2_unregister(priv);
+> >> +
+> >> +	regulator_disable(priv->regulator);
+> >> +
+> >> +	gpiod_set_value_cansleep(priv->gpiod_pwdn, 0);
+> > 
+> > Usual power down sequence is to pull the power down gpio low and then turn off
+> > the regulators. This helps in clearing up the internal state machine properly.
+> 
+> Do you mean usual, among drivers using regulators? or usual for the max9286?
 > 
 
-Below I don't even see virtio_mem. I had to repair the image (filesystem
-fsck) because it was broken, can you try that as well?
+Usual for devices exposing shutdown gpios and powered by an external regulator.
 
-Also, it would be great if you could test with v4.
+> I have a platform which controls the regulators for the cameras
+> (priv->regulator) through one of the GPIOs provided by the MAX9286.
+> 
+> If we powerdown the max9286 first, then we will not be able to change
+> the GPIO value on the gpio controlled regulator.
+> 
 
--- 
+Hmm, I didn't think of this usecase. Let's keep it as it is.
+
 Thanks,
+Mani
 
-David / dhildenb
-
+> (Currently it doesn't expose as a gpio regulator, but just a gpio-hog -
+> but thats a different matter)
+> 
+> --
+> Kieran
+> 
+> 
+> > 
+> > Thanks,
+> > Mani
+> > 
+> >> +
+> >> +	max9286_cleanup_dt(priv);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static const struct of_device_id max9286_dt_ids[] = {
+> >> +	{ .compatible = "maxim,max9286" },
+> >> +	{},
+> >> +};
+> >> +MODULE_DEVICE_TABLE(of, max9286_dt_ids);
+> >> +
+> >> +static struct i2c_driver max9286_i2c_driver = {
+> >> +	.driver	= {
+> >> +		.name		= "max9286",
+> >> +		.of_match_table	= of_match_ptr(max9286_dt_ids),
+> >> +	},
+> >> +	.probe_new	= max9286_probe,
+> >> +	.remove		= max9286_remove,
+> >> +};
+> >> +
+> >> +module_i2c_driver(max9286_i2c_driver);
+> >> +
+> >> +MODULE_DESCRIPTION("Maxim MAX9286 GMSL Deserializer Driver");
+> >> +MODULE_AUTHOR("Jacopo Mondi, Kieran Bingham, Laurent Pinchart, Niklas Söderlund, Vladimir Barinov");
+> >> +MODULE_LICENSE("GPL");
+> >> -- 
+> >> 2.25.1
+> >>
+> 
