@@ -2,122 +2,93 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D2CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B38C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A5B32065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14B8A2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:08:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GtSzbFug"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ClPJZeER"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729419AbgENUIQ (ORCPT
+        id S1729426AbgENUIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 16:08:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60230 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729278AbgENUHn (ORCPT
+        Thu, 14 May 2020 16:08:25 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:57554 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728187AbgENUIY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 16:07:43 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC12CC061A0C;
-        Thu, 14 May 2020 13:07:42 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id h16so3459503eds.5;
-        Thu, 14 May 2020 13:07:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ioo9tN1eVsbgycuXVtXW3j/mdJh9pHsUFw60B6xaAJg=;
-        b=GtSzbFugKXUZLfIGhS+lGWTCnLshbSF1JRUkZH+02JeQGSSHJvXuU04N7PFHtpvCph
-         jDrfm6OXEey0Yult4YjLTHi8ilKeMa+sAT5PIK7kSky98WtwzkWMUSh/UykuEbn3nTyW
-         H+FkpMQ5SA70GwSWmEaOtbzmSED5MFgxAoOUo73yo3CyNIqDQTCTPgQBBbpnwqgPw7Wb
-         S6dNrKVF1aNaFlQ0CoVPpBTB5P+l94OLWUoUgkBkbgJ85MUhFPGyLb6qQUFbDHa6vBRm
-         LgkExgyHxWI1wJ4hQsdEeEHgDbUoYcg9DzkTgbvkMRAKe+D0nZOdczddC6ieRB+uZy1L
-         7kKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ioo9tN1eVsbgycuXVtXW3j/mdJh9pHsUFw60B6xaAJg=;
-        b=XlSFpIpLLI01Gt9PLV963g7Bk3FytgioNR+nkJbBuXVwJE8vNQ0HMX5MmRliHiOqeC
-         NcfKm3iE3e9ME3xFM1jmf7DGD18L0/czs/2N/8Lah5WJtDwspuOBcjcH0FBLDllswvyX
-         64TfHWW6jmWm4PfJ6j0smSOlXKmYOYUqVJxPPY9cVEuCB9IPR/okRO3boY03o8HytH+D
-         sy0mRLTpUdQng6+Cq39csUOphUnv3uIZ6OvrPWcKA5AU9yxh+k+syZowIwk3/NdQ35e0
-         sU5Vn/ENabpbciVnu8onq0ZMnGRYzyB6LuehhFNSkNAPNfvNbsWk1s6/INTannh+bCap
-         YLhQ==
-X-Gm-Message-State: AOAM532ajUKgdYjHZC8WYl32/ncb3WfHt7kz4EGZlwLOpdWJtrrYNTw9
-        znSC4Z+cqHnPZ06OfEdK6OM=
-X-Google-Smtp-Source: ABdhPJyt4UuV2TMAZZyM8I2pUJSWcQuUc1x/pxGNfo0AGSIDTCiuplAOe/iA9oVWL1HR11F172Qx+A==
-X-Received: by 2002:a05:6402:30b2:: with SMTP id df18mr5357586edb.323.1589486861453;
-        Thu, 14 May 2020 13:07:41 -0700 (PDT)
-Received: from Ansuel-XPS.localdomain (host122-89-dynamic.247-95-r.retail.telecomitalia.it. [95.247.89.122])
-        by smtp.googlemail.com with ESMTPSA id bd10sm1472edb.10.2020.05.14.13.07.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 13:07:40 -0700 (PDT)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>, Rob Herring <robh@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 05/10] dt-bindings: PCI: qcom: Add ext reset
-Date:   Thu, 14 May 2020 22:07:06 +0200
-Message-Id: <20200514200712.12232-6-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200514200712.12232-1-ansuelsmth@gmail.com>
-References: <20200514200712.12232-1-ansuelsmth@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 14 May 2020 16:08:24 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589486904; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=4YJ2XzG2JIi+LCwLrdlVxFzG02vS8JkhTTg9UN+mYy4=; b=ClPJZeERQVc4KP0tfj37bhukVwSr/53LYxeNfJp3ro4xMH1yYiGVBstHYUUImLzkKcN23gc5
+ E9hn3o/4iiGk8IaL5538577/hVNHAn+LkVL0h8r2xQCLJX2YNLCKnV0GGgOTg/w6yvDoBkJF
+ 7E9zQbTNQLJFgvsAJ9a+hJpJHFM=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebda537.7f793e833a08-smtp-out-n03;
+ Thu, 14 May 2020 20:08:23 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B4F95C072B7; Thu, 14 May 2020 20:08:22 +0000 (UTC)
+Received: from rishabhb-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rishabhb)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8AD8EC38561;
+        Thu, 14 May 2020 20:08:20 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8AD8EC38561
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rishabhb@codeaurora.org
+From:   Rishabh Bhatnagar <rishabhb@codeaurora.org>
+To:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     bjorn.andersson@linaro.org, mathieu.poirier@linaro.org,
+        tsoni@codeaurora.org, psodagud@codeaurora.org,
+        sidgup@codeaurora.org, Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Subject: [PATCH v3 0/3] Extend coredump functionality
+Date:   Thu, 14 May 2020 13:07:33 -0700
+Message-Id: <1589486856-23440-1-git-send-email-rishabhb@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document ext reset used in ipq8064 SoC by qcom PCIe driver.
+This patch series moves the coredump functionality to a separate
+file and adds "inline" coredump feature. Inline coredump directly
+copies segments from device memory during coredump to userspace.
+This avoids extra memory usage at the cost of speed. Recovery is
+stalled untill all data is read by userspace.
 
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/pci/qcom,pcie.txt | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Changelog:
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-index becdbdc0fffa..6efcef040741 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-@@ -179,6 +179,7 @@
- 			- "pwr"			PWR reset
- 			- "ahb"			AHB reset
- 			- "phy_ahb"		PHY AHB reset
-+			- "ext"			EXT reset
- 
- - reset-names:
- 	Usage: required for ipq8074
-@@ -287,8 +288,9 @@
- 			 <&gcc PCIE_HCLK_RESET>,
- 			 <&gcc PCIE_POR_RESET>,
- 			 <&gcc PCIE_PCI_RESET>,
--			 <&gcc PCIE_PHY_RESET>;
--		reset-names = "axi", "ahb", "por", "pci", "phy";
-+			 <&gcc PCIE_PHY_RESET>,
-+			 <&gcc PCIE_EXT_RESET>;
-+		reset-names = "axi", "ahb", "por", "pci", "phy", "ext";
- 		pinctrl-0 = <&pcie_pins_default>;
- 		pinctrl-names = "default";
- 	};
+v3 -> v2:
+- Move entire coredump functionality to remoteproc_coredump.c
+- Modify rproc_coredump to perform dump according to conf. set by userspace
+- Move the userspace configuration to debugfs from sysfs.
+- Keep the default coredump implementation as is
+
+v2 -> v1:
+- Introduce new file for coredump.
+- Add userspace sysfs configuration for dump type.
+
+Rishabh Bhatnagar (3):
+  remoteproc: Move coredump functionality to a new file
+  remoteproc: Add inline coredump functionality
+  remoteproc: Add coredump debugfs entry
+
+ drivers/remoteproc/Makefile              |   1 +
+ drivers/remoteproc/remoteproc_core.c     | 191 ------------------
+ drivers/remoteproc/remoteproc_coredump.c | 322 +++++++++++++++++++++++++++++++
+ drivers/remoteproc/remoteproc_debugfs.c  |  86 +++++++++
+ drivers/remoteproc/remoteproc_internal.h |   4 +
+ include/linux/remoteproc.h               |  15 ++
+ 6 files changed, 428 insertions(+), 191 deletions(-)
+ create mode 100644 drivers/remoteproc/remoteproc_coredump.c
+
 -- 
-2.25.1
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
