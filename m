@@ -2,169 +2,110 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6550EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BC5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F3CE2065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:29:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="M+DpRLIR"
+	by mail.kernel.org (Postfix) with ESMTP id 1719E20728
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:29:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726010AbgENJ3p (ORCPT
+        id S1726072AbgENJ3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 05:29:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725878AbgENJ3p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 05:29:45 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D497DC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 02:29:44 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id c12so23001108oic.1
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 02:29:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wCiVumaq6wcVuq/rN4Y5EIzrDgqgEOQzKlYptSZX3oI=;
-        b=M+DpRLIR1KWirx3ozNZP183Wa9bvcBtupJ5hvzmrcyfFPbUkajYX+pFLOP4Vjb4X3Q
-         FawvRVJjskYpkc8utMwVe7ZNMW2Inj1BKHHE2LnEYcmYwkWaNLk9n5d1FVKTxgNhfB3l
-         UeLQstW6MTljDRR8YXBVCjxQJ3MgwzrCqTMcpxplnwe6OKYeQvVdg+RFBOnKN9G8xvgA
-         YQDSlyR5MhpVKtpbxiTan5wbl1+Ib4nZ/PKuukIXE2aP2T0U5iQmkiEegUxC8DZRHHJV
-         zrnt1YMrwrTw5F9/2w2yf3NHl+5iAs6d9DFayhdpxRNlJD8LKx0cobudOvyhGXHYb7wu
-         gRKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wCiVumaq6wcVuq/rN4Y5EIzrDgqgEOQzKlYptSZX3oI=;
-        b=Jz0o8wqUXt7+KVWuUpNS/mlV/vMlXehQ4zYgITrLJOnJ21br06Edz3iSVfuLLnqFeZ
-         vO0+aWZ+y3L4FOlrythQUnWbKhotESbGXyW68rlkzbRAjB+qiVXmpS1WB6B9B9M0eMyi
-         J43emVkeW8USU4VzY6PgupBD+8mUF9U6ervzKuvsUfZGOTrXOGpaxPLaEfsJKeLkf29/
-         2NyCAczUMgEUFh0yKSKAJvxsFay4cdq7ZlKuRKTPurnyBXahXg/1w4klArlccDgkSUsw
-         DmHn3gn9T+9DrxOXG1azCY1eO4w1qmfz+oUAHG/uYBGBJo41ytSfIPHIm5w4Fy8xtbrf
-         aUTw==
-X-Gm-Message-State: AOAM530QziVwK+19N9uILJwJfqwQdthm5FqXMol27X4TonjD33rm+xzm
-        xLWc6xRHwIX13lRNk6p293ovjKOE7QbTTj9MpQHhcg==
-X-Google-Smtp-Source: ABdhPJy0BZy/80kBmbbNGXWB+0otugy/D99TGiabeb7uQ63D/N2iRHOx8D9HzC8UVf8RQ4g/SJRNWcVVjR51nBt0dp4=
-X-Received: by 2002:aca:3585:: with SMTP id c127mr4674008oia.32.1589448584196;
- Thu, 14 May 2020 02:29:44 -0700 (PDT)
+        Thu, 14 May 2020 05:29:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:33072 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725878AbgENJ3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 05:29:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7F26531B;
+        Thu, 14 May 2020 02:29:52 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D47A93F71E;
+        Thu, 14 May 2020 02:29:50 -0700 (PDT)
+Date:   Thu, 14 May 2020 10:29:44 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Tuan Phan <tuanphan@os.amperecomputing.com>
+Cc:     patches@amperecomputing.com, Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Neil Leeder <nleeder@codeaurora.org>,
+        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] ACPI/IORT: Fix PMCG node always look for a single ID
+ mapping.
+Message-ID: <20200514092944.GA18032@e121166-lin.cambridge.arm.com>
+References: <1589415122-5899-1-git-send-email-tuanphan@os.amperecomputing.com>
 MIME-Version: 1.0
-References: <20200514060243.106976-1-zong.li@sifive.com>
-In-Reply-To: <20200514060243.106976-1-zong.li@sifive.com>
-From:   Zong Li <zong.li@sifive.com>
-Date:   Thu, 14 May 2020 17:29:33 +0800
-Message-ID: <CANXhq0q6xb1DaVp8skvvC+G9MDMXpXrv0dxmceTrerc6noBH8A@mail.gmail.com>
-Subject: Re: [PATCH] riscv: perf: fix build error for dependency issue
-To:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     Greentime Hu <greentime.hu@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589415122-5899-1-git-send-email-tuanphan@os.amperecomputing.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 2:03 PM Zong Li <zong.li@sifive.com> wrote:
->
-> CONFIG_RISCV_BASE_PMU can be selected or unselected, but in fact,
-> CONFIG_RISCV_BASE_PMU must be always selected when selecting
-> CONFIG_PERF_EVENTS on current perf implementation, otherwise, it
-> would cause the build error when only selecting CONFIG_PERF_EVENTS.
-> The build case is applied randconfig which generated by kbuild test.
->
-> This patch removes the unnecessary configuration and implementations.
-> Eventually, the number of counters should be determinated at runtime,
-> such as DTB, so we don't need to re-build kernel for various platform
-> which has got different number of hpmcounters.
->
-> Signed-off-by: Zong Li <zong.li@sifive.com>
-> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+Please update the subject:
+
+Subject: "ACPI/IORT: Fix PMCG node single ID mapping handling"
+
+On Wed, May 13, 2020 at 05:12:02PM -0700, Tuan Phan wrote:
+> PMCG node can have zero ID mapping if its overflow interrupt
+> is wire based. The code to parse PMCG node can not assume it will
+> have a single ID mapping.
+
+"An IORT PMCG node can have no ID mapping if its overflow interrupt is
+wire based therefore the code that parses the PMCG node can not assume
+the node will always have a single mapping present at index 0.
+
+Fix iort_get_id_mapping_index() by checking for an overflow interrupt
+and mapping count."
+
+> Fixes: 24e516049360 ("ACPI/IORT: Add support for PMCG")
+> Reviewed-by: Hanjun Guo <guoahanjun@huawei.com>
+> Signed-off-by: Tuan Phan <tuanphan@os.amperecomputing.com>
 > ---
->  arch/riscv/Kconfig                  | 13 -------------
->  arch/riscv/include/asm/perf_event.h | 16 +++-------------
->  2 files changed, 3 insertions(+), 26 deletions(-)
->
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 74f82cf4f781..7d5123576953 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -283,19 +283,6 @@ config RISCV_ISA_C
->
->            If you don't know what to do here, say Y.
->
-> -menu "supported PMU type"
-> -       depends on PERF_EVENTS
-> -
-> -config RISCV_BASE_PMU
-> -       bool "Base Performance Monitoring Unit"
-> -       def_bool y
-> -       help
-> -         A base PMU that serves as a reference implementation and has limited
-> -         feature of perf.  It can run on any RISC-V machines so serves as the
-> -         fallback, but this option can also be disable to reduce kernel size.
-> -
-> -endmenu
-> -
->  config FPU
->         bool "FPU support"
->         default y
-> diff --git a/arch/riscv/include/asm/perf_event.h b/arch/riscv/include/asm/perf_event.h
-> index 0234048b12bc..8e5b1d81112c 100644
-> --- a/arch/riscv/include/asm/perf_event.h
-> +++ b/arch/riscv/include/asm/perf_event.h
-> @@ -16,15 +16,11 @@
->
->  /*
->   * The RISCV_MAX_COUNTERS parameter should be specified.
-> + * Currently, we only support base PMU, so just make
-> + * RISCV_MAX_COUNTERS be equal to RISCV_BASE_COUNTERS.
->   */
->
-> -#ifdef CONFIG_RISCV_BASE_PMU
-> -#define RISCV_MAX_COUNTERS     2
-> -#endif
-> -
-> -#ifndef RISCV_MAX_COUNTERS
-> -#error "Please provide a valid RISCV_MAX_COUNTERS for the PMU."
-> -#endif
-> +#define RISCV_MAX_COUNTERS RISCV_BASE_COUNTERS
->
->  /*
->   * These are the indexes of bits in counteren register *minus* 1,
-> @@ -38,12 +34,6 @@
->   */
->  #define RISCV_PMU_CYCLE                0
->  #define RISCV_PMU_INSTRET      1
-> -#define RISCV_PMU_MHPMCOUNTER3 2
-> -#define RISCV_PMU_MHPMCOUNTER4 3
-> -#define RISCV_PMU_MHPMCOUNTER5 4
-> -#define RISCV_PMU_MHPMCOUNTER6 5
-> -#define RISCV_PMU_MHPMCOUNTER7 6
-> -#define RISCV_PMU_MHPMCOUNTER8 7
->
->  #define RISCV_OP_UNSUPP                (-EOPNOTSUPP)
->
-> --
-> 2.26.2
->
+> v1 -> v2:
+> - Use pmcg node to detect wired base overflow interrupt.
+> 
+> v2 -> v3:
+> - Address Hanjun and Robin's comments.
+> 
+>  drivers/acpi/arm64/iort.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 
-Hi all,
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 
-I don't notice that there was a patch already to fix this issue by
-Kefeng, (https://lore.kernel.org/linux-riscv/mhng-58148e77-03b6-4c56-98ea-0d0cbf99d522@palmerdabbelt-glaptop1/T/#u).
-Even though it was a different way, but I also think it was good for
-the present. As my comment in this patch, eventually, the number of
-counters should be decided at runtime, such as DTB, then we don't need
-to re-build kernel for various platform
-which has got a different number of hpmcounters.
+> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+> index ed3d2d1..12bb70e 100644
+> --- a/drivers/acpi/arm64/iort.c
+> +++ b/drivers/acpi/arm64/iort.c
+> @@ -414,6 +414,7 @@ static struct acpi_iort_node *iort_node_get_id(struct acpi_iort_node *node,
+>  static int iort_get_id_mapping_index(struct acpi_iort_node *node)
+>  {
+>  	struct acpi_iort_smmu_v3 *smmu;
+> +	struct acpi_iort_pmcg *pmcg;
+>  
+>  	switch (node->type) {
+>  	case ACPI_IORT_NODE_SMMU_V3:
+> @@ -441,6 +442,10 @@ static int iort_get_id_mapping_index(struct acpi_iort_node *node)
+>  
+>  		return smmu->id_mapping_index;
+>  	case ACPI_IORT_NODE_PMCG:
+> +		pmcg = (struct acpi_iort_pmcg *)node->node_data;
+> +		if (pmcg->overflow_gsiv || node->mapping_count == 0)
+> +			return -EINVAL;
+> +
+>  		return 0;
+>  	default:
+>  		return -EINVAL;
+> -- 
+> 2.7.4
+> 
