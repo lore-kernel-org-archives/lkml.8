@@ -2,108 +2,78 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CDFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D43C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2010A205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:09:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589468948;
-	bh=5ZIUZLh3hl0XJeCruWdO+4sBSAhw7XXJeX3qzYngHko=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ddubXCPvZOn5xAm7bdjoYYXeVWHwjG2JTDHIANCiEgLkkoycO2gGj0ZP0tuL1zCms
-	 LAWMQX5AmpLBEzAK6tNmMEgJzJ880DciNSr33zSh7gcQNq+TDslxp4kZK8NKSlLALZ
-	 JKFr7K35nvrZi6FjzwFXpYSU9emVJhM8kWBDDAwU=
+	by mail.kernel.org (Postfix) with ESMTP id 16BBA206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:09:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgENPJH (ORCPT
+        id S1728000AbgENPJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 11:09:07 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44337 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbgENPJG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 11:09:06 -0400
-Received: by mail-oi1-f194.google.com with SMTP id a2so24613398oia.11;
-        Thu, 14 May 2020 08:09:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pEb8Z2pMkkbfNV7pCxLtoRmGyd419uEf0xyvpMZy978=;
-        b=W7stWmPAgpc4oQ1dJvRCckEPqKVXjFF9my7CGSL+VcBRZgEQzp5nDZfI6QEamd9LKw
-         CdIHvkFcdF4NAklzfcYHGSETc3XOCiwkPMYzu5rKweM6+/L4UanPfcCsRqGMtorgEfNO
-         L6N8atZsMn7S+aG7w2PL94BmKafh1yZfrZnHpjvplCxxJOnh2Bz6gdL1jSJZkRaUAUGo
-         lwLYspP9d5VzD3ACBfJVw700x76PSU7VPo9hRRaGzCGZiLDC/Q1hdWEbX3Gfb3dTtyJ/
-         8I3ZReu7InNAgshfpbtmpa8HWOImP+/sL56PVwkpRclmKmZzDYuHpleXYAUItFealmw/
-         bLIw==
-X-Gm-Message-State: AGi0PuYp8D52C84tZuk+kwQ56tOqJCNsCVqM/GEZz+HNaVNDctswR338
-        rEqMG0DuoLj8trFzbgnj1g==
-X-Google-Smtp-Source: APiQypLVRNwGWhiz/pLryvwHAj1Sc7jqWQATwc7y3kNeYCvEkOxVAGZwsNHFpv/Mc94Bdfgu+ChEGg==
-X-Received: by 2002:a05:6808:7dc:: with SMTP id f28mr31904197oij.88.1589468945619;
-        Thu, 14 May 2020 08:09:05 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l192sm857550ooc.3.2020.05.14.08.09.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 08:09:04 -0700 (PDT)
-Received: (nullmailer pid 28879 invoked by uid 1000);
-        Thu, 14 May 2020 15:09:03 -0000
-Date:   Thu, 14 May 2020 10:09:03 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sergey.Semin@baikalelectronics.ru
-Cc:     devicetree@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-kernel@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
-        linux-mips@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        Ralf Baechle <ralf@linux-mips.org>
-Subject: Re: [PATCH v2 01/20] dt-bindings: power: Convert mti,mips-cpc to DT
- schema
-Message-ID: <20200514150903.GA28744@bogus>
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
- <20200506174238.15385-2-Sergey.Semin@baikalelectronics.ru>
+        Thu, 14 May 2020 11:09:45 -0400
+Received: from muru.com ([72.249.23.125]:54474 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726240AbgENPJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 11:09:45 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 8C18B80C0;
+        Thu, 14 May 2020 15:10:33 +0000 (UTC)
+Date:   Thu, 14 May 2020 08:09:41 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     linux-omap@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Suman Anna <s-anna@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/6] dt-bindings: omap: Update PRM binding for genpd
+Message-ID: <20200514150941.GN37466@atomide.com>
+References: <20200512203852.29499-1-tony@atomide.com>
+ <20200512203852.29499-2-tony@atomide.com>
+ <352b8c4d-1233-e208-63ce-c116632546a9@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200506174238.15385-2-Sergey.Semin@baikalelectronics.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <352b8c4d-1233-e208-63ce-c116632546a9@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 May 2020 20:42:19 +0300,  wrote:
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+* Tero Kristo <t-kristo@ti.com> [200514 07:40]:
+> On 12/05/2020 23:38, Tony Lindgren wrote:
+> > The PRM (Power and Reset Module) has registers to enable and disable
+> > power domains, so let's update the binding for that.
+> > 
+> > Cc: devicetree@vger.kernel.org
+> > Cc: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Tony Lindgren <tony@atomide.com>
+> > ---
+> >   Documentation/devicetree/bindings/arm/omap/prm-inst.txt | 4 ++++
+> >   1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/omap/prm-inst.txt b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
+> > --- a/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
+> > +++ b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
+> > @@ -18,12 +18,16 @@ Required properties:
+> >   		(base address and length)
+> >   Optional properties:
+> > +- #power-domain-cells:	Should be 0 if the PRM instance is a power domain.
+> >   - #reset-cells:	Should be 1 if the PRM instance in question supports resets.
+> > +- clocks: Functional and interface clocks managed by the power domain
+> > +- clock-names: Names for the clocks using "fck" and "ick" naming
 > 
-> It's a Cluster Power Controller embedded into the MIPS IP cores.
-> Currently the corresponding dts node is supposed to have compatible
-> and reg properties.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: linux-pm@vger.kernel.org
-> 
-> ---
-> 
-> Changelog v2:
-> - Reword the changelog summary - use shorter version.
-> - Lowercase the example hex'es.
-> ---
->  .../bindings/power/mti,mips-cpc.txt           |  8 -----
->  .../bindings/power/mti,mips-cpc.yaml          | 35 +++++++++++++++++++
->  2 files changed, 35 insertions(+), 8 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.txt
->  create mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
-> 
+> Whats the purpose of the clocks for PRM? It looks like you are using this
+> with ABE domain on omap4/omap5, but why is this needed?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Hmm good point, seems to be just confusion at my end on what should
+handle the clocks for the interconnect instances. We can just leave
+out the clocks here probably.
+
+Regards,
+
+Tony
