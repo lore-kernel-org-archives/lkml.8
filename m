@@ -2,150 +2,169 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C944CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E8AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7E942065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F812065C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:43:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="c5o3x+2Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728390AbgENTmY (ORCPT
+        id S1728416AbgENTnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:42:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56246 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727118AbgENTmY (ORCPT
+        Thu, 14 May 2020 15:43:24 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:40444 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727769AbgENTnX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 15:42:24 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A915C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 12:42:24 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jZJkL-0008Kr-Ok; Thu, 14 May 2020 21:42:21 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jZJkJ-0005js-Cc; Thu, 14 May 2020 21:42:19 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>
-Subject: [PATCH net-next v1] net: phy: tja11xx: execute cable test on link up
-Date:   Thu, 14 May 2020 21:42:18 +0200
-Message-Id: <20200514194218.22011-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.26.2
+        Thu, 14 May 2020 15:43:23 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1001)
+        id 8740120B717B; Thu, 14 May 2020 12:43:22 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8740120B717B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1589485402;
+        bh=CJJ+sOkxdWfr6O8hmWNrk7EaS+VUkJF7il2uw19u0gs=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=c5o3x+2QFTsrYiBRb9pjAfHPLzqiQrZo6fMZ9dNLbStilKd8++OGSnFuZlOLrJf0/
+         LSohna5CO+XRKRHEsq1FCANuvmaLSBv6SJJzcksJzIhyau5BdUXqoAIA429Y7PHfdU
+         kJhZd5pgzIN9QG7zsEKxDyxut/V0obeAu1ZOG04g=
+Received: from localhost (localhost [127.0.0.1])
+        by linux.microsoft.com (Postfix) with ESMTP id 83BD930705DA;
+        Thu, 14 May 2020 12:43:22 -0700 (PDT)
+Date:   Thu, 14 May 2020 12:43:22 -0700 (PDT)
+From:   James Morris <jamorris@linux.microsoft.com>
+X-X-Sender: jamorris@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+cc:     Anders Roxell <anders.roxell@linaro.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] security: fix the default value of secid_to_secctx
+ hook
+In-Reply-To: <CAADnVQK6cka9i_GGz3OcjaNiEQEZYwgCLsn-S_Bkm-OWPJZb_w@mail.gmail.com>
+Message-ID: <alpine.LRH.2.21.2005141243120.53197@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
+References: <20200512174607.9630-1-anders.roxell@linaro.org> <CAADnVQK6cka9i_GGz3OcjaNiEQEZYwgCLsn-S_Bkm-OWPJZb_w@mail.gmail.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A typical 100Base-T1 link should be always connected. If the link is in
-a shot or open state, it is a failure. In most cases, we won't be able
-to automatically handle this issue, but we need to log it or notify user
-(if possible).
+On Wed, 13 May 2020, Alexei Starovoitov wrote:
 
-With this patch, the cable will be tested on "ip l s dev .. up" attempt
-and send ethnl notification to the user space.
+> James,
+> 
+> since you took the previous similar patch are you going to pick this
+> one up as well?
+> Or we can route it via bpf tree to Linus asap.
 
-This patch was tested with TJA1102 PHY and "ethtool --monitor" command.
+Routing via your tree is fine.
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- drivers/net/phy/nxp-tja11xx.c | 48 +++++++++++++++++++++++++++++++----
- 1 file changed, 43 insertions(+), 5 deletions(-)
+> 
+> Thanks
+> 
+> On Tue, May 12, 2020 at 10:46 AM Anders Roxell <anders.roxell@linaro.org> wrote:
+> >
+> > security_secid_to_secctx is called by the bpf_lsm hook and a successful
+> > return value (i.e 0) implies that the parameter will be consumed by the
+> > LSM framework. The current behaviour return success when the pointer
+> > isn't initialized when CONFIG_BPF_LSM is enabled, with the default
+> > return from kernel/bpf/bpf_lsm.c.
+> >
+> > This is the internal error:
+> >
+> > [ 1229.341488][ T2659] usercopy: Kernel memory exposure attempt detected from null address (offset 0, size 280)!
+> > [ 1229.374977][ T2659] ------------[ cut here ]------------
+> > [ 1229.376813][ T2659] kernel BUG at mm/usercopy.c:99!
+> > [ 1229.378398][ T2659] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+> > [ 1229.380348][ T2659] Modules linked in:
+> > [ 1229.381654][ T2659] CPU: 0 PID: 2659 Comm: systemd-journal Tainted: G    B   W         5.7.0-rc5-next-20200511-00019-g864e0c6319b8-dirty #13
+> > [ 1229.385429][ T2659] Hardware name: linux,dummy-virt (DT)
+> > [ 1229.387143][ T2659] pstate: 80400005 (Nzcv daif +PAN -UAO BTYPE=--)
+> > [ 1229.389165][ T2659] pc : usercopy_abort+0xc8/0xcc
+> > [ 1229.390705][ T2659] lr : usercopy_abort+0xc8/0xcc
+> > [ 1229.392225][ T2659] sp : ffff000064247450
+> > [ 1229.393533][ T2659] x29: ffff000064247460 x28: 0000000000000000
+> > [ 1229.395449][ T2659] x27: 0000000000000118 x26: 0000000000000000
+> > [ 1229.397384][ T2659] x25: ffffa000127049e0 x24: ffffa000127049e0
+> > [ 1229.399306][ T2659] x23: ffffa000127048e0 x22: ffffa000127048a0
+> > [ 1229.401241][ T2659] x21: ffffa00012704b80 x20: ffffa000127049e0
+> > [ 1229.403163][ T2659] x19: ffffa00012704820 x18: 0000000000000000
+> > [ 1229.405094][ T2659] x17: 0000000000000000 x16: 0000000000000000
+> > [ 1229.407008][ T2659] x15: 0000000000000000 x14: 003d090000000000
+> > [ 1229.408942][ T2659] x13: ffff80000d5b25b2 x12: 1fffe0000d5b25b1
+> > [ 1229.410859][ T2659] x11: 1fffe0000d5b25b1 x10: ffff80000d5b25b1
+> > [ 1229.412791][ T2659] x9 : ffffa0001034bee0 x8 : ffff00006ad92d8f
+> > [ 1229.414707][ T2659] x7 : 0000000000000000 x6 : ffffa00015eacb20
+> > [ 1229.416642][ T2659] x5 : ffff0000693c8040 x4 : 0000000000000000
+> > [ 1229.418558][ T2659] x3 : ffffa0001034befc x2 : d57a7483a01c6300
+> > [ 1229.420610][ T2659] x1 : 0000000000000000 x0 : 0000000000000059
+> > [ 1229.422526][ T2659] Call trace:
+> > [ 1229.423631][ T2659]  usercopy_abort+0xc8/0xcc
+> > [ 1229.425091][ T2659]  __check_object_size+0xdc/0x7d4
+> > [ 1229.426729][ T2659]  put_cmsg+0xa30/0xa90
+> > [ 1229.428132][ T2659]  unix_dgram_recvmsg+0x80c/0x930
+> > [ 1229.429731][ T2659]  sock_recvmsg+0x9c/0xc0
+> > [ 1229.431123][ T2659]  ____sys_recvmsg+0x1cc/0x5f8
+> > [ 1229.432663][ T2659]  ___sys_recvmsg+0x100/0x160
+> > [ 1229.434151][ T2659]  __sys_recvmsg+0x110/0x1a8
+> > [ 1229.435623][ T2659]  __arm64_sys_recvmsg+0x58/0x70
+> > [ 1229.437218][ T2659]  el0_svc_common.constprop.1+0x29c/0x340
+> > [ 1229.438994][ T2659]  do_el0_svc+0xe8/0x108
+> > [ 1229.440587][ T2659]  el0_svc+0x74/0x88
+> > [ 1229.441917][ T2659]  el0_sync_handler+0xe4/0x8b4
+> > [ 1229.443464][ T2659]  el0_sync+0x17c/0x180
+> > [ 1229.444920][ T2659] Code: aa1703e2 aa1603e1 910a8260 97ecc860 (d4210000)
+> > [ 1229.447070][ T2659] ---[ end trace 400497d91baeaf51 ]---
+> > [ 1229.448791][ T2659] Kernel panic - not syncing: Fatal exception
+> > [ 1229.450692][ T2659] Kernel Offset: disabled
+> > [ 1229.452061][ T2659] CPU features: 0x240002,20002004
+> > [ 1229.453647][ T2659] Memory Limit: none
+> > [ 1229.455015][ T2659] ---[ end Kernel panic - not syncing: Fatal exception ]---
+> >
+> > Rework the so the default return value is -EOPNOTSUPP.
+> >
+> > There are likely other callbacks such as security_inode_getsecctx() that
+> > may have the same problem, and that someone that understand the code
+> > better needs to audit them.
+> >
+> > Thank you Arnd for helping me figure out what went wrong.
+> >
+> > CC: Arnd Bergmann <arnd@arndb.de>
+> > Fixes: 98e828a0650f ("security: Refactor declaration of LSM hooks")
+> > Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+> > ---
+> >  include/linux/lsm_hook_defs.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+> > index b9e73d736e13..31eb3381e54b 100644
+> > --- a/include/linux/lsm_hook_defs.h
+> > +++ b/include/linux/lsm_hook_defs.h
+> > @@ -243,7 +243,7 @@ LSM_HOOK(int, -EINVAL, getprocattr, struct task_struct *p, char *name,
+> >          char **value)
+> >  LSM_HOOK(int, -EINVAL, setprocattr, const char *name, void *value, size_t size)
+> >  LSM_HOOK(int, 0, ismaclabel, const char *name)
+> > -LSM_HOOK(int, 0, secid_to_secctx, u32 secid, char **secdata,
+> > +LSM_HOOK(int, -EOPNOTSUPP, secid_to_secctx, u32 secid, char **secdata,
+> >          u32 *seclen)
+> >  LSM_HOOK(int, 0, secctx_to_secid, const char *secdata, u32 seclen, u32 *secid)
+> >  LSM_HOOK(void, LSM_RET_VOID, release_secctx, char *secdata, u32 seclen)
+> > --
+> > 2.20.1
+> >
+> 
 
-diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
-index 8b743d25002b9..0d4f9067ca715 100644
---- a/drivers/net/phy/nxp-tja11xx.c
-+++ b/drivers/net/phy/nxp-tja11xx.c
-@@ -180,10 +180,43 @@ static int tja11xx_soft_reset(struct phy_device *phydev)
- 	return genphy_soft_reset(phydev);
- }
- 
-+static int tja11xx_config_aneg_cable_test(struct phy_device *phydev)
-+{
-+	bool finished = false;
-+	int ret;
-+
-+	if (phydev->link)
-+		return 0;
-+
-+	if (!phydev->drv->cable_test_start ||
-+	    !phydev->drv->cable_test_get_status)
-+		return 0;
-+
-+	ret = ethnl_cable_test_alloc(phydev);
-+	if (ret)
-+		return ret;
-+
-+	ret = phydev->drv->cable_test_start(phydev);
-+	if (ret)
-+		return ret;
-+
-+	/* According to the documentation this test takes 100 usec */
-+	usleep_range(100, 200);
-+
-+	ret = phydev->drv->cable_test_get_status(phydev, &finished);
-+	if (ret)
-+		return ret;
-+
-+	if (finished)
-+		ethnl_cable_test_finished(phydev);
-+
-+	return 0;
-+}
-+
- static int tja11xx_config_aneg(struct phy_device *phydev)
- {
-+	int ret, changed = 0;
- 	u16 ctl = 0;
--	int ret;
- 
- 	switch (phydev->master_slave_set) {
- 	case MASTER_SLAVE_CFG_MASTER_FORCE:
-@@ -193,17 +226,22 @@ static int tja11xx_config_aneg(struct phy_device *phydev)
- 		break;
- 	case MASTER_SLAVE_CFG_UNKNOWN:
- 	case MASTER_SLAVE_CFG_UNSUPPORTED:
--		return 0;
-+		goto do_test;
- 	default:
- 		phydev_warn(phydev, "Unsupported Master/Slave mode\n");
- 		return -ENOTSUPP;
- 	}
- 
--	ret = phy_modify_changed(phydev, MII_CFG1, MII_CFG1_MASTER_SLAVE, ctl);
--	if (ret < 0)
-+	changed = phy_modify_changed(phydev, MII_CFG1, MII_CFG1_MASTER_SLAVE, ctl);
-+	if (changed < 0)
-+		return changed;
-+
-+do_test:
-+	ret = tja11xx_config_aneg_cable_test(phydev);
-+	if (ret)
- 		return ret;
- 
--	return __genphy_config_aneg(phydev, ret);
-+	return __genphy_config_aneg(phydev, changed);
- }
- 
- static int tja11xx_config_init(struct phy_device *phydev)
+
 -- 
-2.26.2
-
+James Morris
+<jamorris@linux.microsoft.com>
