@@ -2,136 +2,101 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F6A1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66DB8206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B2C020756
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:25:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbgENPW5 convert rfc822-to-8bit (ORCPT
+        id S1726659AbgENPZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 11:22:57 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:56501 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbgENPW4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 11:22:56 -0400
-X-Originating-IP: 90.76.143.236
-Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 24BF41BF20E;
-        Thu, 14 May 2020 15:22:53 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 14 May 2020 11:25:35 -0400
+Received: from mga06.intel.com ([134.134.136.31]:42920 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726056AbgENPZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 11:25:35 -0400
+IronPort-SDR: /rKbp9lSq4uFDVylUEPvhTK9wfLK1N2G0sik70JIZ7FqtZxi54OuXiU2MQTeENBOZ9x7bBxcm5
+ SIFeUsYN5ULA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 08:25:34 -0700
+IronPort-SDR: Ng2hBVYJXHRSIZgay8eUBPE0EZoRJvviZ2qMfzj8FYvf8AGmaHPL90x4D+uUNQg0wv84fsgGmS
+ hylSshRCqn8g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,391,1583222400"; 
+   d="scan'208";a="298071283"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by fmsmga002.fm.intel.com with ESMTP; 14 May 2020 08:25:33 -0700
+Date:   Thu, 14 May 2020 08:31:43 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v13 3/8] iommu/vt-d: Add nested translation helper
+ function
+Message-ID: <20200514083143.6400d813@jacob-builder>
+In-Reply-To: <20200514055424.GC22388@infradead.org>
+References: <1589410909-38925-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1589410909-38925-4-git-send-email-jacob.jun.pan@linux.intel.com>
+        <20200514055424.GC22388@infradead.org>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200324104918.29578-1-hhhawa@amazon.com>
-References: <20200324104918.29578-1-hhhawa@amazon.com>
-Cc:     devicetree@vger.kernel.org, benh@amazon.com,
-        linux-kernel@vger.kernel.org, hanochu@amazon.com,
-        dwmw@amazon.co.uk, jonnyc@amazon.com, ronenk@amazon.com,
-        talel@amazon.com, linux-arm-kernel@lists.infradead.org
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     hhhawa@amazon.com, robh+dt@kernel.org, tsahee@annapurnalabs.com,
-        arm@kernel.org
-Subject: Re: [PATCH v5 0/6] Amazon's Annapurna Labs Alpine v3 device-tree
-Message-ID: <158946977180.3480.12435085393834819053@kwain>
-Date:   Thu, 14 May 2020 17:22:52 +0200
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Adding arm-soc]
+On Wed, 13 May 2020 22:54:24 -0700
+Christoph Hellwig <hch@infradead.org> wrote:
 
-Hi Hanna,
+> > +	 * 1. CPU vs. IOMMU
+> > +	 * 2. Guest vs. Host.
+> > +	 */
+> > +	switch (addr_width) {
+> > +#ifdef CONFIG_X86
+> > +	case ADDR_WIDTH_5LEVEL:
+> > +		if (cpu_feature_enabled(X86_FEATURE_LA57) &&
+> > +		    cap_5lp_support(iommu->cap)) {
+> > +			pasid_set_flpm(pte, 1);
+> > +		} else {
+> > +			dev_err_ratelimited(dev, "5-level paging
+> > not supported\n");
+> > +			return -EINVAL;
+> > +		}
+> > +		break;  
+> 
+> The normal style would be to handle the early error return first:
+> 
+> 		if (!cpu_feature_enabled(X86_FEATURE_LA57) ||
+> 		    !cap_5lp_support(iommu->cap)) {
+> 			dev_err_ratelimited(dev,
+> 				"5-level paging not supported\n");
+> 			return -EINVAL;
+> 		}
+> 
+> 		pasid_set_flpm(pte, 1);
+> 		break;
+> 
 
-Sorry for the delay, the series was buried in my mails...
+Sounds good. I was thinking in positive logic.
 
-Acked-by: Antoine Tenart <antoine.tenart@bootlin.com>
-
-Arnd, Olof, could you take this series directly as this will be the only
-Alpine patches for this release (and for a long time)?
-
-Thanks!
-Antoine
-
-Quoting Hanna Hawa (2020-03-24 11:49:12)
-> This series organize the Amazon's Annapurna Labs Alpine device tree
-> bindings, device tree folder and adds new device tree for Alpine v3.
-> 
-> Changes since v4:
-> -----------------
-> - Re-order nodes in increasing order.
-> - Add disable to UART nodes.
-> - Add missing UART nodes (1,2,3)
-> - Add comments for GIC/UART
-> - Add io-fabric bus, and move uart nodes into it.
-> - Fix MSIx range according Alpine function spec
-> 
-> Changes since v3:
-> -----------------
-> - rebased and retested for tag Linux 5.6-rc2
-> 
-> Changes since v2:
-> -----------------
-> - Move up a level for DT node without mmio regs.
-> - Drop device_type from serial@fd883000 node.
-> - Minor change name of PCIe node to: pcie@fbd00000
-> 
-> Changes since v1:
-> -----------------
-> - Rename al,alpine DT binding to amazon,alpine
-> - Rename al folder to be amazon
-> - Update maintainers of amazon,alpine DT
-> - Add missing alpine-v2 DT binding
-> - Fix yaml schemas for alpine-v3-evp.dts:
->         - #size-cells:0:0: 0 is not one of [1, 2]
->         - arch-timer: interrupts: [[1, 13, 8, 1, 14, 8, 1, 11, 8, 1, 10,
->         8]] is too short
-> - Change compatible string of alpine-v3-evp to amazon,al
-> 
-> Hanna Hawa (5):
->   dt-bindings: arm: amazon: rename al,alpine DT binding to amazon,al
->   arm64: dts: amazon: rename al folder to be amazon
->   dt-bindings: arm: amazon: update maintainers of amazon,al DT bindings
->   dt-bindings: arm: amazon: add missing alpine-v2 DT binding
->   dt-bindings: arm: amazon: add Amazon Annapurna Labs Alpine V3
-> 
-> Ronen Krupnik (1):
->   arm64: dts: amazon: add Amazon's Annapurna Labs Alpine v3 support
-> 
->  .../devicetree/bindings/arm/al,alpine.yaml    |  21 -
->  .../devicetree/bindings/arm/amazon,al.yaml    |  33 ++
->  MAINTAINERS                                   |   2 +-
->  arch/arm64/boot/dts/Makefile                  |   2 +-
->  arch/arm64/boot/dts/{al => amazon}/Makefile   |   1 +
->  .../boot/dts/{al => amazon}/alpine-v2-evp.dts |   0
->  .../boot/dts/{al => amazon}/alpine-v2.dtsi    |   0
->  arch/arm64/boot/dts/amazon/alpine-v3-evp.dts  |  24 ++
->  arch/arm64/boot/dts/amazon/alpine-v3.dtsi     | 408 ++++++++++++++++++
->  9 files changed, 468 insertions(+), 23 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/al,alpine.yaml
->  create mode 100644 Documentation/devicetree/bindings/arm/amazon,al.yaml
->  rename arch/arm64/boot/dts/{al => amazon}/Makefile (64%)
->  rename arch/arm64/boot/dts/{al => amazon}/alpine-v2-evp.dts (100%)
->  rename arch/arm64/boot/dts/{al => amazon}/alpine-v2.dtsi (100%)
->  create mode 100644 arch/arm64/boot/dts/amazon/alpine-v3-evp.dts
->  create mode 100644 arch/arm64/boot/dts/amazon/alpine-v3.dtsi
-> 
-> -- 
-> 2.17.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-Antoine Ténart, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+thanks
