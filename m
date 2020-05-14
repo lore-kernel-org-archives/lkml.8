@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9299C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA24AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A156420643
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A5AC2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483343;
-	bh=fgwqYlmvbIZhbZ+Axt+VfYBsWO6kKrxtHD5E8q5cdxI=;
+	s=default; t=1589483349;
+	bh=LIAMOJa5wfbbix5mguD+xD+vK9hdv1xD7K/rHhBz43g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0HUDgBSofiOKjsWH9efnUQXGlnwJ4GI4YEGy9I28GBwH3bufbfy8sHB+hNEH6xdj0
-	 AIJsOyNhdfvUYyHhnFuFLrR1TqM7aLGb2rjTUTbdnu77DyvcBIcVpn2Ylb0OwFcWY3
-	 Vr/+wCihnUia5Z1FR6RgvO118PBaDfEzo430q/9A=
+	b=mPIkmozBP+dNF7LjtHEEmeO/EzCk8CAWUjtbQ3zWe6rzFt0j6dPEybq6zATJpCcMX
+	 QOWzk3iGQVZX2oAf62vER3H5QfAcLw27A4/jONsrBV3XJqH0tfoj6TRd+feRF175WB
+	 mGZDmU57dFrRITqJ8wPzCLk3lNuY5Hyr7voA2QCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730223AbgENTJC (ORCPT
+        id S1729689AbgENTJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:09:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51942 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:09:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728547AbgENSxC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:53:02 -0400
+        id S1728535AbgENSxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:53:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E52BA206A5;
-        Thu, 14 May 2020 18:53:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4FAB207D4;
+        Thu, 14 May 2020 18:52:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482382;
-        bh=fgwqYlmvbIZhbZ+Axt+VfYBsWO6kKrxtHD5E8q5cdxI=;
+        s=default; t=1589482380;
+        bh=LIAMOJa5wfbbix5mguD+xD+vK9hdv1xD7K/rHhBz43g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f8Yrzbzlek2UMNCKMLplTFh581qWaX2/DdHsl7cQwi3Nvw2tF4+rHx9HSLi4v4aF4
-         VqdLedzKpfaPiD3P6YjxL+EB/yPIiv7qObu+VXiNyKl4S+3puZs+buYufL8s1ez8Sh
-         f54X65Sm59xr3Y/F/6UQRVdxAbPz+k/xMg1USFio=
+        b=bORhiR2KWc9RumwqGGlRd6NjeSn56vPFf5XttCKDDIq2Q8jSJKUsByKNs4DKj4nYJ
+         fkSyrU/nC49qN8gTN+9n7iD04sdNKqJgNLv5VF9gTgm1dJv0GkMcFpaA8+l7+B9b/1
+         Pz6Pz5EmUmR8BNrsRx5Z9AVrrCQhGgtJqlBEA7Ng=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 59/62] gcc-10: mark more functions __init to avoid section mismatch warnings
-Date:   Thu, 14 May 2020 14:51:44 -0400
-Message-Id: <20200514185147.19716-59-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 57/62] gcc-10: disable 'stringop-overflow' warning for now
+Date:   Thu, 14 May 2020 14:51:42 -0400
+Message-Id: <20200514185147.19716-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185147.19716-1-sashal@kernel.org>
 References: <20200514185147.19716-1-sashal@kernel.org>
@@ -60,58 +60,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit e99332e7b4cda6e60f5b5916cf9943a79dbef902 ]
+[ Upstream commit 5a76021c2eff7fcf2f0918a08fd8a37ce7922921 ]
 
-It seems that for whatever reason, gcc-10 ends up not inlining a couple
-of functions that used to be inlined before.  Even if they only have one
-single callsite - it looks like gcc may have decided that the code was
-unlikely, and not worth inlining.
+This is the final array bounds warning removal for gcc-10 for now.
 
-The code generation difference is harmless, but caused a few new section
-mismatch errors, since the (now no longer inlined) function wasn't in
-the __init section, but called other init functions:
-
-   Section mismatch in reference from the function kexec_free_initrd() to the function .init.text:free_initrd_mem()
-   Section mismatch in reference from the function tpm2_calc_event_log_size() to the function .init.text:early_memremap()
-   Section mismatch in reference from the function tpm2_calc_event_log_size() to the function .init.text:early_memunmap()
-
-So add the appropriate __init annotation to make modpost not complain.
-In both cases there were trivially just a single callsite from another
-__init function.
+Again, the warning is good, and we should re-enable all these warnings
+when we have converted all the legacy array declaration cases to
+flexible arrays. But in the meantime, it's just noise.
 
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/tpm.c | 2 +-
- init/initramfs.c           | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
-index 31f9f0e369b97..55b031d2c9890 100644
---- a/drivers/firmware/efi/tpm.c
-+++ b/drivers/firmware/efi/tpm.c
-@@ -16,7 +16,7 @@
- int efi_tpm_final_log_size;
- EXPORT_SYMBOL(efi_tpm_final_log_size);
+diff --git a/Makefile b/Makefile
+index bc5e9a5fc5cbf..dde725d9c17d2 100644
+--- a/Makefile
++++ b/Makefile
+@@ -861,6 +861,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
+ # We'll want to enable this eventually, but it's not going away for 5.7 at least
+ KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
+ KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
++KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
  
--static int tpm2_calc_event_log_size(void *data, int count, void *size_info)
-+static int __init tpm2_calc_event_log_size(void *data, int count, void *size_info)
- {
- 	struct tcg_pcr_event2_head *header;
- 	int event_size, size = 0;
-diff --git a/init/initramfs.c b/init/initramfs.c
-index 8ec1be4d7d512..7a38012e1af74 100644
---- a/init/initramfs.c
-+++ b/init/initramfs.c
-@@ -542,7 +542,7 @@ void __weak free_initrd_mem(unsigned long start, unsigned long end)
- }
- 
- #ifdef CONFIG_KEXEC_CORE
--static bool kexec_free_initrd(void)
-+static bool __init kexec_free_initrd(void)
- {
- 	unsigned long crashk_start = (unsigned long)__va(crashk_res.start);
- 	unsigned long crashk_end   = (unsigned long)__va(crashk_res.end);
+ # Enabled with W=2, disabled by default as noisy
+ KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
 -- 
 2.20.1
 
