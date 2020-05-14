@@ -7,52 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC18C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E37B5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0F7C2065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:00:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5C402065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:01:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482857;
-	bh=4+p9Et0PJxrEXamW6haclt6TvsWygj2K5WYzhSpxuRI=;
+	s=default; t=1589482866;
+	bh=sKKycsNvZwdMi/ig82103IsNNPEMODqd4qw0y2HS1+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EHviLcgLbrFxtRCNQoNGGjLH7h9PTxOCyQi3qStNUNJZX5RlAmRlMxNpyqoK3m9Sv
-	 FnJWWW/KKyVg738HKjnAzaxm6pOrRWL5CnZZuyZOvvrOmlR+psv9qcqtN+XmJUUGv+
-	 3B1RjlkwzruhsqvVJM2lNeMiP+iJQvzkwSJC0Rxg=
+	b=MVkqskF+wswhFYmf6ppzTb+4MufV7B7nHbR46fdC23a6ffCZRrQOBCSobiG0a+97w
+	 3a4wbHU6rALtUkcDPe4yT1RkFC+H4KVrqHdYr8vUSd71ywEpy2C/hhMzaxXhEGqy1Q
+	 KlOJOUA48nBDs1dwKfp32Dct7aesHHYD2Eznm06E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729418AbgENSzg (ORCPT
+        id S1729951AbgENTBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:55:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55868 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:01:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729347AbgENSzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:55:19 -0400
+        id S1729403AbgENSze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:55:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DFFA2081A;
-        Thu, 14 May 2020 18:55:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20F2F206DC;
+        Thu, 14 May 2020 18:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482519;
-        bh=4+p9Et0PJxrEXamW6haclt6TvsWygj2K5WYzhSpxuRI=;
+        s=default; t=1589482533;
+        bh=sKKycsNvZwdMi/ig82103IsNNPEMODqd4qw0y2HS1+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RzyVx6gv1zSgTkFaAJqbG4Lp6IKKZ8CfSOAYHoB5oKe1pr4EG444N+vZFWrdqpOi/
-         fAoCQoXfN8UdubNA9LXxz6+0fRNdwYDgRkJ6yEdNLipeQtAaH1p4aqwoGobF22BixB
-         5uiGWxwvf06IEiy94pNTHWG6D+ahc6hWzWr4pWcI=
+        b=s9GcdBnYSNzElu/7Zdyf9AT7Shu4U6Cio8+64k7ZF/OUHgkd96zQhLO3mZfv6Y11G
+         xZF+kzx2/3AS9NC76QFr84rqZ9CZ4JsYj90tHLJ6Ya1PKwbCkn7vgB9oC7HxBM34O1
+         t3HuZ2jItExr6j2T/jA+Pxq0ttxv4HNH5katmetM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>, Dave Jones <dsj@fb.com>,
-        Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 15/39] x86/unwind/orc: Fix error path for bad ORC entry type
-Date:   Thu, 14 May 2020 14:54:32 -0400
-Message-Id: <20200514185456.21060-15-sashal@kernel.org>
+Cc:     Scott Dial <scott@scottdial.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 27/39] net: macsec: preserve ingress frame ordering
+Date:   Thu, 14 May 2020 14:54:44 -0400
+Message-Id: <20200514185456.21060-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185456.21060-1-sashal@kernel.org>
 References: <20200514185456.21060-1-sashal@kernel.org>
@@ -65,43 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Scott Dial <scott@scottdial.com>
 
-[ Upstream commit a0f81bf26888048100bf017fadf438a5bdffa8d8 ]
+[ Upstream commit ab046a5d4be4c90a3952a0eae75617b49c0cb01b ]
 
-If the ORC entry type is unknown, nothing else can be done other than
-reporting an error.  Exit the function instead of breaking out of the
-switch statement.
+MACsec decryption always occurs in a softirq context. Since
+the FPU may not be usable in the softirq context, the call to
+decrypt may be scheduled on the cryptd work queue. The cryptd
+work queue does not provide ordering guarantees. Therefore,
+preserving order requires masking out ASYNC implementations
+of gcm(aes).
 
-Fixes: ee9f8fce9964 ("x86/unwind: Add the ORC unwinder")
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Jones <dsj@fb.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lore.kernel.org/r/a7fa668ca6eabbe81ab18b2424f15adbbfdc810a.1587808742.git.jpoimboe@redhat.com
+For instance, an Intel CPU with AES-NI makes available the
+generic-gcm-aesni driver from the aesni_intel module to
+implement gcm(aes). However, this implementation requires
+the FPU, so it is not always available to use from a softirq
+context, and will fallback to the cryptd work queue, which
+does not preserve frame ordering. With this change, such a
+system would select gcm_base(ctr(aes-aesni),ghash-generic).
+While the aes-aesni implementation prefers to use the FPU, it
+will fallback to the aes-asm implementation if unavailable.
+
+By using a synchronous version of gcm(aes), the decryption
+will complete before returning from crypto_aead_decrypt().
+Therefore, the macsec_decrypt_done() callback will be called
+before returning from macsec_decrypt(). Thus, the order of
+calls to macsec_post_decrypt() for the frames is preserved.
+
+While it's presumable that the pure AES-NI version of gcm(aes)
+is more performant, the hybrid solution is capable of gigabit
+speeds on modest hardware. Regardless, preserving the order
+of frames is paramount for many network protocols (e.g.,
+triggering TCP retries). Within the MACsec driver itself, the
+replay protection is tripped by the out-of-order frames, and
+can cause frames to be dropped.
+
+This bug has been present in this code since it was added in
+v4.6, however it may not have been noticed since not all CPUs
+have FPU offload available. Additionally, the bug manifests
+as occasional out-of-order packets that are easily
+misattributed to other network phenomena.
+
+When this code was added in v4.6, the crypto/gcm.c code did
+not restrict selection of the ghash function based on the
+ASYNC flag. For instance, x86 CPUs with PCLMULQDQ would
+select the ghash-clmulni driver instead of ghash-generic,
+which submits to the cryptd work queue if the FPU is busy.
+However, this bug was was corrected in v4.8 by commit
+b30bdfa86431afbafe15284a3ad5ac19b49b88e3, and was backported
+all the way back to the v3.14 stable branch, so this patch
+should be applicable back to the v4.6 stable branch.
+
+Signed-off-by: Scott Dial <scott@scottdial.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/unwind_orc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/macsec.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index 8a855867e4568..19a02c47d76c7 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -460,7 +460,7 @@ bool unwind_next_frame(struct unwind_state *state)
- 	default:
- 		orc_warn("unknown .orc_unwind entry type %d for ip %pB\n",
- 			 orc->type, (void *)orig_ip);
--		break;
-+		goto err;
- 	}
+diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
+index 926e2eb528fd4..4a92160394c07 100644
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@ -1309,7 +1309,8 @@ static struct crypto_aead *macsec_alloc_tfm(char *key, int key_len, int icv_len)
+ 	struct crypto_aead *tfm;
+ 	int ret;
  
- 	/* Find BP: */
+-	tfm = crypto_alloc_aead("gcm(aes)", 0, 0);
++	/* Pick a sync gcm(aes) cipher to ensure order is preserved. */
++	tfm = crypto_alloc_aead("gcm(aes)", 0, CRYPTO_ALG_ASYNC);
+ 
+ 	if (IS_ERR(tfm))
+ 		return tfm;
 -- 
 2.20.1
 
