@@ -2,149 +2,65 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6D9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB09C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34C2620727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:39:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HLWCLjI/"
+	by mail.kernel.org (Postfix) with ESMTP id 876A22073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:40:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589463640;
+	bh=jNuPA/dabcue1FHcKH317SrIIgVTgh/73Xfhxy1N3ys=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NJc4KNNkIqr841vd/BxduCa8WF5+zqrU2suGf45areSqKMsFalznJ0elVob8/KCax
+	 cHGfDeNChKw8wb/Z7yxvPlurroOdPmqg7xEBUqIUE8RQ2xf3pnsPhXCNOHVeiISK3F
+	 EEDP86/9A+jLBiCuA7bBbGO4iKlfSyaD1TEnXo9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbgENNju (ORCPT
+        id S1727769AbgENNkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:39:50 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:45043 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbgENNjr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:39:47 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200514133945euoutp0139bfab19cc70183bf53c93f962dfb5b7~O6LWb02LZ2264422644euoutp01o
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 13:39:45 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200514133945euoutp0139bfab19cc70183bf53c93f962dfb5b7~O6LWb02LZ2264422644euoutp01o
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1589463585;
-        bh=fWx0YMUp/JMtvmNqrUDqO8Zb5vgF1GKtXhH/LVX0fYY=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=HLWCLjI/770gPJMadpcWM3NeSxssOPuLiZmRwF7UbRcpTNMrihfvWd0ocx8x59R/r
-         qMLquXMgzuJyLKRnlDUbjeqF7b05d4mhOLebLtoQqdXomOfRfbwR0m5BGA7V3W5BnA
-         M1ut1ZcehuoaV/FnDSrkyaoZr6zvO7uo+uOrLZ9E=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200514133944eucas1p1c83134058526c09d938d5a3035abae7d~O6LWPESKz1865318653eucas1p1Q;
-        Thu, 14 May 2020 13:39:44 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 97.38.61286.02A4DBE5; Thu, 14
-        May 2020 14:39:44 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200514133944eucas1p2fb43685052347ab281924ef91a9538aa~O6LVtPLQ12683826838eucas1p2H;
-        Thu, 14 May 2020 13:39:44 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200514133944eusmtrp1c94ae43e151473eaf211964d0f36f374~O6LVstZuV0296802968eusmtrp1L;
-        Thu, 14 May 2020 13:39:44 +0000 (GMT)
-X-AuditID: cbfec7f2-ef1ff7000001ef66-5a-5ebd4a206a68
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id C6.B2.07950.02A4DBE5; Thu, 14
-        May 2020 14:39:44 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200514133944eusmtip1ad25d7e2251d2ea96e578cbfc820a524~O6LVepM9E1597315973eusmtip1N;
-        Thu, 14 May 2020 13:39:44 +0000 (GMT)
-Subject: Re: [PATCH 12/20] omapfb: get rid of pointless access_ok() calls
-To:     Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <8e349e00-817f-6c3e-82db-ce4c1f72bada@samsung.com>
-Date:   Thu, 14 May 2020 15:39:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Thu, 14 May 2020 09:40:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41852 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726050AbgENNkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 09:40:39 -0400
+Received: from localhost (unknown [122.182.193.86])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A18EC20727;
+        Thu, 14 May 2020 13:40:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589463639;
+        bh=jNuPA/dabcue1FHcKH317SrIIgVTgh/73Xfhxy1N3ys=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tB1h5IvLUjxY1J5AEn8KN6oNNBIqrDgkdylvwL7wrwljvb+G/ffzjvgEUAScfgJAg
+         Dq6VgU6IcGxexhTnCh/1I5MZKjNe9NrLUYDT3z70Y9Uu4jl45A9qpy/qFgYC034rSx
+         r9uiLdhXe4EXqqgf9AvsAHXMruxi9zRtqskYjXJo=
+Date:   Thu, 14 May 2020 19:10:27 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: db820c: Add pmi8994 RPM regulators
+Message-ID: <20200514134027.GS14092@vkoul-mobl>
+References: <20200417070303.1376290-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200509234557.1124086-12-viro@ZenIV.linux.org.uk>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprEKsWRmVeSWpSXmKPExsWy7djP87oKXnvjDNZ/t7TYs/cki8XlXXPY
-        LB71vWW3OP/3OKsDi8eJGb9ZPD5vkvPY9OQtUwBzFJdNSmpOZllqkb5dAlfGx1P3GAtaOSpO
-        3vvA0sB4na2LkZNDQsBEYtGjo8xdjFwcQgIrGCV6bp5jAUkICXxhlHjVbg2R+Mwosb1rFTNM
-        x8JF69khEssZJf5uvM8I4bxllPjRvYgRpEpYwFPi59Z/YB0iAqoSd06dYQKxmQUKJTbe+QpW
-        wyZgJTGxfRWYzStgJ3Ho9Tawehag+lm39oPZogIREp8eHGaFqBGUODnzCdh5nAIOEr2fW9kg
-        ZopL3HoyH2q+vMT2t3PA/pEQ6GaXON/1ggXibBeJvk+HoGxhiVfHt7BD2DISpyf3sEA0rAN6
-        p+MFVPd2Ronlk/9Bg8la4s65X0A2B9AKTYn1u/Qhwo4SXaufMYKEJQT4JG68FYQ4gk9i0rbp
-        zBBhXomONiGIajWJDcs2sMGs7dq5knkCo9IsJK/NQvLOLCTvzELYu4CRZRWjeGppcW56arFh
-        Xmq5XnFibnFpXrpecn7uJkZgSjn97/inHYxfLyUdYhTgYFTi4bW4tTtOiDWxrLgy9xCjBAez
-        kgiv33qgEG9KYmVValF+fFFpTmrxIUZpDhYlcV7jRS9jhQTSE0tSs1NTC1KLYLJMHJxSDYy2
-        f65MWWhVPfd2sGDy5p3q8z89Et3au/iWm+iHb9O7/vJllopGfF+2rnNNsdBni/+Ln52dqHVs
-        ZfrxXXbCAj94r/OG+7l941EO+s4fIlGQ3f1sjYfj5nMrmKZE79kfs9mrW9Du+RoFTZssx+Jp
-        OvwlAW3JuYfutJo7nAvzdpFfN8vI84G/no4SS3FGoqEWc1FxIgAPxDKuJQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCIsWRmVeSWpSXmKPExsVy+t/xu7oKXnvjDGY2S1js2XuSxeLyrjls
-        Fo/63rJbnP97nNWBxePEjN8sHp83yXlsevKWKYA5Ss+mKL+0JFUhI7+4xFYp2tDCSM/Q0kLP
-        yMRSz9DYPNbKyFRJ384mJTUnsyy1SN8uQS/j46l7jAWtHBUn731gaWC8ztbFyMkhIWAisXDR
-        evYuRi4OIYGljBLzui6wdDFyACVkJI6vL4OoEZb4c62LDaLmNaPEzPk32UESwgKeEj+3/mMG
-        sUUEVCXunDrDBGIzCxRKtE/9zgLR8I1R4mnPMbAiNgEriYntqxhBbF4BO4lDr7eBxVmAmmfd
-        2g9miwpESBzeMQuqRlDi5MwnLCA2p4CDRO/nVjaIBeoSf+ZdYoawxSVuPZkPtVheYvvbOcwT
-        GIVmIWmfhaRlFpKWWUhaFjCyrGIUSS0tzk3PLTbSK07MLS7NS9dLzs/dxAiMoW3Hfm7Zwdj1
-        LvgQowAHoxIPr8Wt3XFCrIllxZW5hxglOJiVRHj91gOFeFMSK6tSi/Lji0pzUosPMZoCPTeR
-        WUo0OR8Y33kl8YamhuYWlobmxubGZhZK4rwdAgdjhATSE0tSs1NTC1KLYPqYODilGhiX8nuE
-        lJx49rehIpFNtFAxYt9K4+qARzzfpr3h1FsnIKq5lk9fedpuf8v/2ktnnTjTbSXx9+cJz88W
-        CkLtgjyH/P2b7EoyLmyLy2h9/oal5oOUQPiqSdIPn9ZIdz366Ts1fLU3t9uRb7l9y9Rufewv
-        WDHzLWNg3q8FOwuy58T5TUw6veGmEosSS3FGoqEWc1FxIgC/UVHgtwIAAA==
-X-CMS-MailID: 20200514133944eucas1p2fb43685052347ab281924ef91a9538aa
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200509234608eucas1p13a673239d8145e2dfd12d0ecc98a4cca
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200509234608eucas1p13a673239d8145e2dfd12d0ecc98a4cca
-References: <20200509234124.GM23230@ZenIV.linux.org.uk>
-        <20200509234557.1124086-1-viro@ZenIV.linux.org.uk>
-        <CGME20200509234608eucas1p13a673239d8145e2dfd12d0ecc98a4cca@eucas1p1.samsung.com>
-        <20200509234557.1124086-12-viro@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200417070303.1376290-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 17-04-20, 00:03, Bjorn Andersson wrote:
+> The PMI8994 provides 3 SPMS regulators and one boost/bypass regulator.
+> Define s1 and the boot/bypass and update pm8994 to appropriately
+> describe the supply from PMI8994.
 
-On 5/10/20 1:45 AM, Al Viro wrote:
-> From: Al Viro <viro@zeniv.linux.org.uk>
-> 
-> address is passed only to copy_to_user()
-> 
-> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
-Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
-
-> ---
->  drivers/video/fbdev/omap2/omapfb/omapfb-ioctl.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/drivers/video/fbdev/omap2/omapfb/omapfb-ioctl.c b/drivers/video/fbdev/omap2/omapfb/omapfb-ioctl.c
-> index 56995f44e76d..f40be68d5aac 100644
-> --- a/drivers/video/fbdev/omap2/omapfb/omapfb-ioctl.c
-> +++ b/drivers/video/fbdev/omap2/omapfb/omapfb-ioctl.c
-> @@ -482,9 +482,6 @@ static int omapfb_memory_read(struct fb_info *fbi,
->  	if (!display || !display->driver->memory_read)
->  		return -ENOENT;
->  
-> -	if (!access_ok(mr->buffer, mr->buffer_size))
-> -		return -EFAULT;
-> -
->  	if (mr->w > 4096 || mr->h > 4096)
->  		return -EINVAL;
->  
-> 
-
+-- 
+~Vinod
