@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7ABC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0F9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50D7A207ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3C78206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:55:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482515;
-	bh=M7pvGnvnXA7VoSIGQiVFsoWdv3eCoTkXxemX1i2yzuI=;
+	s=default; t=1589482523;
+	bh=ryExQOqJfowyk+yxGk4cWSfxd7KEFPZqFSFmovtxKUI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tgNnXzRB+PJxGSxWVDGRT3LITNKUnwLDD0PfVvSfM1xyj15ygtaUdmBZ/Yp6catN2
-	 klgRzv9atXiFx0X79GZje3P0n8ZrxIDie9vhObGHGk2Bv1HjvVE2dAOD3HFeV3MeD+
-	 Uq7zjWBf0GTqbX5t1gvQDWW0QVOEjF11nBiEu31A=
+	b=dPRRbJzGj784mzRKBICJsTwpESTQ7VAEI0XGfLBl1FT/i51gOyAGxcycS6/tqgUG6
+	 fcOCS8hmX+nhEUna8v1hrcgY1irnw+hPITWqh2Wnns4oxImNJlKE+CBw4Yn0EZZlP7
+	 eNaAt45kwocljFm/iQqVuxVmXJQMfrZ7PbbXvqvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729327AbgENSzN (ORCPT
+        id S1729356AbgENSzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:55:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55038 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:55:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729085AbgENSyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:54:50 -0400
+        id S1729265AbgENSzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:55:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00066206F1;
-        Thu, 14 May 2020 18:54:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB8BF206F1;
+        Thu, 14 May 2020 18:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482489;
-        bh=M7pvGnvnXA7VoSIGQiVFsoWdv3eCoTkXxemX1i2yzuI=;
+        s=default; t=1589482500;
+        bh=ryExQOqJfowyk+yxGk4cWSfxd7KEFPZqFSFmovtxKUI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W7HfcxaWLts/xf9FKwEJ978bvGAUNjYLEnkOlpGvHeM2gf2rm947eLfw1+d0VeM/i
-         Qsgf8sZlqI9+N4Uywi7BNJi/lI5WAMojq+rpTzGgJ0mUecc5t2NmDhH2mj4YrSNuKB
-         oJ+tWTsWgor+QIEumvUBdMk+BJWQKMWZLi3iMZB4=
+        b=vmSORFkyXNoIDDcgHdYF9Y7VdGe9Akq4aQId32J4QrWYUxromnv2MOh9Il6ONLuwd
+         MBxj6sNcIJEdoz3vWyQ9zbBOKnA7MzYUVzTowwJ1VoxsmXRpLr9zwmnO6EDbYS6ykb
+         j6h9xMocEkjwaa9w3cBCKlWLJg/rXx3vMG9uILbc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 28/31] ARM: futex: Address build warning
-Date:   Thu, 14 May 2020 14:54:10 -0400
-Message-Id: <20200514185413.20755-28-sashal@kernel.org>
+Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 03/39] HID: multitouch: add eGalaxTouch P80H84 support
+Date:   Thu, 14 May 2020 14:54:20 -0400
+Message-Id: <20200514185456.21060-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200514185413.20755-1-sashal@kernel.org>
-References: <20200514185413.20755-1-sashal@kernel.org>
+In-Reply-To: <20200514185456.21060-1-sashal@kernel.org>
+References: <20200514185456.21060-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,68 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-[ Upstream commit 8101b5a1531f3390b3a69fa7934c70a8fd6566ad ]
+[ Upstream commit f9e82295eec141a0569649d400d249333d74aa91 ]
 
-Stephen reported the following build warning on a ARM multi_v7_defconfig
-build with GCC 9.2.1:
+Add support for P80H84 touchscreen from eGalaxy:
 
-kernel/futex.c: In function 'do_futex':
-kernel/futex.c:1676:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
- 1676 |   return oldval == cmparg;
-      |          ~~~~~~~^~~~~~~~~
-kernel/futex.c:1652:6: note: 'oldval' was declared here
- 1652 |  int oldval, ret;
-      |      ^~~~~~
+  idVendor           0x0eef D-WAV Scientific Co., Ltd
+  idProduct          0xc002
+  iManufacturer           1 eGalax Inc.
+  iProduct                2 eGalaxTouch P80H84 2019 vDIVA_1204_T01 k4.02.146
 
-introduced by commit a08971e9488d ("futex: arch_futex_atomic_op_inuser()
-calling conventions change").
-
-While that change should not make any difference it confuses GCC which
-fails to work out that oldval is not referenced when the return value is
-not zero.
-
-GCC fails to properly analyze arch_futex_atomic_op_inuser(). It's not the
-early return, the issue is with the assembly macros. GCC fails to detect
-that those either set 'ret' to 0 and set oldval or set 'ret' to -EFAULT
-which makes oldval uninteresting. The store to the callsite supplied oldval
-pointer is conditional on ret == 0.
-
-The straight forward way to solve this is to make the store unconditional.
-
-Aside of addressing the build warning this makes sense anyway because it
-removes the conditional from the fastpath. In the error case the stored
-value is uninteresting and the extra store does not matter at all.
-
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/87pncao2ph.fsf@nanos.tec.linutronix.de
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/include/asm/futex.h | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/hid/hid-ids.h        | 1 +
+ drivers/hid/hid-multitouch.c | 3 +++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/arch/arm/include/asm/futex.h b/arch/arm/include/asm/futex.h
-index ffebe7b7a5b74..91ca80035fc42 100644
---- a/arch/arm/include/asm/futex.h
-+++ b/arch/arm/include/asm/futex.h
-@@ -163,8 +163,13 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- 	preempt_enable();
- #endif
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 9d372fa7c298c..a1e5e0529545b 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -369,6 +369,7 @@
+ #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_7349	0x7349
+ #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_73F7	0x73f7
+ #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001	0xa001
++#define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002	0xc002
  
--	if (!ret)
--		*oval = oldval;
-+	/*
-+	 * Store unconditionally. If ret != 0 the extra store is the least
-+	 * of the worries but GCC cannot figure out that __futex_atomic_op()
-+	 * is either setting ret to -EFAULT or storing the old value in
-+	 * oldval which results in a uninitialized warning at the call site.
-+	 */
-+	*oval = oldval;
+ #define USB_VENDOR_ID_ELAN		0x04f3
  
- 	return ret;
- }
+diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+index 07d92d4a9f7c8..db29bf539a4b2 100644
+--- a/drivers/hid/hid-multitouch.c
++++ b/drivers/hid/hid-multitouch.c
+@@ -1550,6 +1550,9 @@ static const struct hid_device_id mt_devices[] = {
+ 	{ .driver_data = MT_CLS_EGALAX_SERIAL,
+ 		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
+ 			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001) },
++	{ .driver_data = MT_CLS_EGALAX,
++		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
++			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002) },
+ 
+ 	/* Elitegroup panel */
+ 	{ .driver_data = MT_CLS_SERIAL,
 -- 
 2.20.1
 
