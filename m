@@ -2,169 +2,202 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D25F1C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD27C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5B2220657
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F4220657
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:46:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WeBSVMSY"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="SxDlxjrQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgENPpT (ORCPT
+        id S1727853AbgENPq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 11:45:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47372 "EHLO
+        Thu, 14 May 2020 11:46:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbgENPpR (ORCPT
+        with ESMTP id S1726056AbgENPq1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 11:45:17 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21A5BC05BD09
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 08:45:16 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ms17so12619067pjb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 08:45:16 -0700 (PDT)
+        Thu, 14 May 2020 11:46:27 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86C05C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 08:46:27 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id c24so3227832qtw.7
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 08:46:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=C14dFYivD8qv8BpAvB7kTDBgmObt0Bwj81tS0Zc4/E8=;
-        b=WeBSVMSYQ4gtB5dULeEkKU/Ya0fz/EW/RpuUt7D8OeJEBKAKV2pF5kPidP02iOR39J
-         G1MttEPeItqlTkRXkO6DaVmCrP7nH7+PO7my0CuD5d86lDI5xv46HrYCZiFQuNjdOnTz
-         5lq27uwgV1aYUO8FPK6JNzqOwNdl1+mzKbYGk=
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=EvtEJvAWirIZmQ1Z7jbnfUadpeoAVrZfw1XsagvgGvU=;
+        b=SxDlxjrQmMi7iKIvy54Aq8ysc6IXtNTU4zH6VizVx8MeEFCNdOUG81zLx/RY+HhnM5
+         MUtvVqmzDtMFFYWGH+H9BIHrMjhgg6XOf9ws18FFokyFiACkJ56gYR4V3dLAbFIam2gQ
+         SPFLPxur658m9PdXybU+84o7wsi5tbldbQpIe1qJwYE8lHP4P/Vtsj5QPgOAzOAVwANx
+         VG+JifixQCA5gSCG7DuCsjYCXU14ClCgCZ+s55++aAswqZCMtZbqwd2Up8HeMRE/r655
+         d1Pw3wtdB6X/q3lPl+ZGl2HMqZyw+WE0PfkmoytkNUzze7xdzmYrmVlWr3kh2bUxMOmj
+         JYug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=C14dFYivD8qv8BpAvB7kTDBgmObt0Bwj81tS0Zc4/E8=;
-        b=oHYCSu7tnBLIk7FBuwrMbW/4ElJI/b9tNRaAWSAWdsG0NYh2YH/7MSx2z0VRPuFguH
-         iKAPeu2c3gmfj/cutFevmoDAvpeNpFOMxCkCXtPLhSXRaECAb3hssRrcBCtz9R6LCFw2
-         MhC/8LP5PP4vGlStNDB7sRWIjVu6ujrEo0fo45KJI3nGpolQ4O21Vm/jDjW8OPUj2aX9
-         oLypAEEjGocjMWyJkDBZ2TK0MekiYwE+PWUyg34tGlEQ5AJK2aVgzOqDaQBOAMzminzE
-         3aBP59IFscgHJOb0LadCwW0gDxzCWdrIkpKiskTwOQCuGvLiabU32W6/Iyb+PP6YzW/M
-         Izsw==
-X-Gm-Message-State: AOAM530UAn8ugjQjjmmQ6GaXxUUziAbgdsZIrQSb20e40TTRASytYqzr
-        U8gKUjG8rynhmWxw/heu4pzk+A==
-X-Google-Smtp-Source: ABdhPJyhzYoT7OtYhHCXKJ4eWD6sNRzKX5qxh8oQ2rT3RB19/hswKImd/xT2ezGyqupFNS8qGCcfOg==
-X-Received: by 2002:a17:902:c113:: with SMTP id 19mr4514772pli.95.1589471115414;
-        Thu, 14 May 2020 08:45:15 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e15sm1909094pfh.23.2020.05.14.08.45.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 08:45:14 -0700 (PDT)
-Date:   Thu, 14 May 2020 08:45:13 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH v5 3/6] fs: Enable to enforce noexec mounts or file exec
- through O_MAYEXEC
-Message-ID: <202005140830.2475344F86@keescook>
-References: <20200505153156.925111-1-mic@digikod.net>
- <20200505153156.925111-4-mic@digikod.net>
- <CAEjxPJ7y2G5hW0WTH0rSrDZrorzcJ7nrQBjfps2OWV5t1BUYHw@mail.gmail.com>
- <202005131525.D08BFB3@keescook>
- <202005132002.91B8B63@keescook>
- <CAEjxPJ7WjeQAz3XSCtgpYiRtH+Jx-UkSTaEcnVyz_jwXKE3dkw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEjxPJ7WjeQAz3XSCtgpYiRtH+Jx-UkSTaEcnVyz_jwXKE3dkw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=EvtEJvAWirIZmQ1Z7jbnfUadpeoAVrZfw1XsagvgGvU=;
+        b=cXEvGXmA1se3DfU69AMKCCu5ReUIE8XsE1Dsu+P9yw4E5H/i2T8UPFXEfR47nLLTA5
+         uBEQ1oEfmVyS+cOF0rUKxgFbg+LYvH9A7kLfSa5BvqTHsOD55WjuLdBn+SKZXSeXOCGi
+         3a9qb9nASxkiwUH7xsktLq9mZpxB8uv+UAwzsl3RXxbP4eGpsgbcuUS2Tn1qy8u6/erW
+         uYzbRSx6GcCcE7YPspZR2fcS0FKJ9VvV0jSkc2q0XKNwjvvGr6C+y/C7kpsqcIpIXpdn
+         aG7Ihg0wHgYxp046sCA/fU3kVK5ToJJxZasfSeRA3zTIf+4/V9zfU+GUNsSqiOgcst6p
+         s9IQ==
+X-Gm-Message-State: AOAM5301+nOIInwl98t8xPUkapeRzGZ/QQ1ANKJDQAKvby5IUR/Oca/z
+        6OrXk2hjvN8zKQctF/jySKA5+Q==
+X-Google-Smtp-Source: ABdhPJyL56oT0F10NB9HzzF4jSHef/mJ0f8Ab/J+5o5AMZA6se1xgSynhjMgMRo8KI44Hgyn1fXAew==
+X-Received: by 2002:aed:3848:: with SMTP id j66mr5294804qte.227.1589471186484;
+        Thu, 14 May 2020 08:46:26 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id f24sm293899qtq.39.2020.05.14.08.46.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 May 2020 08:46:24 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: Default enable RCU list lockdep debugging with PROVE_RCU
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20200514153400.GJ2869@paulmck-ThinkPad-P72>
+Date:   Thu, 14 May 2020 11:46:23 -0400
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Amol Grover <frextrite@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <6089C62B-52AA-47CB-BCA0-9096B3482509@lca.pw>
+References: <20200514222535.259cb69e@canb.auug.org.au>
+ <ADC503BE-32C0-46BB-A65E-59FFEC30ED57@lca.pw>
+ <20200514133328.GG2869@paulmck-ThinkPad-P72>
+ <ADE40EB3-1B1C-4CCF-9B8A-1F2BC585BCFB@lca.pw>
+ <20200514135402.GI2869@paulmck-ThinkPad-P72>
+ <CC392959-36FD-459F-BD13-8F50C22FC615@lca.pw>
+ <20200514153400.GJ2869@paulmck-ThinkPad-P72>
+To:     paulmck@kernel.org
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 08:22:01AM -0400, Stephen Smalley wrote:
-> On Wed, May 13, 2020 at 11:05 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Wed, May 13, 2020 at 04:27:39PM -0700, Kees Cook wrote:
-> > > Like, couldn't just the entire thing just be:
-> > >
-> > > diff --git a/fs/namei.c b/fs/namei.c
-> > > index a320371899cf..0ab18e19f5da 100644
-> > > --- a/fs/namei.c
-> > > +++ b/fs/namei.c
-> > > @@ -2849,6 +2849,13 @@ static int may_open(const struct path *path, int acc_mode, int flag)
-> > >               break;
-> > >       }
-> > >
-> > > +     if (unlikely(mask & MAY_OPENEXEC)) {
-> > > +             if (sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_MOUNT &&
-> > > +                 path_noexec(path))
-> > > +                     return -EACCES;
-> > > +             if (sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_FILE)
-> > > +                     acc_mode |= MAY_EXEC;
-> > > +     }
-> > >       error = inode_permission(inode, MAY_OPEN | acc_mode);
-> > >       if (error)
-> > >               return error;
-> > >
-> >
-> > FYI, I've confirmed this now. Effectively with patch 2 dropped, patch 3
-> > reduced to this plus the Kconfig and sysctl changes, the self tests
-> > pass.
-> >
-> > I think this makes things much cleaner and correct.
-> 
-> I think that covers inode-based security modules but not path-based
-> ones (they don't implement the inode_permission hook).  For those, I
-> would tentatively guess that we need to make sure FMODE_EXEC is set on
-> the open file and then they need to check for that in their file_open
-> hooks.
 
-I kept confusing myself about what order things happened in, so I made
-these handy notes about the call graph:
 
-openat2(dfd, char * filename, open_how)
-    do_filp_open(dfd, filename, open_flags)
-        path_openat(nameidata, open_flags, flags)
-            do_open(nameidata, file, open_flags) 
-                may_open(path, acc_mode, open_flag)
-                    inode_permission(inode, MAY_OPEN | acc_mode)
-                        security_inode_permission(inode, acc_mode)
-                vfs_open(path, file)
-                    do_dentry_open(file, path->dentry->d_inode, open)
-                        if (unlikely(f->f_flags & FMODE_EXEC && !S_ISREG(inode->i_mode))) ...
-                        security_file_open(f)
-                        open()
+> On May 14, 2020, at 11:34 AM, Paul E. McKenney <paulmck@kernel.org> =
+wrote:
+>=20
+> On Thu, May 14, 2020 at 10:03:21AM -0400, Qian Cai wrote:
+>>=20
+>>=20
+>>> On May 14, 2020, at 9:54 AM, Paul E. McKenney <paulmck@kernel.org> =
+wrote:
+>>>=20
+>>> On Thu, May 14, 2020 at 09:44:28AM -0400, Qian Cai wrote:
+>>>>=20
+>>>>=20
+>>>>> On May 14, 2020, at 9:33 AM, Paul E. McKenney <paulmck@kernel.org> =
+wrote:
+>>>>>=20
+>>>>> On Thu, May 14, 2020 at 08:31:13AM -0400, Qian Cai wrote:
+>>>>>>=20
+>>>>>>=20
+>>>>>>> On May 14, 2020, at 8:25 AM, Stephen Rothwell =
+<sfr@canb.auug.org.au> wrote:
+>>>>>>>=20
+>>>>>>> Hi Paul,
+>>>>>>>=20
+>>>>>>> This patch in the rcu tree
+>>>>>>>=20
+>>>>>>> d13fee049fa8 ("Default enable RCU list lockdep debugging with =
+PROVE_RCU")
+>>>>>>>=20
+>>>>>>> is causing whack-a-mole in the syzbot testing of linux-next.  =
+Because
+>>>>>>> they always do a debug build of linux-next, no testing is =
+getting done. :-(
+>>>>>>>=20
+>>>>>>> Can we find another way to find all the bugs that are being =
+discovered
+>>>>>>> (very slowly)?
+>>>>>>=20
+>>>>>> Alternatively, could syzbot to use PROVE_RCU=3Dn temporarily =
+because it can=E2=80=99t keep up with it? I personally found =
+PROVE_RCU_LIST=3Dy is still useful for my linux-next testing, and =
+don=E2=80=99t want to lose that coverage overnight.
+>>>>>=20
+>>>>> The problem is that PROVE_RCU is exactly PROVE_LOCKING, and asking =
+people
+>>>>> to test without PROVE_LOCKING is a no-go in my opinion.  But of =
+course
+>>>>> on the other hand if there is no testing of RCU list lockdep =
+debugging,
+>>>>> those issues will never be found, let alone fixed.
+>>>>>=20
+>>>>> One approach would be to do as Stephen asks (either remove =
+d13fee049fa8
+>>>>> or pull it out of -next) and have testers force-enable the RCU =
+list
+>>>>> lockdep debugging.
+>>>>>=20
+>>>>> Would that work for you?
+>>>>=20
+>>>> Alternatively, how about having
+>>>>=20
+>>>> PROVE_RCU_LIST=3Dn if DEBUG_AID_FOR_SYZBOT
+>>>>=20
+>>>> since it is only syzbot can=E2=80=99t keep up with it?
+>>>=20
+>>> Sound good to me, assuming that this works for the syzkaller guys.
+>>> Or could there be a "select PROVE_RCU_LIST" for the people who would
+>>> like to test it.
+>>>=20
+>>> Alternatively, if we revert d13fee049fa8 from -next, I could provide
+>>> you a script that updates your .config to set both RCU_EXPERT and
+>>> PROVE_RCU_LIST.
+>>>=20
+>>> There are a lot of ways to appraoch this.
+>>>=20
+>>> So what would work best for everyone?
+>>=20
+>>=20
+>> If PROVE_RCU_LIST=3Dn if DEBUG_AID_FOR_SYZBOT works for syzbot guys, =
+that would be great, so other testing agents could still report/fix =
+those RCU-list bugs and then pave a way for syzbot to return back once =
+all those false positives had been sorted out.
+>=20
+> On that, I must defer to the syzbot guys.
+>=20
+>> Otherwise,  =E2=80=9Cselect PROVE_RCU_LIST=E2=80=9D *might* be better =
+than buried into RCU_EXPERT where we will probably never saw those false =
+positives been addressed since my configs does not cover a wide range of =
+subsystems and probably not many other bots would enable RCU_EXPERT.
+>=20
+> Yet another option would be to edit your local =
+kernel/rcu/Kconfig.debug
+> and change the code to the following:
+>=20
+> 	config PROVE_RCU_LIST
+> 		def_bool y
+> 		help
+> 		  Enable RCU lockdep checking for list usages. It is =
+default
+> 		  enabled with CONFIG_PROVE_RCU.
+>=20
+> Removing the RCU_EXPERT dependency would not go over at all well with
+> some people whose opinions are difficult to ignore.  ;-)
 
-So, it looks like adding FMODE_EXEC into f_flags in do_open() is needed in
-addition to injecting MAY_EXEC into acc_mode in do_open()? Hmmm
+I am trying to not getting into a game of carrying any custom patch =
+myself.
 
--- 
-Kees Cook
+Let=E2=80=99s see what syzbot guys will say, and then I=E2=80=99ll =
+enable RCU_EXPERT myself if needed, but again we probably never see =
+PROVE_RCU_LIST to be used again in syzbot for this path. I surely have =
+no cycles to expand the testing coverage for more subsystems at the =
+moment.
+
