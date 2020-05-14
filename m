@@ -2,90 +2,188 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F16C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F11C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AC88206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:26:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589441191;
-	bh=syiyWkIggjH/CryQFESzDaHB1LaDM9sAiDSV8Zk+Uqk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Bv8sIKBAPySX06SBhIEF346aFwO2zvqvrkUNcZxhG4oj1YCcnOgf51/KG+gsWrhgl
-	 9hlMxPlmxy+tN7v0L5Bm7NOqu11RajyJztRyNUOIvt4cn36Paxl13Wvx8HVWk1QQk1
-	 DUzl4wti7oY/PXErFx8d34h2fjs6GU1GmOJMPhN0=
+	by mail.kernel.org (Postfix) with ESMTP id 6512F205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:27:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T58w69kB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726038AbgENH0a (ORCPT
+        id S1726101AbgENH1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 03:26:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53430 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725909AbgENH0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 03:26:30 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 662B8205CB;
-        Thu, 14 May 2020 07:26:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589441189;
-        bh=syiyWkIggjH/CryQFESzDaHB1LaDM9sAiDSV8Zk+Uqk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ek40gIMInC2Mr/QZBAdoHMpZmRPcD90RoXY/yN1eeMabVl/de9AUapECYzCBaDwCa
-         2tcgtqRDr7GFJ7vw6eDr2kvJM1XTlZiy2DlqxTt5sRbLvsP8hsEOpDENzgn2HwlhyM
-         EwplRkZwQiEsntqr1RjZclYz+G/OzV+9rZdladIQ=
-Date:   Thu, 14 May 2020 08:26:24 +0100
-From:   Will Deacon <will@kernel.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        ndesaulniers@google.com, matt@codeblueprint.co.uk,
-        sparclinux@vger.kernel.org, kernel-team@android.com,
-        tglx@linutronix.de
-Subject: Re: [RESEND PATCH 0/4] Rework sparc32 page-table layout
-Message-ID: <20200514072624.GA4280@willie-the-truck>
-References: <20200414214011.2699-1-will@kernel.org>
- <20200513.153226.1639916880914538869.davem@davemloft.net>
+        Thu, 14 May 2020 03:27:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbgENH1t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 03:27:49 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEAD1C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 00:27:48 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id c21so1734791lfb.3
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 00:27:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OvIg8OTmvpD4AIra61gchuv+YQzJPkLcRjdOE9A6l2A=;
+        b=T58w69kBOxFktle1yYsy3hLN3gMn/osjm5YR8FTXl4uYp8PjKu2TZzOiHNgCx36vrE
+         Wl/ZIQZLvdR8y6+piwx3KEwGBHD8kyjMwzas/eYyJaxuJxY8/KGnPz4HlvtDAulI9I15
+         lGRt7VR2EK+bxqp2oZhR93/egU4OCxQtySGt6pV8RF67V5Vj3IcxPdw3Km1KhdoaRiaq
+         bSo22sNuywieNiZ1fpmYK7epfyyHEaUnQ1U7yB7K1aXP/AJXWde5jIFrUkDbeeALECIL
+         u0FuTV6q/ZfQm1Z7KARSGRX7zu3oek6QkvyBvFcfjjmEMIagj6XaGUbGVW2NX71/UJ7h
+         Omtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OvIg8OTmvpD4AIra61gchuv+YQzJPkLcRjdOE9A6l2A=;
+        b=Gxm0WSKTJWWx2w+zN4QR3SmQxl7ojLTsBmLm4BgcGIvQsOF4NI2wVcl6EIwsq3iqlA
+         Fj/QOYb7/AoF6oS4qlwZN61dGe8N3P9hcgZ5F7jE2WZqQeOXP0qRid1tUOsJKBV7D2ve
+         odPWPfvIBcRttr4FoJUjrS33b3sHPh20ZJLJ//tXBV4zCTX30jt8dWwb/orTz+G8fjRx
+         J1g9dxu9/VRt6VVJA/1iXXGJo2wk41NciQC3lN+B1JwCREG+834pqUQMIAx8KokmzKm4
+         LmSbOkKa8yoC8dFrSATdSnVq/3MS6bVCpABl1Q5Y+sCp+bDI35uMb/5/DAKGrRgwchyg
+         KxGg==
+X-Gm-Message-State: AOAM5304BtWZb7G40aZmaR69QBsSv6V+5k2wPBXD65ErTvT7xOQ6pkCI
+        wH371rYOT60w7vUM2lSgCGRx2xMVC8f+DzVFa7Bibg==
+X-Google-Smtp-Source: ABdhPJzL0WsvMihqen9758VYmk6yEgm/ZN9/XilvuCWzmgJOy/SB9sZscduKIMjRAKM98dv/ishZnbn+Lr4DfqPaa0A=
+X-Received: by 2002:a19:ccce:: with SMTP id c197mr2356496lfg.59.1589441267234;
+ Thu, 14 May 2020 00:27:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513.153226.1639916880914538869.davem@davemloft.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1588758017-30426-1-git-send-email-sumit.garg@linaro.org>
+ <1588758017-30426-3-git-send-email-sumit.garg@linaro.org> <ef2093f96eae7e9e6785f2c0ad00604d8adfd3be.camel@linux.intel.com>
+In-Reply-To: <ef2093f96eae7e9e6785f2c0ad00604d8adfd3be.camel@linux.intel.com>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Thu, 14 May 2020 12:57:35 +0530
+Message-ID: <CAFA6WYPr1iL-uJgSRu_61uv=2DhuEdDVdQLDuyPEOOK2jEgvyg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] KEYS: trusted: Introduce TEE based Trusted Keys
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        James Bottomley <jejb@linux.ibm.com>, dhowells@redhat.com,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Janne Karhunen <janne.karhunen@gmail.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Markus Wamser <Markus.Wamser@mixed-mode.de>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        op-tee@lists.trustedfirmware.org,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
+Content-Type: multipart/mixed; boundary="00000000000021218505a596a2dc"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+--00000000000021218505a596a2dc
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, May 13, 2020 at 03:32:26PM -0700, David Miller wrote:
-> From: Will Deacon <will@kernel.org>
-> Date: Tue, 14 Apr 2020 22:40:07 +0100
-> 
-> > This is a reposting of the patch series I sent previously to rework the
-> > sparc32 page-table layout so that 'pmd_t' can be used safely with
-> > READ_ONCE():
-> > 
-> > https://lore.kernel.org/lkml/20200324104005.11279-1-will@kernel.org
-> > 
-> > This is blocking the READ_ONCE() rework, which in turn allows us to
-> > bump the minimum GCC version for building the kernel up to 4.8.
-> 
-> Series applied to sparc-next, thanks Will.
+On Thu, 14 May 2020 at 05:58, Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> On Wed, 2020-05-06 at 15:10 +0530, Sumit Garg wrote:
+> > Add support for TEE based trusted keys where TEE provides the functionality
+> > to seal and unseal trusted keys using hardware unique key.
+> >
+> > Refer to Documentation/tee.txt for detailed information about TEE.
+> >
+> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+>
+> The implementation looks solid but how or who could possibly test this?
+>
+> I do posses (personally, not from employer) bunch of ARM boards but my
+> TZ knowledge is somewhat limited (e.g. how can I get something running
+> in TZ).
+>
 
-Thanks, although this was picked up by -tip a couple of days ago [1] since
-the READ_ONCE() rework relies on it to avoid breaking the sparc32 build.
+Although, it should be fairly easy to test this implementation on an
+ARM board which supports OP-TEE. But since you are new to ARM
+TrustZone world, I would suggest you get used to OP-TEE on Qemu based
+setup. You could find pretty good documentation for this here [1] but
+for simplicity let me document steps here to test this trusted keys
+feature from scratch:
 
-It's obviously harmless to go in both trees, but if you don't need it for
-anything then you may want to drop these to avoid duplicate commits in
-mainline.
+# Install prerequisites as mentioned here [2]
 
-Cheers,
+# Get the source code
+$ mkdir -p <optee-project>
+$ cd <optee-project>
+$ repo init -u https://github.com/OP-TEE/manifest.git -m qemu_v8.xml
+$ repo sync -j4 --no-clone-bundle
 
-Will
+# Get the toolchain
+$ cd <optee-project>/build
+$ make -j2 toolchains
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=locking/kcsan
+# As trusted keys work is based on latest tpmdd/master, so we can
+change Linux base as follows:
+$ cd <optee-project>/linux
+$ git remote add tpmdd git://git.infradead.org/users/jjs/linux-tpmdd.git
+$ git pull tpmdd
+$ git checkout -b tpmdd-master remotes/tpmdd/master
+# Cherry-pick and apply TEE features patch-set from this PR[3]
+# Apply this Linux trusted keys patch-set.
+
+# Now move on to build the source code
+$ cd <optee-project>/build
+# Apply attached "keyctl_change" patch
+$ patch -p1 < keyctl_change
+$ make -j`nproc`
+CFG_IN_TREE_EARLY_TAS=trusted_keys/f04a0fe7-1f5d-4b9b-abf7-619b85b4ce8c
+
+# Run QEMU setup
+$ make run-only
+# Type "c" on QEMU console to continue boot
+
+# Now there should be two virtual consoles up, one for OP-TEE and
+other for Linux
+# On Linux console, you can play with "keyctl" utility to have trusted
+and encrypted keys based on TEE.
+
+Do let me know in case you are stuck while following the above steps.
+
+[1] https://optee.readthedocs.io/en/latest/building/devices/qemu.html#qemu-v8
+[2] https://optee.readthedocs.io/en/latest/building/prerequisites.html#prerequisites
+[3] https://lkml.org/lkml/2020/5/4/1062
+
+-Sumit
+
+> /Jarkko
+>
+
+--00000000000021218505a596a2dc
+Content-Type: application/octet-stream; name=keyctl_change
+Content-Disposition: attachment; filename=keyctl_change
+Content-Transfer-Encoding: base64
+Content-ID: <f_ka6g56md0>
+X-Attachment-Id: f_ka6g56md0
+
+ZGlmZiAtLWdpdCBhL2NvbW1vbi5tayBiL2NvbW1vbi5tawppbmRleCBhZWI3YjQxLi42NjNlNTI4
+IDEwMDY0NAotLS0gYS9jb21tb24ubWsKKysrIGIvY29tbW9uLm1rCkBAIC0yMjksNiArMjI5LDcg
+QEAgQlIyX1BBQ0tBR0VfT1BURUVfVEVTVF9TREsgPz0gJChPUFRFRV9PU19UQV9ERVZfS0lUX0RJ
+UikKIEJSMl9QQUNLQUdFX09QVEVFX1RFU1RfU0lURSA/PSAkKE9QVEVFX1RFU1RfUEFUSCkKIEJS
+Ml9QQUNLQUdFX1NUUkFDRSA/PSB5CiBCUjJfVEFSR0VUX0dFTkVSSUNfR0VUVFlfUE9SVCA/PSAk
+KGlmICQoQ0ZHX05XX0NPTlNPTEVfVUFSVCksdHR5QU1BJChDRkdfTldfQ09OU09MRV9VQVJUKSx0
+dHlBTUEwKQorQlIyX1BBQ0tBR0VfS0VZVVRJTFMgOj0geQogCiAjIEFsbCBCUjJfKiB2YXJpYWJs
+ZXMgZnJvbSB0aGUgbWFrZWZpbGUgb3IgdGhlIGVudmlyb25tZW50IGFyZSBhcHBlbmRlZCB0bwog
+IyAuLi9vdXQtYnIvZXh0cmEuY29uZi4gQWxsIHZhbHVlcyBhcmUgcXVvdGVkICIuLi4iIGV4Y2Vw
+dCB5IGFuZCBuLgpkaWZmIC0tZ2l0IGEva2NvbmZpZ3MvcWVtdS5jb25mIGIva2NvbmZpZ3MvcWVt
+dS5jb25mCmluZGV4IDM2OGMxOGEuLjgzMmFiNzQgMTAwNjQ0Ci0tLSBhL2tjb25maWdzL3FlbXUu
+Y29uZgorKysgYi9rY29uZmlncy9xZW11LmNvbmYKQEAgLTIwLDMgKzIwLDUgQEAgQ09ORklHXzlQ
+X0ZTPXkKIENPTkZJR185UF9GU19QT1NJWF9BQ0w9eQogQ09ORklHX0hXX1JBTkRPTT15CiBDT05G
+SUdfSFdfUkFORE9NX1ZJUlRJTz15CitDT05GSUdfVFJVU1RFRF9LRVlTPXkKK0NPTkZJR19FTkNS
+WVBURURfS0VZUz15Cg==
+--00000000000021218505a596a2dc--
