@@ -2,107 +2,146 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 872D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 077DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E04B206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:20:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="rXZO0q+X"
+	by mail.kernel.org (Postfix) with ESMTP id D0B57206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:22:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589476954;
+	bh=wIMgNNfo0EDDt8NmxxrijoMhNj8Je6+uJKEuTcKCsoQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hQ41RcBsXnIA81v8synSEt3zj6jcJOoxmFS3NU7Qox2IbIeBLtJuVrLFHQFLGUMgv
+	 5LiIQjNk1QBOJkoVeHpw/OZhvZuhoIDjyydU+V6Kmgs+AN1Cco9NiBAErHTzQ5Vnk8
+	 ujw87pjQrC+maAczATclQ7dqXZewNNmDKXdsqFfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726076AbgENRUo (ORCPT
+        id S1726133AbgENRWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 13:20:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34074 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725975AbgENRUn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 13:20:43 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A738AC061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 10:20:43 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id t12so1999659ile.9
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 10:20:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zDpj6X02YNWJzxuOMR+V42uIE+YhhkIBci21m3AAt/M=;
-        b=rXZO0q+XrlwWB7m/MiDeDcnwsfknbebAsjxWpc17K/Cy+Rox3RFLMqNk2H2U9uB42S
-         Q1O0Tkjqbh9JQSfZpJsHCBqge+GqZ8dESZvBL2gzlCV6hAmgf/WtJBJNFQuCYIT3CiBx
-         2uFRJJXnVghMFa3eIBjbmhxjQGxVDYx8u5GPi/gjN2tSFLtxlJ9Nq14b2Y0KD9h/XPZu
-         SeXVXzvmgRDDeNtNmfMyvkBk0EITl1uIaLhp4qJO8XW1hO4Wx0xqQfQLllaRYW6pxfw7
-         mzPnbES6Q4EojYcwkN5+x+FthMWji3G9J+kaf5zWnwDRlxqJGPjNKifVC5CJ3tk1KDqA
-         pFbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zDpj6X02YNWJzxuOMR+V42uIE+YhhkIBci21m3AAt/M=;
-        b=ggwFI2so4ehnBmhx+vHOMLCoziwxW2szPfe+cqSCV/umZ9C/1aREq6YRjJXUxkrXz+
-         oG8qv1loX302yrdQpI5o60HwuO8J8xcLCP+vhrbQCb9y9koqbWs0GZJ532GywFkYXh5B
-         R1ogGSoO7L9y1/4GfF3ecWIN6zNQSXfx08EuzCns11TBokNX9NAml3wCaiozyTeQrKQC
-         4VobEdgNMPryI+3JEJXIDpYbV0eX++93bHrG6mQvWK6ZFpGe389N3T8xGNkg5F/8kb8K
-         mg9l5B44g6Lk1b4yy3irDiTA3pXsQKI7Gnne1ST20MJWd0xdoyh4TBZlfe+xZrgNQOhP
-         FhKA==
-X-Gm-Message-State: AOAM533hEmvqWFiDJMKQXjdIpAvqXLl4Xgcn7OUKzl5Lqt8zR/zDi4Xg
-        CD2rK8bKVV6wnUBXBEmY9rMeRDWIPiICQdk7iWYgyQ==
-X-Google-Smtp-Source: ABdhPJwhdwkv2qQCDyAysReOGfjGM0RMqXBGvQL+ChLTuDbPS6OZOVMDrxGx/BhpZSrNAa8+jlHhGkZPEsHAANt5H3k=
-X-Received: by 2002:a92:dac8:: with SMTP id o8mr5450499ilq.189.1589476843040;
- Thu, 14 May 2020 10:20:43 -0700 (PDT)
+        Thu, 14 May 2020 13:22:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41240 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726027AbgENRWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 13:22:33 -0400
+Received: from localhost (unknown [122.182.193.86])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 284E3206D8;
+        Thu, 14 May 2020 17:22:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589476953;
+        bh=wIMgNNfo0EDDt8NmxxrijoMhNj8Je6+uJKEuTcKCsoQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=O2zdxtCScg6zANPn7hgKwfoSDOdN+BdSGrfM4Dc7c0P7Lt6SYzjA9JJaA1H1zyF37
+         JssAlZm3g2JNlmglXAcfxSlBz2sEo3wndutLsIhwwr4HxhPgp/TlWH0lm5E3+zndvO
+         K1q87xdcYjl3df/m9heCAUDSY31vKczdAalMRUyo=
+Date:   Thu, 14 May 2020 22:52:23 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Robert Foss <robert.foss@linaro.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] arm64: dts: qcom: apq8016-sbc-d3: Add Qualcomm
+ APQ8016 SBC + D3 mezzanine
+Message-ID: <20200514172223.GF14092@vkoul-mobl>
+References: <20200422111014.616233-1-robert.foss@linaro.org>
 MIME-Version: 1.0
-References: <20200514165938.21725-1-brgl@bgdev.pl> <8fc8ea34-a68c-8fbd-3821-d073c08444f8@gmail.com>
-In-Reply-To: <8fc8ea34-a68c-8fbd-3821-d073c08444f8@gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 14 May 2020 19:20:32 +0200
-Message-ID: <CAMRc=Mcp89E7f+PeVfhJ8iXXRZdG9c28_CzCeMpSJj=n5Gwo+w@mail.gmail.com>
-Subject: Re: [PATCH] net: phy: mdio-moxart: remove unneeded include
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200422111014.616233-1-robert.foss@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 14 maj 2020 o 19:13 Florian Fainelli <f.fainelli@gmail.com> napisa=C5=
-=82(a):
->
->
->
-> On 5/14/2020 9:59 AM, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > mdio-moxart doesn't use regulators in the driver code. We can remove
-> > the regulator include.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> --
-> Florian
+On 22-04-20, 13:10, Robert Foss wrote:
+> Add device treee support for the Qualcomm APQ8016 SBC, otherwise known as
+> the Dragonboard 410c with the D3 mezzanine expansion board.
+> 
+> The D3 mezzanine ships in a kit with a OmniVision 5640 sensor module,
+> which is what this DT targets.
+> 
+> Signed-off-by: Robert Foss <robert.foss@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile           |  1 +
+>  arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts | 45 +++++++++++++++++++++
+>  2 files changed, 46 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index cc103f7020fd..025362471929 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -1,5 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc-d3.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
+>  dtb-$(CONFIG_ARCH_QCOM) += apq8096-ifc6640.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= ipq6018-cp01-c1.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts
+> new file mode 100644
+> index 000000000000..1b85adeeada1
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts
+> @@ -0,0 +1,45 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
 
-Hi Andrew, Florian,
+Dual BSD + GPL please
 
-I noticed this by accident when I was looking at the PHY drivers to
-see how they handle regulators supplying PHYs. In the case of the
-MediaTek Pumpkin board I'm working on - the PHY is a Realtek RTL8201F
-and it's supplied by a regulator that's enabled on boot by the
-relevant PMIC driver. I'd like to model it in the device-tree but I'm
-not sure what the correct approach is. Some ethernet drivers have a
-phy-supply property but it looks wrong to me - IMO this should be
-handled at the PHY driver level. Is it fine if I add a probe()
-callback to the realtek driver and retrieve the "phy-supply" there?
+> +/*
+> + * Copyright (c) 2015, The Linux Foundation. All rights reserved.
 
-Bart
+we are in 2020 now :)
+
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "apq8016-sbc.dtsi"
+> +
+> +/ {
+> +	model = "Qualcomm Technologies, Inc. APQ 8016 SBC w/ D3 Mezzanine";
+> +	compatible = "qcom,apq8016-sbc", "qcom,apq8016", "qcom,sbc";
+> +};
+> +
+> +&cci_i2c0 {
+> +	/delete-node/ camera_rear@3b;
+> +
+> +	camera_rear@76 {
+> +		compatible = "ovti,ov5640";
+> +		reg = <0x76>;
+> +
+> +		enable-gpios = <&msmgpio 34 GPIO_ACTIVE_HIGH>;
+> +		reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&camera_rear_default>;
+> +
+> +		clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
+> +		clock-names = "xclk";
+> +		clock-frequency = <23880000>;
+> +
+> +		vdddo-supply = <&camera_vdddo_1v8>;
+> +		vdda-supply = <&camera_vdda_2v8>;
+> +		vddd-supply = <&camera_vddd_1v5>;
+> +
+> +		status = "ok";
+> +
+> +		port {
+> +			ov5640_ep: endpoint {
+> +				clock-lanes = <1>;
+> +				data-lanes = <0 2>;
+> +				remote-endpoint = <&csiphy0_ep>;
+> +			};
+> +		};
+> +	};
+> +};
+> -- 
+> 2.25.1
+
+-- 
+~Vinod
