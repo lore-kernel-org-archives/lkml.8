@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBE3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED9CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CC53206BE
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77940206DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:53:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726108AbgENGxX (ORCPT
+        id S1726143AbgENGxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 02:53:23 -0400
-Received: from mga03.intel.com ([134.134.136.65]:2893 "EHLO mga03.intel.com"
+        Thu, 14 May 2020 02:53:25 -0400
+Received: from mga04.intel.com ([192.55.52.120]:24927 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725979AbgENGxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 02:53:20 -0400
-IronPort-SDR: bVdYOmAc+ImvTljnNUu5s3lkNOFBoJnw+I2OwvzUOGRadX5xQ8QJaQFtJGIWA6ZruaYJi1R7tP
- nTvdvvYaFuWA==
+        id S1726073AbgENGxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 02:53:23 -0400
+IronPort-SDR: uUYrQ0spcZxQfizYjeBaPbeii2rwZ46kvS6Q9ypb31jEDdUDW2I82RWGKIoo/n0vzRRkh6B3Gj
+ 4Volcyb/+gBw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 23:53:20 -0700
-IronPort-SDR: GQ1hzhuh/TPZ67YOSApRWHc8Iy7TvflZ/UemSyzmBNp7CscHHJ8BwECoY2udEzrOPjGg9J75Hd
- Rl8goN+obTIQ==
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 23:53:22 -0700
+IronPort-SDR: RxBuS85HhHzrSVXGaKAobyW/MaPv9BTlsNVoJyS2oCQZyPk9OABQSeQqX4Rr7kv9s3be4gnVMo
+ F8oNoRXT473w==
 X-IronPort-AV: E=Sophos;i="5.73,390,1583222400"; 
-   d="scan'208";a="297929571"
+   d="scan'208";a="372145086"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 23:53:19 -0700
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 23:53:21 -0700
 From:   ira.weiny@intel.com
 To:     linux-ext4@vger.kernel.org,
         Andreas Dilger <adilger.kernel@dilger.ca>,
@@ -41,9 +41,9 @@ Cc:     Ira Weiny <ira.weiny@intel.com>, Al Viro <viro@zeniv.linux.org.uk>,
         Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
         "Darrick J. Wong" <darrick.wong@oracle.com>,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V1 1/9] fs/ext4: Narrow scope of DAX check in setflags
-Date:   Wed, 13 May 2020 23:53:07 -0700
-Message-Id: <20200514065316.2500078-2-ira.weiny@intel.com>
+Subject: [PATCH V1 4/9] fs/ext4: Change EXT4_MOUNT_DAX to EXT4_MOUNT_DAX_ALWAYS
+Date:   Wed, 13 May 2020 23:53:10 -0700
+Message-Id: <20200514065316.2500078-5-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200514065316.2500078-1-ira.weiny@intel.com>
 References: <20200514065316.2500078-1-ira.weiny@intel.com>
@@ -56,33 +56,103 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-When preventing DAX and journaling on an inode.  Use the effective DAX
-check rather than the mount option.
-
-This will be required to support per inode DAX flags.
+In prep for the new tri-state mount option which then introduces
+EXT4_MOUNT_DAX_NEVER.
 
 Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
----
- fs/ext4/ioctl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
-index bfc1281fc4cb..5813e5e73eab 100644
---- a/fs/ext4/ioctl.c
-+++ b/fs/ext4/ioctl.c
-@@ -393,9 +393,9 @@ static int ext4_ioctl_setflags(struct inode *inode,
- 	if ((jflag ^ oldflags) & (EXT4_JOURNAL_DATA_FL)) {
- 		/*
- 		 * Changes to the journaling mode can cause unsafe changes to
--		 * S_DAX if we are using the DAX mount option.
-+		 * S_DAX if the inode is DAX
- 		 */
--		if (test_opt(inode->i_sb, DAX)) {
-+		if (IS_DAX(inode)) {
- 			err = -EBUSY;
- 			goto flags_out;
+---
+Changes:
+	New patch
+---
+ fs/ext4/ext4.h  |  4 ++--
+ fs/ext4/inode.c |  2 +-
+ fs/ext4/super.c | 12 ++++++------
+ 3 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+index 91eb4381cae5..1a3daf2d18ef 100644
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -1123,9 +1123,9 @@ struct ext4_inode_info {
+ #define EXT4_MOUNT_MINIX_DF		0x00080	/* Mimics the Minix statfs */
+ #define EXT4_MOUNT_NOLOAD		0x00100	/* Don't use existing journal*/
+ #ifdef CONFIG_FS_DAX
+-#define EXT4_MOUNT_DAX			0x00200	/* Direct Access */
++#define EXT4_MOUNT_DAX_ALWAYS		0x00200	/* Direct Access */
+ #else
+-#define EXT4_MOUNT_DAX			0
++#define EXT4_MOUNT_DAX_ALWAYS		0
+ #endif
+ #define EXT4_MOUNT_DATA_FLAGS		0x00C00	/* Mode for data writes: */
+ #define EXT4_MOUNT_JOURNAL_DATA		0x00400	/* Write data to journal */
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 2a4aae6acdcb..a10ff12194db 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -4400,7 +4400,7 @@ int ext4_get_inode_loc(struct inode *inode, struct ext4_iloc *iloc)
+ 
+ static bool ext4_should_use_dax(struct inode *inode)
+ {
+-	if (!test_opt(inode->i_sb, DAX))
++	if (!test_opt(inode->i_sb, DAX_ALWAYS))
+ 		return false;
+ 	if (!S_ISREG(inode->i_mode))
+ 		return false;
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 9873ab27e3fa..d0434b513919 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -1767,7 +1767,7 @@ static const struct mount_opts {
+ 	{Opt_min_batch_time, 0, MOPT_GTE0},
+ 	{Opt_inode_readahead_blks, 0, MOPT_GTE0},
+ 	{Opt_init_itable, 0, MOPT_GTE0},
+-	{Opt_dax, EXT4_MOUNT_DAX, MOPT_SET},
++	{Opt_dax, EXT4_MOUNT_DAX_ALWAYS, MOPT_SET},
+ 	{Opt_stripe, 0, MOPT_GTE0},
+ 	{Opt_resuid, 0, MOPT_GTE0},
+ 	{Opt_resgid, 0, MOPT_GTE0},
+@@ -3974,7 +3974,7 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 				 "both data=journal and dioread_nolock");
+ 			goto failed_mount;
  		}
+-		if (test_opt(sb, DAX)) {
++		if (test_opt(sb, DAX_ALWAYS)) {
+ 			ext4_msg(sb, KERN_ERR, "can't mount with "
+ 				 "both data=journal and dax");
+ 			goto failed_mount;
+@@ -4084,7 +4084,7 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+ 		goto failed_mount;
+ 	}
+ 
+-	if (sbi->s_mount_opt & EXT4_MOUNT_DAX) {
++	if (sbi->s_mount_opt & EXT4_MOUNT_DAX_ALWAYS) {
+ 		if (ext4_has_feature_inline_data(sb)) {
+ 			ext4_msg(sb, KERN_ERR, "Cannot use DAX on a filesystem"
+ 					" that may contain inline data");
+@@ -5404,7 +5404,7 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
+ 			err = -EINVAL;
+ 			goto restore_opts;
+ 		}
+-		if (test_opt(sb, DAX)) {
++		if (test_opt(sb, DAX_ALWAYS)) {
+ 			ext4_msg(sb, KERN_ERR, "can't mount with "
+ 				 "both data=journal and dax");
+ 			err = -EINVAL;
+@@ -5425,10 +5425,10 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
+ 		goto restore_opts;
+ 	}
+ 
+-	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_DAX) {
++	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt) & EXT4_MOUNT_DAX_ALWAYS) {
+ 		ext4_msg(sb, KERN_WARNING, "warning: refusing change of "
+ 			"dax flag with busy inodes while remounting");
+-		sbi->s_mount_opt ^= EXT4_MOUNT_DAX;
++		sbi->s_mount_opt ^= EXT4_MOUNT_DAX_ALWAYS;
+ 	}
+ 
+ 	if (sbi->s_mount_flags & EXT4_MF_FS_ABORTED)
 -- 
 2.25.1
 
