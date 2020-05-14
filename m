@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BD0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E17B2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60EB220675
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B450020675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:09:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483370;
-	bh=nx23dqVpWnjfhGPHJ3dCs8uLrVRnY0WPQ+tFW7+VuqM=;
+	s=default; t=1589483373;
+	bh=FpJAmaIbXfW+zhkboocQed7po9iRsV2lzX9DK4liwkU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k2+zaX3OiiGJBkoGly6ZttrLLPoh5uLlQSVVju6GA/ltlJWs6MWipcJN9fO1Wb3eM
-	 QEYVqBRJIUzseSVF78eouD/A5zL4n96973E0ZmS+Fbd6byPWwUr0t0VulnNU1USqHp
-	 cGK8TYrC5QQ3I3VTIiI+20BdbCP7ic1YnS1unr9Q=
+	b=TA+7CXKQewbZd6dtCcceToEMbrUudl98Yj10XUKfHrF5127xLu2oI75ZRrfTzq87S
+	 jmH0yKAWv9fAw3p+BXgNZNOKN+hltDYqHenO06bEUf2ybmd16/IMv1KYXB2HtuKeJC
+	 U4plOoo5y9IF8gyIP6FE1VLACAqkvnqCu210/7GQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbgENSwp (ORCPT
+        id S1729391AbgENTJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:52:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51012 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:09:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728398AbgENSwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:52:38 -0400
+        id S1728465AbgENSws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:52:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29C4E20727;
-        Thu, 14 May 2020 18:52:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AFED2065F;
+        Thu, 14 May 2020 18:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482357;
-        bh=nx23dqVpWnjfhGPHJ3dCs8uLrVRnY0WPQ+tFW7+VuqM=;
+        s=default; t=1589482367;
+        bh=FpJAmaIbXfW+zhkboocQed7po9iRsV2lzX9DK4liwkU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MNrhG7YtabLcEzkB+ziSxGBuaiNDXEPeHN9wvOZzcj3T21wpVQhqp0c3oCaadPmgk
-         RaxT71cykMQu0sXYDisTyOeMFB1+J5uXSeM3QI0gZ5IM76L+DtJ8SdKLKV9YCo2Mfh
-         iLJxz1Kb4vQcVLonMMqxWAn6j5bujIOhm/7N8tp0=
+        b=kBgg7eSyfBLZcQW1BIRmjA6UiW1oz+cWp3SQDVx7M2GY89mo/L/YpXuqblWdlT6ZB
+         2/nL1t9MVAnW5Fnsb0BDCgmXvVZRuP4OjGgGpSIdNbZhRo7t1zMbnNcbiMjw4NjOnV
+         aFlOfh4lWq92GTjY/JyRarXrHOkqe2/bDS3KNfpc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 38/62] USB: core: Fix misleading driver bug report
-Date:   Thu, 14 May 2020 14:51:23 -0400
-Message-Id: <20200514185147.19716-38-sashal@kernel.org>
+Cc:     Aurabindo Pillai <aurabindo.pillai@amd.com>,
+        Harry Wentland <Harry.Wentland@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.6 46/62] drm/amd/display: Prevent dpcd reads with passive dongles
+Date:   Thu, 14 May 2020 14:51:31 -0400
+Message-Id: <20200514185147.19716-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185147.19716-1-sashal@kernel.org>
 References: <20200514185147.19716-1-sashal@kernel.org>
@@ -60,67 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Aurabindo Pillai <aurabindo.pillai@amd.com>
 
-[ Upstream commit ac854131d9844f79e2fdcef67a7707227538d78a ]
+[ Upstream commit e6142dd511425cb827b5db869f489eb81f5f994d ]
 
-The syzbot fuzzer found a race between URB submission to endpoint 0
-and device reset.  Namely, during the reset we call usb_ep0_reinit()
-because the characteristics of ep0 may have changed (if the reset
-follows a firmware update, for example).  While usb_ep0_reinit() is
-running there is a brief period during which the pointers stored in
-udev->ep_in[0] and udev->ep_out[0] are set to NULL, and if an URB is
-submitted to ep0 during that period, usb_urb_ep_type_check() will
-report it as a driver bug.  In the absence of those pointers, the
-routine thinks that the endpoint doesn't exist.  The log message looks
-like this:
+[why]
+During hotplug, a DP port may be connected to the sink through
+passive adapter which does not support DPCD reads. Issuing reads
+without checking for this condition will result in errors
 
-------------[ cut here ]------------
-usb 2-1: BOGUS urb xfer, pipe 2 != type 2
-WARNING: CPU: 0 PID: 9241 at drivers/usb/core/urb.c:478
-usb_submit_urb+0x1188/0x1460 drivers/usb/core/urb.c:478
+[how]
+Ensure the link is in aux_mode before initiating operation that result
+in a DPCD read.
 
-Now, although submitting an URB while the device is being reset is a
-questionable thing to do, it shouldn't count as a driver bug as severe
-as submitting an URB for an endpoint that doesn't exist.  Indeed,
-endpoint 0 always exists, even while the device is in its unconfigured
-state.
-
-To prevent these misleading driver bug reports, this patch updates
-usb_disable_endpoint() to avoid clearing the ep_in[] and ep_out[]
-pointers when the endpoint being disabled is ep0.  There's no danger
-of leaving a stale pointer in place, because the usb_host_endpoint
-structure being pointed to is stored permanently in udev->ep0; it
-doesn't get deallocated until the entire usb_device structure does.
-
-Reported-and-tested-by: syzbot+db339689b2101f6f6071@syzkaller.appspotmail.com
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2005011558590.903-100000@netrider.rowland.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Aurabindo Pillai <aurabindo.pillai@amd.com>
+Reviewed-by: Harry Wentland <Harry.Wentland@amd.com>
+Acked-by: Aurabindo Pillai <aurabindo.pillai@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/core/message.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c   | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/usb/core/message.c b/drivers/usb/core/message.c
-index 02eaac7e1e34e..a1ac2f0723b0b 100644
---- a/drivers/usb/core/message.c
-+++ b/drivers/usb/core/message.c
-@@ -1143,11 +1143,11 @@ void usb_disable_endpoint(struct usb_device *dev, unsigned int epaddr,
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 8136a58deb393..f98c42150b4f3 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -1941,17 +1941,22 @@ amdgpu_dm_update_connector_after_detect(struct amdgpu_dm_connector *aconnector)
+ 		dc_sink_retain(aconnector->dc_sink);
+ 		if (sink->dc_edid.length == 0) {
+ 			aconnector->edid = NULL;
+-			drm_dp_cec_unset_edid(&aconnector->dm_dp_aux.aux);
++			if (aconnector->dc_link->aux_mode) {
++				drm_dp_cec_unset_edid(
++					&aconnector->dm_dp_aux.aux);
++			}
+ 		} else {
+ 			aconnector->edid =
+-				(struct edid *) sink->dc_edid.raw_edid;
+-
++				(struct edid *)sink->dc_edid.raw_edid;
  
- 	if (usb_endpoint_out(epaddr)) {
- 		ep = dev->ep_out[epnum];
--		if (reset_hardware)
-+		if (reset_hardware && epnum != 0)
- 			dev->ep_out[epnum] = NULL;
+ 			drm_connector_update_edid_property(connector,
+-					aconnector->edid);
+-			drm_dp_cec_set_edid(&aconnector->dm_dp_aux.aux,
+-					    aconnector->edid);
++							   aconnector->edid);
++
++			if (aconnector->dc_link->aux_mode)
++				drm_dp_cec_set_edid(&aconnector->dm_dp_aux.aux,
++						    aconnector->edid);
+ 		}
++
+ 		amdgpu_dm_update_freesync_caps(connector, aconnector->edid);
+ 
  	} else {
- 		ep = dev->ep_in[epnum];
--		if (reset_hardware)
-+		if (reset_hardware && epnum != 0)
- 			dev->ep_in[epnum] = NULL;
- 	}
- 	if (ep) {
 -- 
 2.20.1
 
