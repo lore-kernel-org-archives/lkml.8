@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C51C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 075E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 049D8207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA532206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:00:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482831;
-	bh=P3vnlNl2kfwRlE3gX2+SClcTGmFVrHC5ebGzq7c4wOo=;
+	s=default; t=1589482844;
+	bh=IBP3bY83sjTsA6aaVcP1VbJSrvnv50m/W6qFCgpoO9c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hDzT1F6KIrFtOsUmvDR18TgT4Fb87+1baqi+AGHs6d5sJlOlq5R+JLjS0iRvQ29l9
-	 +aVbphOcl0EJ0wjrk9RXFSeN24vXgoIvPuSlOICkZAyFUwid7dCq5RByq5fJCEg5Zb
-	 G/HYWzxHOTIoO1y+FyApDXBnvt4cLXM6suXEJZbE=
+	b=0bzDzijKEWfW74e/cy+POyIZHj+mrbT5/hAstoqykm5+LSyR0OprlBzLgwe80tz4x
+	 gh+l/GtSNf4OdnKxfcEjtU55sjAnMm9uIj/wh+a61JzmHRVqNaeZva7K8yFLh826ui
+	 /qUhOMYz5kX9leI+kQBUox7WkSw6a3uDiVcjxqKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729481AbgENSzq (ORCPT
+        id S1729945AbgENTAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:55:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56170 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:00:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729397AbgENSzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:55:33 -0400
+        id S1729438AbgENSzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:55:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09E7E20767;
-        Thu, 14 May 2020 18:55:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF6E4207D5;
+        Thu, 14 May 2020 18:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482532;
-        bh=P3vnlNl2kfwRlE3gX2+SClcTGmFVrHC5ebGzq7c4wOo=;
+        s=default; t=1589482539;
+        bh=IBP3bY83sjTsA6aaVcP1VbJSrvnv50m/W6qFCgpoO9c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C1+I9BO4GafDA7sEkWIrMK7Oe/wFMsI6/R/N3ukO/a1XHACuvYXHSlulqEbz+fFSh
-         uYLozwSp8Z9Nk4w6YscAtxf6ypKOkdSAlDHlXXAAvOHMPDnAjoW4qqPpOOcWXPGDKI
-         WTPrsJHgxp6Sw6M8fBBpFYIhtQhaxM+A8fnYBTTI=
+        b=Oqx4fFPj1VcbU4tmsgCtP5A0RNGI1jBy8lyayzvSwqgVpPem2yw9UJX4F9LrVpEza
+         gA3IFBqE/6Llfi3Y/KaeOUV3nVshWvT3DjDijmtDYtSmYwbsuWLo7lsEZFm2muVKNk
+         uZFcfbGmIjoiC74d90UMA/P+EwYGPY9SDN3B2amw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alex Elder <elder@linaro.org>,
+Cc:     Matt Jolly <Kangie@footclan.ninja>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 26/39] net: ipa: fix a bug in ipa_endpoint_stop()
-Date:   Thu, 14 May 2020 14:54:43 -0400
-Message-Id: <20200514185456.21060-26-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 32/39] net: usb: qmi_wwan: add support for DW5816e
+Date:   Thu, 14 May 2020 14:54:49 -0400
+Message-Id: <20200514185456.21060-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185456.21060-1-sashal@kernel.org>
 References: <20200514185456.21060-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,54 +62,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Elder <elder@linaro.org>
+From: Matt Jolly <Kangie@footclan.ninja>
 
-[ Upstream commit 713b6ebb4c376b3fb65fdceb3b59e401c93248f9 ]
+[ Upstream commit 57c7f2bd758eed867295c81d3527fff4fab1ed74 ]
 
-In ipa_endpoint_stop(), for TX endpoints we set the number of retries
-to 0.  When we break out of the loop, retries being 0 means we return
-EIO rather than the value of ret (which should be 0).
+Add support for Dell Wireless 5816e to drivers/net/usb/qmi_wwan.c
 
-Fix this by using a non-zero retry count for both RX and TX
-channels, and just break out of the loop after calling
-gsi_channel_stop() for TX channels.  This way only RX channels
-will retry, and the retry count will be non-zero at the end
-for TX channels (so the proper value gets returned).
-
-Signed-off-by: Alex Elder <elder@linaro.org>
+Signed-off-by: Matt Jolly <Kangie@footclan.ninja>
+Acked-by: Bjørn Mork <bjorn@mork.no>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ipa/ipa_endpoint.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/net/usb/qmi_wwan.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ipa/ipa_endpoint.c b/drivers/net/ipa/ipa_endpoint.c
-index 915b4cd05dd29..78ed431e6eb86 100644
---- a/drivers/net/ipa/ipa_endpoint.c
-+++ b/drivers/net/ipa/ipa_endpoint.c
-@@ -1284,7 +1284,7 @@ static int ipa_endpoint_stop_rx_dma(struct ipa *ipa)
-  */
- int ipa_endpoint_stop(struct ipa_endpoint *endpoint)
- {
--	u32 retries = endpoint->toward_ipa ? 0 : IPA_ENDPOINT_STOP_RX_RETRIES;
-+	u32 retries = IPA_ENDPOINT_STOP_RX_RETRIES;
- 	int ret;
- 
- 	do {
-@@ -1292,12 +1292,9 @@ int ipa_endpoint_stop(struct ipa_endpoint *endpoint)
- 		struct gsi *gsi = &ipa->gsi;
- 
- 		ret = gsi_channel_stop(gsi, endpoint->channel_id);
--		if (ret != -EAGAIN)
-+		if (ret != -EAGAIN || endpoint->toward_ipa)
- 			break;
- 
--		if (endpoint->toward_ipa)
--			continue;
--
- 		/* For IPA v3.5.1, send a DMA read task and check again */
- 		if (ipa->version == IPA_VERSION_3_5_1) {
- 			ret = ipa_endpoint_stop_rx_dma(ipa);
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index e028e03765a56..820feeda1f351 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -1283,6 +1283,7 @@ static const struct usb_device_id products[] = {
+ 	{QMI_FIXED_INTF(0x413c, 0x81b3, 8)},	/* Dell Wireless 5809e Gobi(TM) 4G LTE Mobile Broadband Card (rev3) */
+ 	{QMI_FIXED_INTF(0x413c, 0x81b6, 8)},	/* Dell Wireless 5811e */
+ 	{QMI_FIXED_INTF(0x413c, 0x81b6, 10)},	/* Dell Wireless 5811e */
++	{QMI_FIXED_INTF(0x413c, 0x81cc, 8)},	/* Dell Wireless 5816e */
+ 	{QMI_FIXED_INTF(0x413c, 0x81d7, 0)},	/* Dell Wireless 5821e */
+ 	{QMI_FIXED_INTF(0x413c, 0x81d7, 1)},	/* Dell Wireless 5821e preproduction config */
+ 	{QMI_FIXED_INTF(0x413c, 0x81e0, 0)},	/* Dell Wireless 5821e with eSIM support*/
 -- 
 2.20.1
 
