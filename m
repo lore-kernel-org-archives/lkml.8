@@ -2,74 +2,126 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F710C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA49CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13CC620823
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A22D4206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:23:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AQB8AjMy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726169AbgENLXW (ORCPT
+        id S1726316AbgENLXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 07:23:22 -0400
-Received: from 8bytes.org ([81.169.241.247]:42820 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725925AbgENLXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 07:23:22 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 490C9379; Thu, 14 May 2020 13:23:20 +0200 (CEST)
-Date:   Thu, 14 May 2020 13:23:17 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Guillaume Tucker <guillaume.tucker@collabora.com>
-Cc:     Joerg Roedel <jroedel@suse.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org
-Subject: Re: next/master bisection: baseline.login on jetson-tk1
-Message-ID: <20200514112317.GH18353@8bytes.org>
-References: <5eb9fab4.1c69fb81.a1f1c.0e95@mx.google.com>
- <a868fa70-9039-f72a-39c6-5464a9d06db2@collabora.com>
- <20200512151600.GD8135@suse.de>
- <c9745450-a6d0-1944-a9af-ef9ce18fed12@collabora.com>
+        Thu, 14 May 2020 07:23:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726176AbgENLXt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 07:23:49 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62902C05BD43
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 04:23:47 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id 82so797690lfh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 04:23:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=52Rzrrj4E2al2tTGlHFyR6M/8l4BjJi9pTbsEHvkafw=;
+        b=AQB8AjMyAZSGOL4e97UU90oVl9kAMguV5p4dTDDqcw0/yek+GT5FWuN2tscAVlKFEs
+         EGzg8HjoW6dtHzhFbCevirz+96qH21ZW9fHpy2kzigcrKVJlygWbNXwPaiOUs6uFh063
+         aPAdVZthuA7Y6Oqs1VLm4MDl2Ymqdb56dcWwjCBZ0og7DZpzl8xsqkqa05M1swjos7Gz
+         BvCnthOJZ3OAhbZMPq0iz6CbKdHXINgpBnT6TT6KscyzM/JwxVG6ZXzKdHQmih4z9i43
+         mHHs4GZHjvk6LTACjAngtXARfd2tJBCvG7KpSeW1akMKIkbng2rYc0JDaLTV5N6BoPB4
+         oObw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=52Rzrrj4E2al2tTGlHFyR6M/8l4BjJi9pTbsEHvkafw=;
+        b=RFwgbzpqzr0CMRT9O68WZrpG4PQNavL1JUnbHjKqKZCHK7qM9a68a9l+CSXWulIHCx
+         xJaiGk/BNVO69yY8pU6F8nTKYG12HwTLMjpsQEh/RhIStO0q1InwDkoskdpZprEsrlAD
+         xYpLZwtacVv0b8cFonixQCdJrT1JX03d7zkNq3x+aImAeIcxliWo5c7nIfoA12kqmbiG
+         EArvFVjHjrZ90XequI/ipG1CDqF8vSMvHsb+BSH8weQSAfWtJvc6HZiOpfOuQT0eVg+m
+         0l4YHIdE8RFn7/8eUlr30gEbrXU0WzlM5v7KBjejqN+AV859qapgmaiAfIQNLYT94leU
+         4aVg==
+X-Gm-Message-State: AOAM530T7/LcLSgTeH3lrRCepn98z8GjhnDi6VT4yAu3DfuC6K2ie/L8
+        +HIuWjXFmhg4TAGFaoUwxAMNtdxIKDjXXGj2y/xv1Q==
+X-Google-Smtp-Source: ABdhPJyJHVIeFpsuP6hWyR4T3t3i5l95UvM1ck7qhqVExGI1lWc37GndFTYXCpQQGciey+GLFpqutzOT/FYhOL3syjg=
+X-Received: by 2002:ac2:44bb:: with SMTP id c27mr3095483lfm.40.1589455425658;
+ Thu, 14 May 2020 04:23:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c9745450-a6d0-1944-a9af-ef9ce18fed12@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1588758017-30426-1-git-send-email-sumit.garg@linaro.org>
+ <1588758017-30426-2-git-send-email-sumit.garg@linaro.org> <07bb6080f8be9f6613f460e2d6e19f3d456e219c.camel@linux.intel.com>
+In-Reply-To: <07bb6080f8be9f6613f460e2d6e19f3d456e219c.camel@linux.intel.com>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Thu, 14 May 2020 16:53:34 +0530
+Message-ID: <CAFA6WYMciZ=qkG3N_9YWzt_DJr2dGwdAy9diMXCJSNjr2o5ONA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/4] KEYS: trusted: Add generic trusted keys framework
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        James Bottomley <jejb@linux.ibm.com>, dhowells@redhat.com,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Janne Karhunen <janne.karhunen@gmail.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Markus Wamser <Markus.Wamser@mixed-mode.de>,
+        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        op-tee@lists.trustedfirmware.org,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 11:16:14PM +0100, Guillaume Tucker wrote:
-> which this time gave me:
-> 
-> <4>[    2.540558] PC is at iommu_probe_device+0x1c/0x15c
-> <4>[    2.545606] LR is at of_iommu_configure+0x15c/0x1c4
-> <4>[    2.550736] pc : [<c092e0e4>]    lr : [<c0932c0c>]    psr: a0000013
-> 
-> which in turn brings us to:
-> 
-> (gdb) l *0xc092e0e4
-> 0xc092e0e4 is in iommu_probe_device (drivers/iommu/iommu.c:232).
-> 227		int ret;
-> 228	
-> 229		if (!dev_iommu_get(dev))
-> 230			return -ENOMEM;
-> 231	
-> 232		if (!try_module_get(ops->owner)) {
-> 233			ret = -EINVAL;
-> 234			goto err_out;
-> 235		}
-> 236
+On Thu, 14 May 2020 at 05:55, Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> On Wed, 2020-05-06 at 15:10 +0530, Sumit Garg wrote:
+> > Current trusted keys framework is tightly coupled to use TPM device as
+> > an underlying implementation which makes it difficult for implementations
+> > like Trusted Execution Environment (TEE) etc. to provide trusked keys
+> > support in case platform doesn't posses a TPM device.
+> >
+> > So this patch tries to add generic trusted keys framework where underlying
+> > implemtations like TPM, TEE etc. could be easily plugged-in.
+> >
+> > Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+>
+> I tend to agree how this is implemented and could merge it as such.
+>
+> I'm just thinking if we could refine this patch in a way that instead of
+> copying TRUSTED_DEBUG macro we could just replace pr_info() statements
+> with pr_debug()?
 
-Okay, so ops is NULL. I queued a fix for that in the iommu-tree. If you
-test the latest master branch the problem should be gone.
+AFAIU, TRUSTED_DEBUG being a security sensitive operation is only
+meant to be used in development environments and should be strictly
+disabled in production environments. But it may not always be true
+with pr_debug() with CONFIG_DYNAMIC_DEBUG=y which allows the debug
+paths to be compiled into the kernel which can be enabled/disabled at
+runtime.
 
-Thanks for the report,
+IMO we should keep this TRUSTED_DEBUG macro, so that users are aware
+of its security sensitive nature and need to explicitly enable it to
+debug.
 
+-Sumit
 
-       Joerg
+>
+> /Jarkko
+>
