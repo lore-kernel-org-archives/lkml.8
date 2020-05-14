@@ -2,176 +2,149 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_STARTS_WITH_NUMS,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B64EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF626C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30DA620727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:00:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589461209;
-	bh=3YB2PlClmWWHHL7lA2CsDaPrtsOSWCLyW5Yldb5v+a4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=ZYVAV70Cejt6JrNdtfgbMR18jBVIK5s031U1wNswNqGiF1VuGjhIwonuqVbDfi0Ql
-	 /OLc9W3iR3XzmvX/2CYKLBwWyxWQ1bcHBaLfvks1OiSfIN3bAVyH53c77/ErDHpNxG
-	 S9a3BHglGAPuPh2oRIw2Z6IZwzZe8Bo1IRSQie/g=
+	by mail.kernel.org (Postfix) with ESMTP id A6EAE20727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:00:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eT6a31lX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbgENNAI (ORCPT
+        id S1726948AbgENNA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:00:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49650 "EHLO
+        Thu, 14 May 2020 09:00:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726056AbgENNAG (ORCPT
+        by vger.kernel.org with ESMTP id S1726056AbgENNA2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:00:06 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75754C061A0C;
-        Thu, 14 May 2020 06:00:05 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id h188so1803092lfd.7;
-        Thu, 14 May 2020 06:00:05 -0700 (PDT)
+        Thu, 14 May 2020 09:00:28 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A114C061A0C;
+        Thu, 14 May 2020 06:00:27 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id p12so2664983qtn.13;
+        Thu, 14 May 2020 06:00:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=ROR9+95dsTUL1CeIysEpgW1DhBAJL0UZ2A95+lwDUiw=;
-        b=KO6z1RYlRErR/eWlNzvzQ1S4WAxi9GPRDFuqfPtP3FkEatHRkZJJYMDLbVWyrzKM05
-         kdvUfgzIXmLo9llmPsA0bTlpcoZPlGa1gQ1i1M3P2LWLtEY5ERlIUn+AVfptSlpLbwVI
-         8TT6ZW7OHWOzgTPcBdcMCweELyx/ku0oW8s0fbHOiKfYMSDGHJaGcVwKSpYVVg6mEI9p
-         IseVRHYjX7nj0CCb+CDXaxSmi8RCuNUFUnnvPBkx/33a3PNl4IzvkfzHCPM/8KeTdf1q
-         AxOnnkTEJH1IWW99opQOR1zBslGDQ3EMeU4aMmxxT3o2eaiXj6SPSxUT6BfOnoWNMlm9
-         HZuw==
+        h=from:to:cc:subject:date:message-id;
+        bh=z6WOKhYc3LBk7MDZUdCfkm93NHPFxuz30hVZ9EsTSJY=;
+        b=eT6a31lXMYbpMmePM3w2g8mpZeu+6ZCGfi+ihbQIGZB7mp5akrcERZJ+d7tWh3PUSi
+         YsJdlUB5atJGK2D819evYElM3lRGMXzxV+ND2Dnj/8NzSTry7i4ZuZZ+BYhVV4PyA9mR
+         FEbabEsHZm91Bp8fCfg6cbediwk95zq0Ui0hW+CV+7/PD8hUVgFM0erv9wMET337qpO0
+         Pw0JgikhQlg4pabcMmoekfFN80ViwxYE88FGJa2VvKDzREiYb6sXkTAnCxX9uNCH5fVl
+         6/CBD08zoqwII5v8DGI9Cwy1wosGT6zKsKbSDd/RUfKv94IvHYUbitUOrpwgW70BgzSZ
+         kz+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=ROR9+95dsTUL1CeIysEpgW1DhBAJL0UZ2A95+lwDUiw=;
-        b=gPchzb3oXJBkBat5/pPBSDkRRX7c5vjsr824NBgUPxrpT+FlV9ZdJT/Lmt/1dCErdy
-         /17gWdDfWG3Pv58GTOkO0F6S1NnHlLz3ZmuZFtcDsJfyN+1epPPtBhJxeOctOB9cCq29
-         UBSibJqP18O9lbO/Lbn3PSoOHvhf5iCO8x050N0jyQw7ppwg6YB7dHA/97Zc2IoIINJe
-         i8HKgkN11KUPaMyzpDmnl+zQzhvbJXhRQCzedjESts8pFsQqF1wJ3buppZLPOtZ/FMOq
-         9v30X0dJVke/OAdt+vwTefCgIgA77y2uGMHFk2fHmb6ZCozR2UscxKrkSV0qZs6Y+f5a
-         f95w==
-X-Gm-Message-State: AOAM53265zX+WC6kpoBbFiHx+9r6n1nfQmlqZ/CM3HC85KHwiogDLCv7
-        jtw7tfqQPODBiX5h7tUTr0z4wPEiHXdhsg==
-X-Google-Smtp-Source: ABdhPJxNerIfBcvLmQHYutWMRmJg9p7efJMIVDi65EtZZ3Y4oVoOZUA65oO9+bwhonnVNLfMWyzKiQ==
-X-Received: by 2002:ac2:5999:: with SMTP id w25mr3194661lfn.196.1589461203516;
-        Thu, 14 May 2020 06:00:03 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id g3sm1894755ljk.27.2020.05.14.06.00.02
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 May 2020 06:00:02 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Neil Armstrong <narmstrong@baylibre.com>, kishon@ti.com,
-        khilman@baylibre.com, martin.blumenstingl@googlemail.com
-Cc:     linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/13] usb: dwc3: meson: add OTG support for GXL/GXM
-In-Reply-To: <8404c7a0-fca7-9e28-b65a-312ed09ecdd3@baylibre.com>
-References: <20200324102030.31000-1-narmstrong@baylibre.com> <87369rfo7l.fsf@kernel.org> <87r1vm4xyq.fsf@kernel.org> <8404c7a0-fca7-9e28-b65a-312ed09ecdd3@baylibre.com>
-Date:   Thu, 14 May 2020 15:59:52 +0300
-Message-ID: <87wo5e3c53.fsf@kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=z6WOKhYc3LBk7MDZUdCfkm93NHPFxuz30hVZ9EsTSJY=;
+        b=JFgrxm3L4AgHbzUZ44/hqaPwUHlIa86fXryfffc1k5HW0j87jTUcTMAM5QWUnnFfsj
+         KlfmNbC3hJthGTR1Iy4AShSuzL1RjBBb81tgijn2m+d/Vwc4SP+9TLYM8Ujq9/2pgYgf
+         5sD7oiUnyXDvv1xixH/QavR5LaMzQlJe0HfQK2qIOqK3azd+F/gzkJvsk+MKDKQbfqDi
+         VkaLH5qdEwHUnBVw7TaXnI8mtMbfQ/zeUqo77KkWpi9GOyJO1sCHK5j8/SE1fdYATH+i
+         x+62OrrBuTu3E3RVrHgcx6dkASvymv04zZZEhoQ0R6VfGYAJA6mLbuuXda8kIqYJ/wVZ
+         OxHA==
+X-Gm-Message-State: AOAM533G6qzIUVc4IuBr3U81X1Wa1kZ/oSCBx8Xg/i2GYpqx0mUZfgkj
+        KiCMNRXxhrbbUcN5V255PL742LxvWurxRQ==
+X-Google-Smtp-Source: ABdhPJwUPArE3/PN49KiSxkIfZTbNFqpTHDn0QvN073tvinjkho7qc4/vmlunVwycSLNmjQVWrSleQ==
+X-Received: by 2002:ac8:4e56:: with SMTP id e22mr4363384qtw.185.1589461226336;
+        Thu, 14 May 2020 06:00:26 -0700 (PDT)
+Received: from sca.dev ([201.17.110.164])
+        by smtp.gmail.com with ESMTPSA id g144sm2473724qke.18.2020.05.14.06.00.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 May 2020 06:00:25 -0700 (PDT)
+From:   Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+X-Google-Original-From: Rodrigo Alencar <alencar.fmce@imbel.gov.br>
+To:     linux-gpio@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, bgolaszewski@baylibre.com,
+        linus.walleij@linaro.org,
+        Rodrigo Alencar <alencar.fmce@imbel.gov.br>,
+        Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+Subject: [PATCH] gpio: gpio-max730x: bring gpiochip_add_data after port config
+Date:   Thu, 14 May 2020 10:00:12 -0300
+Message-Id: <1589461212-27357-1-git-send-email-alencar.fmce@imbel.gov.br>
+X-Mailer: git-send-email 1.9.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+gpiochip_add_data being called before might cause premature calls of
+the gpiochip operations before the port_config values are initialized,
+which would possibily write zeros to port gonfiguration registers,
+an operation not allowed. For example, if there are gpio-hog nodes
+in a device-tree, the sequence of function calls are performed
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+gpiochip_add_data
+of_gpiochip_add
+of_gpiochip_scan_gpios
+of_gpiochip_add_hog
+gpiod_hog
+gpiochip_request_own_desc
+gpiod_configure_flags
+gpiod_direction_output/gpiod_direction_input
 
-> Hi,
->
-> On 14/05/2020 12:23, Felipe Balbi wrote:
->> Felipe Balbi <balbi@kernel.org> writes:
->>=20
->>> Neil Armstrong <narmstrong@baylibre.com> writes:
->>>
->>>> The USB support was initialy done with a set of PHYs and dwc3-of-simple
->>>> because the architecture of the USB complex was not understood correct=
-ly
->>>> at the time (and proper documentation was missing...).
->>>>
->>>> But with the G12A family, the USB complex was correctly understood and
->>>> implemented correctly.
->>>> But seems the G12A architecture was derived for the GXL USB architectu=
-re,
->>>> with minor differences and looks we can share most of the USB DWC3 glue
->>>> driver.
->>>>
->>>> This patchset refactors and adds callbacks to handle the architecture
->>>> difference while keeping the main code shared.
->>>>
->>>> The main difference is that on GXL/GXM the USB2 PHY control registers
->>>> are mixed with the PHY registers (we already handle correctly), and
->>>> the GLUE registers are allmost (99%) the same as G12A.
->>>>
->>>> But, the GXL/GXM HW is buggy, here are the quirks :
->>>> - for the DWC2 controller to reset correctly, the GLUE mux must be swi=
-tched
->>>>   to peripheral when the DWC2 controlle probes. For now it's handled b=
-y simply
->>>>   switching to device when probing the subnodes, but it may be not eno=
-ugh
->>>> - when manually switching from Host to Device when the USB port is not
->>>>   populated (should not happen with proper Micro-USB/USB-C OTG switch)=
-, it
->>>>   makes the DWC3 to crash. The only way to avoid that is to use the Ho=
-st
->>>>   Disconnect bit to disconnect the DWC3 controller from the port, but =
-we can't
->>>>   recover the Host functionnality unless resetting the DWC3 controller.
->>>>   This bit is set when only manual switch is done, and a warning is pr=
-inted
->>>>   on manual switching.
->>>>
->>>> The patches 1-8 should be applied first, then either waiting the next =
-release
->>>> or if the usb maintainer can provide us a stable tag, we can use it to=
- merge
->>>> the DT and bindings.
->>>
->>> it's unclear to me if this series is ready to be merged. Can someone
->>> confirm? If it is, can you resend with all reviewed by tags in place?
->>=20
->> Are we getting a v2 for this?
->>=20
->
-> Yes, even a v3 with reviews on all patches:
-> http://lkml.kernel.org/r/20200416121910.12723-1-narmstrong@baylibre.com
+which would call later the gpiochip operation direction_output or
+direction_input prior the port_config[] initialization.
 
-In that case, can you check that I have applied everything correctly in
-testing/next?
+Moreover, gpiochip_get_data is replaced by the container_of macro
+inside the gpiochip operations, which would allow the calling of
+max7301_direction_input prior to gpiochip_add_data
 
-cheers
+Signed-off-by: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
+---
+ drivers/gpio/gpio-max730x.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-=2D-=20
-balbi
+diff --git a/drivers/gpio/gpio-max730x.c b/drivers/gpio/gpio-max730x.c
+index 1e1935c51096..b8c1fe20f49a 100644
+--- a/drivers/gpio/gpio-max730x.c
++++ b/drivers/gpio/gpio-max730x.c
+@@ -47,7 +47,7 @@
+ 
+ static int max7301_direction_input(struct gpio_chip *chip, unsigned offset)
+ {
+-	struct max7301 *ts = gpiochip_get_data(chip);
++	struct max7301 *ts = container_of(chip, struct max7301, chip);
+ 	u8 *config;
+ 	u8 offset_bits, pin_config;
+ 	int ret;
+@@ -89,7 +89,7 @@ static int __max7301_set(struct max7301 *ts, unsigned offset, int value)
+ static int max7301_direction_output(struct gpio_chip *chip, unsigned offset,
+ 				    int value)
+ {
+-	struct max7301 *ts = gpiochip_get_data(chip);
++	struct max7301 *ts = container_of(chip, struct max7301, chip);
+ 	u8 *config;
+ 	u8 offset_bits;
+ 	int ret;
+@@ -189,10 +189,6 @@ int __max730x_probe(struct max7301 *ts)
+ 	ts->chip.parent = dev;
+ 	ts->chip.owner = THIS_MODULE;
+ 
+-	ret = gpiochip_add_data(&ts->chip, ts);
+-	if (ret)
+-		goto exit_destroy;
+-
+ 	/*
+ 	 * initialize pullups according to platform data and cache the
+ 	 * register values for later use.
+@@ -214,7 +210,9 @@ int __max730x_probe(struct max7301 *ts)
+ 		}
+ 	}
+ 
+-	return ret;
++	ret = gpiochip_add_data(&ts->chip, ts);
++	if (!ret)
++		return ret;
+ 
+ exit_destroy:
+ 	mutex_destroy(&ts->lock);
+-- 
+2.23.0.rc1
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl69QMoACgkQzL64meEa
-mQZ7CBAAjOVQDtFwDKrzgDZRhyR2kgFRKf9TzlbXviaZij9EeWPBy1HaR0b+/2eX
-SgIO6RsGUiDD0dBt92WLGnvIxt2JecaAdUNbjUzQBeIkuvEyAuJq0M3qkaMLUU+h
-6t6yJZBfO+MyOoFzUS7o+jKQn96KrQLHxcUB69ubZChlNHJUG5nBXpJ2D8xeehnW
-Jz3VvJRqBTtN6X8Cgox6e+X7xq42E+VJz9/vwEqQuMA8R85Ay+fxKbX20GdEj0+P
-8mhZVbe/Anwpksh5RDLAYeP6tOwz5XeAxotB6Iav81HY//gw2HwVuLdhG4t7sm8h
-lfzOa/MkbeoLwT2NacYaZ6eQbBWNpe0+JhX74FL08/P+S5JiHw/DoejbYJL4u8v5
-vfA9kWfkrgEQem/MxNAD8dI+HtFMAnNemLsXMATSrNepVNJiEFACyR9fPA76tf1A
-OPd9sztw4TMDhVi7rPFjnkRYacG7eNkY814OI39975lRc2VI24GjkzBELJMILhqo
-u6EFJcd5vUJcsE47LNyn+hnEFZdkzjxnDXRIJhFfHIyuHaBWYF7chXbkj/TohCQi
-NnLdxEIHnHTXLsD+zN79KNx+UB+4JmRoMVyGlipjaGcgiPWTark9gXyxqOzJNYGG
-Ag7n5Rbxrlh80c2pOZnK4dHKjpUSLf8pcbXgK4rvLr5uWZEvT9A=
-=1kRq
------END PGP SIGNATURE-----
---=-=-=--
