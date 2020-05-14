@@ -2,185 +2,132 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B9FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C79C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1149220675
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EEDF20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:18:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZYqSa8L/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726015AbgENJRK (ORCPT
+        id S1726098AbgENJSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 05:17:10 -0400
-Received: from wind.enjellic.com ([76.10.64.91]:43910 "EHLO wind.enjellic.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725878AbgENJRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 05:17:10 -0400
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 04E9GcQO026356;
-        Thu, 14 May 2020 04:16:38 -0500
-Received: (from greg@localhost)
-        by wind.enjellic.com (8.15.2/8.15.2/Submit) id 04E9Gc1v026355;
-        Thu, 14 May 2020 04:16:38 -0500
-Date:   Thu, 14 May 2020 04:16:37 -0500
-From:   "Dr. Greg" <greg@enjellic.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-sgx@vger.kernel.org,
-        akpm@linux-foundation.org, dave.hansen@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, kai.svahn@intel.com,
-        bp@alien8.de, josh@joshtriplett.org, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        puiterwijk@redhat.com
-Subject: Re: [PATCH v29 00/20] Intel SGX foundations
-Message-ID: <20200514091637.GA25156@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com> <20200426165753.GA11046@wind.enjellic.com> <87d07gk24l.fsf@nanos.tec.linutronix.de> <20200508190226.GA31465@wind.enjellic.com> <20200508195635.GR27052@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508195635.GR27052@linux.intel.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Thu, 14 May 2020 04:16:39 -0500 (CDT)
+        Thu, 14 May 2020 05:18:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43332 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725878AbgENJSV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 05:18:21 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89AADC061A0C;
+        Thu, 14 May 2020 02:18:20 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id j2so31609ilr.5;
+        Thu, 14 May 2020 02:18:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ydoBtyjQkZ71HME1rY9/L3edxtQ8UTZXOUoGaJuGgqs=;
+        b=ZYqSa8L/3MIGZtdjLm0uDEAUX9qw4WfHyEd/Xw3RGOzYb1CkiCmu64wr9INtmjvKAv
+         emNDZI8PC9mqxdaFO/x+7iDPFrRBkDTofku3oFwDsonyzK71UUmM/f2Ph34IYVB1ePui
+         TRYJEkf6+HZ5dpJwh+khw4qEqdRQ1Yz4UtEMkaULjMFHZPky5finqqVyz2JPi5d/Mocq
+         Ga+oJmmuDjPRydwsVFRhLCydvb7MAqHM/hyGTEJ+1CxinGcEilDhOARv4nY1Mia/4k5g
+         0CjcHoE1TsdomFZGSZaCa096y7nxhGm4PrO3r+27z96mUV9fH7IfZq7KcSOXdK64+inC
+         4q8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ydoBtyjQkZ71HME1rY9/L3edxtQ8UTZXOUoGaJuGgqs=;
+        b=XgmuF3P3HSIQdiZq5nvGM4PC5volrhSK+Q/k92hEYAGIVfZRHAnpWUgxmfRp6au2Oh
+         0dvouz+a3Y4fsC1JkBUpzl6BvgeLT0zTf6g4kZWOwcx7O876cxfa2IuxYkwoo6TlOE36
+         t3Y+DLdSfRm3khn8hWL33GiDSWAf1QRc3gD9UBNRt4bRESkQOHX9OMmU5qbHm1BUEwW7
+         qzQdeBSptNF2Qc0WTYa3X9o+MzY4q4iLDcDGQ87k6XLWqYo/Bo+p9/xWEegp6xXyMKof
+         Fumtlfqmp/NkRD280Fh7GmZEEOrThMXZcqrdM9tqv1Q9SIL/UI20FGJm2/m+QAXvdzkQ
+         K01w==
+X-Gm-Message-State: AOAM533o0QBL2hhJZzYJ6TnpB9MJdY90kVxfQ7jEDSuewK2GTFNS5XmE
+        j6d27Znb8zQac4sNanHXbKObRJPzt8eIuwnJ3Xw=
+X-Google-Smtp-Source: ABdhPJx7BSQgQE4F6HtJZDnTuhUIhxQY0EfiByegZhfXtsPPqB/OWed28lLtaW/x8ef7ztWZ46mbWs3Tdl5vZCAZRP0=
+X-Received: by 2002:a92:3556:: with SMTP id c83mr3346133ila.218.1589447900002;
+ Thu, 14 May 2020 02:18:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <1589267017-17294-1-git-send-email-dillon.minfei@gmail.com>
+ <1589267017-17294-4-git-send-email-dillon.minfei@gmail.com> <CACRpkda5VjjBdbruXTi33QBNb=VU6vK2zDE8yyQXoWw7=NQFeg@mail.gmail.com>
+In-Reply-To: <CACRpkda5VjjBdbruXTi33QBNb=VU6vK2zDE8yyQXoWw7=NQFeg@mail.gmail.com>
+From:   dillon min <dillon.minfei@gmail.com>
+Date:   Thu, 14 May 2020 17:17:42 +0800
+Message-ID: <CAL9mu0JZdgJ0yjULUHkXzU0CyKeMi0dcA1L7PxPiZucpuuyQ9Q@mail.gmail.com>
+Subject: Re: [PATCH v3 3/5] ARM: dts: stm32: enable ltdc binding with ili9341
+ on stm32429-disco board
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 12:56:35PM -0700, Sean Christopherson wrote:
+Hi, Linus,
 
-Good morning, I hope the week is proceeding well for everyone.
+thanks for reviewing.
 
-> On Fri, May 08, 2020 at 02:02:26PM -0500, Dr. Greg wrote:
-> > On Thu, May 07, 2020 at 02:41:30AM +0200, Thomas Gleixner wrote:
-> > > The diffstat of your patch is irrelevant. What's relevant is the
-> > > fact that it is completely unreviewed and that it creates yet
-> > > another user space visible ABI with a noticable lack of
-> > > documentation.
-> 
-> ...
-> 
-> > As to lack of review, we would certainly welcome technical and API
-> > comments but we cannot force them.
+On Thu, May 14, 2020 at 4:24 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Tue, May 12, 2020 at 9:04 AM <dillon.minfei@gmail.com> wrote:
+>
+> > From: dillon min <dillon.minfei@gmail.com>
+> >
+> > Enable the ltdc & ili9341 on stm32429-disco board.
+> >
+> > Signed-off-by: dillon min <dillon.minfei@gmail.com>
+>
+> This mostly looks good but...
+>
+> > +&spi5 {
+> > +       status = "okay";
+> > +       pinctrl-0 = <&spi5_pins>;
+> > +       pinctrl-names = "default";
+> > +       #address-cells = <1>;
+> > +       #size-cells = <0>;
+> > +       cs-gpios = <&gpioc 2 GPIO_ACTIVE_LOW>;
+> > +       dmas = <&dma2 3 2 0x400 0x0>,
+> > +              <&dma2 4 2 0x400 0x0>;
+> > +       dma-names = "rx", "tx";
+>
+> These DMA assignments seem to be SoC things and should
+> rather be in the DTS(I) file where &spi5 is defined, right?
+> stm32f429.dtsi I suppose?
+>
+> It is likely the same no matter which device is using spi5.
+>
+> Yours,
+> Linus Walleij
 
-> Thomas' point isn't that your code needs to be reviewed, it's that
-> trying to squeeze it into the initial merge will, not might, _will_
-> push out the acceptance of SGX.  The same is true for other features
-> we have lined up, e.g. KVM and cgroup support.  It's not a slight on
-> your code, it's just reality at this point.
+Yes, the dma assignments can be moved to stm32f429.dtsi file.
+i will change it.
 
-For the record and for whatever it is worth at this point.  The patch
-has been available in its present form and function for around 14
-months.
+thanks.
 
-So there was plenty of time for its consideration and integration into
-what is being prepared as the final merge candidate.
+best regards.
 
-> > In fact, anyone who reviews the patch will see that the current driver
-> > creates a pointer in the ioctl call to pass downward into the hardware
-> > initialization routines.  Our code simply replaces that pointer with
-> > one supplied by userspace.
-
-> Personally, I'm in favor of adding a reserved placeholder for a
-> token so as to avoid adding a second ioctl() in the event that
-> something gets upstreamed that wants the token.  Ditto for a file
-> descriptor for the backing store in sgx_enclave_create.
-
-That would be a very low cost and forward looking addition.
-
-> > At the very least a modular form of the driver should be
-> > considered that would allow alternate implementations.  Sean
-> > indicated that there was a 'kludgy' approach that would allow an
-> > alternate modular implementation alongside the in-kernel driver.
-> > I believe that Andy has already indicated that may not be an
-> > advisable approach.
-
-> Modularizing the the driver does nothing for your use case.  The
-> "driver" is a relatively lightweight wrapper, removing that is akin
-> to making /dev/sgx/enclave inaccessible, i.e. it doesn't make the
-> EPC tracking and core code go away.  Modularizing the whole thing is
-> flat out not an option, as doing so is not compatible with an EPC
-> cgroup and adds unnecessary complexity to KVM enabling, both of
-> which are highly desired features by pretty much everyone that plans
-> on using SGX.
-
-All well taken technical points, but they don't speak directly to the
-issue at hand.  The potential security issue in all of this is access
-to /dev/sgx/enclave, not the EPC tracking and core code.
-
-Here in a nutshell is the paradox the kernel faces:
-
-No one seems to be disputing the fact that the primary focus of this
-driver will be to support the notion of 'runtime encryption' and
-Confidential Computing.  The whole premise of the concept and economic
-predicate of the initiative is that the owner/manager of the platform
-has no visibility into what is being done on the platform.
-
-If the Linux community believes that standard platform security
-controls can make qualitatively good judgements on what enclave based
-execution is doing, it is effectively making the statement that the
-very concept of runtime encryption and by extension Confidential
-Computing is invalid.
-
-If we accept the concept that Confidential Computing is valid then we
-admit the technology provides the opportunity for unsupervised code
-execution and data manipulation.
-
-Our premise in all of this is that one page of code implementing three
-linked lists is a small price to pay to provide platform owners with
-the opportunity to optionally implement what is effectively 2-factor
-authentication over this process.
-
-Going forward, if we are intellectually honest, all of this suggests
-that adding complexity to the driver with LSM controls makes little
-sense technically.  Since, by definition and economic intent, the
-technology provides tools and infrastructure that allows these
-controls to be evaded.
-
-The notion that entities with adversarial intent would not try and
-take advantage of this flies in the face of everything we know about
-security.
-
-> Andy is right to caution against playing games to squish in-kernel
-> things, but the virtualization snafu is a completely different
-> beast.  E.g. SGX doesn't require fiddling with CR4, won't corrupt
-> random memory across kexec(), doesn't block INIT, etc...  And I'm
-> not advocating long-term shenanigans, I just wanted to point out
-> that there are options for running out-of-tree drivers in the short
-> term, e.g. until proper policy controls land upstream.
-
-It appears that the distributions, at least IBM/RHEL, are going to
-compile this driver in and backport it as well.
-
-What we would recommend at this point is that you and Jarkko do the
-Linux community and beyond a favor and wire up a simple kernel
-command-line parameter that controls the ability of the driver to be
-used, ie. enables/disables access to /dev/sgx/enclave.
-
-Distributions or others can set this command-line parameter by default
-to 'disable' and avoid any possibility of the technology being used
-for nefarious purposes.  Since the technology now appears to be
-focused only on the cloud providers they will certainly be capable of
-configuring their implementations to change the default.
-
-In essence, make the kernel's behavior secure by default.
-
-Best wishes for a pleasant weekend to everyone.
-
-Dr. Greg
-
-As always,
-Dr. Greg Wettstein, Ph.D, Worker      Artisans in autonomously
-Enjellic Systems Development, LLC     self-defensive IOT platforms
-4206 N. 19th Ave.                     and edge devices.
-Fargo, ND  58102
-PH: 701-281-1686                      EMAIL: greg@enjellic.com
-------------------------------------------------------------------------------
-"Intellectuals solve problems; geniuses prevent them."
-                                -- Albert Einstein
+dillon,
