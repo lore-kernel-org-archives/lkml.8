@@ -2,120 +2,133 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MIME_QP_LONG_LINE,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E16C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6089C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCB0A20643
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C06B20657
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:55:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="xTZ9ZgYO"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="JJOGiHxd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgENOyz (ORCPT
+        id S1727915AbgENOzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:54:55 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:35134 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727099AbgENOyy (ORCPT
+        Thu, 14 May 2020 10:55:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39428 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727885AbgENOzG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:54:54 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04EEpneU022552;
-        Thu, 14 May 2020 07:53:52 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pfpt0818;
- bh=x8IBUREuUDXo4FtIk04O7Hcn5Vr/q9rC9/eF3dAW9nk=;
- b=xTZ9ZgYOa+dXgk6XERZ3kqEuKm0pnGxc0SzbyedYihgXLYtLsf9HbU/2MTKDD95ow/up
- lUrd38xeGDDXOpEBRunttACRYKhuw8X5tDiSwMm3kFr9S0qtLH3hBU5ZJu1wVWxQ6CKf
- BLi6wfcaHR71sywLaBpu79Ix+bbWXFsmO5Ht0LxRKEwsdMNxqo5Hia41cPB0G8IDPpBp
- hUFPx8qsMLEGJeEVzBwkKw50QUTT/iDDwZBFI4QOnG9z4CNeh4Y2gXYBWBKzQytO+wzd
- F/bEQ16VG/6XtNuAnGXEinM+m7YWv1aE11aQNIEaL9JNcZ+Li9bpRjaEkiRjuQJGW2zH yg== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0a-0016f401.pphosted.com with ESMTP id 3100xajx64-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 14 May 2020 07:53:52 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 14 May
- 2020 07:53:51 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 14 May
- 2020 07:53:50 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 14 May 2020 07:53:50 -0700
-Received: from [10.193.39.5] (unknown [10.193.39.5])
-        by maili.marvell.com (Postfix) with ESMTP id D79AA3F703F;
-        Thu, 14 May 2020 07:53:42 -0700 (PDT)
-Subject: Re: [EXT] [PATCH 09/15] qed: use new module_firmware_crashed()
-To:     Luis Chamberlain <mcgrof@kernel.org>
-CC:     <jeyu@kernel.org>, <akpm@linux-foundation.org>, <arnd@arndb.de>,
-        <rostedt@goodmis.org>, <mingo@redhat.com>, <aquini@redhat.com>,
-        <cai@lca.pw>, <dyoung@redhat.com>, <bhe@redhat.com>,
-        <peterz@infradead.org>, <tglx@linutronix.de>,
-        <gpiccoli@canonical.com>, <pmladek@suse.com>, <tiwai@suse.de>,
-        <schlad@suse.de>, <andriy.shevchenko@linux.intel.com>,
-        <keescook@chromium.org>, <daniel.vetter@ffwll.ch>,
-        <will@kernel.org>, <mchehab+samsung@kernel.org>,
-        <kvalo@codeaurora.org>, <davem@davemloft.net>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Ariel Elior <aelior@marvell.com>,
-        GR-everest-linux-l2 <GR-everest-linux-l2@marvell.com>
-References: <20200509043552.8745-1-mcgrof@kernel.org>
- <20200509043552.8745-10-mcgrof@kernel.org>
- <2aaddb69-2292-ff3f-94c7-0ab9dbc8e53c@marvell.com>
- <20200509164229.GJ11244@42.do-not-panic.com>
- <e10b611e-f925-f12d-bcd2-ba60d86dd8d0@marvell.com>
- <20200512173431.GD11244@42.do-not-panic.com>
-From:   Igor Russkikh <irusskikh@marvell.com>
-Message-ID: <9badaaa7-ca79-9b6d-aa83-b1c28310ec4d@marvell.com>
-Date:   Thu, 14 May 2020 17:53:41 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101
- Thunderbird/77.0
-MIME-Version: 1.0
-In-Reply-To: <20200512173431.GD11244@42.do-not-panic.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-14_05:2020-05-14,2020-05-14 signatures=0
+        Thu, 14 May 2020 10:55:06 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 763FBC061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:55:06 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id n18so1420859pfa.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:55:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=9HjMnwIKxpe2uw0fQ8jjAuZF11Ao8ED5SVrgc8CsCDU=;
+        b=JJOGiHxd0wdf2wJI5MuPpFjPtxQ7336AKRPSLZeicJkX+D3PP8scBGIsBz7GD3QQvY
+         xiDcWzNAzUxhW5hIUcxoleTzO8oAEVfftJFQNoolwWfsMx2PiEagXOnbpeVhC6GGnS9l
+         rCpsi9hHJ5auXSrHEZxRh3PXFSWNGOSSSXWNEWF9OCfE1HfQFB9QuHvo0E/SlgF2pCZX
+         MZr/D/ye5y3KRfgmGbeVwwineXkE5b65/rb6DPIGi60rhr1wVF5JSJUmpqM7ec8xveV9
+         nqwa8FaksRAXyjj1qSAteUzrVwMtvw6/Dk+GCTMAbo2XbFa0SvjyzQAK6HWKZAdgC+2r
+         c60w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=9HjMnwIKxpe2uw0fQ8jjAuZF11Ao8ED5SVrgc8CsCDU=;
+        b=TEfMFj1QteCAZb9dBWe3JqDAWJElw4jtpZwAgn5BLOTOzmFZIBd8Wh+fKoza8hO8ba
+         ZDWfonrCGv+u4wLWJYlPiPSwbDp/OfmdYnK8KoeiUwqTJIZ1vcnnbfT24NHcExqew8lh
+         gHEqUf2ctvNwEEgWO7dL/lIBBhcle+TpJZmZTYxg3qnkg+ac48dhWDykYO14VYksRuEO
+         kuBsKqE9xOMeutfAJEAilNI0s3nMxi+Z6TOmXiy2UIYehXUkcennhvP6s79HHma3eZaU
+         62e72EWj4oqNRNI6Hqp3Qi16uYI+iAq8OZC2BXUiqT9HvPGfgSxhuKCVG/g6bhkR5waU
+         Kgtw==
+X-Gm-Message-State: AOAM5321j0kwWA6jHRx0sdK4Q8JNjoy04zSJcy9EMqo678bZ5hxxKa7w
+        mYFCbiSzHz+yl+5/J2QHqpwyHA==
+X-Google-Smtp-Source: ABdhPJx7+2eXLTKSXrTOBJ/rU5kJS0lPi+SyNjeJFlAisPsQ3+tH/CNhEfooTQvfWFF33wo1bvaJsw==
+X-Received: by 2002:a65:480c:: with SMTP id h12mr4478831pgs.106.1589468105764;
+        Thu, 14 May 2020 07:55:05 -0700 (PDT)
+Received: from ?IPv6:2600:1010:b044:c0a6:fc3e:abd:d4e0:e1e4? ([2600:1010:b044:c0a6:fc3e:abd:d4e0:e1e4])
+        by smtp.gmail.com with ESMTPSA id nm6sm6815276pjb.34.2020.05.14.07.55.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 May 2020 07:55:05 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [patch V4 part 4 02/24] x86/int3: Avoid atomic instrumentation
+Date:   Thu, 14 May 2020 07:55:02 -0700
+Message-Id: <9DBF3103-4D31-41AA-AC02-9A6F1849AA00@amacapital.net>
+References: <20200514131530.GQ2957@hirez.programming.kicks-ass.net>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <JGross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+In-Reply-To: <20200514131530.GQ2957@hirez.programming.kicks-ass.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+X-Mailer: iPhone Mail (17E262)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> 
-> So do you mean like the changes below?
-> 
-> diff --git a/drivers/net/ethernet/qlogic/qed/qed_debug.c
-> b/drivers/net/ethernet/qlogic/qed/qed_debug.c
-> index f4eebaabb6d0..95cb7da2542e 100644
-> --- a/drivers/net/ethernet/qlogic/qed/qed_debug.c
-> +++ b/drivers/net/ethernet/qlogic/qed/qed_debug.c
-> @@ -7906,6 +7906,7 @@ int qed_dbg_all_data(struct qed_dev *cdev, void
-> *buffer)
->  		rc = qed_dbg_grc(cdev, (u8 *)buffer + offset +
->  				 REGDUMP_HEADER_SIZE, &feature_size);
->  		if (!rc) {
-> +			module_firmware_crashed();
->  			*(u32 *)((u8 *)buffer + offset) =
->  			    qed_calc_regdump_header(cdev, GRC_DUMP,
->  						    cur_engine,
-
-Please remove this invocation. Its not a place where FW crash is happening.
 
 
->  		DP_NOTICE(p_hwfn,
->  			  "The MFW failed to respond to command 0x%08x
-> [param 0x%08x].\n",
->  			  p_mb_params->cmd, p_mb_params->param);
-> +		module_firmware_crashed();
->  		qed_mcp_print_cpu_info(p_hwfn, p_ptt);
+> On May 14, 2020, at 6:15 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+>=20
+> =EF=BB=BFOn Thu, May 14, 2020 at 02:51:32PM +0200, Thomas Gleixner wrote:
+>> Peter Zijlstra <peterz@infradead.org> writes:
+>>> On Wed, May 13, 2020 at 09:57:52PM -0700, Andy Lutomirski wrote:
+>>>>> On Tue, May 5, 2020 at 7:15 AM Thomas Gleixner <tglx@linutronix.de> wr=
+ote:
+>>>>>>=20
+>>>>>> From: Peter Zijlstra <peterz@infradead.org>
+>>>>>>=20
+>>>>>> Use arch_atomic_*() and READ_ONCE_NOCHECK() to ensure nothing untowar=
+d
+>>>>>> creeps in and ruins things.
+>>>>>>=20
+>>>>>> That is; this is the INT3 text poke handler, strictly limit the code
+>>>>>> that runs in it, lest it inadvertenly hits yet another INT3.
+>>>>>=20
+>>>>>=20
+>>>>> Acked-by: Andy Lutomirski <luto@kernel.org>
+>>>>>=20
+>>>>> Does objtool catch this error?
+>>>=20
+>>> It does not. I'll put it on the (endless) todo list..
+>>=20
+>> Well, at least it detects when that code calls out into something which
+>> is not in the non-instrumentable section.
+>=20
+> True, but the more specific problem is that noinstr code can use
+> jump_label/static_call just fine.
+>=20
+> So a more specific test is validating none of that happens in the INT3
+> handler before poke_int3_handler(). Which is what I think Andy was
+> after.
 
-This one is perfect, thanks!
-
-Regards
-  Igor
+Exactly.  I admit that sleep-deprived Andy was actually thinking =E2=80=9Ctg=
+lx and/or PeterZ found this by inspection, and somewhere it escaped objtool=E2=
+=80=99s notice,=E2=80=9D which is sort of the same thing :)=
