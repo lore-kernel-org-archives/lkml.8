@@ -2,153 +2,130 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A971C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7918C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02F68205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DA6D205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:43:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X+1M/fmb"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="CbNLuemM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbgENOlq (ORCPT
+        id S1727850AbgENOnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:41:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37342 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbgENOlo (ORCPT
+        Thu, 14 May 2020 10:43:39 -0400
+Received: from mail.efficios.com ([167.114.26.124]:42118 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbgENOnj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:41:44 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 489D9C05BD09
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:41:44 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id a5so12627755pjh.2
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:41:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IpKyFs1yszxKs0lfKzxRyfm8sy/4V4zXUkzdtSdkHLU=;
-        b=X+1M/fmbQRViUiNWq5i8Wnhzf2ZxZWa44EfPqXFdhzGNfFrnMMGFlC9RiMxXJ091Ma
-         NG/CNZqhzV1Qho131HIRtHnMmH2dd1a0u/Lnxs7n0oy487ROOuwOgwTDBO2IRRCDsPb3
-         hmLh+/ITWKzvGRhNGI8R89GJSU8kqpyPsfmQQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IpKyFs1yszxKs0lfKzxRyfm8sy/4V4zXUkzdtSdkHLU=;
-        b=j2E+1I7cpo6BceyMZ+3uc9kpE3cZScDhA4zYUOnWjdWEAU+35eeRxyNZiVSMScJtgC
-         AAGua+eZAuZEzIH+BoLQz5DnLg5l2/o3l3CStk2PJyfI9CDdO8uvFnusXN9XPGHPUgem
-         RFXQjnQiQx7BNJvkYFL7Izj0KqBTKpNKFa4CoQmGJbiAHphxa3I374awK/WtctvuCFgz
-         eNYihPPw5814JxCNNutF2g9rvGqwEXK3ae+SxwllyTvR2/gk5t+vsH7Z3l9h10dftady
-         lhIV++hhAdQKR6JPIn/zjZ5u/Xl4e/7a1eSZddX2WRTa4gwAM4A7DOeTRS89o3V5XhMn
-         YgtA==
-X-Gm-Message-State: AOAM532QrAZnh06kbYheh3LfuuaP6+i6rfkVnNaMw6DVr7k4I12F5u3r
-        kz132TdevkHYn/nP5hsuRcuzzw==
-X-Google-Smtp-Source: ABdhPJw803NLliwJdw3Qk5o4x+XH/SQaDwZsQ2JFMZ1iNHIhcyH1GCLb3+bU8sx5k7WA09KC4Ps+iQ==
-X-Received: by 2002:a17:902:b608:: with SMTP id b8mr4282064pls.163.1589467303571;
-        Thu, 14 May 2020 07:41:43 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g10sm2542952pfk.103.2020.05.14.07.41.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 07:41:41 -0700 (PDT)
-Date:   Thu, 14 May 2020 07:41:40 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Thu, 14 May 2020 10:43:39 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 4D4B42A5B7D;
+        Thu, 14 May 2020 10:43:38 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Waxj-7Zm_nSu; Thu, 14 May 2020 10:43:37 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id D649D2A5B7C;
+        Thu, 14 May 2020 10:43:37 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com D649D2A5B7C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1589467417;
+        bh=6hptfcSKmRUE+zmXMAzHjHOIYDANTwRCBE8XEZLUToM=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=CbNLuemM5szRYd+im9stxtZ2K4ChiyVuhndUneuss2RHpFJpEt3to5BXLCfxc+6p+
+         dUu4n03eppFxjqS8YygnzTD1LI9vbfLW3E8m9zPkuzGBrNbadBGDlMBbRyMRK2iu/p
+         SmcI4VZGW6XAdUr4/18c3R8A+uGr1h64194DsOhYxk7UQqp50+n8tj8hMjT76hmDHG
+         qwRpsvZ6Bdj6baSozUefaGnLskGdXXjZuvSTGIopxRrljhdUPOmXKFKj7UJkoD2YLI
+         x8lkib4wixj45I2eQVQP7NwZAt878tTBJcfXIKroP0R0UdZntnuWC3dNLTpaWAxIGg
+         TLdrQQnZMtC8g==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id cOCJjQ3pcUwU; Thu, 14 May 2020 10:43:37 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id C4B632A5C4E;
+        Thu, 14 May 2020 10:43:37 -0400 (EDT)
+Date:   Thu, 14 May 2020 10:43:37 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Lutomirski <luto@kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
+        x86 <x86@kernel.org>, paulmck <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH v5 3/6] fs: Enable to enforce noexec mounts or file exec
- through O_MAYEXEC
-Message-ID: <202005140739.F3A4D8F3@keescook>
-References: <20200505153156.925111-1-mic@digikod.net>
- <20200505153156.925111-4-mic@digikod.net>
- <CAEjxPJ7y2G5hW0WTH0rSrDZrorzcJ7nrQBjfps2OWV5t1BUYHw@mail.gmail.com>
- <202005131525.D08BFB3@keescook>
- <202005132002.91B8B63@keescook>
- <CAEjxPJ7WjeQAz3XSCtgpYiRtH+Jx-UkSTaEcnVyz_jwXKE3dkw@mail.gmail.com>
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>, rostedt <rostedt@goodmis.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Message-ID: <311451534.21045.1589467417727.JavaMail.zimbra@efficios.com>
+In-Reply-To: <87eermzk1n.fsf@nanos.tec.linutronix.de>
+References: <20200505134354.774943181@linutronix.de> <20200505134904.166735365@linutronix.de> <835459920.20630.1589420674977.JavaMail.zimbra@efficios.com> <CALCETrXFv59dX5K5R_KO6D5uznD9E8DCDR5fQ7_fCwTTGOgS5Q@mail.gmail.com> <1225010168.20900.1589463536204.JavaMail.zimbra@efficios.com> <87eermzk1n.fsf@nanos.tec.linutronix.de>
+Subject: Re: [patch V4 part 3 09/29] x86/entry/32: Provide macro to emit IDT
+ entry stubs
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEjxPJ7WjeQAz3XSCtgpYiRtH+Jx-UkSTaEcnVyz_jwXKE3dkw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3928 (zclient/8.8.15_GA_3928)
+Thread-Topic: x86/entry/32: Provide macro to emit IDT entry stubs
+Thread-Index: kQKldAjQdVcOVE13Ds4o+qa9RgzKkA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 08:22:01AM -0400, Stephen Smalley wrote:
-> On Wed, May 13, 2020 at 11:05 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Wed, May 13, 2020 at 04:27:39PM -0700, Kees Cook wrote:
-> > > Like, couldn't just the entire thing just be:
-> > >
-> > > diff --git a/fs/namei.c b/fs/namei.c
-> > > index a320371899cf..0ab18e19f5da 100644
-> > > --- a/fs/namei.c
-> > > +++ b/fs/namei.c
-> > > @@ -2849,6 +2849,13 @@ static int may_open(const struct path *path, int acc_mode, int flag)
-> > >               break;
-> > >       }
-> > >
-> > > +     if (unlikely(mask & MAY_OPENEXEC)) {
-> > > +             if (sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_MOUNT &&
-> > > +                 path_noexec(path))
-> > > +                     return -EACCES;
-> > > +             if (sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_FILE)
-> > > +                     acc_mode |= MAY_EXEC;
-> > > +     }
-> > >       error = inode_permission(inode, MAY_OPEN | acc_mode);
-> > >       if (error)
-> > >               return error;
-> > >
-> >
-> > FYI, I've confirmed this now. Effectively with patch 2 dropped, patch 3
-> > reduced to this plus the Kconfig and sysctl changes, the self tests
-> > pass.
-> >
-> > I think this makes things much cleaner and correct.
-> 
-> I think that covers inode-based security modules but not path-based
-> ones (they don't implement the inode_permission hook).  For those, I
-> would tentatively guess that we need to make sure FMODE_EXEC is set on
-> the open file and then they need to check for that in their file_open
-> hooks.
 
-Does there need to be an FMODE_OPENEXEC, or is the presence of
-FMODE_OPEN with FMODE_EXEC sufficient?
+----- Thomas Gleixner <tglx@linutronix.de> wrote:
+> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> writes:
+> > ----- On May 14, 2020, at 12:31 AM, Andy Lutomirski luto@kernel.org wrote:
+> >> On Wed, May 13, 2020 at 6:44 PM Mathieu Desnoyers
+> >> <mathieu.desnoyers@efficios.com> wrote:
+> >> They're needed for all entries except SYSCALL, but they're hidden
+> >> inside helpers in many cases.
+> >
+> > Indeed, on x86-32 the macro SAVE_ALL contains cld. That architecture
+> > appears to be OK.
+> >
+> > What I am concerned about is the idtentry, idtentry_mce_db,
+> > and idtentry_df macros introduced in entry_64.S by this series.
+> > Those are supposed to be technically equivalent to the prior
+> > code, which indeed has the ASM_CLAC but no "cld".
+> >
+> > So maybe the cld happens to be hidden elsewhere, but I'm clearly
+> > missing it ? Or is it not needed for some reason ?
+> 
+> It's needed and it is there where it was forever in error_entry and
+> paranoid_entry.
+
+Ok I simply missed it.
+
+> 
+> It probably makes sense to stick it right after the CLAC.
+
+Indeed.
+
+Thanks!
+
+Mathieu
+
+> 
+> Thanks,
+> 
+>         tglx
+> 
+> 
 
 -- 
-Kees Cook
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
