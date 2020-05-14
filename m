@@ -2,104 +2,144 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3497C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4F1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9AC820728
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:08:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589461685;
-	bh=h306FV35eG189sbShcYa1Vc8owR5Bi5Bad/ZWYSnKyE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XDBs2S1D/BmpDnuFzllmj1qHTFMaquxqEAE9aAZGyQJ9GHEkHzM7dklsDqOZ2nQtn
-	 zLNgTdZJl+d9hxHs7mKKGE5DMWUrKQgfFqtDMyDBkQWFvG8+cDSELLtrt0PKKXqY0e
-	 RokeBBSHJg7wwAJSoCexCkcJZwwTWonzBhJbQ9Rs=
+	by mail.kernel.org (Postfix) with ESMTP id 73BB220728
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:08:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HQy57Gtt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgENNIF (ORCPT
+        id S1726610AbgENNIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:08:05 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33628 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgENNIE (ORCPT
+        Thu, 14 May 2020 09:08:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50922 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725955AbgENNIR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:08:04 -0400
-Received: by mail-oi1-f195.google.com with SMTP id o24so24466565oic.0;
-        Thu, 14 May 2020 06:08:02 -0700 (PDT)
+        Thu, 14 May 2020 09:08:17 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1112C061A0C;
+        Thu, 14 May 2020 06:08:16 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id o5so1064720iow.8;
+        Thu, 14 May 2020 06:08:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TxjLQAmlgCmIbW66ttakmR+UHsu55ZGYYjiNgQ7pD60=;
+        b=HQy57GttiwVxh24sQLfeiQngcOiErLC6lrc6A6arkVum1pGd0PXCrQaHvOCK4hPNEV
+         b/059ZwlWVA1AS8FK1q2/gCJIeug5/mReyn6myQQGKj7Nqz7CVRv86DNFSRbqqL9jNJu
+         tITMdAKorHxeF7YvlIBXB8sc7+tzC2Jw9Tf81bsZ6FJbcXdDfUt6nlqKXBjb5tQmn5MB
+         gsR5CUzH/zKAUZsVkX976vv3QKAm1v8PnXFZ2eAaurKTEVbK4xwSxyYq0RD28bfWf5Cm
+         c7yPr6SgCzeFtV1ZHtYdDrrDUR4DC+KkcElHzh4hDhUaeG4VHhyQV+JNQPmJwrKZiy5d
+         Dj2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fbQaej0+IJeKYT0mug72y3TFgNAGh3pGBDCTmds+4Dg=;
-        b=ggKxPgTE5lsEr2Lp9mtxlQaGy9V5W46OIASq8eTGlIKRtUWAQMZ9Rv8Cbf4vTUSHdq
-         kOWfW4N9COBe9b1BLrLqzn4zBgGI3VhMS08Lhj6bb1t05rBHyoTNMdCU/dZKe42lgwIc
-         C/qbdU6/l93p+hl8epFdr6cn7tDZKyh4w5wQO6iP1+SCqwVZnCL9thCiUBflTOKkYpw6
-         KOJrIwyWWnlO8GFElD+dmMjE9eT7Y5X2dFbY0kFgiuJjKayj96XRgbaKT/QIntkQqdd9
-         2A6IrjtgYVMciuIBp55Br5AMKpEF4aGDsacjMqU9W5s7RTA3c2cvXwH6esSSB9BziaSb
-         S09w==
-X-Gm-Message-State: AOAM530LVQtpFYCTazIu0gt7ORlYb/jkwRY14/TQM2bFd1e1qr59tbtX
-        46gAvd9CAC2omOyg+hEZ2w==
-X-Google-Smtp-Source: ABdhPJw9GMygDyZnfEXw9k49JWUj2GYlVgzzt4Ko7/p8rxdjnplLymQ5zNFFIPHAyaQ6bZG1qZsHbQ==
-X-Received: by 2002:aca:af94:: with SMTP id y142mr4549151oie.111.1589461682497;
-        Thu, 14 May 2020 06:08:02 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l89sm757614otc.32.2020.05.14.06.08.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 06:08:01 -0700 (PDT)
-Received: (nullmailer pid 23923 invoked by uid 1000);
-        Thu, 14 May 2020 13:08:01 -0000
-Date:   Thu, 14 May 2020 08:08:01 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     TY Chang <tychang@realtek.com>
-Cc:     robh+dt@kernel.org, afaerber@suse.de, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
-        linux-realtek-soc@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 4/7] dt-bindings: pinctrl: realtek: Add Realtek DHC SoC
- rtd1195 and rtd1295.
-Message-ID: <20200514130801.GA23147@bogus>
-References: <20200514092125.6875-1-tychang@realtek.com>
- <20200514092125.6875-5-tychang@realtek.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TxjLQAmlgCmIbW66ttakmR+UHsu55ZGYYjiNgQ7pD60=;
+        b=uDIITVugJ18J9MzAI1K+7uH1u3m1je5J4rJ+RkFXN/vQGs5ORJGQUAdFRVwL8CvoUo
+         s9W/PI70ZJjjQr+sk9hHXil6NBfoDeOuhRIzULjy5811CxksvyX+qQPt1UI3UffBzwV4
+         JkoyDMsEIy1/isXnh9zp8w70brsnypgRgsR6tmU+hlBpeCGRGS7Cph9lmNAt6t+J3ZQJ
+         0BfH8CDTbQtNf6yaLQP0QJRlDC7NxkgvnL6yMlud9w/f7MQOvtukjSfz5B+lRRte3ycS
+         WgZRFzVvlwfUSyHRGIc4RWHgBLS0WGIP8iJP3HooxRQDYXXv8XU1ea48WK86PWVCJXAq
+         E4vQ==
+X-Gm-Message-State: AOAM533KS1NSUVIvgJ/r7+LxyfLkzvAIGEZ5mnRVXLJv9oYeMQapcr2P
+        jTmstuOgHgN7+KYVy4ztAmw536EefhUULf30/n8=
+X-Google-Smtp-Source: ABdhPJxFXm/snfV7f+PaeEk0/JpSTrHSkPZMuSqd6hBKK/zxQapVp8rf2U8UIu+qvc9Q33J56Hi8hFlnpuvp0XR2Wlk=
+X-Received: by 2002:a5d:8b8e:: with SMTP id p14mr3979084iol.110.1589461696306;
+ Thu, 14 May 2020 06:08:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200514092125.6875-5-tychang@realtek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1589267017-17294-1-git-send-email-dillon.minfei@gmail.com>
+ <1589267017-17294-4-git-send-email-dillon.minfei@gmail.com>
+ <CACRpkda5VjjBdbruXTi33QBNb=VU6vK2zDE8yyQXoWw7=NQFeg@mail.gmail.com> <a4ebd7cd-5756-0683-135f-0f96be8a4a7b@st.com>
+In-Reply-To: <a4ebd7cd-5756-0683-135f-0f96be8a4a7b@st.com>
+From:   dillon min <dillon.minfei@gmail.com>
+Date:   Thu, 14 May 2020 21:07:40 +0800
+Message-ID: <CAL9mu0Jt_xwo5pJfcx6G3grBuOaxLXvakpEjiB4gV3=bkiq2fg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/5] ARM: dts: stm32: enable ltdc binding with ili9341
+ on stm32429-disco board
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 May 2020 17:21:22 +0800, TY Chang wrote:
-> Add compatible string for RTD1195 and RTD1295.
-> 
-> Signed-off-by: TY Chang <tychang@realtek.com>
-> ---
->  .../bindings/pinctrl/realtek,rtd-pinctrl.yaml | 59 +++++++++++++++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.yaml
-> 
+Hi Alexandre,
 
+On Thu, May 14, 2020 at 8:53 PM Alexandre Torgue
+<alexandre.torgue@st.com> wrote:
+>
+>
+>
+> On 5/14/20 10:24 AM, Linus Walleij wrote:
+> > On Tue, May 12, 2020 at 9:04 AM <dillon.minfei@gmail.com> wrote:
+> >
+> >> From: dillon min <dillon.minfei@gmail.com>
+> >>
+> >> Enable the ltdc & ili9341 on stm32429-disco board.
+> >>
+> >> Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> >
+> > This mostly looks good but...
+> >
+> >> +&spi5 {
+> >> +       status = "okay";
+> >> +       pinctrl-0 = <&spi5_pins>;
+> >> +       pinctrl-names = "default";
+> >> +       #address-cells = <1>;
+> >> +       #size-cells = <0>;
+> >> +       cs-gpios = <&gpioc 2 GPIO_ACTIVE_LOW>;
+> >> +       dmas = <&dma2 3 2 0x400 0x0>,
+> >> +              <&dma2 4 2 0x400 0x0>;
+> >> +       dma-names = "rx", "tx";
+> >
+> > These DMA assignments seem to be SoC things and should
+> > rather be in the DTS(I) file where &spi5 is defined, right?
+> > stm32f429.dtsi I suppose?
+>
+> I agree with Linus, DMA have to be defined in SoC dtsi. And if a board
+> doesn't want to use it, we use the "delete-property".
+Yes, will move to Soc dtsi in next submits.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+i'm working on write a v4l2-m2m driver for dma2d of stm32 to support
+pixel conversion
+alpha blending between foreground and background graphics.
 
-Error: Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.example.dts:24.5-6 syntax error
-FATAL ERROR: Unable to parse input tree
-scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-Makefile:1300: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+as you know, some soc's engineer trying to add this function to drm system.
 
-See https://patchwork.ozlabs.org/patch/1290046
+do you know st's planning about soc's hardware accelerator driver on stm32mp?
+such as chrom-art, will add to drm subsystem via ioctl to access, or to v4l2,
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+thanks.
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+>
+> >
+> > It is likely the same no matter which device is using spi5.
+> >
+> > Yours,
+> > Linus Walleij
+> >
