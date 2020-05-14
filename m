@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0DDC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B855C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 655D32065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C2172065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:03:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483024;
-	bh=0R8mz2R+nq6sMxuEDlBQl2ByD9/WeJn9V11MB1lxkeo=;
+	s=default; t=1589483027;
+	bh=gPckmIztXfjJbXxBAWfzP6ZcwI6+w9im8apwVVJjJn8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ix46svWlSWmJ2aDGLP0o2muiAvJpZWMwjqZm3jFVRST4jpCueLLkyURiMtPWv3VKg
-	 9MfI2yhc5twxq0eNcxTxZnKrJGpxNicYY5zoRekIrH9JKH1evUKTPdX2lEbTMlAEQI
-	 RzytKwklNPFNGKFvIvUJtKrfdHgMrEF8FuGmLx7k=
+	b=b2hD0yQupr0qu9GHABlVFTEFe3GlQCbHVZ4efstUj1xmCaEfasiOKw9Zi9wqEN6tr
+	 QiTR3/20+CfrveOm8WqS9bV/crw3YRIO560fsrLPkG58HUPdOtBXl/DvZWlrM8D4MF
+	 kYvPiSfYp2cvUobe12qnt78lgCme0+r06oQ/ymlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729167AbgENSym (ORCPT
+        id S1729148AbgENSyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:54:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54290 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:54:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729024AbgENSyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:54:22 -0400
+        id S1729020AbgENSyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:54:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE5D820767;
-        Thu, 14 May 2020 18:54:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE80420727;
+        Thu, 14 May 2020 18:54:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482461;
-        bh=0R8mz2R+nq6sMxuEDlBQl2ByD9/WeJn9V11MB1lxkeo=;
+        s=default; t=1589482460;
+        bh=gPckmIztXfjJbXxBAWfzP6ZcwI6+w9im8apwVVJjJn8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ueJ3hq/X4UY4CfD+K3V0BrhGuqBUDj1eW5esosSmbVVE8XXFUZiUI95WN0hqtoX0q
-         mkz0cXQQMVjM+j7qxBcsMhBCP9uDzAPGFs4N4NT5U7qzAZRs6cS7HwSMjrWG/EEEug
-         WxdvLGBmoui/r8ElMkjDSk7SdjL7QJUeQRzy7XKQ=
+        b=zRvDZQv5CPndKeZaMmsr7AFIImCEH4TfNbNo1HqSvIVTeZNFmdr6/QKKP8wM501hd
+         OZS2LjhrsAtIBWz5OKPTwdZTRKYl7x4FXctz6A/g74+zo2mO2Oc2bndkaOxALYMX2v
+         L7B+65JJr1l/GSMy4Q3b/3Cnng4nBVmuE0Vkdm70=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thierry Reding <treding@nvidia.com>,
-        kbuild test robot <lkp@intel.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 06/31] phy: tegra: Select USB_COMMON for usb_get_maximum_speed()
-Date:   Thu, 14 May 2020 14:53:48 -0400
-Message-Id: <20200514185413.20755-6-sashal@kernel.org>
+Cc:     Jiri Kosina <jkosina@suse.cz>,
+        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 05/31] HID: alps: ALPS_1657 is too specific; use U1_UNICORN_LEGACY instead
+Date:   Thu, 14 May 2020 14:53:47 -0400
+Message-Id: <20200514185413.20755-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185413.20755-1-sashal@kernel.org>
 References: <20200514185413.20755-1-sashal@kernel.org>
@@ -61,40 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Jiri Kosina <jkosina@suse.cz>
 
-[ Upstream commit 0d5c9bc7c68009af04bbadf22306467674c6fb90 ]
+[ Upstream commit 185af3e775b693f773d9a4b5a8c3cda69fc8ca0f ]
 
-The usb_get_maximum_speed() function is part of the usb-common module,
-so enable it by selecting the corresponding Kconfig symbol.
+HID_DEVICE_ID_ALPS_1657 PID is too specific, as there are many other
+ALPS hardware IDs using this particular touchpad.
 
-While at it, also make sure to depend on USB_SUPPORT because USB_PHY
-requires that. This can lead to Kconfig conflicts if USB_SUPPORT is not
-enabled while attempting to enable PHY_TEGRA_XUSB.
+Rename the identifier to HID_DEVICE_ID_ALPS_U1_UNICORN_LEGACY in order
+to describe reality better.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://lore.kernel.org/r/20200330101038.2422389-1-thierry.reding@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 640e403b1fd24 ("HID: alps: Add AUI1657 device ID")
+Reported-by: Xiaojian Cao <xiaojian.cao@cn.alps.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/tegra/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/hid/hid-alps.c | 2 +-
+ drivers/hid/hid-ids.h  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
-index a3b1de953fb70..bf4e93b835e91 100644
---- a/drivers/phy/tegra/Kconfig
-+++ b/drivers/phy/tegra/Kconfig
-@@ -1,6 +1,7 @@
- config PHY_TEGRA_XUSB
- 	tristate "NVIDIA Tegra XUSB pad controller driver"
--	depends on ARCH_TEGRA
-+	depends on ARCH_TEGRA && USB_SUPPORT
-+	select USB_COMMON
- 	help
- 	  Choose this option if you have an NVIDIA Tegra SoC.
+diff --git a/drivers/hid/hid-alps.c b/drivers/hid/hid-alps.c
+index 28ca21014bbe4..3489f0af7409c 100644
+--- a/drivers/hid/hid-alps.c
++++ b/drivers/hid/hid-alps.c
+@@ -806,7 +806,7 @@ static int alps_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ 		break;
+ 	case HID_DEVICE_ID_ALPS_U1_DUAL:
+ 	case HID_DEVICE_ID_ALPS_U1:
+-	case HID_DEVICE_ID_ALPS_1657:
++	case HID_DEVICE_ID_ALPS_U1_UNICORN_LEGACY:
+ 		data->dev_type = U1;
+ 		break;
+ 	default:
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 53ac5e1ab4bc5..2a9cec9764cf9 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -81,9 +81,9 @@
+ #define HID_DEVICE_ID_ALPS_U1_DUAL_PTP	0x121F
+ #define HID_DEVICE_ID_ALPS_U1_DUAL_3BTN_PTP	0x1220
+ #define HID_DEVICE_ID_ALPS_U1		0x1215
++#define HID_DEVICE_ID_ALPS_U1_UNICORN_LEGACY         0x121E
+ #define HID_DEVICE_ID_ALPS_T4_BTNLESS	0x120C
+ #define HID_DEVICE_ID_ALPS_1222		0x1222
+-#define HID_DEVICE_ID_ALPS_1657         0x121E
  
+ #define USB_VENDOR_ID_AMI		0x046b
+ #define USB_DEVICE_ID_AMI_VIRT_KEYBOARD_AND_MOUSE	0xff10
 -- 
 2.20.1
 
