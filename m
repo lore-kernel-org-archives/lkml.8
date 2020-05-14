@@ -2,92 +2,164 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 833DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16146C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5311A2065C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3561206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:48:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gqj8+3vM"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kCm4gyCv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728547AbgENTsH (ORCPT
+        id S1728564AbgENTsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:48:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57168 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727124AbgENTsG (ORCPT
+        Thu, 14 May 2020 15:48:30 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:51950 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727124AbgENTs3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 15:48:06 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F12CC061A0C;
-        Thu, 14 May 2020 12:48:06 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id j3so4859987ljg.8;
-        Thu, 14 May 2020 12:48:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UM6g2a97Qr15ZVZrS+9k+t3FhiMgu6vYpKrUc29rMtc=;
-        b=gqj8+3vMqSzbhYdeicKrT7ZL9dAspmfumIkEgUa5NVmAhKmTbHbTU0ne7xSspsTtvo
-         QDNS6LhEzK/vTRFCD4R6TKn7jE8LsBUpGdlaJ59G56Q73lNA6howXV7jxH6z7V+UM/3b
-         YK4gqhhcINO6LwRGjtl7MY6Jr75cNU/R6gESwRTs/0VlaNphJCMUWns9uvx1mBlqcHrK
-         dDNHQYcPVqFGTi4w1phcg13+8+Zy+x60XO8mkM67q1/P+uFcPpZqZZMBbW/12lPn2Rxn
-         Jk7RdLot9MKy/VIVDWOcfBZOvYzMHcrq0PgeGuHck6zmk3nzPe9rD4rWCx6ha9SaQBNm
-         +jVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UM6g2a97Qr15ZVZrS+9k+t3FhiMgu6vYpKrUc29rMtc=;
-        b=Ay3PKxmgPYWxuIM8cjSWVOXPYqYqKkOh6lEaxY9Dr2wDRutWuRUqCWdrf5simIjZe7
-         IG2S6JN5VuQBt5yme3ZJu3RDrSHeu3PYmlg83oq8CjICfKql/IcYnc6WGcMCMCdAAubd
-         wfqWRDDVVxAPaqMNDI8GOm7FM+smQ4QWPSfc6eMcCnCvFvUVxJpFN/hU5EX9bensRaEI
-         a37u78Fplbl3EnroSGBbHAm/PB3uimJoBNjMW5dELUf6AUC7nPP6kUyrCnd+HQM2tySU
-         SgIf9rB6iMgPx5ND9Kv3Pru6wv7IiedRbTW6Zo7P6N/fwXNaoQfGqGUw7OAOEpLMM1EN
-         S7jQ==
-X-Gm-Message-State: AOAM531aOK/BizGhl8mC+d5pz0CqgLcoaiDCx1TgEf7J+WJw6XQKr3eM
-        lFltFSQiwubVlD/q3uhZvevhrhWUlI5fCXwGDtg=
-X-Google-Smtp-Source: ABdhPJyMCv4AqK4iIfdpObzAoqu6HvSqELmU5tnvzFHwHgi+1VOiVItheZA5sLB4ESsu0low1fmDNzxv8sP6aCaJTY4=
-X-Received: by 2002:a2e:9641:: with SMTP id z1mr3534986ljh.215.1589485684571;
- Thu, 14 May 2020 12:48:04 -0700 (PDT)
+        Thu, 14 May 2020 15:48:29 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04EJmMmb101895;
+        Thu, 14 May 2020 14:48:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589485702;
+        bh=L8yaIk6s3rQNnlVa1+GsvW8B3fjy5acHx+zekh7EIek=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=kCm4gyCvWRHJIrlwnSoE2YKbDrJZGO49JyM2hiz3wTnJf+rs7EFeyvtfZwXSNQiQL
+         A9faduoFhItlqvDDLBjzb2+TGhncLiPKEj3bck6QRF63FvjTDEKzs34SqasALG7oNH
+         K4Vpn5LiwpkCQNi64WuerL3TB7C6zHBfY4v0rmac=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04EJmMXd123049
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 14 May 2020 14:48:22 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 14
+ May 2020 14:48:21 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 14 May 2020 14:48:21 -0500
+Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04EJmLPI008923;
+        Thu, 14 May 2020 14:48:21 -0500
+Subject: Re: [PATCH net-next 1/2] dt-bindings: net: dp83822: Add TI dp83822
+ phy
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+References: <20200514173055.15013-1-dmurphy@ti.com>
+ <20200514173055.15013-2-dmurphy@ti.com> <20200514183912.GW499265@lunn.ch>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <2f03f066-38d0-a7c7-956d-e14356ca53b3@ti.com>
+Date:   Thu, 14 May 2020 14:38:54 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200512174607.9630-1-anders.roxell@linaro.org>
- <CAADnVQK6cka9i_GGz3OcjaNiEQEZYwgCLsn-S_Bkm-OWPJZb_w@mail.gmail.com> <alpine.LRH.2.21.2005141243120.53197@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
-In-Reply-To: <alpine.LRH.2.21.2005141243120.53197@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Thu, 14 May 2020 12:47:53 -0700
-Message-ID: <CAADnVQJRsknY7+3zwXR-N4e6oC6E87Z32Msg4EXaM8iyB=R3qQ@mail.gmail.com>
-Subject: Re: [PATCH] security: fix the default value of secid_to_secctx hook
-To:     James Morris <jamorris@linux.microsoft.com>
-Cc:     Anders Roxell <anders.roxell@linaro.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200514183912.GW499265@lunn.ch>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 12:43 PM James Morris
-<jamorris@linux.microsoft.com> wrote:
->
-> On Wed, 13 May 2020, Alexei Starovoitov wrote:
->
-> > James,
-> >
-> > since you took the previous similar patch are you going to pick this
-> > one up as well?
-> > Or we can route it via bpf tree to Linus asap.
->
-> Routing via your tree is fine.
+Andrew
 
-Perfect.
-Applied to bpf tree. Thanks everyone.
+On 5/14/20 1:39 PM, Andrew Lunn wrote:
+> On Thu, May 14, 2020 at 12:30:54PM -0500, Dan Murphy wrote:
+>> Add a dt binding for the TI dp83822 ethernet phy device.
+>>
+>> CC: Rob Herring <robh+dt@kernel.org>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   .../devicetree/bindings/net/ti,dp83822.yaml   | 49 +++++++++++++++++++
+>>   1 file changed, 49 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/net/ti,dp83822.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/ti,dp83822.yaml b/Documentation/devicetree/bindings/net/ti,dp83822.yaml
+>> new file mode 100644
+>> index 000000000000..60afd43ad3b6
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/ti,dp83822.yaml
+>> @@ -0,0 +1,49 @@
+>> +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
+>> +# Copyright (C) 2020 Texas Instruments Incorporated
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/net/ti,dp83822.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: TI DP83822 ethernet PHY
+>> +
+>> +allOf:
+>> +  - $ref: "ethernet-controller.yaml#"
+>> +
+>> +maintainers:
+>> +  - Dan Murphy <dmurphy@ti.com>
+>> +
+>> +description: |
+>> +  The DP83822 is a low-power, single-port, 10/100 Mbps Ethernet PHY. It
+>> +  provides all of the physical layer functions needed to transmit and receive
+>> +  data over standard, twisted-pair cables or to connect to an external,
+>> +  fiber-optic transceiver. Additionally, the DP83822 provides flexibility to
+>> +  connect to a MAC through a standard MII, RMII, or RGMII interface
+> Hi Dan
+>
+> You say 10/100 Mbps Ethernet PHY, but then list RGMII?
+Copied from the data sheet.
+>
+>> +
+>> +  Specifications about the charger can be found at:
+>> +    http://www.ti.com/lit/ds/symlink/dp83822i.pdf
+>> +
+>> +properties:
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  ti,signal-polarity-low:
+>> +    type: boolean
+>> +    description: |
+>> +       DP83822 PHY in Fiber mode only.
+>> +       Sets the DP83822 to detect a link drop condition when the signal goes
+>> +       high.  If not set then link drop will occur when the signal goes low.
+> Are we talking about the LOS line from the SFP cage? In the SFF/SFP
+> binding we have:
+>
+> - los-gpios : GPIO phandle and a specifier of the Receiver Loss of Signal
+>    Indication input gpio signal, active (signal lost) high
+>
+> It would be nice to have a consistent naming.
+
+> Is it required the LOS signal is connected to the PHY? Russell King
+> has some patches which allows the Marvell PHY to be used as a media
+> converter. In that setting, i think the SFP signals are connected to
+> GPIOs not the PHY. The SFP core can then control the transmit disable,
+> module insertion detection etc. So i'm wondering if you need a
+> property to indicate the LOS is not connected to the PHY?
+
+The LED_1 pin can be strapped to be an input to the chip for signal loss 
+detection.  This is an optional feature of the PHY.
+
+This property defines the polarity for the 822 LED_1/GPIO input pin.
+
+The LOS is not required to be connected to the PHY.  If the preferred 
+method is to use the SFP framework and Processor GPIOs then I can remove 
+this from the patch set.
+
+And if a user would like to use the feature then they can add it.
+
+Dan
+
+
+>
+> 	 Andrew
