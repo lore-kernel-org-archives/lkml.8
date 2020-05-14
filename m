@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7083BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6D6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9D5206F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD41E20727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:09:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dfyS/sP4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tltjcWtT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbgENVJp (ORCPT
+        id S1728201AbgENVJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 17:09:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41664 "EHLO
+        Thu, 14 May 2020 17:09:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727777AbgENVJn (ORCPT
+        by vger.kernel.org with ESMTP id S1728043AbgENVJm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 17:09:43 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF3ADC061A0F;
-        Thu, 14 May 2020 14:09:42 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id l19so5087253lje.10;
-        Thu, 14 May 2020 14:09:42 -0700 (PDT)
+        Thu, 14 May 2020 17:09:42 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2138C061A0C;
+        Thu, 14 May 2020 14:09:40 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id c21so7487lfb.3;
+        Thu, 14 May 2020 14:09:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=MbEwAEDY+UIz4Bw5+QFZkmbm4gisWV5nZMVAP0V+gWg=;
-        b=dfyS/sP46qW3uvPVJQkdARtLyOipAh/Fz8Npnv+Bs1bbVNFTnOZFrWXV9okA/ZiMbg
-         CB0NH+AvHjZgfAHA+DTHZ0BwQkTg6A+t0+5r3K/drjuIC63WOkMo25JRUDiROIk+/tCQ
-         D8Qh0g4fdkthrjZ420wJ2/dYoWexp+lVhcjSMLe0LSXzmoqf579SDJ+L/jdCGfwULGE0
-         oH6EljARn+2wA3ooEGqHJt0oHllyQT7wfHRTYoCBMy+UmQ1+nkuSdRjkcsUsZZdoTsqX
-         S8fLeSizceMcqArQRoQ+8xXHTgE6vIxqnxCkGgZqYxL/dBfDMrTZ7P8P1mlZ92E4UthP
-         nqkw==
+        bh=EO0vr0FBuxVa7FqS3Iq4jMbQpH1iOzHD8PnLZeBEDCg=;
+        b=tltjcWtTVsozKzAf9N+yxZwewU2cNg30qCpbUSnD4xjqn3IaFYSc11cT2s/BUL/eo2
+         eXwYVd2jl6wBp8ekYPoinV7qyWBI/eE5FVU7CkPyuC6GI/SwOTI2Pq2XJYf4r+e9QBZe
+         ygFDJQSL/D8hYv2L+KzG2ZXUD8oeB42Ne3vya1sRjlz6jo3ZU3a+StfRucZXUdIkXsxo
+         FnlijK74UmStroYupJDYMm37bA8DF9v08j9v7/owoQgiy/Eqg4nj2S0ltJdI/YfsABS1
+         wmHuOppJGxLYcVHNerVfrh3N1QHnk5JJC3QvOcnEzuIgRHDB7kDzhX9+uw4uovyPCQlU
+         PwVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MbEwAEDY+UIz4Bw5+QFZkmbm4gisWV5nZMVAP0V+gWg=;
-        b=uZwtf8MQVeOWeeEBb+igUYzOMjmGCYIXjokaqFbm5ADk2/JpxjMRWqmQChjDh1nkng
-         lzcgCfoNW4o043atU7YubOmZIuFIbTgrNTJKzmR4BOECo5oiTv+EJ8ZrYwRjk1r9+++9
-         PfkjPz8Ec2r31aoc25qikSBJ1JV0zQ0oAFE0hq+ky3wk/BwDltvpQ60erY4SJq08mIzQ
-         K/sTZLYbp6EI6d8T7yixKbfEAbqyQAVDRuHwvwgh2cgROCrdJkfyj6HP/gsNZCJdwPwQ
-         kksbeY9J/NWSxyAi5SqFYeHqGT4/PCR9WWwmCNW2tvbAYDpDwESFFbHigFuDObdwauTa
-         OGaA==
-X-Gm-Message-State: AOAM531LF+cKg/W1LrgJFq+tQu0xTPk8aOFS3IaXJwKrkq9DMcFlyb9a
-        Vrrj/igyWQTaDmneiPDtX1A=
-X-Google-Smtp-Source: ABdhPJxPYojjqv+Q6EeNKYsxCP1N3bnO5bJhCCmwZemIP2H/4hZRmku6zi509u41Zy3B51R9aFzG2Q==
-X-Received: by 2002:a2e:361a:: with SMTP id d26mr103704lja.171.1589490581256;
-        Thu, 14 May 2020 14:09:41 -0700 (PDT)
+        bh=EO0vr0FBuxVa7FqS3Iq4jMbQpH1iOzHD8PnLZeBEDCg=;
+        b=FplEEN7y2ZZ9qDxUIWr05eKOL2ZV2jrIprdlQ7ELZMzJC7g77vwqhwT9deWlLw+QCT
+         VETDWeXB30YOCaSRoOhgbfljotBa5fyKtnrgvy5wrvKiNLTLgKcAPpNrz3LBqGQ0Csa/
+         cuaFNkGoJ20gnks01Wr14hAo8Scqmx7mnrXA5kEig1SOesHbXc3uQzOXw+1VPEER2wdi
+         NPND72zG6PBDJD2kAz9AHMOQbPMvhQeldXSM0CW2Vla10Qh4J2WRADRLCsdJMGrJlf8p
+         NJ6O8P8CmuQ6IjXIm1673z0j+Ov+vLME/Jx0Be+xksVsCye90YWeZBPPbhco/Vy8BDKW
+         g0JA==
+X-Gm-Message-State: AOAM533Y8ZIAXo+IMl3rWBTe4oKbg2DL7J6kO4ZbtoevHacRfTn9Rc3i
+        6DTk4Zhr2fSRw39BSs/fAEk=
+X-Google-Smtp-Source: ABdhPJwmXn6PJe8MV8dlPU1VcNAyZYVcG4jdW1N/ABx/HZNFEa2KXiju6MxUhsgJEX3Zjn5+oOQ5Kg==
+X-Received: by 2002:a19:d55:: with SMTP id 82mr55733lfn.89.1589490579255;
+        Thu, 14 May 2020 14:09:39 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id g3sm45215ljk.27.2020.05.14.14.09.40
+        by smtp.gmail.com with ESMTPSA id g3sm45215ljk.27.2020.05.14.14.09.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 14:09:40 -0700 (PDT)
+        Thu, 14 May 2020 14:09:38 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -68,9 +68,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Dan Carpenter <dan.carpenter@oracle.com>
 Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 4/4] media: staging: tegra-vde: Power-cycle hardware on probe
-Date:   Fri, 15 May 2020 00:08:47 +0300
-Message-Id: <20200514210847.9269-5-digetx@gmail.com>
+Subject: [PATCH v1 2/4] media: staging: tegra-vde: Runtime PM is always available on Tegra
+Date:   Fri, 15 May 2020 00:08:45 +0300
+Message-Id: <20200514210847.9269-3-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200514210847.9269-1-digetx@gmail.com>
 References: <20200514210847.9269-1-digetx@gmail.com>
@@ -81,34 +81,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VDE partition is left turned ON after bootloader on most devices, hence
-let's ensure that it's turned OFF in order to lower power leakage while
-hardware is idling by turning it ON and OFF during of the driver's probe.
+Runtime PM is always available on Tegra nowadays since commit 40b2bb1b132a
+("ARM: tegra: enforce PM requirement"), hence the case of unavailable RPM
+doesn't need to be handled.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/staging/media/tegra-vde/vde.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/staging/media/tegra-vde/vde.c | 16 ----------------
+ 1 file changed, 16 deletions(-)
 
 diff --git a/drivers/staging/media/tegra-vde/vde.c b/drivers/staging/media/tegra-vde/vde.c
-index b64e35b86fb4..3be96c36bf43 100644
+index 803e5dda4bb5..85cbbc8f70d3 100644
 --- a/drivers/staging/media/tegra-vde/vde.c
 +++ b/drivers/staging/media/tegra-vde/vde.c
-@@ -1068,6 +1068,14 @@ static int tegra_vde_probe(struct platform_device *pdev)
+@@ -1068,17 +1068,8 @@ static int tegra_vde_probe(struct platform_device *pdev)
  	pm_runtime_use_autosuspend(dev);
  	pm_runtime_set_autosuspend_delay(dev, 300);
  
-+	/*
-+	 * VDE partition may be left ON after bootloader, hence let's
-+	 * power-cycle it in order to put hardware into a predictable lower
-+	 * power state.
-+	 */
-+	pm_runtime_get_sync(dev);
-+	pm_runtime_put(dev);
-+
+-	if (!pm_runtime_enabled(dev)) {
+-		err = tegra_vde_runtime_resume(dev);
+-		if (err)
+-			goto err_misc_unreg;
+-	}
+-
  	return 0;
  
+-err_misc_unreg:
+-	misc_deregister(&vde->miscdev);
+-
  err_deinit_iommu:
+ 	tegra_vde_iommu_deinit(vde);
+ 
+@@ -1093,13 +1084,6 @@ static int tegra_vde_remove(struct platform_device *pdev)
+ {
+ 	struct tegra_vde *vde = platform_get_drvdata(pdev);
+ 	struct device *dev = &pdev->dev;
+-	int err;
+-
+-	if (!pm_runtime_enabled(dev)) {
+-		err = tegra_vde_runtime_suspend(dev);
+-		if (err)
+-			return err;
+-	}
+ 
+ 	pm_runtime_dont_use_autosuspend(dev);
+ 	pm_runtime_disable(dev);
 -- 
 2.26.0
 
