@@ -2,103 +2,104 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64727C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3497C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C489206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:07:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BHM3/sHL"
+	by mail.kernel.org (Postfix) with ESMTP id A9AC820728
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:08:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589461685;
+	bh=h306FV35eG189sbShcYa1Vc8owR5Bi5Bad/ZWYSnKyE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XDBs2S1D/BmpDnuFzllmj1qHTFMaquxqEAE9aAZGyQJ9GHEkHzM7dklsDqOZ2nQtn
+	 zLNgTdZJl+d9hxHs7mKKGE5DMWUrKQgfFqtDMyDBkQWFvG8+cDSELLtrt0PKKXqY0e
+	 RokeBBSHJg7wwAJSoCexCkcJZwwTWonzBhJbQ9Rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726117AbgENNHV (ORCPT
+        id S1726184AbgENNIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:07:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50772 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725955AbgENNHV (ORCPT
+        Thu, 14 May 2020 09:08:05 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33628 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbgENNIE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:07:21 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9F48C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:07:20 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id r25so24452088oij.4
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:07:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8NV16GFiBJNWCA0OVx7TbffCUg4QNsB+1OOfXXBvkrE=;
-        b=BHM3/sHLyHFtZ7CWU6vrg7iC1dP7OaBu6AlwERvOEbdy+sktUiTjSSoZeflxfx2UPK
-         +DbFveiaLHQVJa6xozL6NSuk0ge7HqIxE6UuvPIuE4P0XfK+9wDjWNTBzAc87Hv8TpGp
-         NW6pgR4YZI+qDuZLhXMc4pNDYTTq2P25kwqDY/4BVCxHsON4MnQXdiFu4KBjt+Db+O5r
-         n8uU0fs7eCyA309jWThGwpxDoXsc0d1s8UkFV1zOkQYvO/1zpdpvGh+pO3+qvvozjJTH
-         c7Qaz8ghzHoqmbUwPlTxxzAxchBzzUbWU/Nzxw9HetUwy8t3g/R1Z/ShncVL7aBr8oVM
-         FC7A==
+        Thu, 14 May 2020 09:08:04 -0400
+Received: by mail-oi1-f195.google.com with SMTP id o24so24466565oic.0;
+        Thu, 14 May 2020 06:08:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8NV16GFiBJNWCA0OVx7TbffCUg4QNsB+1OOfXXBvkrE=;
-        b=PUZOHtOKZAh61oNZkG+7Mn6tWxHmM4eYttHrnMs9eqs6IsyttDk6OJQ4swhJeeER/o
-         c8B+BDisWLicVPq/T38qx6IMmvNLA+kqU87OnRJC6G2+ezFqYpNCo1A+7z8yX1sttf59
-         us4iG8mLNBwv1vU/07P+3ugUwFr4MhGYKH0EmyFLSiMrDZrz8H7SpAFEjXNsbND/rzzR
-         qHRqX2+z2ztA7iJ1LLCfnG8E7pnqYPL3CFniWBfsrKeUVgRFthLmTJFsGUNzFyWLecSt
-         amX8oKCMJAGuRsDPc2b4ZifbXl0BhN8x4Io5scYbUJFOfckGW229PSnyuYsfb1lFLEbz
-         pJaw==
-X-Gm-Message-State: AGi0PuZkbdu3yW5JpXeBm2D9dqxRYDFiFWqi8fqVeawvBC8PmFykuhJt
-        J+9MmDav/Dmp7JnH1E0lIbv6a4P6EISUs+nsS/nmdQ==
-X-Google-Smtp-Source: APiQypLh3YOlCumYeNfR0wBo1cSOvrScMD4+LC8kqWJLvd4YTjxxwL3dmtu58EkQWEzaq4z0cF3O1J1SolCmY7kZy/U=
-X-Received: by 2002:aca:3254:: with SMTP id y81mr10461078oiy.172.1589461639927;
- Thu, 14 May 2020 06:07:19 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fbQaej0+IJeKYT0mug72y3TFgNAGh3pGBDCTmds+4Dg=;
+        b=ggKxPgTE5lsEr2Lp9mtxlQaGy9V5W46OIASq8eTGlIKRtUWAQMZ9Rv8Cbf4vTUSHdq
+         kOWfW4N9COBe9b1BLrLqzn4zBgGI3VhMS08Lhj6bb1t05rBHyoTNMdCU/dZKe42lgwIc
+         C/qbdU6/l93p+hl8epFdr6cn7tDZKyh4w5wQO6iP1+SCqwVZnCL9thCiUBflTOKkYpw6
+         KOJrIwyWWnlO8GFElD+dmMjE9eT7Y5X2dFbY0kFgiuJjKayj96XRgbaKT/QIntkQqdd9
+         2A6IrjtgYVMciuIBp55Br5AMKpEF4aGDsacjMqU9W5s7RTA3c2cvXwH6esSSB9BziaSb
+         S09w==
+X-Gm-Message-State: AOAM530LVQtpFYCTazIu0gt7ORlYb/jkwRY14/TQM2bFd1e1qr59tbtX
+        46gAvd9CAC2omOyg+hEZ2w==
+X-Google-Smtp-Source: ABdhPJw9GMygDyZnfEXw9k49JWUj2GYlVgzzt4Ko7/p8rxdjnplLymQ5zNFFIPHAyaQ6bZG1qZsHbQ==
+X-Received: by 2002:aca:af94:: with SMTP id y142mr4549151oie.111.1589461682497;
+        Thu, 14 May 2020 06:08:02 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l89sm757614otc.32.2020.05.14.06.08.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 06:08:01 -0700 (PDT)
+Received: (nullmailer pid 23923 invoked by uid 1000);
+        Thu, 14 May 2020 13:08:01 -0000
+Date:   Thu, 14 May 2020 08:08:01 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     TY Chang <tychang@realtek.com>
+Cc:     robh+dt@kernel.org, afaerber@suse.de, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
+        linux-realtek-soc@lists.infradead.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 4/7] dt-bindings: pinctrl: realtek: Add Realtek DHC SoC
+ rtd1195 and rtd1295.
+Message-ID: <20200514130801.GA23147@bogus>
+References: <20200514092125.6875-1-tychang@realtek.com>
+ <20200514092125.6875-5-tychang@realtek.com>
 MIME-Version: 1.0
-References: <CANpmjNNeSnrAgfkskE5Y0NNu3-DS6hk+SwjkBunrr8FRxwwT-Q@mail.gmail.com>
- <20200513111057.GN2957@hirez.programming.kicks-ass.net> <CANpmjNMariz3-keqwUsLHVrpk2r7ThLSKtkhHxTDa3SEGeznhA@mail.gmail.com>
- <20200513123243.GO2957@hirez.programming.kicks-ass.net> <20200513124021.GB20278@willie-the-truck>
- <CANpmjNM5XW+ufJ6Mw2Tn7aShRCZaUPGcH=u=4Sk5kqLKyf3v5A@mail.gmail.com>
- <20200513132440.GN2978@hirez.programming.kicks-ass.net> <CANpmjNM5dD1VH0hoQwsZYEL=mhWunKwAEJMQgASzHSN019OCnw@mail.gmail.com>
- <20200514112142.GV2978@hirez.programming.kicks-ass.net> <20200514120104.GD4280@willie-the-truck>
- <20200514122735.GW2978@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200514122735.GW2978@hirez.programming.kicks-ass.net>
-From:   Marco Elver <elver@google.com>
-Date:   Thu, 14 May 2020 15:07:08 +0200
-Message-ID: <CANpmjNPmZv6TBQJ93TRuxCxJCpvJy8+XS5u9+ucOE2eEebEw9Q@mail.gmail.com>
-Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Will Deacon <will@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514092125.6875-5-tychang@realtek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 May 2020 at 14:27, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Thu, May 14, 2020 at 01:01:04PM +0100, Will Deacon wrote:
->
-> > > +#if __has_feature(undefined_sanitizer)
-> >
-> > Hmm, this might want to be __has_feature(undefined_behavior_sanitizer)
-> > (and damn is that hard for a Brit to type out!)
->
-> (I know right, it should be behaviour, dammit!)
->
-> I tried without the condition, eg.:
->
-> +#define __no_sanitize_undefined \
-> +               __attribute__((no_sanitize("undefined")))
->
-> and it still generated UBSAN gunk.
+On Thu, 14 May 2020 17:21:22 +0800, TY Chang wrote:
+> Add compatible string for RTD1195 and RTD1295.
+> 
+> Signed-off-by: TY Chang <tychang@realtek.com>
+> ---
+>  .../bindings/pinctrl/realtek,rtd-pinctrl.yaml | 59 +++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.yaml
+> 
 
-Which ubsan calls are left? I'm trying to reproduce.
 
-Thanks,
--- Marco
+My bot found errors running 'make dt_binding_check' on your patch:
+
+Error: Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.example.dts:24.5-6 syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:312: recipe for target 'Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/pinctrl/realtek,rtd-pinctrl.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+Makefile:1300: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+See https://patchwork.ozlabs.org/patch/1290046
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
