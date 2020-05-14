@@ -2,91 +2,159 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AB1C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 020D0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3F682070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC30820758
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:10:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FQhI3XH8"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Tq5YkrOS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbgENOIz (ORCPT
+        id S1726908AbgENOKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:08:55 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:32971 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728003AbgENOIw (ORCPT
+        Thu, 14 May 2020 10:10:21 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:60102 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726050AbgENOKU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:08:52 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589465332; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=8+Vie2hsxCQbkdc6lWiHV4L35G4vuVJJaMS8++AIXMw=; b=FQhI3XH8vmphZoluqZU4zAzUVPGTnm9YsbIyDvRXDCs1VCWLxyr+rurSJuIOvSQ+LDcv6G0g
- IedxAD9/mdptbD3xjcWKPgCaifLItd0feId7Af0U3sMS8UgJdCLgFe3BEoY6cJS5SwtBTdbU
- iboeFXsErctxKFrnCV0FyK/ANDQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ebd50dc.7f730a40a180-smtp-out-n03;
- Thu, 14 May 2020 14:08:28 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E8CD3C433F2; Thu, 14 May 2020 14:08:27 +0000 (UTC)
-Received: from jhugo-perf-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2305AC44BC3;
-        Thu, 14 May 2020 14:08:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2305AC44BC3
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-To:     arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     manivannan.sadhasivam@linaro.org, bjorn.andersson@linaro.org,
-        wufan@codeaurora.org, pratanan@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [RFC PATCH 8/8] MAINTAINERS: Add entry for QAIC driver
-Date:   Thu, 14 May 2020 08:07:46 -0600
-Message-Id: <1589465266-20056-9-git-send-email-jhugo@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1589465266-20056-1-git-send-email-jhugo@codeaurora.org>
-References: <1589465266-20056-1-git-send-email-jhugo@codeaurora.org>
+        Thu, 14 May 2020 10:10:20 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04EE3BuV021940;
+        Thu, 14 May 2020 16:10:04 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=nGjr1Mu7bkzp2bxZhBiDxdZ++d1WWKpOhGKs+gral3M=;
+ b=Tq5YkrOS4LSWphjCakeNMmmhH06rm4W1vFs1ggV9DtufKvfk5Y3v1ebF47urfBqaEIvu
+ 9EDT1fYMFH9XeMRHOXzXPmHi6DDs2PQjs50X46K8+dLT2aWJbrwtu41mpPkXTVspPwYY
+ DvujEIxtq4i3el5pULfAP9w7oRlMpOd0hwg18pZ+1JXHfercoJ68fx+mUKzGE/vsJa0e
+ hZcIqlP2wjlM0eVow+1OZi1f+ixVkUtXPxl8Z6dJ9eG8pDzWcs2CHJkzM0WepTJ8NpYn
+ XgZVtwY3IioxxDIu+iiibtCPkpE/NqiBZN0k++bpODuRDykzg1hdj9F3pKJtV5EXcJF+ Ow== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 3100vykuda-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 May 2020 16:10:04 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CD25210002A;
+        Thu, 14 May 2020 16:10:03 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B967B2BF9CD;
+        Thu, 14 May 2020 16:10:03 +0200 (CEST)
+Received: from lmecxl0912.tpe.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 14 May
+ 2020 16:09:56 +0200
+Subject: Re: [PATCH v2 2/3] ARM: dts: stm32: enable l3gd20 on stm32429-disco
+ board
+To:     <dillon.minfei@gmail.com>, <robh+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <broonie@kernel.org>,
+        <p.zabel@pengutronix.de>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>, <dillonhua@gmail.com>
+References: <1589269010-18472-1-git-send-email-dillon.minfei@gmail.com>
+ <1589269010-18472-3-git-send-email-dillon.minfei@gmail.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <da9fbb80-571d-1217-4028-e413a0c7db84@st.com>
+Date:   Thu, 14 May 2020 16:09:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <1589269010-18472-3-git-send-email-dillon.minfei@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-14_04:2020-05-14,2020-05-14 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add MAINTAINERS entry for the Qualcomm Cloud AI 100 driver.
+Hi Dillon
 
-Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+On 5/12/20 9:36 AM, dillon.minfei@gmail.com wrote:
+> From: dillon min <dillon.minfei@gmail.com>
+> 
+> L3gd20, st mems motion sensor, 3-axis digital output gyroscope,
+> connect to stm32f429 via spi5
+> 
+> Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> ---
+> 
+> Hi Alexandre,
+> 
+> V2:
+>      1, insert blank line at stm32f420-disco.dts line 143
+>      2, add more description about l3gd20 in commit message
+> 
+> V1:
+>      enable l3gd20 dts binding on stm32f429-disco
+> 
+> thanks.
+> 
+> dillon,
+> 
+>   arch/arm/boot/dts/stm32f429-disco.dts | 25 +++++++++++++++++++++++++
+>   1 file changed, 25 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
+> index 30c0f67..1bfb903 100644
+> --- a/arch/arm/boot/dts/stm32f429-disco.dts
+> +++ b/arch/arm/boot/dts/stm32f429-disco.dts
+> @@ -49,6 +49,8 @@
+>   #include "stm32f429.dtsi"
+>   #include "stm32f429-pinctrl.dtsi"
+>   #include <dt-bindings/input/input.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/gpio/gpio.h>
+>   
+>   / {
+>   	model = "STMicroelectronics STM32F429i-DISCO board";
+> @@ -127,3 +129,26 @@
+>   	pinctrl-names = "default";
+>   	status = "okay";
+>   };
+> +
+> +&spi5 {
+> +	status = "okay";
+> +	pinctrl-0 = <&spi5_pins>;
+> +	pinctrl-names = "default";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	cs-gpios = <&gpioc 1 GPIO_ACTIVE_LOW>;
+> +	dmas = <&dma2 3 2 0x400 0x0>,
+> +	       <&dma2 4 2 0x400 0x0>;
+> +	dma-names = "rx", "tx";
+> +
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b816a45..7822d07 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13962,6 +13962,13 @@ F:	Documentation/devicetree/bindings/media/qcom,camss.txt
- F:	Documentation/media/v4l-drivers/qcom_camss.rst
- F:	drivers/media/platform/qcom/camss/
- 
-+QUALCOMM CLOUD AI 100 (QAIC) DRIVER
-+M:	Jeffrey Hugo <jhugo@codeaurora.org>
-+L:	linux-arm-msm@vger.kernel.org
-+S:	Supported
-+F:	drivers/misc/qaic/
-+F:	include/uapi/misc/qaic.h
-+
- QUALCOMM CORE POWER REDUCTION (CPR) AVS DRIVER
- M:	Niklas Cassel <nks@flawful.org>
- L:	linux-pm@vger.kernel.org
--- 
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+You added this spi5 node in this patch but also in the display series. I 
+will have issue to merge. Even if I could fix it easily, as you are 
+going to resend, the good practice could be to have several patches in 
+one series: one patch for spi5 controller, another for gyro and another 
+for display.
+
+And also same remark than Linus did in display series move DMA to soc 
+dtsi file please.
+
+
+> +	l3gd20: l3gd20@0 {
+> +		compatible = "st,l3gd20-gyro";
+> +		spi-max-frequency = <10000000>;
+> +		st,drdy-int-pin = <2>;
+> +		interrupt-parent = <&gpioa>;
+> +		interrupts = <1 IRQ_TYPE_EDGE_RISING>,
+> +				<2 IRQ_TYPE_EDGE_RISING>;
+> +		reg = <0>;
+> +		status = "okay";
+> +	};
+> +};
+> 
