@@ -2,211 +2,128 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E87C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94B5E2065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:47:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589471230;
-	bh=VdNGNytUoEDqByba4R9ST8kEqlNqY6M19e3zbSRuc/8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=b5lbHlgBB2EqsgwHjhAlPJOA2cxGBw+saq3FjohDsaage20hcaAH22pX/iD8mafVF
-	 J7ldKoaZGIMxlP8aKpYR3h/YW6yj7Vy0e/BeI0qg5KuZOPWHNHQLS3Tf9+bHxSJoWv
-	 JUc2U3L1EMTWtP2UWaWwF9RzI1/8Em7gmJE0acpk=
+	by mail.kernel.org (Postfix) with ESMTP id 95D042065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:47:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="IEKo0HbM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgENPrJ (ORCPT
+        id S1727924AbgENPrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 11:47:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39646 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726056AbgENPrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 11:47:09 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29FC920657;
-        Thu, 14 May 2020 15:47:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589471228;
-        bh=VdNGNytUoEDqByba4R9ST8kEqlNqY6M19e3zbSRuc/8=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=iPs0Ot0Jz8Lr3N/DIQe+XwjCn9ILcTojcQoM7Yx3CRRZ2ux7tKv75GCqI0dPmL4Zc
-         pN0HV0z8bkkyFu6luIwgWjsMu9uANH0c+lpXNiQDQAYkYaPD87b+GjFCpD+rM+w692
-         mWFltUN5b2rGlI0nu59UmUdAQnAPkmxs1zWXn5V4=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id ADB3635229C5; Thu, 14 May 2020 08:47:07 -0700 (PDT)
-Date:   Thu, 14 May 2020 08:47:07 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Josh Triplett <josh@joshtriplett.org>
-Subject: Re: [PATCH 08/10] rcu: Allow to deactivate nocb on a CPU
-Message-ID: <20200514154707.GL2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200513164714.22557-1-frederic@kernel.org>
- <20200513164714.22557-9-frederic@kernel.org>
- <20200513183831.GV2869@paulmck-ThinkPad-P72>
- <20200513224525.GA18303@lenoir>
+        Thu, 14 May 2020 11:47:20 -0400
+Received: from mail-eopbgr60061.outbound.protection.outlook.com ([40.107.6.61]:18497
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726056AbgENPrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 11:47:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eiZFUDzSlP03cr9jDhoN+eonsTX5LsQk4q8nQveIeN+Rj7JPnnO2NvVZgTIvnT+CeWoXhvV4oE70AjKS913hNAZALLiFg3CSF5xYC4scCGlkuMBA3g1iDA5vgnLmPhDYcCKnDFs0a7KDSoiGXqADnkoFPc8GqN9T1EpOmcR6lPipND1SakgiPd7/q4YsJiry6ZjQONur0HJzE+wqT4+TVyEBxPtUO4sl9k3eNBbhX7mrQfaqdK6MWKJlCDEYeRgtyyF7250pfk01DbljqlwjxOA7OFSDgbSRtPIdcYetIOBIj8C5zPhE1lZZYFtQTh30ExuaZh7tjNo7eEJd15zPNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=blj7HusYKjnxJ+nHwmQ1Hu1li3cGXcsQvgPaRYcohoI=;
+ b=Jij88atslg8G57iYNv6sOkoPO1KZb2El0zT9mp0sqKldJgZ/J1rDopkxxhcc8bFInguS08GhKmA8/umagjxqmQx1kMLDVtj5P74y+IR66cZngkXoXUidBLu/4PbcV5ig61VDnltPPsvARbTsa5LPdYmvbLTmJBrAxoZnFNBbciGAhRHJY1cjG2CZdpcOX1eWjdeJzFexcwv6tv/EQxn5OtvsWHpSTlwoypQ9AdBYGRfR1pLvZWiqD2Nl3f/iQ6Ff8WugBj0DyuwxNF0cZ/pzPIVX9KAP9gOqWdpRnJRZOxXDCSNix8w8XmOALpTaLcfLWdSjm38Gc9gKfNuU/3/mAQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=blj7HusYKjnxJ+nHwmQ1Hu1li3cGXcsQvgPaRYcohoI=;
+ b=IEKo0HbMKOayJzLkxsoiQMHykjbJACDMUS6c4nJGXOTWUQHMqaElazVXmEIowi4TV+Jp8q04QdG3V2p8fZythfW4rSZK07GLFdQHf65pIf3XVBzWuoZoD2c6Y8rWabcSYoTWTSY/816GUYwnjvdFpD8Z3HF10/5MKFhIivpzPcM=
+Received: from AM0PR04MB7041.eurprd04.prod.outlook.com (2603:10a6:208:19a::13)
+ by AM0PR04MB6036.eurprd04.prod.outlook.com (2603:10a6:208:146::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.25; Thu, 14 May
+ 2020 15:47:17 +0000
+Received: from AM0PR04MB7041.eurprd04.prod.outlook.com
+ ([fe80::1cab:2a78:51cb:2a00]) by AM0PR04MB7041.eurprd04.prod.outlook.com
+ ([fe80::1cab:2a78:51cb:2a00%9]) with mapi id 15.20.2979.033; Thu, 14 May 2020
+ 15:47:17 +0000
+From:   Christian Herber <christian.herber@nxp.com>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Oleksij Rempel <o.rempel@pengutronix.de>
+CC:     Mark Rutland <mark.rutland@arm.com>, Marek Vasut <marex@denx.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        David Jander <david@protonic.nl>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: RE: [EXT] Re: [PATCH net-next v1] net: phy: tja11xx: add cable-test
+ support
+Thread-Topic: [EXT] Re: [PATCH net-next v1] net: phy: tja11xx: add cable-test
+ support
+Thread-Index: AQHWKSv6TM4lhcjgTkGu0RMmbRa8+qimSMKAgAAGAACAATATgIAAGLOAgAAiuCA=
+Date:   Thu, 14 May 2020 15:47:16 +0000
+Message-ID: <AM0PR04MB704193C938ECC28DE9A1B28E86BC0@AM0PR04MB7041.eurprd04.prod.outlook.com>
+References: <20200513123440.19580-1-o.rempel@pengutronix.de>
+ <20200513133925.GD499265@lunn.ch>
+ <20200513174011.kl6l767cimeo6dpy@pengutronix.de>
+ <20200513180140.GK499265@lunn.ch>
+ <20200514120959.b24cszsmkjvfzss6@pengutronix.de>
+ <20200514133823.GO527401@lunn.ch>
+In-Reply-To: <20200514133823.GO527401@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: lunn.ch; dkim=none (message not signed)
+ header.d=none;lunn.ch; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [88.130.52.52]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 48379456-cf7a-41ce-d83c-08d7f81e1467
+x-ms-traffictypediagnostic: AM0PR04MB6036:
+x-microsoft-antispam-prvs: <AM0PR04MB6036329F597B9F4549ED0E8486BC0@AM0PR04MB6036.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 040359335D
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: g3e/UiDrmEPGy03CIL1pnArMr32LNuqK2BMJfBbKmgFL01vhhiNKsXmi7AGOi0oO0ddp8NHFrWBHu1x3sqzsuv7ICKU/lQ3AL63E6qWYNkIN73yO1mF4lA0hY38J1VhBRvbpNIpZyiRHtr1H1Hl4f0/lED9RGHc5qixR/ZXn+Dw/owgnQeRLipUzgarK5/VlQ6n5nsQW7tTKWnSY4Iu6jrNp2KnVl1sBMQQitQBOrZ6yMiE9wwmvOm1gWjbE1P62pG9UlVKxpOeyLHzrXh9u1o2xadURyxEdVoGmX3ZOs+L8Cp/E9pPSoTY7xod2h2EmcMKEGdLQCd4DIZ5U4HoJRXi0sC78gDW00bgrcVcZXa5i00jtDcAHPGSI/pldrs5cGlRjt7HkK8FC5jroYP9xJipwA/1KBer9nfK8psRZ/1AJ51cIzGyZyowniPkUubaP
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB7041.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(366004)(346002)(39860400002)(376002)(52536014)(66446008)(64756008)(86362001)(5660300002)(66556008)(66946007)(66476007)(76116006)(2906002)(4326008)(71200400001)(8676002)(8936002)(55016002)(6506007)(4744005)(478600001)(26005)(44832011)(9686003)(316002)(7416002)(110136005)(7696005)(54906003)(186003)(33656002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 56Ow/SNMS2QW2YUXj7IjJxCvZGRiWH2HWr6ecYL/FC1dvK1noXk1V8EY8bji5/xRE7pDvNmhnz3qpTg8PihLo6899/zC43tTPZr5OW84V5VvVpqoPNIr6yKplAQrvKTPSDO6rCxaHs4dtQQ/iWzR3YPJj5tVrkhe9qxdOX1vfMHXlS8drB59MXCr1PHpOj28PmGQuk58f0LnKYGfJxllmZGKxClJ6Qmkatmpbi5iqBED6eKotZ9GjjEpg7xpJPZAIGlsJ1TF42J+bo0PJK8FEJT/oqZRuz85oV9CPrMtShRCff1XuIDUoXO5zbrjFkUwF5vidEUAh+pxvLHNtCv7NMIiik/l4bvU3u01f5laHfRh7hrDFNpqDqRG/GHLkehIEPvm668SHeqXELu+PMh6UVVGUzFPt/nj7wq3XtqqDVD/9Wd9NOBeHZMw5yZ1fKQxDB1V9ikImnYUWN+xr8XM76oAKk1tI1uO8+HbQO7e6Go=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513224525.GA18303@lenoir>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 48379456-cf7a-41ce-d83c-08d7f81e1467
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2020 15:47:16.8454
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: TGoYxAOCz4mdmL8svaUeb5ToM/6WfUMjOnRQBnI36b5yCkaAAMjAR+7P16fLIA9Yen2AQCy5nqF7EpAJ1zUB12ta7ao/Iabwo79Y41JVByA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6036
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 12:45:26AM +0200, Frederic Weisbecker wrote:
-> On Wed, May 13, 2020 at 11:38:31AM -0700, Paul E. McKenney wrote:
-> > On Wed, May 13, 2020 at 06:47:12PM +0200, Frederic Weisbecker wrote:
-> > > +static void __rcu_nocb_rdp_deoffload(struct rcu_data *rdp)
-> > > +{
-> > > +	unsigned long flags;
-> > > +	struct rcu_node *rnp = rdp->mynode;
-> > > +
-> > > +	printk("De-offloading %d\n", rdp->cpu);
-> > > +	kthread_park(rdp->nocb_cb_kthread);
-> > 
-> > I am a bit concerned about this, because from this point until the
-> > end of this function, no RCU callbacks can be invoked for this CPU.
-> > This could be a problem if there is a callback flood in progress, and
-> > such callback floods are in fact one reason that the sysadm might want
-> > to be switching from offloaded to non-offloaded.  Is it possible to
-> > move this kthread_park() to the end of this function?  Yes, this can
-> > result in concurrent invocation of different callbacks for this CPU,
-> > but because we have excluded rcu_barrier(), that should be OK.
-> > 
-> > Or is there some failure mode that I am failing to see?  (Wouldn't
-> > be the first time...)
-> 
-> Heh I actually worried about that. Ok the issue is that it leaves
-> a window where nocb_cb and local caller of rcu_do_batch() can
-> compete but the local caller doesn't lock the nocb_lock.
+Hi Andrew,
 
-Indeed, my nightmare scenario involves some sort of preemption or
-similar long delay at that point.  Callbacks pile up, and then OOM!
+> On Wed, May 13, 2020 at 03:39:00PM +0200, Andrew Lunn wrote:
+>> On Thu, May 14, 2020 at 02:09:59PM +0200, Oleksij Rempel wrote:
+>>  ETHTOOL_A_CABLE_RESULT_CODE_ACTIVE_PARTNER - the link partner is active=
+.
+>>
+>>      The TJA1102 is able to detect it if partner link is master.
+>>
+> master is not a cable diagnostics issue. This is a configuration
+> issue.
 
-> So there are two ways to solve that.:
-> 
-> 1)  - set cblist->offloaded = 0 locally
->     - From the kthread while calling rcu_do_batch():
->       check the value of cblist->offloaded everytime after
->       we call rcu_nocb_lock() and stop messsing with the
->       cblist and return when we see cblist->offloaded == 0
->     - Allow to handle cblist locally without taking the nocb_lock
->     - Park kthread
-> 
-> But there I'm worried about races. Imagine we have:
-> 
-> 
->       Kthread                     Local
->       --------                   -------
->       rcu_do_batch() {
->           rcu_nocb_lock()
->           do stuff with cblist
->           rcu_nocb_unlock()
->                                  rcu_nocb_lock()
->                                  set cblist->offloaded = 0
->                                  rcu_nocb_unlock()
->                                  ===> INT or preemption
->                                  rcu_do_batch() {
->                                      do stuff with cblist
-> 
-> Are we guaranteed that the Local CPU will see the updates from
-> the kthread while calling rcu_do_batch()? I would tend to say
-> yes but I'm not entirely sure...
-> 
-> Oh wait, that solution also implies that we can't re-enqueue
-> extracted callbacks if we spent took much time in threaded
-> rcu_do_batch(), as the cblist may have been offloaded while
-> we executed the extracted callbacks.
-> 
-> That's a lot of corner cases to handle, which is why I prefer
-> the other solution:
-> 
-> 2) enum cblist_offloaded {
->         CBLIST_NOT_OFFLOADED,
->         CBLIST_(DE)OFFLOADING,
->         CBLIST_OFFLOADED
->    }
-> 
->  - Locally set cblist->offloaded =  CBLIST_DEOFFLOADING
->  - From the kthread while calling rcu_do_batch(), do as
->    usual.
->  - Local CPU can call rcu_do_batch() and if it sees CBLIST_DEOFFLOADING,
->    rcu_nocb_lock() will take the lock.
->  - Park kthread
->  - Locally set cblist->offloaded =  CBLIST_NOT_OFFLOADED
->  - Local calls to rcu_do_batch() won't take the lock anymore.
+Master is very relevant for cable diagnostics, as a cable measurement shoul=
+d not be done with an active link partner on the other end (i.e. a PHY in m=
+aster mode trying to train the link).
 
-This last seems best to me.  The transition from CBLIST_NOT_OFFLOADED
-to CBLIST_OFFLOADING of course needs to be on the CPU in question with
-at least bh disabled.  Probably best to be holding rcu_nocb_lock(),
-but that might just be me being overly paranoid.
+So if the measurement detects an active link partner disturbing the measure=
+ment, it is important to report this to the user.
 
-> > > +static long rcu_nocb_rdp_deoffload(void *arg)
-> > > +{
-> > > +	struct rcu_data *rdp = arg;
-> > > +
-> > > +	WARN_ON_ONCE(rdp->cpu != raw_smp_processor_id());
-> > > +	__rcu_nocb_rdp_deoffload(rdp);
-> > > +
-> > > +	return 0;
-> > > +}
-> > 
-> > For example, is the problem caused by invocations of this
-> > rcu_nocb_rdp_deoffload() function?
-> 
-> How so?
-
-It looked to me like it wasn't excluding either rcu_barrier() or CPU
-hotplug.  It might also not have been pinning onto the CPU in question,
-but that might just be me misremembering.  Then again, I didn't see a
-call to it, so maybe its callers set things up appropriately.
-
-OK, I will bite...  What is the purpose of rcu_nocb_rdp_deoffload()?  ;-)
-
-> > But if so, do we really need to acquire rcu_state.barrier_mutex?
-> 
-> Indeed it was probably not needed if we parked the kthread before
-> anything, as we would have kept the callbacks ordering.
-> 
-> But now if we allow concurrent callbacks execution during the small
-> window, we'll need it.
-
-Agreed!  And I do believe that concurrent callback execution will
-prove better than a possibly indefinite gap in callback execution.
-
-> > That aside, if it is possible to do the switch without interrupting
-> > callback invocation?  Or is your idea that because we are always executing
-> > on the CPU being deoffloaded, that CPU has been prevented from posting
-> > callbacks in any case?
-> 
-> No in the tiny window between kthread_park() and the irqs being disabled,
-> the workqueue can be preempted and thus call_rcu() can be called anytime.
-
-Agreed!  ;-)
-
-> > If the latter, does that mean that it is not
-> > possible to deoffload offlined CPUs?  (Not sure whether this restriction
-> > is a real problem, but figured that I should ask.)
-> 
-> Ah in the case of offlined CPUs I simply call the function directly from the CPU
-> that disables the nocb remotely. So we remotely park the kthread (that we
-> always do anyway) and set offlined.
-
-And the cpus_read_lock() in rcu_nocb_cpu_deoffload() prevents that CPU
-from coming back online, so looks good!
-
-							Thanx, Paul
+Christian
