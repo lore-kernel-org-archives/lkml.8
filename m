@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A3AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9299C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06F4920643
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A156420643
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:09:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483335;
-	bh=asT13lXLqrmQ9DkSvcmPjMnK3Y0L+jOZqMCgAppTv88=;
+	s=default; t=1589483343;
+	bh=fgwqYlmvbIZhbZ+Axt+VfYBsWO6kKrxtHD5E8q5cdxI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ph3eW6eE4pAzv9EmiPM1UnEDRCWcIUGWSTvsLYLgLkM1pE1OUHYxQZYFzM3I7fkAE
-	 CM4orqktyQDgT9QbGOooQoRIUhEMkTeQ9zn6O7zodfaqZ9XzKRIjq9lpMtMVJlOBDG
-	 2C4ZBicJlNEF5o2zg8E7ngEUsLkhs69MZy5jOznI=
+	b=0HUDgBSofiOKjsWH9efnUQXGlnwJ4GI4YEGy9I28GBwH3bufbfy8sHB+hNEH6xdj0
+	 AIJsOyNhdfvUYyHhnFuFLrR1TqM7aLGb2rjTUTbdnu77DyvcBIcVpn2Ylb0OwFcWY3
+	 Vr/+wCihnUia5Z1FR6RgvO118PBaDfEzo430q/9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbgENTIy (ORCPT
+        id S1730223AbgENTJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:08:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52024 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:09:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728568AbgENSxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:53:05 -0400
+        id S1728547AbgENSxC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:53:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1B0E206DC;
-        Thu, 14 May 2020 18:53:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E52BA206A5;
+        Thu, 14 May 2020 18:53:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482384;
-        bh=asT13lXLqrmQ9DkSvcmPjMnK3Y0L+jOZqMCgAppTv88=;
+        s=default; t=1589482382;
+        bh=fgwqYlmvbIZhbZ+Axt+VfYBsWO6kKrxtHD5E8q5cdxI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qbSK0XTnpPnglzj4KycwzvtVqoPDJ+PQwvA4GMpH7runCOesbWwKUSa69ZGp6oJzd
-         AvHqi+mSJ8hrzdpN/tjFufGd+RzuEAN4Foq+xqaR9wKDNUjLeE62Sjslcgbn1I0IkZ
-         HfFQbWz5fEu9ZhZBR4YzC9axGqRt+Hn6RUTuI+O0=
+        b=f8Yrzbzlek2UMNCKMLplTFh581qWaX2/DdHsl7cQwi3Nvw2tF4+rHx9HSLi4v4aF4
+         VqdLedzKpfaPiD3P6YjxL+EB/yPIiv7qObu+VXiNyKl4S+3puZs+buYufL8s1ez8Sh
+         f54X65Sm59xr3Y/F/6UQRVdxAbPz+k/xMg1USFio=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 61/62] crypto: xts - simplify error handling in ->create()
-Date:   Thu, 14 May 2020 14:51:46 -0400
-Message-Id: <20200514185147.19716-61-sashal@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 59/62] gcc-10: mark more functions __init to avoid section mismatch warnings
+Date:   Thu, 14 May 2020 14:51:44 -0400
+Message-Id: <20200514185147.19716-59-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185147.19716-1-sashal@kernel.org>
 References: <20200514185147.19716-1-sashal@kernel.org>
@@ -59,91 +58,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 732e540953477083082e999ff553622c59cffd5f ]
+[ Upstream commit e99332e7b4cda6e60f5b5916cf9943a79dbef902 ]
 
-Simplify the error handling in the XTS template's ->create() function by
-taking advantage of crypto_drop_skcipher() now accepting (as a no-op) a
-spawn that hasn't been grabbed yet.
+It seems that for whatever reason, gcc-10 ends up not inlining a couple
+of functions that used to be inlined before.  Even if they only have one
+single callsite - it looks like gcc may have decided that the code was
+unlikely, and not worth inlining.
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+The code generation difference is harmless, but caused a few new section
+mismatch errors, since the (now no longer inlined) function wasn't in
+the __init section, but called other init functions:
+
+   Section mismatch in reference from the function kexec_free_initrd() to the function .init.text:free_initrd_mem()
+   Section mismatch in reference from the function tpm2_calc_event_log_size() to the function .init.text:early_memremap()
+   Section mismatch in reference from the function tpm2_calc_event_log_size() to the function .init.text:early_memunmap()
+
+So add the appropriate __init annotation to make modpost not complain.
+In both cases there were trivially just a single callsite from another
+__init function.
+
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/xts.c | 28 +++++++++++-----------------
- 1 file changed, 11 insertions(+), 17 deletions(-)
+ drivers/firmware/efi/tpm.c | 2 +-
+ init/initramfs.c           | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/crypto/xts.c b/crypto/xts.c
-index 29efa15f14954..dbdd8af629e69 100644
---- a/crypto/xts.c
-+++ b/crypto/xts.c
-@@ -379,15 +379,15 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
+diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
+index 31f9f0e369b97..55b031d2c9890 100644
+--- a/drivers/firmware/efi/tpm.c
++++ b/drivers/firmware/efi/tpm.c
+@@ -16,7 +16,7 @@
+ int efi_tpm_final_log_size;
+ EXPORT_SYMBOL(efi_tpm_final_log_size);
  
- 	err = -EINVAL;
- 	if (alg->base.cra_blocksize != XTS_BLOCK_SIZE)
--		goto err_drop_spawn;
-+		goto err_free_inst;
- 
- 	if (crypto_skcipher_alg_ivsize(alg))
--		goto err_drop_spawn;
-+		goto err_free_inst;
- 
- 	err = crypto_inst_setname(skcipher_crypto_instance(inst), "xts",
- 				  &alg->base);
- 	if (err)
--		goto err_drop_spawn;
-+		goto err_free_inst;
- 
- 	err = -EINVAL;
- 	cipher_name = alg->base.cra_name;
-@@ -400,20 +400,20 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
- 
- 		len = strlcpy(ctx->name, cipher_name + 4, sizeof(ctx->name));
- 		if (len < 2 || len >= sizeof(ctx->name))
--			goto err_drop_spawn;
-+			goto err_free_inst;
- 
- 		if (ctx->name[len - 1] != ')')
--			goto err_drop_spawn;
-+			goto err_free_inst;
- 
- 		ctx->name[len - 1] = 0;
- 
- 		if (snprintf(inst->alg.base.cra_name, CRYPTO_MAX_ALG_NAME,
- 			     "xts(%s)", ctx->name) >= CRYPTO_MAX_ALG_NAME) {
- 			err = -ENAMETOOLONG;
--			goto err_drop_spawn;
-+			goto err_free_inst;
- 		}
- 	} else
--		goto err_drop_spawn;
-+		goto err_free_inst;
- 
- 	inst->alg.base.cra_flags = alg->base.cra_flags & CRYPTO_ALG_ASYNC;
- 	inst->alg.base.cra_priority = alg->base.cra_priority;
-@@ -437,17 +437,11 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
- 	inst->free = free;
- 
- 	err = skcipher_register_instance(tmpl, inst);
--	if (err)
--		goto err_drop_spawn;
--
--out:
--	return err;
--
--err_drop_spawn:
--	crypto_drop_skcipher(&ctx->spawn);
-+	if (err) {
- err_free_inst:
--	kfree(inst);
--	goto out;
-+		free(inst);
-+	}
-+	return err;
+-static int tpm2_calc_event_log_size(void *data, int count, void *size_info)
++static int __init tpm2_calc_event_log_size(void *data, int count, void *size_info)
+ {
+ 	struct tcg_pcr_event2_head *header;
+ 	int event_size, size = 0;
+diff --git a/init/initramfs.c b/init/initramfs.c
+index 8ec1be4d7d512..7a38012e1af74 100644
+--- a/init/initramfs.c
++++ b/init/initramfs.c
+@@ -542,7 +542,7 @@ void __weak free_initrd_mem(unsigned long start, unsigned long end)
  }
  
- static struct crypto_template crypto_tmpl = {
+ #ifdef CONFIG_KEXEC_CORE
+-static bool kexec_free_initrd(void)
++static bool __init kexec_free_initrd(void)
+ {
+ 	unsigned long crashk_start = (unsigned long)__va(crashk_res.start);
+ 	unsigned long crashk_end   = (unsigned long)__va(crashk_res.end);
 -- 
 2.20.1
 
