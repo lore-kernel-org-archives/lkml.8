@@ -2,144 +2,111 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16466C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F6BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC3662073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589462157;
-	bh=v6MXwV/gG1H4E+LPHWAerasj/q/Dsnckh5u8rtbYcbI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=SFUHnTsvm5mfEFn5JmdJmBOEfLPcyL3TH8UKC1v5AvMIx7ZJ989ZBaG1tEeFU6GPX
-	 G2pYfui4JMQxbo+15RqIpKyKRQSeZOIo27tMrNS4ke5WNyzCacuLpoNsq3AhgG713b
-	 b6T7XXm2FZv/LZQkH+HCrQnO+ImB5qiAbRyecSjs=
+	by mail.kernel.org (Postfix) with ESMTP id 2C571206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:16:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="K1nuKyO9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbgENNP5 (ORCPT
+        id S1727072AbgENNQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:15:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59894 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726037AbgENNP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:15:56 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        Thu, 14 May 2020 09:16:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726037AbgENNQK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 09:16:10 -0400
+Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DF0FC061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:16:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=TpLw4BdJT0JveDtO4r1F8bJeWxiAnJbyCG4f/8DEh+w=; b=K1nuKyO9v7e/WFY//uVAMPcEwp
+        WJkX8ripvNzw4cpzMXS5ArXCwZKrcYEs+sIWd8kzPYCTpBQEcsHezZ9EFkUv9VaH5DGHTxgV1b8tg
+        Du61eFF8etGcz5sT5bqOP41re+HBV9eAHnLjCT1i9o86+/WDGiGzMF4zyi8tv6JeUbZVoROf7UU09
+        GbARtX6P6qoiashn9XcLC5gaWETrYhjFms99a4VN8BRR6U5j7nxyXNe8LajLnj4syY4u+V9LLbhBJ
+        VfuRY7tK5GvuFMSARfBklSW14Kn8h6cHwCBxoM8z0NEnXd0CrMGI5h+A9bpD+b1t+mzZKUoam7qHu
+        88SUcd/g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jZDi0-0007nQ-O6; Thu, 14 May 2020 13:15:32 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B327206DA;
-        Thu, 14 May 2020 13:15:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589462156;
-        bh=v6MXwV/gG1H4E+LPHWAerasj/q/Dsnckh5u8rtbYcbI=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=XB6Ugjlx1W02LH3VZWK0fqRmtjYZSNl3xW6tdtxis9HDm4ZOUr75Aq2XAHcOg2XDj
-         EYLZkgbIWPq0x/CprqqaTBIrrj/qGQii0SrkXoVlo6d8P3nz7JPKXPOXRJmQOqTH1i
-         M9Z22+FO6a0yNNOu7fSdROa1ZtoLKX87+Qg9RbSM=
-Message-ID: <4e5bf0e3bf055e53a342b19d168f6cf441781973.camel@kernel.org>
-Subject: Re: [PATCH] ceph: don't return -ESTALE if there's still an open file
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Luis Henriques <lhenriques@suse.com>
-Cc:     Ilya Dryomov <idryomov@gmail.com>, ceph-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>
-Date:   Thu, 14 May 2020 09:15:54 -0400
-In-Reply-To: <20200514124845.GA12559@suse.com>
-References: <20200514111453.GA99187@suse.com>
-         <8497fe9a11ac1837813ee5f14b6ebae8fa6bf707.camel@kernel.org>
-         <20200514124845.GA12559@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 166C4300455;
+        Thu, 14 May 2020 15:15:30 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C62A6213C8B61; Thu, 14 May 2020 15:15:30 +0200 (CEST)
+Date:   Thu, 14 May 2020 15:15:30 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [patch V4 part 4 02/24] x86/int3: Avoid atomic instrumentation
+Message-ID: <20200514131530.GQ2957@hirez.programming.kicks-ass.net>
+References: <20200505134926.578885807@linutronix.de>
+ <20200505135313.517429268@linutronix.de>
+ <CALCETrXVQsdPafvH56_nF+CKU94wgq-T71=EB6eSBnz70Cd0Rw@mail.gmail.com>
+ <20200514093257.GT2978@hirez.programming.kicks-ass.net>
+ <87h7wiznl7.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87h7wiznl7.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-05-14 at 13:48 +0100, Luis Henriques wrote:
-> On Thu, May 14, 2020 at 08:10:09AM -0400, Jeff Layton wrote:
-> > On Thu, 2020-05-14 at 12:14 +0100, Luis Henriques wrote:
-> > > Similarly to commit 03f219041fdb ("ceph: check i_nlink while converting
-> > > a file handle to dentry"), this fixes another corner case with
-> > > name_to_handle_at/open_by_handle_at.  The issue has been detected by
-> > > xfstest generic/467, when doing:
-> > > 
-> > >  - name_to_handle_at("/cephfs/myfile")
-> > >  - open("/cephfs/myfile")
-> > >  - unlink("/cephfs/myfile")
-> > >  - open_by_handle_at()
-> > > 
-> > > The call to open_by_handle_at should not fail because the file still
-> > > exists and we do have a valid handle to it.
-> > > 
-> > > Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> > > ---
-> > >  fs/ceph/export.c | 13 +++++++++++--
-> > >  1 file changed, 11 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/fs/ceph/export.c b/fs/ceph/export.c
-> > > index 79dc06881e78..8556df9d94d0 100644
-> > > --- a/fs/ceph/export.c
-> > > +++ b/fs/ceph/export.c
-> > > @@ -171,12 +171,21 @@ struct inode *ceph_lookup_inode(struct super_block *sb, u64 ino)
-> > >  
-> > >  static struct dentry *__fh_to_dentry(struct super_block *sb, u64 ino)
-> > >  {
-> > > +	struct ceph_inode_info *ci;
-> > >  	struct inode *inode = __lookup_inode(sb, ino);
-> > > +
-> > >  	if (IS_ERR(inode))
-> > >  		return ERR_CAST(inode);
-> > >  	if (inode->i_nlink == 0) {
-> > > -		iput(inode);
-> > > -		return ERR_PTR(-ESTALE);
-> > > +		bool is_open;
-> > > +		ci = ceph_inode(inode);
-> > > +		spin_lock(&ci->i_ceph_lock);
-> > > +		is_open = __ceph_is_file_opened(ci);
-> > > +		spin_unlock(&ci->i_ceph_lock);
-> > > +		if (!is_open) {
-> > > +			iput(inode);
-> > > +			return ERR_PTR(-ESTALE);
-> > > +		}
-> > >  	}
-> > >  	return d_obtain_alias(inode);
-> > >  }
-> > 
-> > Thanks Luis. Out of curiousity, is there any reason we shouldn't ignore
-> > the i_nlink value here? Does anything obviously break if we do?
+On Thu, May 14, 2020 at 02:51:32PM +0200, Thomas Gleixner wrote:
+> Peter Zijlstra <peterz@infradead.org> writes:
+> > On Wed, May 13, 2020 at 09:57:52PM -0700, Andy Lutomirski wrote:
+> >> On Tue, May 5, 2020 at 7:15 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> >
+> >> > From: Peter Zijlstra <peterz@infradead.org>
+> >> >
+> >> > Use arch_atomic_*() and READ_ONCE_NOCHECK() to ensure nothing untoward
+> >> > creeps in and ruins things.
+> >> >
+> >> > That is; this is the INT3 text poke handler, strictly limit the code
+> >> > that runs in it, lest it inadvertenly hits yet another INT3.
+> >> 
+> >> 
+> >> Acked-by: Andy Lutomirski <luto@kernel.org>
+> >> 
+> >> Does objtool catch this error?
+> >
+> > It does not. I'll put it on the (endless) todo list..
 > 
-> Yes, the scenario described in commit 03f219041fdb is still valid, which
-> is basically the same but without the extra open(2):
-> 
->   - name_to_handle_at("/cephfs/myfile")
->   - unlink("/cephfs/myfile")
->   - open_by_handle_at()
-> 
+> Well, at least it detects when that code calls out into something which
+> is not in the non-instrumentable section.
 
-Ok, I guess we end up doing some delayed cleanup, and that allows the
-inode to be found in that situation.
+True, but the more specific problem is that noinstr code can use
+jump_label/static_call just fine.
 
-> The open_by_handle_at man page isn't really clear about these 2 scenarios,
-> but generic/426 will fail if -ESTALE isn't returned.  Want me to add a
-> comment to the code, describing these 2 scenarios?
-> 
-
-(cc'ing Amir since he added this test)
-
-I don't think there is any hard requirement that open_by_handle_at
-should fail in that situation. It generally does for most filesystems
-due to the way they handle cleaning up unlinked inodes, but I don't
-think it's technically illegal to allow the inode to still be found. If
-the caller cares about whether it has been unlinked it can always test
-i_nlink itself.
-
-Amir, is this required for some reason that I'm not aware of?
-
-Thanks,
--- 
-Jeff Layton <jlayton@kernel.org>
-
+So a more specific test is validating none of that happens in the INT3
+handler before poke_int3_handler(). Which is what I think Andy was
+after.
