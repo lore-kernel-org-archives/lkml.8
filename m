@@ -2,130 +2,172 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B721FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E7DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8815C2065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F4B20727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:25:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JyAQXOUW"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YYY6jaxo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbgENOZM (ORCPT
+        id S1727910AbgENOZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:25:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34708 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbgENOZM (ORCPT
+        Thu, 14 May 2020 10:25:39 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:60874 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726146AbgENOZi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:25:12 -0400
-Received: from merlin.infradead.org (unknown [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 201D9C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:25:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Jfq3RHqQr0LXNTIpWKRuiuSUC1EarhLNtIVJLxWCknU=; b=JyAQXOUWWOei1IZOAQ7L4zIf+H
-        FIy+Do8COvpZ+v4bjUk6bunJBTtX/7YTjcDzlXvNvgZ5Nnng+jwj+7vqVGNgbgMIT0L+WksIM2lwP
-        XT16+4/nWS+flkuX446mR+rgREiVEkoamLwA2HPXyldFyoFSlcnGstDjbwVQgOC9Q7/tsgp1Yz0UB
-        u7J6cqFMO0lrrE8B2NuMcLdmsFzWnx86TfEu/hrspbOAxhIO6R+lPuq6jGUloegcVFY9EwGlskB+M
-        jt/1u7ZDGi7tW2lCBHE/XDK+q59w+iGaGzXYoHvlEa/k87Exc+SLnR3cDQX2fsVg5PNSI+xv/ifQU
-        lu4sfUWA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZEn6-00012p-Cl; Thu, 14 May 2020 14:24:52 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C276F302753;
-        Thu, 14 May 2020 16:24:50 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A952B2B852D47; Thu, 14 May 2020 16:24:50 +0200 (CEST)
-Date:   Thu, 14 May 2020 16:24:50 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
-Message-ID: <20200514142450.GC2978@hirez.programming.kicks-ass.net>
-References: <20200513124021.GB20278@willie-the-truck>
- <CANpmjNM5XW+ufJ6Mw2Tn7aShRCZaUPGcH=u=4Sk5kqLKyf3v5A@mail.gmail.com>
- <20200513165008.GA24836@willie-the-truck>
- <CANpmjNN=n59ue06s0MfmRFvKX=WB2NgLgbP6kG_MYCGy2R6PHg@mail.gmail.com>
- <20200513174747.GB24836@willie-the-truck>
- <CANpmjNNOpJk0tprXKB_deiNAv_UmmORf1-2uajLhnLWQQ1hvoA@mail.gmail.com>
- <20200513212520.GC28594@willie-the-truck>
- <CANpmjNOAi2K6knC9OFUGjpMo-rvtLDzKMb==J=vTRkmaWctFaQ@mail.gmail.com>
- <20200514110537.GC4280@willie-the-truck>
- <CANpmjNMTsY_8241bS7=XAfqvZHFLrVEkv_uM4aDUWE_kh3Rvbw@mail.gmail.com>
+        Thu, 14 May 2020 10:25:38 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200514142536euoutp01a59ad800e937e620eb8dd5f7f39f0a2d~O6zYxpQq42873828738euoutp01M
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 14:25:36 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200514142536euoutp01a59ad800e937e620eb8dd5f7f39f0a2d~O6zYxpQq42873828738euoutp01M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1589466336;
+        bh=VtAYupjDYOT6wcRX4a+idj2p/Ul8+u+WfufBE0nAEFw=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=YYY6jaxoJJJBm6fT181duIiXIOCmk8iX0s3SWwYbl5ZdVyoIVMyVmQzpYHMV/dnM0
+         cP/PKS6oWKE+eVNMg3fTAKSTFqUZpyTyweZonFzekAVZ8r/R1aQiMuPkTqqIUZpH+5
+         0zt+xiemXm1sx3Pzu1IKr6bfkiOFvBY8ZI/nM5+U=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200514142536eucas1p196a362f82e4a0bd06e9a3d3f40ace3b9~O6zYmljUs0331303313eucas1p1F;
+        Thu, 14 May 2020 14:25:36 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 54.5F.61286.0E45DBE5; Thu, 14
+        May 2020 15:25:36 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200514142535eucas1p273584e72416843ab0c643ec0701ec6f2~O6zYQ8iG90687606876eucas1p29;
+        Thu, 14 May 2020 14:25:35 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200514142535eusmtrp128c135d76dd944f8cc4733a4dfae64d9~O6zYQXljJ0037500375eusmtrp1R;
+        Thu, 14 May 2020 14:25:35 +0000 (GMT)
+X-AuditID: cbfec7f2-f0bff7000001ef66-dc-5ebd54e06a04
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 8F.4D.08375.FD45DBE5; Thu, 14
+        May 2020 15:25:35 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200514142535eusmtip21db80ded3f90c20289a3cdea69610122~O6zX_RkuJ3077830778eusmtip2H;
+        Thu, 14 May 2020 14:25:35 +0000 (GMT)
+Subject: Re: [PATCH 11/20] amifb: get rid of pointless access_ok() calls
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <f6fcfa46-6271-45ea-37c2-62bcf0a607cb@samsung.com>
+Date:   Thu, 14 May 2020 16:25:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNMTsY_8241bS7=XAfqvZHFLrVEkv_uM4aDUWE_kh3Rvbw@mail.gmail.com>
+In-Reply-To: <20200514140720.GB23230@ZenIV.linux.org.uk>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIKsWRmVeSWpSXmKPExsWy7djP87oPQvbGGSzcyWuxZ+9JFovLu+aw
+        WTzqe8tucf7vcVYHFo8TM36zeHzeJOex6clbpgDmKC6blNSczLLUIn27BK6Mzj23mQueCVRc
+        XtHA1sC4nLeLkYNDQsBE4tOC8C5GLg4hgRWMElsPNzNBOF8YJfo+TmOBcD4zSky/dp+xi5ET
+        rOPmpGY2iMRyRomrJ24zQzhvGSUmvjnICjJXWMBD4vfeepAGEQFViR13J7KC2MwChRIb73wF
+        G8QmYCUxsX0VmM0rYCdxoOkQWA0LUH37/k0sILaoQITEpweHWSFqBCVOznwCFucUsJB48GcD
+        M8RMcYlbT+YzQdjyEtvfzgG7R0Kgm11izsxTzBBXu0g8+TWDCcIWlnh1fAs7hC0jcXpyDwtE
+        wzpGib8dL6C6tzNKLJ/8jw2iylrizrlfbCCfMQtoSqzfpQ8RdpRY/nQtIyQg+SRuvBWEOIJP
+        YtK26cwQYV6JjjYhiGo1iQ3LNrDBrO3auZJ5AqPSLCSvzULyziwk78xC2LuAkWUVo3hqaXFu
+        emqxYV5quV5xYm5xaV66XnJ+7iZGYEI5/e/4px2MXy8lHWIU4GBU4uG1uLU7Tog1say4MvcQ
+        owQHs5IIr996oBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFe40UvY4UE0hNLUrNTUwtSi2CyTByc
+        Ug2M3WXO9TOmntvC7333p5DJsot1MjH3930PTmGUuna/fcHCr1s6uQvm/mPdGClZEHXe4wRX
+        g6S0jbbt7yWqMrJtkxp8Dsnn7lvlZe/NEcakmFS4jXmNQd7DnEC3c2cN7mRc+/d96YT5M947
+        GZ0S3FBTbjHNYiHP9tCf23MlH905eFtV20CydbGTEktxRqKhFnNRcSIAaUfv0iQDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEIsWRmVeSWpSXmKPExsVy+t/xe7r3Q/bGGXx5YWKxZ+9JFovLu+aw
+        WTzqe8tucf7vcVYHFo8TM36zeHzeJOex6clbpgDmKD2bovzSklSFjPziElulaEMLIz1DSws9
+        IxNLPUNj81grI1MlfTublNSczLLUIn27BL2Mzj23mQueCVRcXtHA1sC4nLeLkZNDQsBE4uak
+        ZrYuRi4OIYGljBJNp9ewdDFyACVkJI6vL4OoEZb4c62LDcQWEnjNKLFvih5IibCAh8TvvfUg
+        YREBVYkddyeygtjMAoUS7VO/s0CMvMkksfPoBhaQBJuAlcTE9lWMIDavgJ3EgaZDYA0sQM3t
+        +zeB1YgKREgc3jELqkZQ4uTMJ2BxTgELiQd/NjBDLFCX+DPvEpQtLnHryXwmCFteYvvbOcwT
+        GIVmIWmfhaRlFpKWWUhaFjCyrGIUSS0tzk3PLTbUK07MLS7NS9dLzs/dxAiMn23Hfm7ewXhp
+        Y/AhRgEORiUeXotbu+OEWBPLiitzDzFKcDArifD6rQcK8aYkVlalFuXHF5XmpBYfYjQFem4i
+        s5Rocj4wtvNK4g1NDc0tLA3Njc2NzSyUxHk7BA7GCAmkJ5akZqemFqQWwfQxcXBKNTCmHI0r
+        M9idXra2+dLUuVrN1oEnN035rCu7IWbBtTJunod8CpdMpFt/zY6TkZa0u+ucLRsZrNC2XIPx
+        Bv9UnzmKCcEWssH2c+aurhRxfDLR5OIl1UNd4u3hxVs33O+qSXJfcSpN+2ltQ4FAEV/J7ZtJ
+        r8SdsxbZ7br0cNev6adjQgxUlr36PFWJpTgj0VCLuag4EQBLCsjVtQIAAA==
+X-CMS-MailID: 20200514142535eucas1p273584e72416843ab0c643ec0701ec6f2
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200509234610eucas1p258be307cde10392b26c322354db78a9b
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200509234610eucas1p258be307cde10392b26c322354db78a9b
+References: <20200509234124.GM23230@ZenIV.linux.org.uk>
+        <20200509234557.1124086-1-viro@ZenIV.linux.org.uk>
+        <CGME20200509234610eucas1p258be307cde10392b26c322354db78a9b@eucas1p2.samsung.com>
+        <20200509234557.1124086-11-viro@ZenIV.linux.org.uk>
+        <6f89732b-fba9-a947-6c61-5d1680747f3b@samsung.com>
+        <20200514140720.GB23230@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 03:35:58PM +0200, Marco Elver wrote:
 
-> Let me try to spell out the requirements I see so far (this is for
-> KCSAN only though -- other sanitizers might be similar):
+On 5/14/20 4:07 PM, Al Viro wrote:
+> On Thu, May 14, 2020 at 03:45:09PM +0200, Bartlomiej Zolnierkiewicz wrote:
+>>
+>> Hi Al,
+>>
+>> On 5/10/20 1:45 AM, Al Viro wrote:
+>>> From: Al Viro <viro@zeniv.linux.org.uk>
+>>>
+>>> addresses passed only to get_user() and put_user()
+>>
+>> This driver lacks checks for {get,put}_user() return values so it will
+>> now return 0 ("success") even if {get,put}_user() fails.
+>>
+>> Am I missing something?
 > 
->   1. __no_kcsan functions should not call anything, not even
-> kcsan_{enable,disable}_current(), when using __{READ,WRITE}_ONCE.
-> [Requires leaving data_race() off of these.]
+> "now" is interesting, considering
+> /* We let the MMU do all checking */
+> static inline int access_ok(const void __user *addr,
+>                             unsigned long size)
+> {
+>         return 1;
+> }
+> in arch/m68k/include/asm/uaccess_mm.h
 > 
->   2. __always_inline functions inlined into __no_sanitize function is
-> not instrumented. [Has always been satisfied by GCC and Clang.]
+> Again, access_ok() is *NOT* about checking if memory is readable/writable/there
+> in the first place.  All it does is a static check that address is in
+> "userland" range - on architectures that have kernel and userland sharing the
+> address space.  On architectures where we have separate ASI or equivalents
+> thereof for kernel and for userland the fscker is always true.
 > 
->   3. __always_inline functions inlined into instrumented function is
-> instrumented. [Has always been satisfied by GCC and Clang.]
+> If MMU will prevent access to kernel memory by uaccess insns for given address
+> range, access_ok() is fine with it.  It does not do anything else.
 > 
->   4. __no_kcsan functions should never be spuriously inlined into
-> instrumented functions, causing the accesses of the __no_kcsan
-> function to be instrumented. [Satisfied by Clang >= 7. All GCC
-> versions are broken.]
+> And yes, get_user()/put_user() callers should handle the fact that those can
+> fail.  Which they bloody well can _after_ _success_ of access_ok().  And
+> without any races whatsoever.
 > 
->   5. we should not break atomic_{read,set} for KCSAN. [Because of #1,
-> we'd need to add data_race() around the arch-calls in
-> atomic_{read,set}; or rely on Clang 11's -tsan-distinguish-volatile
-> support (GCC 11 might get this as well).]
+> IOW, the lack of such checks is a bug, but it's quite independent from the
+> bogus access_ok() call.  On any architecture.  mmap() something, munmap()
+> it and pass the address where it used to be to that ioctl().  Failing
+> get_user()/put_user() is guaranteed, so's succeeding access_ok().
 > 
->   6. never emit __tsan_func_{entry,exit}. [Clang supports disabling
-> this, GCC doesn't.]
-> 
->   7. kernel is supported by compiler. [Clang >= 9 seems to build -tip
-> for me, anything below complains about lack of asm goto. GCC trivial.]
-> 
-> So, because of #4 & #6 & #7 we're down to Clang >= 9. Because of #5
-> we'll have to make a choice between Clang >= 9 or Clang >= 11
-> (released in ~June). In an ideal world we might even fix GCC in
-> future.
-> 
-> That's not even considering the problems around UBSan and KASAN. But
-> maybe one step at a time?
+> And that code is built only on amiga, so access_ok() always succeeds, anyway.
 
-Exact same requirements, KASAN even has the data_race() problem through
-READ_ONCE_NOCHECK(), UBSAN doesn't and might be simpler because of it.
+Thank you for in-detail explanations, for this patch:
 
-> Any preferences?
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 
-I suppose DTRT, if we then write the Makefile rule like:
+Could you also please take care of adding missing checks for {get,put}_user()
+failures later?
 
-KCSAN_SANITIZE := KCSAN_FUNCTION_ATTRIBUTES
-
-and set that to either 'y'/'n' depending on the compiler at hand
-supporting enough magic to make it all work.
-
-I suppose all the sanitize stuff is most important for developers and
-we tend to have the latest compiler versions anyway, right?
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
