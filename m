@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 773B4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C57FC433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A8DC206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38D772065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:02:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482914;
-	bh=WCnPS7QiF7nGaLWKAw6gNpGkTwoK5y0//6jMq9R7/fs=;
+	s=default; t=1589482922;
+	bh=h/zuaQK9kLecJ0nDipmLVxXwOQZ5+twJhwYn1AyZAqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YHe5F0giSVVuwaLp1ird1fEh4DPHApgXWMYdDGxjoLvEDlqtccqNB8181eM5wo0Kh
-	 UCNsfE3yqQiMmsJs5VfL5TiD2LdRagx5fNMnzMbIGTdSegD5cqeQxanL8KTDiQO41e
-	 jNxtRI1/E7i/j6m1dE7N05ZWrJ/bViH+hhxIEDFE=
+	b=HQYwhMSoAMOnSy4SH0YoB0ot0YQ/Pfwb88Eycnq3dJ4qMB+rtuwLDHhclocvN5Xr8
+	 bdYBYPQwKDtbLUGuy9yDOSgj+iBw8WJbOG0bnm3So3wD8lbLSmFfkt5+Vpv0P94Ok4
+	 Y2aOjQZ3y+pBT6obbVjMe0YS9p4ldz1nSGoqoWEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730018AbgENTBx (ORCPT
+        id S1729338AbgENSzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:01:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55966 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:55:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729361AbgENSzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:55:23 -0400
+        id S1729230AbgENSyv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:54:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B99420727;
-        Thu, 14 May 2020 18:55:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1294220767;
+        Thu, 14 May 2020 18:54:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482523;
-        bh=WCnPS7QiF7nGaLWKAw6gNpGkTwoK5y0//6jMq9R7/fs=;
+        s=default; t=1589482490;
+        bh=h/zuaQK9kLecJ0nDipmLVxXwOQZ5+twJhwYn1AyZAqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gkq6Vzb5T1/Q1IyC1iRtCr6bmN4IiLBNnslcTYyMXIypSidcci/wB0GbekBZ1FwfI
-         UUxBpNvMyTiV16gxmyYpXwTh8yaPD+JzRZgUgw4JdjOnDGPzvuaqZp//wUi3jyGdg9
-         CnOTQCO0VPYCsXXHT+xztffHLO4A6vLz+C+eoTVk=
+        b=NgwTtOLuI7c/HIQaFacUaGN5xQR6kdN6XzS1LaT8+7+4hBju9EvqK9ReMCiw+su8u
+         f+/2Kmlg1eE+PAIuqe0d8bYgTEsfW6rZm2QS2pUEBFa/wMAQeW3PH7iN5nHJ3jEFEr
+         lpYUI4xUg9vxzbLEQg4aAS8MTDGVhBx1tNxurz6M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Chan <michael.chan@broadcom.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 18/39] bnxt_en: Fix VLAN acceleration handling in bnxt_fix_features().
-Date:   Thu, 14 May 2020 14:54:35 -0400
-Message-Id: <20200514185456.21060-18-sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 29/31] crypto: lrw - simplify error handling in create()
+Date:   Thu, 14 May 2020 14:54:11 -0400
+Message-Id: <20200514185413.20755-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200514185456.21060-1-sashal@kernel.org>
-References: <20200514185456.21060-1-sashal@kernel.org>
+In-Reply-To: <20200514185413.20755-1-sashal@kernel.org>
+References: <20200514185413.20755-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,54 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit c72cb303aa6c2ae7e4184f0081c6d11bf03fb96b ]
+[ Upstream commit d57063103332b95eac9c118900f35700a491da08 ]
 
-The current logic in bnxt_fix_features() will inadvertently turn on both
-CTAG and STAG VLAN offload if the user tries to disable both.  Fix it
-by checking that the user is trying to enable CTAG or STAG before
-enabling both.  The logic is supposed to enable or disable both CTAG and
-STAG together.
+Simplify the error handling in the LRW template's ->create() function by
+taking advantage of crypto_drop_skcipher() now accepting (as a no-op) a
+spawn that hasn't been grabbed yet.
 
-Fixes: 5a9f6b238e59 ("bnxt_en: Enable and disable RX CTAG and RX STAG VLAN acceleration together.")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ crypto/lrw.c | 28 +++++++++++-----------------
+ 1 file changed, 11 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 5163da01e54f8..5c954488072ec 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -6827,6 +6827,7 @@ static netdev_features_t bnxt_fix_features(struct net_device *dev,
- 					   netdev_features_t features)
- {
- 	struct bnxt *bp = netdev_priv(dev);
-+	netdev_features_t vlan_features;
+diff --git a/crypto/lrw.c b/crypto/lrw.c
+index 5504d1325a56a..11d079c44cafc 100644
+--- a/crypto/lrw.c
++++ b/crypto/lrw.c
+@@ -508,15 +508,15 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
  
- 	if ((features & NETIF_F_NTUPLE) && !bnxt_rfs_capable(bp))
- 		features &= ~NETIF_F_NTUPLE;
-@@ -6834,12 +6835,14 @@ static netdev_features_t bnxt_fix_features(struct net_device *dev,
- 	/* Both CTAG and STAG VLAN accelaration on the RX side have to be
- 	 * turned on or off together.
- 	 */
--	if ((features & (NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_HW_VLAN_STAG_RX)) !=
--	    (NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_HW_VLAN_STAG_RX)) {
-+	vlan_features = features & (NETIF_F_HW_VLAN_CTAG_RX |
-+				    NETIF_F_HW_VLAN_STAG_RX);
-+	if (vlan_features != (NETIF_F_HW_VLAN_CTAG_RX |
-+			      NETIF_F_HW_VLAN_STAG_RX)) {
- 		if (dev->features & NETIF_F_HW_VLAN_CTAG_RX)
- 			features &= ~(NETIF_F_HW_VLAN_CTAG_RX |
- 				      NETIF_F_HW_VLAN_STAG_RX);
--		else
-+		else if (vlan_features)
- 			features |= NETIF_F_HW_VLAN_CTAG_RX |
- 				    NETIF_F_HW_VLAN_STAG_RX;
- 	}
+ 	err = -EINVAL;
+ 	if (alg->base.cra_blocksize != LRW_BLOCK_SIZE)
+-		goto err_drop_spawn;
++		goto err_free_inst;
+ 
+ 	if (crypto_skcipher_alg_ivsize(alg))
+-		goto err_drop_spawn;
++		goto err_free_inst;
+ 
+ 	err = crypto_inst_setname(skcipher_crypto_instance(inst), "lrw",
+ 				  &alg->base);
+ 	if (err)
+-		goto err_drop_spawn;
++		goto err_free_inst;
+ 
+ 	err = -EINVAL;
+ 	cipher_name = alg->base.cra_name;
+@@ -529,20 +529,20 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
+ 
+ 		len = strlcpy(ecb_name, cipher_name + 4, sizeof(ecb_name));
+ 		if (len < 2 || len >= sizeof(ecb_name))
+-			goto err_drop_spawn;
++			goto err_free_inst;
+ 
+ 		if (ecb_name[len - 1] != ')')
+-			goto err_drop_spawn;
++			goto err_free_inst;
+ 
+ 		ecb_name[len - 1] = 0;
+ 
+ 		if (snprintf(inst->alg.base.cra_name, CRYPTO_MAX_ALG_NAME,
+ 			     "lrw(%s)", ecb_name) >= CRYPTO_MAX_ALG_NAME) {
+ 			err = -ENAMETOOLONG;
+-			goto err_drop_spawn;
++			goto err_free_inst;
+ 		}
+ 	} else
+-		goto err_drop_spawn;
++		goto err_free_inst;
+ 
+ 	inst->alg.base.cra_flags = alg->base.cra_flags & CRYPTO_ALG_ASYNC;
+ 	inst->alg.base.cra_priority = alg->base.cra_priority;
+@@ -568,17 +568,11 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
+ 	inst->free = free;
+ 
+ 	err = skcipher_register_instance(tmpl, inst);
+-	if (err)
+-		goto err_drop_spawn;
+-
+-out:
+-	return err;
+-
+-err_drop_spawn:
+-	crypto_drop_skcipher(spawn);
++	if (err) {
+ err_free_inst:
+-	kfree(inst);
+-	goto out;
++		free(inst);
++	}
++	return err;
+ }
+ 
+ static struct crypto_template crypto_tmpl = {
 -- 
 2.20.1
 
