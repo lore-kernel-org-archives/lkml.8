@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5407DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 033CCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23ACE207D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6AC0207D5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:57:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482622;
-	bh=P3vnlNl2kfwRlE3gX2+SClcTGmFVrHC5ebGzq7c4wOo=;
+	s=default; t=1589482628;
+	bh=vuzK44KzWkdL+i/AG+y3AzKDLu8c1TW+lmWn/sqUuHs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OwGHYcyEMLbuWPUZqg96bKDsktAZNi5SHyR8I3u1Ba5Vgs2At24A83AQuwDf2HZKf
-	 OHZqIsJKJv5TmW5Gc6Q6dIKDuhk3QEyiFOz7Fi4gi5rsqSArjThFHt6zFnhGyya9Zd
-	 Dr+mzJHaJGq0fXZa9BucWoGFGeOPM5OQhzDZdyOY=
+	b=JW4gnbRdhbDUAvuuOU1I6yyuu9F2uC3xJQXHH/AShjbTcdxzK0V1hz+yBZKu3baqh
+	 UCHTaNY8Y+4idMYDkEVeJnv3MYGh3J502HrPjh54w9DFATt+7BP0AHqhsBoIMwq85d
+	 RkJOV7NBXnVPZw4tg64f+VqDxU0FbrLtWrIk8cxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbgENS5A (ORCPT
+        id S1729818AbgENS5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:57:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57606 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:57:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729625AbgENS4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:56:35 -0400
+        id S1729738AbgENS4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:56:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 418972074A;
-        Thu, 14 May 2020 18:56:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DF352074A;
+        Thu, 14 May 2020 18:56:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482594;
-        bh=P3vnlNl2kfwRlE3gX2+SClcTGmFVrHC5ebGzq7c4wOo=;
+        s=default; t=1589482597;
+        bh=vuzK44KzWkdL+i/AG+y3AzKDLu8c1TW+lmWn/sqUuHs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k9O9bL0912oF9uYM+nzmzwzS6Pggc5aGS2A27lB3z/UhDKfcJEckroCruG+dH3dTi
-         19rx28cV2Dg42ZQ0hYs2H42jksRgF5ji4B43sqTuy3qWZr5OUlUl4roaiBwil7L2Xx
-         YU5ZI4FGVJixEjR8JUC5Wr+eLt3NEwF8fHa/SxOM=
+        b=DHnD+3hAEkxV4QE+z5sdT1GH7dY6IVr/P2zYfE3ZwevUCtv+q05V573TGbwQZpteC
+         h1EKdu7Ysob2aYdSmHiOwXOZFQV+xb64LxuJzP2GUbVbH7r/gJO5SkpzzbhN768/+/
+         n1pmB/L87ltEwbWo9tJQxWeKVh8HlghokqvYk9KE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alex Elder <elder@linaro.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 07/14] net: ipa: fix a bug in ipa_endpoint_stop()
-Date:   Thu, 14 May 2020 14:56:18 -0400
-Message-Id: <20200514185625.21753-7-sashal@kernel.org>
+Cc:     Wu Bo <wubo40@huawei.com>, "Yan, Zheng" <zyan@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 09/14] ceph: fix double unlock in handle_cap_export()
+Date:   Thu, 14 May 2020 14:56:20 -0400
+Message-Id: <20200514185625.21753-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185625.21753-1-sashal@kernel.org>
 References: <20200514185625.21753-1-sashal@kernel.org>
@@ -59,54 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Elder <elder@linaro.org>
+From: Wu Bo <wubo40@huawei.com>
 
-[ Upstream commit 713b6ebb4c376b3fb65fdceb3b59e401c93248f9 ]
+[ Upstream commit 4d8e28ff3106b093d98bfd2eceb9b430c70a8758 ]
 
-In ipa_endpoint_stop(), for TX endpoints we set the number of retries
-to 0.  When we break out of the loop, retries being 0 means we return
-EIO rather than the value of ret (which should be 0).
+If the ceph_mdsc_open_export_target_session() return fails, it will
+do a "goto retry", but the session mutex has already been unlocked.
+Re-lock the mutex in that case to ensure that we don't unlock it
+twice.
 
-Fix this by using a non-zero retry count for both RX and TX
-channels, and just break out of the loop after calling
-gsi_channel_stop() for TX channels.  This way only RX channels
-will retry, and the retry count will be non-zero at the end
-for TX channels (so the proper value gets returned).
-
-Signed-off-by: Alex Elder <elder@linaro.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Wu Bo <wubo40@huawei.com>
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ipa/ipa_endpoint.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ fs/ceph/caps.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ipa/ipa_endpoint.c b/drivers/net/ipa/ipa_endpoint.c
-index 915b4cd05dd29..78ed431e6eb86 100644
---- a/drivers/net/ipa/ipa_endpoint.c
-+++ b/drivers/net/ipa/ipa_endpoint.c
-@@ -1284,7 +1284,7 @@ static int ipa_endpoint_stop_rx_dma(struct ipa *ipa)
-  */
- int ipa_endpoint_stop(struct ipa_endpoint *endpoint)
- {
--	u32 retries = endpoint->toward_ipa ? 0 : IPA_ENDPOINT_STOP_RX_RETRIES;
-+	u32 retries = IPA_ENDPOINT_STOP_RX_RETRIES;
- 	int ret;
+diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+index efdf81ea3b5f8..3d0497421e62b 100644
+--- a/fs/ceph/caps.c
++++ b/fs/ceph/caps.c
+@@ -3293,6 +3293,7 @@ static void handle_cap_export(struct inode *inode, struct ceph_mds_caps *ex,
+ 		WARN_ON(1);
+ 		tsession = NULL;
+ 		target = -1;
++		mutex_lock(&session->s_mutex);
+ 	}
+ 	goto retry;
  
- 	do {
-@@ -1292,12 +1292,9 @@ int ipa_endpoint_stop(struct ipa_endpoint *endpoint)
- 		struct gsi *gsi = &ipa->gsi;
- 
- 		ret = gsi_channel_stop(gsi, endpoint->channel_id);
--		if (ret != -EAGAIN)
-+		if (ret != -EAGAIN || endpoint->toward_ipa)
- 			break;
- 
--		if (endpoint->toward_ipa)
--			continue;
--
- 		/* For IPA v3.5.1, send a DMA read task and check again */
- 		if (ipa->version == IPA_VERSION_3_5_1) {
- 			ret = ipa_endpoint_stop_rx_dma(ipa);
 -- 
 2.20.1
 
