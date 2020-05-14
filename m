@@ -2,112 +2,121 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C048C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86916C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35F7120575
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67E1220575
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:01:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="JJCxO3Ex"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbgENIA7 (ORCPT
+        id S1727122AbgENIA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 04:00:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52934 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbgENIA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 14 May 2020 04:00:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 08393AB91;
-        Thu, 14 May 2020 08:00:57 +0000 (UTC)
-Date:   Thu, 14 May 2020 10:00:53 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH] printk: Add loglevel for "do not print to consoles".
-Message-ID: <20200514080053.GN17734@linux-b0ei>
-References: <b1d507b1-dae7-f526-c74a-d465ddecea6a@i-love.sakura.ne.jp>
- <20200429142106.GG28637@dhcp22.suse.cz>
- <a59271f1-b3fc-26d1-f0a2-5ec351d0095e@i-love.sakura.ne.jp>
- <20200513062652.GM413@jagdpanzerIV.localdomain>
- <a75d6560-ad99-5b02-3648-247c27c3a398@i-love.sakura.ne.jp>
- <20200513100413.GH17734@linux-b0ei>
- <20200513104938.GW29153@dhcp22.suse.cz>
- <d66c38d9-dd97-072d-e1a7-949e9573b38d@i-love.sakura.ne.jp>
- <20200513121942.GK17734@linux-b0ei>
- <2173e3ac-7d5e-24da-0c1e-6472df905767@i-love.sakura.ne.jp>
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726383AbgENIAX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 04:00:23 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BC23C05BD0B
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:00:22 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id h17so2589738wrc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:00:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=A3BhZ5w2nZuK3+ZudhXc+00fKQMrXVNQ6trbR5U2M5Y=;
+        b=JJCxO3Exc7DnGIwr2iuuQUzDbvfOLbZbgPpv5L3N74cFZsgnyJHeo5Sc60JJTq+MbP
+         XwFLwQsDTsS0wGHd4KAwQHWKbM9MwDOMb86EwwIBhrl0F6j84h5tjc2/n3ZabjTtMh9D
+         ky3W3TQ+YF5EhKOyDkGQ3o2KIlO7tbPkHLOmpD4Nrk5F1S5+YN1zv+gHWLHEzDcrxu+g
+         rabtnGA8f9E8JFjGQkbJ2p0Qn0ZRvcwuKhqf+n5uk9hGMcmu+GqfDrq5yfic4Rk4Cv04
+         Tu/m1I679dB1PLq36SC+1yxLv5TcGKGsz+b/f+0RUtSrRVXjYdBuloDHyilE/A1AhdW4
+         cHAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=A3BhZ5w2nZuK3+ZudhXc+00fKQMrXVNQ6trbR5U2M5Y=;
+        b=VvIrWO7HfHdgvW1Sw2SvSnSCUV9N/Vc6KAncnS+lHf/lSbZ58ssxdI0Ex4wbZoFJ6q
+         OYO91lm5hzCi9+iQkE4ZtlZ5Y5/PLmZiToZdLdDBwHYRUaquZr1TtikzTnOiUkgrkfus
+         RKpt3WeY/wrtJ+7cBmJS/l5hPUk21ExGf0myhw3izYYBgSg9klz8/maKl+PwQ9WD8975
+         YGq9qIhDRtbOIFrAhmkkORtjTiA+6SdUN1dO4nxp73CHdDi2a1IbnK1VAaMNilfWVB8E
+         WepvhmIz1oDkaDhhP9ORcXBDqe93fa1GoisNTUDNjhXb5BB2gNhpoyGKhbbCOnVo0KWI
+         07ww==
+X-Gm-Message-State: AOAM530jxNAtQbAJLp1Bi5drNcLZsLMZmIxQ3ii0llSqm1tjuoMDkyr6
+        ioXL9PlB+SRDerTRI7VJ8ThDWQ==
+X-Google-Smtp-Source: ABdhPJwQsAtFFDpkxmlp3HoBK9HFLKTyKPF/9otGNSorLEiCutYPpPt/Uz19BtSeOpUqWag0enyEZw==
+X-Received: by 2002:a5d:400f:: with SMTP id n15mr4090320wrp.419.1589443221364;
+        Thu, 14 May 2020 01:00:21 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id 81sm23337446wme.16.2020.05.14.01.00.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 01:00:20 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v3 11/15] ARM64: dts: mediatek: add pericfg syscon to mt8516.dtsi
+Date:   Thu, 14 May 2020 09:59:38 +0200
+Message-Id: <20200514075942.10136-12-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200514075942.10136-1-brgl@bgdev.pl>
+References: <20200514075942.10136-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2173e3ac-7d5e-24da-0c1e-6472df905767@i-love.sakura.ne.jp>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2020-05-13 21:59:23, Tetsuo Handa wrote:
-> On 2020/05/13 21:19, Petr Mladek wrote:
-> > On Wed 2020-05-13 20:24:24, Tetsuo Handa wrote:
-> >> On 2020/05/13 19:49, Michal Hocko wrote:
-> >>> On Wed 13-05-20 12:04:13, Petr Mladek wrote:
-> >>>> What is so special about  OOM dump task so that it would deserve such
-> >>>> complications?
-> >  
-> >> I don't think dump_tasks() is important information to be printed on consoles.
-> >> But since somebody might think dump_tasks() is important information to be
-> >> printed on consoles, I suggest switching KERN_NO_CONSOLES using e.g. sysctl.
-> > 
-> > You might achieve the same with DEBUG loglevel. Or do I miss anything?
-> 
-> Use of KERN_DEBUG affects userspace syslog daemon. We will have to ask administrators
-> to configure syslog daemon not to filter KERN_DEBUG messages. And administrators will
-> be bothered by needless KERN_DEBUG messages. Also,
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-What about using KERN_INFO then? Is there still the same problem?
+This adds support for the PERICFG register range as a syscon. This will
+soon be used by the MediaTek Ethernet MAC driver for NIC configuration.
 
-Otherwise this looks like a dead end. The above states that
-administrators will not have to do anything when KERN_NO_CONSOLES
-are introduced. But there are people that will not like the new
-behavior. They will have to do something.
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ arch/arm64/boot/dts/mediatek/mt8516.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/mediatek/mt8516.dtsi b/arch/arm64/boot/dts/mediatek/mt8516.dtsi
+index 2f8adf042195..8cedaf74ae86 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8516.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8516.dtsi
+@@ -191,6 +191,11 @@ infracfg: infracfg@10001000 {
+ 			#clock-cells = <1>;
+ 		};
+ 
++		pericfg: pericfg@10003050 {
++			compatible = "mediatek,mt8516-pericfg", "syscon";
++			reg = <0 0x10003050 0 0x1000>;
++		};
++
+ 		apmixedsys: apmixedsys@10018000 {
+ 			compatible = "mediatek,mt8516-apmixedsys", "syscon";
+ 			reg = <0 0x10018000 0 0x710>;
+-- 
+2.25.0
 
-> > I know that it is meant as a modifier, like LOGLEVEL_SCHED and
-> > KERN_CONT.
-> 
-> Right. KERN_NO_CONSOLES is a modifier.
-> 
-> >            But this is another reason to avoid it. We already have
-> > huge pain with these two modifiers. They both do not work well.
-> 
-> KERN_NO_CONSOLES can not cause pains like LOGLEVEL_SCHED because
-> KERN_NO_CONSOLES is to say "no need to call console drivers" while
-> LOGLEVEL_SCHED is to say "don't call console drivers now but have
-> to call console drivers later".
-
-The problem with LOGLEVEL_SCHED is that it is not reliable. It must be
-used for all printk() calls in the critical path. But people are not
-aware of this, or they forget, or it gets complicated in shared code.
-
-KERN_NO_CONSOLES will have exactly the same problems.
-
-KERN_CONT is not reliable also from other reasons.
-
-
-> > NO_CONSOLES would mess with this decision. Some messages would suddenly
-> > get hidden on console but appear in userspace.
-> 
-> Wrong. Console loglevel is already hiding some messages.
-
-Exactly and people are aware of it. We should use it when possible
-instead of introducing yet another complexity.
-
-Best Regards,
-Petr
