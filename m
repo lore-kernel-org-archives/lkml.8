@@ -2,94 +2,105 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21956C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7556C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F05432065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C850720748
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:24:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OXJCh5GL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbgENOWj (ORCPT
+        id S1727861AbgENOYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:22:39 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:36393 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727033AbgENOWi (ORCPT
+        Thu, 14 May 2020 10:24:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26351 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726582AbgENOYW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:22:38 -0400
-Received: (qmail 14203 invoked by uid 500); 14 May 2020 10:22:37 -0400
-Date:   Thu, 14 May 2020 10:22:37 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Macpaul Lin <macpaul.lin@mediatek.com>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Sergey Organov <sorganov@gmail.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
-        Macpaul Lin <macpaul.lin@gmail.com>,
-        Stan Lu <stan.lu@mediatek.com>
-Subject: Re: [PATCH] usb: gadget: u_serial: fix coverity warning: negative
- index at array
-Message-ID: <20200514142237.GB12181@rowland.harvard.edu>
-References: <1589443500-3990-1-git-send-email-macpaul.lin@mediatek.com>
+        Thu, 14 May 2020 10:24:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589466261;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fGWHZrRoLExAS3mHwk8ufZ/s4MYBxFdJolCaEnLqA8M=;
+        b=OXJCh5GLUPv3k4SUBHt3EOoS6pcj0UXeOEj+luCmjZqmh9udrIAukKWN4wRIXhrk8SZgiq
+        3qezn7J2Rtb6PtKX5HRY5eYO4PDubZpacgbGxZhxmrzkcmCnLbqDe1mMnzi5ohEH16meoJ
+        HQgq42UtuWxXzvF1jYtaWz6pjKjh7EM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-187-gDkumX-iOmOMry4mSLa6sw-1; Thu, 14 May 2020 10:24:17 -0400
+X-MC-Unique: gDkumX-iOmOMry4mSLa6sw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B5F8800053;
+        Thu, 14 May 2020 14:24:13 +0000 (UTC)
+Received: from redhat.com (null.msp.redhat.com [10.15.80.136])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E42045D9CA;
+        Thu, 14 May 2020 14:24:04 +0000 (UTC)
+Date:   Thu, 14 May 2020 09:24:03 -0500
+From:   David Teigland <teigland@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Christine Caulfield <ccaulfie@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Jon Maloy <jmaloy@redhat.com>,
+        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org,
+        target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
+        linux-cifs@vger.kernel.org, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, netdev@vger.kernel.org,
+        linux-sctp@vger.kernel.org, ceph-devel@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org
+Subject: Re: is it ok to always pull in sctp for dlm, was: Re: [PATCH 27/33]
+ sctp: export sctp_setsockopt_bindx
+Message-ID: <20200514142403.GA1447@redhat.com>
+References: <20200513062649.2100053-1-hch@lst.de>
+ <20200513062649.2100053-28-hch@lst.de>
+ <20200513180058.GB2491@localhost.localdomain>
+ <20200514104040.GA12979@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589443500-3990-1-git-send-email-macpaul.lin@mediatek.com>
+In-Reply-To: <20200514104040.GA12979@lst.de>
+User-Agent: Mutt/1.8.3 (2017-05-23)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 04:05:00PM +0800, Macpaul Lin wrote:
-> This issue has been reported by coverity scanner.
-> Replace "int portnum" by "unsigned int", this void negative index at
-> array.
-
-Can you please explain this more fully?  Why does coverity think the 
-code might use a negative array index?  Is there some possibility that 
-the portnum value might actually be negative?
-
-It's noticeable that your patch doesn't actually change any values, only 
-the type.  This means that if the code was buggy before, it's still 
-buggy.  Alternatively, if the code wasn't buggy before then coverity got 
-a false positive, so no change should be needed.
-
-Alan Stern
-
-> Signed-off-by: Stan Lu <stan.lu@mediatek.com>
-> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
-> ---
->  drivers/usb/gadget/function/u_serial.c |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+On Thu, May 14, 2020 at 12:40:40PM +0200, Christoph Hellwig wrote:
+> On Wed, May 13, 2020 at 03:00:58PM -0300, Marcelo Ricardo Leitner wrote:
+> > On Wed, May 13, 2020 at 08:26:42AM +0200, Christoph Hellwig wrote:
+> > > And call it directly from dlm instead of going through kernel_setsockopt.
+> > 
+> > The advantage on using kernel_setsockopt here is that sctp module will
+> > only be loaded if dlm actually creates a SCTP socket.  With this
+> > change, sctp will be loaded on setups that may not be actually using
+> > it. It's a quite big module and might expose the system.
+> > 
+> > I'm okay with the SCTP changes, but I'll defer to DLM folks to whether
+> > that's too bad or what for DLM.
 > 
-> diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
-> index 8167d37..53951f2 100644
-> --- a/drivers/usb/gadget/function/u_serial.c
-> +++ b/drivers/usb/gadget/function/u_serial.c
-> @@ -587,7 +587,7 @@ static int gs_start_io(struct gs_port *port)
->   */
->  static int gs_open(struct tty_struct *tty, struct file *file)
->  {
-> -	int		port_num = tty->index;
-> +	unsigned int	port_num = tty->index;
->  	struct gs_port	*port;
->  	int		status = 0;
->  
-> @@ -1211,7 +1211,7 @@ int gserial_alloc_line_no_console(unsigned char *line_num)
->  	struct gs_port			*port;
->  	struct device			*tty_dev;
->  	int				ret;
-> -	int				port_num;
-> +	unsigned int			port_num;
->  
->  	coding.dwDTERate = cpu_to_le32(9600);
->  	coding.bCharFormat = 8;
-> -- 
-> 1.7.9.5
+> So for ipv6 I could just move the helpers inline as they were trivial
+> and avoid that issue.  But some of the sctp stuff really is way too
+> big for that, so the only other option would be to use symbol_get.
+
+Let's try symbol_get, having the sctp module always loaded caused problems
+last time it happened (almost nobody uses dlm with it.)
+Dave 
+
