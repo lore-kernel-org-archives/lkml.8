@@ -2,240 +2,158 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B688AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B909AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9945520767
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 959562065C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:37:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589488648;
+	bh=uuyonOVzZlqOqi/2AgdgCj2JP37ZDmCHYgPvRRf19Dc=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=uDmF5Yzm+8Y/KHJxxL2LTc/B88B6EnlHMCAW44X+s2RYlH+Bwqj2aEvNZ8PqgLQov
+	 hSyWJx4Ng/w7hPzS0D8azvboRsdmer/ycFX6d/215xUvms4cEdxvFKAUMfqCakKYGP
+	 lUFhFg1o26zJiXPMg9KeYIlG/5UhQ9/3cMk4R8ZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbgENUgT (ORCPT
+        id S1727933AbgENUh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 16:36:19 -0400
-Received: from mga17.intel.com ([192.55.52.151]:51661 "EHLO mga17.intel.com"
+        Thu, 14 May 2020 16:37:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725975AbgENUgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 16:36:18 -0400
-IronPort-SDR: Kr8moFJSQEHA3eT73cJVvDMQdPKfEOulGCaZX4vRYFninq45S8ekYOVD1j6Mt76olLOdz66f1i
- KYGgblmuVZ6A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 13:36:10 -0700
-IronPort-SDR: HV+kHQ5Ogs960O8wFt2vPmpkBM5xDpfibolAbWTRvN3DWjKvI7fgnx1b4Qo59Fp4QlfNpthB3a
- 2AK2fAtTDLFA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,392,1583222400"; 
-   d="scan'208";a="307212706"
-Received: from aruizmcc-mobl2.amr.corp.intel.com (HELO [10.254.64.168]) ([10.254.64.168])
-  by FMSMGA003.fm.intel.com with ESMTP; 14 May 2020 13:36:09 -0700
-Subject: Re: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for
- non-hotplug capable devices
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, jay.vosburgh@canonical.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-References: <20200513224449.GA347443@bjorn-Precision-5520>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <7217c72f-d13c-9128-4824-ed73aebc8abc@linux.intel.com>
-Date:   Thu, 14 May 2020 13:36:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S1726073AbgENUh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 16:37:27 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F93A2065C;
+        Thu, 14 May 2020 20:37:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589488646;
+        bh=uuyonOVzZlqOqi/2AgdgCj2JP37ZDmCHYgPvRRf19Dc=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=2VQgOl4ELKbRsJEzLTZeBfkE1w/iYlNe/5tiddRy+3CWlzE7rsSRsSxkqY74t5x7c
+         FHAXFmyO46R7q/U1Rsu+w5Qo2rm2BxyMeECVOUIEpVtieCUS94mFO5tQ1l7E0FGUGa
+         E8/GSx5lKDGO7WCN2E0vn+6cJDJIytOOmWxlyCWE=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200513224449.GA347443@bjorn-Precision-5520>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAFBinCBHuPLS8BDzO4Gb86TG3tNTtqmW5BSWy8jhPuN3STOTUA@mail.gmail.com>
+References: <CAFBinCBHuPLS8BDzO4Gb86TG3tNTtqmW5BSWy8jhPuN3STOTUA@mail.gmail.com>
+Subject: Re: clk_hw.init and -EPROBE_DEFER / driver re-load
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     mturquette@baylibre.com, linux-kernel@vger.kernel.org,
+        jbrunet@baylibre.com
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-clk@vger.kernel.org
+Date:   Thu, 14 May 2020 13:37:25 -0700
+Message-ID: <158948864581.215346.7236327959062539884@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+Quoting Martin Blumenstingl (2020-04-27 12:57:33)
+> Hello Stephen et al.
+>=20
+> I am working on a driver for the "SDHC" controller on older Amlogic Meson=
+ SoCs.
+> This has some clock controller bits built into.
+> Using CCF for the whole rate management makes things a lot easier, so
+> I decided to use that instead of poking register bits manually.
+> The code can be seen here: [0] - but don't take it too seriously
+> because I have to move some of that in the next patch revision.
+>=20
+> I solved an "interesting" problem where I'm not sure if it works as
+> intended (which is what I assumed) or if there's an actual problem (as
+> suggested by Jerome).
+>=20
+> The flow in the driver is basically:
+> (the clk_hws are defined as "static" variables inside the driver)
+> 1) fetch related OF properties
+> 2) initialize and register the built-in (into the MMC controller
+> driver) clock controller part
+> 3) initialize the MMC controller
+>=20
+> Step 3) can fail for example because one of the regulators is not ready.
+> In this case I'm de-registering the clock controller part again.
+> Finally the driver returns -EPROBE_DEFER
+> (so far everything is working fine)
+>=20
+> However, once the regulator (in this example) becomes ready the the
+> same flow as above is being executed.
+> Only this time the clock controller registration fails because
+> hw->init is NULL (before it had the values which I defined in the
+> driver).
+> This is due to the following line in __clk_register():
+>   hw->init =3D NULL;
+>=20
+> My way to "solve" this is to clone the clk_hws while registering the
+> clock controller.
+> Unfortunately this means that I can't easily use clk_hw references to
+> describe the parent/child relation between these clocks.
+>=20
+> I'm not sure if my way of defining the clk_hws is wrong, there's a bug
+> in CCF, this is a new feature request or something completely
+> different :-)
+> My motivation is to understand how I should to consider this behavior
+> for my next version of the MMC controller patches.
+>=20
 
-On 5/13/20 3:44 PM, Bjorn Helgaas wrote:
-> On Wed, May 06, 2020 at 08:32:59PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>
->> If there are non-hotplug capable devices connected to a given
->> port, then during the fatal error recovery(triggered by DPC or
->> AER), after calling reset_link() function, we cannot rely on
->> hotplug handler to detach and re-enumerate the device drivers
->> in the affected bus. Instead, we will have to let the error
->> recovery handler call report_slot_reset() for all devices in
->> the bus to notify about the reset operation. Although this is
->> only required for non hot-plug capable devices, doing it for
->> hotplug capable devices should not affect the functionality.
-> 
-> Apparently this fixes a bug.  Can you include a link to a problem
-> report?  The above is a description of a *solution*, but it's hard to
-> understand without starting with the problem itself.
+Maybe the patch to make hw->init be NULL is just not useful and we
+should revert it. The intent was to catch misbehaving drivers that tried
+to use the init data after registration but then it causes problems like
+we see here where drivers have static clk data mixed with static init
+data that they unregister later and expect to be able to register again.
 
-Let me add the problem description to the commit log in next version.
+This is one of the failed design decisions we made early on to associate
+the init data with the clk_hw struct instead of passing it as another
+argument to clk_register().
 
-Adding it here for discussion.
+Maybe a better workaround would be to always assign hw->init in the
+driver before registering the clks? Basically make a clk registration
+API that we should have made before.
 
-Current pcie_do_recovery() implementation has following three issues:
+int my_clk_register(struct clk_hw *hw, struct clk_init_data *init)
+{
+	hw->init =3D init;
+	ret =3D clk_hw_register(dev, hw);
+	...
+}
 
-1. Fatal (DPC) error recovery is currently broken for non-hotplug
-capable devices. Current DPC recovery implementation relies on hotplug
-handler for detaching/re-enumerating the affected devices/drivers on
-DLLSC state changes. So when dealing with non-hotplug capable devices,
-recovery code does not restore the state of the affected devices
-correctly. Correct implementation should call report_mmio_enabled() and
-report_slot_reset() functions after reseting the link/device which is
-currently missing.
+Do you have some sort of array of clk_hw pointers to register? Maybe we
+could make a new clk registration structure to simplify this for users,
+but I'm not super interested in introducing yet another registration
+API! :/
 
-2. For non-fatal errors if report_error_detected() or
-report_mmio_enabled() functions requests PCI_ERS_RESULT_NEED_RESET then
-current pcie_do_recovery() implementation does not do the requested
-explicit device reset, instead just calls the report_slot_reset() on all
-affected devices. Notifying about the reset via report_slot_reset()
-without doing the actual device reset is incorrect.
+struct clk_hw_desc {
+	struct clk_hw *hw;
+	struct clk_init_data *init;
+};
 
-3. For fatal errors, pcie_do_recovery() function currently completely
-ignores the status result of report_error_detected() call. After calling
-reset_link() function then status value gets updated to either
-PCI_ERS_RESULT_DISCONNECT or PCI_ERS_RESULT_RECOVERED, and the initial
-value returned from report_error_detected() is totally ignored. For
-solving the issue # 1, we need to update the status only if reset_link()
-call failed and returns PCI_ERS_RESULT_DISCONNECT. Otherwise recovery
-handler should proceed to call report_mmio_enabled() and
-report_slot_reset().
+and then drivers can call clk_hw_register_bulk() or something like this:
 
+int clk_hw_register_bulk(struct device *dev, const struct clk_hw_desc **des=
+cs, size_t num_descs)
+{
+	int ret;
+	int i;
 
-> 
-> The above talks about reset_link(), which is only used in the
-> io_frozen case.  In that case, I think the only thing this patch
-> changes is that when reset_link() fails, we'll return with
-> PCI_ERS_RESULT_DISCONNECT instead of whatever reset_link()
-> returned.
-Yes, if reset_link() is successful then we let pcie_do_recovery()
-proceed to call report_slot_reset() with initial status value returned
-from report_error_detected() function call.
-> 
-> What this patch *does* change is that in the normal_detected case, we
-> previously never called reset_link() but now we will if an
-> .error_detected() callback requested it.
-yes, as highlighted in issue # 1 this patch adds support to call
-reset_link() if report_error_detected() function requests it.
-> 
->> Along with above issue, this fix also applicable to following
->> issue.
->>
->> Commit 6d2c89441571 ("PCI/ERR: Update error status after
->> reset_link()") added support to store status of reset_link()
->> call. Although this fixed the error recovery issue observed if
->> the initial value of error status is PCI_ERS_RESULT_DISCONNECT
->> or PCI_ERS_RESULT_NO_AER_DRIVER, it also discarded the status
->> result from report_frozen_detected. This can cause a failure to
->> recover if _NEED_RESET is returned by report_frozen_detected and
->> report_slot_reset is not invoked.
-> 
-> Sorry, I'm not following this explanation.  IIUC this fixes a bug when
-> the channel is frozen and .error_detected() returns NEED_RESET.
-> 
-> In that case, the current code does:
-> 
->    * state == io_frozen
->    * .error_detected() returns status == NEED_RESET
->    * status = reset_link()
->    * if status != RECOVERED, we return status
->    * otherwise status == RECOVERED
->    * we do not call report_slot_reset()
->    * we return RECOVERED
-> 
-> It does seem like we *should* call the .slot_reset() callbacks, but
-> the only time we return recovery failure is if reset_link() failed.
-> 
-> I can certainly understand if drivers don't recover when we reset
-> their device but don't call their .slot_reset() callback.  Is that
-> what this fixes?
-> 
-> After the patch,
-> 
->    * state == io_frozen
->    * .error_detected() returns status == NEED_RESET
->    * we set status = NEED_RESET (doesn't change anything in this case)
->    * we call reset_link()
->    * if reset_link() failed, we return DISCONNECT
->    * otherwise continue with status == NEED_RESET
->    * we *do* call report_slot_reset()
->    * we return whatever .slot_reset() returned
-> 
-> I think the change to call .slot_reset() makes sense, but that's not
-> at all clear from the commit log.  Am I understanding the behavior
-> correctly?
-Yes, your understanding is correct. I hope above mentioned error
-description clarifies it.
-> 
->> Such an event can be induced for testing purposes by reducing the
->> Max_Payload_Size of a PCIe bridge to less than that of a device
->> downstream from the bridge, and then initiating I/O through the
->> device, resulting in oversize transactions.  In the presence of DPC,
->> this results in a containment event and attempted reset and recovery
->> via pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not
->> invoked, and the device does not recover.
-> 
-> Use "pcie_do_recovery()" and "report_slot_reset()" (including the
-> parentheses) to follow convention.  Also fix other occurrences above.
-will fix it in next version.
-> 
->> [original patch is from jay.vosburgh@canonical.com]
->> [original patch link https://lore.kernel.org/linux-pci/18609.1588812972@famine/]
->> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
->> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
->> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->> ---
->>   drivers/pci/pcie/err.c | 19 +++++++++++++++----
->>   1 file changed, 15 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->> index 14bb8f54723e..db80e1ecb2dc 100644
->> --- a/drivers/pci/pcie/err.c
->> +++ b/drivers/pci/pcie/err.c
->> @@ -165,13 +165,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->>   	pci_dbg(dev, "broadcast error_detected message\n");
->>   	if (state == pci_channel_io_frozen) {
->>   		pci_walk_bus(bus, report_frozen_detected, &status);
->> -		status = reset_link(dev);
->> -		if (status != PCI_ERS_RESULT_RECOVERED) {
->> +		status = PCI_ERS_RESULT_NEED_RESET;
->> +	} else {
->> +		pci_walk_bus(bus, report_normal_detected, &status);
->> +	}
->> +
->> +	if (status == PCI_ERS_RESULT_NEED_RESET) {
->> +		if (reset_link) {
->> +			if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
->> +				status = PCI_ERS_RESULT_DISCONNECT;
->> +		} else {
->> +			if (pci_bus_error_reset(dev))
->> +				status = PCI_ERS_RESULT_DISCONNECT;
-> 
-> As far as I can tell, there is no caller of pcie_do_recovery() where
-> reset_link is NULL, so this call of pci_bus_error_reset() looks like
-> dead code.
-Yes, I will remove the if (reset_link) check.
-> 
-> We did not previously check whether reset_link was NULL, and this
-> patch changes nothing that could result in it being NULL.
-> 
->> +		}
->> +
->> +		if (status == PCI_ERS_RESULT_DISCONNECT) {
->>   			pci_warn(dev, "link reset failed\n");
->>   			goto failed;
->>   		}
->> -	} else {
->> -		pci_walk_bus(bus, report_normal_detected, &status);
->>   	}
->>   
->>   	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
->> -- 
->> 2.17.1
->>
+	for (i =3D 0; i < num_descs; i++) {
+		ret =3D some_internal_clk_register_func(dev, descs[i]->hw, descs[i]->init=
+);
+		if (ret)
+			goto error;
+	}
+
+	return 0;
+error:
+	while (--i >=3D 0)
+		clk_hw_unregister(...)
+
+	return ret;
+}
