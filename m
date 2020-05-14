@@ -2,156 +2,94 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 535DCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F90C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21C782065C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83DB020734
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CXbcGZPR"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RZ4s9HiG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728765AbgENWll (ORCPT
+        id S1728774AbgENWnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 18:41:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56062 "EHLO
+        Thu, 14 May 2020 18:43:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728313AbgENWlk (ORCPT
+        by vger.kernel.org with ESMTP id S1728229AbgENWnU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 18:41:40 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8714AC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 15:41:39 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id s37so95133ybe.13
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 15:41:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VP7VFrpLx9+7zavNiPF4upyf8a0jJr6Pd2wVgsM8FEU=;
-        b=CXbcGZPRh61YqMS5n5nKa2yXWpw1FMvimDyryPuY+qg8BNN0pqXrfagDSgvy28KKOV
-         7Hbnkh8tWoJYas/OJUDoJkzh/GipkESuIsFsB/hf1xT5/xsajMko0tT1qXi1UvtYerd1
-         mBWbGD/ni7PpptTtrPwm6BQSKx7fxUm4+C98aRmbxjS4+qANciEh4d7M5jJn7Men447x
-         azfOtzeWw1gPeIE4HP5tYqLIVh9Gty14TZfj+SRPPd5OtG9WVZ4EALxPbMOeEMP8wu6w
-         BZXIxMmIITcQz7gDxHeO8e5ZUFpwO1KoTOyM1ZP/0tYFGU4xbB/+I5dsccDjPWx4e9o5
-         QA9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VP7VFrpLx9+7zavNiPF4upyf8a0jJr6Pd2wVgsM8FEU=;
-        b=XpMK4XtbLdCXhX17NNTz2qUHXaa1fZevSGuCoV5F0zxJtaoQTjdpprrwDTQPNPSw5E
-         ZEmqDWVpqjYfoZORwPbI7Idrcu8XuAAomK/BycG4ThDIhWj5VaEDBlM2cujBlMOjgxSs
-         YyQxj6KjaWFRAJLga51+rsKCXZfjGe34lqtjc536KauyF1N5tIPfB2u+SJwmNs7m4mnv
-         WlrNNpZ3DPDnosl0weO5xb0vea+8i5Y1B15+bEhy3rfIQba/s6qpMQIduxiRUtXIwhCS
-         LThGBptwgNr7kWiw7wA34U2CChaUg/RsVV5J7cemm6HfdOcyo+uUCIc5A9JbW3QuoaHw
-         xyQA==
-X-Gm-Message-State: AOAM533tN9WYiqnWB6CQSyp9/7BHQtkYBSfVrw8GtG7rbEM/iQQ3NmRr
-        dIczqI4R7WYfbzuGghXX1pEZw4wBPwAx1r/uuOAj+g==
-X-Google-Smtp-Source: ABdhPJxMooBWdF5Rsgk3jORT1U07gQqPsMGpBPJeECF2zavMRjs2LQaZRhguXrsqFNYUm1+cJTvffdJKsPibqDZSvlA=
-X-Received: by 2002:a25:5387:: with SMTP id h129mr840559ybb.47.1589496098451;
- Thu, 14 May 2020 15:41:38 -0700 (PDT)
+        Thu, 14 May 2020 18:43:20 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 688B3C061A0C;
+        Thu, 14 May 2020 15:43:20 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49NRQZ5bMbz9sTD;
+        Fri, 15 May 2020 08:43:18 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1589496199;
+        bh=aAaREl4wtg8m5bBBhlWrMHr+r5xP6gQjE/JEICeZG3E=;
+        h=Date:From:To:Cc:Subject:From;
+        b=RZ4s9HiGzxEgAqvB5xZBrLAwG2138vTNReky3++q8UxUblS81Q/9jEgkdGpXNmLTr
+         jVNJmbaBbPM+NAOdgNAX7hxlEtJOhvWuhKqGutN0C9g3eXKhLcHYywB9EYcLDCPchc
+         xuTg36JRQ03Qa47NoAqBWxHPFpfzbU+etvb+xo6CiofvlAZVqL+o+g4zdsAAJUhV4E
+         8nQtf9m/fjbfHRN7HmDDI2N7YSVqNF2Bzpc5i8jAtGes2HWKv2Ym69vKQxYJ33eDAU
+         C+Y22ASqVs+jNoT8ULIb5iffQ6aqkmy32HLhBuvK6uEITBkAYNKdN3IFgFqTZca55s
+         kL5Z2PNdUTn6g==
+Date:   Fri, 15 May 2020 08:43:17 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commits in the rcu tree
+Message-ID: <20200515084317.7deae61a@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200427061520.24905-1-nick.gasson@arm.com> <20200427103505.GA1476763@krava>
- <85lflu7v4o.fsf@arm.com> <20200514132337.GM5583@kernel.org>
-In-Reply-To: <20200514132337.GM5583@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 14 May 2020 15:41:26 -0700
-Message-ID: <CAP-5=fX-dV+VHaPMO2Sw0DFB72YtuSyc23X5S3EvxGxYhAT4kQ@mail.gmail.com>
-Subject: Re: [PATCH 0/3] perf jvmti: Various fixes to JVMTI agent
-To:     Nick Gasson <nick.gasson@arm.com>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/mcZlU9e8Bi.SUIOyAez9_CP";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 6:23 AM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
->
-> Em Thu, May 14, 2020 at 04:56:07PM +0800, Nick Gasson escreveu:
-> > On 04/27/20 18:35 pm, Jiri Olsa wrote:
-> > >
-> > > adding Stephane to the loop
->
-> Stephane, Ian, can you guys please take a look at this one and provide a
-> Reviewed-by or Acked-by?
->
-> Thanks,
->
-> - Arnaldo
->
->
-> > > jirka
-> > >
-> > >>
-> > >> These three patches fix a couple of issues I ran into while using the
-> > >> jitdump JVMTI agent to profile the SPECjbb benchmark.
-> > >>
-> >
-> > Hi, any feedback on these patches?
-> >
-> > Thanks,
-> > Nick
->
+--Sig_/mcZlU9e8Bi.SUIOyAez9_CP
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks Nick,
+Hi all,
+Commits
 
-If you are looking at this code I believe there is a bug in that the
-loop handling jvmtiCompiledMethodLoadInlineRecord is writing out the
-entire line number table before a pc and not just the line number
-table at the pc. This loop in do_get_line_numbers:
+  b2998782ded4 ("Documentation/litmus-tests: Clarify about the RCU pre-init=
+ialization test")
+  663f9202eb8a ("Documentation/litmus-tests: Merge atomic's README into top=
+-level one")
+  f5eff20366f6 ("tools/memory-model: Fix reference to litmus test in recipe=
+s.txt")
 
-if (loc_tab[i].start_location < bci) {
-tab[lines].pc = (unsigned long)pc;
-tab[lines].line_number = loc_tab[i].line_number;
-tab[lines].discrim = 0; /* not yet used */
-tab[lines].methodID = m;
-lines++;
-} else {
+are missing a Signed-off-by from their committer.
 
-It could possibly make sense if it were iterating over the inline data
-in the jvmtiCompiledMethodLoadInlineRecord rather than the line number
-table.
-Fixing this is toward the end of a list of things I need to look at.
+--=20
+Cheers,
+Stephen Rothwell
 
-Thanks,
-Ian
+--Sig_/mcZlU9e8Bi.SUIOyAez9_CP
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-> > >>
-> > >>
-> > >> Nick Gasson (3):
-> > >>   perf jvmti: Fix jitdump for methods without debug info
-> > >>   perf jvmti: Do not report error when missing debug information
-> > >>   perf jvmti: Fix demangling Java symbols
-> > >>
-> > >>  tools/perf/jvmti/libjvmti.c           | 24 +++++++--------
-> > >>  tools/perf/tests/Build                |  1 +
-> > >>  tools/perf/tests/builtin-test.c       |  4 +++
-> > >>  tools/perf/tests/demangle-java-test.c | 42 +++++++++++++++++++++++++++
-> > >>  tools/perf/tests/tests.h              |  1 +
-> > >>  tools/perf/util/demangle-java.c       | 13 +++++----
-> > >>  6 files changed, 66 insertions(+), 19 deletions(-)
-> > >>  create mode 100644 tools/perf/tests/demangle-java-test.c
-> > >>
-> > >> --
-> > >> 2.26.1
-> > >>
-> >
->
-> --
->
-> - Arnaldo
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl69yYUACgkQAVBC80lX
+0GwOGAf+IkvkuLZuGvdy1FqMcRh1VgWgSvXseITJvxc2NBISGHpDS8L9YO9Ltv9H
+2z0yHN7CAXe/nfKdVeUd6tmclx1cBIJiriEzzcCcPXa3+bZ2O4i4D5uvjTUwYY0i
+Bc2KvgD/D9tjouJ7rQ4TyK7jJz8hx9cHDGG0uPj1ve4FF4dUntE1LaJ0satevSAU
+6JNfnu50R/0TTD1/2ZX211Gnt6cR5ukKTO7pniUf6wILiXg5VX/LHcpzHVlf19p3
+oBapgYZqxycSsTnnodJMgP4I91Rv3xmLw0bYr7K1oK5nzEC3ZOm7aAj+912Y72rF
+v7TTI8Rr3fYF8yGd7hzWBGSCIKzFxA==
+=vHT/
+-----END PGP SIGNATURE-----
+
+--Sig_/mcZlU9e8Bi.SUIOyAez9_CP--
