@@ -2,106 +2,119 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB842C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95290C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4E4D2065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:29:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jJHv4dkn"
+	by mail.kernel.org (Postfix) with ESMTP id 67F57206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 22:30:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589495427;
+	bh=JfZ06iD6joUXIwH8ooSqgCGK+kgADmqALTGYVV5apCs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Jq8gYPDNM9Cwuv7InbYT3SokN4T7cg/dKHy0DHqVmJUXyLxpKOuyHfsWil6zOuSGt
+	 IBayn27emuOiCeCh12VG+9iNrQOWQKORgb8l8z7nSf5Xb9eOBuJCQZPef7puNgsD89
+	 +eKt/B6yaSECP0GBNENNJiZtZgBknIXBwb7gBVGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728612AbgENW3l (ORCPT
+        id S1728627AbgENWa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 18:29:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54182 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728482AbgENW3l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 18:29:41 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC56EC061A0C;
-        Thu, 14 May 2020 15:29:40 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Thu, 14 May 2020 18:30:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41614 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728482AbgENWa0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 18:30:26 -0400
+Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49NR6n70DLz9sTD;
-        Fri, 15 May 2020 08:29:37 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1589495378;
-        bh=JeunvOBzj/nn3DzNyB3xTBnP1+Ir5YCeDPCehLP/7j0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=jJHv4dknuh4xybfYrlLlbHfRKcaTvQAfjiPv9EcobAtPFMcviu14hy8kNAscycqQc
-         WFIQaNbFbO/PVx8d5HpEwWV2hLjOun9bySAOLaA9enmuqrA5kLuVsN8+aFs0fJvse0
-         SvfN2MdxFAyVdivQLBOHsLefWftQlUHgHgduSBhYOMmCvEz8E59pQ2KsEb3GW2AQwD
-         3TXo+7v/MGYFsJkyDn/3FJoAe3I7BP/6LZuCcS3QdFc+IYh+jW6U1MaT5qkeU5Y60q
-         sJX8h1jzvUceS1lo47EuShPGzSjfY65EnXdcY5g23WlzNjbKpewxz9awef6UHhJx7c
-         9cwfs8CEKI8bQ==
-Date:   Fri, 15 May 2020 08:29:34 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mimi Zohar <zohar@linux.vnet.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: linux-next: Fixes tag needs some work in the integrity-fixes tree
-Message-ID: <20200515082934.7a8ebec5@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 561A92065F;
+        Thu, 14 May 2020 22:30:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589495425;
+        bh=JfZ06iD6joUXIwH8ooSqgCGK+kgADmqALTGYVV5apCs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=F2NspCxOGZkToo3+fx8xJC+Qf2ygjE+T7gb19UvYVE1wxrBTPpnfLEZYXpFUrH64p
+         ISqhwDBUmhLLT3spWx6FVO+VlFnbN7F6MnAcMmxYWlIqhlLC9fbcxwomU5a/d5ZoTb
+         VtekT5VPwn3OZ7WMLvTCrEDaWl+5uhESQh/HKZuw=
+Date:   Fri, 15 May 2020 00:30:23 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Josh Triplett <josh@joshtriplett.org>
+Subject: Re: [PATCH 08/10] rcu: Allow to deactivate nocb on a CPU
+Message-ID: <20200514223021.GA4071@lenoir>
+References: <20200513164714.22557-1-frederic@kernel.org>
+ <20200513164714.22557-9-frederic@kernel.org>
+ <20200513183831.GV2869@paulmck-ThinkPad-P72>
+ <20200513224525.GA18303@lenoir>
+ <20200514154707.GL2869@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/gjVtG1tEKHExZV1K3=CuFBa";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514154707.GL2869@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/gjVtG1tEKHExZV1K3=CuFBa
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, May 14, 2020 at 08:47:07AM -0700, Paul E. McKenney wrote:
+> On Thu, May 14, 2020 at 12:45:26AM +0200, Frederic Weisbecker wrote:
+> This last seems best to me.  The transition from CBLIST_NOT_OFFLOADED
+> to CBLIST_OFFLOADING of course needs to be on the CPU in question with
+> at least bh disabled.  Probably best to be holding rcu_nocb_lock(),
+> but that might just be me being overly paranoid.
 
-Hi all,
+So that's in the case of offloading, right? Well, I don't think we'd
+need to even disable bh nor lock nocb. We just need the current CPU
+to see the local update of cblist->offloaded = CBLIST_OFFLOADING
+before the kthread is unparked:
 
-In commit
+    cblist->offloaded = CBLIST_OFFLOADING;
+    /* Make sure subsequent softirq lock nocb */
+    barrier();
+    kthread_unpark(rdp->nocb_cb_thread);
 
-  f438e9598695 ("evm: Fix a small race in init_desc()")
+Now, although that guarantees that nocb_cb will see CBLIST_OFFLOADING
+upon unparking, it's not guaranteed that the nocb_gp will see it on its
+next round. Ok so eventually you're right, I should indeed lock nocb...
 
-Fixes tag
+> 
+> > > > +static long rcu_nocb_rdp_deoffload(void *arg)
+> > > > +{
+> > > > +	struct rcu_data *rdp = arg;
+> > > > +
+> > > > +	WARN_ON_ONCE(rdp->cpu != raw_smp_processor_id());
+> > > > +	__rcu_nocb_rdp_deoffload(rdp);
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > 
+> > > For example, is the problem caused by invocations of this
+> > > rcu_nocb_rdp_deoffload() function?
+> > 
+> > How so?
+> 
+> It looked to me like it wasn't excluding either rcu_barrier() or CPU
+> hotplug.  It might also not have been pinning onto the CPU in question,
+> but that might just be me misremembering.  Then again, I didn't see a
+> call to it, so maybe its callers set things up appropriately.
+> 
+> OK, I will bite...  What is the purpose of rcu_nocb_rdp_deoffload()?  ;-)
 
-  Fixes: 53de3b080d5e: "evm: Check also if *tfm is an error pointer in init=
-_desc()"
+Ah it's called using work_on_cpu() which launch a workqueue on the
+target and waits for completion. And that whole thing is protected
+inside the barrier mutex and hotplug.
 
-has these problem(s):
+> Agreed!  And I do believe that concurrent callback execution will
+> prove better than a possibly indefinite gap in callback execution.
 
-  - missing space between the SHA1 and the subject
-    Just use
-	git log -1 --format=3D'Fixes: %h ("%s")'
+Mutual agreement! :-)
 
-So
-
-Fixes: 53de3b080d5e ("evm: Check also if *tfm is an error pointer in init_d=
-esc()")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/gjVtG1tEKHExZV1K3=CuFBa
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl69xk4ACgkQAVBC80lX
-0Gz8gQf/XSXD6YMSUC4GVhv8Myotbghpumgq0plm4JphQ41inYUn1ZJUi10Uq+93
-p5twZ4HGoldEr1TMUKykK2cyZ2F4H0TqrYv1lFdGR5M3h6UNWNF7Tvx8kAjj5zvK
-fsX4cVNn1pLPOBFaSNdd6kG7Qxop2lZDayZxhdzFwmqAB6geqlFs9uSknMF+eCsU
-qSEMSmqhG79f8b5fcu7iI8uFkngAztixcesl7qZ4cO9xMRUKxv2iVr1p+A8V+FTK
-EP/TY1S2sUvLY8CG1VgrMh8c2jV0rmR/ug3jwNTxW5sCOGk41VwjOGcrf40V5/TD
-W3tEI3c1UMqRUaSsG8bueMu1PeeswQ==
-=Y8ol
------END PGP SIGNATURE-----
-
---Sig_/gjVtG1tEKHExZV1K3=CuFBa--
+Thanks.
