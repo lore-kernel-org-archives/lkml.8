@@ -2,116 +2,129 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D90AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D290CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BF3020671
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:35:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589481351;
-	bh=DBsRMjvUPnOqCsVmwYL6jya0KCwKQ1zQUIs0BXYW/7U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LkTtwvRTy+pAbKi9F63Au5Lvw/cEImTVeDvqMCBm53vHj92vOixIS/yEw2vyOrXAc
-	 Q6yvF4wvAdR6DNHnmRUuSub/tZfJjGbIULayppn85sibOHZqbYuIneAr5JucquXpcE
-	 7+xeI1gXQH0jc7socymriQtVYqpDYnIo9bDvwgbY=
+	by mail.kernel.org (Postfix) with ESMTP id B1FDE20657
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:39:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uyVvJKrr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbgENSfu (ORCPT
+        id S1727119AbgENSjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:35:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45764 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726165AbgENSft (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:35:49 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73071C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 11:35:49 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id l19so4624572lje.10
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 11:35:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=l8s6vDtxuT5olw4UM6subAP86ZwrBjNzAYmJbIDfuCY=;
-        b=fgXSyf0fckO2ltX2VwxVKikMBMpglkxCARZIOKyOtCiQEL1TZcg5HkOTZ7ySmrB5lf
-         vxtWHU+nchNF+ANnp3/v2fvqljvpOUtBHt8c1vuR/sUKXTr4DIiUH0HGahhYay5c/baU
-         zDvjpcHNIg9W0KMF+jl0GQxZzhQhzGtTu+sp0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l8s6vDtxuT5olw4UM6subAP86ZwrBjNzAYmJbIDfuCY=;
-        b=Cc+z4LCQ7+jmidjMA33ebdxvl1M1cPSezik96zouB7d+cFTsH86YIesNFCxH5NjJnN
-         ChJFI1cfzG9Py7c1m/1gcmk9rXyfRx5UQS5mlEM1gpaieCQzZpjqKjpIcD/Sc7ubFeWn
-         RfNJk82UKYQ8Vx5qEvCN5br5UE/MgcKvjJGOxLGpXR6pZzuHqC48uiIii/DFtRUk7q7W
-         op2rdOUMGnSzcGyUEeC/O218BiMdUQItNB166MakRBCNP0H0HS9bUcGyienOVZOfEP6X
-         GZ9SeFcf/8VH5YxFPVwnEHfTerPVu/gMljGbesg+uUWK/vdss+2Jpk35Kji4gGYotASP
-         6PBQ==
-X-Gm-Message-State: AOAM531Y+5dhON9NcsD6g2oSLyxuTXf7j756xhbGKnDBLXEXIquJKG0p
-        iqjGvcSFZhyt0HR5Jv7dLfr+090fzqE=
-X-Google-Smtp-Source: ABdhPJzUN7P/v+ThA8iOb+xMr3oIzqkEuXZI8+sbSpMlJgSR4+kQjZ5L668wyf0mJk3h2m/ePjW93w==
-X-Received: by 2002:a2e:a40d:: with SMTP id p13mr3569238ljn.183.1589481347437;
-        Thu, 14 May 2020 11:35:47 -0700 (PDT)
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
-        by smtp.gmail.com with ESMTPSA id m3sm2082056lfb.30.2020.05.14.11.35.46
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 May 2020 11:35:46 -0700 (PDT)
-Received: by mail-lf1-f51.google.com with SMTP id h26so3507317lfg.6
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 11:35:46 -0700 (PDT)
-X-Received: by 2002:ac2:47fb:: with SMTP id b27mr4273082lfp.10.1589481345738;
- Thu, 14 May 2020 11:35:45 -0700 (PDT)
+        Thu, 14 May 2020 14:39:20 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:60834 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726188AbgENSjT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:39:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=gupvsLoI2EPTbCeDlomiVkEb9QRYW3zBFnUQWK4fPE4=; b=uyVvJKrrD/p1T/m5Bb74qBnCzQ
+        auVHibpRub8C3s343/Oc3+N1Jsnbmy9fV5yfn7yMhB6GnTyOsCJyHzcFYntm0Na8w22GXjC9JI3nJ
+        WhvkjmIm92B3rIlwXuBTkoLdR/1d1CbW4cM3BjKP+5GRdNjdLEaJ1kEGadEz2rnXSLtk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jZIlE-002JT7-AS; Thu, 14 May 2020 20:39:12 +0200
+Date:   Thu, 14 May 2020 20:39:12 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
+        robh@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH net-next 1/2] dt-bindings: net: dp83822: Add TI dp83822
+ phy
+Message-ID: <20200514183912.GW499265@lunn.ch>
+References: <20200514173055.15013-1-dmurphy@ti.com>
+ <20200514173055.15013-2-dmurphy@ti.com>
 MIME-Version: 1.0
-References: <20200514170451.1821723-1-christian.brauner@ubuntu.com>
- <CAHk-=wjpb-h9Z6O6o_7GkqCV1N-qQhagVJxpYZurYQR+eLkuEg@mail.gmail.com> <1C5DBE84-3E8F-4478-8188-8A09A527B195@ubuntu.com>
-In-Reply-To: <1C5DBE84-3E8F-4478-8188-8A09A527B195@ubuntu.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 14 May 2020 11:35:29 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjET6Hu50QbnPA+khx8b7hPsZ2bWXmpgA7Ljc6kg8iO-Q@mail.gmail.com>
-Message-ID: <CAHk-=wjET6Hu50QbnPA+khx8b7hPsZ2bWXmpgA7Ljc6kg8iO-Q@mail.gmail.com>
-Subject: Re: [GIT PULL] thread fixes v5.7-rc5
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514173055.15013-2-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 11:22 AM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
->
-> Seemed weird to me to change something that's been exposed to userspace for that long.
+On Thu, May 14, 2020 at 12:30:54PM -0500, Dan Murphy wrote:
+> Add a dt binding for the TI dp83822 ethernet phy device.
+> 
+> CC: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  .../devicetree/bindings/net/ti,dp83822.yaml   | 49 +++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/ti,dp83822.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/net/ti,dp83822.yaml b/Documentation/devicetree/bindings/net/ti,dp83822.yaml
+> new file mode 100644
+> index 000000000000..60afd43ad3b6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/ti,dp83822.yaml
+> @@ -0,0 +1,49 @@
+> +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
+> +# Copyright (C) 2020 Texas Instruments Incorporated
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/net/ti,dp83822.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: TI DP83822 ethernet PHY
+> +
+> +allOf:
+> +  - $ref: "ethernet-controller.yaml#"
+> +
+> +maintainers:
+> +  - Dan Murphy <dmurphy@ti.com>
+> +
+> +description: |
+> +  The DP83822 is a low-power, single-port, 10/100 Mbps Ethernet PHY. It
+> +  provides all of the physical layer functions needed to transmit and receive
+> +  data over standard, twisted-pair cables or to connect to an external,
+> +  fiber-optic transceiver. Additionally, the DP83822 provides flexibility to
+> +  connect to a MAC through a standard MII, RMII, or RGMII interface
 
-Well, the internal declarations aren't actually "exposed" to user
-space - it's not like it's the declaration of the system call, that's
-separate.
+Hi Dan
 
-And we have done that before: we have had a lot of history of using
-"unsigned long" to basically mean "register", and then ended up
-cleaning up types afterwards.
+You say 10/100 Mbps Ethernet PHY, but then list RGMII?
 
-In fact, if you look at the macros that do SYSCALL_DEFINE() (hint -
-don't actually do it, you'll go mad) you'll see that magical
-__SC_LONG() thing, which actually declares _all_ arguments as either
-"unsigned long" or "unsigned long long".
+> +
+> +  Specifications about the charger can be found at:
+> +    http://www.ti.com/lit/ds/symlink/dp83822i.pdf
+> +
+> +properties:
+> +  reg:
+> +    maxItems: 1
+> +
+> +  ti,signal-polarity-low:
+> +    type: boolean
+> +    description: |
+> +       DP83822 PHY in Fiber mode only.
+> +       Sets the DP83822 to detect a link drop condition when the signal goes
+> +       high.  If not set then link drop will occur when the signal goes low.
 
-That's the "native" representation of the low-level system call (it's
-also marked "asmlinkage" etc).
+Are we talking about the LOS line from the SFP cage? In the SFF/SFP
+binding we have:
 
-We then end up casting them to the internal representation with that
-__SC_CAST() macro.
+- los-gpios : GPIO phandle and a specifier of the Receiver Loss of Signal
+  Indication input gpio signal, active (signal lost) high
 
-So the actual types that we get are intentionally "cleaned up"
-versions of the raw registers that were passed in.
+It would be nice to have a consistent naming.
 
-But you really don't want to understand the __SYSCALL_DEFINEx() macro.
-It's clever, but it really is the Cthulhu of macros. Just looking at
-it might drive you mad.
+Is it required the LOS signal is connected to the PHY? Russell King
+has some patches which allows the Marvell PHY to be used as a media
+converter. In that setting, i think the SFP signals are connected to
+GPIOs not the PHY. The SFP core can then control the transmit disable,
+module insertion detection etc. So i'm wondering if you need a
+property to indicate the LOS is not connected to the PHY?
 
-                Linus
+	 Andrew
