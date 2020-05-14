@@ -2,256 +2,98 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE40C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCF7B2065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36CA82065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:13:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YVAWLtGy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726165AbgENRNC (ORCPT
+        id S1726197AbgENRNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 13:13:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32882 "EHLO
+        Thu, 14 May 2020 13:13:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726032AbgENRNB (ORCPT
+        by vger.kernel.org with ESMTP id S1726032AbgENRNf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 13:13:01 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F791C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 10:13:01 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id C4CCA2A2FB5
-Subject: Re: [PATCH v4 7/7] drm/mediatek: mtk_dsi: Create connector for
- bridges
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Cc:     Enric Balletbo Serra <eballetbo@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <20200501152335.1805790-1-enric.balletbo@collabora.com>
- <20200501152335.1805790-8-enric.balletbo@collabora.com>
- <CAFqH_53h=3OXzwLnw1XT3rHYkMPOPNFBdQdPeFmNubN9qq_Twg@mail.gmail.com>
- <CAAOTY_-pOUuM7LQ1jm6gqpg8acMqDWOHxGucY5XOjq0ctGUkzA@mail.gmail.com>
- <53683f2d-23c7-57ab-2056-520c50795ffe@collabora.com>
- <CAAOTY__b6V12fS2xTKGjB1fQTfRjX7AQyBqDPXzshfhkjjSkeQ@mail.gmail.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <37191700-5832-2931-5764-7f7fddd023b9@collabora.com>
-Date:   Thu, 14 May 2020 19:12:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 14 May 2020 13:13:35 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A2F9C061A0C;
+        Thu, 14 May 2020 10:13:35 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l18so5263376wrn.6;
+        Thu, 14 May 2020 10:13:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=IF8Ki5IlJmDfGWXpvnWsTxxWq1hehzYSo+Qr+oMt2Z0=;
+        b=YVAWLtGyA8IStGobc6Np+B0DqYsQgG4a9IntUyAoFxRiqqCmFGgKQUtUGe+9Ut0QPK
+         HIsTq+Pa9oK0CuKgwObt7FuaJyGf0jJOd3q3DKR8L1aNqaOEeiUnGTcO5qVsKdmx0RC2
+         QAQ7Ec+lsKn5/9dVqTuw5JjbByExL8+IiMHtZHVpckeUnpPHAMILVpOqqYwDTYRcxp4x
+         aproeUhw4vmsUX8AT+oSousx+LNDC21tmwN0g/IKojVXIEpMJzCr1+a44ZPzL+Ag+X2y
+         Pm5UYi0MRgAWlf8KZgTMBphQj795IZR/J1S/zdEPJVO9VQV5ED1YOekHXLoAn+zCaui4
+         tjaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IF8Ki5IlJmDfGWXpvnWsTxxWq1hehzYSo+Qr+oMt2Z0=;
+        b=PF5qlnske1pn8FFVfBDNwCTTsM/4+Xt0mH9uDsx1x5hxwZ9WIdkD1DfByu6o+khZc/
+         qeDi7cuzci/YAKy4NftacXHfZZLRBQCyjkF2WVMYW30COZJEp6AyhuzDZ7C4Cd/4sxPf
+         zBjjIevEiuPz3a6e2AvrEu3KkImB3zR/rucPwmxP5YXsi7uCOcUfzL3J/bA9soJwO1Ig
+         XsEhYuHkuzCc33r0JfslMadB/qV0OjDPUFvh2lpH+n217FNikn9J0vpO/mnIcRXA8sF8
+         LkoNkPyub6rBDDMqELh+a0DauwR8MQ2kAItMCZg5arRBsbyv5LXbbkC1QscDNuJM0qTp
+         uvDA==
+X-Gm-Message-State: AOAM532/ppHWDCMWJwhXT4phItLpoe4/vYqcsf7corNLeCiPwXgcd7xm
+        RYBHzR+gczyrA9Z1kftuQzC7kJ3t
+X-Google-Smtp-Source: ABdhPJwJIGaaAtyx2qFPvj7ZGgx53qTYgdTvqwtZEkplNTBmG5Hqf357izSZbM5oXPFyLo0s18Ox5w==
+X-Received: by 2002:a5d:560c:: with SMTP id l12mr6362645wrv.309.1589476414053;
+        Thu, 14 May 2020 10:13:34 -0700 (PDT)
+Received: from [10.230.188.43] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id c19sm5109706wrb.89.2020.05.14.10.13.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 May 2020 10:13:33 -0700 (PDT)
+Subject: Re: [PATCH] net: phy: mdio-moxart: remove unneeded include
+To:     Bartosz Golaszewski <brgl@bgdev.pl>, Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20200514165938.21725-1-brgl@bgdev.pl>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <8fc8ea34-a68c-8fbd-3821-d073c08444f8@gmail.com>
+Date:   Thu, 14 May 2020 10:13:29 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAAOTY__b6V12fS2xTKGjB1fQTfRjX7AQyBqDPXzshfhkjjSkeQ@mail.gmail.com>
+In-Reply-To: <20200514165938.21725-1-brgl@bgdev.pl>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chun-Kuang,
 
-On 14/5/20 18:44, Chun-Kuang Hu wrote:
-> Hi, Enric:
-> 
-> Enric Balletbo i Serra <enric.balletbo@collabora.com> 於 2020年5月14日 週四 下午11:42寫道：
->>
->> Hi Chun-Kuang,
->>
->> On 14/5/20 16:28, Chun-Kuang Hu wrote:
->>> Hi, Enric:
->>>
->>> Enric Balletbo Serra <eballetbo@gmail.com> 於 2020年5月14日 週四 上午12:41寫道：
->>>>
->>>> Hi Chun-Kuang,
->>>>
->>>> Missatge de Enric Balletbo i Serra <enric.balletbo@collabora.com> del
->>>> dia dv., 1 de maig 2020 a les 17:25:
->>>>>
->>>>> Use the drm_bridge_connector helper to create a connector for pipelines
->>>>> that use drm_bridge. This allows splitting connector operations across
->>>>> multiple bridges when necessary, instead of having the last bridge in
->>>>> the chain creating the connector and handling all connector operations
->>>>> internally.
->>>>>
->>>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->>>>> Acked-by: Sam Ravnborg <sam@ravnborg.org>
->>>>
->>>> A gentle ping on this, I think that this one is the only one that
->>>> still needs a review in the series.
->>>
->>> This is what I reply in patch v3:
->>>
->>
->> Sorry for missing this.
->>
->>> I think the panel is wrapped into next_bridge here,
->>>
->>
->> Yes, you can have for example:
->>
->> 1. drm_bridge (mtk_dsi) -> drm_bridge (ps8640 - dsi-to-edp) -> drm_panel_bridge
->> (edp panel)
->>
->> or a
->>
->> 2. drm_bridge (mtk_dsi)-> drm_panel_bridge (dsi panel)
->>
->> The _first_ one is my use case
->>
->>> if (panel) {
->>
->> This handles the second case, where you attach a dsi panel.
->>
->>>     dsi->next_bridge = devm_drm_panel_bridge_add(dev, panel);
->>>
->>> so the next_bridge is a panel_bridge, in its attach function
->>> panel_bridge_attach(),
->>> according to the flag DRM_BRIDGE_ATTACH_NO_CONNECTOR, if not exist,
->>> it would create connector and attach connector to panel.
->>>
->>> I'm not sure this flag would exist or not, but for both case, it's strange.
->>> If exist, you create connector in this patch but no where to attach
->>> connector to panel.
->>
->> Yes, in fact, this is transitional patch needed, as once I converted mtk_dpi,
->> mtk_dsi and mtk_hdmi to the new drm_bridge API the drm_bridge_connector_init()
->> will be done in mtk_drm_drv. We will need to call drm_bridge_connector_init for
->> dpi and dsi pipes and remove that call from mtk_dsi and mtk_dpi drivers. The
->> graphic controller driver should create connectors and CRTCs, as example you can
->> take a look at drivers/gpu/drm/omapdrm/omap_drv.c
->>
-> 
-> I have such question because I've reviewed omap's driver. In omap's
-> driver, after it call drm_bridge_connector_init(), it does this:
-> 
-> if (pipe->output->panel) {
-> ret = drm_panel_attach(pipe->output->panel,
->       pipe->connector);
-> if (ret < 0)
-> return ret;
-> }
-> 
-> In this patch, you does not do this.
-> 
 
-I see, so yes, I am probably missing call drm_panel_attach in case there is a
-direct panel attached. Thanks for pointing it.
+On 5/14/2020 9:59 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> mdio-moxart doesn't use regulators in the driver code. We can remove
+> the regulator include.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-I'll send a new version adding the drm_panel_attach call.
-
->>> If not exist, the next_brige would create one connector and this brige
->>> would create another connector.
->>>
->>> I think in your case, mtk_dsi does not directly connect to a panel, so
->>
->> Exactly
->>
->>> I need a exact explain. Or someone could test this on a
->>> directly-connect-panel platform.
->>
->> I don't think I am breaking this use case but AFAICS there is no users in
->> mainline that directly connect a panel using the mediatek driver. As I said my
->> use case is the other so I can't really test. Do you know anyone that can test this?
-> 
-> I'm not sure who can test this, but [1], which is sent by YT Shen in a
-> series, is a patch to support dsi command mode so dsi could directly
-> connect to panel.
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/gpu/drm/mediatek?h=v5.7-rc5&id=21898816831fc60c92dd634ab4316a24da7eb4af
-> 
-> It's better that someone could test this case, but if no one would
-> test this, I could also accept a good-look patch.
-> 
-> Regards,
-> Chun-Kuang.
-> 
->>
->> Thanks,
->>  Enric
->>
->>>
->>> Regards,
->>> Chun-Kuang.
->>>
->>>>
->>>> Thanks,
->>>>  Enric
->>>>
->>>>> ---
->>>>>
->>>>> Changes in v4: None
->>>>> Changes in v3:
->>>>> - Move the bridge.type line to the patch that adds drm_bridge support. (Laurent Pinchart)
->>>>>
->>>>> Changes in v2: None
->>>>>
->>>>>  drivers/gpu/drm/mediatek/mtk_dsi.c | 13 ++++++++++++-
->>>>>  1 file changed, 12 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
->>>>> index 4f3bd095c1ee..471fcafdf348 100644
->>>>> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
->>>>> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
->>>>> @@ -17,6 +17,7 @@
->>>>>
->>>>>  #include <drm/drm_atomic_helper.h>
->>>>>  #include <drm/drm_bridge.h>
->>>>> +#include <drm/drm_bridge_connector.h>
->>>>>  #include <drm/drm_mipi_dsi.h>
->>>>>  #include <drm/drm_of.h>
->>>>>  #include <drm/drm_panel.h>
->>>>> @@ -183,6 +184,7 @@ struct mtk_dsi {
->>>>>         struct drm_encoder encoder;
->>>>>         struct drm_bridge bridge;
->>>>>         struct drm_bridge *next_bridge;
->>>>> +       struct drm_connector *connector;
->>>>>         struct phy *phy;
->>>>>
->>>>>         void __iomem *regs;
->>>>> @@ -977,10 +979,19 @@ static int mtk_dsi_encoder_init(struct drm_device *drm, struct mtk_dsi *dsi)
->>>>>          */
->>>>>         dsi->encoder.possible_crtcs = 1;
->>>>>
->>>>> -       ret = drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL, 0);
->>>>> +       ret = drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL,
->>>>> +                               DRM_BRIDGE_ATTACH_NO_CONNECTOR);
->>>>>         if (ret)
->>>>>                 goto err_cleanup_encoder;
->>>>>
->>>>> +       dsi->connector = drm_bridge_connector_init(drm, &dsi->encoder);
->>>>> +       if (IS_ERR(dsi->connector)) {
->>>>> +               DRM_ERROR("Unable to create bridge connector\n");
->>>>> +               ret = PTR_ERR(dsi->connector);
->>>>> +               goto err_cleanup_encoder;
->>>>> +       }
->>>>> +       drm_connector_attach_encoder(dsi->connector, &dsi->encoder);
->>>>> +
->>>>>         return 0;
->>>>>
->>>>>  err_cleanup_encoder:
->>>>> --
->>>>> 2.26.2
->>>>>
->>>>>
->>>>> _______________________________________________
->>>>> Linux-mediatek mailing list
->>>>> Linux-mediatek@lists.infradead.org
->>>>> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
