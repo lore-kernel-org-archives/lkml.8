@@ -2,202 +2,211 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD27C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7B3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22F4220657
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:46:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="SxDlxjrQ"
+	by mail.kernel.org (Postfix) with ESMTP id 94B5E2065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:47:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589471230;
+	bh=VdNGNytUoEDqByba4R9ST8kEqlNqY6M19e3zbSRuc/8=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=b5lbHlgBB2EqsgwHjhAlPJOA2cxGBw+saq3FjohDsaage20hcaAH22pX/iD8mafVF
+	 J7ldKoaZGIMxlP8aKpYR3h/YW6yj7Vy0e/BeI0qg5KuZOPWHNHQLS3Tf9+bHxSJoWv
+	 JUc2U3L1EMTWtP2UWaWwF9RzI1/8Em7gmJE0acpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727853AbgENPq2 (ORCPT
+        id S1727830AbgENPrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 11:46:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47566 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbgENPq1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 11:46:27 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86C05C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 08:46:27 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id c24so3227832qtw.7
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 08:46:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=EvtEJvAWirIZmQ1Z7jbnfUadpeoAVrZfw1XsagvgGvU=;
-        b=SxDlxjrQmMi7iKIvy54Aq8ysc6IXtNTU4zH6VizVx8MeEFCNdOUG81zLx/RY+HhnM5
-         MUtvVqmzDtMFFYWGH+H9BIHrMjhgg6XOf9ws18FFokyFiACkJ56gYR4V3dLAbFIam2gQ
-         SPFLPxur658m9PdXybU+84o7wsi5tbldbQpIe1qJwYE8lHP4P/Vtsj5QPgOAzOAVwANx
-         VG+JifixQCA5gSCG7DuCsjYCXU14ClCgCZ+s55++aAswqZCMtZbqwd2Up8HeMRE/r655
-         d1Pw3wtdB6X/q3lPl+ZGl2HMqZyw+WE0PfkmoytkNUzze7xdzmYrmVlWr3kh2bUxMOmj
-         JYug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=EvtEJvAWirIZmQ1Z7jbnfUadpeoAVrZfw1XsagvgGvU=;
-        b=cXEvGXmA1se3DfU69AMKCCu5ReUIE8XsE1Dsu+P9yw4E5H/i2T8UPFXEfR47nLLTA5
-         uBEQ1oEfmVyS+cOF0rUKxgFbg+LYvH9A7kLfSa5BvqTHsOD55WjuLdBn+SKZXSeXOCGi
-         3a9qb9nASxkiwUH7xsktLq9mZpxB8uv+UAwzsl3RXxbP4eGpsgbcuUS2Tn1qy8u6/erW
-         uYzbRSx6GcCcE7YPspZR2fcS0FKJ9VvV0jSkc2q0XKNwjvvGr6C+y/C7kpsqcIpIXpdn
-         aG7Ihg0wHgYxp046sCA/fU3kVK5ToJJxZasfSeRA3zTIf+4/V9zfU+GUNsSqiOgcst6p
-         s9IQ==
-X-Gm-Message-State: AOAM5301+nOIInwl98t8xPUkapeRzGZ/QQ1ANKJDQAKvby5IUR/Oca/z
-        6OrXk2hjvN8zKQctF/jySKA5+Q==
-X-Google-Smtp-Source: ABdhPJyL56oT0F10NB9HzzF4jSHef/mJ0f8Ab/J+5o5AMZA6se1xgSynhjMgMRo8KI44Hgyn1fXAew==
-X-Received: by 2002:aed:3848:: with SMTP id j66mr5294804qte.227.1589471186484;
-        Thu, 14 May 2020 08:46:26 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id f24sm293899qtq.39.2020.05.14.08.46.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 May 2020 08:46:24 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: Default enable RCU list lockdep debugging with PROVE_RCU
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20200514153400.GJ2869@paulmck-ThinkPad-P72>
-Date:   Thu, 14 May 2020 11:46:23 -0400
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Amol Grover <frextrite@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <6089C62B-52AA-47CB-BCA0-9096B3482509@lca.pw>
-References: <20200514222535.259cb69e@canb.auug.org.au>
- <ADC503BE-32C0-46BB-A65E-59FFEC30ED57@lca.pw>
- <20200514133328.GG2869@paulmck-ThinkPad-P72>
- <ADE40EB3-1B1C-4CCF-9B8A-1F2BC585BCFB@lca.pw>
- <20200514135402.GI2869@paulmck-ThinkPad-P72>
- <CC392959-36FD-459F-BD13-8F50C22FC615@lca.pw>
- <20200514153400.GJ2869@paulmck-ThinkPad-P72>
-To:     paulmck@kernel.org
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Thu, 14 May 2020 11:47:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39646 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726056AbgENPrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 11:47:09 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29FC920657;
+        Thu, 14 May 2020 15:47:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589471228;
+        bh=VdNGNytUoEDqByba4R9ST8kEqlNqY6M19e3zbSRuc/8=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=iPs0Ot0Jz8Lr3N/DIQe+XwjCn9ILcTojcQoM7Yx3CRRZ2ux7tKv75GCqI0dPmL4Zc
+         pN0HV0z8bkkyFu6luIwgWjsMu9uANH0c+lpXNiQDQAYkYaPD87b+GjFCpD+rM+w692
+         mWFltUN5b2rGlI0nu59UmUdAQnAPkmxs1zWXn5V4=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id ADB3635229C5; Thu, 14 May 2020 08:47:07 -0700 (PDT)
+Date:   Thu, 14 May 2020 08:47:07 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Josh Triplett <josh@joshtriplett.org>
+Subject: Re: [PATCH 08/10] rcu: Allow to deactivate nocb on a CPU
+Message-ID: <20200514154707.GL2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200513164714.22557-1-frederic@kernel.org>
+ <20200513164714.22557-9-frederic@kernel.org>
+ <20200513183831.GV2869@paulmck-ThinkPad-P72>
+ <20200513224525.GA18303@lenoir>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513224525.GA18303@lenoir>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 14, 2020 at 12:45:26AM +0200, Frederic Weisbecker wrote:
+> On Wed, May 13, 2020 at 11:38:31AM -0700, Paul E. McKenney wrote:
+> > On Wed, May 13, 2020 at 06:47:12PM +0200, Frederic Weisbecker wrote:
+> > > +static void __rcu_nocb_rdp_deoffload(struct rcu_data *rdp)
+> > > +{
+> > > +	unsigned long flags;
+> > > +	struct rcu_node *rnp = rdp->mynode;
+> > > +
+> > > +	printk("De-offloading %d\n", rdp->cpu);
+> > > +	kthread_park(rdp->nocb_cb_kthread);
+> > 
+> > I am a bit concerned about this, because from this point until the
+> > end of this function, no RCU callbacks can be invoked for this CPU.
+> > This could be a problem if there is a callback flood in progress, and
+> > such callback floods are in fact one reason that the sysadm might want
+> > to be switching from offloaded to non-offloaded.  Is it possible to
+> > move this kthread_park() to the end of this function?  Yes, this can
+> > result in concurrent invocation of different callbacks for this CPU,
+> > but because we have excluded rcu_barrier(), that should be OK.
+> > 
+> > Or is there some failure mode that I am failing to see?  (Wouldn't
+> > be the first time...)
+> 
+> Heh I actually worried about that. Ok the issue is that it leaves
+> a window where nocb_cb and local caller of rcu_do_batch() can
+> compete but the local caller doesn't lock the nocb_lock.
 
+Indeed, my nightmare scenario involves some sort of preemption or
+similar long delay at that point.  Callbacks pile up, and then OOM!
 
-> On May 14, 2020, at 11:34 AM, Paul E. McKenney <paulmck@kernel.org> =
-wrote:
->=20
-> On Thu, May 14, 2020 at 10:03:21AM -0400, Qian Cai wrote:
->>=20
->>=20
->>> On May 14, 2020, at 9:54 AM, Paul E. McKenney <paulmck@kernel.org> =
-wrote:
->>>=20
->>> On Thu, May 14, 2020 at 09:44:28AM -0400, Qian Cai wrote:
->>>>=20
->>>>=20
->>>>> On May 14, 2020, at 9:33 AM, Paul E. McKenney <paulmck@kernel.org> =
-wrote:
->>>>>=20
->>>>> On Thu, May 14, 2020 at 08:31:13AM -0400, Qian Cai wrote:
->>>>>>=20
->>>>>>=20
->>>>>>> On May 14, 2020, at 8:25 AM, Stephen Rothwell =
-<sfr@canb.auug.org.au> wrote:
->>>>>>>=20
->>>>>>> Hi Paul,
->>>>>>>=20
->>>>>>> This patch in the rcu tree
->>>>>>>=20
->>>>>>> d13fee049fa8 ("Default enable RCU list lockdep debugging with =
-PROVE_RCU")
->>>>>>>=20
->>>>>>> is causing whack-a-mole in the syzbot testing of linux-next.  =
-Because
->>>>>>> they always do a debug build of linux-next, no testing is =
-getting done. :-(
->>>>>>>=20
->>>>>>> Can we find another way to find all the bugs that are being =
-discovered
->>>>>>> (very slowly)?
->>>>>>=20
->>>>>> Alternatively, could syzbot to use PROVE_RCU=3Dn temporarily =
-because it can=E2=80=99t keep up with it? I personally found =
-PROVE_RCU_LIST=3Dy is still useful for my linux-next testing, and =
-don=E2=80=99t want to lose that coverage overnight.
->>>>>=20
->>>>> The problem is that PROVE_RCU is exactly PROVE_LOCKING, and asking =
-people
->>>>> to test without PROVE_LOCKING is a no-go in my opinion.  But of =
-course
->>>>> on the other hand if there is no testing of RCU list lockdep =
-debugging,
->>>>> those issues will never be found, let alone fixed.
->>>>>=20
->>>>> One approach would be to do as Stephen asks (either remove =
-d13fee049fa8
->>>>> or pull it out of -next) and have testers force-enable the RCU =
-list
->>>>> lockdep debugging.
->>>>>=20
->>>>> Would that work for you?
->>>>=20
->>>> Alternatively, how about having
->>>>=20
->>>> PROVE_RCU_LIST=3Dn if DEBUG_AID_FOR_SYZBOT
->>>>=20
->>>> since it is only syzbot can=E2=80=99t keep up with it?
->>>=20
->>> Sound good to me, assuming that this works for the syzkaller guys.
->>> Or could there be a "select PROVE_RCU_LIST" for the people who would
->>> like to test it.
->>>=20
->>> Alternatively, if we revert d13fee049fa8 from -next, I could provide
->>> you a script that updates your .config to set both RCU_EXPERT and
->>> PROVE_RCU_LIST.
->>>=20
->>> There are a lot of ways to appraoch this.
->>>=20
->>> So what would work best for everyone?
->>=20
->>=20
->> If PROVE_RCU_LIST=3Dn if DEBUG_AID_FOR_SYZBOT works for syzbot guys, =
-that would be great, so other testing agents could still report/fix =
-those RCU-list bugs and then pave a way for syzbot to return back once =
-all those false positives had been sorted out.
->=20
-> On that, I must defer to the syzbot guys.
->=20
->> Otherwise,  =E2=80=9Cselect PROVE_RCU_LIST=E2=80=9D *might* be better =
-than buried into RCU_EXPERT where we will probably never saw those false =
-positives been addressed since my configs does not cover a wide range of =
-subsystems and probably not many other bots would enable RCU_EXPERT.
->=20
-> Yet another option would be to edit your local =
-kernel/rcu/Kconfig.debug
-> and change the code to the following:
->=20
-> 	config PROVE_RCU_LIST
-> 		def_bool y
-> 		help
-> 		  Enable RCU lockdep checking for list usages. It is =
-default
-> 		  enabled with CONFIG_PROVE_RCU.
->=20
-> Removing the RCU_EXPERT dependency would not go over at all well with
-> some people whose opinions are difficult to ignore.  ;-)
+> So there are two ways to solve that.:
+> 
+> 1)  - set cblist->offloaded = 0 locally
+>     - From the kthread while calling rcu_do_batch():
+>       check the value of cblist->offloaded everytime after
+>       we call rcu_nocb_lock() and stop messsing with the
+>       cblist and return when we see cblist->offloaded == 0
+>     - Allow to handle cblist locally without taking the nocb_lock
+>     - Park kthread
+> 
+> But there I'm worried about races. Imagine we have:
+> 
+> 
+>       Kthread                     Local
+>       --------                   -------
+>       rcu_do_batch() {
+>           rcu_nocb_lock()
+>           do stuff with cblist
+>           rcu_nocb_unlock()
+>                                  rcu_nocb_lock()
+>                                  set cblist->offloaded = 0
+>                                  rcu_nocb_unlock()
+>                                  ===> INT or preemption
+>                                  rcu_do_batch() {
+>                                      do stuff with cblist
+> 
+> Are we guaranteed that the Local CPU will see the updates from
+> the kthread while calling rcu_do_batch()? I would tend to say
+> yes but I'm not entirely sure...
+> 
+> Oh wait, that solution also implies that we can't re-enqueue
+> extracted callbacks if we spent took much time in threaded
+> rcu_do_batch(), as the cblist may have been offloaded while
+> we executed the extracted callbacks.
+> 
+> That's a lot of corner cases to handle, which is why I prefer
+> the other solution:
+> 
+> 2) enum cblist_offloaded {
+>         CBLIST_NOT_OFFLOADED,
+>         CBLIST_(DE)OFFLOADING,
+>         CBLIST_OFFLOADED
+>    }
+> 
+>  - Locally set cblist->offloaded =  CBLIST_DEOFFLOADING
+>  - From the kthread while calling rcu_do_batch(), do as
+>    usual.
+>  - Local CPU can call rcu_do_batch() and if it sees CBLIST_DEOFFLOADING,
+>    rcu_nocb_lock() will take the lock.
+>  - Park kthread
+>  - Locally set cblist->offloaded =  CBLIST_NOT_OFFLOADED
+>  - Local calls to rcu_do_batch() won't take the lock anymore.
 
-I am trying to not getting into a game of carrying any custom patch =
-myself.
+This last seems best to me.  The transition from CBLIST_NOT_OFFLOADED
+to CBLIST_OFFLOADING of course needs to be on the CPU in question with
+at least bh disabled.  Probably best to be holding rcu_nocb_lock(),
+but that might just be me being overly paranoid.
 
-Let=E2=80=99s see what syzbot guys will say, and then I=E2=80=99ll =
-enable RCU_EXPERT myself if needed, but again we probably never see =
-PROVE_RCU_LIST to be used again in syzbot for this path. I surely have =
-no cycles to expand the testing coverage for more subsystems at the =
-moment.
+> > > +static long rcu_nocb_rdp_deoffload(void *arg)
+> > > +{
+> > > +	struct rcu_data *rdp = arg;
+> > > +
+> > > +	WARN_ON_ONCE(rdp->cpu != raw_smp_processor_id());
+> > > +	__rcu_nocb_rdp_deoffload(rdp);
+> > > +
+> > > +	return 0;
+> > > +}
+> > 
+> > For example, is the problem caused by invocations of this
+> > rcu_nocb_rdp_deoffload() function?
+> 
+> How so?
 
+It looked to me like it wasn't excluding either rcu_barrier() or CPU
+hotplug.  It might also not have been pinning onto the CPU in question,
+but that might just be me misremembering.  Then again, I didn't see a
+call to it, so maybe its callers set things up appropriately.
+
+OK, I will bite...  What is the purpose of rcu_nocb_rdp_deoffload()?  ;-)
+
+> > But if so, do we really need to acquire rcu_state.barrier_mutex?
+> 
+> Indeed it was probably not needed if we parked the kthread before
+> anything, as we would have kept the callbacks ordering.
+> 
+> But now if we allow concurrent callbacks execution during the small
+> window, we'll need it.
+
+Agreed!  And I do believe that concurrent callback execution will
+prove better than a possibly indefinite gap in callback execution.
+
+> > That aside, if it is possible to do the switch without interrupting
+> > callback invocation?  Or is your idea that because we are always executing
+> > on the CPU being deoffloaded, that CPU has been prevented from posting
+> > callbacks in any case?
+> 
+> No in the tiny window between kthread_park() and the irqs being disabled,
+> the workqueue can be preempted and thus call_rcu() can be called anytime.
+
+Agreed!  ;-)
+
+> > If the latter, does that mean that it is not
+> > possible to deoffload offlined CPUs?  (Not sure whether this restriction
+> > is a real problem, but figured that I should ask.)
+> 
+> Ah in the case of offlined CPUs I simply call the function directly from the CPU
+> that disables the nocb remotely. So we remotely park the kthread (that we
+> always do anyway) and set offlined.
+
+And the cpus_read_lock() in rcu_nocb_cpu_deoffload() prevents that CPU
+from coming back online, so looks good!
+
+							Thanx, Paul
