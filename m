@@ -2,144 +2,185 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC6FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B842AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 236A020727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:35:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9311020728
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:36:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QMSW1I6g"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TzIq+IWZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgENNfv (ORCPT
+        id S1727107AbgENNgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:35:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55198 "EHLO
+        Thu, 14 May 2020 09:36:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726037AbgENNfu (ORCPT
+        by vger.kernel.org with ESMTP id S1726037AbgENNgM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:35:50 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84A23C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:35:49 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id p21so1240711pgm.13
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:35:49 -0700 (PDT)
+        Thu, 14 May 2020 09:36:12 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 181B6C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:36:12 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id p127so5040973oia.13
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:36:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dFH4YBbehMI5t5iqf9Q3qC3HSqGhIHfBCfuP+cdahd4=;
-        b=QMSW1I6g69BXV603QaMHpeUSgDh97tVPbW+aOr8TNB1DROgfixI7vPwvLqnPQftRbu
-         k/DPWZZCyDkAqkGMyKxaCuU0auNG8u3VNTsYoKg9i/6TfyufPw31JBq/HqrXhlY25q1O
-         FEoyvdlBEbpmE+R9iw2Bk2PDZdoUDuaBcRV4+4KZrgKr2IdlZWue1/hOrdi/XGwFUh+L
-         myzCQVsNAZHA17H/eqiUz6s17fy9GI9NvsMmjq2Mrnegh2/CXKfNxpd76zfde3+2XF4Y
-         9GlNZqEtCWPbdJmgW+qw8QzMoUZgkAfkbH8Vqoah21hxzL4zQOTpotm6U+rO26/XhNZe
-         cxTQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6PHyeCO76tbGZ0mePRVZUvflJ0rFtTxZbMOic/9HXzM=;
+        b=TzIq+IWZKXT34K6MZNfCK2a7fsUTE1V+Kij8vqp4RsDm4orDA1Cchams2k9m5Q+N1I
+         iUaPkEYx/bhBdlTpxJHytp9BeAQRhIlX/asCMKYSiDEzo+OhkYQPqZaCgyO6tdjbjT9W
+         nKpsJAK0CL7oHGhnmCcPy1o8cmBcdjGiP1jV++WX7ykjpx/mLVuH97+8G1h/nYRQ7iWE
+         /NFVTJNhGeB7u5FWOLYRcUITiXz0Bv4iBmeI4AzQM94pzusBry5ZT09FVgW92TOrC91Z
+         5JaZbyEt8DOBnsWBhTK2cuOaqOQbTO2A7X+epBXeDteYHUV4DFlB5Kk4Jz1+MOkRQHDI
+         6oEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dFH4YBbehMI5t5iqf9Q3qC3HSqGhIHfBCfuP+cdahd4=;
-        b=U85Ahm6YsM/ZMxh6SQo/RnaLUaNWUXArzp63gwVwqlUSK2KxK4ZG2frXArO/6CBR//
-         3Xybk+gvyc3Uv6GqQEmxlq+CRpy7IhIGL6gaTS1izDYRKFBRdCzyJN8cnAedaGkP9PMp
-         YxGdc3cD46flrXgPTr3mya5hWkEzOAcT21MTKXS4hRdtAGVW5mxTK4wmYONJobqdDc93
-         Rn4CyNt3zHeZBjGx1sufSF5aFhxfMnwnBfqWmKJn4UvSvoJbmGl/952qfoPV7DrDZD5u
-         gbYPERgmvoS49GWNxNDfmN1+E330XuSrNndA8EY10nzGDYvPRj0nmDi8ySpvlFRk2BPS
-         NziA==
-X-Gm-Message-State: AOAM5329k/MYZXjdkiC8hvcBQHZC1snAJJeynWyLRvYi/wzinzSeFL5H
-        y1EQzrm8CH+v7pWLt+UhG08K93Rw
-X-Google-Smtp-Source: ABdhPJyQMSiFyybpBsgKRX8zYbVXbAgjPZ/ufU3iqqpt6IQVzBBGvLrZ288ij1pt0DGhq+h93Zc31g==
-X-Received: by 2002:a62:ab16:: with SMTP id p22mr4250043pff.216.1589463348447;
-        Thu, 14 May 2020 06:35:48 -0700 (PDT)
-Received: from localhost ([49.207.51.148])
-        by smtp.gmail.com with ESMTPSA id gb6sm4426799pjb.56.2020.05.14.06.35.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 May 2020 06:35:47 -0700 (PDT)
-Date:   Thu, 14 May 2020 19:05:45 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: ARM: static kernel in vmalloc space
-Message-ID: <20200514133545.GA5020@afzalpc>
-References: <20200503145017.GA5074@afzalpc>
- <CAK8P3a3OC5UO72rTDWi6+XgmExJmkATEjscq8hns8Bng06OpcQ@mail.gmail.com>
- <20200504091018.GA24897@afzalpc>
- <CAK8P3a25sZ9B+AE=EJyJZSU91CkBLLR6p2nixw_=UAbczg3RiQ@mail.gmail.com>
- <20200511142113.GA31707@afzalpc>
- <CAK8P3a0=+aBJLTvHOskTv=tba_s5b5MzWrYG8mxH3iLNy4hfBw@mail.gmail.com>
- <20200512104758.GA12980@afzalpc>
- <CAK8P3a1DQWG1+ab2+vQ2XCAKYxPUjJk5g3W3094j-adDXSQfzQ@mail.gmail.com>
- <20200514111755.GA4997@afzalpc>
- <CAK8P3a2PNZY-9L9+SFDLtrp731ZGo6Nbs-7jY6E2PwWXa0kfKw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6PHyeCO76tbGZ0mePRVZUvflJ0rFtTxZbMOic/9HXzM=;
+        b=Nxr2Cr4Kbps1UInrccV3erHsQ2QeDLIEy94KphP0L7bMVBbcn5ny5sy5Dei7NaxJQi
+         YHx7WP6pYTpmOHc5d6avhcsbuayLys5jSQ9NMmKldVBFhUJu8WZFY0cojEFV87zcZ5XJ
+         zExNjHFqu5FctEErFnOrHbB3pUOj68zni4kdBlGrh1OBrr6khnceNop92okZ5kLc1oLT
+         hJrKccMyfVQ8MYOhABwISEbLqT7xZEF1aNHw0ngQ/Op8TNj53B780B9toiPDMgvuMrgE
+         hT9GJBBN6HQOtBfc9PH4LEsX7wWr/2VbrBKj2hlliOIb9U31QzMKNtFGWrQYJ1LkCq9r
+         gqqw==
+X-Gm-Message-State: AOAM5326Lgh4+SCsJrHMZQwhiCvOAX1s2UVMAycEZUPZ1YLftt5Fxu7h
+        woEaM8CTts/hjDmOv3gwhgQjtR1g8i7vAWqdr2MvAA==
+X-Google-Smtp-Source: ABdhPJy4mVN1kG4sF0jvsu+qYq4LjySp9nA1tJF3fx4WkEwatSMXIe2dt9N5oxcxGSMaObYJhhtySxgrPJU5URAgW2s=
+X-Received: by 2002:aca:ebc5:: with SMTP id j188mr1520452oih.70.1589463370303;
+ Thu, 14 May 2020 06:36:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2PNZY-9L9+SFDLtrp731ZGo6Nbs-7jY6E2PwWXa0kfKw@mail.gmail.com>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+References: <CANpmjNMariz3-keqwUsLHVrpk2r7ThLSKtkhHxTDa3SEGeznhA@mail.gmail.com>
+ <20200513123243.GO2957@hirez.programming.kicks-ass.net> <20200513124021.GB20278@willie-the-truck>
+ <CANpmjNM5XW+ufJ6Mw2Tn7aShRCZaUPGcH=u=4Sk5kqLKyf3v5A@mail.gmail.com>
+ <20200513165008.GA24836@willie-the-truck> <CANpmjNN=n59ue06s0MfmRFvKX=WB2NgLgbP6kG_MYCGy2R6PHg@mail.gmail.com>
+ <20200513174747.GB24836@willie-the-truck> <CANpmjNNOpJk0tprXKB_deiNAv_UmmORf1-2uajLhnLWQQ1hvoA@mail.gmail.com>
+ <20200513212520.GC28594@willie-the-truck> <CANpmjNOAi2K6knC9OFUGjpMo-rvtLDzKMb==J=vTRkmaWctFaQ@mail.gmail.com>
+ <20200514110537.GC4280@willie-the-truck>
+In-Reply-To: <20200514110537.GC4280@willie-the-truck>
+From:   Marco Elver <elver@google.com>
+Date:   Thu, 14 May 2020 15:35:58 +0200
+Message-ID: <CANpmjNMTsY_8241bS7=XAfqvZHFLrVEkv_uM4aDUWE_kh3Rvbw@mail.gmail.com>
+Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
+To:     Will Deacon <will@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, 14 May 2020 at 13:05, Will Deacon <will@kernel.org> wrote:
+>
+> Hi Marco,
+>
+> On Thu, May 14, 2020 at 09:31:49AM +0200, Marco Elver wrote:
+> > Ouch. With the __{READ,WRITE}_ONCE requirement, we're going to need
+> > Clang 11 though.
+> >
+> > Because without the data_race() around __*_ONCE,
+> > arch_atomic_{read,set} will be broken for KCSAN, but we can't have
+> > data_race() because it would still add
+> > kcsan_{enable,disable}_current() calls to __no_sanitize functions (if
+> > compilation unit is instrumented). We can't make arch_atomic functions
+> > __no_sanitize_or_inline, because even in code that we want to
+> > sanitize, they should remain __always_inline (so they work properly in
+> > __no_sanitize functions). Therefore, Clang 11 with support for
+> > distinguishing volatiles will be the compiler that will satisfy all
+> > the constraints.
+> >
+> > If this is what we want, let me prepare a series on top of
+> > -tip/locking/kcsan with all the things I think we need.
+>
+> Stepping back a second, the locking/kcsan branch is at least functional at
+> the moment by virtue of KCSAN_SANITIZE := n being used liberally in
+> arch/x86/. However, I still think we want to do better than that because (a)
+> it would be good to get more x86 coverage and (b) enabling this for arm64,
+> where objtool is not yet available, will be fragile if we have to whitelist
+> object files. There's also a fair bit of arm64 low-level code spread around
+> drivers/, so it feels like we'd end up with a really bad case of whack-a-mole.
+>
+> Talking off-list, Clang >= 7 is pretty reasonable wrt inlining decisions
+> and the behaviour for __always_inline is:
+>
+>   * An __always_inline function inlined into a __no_sanitize function is
+>     not instrumented
+>   * An __always_inline function inlined into an instrumented function is
+>     instrumented
+>   * You can't mark a function as both __always_inline __no_sanitize, because
+>     __no_sanitize functions are never inlined
+>
+> GCC, on the other hand, may still inline __no_sanitize functions and then
+> subsequently instrument them.
+>
+> So if were willing to make KCSAN depend on Clang >= 7, then we could:
+>
+>   - Remove the data_race() from __{READ,WRITE}_ONCE()
+>   - Wrap arch_atomic*() in data_race() when called from the instrumented
+>     atomic wrappers
+>
+> At which point, I *think* everything works as expected. READ_ONCE_NOCHECK()
+> won't generate any surprises, and Peter can happily use arch_atomic()
+> from non-instrumented code.
+>
+> Thoughts? I don't see the need to support buggy compilers when enabling
+> a new debug feature.
 
-On Thu, May 14, 2020 at 02:41:11PM +0200, Arnd Bergmann wrote:
-> On Thu, May 14, 2020 at 1:18 PM afzal mohammed <afzal.mohd.ma@gmail.com> wrote:
+This is also a reply to
+https://lkml.kernel.org/r/20200514122038.GH3001@hirez.programming.kicks-ass.net
+-- the problem with __READ_ONCE would be solved with what Will
+proposed above.
 
-> > 1. SoC w/ LPAE
-> > 2. TTBR1 (top 256MB) for static kernel, modules, io mappings, vmalloc,
-> >         kmap, fixmap & vectors
+Let me try to spell out the requirements I see so far (this is for
+KCSAN only though -- other sanitizers might be similar):
 
-> Right, these kind of go together because pre-LPAE cannot do the
-> same TTBR1 split, and they more frequently have conflicting
-> static mappings.
-> 
-> It's clearly possible to do something very similar for older chips
-> (v6 or v7 without LPAE, possibly even v5), it just gets harder
-> while providing less benefit.
+  1. __no_kcsan functions should not call anything, not even
+kcsan_{enable,disable}_current(), when using __{READ,WRITE}_ONCE.
+[Requires leaving data_race() off of these.]
 
-Yes, lets have it only for LPAE
+  2. __always_inline functions inlined into __no_sanitize function is
+not instrumented. [Has always been satisfied by GCC and Clang.]
 
-> > 3. TTBR0 (low 3768MB) for user space & lowmem (kernel lowmem to have
+  3. __always_inline functions inlined into instrumented function is
+instrumented. [Has always been satisfied by GCC and Clang.]
 
-> hardcoded 3840/256 split is likely the best compromise of all the
+  4. __no_kcsan functions should never be spuriously inlined into
+instrumented functions, causing the accesses of the __no_kcsan
+function to be instrumented. [Satisfied by Clang >= 7. All GCC
+versions are broken.]
 
-hmm,i swallowed 72MB ;)
+  5. we should not break atomic_{read,set} for KCSAN. [Because of #1,
+we'd need to add data_race() around the arch-calls in
+atomic_{read,set}; or rely on Clang 11's -tsan-distinguish-volatile
+support (GCC 11 might get this as well).]
 
-> > 4. for user space to/from copy
-> >  a. pin user pages
-> >  b. kmap user page (can't corresponding lowmem be used instead ?)
+  6. never emit __tsan_func_{entry,exit}. [Clang supports disabling
+this, GCC doesn't.]
 
-> - In the long run, there is no need for kmap()/kmap_atomic() after
->   highmem gets removed from the kernel, but for the next few years
->   we should still assume that highmem can be used, in order to support
->   systems like the 8GB highbank, armadaxp, keystone2 or virtual
->   machines. For lowmem pages (i.e. all pages when highmem is
->   disabled), kmap_atomic() falls back to page_address() anyway,
->   so there is no much overhead.
+  7. kernel is supported by compiler. [Clang >= 9 seems to build -tip
+for me, anything below complains about lack of asm goto. GCC trivial.]
 
-Here i have some confusion - iiuc, VMSPLIT_4G_4G is meant to help
-platforms having RAM > 768M and <= 4GB disable high memory and still
-be able to access full RAM, so high memory shouldn't come into picture,
-right ?. And for the above platforms it can continue current VMPSLIT
-option (the default 3G/1G), no ?, as VMSPLIT_4G_4G can't help complete
-8G to be accessible from lowmem.
+So, because of #4 & #6 & #7 we're down to Clang >= 9. Because of #5
+we'll have to make a choice between Clang >= 9 or Clang >= 11
+(released in ~June). In an ideal world we might even fix GCC in
+future.
 
-So if we make VMSPLIT_4G_4G, depends on !HIGH_MEMORY (w/ mention of
-caveat in Kconfig help that this is meant for platforms w/ <=4GB), then
-we can do copy_{from,to}_user the same way currently do, and no need to
-do the user page pinning & kmap, right ?
+That's not even considering the problems around UBSan and KASAN. But
+maybe one step at a time?
 
-Only problem i see is Kernel compiled w/ VMSPLIT_4G_4G not suitable
-for >4GB machines, but anyway iiuc, it is was not meant for those
-machines. And it is not going to affect our current multiplatform
-setup as LPAE is not defined in multi_v7.
+Any preferences?
 
-Regards
-afzal
+Thanks,
+-- Marco
