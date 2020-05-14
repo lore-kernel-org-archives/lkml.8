@@ -2,49 +2,56 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD88BC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C81C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9419B206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B548720671
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:04:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=seznam.cz header.i=@seznam.cz header.b="IHFWVTxh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgENREr (ORCPT
+        id S1726161AbgENREs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 13:04:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59830 "EHLO
+        Thu, 14 May 2020 13:04:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbgENREq (ORCPT
+        with ESMTP id S1725975AbgENREr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 13:04:46 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91524C061A0E;
+        Thu, 14 May 2020 13:04:47 -0400
+Received: from mxa2.seznam.cz (mxa2.seznam.cz [IPv6:2a02:598:2::90])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84D27C061A0C;
         Thu, 14 May 2020 10:04:46 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 4A6B92A2FA5
-Received: by jupiter.universe (Postfix, from userid 1000)
-        id 475BF4800F8; Thu, 14 May 2020 19:04:42 +0200 (CEST)
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        Robert Beckett <bob.beckett@collabora.com>,
-        stable@vger.kernel.org, Ian Ray <ian.ray@ge.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCHv1] ARM: dts/imx6q-bx50v3: Set display interface clock parents
-Date:   Thu, 14 May 2020 19:02:37 +0200
-Message-Id: <20200514170236.24814-1-sebastian.reichel@collabora.com>
-X-Mailer: git-send-email 2.26.2
+Received: from email.seznam.cz
+        by email-smtpc11b.ng.seznam.cz (email-smtpc11b.ng.seznam.cz [10.23.14.75])
+        id 3ef2742065fc20493f5bb87e;
+        Thu, 14 May 2020 19:04:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seznam.cz; s=beta;
+        t=1589475878; bh=U1RHpu2MQPEcxje/nVWl8eQg+lZOAKfXx2Xs659abiQ=;
+        h=Received:From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
+         Content-Transfer-Encoding;
+        b=IHFWVTxhrun3hvhbMkMoKgl8/SzmQYKKtSjGwdKu8F8i01OT5l2iSyAAFYzv2uE+W
+         YG6i5jEDUQo5ch5HdgRiU6ciO5592O2rU8TMOKWrDEKTVPR+b8VlcZ149rfg6WpsKo
+         bnKaKtsGbVsNal2IuKclpn8OQkm552aKfxpVvzCM=
+Received: from localhost.localdomain (212.69.128.228 [212.69.128.228])
+        by email-relay9.ng.seznam.cz (Seznam SMTPD 1.3.114) with ESMTP;
+        Thu, 14 May 2020 19:04:33 +0200 (CEST)  
+From:   michael.srba@seznam.cz
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Michael Srba <michael.srba@seznam.cz>
+Subject: [PATCH] arm64: dts: qcom: msm8916-samsung-a3u: add nodes for display panel
+Date:   Thu, 14 May 2020 19:01:29 +0200
+Message-Id: <20200514170129.10902-1-michael.srba@seznam.cz>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -52,116 +59,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Beckett <bob.beckett@collabora.com>
+From: Michael Srba <michael.srba@seznam.cz>
 
-Avoid LDB and IPU DI clocks both using the same parent. LDB requires
-pasthrough clock to avoid breaking timing while IPU DI does not.
+This patch wires up display support on Samsung Galaxy A3 2015.
 
-Force IPU DI clocks to use IMX6QDL_CLK_PLL2_PFD0_352M as parent
-and LDB to use IMX6QDL_CLK_PLL5_VIDEO_DIV.
+Signed-off-by: Michael Srba <michael.srba@seznam.cz>
 
-This fixes an issue where attempting atomic modeset while using
-HDMI and display port at the same time causes LDB clock programming
-to destroy the programming of HDMI that was done during the same
-modeset.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
-[Use IMX6QDL_CLK_PLL2_PFD0_352M instead of IMX6QDL_CLK_PLL2_PFD2_396M
- originally chosen by Robert Beckett to avoid affecting eMMC clock
- by DRM atomic updates]
-Signed-off-by: Ian Ray <ian.ray@ge.com>
-[Squash Robert's and Ian's commits for bisectability, update patch
- description and add stable tag]
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- arch/arm/boot/dts/imx6q-b450v3.dts  |  7 -------
- arch/arm/boot/dts/imx6q-b650v3.dts  |  7 -------
- arch/arm/boot/dts/imx6q-b850v3.dts  | 11 -----------
- arch/arm/boot/dts/imx6q-bx50v3.dtsi | 15 +++++++++++++++
- 4 files changed, 15 insertions(+), 25 deletions(-)
+ .../qcom/msm8916-samsung-a2015-common.dtsi    | 44 +++++++++++++++
+ .../boot/dts/qcom/msm8916-samsung-a3u-eur.dts | 54 +++++++++++++++++++
+ 2 files changed, 98 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6q-b450v3.dts b/arch/arm/boot/dts/imx6q-b450v3.dts
-index 95b8f2d71821..fb0980190aa0 100644
---- a/arch/arm/boot/dts/imx6q-b450v3.dts
-+++ b/arch/arm/boot/dts/imx6q-b450v3.dts
-@@ -65,13 +65,6 @@ panel_in_lvds0: endpoint {
- 	};
- };
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
+index af812f76e8be..2a64aa269f52 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a2015-common.dtsi
+@@ -72,6 +72,24 @@ phy {
+ 			};
+ 		};
  
--&clks {
--	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
--			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
--	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
--				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
--};
--
- &ldb {
- 	status = "okay";
- 
-diff --git a/arch/arm/boot/dts/imx6q-b650v3.dts b/arch/arm/boot/dts/imx6q-b650v3.dts
-index 611cb7ae7e55..8f762d9c5ae9 100644
---- a/arch/arm/boot/dts/imx6q-b650v3.dts
-+++ b/arch/arm/boot/dts/imx6q-b650v3.dts
-@@ -65,13 +65,6 @@ panel_in_lvds0: endpoint {
- 	};
- };
- 
--&clks {
--	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
--			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
--	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
--				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
--};
--
- &ldb {
- 	status = "okay";
- 
-diff --git a/arch/arm/boot/dts/imx6q-b850v3.dts b/arch/arm/boot/dts/imx6q-b850v3.dts
-index e4cb118f88c6..1ea64ecf4291 100644
---- a/arch/arm/boot/dts/imx6q-b850v3.dts
-+++ b/arch/arm/boot/dts/imx6q-b850v3.dts
-@@ -53,17 +53,6 @@ chosen {
- 	};
- };
- 
--&clks {
--	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
--			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>,
--			  <&clks IMX6QDL_CLK_IPU1_DI0_PRE_SEL>,
--			  <&clks IMX6QDL_CLK_IPU2_DI0_PRE_SEL>;
--	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
--				 <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
--				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>,
--				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>;
--};
--
- &ldb {
- 	fsl,dual-channel;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-index fa27dcdf06f1..1938b04199c4 100644
---- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-+++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-@@ -377,3 +377,18 @@ pci_root: root@0,0 {
- 		#interrupt-cells = <1>;
- 	};
- };
++		mdss@1a00000 {
++			dsi@1a98000 {
++				#address-cells = <1>;
++				#size-cells = <0>;
 +
-+&clks {
-+	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
-+			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>,
-+			  <&clks IMX6QDL_CLK_IPU1_DI0_PRE_SEL>,
-+			  <&clks IMX6QDL_CLK_IPU1_DI1_PRE_SEL>,
-+			  <&clks IMX6QDL_CLK_IPU2_DI0_PRE_SEL>,
-+			  <&clks IMX6QDL_CLK_IPU2_DI1_PRE_SEL>;
-+	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
-+				 <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
-+				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>,
-+				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>,
-+				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>,
-+				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>;
++				vdda-supply = <&pm8916_l2>;
++				vddio-supply = <&pm8916_l6>;
++
++				pinctrl-names = "default", "sleep";
++				pinctrl-0 = <&mdss_default>;
++				pinctrl-1 = <&mdss_sleep>;
++			};
++
++			dsi-phy@1a98300 {
++				vddio-supply = <&pm8916_l6>;
++			};
++		};
++
+ 		wcnss@a21b000 {
+ 			status = "okay";
+ 		};
+@@ -172,6 +190,32 @@ pinconf {
+ 			bias-disable;
+ 		};
+ 	};
++
++	pmx-mdss {
++		mdss_default: mdss-default {
++			pinmux {
++				function = "gpio";
++				pins = "gpio25";
++			};
++			pinconf {
++				pins = "gpio25";
++				drive-strength = <8>;
++				bias-disable;
++			};
++		};
++
++		mdss_sleep: mdss-sleep {
++			pinmux {
++				function = "gpio";
++				pins = "gpio25";
++			};
++			pinconf {
++				pins = "gpio25";
++				drive-strength = <2>;
++				bias-pull-down;
++			};
++		};
++	};
+ };
+ 
+ &smd_rpm_regulators {
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts b/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts
+index d10f7ac5089f..b46c87289033 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts
++++ b/arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dts
+@@ -7,4 +7,58 @@
+ / {
+ 	model = "Samsung Galaxy A3U (EUR)";
+ 	compatible = "samsung,a3u-eur", "qcom,msm8916";
++
++	reg_panel_vdd3: regulator-panel-vdd3 {
++		compatible = "regulator-fixed";
++		regulator-name = "panel_vdd3";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++
++		gpio = <&msmgpio 9 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&panel_vdd3_default>;
++	};
 +};
++
++&dsi0 {
++	panel@0 {
++		reg = <0>;
++
++		compatible = "samsung,s6e88a0-ams452ef01";
++
++		vdd3-supply = <&reg_panel_vdd3>;
++		vci-supply = <&pm8916_l17>;
++		reset-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
++
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&dsi0_out>;
++			};
++		};
++	};
++
++	ports {
++		port@1 {
++			dsi0_out: endpoint {
++				remote-endpoint = <&panel_in>;
++				data-lanes = <0 1>;
++			};
++		};
++	};
++};
++
++&msmgpio {
++	panel_vdd3_default: panel-vdd3-default {
++		pinmux {
++			function = "gpio";
++			pins = "gpio9";
++		};
++		pinconf {
++			pins = "gpio9";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
+ };
 -- 
-2.26.2
+2.24.0
 
