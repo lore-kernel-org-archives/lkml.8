@@ -2,80 +2,86 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42630C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B947CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FB80205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C41F920727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:28:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="BHnzOpZ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733121AbgENAZ1 (ORCPT
+        id S1733109AbgENA21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 20:25:27 -0400
-Received: from mga01.intel.com ([192.55.52.88]:53240 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732946AbgENAZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 20:25:26 -0400
-IronPort-SDR: pw48jvxnERiPyZBSrKdMTKCsAM/mOxATAGPHq+ahdRvbcbobJR3CJmk+E8d8dCqr2XfgWJM5cf
- 6NZtcSQQgggg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 17:25:26 -0700
-IronPort-SDR: LmigXyC+PKXEwMmfY0sVl4rNnEd46L+o3kglBun/40P0Ry5MzcqKSfH2nUh0qUui+AXBzt99h0
- L6gOZAQubFMg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,389,1583222400"; 
-   d="scan'208";a="262661894"
-Received: from gliber-mobl1.ger.corp.intel.com ([10.249.38.41])
-  by orsmga003.jf.intel.com with ESMTP; 13 May 2020 17:25:20 -0700
-Message-ID: <07bb6080f8be9f6613f460e2d6e19f3d456e219c.camel@linux.intel.com>
-Subject: Re: [PATCH v4 1/4] KEYS: trusted: Add generic trusted keys framework
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sumit Garg <sumit.garg@linaro.org>, zohar@linux.ibm.com,
-        jejb@linux.ibm.com
-Cc:     dhowells@redhat.com, jens.wiklander@linaro.org, corbet@lwn.net,
-        jmorris@namei.org, serge@hallyn.com, casey@schaufler-ca.com,
-        janne.karhunen@gmail.com, daniel.thompson@linaro.org,
-        Markus.Wamser@mixed-mode.de, keyrings@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        op-tee@lists.trustedfirmware.org, tee-dev@lists.linaro.org
-Date:   Thu, 14 May 2020 03:25:14 +0300
-In-Reply-To: <1588758017-30426-2-git-send-email-sumit.garg@linaro.org>
-References: <1588758017-30426-1-git-send-email-sumit.garg@linaro.org>
-         <1588758017-30426-2-git-send-email-sumit.garg@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 13 May 2020 20:28:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45500 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732946AbgENA21 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 20:28:27 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEF8FC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 17:28:26 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x15so507974pfa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 17:28:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/OgFWQcl6GqLh70sxVH11v5JkzFPDxSBTU/nOH/MDE0=;
+        b=BHnzOpZ4aPuXZ4y4SiBIhfTt3B49rsvbpJmsylMOyVg9evwgE/8f6zVeYX4Kfy13ju
+         Z3KIUPf0JfMxqUSjKIhCrBDludl9XLA7mfefFHVi1ntb/1+3bJoLlTal76guWAnUSqGt
+         HE3SSLoxxSOEHXpbtNSYoB8HNFxD7IxnBRRE+s2DaEWYSA2kJxnrd+ZJIBq14VYlBYFH
+         OPSQ7X/61B7QPjJZQ2H31IYpM1t54Ro4SCLjRYOJZt/ZVJys4E83Y7rONE8/JWsdiNg2
+         uFnk9WBknjkS/eF+vfC2yu9hVMSRYadUA4+LsYq52JrPmFSxZFYIXEES5r9P+tddTIV8
+         szRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=/OgFWQcl6GqLh70sxVH11v5JkzFPDxSBTU/nOH/MDE0=;
+        b=D4tVwn909ePM9Kdk7F+KEqRDvhOEDcMVQ/h+TJMJTAY4rOgzmuX8mfHvM0mVaH9hI4
+         JQ5K1Z5mdaKI/5VFEHK4xhoNXza6RKmYktQ7UI4Is1awqVHjVExBhBC5dObMzaTjL7on
+         4o+i6xEAPzt3CItUJqRDv3s2NB5yjurnOzS21bfe+z3tgaPPO1gs353RuHWYJZ8KAVsE
+         /JuHqv3OG9lbrccEVnXB0sETWKrALACB+6cDlpj/TRWev6iEx0m/tC/WVMwAzrs090mq
+         sP1lNUbxQpWGfAEPuJU6LtlQ++15Jtz6S+aVLV1Z+zChJQs9wzXQX4RGMWSvBq7SWsuw
+         bF1g==
+X-Gm-Message-State: AOAM531oSIRJ8XZqbnXM7I3ylOlP+2NgHjEulvcD3AWAnlDVssMKg60v
+        F5URtIHNO5lGOkl2SOGmUzu4Zhejo2o=
+X-Google-Smtp-Source: ABdhPJyfQiKngEQA41ugpWVwsMyP0DyUIcBpI9LEiTAFMNFmhOt/49ftEYNWPohSlNJYLaFWt3g3rg==
+X-Received: by 2002:a65:480c:: with SMTP id h12mr1824385pgs.106.1589416106079;
+        Wed, 13 May 2020 17:28:26 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id g43sm16612227pje.22.2020.05.13.17.28.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 17:28:25 -0700 (PDT)
+Date:   Wed, 13 May 2020 17:28:25 -0700 (PDT)
+X-Google-Original-Date: Wed, 13 May 2020 17:13:28 PDT (-0700)
+Subject:     Re: linux-next: Signed-off-by missing for commit in the risc-v-fixes tree
+In-Reply-To: <20200513211925.030deeec@canb.auug.org.au>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-next@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Message-ID: <mhng-ae684228-c7f9-48a1-aa4d-8fe166efe5ab@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-05-06 at 15:10 +0530, Sumit Garg wrote:
-> Current trusted keys framework is tightly coupled to use TPM device as
-> an underlying implementation which makes it difficult for implementations
-> like Trusted Execution Environment (TEE) etc. to provide trusked keys
-> support in case platform doesn't posses a TPM device.
-> 
-> So this patch tries to add generic trusted keys framework where underlying
-> implemtations like TPM, TEE etc. could be easily plugged-in.
-> 
-> Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+On Wed, 13 May 2020 04:19:25 PDT (-0700), Stephen Rothwell wrote:
+> Hi all,
+>
+> Commit
+>
+>   e2d8d84b18c3 ("riscv: pgtable: Fix __kernel_map_pages build error if NOMMU")
+>
+> is missing a Signed-off-by from its committer.
 
-I tend to agree how this is implemented and could merge it as such.
-
-I'm just thinking if we could refine this patch in a way that instead of
-copying TRUSTED_DEBUG macro we could just replace pr_info() statements
-with pr_debug()?
-
-/Jarkko
-
+Thanks.  I had to manually apply this and must have forgotten -s, it's fixed now.
