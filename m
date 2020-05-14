@@ -2,100 +2,177 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 673F7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A272EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37CE32065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:08:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589479701;
-	bh=xuYDa7Wzcdgi1q9QmCW2AcEVXuZ3sqBi7uZDUOUk33k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LVI0BUC/pDb5ETPRoZe/CiXU8cwZ0laXbBwMo8WbIvn8wm7piXkwEcNgMadtTYWfn
-	 1OY226DGNu4XbqxjjULTtN+57l0LuljaIa5yjaQpXB560Rq/R5B4xvxXCq0vq+0V5Q
-	 Vt3oAIih+U8pVGBikGqELDRmfaedgf+IGKGZ+sFE=
+	by mail.kernel.org (Postfix) with ESMTP id 78B4E20671
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:08:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pWirkS2g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbgENSIU (ORCPT
+        id S1727029AbgENSIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:08:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41510 "EHLO
+        Thu, 14 May 2020 14:08:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726073AbgENSIT (ORCPT
+        by vger.kernel.org with ESMTP id S1726073AbgENSIl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:08:19 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51136C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 11:08:19 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id r17so3430455lff.9
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 11:08:19 -0700 (PDT)
+        Thu, 14 May 2020 14:08:41 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65782C061A0C;
+        Thu, 14 May 2020 11:08:41 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id z1so1670209pfn.3;
+        Thu, 14 May 2020 11:08:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iR/FrKJ5o9ZJUcI6oDUu5nuQF8FuXexxHEQI4n/t63A=;
-        b=bdTCXJX5zV5x1sZtiFkfr8j0MKRemAUTGPweeIaxXM5y14yyF5FABO/Ry9tIQcSJ6t
-         DBCeIMQp5CccUk/j7F8B8uzTHl65tDxuGlxIGvr2CO03hMPyaLx7AQZJNrwK2jK2eOVj
-         P1BYkK274Yzxew9F9BjILsdbpqHT96wikAQHU=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2d5fVy+d6deYSpZC8S3wee5KklHYM0y0bBICCB6+zyc=;
+        b=pWirkS2gDFyVdTR/01nN/VqD5RYntOM0VMhu4r1TSebXHPpqIVg2YH5CDgejdac+46
+         BNcjMBWXGvOgbmJaOJEeJ9I5u1NDXn05Jf5X1DrY9dsUaDhuQySLjq7dZD2caNky+Axy
+         R6VZVzq3+5w+n9OwDsL2apNYy/46mUq7RJDZyW/3V1FFRLhWcts8A+QitmC0De63mrc6
+         YqNkxu9SNB/VBih5yQfuojAQH37wh835YtO+fISuyGEACkQ8fYJtKD0kssYvuNNk2LAS
+         wmB+cPSjMMJU87KWK04tNMEXy+CT82hYkCMrvO2Nt1HSVzat/CsD3PtoRCF8ao8ilIqy
+         D23A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iR/FrKJ5o9ZJUcI6oDUu5nuQF8FuXexxHEQI4n/t63A=;
-        b=SiGgbnd/b2vFsGp7Hm07BEbSKFbx4+ss4rbr7SMn98JSa0SwzUsE7bk0Hx/Q2cfTnV
-         t5VvgoVHVZbDiJYxTaV3yvFqIBwI1tBou8r28Kyu/J2x0Ly8BDwEKz2Y4jvUgX2/RHhe
-         iI7Ouk6mwmg46vWxQc3t/SQQ+H9Du+8OZtyQaiCOvqe/ybwklf533G934Vx0Gdh0m8hf
-         QzkwyB8O9GGo76eXffQrlIPwwj6RRd+qT5TDJWhctm8kos2h9lqQr/xIFmfe5DgcML1Y
-         iUMequUUiHHKElsqK/lh0Gw6vpaDniih0RwYzR1V1orX557YdYuMZlUs30bZS+V54cXi
-         JmuA==
-X-Gm-Message-State: AOAM530YcCKWzR4UGg4L20hV0NhuCqXVpUnz7OnpI4f6TWygrlcA3GMJ
-        CzMFflu+9F59sTjs7235PbJV9HdhMfU=
-X-Google-Smtp-Source: ABdhPJybPsjY0xzELBBVvW5CAxnMe14HCpCxGjo7hOq0N0zQr5uFgqDI2Gl2mQ8iv0U09C2H0BTdug==
-X-Received: by 2002:ac2:46c1:: with SMTP id p1mr3911625lfo.25.1589479697306;
-        Thu, 14 May 2020 11:08:17 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id l18sm1875746lje.19.2020.05.14.11.08.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 May 2020 11:08:16 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id v5so3397810lfp.13
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 11:08:16 -0700 (PDT)
-X-Received: by 2002:a19:ed07:: with SMTP id y7mr4134573lfy.31.1589479695915;
- Thu, 14 May 2020 11:08:15 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2d5fVy+d6deYSpZC8S3wee5KklHYM0y0bBICCB6+zyc=;
+        b=LX3Bq2Gpi+DhKMcjCtxE3LagBSY5uCeoqkU00tqOLEwqY2l4BbFTS7YT4/ywK84vKy
+         tEldQ2V9D0eLMJmSkG4hlyUFPBbF48O8eoKnuJZGJve+XRNn4ljDTt+7TzVJTKRsRxUU
+         6hn/l4sjXAsUqXB2K2eDxBVVQtrRfjSCQ8IDj0/yt8w90y60ozBkA3MKm7ZLSM3xIKh7
+         DywCpksltCpzOz+Wjesvb8T3MiCPhtusX1IIPyMvXCkFFtxYQ+lliX7mOdm355WjEjaH
+         Dv21gZC5aGA1cfIyuFgqjkJe7WQuWqqSN1YCFdstde6hcmQiq3L1X2F8JjH874wBpY35
+         u6Pw==
+X-Gm-Message-State: AOAM531b0LYedC7d1GyHyAyghT6NjpJhK0Y85iODH2X7XRV9xrjaamaG
+        OteFU1/zzumNIV0Nvk0lFJE=
+X-Google-Smtp-Source: ABdhPJySHGz9/Kj++2O4bWlbSQCkK8iKcI7+dZOkwL52bQgFlf3FpsIqmaflG+w6PkxkVYObPktJNg==
+X-Received: by 2002:a63:24a:: with SMTP id 71mr5372276pgc.184.1589479720804;
+        Thu, 14 May 2020 11:08:40 -0700 (PDT)
+Received: from workstation-kernel-dev ([103.87.56.31])
+        by smtp.gmail.com with ESMTPSA id m9sm2493264pgd.1.2020.05.14.11.08.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 11:08:40 -0700 (PDT)
+Date:   Thu, 14 May 2020 23:38:31 +0530
+From:   Amol Grover <frextrite@gmail.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>, allison@lohutok.net,
+        ap420073@gmail.com, David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        syzbot <syzbot+bb82cafc737c002d11ca@syzkaller.appspotmail.com>
+Subject: Re: linux-next boot error: WARNING: suspicious RCU usage in
+ bpq_device_event
+Message-ID: <20200514180831.GA6087@workstation-kernel-dev>
+References: <000000000000785a6905a59a1e4a@google.com>
+ <A19DAE77-5DCD-460A-88E5-437450CBD50B@lca.pw>
 MIME-Version: 1.0
-References: <20200514170451.1821723-1-christian.brauner@ubuntu.com>
-In-Reply-To: <20200514170451.1821723-1-christian.brauner@ubuntu.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 14 May 2020 11:07:59 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjpb-h9Z6O6o_7GkqCV1N-qQhagVJxpYZurYQR+eLkuEg@mail.gmail.com>
-Message-ID: <CAHk-=wjpb-h9Z6O6o_7GkqCV1N-qQhagVJxpYZurYQR+eLkuEg@mail.gmail.com>
-Subject: Re: [GIT PULL] thread fixes v5.7-rc5
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <A19DAE77-5DCD-460A-88E5-437450CBD50B@lca.pw>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 10:05 AM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
->
-> This contains a single fix for all exported legacy fork helpers to block
-> accidental access to clone3() features in the upper 32 bits of their
-> respective flags arguments.
+On Thu, May 14, 2020 at 08:24:54AM -0400, Qian Cai wrote:
+> 
+> 
+> > On May 14, 2020, at 7:37 AM, syzbot <syzbot+bb82cafc737c002d11ca@syzkaller.appspotmail.com> wrote:
+> > 
+> > Hello,
+> > 
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    c9529331 Add linux-next specific files for 20200514
+> > git tree:       linux-next
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=17119f48100000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=404a80e135048067
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=bb82cafc737c002d11ca
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+bb82cafc737c002d11ca@syzkaller.appspotmail.com
+> > 
+> > =============================
+> > WARNING: suspicious RCU usage
+> > 5.7.0-rc5-next-20200514-syzkaller #0 Not tainted
+> > -----------------------------
+> > drivers/net/hamradio/bpqether.c:149 RCU-list traversed in non-reader section!!
+> 
+> How about teaching the bot to always CC Madhuparna and Amol for those RCU-list bug reports?
+> 
 
-I've taken this pull, but I really think the minimal and more
-straightforward fix would have been to just make do_fork(),
-kernel_thread() and clone() change the flags field from "unsigned
-long" to "unsigned int".
+Sounds good to me if this indeed is possible.
 
-I don't see why that wouldn't have fixed things, and it would have
-been simpler and more obvious, I think.
-
-Doesn't matter, I guess.
-
-                   Linus
+> > 
+> > other info that might help us debug this:
+> > 
+> > 
+> > rcu_scheduler_active = 2, debug_locks = 1
+> > 1 lock held by ip/3967:
+> > #0: ffffffff8a7bad88 (rtnl_mutex){+.+.}-{3:3}, at: rtnl_lock net/core/rtnetlink.c:72 [inline]
+> > #0: ffffffff8a7bad88 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x3f9/0xad0 net/core/rtnetlink.c:5458
+> > 
+> > stack backtrace:
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > Call Trace:
+> > __dump_stack lib/dump_stack.c:77 [inline]
+> > dump_stack+0x18f/0x20d lib/dump_stack.c:118
+> > bpq_get_ax25_dev drivers/net/hamradio/bpqether.c:149 [inline]
+> > bpq_device_event+0x796/0x8ee drivers/net/hamradio/bpqether.c:538
+> > notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+> > call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+> > call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+> > call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+> > call_netdevice_notifiers net/core/dev.c:2042 [inline]
+> > __dev_notify_flags+0x121/0x2c0 net/core/dev.c:8279
+> > dev_change_flags+0x100/0x160 net/core/dev.c:8317
+> > do_setlink+0xa1c/0x35d0 net/core/rtnetlink.c:2605
+> > __rtnl_newlink+0xad0/0x1590 net/core/rtnetlink.c:3273
+> > rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3398
+> > rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5461
+> > netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
+> > netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+> > netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+> > netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+> > sock_sendmsg_nosec net/socket.c:652 [inline]
+> > sock_sendmsg+0xcf/0x120 net/socket.c:672
+> > ____sys_sendmsg+0x6e6/0x810 net/socket.c:2352
+> > ___sys_sendmsg+0x100/0x170 net/socket.c:2406
+> > __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+> > do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+> > entry_SYSCALL_64_after_hwframe+0x49/0xb3
+> > RIP: 0033:0x7f76dcdfcdc7
+> > Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb cd 66 0f 1f 44 00 00 8b 05 4a 49 2b 00 85 c0 75 2e 48 63 ff 48 63 d2 b8 2e 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 8b 15 a1 f0 2a 00 f7 d8 64 89 02 48
+> > RSP: 002b:00007ffd45eccf28 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> > RAX: ffffffffffffffda RBX: 000000005ebd27cd RCX: 00007f76dcdfcdc7
+> > RDX: 0000000000000000 RSI: 00007ffd45eccf70 RDI: 0000000000000003
+> > RBP: 00007ffd45eccf70 R08: 0000000000001000 R09: fefefeff77686d74
+> > R10: 00000000000005e9 R11: 0000000000000246 R12: 00007ffd45eccfb0
+> > R13: 0000561a2ddea3c0 R14: 00007ffd45ed5030 R15: 0000000000000000
+> > ip (3967) used greatest stack depth: 23144 bytes left
+> > 
+> > 
+> > ---
+> > This bug is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > 
+> > syzbot will keep track of this bug report. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
