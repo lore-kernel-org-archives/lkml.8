@@ -2,127 +2,104 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A03A5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A23AAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3BFA2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:56:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OkxWSxaX"
+	by mail.kernel.org (Postfix) with ESMTP id AAC5A2065C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:00:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589418016;
+	bh=iL3qRo6PKMlX7MXjMuhMdIo6UsuawSg8IZnaTVQPWcw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=pb4rLZQi8MEygFNqBri15qUZpH2YU46mCqJ7oqQK9EvzbAp5ol2DauXQgKiAomUVs
+	 4pcML26Xv4eH9p2RzZLUfYFhkbI+ArkX8KK5lWpJSc0pMgdaTSDf1lqnw+Uc7hbwGu
+	 Z8YhKjSZaWIDQRdFsyg5pLxUXBI8D6znWVXRY8IE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726190AbgENA4T (ORCPT
+        id S1726614AbgENBAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 20:56:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49904 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725925AbgENA4T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 20:56:19 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E9EFC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 17:56:19 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id c2so669297ybi.7
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 17:56:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ywtmfrQ4bvC5mZcT0l80a/uW5Hgu+UN45Tyqwdq32Is=;
-        b=OkxWSxaXhUyaPgEtFpvznn/IR4r/kI+9K4bNbcYvP6OCC+XmUj4CsOW8CLQGMWwa9e
-         JwrRNfd55qmIftqfrkx9QiCWtXjnkB4sPmn7osrSVfrOkdg9zuxBLG4oYbbZ1g5Z5A/G
-         nRpH6VnlK8bSOiCr5JLaDbnE6wsDF8b/KhlOVwvsvtRRCuyTqXuxezpi46UIoPBik4iG
-         KN5kQYM+It1praMo+VOihF9/FCqil6pT42Sber9ocYOElwR5QO44DY1W5vDRreWE9Waq
-         ndcoTReOCZ0WS+ozzJrURog5NQ3+YoscS3+HOQHNk4qli3HIWnd4GKMnPgsm/7sNBUor
-         HH/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ywtmfrQ4bvC5mZcT0l80a/uW5Hgu+UN45Tyqwdq32Is=;
-        b=Gaekq5hnfmditVX2pqNI/WJAb/oQElmdXS3JV90wANVfBugImyOXtT08nN5E7PieHv
-         Jw3FUs/oKVr7RRi2JYAMLedXsxg/ugSDucqynZRVgjsUy3WiFLkspDEG8S8i6zSFxhxj
-         J5oLj7hb5aOnBRU7Xvo+iFyLSsdsmzU6AqieZ6rQ/bBas2HSzQlrRcbUR5IhWaxstfW+
-         u2cBZPRpTjNk5/pJSQAkJ5aWun0V0dv13EGlv9LPL6PRbSSsIi8toFBXh0JrBIh+so+4
-         Q46Z9T4rym4OgIhL921TWMJ1CkCX5JqFr7tuMGyFUg1yuwjLX3vses1fECfBN1ZnPXUD
-         ch7Q==
-X-Gm-Message-State: AOAM532Ii62b5zeMlVAGeC5uBuhK9fuJ+rsQiOFXsxe6Pm27b6Ku1cE3
-        L0mYH5U5HleekrANNVZJih0QO0G69JWxNwAzoNF6DZG5Grc=
-X-Google-Smtp-Source: ABdhPJw+qk4VeY2tg26zqXyMNZtusjGg2XCTiWdMcKoJSuhin43muLjbGFl1CVDuAf26no+QkkphmWfleEQpZkjYzZI=
-X-Received: by 2002:a25:c08b:: with SMTP id c133mr3006026ybf.286.1589417777831;
- Wed, 13 May 2020 17:56:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200513234738.GA21211@embeddedor>
-In-Reply-To: <20200513234738.GA21211@embeddedor>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 13 May 2020 17:56:06 -0700
-Message-ID: <CAP-5=fV=hQQvafgp8saDUadZch7vwtBsEKqf==qmSm8htq3Ugw@mail.gmail.com>
-Subject: Re: [PATCH perf/core] perf intel-pt: Fix clang build failure in intel_pt_synth_pebs_sample
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 13 May 2020 21:00:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725942AbgENBAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 21:00:15 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5F482054F;
+        Thu, 14 May 2020 01:00:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589418014;
+        bh=iL3qRo6PKMlX7MXjMuhMdIo6UsuawSg8IZnaTVQPWcw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=eMXyaK/bX8VY/yTLe5XB8JtMJrtcjjev1fGQABBIMNzXe1l1nVaonllA6Js7jUFE/
+         roA4DNirFqPNV8zYvxpE5SZpnZrPScPhYauQnT6eTn3ErV59izLzTc8zoDjhqVpUBV
+         xIAKU4KFe9w7hOY+jhok+DYEHeqUtAEj9JByg/IQ=
+Date:   Thu, 14 May 2020 10:00:09 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Christoph Hellwig <hch@lst.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-parisc@vger.kernel.org,
+        linux-um <linux-um@lists.infradead.org>,
+        Netdev <netdev@vger.kernel.org>, bpf@vger.kernel.org,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 11/18] maccess: remove strncpy_from_unsafe
+Message-Id: <20200514100009.a8e6aa001f0ace5553c7904f@kernel.org>
+In-Reply-To: <CAHk-=wjBKGLyf1d53GwfUTZiK_XPdujwh+u2XSpD2HWRV01Afw@mail.gmail.com>
+References: <20200513160038.2482415-1-hch@lst.de>
+        <20200513160038.2482415-12-hch@lst.de>
+        <CAHk-=wj=u+nttmd1huNES2U=9nePtmk7WgR8cMLCYS8wc=rhdA@mail.gmail.com>
+        <20200513192804.GA30751@lst.de>
+        <0c1a7066-b269-9695-b94a-bb5f4f20ebd8@iogearbox.net>
+        <20200514082054.f817721ce196f134e6820644@kernel.org>
+        <CAHk-=wjBKGLyf1d53GwfUTZiK_XPdujwh+u2XSpD2HWRV01Afw@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 4:43 PM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
->
-> Fix the following build failure generated with command
-> $ make CC=clang HOSTCC=clang -C tools/ perf:
->
-> util/intel-pt.c:1802:24: error: field 'br_stack' with variable sized type 'struct branch_stack' not at the end of a struct or class is a GNU extension [-Werror,-Wgnu-variable-sized-type-not-at-end]
->                         struct branch_stack br_stack;
->                                             ^
-> 1 error generated.
->
-> Fix this by reordering the members of struct br.
->
-> Clang version 11.0.0 was used.
->
-> Fixes: f283f293a60d ("perf tools: Replace zero-length array with flexible-array")
-> Reported-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+On Wed, 13 May 2020 16:59:40 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Tested-by: Ian Rogers <irogers@google.com>
+> On Wed, May 13, 2020 at 4:21 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >
+> >
+> > For trace_kprobe.c current order (kernel -> user fallback) is preferred
+> > because it has another function dedicated for user memory.
+> 
+> Well, then it should just use the "strict" kernel-only one for the
+> non-user memory.
+> 
+> But yes, if there are legacy interfaces, then we might want to say
+> "these continue to work for the legacy case on platforms where we can
+> tell which kind of pointer it is from the bit pattern".
 
-Thanks!
-Ian
+Yes, that was why I changed my mind and send reviewed-by last time.
 
-> ---
-> Here to fix what I break. :)
->
->  tools/perf/util/intel-pt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-> index f17b1e769ae4..b34179e3926f 100644
-> --- a/tools/perf/util/intel-pt.c
-> +++ b/tools/perf/util/intel-pt.c
-> @@ -1799,8 +1799,8 @@ static int intel_pt_synth_pebs_sample(struct intel_pt_queue *ptq)
->
->         if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
->                 struct {
-> -                       struct branch_stack br_stack;
->                         struct branch_entry entries[LBRS_MAX];
-> +                       struct branch_stack br_stack;
->                 } br;
->
->                 if (items->mask[INTEL_PT_LBR_0_POS] ||
-> --
-> 2.26.2
->
+https://lore.kernel.org/bpf/20200511142716.f1ff6fc55220012982c47fec@kernel.org/
+
+> But we should likely at least disallow it entirely on platforms where
+> we really can't - or pick one hardcoded choice. On sparc, you really
+> _have_ to specify one or the other.
+
+OK. BTW, is there any way to detect the kernel/user space overlap on
+memory layout statically? If there, I can do it. (I don't like
+"if (CONFIG_X86)" thing....)
+Or, maybe we need CONFIG_ARCH_OVERLAP_ADDRESS_SPACE?
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
