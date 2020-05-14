@@ -2,164 +2,134 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0332C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 530B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F2CC206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:27:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FDvaNrZJ"
+	by mail.kernel.org (Postfix) with ESMTP id 31B10206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:29:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589455763;
+	bh=OnuC3p7HMPjmLxqZAsFmvEk9vjs+q+iYT5rEuONnxYg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=rPMcWowS56xuOHYMySpZsfJsBY6T2W/SvCj/z3tyYcXz+hCpuN2BZ6VXPDLlYvaQq
+	 irJ6O6xStgjLw/pnZx1tfHFAkfjCREoj8W++vSFzf/6jbuYEg2eVoda+u+6K2LbhTt
+	 STLzxFhUR+z2jFe9SseOrxM/1MbgkQODJmCCZiD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgENL15 (ORCPT
+        id S1726216AbgENL3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 07:27:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35244 "EHLO
+        Thu, 14 May 2020 07:29:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726051AbgENL14 (ORCPT
+        with ESMTP id S1726010AbgENL3W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 07:27:56 -0400
-Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5DF5C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 04:27:55 -0700 (PDT)
-Received: by mail-ot1-x32f.google.com with SMTP id c3so2005586otr.12
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 04:27:55 -0700 (PDT)
+        Thu, 14 May 2020 07:29:22 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9559C061A0C;
+        Thu, 14 May 2020 04:29:21 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id u6so3090769ljl.6;
+        Thu, 14 May 2020 04:29:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wxAs+mvRFMkQC0sck5MS5WhqTOyvJuovj78EsreUtvE=;
-        b=FDvaNrZJJwmbPiapmx88pMKzanvUHC7BTHIvMPe6B5SRaYMqaQWdQVHWUzKT+CHWUO
-         IPI6jehEtsu0MvskmpriRki1/VVhuWa2lsxgeLpPE7ZS8EWWrQif51SMiqmU1yHqtGJM
-         6bRy5vuz/HsIlMA7dBfSMddHzP681WpZ3lOPsOAzBtSVfjWxRh+ijCUQwrlwc4KkTRYX
-         jD2GmDreLZ9kOPcjPIeoO58EFtYAxQQcULnBjInpLJv/yor8X2t278Rdl8YDRBz5nLdX
-         S2xUG1+EBMvAZsS/mbUm6DSjxNvARM92lDxzTsBdL2WqA5oI2dzXTWMEpCHuE6qJYR1r
-         9BZQ==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=aZUh5M8C4xCIdhCIBNG4+MSgiN9g9T+0cBtSXdRuzAA=;
+        b=AnB5LTU1UnPEHRn3jH8GdEPOYR1y1ntXOEKMsFgjXqrYiJdeY1QAx1dBcMfOHe0ped
+         pskLUgyRJKw2jnp8i+ZbQ3JUVIfYF8gnUqyqhSauBJ7YpXB/gXaM5vTcUJO7rnGsFcJj
+         phnidUoZ7zOHcgHsQsXuyd8Q8+XjN7Q8I9yICKOAHOK3/dZ9FzI6CDhUjNl/qD9OWlns
+         sehSif3Ul7dB0dPYKtSuTtsG73QwrQbSoh40N/VI4i3Zr6HIdsrVBIev/mUZqXzt0SAV
+         h7gDOA4ij8IKfDbzF5glNYcNHAh8enREXiYTT8qgW9Oxh0/9WE8DBmIW3MoYBM9QSKiq
+         9ZmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wxAs+mvRFMkQC0sck5MS5WhqTOyvJuovj78EsreUtvE=;
-        b=UnlZWITwcvNmKamnlyimsrkFt1GidsCigVgcyypCBPJTmsgRvbRdi3er6h9t2CaEcn
-         uzpGoo88I49qTghxmI66pqR7JvFhUi8Iti2mxZocDgIfJCZ0WkDFiK2wHML3EpjLQDAW
-         WkxiEbe2nLvy2m8N2pQ6l1n3Ei032SFEP6tJKpjmA6AbkbXp5sHa992wBiIIQ/+xgruE
-         qILPYUAgmwKowaJgv+2WPSs37iPrCSEBTw8kZYNHp/MdI4CZI+9iTmeXKxuQyUGBI1/2
-         U8W5GDI9+6EVTCvqIM7zSLpVoT/ic62qdXiUrhrcbvnJ9YWkqBC7xYiUaw5KWfRcKuez
-         kaEw==
-X-Gm-Message-State: AOAM531vfeU/7R3mCffpD1QKpQS7ZKIsDn0R43EZjFi1C7zp8JRHgQQo
-        xYaq0upNdnFrOOntwnRIFdbY9kKxOshdGSQIHujGv6gq0ci1MQ==
-X-Google-Smtp-Source: ABdhPJwpNNt1Jw4j4qQX1GS4dly/n8TtoBFGmz3on2XvNgxroZ43lfjyKd0ko9cuFU1Ms4pbt3IhJepoCBIn1LeudGU=
-X-Received: by 2002:a9d:e93:: with SMTP id 19mr3159324otj.371.1589455675094;
- Thu, 14 May 2020 04:27:55 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=aZUh5M8C4xCIdhCIBNG4+MSgiN9g9T+0cBtSXdRuzAA=;
+        b=FErlio98oENcSUjKCv341Iy4krBnHfofFezkt51vek2Mo/Q9R/84Vr/1IWlrWtucHA
+         xpZN390YMZ6FJDcQdtYbV70kw/4tC65L905qxZLCO4k3A/AeA68E1oPT67fx6QFGoaZi
+         8QUaH2dMqHtf80v7cz7ewD3efNSs7iUWc1ZQ+zOTPuD28W+hcvxLvob7kvllCzGQQB/y
+         KK07jqp3NrAkh/BNHm6Cw9V4sdoyKghShTNeNFM7f0rf+E8O1Xf3ZFUm59IQJyuGTH6/
+         Cq6o5YSzuXnN4kgshg29M6/YU2UtV2lmRQkl9TyGzfs73k3TiZzymrRdRNJGR4tXJo0X
+         P5pw==
+X-Gm-Message-State: AOAM5333mGvEFGSnVvgqBjRgZm4jpU8M8ehdeKl9NY0um8Kgnbab65nQ
+        aTTkCi4WbniXdc3MqQ69AuQ=
+X-Google-Smtp-Source: ABdhPJxCRXpMeI5VGzKYeX4Cb0PWBtnxXi8wdrx4llBhB1c6Ix70JZCCdZkrLcSG0KWJQzDuD7yLLA==
+X-Received: by 2002:a2e:b043:: with SMTP id d3mr2321630ljl.77.1589455760189;
+        Thu, 14 May 2020 04:29:20 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id 4sm1671551lfr.66.2020.05.14.04.29.18
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 14 May 2020 04:29:19 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3 driver
+In-Reply-To: <1585718145-29537-3-git-send-email-sanm@codeaurora.org>
+References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org> <1585718145-29537-3-git-send-email-sanm@codeaurora.org>
+Date:   Thu, 14 May 2020 14:29:15 +0300
+Message-ID: <878shu4uwk.fsf@kernel.org>
 MIME-Version: 1.0
-References: <20200508204200.13481-1-sumit.semwal@linaro.org>
- <20200508204200.13481-4-sumit.semwal@linaro.org> <20200511103937.GC8216@sirena.org.uk>
-In-Reply-To: <20200511103937.GC8216@sirena.org.uk>
-From:   Sumit Semwal <sumit.semwal@linaro.org>
-Date:   Thu, 14 May 2020 16:57:43 +0530
-Message-ID: <CAO_48GFGpHeu_xb9XT9CFMOSUOJgRrb-z_KZ3-r3X78s-2ddjw@mail.gmail.com>
-Subject: Re: [v2 3/4] regulator: qcom: Add labibb driver
-To:     Mark Brown <broonie@kernel.org>
-Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
-        lgirdwood@gmail.com, robh+dt@kernel.org,
-        Nisha Kumari <nishakumari@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, kgunda@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Mark,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your review comments!
-On Mon, 11 May 2020 at 16:09, Mark Brown <broonie@kernel.org> wrote:
->
-> On Sat, May 09, 2020 at 02:11:59AM +0530, Sumit Semwal wrote:
->
-> > +     ret = regmap_bulk_read(reg->regmap, reg->base +
-> > +                            REG_LABIBB_STATUS1, &val, 1);
-> > +     if (ret < 0) {
-> > +             dev_err(reg->dev, "Read register failed ret = %d\n", ret);
-> > +             return ret;
-> > +     }
->
-> Why a bulk read of a single register?
-Right, will change.
->
-> > +static int _check_enabled_with_retries(struct regulator_dev *rdev,
-> > +                     int retries, int enabled)
-> > +{
->
-> This is not retrying, this is polling to see if the regulator actually
-> enabled.
-Yes, will update accordingly.
 
->
-> > +static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
-> > +{
->
-> > +     ret = _check_enabled_with_retries(rdev, retries, 1);
-> > +     if (ret < 0) {
-> > +             dev_err(reg->dev, "retries exhausted: enable %s regulator\n",
-> > +                     reg->desc.name);
-> > +             return ret;
-> > +     }
->
-> If this is useful factor it out into a helper or the core, other devices
-> also have status bits saying if the regulator is enabled.  It looks like
-> this may be mainly trying to open code something like enable_time, with
-> possibly some issues where the time taken to enable varies a lot.
->
-Makes sense; I am not terribly familiar with the regulator core and
-helpers, so let me look and refactor accordingly.
+Hi,
 
-> > +     if (ret)
-> > +             return 0;
-> > +
-> > +
-> > +     dev_err(reg->dev, "Can't enable %s\n", reg->desc.name);
-> > +     return -EINVAL;
->
-> Return the actual error code (the logic here is quite convoluted).
-Will try to simplify.
->
-> > +     ret = regulator_disable_regmap(rdev);
-> > +
-> > +     if (ret < 0) {
->
-> You have lots of blank lines between operations and checking their
-> return codes?
->
-will correct that.
-> > +     ret = _check_enabled_with_retries(rdev, retries, 0);
-> > +     if (ret < 0) {
-> > +             dev_err(reg->dev, "retries exhausted: disable %s regulator\n",
-> > +                     reg->desc.name);
-> > +             return ret;
-> > +     }
->
-> Similarly to the enable path, but is this one about off_on_delay rather
-> than enable_time?
-Got it. Let me look deeper.
->
-> > +     if (reg_data->type == QCOM_LAB_TYPE) {
-> > +             reg = &labibb->lab;
-> > +             reg->desc.enable_mask = LAB_ENABLE_CTL_MASK;
-> > +     } else {
-> > +             reg = &labibb->ibb;
-> > +             reg->desc.enable_mask = IBB_ENABLE_CTL_MASK;
-> > +     }
->
-> Write a switch statement so this is extensible.
-I can change over to switch, though in the current set of downstream
-code I've seen, it doesn't look that it would get extended. But I
-guess there isn't any harm in moving over to switch. Will do.
+Sandeep Maheswaram <sanm@codeaurora.org> writes:
+> +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
+> +{
+> +	struct device *dev =3D qcom->dev;
+> +	int ret;
+> +
+> +	if (!device_is_bound(&qcom->dwc3->dev))
+> +		return -EPROBE_DEFER;
 
-Best,
-Sumit.
+this breaks allmodconfig. I'm dropping this series from my queue for
+this merge window.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl69K4sACgkQzL64meEa
+mQYJXA/+Ov/nCvG+76vWtewqpijWe9V1NsHKzHm3mBiXlbQmSBA+8IpWrppxApkh
+JoUD1IjMEGCiUx69OzLnZlKGtkNmeygVBf780nk2eZ2oqWUJRbiOkeDOz8fwf7OM
+HXX2sI2SqdIJ0MLbwcSMQu2rrRNxsCog4kgI6q1u9+og9cj4RIuZ5K+Jv36EK1pT
+EAlZ3T+a2nMEcuOuS9BO0kHkIabL1ppTS3P7wgnj5iD+ZKbjNZeC5WNxYGRrucs6
+EW/kNJyoGHZJ9pgoN1ZblbYj0XY0MWVf2IZu55QHfDgE/xB1oag2LuUsle2tRAAP
+G5QSGW9yNSbPpOtLfaZ/XvieOYhaumL17HIKBnUqGqIIVhCfJwy3PH8/M57TDdV1
+sGUsr2r6yOYaGiHceEqTkQCHgwIkNLaAXpL9MbflV9lymcomd5Hu1l+wlywEhgON
+rKzbvjysZTsuZZer0eYLS+H+deqJdu/Anqqh7I/gnW2W02Hxz4lh0ujhgSpqDN/G
+z/LfoxVP1s4YjEYSmnSkKDaPCqjjyr0WL7n8LE8xTKhvZUv2aa2ArbMSvlkcxait
+G5fGYrIr7Jtu8l2B+0XfDPiJA9Ahwt3nG54x5cFpXyPs5u5QceSpGsx2hxZQlOjr
+brk7eVmCHta9WZyIeGJAttJWqYeIxi/HZY3lJGZI02YFLvo0Osg=
+=r7D8
+-----END PGP SIGNATURE-----
+--=-=-=--
