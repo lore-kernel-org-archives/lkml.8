@@ -2,73 +2,180 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16EC4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C96C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDB4E20709
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:04:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="mkSo5KN+"
+	by mail.kernel.org (Postfix) with ESMTP id 51FC320727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:06:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589490370;
+	bh=UY4fp0mnf5dW1wUh0nDLNnXc+3+KQou78sP+055n/7o=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=DUYYoAJG1rQcELMvJtpGJhpHD99Tsu+s5cNTOwHmYZSqCwiymxAEgxfsDeP+7QzhR
+	 QO7mK0W0X5fJYDcd+VJxn43yFrIMmMN8T8zq0oJKHW/IL1r8PdZFzYkR3OQ2i8s6FP
+	 P48HDu7I1AFJWVGm6yD2eYdZ6tlLBNS77z5FE5D8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbgENVE7 (ORCPT
+        id S1728110AbgENVGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 17:04:59 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:33086 "EHLO vps0.lunn.ch"
+        Thu, 14 May 2020 17:06:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727122AbgENVE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 17:04:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=nIakemcvGrSlleeazZMw285DAqRzE/zcAS5fWft65g4=; b=mkSo5KN+yL3rncs/RXJLTFsuvx
-        iA0px8NOntJ+lrSMHWRb1BH8gVSZeMPnqZJT8dCGnpRX42dsZHqrknRNOescpwGTDUdgOyZ7Ghp6y
-        HDcXS8HHpXe8xMiW35FNlC3gzwZJ/enDY5GVxkOsmv1FgryjbJ5gmvNkePqTXn8rA1H0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jZL2E-002KVz-RA; Thu, 14 May 2020 23:04:54 +0200
-Date:   Thu, 14 May 2020 23:04:54 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
-        robh@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH net-next 1/2] dt-bindings: net: dp83822: Add TI dp83822
- phy
-Message-ID: <20200514210454.GB499265@lunn.ch>
-References: <20200514173055.15013-1-dmurphy@ti.com>
- <20200514173055.15013-2-dmurphy@ti.com>
- <20200514183912.GW499265@lunn.ch>
- <2f03f066-38d0-a7c7-956d-e14356ca53b3@ti.com>
- <20200514205028.GA499265@lunn.ch>
- <b79f8df0-add8-4ebb-1784-36cc6c50b285@ti.com>
+        id S1727942AbgENVGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 17:06:09 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36852206F1;
+        Thu, 14 May 2020 21:06:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589490368;
+        bh=UY4fp0mnf5dW1wUh0nDLNnXc+3+KQou78sP+055n/7o=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=iGkC1CT3zmGMq2uKjMheCCTkkAmJnKrHaH1Vcq/IXoUTAC4qgU+jRimYwS8hlmz7h
+         YUJ3vwEGdKVFhOoTI08Vy4zHsOq1emOLEwbBqZKOjr72brCADdK0sIpIp9aJj6PgpW
+         09KeR8l/UL60hPXHKOk6xLczM2j324/3jR1YkKjM=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b79f8df0-add8-4ebb-1784-36cc6c50b285@ti.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200511195534.1207927-2-lkundrak@v3.sk>
+References: <20200511195534.1207927-1-lkundrak@v3.sk> <20200511195534.1207927-2-lkundrak@v3.sk>
+Subject: Re: [PATCH 1/2] dt-bindings: sound: Add Marvell MMP Audio Clock Controller binding
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+To:     Lubomir Rintel <lkundrak@v3.sk>,
+        Michael Turquette <mturquette@baylibre.com>
+Date:   Thu, 14 May 2020 14:06:07 -0700
+Message-ID: <158949036750.215346.11234071140104055350@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Why would we need 2?  The SFP core would need to know that the LOS is
-> connected to the PHY.
+Quoting Lubomir Rintel (2020-05-11 12:55:33)
+> diff --git a/Documentation/devicetree/bindings/clock/marvell,mmp2-audio-c=
+lock.yaml b/Documentation/devicetree/bindings/clock/marvell,mmp2-audio-cloc=
+k.yaml
+> new file mode 100644
+> index 000000000000..b86e9fbfa56d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/marvell,mmp2-audio-clock.ya=
+ml
+> @@ -0,0 +1,73 @@
+> +# SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/marvell,mmp2-audio-clock.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Marvell MMP2 Audio Clock Controller
+> +
+> +maintainers:
+> +  - Lubomir Rintel <lkundrak@v3.sk>
+> +
+> +description: |
+> +  The audio clock controller generates and supplies the clocks to the au=
+dio
+> +  codec.
+> +
+> +  Each clock is assigned an identifier and client nodes use this identif=
+ier
+> +  to specify the clock which they consume.
+> +
+> +  All these identifiers could be found in <dt-bindings/clock/marvell,mmp=
+2.h>.
 
-That is possible today. Just don't list the GPIO when declaring the
-SFP.
+Is this right? The patch puts them in mmp2-audio.h
 
-> The PHY is strapped to configure the LED_1 as a GPIO input.  I am
-> not seeing a register that we can force this configuration.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - marvell,mmp2-audio-clock
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: Audio subsystem clock
+> +      - description: The crystal oscillator clock
+> +      - description: First I2S clock
+> +      - description: Second I2S clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: audio
+> +      - const: vctcxo
+> +      - const: i2s0
+> +      - const: i2s1
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - '#clock-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/marvell,mmp2.h>
+> +    #include <dt-bindings/power/marvell,mmp2.h>
+> +
+> +    clocks@d42a0c30 {
 
-Ah, O.K. If it is selected via strapping only, they an additional
-property is not needed.
+clock-controller@d42a0c30
 
-	 Andrew
+> +      compatible =3D "marvell,mmp2-audio-clock";
+> +      reg =3D <0xd42a0c30 0x10>;
+
+That is a very specific and tiny region. Presumably this is part of a
+larger hardware block and thus shouldn't be described in DT this way.
+Instead there should be one clock-controller node and a driver that
+controls all the clks that it wants to inside that hardware block.
+
+> +      clock-names =3D "audio", "vctcxo", "i2s0", "i2s1";
+> +      clocks =3D <&soc_clocks MMP2_CLK_AUDIO>,
+> +               <&soc_clocks MMP2_CLK_VCTCXO>,
+> +               <&soc_clocks MMP2_CLK_I2S0>,
+> +               <&soc_clocks MMP2_CLK_I2S1>;
+> +      power-domains =3D <&soc_clocks MMP2_POWER_DOMAIN_AUDIO>;
+> +      #clock-cells =3D <1>;
+> +    };
+> diff --git a/include/dt-bindings/clock/marvell,mmp2-audio.h b/include/dt-=
+bindings/clock/marvell,mmp2-audio.h
+> new file mode 100644
+> index 000000000000..127b48ec0f0a
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/marvell,mmp2-audio.h
+> @@ -0,0 +1,8 @@
+> +/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-2-Clause) */
+> +#ifndef __DT_BINDINGS_CLOCK_MARVELL_MMP2_AUDIO_H
+> +#define __DT_BINDINGS_CLOCK_MARVELL_MMP2_AUDIO_H
+> +
+> +#define MMP2_CLK_AUDIO_SYSCLK          1
+
+Any reason to start at 1 vs. 0?
+
+> +#define MMP2_CLK_AUDIO_SSPA0           2
+> +#define MMP2_CLK_AUDIO_SSPA1           3
+> +#endif
+> --=20
+> 2.26.2
+>
