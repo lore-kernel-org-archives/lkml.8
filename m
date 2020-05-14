@@ -2,78 +2,94 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 677DAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 661F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3439E2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AED720657
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:35:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgENSdG (ORCPT
+        id S1727067AbgENSfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:33:06 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:51617 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbgENSdG (ORCPT
+        Thu, 14 May 2020 14:35:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45720 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726165AbgENSfe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:33:06 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jZIfG-00045Y-Js; Thu, 14 May 2020 18:33:02 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] net: dsa: felix: fix incorrect clamp calculation for burst
-Date:   Thu, 14 May 2020 19:33:02 +0100
-Message-Id: <20200514183302.16925-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 14 May 2020 14:35:34 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1406DC061A0C;
+        Thu, 14 May 2020 11:35:34 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jZIha-0005aR-Fv; Thu, 14 May 2020 20:35:26 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 08AAA1C0243;
+        Thu, 14 May 2020 20:35:26 +0200 (CEST)
+Date:   Thu, 14 May 2020 18:35:25 -0000
+From:   "tip-bot2 for Fenghua Yu" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/splitlock] x86/split_lock: Add Icelake microserver CPU model
+Cc:     Fenghua Yu <fenghua.yu@intel.com>, Borislav Petkov <bp@suse.de>,
+        Tony Luck <tony.luck@intel.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <1588290395-2677-1-git-send-email-fenghua.yu@intel.com>
+References: <1588290395-2677-1-git-send-email-fenghua.yu@intel.com>
 MIME-Version: 1.0
+Message-ID: <158948132586.17726.4500141435426378376.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+The following commit has been merged into the x86/splitlock branch of tip:
 
-Currently burst is clamping on rate and not burst, the assignment
-of burst from the clamping discards the previous assignment of burst.
-This looks like a cut-n-paste error from the previous clamping
-calculation on ramp.  Fix this by replacing ramp with burst.
+Commit-ID:     0ed7bf1d92eafc37bb9eb7c8692a8e44d24f9b99
+Gitweb:        https://git.kernel.org/tip/0ed7bf1d92eafc37bb9eb7c8692a8e44d24f9b99
+Author:        Fenghua Yu <fenghua.yu@intel.com>
+AuthorDate:    Thu, 30 Apr 2020 16:46:35 -07:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Thu, 14 May 2020 19:25:10 +02:00
 
-Addresses-Coverity: ("Unused value")
-Fixes: 0fbabf875d18 ("net: dsa: felix: add support Credit Based Shaper(CBS) for hardware offload")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+x86/split_lock: Add Icelake microserver CPU model
+
+Icelake microserver CPU supports split lock detection while it doesn't
+have the split lock enumeration bit in IA32_CORE_CAPABILITIES.
+
+Enumerate the feature by model number.
+
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/1588290395-2677-1-git-send-email-fenghua.yu@intel.com
 ---
- drivers/net/dsa/ocelot/felix_vsc9959.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/cpu/intel.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/dsa/ocelot/felix_vsc9959.c b/drivers/net/dsa/ocelot/felix_vsc9959.c
-index df4498c0e864..85e34d85cc51 100644
---- a/drivers/net/dsa/ocelot/felix_vsc9959.c
-+++ b/drivers/net/dsa/ocelot/felix_vsc9959.c
-@@ -1360,7 +1360,7 @@ static int vsc9959_qos_port_cbs_set(struct dsa_switch *ds, int port,
- 	/* Burst unit is 4kB */
- 	burst = DIV_ROUND_UP(cbs_qopt->hicredit, 4096);
- 	/* Avoid using zero burst size */
--	burst = clamp_t(u32, rate, 1, GENMASK(5, 0));
-+	burst = clamp_t(u32, burst, 1, GENMASK(5, 0));
- 	ocelot_write_gix(ocelot,
- 			 QSYS_CIR_CFG_CIR_RATE(rate) |
- 			 QSYS_CIR_CFG_CIR_BURST(burst),
--- 
-2.25.1
-
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index a19a680..b59bc4a 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -1135,6 +1135,7 @@ void switch_to_sld(unsigned long tifn)
+ static const struct x86_cpu_id split_lock_cpu_ids[] __initconst = {
+ 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		0),
+ 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		0),
++	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_D,		0),
+ 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT,	1),
+ 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_D,	1),
+ 	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,	1),
