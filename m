@@ -2,119 +2,88 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D235C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9124BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DDDF20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 714F920675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:31:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726108AbgENI3g convert rfc822-to-8bit (ORCPT
+        id S1726151AbgENIbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 04:29:36 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:30013 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726037AbgENI3g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 04:29:36 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-41-3XJ_vbSSOB-Mdnc0632Mfw-1; Thu, 14 May 2020 09:29:32 +0100
-X-MC-Unique: 3XJ_vbSSOB-Mdnc0632Mfw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 14 May 2020 09:29:31 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 14 May 2020 09:29:31 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Joe Perches' <joe@perches.com>, Christoph Hellwig <hch@lst.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Eric Dumazet <edumazet@google.com>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        "Vlad Yasevich" <vyasevich@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        "Marcelo Ricardo Leitner" <marcelo.leitner@gmail.com>,
-        Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>,
-        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
-        "cluster-devel@redhat.com" <cluster-devel@redhat.com>,
-        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: RE: remove kernel_setsockopt and kernel_getsockopt
-Thread-Topic: remove kernel_setsockopt and kernel_getsockopt
-Thread-Index: AQHWKU15LJmP4mOGDE2/GHhLszFt9KinP7aQ
-Date:   Thu, 14 May 2020 08:29:30 +0000
-Message-ID: <756758e8f0e34e2e97db470609f5fbba@AcuMS.aculab.com>
-References: <20200513062649.2100053-1-hch@lst.de>
- <ecc165c33962d964d518c80de605af632eee0474.camel@perches.com>
-In-Reply-To: <ecc165c33962d964d518c80de605af632eee0474.camel@perches.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 14 May 2020 04:31:13 -0400
+Received: from mga18.intel.com ([134.134.136.126]:12082 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726032AbgENIbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 04:31:13 -0400
+IronPort-SDR: FVEiGjUqFpGAyCGTGXEF1GEvM8h0rWuXHPn+J6NW4WIEhuGXGVQRjmCRx4f20E991guxNjqgyI
+ AhZv081oGb6g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 01:31:12 -0700
+IronPort-SDR: 9XWc+sruIwRfNn7Rh1sIanPM0IFYR2MyJP81M69xvd01H9zD2Zl0evdC3JHt7+O9LQ5XXi4m9W
+ G/sShjQvuirg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,390,1583222400"; 
+   d="scan'208";a="341539917"
+Received: from sqa-gate.sh.intel.com (HELO clx-ap-likexu.tsp.org) ([10.239.48.212])
+  by orsmga001.jf.intel.com with ESMTP; 14 May 2020 01:31:09 -0700
+From:   Like Xu <like.xu@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>, ak@linux.intel.com,
+        wei.w.wang@intel.com
+Subject: [PATCH v11 01/11] perf/x86: Fix variable types for LBR registers
+Date:   Thu, 14 May 2020 16:30:44 +0800
+Message-Id: <20200514083054.62538-2-like.xu@linux.intel.com>
+X-Mailer: git-send-email 2.21.3
+In-Reply-To: <20200514083054.62538-1-like.xu@linux.intel.com>
+References: <20200514083054.62538-1-like.xu@linux.intel.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Perches
-> Sent: 13 May 2020 18:39
-> On Wed, 2020-05-13 at 08:26 +0200, Christoph Hellwig wrote:
-> > this series removes the kernel_setsockopt and kernel_getsockopt
-> > functions, and instead switches their users to small functions that
-> > implement setting (or in one case getting) a sockopt directly using
-> > a normal kernel function call with type safety and all the other
-> > benefits of not having a function call.
-> >
-> > In some cases these functions seem pretty heavy handed as they do
-> > a lock_sock even for just setting a single variable, but this mirrors
-> > the real setsockopt implementation - counter to that a few kernel
-> > drivers just set the fields directly already.
-> >
-> > Nevertheless the diffstat looks quite promising:
-> >
-> >  42 files changed, 721 insertions(+), 799 deletions(-)
+From: Wei Wang <wei.w.wang@intel.com>
 
-I missed this patch going through.
-Massive NACK.
+The msr variable type can be 'unsigned int', which uses less memory than
+the longer 'unsigned long'. Fix 'struct x86_pmu' for that. The lbr_nr won't
+be a negative number, so make it 'unsigned int' as well.
 
-You need to export functions that do most of the socket options
-for all protocols.
-As well as REUSADDR and NODELAY SCTP has loads because a lot
-of stuff that should have been extra system calls got piled
-into setsockopt.
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Wei Wang <wei.w.wang@intel.com>
+---
+ arch/x86/events/perf_event.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-An alternate solution would be to move the copy_to/from_user()
-into a wrapper function so that the kernel_[sg]etsockopt()
-functions would bypass them completely.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index f1cd1ca1a77b..1025bc6eb04f 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -672,8 +672,8 @@ struct x86_pmu {
+ 	/*
+ 	 * Intel LBR
+ 	 */
+-	unsigned long	lbr_tos, lbr_from, lbr_to; /* MSR base regs       */
+-	int		lbr_nr;			   /* hardware stack size */
++	unsigned int	lbr_tos, lbr_from, lbr_to,
++			lbr_nr;			   /* LBR base regs and size */
+ 	u64		lbr_sel_mask;		   /* LBR_SELECT valid bits */
+ 	const int	*lbr_sel_map;		   /* lbr_select mappings */
+ 	bool		lbr_double_abort;	   /* duplicated lbr aborts */
+-- 
+2.21.3
 
