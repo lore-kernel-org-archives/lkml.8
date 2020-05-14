@@ -2,321 +2,204 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93999C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43706C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66D462065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:31:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YH3JwG/l"
+	by mail.kernel.org (Postfix) with ESMTP id 2FC2E20671
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:31:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726156AbgENJbM (ORCPT
+        id S1726171AbgENJb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 05:31:12 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:38380 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbgENJbM (ORCPT
+        Thu, 14 May 2020 05:31:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45378 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725878AbgENJb0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 05:31:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589448669;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+M/JCln9wzAsGjhD0XvCSZCE5bghanH9yHT8B9Yuz1U=;
-        b=YH3JwG/ltTjd1x5c9fbNSlF26ysMBxJr6fcTOqJb68wwU5Arh8rrQ9YMuKpJw3Y+lsfKkS
-        6rQXMtHL9+BDJbJJDmBbmGrJ65tKh19YPcG0gLYMtpK+o0Zz/jPpBzG9fcaOofKfFV/rif
-        oD1wvovJ2WSjouInFrjeVk18JAdagtg=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-9-MnXRLqu2NOWT4ehJvV96KQ-1; Thu, 14 May 2020 05:31:06 -0400
-X-MC-Unique: MnXRLqu2NOWT4ehJvV96KQ-1
-Received: by mail-wr1-f72.google.com with SMTP id p13so1292520wrw.1
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 02:31:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+M/JCln9wzAsGjhD0XvCSZCE5bghanH9yHT8B9Yuz1U=;
-        b=HGkPY9rGwb3MgLFoNhVsnTZBFLJvPhsyPNLi2Dw/rRM2f1odBAwaeik3KcqvK1u8C3
-         cATufP2uYzsiifI883t4D5A9YLoL662yGt4mKz5R3054Zem1rUb1X7ZoWIoez/PPihEQ
-         ZhBQDMJpsmbcnrrSpLRP8UaZWD77rJ8t9MtcbYT111d/wM/1QDP36GOouX080fArUdxZ
-         ridQnkhsWa1RAr8/HHF4iGua9xQ/SlxuoFTLmPEhVXzLMnKrDUJUqU6chtCJJrZp7mTy
-         qI6eLHUa+94SKy2r5NQchqvQiAPimg3sEYq2iM6u+yMdx0Z1JNggdiPFO2oG6brwWe5v
-         oTAQ==
-X-Gm-Message-State: AOAM5313M989edpVYdDNgPKM1jxysD8cE3Nviu8/Ufxn7ODeDSLQdgE4
-        EaZh0di9drioY0RgZo3sD1OehmJknH/m7+2E3jly9FzEPwdewWmGWXq30FYtLjRBy2Zdf7SGCP/
-        TuaTGywDUhjt+T21A0zSMD41T
-X-Received: by 2002:a5d:68c7:: with SMTP id p7mr4685757wrw.29.1589448664628;
-        Thu, 14 May 2020 02:31:04 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJycsR0+2Kleb6jHGMFKI+gdToHSPwOeDmcvW6rc5OTqQmi+/V8HolBTWiHvc8/6IWG23MXf2w==
-X-Received: by 2002:a5d:68c7:: with SMTP id p7mr4685718wrw.29.1589448664260;
-        Thu, 14 May 2020 02:31:04 -0700 (PDT)
-Received: from redhat.com (bzq-79-179-68-225.red.bezeqint.net. [79.179.68.225])
-        by smtp.gmail.com with ESMTPSA id y70sm41006618wmc.36.2020.05.14.02.31.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 02:31:03 -0700 (PDT)
-Date:   Thu, 14 May 2020 05:31:00 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Bharat Bhushan <bbhushan2@marvell.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        virtio-dev@lists.oasis-open.org, jean-philippe@linaro.org,
-        joro@8bytes.org, jasowang@redhat.com, eric.auger.pro@gmail.com,
-        eric.auger@redhat.com
-Subject: Re: [PATCH v6] iommu/virtio: Use page size bitmap supported by
- endpoint
-Message-ID: <20200514043747-mutt-send-email-mst@kernel.org>
-References: <20200514075237.3941-1-bbhushan2@marvell.com>
+        Thu, 14 May 2020 05:31:26 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CDF1C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 02:31:26 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jZACz-0001LV-Mi; Thu, 14 May 2020 11:31:17 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jZACy-0005WE-PV; Thu, 14 May 2020 11:31:16 +0200
+Date:   Thu, 14 May 2020 11:31:16 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Fengping Yu <fengping.yu@mediatek.com>
+Cc:     Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/3] dt-bindings: Add keypad devicetree documentation
+Message-ID: <20200514093116.coiz5ofsjmxhafma@pengutronix.de>
+References: <20200514061747.25466-1-fengping.yu@mediatek.com>
+ <20200514061747.25466-2-fengping.yu@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200514075237.3941-1-bbhushan2@marvell.com>
+In-Reply-To: <20200514061747.25466-2-fengping.yu@mediatek.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 11:26:01 up 181 days, 44 min, 197 users,  load average: 0.03, 0.10,
+ 0.14
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 01:22:37PM +0530, Bharat Bhushan wrote:
-> Different endpoint can support different page size, probe
-> endpoint if it supports specific page size otherwise use
-> global page sizes.
+Hi,
+
+On 20-05-14 14:17, Fengping Yu wrote:
+> From: "fengping.yu" <fengping.yu@mediatek.com>
 > 
-> Device attached to domain should support a minimum of
-> domain supported page sizes. If device supports more
-> than domain supported page sizes then device is limited
-> to use domain supported page sizes only.
-
-OK so I am just trying to figure it out.
-Before the patch, we always use the domain supported page sizes
-right? With the patch, we still do, but we also probe and
-validate that device supports all domain page sizes,
-if it does not then we fail to attach the device.
-
-This seems like a lot of effort for little benefit, can't
-hypervisor simply make sure endpoints support the
-iommu page sizes for us?
-
-
-
+> Add Mediatek matrix keypad dt-binding doc as yaml schema.
 > 
-> Signed-off-by: Bharat Bhushan <bbhushan2@marvell.com>
+> Signed-off-by: fengping.yu <fengping.yu@mediatek.com>
 > ---
-> v5->v6
->  - property length before dereference
->  - Error out on no supported page sizes (page-size-mask is zero)
->  - Allow device to attach to domain even it supports
->    minimum of domain supported page sizes. In that case device
->    will use domain page sizes only.
->  - added format of pgsize_bitmap
+>  .../devicetree/bindings/input/mtk-kpd.yaml    | 102 ++++++++++++++++++
+>  1 file changed, 102 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/mtk-kpd.yaml
 > 
-> v4->v5:
->  - Rebase to Linux v5.7-rc4
-> 
-> v3->v4:
->  - Fix whitespace error
-> 
-> v2->v3:
->  - Fixed error return for incompatible endpoint
->  - __u64 changed to __le64 in header file
-> 
->  drivers/iommu/virtio-iommu.c      | 63 ++++++++++++++++++++++++++++---
->  include/uapi/linux/virtio_iommu.h | 14 ++++++-
->  2 files changed, 71 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
-> index 4e1d11af23c8..cbac3047a781 100644
-> --- a/drivers/iommu/virtio-iommu.c
-> +++ b/drivers/iommu/virtio-iommu.c
-> @@ -78,6 +78,7 @@ struct viommu_endpoint {
->  	struct viommu_dev		*viommu;
->  	struct viommu_domain		*vdomain;
->  	struct list_head		resv_regions;
-> +	u64				pgsize_bitmap;
->  };
->  
->  struct viommu_request {
-> @@ -415,6 +416,23 @@ static int viommu_replay_mappings(struct viommu_domain *vdomain)
->  	return ret;
->  }
->  
-> +static int viommu_set_pgsize_bitmap(struct viommu_endpoint *vdev,
-> +				    struct virtio_iommu_probe_pgsize_mask *mask,
-> +				    size_t len)
-> +{
-> +	u64 pgsize_bitmap;
+> diff --git a/Documentation/devicetree/bindings/input/mtk-kpd.yaml b/Documentation/devicetree/bindings/input/mtk-kpd.yaml
+> new file mode 100644
+> index 000000000000..8f594fe0bfc2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/mtk-kpd.yaml
+> @@ -0,0 +1,102 @@
+> +%YAML 1.2
+> +---
+> +version: 1
 > +
-> +	if (len < sizeof(*mask))
-> +		return -EINVAL;
+> +$id: http://devicetree.org/schemas/input/mtk-keypad.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +	pgsize_bitmap = le64_to_cpu(mask->pgsize_bitmap);
-> +	if (!pgsize_bitmap)
-> +		return -EINVAL;
+> +title: Mediatek's Keypad Controller device tree bindings
 > +
-> +	vdev->pgsize_bitmap = pgsize_bitmap;
-> +	return 0;
-> +}
+> +maintainer:
+> +  - Fengping Yu <fengping.yu@mediatek.com>
 > +
->  static int viommu_add_resv_mem(struct viommu_endpoint *vdev,
->  			       struct virtio_iommu_probe_resv_mem *mem,
->  			       size_t len)
-> @@ -499,6 +517,9 @@ static int viommu_probe_endpoint(struct viommu_dev *viommu, struct device *dev)
->  		case VIRTIO_IOMMU_PROBE_T_RESV_MEM:
->  			ret = viommu_add_resv_mem(vdev, (void *)prop, len);
->  			break;
-> +		case VIRTIO_IOMMU_PROBE_T_PAGE_SIZE_MASK:
-> +			ret = viommu_set_pgsize_bitmap(vdev, (void *)prop, len);
-> +			break;
->  		default:
->  			dev_err(dev, "unknown viommu prop 0x%x\n", type);
->  		}
-> @@ -615,7 +636,7 @@ static int viommu_domain_finalise(struct viommu_endpoint *vdev,
->  	struct viommu_dev *viommu = vdev->viommu;
->  	struct viommu_domain *vdomain = to_viommu_domain(domain);
->  
-> -	viommu_page_size = 1UL << __ffs(viommu->pgsize_bitmap);
-> +	viommu_page_size = 1UL << __ffs(vdev->pgsize_bitmap);
->  	if (viommu_page_size > PAGE_SIZE) {
->  		dev_err(vdev->dev,
->  			"granule 0x%lx larger than system page size 0x%lx\n",
-
-
-Looks like this is messed up on 32 bit: e.g. 0x100000000 will try to do
-1UL << -1, which is undefined behaviour. Which is btw already messed up
-wrt viommu->pgsize_bitmap, but that's not a reason to propagate
-the error.
-
-
-> @@ -630,7 +651,7 @@ static int viommu_domain_finalise(struct viommu_endpoint *vdev,
->  
->  	vdomain->id		= (unsigned int)ret;
->  
-> -	domain->pgsize_bitmap	= viommu->pgsize_bitmap;
-> +	domain->pgsize_bitmap	= vdev->pgsize_bitmap;
->  	domain->geometry	= viommu->geometry;
->  
->  	vdomain->map_flags	= viommu->map_flags;
-> @@ -654,6 +675,38 @@ static void viommu_domain_free(struct iommu_domain *domain)
->  	kfree(vdomain);
->  }
->  
-> +/*
-> + * Check whether the endpoint's capabilities are compatible with other
-> + * endpoints in the domain. Report any inconsistency.
-
-This actually has side effects, so _is_ isn't a good name for it.
-viommu_endpoint_compatible?
-
-> + */
-> +static bool viommu_endpoint_is_compatible(struct viommu_endpoint *vdev,
-> +					  struct viommu_domain *vdomain)
-> +{
-> +	struct device *dev = vdev->dev;
-> +	u64 pgsize_bitmap;
+> +description: |
+> +  Mediatek's Keypad controller is used to interface a SoC with a matrix-type
+> +  keypad device. The keypad controller supports multiple row and column lines.
+> +  A key can be placed at each intersection of a unique row and a unique column.
+> +  The keypad controller can sense a key-press and key-release and report the
+> +  event using a interrupt to the cpu.
 > +
-> +	if (vdomain->viommu != vdev->viommu) {
-> +		dev_err(dev, "cannot attach to foreign vIOMMU\n");
-> +		return false;
-> +	}
+> +properties:
+> +  compatible:
+> +      constraint: |
+
+enum or const ?
+
+> +        "mediatek,mt6779-keypad"
+> +        "mediatek, kp"
 > +
-> +	pgsize_bitmap = vdomain->domain.pgsize_bitmap & vdev->pgsize_bitmap;
+> +    clock-names:
+> +	description: Names of the clocks listed in clocks property in the same order
 > +
-
-
-> +	if (pgsize_bitmap != vdomain->domain.pgsize_bitmap) {
-
-So this triggers when device is not a superset of domain, right?
-Maybe add a comment.
-
-> +		dev_err(dev, "incompatible domain bitmap 0x%lx != 0x%llx\n",
-> +			vdomain->domain.pgsize_bitmap, vdev->pgsize_bitmap);
-> +		return false;
-> +	}
+> +    clocks:
+> +	description: Must contain one entry, for the module clock
+> +	refs: devicetree/bindings/clocks/clock-bindings.txt for details.
 > +
-> +	/* Domain pagesize bitmap is subset of device pagesize bitmap */
-> +	if (pgsize_bitmap != vdev->pgsize_bitmap) {
-> +		dev_info(dev, "page size bitmap used %llx, supported %llx\n",
-> +			 pgsize_bitmap, vdev->pgsize_bitmap);
-> +		vdev->pgsize_bitmap = pgsize_bitmap;
-> +	}
-> +	return true;
-> +}
+> +    interrupts:
+> +	description: A single interrupt specifier
 > +
->  static int viommu_attach_dev(struct iommu_domain *domain, struct device *dev)
->  {
->  	int i;
-> @@ -670,9 +723,8 @@ static int viommu_attach_dev(struct iommu_domain *domain, struct device *dev)
->  		 * owns it.
->  		 */
->  		ret = viommu_domain_finalise(vdev, domain);
-> -	} else if (vdomain->viommu != vdev->viommu) {
-> -		dev_err(dev, "cannot attach to foreign vIOMMU\n");
-> -		ret = -EXDEV;
-> +	} else if (!viommu_endpoint_is_compatible(vdev, vdomain)) {
-> +		ret = -EINVAL;
->  	}
->  	mutex_unlock(&vdomain->mutex);
->  
-> @@ -886,6 +938,7 @@ static int viommu_add_device(struct device *dev)
->  
->  	vdev->dev = dev;
->  	vdev->viommu = viommu;
-> +	vdev->pgsize_bitmap = viommu->pgsize_bitmap;
->  	INIT_LIST_HEAD(&vdev->resv_regions);
->  	dev_iommu_priv_set(dev, vdev);
->  
-> diff --git a/include/uapi/linux/virtio_iommu.h b/include/uapi/linux/virtio_iommu.h
-> index 48e3c29223b5..15a8327ffef5 100644
-> --- a/include/uapi/linux/virtio_iommu.h
-> +++ b/include/uapi/linux/virtio_iommu.h
-> @@ -28,7 +28,11 @@ struct virtio_iommu_range_32 {
->  };
->  
->  struct virtio_iommu_config {
-> -	/* Supported page sizes */
-> +	/*
-> +	 * Bitmap of supported page sizes. The least significant bit
-> +	 * indicates the smallest granularity and the other bits are
-> +	 * hints indicating optimal block sizes.
-> +	 */
->  	__u64					page_size_mask;
->  	/* Supported IOVA range */
->  	struct virtio_iommu_range_64		input_range;
-> @@ -111,6 +115,7 @@ struct virtio_iommu_req_unmap {
->  
->  #define VIRTIO_IOMMU_PROBE_T_NONE		0
->  #define VIRTIO_IOMMU_PROBE_T_RESV_MEM		1
-> +#define VIRTIO_IOMMU_PROBE_T_PAGE_SIZE_MASK	2
->  
->  #define VIRTIO_IOMMU_PROBE_T_MASK		0xfff
->  
-> @@ -119,6 +124,13 @@ struct virtio_iommu_probe_property {
->  	__le16					length;
->  };
->  
-> +struct virtio_iommu_probe_pgsize_mask {
-> +	struct virtio_iommu_probe_property	head;
-> +	__u8					reserved[4];
-> +	/* Same format as virtio_iommu_config::page_size_mask */
-
-It's actually slightly different in that
-this must be a superset of domain page size mask, right?
-
-
-
-
-
-> +	__le64					pgsize_bitmap;
-> +};
+> +    linux,keymap:
+> +	description: The keymap for keys as described in the binding document
+> +	refs: devicetree/bindings/input/matrix-keymap.txt
 > +
->  #define VIRTIO_IOMMU_RESV_MEM_T_RESERVED	0
->  #define VIRTIO_IOMMU_RESV_MEM_T_MSI		1
->  
+> +    pinctrl-0:
+> +	description: Specify pin control groups used for this controller
+> +	refs: devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> +
+> +    pinctrl-names:
+> +	description: Names for optional pin modes
+> +
+> +    reg:
+> +	description: The base address of the Keypad register bank
+> +
+> +    wakeup-source:
+> +	description: use any event on keypad as wakeup event
+> +
+> +    keypad,num-columns:
+> +	description: Number of column lines connected to the keypad controller,
+> + 	it is not equal to PCB columns number, instead you should add required value
+> + 	for each IC
+> +
+> +    keypad,num-rows:
+> +	description: Number of row lines connected to the keypad controller, it is
+> + 	not equal to PCB rows number, instead you should add required value for each IC
+> +
+> +    mediatek,debounce-us:
+> +	description: Debounce interval in microseconds
+> +	maximum: 256000
+
+I think that you are missing the maxItems on all your properties so we
+can't make any validation. Also the indent looks wrong.
+
+> +
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - mediatek,debounce-us
+> +  - keypad,num-rows
+> +  - keypad,num-columns
+> +  - linux,keymap
+> +  - pinctrl
+> +  - clocks
+> +  - clock-names
+> +
+> +optional:
+> +  - wakeup-source:
+
+I think the optional can be dropped.
+
+> +examples:
+> +  - |
+> +
+> +    keypad: kp@10010000 {
+> +	compatible = "mediatek,kp";
+> +	reg = <0 0x10010000 0 0x1000>;
+> +	wakeup-source;
+> +	interrupts = <GIC_SPI 75 IRQ_TYPE_EDGE_FALLING>;
+> +	clocks = <&clk26m>;
+> +	clock-names = "kpd";
+> +    };
+> +
+> +    &keypad {
+> +	mediatek,debounce-us = <32000>;
+> +	keypad,num-rows = <8>;
+> +	keypad,num-columns = <9>;
+> +	linux,keymap = < MATRIX_KEY(0x00, 0x00, KEY_VOLUMEDOWN) >;
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&kpd_gpios_def_cfg>;
+> +    };
+
+Pls squash those nodes.
+
+Regards,
+  Marco
+
 > -- 
-> 2.17.1
-
+> 2.18.0
