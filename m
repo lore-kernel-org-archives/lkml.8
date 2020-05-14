@@ -2,119 +2,110 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19859C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE345C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D48F2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBBEA2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:44:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="JFQDRTde"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="fc6xdFKA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbgENBjN (ORCPT
+        id S1726038AbgENBoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 21:39:13 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:14344 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725925AbgENBjN (ORCPT
+        Wed, 13 May 2020 21:44:37 -0400
+Received: from mail.efficios.com ([167.114.26.124]:46034 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725925AbgENBog (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 21:39:13 -0400
-X-UUID: 4b3c483eabb647ccac6f02e4391850e8-20200514
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=c6lbM5ORaD1df0n3V09w+vUyABWL3OC0bP3q4G96Tcg=;
-        b=JFQDRTdeKMXmptoNuzltVULKMmUll5JnMpZe+S/kxnVb3BXqfeqP1ULq3AwK4EnwxqfzDmXQxK0c+nkNkt3zagqihn2OJNX4bii+4inY22I5mQiBsFyUAKCdcVlVLezmo+Tym+beCV4iNcHRGN9BS7j1Cv5UcwLflgjVM0szfMI=;
-X-UUID: 4b3c483eabb647ccac6f02e4391850e8-20200514
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 127096153; Thu, 14 May 2020 09:39:07 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS32N2.mediatek.inc
- (172.27.4.72) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 14 May
- 2020 09:39:04 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 14 May 2020 09:39:03 +0800
-Message-ID: <1589420265.5899.0.camel@mhfsdcap03>
-Subject: Re: [PATCH 3/3] usb: dwc3: keystone: Turn on USB3 PHY before
- controller
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Roger Quadros <rogerq@ti.com>
-CC:     <balbi@kernel.org>, <robh+dt@kernel.org>, <vigneshr@ti.com>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Thu, 14 May 2020 09:37:45 +0800
-In-Reply-To: <20200513130709.10239-4-rogerq@ti.com>
-References: <20200513130709.10239-1-rogerq@ti.com>
-         <20200513130709.10239-4-rogerq@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 13 May 2020 21:44:36 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 9E67A2A1317;
+        Wed, 13 May 2020 21:44:35 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id diXTWMAjP-sG; Wed, 13 May 2020 21:44:35 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 240A62A1229;
+        Wed, 13 May 2020 21:44:35 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 240A62A1229
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1589420675;
+        bh=6FThw3NNByQCnxLcP7jjvyChrbYfW3ckvc93LQYwYE8=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=fc6xdFKAcrDet33aSmzu9EWoVN7G2SwLUoqyCqvG7ztumDlWhOO5IcIn2G1iwIkdk
+         xRFJCEV0bL3b7p0tH/KQ7NhjPmM2uKijxXvSb3RrfiLjUpcwCQlUPe6D937DAL/J//
+         MMbYImZsY3prXz7ga1scJ0xyfWmBW/LKs/yoMJjfEWkVI5yB7/lPO8nlyo+DZidHOo
+         oRCp2WnELPcfzM9l1bKsZBam2mCZvA3yWQcL6834Fu4bpbMgDwomS2fhwkJPqk1uhT
+         7wvfCIWvNgt3/8xl7FnCosgbvEJvrkWNCIt5VF3xer4uh1+2z3W3CwbMrzVyQRf8zq
+         WobvLBQ/amT8g==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id IUqaYDzi7Za5; Wed, 13 May 2020 21:44:35 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 103912A112F;
+        Wed, 13 May 2020 21:44:35 -0400 (EDT)
+Date:   Wed, 13 May 2020 21:44:34 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
+        paulmck <paulmck@kernel.org>, Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>, rostedt <rostedt@goodmis.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+Message-ID: <835459920.20630.1589420674977.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200505134904.166735365@linutronix.de>
+References: <20200505134354.774943181@linutronix.de> <20200505134904.166735365@linutronix.de>
+Subject: Re: [patch V4 part 3 09/29] x86/entry/32: Provide macro to emit IDT
+ entry stubs
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 3195E2F93C14396777CFF1A5A593F242391F9645814601659A98E9F49774BB9F2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF76 (Linux)/8.8.15_GA_3928)
+Thread-Topic: x86/entry/32: Provide macro to emit IDT entry stubs
+Thread-Index: bKEXdwZ/BOfNVJVq+EaT2heUgapaxw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA1LTEzIGF0IDE2OjA3ICswMzAwLCBSb2dlciBRdWFkcm9zIHdyb3RlOg0K
-PiBUaGUgTG9jYWwgUG93ZXIgU2xlZXAgQ29udHJvbGxlciAoTFBTQykgZGVwZW5kZW5jeSBvbiBB
-TTY1DQo+IHJlcXVpcmVzIFNFUkRFUzAgdG8gYmUgcG93ZXJlZCBvbiBiZWZvcmUgVVNCLg0KPiAN
-Cj4gV2UgbmVlZCB0byBwb3dlciB1cCBTRVJERVMwIHBvd2VyIGRvbWFpbiBhbmQgaG9sZCBpdCBv
-bg0KPiB0aHJvdWdob3V0IHRoZSByZXNldCwgaW5pdCwgcG93ZXIgb24gc2VxdWVuY2UuDQo+IA0K
-PiBTaWduZWQtb2ZmLWJ5OiBSb2dlciBRdWFkcm9zIDxyb2dlcnFAdGkuY29tPg0KPiAtLS0NCj4g
-IGRyaXZlcnMvdXNiL2R3YzMvZHdjMy1rZXlzdG9uZS5jIHwgNDcgKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKy0NCj4gIDEgZmlsZSBjaGFuZ2VkLCA0NiBpbnNlcnRpb25zKCspLCAxIGRl
-bGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvZHdjMy9kd2MzLWtleXN0
-b25lLmMgYi9kcml2ZXJzL3VzYi9kd2MzL2R3YzMta2V5c3RvbmUuYw0KPiBpbmRleCAxZTE0YTZm
-NDg4NGIuLjQ2ZDQ2ZjM1MDdmYyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy91c2IvZHdjMy9kd2Mz
-LWtleXN0b25lLmMNCj4gKysrIGIvZHJpdmVycy91c2IvZHdjMy9kd2MzLWtleXN0b25lLmMNCj4g
-QEAgLTE0LDYgKzE0LDcgQEANCj4gICNpbmNsdWRlIDxsaW51eC9kbWEtbWFwcGluZy5oPg0KPiAg
-I2luY2x1ZGUgPGxpbnV4L2lvLmg+DQo+ICAjaW5jbHVkZSA8bGludXgvb2ZfcGxhdGZvcm0uaD4N
-Cj4gKyNpbmNsdWRlIDxsaW51eC9waHkvcGh5Lmg+DQo+ICAjaW5jbHVkZSA8bGludXgvcG1fcnVu
-dGltZS5oPg0KPiAgDQo+ICAvKiBVU0JTUyByZWdpc3RlciBvZmZzZXRzICovDQo+IEBAIC0zNCw2
-ICszNSw3IEBADQo+ICBzdHJ1Y3QgZHdjM19rZXlzdG9uZSB7DQo+ICAJc3RydWN0IGRldmljZQkJ
-CSpkZXY7DQo+ICAJdm9pZCBfX2lvbWVtCQkJKnVzYnNzOw0KPiArCXN0cnVjdCBwaHkJCQkqdXNi
-M19waHk7DQo+ICB9Ow0KPiAgDQo+ICBzdGF0aWMgaW5saW5lIHUzMiBrZHdjM19yZWFkbCh2b2lk
-IF9faW9tZW0gKmJhc2UsIHUzMiBvZmZzZXQpDQo+IEBAIC05NSw4ICs5Nyw0NCBAQCBzdGF0aWMg
-aW50IGtkd2MzX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAJaWYgKElT
-X0VSUihrZHdjLT51c2JzcykpDQo+ICAJCXJldHVybiBQVFJfRVJSKGtkd2MtPnVzYnNzKTsNCj4g
-IA0KPiAtCXBtX3J1bnRpbWVfZW5hYmxlKGtkd2MtPmRldik7DQo+ICsJLyogUFNDIGRlcGVuZGVu
-Y3kgb24gQU02NSBuZWVkcyBTRVJERVMwIHRvIGJlIHBvd2VyZWQgYmVmb3JlIFVTQjAgKi8NCj4g
-KwlrZHdjLT51c2IzX3BoeSA9IGRldm1fcGh5X2dldChkZXYsICJ1c2IzLXBoeSIpOw0KVXNlIGRl
-dm1fcGh5X29wdGlvbmFsX2dldCgpIGluc3RlYWQ/DQoNCj4gKwlpZiAoSVNfRVJSKGtkd2MtPnVz
-YjNfcGh5KSkgew0KPiArCQllcnJvciA9IFBUUl9FUlIoa2R3Yy0+dXNiM19waHkpOw0KPiArCQlp
-ZiAoZXJyb3IgPT0gLUVOT1NZUyB8fCBlcnJvciA9PSAtRU5PREVWKSB7DQo+ICsJCQlrZHdjLT51
-c2IzX3BoeSA9IE5VTEw7DQo+ICsJCX0gZWxzZSB7DQo+ICsJCQlpZiAoZXJyb3IgIT0gLUVQUk9C
-RV9ERUZFUikgew0KPiArCQkJCWRldl9lcnIoZGV2LCAiY291bGRuJ3QgZ2V0IHVzYjMgcGh5OiAl
-ZFxuIiwNCj4gKwkJCQkJZXJyb3IpOw0KPiArCQkJfQ0KPiArDQo+ICsJCQlyZXR1cm4gZXJyb3I7
-DQo+ICsJCX0NCj4gKwl9DQo+ICsNCj4gKwlwaHlfcG1fcnVudGltZV9nZXRfc3luYyhrZHdjLT51
-c2IzX3BoeSk7DQo+ICsNCj4gKwllcnJvciA9IHBoeV9yZXNldChrZHdjLT51c2IzX3BoeSk7DQo+
-ICsJaWYgKGVycm9yIDwgMCkgew0KPiArCQlkZXZfZXJyKGRldiwgInVzYjMgcGh5IHJlc2V0IGZh
-aWxlZDogJWRcbiIsIGVycm9yKTsNCj4gKwkJcmV0dXJuIGVycm9yOw0KPiArCX0NCj4gKw0KPiAr
-CWVycm9yID0gcGh5X2luaXQoa2R3Yy0+dXNiM19waHkpOw0KPiArCWlmIChlcnJvciA8IDApIHsN
-Cj4gKwkJZGV2X2VycihkZXYsICJ1c2IzIHBoeSBpbml0IGZhaWxlZDogJWRcbiIsIGVycm9yKTsN
-Cj4gKwkJcmV0dXJuIGVycm9yOw0KPiArCX0NCj4gIA0KPiArCWVycm9yID0gcGh5X3Bvd2VyX29u
-KGtkd2MtPnVzYjNfcGh5KTsNCj4gKwlpZiAoZXJyb3IgPCAwKSB7DQo+ICsJCWRldl9lcnIoZGV2
-LCAidXNiMyBwaHkgcG93ZXIgb24gZmFpbGVkOiAlZFxuIiwgZXJyb3IpOw0KPiArCQlwaHlfZXhp
-dChrZHdjLT51c2IzX3BoeSk7DQo+ICsJCXJldHVybiBlcnJvcjsNCj4gKwl9DQo+ICsNCj4gKwlw
-bV9ydW50aW1lX2VuYWJsZShrZHdjLT5kZXYpOw0KPiAgCWVycm9yID0gcG1fcnVudGltZV9nZXRf
-c3luYyhrZHdjLT5kZXYpOw0KPiAgCWlmIChlcnJvciA8IDApIHsNCj4gIAkJZGV2X2VycihrZHdj
-LT5kZXYsICJwbV9ydW50aW1lX2dldF9zeW5jIGZhaWxlZCwgZXJyb3IgJWRcbiIsDQo+IEBAIC0x
-MzgsNiArMTc2LDkgQEAgc3RhdGljIGludCBrZHdjM19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2
-aWNlICpwZGV2KQ0KPiAgZXJyX2lycToNCj4gIAlwbV9ydW50aW1lX3B1dF9zeW5jKGtkd2MtPmRl
-dik7DQo+ICAJcG1fcnVudGltZV9kaXNhYmxlKGtkd2MtPmRldik7DQo+ICsJcGh5X3Bvd2VyX29m
-ZihrZHdjLT51c2IzX3BoeSk7DQo+ICsJcGh5X2V4aXQoa2R3Yy0+dXNiM19waHkpOw0KPiArCXBo
-eV9wbV9ydW50aW1lX3B1dF9zeW5jKGtkd2MtPnVzYjNfcGh5KTsNCj4gIA0KPiAgCXJldHVybiBl
-cnJvcjsNCj4gIH0NCj4gQEAgLTE2Myw2ICsyMDQsMTAgQEAgc3RhdGljIGludCBrZHdjM19yZW1v
-dmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gIAlwbV9ydW50aW1lX3B1dF9zeW5j
-KGtkd2MtPmRldik7DQo+ICAJcG1fcnVudGltZV9kaXNhYmxlKGtkd2MtPmRldik7DQo+ICANCj4g
-KwlwaHlfcG93ZXJfb2ZmKGtkd2MtPnVzYjNfcGh5KTsNCj4gKwlwaHlfZXhpdChrZHdjLT51c2Iz
-X3BoeSk7DQo+ICsJcGh5X3BtX3J1bnRpbWVfcHV0X3N5bmMoa2R3Yy0+dXNiM19waHkpOw0KPiAr
-DQo+ICAJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgTlVMTCk7DQo+ICANCj4gIAlyZXR1cm4g
-MDsNCg0K
+----- On May 5, 2020, at 9:44 AM, Thomas Gleixner tglx@linutronix.de wrote:
 
+[...]
+
+> +.macro idtentry vector asmsym cfunc has_error_code:req sane=0
+> +SYM_CODE_START(\asmsym)
+> +	ASM_CLAC
+> +	cld
+
+Looking at the various interrupt and trap entry points for 32 and 64-bit
+x86, I notice a lack of consistency in use of the following instruction
+sequence at the asm entry point:
+
+- ASM_CLAC,
+- cld (clear direction flag).
+
+Are they always needed, or only for interrupt handlers ?
+
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
