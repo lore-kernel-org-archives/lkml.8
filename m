@@ -2,72 +2,134 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB165C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C0DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 901DA20643
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4587B20643
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:31:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oE+erCfB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbgENTav (ORCPT
+        id S1726532AbgENTbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:30:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54416 "EHLO
+        Thu, 14 May 2020 15:31:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725965AbgENTav (ORCPT
+        by vger.kernel.org with ESMTP id S1725965AbgENTbl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 15:30:51 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF2CDC061A0C;
-        Thu, 14 May 2020 12:30:50 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jZJZ4-0007W6-Lh; Thu, 14 May 2020 21:30:42 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 283061004CE; Thu, 14 May 2020 21:30:42 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Nathaniel McCallum <npmccallum@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com,
-        "Christopherson\, Sean J" <sean.j.christopherson@intel.com>,
-        Neil Horman <nhorman@redhat.com>,
-        "Huang\, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com,
-        "Svahn\, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
-        "Xing\, Cedric" <cedric.xing@intel.com>,
-        Patrick Uiterwijk <puiterwijk@redhat.com>
-Subject: Re: [PATCH v29 00/20] Intel SGX foundations
-In-Reply-To: <0d485f780ac9809229290762931cd591e6f8156a.camel@linux.intel.com>
-References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com> <CAOASepPFe_ucuwe7JW_-+VBQ4=+sHqyGXOdA9kUbcYA_9=v0sA@mail.gmail.com> <0d485f780ac9809229290762931cd591e6f8156a.camel@linux.intel.com>
-Date:   Thu, 14 May 2020 21:30:42 +0200
-Message-ID: <87mu6axqjh.fsf@nanos.tec.linutronix.de>
+        Thu, 14 May 2020 15:31:41 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7033C061A0E
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 12:31:39 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id 82so2131888lfh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 12:31:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8TrvMGjL/nIict/6w5oVI+9sWLqNPjzAT918UG4yoQA=;
+        b=oE+erCfB0gVNNvhR9t4gwySrld/o75HjFM6hpk8lOO7oHy7YsdZOrWzT2vRVWNDUOu
+         JQVVj5ko9BKmwvQqSeAjXSmGnXziVmfpKmb/A50PUsZAp0u5stMMlmSW79jWis53ih74
+         HhW9ShKBjZvT2VPKYmSt3hCNP754KAqXPCuSTV2emYOA30Qz4WbMHykau+LZU7dmB2QW
+         JhUNej/rezc+RhgGlh49abfNZSb/B16PyglFaEXCpQHzfexo3k9QwuWrseUjTzL8aCNF
+         1E9Gn44ExDoWxBo8T2WCx8l2ClcwATlTpzEI6nFuaUpuSoLckrYFKB228IuzRq3dud/L
+         /8vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8TrvMGjL/nIict/6w5oVI+9sWLqNPjzAT918UG4yoQA=;
+        b=LQW+bOtc7hBCyuJNJak2jRHrCoXnW2kK12u5Hl0t7m+ox6fEJWmWDPMgcAFbEgCtMf
+         PvcoC9+em13q4gDmP1mbvhxzzJsmGydQf+UXajLtmFrR98602Qhz5uQCj/X43H320nxf
+         N4JiGA7E+opz3AD8f4AGt4myupgaBpJYoO0kJLOSvyOCXF5LebKKXIJlG7sHcHcp06QV
+         tlLEDlrlIlpJ84f04pDJXQXCIAnbtnmVMaXsEIcFdAVVPwPLlsaJ5CmzmCvrNr95/tch
+         +/DUf1aJe+VGJpgsON3Y+f68Z7lNoyyMB32hcLFFk/bmAkvNNb9WRRjsD8l2DkrnjG1D
+         AuTA==
+X-Gm-Message-State: AOAM530s+Cb8rlKGpV+7twdeHh2Cwey/m64suiACX3P7t0g9Iq3qhf6I
+        BdEm6NjiMoSC7v80ad+nbE30p6g0ow4=
+X-Google-Smtp-Source: ABdhPJx1ZkrWbi3K6iUfVZTihSVhU7QhCqZ9X8dQVgauINuu5OosIIDfoslhqcJORR/aHR2Q5z+Jdw==
+X-Received: by 2002:ac2:5106:: with SMTP id q6mr189628lfb.59.1589484698170;
+        Thu, 14 May 2020 12:31:38 -0700 (PDT)
+Received: from localhost.localdomain (h-98-128-181-7.NA.cust.bahnhof.se. [98.128.181.7])
+        by smtp.gmail.com with ESMTPSA id w9sm2014185ljw.39.2020.05.14.12.31.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 12:31:37 -0700 (PDT)
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+To:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [GIT PULL] MMC fixes for v5.7-rc6
+Date:   Thu, 14 May 2020 21:31:36 +0200
+Message-Id: <20200514193136.23283-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> writes:
->
-> General question: maybe it would be easiest that I issue a pull request
-> once everyone feels that the series is ready to be pulled and stop sending
-> new versions of the series?
+Hi Linus,
 
-Might be the easiest for you, but I prefer a final series in email.
+Here's a PR with a couple of MMC fixes intended for v5.7-rc6. Details about the
+highlights are as usual found in the signed tag.
 
-Thanks,
+Please pull this in!
 
-        tglx
+Kind regards
+Ulf Hansson
+
+
+The following changes since commit 0e698dfa282211e414076f9dc7e83c1c288314fd:
+
+  Linux 5.7-rc4 (2020-05-03 14:56:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.7-rc4
+
+for you to fetch changes up to 45a3fe3bf93b7cfeddc28ef7386555e05dc57f06:
+
+  mmc: sdhci-acpi: Add SDHCI_QUIRK2_BROKEN_64_BIT_DMA for AMDI0040 (2020-05-11 10:51:30 +0200)
+
+----------------------------------------------------------------
+MMC core:
+ - Fix a couple of quite severe issues for the CQE request path
+
+MMC host:
+ - alcor: Fix a resource leak in the error path for ->probe()
+ - sdhci-acpi: Fix the DMA support for the AMD eMMC v5.0 variant
+ - sdhci-pci-gli: Fix system resume support for GL975x
+ - sdhci-pci-gli: Fix reboot error for GL9750
+
+----------------------------------------------------------------
+Adrian Hunter (1):
+      mmc: block: Fix request completion in the CQE timeout path
+
+Ben Chuang (2):
+      mmc: sdhci-pci-gli: Fix no irq handler from suspend
+      mmc: sdhci-pci-gli: Fix can not access GL9750 after reboot from Windows 10
+
+Christophe JAILLET (1):
+      mmc: alcor: Fix a resource leak in the error path for ->probe()
+
+Raul E Rangel (1):
+      mmc: sdhci-acpi: Add SDHCI_QUIRK2_BROKEN_64_BIT_DMA for AMDI0040
+
+Sarthak Garg (1):
+      mmc: core: Fix recursive locking issue in CQE recovery path
+
+Veerabhadrarao Badiganti (1):
+      mmc: core: Check request type before completing the request
+
+ drivers/mmc/core/block.c         |  3 ++-
+ drivers/mmc/core/queue.c         | 16 +++++-----------
+ drivers/mmc/host/alcor.c         |  6 +++++-
+ drivers/mmc/host/sdhci-acpi.c    | 10 ++++++----
+ drivers/mmc/host/sdhci-pci-gli.c | 23 +++++++++++++++++++++++
+ 5 files changed, 41 insertions(+), 17 deletions(-)
