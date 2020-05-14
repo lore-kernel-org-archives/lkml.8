@@ -2,103 +2,94 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC0BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47546C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20A4C20575
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 247DE20709
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:00:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EnRhIpz7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726200AbgENH6N (ORCPT
+        id S1726073AbgENIAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 03:58:13 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:58177 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725952AbgENH6N (ORCPT
+        Thu, 14 May 2020 04:00:04 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41222 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725952AbgENIAE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 03:58:13 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jZ8kr-000597-H0; Thu, 14 May 2020 07:58:09 +0000
-Date:   Thu, 14 May 2020 09:58:08 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc:     "Luck, Tony" <tony.luck@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ia64: enable HAVE_COPY_THREAD_TLS, switch to
- kernel_clone_args
-Message-ID: <20200514075808.krdtypxpag4tfa74@wittgenstein>
-References: <20200513204848.1208864-1-christian.brauner@ubuntu.com>
- <3908561D78D1C84285E8C5FCA982C28F7F6266E0@ORSMSX115.amr.corp.intel.com>
- <79e58d9b-5a39-390c-2f0c-0d87b63442b4@physik.fu-berlin.de>
- <20200514074606.vkc35syhdep23rzh@wittgenstein>
- <6b298416-1e64-eee7-0bb4-3b1f7f67adc6@physik.fu-berlin.de>
+        Thu, 14 May 2020 04:00:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589443203;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=e4jjCqMhrz73017AHqU+ojMzDyx024B7mYUCVLrg2XA=;
+        b=EnRhIpz76HdOVmzPhyaDfrZy0InWXAgfZimbjbW6G1H3JSqxry3ShJ+H4mB02mhMMro/O2
+        zRipUrdV6njafFwbcdwaEpkLPr6pyhiLagp4n+O4uJROwT1fPUSujc6l7gCJzQfDA7FA3e
+        jrcg2cDv6w6j4Eu4Fly0o70G23wC4tY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-346-DblcYXPVPo60onW8Liue0g-1; Thu, 14 May 2020 03:59:59 -0400
+X-MC-Unique: DblcYXPVPo60onW8Liue0g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 80E5180058A;
+        Thu, 14 May 2020 07:59:57 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-115-145.ams2.redhat.com [10.36.115.145])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3CF086A977;
+        Thu, 14 May 2020 07:59:53 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 6FE4417444; Thu, 14 May 2020 09:59:52 +0200 (CEST)
+Date:   Thu, 14 May 2020 09:59:52 +0200
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     David Stevens <stevensd@chromium.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:VIRTIO CORE, NET..." 
+        <virtualization@lists.linux-foundation.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, virtio-dev@lists.oasis-open.org
+Subject: Re: [PATCH v3 1/4] dma-buf: add support for virtio exported objects
+Message-ID: <20200514075952.zuc3zjtmasaqrw75@sirius.home.kraxel.org>
+References: <20200311112004.47138-1-stevensd@chromium.org>
+ <20200311112004.47138-2-stevensd@chromium.org>
+ <CAKMK7uHFgiHLe9oiFBr-VR-6rU9-hLTpBTEVNh0ezyj54u70jw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6b298416-1e64-eee7-0bb4-3b1f7f67adc6@physik.fu-berlin.de>
+In-Reply-To: <CAKMK7uHFgiHLe9oiFBr-VR-6rU9-hLTpBTEVNh0ezyj54u70jw@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 09:53:49AM +0200, John Paul Adrian Glaubitz wrote:
-> Hi Christian!
-> 
-> On 5/14/20 9:46 AM, Christian Brauner wrote:
-> >>> My last functional ia64 machine no longer powers on. Unclear if it's just
-> >>> a broken power supply or something more serious. With almost nobody
-> >>> in offices/labs anymore my search for another machine is proceeding
-> >>> slowly.
-> >>
-> >> I could test it.
-> > 
-> > Hey Adrian,
-> > 
-> > That would be excellent and much appreciated.
-> > Do you think you can get it tested soon?
-> 
-> The kernel is currently building, you should get it by the evening (CEST).
+  Hi,
 
-Thank you!
+> - for the runtime upcasting the usual approach is to check the ->ops
+> pointer. Which means that would need to be the same for all virtio
+> dma_bufs, which might get a bit awkward. But I'd really prefer we not
+> add allocator specific stuff like this to dma-buf.
 
-> 
-> The machine also serves as a Debian buildd which is why it's a bit more
-> busy than other servers.
+This is exactly the problem, it gets messy quickly, also when it comes
+to using the drm_prime.c helpers ...
 
-Oh? Does it also produce Debian images for ia64 similar to what is done
-for sparc64?
+take care,
+  Gerd
 
-> 
-> >> As for getting a working cross-compiler for ia64 in Debian, this has
-> >> been on my TODO list for a while now. Building a cross-compiler for
-> >> ia64 is a bit more tricky due to it's dependency on the external
-> >> libunwind.
-> > 
-> > I hit that roadblock as well but yeah, a cross-compiler would be
-> > helpful.
-> 
-> It's not difficult, it's just a bit of annoying package work including
-> some trial and error testing.
-> 
-> Once the cross-compiler is in Debian, it will be available in Ubuntu as well.
-
-Would that based on a recent gcc? I vaguely remember a post somwhere
-that gcc 10 or 11 was planning to drop support for ia64?
-
-Thanks for your help!
-Christian
