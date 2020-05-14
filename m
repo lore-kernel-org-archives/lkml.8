@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CD2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 154F6C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8353920727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D943E20727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:59:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482779;
-	bh=2K8/xX5qPz/2GkBEO4hSwzpuw4kzPYUm1BPA9HRbYuE=;
+	s=default; t=1589482790;
+	bh=0R8mz2R+nq6sMxuEDlBQl2ByD9/WeJn9V11MB1lxkeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y/ecJgYZEqt7eYVVNcK6NStYUYPgHJP9F76H0pHADQCqDWtEP8hgR9Wac3+RvK7Wd
-	 4SG0G1EjCbuM18qErdf/zVoNKx7wmwAPOMO+dWyyN0qkHp8LoKVYW9ohSvepFp/Gjd
-	 fW42P0+merppIxaqnxA+idbRNm5qCoudgeCbM/mg=
+	b=Q+3i9bFUO8AUUz3HB/wlXGNG+Vl+fHm/LkykvxEEzKps3fwOq9kB0SPNmZqoPJWOt
+	 ++bEbPjuMrdIWpB1z9MUqJEe2qsTZDf2oBkmmbyyDrRW3xCAqbmKNuPCYz416CXmg3
+	 jaTt2+3Tfp/6tTQMxV86BeKCN/twBvQSmPUyjo4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729705AbgENS7j (ORCPT
+        id S1729922AbgENS7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:59:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56906 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:59:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729565AbgENS4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:56:05 -0400
+        id S1728305AbgENS4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:56:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A857820823;
-        Thu, 14 May 2020 18:56:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C581207FB;
+        Thu, 14 May 2020 18:56:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482564;
-        bh=2K8/xX5qPz/2GkBEO4hSwzpuw4kzPYUm1BPA9HRbYuE=;
+        s=default; t=1589482561;
+        bh=0R8mz2R+nq6sMxuEDlBQl2ByD9/WeJn9V11MB1lxkeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OeqDwYcD2xeeVxvYkUGH0b97RTu7q+T2KD/KJA7lYzk6zb9zHfH8qUcYguuDjiqSD
-         jAVCUAQJ3x6X/VTIA9FlDee+f5VzFGHaPEldnZ++eqkitu/BgQY/98iQAh+lmta93P
-         q9PCzvVHTM2cHH6CeLyESV3Y+58ByN8aCFSceVy8=
+        b=WTK01Ad5NsN2xWeeDtrjKNOv/mq4TzTk+B/M8AKZaGbadLEdT0k6UEZf+PIsSvi3q
+         GWDy40z7EWwTYiaL41DskiJCwK/671bVfkYMjs+jQPi0cjhwz3UpRYh2M02E3CORmj
+         zDDO6W2FHGkSqzahMpHFc8zwmJhfsWod+sNw7nps=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 11/27] net/sonic: Fix a resource leak in an error handling path in 'jazz_sonic_probe()'
-Date:   Thu, 14 May 2020 14:55:34 -0400
-Message-Id: <20200514185550.21462-11-sashal@kernel.org>
+Cc:     Thierry Reding <treding@nvidia.com>,
+        kbuild test robot <lkp@intel.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 08/27] phy: tegra: Select USB_COMMON for usb_get_maximum_speed()
+Date:   Thu, 14 May 2020 14:55:31 -0400
+Message-Id: <20200514185550.21462-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185550.21462-1-sashal@kernel.org>
 References: <20200514185550.21462-1-sashal@kernel.org>
@@ -59,49 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 10e3cc180e64385edc9890c6855acf5ed9ca1339 ]
+[ Upstream commit 0d5c9bc7c68009af04bbadf22306467674c6fb90 ]
 
-A call to 'dma_alloc_coherent()' is hidden in 'sonic_alloc_descriptors()',
-called from 'sonic_probe1()'.
+The usb_get_maximum_speed() function is part of the usb-common module,
+so enable it by selecting the corresponding Kconfig symbol.
 
-This is correctly freed in the remove function, but not in the error
-handling path of the probe function.
-Fix it and add the missing 'dma_free_coherent()' call.
+While at it, also make sure to depend on USB_SUPPORT because USB_PHY
+requires that. This can lead to Kconfig conflicts if USB_SUPPORT is not
+enabled while attempting to enable PHY_TEGRA_XUSB.
 
-While at it, rename a label in order to be slightly more informative.
-
-Fixes: efcce839360f ("[PATCH] macsonic/jazzsonic network drivers update")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: kbuild test robot <lkp@intel.com>
+Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://lore.kernel.org/r/20200330101038.2422389-1-thierry.reding@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/natsemi/jazzsonic.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/phy/tegra/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/natsemi/jazzsonic.c b/drivers/net/ethernet/natsemi/jazzsonic.c
-index acf3f11e38cc1..68d2f31921ff8 100644
---- a/drivers/net/ethernet/natsemi/jazzsonic.c
-+++ b/drivers/net/ethernet/natsemi/jazzsonic.c
-@@ -247,13 +247,15 @@ static int jazz_sonic_probe(struct platform_device *pdev)
- 		goto out;
- 	err = register_netdev(dev);
- 	if (err)
--		goto out1;
-+		goto undo_probe1;
+diff --git a/drivers/phy/tegra/Kconfig b/drivers/phy/tegra/Kconfig
+index a3b1de953fb70..bf4e93b835e91 100644
+--- a/drivers/phy/tegra/Kconfig
++++ b/drivers/phy/tegra/Kconfig
+@@ -1,6 +1,7 @@
+ config PHY_TEGRA_XUSB
+ 	tristate "NVIDIA Tegra XUSB pad controller driver"
+-	depends on ARCH_TEGRA
++	depends on ARCH_TEGRA && USB_SUPPORT
++	select USB_COMMON
+ 	help
+ 	  Choose this option if you have an NVIDIA Tegra SoC.
  
- 	printk("%s: MAC %pM IRQ %d\n", dev->name, dev->dev_addr, dev->irq);
- 
- 	return 0;
- 
--out1:
-+undo_probe1:
-+	dma_free_coherent(lp->device, SIZEOF_SONIC_DESC * SONIC_BUS_SCALE(lp->dma_bitmode),
-+			  lp->descriptors, lp->descriptors_laddr);
- 	release_mem_region(dev->base_addr, SONIC_MEM_SIZE);
- out:
- 	free_netdev(dev);
 -- 
 2.20.1
 
