@@ -2,138 +2,113 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9557FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA2CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 785BB206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0320E20575
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:10:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589458213;
+	bh=zZrhSfAlm531Od9eVUfmWK9vqXkQ/owf9bFjsI4khKU=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=oSvwrEQ9Ii0iqovrVWdeeAsvlJMpjGkzzQZFhMLYLNdMQGFRFYZflGVV385ILgSUz
+	 MRqWnYRV3BpCs6WiYkNcgxIefuM3QSshmv1xMxFRZIyRR2Cm5v1HQ82aBtW3VITOQ6
+	 yUD1ng1h2gI6lhWXFvRfQzXzuceQ2NGlCnoRRl+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgENMKG (ORCPT
+        id S1727822AbgENMKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 08:10:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726050AbgENMKF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 08:10:05 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2341FC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 05:10:05 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jZCgb-0003BD-K7; Thu, 14 May 2020 14:10:01 +0200
-Received: from ore by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jZCgZ-0004mB-9G; Thu, 14 May 2020 14:09:59 +0200
-Date:   Thu, 14 May 2020 14:09:59 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Marek Vasut <marex@denx.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        David Jander <david@protonic.nl>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH net-next v1] net: phy: tja11xx: add cable-test support
-Message-ID: <20200514120959.b24cszsmkjvfzss6@pengutronix.de>
-References: <20200513123440.19580-1-o.rempel@pengutronix.de>
- <20200513133925.GD499265@lunn.ch>
- <20200513174011.kl6l767cimeo6dpy@pengutronix.de>
- <20200513180140.GK499265@lunn.ch>
+        Thu, 14 May 2020 08:10:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726050AbgENMKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 08:10:11 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB47820722;
+        Thu, 14 May 2020 12:10:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589458211;
+        bh=zZrhSfAlm531Od9eVUfmWK9vqXkQ/owf9bFjsI4khKU=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=nCHZRiItMFV2iDKspkwdGnR6DplR3qfevR652dKDTZi0Lw2wBsMu9OV6UL6Y0bmzX
+         pUeDO78bLa4A9MAOv6IifvLDUdNDIQNk3zSejsSoeR/M7hFOUQ0kyXKyoCkgUqPTMR
+         5Uer5t6IeQLOCO0sgyz1JzhxL6SzWFMz31K+oLIg=
+Message-ID: <8497fe9a11ac1837813ee5f14b6ebae8fa6bf707.camel@kernel.org>
+Subject: Re: [PATCH] ceph: don't return -ESTALE if there's still an open file
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Luis Henriques <lhenriques@suse.com>,
+        Ilya Dryomov <idryomov@gmail.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 14 May 2020 08:10:09 -0400
+In-Reply-To: <20200514111453.GA99187@suse.com>
+References: <20200514111453.GA99187@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gajm7flkp5ezd5xr"
-Content-Disposition: inline
-In-Reply-To: <20200513180140.GK499265@lunn.ch>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 13:50:05 up 181 days,  3:08, 197 users,  load average: 0.14, 0.08,
- 0.08
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 2020-05-14 at 12:14 +0100, Luis Henriques wrote:
+> Similarly to commit 03f219041fdb ("ceph: check i_nlink while converting
+> a file handle to dentry"), this fixes another corner case with
+> name_to_handle_at/open_by_handle_at.  The issue has been detected by
+> xfstest generic/467, when doing:
+> 
+>  - name_to_handle_at("/cephfs/myfile")
+>  - open("/cephfs/myfile")
+>  - unlink("/cephfs/myfile")
+>  - open_by_handle_at()
+> 
+> The call to open_by_handle_at should not fail because the file still
+> exists and we do have a valid handle to it.
+> 
+> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> ---
+>  fs/ceph/export.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+> index 79dc06881e78..8556df9d94d0 100644
+> --- a/fs/ceph/export.c
+> +++ b/fs/ceph/export.c
+> @@ -171,12 +171,21 @@ struct inode *ceph_lookup_inode(struct super_block *sb, u64 ino)
+>  
+>  static struct dentry *__fh_to_dentry(struct super_block *sb, u64 ino)
+>  {
+> +	struct ceph_inode_info *ci;
+>  	struct inode *inode = __lookup_inode(sb, ino);
+> +
+>  	if (IS_ERR(inode))
+>  		return ERR_CAST(inode);
+>  	if (inode->i_nlink == 0) {
+> -		iput(inode);
+> -		return ERR_PTR(-ESTALE);
+> +		bool is_open;
+> +		ci = ceph_inode(inode);
+> +		spin_lock(&ci->i_ceph_lock);
+> +		is_open = __ceph_is_file_opened(ci);
+> +		spin_unlock(&ci->i_ceph_lock);
+> +		if (!is_open) {
+> +			iput(inode);
+> +			return ERR_PTR(-ESTALE);
+> +		}
+>  	}
+>  	return d_obtain_alias(inode);
+>  }
 
---gajm7flkp5ezd5xr
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks Luis. Out of curiousity, is there any reason we shouldn't ignore
+the i_nlink value here? Does anything obviously break if we do?
 
-On Wed, May 13, 2020 at 08:01:40PM +0200, Andrew Lunn wrote:
-> > What would be the best place to do a test before the link is getting up?
-> > Can it be done in the phy core, or it should be done in the PHY driver?
-> >=20
-> > So far, no action except of logging these errors is needed.=20
->=20
-> You could do it in the config_aneg callback.
+Thanks,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
-In this case I get two test cycles if the test was requested from user
-space: from .cable_test_get_status and from .config_aneg
-
-> A kernel log entry is not very easy to use. You might want to see how
-> easy it is to send a cable test result to userspace. Anything which is
-> interested in this information can then listen for it. All the needed
-> code is there, you will just need to rearrange it a bit.
-
-Indeed. I discovered" ethtool --monitor" for me. And the code is some
-thing like this:
-	ethnl_cable_test_alloc(phydev);
-	phydev->drv->cable_test_start(phydev);
-	usleep_range(100, 200);
-	phydev->drv->cable_test_get_status(phydev, &finished);
-	if (finished)
-		ethnl_cable_test_finished(phydev);
-
-
-Beside, what do you think about new result codes:
-  ETHTOOL_A_CABLE_RESULT_CODE_POLARITY - if cable polarity is wrong (-
-  connected to +)
-  ETHTOOL_A_CABLE_RESULT_CODE_ACTIVE_PARTNER - the link partner is active.
-     The TJA1102 is able to detect it if partner link is master.
-
-Regards,
-Oleksij
-
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---gajm7flkp5ezd5xr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEERBNZvwSgvmcMY/T74omh9DUaUbMFAl69NRMACgkQ4omh9DUa
-UbNEnhAAu3NAVDNkJoC3+NmPL1wXsVPuDQpQvL07ZQ7CWXY7he1iC7CMDN/CkEeg
-PebzI10BA7AbFVjBCAtPRFtIDC9brvS3OLy2VwLsv8Kca7XheAAE66fdihWxcRQg
-smHbrb9zBtjPsmSGv3PlHqlBxHJaenz9D1fyONvOOpIBB1NY+zjrcHr01FZLSEN0
-0rsDIifNM9Gs5ffNvlC5Egzkrib50XFx5boZXcM2ZVTydZ6hj1lh7sqSr0+IXakY
-5uFynAp+eCalvJ/qkkcrkqubuEibahNlmz0KQCU4xGZ7FWvjmozAa8B86RmG6xuB
-GP18d7kXT8pIoBDlfCxnqCJ5dC+rbM5sWyEH65amYPCl/55pJmK00Q0t0zFjh5CN
-4CPHC3S4Lk2FR05UMIF4Jw06trTpOr5UN1DmtV+Ef0p0tL+GqkwSKYtaelmRbFdX
-1Jcv9xpvQcarfMpMFDKXhaKl+lS3nDpUbfCuA9nzdNv/nxY5H51oQFcANV9HGCXG
-D7LqMRjRe4glCiS9YqVMSK+3P7N/Tiq6JlTcueMktzdPtLIwDuTN/Yigi810cum7
-p5+/TFrhJpE1frvjwRZuiUcKQpVwZyHRkMducjFG+wpJZiAvcE0mOfM/anPNjlEW
-R3EEbTaVlCguHvx5KKbXeFosDr5haLNEOCkPi+NBHC5ljh5s1SI=
-=hMfY
------END PGP SIGNATURE-----
-
---gajm7flkp5ezd5xr--
