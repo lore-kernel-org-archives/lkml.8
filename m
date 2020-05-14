@@ -2,124 +2,187 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAA3C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 401E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 980542065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mEnsvt67"
+	by mail.kernel.org (Postfix) with ESMTP id 16F1520643
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589483153;
+	bh=elKX9GjZkRjjBsScde6PaJioZSg2CbxIyAArtC99r5A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oIvT4RPIgFXl+qK+wwT6IIbLav50heD6ceC53L/b273lWo/hQot8dAZqVTPMK621c
+	 DiNwmgJyvWsGgrDANcSvahlqTSFI7VLJchx83KS/Zlj2qgKvHPTnqlQp9FgVydX3S2
+	 TeG6B0WbOdLmmvFB1z5g50Cv6E/EqmlooX5DP9as=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbgENTFt (ORCPT
+        id S1728910AbgENSyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:05:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50454 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728661AbgENTFq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 15:05:46 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C5C5C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 12:05:46 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id s21so3768602ejd.2
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 12:05:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3tnon885BClw24KtSQO83UeeP0neoUdjMWWIznWI9/0=;
-        b=mEnsvt67Bs+ijyGbEbYpmFzdKllOnYkYg2wqyJn5b8oZl+W2YcNusKGLRP9+Zv71aD
-         bvnpNRlwm3n+nu/MfpFkeS29wmAqit1EIdY/5xYvN2+YHW5w1w9QzfKUAhu1z//b5FyV
-         k7dGKz/gm2cwJDUdsjcAGnnZvIUs7DSgpSuU6dsJTiO54rNsE0omiR6rvOq+1m4zvUKk
-         N2zTBxT+XyvQS/pazILhd2ryi6MMD4lCcnDv7gM9ufWdCfkhqBBALDBfJo5ZiNRNFLMF
-         xssG0X9eIu48mho9U/h+tzq0gpyyTRyeOIE9nztgGi41aWzm4DOSTjaKMqC54Fvnv3Gb
-         KttA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3tnon885BClw24KtSQO83UeeP0neoUdjMWWIznWI9/0=;
-        b=P955lVx1hdF0l2I7gicVl+l9u2DQAjSNSIf0FxVots2Su74VB+fuG0KNH6bZnimsp9
-         44aLX2ECjXXAcorA/bf/dKnCGspOltaDayguc5wAvBuzhUxX0ZHxlPnDFkA160bb8UTb
-         +BT0JM4Nk/8KwHqy0dIn/9BPSLdFMZn4cFy9MUnusIwVCqEmkhlidLt/qUqQJm4mQwYW
-         BYYpbN2Ubi41zCnxrjc7QU2aNloU1c9Vbah0qBgfIEFxXPESyHl9jxTKK52s+PtYXUiw
-         +Wj/ySyAHagDCRNLmcxA9YT6Atk9TAf2fG0PVcxn+ww1q8Pm+6Ff/NMlEx5SyyJUIu1B
-         Fi8Q==
-X-Gm-Message-State: AOAM533PI1BMU+NDBc2HuhA8kv7QDsjzG6O2DLUohPIeP50M51tLIGrb
-        /MnWIedkdyPRsVoGUXZJmCEPgjarbSvUA7eupQYshtOiwoDMWQ==
-X-Google-Smtp-Source: ABdhPJyXoPpJjnDEyX65MLtuSaVojJUla6uGMFPpeIL9qaCZ9kWwHdMrb4GwEnIrg9s40Ca65adiOCj7stM0y7lKZ6c=
-X-Received: by 2002:a17:906:724b:: with SMTP id n11mr5455125ejk.355.1589483144432;
- Thu, 14 May 2020 12:05:44 -0700 (PDT)
+        Thu, 14 May 2020 14:54:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53208 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728819AbgENSxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:53:45 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D890207D4;
+        Thu, 14 May 2020 18:53:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589482424;
+        bh=elKX9GjZkRjjBsScde6PaJioZSg2CbxIyAArtC99r5A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TlZy6ZJFJjL0q9RxxX64nkp833t69xZaGYEGZ1kvCYbBBFPuT0k0E4XCONAW0xbWn
+         xsL1Fk7UaJqD3JA1ZkoYs6cSqY/xKYWeu0CYt6JJdket/qibzdZlezTziQw9+DTfWV
+         jrv9xKbtrO6BV2DZgXZXgHkyjoBn1ojudZsOUxrQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Leon Romanovsky <leon@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 27/49] x86/apic: Move TSC deadline timer debug printk
+Date:   Thu, 14 May 2020 14:52:48 -0400
+Message-Id: <20200514185311.20294-27-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200514185311.20294-1-sashal@kernel.org>
+References: <20200514185311.20294-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com> <20200508190813.GP27052@linux.intel.com>
-In-Reply-To: <20200508190813.GP27052@linux.intel.com>
-From:   Seth Moore <sethmo@google.com>
-Date:   Thu, 14 May 2020 12:05:32 -0700
-Message-ID: <CAJsHiNx0jnx_zwCuNecci7opgCkxg-FB8UpYvnmubjWdM3fXZQ@mail.gmail.com>
-Subject: Re: [PATCH v29 00/20] Intel SGX foundations
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com,
-        David Rientjes <rientjes@google.com>, cedric.xing@intel.com,
-        puiterwijk@redhat.com, Anna Sapek <asapek@google.com>,
-        Conrad Parker <conradparker@google.com>,
-        Keith Moyer <kmoy@google.com>,
-        Yaozhang Xu <yaozhangx@google.com>,
-        Chen Chen <chenalexchen@google.com>,
-        Christian Ludloff <ludloff@google.com>,
-        Carmen Hanish <cyhanish@google.com>,
-        Kevin Yap <ikeviny@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 8, 2020 at 12:08 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> Adding some Google folks to the party.
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Thanks, Sean.
+[ Upstream commit c84cb3735fd53c91101ccdb191f2e3331a9262cb ]
 
-> On Wed, Apr 22, 2020 at 12:52:56AM +0300, Jarkko Sakkinen wrote:
-> > Intel(R) SGX is a set of CPU instructions that can be used by applications
-> > to set aside private regions of code and data. The code outside the enclave
-> > is disallowed to access the memory inside the enclave by the CPU access
-> > control.
-> >
-> > There is a new hardware unit in the processor called Memory Encryption
-> > Engine (MEE) starting from the Skylake microacrhitecture. BIOS can define
-> > one or many MEE regions that can hold enclave data by configuring them with
-> > PRMRR registers.
-> >
-> > The MEE automatically encrypts the data leaving the processor package to
-> > the MEE regions. The data is encrypted using a random key whose life-time
-> > is exactly one power cycle.
-> >
-> > The current implementation requires that the firmware sets
-> > IA32_SGXLEPUBKEYHASH* MSRs as writable so that ultimately the kernel can
-> > decide what enclaves it wants run. The implementation does not create
-> > any bottlenecks to support read-only MSRs later on.
-> >
-> > You can tell if your CPU supports SGX by looking into /proc/cpuinfo:
-> >
-> >       cat /proc/cpuinfo  | grep sgx
+Leon reported that the printk_once() in __setup_APIC_LVTT() triggers a
+lockdep splat due to a lock order violation between hrtimer_base::lock and
+console_sem, when the 'once' condition is reset via
+/sys/kernel/debug/clear_warn_once after boot.
 
-We applied the v29 patches to Linux 5.6.0, then tested on Xeon(R) E-2186G
-with Asylo (http://asylo.dev).
+The initial printk cannot trigger this because that happens during boot
+when the local APIC timer is set up on the boot CPU.
 
-Looks good. All Asylo tests pass.
+Prevent it by moving the printk to a place which is guaranteed to be only
+called once during boot.
 
-Tested-by: Seth Moore <sethmo@google.com>
+Mark the deadline timer check related functions and data __init while at
+it.
+
+Reported-by: Leon Romanovsky <leon@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/87y2qhoshi.fsf@nanos.tec.linutronix.de
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/kernel/apic/apic.c | 27 ++++++++++++++-------------
+ 1 file changed, 14 insertions(+), 13 deletions(-)
+
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index df891f8746142..25b8c45467fcd 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -352,8 +352,6 @@ static void __setup_APIC_LVTT(unsigned int clocks, int oneshot, int irqen)
+ 		 * According to Intel, MFENCE can do the serialization here.
+ 		 */
+ 		asm volatile("mfence" : : : "memory");
+-
+-		printk_once(KERN_DEBUG "TSC deadline timer enabled\n");
+ 		return;
+ 	}
+ 
+@@ -552,7 +550,7 @@ static DEFINE_PER_CPU(struct clock_event_device, lapic_events);
+ #define DEADLINE_MODEL_MATCH_REV(model, rev)	\
+ 	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, (unsigned long)rev }
+ 
+-static u32 hsx_deadline_rev(void)
++static __init u32 hsx_deadline_rev(void)
+ {
+ 	switch (boot_cpu_data.x86_stepping) {
+ 	case 0x02: return 0x3a; /* EP */
+@@ -562,7 +560,7 @@ static u32 hsx_deadline_rev(void)
+ 	return ~0U;
+ }
+ 
+-static u32 bdx_deadline_rev(void)
++static __init u32 bdx_deadline_rev(void)
+ {
+ 	switch (boot_cpu_data.x86_stepping) {
+ 	case 0x02: return 0x00000011;
+@@ -574,7 +572,7 @@ static u32 bdx_deadline_rev(void)
+ 	return ~0U;
+ }
+ 
+-static u32 skx_deadline_rev(void)
++static __init u32 skx_deadline_rev(void)
+ {
+ 	switch (boot_cpu_data.x86_stepping) {
+ 	case 0x03: return 0x01000136;
+@@ -587,7 +585,7 @@ static u32 skx_deadline_rev(void)
+ 	return ~0U;
+ }
+ 
+-static const struct x86_cpu_id deadline_match[] = {
++static const struct x86_cpu_id deadline_match[] __initconst = {
+ 	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_HASWELL_X,	hsx_deadline_rev),
+ 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_BROADWELL_X,	0x0b000020),
+ 	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_BROADWELL_D,	bdx_deadline_rev),
+@@ -609,18 +607,19 @@ static const struct x86_cpu_id deadline_match[] = {
+ 	{},
+ };
+ 
+-static void apic_check_deadline_errata(void)
++static __init bool apic_validate_deadline_timer(void)
+ {
+ 	const struct x86_cpu_id *m;
+ 	u32 rev;
+ 
+-	if (!boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER) ||
+-	    boot_cpu_has(X86_FEATURE_HYPERVISOR))
+-		return;
++	if (!boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER))
++		return false;
++	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
++		return true;
+ 
+ 	m = x86_match_cpu(deadline_match);
+ 	if (!m)
+-		return;
++		return true;
+ 
+ 	/*
+ 	 * Function pointers will have the MSB set due to address layout,
+@@ -632,11 +631,12 @@ static void apic_check_deadline_errata(void)
+ 		rev = (u32)m->driver_data;
+ 
+ 	if (boot_cpu_data.microcode >= rev)
+-		return;
++		return true;
+ 
+ 	setup_clear_cpu_cap(X86_FEATURE_TSC_DEADLINE_TIMER);
+ 	pr_err(FW_BUG "TSC_DEADLINE disabled due to Errata; "
+ 	       "please update microcode to version: 0x%x (or later)\n", rev);
++	return false;
+ }
+ 
+ /*
+@@ -2098,7 +2098,8 @@ void __init init_apic_mappings(void)
+ {
+ 	unsigned int new_apicid;
+ 
+-	apic_check_deadline_errata();
++	if (apic_validate_deadline_timer())
++		pr_debug("TSC deadline timer available\n");
+ 
+ 	if (x2apic_mode) {
+ 		boot_cpu_physical_apicid = read_apic_id();
+-- 
+2.20.1
+
