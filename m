@@ -2,122 +2,104 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAE4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C9F4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 296422065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:49:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PiA5t1EC"
+	by mail.kernel.org (Postfix) with ESMTP id 675EB2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:50:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589471434;
+	bh=5tSjNChQ6lIWRMBCkikt2nPuu1u6XyTfuXs2AiZn6Ws=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=LKjYEclXOdkoRpF+xeucOyosuwoWTQdDIvJSnep6hVrjM7Sw52vNwg+YnnUMygMcS
+	 HxCcXcc1bvLiuXHj+x9kKxaFsGFb9z5ohFQmTLZn0NFQ44QXpbmJXIe+6nQpkhjVnV
+	 aJDgfA9GPCFH3a7Zcqy6CoJ8YAe5/8+lO9sS/T1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgENPtA (ORCPT
+        id S1727838AbgENPud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 11:49:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47978 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbgENPs7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 11:48:59 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99DBEC061A0F
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 08:48:59 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id n15so1190173pjt.4
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 08:48:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xc0xMz/yvwFH4+2sZUX9Mzn97it6v0pR0LQRUSS/E70=;
-        b=PiA5t1ECMRuuR+HXKMfA3cTte/yc0Jb2wZpjTuONoyQT8+eOxJ6lAv6xWFVheYAPQX
-         mop7QRaUoUv6SEjqXRjbU5K99Kz3EUrsQLuoTiltzApmHSCKH5G+nrxw8ti9nhdb7fqe
-         jWfLI5KiJD47MHevRL9KAaQDdLmDrDUpw7Tiw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xc0xMz/yvwFH4+2sZUX9Mzn97it6v0pR0LQRUSS/E70=;
-        b=h0O7+PQLxXrb/pDhRU9zeBUPYuFX8yHrooOUF932gfowJFvWZm9X+SG87TbfW2n827
-         XdBkvhOAWh2scm9AR5IgYBf9bKY+s0UjaQBsgwR3NuZ+RhmeprQtisVj524Swrv6XztI
-         rIaTaEoCw/AYufnR/DK70HWPdsP6YXMtQTXN2/kh89wLsvviY5kThFV2/4LFX/tC9Rq2
-         NZ/7zcsDLSjhdUKk4FfBMkAS+iv4SDcsCS66TGp3Wa8feNWvv0dWoDC4EL6lw9NXf1W9
-         wqd+N13eneh0pOMuEON6EvqtO2MpaFwQt4meg/c7H/btTGDXUZX9wTR5h3aPqDtuLV1w
-         OWOg==
-X-Gm-Message-State: AGi0PuZHAkYUReXEY1OoxZ21+Cz1Mri5ngsTbJslFxqoEl2tJmMatX1/
-        2rv7HpbrNkiPIq/SyUfSKbming==
-X-Google-Smtp-Source: APiQypLdE3XgkOQdsZ7skOwgbr0+jpPDHHkYRGIHpuO9kIkbSs8cT1F1ifdldVqKmAC4ik2usLfWlA==
-X-Received: by 2002:a17:90a:f995:: with SMTP id cq21mr39335143pjb.56.1589471339202;
-        Thu, 14 May 2020 08:48:59 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id cx11sm2467105pjb.36.2020.05.14.08.48.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 08:48:58 -0700 (PDT)
-Date:   Thu, 14 May 2020 08:48:57 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Lev R. Oshvang ." <levonshe@gmail.com>
-Cc:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v5 2/6] fs: Add a MAY_EXECMOUNT flag to infer the noexec
- mount property
-Message-ID: <202005140845.16F1CDC@keescook>
-References: <20200505153156.925111-1-mic@digikod.net>
- <20200505153156.925111-3-mic@digikod.net>
- <202005121407.A339D31A@keescook>
- <CAP22eLEWW+KjD5rHosZV8vSuBB4YBLh0BQ=4-=kJQt9o=Fx1ig@mail.gmail.com>
+        Thu, 14 May 2020 11:50:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726088AbgENPud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 11:50:33 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3C24206A5;
+        Thu, 14 May 2020 15:50:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589471432;
+        bh=5tSjNChQ6lIWRMBCkikt2nPuu1u6XyTfuXs2AiZn6Ws=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=PJPRRTfSUaf9HnO7ggpV1YaRRzlO36Yg5u5DvUb3QyKw34quNnibbBMuEqvwvaR5s
+         rPOIao0VbaPs5gIhJRITJEvZwsQzlNZvZfJfMdbjVPNX9Z9pGpN/vT7B+660iGyMjB
+         rNj1sUjoWWp1KF65oOlaWbiLYS18Y4C2f478GyY4=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 86A6C35229C5; Thu, 14 May 2020 08:50:32 -0700 (PDT)
+Date:   Thu, 14 May 2020 08:50:32 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Josh Triplett <josh@joshtriplett.org>
+Subject: Re: [PATCH 07/10] rcu: Temporarily assume that nohz full CPUs might
+ not be NOCB
+Message-ID: <20200514155032.GN2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200513164714.22557-1-frederic@kernel.org>
+ <20200513164714.22557-8-frederic@kernel.org>
+ <20200513182527.GU2869@paulmck-ThinkPad-P72>
+ <20200513230827.GC18303@lenoir>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP22eLEWW+KjD5rHosZV8vSuBB4YBLh0BQ=4-=kJQt9o=Fx1ig@mail.gmail.com>
+In-Reply-To: <20200513230827.GC18303@lenoir>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 11:14:04AM +0300, Lev R. Oshvang . wrote:
-> New sysctl is indeed required to allow userspace that places scripts
-> or libs under noexec mounts.
+On Thu, May 14, 2020 at 01:08:28AM +0200, Frederic Weisbecker wrote:
+> On Wed, May 13, 2020 at 11:25:27AM -0700, Paul E. McKenney wrote:
+> > On Wed, May 13, 2020 at 06:47:11PM +0200, Frederic Weisbecker wrote:
+> > > So far nohz_full CPUs had to be nocb. This requirement may change
+> > > temporarily as we are working on preparing RCU to be able to toggle the
+> > > nocb state of a CPU. Once that is done and nohz_full can be toggled as
+> > > well dynamically, we'll restore that initial requirement.
+> > 
+> > Would it simplify anything to make the CPU exit nohz_full first and
+> > then exit rcu_nocb and vice versa in the other direction?  That way the
+> > assumption about nohz_full CPUs always being rcu_nocb could remain while
+> > still allowing runtime changes to both states.
+> 
+> That's the future plan but for now nohz_full can't even be exited yet.
+> RCU is unlucky enough to be chosen as the starting point of this whole work :-)
 
-But since this is a not-uncommon environment, we must have the sysctl
-otherwise this change would break those systems.
+But testing could still start with CPUs marked rcu_nocb but not marked
+nohz_full, right?  I must confess that I am a bit concerned about the
+increase in state space.
 
-> fs.mnt_noexec_strict =0 (allow, e) , 1 (deny any file with --x
-> permission), 2 (deny when O_MAYEXEC absent), for any file with ---x
-> permissions)
+> > Of course, given that setup, it would not be possible to cause a CPU to
+> > exit rcu_nocb state if it was still in nohz_full state.
+> 
+> Right.
+> 
+> > My fear is that allowing a CPU to be in nohz_full state without also
+> > being in rcu_nocb state will cause needless confusion and bug reports.
+> 
+> Well, it should only be visible to those who work on it since there
+> won't be a proper interface before we achieve the whole.
 
-I don't think we want another mount option -- this is already fully
-expressed with noexec and the system-wide sysctl.
+Fair point, but I am also concerned about the welfare of the people
+working on it.  ;-)
 
--- 
-Kees Cook
+							Thanx, Paul
