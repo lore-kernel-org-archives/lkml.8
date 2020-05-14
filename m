@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 289E8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D69AAC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0092E2078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA646207D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:53:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482419;
-	bh=dmKkOEPjX4LthcX5VeXmmzZybGQIaDpfw/FE7fFRzuA=;
+	s=default; t=1589482414;
+	bh=/YIMc0DjlVGWM+fRgQmvqtFvqtfNuEA6pf5gHXY2z6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BdZQW342hmZdOFzBDhokXfrXWrDbzEL3plAPZIWc3+pf7jEItEe6MwyMK3tpeVv4T
-	 R2cr1kDgrDLJKGUQqrFi+g9YcX714wevf/KNLNVlB79EE/ZcrnISQQndbnz9S6jIgz
-	 3S4Q9t5O7+vUCGI/ujYgsuWSZBiHBnFcbHQy5uWE=
+	b=XwD+JCLEIpVx5FR5NaxbR5KPYwGqg1I368HCmmhbonAeG8i9pAdlc43r/+kmhwFyc
+	 ZCukDCaOw7foB0FCtIipAu4I/0k71qNN29PuE3mPTce18/mayIrFwg2utMFuCKY0BF
+	 HqkFmNhooKQXWTfYD+zxAZhuuXpQrY3S7EGfzUVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbgENSxi (ORCPT
+        id S1728740AbgENSxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:53:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52592 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:53:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728680AbgENSxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:53:25 -0400
+        id S1728664AbgENSxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:53:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4186206DC;
-        Thu, 14 May 2020 18:53:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46691206F1;
+        Thu, 14 May 2020 18:53:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482405;
-        bh=dmKkOEPjX4LthcX5VeXmmzZybGQIaDpfw/FE7fFRzuA=;
+        s=default; t=1589482403;
+        bh=/YIMc0DjlVGWM+fRgQmvqtFvqtfNuEA6pf5gHXY2z6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NptH02gecPG2PWCHCq541W5sMGq4lDJ0a6CRD6FQazmQ8v1M05h6hVVRs52ojdyS+
-         T1uFv8w0eEJmKpZDCwhZqF2IyiEtv6jooTiliUWrhN3OzaA724ZJ0KqxRliW/1EeHT
-         v+109oZKuyHguP+lD9YHV8xerjpEkvcwmK3NHzTw=
+        b=Vi1qgPeZ/hbrR4u4TSF9I+Tpoce2RFPARRnKK0seboe3krRcfd9L5It0+NJWpt3KJ
+         ZhTxeQu/F9uZ6okpmq1r/izjU1IwHS4zIhQtdukQO+KliJYhsKPMUpGWUcj+ydW7u8
+         lJeMJiAMe+Rk6cDs9jO5fgfr6OFZfCCZU5gb6rvI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>, Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 11/49] configfs: fix config_item refcnt leak in configfs_rmdir()
-Date:   Thu, 14 May 2020 14:52:32 -0400
-Message-Id: <20200514185311.20294-11-sashal@kernel.org>
+Cc:     Arun Easi <aeasi@marvell.com>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 09/49] scsi: qla2xxx: Fix hang when issuing nvme disconnect-all in NPIV
+Date:   Thu, 14 May 2020 14:52:30 -0400
+Message-Id: <20200514185311.20294-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185311.20294-1-sashal@kernel.org>
 References: <20200514185311.20294-1-sashal@kernel.org>
@@ -59,45 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Arun Easi <aeasi@marvell.com>
 
-[ Upstream commit 8aebfffacfa379ba400da573a5bf9e49634e38cb ]
+[ Upstream commit 45a76264c26fd8cfd0c9746196892d9b7e2657ee ]
 
-configfs_rmdir() invokes configfs_get_config_item(), which returns a
-reference of the specified config_item object to "parent_item" with
-increased refcnt.
+In NPIV environment, a NPIV host may use a queue pair created by base host
+or other NPIVs, so the check for a queue pair created by this NPIV is not
+correct, and can cause an abort to fail, which in turn means the NVME
+command not returned.  This leads to hang in nvme_fc layer in
+nvme_fc_delete_association() which waits for all I/Os to be returned, which
+is seen as hang in the application.
 
-When configfs_rmdir() returns, local variable "parent_item" becomes
-invalid, so the refcount should be decreased to keep refcount balanced.
-
-The reference counting issue happens in one exception handling path of
-configfs_rmdir(). When down_write_killable() fails, the function forgets
-to decrease the refcnt increased by configfs_get_config_item(), causing
-a refcnt leak.
-
-Fix this issue by calling config_item_put() when down_write_killable()
-fails.
-
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Link: https://lore.kernel.org/r/20200331104015.24868-3-njavali@marvell.com
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Arun Easi <aeasi@marvell.com>
+Signed-off-by: Nilesh Javali <njavali@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/configfs/dir.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/qla2xxx/qla_mbx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
-index cf7b7e1d5bd72..cb733652ecca6 100644
---- a/fs/configfs/dir.c
-+++ b/fs/configfs/dir.c
-@@ -1519,6 +1519,7 @@ static int configfs_rmdir(struct inode *dir, struct dentry *dentry)
- 		spin_lock(&configfs_dirent_lock);
- 		configfs_detach_rollback(dentry);
- 		spin_unlock(&configfs_dirent_lock);
-+		config_item_put(parent_item);
- 		return -EINTR;
- 	}
- 	frag->frag_dead = true;
+diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
+index 1ef8907314e58..62a16463f0254 100644
+--- a/drivers/scsi/qla2xxx/qla_mbx.c
++++ b/drivers/scsi/qla2xxx/qla_mbx.c
+@@ -3117,7 +3117,7 @@ qla24xx_abort_command(srb_t *sp)
+ 	ql_dbg(ql_dbg_mbx + ql_dbg_verbose, vha, 0x108c,
+ 	    "Entered %s.\n", __func__);
+ 
+-	if (vha->flags.qpairs_available && sp->qpair)
++	if (sp->qpair)
+ 		req = sp->qpair->req;
+ 	else
+ 		return QLA_FUNCTION_FAILED;
 -- 
 2.20.1
 
