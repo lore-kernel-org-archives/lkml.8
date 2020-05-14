@@ -2,84 +2,125 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBCFAC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F24C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8105720671
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 551652065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:42:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="GmXkwb6t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbgENRll (ORCPT
+        id S1726298AbgENRmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 13:41:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725975AbgENRll (ORCPT
+        Thu, 14 May 2020 13:42:03 -0400
+Received: from mail.efficios.com ([167.114.26.124]:37914 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbgENRmD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 13:41:41 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24CB4C061A0C;
-        Thu, 14 May 2020 10:41:41 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZHrP-008NZt-Fd; Thu, 14 May 2020 17:41:31 +0000
-Date:   Thu, 14 May 2020 18:41:31 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 11/20] amifb: get rid of pointless access_ok() calls
-Message-ID: <20200514174131.GD23230@ZenIV.linux.org.uk>
-References: <20200509234124.GM23230@ZenIV.linux.org.uk>
- <20200509234557.1124086-1-viro@ZenIV.linux.org.uk>
- <CGME20200509234610eucas1p258be307cde10392b26c322354db78a9b@eucas1p2.samsung.com>
- <20200509234557.1124086-11-viro@ZenIV.linux.org.uk>
- <6f89732b-fba9-a947-6c61-5d1680747f3b@samsung.com>
- <20200514140720.GB23230@ZenIV.linux.org.uk>
- <f6fcfa46-6271-45ea-37c2-62bcf0a607cb@samsung.com>
+        Thu, 14 May 2020 13:42:03 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id CE86B2A74A8;
+        Thu, 14 May 2020 13:42:01 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 6gRTkJaYBkVH; Thu, 14 May 2020 13:42:01 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 71EC92A726A;
+        Thu, 14 May 2020 13:42:01 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 71EC92A726A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1589478121;
+        bh=rl5NndpsDO8QhemJHLzoUyiImPIEnoGILnWFL7l4FrA=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=GmXkwb6t1r1dVa06dFwR+WVq7UGqKtZYxWOstsYoLrzCLgzOvMU6QDx2u/7s1GxlG
+         BixschzIw+si7AK7rtmBJofm+Csfq8P0tEixAV19Ge7lTSHWC8Zmap1YuhaMa6O8OD
+         mXu2ZSdMKJiVuzKP8wZYJI6ugKfYRjDQqb2BHYoRdd9bf6oqjoMkYvaoUJ6BKclQGz
+         EU3pqKuI3Isv4CAdZ+TbRvYR35e2sKUMKQcr3H0C6lxU/u/7+ZeNTvAFXeuJpJTXxw
+         M7m3R+2gQMisLgDBmrG5JK0xM8sC634/8uAQsWCW2Ql1IPDn0DiBkeUSv8TslFjw7+
+         /d7pjbBeM+cOw==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id fOKMkDNG6Odq; Thu, 14 May 2020 13:42:01 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 5F4F52A7601;
+        Thu, 14 May 2020 13:42:01 -0400 (EDT)
+Date:   Thu, 14 May 2020 13:42:01 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
+        paulmck <paulmck@kernel.org>, Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>, rostedt <rostedt@goodmis.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Message-ID: <1431848694.21308.1589478121367.JavaMail.zimbra@efficios.com>
+In-Reply-To: <87y2puxvqa.fsf@nanos.tec.linutronix.de>
+References: <20200505131602.633487962@linutronix.de> <20200505134100.957390899@linutronix.de> <409359846.20366.1589413337072.JavaMail.zimbra@efficios.com> <87y2puxvqa.fsf@nanos.tec.linutronix.de>
+Subject: Re: [patch V4 part 1 29/36] x86/mce: Send #MC singal from task work
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f6fcfa46-6271-45ea-37c2-62bcf0a607cb@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF76 (Linux)/8.8.15_GA_3928)
+Thread-Topic: x86/mce: Send #MC singal from task work
+Thread-Index: ImAUO0bzJcO1A9UmbRjZPE+t84RW8A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 04:25:35PM +0200, Bartlomiej Zolnierkiewicz wrote:
-> Thank you for in-detail explanations, for this patch:
+----- On May 14, 2020, at 1:38 PM, Thomas Gleixner tglx@linutronix.de wrote:
+
+> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> writes:
+>> ----- On May 5, 2020, at 9:16 AM, Thomas Gleixner tglx@linutronix.de wrote:
+>>
+>>> From: Peter Zijlstra <peterz@infradead.org>
+>>> 
+>>
+>> Patch title: singal -> signal.
+>>
+>>> Convert #MC over to using task_work_add(); it will run the same code
+>>> slightly later, on the return to user path of the same exception.
+>>
+>> So I suspect that switching the order between tracehook_notify_resume()
+>> (which ends up calling task_work_run()) and do_signal() done by an
+>> earlier patch in this series intends to ensure the information about the
+>> instruction pointer causing the #MC is not overwritten by do_signal()
+>> (but I'm just guessing).
 > 
-> Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> No, it does not. See the ordering discussion.
 > 
-> Could you also please take care of adding missing checks for {get,put}_user()
-> failures later?
+> Aside of that signal never transported any address information. It uses
+> force_sig(SIGBUS).
+> 
+> Even if a different signal would be sent first then the register frame
+> of the #MC is still there when the fatal signal is sent later.
+> 
+> But even w/o changing the ordering the taskwork check in do_signal()
+> runs the pending work before delivering anything.
 
-Umm...  OK; put_user() side is trivial -  the interesting part is what to do
-about get_user() failures halfway through.  Right now it treats them as
-"we'd read zeroes".  On anything else I would say "screw it, memdup_user()
-the damn thing on the way in and copy from there", but... Amiga has how
-much RAM, again?
+Yep, that was the key thing I missed,
 
-OTOH, from my reading of that code it does appear to be limited to
-4Kb of data to copy, so it's probably OK...  Hell knows - I'm really
-confused by those #ifdef __mc68000__ in there; the driver *is*
-amiga-only:
-obj-$(CONFIG_FB_AMIGA)            += amifb.o c2p_planar.o
-config FB_AMIGA
-        tristate "Amiga native chipset support"
-        depends on FB && AMIGA
-and AMIGA is defined only in arch/m68k/Kconfig.machine.  So how the
-hell can it *not* be true?  OTOH, it looks like hand-optimized
-asm equivalents of C they have in #else, so that #else might be
-meant to document what's going on...
+Thanks,
 
-I've no idea how to test any changes to that thing - the only
-m68k emulator I'm reasonably familiar with is aranym, and
-that's Atari, not Amiga.  Never got around to setting up UAE...
-So I can do a patch more or less blindly (memdup_user() after
-it has checked the limits on height/width, then dereferencing
-from copy instead of get_user()), but I won't be able to test
-it.
+Mathieu
+
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
