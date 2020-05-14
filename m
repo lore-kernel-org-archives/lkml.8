@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDFBC433E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD14C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97B0520767
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B0592065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:53:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482375;
-	bh=a4jLj5YoajADdtK8+YqM4haJAzib1te6w43IqWap+Bs=;
+	s=default; t=1589482383;
+	bh=fIKF1pDVkSW6DCJNR99hImpfok5ZmIDQ7demSS+zRYk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zI2RLFtCDwea/dKAcgJ6cgzfGWzYUDnNQcWs5Y7ezW1FtB3ta8RqaJJidACYI677y
-	 Vd3T2RZNBg9/+IRGNikyfetkQSX0QxgGfGZEEBUrZG8Y6Sx15+Dlo6nUEnM0Jo0R5+
-	 W7zF5CEHzmHenChRjkpK6yCEhaM26zH3xwoW0duE=
+	b=nKpo3CyCdErMTnhofSDynGWAEcd/K1aCIvwPewyqp90tzZ57kYkqVi0DiIsnUKkgH
+	 O0FpTuhQdfJnhufM6cmSqg1JS8myr2pngFfFiR1uXV3qWNJ9RB2QTSrJrPxmz+/496
+	 mPSiocz8Fbx9FlK0VXzk316FCRNoDl+Qp9Y0oC2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbgENSwy (ORCPT
+        id S1728549AbgENSxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:52:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51400 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:53:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728475AbgENSwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:52:51 -0400
+        id S1728488AbgENSwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:52:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19E77206A5;
-        Thu, 14 May 2020 18:52:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C261B20722;
+        Thu, 14 May 2020 18:52:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482369;
-        bh=a4jLj5YoajADdtK8+YqM4haJAzib1te6w43IqWap+Bs=;
+        s=default; t=1589482373;
+        bh=fIKF1pDVkSW6DCJNR99hImpfok5ZmIDQ7demSS+zRYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F+ZbK25Zsq4Hj4iZoFcyFs2mpXjzwAprdg6UZjRlFiRr+U/2zwlyX1ntg9sRI+YQ5
-         ZOeEoZObmQ9uPQd8VU5B1h8aXHtEjfVj4jyRTJyRL2o3TIs3XC8H9GlRB9R+REpcR7
-         Ao+95IlO1+JwDsp1AGqTMakA5JZx26H/etF2+mnw=
+        b=M3EqFsbsvrAoZgI8kixBOZIfof+X5e65heH0oOMNn+M/il9Cl8bu6CEIg2OatGDRP
+         MDwz01/o7D4pnvBNKfvve3C2WuiJlTpAFKS4R7ViQShkNxiwT9/alw9pstAHuDGmJj
+         LMbxO1AghcApJzvkZKRXJwYjf7S+eIEQ8YT8uAEQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 48/62] ARM: futex: Address build warning
-Date:   Thu, 14 May 2020 14:51:33 -0400
-Message-Id: <20200514185147.19716-48-sashal@kernel.org>
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, wireguard@lists.zx2c4.com,
+        netdev@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 5.6 51/62] wireguard: selftests: initalize ipv6 members to NULL to squelch clang warning
+Date:   Thu, 14 May 2020 14:51:36 -0400
+Message-Id: <20200514185147.19716-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185147.19716-1-sashal@kernel.org>
 References: <20200514185147.19716-1-sashal@kernel.org>
@@ -60,68 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
 
-[ Upstream commit 8101b5a1531f3390b3a69fa7934c70a8fd6566ad ]
+[ Upstream commit 4fed818ef54b08d4b29200e416cce65546ad5312 ]
 
-Stephen reported the following build warning on a ARM multi_v7_defconfig
-build with GCC 9.2.1:
+Without setting these to NULL, clang complains in certain
+configurations that have CONFIG_IPV6=n:
 
-kernel/futex.c: In function 'do_futex':
-kernel/futex.c:1676:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
- 1676 |   return oldval == cmparg;
-      |          ~~~~~~~^~~~~~~~~
-kernel/futex.c:1652:6: note: 'oldval' was declared here
- 1652 |  int oldval, ret;
-      |      ^~~~~~
+In file included from drivers/net/wireguard/ratelimiter.c:223:
+drivers/net/wireguard/selftest/ratelimiter.c:173:34: error: variable 'skb6' is uninitialized when used here [-Werror,-Wuninitialized]
+                ret = timings_test(skb4, hdr4, skb6, hdr6, &test_count);
+                                               ^~~~
+drivers/net/wireguard/selftest/ratelimiter.c:123:29: note: initialize the variable 'skb6' to silence this warning
+        struct sk_buff *skb4, *skb6;
+                                   ^
+                                    = NULL
+drivers/net/wireguard/selftest/ratelimiter.c:173:40: error: variable 'hdr6' is uninitialized when used here [-Werror,-Wuninitialized]
+                ret = timings_test(skb4, hdr4, skb6, hdr6, &test_count);
+                                                     ^~~~
+drivers/net/wireguard/selftest/ratelimiter.c:125:22: note: initialize the variable 'hdr6' to silence this warning
+        struct ipv6hdr *hdr6;
+                            ^
 
-introduced by commit a08971e9488d ("futex: arch_futex_atomic_op_inuser()
-calling conventions change").
+We silence this warning by setting the variables to NULL as the warning
+suggests.
 
-While that change should not make any difference it confuses GCC which
-fails to work out that oldval is not referenced when the return value is
-not zero.
-
-GCC fails to properly analyze arch_futex_atomic_op_inuser(). It's not the
-early return, the issue is with the assembly macros. GCC fails to detect
-that those either set 'ret' to 0 and set oldval or set 'ret' to -EFAULT
-which makes oldval uninteresting. The store to the callsite supplied oldval
-pointer is conditional on ret == 0.
-
-The straight forward way to solve this is to make the store unconditional.
-
-Aside of addressing the build warning this makes sense anyway because it
-removes the conditional from the fastpath. In the error case the stored
-value is uninteresting and the extra store does not matter at all.
-
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/87pncao2ph.fsf@nanos.tec.linutronix.de
+Reported-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/include/asm/futex.h | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/net/wireguard/selftest/ratelimiter.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/include/asm/futex.h b/arch/arm/include/asm/futex.h
-index 83c391b597d45..fdc4ae3e7378d 100644
---- a/arch/arm/include/asm/futex.h
-+++ b/arch/arm/include/asm/futex.h
-@@ -164,8 +164,13 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
- 	preempt_enable();
- #endif
+diff --git a/drivers/net/wireguard/selftest/ratelimiter.c b/drivers/net/wireguard/selftest/ratelimiter.c
+index bcd6462e45401..007cd4457c5f6 100644
+--- a/drivers/net/wireguard/selftest/ratelimiter.c
++++ b/drivers/net/wireguard/selftest/ratelimiter.c
+@@ -120,9 +120,9 @@ bool __init wg_ratelimiter_selftest(void)
+ 	enum { TRIALS_BEFORE_GIVING_UP = 5000 };
+ 	bool success = false;
+ 	int test = 0, trials;
+-	struct sk_buff *skb4, *skb6;
++	struct sk_buff *skb4, *skb6 = NULL;
+ 	struct iphdr *hdr4;
+-	struct ipv6hdr *hdr6;
++	struct ipv6hdr *hdr6 = NULL;
  
--	if (!ret)
--		*oval = oldval;
-+	/*
-+	 * Store unconditionally. If ret != 0 the extra store is the least
-+	 * of the worries but GCC cannot figure out that __futex_atomic_op()
-+	 * is either setting ret to -EFAULT or storing the old value in
-+	 * oldval which results in a uninitialized warning at the call site.
-+	 */
-+	*oval = oldval;
- 
- 	return ret;
- }
+ 	if (IS_ENABLED(CONFIG_KASAN) || IS_ENABLED(CONFIG_UBSAN))
+ 		return true;
 -- 
 2.20.1
 
