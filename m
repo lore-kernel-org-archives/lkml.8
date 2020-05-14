@@ -2,87 +2,108 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C72BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A4FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95F1920671
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A76A62065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:05:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IWhLAZ3k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbgENSFk (ORCPT
+        id S1726632AbgENSFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:05:40 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:60540 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbgENSFj (ORCPT
+        Thu, 14 May 2020 14:05:52 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44789 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726100AbgENSFv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:05:39 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 5DF20803089C;
-        Thu, 14 May 2020 18:05:37 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id W3Xv057Q_gie; Thu, 14 May 2020 21:05:32 +0300 (MSK)
-Date:   Thu, 14 May 2020 21:05:32 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Rob Herring <robh@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        <devicetree@vger.kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        <linux-mips@vger.kernel.org>
-Subject: Re: [PATCH v2 02/20] dt-bindings: bus: Add MIPS CDMM controller
-Message-ID: <20200514180532.3lg2476qtdfaxmoa@mobilestation>
-References: <20200306124807.3596F80307C2@mail.baikalelectronics.ru>
- <20200506174238.15385-1-Sergey.Semin@baikalelectronics.ru>
- <20200506174238.15385-3-Sergey.Semin@baikalelectronics.ru>
- <20200514150943.GA30404@bogus>
+        Thu, 14 May 2020 14:05:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589479550;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=LLFv8mqHtnrI3q8vZushlb2smHCADXuknkmWKektqUM=;
+        b=IWhLAZ3kQVdoXKwrtg/WuFUCzPYIqEFeG7TGMt6DIDxMfR/JU316ImwC1Emdn3ObRQvXLM
+        +XmVkyz0FZIVEW7Txo39TPQ6mAYlQyTrrDVEx6wbC61HV0o4fyofAO7g7w8hN0C+Bp1IOm
+        7ruJKi1BmauEou1ZwcYqQHR3fdXdJ2E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-476-1kpvXTpgMCi_hSasxGTFTw-1; Thu, 14 May 2020 14:05:48 -0400
+X-MC-Unique: 1kpvXTpgMCi_hSasxGTFTw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7C6731005510;
+        Thu, 14 May 2020 18:05:47 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.195.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 412E55D9CA;
+        Thu, 14 May 2020 18:05:42 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Michael Tsirkin <mst@redhat.com>,
+        Julia Suvorova <jsuvorov@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>, x86@kernel.org
+Subject: [PATCH RFC 0/5] KVM: x86: KVM_MEM_ALLONES memory
+Date:   Thu, 14 May 2020 20:05:35 +0200
+Message-Id: <20200514180540.52407-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200514150943.GA30404@bogus>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 10:09:43AM -0500, Rob Herring wrote:
-> On Wed, 6 May 2020 20:42:20 +0300,  wrote:
-> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > 
-> > It's a Common Device Memory Map controller embedded into the MIPS IP
-> > cores, which dts node is supposed to have compatible and reg properties.
-> > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: linux-mips@vger.kernel.org
-> > Cc: linux-pm@vger.kernel.org
-> > 
-> > ---
-> > 
-> > Changelog v2:
-> > - Lowercase the example hex'es.
-> > ---
-> >  .../bindings/bus/mti,mips-cdmm.yaml           | 35 +++++++++++++++++++
-> >  1 file changed, 35 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/bus/mti,mips-cdmm.yaml
-> > 
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+The idea of the patchset was suggested by Michael S. Tsirkin.
 
-Great! Thanks.
+PCIe config space can (depending on the configuration) be quite big but
+usually is sparsely populated. Guest may scan it by accessing individual
+device's page which, when device is missing, is supposed to have 'pci
+holes' semantics: reads return '0xff' and writes get discarded. Currently,
+userspace has to allocate real memory for these holes and fill them with
+'0xff'. Moreover, different VMs usually require different memory.
 
--Sergey
+The idea behind the feature introduced by this patch is: let's have a
+single read-only page filled with '0xff' in KVM and map it to all such
+PCI holes in all VMs. This will free userspace of obligation to allocate
+real memory and also allow us to speed up access to these holes as we
+can aggressively map the whole slot upon first fault.
+
+RFC. I've only tested the feature with the selftest (PATCH5) on Intel/AMD
+with and wiuthout EPT/NPT. I haven't tested memslot modifications yet.
+
+Patches are against kvm/next.
+
+Vitaly Kuznetsov (5):
+  KVM: rename labels in kvm_init()
+  KVM: x86: introduce KVM_MEM_ALLONES memory
+  KVM: x86: move kvm_vcpu_gfn_to_memslot() out of try_async_pf()
+  KVM: x86: aggressively map PTEs in KVM_MEM_ALLONES slots
+  KVM: selftests: add KVM_MEM_ALLONES test
+
+ Documentation/virt/kvm/api.rst                |  22 ++--
+ arch/x86/include/uapi/asm/kvm.h               |   1 +
+ arch/x86/kvm/mmu/mmu.c                        |  34 ++++--
+ arch/x86/kvm/mmu/paging_tmpl.h                |  30 ++++-
+ arch/x86/kvm/x86.c                            |   9 +-
+ include/linux/kvm_host.h                      |  15 ++-
+ include/uapi/linux/kvm.h                      |   2 +
+ tools/testing/selftests/kvm/Makefile          |   1 +
+ .../testing/selftests/kvm/include/kvm_util.h  |   1 +
+ tools/testing/selftests/kvm/lib/kvm_util.c    |  81 +++++++------
+ .../kvm/x86_64/memory_region_allones.c        | 112 ++++++++++++++++++
+ virt/kvm/kvm_main.c                           | 110 +++++++++++++----
+ 12 files changed, 342 insertions(+), 76 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/x86_64/memory_region_allones.c
+
+-- 
+2.25.4
+
