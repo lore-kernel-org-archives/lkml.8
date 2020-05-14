@@ -2,337 +2,394 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CD9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05558C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B57320728
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A7A20727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:03:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ltNMjjf3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RiJQjM6I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726388AbgENNBK (ORCPT
+        id S1726160AbgENNDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:01:10 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:59437 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726037AbgENNBK (ORCPT
+        Thu, 14 May 2020 09:03:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50134 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726011AbgENNDL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:01:10 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589461268; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: To:
- Subject: Sender; bh=KCrkZDljahm2VY1bQ73k/xbKgbU2wAdGuhnKSxUTF30=; b=ltNMjjf315+wJJubC4q/qv6wOdJWCfSv9vRd0HzDUy43wc1EgmjoFuVMVdMYOf6P6ocVMf52
- lU4Fh0dh4HpOM5lyNAjRxmUJ/EerF/5XOBVXzg+Aw/ofaTartVppaexn2JPb63an1nw7eweW
- fGmxzXDCWqvKT4VP+LHNMUI9IGM=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5ebd40e7.7f006a2d4378-smtp-out-n02;
- Thu, 14 May 2020 13:00:23 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 49CEBC433BA; Thu, 14 May 2020 13:00:23 +0000 (UTC)
-Received: from [192.168.0.102] (unknown [183.83.139.238])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: charante)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id ACE35C433D2;
-        Thu, 14 May 2020 13:00:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org ACE35C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
-Subject: Re: [PATCH v2] dma-buf: fix use-after-free in dmabuffs_dname
-To:     Sumit Semwal <sumit.semwal@linaro.org>, Greg KH <greg@kroah.com>,
-        Chenbo Feng <fengc@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        Linaro MM SIG <linaro-mm-sig@lists.linaro.org>,
-        vinmenon@codeaurora.org, Greg Hackmann <ghackmann@google.com>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>
-References: <1588920063-17624-1-git-send-email-charante@codeaurora.org>
- <20200512085221.GB3557007@kroah.com>
- <a3cbf675-becc-1713-bcdc-664ddfe4a544@codeaurora.org>
- <20200513125112.GC1083139@kroah.com>
- <20200513154653.GK206103@phenom.ffwll.local>
- <CAO_48GF0GMDJH1Wx4p5pfS4t57bh_BJO2=CmOpj_XCBnF0CbCQ@mail.gmail.com>
-From:   Charan Teja Kalla <charante@codeaurora.org>
-Message-ID: <20a2e97d-6a28-8bbd-044b-9d49aad0f65e@codeaurora.org>
-Date:   Thu, 14 May 2020 18:30:15 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 14 May 2020 09:03:11 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AD21C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 06:03:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=KeSwjN7AQ4hCBh+e7FgC+sDqnOGQJ4GTrovXq5bwJvs=; b=RiJQjM6IreZoIi6Lv4NKF/8De0
+        UaZZ5n3D6SVWi1JPHstL45VKLff7Z70MyJ7xPyD0Xw9NZnC4gnSk5g7dR3VqjjReHclVRTGZ5V2UI
+        IXyp05ec2zNHQcN83b2wMpzBBJ3lq0keBEFIqh5olLBSrOx34QH7zmVrV+Uum8iYOVunbpwGODNjH
+        WWwcYCLLKtIVPjxfXpiSdgUTiMC3cIF0HPQ0JxD+7DoHkNWR5V60laUIInB1blVfBxYHL8vbgivMX
+        NI4EK2KWCSWiC/RRjgk0xVfU27PtOUt6N4eTgNXy9llrQ35nX+r9ptXJq1LJicrvWFWxjentgcXA5
+        UNojGoSw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jZDVk-0006pQ-3m; Thu, 14 May 2020 13:02:52 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 900D1301205;
+        Thu, 14 May 2020 15:02:48 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 728F1213C8B7A; Thu, 14 May 2020 15:02:48 +0200 (CEST)
+Date:   Thu, 14 May 2020 15:02:48 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Aaron Lu <aaron.lwe@gmail.com>
+Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Aaron Lu <aaron.lu@linux.alibaba.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH updated v2] sched/fair: core wide cfs task priority
+ comparison
+Message-ID: <20200514130248.GD2940@hirez.programming.kicks-ass.net>
+References: <CANaguZAXsjD=X-bB7dvQZ3FSqLioiZU=YREHH_7JqiFsZCTxHA@mail.gmail.com>
+ <20200417094045.GA197704@ziqianlu-desktop.localdomain>
+ <20200420080759.GA224731@ziqianlu-desktop.localdomain>
+ <CANaguZDP3nyBdjLeeCZGoUoYk6Lf0HUv19N2Qxo4CpZfrjPZHA@mail.gmail.com>
+ <20200421025131.GA227300@aaronlu-desktop>
+ <20200424142443.GA263207@aaronlu-desktop>
+ <20200506143506.GH5298@hirez.programming.kicks-ass.net>
+ <20200508084419.GA120223@aaronlu-desktop>
+ <20200508090925.GV5298@hirez.programming.kicks-ass.net>
+ <20200508123457.GA122180@aaronlu-desktop>
 MIME-Version: 1.0
-In-Reply-To: <CAO_48GF0GMDJH1Wx4p5pfS4t57bh_BJO2=CmOpj_XCBnF0CbCQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508123457.GA122180@aaronlu-desktop>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you for the reply.
+On Fri, May 08, 2020 at 08:34:57PM +0800, Aaron Lu wrote:
+> With this said, I realized a workaround for the issue described above:
+> when the core went from 'compatible mode'(step 1-3) to 'incompatible
+> mode'(step 4), reset all root level sched entities' vruntime to be the
+> same as the core wide min_vruntime. After all, the core is transforming
+> from two runqueue mode to single runqueue mode... I think this can solve
+> the issue to some extent but I may miss other scenarios.
 
-On 5/13/2020 9:33 PM, Sumit Semwal wrote:
-> On Wed, 13 May 2020 at 21:16, Daniel Vetter <daniel@ffwll.ch> wrote:
->>
->> On Wed, May 13, 2020 at 02:51:12PM +0200, Greg KH wrote:
->>> On Wed, May 13, 2020 at 05:40:26PM +0530, Charan Teja Kalla wrote:
->>>>
->>>> Thank you Greg for the comments.
->>>> On 5/12/2020 2:22 PM, Greg KH wrote:
->>>>> On Fri, May 08, 2020 at 12:11:03PM +0530, Charan Teja Reddy wrote:
->>>>>> The following race occurs while accessing the dmabuf object exported as
->>>>>> file:
->>>>>> P1                               P2
->>>>>> dma_buf_release()          dmabuffs_dname()
->>>>>>                     [say lsof reading /proc/<P1 pid>/fd/<num>]
->>>>>>
->>>>>>                     read dmabuf stored in dentry->d_fsdata
->>>>>> Free the dmabuf object
->>>>>>                     Start accessing the dmabuf structure
->>>>>>
->>>>>> In the above description, the dmabuf object freed in P1 is being
->>>>>> accessed from P2 which is resulting into the use-after-free. Below is
->>>>>> the dump stack reported.
->>>>>>
->>>>>> We are reading the dmabuf object stored in the dentry->d_fsdata but
->>>>>> there is no binding between the dentry and the dmabuf which means that
->>>>>> the dmabuf can be freed while it is being read from ->d_fsdata and
->>>>>> inuse. Reviews on the patch V1 says that protecting the dmabuf inuse
->>>>>> with an extra refcount is not a viable solution as the exported dmabuf
->>>>>> is already under file's refcount and keeping the multiple refcounts on
->>>>>> the same object coordinated is not possible.
->>>>>>
->>>>>> As we are reading the dmabuf in ->d_fsdata just to get the user passed
->>>>>> name, we can directly store the name in d_fsdata thus can avoid the
->>>>>> reading of dmabuf altogether.
->>>>>>
->>>>>> Call Trace:
->>>>>>  kasan_report+0x12/0x20
->>>>>>  __asan_report_load8_noabort+0x14/0x20
->>>>>>  dmabuffs_dname+0x4f4/0x560
->>>>>>  tomoyo_realpath_from_path+0x165/0x660
->>>>>>  tomoyo_get_realpath
->>>>>>  tomoyo_check_open_permission+0x2a3/0x3e0
->>>>>>  tomoyo_file_open
->>>>>>  tomoyo_file_open+0xa9/0xd0
->>>>>>  security_file_open+0x71/0x300
->>>>>>  do_dentry_open+0x37a/0x1380
->>>>>>  vfs_open+0xa0/0xd0
->>>>>>  path_openat+0x12ee/0x3490
->>>>>>  do_filp_open+0x192/0x260
->>>>>>  do_sys_openat2+0x5eb/0x7e0
->>>>>>  do_sys_open+0xf2/0x180
->>>>>>
->>>>>> Fixes: bb2bb9030425 ("dma-buf: add DMA_BUF_SET_NAME ioctls")
->>>>>> Reported-by: syzbot+3643a18836bce555bff6@syzkaller.appspotmail.com
->>>>>> Cc: <stable@vger.kernel.org> [5.3+]
->>>>>> Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
->>>>>> ---
->>>>>>
->>>>>> Changes in v2:
->>>>>>
->>>>>> - Pass the user passed name in ->d_fsdata instead of dmabuf
->>>>>> - Improve the commit message
->>>>>>
->>>>>> Changes in v1: (https://patchwork.kernel.org/patch/11514063/)
->>>>>>
->>>>>>  drivers/dma-buf/dma-buf.c | 17 ++++++++++-------
->>>>>>  1 file changed, 10 insertions(+), 7 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
->>>>>> index 01ce125..0071f7d 100644
->>>>>> --- a/drivers/dma-buf/dma-buf.c
->>>>>> +++ b/drivers/dma-buf/dma-buf.c
->>>>>> @@ -25,6 +25,7 @@
->>>>>>  #include <linux/mm.h>
->>>>>>  #include <linux/mount.h>
->>>>>>  #include <linux/pseudo_fs.h>
->>>>>> +#include <linux/dcache.h>
->>>>>>
->>>>>>  #include <uapi/linux/dma-buf.h>
->>>>>>  #include <uapi/linux/magic.h>
->>>>>> @@ -40,15 +41,13 @@ struct dma_buf_list {
->>>>>>
->>>>>>  static char *dmabuffs_dname(struct dentry *dentry, char *buffer, int buflen)
->>>>>>  {
->>>>>> -        struct dma_buf *dmabuf;
->>>>>>          char name[DMA_BUF_NAME_LEN];
->>>>>>          size_t ret = 0;
->>>>>>
->>>>>> -        dmabuf = dentry->d_fsdata;
->>>>>> -        dma_resv_lock(dmabuf->resv, NULL);
->>>>>> -        if (dmabuf->name)
->>>>>> -                ret = strlcpy(name, dmabuf->name, DMA_BUF_NAME_LEN);
->>>>>> -        dma_resv_unlock(dmabuf->resv);
->>>>>> +        spin_lock(&dentry->d_lock);
->>>>>
->>>>> Are you sure this lock always protects d_fsdata?
->>>>
->>>> I think yes. In the dma-buf.c, I have to make sure that d_fsdata should
->>>> always be under d_lock thus it will be protected. (In this posted patch
->>>> there is one place(in dma_buf_set_name) that is missed, will update this
->>>> in V3).
->>>>
->>>>>
->>>>>> +        if (dentry->d_fsdata)
->>>>>> +                ret = strlcpy(name, dentry->d_fsdata, DMA_BUF_NAME_LEN);
->>>>>> +        spin_unlock(&dentry->d_lock);
->>>>>>
->>>>>>          return dynamic_dname(dentry, buffer, buflen, "/%s:%s",
->>>>>>                               dentry->d_name.name, ret > 0 ? name : "");
->>>>>
->>>>> If the above check fails the name will be what?  How could d_name.name
->>>>> be valid but d_fsdata not be valid?
->>>>
->>>> In case of check fails, empty string "" is appended to the name by the
->>>> code, ret > 0 ? name : "", ret is initialized to zero. Thus the name
->>>> string will be like "/dmabuf:".
->>>
->>> So multiple objects can have the same "name" if this happens to multiple
->>> ones at once?
+A little something like so, this syncs min_vruntime when we switch to
+single queue mode. This is very much SMT2 only, I got my head in twist
+when thikning about more siblings, I'll have to try again later.
 
-Yes that it can happen.
+This very much retains the horrible approximation of S we always do.
 
->>>
->>>> Regarding the validity of d_fsdata, we are setting the dmabuf's
->>>> dentry->d_fsdata to NULL in the dma_buf_release() thus can go invalid if
->>>> that dmabuf is in the free path.
->>>
->>> Why are we allowing the name to be set if the dmabuf is on the free path
->>> at all?  Shouldn't that be the real fix here?
+Also, it is _completely_ untested...
 
-I don't think that user setting the name is the problem but accessing
-the ->name while dmabuf is on the free path. And given a dmabuf we don't
-know If that is already in the free path.
-
->>>
->>>>>> @@ -80,12 +79,16 @@ static int dma_buf_fs_init_context(struct fs_context *fc)
->>>>>>  static int dma_buf_release(struct inode *inode, struct file *file)
->>>>>>  {
->>>>>>          struct dma_buf *dmabuf;
->>>>>> +        struct dentry *dentry = file->f_path.dentry;
->>>>>>
->>>>>>          if (!is_dma_buf_file(file))
->>>>>>                  return -EINVAL;
->>>>>>
->>>>>>          dmabuf = file->private_data;
->>>>>>
->>>>>> +        spin_lock(&dentry->d_lock);
->>>>>> +        dentry->d_fsdata = NULL;
->>>>>> +        spin_unlock(&dentry->d_lock);
->>>>>>          BUG_ON(dmabuf->vmapping_counter);
->>>>>>
->>>>>>          /*
->>>>>> @@ -343,6 +346,7 @@ static long dma_buf_set_name(struct dma_buf *dmabuf, const char __user *buf)
->>>>>>          }
->>>>>>          kfree(dmabuf->name);
->>>>>>          dmabuf->name = name;
->>>>>> +        dmabuf->file->f_path.dentry->d_fsdata = name;
->>>>>
->>>>> You are just changing the use of d_fsdata from being a pointer to the
->>>>> dmabuf to being a pointer to the name string?  What's to keep that name
->>>>> string around and not have the same reference counting issues that the
->>>>> dmabuf structure itself has?  Who frees that string memory?
->>>>>
->>>>
->>>> Yes, I am just storing the name string in the d_fsdata in place of
->>>> dmabuf and this helps to get rid of any extra refcount requirement.
->>>> Because the user passed name carried in the d_fsdata is copied to the
->>>> local buffer in dmabuffs_dname under spin_lock(d_lock) and the same
->>>> d_fsdata is set to NULL(under the d_lock only) when that dmabuf is in
->>>> the release path. So, when d_fsdata is NULL, name string is not accessed
->>>> from the dmabuffs_dname thus extra count is not required.
->>>>
->>>> String memory, stored in the dmabuf->name, is released from the
->>>> dma_buf_release(). Flow will be like, It fist sets d_fsdata=NULL and
->>>> then free the dmabuf->name.
->>>>
->>>> However from your comments I have realized that there is a race in this
->>>> patch when using the name string between dma_buf_set_name() and
->>>> dmabuffs_dname(). But, If the idea of passing the name string inplace of
->>>> dmabuf in d_fsdata looks fine, I can update this next patch.
->>>
->>> I'll leave that to the dmabuf authors/maintainers, but it feels odd to
->>> me...
->>
->> I have zero clue about fs internals. This all scares me, that's all. I
->> know enough about lifetime bugs that if you don't deeply understand a
->> subsystem, all that's guaranteed is that you will get it wrong.
-> 
-> Likewise, and that made me realise that the 'fix' may not be as
-> innocuous or quick.
-> 
-> I will try to check with some folks more experienced than me in the fs
-> domain and see what is the logical way to handle it.
-> 
-
-BTW, I also would like to bring your notice that we have seen
-sleep-while-atomic bug in the dmabuffs_dname() because of the mutex
-used. It is caused from the SELinux permissions checks. I think SELinux
-tries to validate the inherited files from fork + exec and in doing so,
-it has to traverse the files. So, it relies on iterate_fd() (which
-traverse files under spin_lock) and call
-match_file(security/selinux/hooks.c) where the permission checks happen
-and then dumps the information logs using dump_common_audit_data(). This
-function is what actually trying to get the file path name and thus use
-d_path(). If the file check happen on the dmabuf's fd, then it ends up
-in ->dmabuffs_dname() under spin_lock(). So, flow will be like:
-flush_unauthorized_files()
-  iterate_fd()
-    spin_lock()
-      match_file()
-        file_has_perm()
-          avc_has_perm()
-            avc_audit()
-              slow_avc_audit()
-	        common_lsm_audit()
-		  dump_common_audit_data()
-		    audit_log_d_path()
-		      d_path()
-                        dmabuffs_dname()
-                          mutex_lock()--> Sleep while atomic.
-
-So, we have to remove the use of mutex in the dmabuffs_dname(which is
-another bug in the existing code).
-
-Call trace captured is as below:
-___might_sleep+0x204/0x208
-__might_sleep+0x50/0x88
-__mutex_lock_common+0x5c/0x1068
-__mutex_lock_common+0x5c/0x1068
-mutex_lock_nested+0x40/0x50
-dmabuffs_dname+0xa0/0x170
-d_path+0x84/0x290
-audit_log_d_path+0x74/0x130
-common_lsm_audit+0x334/0x6e8
-slow_avc_audit+0xb8/0xf8
-avc_has_perm+0x154/0x218
-file_has_perm+0x70/0x180
-match_file+0x60/0x78
-iterate_fd+0x128/0x168
-selinux_bprm_committing_creds+0x178/0x248
-security_bprm_committing_creds+0x30/0x48
-install_exec_creds+0x1c/0x68
-load_elf_binary+0x3a4/0x14e0
-search_binary_handler+0xb0/0x1e0
-
->>
->> /me out
->>
->> Cheers, Daniel
->>
-> 
-> Best,
-> Sumit.
-> 
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
-Forum, a Linux Foundation Collaborative Project
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -102,7 +102,6 @@ static inline int __task_prio(struct tas
+ /* real prio, less is less */
+ static inline bool prio_less(struct task_struct *a, struct task_struct *b)
+ {
+-
+ 	int pa = __task_prio(a), pb = __task_prio(b);
+ 
+ 	if (-pa < -pb)
+@@ -114,19 +113,8 @@ static inline bool prio_less(struct task
+ 	if (pa == -1) /* dl_prio() doesn't work because of stop_class above */
+ 		return !dl_time_before(a->dl.deadline, b->dl.deadline);
+ 
+-	if (pa == MAX_RT_PRIO + MAX_NICE)  { /* fair */
+-		u64 vruntime = b->se.vruntime;
+-
+-		/*
+-		 * Normalize the vruntime if tasks are in different cpus.
+-		 */
+-		if (task_cpu(a) != task_cpu(b)) {
+-			vruntime -= task_cfs_rq(b)->min_vruntime;
+-			vruntime += task_cfs_rq(a)->min_vruntime;
+-		}
+-
+-		return !((s64)(a->se.vruntime - vruntime) <= 0);
+-	}
++	if (pa == MAX_RT_PRIO + MAX_NICE)
++		return cfs_prio_less(a, b);
+ 
+ 	return false;
+ }
+@@ -4293,10 +4281,11 @@ static struct task_struct *
+ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ {
+ 	struct task_struct *next, *max = NULL;
++	int old_active = 0, new_active = 0;
+ 	const struct sched_class *class;
+ 	const struct cpumask *smt_mask;
+-	int i, j, cpu;
+ 	bool need_sync = false;
++	int i, j, cpu;
+ 
+ 	cpu = cpu_of(rq);
+ 	if (cpu_is_offline(cpu))
+@@ -4349,10 +4338,14 @@ pick_next_task(struct rq *rq, struct tas
+ 		rq_i->core_pick = NULL;
+ 
+ 		if (rq_i->core_forceidle) {
++			// XXX is_idle_task(rq_i->curr) && rq_i->nr_running ??
+ 			need_sync = true;
+ 			rq_i->core_forceidle = false;
+ 		}
+ 
++		if (!is_idle_task(rq_i->curr))
++			old_active++;
++
+ 		if (i != cpu)
+ 			update_rq_clock(rq_i);
+ 	}
+@@ -4463,8 +4456,12 @@ next_class:;
+ 
+ 		WARN_ON_ONCE(!rq_i->core_pick);
+ 
+-		if (is_idle_task(rq_i->core_pick) && rq_i->nr_running)
+-			rq_i->core_forceidle = true;
++		if (is_idle_task(rq_i->core_pick)) {
++			if (rq_i->nr_running)
++				rq_i->core_forceidle = true;
++		} else {
++			new_active++;
++		}
+ 
+ 		if (i == cpu)
+ 			continue;
+@@ -4476,6 +4473,16 @@ next_class:;
+ 		WARN_ON_ONCE(!cookie_match(next, rq_i->core_pick));
+ 	}
+ 
++	/* XXX SMT2 only */
++	if (new_active == 1 && old_active > 1) {
++		/*
++		 * We just dropped into single-rq mode, increment the sequence
++		 * count to trigger the vruntime sync.
++		 */
++		rq->core->core_sync_seq++;
++	}
++	rq->core->core_active = new_active;
++
+ done:
+ 	set_next_task(rq, next);
+ 	return next;
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -386,6 +386,12 @@ is_same_group(struct sched_entity *se, s
+ 	return NULL;
+ }
+ 
++static inline bool
++is_same_tg(struct sched_entity *se, struct sched_entity *pse)
++{
++	return se->cfs_rq->tg == pse->cfs_rq->tg;
++}
++
+ static inline struct sched_entity *parent_entity(struct sched_entity *se)
+ {
+ 	return se->parent;
+@@ -394,8 +400,6 @@ static inline struct sched_entity *paren
+ static void
+ find_matching_se(struct sched_entity **se, struct sched_entity **pse)
+ {
+-	int se_depth, pse_depth;
+-
+ 	/*
+ 	 * preemption test can be made between sibling entities who are in the
+ 	 * same cfs_rq i.e who have a common parent. Walk up the hierarchy of
+@@ -403,23 +407,16 @@ find_matching_se(struct sched_entity **s
+ 	 * parent.
+ 	 */
+ 
+-	/* First walk up until both entities are at same depth */
+-	se_depth = (*se)->depth;
+-	pse_depth = (*pse)->depth;
+-
+-	while (se_depth > pse_depth) {
+-		se_depth--;
+-		*se = parent_entity(*se);
+-	}
+-
+-	while (pse_depth > se_depth) {
+-		pse_depth--;
+-		*pse = parent_entity(*pse);
+-	}
++	/* XXX we now have 3 of these loops, C stinks */
+ 
+ 	while (!is_same_group(*se, *pse)) {
+-		*se = parent_entity(*se);
+-		*pse = parent_entity(*pse);
++		int se_depth = (*se)->depth;
++		int pse_depth = (*pse)->depth;
++
++		if (se_depth <= pse_depth)
++			*pse = parent_entity(*pse);
++		if (se_depth >= pse_depth)
++			*se = parent_entity(*se);
+ 	}
+ }
+ 
+@@ -455,6 +452,12 @@ static inline struct sched_entity *paren
+ 	return NULL;
+ }
+ 
++static inline bool
++is_same_tg(struct sched_entity *se, struct sched_entity *pse)
++{
++	return true;
++}
++
+ static inline void
+ find_matching_se(struct sched_entity **se, struct sched_entity **pse)
+ {
+@@ -462,6 +465,31 @@ find_matching_se(struct sched_entity **s
+ 
+ #endif	/* CONFIG_FAIR_GROUP_SCHED */
+ 
++bool cfs_prio_less(struct task_struct *a, struct task_struct *b)
++{
++	struct sched_entity *se_a = &a->se, *se_b = &b->se;
++	struct cfs_rq *cfs_rq_a, *cfa_rq_b;
++	u64 vruntime_a, vruntime_b;
++
++	while (!is_same_tg(se_a, se_b)) {
++		int se_a_depth = se_a->depth;
++		int se_b_depth = se_b->depth;
++
++		if (se_a_depth <= se_b_depth)
++			se_b = parent_entity(se_b);
++		if (se_a_depth >= se_b_depth)
++			se_a = parent_entity(se_a);
++	}
++
++	cfs_rq_a = cfs_rq_of(se_a);
++	cfs_rq_b = cfs_rq_of(se_b);
++
++	vruntime_a = se_a->vruntime - cfs_rq_a->core_vruntime;
++	vruntime_b = se_b->vruntime - cfs_rq_b->core_vruntime;
++
++	return !((s64)(vruntime_a - vruntime_b) <= 0);
++}
++
+ static __always_inline
+ void account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec);
+ 
+@@ -6891,6 +6919,18 @@ static void check_preempt_wakeup(struct
+ 		set_last_buddy(se);
+ }
+ 
++static void core_sync_entity(struct rq *rq, struct cfs_rq *cfs_rq)
++{
++	if (!sched_core_enabled())
++		return;
++
++	if (rq->core->core_sync_seq == cfs_rq->core_sync_seq)
++		return;
++
++	cfs_rq->core_sync_seq = rq->core->core_sync_seq;
++	cfs_rq->core_vruntime = cfs_rq->min_vruntime;
++}
++
+ static struct task_struct *pick_task_fair(struct rq *rq)
+ {
+ 	struct cfs_rq *cfs_rq = &rq->cfs;
+@@ -6902,6 +6942,14 @@ static struct task_struct *pick_task_fai
+ 	do {
+ 		struct sched_entity *curr = cfs_rq->curr;
+ 
++		/*
++		 * Propagate the sync state down to whatever cfs_rq we need,
++		 * the active cfs_rq's will have been done by
++		 * set_next_task_fair(), the rest is inactive and will not have
++		 * changed due to the current running task.
++		 */
++		core_sync_entity(rq, cfs_rq);
++
+ 		se = pick_next_entity(cfs_rq, NULL);
+ 
+ 		if (curr) {
+@@ -10825,7 +10873,8 @@ static void switched_to_fair(struct rq *
+ 	}
+ }
+ 
+-/* Account for a task changing its policy or group.
++/*
++ * Account for a task changing its policy or group.
+  *
+  * This routine is mostly called to set cfs_rq->curr field when a task
+  * migrates between groups/classes.
+@@ -10847,6 +10896,9 @@ static void set_next_task_fair(struct rq
+ 	for_each_sched_entity(se) {
+ 		struct cfs_rq *cfs_rq = cfs_rq_of(se);
+ 
++		/* snapshot vruntime before using it */
++		core_sync_entity(rq, cfs_rq);
++
+ 		set_next_entity(cfs_rq, se);
+ 		/* ensure bandwidth has been allocated on our new cfs_rq */
+ 		account_cfs_rq_runtime(cfs_rq, 0);
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -503,6 +503,10 @@ struct cfs_rq {
+ 	unsigned int		h_nr_running;      /* SCHED_{NORMAL,BATCH,IDLE} */
+ 	unsigned int		idle_h_nr_running; /* SCHED_IDLE */
+ 
++#ifdef CONFIG_SCHED_CORE
++	unsigned int		core_sync_seq;
++	u64			core_vruntime;
++#endif
+ 	u64			exec_clock;
+ 	u64			min_vruntime;
+ #ifndef CONFIG_64BIT
+@@ -1035,12 +1039,15 @@ struct rq {
+ 	unsigned int		core_enabled;
+ 	unsigned int		core_sched_seq;
+ 	struct rb_root		core_tree;
+-	bool			core_forceidle;
++	unsigned int		core_forceidle;
+ 
+ 	/* shared state */
+ 	unsigned int		core_task_seq;
+ 	unsigned int		core_pick_seq;
+ 	unsigned long		core_cookie;
++	unsigned int		core_sync_seq;
++	unsigned int		core_active;
++
+ #endif
+ };
+ 
+@@ -2592,6 +2599,8 @@ static inline bool sched_energy_enabled(
+ 
+ #endif /* CONFIG_ENERGY_MODEL && CONFIG_CPU_FREQ_GOV_SCHEDUTIL */
+ 
++extern bool cfs_prio_less(struct task_struct *a, struct task_struct *b);
++
+ #ifdef CONFIG_MEMBARRIER
+ /*
+  * The scheduler provides memory barriers required by membarrier between:
