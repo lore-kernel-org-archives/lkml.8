@@ -2,113 +2,91 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA2CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D05C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0320E20575
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:10:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589458213;
-	bh=zZrhSfAlm531Od9eVUfmWK9vqXkQ/owf9bFjsI4khKU=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=oSvwrEQ9Ii0iqovrVWdeeAsvlJMpjGkzzQZFhMLYLNdMQGFRFYZflGVV385ILgSUz
-	 MRqWnYRV3BpCs6WiYkNcgxIefuM3QSshmv1xMxFRZIyRR2Cm5v1HQ82aBtW3VITOQ6
-	 yUD1ng1h2gI6lhWXFvRfQzXzuceQ2NGlCnoRRl+M=
+	by mail.kernel.org (Postfix) with ESMTP id B5F1C206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:11:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U/UPlbre"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgENMKM (ORCPT
+        id S1726908AbgENMLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 08:10:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47592 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726050AbgENMKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 08:10:11 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 14 May 2020 08:11:53 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:39801 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726050AbgENMLw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 08:11:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589458311;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=6HsKmtuLIrN+BReIkTLQX/WoJqVnv94Uy7kQRFgxEXw=;
+        b=U/UPlbreN7AUN77cGfjWCNxpZz1w6WQpHxIt0Cz99Uxud7Bq92Eiaz4mbpNU/nrQacFtsq
+        1NsA3jhbxu7hAY2XeuhzDuV1PSUX+wclL8EiqHc0Fa6h3Z/tc8R7MWRsLde0uRbb1yyBWh
+        m1NDGD6I7ESZdalF+3eGCEthl0s5XHU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-323-8AngqwwnMbuyX_GGfxMWrA-1; Thu, 14 May 2020 08:11:49 -0400
+X-MC-Unique: 8AngqwwnMbuyX_GGfxMWrA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB47820722;
-        Thu, 14 May 2020 12:10:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589458211;
-        bh=zZrhSfAlm531Od9eVUfmWK9vqXkQ/owf9bFjsI4khKU=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=nCHZRiItMFV2iDKspkwdGnR6DplR3qfevR652dKDTZi0Lw2wBsMu9OV6UL6Y0bmzX
-         pUeDO78bLa4A9MAOv6IifvLDUdNDIQNk3zSejsSoeR/M7hFOUQ0kyXKyoCkgUqPTMR
-         5Uer5t6IeQLOCO0sgyz1JzhxL6SzWFMz31K+oLIg=
-Message-ID: <8497fe9a11ac1837813ee5f14b6ebae8fa6bf707.camel@kernel.org>
-Subject: Re: [PATCH] ceph: don't return -ESTALE if there's still an open file
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Luis Henriques <lhenriques@suse.com>,
-        Ilya Dryomov <idryomov@gmail.com>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 14 May 2020 08:10:09 -0400
-In-Reply-To: <20200514111453.GA99187@suse.com>
-References: <20200514111453.GA99187@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4EA4395A5E;
+        Thu, 14 May 2020 12:11:48 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-59.rdu2.redhat.com [10.10.112.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EAC765C1BE;
+        Thu, 14 May 2020 12:11:46 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHmME9osYhwzFEyGUELqSSNexgK56NJrOrWTi3vnyDft8tv-hw@mail.gmail.com>
+References: <CAHmME9osYhwzFEyGUELqSSNexgK56NJrOrWTi3vnyDft8tv-hw@mail.gmail.com> <20200514143055.1f71ba68@canb.auug.org.au>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     dhowells@redhat.com, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the keys tree
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3672487.1589458306.1@warthog.procyon.org.uk>
+Date:   Thu, 14 May 2020 13:11:46 +0100
+Message-ID: <3672488.1589458306@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-05-14 at 12:14 +0100, Luis Henriques wrote:
-> Similarly to commit 03f219041fdb ("ceph: check i_nlink while converting
-> a file handle to dentry"), this fixes another corner case with
-> name_to_handle_at/open_by_handle_at.  The issue has been detected by
-> xfstest generic/467, when doing:
-> 
->  - name_to_handle_at("/cephfs/myfile")
->  - open("/cephfs/myfile")
->  - unlink("/cephfs/myfile")
->  - open_by_handle_at()
-> 
-> The call to open_by_handle_at should not fail because the file still
-> exists and we do have a valid handle to it.
-> 
-> Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> ---
->  fs/ceph/export.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/ceph/export.c b/fs/ceph/export.c
-> index 79dc06881e78..8556df9d94d0 100644
-> --- a/fs/ceph/export.c
-> +++ b/fs/ceph/export.c
-> @@ -171,12 +171,21 @@ struct inode *ceph_lookup_inode(struct super_block *sb, u64 ino)
->  
->  static struct dentry *__fh_to_dentry(struct super_block *sb, u64 ino)
->  {
-> +	struct ceph_inode_info *ci;
->  	struct inode *inode = __lookup_inode(sb, ino);
-> +
->  	if (IS_ERR(inode))
->  		return ERR_CAST(inode);
->  	if (inode->i_nlink == 0) {
-> -		iput(inode);
-> -		return ERR_PTR(-ESTALE);
-> +		bool is_open;
-> +		ci = ceph_inode(inode);
-> +		spin_lock(&ci->i_ceph_lock);
-> +		is_open = __ceph_is_file_opened(ci);
-> +		spin_unlock(&ci->i_ceph_lock);
-> +		if (!is_open) {
-> +			iput(inode);
-> +			return ERR_PTR(-ESTALE);
-> +		}
->  	}
->  	return d_obtain_alias(inode);
->  }
+Jason A. Donenfeld <Jason@zx2c4.com> wrote:
 
-Thanks Luis. Out of curiousity, is there any reason we shouldn't ignore
-the i_nlink value here? Does anything obviously break if we do?
+> Your touch might be helpful here. CRYPTO_LIB_CHACHA20POLY1305 is a
+> tristate and depends on as well as selects other things that are
+> tristates.
+> 
+> Meanwhile BIG_KEYS is a bool, which needs to select
+> CRYPTO_LIB_CHACHA20POLY1305. However, it gets antsy if the the symbol
+> its selecting has =m items in its hierarchy.
+> 
+> Any suggestions? The ideal thing to happen would be that the select of
+> CRYPTO_LIB_CHACHA20POLY1305 in BIG_KEYS causes all of the descendants
+> to become =y too.
 
-Thanks,
--- 
-Jeff Layton <jlayton@kernel.org>
+I think that select is broken in its behaviour - it doesn't propagate the
+selection enforcement up the tree.  You could try changing it to a depends on
+or you could put in a select for every dependency.  I'm not sure there are any
+other options - unless we turn big_key into a module and institute autoloading
+of keytypes on demand.
+
+David
 
