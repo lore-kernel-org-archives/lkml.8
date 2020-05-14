@@ -2,181 +2,203 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E15C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 02:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 562EEC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 02:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1944A20659
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 02:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C5F920659
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 02:12:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gBbWxf0s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbgENCJr (ORCPT
+        id S1728547AbgENCM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 22:09:47 -0400
-Received: from mga05.intel.com ([192.55.52.43]:7777 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725952AbgENCJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 22:09:47 -0400
-IronPort-SDR: iYSxrszNNb2InA4ZHUKwuaqf0QcMFNQObzD6sSI0FHUIsI+HEyjo7ATsMN80Lvrgz41JvGe/d/
- NWL6wGMmBoJw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 19:09:46 -0700
-IronPort-SDR: ZxfsolDVixpty+MjFPwQNL8WnPgnIDAqa41NviXNq24lofJOGf4bOMa+mqw07W36MPhh7wn0mm
- pSLLjUrjGTBQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,389,1583222400"; 
-   d="scan'208";a="297863138"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 13 May 2020 19:09:45 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jZ3Jg-0009oy-SS; Thu, 14 May 2020 10:09:44 +0800
-Date:   Thu, 14 May 2020 10:09:23 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- e2938f0f997b5bb37e32b2679afc2ad101065df4
-Message-ID: <5ebca853.7LwrvnthwMycIeH3%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Wed, 13 May 2020 22:12:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33488 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726061AbgENCM3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 22:12:29 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB478C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 19:12:27 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id d184so616799pfd.4
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 19:12:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=w5HuC2pq36yj0OkTrV4K6iXdzhabf7/wAs9Khiu4wb4=;
+        b=gBbWxf0sxZXo/ojCfIKRh5Crbnb0sduNMc4aS36VfsexEAB6BjFzpOL3A8RBK3Ih9+
+         LZn3p7TpGawiclCva0F8oZ71qvI2WSkXVwt6MjRZOQb4jtXJ9kSu8NnZwOsB258fGLgP
+         R8cOCYAeKcgf40M7taQ8K96GBW2wDxNO3/YoMyYl/wPlbAI1+DxMiEq1ocbYmtY6p093
+         HG0oP9l9OYuUGnCDWswZnb90J8nCZXWVbSczRdT4kTPdiztuZr2o9wxCMJbRvfBWOM68
+         2PWOTI4lilmyPSVEDtzUpngM7Womxku+M393qHMmEBMG/OUmsIipi/Vpk87VuGE6c7hu
+         MKDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=w5HuC2pq36yj0OkTrV4K6iXdzhabf7/wAs9Khiu4wb4=;
+        b=eFDzvawhifcoLXPuVkIsI/UbTI8kbIlTqXug2EtZjI2Fz6Ay7tpjF0xRwVdCqDC6z6
+         4VddjjWTWhX/hWX5x6U7h94Zc1YjXlMIUP69HagXdoEfE59+zXk2e23XGXIDMljAp87a
+         E4KNGQUJbNlulJR7unwEgeZerjMteNG/EeWGws8yeX+ztztBlq6YCC2AivM5b0gEdvgx
+         MBKUUgO6b22dLZX0lpxqIcxrIIEDeUqzF9z2+e+CbZb5CD11aYfJw7wKEyiOYlyODlER
+         KZKqcdpUFHvsU2ZlsHCGdvedJj3SeqL+2+ZVUBOC4N4Mp1cuSb6rncAfZoW7IkJTt70u
+         kmsA==
+X-Gm-Message-State: AOAM533QKi4kkd2aUWjJ+DgKtZ4eI0mn466mvAD1aJc4Jif0if07g093
+        SyecXA3iwNww5H6uQuSyjaWgig==
+X-Google-Smtp-Source: ABdhPJxTVraityqx1KdWjBjcIoV6NWLKK7w8ftr0Z9ldOW4IGevBOpYjLS7GwNZJqdRINsqzVC/g1A==
+X-Received: by 2002:a62:a106:: with SMTP id b6mr2040127pff.23.1589422346892;
+        Wed, 13 May 2020 19:12:26 -0700 (PDT)
+Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id f64sm17020727pjd.5.2020.05.13.19.12.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 May 2020 19:12:26 -0700 (PDT)
+Date:   Wed, 13 May 2020 19:10:55 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     ohad@wizery.com, loic.pallardy@st.com, arnaud.pouliquen@st.com,
+        s-anna@ti.com, linux-remoteproc@vger.kernel.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 05/14] remoteproc: Refactor function rproc_fw_boot()
+Message-ID: <20200514021055.GF16107@builder.lan>
+References: <20200424200135.28825-1-mathieu.poirier@linaro.org>
+ <20200424200135.28825-6-mathieu.poirier@linaro.org>
+ <20200506003341.GD2329931@builder.lan>
+ <20200508212756.GB5650@xps15>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200508212756.GB5650@xps15>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: e2938f0f997b5bb37e32b2679afc2ad101065df4  Merge branch 'core/kprobes'
+On Fri 08 May 14:27 PDT 2020, Mathieu Poirier wrote:
 
-elapsed time: 923m
+> On Tue, May 05, 2020 at 05:33:41PM -0700, Bjorn Andersson wrote:
+> > On Fri 24 Apr 13:01 PDT 2020, Mathieu Poirier wrote:
+> > 
+> > > Refactor function rproc_fw_boot() in order to better reflect the work
+> > > that is done when supporting scenarios where the remoteproc core is
+> > > synchronising with a remote processor.
+> > > 
+> > > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > > ---
+> > >  drivers/remoteproc/remoteproc_core.c | 10 ++++++----
+> > >  1 file changed, 6 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> > > index a02593b75bec..e90a21de9de1 100644
+> > > --- a/drivers/remoteproc/remoteproc_core.c
+> > > +++ b/drivers/remoteproc/remoteproc_core.c
+> > > @@ -1370,9 +1370,9 @@ static int rproc_start(struct rproc *rproc, const struct firmware *fw)
+> > >  }
+> > >  
+> > >  /*
+> > > - * take a firmware and boot a remote processor with it.
+> > > + * boot or synchronise with a remote processor.
+> > >   */
+> > > -static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+> > > +static int rproc_actuate_device(struct rproc *rproc, const struct firmware *fw)
+> > 
+> > Per patch 4 this function will if rproc_needs_syncing() be called with
+> > fw == NULL, it's not obvious to me that the various operations on "fw"
+> > in this function are valid anymore.
+> 
+> That is right, all firmware related operations in this function are found in
+> remoteproc_internal.h where the value of rproc->sync_with_mcu is checked before
+> moving forward. That allows us to avoid introducing a new function similar to
+> rproc_fw_boot() but without firmware operations or peppering the code with if
+> statements.
+> 
 
-configs tested: 114
-configs skipped: 5
+As I wrote in my other reply, the two mechanisms seems to consist of the
+following steps:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+boot the core:
+1) request firmware
+2) prepare device
+3) parse fw
+4) handle resources
+5) allocate carveouts
+6) load segments
+7) find resource table
+8) prepare subdevices
+9) power on
+10) start subdevices
 
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-sparc                            allyesconfig
-mips                          rm200_defconfig
-riscv                    nommu_virt_defconfig
-mips                      pistachio_defconfig
-xtensa                           alldefconfig
-sh                           se7722_defconfig
-openrisc                         alldefconfig
-arm                        cerfcube_defconfig
-arm                         assabet_defconfig
-sh                ecovec24-romimage_defconfig
-arc                            hsdk_defconfig
-arm                          iop32x_defconfig
-riscv                             allnoconfig
-c6x                                 defconfig
-sh                            titan_defconfig
-mips                       capcella_defconfig
-arm                       spear13xx_defconfig
-arc                        nsimosci_defconfig
-m68k                       m5475evb_defconfig
-arm                         s3c2410_defconfig
-sh                   rts7751r2dplus_defconfig
-arm                         shannon_defconfig
-nios2                            alldefconfig
-arm                           corgi_defconfig
-arm                         lpc32xx_defconfig
-mips                      loongson3_defconfig
-arm                        clps711x_defconfig
-powerpc                    adder875_defconfig
-parisc                generic-64bit_defconfig
-arm                        vexpress_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                              defconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a005-20200513
-x86_64               randconfig-a003-20200513
-x86_64               randconfig-a006-20200513
-x86_64               randconfig-a004-20200513
-x86_64               randconfig-a001-20200513
-x86_64               randconfig-a002-20200513
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-x86_64                              defconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+sync:
+1) prepare device (?)
+2) handle resources
+3) allocate carveouts (?)
+4) prepare subdevices
+5) attach
+6) start subdevices
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Rather than relying on the state flag and missing ops will turn the
+first list into the second list I conceptually prefer having two
+separate functions that are easy to reason about.
+
+But I haven't done any refactoring or implemented this, so in practice
+the two might just be a lot of duplication(?)
+
+> > 
+> > >  {
+> > >  	struct device *dev = &rproc->dev;
+> > >  	const char *name = rproc->firmware;
+> > > @@ -1382,7 +1382,9 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+> > >  	if (ret)
+> > >  		return ret;
+> > >  
+> > > -	dev_info(dev, "Booting fw image %s, size %zd\n", name, fw->size);
+> > > +	if (!rproc_needs_syncing(rproc))
+> > 
+> > Can't we make this check on fw, to make the relationship "if we where
+> > passed a firmware object, we're going to load and boot that firmware"?
+> 
+> It can but I specifically decided to use rproc_needs_syncing() to be consistent
+> with the rest of the patchset.  That way all we need to do is grep for
+> rproc_needs_syncing to get all the places where a decision about synchronising
+> with a remote processor is made.
+> 
+
+Conceptually we have a single "to sync or not to sync", but I think
+we're invoking rproc_needs_syncing() 8 times during rproc_fw_boot() and
+each of those operations may or may not do anything.
+
+There are certain operations where I see it makes sense for a driver to
+either implement or not, but I think that e.g. for a rproc in OFFLINE
+state we should just require ops->start to be specified - because it
+doesn't make sense to enter rproc_start() if ops->start is a nop.
+
+Regards,
+Bjorn
+
+> > 
+> > Regards,
+> > Bjorn
+> > 
+> > > +		dev_info(dev, "Booting fw image %s, size %zd\n",
+> > > +			 name, fw->size);
+> > >  
+> > >  	/*
+> > >  	 * if enabling an IOMMU isn't relevant for this rproc, this is
+> > > @@ -1818,7 +1820,7 @@ int rproc_boot(struct rproc *rproc)
+> > >  		}
+> > >  	}
+> > >  
+> > > -	ret = rproc_fw_boot(rproc, firmware_p);
+> > > +	ret = rproc_actuate_device(rproc, firmware_p);
+> > >  
+> > >  	release_firmware(firmware_p);
+> > >  
+> > > -- 
+> > > 2.20.1
+> > > 
