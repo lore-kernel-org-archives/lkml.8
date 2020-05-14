@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 401E8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A10AC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16F1520643
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 168CB20643
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:05:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483153;
-	bh=elKX9GjZkRjjBsScde6PaJioZSg2CbxIyAArtC99r5A=;
+	s=default; t=1589483157;
+	bh=a4jLj5YoajADdtK8+YqM4haJAzib1te6w43IqWap+Bs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oIvT4RPIgFXl+qK+wwT6IIbLav50heD6ceC53L/b273lWo/hQot8dAZqVTPMK621c
-	 DiNwmgJyvWsGgrDANcSvahlqTSFI7VLJchx83KS/Zlj2qgKvHPTnqlQp9FgVydX3S2
-	 TeG6B0WbOdLmmvFB1z5g50Cv6E/EqmlooX5DP9as=
+	b=ZmBB9ULGZBm8bSRWJgF4sR5BSQ6g+JBOAJ42viPFUO4wPt3VnwzOcdB31+W632Rwk
+	 zHapPWYG2PqZEdEzxvKZDfCwp9JwAQ4MSzCetp1PQkgX8aJo/1bY2hZrVSlUXSuzq3
+	 60EuG8vKi05d+Vdg6Y0xC6n9Yn8p1HueLEwTyeVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbgENSyA (ORCPT
+        id S1729692AbgENTF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:54:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53208 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:05:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728819AbgENSxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:53:45 -0400
+        id S1728901AbgENSyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:54:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D890207D4;
-        Thu, 14 May 2020 18:53:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15C71206F1;
+        Thu, 14 May 2020 18:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482424;
-        bh=elKX9GjZkRjjBsScde6PaJioZSg2CbxIyAArtC99r5A=;
+        s=default; t=1589482439;
+        bh=a4jLj5YoajADdtK8+YqM4haJAzib1te6w43IqWap+Bs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TlZy6ZJFJjL0q9RxxX64nkp833t69xZaGYEGZ1kvCYbBBFPuT0k0E4XCONAW0xbWn
-         xsL1Fk7UaJqD3JA1ZkoYs6cSqY/xKYWeu0CYt6JJdket/qibzdZlezTziQw9+DTfWV
-         jrv9xKbtrO6BV2DZgXZXgHkyjoBn1ojudZsOUxrQ=
+        b=uA5rGnctLtMy+uB9mKBbVn0NHeAHkR54j4ERSYWfwbFGUEMskzcvx8Tnp5mjTpGqp
+         ada/xD4azGn8cFMkvi7VY+16la7xkn9QBxAPDyyDVwSnZvRvUFvRuBBJTRCAfHbGPf
+         1oMnbn1y60b89M+FRXFAUfPsNKywby9cP3EeNXJY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Leon Romanovsky <leon@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 27/49] x86/apic: Move TSC deadline timer debug printk
-Date:   Thu, 14 May 2020 14:52:48 -0400
-Message-Id: <20200514185311.20294-27-sashal@kernel.org>
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 39/49] ARM: futex: Address build warning
+Date:   Thu, 14 May 2020 14:53:00 -0400
+Message-Id: <20200514185311.20294-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185311.20294-1-sashal@kernel.org>
 References: <20200514185311.20294-1-sashal@kernel.org>
@@ -61,128 +62,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit c84cb3735fd53c91101ccdb191f2e3331a9262cb ]
+[ Upstream commit 8101b5a1531f3390b3a69fa7934c70a8fd6566ad ]
 
-Leon reported that the printk_once() in __setup_APIC_LVTT() triggers a
-lockdep splat due to a lock order violation between hrtimer_base::lock and
-console_sem, when the 'once' condition is reset via
-/sys/kernel/debug/clear_warn_once after boot.
+Stephen reported the following build warning on a ARM multi_v7_defconfig
+build with GCC 9.2.1:
 
-The initial printk cannot trigger this because that happens during boot
-when the local APIC timer is set up on the boot CPU.
+kernel/futex.c: In function 'do_futex':
+kernel/futex.c:1676:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
+ 1676 |   return oldval == cmparg;
+      |          ~~~~~~~^~~~~~~~~
+kernel/futex.c:1652:6: note: 'oldval' was declared here
+ 1652 |  int oldval, ret;
+      |      ^~~~~~
 
-Prevent it by moving the printk to a place which is guaranteed to be only
-called once during boot.
+introduced by commit a08971e9488d ("futex: arch_futex_atomic_op_inuser()
+calling conventions change").
 
-Mark the deadline timer check related functions and data __init while at
-it.
+While that change should not make any difference it confuses GCC which
+fails to work out that oldval is not referenced when the return value is
+not zero.
 
-Reported-by: Leon Romanovsky <leon@kernel.org>
+GCC fails to properly analyze arch_futex_atomic_op_inuser(). It's not the
+early return, the issue is with the assembly macros. GCC fails to detect
+that those either set 'ret' to 0 and set oldval or set 'ret' to -EFAULT
+which makes oldval uninteresting. The store to the callsite supplied oldval
+pointer is conditional on ret == 0.
+
+The straight forward way to solve this is to make the store unconditional.
+
+Aside of addressing the build warning this makes sense anyway because it
+removes the conditional from the fastpath. In the error case the stored
+value is uninteresting and the extra store does not matter at all.
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/87y2qhoshi.fsf@nanos.tec.linutronix.de
+Link: https://lkml.kernel.org/r/87pncao2ph.fsf@nanos.tec.linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/apic.c | 27 ++++++++++++++-------------
- 1 file changed, 14 insertions(+), 13 deletions(-)
+ arch/arm/include/asm/futex.h | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index df891f8746142..25b8c45467fcd 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -352,8 +352,6 @@ static void __setup_APIC_LVTT(unsigned int clocks, int oneshot, int irqen)
- 		 * According to Intel, MFENCE can do the serialization here.
- 		 */
- 		asm volatile("mfence" : : : "memory");
--
--		printk_once(KERN_DEBUG "TSC deadline timer enabled\n");
- 		return;
- 	}
+diff --git a/arch/arm/include/asm/futex.h b/arch/arm/include/asm/futex.h
+index 83c391b597d45..fdc4ae3e7378d 100644
+--- a/arch/arm/include/asm/futex.h
++++ b/arch/arm/include/asm/futex.h
+@@ -164,8 +164,13 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
+ 	preempt_enable();
+ #endif
  
-@@ -552,7 +550,7 @@ static DEFINE_PER_CPU(struct clock_event_device, lapic_events);
- #define DEADLINE_MODEL_MATCH_REV(model, rev)	\
- 	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, (unsigned long)rev }
+-	if (!ret)
+-		*oval = oldval;
++	/*
++	 * Store unconditionally. If ret != 0 the extra store is the least
++	 * of the worries but GCC cannot figure out that __futex_atomic_op()
++	 * is either setting ret to -EFAULT or storing the old value in
++	 * oldval which results in a uninitialized warning at the call site.
++	 */
++	*oval = oldval;
  
--static u32 hsx_deadline_rev(void)
-+static __init u32 hsx_deadline_rev(void)
- {
- 	switch (boot_cpu_data.x86_stepping) {
- 	case 0x02: return 0x3a; /* EP */
-@@ -562,7 +560,7 @@ static u32 hsx_deadline_rev(void)
- 	return ~0U;
+ 	return ret;
  }
- 
--static u32 bdx_deadline_rev(void)
-+static __init u32 bdx_deadline_rev(void)
- {
- 	switch (boot_cpu_data.x86_stepping) {
- 	case 0x02: return 0x00000011;
-@@ -574,7 +572,7 @@ static u32 bdx_deadline_rev(void)
- 	return ~0U;
- }
- 
--static u32 skx_deadline_rev(void)
-+static __init u32 skx_deadline_rev(void)
- {
- 	switch (boot_cpu_data.x86_stepping) {
- 	case 0x03: return 0x01000136;
-@@ -587,7 +585,7 @@ static u32 skx_deadline_rev(void)
- 	return ~0U;
- }
- 
--static const struct x86_cpu_id deadline_match[] = {
-+static const struct x86_cpu_id deadline_match[] __initconst = {
- 	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_HASWELL_X,	hsx_deadline_rev),
- 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_BROADWELL_X,	0x0b000020),
- 	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_BROADWELL_D,	bdx_deadline_rev),
-@@ -609,18 +607,19 @@ static const struct x86_cpu_id deadline_match[] = {
- 	{},
- };
- 
--static void apic_check_deadline_errata(void)
-+static __init bool apic_validate_deadline_timer(void)
- {
- 	const struct x86_cpu_id *m;
- 	u32 rev;
- 
--	if (!boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER) ||
--	    boot_cpu_has(X86_FEATURE_HYPERVISOR))
--		return;
-+	if (!boot_cpu_has(X86_FEATURE_TSC_DEADLINE_TIMER))
-+		return false;
-+	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
-+		return true;
- 
- 	m = x86_match_cpu(deadline_match);
- 	if (!m)
--		return;
-+		return true;
- 
- 	/*
- 	 * Function pointers will have the MSB set due to address layout,
-@@ -632,11 +631,12 @@ static void apic_check_deadline_errata(void)
- 		rev = (u32)m->driver_data;
- 
- 	if (boot_cpu_data.microcode >= rev)
--		return;
-+		return true;
- 
- 	setup_clear_cpu_cap(X86_FEATURE_TSC_DEADLINE_TIMER);
- 	pr_err(FW_BUG "TSC_DEADLINE disabled due to Errata; "
- 	       "please update microcode to version: 0x%x (or later)\n", rev);
-+	return false;
- }
- 
- /*
-@@ -2098,7 +2098,8 @@ void __init init_apic_mappings(void)
- {
- 	unsigned int new_apicid;
- 
--	apic_check_deadline_errata();
-+	if (apic_validate_deadline_timer())
-+		pr_debug("TSC deadline timer available\n");
- 
- 	if (x2apic_mode) {
- 		boot_cpu_physical_apicid = read_apic_id();
 -- 
 2.20.1
 
