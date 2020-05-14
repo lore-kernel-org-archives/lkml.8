@@ -2,128 +2,78 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B51B6C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C55C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8ACD020675
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:11:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483461;
-	bh=X5J/cOekaw0vJkG0Lx9XCnZIakgENEiU8hA54KZohQg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=REWPaFKRmKaET5rw+Yit+Me24YOkG3h0vNUmuE2sgkWfu3GYheCzXvJlB4ctvIzcf
-	 tD6axcroPVBd7LYrFSf3dgW8t4zfspnm39ESEd44BikvNHDMVhyihQVR395dr3vFD/
-	 SDXUWEIaKqnpaTia24B7jLfriq9azKv3gVtluurM=
+	by mail.kernel.org (Postfix) with ESMTP id ABCAE20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:11:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="k5pArpMP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730317AbgENTLA (ORCPT
+        id S1730324AbgENTLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:11:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50492 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:11:05 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:60854 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728295AbgENSwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:52:23 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98307206F1;
-        Thu, 14 May 2020 18:52:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482342;
-        bh=X5J/cOekaw0vJkG0Lx9XCnZIakgENEiU8hA54KZohQg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fc3Q+alJS2RJFMpaZhVVYf+lFvVg3NepCj5wrKwQ8URs7EK6NVRdJ6Uhe6B8b6HnM
-         0NLHMW0j7VyyaIA8ibxB2Xj3hSUPKhzSUiJE2goVhXVRHfOSXFNdimV9Fu4HTa6sCX
-         9d4oizqAGMGpNgCgzjaQsLXeRbYpM1xo9P5/GsrQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alan Maguire <alan.maguire@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 26/62] ftrace/selftest: make unresolved cases cause failure if --fail-unresolved set
-Date:   Thu, 14 May 2020 14:51:11 -0400
-Message-Id: <20200514185147.19716-26-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200514185147.19716-1-sashal@kernel.org>
-References: <20200514185147.19716-1-sashal@kernel.org>
+        id S1728210AbgENSwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:52:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=8Za+3ZMb7xHzue8msAwcSz9/IVxF8Kntejn/v5bSVMY=; b=k5pArpMPipxHuMUO1R7sFONOXr
+        tIofq8Qa5rrQaoggQXefTCyyk0ryRf+rfm/EKa60JtlZVA/1gH2yJe3AVEqOZL/MOeTfnQCr5CWqB
+        p44gcsQYsft64KdGT5qvpcDXPKOQD9qTOEArhRNDM+5/0E+5pU8pU3VyoErHvTkscd2E=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jZIxt-002JVc-4J; Thu, 14 May 2020 20:52:17 +0200
+Date:   Thu, 14 May 2020 20:52:17 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
+        robh@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH net-next 2/2] net: phy: DP83822: Add ability to advertise
+ Fiber connection
+Message-ID: <20200514185217.GX499265@lunn.ch>
+References: <20200514173055.15013-1-dmurphy@ti.com>
+ <20200514173055.15013-3-dmurphy@ti.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514173055.15013-3-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Maguire <alan.maguire@oracle.com>
+> +static int dp83822_config_init(struct phy_device *phydev)
+> +{
+> +	struct dp83822_private *dp83822 = phydev->priv;
+> +	int err = 0;
+> +
+> +	if (dp83822->fx_enabled) {
+> +		linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT,
+> +				 phydev->supported);
+> +		linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT,
+> +				 phydev->advertising);
+> +
+> +		/*  Auto negotiation is not available in fiber mode */
+> +		phydev->autoneg = AUTONEG_DISABLE;
+> +		phydev->speed = SPEED_100;
+> +		phydev->duplex = DUPLEX_FULL;
 
-[ Upstream commit b730d668138cb3dd9ce78f8003986d1adae5523a ]
+Hi Dan
 
-Currently, ftracetest will return 1 (failure) if any unresolved cases
-are encountered.  The unresolved status results from modules and
-programs not being available, and as such does not indicate any
-issues with ftrace itself.  As such, change the behaviour of
-ftracetest in line with unsupported cases; if unsupported cases
-happen, ftracetest still returns 0 unless --fail-unsupported.  Here
---fail-unresolved is added and the default is to return 0 if
-unresolved results occur.
+This is normally determined by reading the ability registers,
+genphy_read_abilities(). When strapped to fibre mode, does it still
+indicate all the usual copper capabilities, which it can not actually
+do?
 
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/testing/selftests/ftrace/ftracetest | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
-index 144308a757b70..19e9236dec5e2 100755
---- a/tools/testing/selftests/ftrace/ftracetest
-+++ b/tools/testing/selftests/ftrace/ftracetest
-@@ -17,6 +17,7 @@ echo "		-v|--verbose Increase verbosity of test messages"
- echo "		-vv        Alias of -v -v (Show all results in stdout)"
- echo "		-vvv       Alias of -v -v -v (Show all commands immediately)"
- echo "		--fail-unsupported Treat UNSUPPORTED as a failure"
-+echo "		--fail-unresolved Treat UNRESOLVED as a failure"
- echo "		-d|--debug Debug mode (trace all shell commands)"
- echo "		-l|--logdir <dir> Save logs on the <dir>"
- echo "		            If <dir> is -, all logs output in console only"
-@@ -112,6 +113,10 @@ parse_opts() { # opts
-       UNSUPPORTED_RESULT=1
-       shift 1
-     ;;
-+    --fail-unresolved)
-+      UNRESOLVED_RESULT=1
-+      shift 1
-+    ;;
-     --logdir|-l)
-       LOG_DIR=$2
-       shift 2
-@@ -176,6 +181,7 @@ KEEP_LOG=0
- DEBUG=0
- VERBOSE=0
- UNSUPPORTED_RESULT=0
-+UNRESOLVED_RESULT=0
- STOP_FAILURE=0
- # Parse command-line options
- parse_opts $*
-@@ -280,7 +286,7 @@ eval_result() { # sigval
-     $UNRESOLVED)
-       prlog "	[${color_blue}UNRESOLVED${color_reset}]"
-       UNRESOLVED_CASES="$UNRESOLVED_CASES $CASENO"
--      return 1 # this is a kind of bug.. something happened.
-+      return $UNRESOLVED_RESULT # depends on use case
-     ;;
-     $UNTESTED)
-       prlog "	[${color_blue}UNTESTED${color_reset}]"
--- 
-2.20.1
-
+	Andrew
