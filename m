@@ -2,63 +2,64 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6448CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B246CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FDCE205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABB8F205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:13:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o6lWwHVv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b2giTqOm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbgENBNi (ORCPT
+        id S1728244AbgENBNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 21:13:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52596 "EHLO
+        Wed, 13 May 2020 21:13:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725943AbgENBNh (ORCPT
+        by vger.kernel.org with ESMTP id S1725943AbgENBNo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 21:13:37 -0400
+        Wed, 13 May 2020 21:13:44 -0400
 Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0836C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 18:13:37 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id j2so1536029qtr.12
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 18:13:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6D26C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 18:13:43 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id b1so1602129qtt.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 18:13:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CJ+UkeznHslDwbeNLir1XZYmQ/0y7hByJcBrFbnYXW4=;
-        b=o6lWwHVvKWLLPT7TEcuduO3YEEsc+lC/rZyYhJaHfVLFfMvHyOhX7N65rKnsxIloP7
-         6rX4IXEdoPcyUvJqcwsBTGKiqqXZewnlGfD8nqhdYd0BrIXVExU6L1cElhuJQKhTEWnh
-         J0u5M7EGH1QOhJjfnUCQoF9urNo6ZdmmN+Hp8NwsKzCqewLsH+Nh/3Qp2/fjJxz9CTe4
-         760QALIU5mkk8yLsu6PbBEOX4qGNsdYtcip5Yz/j7b0myP1IEtBjYtCgZTDJzPz9uccI
-         drGOYqL6Wc9QtyjeVCoJHTwFZvSBcYGDWrraB8J3Rjp2ddsbP/ZZpqNTqsKwDU6M7JKl
-         HrKw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1M7pUn0rkqc7ZsQoZUKloLq7Q6JRk8mWdAedCgZjaZs=;
+        b=b2giTqOmEtRSnv8Zsrn5yp+8FRtDQJRm5CSU5UnjPMlb7Q2hr2HVydXzLCJMswd1ta
+         Kvh/xRemk8LSRMVgN0RWiNLiHN8u0kgWodMIbqhM5/YMBjDZp9o0IrU21nJkHgcK7j6e
+         ytLiYqnYlQ3a/65njwlQhT65XXfjUGafpePzBdIwoy0JKDLOjI89ykq+fpbeBn/OSI2f
+         TdWv+ejg/jy1xw+q1gECoUFXP2REm6pbrBnQSTz9nDYGnqSSunipnaFqtfNzsa2n/t79
+         9xJ3z5PKCCMoP7rjgEuxFhcUEgZBR7p/fbrBnX6rj1pZf/MFf+FKw6/jtGRQ2r2rtizh
+         8Haw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CJ+UkeznHslDwbeNLir1XZYmQ/0y7hByJcBrFbnYXW4=;
-        b=XtXeUcnXjgKkopfckr8JS5PJjPcXneBMJRyAxtxQWi+0K4NS34SdHyyQO3TBPCKMxE
-         NiNj55bgPm5t8AXZ8bMeBlGx8bc5QsIuN9hWOaNwJs+RwreI2tQDtuoDBRllc7/QYVJB
-         UM+n7z5rt6mDACF4KfOYgguJsUjLBONDhFFUx6fDTgWRzw6S3iTI10QDgoAVLsbVAfoD
-         +FheK6W8x4cmqUt189G6ss4hCQr4EBDrA4WyOKJ7DkZG+6eyqmWQ89hCuYZSY85CLFej
-         oeqJY4jd/QHLmv9S1aq7q8mfKzB6BdovInpWBZZbs6ienhxNnf7SYnTjkJOlkL4Ab7F4
-         0LTg==
-X-Gm-Message-State: AOAM532ffXZ0v2XLyWSG09epMvbl3UMw4s/68EnxY0XBxFDZ2/cYO6AF
-        iJzhJHJXzIM3MmWrY4rexOMzg93m
-X-Google-Smtp-Source: ABdhPJxQEwtFG+28xOW3LWQtXRD1PCQfChKK6arCzdVJfZ7rBg8XyKCa3dyAhOMM51nPcdhl65BTXQ==
-X-Received: by 2002:ac8:688c:: with SMTP id m12mr1972781qtq.238.1589418816846;
-        Wed, 13 May 2020 18:13:36 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1M7pUn0rkqc7ZsQoZUKloLq7Q6JRk8mWdAedCgZjaZs=;
+        b=TtxedmHstl8E17PmcgA4qwPD1+vC6lyTi3D55yQGE6e04cRQz1wS+BbdazEdRThM3U
+         NI5qO4Moy/d/oqW4M8WO8lp4JguSMA+7cT7PsUJkmdAy/shwBXQhq1daQHGYGJ2702kK
+         Y4fl0eoB86QYaUtssEbv3b2OdsgvasvD/bnCe8crCcq+mJv/f/aPnzyxmBkXKfxgK90p
+         8IPXO4C/dYmzUPmIk39s75O+WWaNQkDgQVEOLvb9ArJeQCJDrvLBjopJJdtGm2hW1vkz
+         QUeFeHvE+FsY1e3n64zvAQRMni4UYNLo2r2J88q1xLu+2O/qPD3THOXpdnoslYuh2fWp
+         MM0A==
+X-Gm-Message-State: AOAM530TpPXGjJuL0AUNbBH45aRu8WwjwL6JVQuSlVdNLwQ+MIwibPhP
+        nkgtKRquVxzrCAPw7NBjYN4=
+X-Google-Smtp-Source: ABdhPJzFjqzx+81830uuaAYdu7Yduh3TO+tXYCNnzXQ7lSyMqFxmqpxdbBUq7l0onj/vtx2ZOJVQmg==
+X-Received: by 2002:ac8:6b18:: with SMTP id w24mr2001047qts.355.1589418822926;
+        Wed, 13 May 2020 18:13:42 -0700 (PDT)
 Received: from LeoBras.aus.stglabs.ibm.com (179-125-143-209.dynamic.desktop.com.br. [179.125.143.209])
-        by smtp.gmail.com with ESMTPSA id j11sm1308314qkk.33.2020.05.13.18.13.24
+        by smtp.gmail.com with ESMTPSA id j11sm1308314qkk.33.2020.05.13.18.13.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 18:13:36 -0700 (PDT)
+        Wed, 13 May 2020 18:13:42 -0700 (PDT)
 From:   Leonardo Bras <leobras.c@gmail.com>
 To:     Michael Ellerman <mpe@ellerman.id.au>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
@@ -72,10 +73,12 @@ To:     Michael Ellerman <mpe@ellerman.id.au>,
         "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
         Nadav Amit <namit@vmware.com>
 Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/2] Implement reentrant rtas call
-Date:   Wed, 13 May 2020 22:12:43 -0300
-Message-Id: <20200514011245.127174-1-leobras.c@gmail.com>
+Subject: [PATCH v3 1/2] powerpc/rtas: Move type/struct definitions from rtas.h into rtas-types.h
+Date:   Wed, 13 May 2020 22:12:44 -0300
+Message-Id: <20200514011245.127174-2-leobras.c@gmail.com>
 X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200514011245.127174-1-leobras.c@gmail.com>
+References: <20200514011245.127174-1-leobras.c@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,61 +86,320 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patch 2 implement rtas_call_reentrant() for reentrant rtas-calls:
-"ibm,int-on", "ibm,int-off",ibm,get-xive" and  "ibm,set-xive",
-according to LoPAPR Version 1.1 (March 24, 2016).
+In order to get any rtas* struct into other headers, including rtas.h
+may cause a lot of errors, regarding include dependency needed for
+inline functions.
 
-For that, it's necessary that every call uses a different
-rtas buffer (rtas_args). Paul Mackerras suggested using the PACA
-structure for creating a per-cpu buffer for these calls.
+Create rtas-types.h and move there all type/struct definitions
+from rtas.h, then include rtas-types.h into rtas.h.
 
-Patch 1 was necessary to make PACA have a 'struct rtas_args' member.
-
-Reentrant rtas calls can be useful to avoid deadlocks in crashing,
-where rtas-calls are needed, but some other thread crashed holding
-the rtas.lock.
-
-This is a backtrace of a deadlock from a kdump testing environment:
-
-  #0 arch_spin_lock
-  #1  lock_rtas () 
-  #2  rtas_call (token=8204, nargs=1, nret=1, outputs=0x0)
-  #3  ics_rtas_mask_real_irq (hw_irq=4100) 
-  #4  machine_kexec_mask_interrupts
-  #5  default_machine_crash_shutdown
-  #6  machine_crash_shutdown 
-  #7  __crash_kexec
-  #8  crash_kexec
-  #9  oops_end
+Also, as suggested by checkpath.pl, replace uint8_t for u8, and keep
+the same type pattern for the whole file, as they are the same
+according to powerpc/boot/types.h.
 
 Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
-
 ---
-Changes since v2:
-- Fixed build failure from ppc64e, by including spinlock_types.h on 
-  rtas-types.h
-- Improved commit messages
-
-Changes since v1:
-- Moved buffer from stack to PACA (as suggested by Paul Mackerras)
-- Added missing output bits
-- Improve documentation following kernel-doc format (as suggested by
-  Nathan Lynch)
-
-
-Leonardo Bras (2):
-  powerpc/rtas: Move type/struct definitions from rtas.h into
-    rtas-types.h
-  powerpc/rtas: Implement reentrant rtas call
-
- arch/powerpc/include/asm/paca.h       |   2 +
  arch/powerpc/include/asm/rtas-types.h | 126 ++++++++++++++++++++++++++
- arch/powerpc/include/asm/rtas.h       | 119 +-----------------------
- arch/powerpc/kernel/rtas.c            |  42 +++++++++
- arch/powerpc/sysdev/xics/ics-rtas.c   |  22 ++---
- 5 files changed, 183 insertions(+), 128 deletions(-)
+ arch/powerpc/include/asm/rtas.h       | 118 +-----------------------
+ 2 files changed, 127 insertions(+), 117 deletions(-)
  create mode 100644 arch/powerpc/include/asm/rtas-types.h
 
+diff --git a/arch/powerpc/include/asm/rtas-types.h b/arch/powerpc/include/asm/rtas-types.h
+new file mode 100644
+index 000000000000..87354e28f160
+--- /dev/null
++++ b/arch/powerpc/include/asm/rtas-types.h
+@@ -0,0 +1,126 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++#ifndef _POWERPC_RTAS_TYPES_H
++#define _POWERPC_RTAS_TYPES_H
++#ifdef __KERNEL__
++
++#include <linux/spinlock_types.h>
++
++typedef __be32 rtas_arg_t;
++
++struct rtas_args {
++	__be32 token;
++	__be32 nargs;
++	__be32 nret;
++	rtas_arg_t args[16];
++	rtas_arg_t *rets;     /* Pointer to return values in args[]. */
++};
++
++struct rtas_t {
++	unsigned long entry;		/* physical address pointer */
++	unsigned long base;		/* physical address pointer */
++	unsigned long size;
++	arch_spinlock_t lock;
++	struct rtas_args args;
++	struct device_node *dev;	/* virtual address pointer */
++};
++
++struct rtas_suspend_me_data {
++	atomic_t working; /* number of cpus accessing this struct */
++	atomic_t done;
++	int token; /* ibm,suspend-me */
++	atomic_t error;
++	struct completion *complete; /* wait on this until working == 0 */
++};
++
++struct rtas_error_log {
++	/* Byte 0 */
++	u8		byte0;			/* Architectural version */
++
++	/* Byte 1 */
++	u8		byte1;
++	/* XXXXXXXX
++	 * XXX		3: Severity level of error
++	 *    XX	2: Degree of recovery
++	 *      X	1: Extended log present?
++	 *       XX	2: Reserved
++	 */
++
++	/* Byte 2 */
++	u8		byte2;
++	/* XXXXXXXX
++	 * XXXX		4: Initiator of event
++	 *     XXXX	4: Target of failed operation
++	 */
++	u8		byte3;			/* General event or error*/
++	__be32		extended_log_length;	/* length in bytes */
++	unsigned char	buffer[1];		/* Start of extended log */
++						/* Variable length.      */
++};
++
++/* RTAS general extended event log, Version 6. The extended log starts
++ * from "buffer" field of struct rtas_error_log defined above.
++ */
++struct rtas_ext_event_log_v6 {
++	/* Byte 0 */
++	u8 byte0;
++	/* XXXXXXXX
++	 * X		1: Log valid
++	 *  X		1: Unrecoverable error
++	 *   X		1: Recoverable (correctable or successfully retried)
++	 *    X		1: Bypassed unrecoverable error (degraded operation)
++	 *     X	1: Predictive error
++	 *      X	1: "New" log (always 1 for data returned from RTAS)
++	 *       X	1: Big Endian
++	 *        X	1: Reserved
++	 */
++
++	/* Byte 1 */
++	u8 byte1;			/* reserved */
++
++	/* Byte 2 */
++	u8 byte2;
++	/* XXXXXXXX
++	 * X		1: Set to 1 (indicating log is in PowerPC format)
++	 *  XXX		3: Reserved
++	 *     XXXX	4: Log format used for bytes 12-2047
++	 */
++
++	/* Byte 3 */
++	u8 byte3;			/* reserved */
++	/* Byte 4-11 */
++	u8 reserved[8];			/* reserved */
++	/* Byte 12-15 */
++	__be32  company_id;		/* Company ID of the company	*/
++					/* that defines the format for	*/
++					/* the vendor specific log type	*/
++	/* Byte 16-end of log */
++	u8 vendor_log[1];		/* Start of vendor specific log	*/
++					/* Variable length.		*/
++};
++
++/* Vendor specific Platform Event Log Format, Version 6, section header */
++struct pseries_errorlog {
++	__be16 id;			/* 0x00 2-byte ASCII section ID	*/
++	__be16 length;			/* 0x02 Section length in bytes	*/
++	u8 version;			/* 0x04 Section version		*/
++	u8 subtype;			/* 0x05 Section subtype		*/
++	__be16 creator_component;	/* 0x06 Creator component ID	*/
++	u8 data[];			/* 0x08 Start of section data	*/
++};
++
++/* RTAS pseries hotplug errorlog section */
++struct pseries_hp_errorlog {
++	u8	resource;
++	u8	action;
++	u8	id_type;
++	u8	reserved;
++	union {
++		__be32	drc_index;
++		__be32	drc_count;
++		struct { __be32 count, index; } ic;
++		char	drc_name[1];
++	} _drc_u;
++};
++
++#endif /* __KERNEL__ */
++#endif /* _POWERPC_RTAS_TYPES_H */
+diff --git a/arch/powerpc/include/asm/rtas.h b/arch/powerpc/include/asm/rtas.h
+index 3c1887351c71..c35c5350b7e4 100644
+--- a/arch/powerpc/include/asm/rtas.h
++++ b/arch/powerpc/include/asm/rtas.h
+@@ -5,6 +5,7 @@
+ 
+ #include <linux/spinlock.h>
+ #include <asm/page.h>
++#include <asm/rtas-types.h>
+ #include <linux/time.h>
+ #include <linux/cpumask.h>
+ 
+@@ -42,33 +43,6 @@
+  *
+  */
+ 
+-typedef __be32 rtas_arg_t;
+-
+-struct rtas_args {
+-	__be32 token;
+-	__be32 nargs;
+-	__be32 nret; 
+-	rtas_arg_t args[16];
+-	rtas_arg_t *rets;     /* Pointer to return values in args[]. */
+-};  
+-
+-struct rtas_t {
+-	unsigned long entry;		/* physical address pointer */
+-	unsigned long base;		/* physical address pointer */
+-	unsigned long size;
+-	arch_spinlock_t lock;
+-	struct rtas_args args;
+-	struct device_node *dev;	/* virtual address pointer */
+-};
+-
+-struct rtas_suspend_me_data {
+-	atomic_t working; /* number of cpus accessing this struct */
+-	atomic_t done;
+-	int token; /* ibm,suspend-me */
+-	atomic_t error;
+-	struct completion *complete; /* wait on this until working == 0 */
+-};
+-
+ /* RTAS event classes */
+ #define RTAS_INTERNAL_ERROR		0x80000000 /* set bit 0 */
+ #define RTAS_EPOW_WARNING		0x40000000 /* set bit 1 */
+@@ -148,31 +122,6 @@ struct rtas_suspend_me_data {
+ /* RTAS check-exception vector offset */
+ #define RTAS_VECTOR_EXTERNAL_INTERRUPT	0x500
+ 
+-struct rtas_error_log {
+-	/* Byte 0 */
+-	uint8_t		byte0;			/* Architectural version */
+-
+-	/* Byte 1 */
+-	uint8_t		byte1;
+-	/* XXXXXXXX
+-	 * XXX		3: Severity level of error
+-	 *    XX	2: Degree of recovery
+-	 *      X	1: Extended log present?
+-	 *       XX	2: Reserved
+-	 */
+-
+-	/* Byte 2 */
+-	uint8_t		byte2;
+-	/* XXXXXXXX
+-	 * XXXX		4: Initiator of event
+-	 *     XXXX	4: Target of failed operation
+-	 */
+-	uint8_t		byte3;			/* General event or error*/
+-	__be32		extended_log_length;	/* length in bytes */
+-	unsigned char	buffer[1];		/* Start of extended log */
+-						/* Variable length.      */
+-};
+-
+ static inline uint8_t rtas_error_severity(const struct rtas_error_log *elog)
+ {
+ 	return (elog->byte1 & 0xE0) >> 5;
+@@ -212,47 +161,6 @@ uint32_t rtas_error_extended_log_length(const struct rtas_error_log *elog)
+ 
+ #define RTAS_V6EXT_COMPANY_ID_IBM	(('I' << 24) | ('B' << 16) | ('M' << 8))
+ 
+-/* RTAS general extended event log, Version 6. The extended log starts
+- * from "buffer" field of struct rtas_error_log defined above.
+- */
+-struct rtas_ext_event_log_v6 {
+-	/* Byte 0 */
+-	uint8_t byte0;
+-	/* XXXXXXXX
+-	 * X		1: Log valid
+-	 *  X		1: Unrecoverable error
+-	 *   X		1: Recoverable (correctable or successfully retried)
+-	 *    X		1: Bypassed unrecoverable error (degraded operation)
+-	 *     X	1: Predictive error
+-	 *      X	1: "New" log (always 1 for data returned from RTAS)
+-	 *       X	1: Big Endian
+-	 *        X	1: Reserved
+-	 */
+-
+-	/* Byte 1 */
+-	uint8_t byte1;			/* reserved */
+-
+-	/* Byte 2 */
+-	uint8_t byte2;
+-	/* XXXXXXXX
+-	 * X		1: Set to 1 (indicating log is in PowerPC format)
+-	 *  XXX		3: Reserved
+-	 *     XXXX	4: Log format used for bytes 12-2047
+-	 */
+-
+-	/* Byte 3 */
+-	uint8_t byte3;			/* reserved */
+-	/* Byte 4-11 */
+-	uint8_t reserved[8];		/* reserved */
+-	/* Byte 12-15 */
+-	__be32  company_id;		/* Company ID of the company	*/
+-					/* that defines the format for	*/
+-					/* the vendor specific log type	*/
+-	/* Byte 16-end of log */
+-	uint8_t vendor_log[1];		/* Start of vendor specific log	*/
+-					/* Variable length.		*/
+-};
+-
+ static
+ inline uint8_t rtas_ext_event_log_format(struct rtas_ext_event_log_v6 *ext_log)
+ {
+@@ -287,16 +195,6 @@ inline uint32_t rtas_ext_event_company_id(struct rtas_ext_event_log_v6 *ext_log)
+ #define PSERIES_ELOG_SECT_ID_HOTPLUG		(('H' << 8) | 'P')
+ #define PSERIES_ELOG_SECT_ID_MCE		(('M' << 8) | 'C')
+ 
+-/* Vendor specific Platform Event Log Format, Version 6, section header */
+-struct pseries_errorlog {
+-	__be16 id;			/* 0x00 2-byte ASCII section ID	*/
+-	__be16 length;			/* 0x02 Section length in bytes	*/
+-	uint8_t version;		/* 0x04 Section version		*/
+-	uint8_t subtype;		/* 0x05 Section subtype		*/
+-	__be16 creator_component;	/* 0x06 Creator component ID	*/
+-	uint8_t data[];			/* 0x08 Start of section data	*/
+-};
+-
+ static
+ inline uint16_t pseries_errorlog_id(struct pseries_errorlog *sect)
+ {
+@@ -309,20 +207,6 @@ inline uint16_t pseries_errorlog_length(struct pseries_errorlog *sect)
+ 	return be16_to_cpu(sect->length);
+ }
+ 
+-/* RTAS pseries hotplug errorlog section */
+-struct pseries_hp_errorlog {
+-	u8	resource;
+-	u8	action;
+-	u8	id_type;
+-	u8	reserved;
+-	union {
+-		__be32	drc_index;
+-		__be32	drc_count;
+-		struct { __be32 count, index; } ic;
+-		char	drc_name[1];
+-	} _drc_u;
+-};
+-
+ #define PSERIES_HP_ELOG_RESOURCE_CPU	1
+ #define PSERIES_HP_ELOG_RESOURCE_MEM	2
+ #define PSERIES_HP_ELOG_RESOURCE_SLOT	3
 -- 
 2.25.4
 
