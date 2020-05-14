@@ -2,102 +2,99 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE3AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B45C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4DF6206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EE90206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:40:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yjrk1yjf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PbhW5x5z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgENUjy (ORCPT
+        id S1728035AbgENUk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 16:39:54 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:41233 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726200AbgENUjx (ORCPT
+        Thu, 14 May 2020 16:40:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37094 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727937AbgENUkZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 16:39:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589488792;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3m6Ftq3TuCCuypkHO0wr59mhrXpVR2PIMdXqJPW1u7s=;
-        b=Yjrk1yjf3OQZhahO8gfxMXRdTiCRF/pV1ipQYaSBpyGkabgDKe/qS3ssZ63VbQsBCjQOVk
-        ey2AICXrl3+g86pwPihM2r2MOqv7j8t7Q+Y0acLMW74fM7XGE+mWrX2MqsRaghqsVEn7pX
-        jG6/d4x8FefUrXZCkjfO7WDmotHvwJA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-401--k3l99i0OaeoHi668YuToQ-1; Thu, 14 May 2020 16:39:50 -0400
-X-MC-Unique: -k3l99i0OaeoHi668YuToQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 056D81005510;
-        Thu, 14 May 2020 20:39:47 +0000 (UTC)
-Received: from treble (ovpn-117-14.rdu2.redhat.com [10.10.117.14])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 813A15D9D7;
-        Thu, 14 May 2020 20:39:45 +0000 (UTC)
-Date:   Thu, 14 May 2020 15:39:42 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>, mgorman@techsingularity.net,
-        linux-kernel@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Subject: Re: [PATCH] tools/perf-bench: Add basic syscall benchmark
-Message-ID: <20200514203942.v2dbjeqrdpuucx5h@treble>
-References: <20190307185253.28432-1-dave@stgolabs.net>
- <20190307191157.GB32240@kernel.org>
- <20190308181747.l36zqz2avtivrr3c@linux-r8p5>
+        Thu, 14 May 2020 16:40:25 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DA01C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 13:40:24 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id a5so13081749pjh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 13:40:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8ShLHCjvXE5CC05PHmK2XoqTLK7MtzkzghArKGHtan0=;
+        b=PbhW5x5zfvK7CT1lw2rJjnTpTGhFpvIGG2nIm0gjiYMHZaNuoex89UcQiyXrL+RTVt
+         LQAmVSG4A4o0AlxzIxjnahjAE/gTAfWQiAAylmz9Gfbc6UJJiZKuCb3S67XzlyiinOPB
+         M3EUcqB4RwyOGubsFfvx6EAox4Hi8KHSN/ENdZ0g8ydlQKhsiAEeeXXwAvlh7aL2+VcY
+         kAzY0nhQJGGOeDFR1yTrRNKVYyhf1ciWLKMw+ket3XMer9nmiYn8dN64Tnnyw6Wd6n5I
+         33LahBp2w38lWSCWHeLyX3Fmv1ODnntZXv7VlC+vnByVIxjEG9OqC1JujiK0CcZwpVha
+         7pcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8ShLHCjvXE5CC05PHmK2XoqTLK7MtzkzghArKGHtan0=;
+        b=GpBmrcSaAcGzevF549NLB54HhLlhzs4o4hdFs1HwNCCmFbqSoNcJtpwKBHBXANiTtn
+         GWBP6C6v9nYkn87nmYUASNEm5XxRVa1UcN15xxJTCTgInyz6RmDNfwMiPYMqmJfaKzT3
+         YzI/Tandqj0VCOS+uoSo4oQQm4mpZRlpeTY9VyI6gyqB25u9CkAPyjWFx5XoMlA9zK3B
+         AcJdXNBu2RB6/sju7pUlESR7Ptu/hr35cFH7sR9yEsCHGhtlGUgzkm06YO+bTBQTHFGM
+         eEl3nDye2aUG6zvb8kOey9sDJE+dty2bJFfbdsRNvAYqQEpJ5FWX5abBz3VPAyrqLt4n
+         Ms5A==
+X-Gm-Message-State: AOAM530PnTAWvbgjGsURS9GwD7wPE4HtGOLwzgfVCPqskRjYWrTJnq3V
+        p9Pl34aYIIuNdHBcroGc3zkFrg==
+X-Google-Smtp-Source: ABdhPJwjkZn2TxedarCJgzq9tQN35yVP/QBf0FK0TqaVBZ6NHPCbCNQ6ePPyBE/alOLnlemR59nlxg==
+X-Received: by 2002:a17:902:b906:: with SMTP id bf6mr352723plb.169.1589488823674;
+        Thu, 14 May 2020 13:40:23 -0700 (PDT)
+Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id d124sm76062pfa.98.2020.05.14.13.40.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 13:40:23 -0700 (PDT)
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     ohad@wizery.com, bjorn.andersson@linaro.org
+Cc:     arnaud.pouliquen@st.com, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/2] rpmsg: core: Add support for name extension 
+Date:   Thu, 14 May 2020 14:40:20 -0600
+Message-Id: <20200514204022.24233-1-mathieu.poirier@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190308181747.l36zqz2avtivrr3c@linux-r8p5>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 10:17:47AM -0800, Davidlohr Bueso wrote:
-> On Thu, 07 Mar 2019, Arnaldo Carvalho de Melo wrote:
-> > You forgot to update tools/perf/Documentation/perf-bench.txt, and please
-> > take a look at tools/perf/util/pmu.c convert_scale() to see how to save
-> > the current locale, set the one you want, then restore the previous one,
-> > so that at the end of this benchmark the environment is back to where it
-> > was.
-> 
-> Here's an updated version with the corresponding docs, but I removed the
-> setlocale() - doesn't seem worth it; I hope Mel has no strong objection.
-> 
-> Thanks.
-> 
-> -------8<----------------------------------------------------------
-> [PATCH v2] tools/perf-bench: Add basic syscall benchmark
-> 
-> The usefulness of having a standard way of testing syscall performance
-> has come up from time to time[0]. Furthermore, some of our testing
-> machinery (such as 'mmtests') already makes use of a simplified version
-> of the microbenchmark. This patch mainly takes the same idea to measure
-> syscall throughput compatible with 'perf-bench' via getppid(2), yet
-> without any of the additional template stuff from Ingo's version (based
-> on numa.c). The code is identical to what mmtests uses.
-> 
-> [0] https://lore.kernel.org/lkml/20160201074156.GA27156@gmail.com/
-> 
-> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+This patchset adds the capability to supplement the base definition
+published by an rpmsg_driver with a postfix description so that it
+is easy to differentiate entities that use the same name service.
 
-It would be nice to see this merged.  I posted something very similar
-back in 2016.
+Applies cleanly on rpmsg-next (4f05fc33bebd).
+
+Thanks,
+Mathieu
+
+New for V5:
+- Return error code if no match is found (Arnaud).
+- Return a pointer to the rpmsg device name rather than
+  duplicating it (Arnaud).
+
+Mathieu Poirier (2):
+  rpmsg: core: Add wildcard match for name service
+  rpmsg: core: Add support to retrieve name extension
+
+ drivers/rpmsg/rpmsg_core.c | 115 ++++++++++++++++++++++++++++++++++++-
+ include/linux/rpmsg.h      |  13 +++++
+ 2 files changed, 127 insertions(+), 1 deletion(-)
 
 -- 
-Josh
+2.20.1
 
