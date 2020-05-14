@@ -2,91 +2,148 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0A2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 418ECC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 665A120722
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20B2B206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:28:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u+lnrCuC"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Y7Vf7sCh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbgENM1l (ORCPT
+        id S1726281AbgENM26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 08:27:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44556 "EHLO
+        Thu, 14 May 2020 08:28:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725955AbgENM1l (ORCPT
+        by vger.kernel.org with ESMTP id S1725955AbgENM25 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 08:27:41 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33880C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 05:27:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=aA5M/XpaRV+Oml4TIMxh30lFTbOlhWVBMWNdlNQaq7w=; b=u+lnrCuCpJW0P9fqCJ9vD5pQI7
-        ArUpPU4ofZ1iu8SrNSHp6Ml4DI1vQ35tM3hOTouwLdXXr1TJHZeOPX/fzWEzrOjnbSJNJEOWYRd+N
-        sET5/QxruF4X2BTxZI9yV2hzPATx0UFz8zjVw6lnO4PczdxYhM5zCWQRa/1JNyzfxCZ/LWwJ1J5Fm
-        kxCb+27POcYtNa6GvHpqalqlWHCc1vtQI8PAsM3NCYmEdabrl2OKJDKO9s/V9npNKr7gJjBuPEXBs
-        cAuUlu9ZLyYVZ8WZdvyAXwj8Np66bi5VDruaGDz0puo2Aln75wQSR2iD7aD+M3sof5/tt7v0VDXAk
-        ayFFRFTQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jZCxe-00061v-2k; Thu, 14 May 2020 12:27:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A247C301205;
-        Thu, 14 May 2020 14:27:35 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9593E213C8B5D; Thu, 14 May 2020 14:27:35 +0200 (CEST)
-Date:   Thu, 14 May 2020 14:27:35 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Marco Elver <elver@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
-Message-ID: <20200514122735.GW2978@hirez.programming.kicks-ass.net>
-References: <CANpmjNNeSnrAgfkskE5Y0NNu3-DS6hk+SwjkBunrr8FRxwwT-Q@mail.gmail.com>
- <20200513111057.GN2957@hirez.programming.kicks-ass.net>
- <CANpmjNMariz3-keqwUsLHVrpk2r7ThLSKtkhHxTDa3SEGeznhA@mail.gmail.com>
- <20200513123243.GO2957@hirez.programming.kicks-ass.net>
- <20200513124021.GB20278@willie-the-truck>
- <CANpmjNM5XW+ufJ6Mw2Tn7aShRCZaUPGcH=u=4Sk5kqLKyf3v5A@mail.gmail.com>
- <20200513132440.GN2978@hirez.programming.kicks-ass.net>
- <CANpmjNM5dD1VH0hoQwsZYEL=mhWunKwAEJMQgASzHSN019OCnw@mail.gmail.com>
- <20200514112142.GV2978@hirez.programming.kicks-ass.net>
- <20200514120104.GD4280@willie-the-truck>
+        Thu, 14 May 2020 08:28:57 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CEA3C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 05:28:56 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id l11so3850118wru.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 05:28:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MhSXdQmfGHknlE+HXPCeR7P0ZV8ATRBftwFVeEaaAyc=;
+        b=Y7Vf7sChBCU2rfY8xBEExV0I7QnH8MFNWEbOMktjW3Gqlslx3DnyxK4la9SJtQSxKI
+         qA++/9v8+v5pkkRVDBpP4CdBvWBlirOOedPFWd8Aq1yzrLg/tcnPNWRJcRikJ/+OFVkM
+         VlrAr49vd56PtJvX3vY9cjGnsRty23kLF2Xlo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=MhSXdQmfGHknlE+HXPCeR7P0ZV8ATRBftwFVeEaaAyc=;
+        b=uaFgQB1Nld/H53qTMb/LhVmyMuJ2hp6AxYnFvtGy5azwCP5rKOgk/6Q+BhCF8lYWuq
+         il1ZXVYR2wOdE10QIcvNQKeVvL/2Cw2SBeIiKQyCYujLPiBSGS8ixMMEr9njMVnZOXG3
+         5L9b7IQbIMBcGzj0qheF6NXT29Qoqv+diQ6AzOrHvinc9WGtToZOSaf49YQQMy29KR/B
+         Kb66Ou7chL86mk/Vli+y1Rxpvt50KQRdqtks2ma/lUCfP7lyBQyd973xFUulc3TMBYMQ
+         Pn3u1v+QLxc+eQ3bZcryOukMguwYXZWBeb7ptYzY3dz11CGfZk/vIt9OUx/bqcNZlITD
+         WrlQ==
+X-Gm-Message-State: AOAM530JBwgwNLuufH1iPK9aJSQPgWBw8y7H4lcjmcXfbHpML9Z42bgM
+        RyolLlfMOHo19G7p2iBn7uSYSw==
+X-Google-Smtp-Source: ABdhPJyi0dv4TvrSEI6BLeM7V23XeYGER8KAK6n/kWqLKYuPlyYwM4QLzJwBgLkyP3bhqCn4hd3iBw==
+X-Received: by 2002:adf:f38b:: with SMTP id m11mr5136675wro.65.1589459334793;
+        Thu, 14 May 2020 05:28:54 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id b2sm4451847wrm.30.2020.05.14.05.28.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 05:28:53 -0700 (PDT)
+Date:   Thu, 14 May 2020 14:28:51 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     David Stevens <stevensd@chromium.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, Tomasz Figa <tfiga@chromium.org>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:VIRTIO CORE, NET..." 
+        <virtualization@lists.linux-foundation.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, virtio-dev@lists.oasis-open.org
+Subject: Re: [PATCH v3 1/4] dma-buf: add support for virtio exported objects
+Message-ID: <20200514122851.GO206103@phenom.ffwll.local>
+Mail-Followup-To: David Stevens <stevensd@chromium.org>,
+        Tomasz Figa <tfiga@chromium.org>, Gerd Hoffmann <kraxel@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:VIRTIO CORE, NET..." <virtualization@lists.linux-foundation.org>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" <linux-media@vger.kernel.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" <linaro-mm-sig@lists.linaro.org>,
+        virtio-dev@lists.oasis-open.org
+References: <20200311112004.47138-1-stevensd@chromium.org>
+ <20200311112004.47138-2-stevensd@chromium.org>
+ <CAKMK7uHFgiHLe9oiFBr-VR-6rU9-hLTpBTEVNh0ezyj54u70jw@mail.gmail.com>
+ <CAD=HUj6d9gdZegTGad6thKdHv5b+qOZnkCv5VcWo9AcHifR9uA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200514120104.GD4280@willie-the-truck>
+In-Reply-To: <CAD=HUj6d9gdZegTGad6thKdHv5b+qOZnkCv5VcWo9AcHifR9uA@mail.gmail.com>
+X-Operating-System: Linux phenom 5.6.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 01:01:04PM +0100, Will Deacon wrote:
-
-> > +#if __has_feature(undefined_sanitizer)
+On Thu, May 14, 2020 at 11:08:52AM +0900, David Stevens wrote:
+> On Thu, May 14, 2020 at 12:45 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+> > On Wed, Mar 11, 2020 at 12:20 PM David Stevens <stevensd@chromium.org> wrote:
+> > >
+> > > This change adds a new dma-buf operation that allows dma-bufs to be used
+> > > by virtio drivers to share exported objects. The new operation allows
+> > > the importing driver to query the exporting driver for the UUID which
+> > > identifies the underlying exported object.
+> > >
+> > > Signed-off-by: David Stevens <stevensd@chromium.org>
+> >
+> > Adding Tomasz Figa, I've discussed this with him at elce last year I
+> > think. Just to make sure.
+> >
+> > Bunch of things:
+> > - obviously we need the users of this in a few drivers, can't really
+> > review anything stand-alone
 > 
-> Hmm, this might want to be __has_feature(undefined_behavior_sanitizer)
-> (and damn is that hard for a Brit to type out!)
+> Here is a link to the usage of this feature by the currently under
+> development virtio-video driver:
+> https://markmail.org/thread/j4xlqaaim266qpks
+> 
+> > - adding very specific ops to the generic interface is rather awkward,
+> > eventually everyone wants that and we end up in a mess. I think the
+> > best solution here would be if we create a struct virtio_dma_buf which
+> > subclasses dma-buf, add a (hopefully safe) runtime upcasting
+> > functions, and then a virtio_dma_buf_get_uuid() function. Just storing
+> > the uuid should be doable (assuming this doesn't change during the
+> > lifetime of the buffer), so no need for a callback.
+> 
+> So you would prefer a solution similar to the original version of this
+> patchset? https://markmail.org/message/z7if4u56q5fmaok4
 
-(I know right, it should be behaviour, dammit!)
-
-I tried without the condition, eg.:
-
-+#define __no_sanitize_undefined \
-+               __attribute__((no_sanitize("undefined")))
-
-and it still generated UBSAN gunk.
+yup.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
