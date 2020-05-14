@@ -2,133 +2,146 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B9BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CCAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA005206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:00:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yB4/wSNa"
+	by mail.kernel.org (Postfix) with ESMTP id 98E7C206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 09:01:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726133AbgENJAc (ORCPT
+        id S1726108AbgENJB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 05:00:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40568 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725878AbgENJAa (ORCPT
+        Thu, 14 May 2020 05:01:28 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:26590 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725955AbgENJB1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 05:00:30 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D735C061A0E
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 02:00:29 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id l18so2831980wrn.6
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 02:00:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=brO8SatzFGXuJx7truk9R35eMq/wT5WUrcx2WinNCbE=;
-        b=yB4/wSNaH36qcX3ATdVHv5wM50wNQ0F9THXz6MYGO/Z5VW2nm/DAW0ZrVAZSVQb4Ei
-         8WzGL9TSkBUW3QBwu55rhPuu5Z+ozILLJFZuV2KWUbiOP15IS+2STJaVBzF02gWjxou/
-         +zqMqF9qqfNCHP4eM3uUGlS8mwnkL85fYTiB4clQVJHIhgf7rI0DDdmiX21dGKp33EMS
-         BBkKD1zYjwe9VnLcjKRxyHAf5ra0+BR4ADKbuaAd2QC3WVrp3Vrvet0BaL/LUd8xD9MQ
-         qZwLuJu7yprAKLS87ee2yC92l4XctwEjvIybLReXE1eSLnwB3R58upThUohkGOb+rDKV
-         TLeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=brO8SatzFGXuJx7truk9R35eMq/wT5WUrcx2WinNCbE=;
-        b=QuJlF3TYPkbBCVlNjF92sRp3/NYNEyBEDNE+DbZ90QUYb82+kvZhOElp3EwsbHeQI6
-         xlrKvs851LJL718E4FfcGAxhhsP5S/BPr6O/n0rozETpY/qg22YacATdmMMaN6L+A4IJ
-         K0HM/QcJ2ITOnWxkY9+93taK7gPWBO9owtGtKQXkI2uOMjFWckcmjlGKVdsxyIOwaUFs
-         Cv5uaNfvNAg+UQoa+FC6P5WLYPkGGDvMrACa0d8WKFbDy5D/85B4dkIIdHXHH3d/P5hx
-         hWQAnamyl+JuHXe1uec1lyXRIwz0dDUmCLZwn+O4EMOYZOeYJVNroHNtl/kyhlsyTDwv
-         wFmA==
-X-Gm-Message-State: AOAM531sWx6YulctSp3wkG/8T8MRff0XLEnlJL4W7kJeF22HaPsEsmrX
-        Ik8pkfQRI2dhVCkBuRmU11fyjg==
-X-Google-Smtp-Source: ABdhPJw+rFHQFUTHAaNgyLW1xC7hhZnEVdOwRgOheuGlo7jgtN0uXxuUcMgeW3VsFaSa/lENVe3Vzg==
-X-Received: by 2002:a5d:53c7:: with SMTP id a7mr4414459wrw.334.1589446828174;
-        Thu, 14 May 2020 02:00:28 -0700 (PDT)
-Received: from dell ([2.31.163.63])
-        by smtp.gmail.com with ESMTPSA id c193sm13125691wme.37.2020.05.14.02.00.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 02:00:26 -0700 (PDT)
-Date:   Thu, 14 May 2020 10:00:25 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.co" <mark.rutland@arm.co>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        Amelie DELAUNAY <amelie.delaunay@st.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v3] dt-bindings: mfd: Convert stmfx bindings to
- json-schema
-Message-ID: <20200514090025.GE271301@dell>
-References: <20200220162246.8334-1-benjamin.gaignard@st.com>
- <20200226162125.GA13349@bogus>
- <70ee04c9-4f65-6909-32bc-a379c21a031e@st.com>
+        Thu, 14 May 2020 05:01:27 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04E8xW3H000770;
+        Thu, 14 May 2020 05:01:10 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 3100x5xnen-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 May 2020 05:01:10 -0400
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 04E918Q2000361
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Thu, 14 May 2020 05:01:09 -0400
+Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
+ SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 14 May 2020 02:01:07 -0700
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by
+ SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 14 May 2020 02:01:07 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Thu, 14 May 2020 02:01:07 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 04E914YC011323;
+        Thu, 14 May 2020 05:01:04 -0400
+From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
+CC:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        "Stefan Popa" <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        "Hartmut Knaack" <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Subject: [PATCH] iio: dac: ad5446: Replace indio_dev->mlock with own device lock
+Date:   Thu, 14 May 2020 12:00:42 +0300
+Message-ID: <20200514090048.80359-1-sergiu.cuciurean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <70ee04c9-4f65-6909-32bc-a379c21a031e@st.com>
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-14_01:2020-05-13,2020-05-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ malwarescore=0 suspectscore=0 cotscore=-2147483648 mlxscore=0 spamscore=0
+ lowpriorityscore=0 mlxlogscore=689 phishscore=0 priorityscore=1501
+ clxscore=1015 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005140081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 May 2020, Benjamin GAIGNARD wrote:
+As part of the general cleanup of indio_dev->mlock, this change replaces
+it with a local lock on the device's state structure.
 
-> 
-> 
-> On 2/26/20 5:21 PM, Rob Herring wrote:
-> > On Thu, 20 Feb 2020 17:22:46 +0100, Benjamin Gaignard wrote:
-> >> Convert stmfx bindings to json-schema
-> >>
-> >> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> >> ---
-> >>   .../devicetree/bindings/mfd/st,stmfx.yaml          | 124 +++++++++++++++++++++
-> >>   Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 -----
-> >>   .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 -------------------
-> >>   3 files changed, 124 insertions(+), 144 deletions(-)
-> >>   create mode 100644 Documentation/devicetree/bindings/mfd/st,stmfx.yaml
-> >>   delete mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
-> >>   delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
-> >>
-> Hi Lee, Rob,
-> 
-> I haven't been able to found this patch in -next branches, can one of 
-> you merge it ?
-> 
-> Thanks,
-> Benjamin
-> > Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+---
+ drivers/iio/dac/ad5446.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-Rob,
-
-We should agree on a process going forward.  Do you take DT document
-changes or should I?  Up until we moved to YAML formatting, I took
-them but responsibly seems to have migrated over to you since then.
-
-I don't mind either way.
-
+diff --git a/drivers/iio/dac/ad5446.c b/drivers/iio/dac/ad5446.c
+index 9884e29b19b7..8f8afc8999bc 100644
+--- a/drivers/iio/dac/ad5446.c
++++ b/drivers/iio/dac/ad5446.c
+@@ -33,6 +33,7 @@
+  * @chip_info:		chip model specific constants, available modes etc
+  * @reg:		supply regulator
+  * @vref_mv:		actual reference voltage used
++ * @lock		lock to protect the data buffer during write ops
+  */
+ 
+ struct ad5446_state {
+@@ -43,6 +44,7 @@ struct ad5446_state {
+ 	unsigned			cached_val;
+ 	unsigned			pwr_down_mode;
+ 	unsigned			pwr_down;
++	struct mutex			lock;
+ };
+ 
+ /**
+@@ -112,7 +114,7 @@ static ssize_t ad5446_write_dac_powerdown(struct iio_dev *indio_dev,
+ 	if (ret)
+ 		return ret;
+ 
+-	mutex_lock(&indio_dev->mlock);
++	mutex_lock(&st->lock);
+ 	st->pwr_down = powerdown;
+ 
+ 	if (st->pwr_down) {
+@@ -123,7 +125,7 @@ static ssize_t ad5446_write_dac_powerdown(struct iio_dev *indio_dev,
+ 	}
+ 
+ 	ret = st->chip_info->write(st, val);
+-	mutex_unlock(&indio_dev->mlock);
++	mutex_unlock(&st->lock);
+ 
+ 	return ret ? ret : len;
+ }
+@@ -197,11 +199,11 @@ static int ad5446_write_raw(struct iio_dev *indio_dev,
+ 			return -EINVAL;
+ 
+ 		val <<= chan->scan_type.shift;
+-		mutex_lock(&indio_dev->mlock);
++		mutex_lock(&st->lock);
+ 		st->cached_val = val;
+ 		if (!st->pwr_down)
+ 			ret = st->chip_info->write(st, val);
+-		mutex_unlock(&indio_dev->mlock);
++		mutex_unlock(&st->lock);
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+@@ -256,6 +258,8 @@ static int ad5446_probe(struct device *dev, const char *name,
+ 	indio_dev->channels = &st->chip_info->channel;
+ 	indio_dev->num_channels = 1;
+ 
++	mutex_init(&st->lock);
++
+ 	st->pwr_down_mode = MODE_PWRDWN_1k;
+ 
+ 	if (st->chip_info->int_vref_mv)
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.17.1
+
