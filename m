@@ -2,159 +2,131 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 005B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29865C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D65BA206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:22:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589451749;
-	bh=vn9+hIkPzrxXP0cywMdfPNthAJJoU2dMAniEk9LTg0I=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=O6cTg5oevQ/iKDyFL5mpYXEF5tILVIHetq4QmPHJw8KYZTCnkmsztRf0KZ02Z/fe0
-	 vXDYQee/R8leezxdJoXH1CX3B4v8Iv5tzdslXuD1WlGNHYMM8en8tHTuvSjC2hBljA
-	 pWc7zmnXxTIwzRjLwcPS+XRldPyZgGv7VLFoniJI=
+	by mail.kernel.org (Postfix) with ESMTP id 0618A206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:22:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SL8beS89"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgENKW1 (ORCPT
+        id S1726374AbgENKWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 06:22:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgENKWA (ORCPT
+        Thu, 14 May 2020 06:22:32 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:53303 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726010AbgENKW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 06:22:00 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF488C061A0C;
-        Thu, 14 May 2020 03:21:59 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id r17so2145099lff.9;
-        Thu, 14 May 2020 03:21:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=BCPye0pUcJCrk1mGrs7j2KRmFPfxGUAT389d2jmnUgA=;
-        b=YHESanEIwOFx7yqx5nXb7MOmP1hbxGBQl8oiuq/VNYK1KZX1rXsZpHig2eMC5eb2Fx
-         9dKmYw5CM1cjQCVC2AiUG5qPL5Ua1ZWRM9yePwUNevdq2fKcBkYoaH0PDq1FQSR4hNwX
-         ZxRrmYeoZ3bbndjHKMX2HEFQX9K3O704YYKZC6dv+2siHCY0ulkVVh5/SmdUXQfBPsVS
-         DCaTQ7kaLOqDIeL16WawA/z1xFV+CwLUhX3OoT5akSwzDgP1NIv8/vrTLenIbb3VohEf
-         tinYb5hl5eeSEiLAJ7yRY5XB1SGSA3E5th8YBUL+q/sO6L2DchdEtwmkNSjRHd96wuPO
-         XZuw==
+        Thu, 14 May 2020 06:22:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589451739;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xdmT6ANXa6NhFjFuIFGimW7zROVm3IZ6tXffgmcMrRw=;
+        b=SL8beS89VTXY/2Xo7ZWoHcFNI73lURdiwbE3U76+SNedpqT4dMSCJjSPlJh+pB7rpJ8Dem
+        OBaDNlqK/uTAmFUinCMSuBnPJJQFXvfYkTBAsXGhdYw1jZ97ZQsbRjVTr7Rdfv0Hk2GY3f
+        Quk1fBn7l24j9PpXjpA2ALRNNnXEpWs=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-220-M-I0_sIFPf20W1D5ymTfcw-1; Thu, 14 May 2020 06:22:17 -0400
+X-MC-Unique: M-I0_sIFPf20W1D5ymTfcw-1
+Received: by mail-ed1-f70.google.com with SMTP id b7so959209edf.9
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 03:22:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=BCPye0pUcJCrk1mGrs7j2KRmFPfxGUAT389d2jmnUgA=;
-        b=OZCOp+Kmn2KqjXCrSe5UPoeyZXS8wn/TTWLj+wgU/GEj0GLI82oL4UPzTB/qpdkn5W
-         t7tjJx9n6LpZnx/ikXznYV43H4HUDEB949gmWh/fHyMJ8kh6Zm7FQb0knAbW+PjlcJ+g
-         aqNf8incK9zUzl75uie3ClfWR5CpyRyk42jp3jrma+Ao7TsqtmTYlyoZ1xGk9ASzl1I+
-         XotYDegh4osq/c1/H9KO82oatMWKP2rUBVtKi1YZncY78XQfZc9/Bawl1aUu2AVwqszz
-         WHNotJu6qFwQtsO6GenSkUxbdPJg07SajHBclcFCKdbvTTTX9SfAraUruT4JWTjd5upi
-         Dt6Q==
-X-Gm-Message-State: AOAM530avmkD31bL9EWG0CLedwM5o1ItbSUeaIyi0Y1OT1Ee/JozsZKb
-        3kmEv/P+vTaYaFiv0dQi6K/F4S1OFoa6nw==
-X-Google-Smtp-Source: ABdhPJwSFr86hBYlDBf0+PbPXxKc+kC7s2B9GDldm15Xqs3P7Se2TIbnDsS5P/MfAEp4LzIbExD5QA==
-X-Received: by 2002:a19:5f04:: with SMTP id t4mr2886505lfb.208.1589451717935;
-        Thu, 14 May 2020 03:21:57 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id h11sm1554137lfp.22.2020.05.14.03.21.56
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 May 2020 03:21:56 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Roger Quadros <rogerq@ti.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     robh+dt@kernel.org, vigneshr@ti.com, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] usb: dwc3: keystone: Turn on USB3 PHY before controller
-In-Reply-To: <baaaf89c-4baf-4218-e22e-53cd1a64ec02@ti.com>
-References: <20200513130709.10239-1-rogerq@ti.com> <20200513130709.10239-4-rogerq@ti.com> <1589420265.5899.0.camel@mhfsdcap03> <baaaf89c-4baf-4218-e22e-53cd1a64ec02@ti.com>
-Date:   Thu, 14 May 2020 13:21:52 +0300
-Message-ID: <87tv0i4y0v.fsf@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xdmT6ANXa6NhFjFuIFGimW7zROVm3IZ6tXffgmcMrRw=;
+        b=qHZ9L/tyfneXaFWC+pCeMCY92uk3bOSenw8fQN4Rik1YQHDSV2ZjnvnPKZu6RMn2g1
+         YUDwxBP8DHUiG+JfawxKQA1ApKehCVnr191OJXD46RUWg6ga3IIVzeo32cKvTinHxWu8
+         N4OMLXT5GIFs0K3Inl80dhthpQBwov0ke91a/YggaKeGSgAZP2hbZQHiDbfq1bv01zuq
+         Cuc4Z76NY6peg3fsndPgfrA7UmyU1NuXByjrzlZACFrK6nM1egNeuW6+Vs2OqrofCE4X
+         jvTQ5QVH9hzVv+rXv5Uqy9CgRdjn4FsITuLZUnCV4wK2DHTx+rMi2p3cI9eLb/L+5H16
+         COoQ==
+X-Gm-Message-State: AOAM532HrstG7TGleI7PWZMwjWF/8KE+nrBnxXJVClYYLOF6CEZ3TcnU
+        zPXNCyV86s7IFOX5xoo99WbL8nOgOMn0g1lcorWSoB14xILbgafd8bREj4fQMfqMA7C+lRFA1UQ
+        t0vaTmpnhBDyDf8hlwZi4H3eNn9TR/oZxtqLHlnFq
+X-Received: by 2002:a17:906:cd08:: with SMTP id oz8mr951006ejb.90.1589451736312;
+        Thu, 14 May 2020 03:22:16 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxLm16DHWkAOyXk9ppPSD0F3lVHAw8cm/ZP5ATce5P9UjOR7zkbX73wgtYMc/2xXQCeE71RiQJSDs0cLAvzLaM=
+X-Received: by 2002:a17:906:cd08:: with SMTP id oz8mr950983ejb.90.1589451736069;
+ Thu, 14 May 2020 03:22:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+References: <CAE4VaGCf0P2ht+7nbGFHV8Dd=e4oDEUPNdRUUBokRWgKRxofAA@mail.gmail.com>
+ <20200507155422.GD3758@techsingularity.net> <CAE4VaGCDTeE16nNmSS8fGzCBvHsO=qkJAW6yDiORAxgsPi-Ziw@mail.gmail.com>
+ <20200508092212.GE3758@techsingularity.net> <CAE4VaGC_v6On-YvqdTwAWu3Mq4ofiV0pLov-QpV+QHr_SJr+Rw@mail.gmail.com>
+ <CAE4VaGDQWPePtmtCZP=ROYW1KPxtPhGDrxqy2QbirHGJdwk4=w@mail.gmail.com>
+ <20200513153023.GF3758@techsingularity.net> <CAE4VaGBq5+ucS4p+0AzFsNP7YDsg7dLZ73dzuhBerHiM4EYP_Q@mail.gmail.com>
+ <20200514095055.GG3758@techsingularity.net> <CAE4VaGCGUFOAZ+YHDnmeJ95o4W0j04Yb7EWnf8a43caUQs_WuQ@mail.gmail.com>
+ <20200514100814.GH3758@techsingularity.net>
+In-Reply-To: <20200514100814.GH3758@techsingularity.net>
+From:   Jirka Hladky <jhladky@redhat.com>
+Date:   Thu, 14 May 2020 12:22:05 +0200
+Message-ID: <CAE4VaGBwFvduqOyn8pQnN3U4ozuB=4DVx6i1vheAg-2PegvE9Q@mail.gmail.com>
+Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
+ balancer v6
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Phil Auld <pauld@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Douglas Shakshober <dshaks@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Joe Mario <jmario@redhat.com>, Bill Gray <bgray@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Thanks!
 
-Roger Quadros <rogerq@ti.com> writes:
+Do you have a link? I cannot find it on github
+(https://github.com/gormanm/mmtests, searched for
+config-network-netperf-cstate-small-cross-socket)
 
-> On 14/05/2020 04:37, Chunfeng Yun wrote:
->> On Wed, 2020-05-13 at 16:07 +0300, Roger Quadros wrote:
->>> The Local Power Sleep Controller (LPSC) dependency on AM65
->>> requires SERDES0 to be powered on before USB.
->>>
->>> We need to power up SERDES0 power domain and hold it on
->>> throughout the reset, init, power on sequence.
->>>
->>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>> ---
->>>   drivers/usb/dwc3/dwc3-keystone.c | 47 +++++++++++++++++++++++++++++++-
->>>   1 file changed, 46 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/usb/dwc3/dwc3-keystone.c b/drivers/usb/dwc3/dwc3-k=
-eystone.c
->>> index 1e14a6f4884b..46d46f3507fc 100644
->>> --- a/drivers/usb/dwc3/dwc3-keystone.c
->>> +++ b/drivers/usb/dwc3/dwc3-keystone.c
->>> @@ -14,6 +14,7 @@
->>>   #include <linux/dma-mapping.h>
->>>   #include <linux/io.h>
->>>   #include <linux/of_platform.h>
->>> +#include <linux/phy/phy.h>
->>>   #include <linux/pm_runtime.h>
->>>=20=20=20
->>>   /* USBSS register offsets */
->>> @@ -34,6 +35,7 @@
->>>   struct dwc3_keystone {
->>>   	struct device			*dev;
->>>   	void __iomem			*usbss;
->>> +	struct phy			*usb3_phy;
->>>   };
->>>=20=20=20
->>>   static inline u32 kdwc3_readl(void __iomem *base, u32 offset)
->>> @@ -95,8 +97,44 @@ static int kdwc3_probe(struct platform_device *pdev)
->>>   	if (IS_ERR(kdwc->usbss))
->>>   		return PTR_ERR(kdwc->usbss);
->>>=20=20=20
->>> -	pm_runtime_enable(kdwc->dev);
->>> +	/* PSC dependency on AM65 needs SERDES0 to be powered before USB0 */
->>> +	kdwc->usb3_phy =3D devm_phy_get(dev, "usb3-phy");
->> Use devm_phy_optional_get() instead?
+
+On Thu, May 14, 2020 at 12:08 PM Mel Gorman <mgorman@techsingularity.net> wrote:
 >
-> Indeed, it seems better suited.
+> On Thu, May 14, 2020 at 11:58:36AM +0200, Jirka Hladky wrote:
+> > Thank you, Mel!
+> >
+> > We are using netperf as well, but AFAIK it's running on two different
+> > hosts. I will check with colleagues, if they can
+> > add network-netperf-unbound run on the localhost.
+> >
+> > Is this the right config?
+> > https://github.com/gormanm/mmtests/blob/345f82bee77cbf09ba57f470a1cfc1ae413c97df/bin/generate-generic-configs
+> > sed -e 's/NETPERF_BUFFER_SIZES=.*/NETPERF_BUFFER_SIZES=64/'
+> > config-network-netperf-unbound > config-network-netperf-unbound-small
+> >
+>
+> That's one I was using at the moment to have a quick test after
+> the reconciliation series was completed. It has since changed to
+> config-network-netperf-cstate-small-cross-socket to limit cstates, bind
+> the client and server to two local CPUs and using one buffer size. It
+> was necessary to get an ftrace function graph of the wakeup path that
+> was readable and not too noisy due to migrations, cpuidle exit costs etc.
+>
+> --
+> Mel Gorman
+> SUSE Labs
+>
 
-patches 1 and 2 are in testing/next
 
-=2D-=20
-balbi
+-- 
+-Jirka
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl69G8AACgkQzL64meEa
-mQa11Q/+LJkpCuNcO49WcpIjbeMQZDjgBgMtNIDOq7wYX2aIP/ZFb3GhrdLLwe/H
-3ZpoOTl5/KcJuF5BjMBt/7t+VdwP0Naw2Z8542e/OKzr/xVANOXmWN9ERujcVZy+
-l50KeoG3eycU5UAoyJN2lAAQV05TNotjTrSl15eClSUbo+FPUYbAyqdu3SZyNrGh
-O8mswueuV3BqznAbMh5dje+Rixdqr0gPYLj2RHnZYSHtWfNFyy5CT2fVikA45RZj
-5dL43DHtbR+Z4MyivdvFtHClS4EvySngRTGhLvtYORLWfP7M8LiBIa1WZ4S0d6iV
-A7lTlwlw3bE4/5uiGYqtM+SS5gDPu3wlyMhofhqKJlJAvV+DvTkaNLb7DI7lmDqU
-CXK8dGcLBtv8D7XyXBHY1FdZ86sXvz4NYrNcoJlldakk+CY7iLrV0c2SYG65Dm0x
-vLBCy2nWFq+tQ0tUYTU8rMGURDkASreb95XvyTh4+Ow6xY3/9MWFoAR16MSBx5r9
-Lz6xXWWVKrQeNTPl6INJuuN9XBXVOwYRNfYhrpbAnB3/bR7WADCY+UNmUGK1RmRK
-AU5zkyqPaamXy5+B6z6gL7KdOx0h5FEMm0J4advv32EFlBRTEi3KQm/lHGsxEnBt
-r7DSou4RpmjBMnx/bDRVPY5l5g31mjEbYRX4wR+EuXbO3jgHv6s=
-=QLsY
------END PGP SIGNATURE-----
---=-=-=--
