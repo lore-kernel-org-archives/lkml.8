@@ -2,246 +2,179 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCD3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 05:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5120EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 05:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91D6B2073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 05:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AFA22073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 05:39:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ol61+9Lb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgENFi6 (ORCPT
+        id S1726133AbgENFjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 14 May 2020 01:39:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37162 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726122AbgENFi6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 14 May 2020 01:38:58 -0400
-Received: from mga03.intel.com ([134.134.136.65]:62468 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725794AbgENFix (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 01:38:53 -0400
-IronPort-SDR: IW9Qi4IUFYkmhNOdpkmgf4Rl686owWbKVHyKPRpeSBssmpOS+UcF1qA8aMnQ7dAOFKOMGe0rIE
- ecrqp9+Rrd0Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 22:38:53 -0700
-IronPort-SDR: XWvgmLmzzM5w0vEwuLbdOrjYifEog/5IPN1eLytFZKtoF/P1gkfyOh3SlUKR8Z+XffTu06OCr/
- mOmAOvGvU6qA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,390,1583222400"; 
-   d="scan'208";a="287289083"
-Received: from kbl-ppc.sh.intel.com ([10.239.159.118])
-  by fmsmga004.fm.intel.com with ESMTP; 13 May 2020 22:38:51 -0700
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v5 5/5] perf stat: Report summary for interval mode
-Date:   Thu, 14 May 2020 13:36:38 +0800
-Message-Id: <20200514053638.3736-6-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200514053638.3736-1-yao.jin@linux.intel.com>
-References: <20200514053638.3736-1-yao.jin@linux.intel.com>
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB13AC061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 22:38:56 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id 188so1487536lfa.10
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 22:38:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cYvOOmKt6CqklOdp6kTHUSl02OGvdRFZjOL384iDoRM=;
+        b=ol61+9LbEU7e8ijqyRqzUAIXynlhyJzhn/SkOgfM4ArdMEfcX7r4ihczbl64mYkMKF
+         vvh85KomqcXA9IeSCihweH7ET/JVCQwEY2fPyCuvakqDemSWoX3wBLhD0EMnZ8xRGr+7
+         RXX/B0DalcH82UeNskfR9FshI39wMZMtVqGfkrvKQGhyJM04gaQpePcqNSiW7lSlTmQ+
+         xrg5vjYXadAv7TA5RBVn449jPcgXVdwXAMkIwPnSfd6SFcb6jmDZP1I4C9BmWIqsa2Wb
+         zqhgD07r2ni5fkODZE/yaWepJs7I2r0YleKbY+vbTaPYzHmzD8Po2oc2rApl0woJZSi+
+         HCfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cYvOOmKt6CqklOdp6kTHUSl02OGvdRFZjOL384iDoRM=;
+        b=RTTC8YHSt7yHs01rgIRad3hnqFesqNMVS4gelO4ek/HjhwVyyjQ0bt/dAw6bZ5jMK9
+         MODJ105Vrw5UcqeZ7ONFgVFAtmCwV7AF9UIf+YvSWyajGrjdVH8mwaRi5ktxrAEnvxOs
+         0Q+FuuaHSMIaqd33uRmV1z7lzbvLjlAo+vqgV+cZYWw8pUIFkQ11i55wqhEVp8Hc1K6r
+         r+dBIRxtUbCXWAQgtiOkNyD50sKwdAbePOG5lPkJkwvBBE7MzthD5wWTWKUvWSkMLnVq
+         T4ouTOkuZUoky/EGCVS8flZChcX/rUk2KBMNONHt/fJL38Zfc8iP7rmqvWk6o3klvyrV
+         2ieg==
+X-Gm-Message-State: AOAM532YvNlgejTSlEI+5R8+NKZWRC+/JLJ+5/8eEFsQUmvSYGjvAt0j
+        O6+pHz3P7r5e3vT6tX0jYxGhJaNgE0N39V7xmf1kOA==
+X-Google-Smtp-Source: ABdhPJzQ0Ihn6yDiCu4RIEGUEPXSdGPbZtzgqm4dhKI9p8ZWqfzBmh/Z92mHho/82s4WB423bi6ux6wY0KnLrACsnaY=
+X-Received: by 2002:ac2:4945:: with SMTP id o5mr2000757lfi.21.1589434735336;
+ Wed, 13 May 2020 22:38:55 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200513003430.651232-1-vlad.babchuk@gmail.com>
+ <20200513003625.651340-1-vlad.babchuk@gmail.com> <CAHUa44E968nR1toCGn0_k6ABw_By7Z8EqB2rGSgiTmseo8oL-Q@mail.gmail.com>
+ <CAFA6WYNOAwSaaaCCf0qoQ=gGBEsCkbdrWUzabkn3XnM7hndsow@mail.gmail.com> <CAOcqxo3vbv40QtK_R2m2ROyk8zXk9fJRszA6zG+f5_rse9qBDw@mail.gmail.com>
+In-Reply-To: <CAOcqxo3vbv40QtK_R2m2ROyk8zXk9fJRszA6zG+f5_rse9qBDw@mail.gmail.com>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Thu, 14 May 2020 11:08:43 +0530
+Message-ID: <CAFA6WYOzzBx4CjyQQCyHgkPbOdqPMOAw54G9MK6DwhfrCHxLzQ@mail.gmail.com>
+Subject: Re: [PATCH] optee: don't fail on unsuccessful device enumeration
+To:     Volodymyr Babchuk <vlad.babchuk@gmail.com>
+Cc:     Jens Wiklander <jens.wiklander@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Jerome Forissier <jerome@forissier.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently perf-stat supports to print counts at regular interval (-I),
-but it's not very easy for user to get the overall statistics.
+Hi Volodymyr,
 
-The patch uses 'evsel->prev_raw_counts' to get counts for summary.
-Copy the counts to 'evsel->counts' after printing the interval results.
-Next, we just follow the non-interval processing.
+On Thu, 14 May 2020 at 06:48, Volodymyr Babchuk <vlad.babchuk@gmail.com> wrote:
+>
+> Hi Sumit,
+>
+> On Wed, 13 May 2020 at 11:24, Sumit Garg <sumit.garg@linaro.org> wrote:
+> >
+> > Hi Volodymyr,
+> >
+> > On Wed, 13 May 2020 at 13:30, Jens Wiklander <jens.wiklander@linaro.org> wrote:
+> > >
+> > > Hi Volodymyr,
+> > >
+> > > On Wed, May 13, 2020 at 2:36 AM Volodymyr Babchuk
+> > > <vlad.babchuk@gmail.com> wrote:
+> > > >
+> > > > optee_enumerate_devices() can fail for multiple of reasons. For
+> > > > example, I encountered issue when Xen OP-TEE mediator NACKed
+> > > > PTA_CMD_GET_DEVICES call.
+> >
+> > Could you share a detailed description of the issue which you are
+> > facing? optee_enumerate_devices() is a simple invocation of pseudo TA
+> > and cases where OP-TEE doesn't provide corresponding pseudo TA are
+> > handled very well.
+>
+> Yes, I did some research and looks like issue is broader, than I
+> expected.  It is my fault, that I wasn't paying attention to the tee
+> client support in the kernel.  Basically, it is incompatible with the
+> virtualization feature. You see, the main issue with virtual machines
+> is the second stage MMU. Intermediate physical address, that appear to
+> be contiguous for the kernel may be not contiguous in the real
+> physical memory due to 2nd stage MMU mappings. This is the reason I
+> introduced OPTEE_MSG_ATTR_NONCONTIG in the kernel driver.
+>
+> But, looks like kernel-side optee client does not use this feature. It
+> tries to provide SHM buffer as a simple contiguous span of memory. Xen
+> blocks calls with OPTEE_MSG_ATTR_TYPE_TMEM_*   but without
+> OPTEE_MSG_ATTR_NONCONTIG , because it can't translate IPAs to PAs for
+> such buffers. This is why call to  PTA_CMD_GET_DEVICES fails.
+>
+> Valid fix would be to use OPTEE_MSG_ATTR_NONCONTIG whenever possible.
+>
 
-Let's see some examples,
+Thanks for the detailed analysis. It looks like you are missing the
+following fix patch in your tree which basically fixed broken
+tee_shm_alloc() in case dynamic shared memory is enabled (IIRC
+virtualization only supports dynamic shared memory).
 
- root@kbl-ppc:~# perf stat -e cycles -I1000 --interval-count 2
- #           time             counts unit events
-      1.000412064          2,281,114      cycles
-      2.001383658          2,547,880      cycles
+commit a249dd200d03791cab23e47571f3e13d9c72af6c
+Author: Sumit Garg <sumit.garg@linaro.org>
+Date:   Fri Nov 8 16:57:14 2019 +0530
 
-  Performance counter stats for 'system wide':
+    tee: optee: Fix dynamic shm pool allocations
 
-          4,828,994      cycles
+    In case of dynamic shared memory pool, kernel memory allocated using
+    dmabuf_mgr pool needs to be registered with OP-TEE prior to its usage
+    during optee_open_session() or optee_invoke_func().
 
-        2.002860349 seconds time elapsed
+    So fix dmabuf_mgr pool allocations via an additional call to
+    optee_shm_register().
 
- root@kbl-ppc:~# perf stat -e cycles,instructions -I1000 --interval-count 2
- #           time             counts unit events
-      1.000389902          1,536,093      cycles
-      1.000389902            420,226      instructions              #    0.27  insn per cycle
-      2.001433453          2,213,952      cycles
-      2.001433453            735,465      instructions              #    0.33  insn per cycle
+    Also, allow kernel pages to be registered as shared memory with OP-TEE.
 
-  Performance counter stats for 'system wide':
+    Fixes: 9733b072a12a ("optee: allow to work without static shared memory")
+    Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+    Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
 
-          3,750,045      cycles
-          1,155,691      instructions              #    0.31  insn per cycle
+After this fix, your issue should be resolved as it uses
+OPTEE_MSG_ATTR_NONCONTIG attribute for kernel memory allocated via
+tee_shm_alloc().
 
-        2.003023361 seconds time elapsed
+> >
+> > > > This should not result in driver
+> > > > initialization error because this is an optional feature.
+> >
+> > I wouldn't call it an optional feature as there might be real kernel
+> > drivers dependent on this enumeration. Also, it is a simple example to
+> > self test OP-TEE functionality too. So I am not sure how much
+> > functional OP-TEE would be if this basic TA invocation fails.
+>
+> Well, it fixed case when Xen is involved. I think, this is valid
+> combination, when platform have the newest OP-TEE, but slightly older
+> kernel. So, imagine that OP-TEE provides PTA_CMD_GET_DEVICES, but
+> kernel can't use because it uses plain TMEM arguments,which are not
+> supported in virtualized environment.
+>
+> If there are kernel drivers, that depend on this PTA, they would not
+> work in any case. But at least userspace clients still be able to use
+> OP-TEE. This is why I call this feature "optional".
 
- root@kbl-ppc:~# perf stat -M CPI,IPC -I1000 --interval-count 2
- #           time             counts unit events
-      1.000435121            905,303      inst_retired.any          #      2.9 CPI
-      1.000435121          2,663,333      cycles
-      1.000435121            914,702      inst_retired.any          #      0.3 IPC
-      1.000435121          2,676,559      cpu_clk_unhalted.thread
-      2.001615941          1,951,092      inst_retired.any          #      1.8 CPI
-      2.001615941          3,551,357      cycles
-      2.001615941          1,950,837      inst_retired.any          #      0.5 IPC
-      2.001615941          3,551,044      cpu_clk_unhalted.thread
+As you can see above, tee_shm_alloc() being broken in your case was
+detected via this simple pseudo TA invocation. So IMO, it would be
+better to keep the existing behaviour as it provides a kind of basic
+OP-TEE driver runtime self test too. Also, I think it would be a
+better user experience to have every OP-TEE interface working rather
+than a partially broken interface.
 
-  Performance counter stats for 'system wide':
+-Sumit
 
-          2,856,395      inst_retired.any          #      2.2 CPI
-          6,214,690      cycles
-          2,865,539      inst_retired.any          #      0.5 IPC
-          6,227,603      cpu_clk_unhalted.thread
-
-        2.003403078 seconds time elapsed
-
- v5:
- ---
- Call perf_evlist__save_aggr_prev_raw_counts to save aggr value
- to first member of prev_raw_counts for AGGR_GLOBAL. Then next,
- perf_stat_process_counter can create aggr values from per cpu
- values.
-
- v4:
- ---
- Move affinity setup and read_counter_cpu to a new function
- read_affinity_counters. It's only called when stat_config.summary
- is not set.
-
- v3:
- ---
- Use evsel->prev_raw_counts for summary counts
-
- v2:
- ---
- Rebase to perf/core branch
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/builtin-stat.c | 31 ++++++++++++++++++++++++++++---
- tools/perf/util/stat.c    |  2 +-
- tools/perf/util/stat.h    |  1 +
- 3 files changed, 30 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index f3b3a59ac7d2..24deed746325 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -314,14 +314,14 @@ static int read_counter_cpu(struct evsel *counter, struct timespec *rs, int cpu)
- 	return 0;
- }
- 
--static void read_counters(struct timespec *rs)
-+static int read_affinity_counters(struct timespec *rs)
- {
- 	struct evsel *counter;
- 	struct affinity affinity;
- 	int i, ncpus, cpu;
- 
- 	if (affinity__setup(&affinity) < 0)
--		return;
-+		return -1;
- 
- 	ncpus = perf_cpu_map__nr(evsel_list->core.all_cpus);
- 	if (!target__has_cpu(&target) || target__has_per_thread(&target))
-@@ -341,6 +341,15 @@ static void read_counters(struct timespec *rs)
- 		}
- 	}
- 	affinity__cleanup(&affinity);
-+	return 0;
-+}
-+
-+static void read_counters(struct timespec *rs)
-+{
-+	struct evsel *counter;
-+
-+	if (!stat_config.summary && (read_affinity_counters(rs) < 0))
-+		return;
- 
- 	evlist__for_each_entry(evsel_list, counter) {
- 		if (counter->err)
-@@ -394,6 +403,7 @@ static void runtime_stat_reset(struct perf_stat_config *config)
- static void process_interval(void)
- {
- 	struct timespec ts, rs;
-+	struct stats walltime_nsecs_stats_bak;
- 
- 	clock_gettime(CLOCK_MONOTONIC, &ts);
- 	diff_timespec(&rs, &ts, &ref_time);
-@@ -407,9 +417,11 @@ static void process_interval(void)
- 			pr_err("failed to write stat round event\n");
- 	}
- 
-+	walltime_nsecs_stats_bak = walltime_nsecs_stats;
- 	init_stats(&walltime_nsecs_stats);
- 	update_stats(&walltime_nsecs_stats, stat_config.interval * 1000000);
- 	print_counters(&rs, 0, NULL);
-+	walltime_nsecs_stats = walltime_nsecs_stats_bak;
- }
- 
- static void enable_counters(void)
-@@ -765,6 +777,19 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 
- 	update_stats(&walltime_nsecs_stats, t1 - t0);
- 
-+	if (interval) {
-+		stat_config.interval = 0;
-+		stat_config.summary = true;
-+
-+		if (stat_config.aggr_mode == AGGR_GLOBAL)
-+			perf_evlist__save_aggr_prev_raw_counts(evsel_list);
-+
-+		perf_evlist__copy_prev_raw_counts(evsel_list);
-+		perf_evlist__reset_prev_raw_counts(evsel_list);
-+		runtime_stat_reset(&stat_config);
-+		perf_stat__reset_shadow_per_stat(&rt_stat);
-+	}
-+
- 	/*
- 	 * Closing a group leader splits the group, and as we only disable
- 	 * group leaders, results in remaining events becoming enabled. To
-@@ -2159,7 +2184,7 @@ int cmd_stat(int argc, const char **argv)
- 		}
- 	}
- 
--	if (!forever && status != -1 && !interval)
-+	if (!forever && status != -1 && (!interval || stat_config.summary))
- 		print_counters(NULL, argc, argv);
- 
- 	if (STAT_RECORD) {
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index fbabdd5b9b62..481543c422a7 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -398,7 +398,7 @@ int perf_stat_process_counter(struct perf_stat_config *config,
- 	 * interval mode, otherwise overall avg running
- 	 * averages will be shown for each interval.
- 	 */
--	if (config->interval) {
-+	if (config->interval || config->summary) {
- 		for (i = 0; i < 3; i++)
- 			init_stats(&ps->res_stats[i]);
- 	}
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index 18ead55756cc..a5604a20bdca 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -110,6 +110,7 @@ struct perf_stat_config {
- 	bool			 all_kernel;
- 	bool			 all_user;
- 	bool			 percore_show_thread;
-+	bool			 summary;
- 	FILE			*output;
- 	unsigned int		 interval;
- 	unsigned int		 timeout;
--- 
-2.17.1
-
+>
+> --
+> WBR Volodymyr Babchuk aka lorc [+380976646013]
+> mailto: vlad.babchuk@gmail.com
