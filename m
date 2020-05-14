@@ -2,191 +2,166 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA961C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD88BC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6D8320671
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:01:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zQHEDIRO"
+	by mail.kernel.org (Postfix) with ESMTP id 9419B206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726227AbgENRBq (ORCPT
+        id S1726112AbgENREr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 13:01:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59368 "EHLO
+        Thu, 14 May 2020 13:04:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbgENRBp (ORCPT
+        with ESMTP id S1725975AbgENREq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 13:01:45 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49387C05BD43
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 10:01:45 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id 23so1562525pfy.8
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 10:01:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZuhsntYUMFZxRnUyqDlk5wRYaifNpo5JONkK2uBeMw8=;
-        b=zQHEDIROdy/6E8RJIS9Cu0voHf1MlMmv2SrYL7sos3L8Znnxs9ubcS/WOm9A0BPSZ0
-         n5av6qoxz4Gchfn1zFTLJqGT2eUZIh+KVILNxsPUJln6zB2yJQGtO2+3D2Exf6iFnETi
-         WR10howEZogi8LvD43gCSmWiXXCXKJuq0EdoJGbDHzR+XNDWR8NwZkL8QF07d2aYc9KA
-         P67louPdgP2Lt18Uxos2gKt/osQIwj8uafwgZr5CUo344bdxWThBaRUh+FVgJH5N1ibT
-         wTjyWN0/Gngn69v0jAn+mehd0GlVg4ESIFcOreXly739xl/C3hZ6ku0bXHOnXN9z7DpJ
-         du7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZuhsntYUMFZxRnUyqDlk5wRYaifNpo5JONkK2uBeMw8=;
-        b=Vh4qWUchiPoglAxdP6F74LmAUKSjWtDTyA/L8Ji/oxS70VkI0zTQUfJYtK2RCLp+98
-         Ls7ci6rChL8XO8LIWXfUQqdAKdMl4ACMMCG58a6GxSHiJlg1qvYo1UHapPCvxECOTztu
-         AHPexf9idR7Ut5oyGh5seboWRr+PQsbRlP6kRiCsUlc/vO+qTJbhP2Quwi+ZFxnghoxQ
-         XtAoKHd80zYhgyZEP0qCxkMAT/8bHGVZq6TIT7VtOMfCJJs9dvnahJZcjoZ+Sz9QLPMq
-         G8yx0a9EjDd4AoR+ZUwx6P8HG8R8DJTakRSjP4ftDXdkFjN4ui4E6oZoglAbhILgT1TS
-         Sm2w==
-X-Gm-Message-State: AOAM532QPTf2x5H/sAdtzaB4Y/mC0ahjAhqVtIZNGI9DhSs3rjY/C29w
-        //FKJ4y1gUUmjHz2ZjI1eNs9Ug==
-X-Google-Smtp-Source: ABdhPJyb1dz1psTKBYjcweFb9ar7rAG/ofRi7zGaZban+NrEY9U1EqPUAktGm/RqFNrqdHjdJ9qhUw==
-X-Received: by 2002:a62:dd8a:: with SMTP id w132mr5333762pff.309.1589475704560;
-        Thu, 14 May 2020 10:01:44 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id p1sm19197796pjf.15.2020.05.14.10.01.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 10:01:43 -0700 (PDT)
-Date:   Thu, 14 May 2020 10:00:13 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] hwspinlock: qcom: Allow mmio usage in addition to
- syscon
-Message-ID: <20200514170013.GX2165@builder.lan>
-References: <20200513005441.1102586-1-bjorn.andersson@linaro.org>
- <20200513005441.1102586-4-bjorn.andersson@linaro.org>
- <20200514141523.GW14092@vkoul-mobl>
+        Thu, 14 May 2020 13:04:46 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91524C061A0E;
+        Thu, 14 May 2020 10:04:46 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 4A6B92A2FA5
+Received: by jupiter.universe (Postfix, from userid 1000)
+        id 475BF4800F8; Thu, 14 May 2020 19:04:42 +0200 (CEST)
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Sebastian Reichel <sre@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        Robert Beckett <bob.beckett@collabora.com>,
+        stable@vger.kernel.org, Ian Ray <ian.ray@ge.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCHv1] ARM: dts/imx6q-bx50v3: Set display interface clock parents
+Date:   Thu, 14 May 2020 19:02:37 +0200
+Message-Id: <20200514170236.24814-1-sebastian.reichel@collabora.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200514141523.GW14092@vkoul-mobl>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 14 May 07:15 PDT 2020, Vinod Koul wrote:
+From: Robert Beckett <bob.beckett@collabora.com>
 
-> On 12-05-20, 17:54, Bjorn Andersson wrote:
-> > In all modern Qualcomm platforms the mutex region of the TCSR is forked
-> > off into its own block, all with a offset of 0 and stride of 4096. So
-> > add support for directly memory mapping this register space, to avoid
-> > the need to represent this block using a syscon.
-> > 
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> >  drivers/hwspinlock/qcom_hwspinlock.c | 72 +++++++++++++++++++++-------
-> >  1 file changed, 56 insertions(+), 16 deletions(-)
-> > 
-> > diff --git a/drivers/hwspinlock/qcom_hwspinlock.c b/drivers/hwspinlock/qcom_hwspinlock.c
-> > index f0da544b14d2..d8d4d729816c 100644
-> > --- a/drivers/hwspinlock/qcom_hwspinlock.c
-> > +++ b/drivers/hwspinlock/qcom_hwspinlock.c
-> > @@ -70,41 +70,81 @@ static const struct of_device_id qcom_hwspinlock_of_match[] = {
-> >  };
-> >  MODULE_DEVICE_TABLE(of, qcom_hwspinlock_of_match);
-> >  
-> > -static int qcom_hwspinlock_probe(struct platform_device *pdev)
-> > +static struct regmap *qcom_hwspinlock_probe_syscon(struct platform_device *pdev,
-> > +						   u32 *base, u32 *stride)
-> >  {
-> > -	struct hwspinlock_device *bank;
-> >  	struct device_node *syscon;
-> > -	struct reg_field field;
-> >  	struct regmap *regmap;
-> > -	size_t array_size;
-> > -	u32 stride;
-> > -	u32 base;
-> >  	int ret;
-> > -	int i;
-> >  
-> >  	syscon = of_parse_phandle(pdev->dev.of_node, "syscon", 0);
-> > -	if (!syscon) {
-> > -		dev_err(&pdev->dev, "no syscon property\n");
-> 
-> any reason to drop the log?
-> 
+Avoid LDB and IPU DI clocks both using the same parent. LDB requires
+pasthrough clock to avoid breaking timing while IPU DI does not.
 
-Given that we first check for the syscon and then fall back to trying to
-use the reg, keeping this line would cause this log line to always show
-up on targets putting this under /soc.
+Force IPU DI clocks to use IMX6QDL_CLK_PLL2_PFD0_352M as parent
+and LDB to use IMX6QDL_CLK_PLL5_VIDEO_DIV.
 
-So I think it's better to drop the line and then require the presence of
-either syscon or reg using the DT schema.
+This fixes an issue where attempting atomic modeset while using
+HDMI and display port at the same time causes LDB clock programming
+to destroy the programming of HDMI that was done during the same
+modeset.
 
-> > -		return -ENODEV;
-> > -	}
-> > +	if (!syscon)
-> > +		return ERR_PTR(-ENODEV);
-> >  
-> >  	regmap = syscon_node_to_regmap(syscon);
-> >  	of_node_put(syscon);
-> >  	if (IS_ERR(regmap))
-> > -		return PTR_ERR(regmap);
-> > +		return regmap;
-> >  
-> > -	ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 1, &base);
-> > +	ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 1, base);
-> >  	if (ret < 0) {
-> >  		dev_err(&pdev->dev, "no offset in syscon\n");
-> > -		return -EINVAL;
-> > +		return ERR_PTR(-EINVAL);
-> >  	}
-> >  
-> > -	ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 2, &stride);
-> > +	ret = of_property_read_u32_index(pdev->dev.of_node, "syscon", 2, stride);
-> >  	if (ret < 0) {
-> >  		dev_err(&pdev->dev, "no stride syscon\n");
-> > -		return -EINVAL;
-> > +		return ERR_PTR(-EINVAL);
-> >  	}
-> >  
-> > +	return regmap;
-> > +}
-> > +
-> > +static const struct regmap_config tcsr_mutex_config = {
-> > +	.reg_bits		= 32,
-> > +	.reg_stride		= 4,
-> > +	.val_bits		= 32,
-> > +	.max_register		= 0x40000,
-> > +	.fast_io		= true,
-> > +};
-> > +
-> > +static struct regmap *qcom_hwspinlock_probe_mmio(struct platform_device *pdev,
-> > +						 u32 *offset, u32 *stride)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct resource *res;
-> > +	void __iomem *base;
-> > +
-> > +	/* All modern platform has offset 0 and stride of 4k */
-> > +	*offset = 0;
-> > +	*stride = 0x1000;
-> 
-> Wouldn't it make sense to read this from DT rather than code in kernel?
-> 
+Cc: stable@vger.kernel.org
+Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
+[Use IMX6QDL_CLK_PLL2_PFD0_352M instead of IMX6QDL_CLK_PLL2_PFD2_396M
+ originally chosen by Robert Beckett to avoid affecting eMMC clock
+ by DRM atomic updates]
+Signed-off-by: Ian Ray <ian.ray@ge.com>
+[Squash Robert's and Ian's commits for bisectability, update patch
+ description and add stable tag]
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+---
+ arch/arm/boot/dts/imx6q-b450v3.dts  |  7 -------
+ arch/arm/boot/dts/imx6q-b650v3.dts  |  7 -------
+ arch/arm/boot/dts/imx6q-b850v3.dts  | 11 -----------
+ arch/arm/boot/dts/imx6q-bx50v3.dtsi | 15 +++++++++++++++
+ 4 files changed, 15 insertions(+), 25 deletions(-)
 
-I did consider this as well as platform specific compatibles, but
-realized that pretty much all 64-bit targets have these values. So given
-that we still can represent this using the syscon approach I don't think
-we need to add yet another mechanism to specify these.
+diff --git a/arch/arm/boot/dts/imx6q-b450v3.dts b/arch/arm/boot/dts/imx6q-b450v3.dts
+index 95b8f2d71821..fb0980190aa0 100644
+--- a/arch/arm/boot/dts/imx6q-b450v3.dts
++++ b/arch/arm/boot/dts/imx6q-b450v3.dts
+@@ -65,13 +65,6 @@ panel_in_lvds0: endpoint {
+ 	};
+ };
+ 
+-&clks {
+-	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
+-			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
+-	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
+-				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
+-};
+-
+ &ldb {
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/imx6q-b650v3.dts b/arch/arm/boot/dts/imx6q-b650v3.dts
+index 611cb7ae7e55..8f762d9c5ae9 100644
+--- a/arch/arm/boot/dts/imx6q-b650v3.dts
++++ b/arch/arm/boot/dts/imx6q-b650v3.dts
+@@ -65,13 +65,6 @@ panel_in_lvds0: endpoint {
+ 	};
+ };
+ 
+-&clks {
+-	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
+-			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
+-	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
+-				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
+-};
+-
+ &ldb {
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/imx6q-b850v3.dts b/arch/arm/boot/dts/imx6q-b850v3.dts
+index e4cb118f88c6..1ea64ecf4291 100644
+--- a/arch/arm/boot/dts/imx6q-b850v3.dts
++++ b/arch/arm/boot/dts/imx6q-b850v3.dts
+@@ -53,17 +53,6 @@ chosen {
+ 	};
+ };
+ 
+-&clks {
+-	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
+-			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>,
+-			  <&clks IMX6QDL_CLK_IPU1_DI0_PRE_SEL>,
+-			  <&clks IMX6QDL_CLK_IPU2_DI0_PRE_SEL>;
+-	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
+-				 <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
+-				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>,
+-				 <&clks IMX6QDL_CLK_PLL2_PFD2_396M>;
+-};
+-
+ &ldb {
+ 	fsl,dual-channel;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+index fa27dcdf06f1..1938b04199c4 100644
+--- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
++++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+@@ -377,3 +377,18 @@ pci_root: root@0,0 {
+ 		#interrupt-cells = <1>;
+ 	};
+ };
++
++&clks {
++	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
++			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>,
++			  <&clks IMX6QDL_CLK_IPU1_DI0_PRE_SEL>,
++			  <&clks IMX6QDL_CLK_IPU1_DI1_PRE_SEL>,
++			  <&clks IMX6QDL_CLK_IPU2_DI0_PRE_SEL>,
++			  <&clks IMX6QDL_CLK_IPU2_DI1_PRE_SEL>;
++	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
++				 <&clks IMX6QDL_CLK_PLL5_VIDEO_DIV>,
++				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>,
++				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>,
++				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>,
++				 <&clks IMX6QDL_CLK_PLL2_PFD0_352M>;
++};
+-- 
+2.26.2
 
-Thanks,
-Bjorn
