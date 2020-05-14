@@ -2,126 +2,133 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 749CCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 03:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7E0C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 03:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C8F5206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 03:50:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="wgk2rSnu"
+	by mail.kernel.org (Postfix) with ESMTP id F3F0A20575
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 03:56:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbgENDuS (ORCPT
+        id S1726027AbgEND4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 23:50:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48628 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgENDuR (ORCPT
+        Wed, 13 May 2020 23:56:12 -0400
+Received: from m17616.mail.qiye.163.com ([59.111.176.16]:50153 "EHLO
+        m17616.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725931AbgEND4L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 23:50:17 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 274CDC061A0E
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 20:50:16 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id i15so1978362wrx.10
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 20:50:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XMTc98UIvyXvpMeARxQhAw8UFvYP9zjRrMHTZktrDvE=;
-        b=wgk2rSnuCu0b50yyTPjkGCFFlEiDvjPrYOiDulK1EirNq9VluSpFZUDuQeDaldkJJk
-         HSUQagu4QMLAURFsWgchUoFXBpIuwem+UgnroBxJHloT4izDBfjUE4gf/gP2GdsPbxbY
-         +pxAl1i2QF5M8EtwjBt59q0Fik7kx1jxkt/8sRTelmVY6CmtLpT5jfySJ9iJwyeB0iHh
-         lqT1versBBzbyiGx0jRalDYFGHV419ly9WOSW/fEhEH+cLGdsQPrnk9gc/9jqb+DiI2u
-         u3kr5+6JFji8rZPfnTnkQsPpVz+ueum+D5aIjP6/4YctO3iBn+DIeoY38AsrYo/AEG1+
-         lEcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XMTc98UIvyXvpMeARxQhAw8UFvYP9zjRrMHTZktrDvE=;
-        b=iynldUA+fGODnyf+XPyV+aeePuIUiN1UJZ1KhVrAls7rNhLWjaW/KenBLbn0YCSmaQ
-         k8mJf7gO1EQwXfq2leMItKuLzxRF3eZKoGjl3RLoiYLtrDpYQchB2MpVTCwjqJ2qMraK
-         jt994qdG0Ifso1+3zHl4PM9rosxn5zLbncvwOtFKf1gM3oZ3yTGMQspSy8NPob88W74p
-         2Bp221Ws7tUqpa6Qle0S/5/ZJYjvvFXc+eYz2OKM4K6VLtWFOUoNv3t3Xwij72sYOWpV
-         EWWsLszEtfBwMLHlo3Bn7vK6EAGCZdaaMzaRH8UWQ3FdeOFLKjQ1liugnfCyLlAVHSJT
-         yUog==
-X-Gm-Message-State: AOAM532iR+4eWcGru4z3KHxsUHccdP/9rRtGy/tTj435jHf3vNIA1lY+
-        fW8J2wxGt6rwcJDUqk0u7HJgBYu4kDYmtXKEz4J0vg==
-X-Google-Smtp-Source: ABdhPJxGuvDaiuvG6Ya4B15DrM/wXwUhKcfyYOzGzij3FdeitgnfmiRUayKqkaOmX8vReE8neotGEf7u+un7HzcBoCM=
-X-Received: by 2002:adf:a389:: with SMTP id l9mr2958751wrb.18.1589428214741;
- Wed, 13 May 2020 20:50:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200509120707.188595-2-arnd@arndb.de> <87v9l24qz6.fsf@kamboji.qca.qualcomm.com>
- <87r1vq4qev.fsf@kamboji.qca.qualcomm.com> <87d078tjl0.fsf_-_@kamboji.qca.qualcomm.com>
- <20200513154847.GA158356@rani.riverdale.lan> <CAK8P3a3KpM91+jv6+7KSKFRpwLqf38Lz1wbGhkFFyfDb9oahgA@mail.gmail.com>
- <20200513214128.GB6733@zn.tnic> <CAK8P3a3XPCyNM7s3vbn8JYK6swA3ZpPtTWB+uhmAE3YEX-nmig@mail.gmail.com>
- <20200513222038.GC6733@zn.tnic> <CAHk-=wgybuOF+Jp2XYWqM7Xn1CW6szWQw_FgVoFh5jx_4YoCVw@mail.gmail.com>
- <20200513233616.GD6733@zn.tnic> <CAHk-=wjZXFe08MiNRevJFGDvX0O6kcQTiK8GFBS7hwUAzB+LQw@mail.gmail.com>
- <CAKwvOd=o_wuiVpw5KVzLEt25W-A9Ah9fzftPZLG+yutqJmWbOg@mail.gmail.com> <CAHk-=wg6G+p1RRjR6UZBEuSCDs9=iWBsxrDPTEwqh+y5RayqKA@mail.gmail.com>
-In-Reply-To: <CAHk-=wg6G+p1RRjR6UZBEuSCDs9=iWBsxrDPTEwqh+y5RayqKA@mail.gmail.com>
-From:   Andy Lutomirski <luto@amacapital.net>
-Date:   Wed, 13 May 2020 20:50:03 -0700
-Message-ID: <CALCETrUYA60fWu+=MviKx0NmW+_ppsOcv-ShUXdbyM4EjyfzHQ@mail.gmail.com>
-Subject: Re: gcc-10: kernel stack is corrupted and fails to boot
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Borislav Petkov <bp@suse.de>, Arnd Bergmann <arnd@arndb.de>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 13 May 2020 23:56:11 -0400
+Received: from ubuntu.localdomain (unknown [58.251.74.227])
+        by m17616.mail.qiye.163.com (Hmail) with ESMTPA id BE95D107CAA;
+        Thu, 14 May 2020 11:56:06 +0800 (CST)
+From:   Wang Wenhu <wenhu.wang@vivo.com>
+To:     Alex Elder <elder@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     kernel@vivo.com, Wang Wenhu <wenhu.wang@vivo.com>
+Subject: [PATCH] drivers: ipa: use devm_kzalloc for simplicity
+Date:   Wed, 13 May 2020 20:55:20 -0700
+Message-Id: <20200514035520.2162-1-wenhu.wang@vivo.com>
+X-Mailer: git-send-email 2.17.1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZT1VNS0pCQkJMTkJNTE9LTFlXWShZQU
+        hPN1dZLVlBSVdZCQ4XHghZQVk1NCk2OjckKS43PlkG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MRw6Cww6EzgrQjAJSjc*Hx8T
+        FDYKCklVSlVKTkNCT0lDTk1CSkpNVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
+        Q1VJTkpVTE9VSUlMWVdZCAFZQUhITks3Bg++
+X-HM-Tid: 0a7211533bcc9374kuwsbe95d107caa
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On May 13, 2020, at 7:20 PM, Linus Torvalds <torvalds@linux-foundation.or=
-g> wrote:
->
-> =EF=BB=BFOn Wed, May 13, 2020 at 5:51 PM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
->>
->> Are you sure LTO treats empty asm statements differently than full
->> memory barriers in regards to preventing tail calls?
->
-> It had better.
->
-> At link-time, there is nothing left of an empty asm statement. So by
-> the time the linker runs, it only sees
->
->    call xyz
->    ret
->
-> in the object code. At that point, it's somewhat reasonable for any
-> link-time optimizer (or an optimizing assembler, for that matter) to
-> say "I'll just turn that sequence into a simple 'jmp xyz' instead".
->
+Make a substitution of kzalloc with devm_kzalloc to simplify the
+ipa_probe() process.
 
-What, what?
+Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+Cc: Alex Elder <elder@kernel.org>
+---
+ drivers/net/ipa/ipa_clock.c | 7 ++-----
+ drivers/net/ipa/ipa_main.c  | 7 ++-----
+ 2 files changed, 4 insertions(+), 10 deletions(-)
 
-LTO isn=E2=80=99t a linker taking regular .o files full of regular machine
-code and optimizing it. That=E2=80=99s nuts.  LTO takes an intermediate
-representation and optimizes *that*. This will contain actual
-indications that something is inline asm.  If LTO starts rewriting
-inline asm, then I bet all kinds of things will go wrong and this is
-the least of our worries.  Also, trying to do the kinds of stuff LTO
-does by looking at just machine code isn't going to work.
+diff --git a/drivers/net/ipa/ipa_clock.c b/drivers/net/ipa/ipa_clock.c
+index 374491ea11cf..ddbd687fe64b 100644
+--- a/drivers/net/ipa/ipa_clock.c
++++ b/drivers/net/ipa/ipa_clock.c
+@@ -276,7 +276,7 @@ struct ipa_clock *ipa_clock_init(struct device *dev)
+ 		goto err_clk_put;
+ 	}
+ 
+-	clock = kzalloc(sizeof(*clock), GFP_KERNEL);
++	clock = devm_kzalloc(dev, sizeof(*clock), GFP_KERNEL);
+ 	if (!clock) {
+ 		ret = -ENOMEM;
+ 		goto err_clk_put;
+@@ -285,15 +285,13 @@ struct ipa_clock *ipa_clock_init(struct device *dev)
+ 
+ 	ret = ipa_interconnect_init(clock, dev);
+ 	if (ret)
+-		goto err_kfree;
++		goto err_clk_put;
+ 
+ 	mutex_init(&clock->mutex);
+ 	atomic_set(&clock->count, 0);
+ 
+ 	return clock;
+ 
+-err_kfree:
+-	kfree(clock);
+ err_clk_put:
+ 	clk_put(clk);
+ 
+@@ -308,6 +306,5 @@ void ipa_clock_exit(struct ipa_clock *clock)
+ 	WARN_ON(atomic_read(&clock->count) != 0);
+ 	mutex_destroy(&clock->mutex);
+ 	ipa_interconnect_exit(clock);
+-	kfree(clock);
+ 	clk_put(clk);
+ }
+diff --git a/drivers/net/ipa/ipa_main.c b/drivers/net/ipa/ipa_main.c
+index 28998dcce3d2..b7b348b863f7 100644
+--- a/drivers/net/ipa/ipa_main.c
++++ b/drivers/net/ipa/ipa_main.c
+@@ -760,7 +760,7 @@ static int ipa_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* Allocate and initialize the IPA structure */
+-	ipa = kzalloc(sizeof(*ipa), GFP_KERNEL);
++	ipa = devm_kzalloc(dev, sizeof(*ipa), GFP_KERNEL);
+ 	if (!ipa) {
+ 		ret = -ENOMEM;
+ 		goto err_wakeup_source_unregister;
+@@ -776,7 +776,7 @@ static int ipa_probe(struct platform_device *pdev)
+ 
+ 	ret = ipa_reg_init(ipa);
+ 	if (ret)
+-		goto err_kfree_ipa;
++		goto err_wakeup_source_unregister;
+ 
+ 	ret = ipa_mem_init(ipa, data->mem_count, data->mem_data);
+ 	if (ret)
+@@ -848,8 +848,6 @@ static int ipa_probe(struct platform_device *pdev)
+ 	ipa_mem_exit(ipa);
+ err_reg_exit:
+ 	ipa_reg_exit(ipa);
+-err_kfree_ipa:
+-	kfree(ipa);
+ err_wakeup_source_unregister:
+ 	wakeup_source_unregister(wakeup_source);
+ err_clock_exit:
+@@ -885,7 +883,6 @@ static int ipa_remove(struct platform_device *pdev)
+ 	gsi_exit(&ipa->gsi);
+ 	ipa_mem_exit(ipa);
+ 	ipa_reg_exit(ipa);
+-	kfree(ipa);
+ 	wakeup_source_unregister(wakeup_source);
+ 	ipa_clock_exit(clock);
+ 	rproc_put(rproc);
+-- 
+2.17.1
 
-So the difference between:
-
-asm volatile ("nop");
-
-and
-
-asm volatile ("");
-
-will be, literally, the absence of the nop.  (And alignment changes, etc.)
