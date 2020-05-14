@@ -2,153 +2,88 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 776C5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA15C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F8F0206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:16:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589440596;
-	bh=x6XY+w06HhJq6OnCryR2C8r+d8634pKZTzl7OEtJ84I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0HgDXvATHiKZr+J3pHwaYAZwaXQ0SraVJqK2yfpC4ZU1tQOf7DTYtKh7iiHhF8aVh
-	 FFiAn6OezZd2M3HOGjsPyo3dwfFrwVnq/GR9XgouInwd9tL1BTWRxiwc17Ec8wNiUt
-	 MHxPulSFlUyYv4PUMt+CRqRYavH6YXs0Qtg59syQ=
+	by mail.kernel.org (Postfix) with ESMTP id A0E0F205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:26:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cVwKQqYo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726035AbgENHQf (ORCPT
+        id S1725978AbgENH0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 03:16:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45362 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725909AbgENHQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 03:16:34 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 14 May 2020 03:26:00 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:35002 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725909AbgENH0A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 03:26:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589441159;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=z22Wqt719gzXO2RzDZasKjbiB6qd6XqJTkPElK0QqYg=;
+        b=cVwKQqYotTK08vNqIq5z1XLxOfLEouO37AjXo1msbGan0AbAeOD3NkKDapmBkfV3vM1gNU
+        POwz97QmCNs3kKXdfg2avYbLe9EtjntRpF0Hgcv7Teu7vlXLrHgI/ltH2ExjEKgrpG8R6K
+        +j+BzVOB5QiRrB4E9X+n+iI68fhUxkU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-199-1SZ4swkBOJa4iBMd9c1R7A-1; Thu, 14 May 2020 03:25:57 -0400
+X-MC-Unique: 1SZ4swkBOJa4iBMd9c1R7A-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80546206B6;
-        Thu, 14 May 2020 07:16:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589440594;
-        bh=x6XY+w06HhJq6OnCryR2C8r+d8634pKZTzl7OEtJ84I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fsVHPsSugeuQaqh74KM3vTh5YlMixAmucxuZV15thPoJJMrucj9GTrX+4SfuldnhB
-         9l1LHA1eD+XBDjopMaSSsjMf2YIDC55sDJofhKonyQwyNCXX2L9+6xLEwnVOYrkmJu
-         HPyLWUmcgMwI4jj/qfiwZg1D0JFjzHw6/eb6nNR8=
-Date:   Thu, 14 May 2020 09:16:31 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Emil Velikov <emil.l.velikov@gmail.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>, x86@kernel.org,
-        linux-input@vger.kernel.org,
-        linux-fbdev <linux-fbdev@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        platform-driver-x86@vger.kernel.org,
-        Tony Prisk <linux@prisktech.co.nz>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Gong <richard.gong@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        LAKML <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 00/10] drivers, provide a way to add sysfs groups
- easily
-Message-ID: <20200514071631.GA1566388@kroah.com>
-References: <20190731124349.4474-1-gregkh@linuxfoundation.org>
- <20190731131045.GB147138@dtor-ws>
- <20190802104633.GA14823@kroah.com>
- <CACvgo52+Uqx4GJFwadJoFzzt5EMc69HcW-+K9uxv9t25TtSDBg@mail.gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9E630A0BD8;
+        Thu, 14 May 2020 07:25:56 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-133.pek2.redhat.com [10.72.12.133])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BEFE52BFF0;
+        Thu, 14 May 2020 07:25:51 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     mst@redhat.com, jasowang@redhat.com,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] vdpa_sim: do not reset IOTLB during device reset
+Date:   Thu, 14 May 2020 15:25:49 +0800
+Message-Id: <20200514072549.29694-1-jasowang@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACvgo52+Uqx4GJFwadJoFzzt5EMc69HcW-+K9uxv9t25TtSDBg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 11:18:15PM +0100, Emil Velikov wrote:
-> Hi Greg,
-> 
-> On Fri, 2 Aug 2019 at 11:46, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> 
-> >
-> > I have now done this with patch 1/10.  Here's the pull info if any
-> > subsystem maintainer wants to suck this into their tree to provide the
-> > ability for drivers to add/remove attribute groups easily.
-> >
-> > This is part of my driver-core tree now, and will go to Linus for
-> > 5.4-rc1, along with a few platform drivers that have been acked by their
-> > various subsystem maintainers that convert them to use this new
-> > functionality.
-> >
-> > If anyone has any questions about this, please let me know.
-> >
-> > thanks,
-> >
-> > greg k-h
-> >
-> > -------------------
-> >
-> > The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
-> >
-> >   Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
-> >
-> > are available in the Git repository at:
-> >
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git tags/dev_groups_all_drivers
-> >
-> > for you to fetch changes up to 23b6904442d08b7dbed7622ed33b236d41a3aa8b:
-> >
-> >   driver core: add dev_groups to all drivers (2019-08-02 12:37:53 +0200)
-> >
-> > ----------------------------------------------------------------
-> > dev_groups added to struct driver
-> >
-> > Persistent tag for others to pull this branch from
-> >
-> > This is the first patch in a longer series that adds the ability for the
-> > driver core to create and remove a list of attribute groups
-> > automatically when the device is bound/unbound from a specific driver.
-> >
-> > See:
-> >         https://lore.kernel.org/r/20190731124349.4474-2-gregkh@linuxfoundation.org
-> > for details on this patch, and examples of how to use it in other
-> > drivers.
-> >
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >
-> > ----------------------------------------------------------------
-> > Dmitry Torokhov (1):
-> >       driver core: add dev_groups to all drivers
-> >
-> >  drivers/base/dd.c      | 14 ++++++++++++++
-> >  include/linux/device.h |  3 +++
-> >  2 files changed, 17 insertions(+)
-> > _______________________________________________
-> 
-> Was planning to re-spin DRM a series which uses .dev_groups, although
-> I cannot see the core patch.
-> Did the it get reverted or simply fell though the cracks?
+We reset IOTLB during device reset this breaks the assumption that the
+mapping needs to be controlled via vDPA DMA ops explicitly in a
+incremental way. So the networking will be broken after e.g a guest
+reset.
 
-Nope, it's in there:
-	23b6904442d0 ("driver core: add dev_groups to all drivers")
-which showed up in the 5.4 kernel release.
+Fix this by not resetting the IOTLB during device reset.
 
-Lots of other subsystems have already been converted to use this, do you
-not see it in your tree?
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+---
+ drivers/vdpa/vdpa_sim/vdpa_sim.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-thanks,
+diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
+index 7957d2d41fc4..cc5525743a25 100644
+--- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
++++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
+@@ -119,8 +119,6 @@ static void vdpasim_reset(struct vdpasim *vdpasim)
+ 	for (i = 0; i < VDPASIM_VQ_NUM; i++)
+ 		vdpasim_vq_reset(&vdpasim->vqs[i]);
+ 
+-	vhost_iotlb_reset(vdpasim->iommu);
+-
+ 	vdpasim->features = 0;
+ 	vdpasim->status = 0;
+ 	++vdpasim->generation;
+-- 
+2.20.1
 
-greg k-h
