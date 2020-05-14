@@ -2,107 +2,144 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE2AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7117C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B375E20734
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A373420734
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:09:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gLiR8Cd3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbgENVJv (ORCPT
+        id S1728270AbgENVJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 17:09:51 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:44741 "EHLO
-        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728073AbgENVJo (ORCPT
+        Thu, 14 May 2020 17:09:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728035AbgENVJm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 17:09:44 -0400
-Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
- EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Thu, 14 May 2020 14:09:39 -0700
-Received: from localhost (unknown [10.200.192.41])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 3BC9EB23CF;
-        Thu, 14 May 2020 17:09:43 -0400 (EDT)
-Date:   Thu, 14 May 2020 14:09:42 -0700
-From:   Matt Helsley <mhelsley@vmware.com>
-To:     Julien Thierry <jthierry@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC][PATCH 3/5] objtool: Add support for relocations without
- addends
-Message-ID: <20200514210942.GK9040@rlwimi.vmware.com>
-Mail-Followup-To: Matt Helsley <mhelsley@vmware.com>,
-        Julien Thierry <jthierry@redhat.com>, linux-kernel@vger.kernel.org,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <cover.1588888003.git.mhelsley@vmware.com>
- <17ee3f6f2a246008aaae70f92df24ae92fa0e21e.1588888003.git.mhelsley@vmware.com>
- <f79a3872-b9ad-a966-71fb-4451e0901281@redhat.com>
- <20200513162648.GJ9040@rlwimi.vmware.com>
- <61c35ce2-47b3-1f62-d4ec-da9984289c5d@redhat.com>
+        Thu, 14 May 2020 17:09:42 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3D62C061A0E;
+        Thu, 14 May 2020 14:09:41 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id g4so5126309ljl.2;
+        Thu, 14 May 2020 14:09:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=KheAdp9M1dfbG4eEm8dhaFoYt33Uw8W6nHGfCYpBQ1U=;
+        b=gLiR8Cd33hBDhgcqV4vb/slAGpWjDL9p3Rlr92Yqo+TGnWCFldIjfFWkxpfV3P7Uz+
+         O1tJy7aA4cLjD+pLXjqLzcIiWL55PtMEubj46qyQlgxfEmTfanFYlsAQXieCN6D62rtg
+         p19Q3gDAAaLIwyC8wHvfxQg0ud80YMVij3hzBMpp8ZjeNXWiTNHro+EYnIXpvFeVdF9H
+         e8Lhq15JBDEU/8X5voT+kE+4CjzGmiZ5iFsoYd1uiQnf6+z4OsKXozVqNoYawaLqFgoO
+         9lCosisXPV8c0ENv1qRoXOBQRAQ2JCzvUlwzys3KvJ2ehFAyDkQ+tPV5s2BmG9jzSYHx
+         J+Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=KheAdp9M1dfbG4eEm8dhaFoYt33Uw8W6nHGfCYpBQ1U=;
+        b=g9RvpPvTI9fSgkTaLacYvG7v0Jp5g4DbwAoho22tFNJh6YRjAtv4ZP/fLU4kABRTUi
+         v5yMixMCtM+Wdsyx0Ul5ra/2AQ3MgptOzeYEoaiQ0InZf/ASzbQ+SQ5f5xI4kpWMr477
+         nzVRKdPP3DJJsebxZrvL+JfYDdCX43i3HhZ1Uwj4iDfDhGMnm8SHmoATDj3+iMCXFGXP
+         qzHL1zFo6kWHbTkVsEtrWJmoWv0rYKUjq4CvInW/+MH+SM2qjgWKUzK5NNfZIdvefEYo
+         HqfIunn2BjqV+znf2qqiDBksJ5WCftoiJ4FFWum2EJA1RDGPUJerv/r/lha25zGSGlNf
+         rBqQ==
+X-Gm-Message-State: AOAM530kDWalTbn4cwSioN0kPNXQYTBkfdCiFfRpYyLG7ARK/KLMRK5r
+        nbWLMFf140SBk5QNW0Id36s=
+X-Google-Smtp-Source: ABdhPJw8fhDNpHCQC51ItCJfok/1aWb8KwJn6He0iS2C3z3YUOfwjJ+4h/7EGYjUKQFCuiWcV40bAA==
+X-Received: by 2002:a2e:9bc3:: with SMTP id w3mr130955ljj.170.1589490580297;
+        Thu, 14 May 2020 14:09:40 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.gmail.com with ESMTPSA id g3sm45215ljk.27.2020.05.14.14.09.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 14:09:39 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 3/4] media: staging: tegra-vde: Turn ON power domain on shutdown
+Date:   Fri, 15 May 2020 00:08:46 +0300
+Message-Id: <20200514210847.9269-4-digetx@gmail.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200514210847.9269-1-digetx@gmail.com>
+References: <20200514210847.9269-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <61c35ce2-47b3-1f62-d4ec-da9984289c5d@redhat.com>
-Received-SPF: None (EX13-EDG-OU-002.vmware.com: mhelsley@vmware.com does not
- designate permitted sender hosts)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 05:55:21PM +0100, Julien Thierry wrote:
-> 
-> 
-> On 5/13/20 5:26 PM, Matt Helsley wrote:
-> > On Tue, May 12, 2020 at 06:04:50PM +0100, Julien Thierry wrote:
-> > > Hi Matt,
-> > > 
-> > > On 5/11/20 6:35 PM, Matt Helsley wrote:
-> > > > Currently objtool only collects information about relocations with
-> > > > addends. In recordmcount, which we are about to merge into objtool,
-> > > > some supported architectures do not use rela relocations. Since
-> > > > object files use one or the other the list can be reused.
-> > > > 
-> > > > Signed-off-by: Matt Helsley <mhelsley@vmware.com>
-> > > > ---
-> > > >    tools/objtool/elf.c | 55 ++++++++++++++++++++++++++++++++++++---------
-> > > >    tools/objtool/elf.h |  5 ++++-
+On some devices bootloader isn't ready to a clamped VDE power, and thus,
+machine hangs on a warm reboot (CPU reset). The VDE power partition is
+turned ON by default on a cold boot, hence VDE driver should keep power
+partition enabled on system's reboot too. This fixes hang on a warm reboot
+on a Tegra20 Acer A500 device, which is handy if Embedded Controller
+driver is unavailable, i.e. cold reboot can't be performed.
 
-<snip>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/staging/media/tegra-vde/vde.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-> > I'm thinking it's simpler with fewer variables. I don't think
-> > moving the cast into the switch cases makes it any clearer. It's also
-> > odd because we'll keep re-initializing relas or rels to rel_buf each loop
-> > iteration. Finally, this approach has the advantage that, when reviewing
-> > the patch, it's clear that the original code handling RELA relocation entries
-> > isn't changing -- you can see it's just shifting into one of the cases
-> > (below).
-> > 
-> > Do you still prefer introducing rel_buf?
-> 
-> On a completely personal taste, yes. I do not like having two local
-> variables in the same scope pointing at the same data but with an implied
-> "you should only use one or the other under the right circumstances".
-> 
-> But my main concern was having an allocation of a certain size and then
-> modifying the size (might have been valid if sizeof(GElf_Rel) <=
-> sizeof(GElf_Rela), but I must admit I did not bother to check). Since you've
-> addressed that issue, the rest is just a matter of taste so better left to
-> the maintainers.
+diff --git a/drivers/staging/media/tegra-vde/vde.c b/drivers/staging/media/tegra-vde/vde.c
+index 85cbbc8f70d3..b64e35b86fb4 100644
+--- a/drivers/staging/media/tegra-vde/vde.c
++++ b/drivers/staging/media/tegra-vde/vde.c
+@@ -1085,9 +1085,17 @@ static int tegra_vde_remove(struct platform_device *pdev)
+ 	struct tegra_vde *vde = platform_get_drvdata(pdev);
+ 	struct device *dev = &pdev->dev;
+ 
++	pm_runtime_get_sync(dev);
+ 	pm_runtime_dont_use_autosuspend(dev);
+ 	pm_runtime_disable(dev);
+ 
++	/*
++	 * Balance RPM state, the VDE power domain is left ON and hardware
++	 * is clock-gated. It's safe to reboot machine now.
++	 */
++	pm_runtime_put_noidle(dev);
++	clk_disable_unprepare(vde->clk);
++
+ 	misc_deregister(&vde->miscdev);
+ 
+ 	tegra_vde_dmabuf_cache_unmap_all(vde);
+@@ -1099,6 +1107,16 @@ static int tegra_vde_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static void tegra_vde_shutdown(struct platform_device *pdev)
++{
++	/*
++	 * On some devices bootloader isn't ready to a power-gated VDE on
++	 * a warm-reboot, machine will hang in that case.
++	 */
++	if (pm_runtime_status_suspended(&pdev->dev))
++		tegra_vde_runtime_resume(&pdev->dev);
++}
++
+ static __maybe_unused int tegra_vde_pm_suspend(struct device *dev)
+ {
+ 	struct tegra_vde *vde = dev_get_drvdata(dev);
+@@ -1144,6 +1162,7 @@ MODULE_DEVICE_TABLE(of, tegra_vde_of_match);
+ static struct platform_driver tegra_vde_driver = {
+ 	.probe		= tegra_vde_probe,
+ 	.remove		= tegra_vde_remove,
++	.shutdown	= tegra_vde_shutdown,
+ 	.driver		= {
+ 		.name		= "tegra-vde",
+ 		.of_match_table = tegra_vde_of_match,
+-- 
+2.26.0
 
-OK. As a sort of tie-breaker I tried to quickly find an analogous piece of code
-in objtool which I could use as a guide on maintainer preference. The
-only place I see void pointers being used is as keys for comparison
-functions. So my guess and preference is to not use a void pointer here.
-
-Cheers,
-	-Matt Helsley
