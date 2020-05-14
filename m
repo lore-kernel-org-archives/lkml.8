@@ -2,135 +2,102 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92976C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E1FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72E55207D5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8932E20727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:58:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482675;
-	bh=fLRqHztcxyEx7HDxfc0qOg9WRUBF2cY3KB0eQlQ7Bs4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yiHTUfpeU+6w4Aie7t21Z/q8zVGpmTrBZfos090JozTVIn7hWr6grsnjQVw8Z777k
-	 9vuKqBJgpfaGHKYrDygJsln+xB26vwk3cWGOWRMhxQNIwsS5Rd0SSZZPKXC/+xYPbT
-	 9tqqOKtvjYDjE+o23K3h0qM2kWN1elc6i9jo0OkU=
+	s=default; t=1589482680;
+	bh=3IGUW1A0A34qCS0X3AaDv5KGQANC6L9T+wI8LUKt1b4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=g2a0BQEYHmkJbbxYggfgcU2qfGfpVkaYuFlm1iAR4rEuAPazNisMTPTO/R/cew+3L
+	 aSHjENq1sE+3J9v9Eqx2IRGZc2ekqVv7ssnvPQf/qgJ+aRT6iqLefkrAuEzN22LQPO
+	 ywHAs1DPFm+1KyPLhPFKYsYeEkH+5BDkwDixKo1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729724AbgENS4c (ORCPT
+        id S1729259AbgENS57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:56:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57108 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729616AbgENS4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:56:14 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 474F92074A;
-        Thu, 14 May 2020 18:56:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482573;
-        bh=fLRqHztcxyEx7HDxfc0qOg9WRUBF2cY3KB0eQlQ7Bs4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RLF6QW3JcJhXC2W8rVw5DTsp49TLwNI9cGA69HKWXISX4GmeOfEnr2MM/ANgcf3f6
-         enJSjotaGaJSAyla4YchBh8EyLLVx6Go05ocfNucy0ioQXVOHD9u0qp2sGVlODVS/2
-         OEQTXnFyP8ZlfX74N9A5GkbrT60nMbHnQVX/KiYg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Scott Dial <scott@scottdial.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 18/27] net: macsec: preserve ingress frame ordering
-Date:   Thu, 14 May 2020 14:55:41 -0400
-Message-Id: <20200514185550.21462-18-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200514185550.21462-1-sashal@kernel.org>
-References: <20200514185550.21462-1-sashal@kernel.org>
+        Thu, 14 May 2020 14:57:59 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38766 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727829AbgENS5y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:57:54 -0400
+Received: by mail-oi1-f196.google.com with SMTP id j145so3655541oib.5;
+        Thu, 14 May 2020 11:57:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nxzudyoHUEYAH8KEsSe3KpgFYuo86VuqnywBjWoEET4=;
+        b=aG1HCfLQU3mcr8CzjrwuwjvTa4N+0ikeutyQUmoXU4rm3j/3sLXcC3YJJ7wZ58gARw
+         dGWt4fUJ7ukKHD9+jBtimUlesBuCcfGMGQFi1hiubBteYG4XxUOpnSz3wXDPePLAtT1z
+         gR367S30CraXQgfF32tdM0gcD+vf3q4TFgulB5iKbKiYzMKV/Pr7goPx34/Anp5Pi5+H
+         3mkk9Q0CmYapVXYoZoe8QSkcTUCuS/11qAA0HGGERv1iuQuFqRKd6JK4O6K9DDjsvmA/
+         ZQIiwa8sEYMjEbRvczq0temsCvzYr/c3HPOmjkVCQsqXMZgBcmEbdGd1CcPMq92hX7OY
+         A6yA==
+X-Gm-Message-State: AGi0PuYxjugMhcwIjneMYbjE0L527TStc5iwX/fNxQjJCS1yAorD/N2p
+        rq4I7xGqOJ+X4UG/GpnaKA==
+X-Google-Smtp-Source: APiQypKjfRyKde3xEfB2aCXkS3yVIEAxHJaGfzUhHRPMgjgw/bWE0/UhjN+F6YNCTUH/+3j853arkQ==
+X-Received: by 2002:aca:53cd:: with SMTP id h196mr32003545oib.104.1589482673516;
+        Thu, 14 May 2020 11:57:53 -0700 (PDT)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 60sm987092oth.38.2020.05.14.11.57.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 11:57:52 -0700 (PDT)
+Received: (nullmailer pid 29634 invoked by uid 1000);
+        Thu, 14 May 2020 18:57:51 -0000
+Date:   Thu, 14 May 2020 13:57:51 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mmc@vger.kernel.org, linux-serial@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Prabhakar <prabhakar.csengg@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 4/9] dt-bindings: serial: renesas,scif: Document
+ r8a7742 bindings
+Message-ID: <20200514185751.GA29577@bogus>
+References: <1588794695-27852-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588794695-27852-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1588794695-27852-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Dial <scott@scottdial.com>
+On Wed,  6 May 2020 20:51:30 +0100, Lad Prabhakar wrote:
+> RZ/G1H (R8A7742) SoC also has the R-Car gen2 compatible SCIF ports,
+> so document the SoC specific bindings.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v1->v2:
+> * No change
+> ---
+> 
+>  Documentation/devicetree/bindings/serial/renesas,scif.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-[ Upstream commit ab046a5d4be4c90a3952a0eae75617b49c0cb01b ]
-
-MACsec decryption always occurs in a softirq context. Since
-the FPU may not be usable in the softirq context, the call to
-decrypt may be scheduled on the cryptd work queue. The cryptd
-work queue does not provide ordering guarantees. Therefore,
-preserving order requires masking out ASYNC implementations
-of gcm(aes).
-
-For instance, an Intel CPU with AES-NI makes available the
-generic-gcm-aesni driver from the aesni_intel module to
-implement gcm(aes). However, this implementation requires
-the FPU, so it is not always available to use from a softirq
-context, and will fallback to the cryptd work queue, which
-does not preserve frame ordering. With this change, such a
-system would select gcm_base(ctr(aes-aesni),ghash-generic).
-While the aes-aesni implementation prefers to use the FPU, it
-will fallback to the aes-asm implementation if unavailable.
-
-By using a synchronous version of gcm(aes), the decryption
-will complete before returning from crypto_aead_decrypt().
-Therefore, the macsec_decrypt_done() callback will be called
-before returning from macsec_decrypt(). Thus, the order of
-calls to macsec_post_decrypt() for the frames is preserved.
-
-While it's presumable that the pure AES-NI version of gcm(aes)
-is more performant, the hybrid solution is capable of gigabit
-speeds on modest hardware. Regardless, preserving the order
-of frames is paramount for many network protocols (e.g.,
-triggering TCP retries). Within the MACsec driver itself, the
-replay protection is tripped by the out-of-order frames, and
-can cause frames to be dropped.
-
-This bug has been present in this code since it was added in
-v4.6, however it may not have been noticed since not all CPUs
-have FPU offload available. Additionally, the bug manifests
-as occasional out-of-order packets that are easily
-misattributed to other network phenomena.
-
-When this code was added in v4.6, the crypto/gcm.c code did
-not restrict selection of the ghash function based on the
-ASYNC flag. For instance, x86 CPUs with PCLMULQDQ would
-select the ghash-clmulni driver instead of ghash-generic,
-which submits to the cryptd work queue if the FPU is busy.
-However, this bug was was corrected in v4.8 by commit
-b30bdfa86431afbafe15284a3ad5ac19b49b88e3, and was backported
-all the way back to the v3.14 stable branch, so this patch
-should be applicable back to the v4.6 stable branch.
-
-Signed-off-by: Scott Dial <scott@scottdial.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/macsec.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
-index df2ee65a33e35..5defa29069ca3 100644
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -1315,7 +1315,8 @@ static struct crypto_aead *macsec_alloc_tfm(char *key, int key_len, int icv_len)
- 	struct crypto_aead *tfm;
- 	int ret;
- 
--	tfm = crypto_alloc_aead("gcm(aes)", 0, 0);
-+	/* Pick a sync gcm(aes) cipher to ensure order is preserved. */
-+	tfm = crypto_alloc_aead("gcm(aes)", 0, CRYPTO_ALG_ASYNC);
- 
- 	if (IS_ERR(tfm))
- 		return tfm;
--- 
-2.20.1
-
+Applied, thanks!
