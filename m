@@ -2,188 +2,199 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F11C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AADBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6512F205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9610205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:32:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T58w69kB"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bbv/fV3X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726101AbgENH1u (ORCPT
+        id S1726022AbgENHcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 03:27:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54154 "EHLO
+        Thu, 14 May 2020 03:32:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgENH1t (ORCPT
+        with ESMTP id S1725911AbgENHcC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 03:27:49 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEAD1C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 00:27:48 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id c21so1734791lfb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 00:27:48 -0700 (PDT)
+        Thu, 14 May 2020 03:32:02 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08770C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 00:32:02 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id a68so1571818otb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 00:32:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=OvIg8OTmvpD4AIra61gchuv+YQzJPkLcRjdOE9A6l2A=;
-        b=T58w69kBOxFktle1yYsy3hLN3gMn/osjm5YR8FTXl4uYp8PjKu2TZzOiHNgCx36vrE
-         Wl/ZIQZLvdR8y6+piwx3KEwGBHD8kyjMwzas/eYyJaxuJxY8/KGnPz4HlvtDAulI9I15
-         lGRt7VR2EK+bxqp2oZhR93/egU4OCxQtySGt6pV8RF67V5Vj3IcxPdw3Km1KhdoaRiaq
-         bSo22sNuywieNiZ1fpmYK7epfyyHEaUnQ1U7yB7K1aXP/AJXWde5jIFrUkDbeeALECIL
-         u0FuTV6q/ZfQm1Z7KARSGRX7zu3oek6QkvyBvFcfjjmEMIagj6XaGUbGVW2NX71/UJ7h
-         Omtg==
+        bh=nDd4Rya0WtESVLejzRMWQV2qXkAC8qyHcifrucwzAGY=;
+        b=bbv/fV3XZUXpGw+d7/urjYA1UazneWXU7wsbIaZBLiWvFLJsL5TubY/hp3rsi95mSA
+         o1zUEhF3Z9cFuurIZZUb7yiqrkPCUYyg+oXq+JsIyofXzC4r24TXk5QbO2KiEFLTcHsB
+         dlGdLPvdA+iW+zcdQeN9ASIMStsWRB2IQZPLA/5Fvu4rFokznL+ENSciOhyG8kgidkYv
+         i+v8z/26aFwFj7BMD7V65mMMLj1FKk/gFLaZjfwhbakCn8fvxA1/XLeR2s2mqrJ6MbQH
+         ecigU5D6eXJ6bZYFY8dNHPTvGrBq1pJWHUfx7BtcJgoACZ+Nr5pl229qNEWrnlJyltrP
+         Z2uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OvIg8OTmvpD4AIra61gchuv+YQzJPkLcRjdOE9A6l2A=;
-        b=Gxm0WSKTJWWx2w+zN4QR3SmQxl7ojLTsBmLm4BgcGIvQsOF4NI2wVcl6EIwsq3iqlA
-         Fj/QOYb7/AoF6oS4qlwZN61dGe8N3P9hcgZ5F7jE2WZqQeOXP0qRid1tUOsJKBV7D2ve
-         odPWPfvIBcRttr4FoJUjrS33b3sHPh20ZJLJ//tXBV4zCTX30jt8dWwb/orTz+G8fjRx
-         J1g9dxu9/VRt6VVJA/1iXXGJo2wk41NciQC3lN+B1JwCREG+834pqUQMIAx8KokmzKm4
-         LmSbOkKa8yoC8dFrSATdSnVq/3MS6bVCpABl1Q5Y+sCp+bDI35uMb/5/DAKGrRgwchyg
-         KxGg==
-X-Gm-Message-State: AOAM5304BtWZb7G40aZmaR69QBsSv6V+5k2wPBXD65ErTvT7xOQ6pkCI
-        wH371rYOT60w7vUM2lSgCGRx2xMVC8f+DzVFa7Bibg==
-X-Google-Smtp-Source: ABdhPJzL0WsvMihqen9758VYmk6yEgm/ZN9/XilvuCWzmgJOy/SB9sZscduKIMjRAKM98dv/ishZnbn+Lr4DfqPaa0A=
-X-Received: by 2002:a19:ccce:: with SMTP id c197mr2356496lfg.59.1589441267234;
- Thu, 14 May 2020 00:27:47 -0700 (PDT)
+        bh=nDd4Rya0WtESVLejzRMWQV2qXkAC8qyHcifrucwzAGY=;
+        b=btGTHF4oaxCFvr3A+Fb8R6qHwuOHjiPoSNI1nlaAEoTvA8b/KTnTG2nFp8PdLREuwM
+         npnro5xu9zRYcCOYCiIDUmhksvm2bMIFbE+f6WoOZLhOe62FdRIP6S8isW+TJewXinCM
+         2qJ9ww4Bm7KNABU5BAJMinPnP76cXuLAm0YvhLxHQ+Sggp0sRI/yakjfctdHPBZo8js/
+         Ti3gWY3ZRw0z1s0dKJuvO6UQCK0pJbOHO6bB+2QvVx7l0f8t8kQLvISCqSdg3VE8z793
+         qD098DJxcTPj7pSBhtI6Jtdvyr/SP0EoqYL1DCmK6awhXFvJVTGyxRbpGAomKCobo1m5
+         SBIA==
+X-Gm-Message-State: AOAM531Ore3pd/avX+6KEs9rRe9StoTKcmqol83R/CgY5402qIXOANfk
+        NtimcxycURCuqBY8GIhk/Kut/VwZkZVKKuHONJ0ZhA==
+X-Google-Smtp-Source: ABdhPJy49TXyLKS76Fgbb71HXjT+M69ADiP8S44hTcqo8BI5i85Oz2jHGYXuq38LuOu3VouKtOcFWYeoscbTATs3KBA=
+X-Received: by 2002:a9d:7608:: with SMTP id k8mr2640435otl.233.1589441520853;
+ Thu, 14 May 2020 00:32:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <1588758017-30426-1-git-send-email-sumit.garg@linaro.org>
- <1588758017-30426-3-git-send-email-sumit.garg@linaro.org> <ef2093f96eae7e9e6785f2c0ad00604d8adfd3be.camel@linux.intel.com>
-In-Reply-To: <ef2093f96eae7e9e6785f2c0ad00604d8adfd3be.camel@linux.intel.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Thu, 14 May 2020 12:57:35 +0530
-Message-ID: <CAFA6WYPr1iL-uJgSRu_61uv=2DhuEdDVdQLDuyPEOOK2jEgvyg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/4] KEYS: trusted: Introduce TEE based Trusted Keys
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        James Bottomley <jejb@linux.ibm.com>, dhowells@redhat.com,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Janne Karhunen <janne.karhunen@gmail.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Markus Wamser <Markus.Wamser@mixed-mode.de>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        op-tee@lists.trustedfirmware.org,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
-Content-Type: multipart/mixed; boundary="00000000000021218505a596a2dc"
+References: <CANpmjNNeSnrAgfkskE5Y0NNu3-DS6hk+SwjkBunrr8FRxwwT-Q@mail.gmail.com>
+ <20200513111057.GN2957@hirez.programming.kicks-ass.net> <CANpmjNMariz3-keqwUsLHVrpk2r7ThLSKtkhHxTDa3SEGeznhA@mail.gmail.com>
+ <20200513123243.GO2957@hirez.programming.kicks-ass.net> <20200513124021.GB20278@willie-the-truck>
+ <CANpmjNM5XW+ufJ6Mw2Tn7aShRCZaUPGcH=u=4Sk5kqLKyf3v5A@mail.gmail.com>
+ <20200513165008.GA24836@willie-the-truck> <CANpmjNN=n59ue06s0MfmRFvKX=WB2NgLgbP6kG_MYCGy2R6PHg@mail.gmail.com>
+ <20200513174747.GB24836@willie-the-truck> <CANpmjNNOpJk0tprXKB_deiNAv_UmmORf1-2uajLhnLWQQ1hvoA@mail.gmail.com>
+ <20200513212520.GC28594@willie-the-truck>
+In-Reply-To: <20200513212520.GC28594@willie-the-truck>
+From:   Marco Elver <elver@google.com>
+Date:   Thu, 14 May 2020 09:31:49 +0200
+Message-ID: <CANpmjNOAi2K6knC9OFUGjpMo-rvtLDzKMb==J=vTRkmaWctFaQ@mail.gmail.com>
+Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
+To:     Will Deacon <will@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---00000000000021218505a596a2dc
-Content-Type: text/plain; charset="UTF-8"
-
-On Thu, 14 May 2020 at 05:58, Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
+On Wed, 13 May 2020 at 23:25, Will Deacon <will@kernel.org> wrote:
 >
-> On Wed, 2020-05-06 at 15:10 +0530, Sumit Garg wrote:
-> > Add support for TEE based trusted keys where TEE provides the functionality
-> > to seal and unseal trusted keys using hardware unique key.
+> On Wed, May 13, 2020 at 08:54:03PM +0200, Marco Elver wrote:
+> > On Wed, 13 May 2020 at 19:47, Will Deacon <will@kernel.org> wrote:
+> > > On Wed, May 13, 2020 at 07:32:58PM +0200, Marco Elver wrote:
+> > > > - We do *not* want the call to __read_once_word_nocheck if we have
+> > > > __no_sanitize_or_inline. AFAIK that's the main problem -- this applies
+> > > > to both KASAN and KCSAN.
+> > >
+> > > Sorry, I should've been more explicit. The code above, with KASAN enabled,
+> > > compiles to:
+> > >
+> > > ffffffff810a2d50 <foo>:
+> > > ffffffff810a2d50:       48 8b 07                mov    (%rdi),%rax
+> > > ffffffff810a2d53:       c3                      retq
+> > >
+> > > but with KCSAN enabled, compiles to:
+> > >
+> > > ffffffff8109ecd0 <foo>:
+> > > ffffffff8109ecd0:       53                      push   %rbx
+> > > ffffffff8109ecd1:       48 89 fb                mov    %rdi,%rbx
+> > > ffffffff8109ecd4:       48 8b 7c 24 08          mov    0x8(%rsp),%rdi
+> > > ffffffff8109ecd9:       e8 52 9c 1a 00          callq  ffffffff81248930 <__tsan_func_entry>
+> > > ffffffff8109ecde:       48 89 df                mov    %rbx,%rdi
+> > > ffffffff8109ece1:       e8 1a 00 00 00          callq  ffffffff8109ed00 <__read_once_word_nocheck>
+> > > ffffffff8109ece6:       48 89 c3                mov    %rax,%rbx
+> > > ffffffff8109ece9:       e8 52 9c 1a 00          callq  ffffffff81248940 <__tsan_func_exit>
+> > > ffffffff8109ecee:       48 89 d8                mov    %rbx,%rax
+> > > ffffffff8109ecf1:       5b                      pop    %rbx
+> > > ffffffff8109ecf2:       c3                      retq
+> > >
+> > > Is that expected? There don't appear to be any more annotations to throw
+> > > at it.
 > >
-> > Refer to Documentation/tee.txt for detailed information about TEE.
+> > Right, so this is expected.
+>
+> Fair enough, I just found it weird since it's different to the usual
+> "disable instrumentation/trace" function annotations.
+>
+> > We can definitely make __tsan_func_entry/exit disappear with Clang, with
+> > GCC it's going to be a while if we want to fix it.
 > >
-> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > If we remove 'noinline' from __no_kcsan_or_inline, we no longer get
+> > the call to __read_once_word_nocheck above! But...
+> >
+> > For KCSAN we force 'noinline' because older compilers still inline and
+> > then instrument small functions even if we just have the no_sanitize
+> > attribute (without inline mentioned). The same is actually true for
+> > KASAN, so KASAN's READ_ONCE_NOCHECK might be broken in a few places,
+> > but nobody seems to have noticed [1]. KASAN's __no_kasan_or_inline
+> > should also have a 'noinline' I think. I just tested
+> > __no_kcsan_or_inline without 'noinline', and yes, GCC 9 still decided
+> > to inline a small function and then instrument the accesses.
+> >
+> > [1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=59600
+> >
+> > The good news is that Clang does the right thing when removing
+> > 'noinline' from __no_kcsan_or_inline:
+> > 1. doesn't inline into functions that are instrumented, and
+> > 2. your above example doesn't do the call to __read_once_word_nocheck.
+> >
+> > The obvious solution to this is: restrict which compiler we want to support?
 >
-> The implementation looks solid but how or who could possibly test this?
+> I would be in favour of that, but I defer to the x86 folks since this
+> affects them much more than it does me. On the arm64 side, we've got patches
+> queued for 5.8 that require GCC 10.0.1 or later, and that thing is only a
+> week old. I think it's reasonable to require a recent toolchain for optional
+> features like this that inherently rely on compiler support.
 >
-> I do posses (personally, not from employer) bunch of ARM boards but my
-> TZ knowledge is somewhat limited (e.g. how can I get something running
-> in TZ).
+> > > > From what I gather, we want to just compile the function as if the
+> > > > sanitizer was never enabled. One reason for why this doesn't quite
+> > > > work is because of the preprocessor.
+> > > >
+> > > > Note that the sanitizers won't complain about these accesses, which
+> > > > unfortunately is all these attributes ever were documented to do. So
+> > > > the attributes aren't completely useless. Why doesn't
+> > > > K[AC]SAN_SANITIZE := n work?
+> > >
+> > > I just don't get the point in having a function annotation if you then have to
+> > > pass flags at the per-object level. That also then necessitates either weird
+> > > refactoring and grouping of code into "noinstrument.c" type files, or blanket
+> > > disabling of instrumentation for things like arch/x86/
+> >
+> > If you want a solution now, here is one way to get us closer to where
+> > we want to be:
+> >
+> > 1. Peter's patch to add data_race around __READ_ONCE/__WRITE_ONCE.
+> > 2. Patch to make __tsan_func_entry/exit disappear with Clang.
+> > 3. Remove 'noinline' from __no_kcsan_or_inline.
+> > 4. Patch to warn users that KCSAN may have problems with GCC and
+> > should use Clang >= 7.
+> >
+> > But this is probably only half a solution.
 >
+> At this point, I think that if READ_ONCE_NOCHECK() works as expected, and
+> calling __{READ,WRITE}_ONCE from functions tagged with __no_sanitize doesn't
+> result in instrumentation, then we're good.
 
-Although, it should be fairly easy to test this implementation on an
-ARM board which supports OP-TEE. But since you are new to ARM
-TrustZone world, I would suggest you get used to OP-TEE on Qemu based
-setup. You could find pretty good documentation for this here [1] but
-for simplicity let me document steps here to test this trusted keys
-feature from scratch:
+Ouch. With the __{READ,WRITE}_ONCE requirement, we're going to need
+Clang 11 though.
 
-# Install prerequisites as mentioned here [2]
+Because without the data_race() around __*_ONCE,
+arch_atomic_{read,set} will be broken for KCSAN, but we can't have
+data_race() because it would still add
+kcsan_{enable,disable}_current() calls to __no_sanitize functions (if
+compilation unit is instrumented). We can't make arch_atomic functions
+__no_sanitize_or_inline, because even in code that we want to
+sanitize, they should remain __always_inline (so they work properly in
+__no_sanitize functions). Therefore, Clang 11 with support for
+distinguishing volatiles will be the compiler that will satisfy all
+the constraints.
 
-# Get the source code
-$ mkdir -p <optee-project>
-$ cd <optee-project>
-$ repo init -u https://github.com/OP-TEE/manifest.git -m qemu_v8.xml
-$ repo sync -j4 --no-clone-bundle
+If this is what we want, let me prepare a series on top of
+-tip/locking/kcsan with all the things I think we need.
 
-# Get the toolchain
-$ cd <optee-project>/build
-$ make -j2 toolchains
-
-# As trusted keys work is based on latest tpmdd/master, so we can
-change Linux base as follows:
-$ cd <optee-project>/linux
-$ git remote add tpmdd git://git.infradead.org/users/jjs/linux-tpmdd.git
-$ git pull tpmdd
-$ git checkout -b tpmdd-master remotes/tpmdd/master
-# Cherry-pick and apply TEE features patch-set from this PR[3]
-# Apply this Linux trusted keys patch-set.
-
-# Now move on to build the source code
-$ cd <optee-project>/build
-# Apply attached "keyctl_change" patch
-$ patch -p1 < keyctl_change
-$ make -j`nproc`
-CFG_IN_TREE_EARLY_TAS=trusted_keys/f04a0fe7-1f5d-4b9b-abf7-619b85b4ce8c
-
-# Run QEMU setup
-$ make run-only
-# Type "c" on QEMU console to continue boot
-
-# Now there should be two virtual consoles up, one for OP-TEE and
-other for Linux
-# On Linux console, you can play with "keyctl" utility to have trusted
-and encrypted keys based on TEE.
-
-Do let me know in case you are stuck while following the above steps.
-
-[1] https://optee.readthedocs.io/en/latest/building/devices/qemu.html#qemu-v8
-[2] https://optee.readthedocs.io/en/latest/building/prerequisites.html#prerequisites
-[3] https://lkml.org/lkml/2020/5/4/1062
-
--Sumit
-
-> /Jarkko
->
-
---00000000000021218505a596a2dc
-Content-Type: application/octet-stream; name=keyctl_change
-Content-Disposition: attachment; filename=keyctl_change
-Content-Transfer-Encoding: base64
-Content-ID: <f_ka6g56md0>
-X-Attachment-Id: f_ka6g56md0
-
-ZGlmZiAtLWdpdCBhL2NvbW1vbi5tayBiL2NvbW1vbi5tawppbmRleCBhZWI3YjQxLi42NjNlNTI4
-IDEwMDY0NAotLS0gYS9jb21tb24ubWsKKysrIGIvY29tbW9uLm1rCkBAIC0yMjksNiArMjI5LDcg
-QEAgQlIyX1BBQ0tBR0VfT1BURUVfVEVTVF9TREsgPz0gJChPUFRFRV9PU19UQV9ERVZfS0lUX0RJ
-UikKIEJSMl9QQUNLQUdFX09QVEVFX1RFU1RfU0lURSA/PSAkKE9QVEVFX1RFU1RfUEFUSCkKIEJS
-Ml9QQUNLQUdFX1NUUkFDRSA/PSB5CiBCUjJfVEFSR0VUX0dFTkVSSUNfR0VUVFlfUE9SVCA/PSAk
-KGlmICQoQ0ZHX05XX0NPTlNPTEVfVUFSVCksdHR5QU1BJChDRkdfTldfQ09OU09MRV9VQVJUKSx0
-dHlBTUEwKQorQlIyX1BBQ0tBR0VfS0VZVVRJTFMgOj0geQogCiAjIEFsbCBCUjJfKiB2YXJpYWJs
-ZXMgZnJvbSB0aGUgbWFrZWZpbGUgb3IgdGhlIGVudmlyb25tZW50IGFyZSBhcHBlbmRlZCB0bwog
-IyAuLi9vdXQtYnIvZXh0cmEuY29uZi4gQWxsIHZhbHVlcyBhcmUgcXVvdGVkICIuLi4iIGV4Y2Vw
-dCB5IGFuZCBuLgpkaWZmIC0tZ2l0IGEva2NvbmZpZ3MvcWVtdS5jb25mIGIva2NvbmZpZ3MvcWVt
-dS5jb25mCmluZGV4IDM2OGMxOGEuLjgzMmFiNzQgMTAwNjQ0Ci0tLSBhL2tjb25maWdzL3FlbXUu
-Y29uZgorKysgYi9rY29uZmlncy9xZW11LmNvbmYKQEAgLTIwLDMgKzIwLDUgQEAgQ09ORklHXzlQ
-X0ZTPXkKIENPTkZJR185UF9GU19QT1NJWF9BQ0w9eQogQ09ORklHX0hXX1JBTkRPTT15CiBDT05G
-SUdfSFdfUkFORE9NX1ZJUlRJTz15CitDT05GSUdfVFJVU1RFRF9LRVlTPXkKK0NPTkZJR19FTkNS
-WVBURURfS0VZUz15Cg==
---00000000000021218505a596a2dc--
+Thanks,
+-- Marco
