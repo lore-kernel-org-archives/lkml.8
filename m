@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F20C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DC2C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F5372065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FCCF2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:54:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482465;
-	bh=Rh2fTYQfbtq2e4tgM/2ICblYH83hEQ5MpFqNJ7lM7z8=;
+	s=default; t=1589482466;
+	bh=KpXwtpN+aAfAH6FenoQRyTKSpBtQCEUMgZY2WB6xwIM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s/+NVtITqTkopKVn0MCTR73/Ob+e1CLQ/y8v/fIPHvzzm10/Wn3VyHjgUpCFH+rtp
-	 l3JINuj6eSdP4m9lm5XnYGeQmJtgs7j5RM5t+d4x2tbDQ0w1Jp6O/Mf+J1Ew3ELQI6
-	 WuT/2ENbNTT5w6/I6aKQHT4SuDR3R0ulqZ7pqwn0=
+	b=Mc/x/z+U6DhVQ+DsFQkLQF4TxfaVq5ofRfujMBI0ZWFknc3vSt9GpPJAj6C8NYhZM
+	 KB72oAwxrM3XkNHAn7OJs7iNv93yqUopugt5pBX2W1lm9ujNRcyiKJg5SGw+KJ+i9O
+	 pPtZOb6sN+z0WsVIGNjISsVio3wZFnEi9uXj6VZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729035AbgENSyX (ORCPT
+        id S1729051AbgENSyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:54:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53868 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:54:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728939AbgENSyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:54:05 -0400
+        id S1728947AbgENSyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:54:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04E972076A;
-        Thu, 14 May 2020 18:54:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED0072076A;
+        Thu, 14 May 2020 18:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482444;
-        bh=Rh2fTYQfbtq2e4tgM/2ICblYH83hEQ5MpFqNJ7lM7z8=;
+        s=default; t=1589482446;
+        bh=KpXwtpN+aAfAH6FenoQRyTKSpBtQCEUMgZY2WB6xwIM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T15YdilF/Wfxvcecf5nWLwVagArUFHxVDaJ7o9JMNhGITTB+wOGl9z2HCnaCFn22F
-         hAuJsVO1ppangEL/EzpOfYOL3CtJtdm+6++mzpThZhdZoq49p6i+XnzU2cQUnkArQT
-         2HpF3oRgV63shzQuZhMWyoTdmETdaJNxEk7Xwnqw=
+        b=uoZHMrc9eQKeknJIqrj08C0AM/Yis7iksUGg4gpZyWpqDdjcp9TnSzV75yZWKbdDJ
+         My37Z8qy25qQg6Pk9bKU7XY3d2qEYA53Ge48xMbQ5qTYaF6J0qIi7DB84DgknGIlJ9
+         8F8AusTXvdhhAlX9kQCqefOXMaArSe8rJ5o7e8tc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 43/49] gcc-10: disable 'array-bounds' warning for now
-Date:   Thu, 14 May 2020 14:53:04 -0400
-Message-Id: <20200514185311.20294-43-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 45/49] gcc-10: disable 'restrict' warning for now
+Date:   Thu, 14 May 2020 14:53:06 -0400
+Message-Id: <20200514185311.20294-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185311.20294-1-sashal@kernel.org>
 References: <20200514185311.20294-1-sashal@kernel.org>
@@ -60,55 +60,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 44720996e2d79e47d508b0abe99b931a726a3197 ]
+[ Upstream commit adc71920969870dfa54e8f40dac8616284832d02 ]
 
-This is another fine warning, related to the 'zero-length-bounds' one,
-but hitting the same historical code in the kernel.
+gcc-10 now warns about passing aliasing pointers to functions that take
+restricted pointers.
 
-Because C didn't historically support flexible array members, we have
-code that instead uses a one-sized array, the same way we have cases of
-zero-sized arrays.
+That's actually a great warning, and if we ever start using 'restrict'
+in the kernel, it might be quite useful.  But right now we don't, and it
+turns out that the only thing this warns about is an idiom where we have
+declared a few functions to be "printf-like" (which seems to make gcc
+pick up the restricted pointer thing), and then we print to the same
+buffer that we also use as an input.
 
-The one-sized arrays come from either not wanting to use the gcc
-zero-sized array extension, or from a slight convenience-feature, where
-particularly for strings, the size of the structure now includes the
-allocation for the final NUL character.
+And people do that as an odd concatenation pattern, with code like this:
 
-So with a "char name[1];" at the end of a structure, you can do things
-like
+    #define sysfs_show_gen_prop(buffer, fmt, ...) \
+        snprintf(buffer, PAGE_SIZE, "%s"fmt, buffer, __VA_ARGS__)
 
-       v = my_malloc(sizeof(struct vendor) + strlen(name));
+where we have 'buffer' as both the destination of the final result, and
+as the initial argument.
 
-and avoid the "+1" for the terminator.
+Yes, it's a bit questionable.  And outside of the kernel, people do have
+standard declarations like
 
-Yes, the modern way to do that is with a flexible array, and using
-'offsetof()' instead of 'sizeof()', and adding the "+1" by hand.  That
-also technically gets the size "more correct" in that it avoids any
-alignment (and thus padding) issues, but this is another long-term
-cleanup thing that will not happen for 5.7.
+    int snprintf( char *restrict buffer, size_t bufsz,
+                  const char *restrict format, ... );
 
-So disable the warning for now, even though it's potentially quite
-useful.  Having a slew of warnings that then hide more urgent new issues
-is not an improvement.
+where that output buffer is marked as a restrict pointer that cannot
+alias with any other arguments.
+
+But in the context of the kernel, that 'use snprintf() to concatenate to
+the end result' does work, and the pattern shows up in multiple places.
+And we have not marked our own version of snprintf() as taking restrict
+pointers, so the warning is incorrect for now, and gcc picks it up on
+its own.
+
+If we do start using 'restrict' in the kernel (and it might be a good
+idea if people find places where it matters), we'll need to figure out
+how to avoid this issue for snprintf and friends.  But in the meantime,
+this warning is not useful.
 
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ Makefile | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/Makefile b/Makefile
-index 49c74e8b55df4..8c8ad7e25e15e 100644
+index b557cf8ce3ebc..a8c9d6d9d8ea5 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -859,6 +859,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
+@@ -862,6 +862,9 @@ KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
+ KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
+ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
  
- # We'll want to enable this eventually, but it's not going away for 5.7 at least
- KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
-+KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
- 
++# Another good warning that we'll want to enable eventually
++KBUILD_CFLAGS += $(call cc-disable-warning, restrict)
++
  # Enabled with W=2, disabled by default as noisy
  KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
+ 
 -- 
 2.20.1
 
