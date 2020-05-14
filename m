@@ -6,63 +6,59 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C40C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE696C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 339092065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A22A12065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589476307;
-	bh=GJ+zMvzM9NaCTf4oi/AU+Wf/RvXsh4BDEFrZEBVzsa0=;
+	s=default; t=1589476372;
+	bh=Z3p3h1N/BubQRakbv/vf4PelC3tt6O0uXYZd9qIxMfs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CUHNAG+SL88PmCnopUQreffbh4Rv8H8BR5k/Nghd1M4O/w5i6zuTLSCArYf8hTMmo
-	 dYqmN8WmJgWacwfGQexKvcZfFrsnzYct7w4lTgAit4wnKfQjDe26HLCCTySW0qHBQs
-	 5IdbgyouMNQkClDdlLJgyeSsmDfjbX9a2qEldGFY=
+	b=xVx6Z8RmlBcEnbuGU5T85m3IGhG4JpuD19+c2ZdCGJJimbm0v+l6gtXua/J2CN8Rx
+	 YB3Ua9zxNvJlMBqheFP1gME/ppINZmeh2+Go3rH0oxCXLuimfL99iJl7hvqj9Fz21i
+	 A6PJf60vn0QeyioZx/Jkcw5/DnX8XidD/2gcA1yI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbgENRLq (ORCPT
+        id S1726122AbgENRMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 13:11:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38248 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 13:12:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725975AbgENRLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 13:11:46 -0400
+        id S1726032AbgENRMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 13:12:51 -0400
 Received: from localhost (unknown [122.182.193.86])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEB5E2065D;
-        Thu, 14 May 2020 17:11:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CE0C2065D;
+        Thu, 14 May 2020 17:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589476306;
-        bh=GJ+zMvzM9NaCTf4oi/AU+Wf/RvXsh4BDEFrZEBVzsa0=;
+        s=default; t=1589476371;
+        bh=Z3p3h1N/BubQRakbv/vf4PelC3tt6O0uXYZd9qIxMfs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CzPReWBYjG7+wqnmeeEIWmeD9RWs4vL9vCYbYnotstb30e8xEP3lehH3+XYDhw1s4
-         6mJDmjn7UYm6heeM8UnKzqT/DVtoYcjIOHzwhK6vs1+fyneGY6eE19SrTgs6Na/Wa0
-         UQaaNk+fPqk7xWikpI8ROUyS8WTuNYVK74HY1VYQ=
-Date:   Thu, 14 May 2020 22:41:30 +0530
+        b=xvoGBh7goOKjA/rgK81u0Yc2kSS6wRzDSZBFBvbTSFllxpAFOxOeYKYzafmHbLDvA
+         5iGCRN8kzkfwHwPlGWGzCfeoI8skn5OJ5rDDol+HZ8Qc2AhWrfecjTX6APIeZ/zKin
+         ihYn9i9saWcHm5azBprEL8m6xfsLhcOiJ9S0Nbo4=
+Date:   Thu, 14 May 2020 22:42:40 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] clk: qcom: gdsc: Handle supply regulators
-Message-ID: <20200514171130.GB14092@vkoul-mobl>
-References: <20200417070044.1376212-1-bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: c630: Specify UFS device reset
+Message-ID: <20200514171240.GC14092@vkoul-mobl>
+References: <20200406060049.227029-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200417070044.1376212-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20200406060049.227029-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17-04-20, 00:00, Bjorn Andersson wrote:
-> Handle supply regulators for GDSCs to allow probe deferral when regulators are
-> not yet present/enabled and to allow the GDSC to enable/disable dependencies as
-> needed.
+On 05-04-20, 23:00, Bjorn Andersson wrote:
+> On some device the reset line for the UFS memory needs to be tickled in
+> order for UFS to initialize properly, add this to the ufs_mem_hc node.
 
 Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
