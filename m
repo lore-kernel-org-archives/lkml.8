@@ -2,212 +2,134 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 668B2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4372320727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDDB6206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:04:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728182AbgENVDV (ORCPT
+        id S1727995AbgENVEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 17:03:21 -0400
-Received: from [66.170.99.2] ([66.170.99.2]:28972 "EHLO
-        sid-build-box.eng.vmware.com" rhost-flags-FAIL-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727976AbgENVDL (ORCPT
+        Thu, 14 May 2020 17:04:46 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45260 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727122AbgENVEp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 17:03:11 -0400
-Received: by sid-build-box.eng.vmware.com (Postfix, from userid 1000)
-        id BA2CABA20C8; Fri, 15 May 2020 02:26:07 +0530 (IST)
-From:   Siddharth Chandrasekaran <csiddharth@vmware.com>
-To:     gregkh@linuxfoundation.org
-Cc:     srostedt@vmware.com, linux-kernel@vger.kernel.org,
-        stable@kernel.org, srivatsab@vmware.com, csiddharth@vmware.com,
-        siddharth@embedjournal.com, dchinner@redhat.com,
-        darrick.wong@oracle.com
-Subject: [PATCH v4.9] xfs: More robust inode extent count validation
-Date:   Fri, 15 May 2020 02:25:21 +0530
-Message-Id: <bead24486cf51a007202b6b56d307a9a71d098da.1589486724.git.csiddharth@vmware.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1589486724.git.csiddharth@vmware.com>
-References: <cover.1589486724.git.csiddharth@vmware.com>
-In-Reply-To: <cover.1589486724.git.csiddharth@vmware.com>
-References: <cover.1589486724.git.csiddharth@vmware.com>
+        Thu, 14 May 2020 17:04:45 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04EL376s033207;
+        Thu, 14 May 2020 17:04:41 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 310tjpks5t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 May 2020 17:04:40 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04EL3a7W035141;
+        Thu, 14 May 2020 17:04:40 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 310tjpks4w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 May 2020 17:04:40 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04EL3Aui018301;
+        Thu, 14 May 2020 21:04:39 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma03wdc.us.ibm.com with ESMTP id 3100ubhthv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 May 2020 21:04:38 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04EL4bSL28967186
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 May 2020 21:04:37 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0C71013604F;
+        Thu, 14 May 2020 21:04:38 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AF9F4136051;
+        Thu, 14 May 2020 21:04:35 +0000 (GMT)
+Received: from oc3272150783.ibm.com (unknown [9.160.9.126])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Thu, 14 May 2020 21:04:35 +0000 (GMT)
+Date:   Thu, 14 May 2020 16:04:25 -0500
+From:   "Paul A. Clarke" <pc@us.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        acme@kernel.org, ananth@linux.vnet.ibm.com,
+        maddy@linux.vnet.ibm.com, naveen.n.rao@linux.vnet.ibm.com,
+        sukadev@linux.ibm.com, irogers@google.com
+Subject: Re: [PATCH 2/2] perf: Add missing metrics to POWER9 'cpi_breakdown'
+Message-ID: <20200514210425.GA3338@oc3272150783.ibm.com>
+References: <1588868938-21933-1-git-send-email-pc@us.ibm.com>
+ <1588868938-21933-3-git-send-email-pc@us.ibm.com>
+ <87eerob5n4.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87eerob5n4.fsf@mpe.ellerman.id.au>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-14_07:2020-05-14,2020-05-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 mlxlogscore=999 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 adultscore=0 priorityscore=1501
+ cotscore=-2147483648 malwarescore=0 mlxscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005140184
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+On Wed, May 13, 2020 at 06:28:31PM +1000, Michael Ellerman wrote:
+> "Paul A. Clarke" <pc@us.ibm.com> writes:
+> > Add the following metrics to the POWER9 'cpi_breakdown' metricgroup:
+> > - ict_noslot_br_mpred_cpi
+> > - ict_noslot_br_mpred_icmiss_cpi
+> > - ict_noslot_cyc_other_cpi
+> > - ict_noslot_disp_held_cpi
+> > - ict_noslot_disp_held_hb_full_cpi
+> > - ict_noslot_disp_held_issq_cpi
+> > - ict_noslot_disp_held_other_cpi
+> > - ict_noslot_disp_held_sync_cpi
+> > - ict_noslot_disp_held_tbegin_cpi
+> > - ict_noslot_ic_l2_cpi
+> > - ict_noslot_ic_l3_cpi
+> > - ict_noslot_ic_l3miss_cpi
+> > - ict_noslot_ic_miss_cpi
+> >
+> > Signed-off-by: Paul A. Clarke <pc@us.ibm.com>
+> > ---
+> >  .../arch/powerpc/power9/metrics.json          | 143 ++++++++++--------
+> >  1 file changed, 78 insertions(+), 65 deletions(-)
+> >
+> > diff --git a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
+> > index 811c2a8c1c9e..6169351a72c8 100644
+> > --- a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
+> > +++ b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
+> > @@ -207,6 +207,84 @@
+> >          "MetricGroup": "cpi_breakdown",
+> >          "MetricName": "fxu_stall_cpi"
+> >      },
+> > +    {
+> > +        "BriefDescription": "Ict empty for this thread due to branch mispred",
+> 
+> I think you're just moving this, not adding it. But ICT is an acronym,
+> so it should be spelled ICT not Ict.
+> 
+> It might be worth expanding it too?
 
-commit 23fcb3340d033d9f081e21e6c12c2db7eaa541d3 upstream.
+This was 98% produced through automated means, translating an existing
+XML file to perf's JSON format.
 
-When the inode is in extent format, it can't have more extents that
-fit in the inode fork. We don't currenty check this, and so this
-corruption goes unnoticed by the inode verifiers. This can lead to
-crashes operating on invalid in-memory structures.
+I've gotten the upstream XML file changed to include the "ICT" metrics
+in the "cpi_breakdown" group already, and can request the changes you
+suggest also be incorporated.
 
-Attempts to access such a inode will now error out in the verifier
-rather than allowing modification operations to proceed.
+For the time being, can we move forward with the patch as-is?
 
-Reported-by: Wen Xu <wen.xu@gatech.edu>
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-[darrick: fix a typedef, add some braces and breaks to shut up compiler warnings]
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Siddharth Chandrasekaran <csiddharth@vmware.com>
----
- fs/xfs/libxfs/xfs_format.h    |   3 ++
- fs/xfs/libxfs/xfs_inode_buf.c | 112 ++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 112 insertions(+), 3 deletions(-)
-
-diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-index 6b7579e..9967d30 100644
---- a/fs/xfs/libxfs/xfs_format.h
-+++ b/fs/xfs/libxfs/xfs_format.h
-@@ -979,6 +979,9 @@ typedef enum xfs_dinode_fmt {
- 		XFS_DFORK_DSIZE(dip, mp) : \
- 		XFS_DFORK_ASIZE(dip, mp))
- 
-+#define XFS_DFORK_MAXEXT(dip, mp, w) \
-+	(XFS_DFORK_SIZE(dip, mp, w) / sizeof(struct xfs_bmbt_rec))
-+
- /*
-  * Return pointers to the data or attribute forks.
-  */
-diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
-index 37ee7f0..ee035a4 100644
---- a/fs/xfs/libxfs/xfs_inode_buf.c
-+++ b/fs/xfs/libxfs/xfs_inode_buf.c
-@@ -381,7 +381,48 @@ xfs_log_dinode_to_disk(
- 	}
- }
- 
--static bool
-+static xfs_failaddr_t
-+xfs_dinode_verify_fork(
-+	struct xfs_dinode	*dip,
-+	struct xfs_mount	*mp,
-+	int			whichfork)
-+{
-+	uint32_t		di_nextents = XFS_DFORK_NEXTENTS(dip, whichfork);
-+
-+	switch (XFS_DFORK_FORMAT(dip, whichfork)) {
-+	case XFS_DINODE_FMT_LOCAL:
-+		/*
-+		 * no local regular files yet
-+		 */
-+		if (whichfork == XFS_DATA_FORK) {
-+			if (S_ISREG(be16_to_cpu(dip->di_mode)))
-+				return __this_address;
-+			if (be64_to_cpu(dip->di_size) >
-+					XFS_DFORK_SIZE(dip, mp, whichfork))
-+				return __this_address;
-+		}
-+		if (di_nextents)
-+			return __this_address;
-+		break;
-+	case XFS_DINODE_FMT_EXTENTS:
-+		if (di_nextents > XFS_DFORK_MAXEXT(dip, mp, whichfork))
-+			return __this_address;
-+		break;
-+	case XFS_DINODE_FMT_BTREE:
-+		if (whichfork == XFS_ATTR_FORK) {
-+			if (di_nextents > MAXAEXTNUM)
-+				return __this_address;
-+		} else if (di_nextents > MAXEXTNUM) {
-+			return __this_address;
-+		}
-+		break;
-+	default:
-+		return __this_address;
-+	}
-+	return NULL;
-+}
-+
-+xfs_failaddr_t
- xfs_dinode_verify(
- 	struct xfs_mount	*mp,
- 	struct xfs_inode	*ip,
-@@ -403,8 +444,73 @@ xfs_dinode_verify(
- 		return false;
- 
- 	/* No zero-length symlinks/dirs. */
--	if ((S_ISLNK(mode) || S_ISDIR(mode)) && dip->di_size == 0)
--		return false;
-+	if ((S_ISLNK(mode) || S_ISDIR(mode)) && di_size == 0)
-+		return __this_address;
-+
-+	/* Fork checks carried over from xfs_iformat_fork */
-+	if (mode &&
-+	    be32_to_cpu(dip->di_nextents) + be16_to_cpu(dip->di_anextents) >
-+			be64_to_cpu(dip->di_nblocks))
-+		return __this_address;
-+
-+	if (mode && XFS_DFORK_BOFF(dip) > mp->m_sb.sb_inodesize)
-+		return __this_address;
-+
-+	flags = be16_to_cpu(dip->di_flags);
-+
-+	if (mode && (flags & XFS_DIFLAG_REALTIME) && !mp->m_rtdev_targp)
-+		return __this_address;
-+
-+	/* Do we have appropriate data fork formats for the mode? */
-+	switch (mode & S_IFMT) {
-+	case S_IFIFO:
-+	case S_IFCHR:
-+	case S_IFBLK:
-+	case S_IFSOCK:
-+		if (dip->di_format != XFS_DINODE_FMT_DEV)
-+			return __this_address;
-+		break;
-+	case S_IFREG:
-+	case S_IFLNK:
-+	case S_IFDIR:
-+		fa = xfs_dinode_verify_fork(dip, mp, XFS_DATA_FORK);
-+		if (fa)
-+			return fa;
-+		break;
-+	case 0:
-+		/* Uninitialized inode ok. */
-+		break;
-+	default:
-+		return __this_address;
-+	}
-+
-+	if (XFS_DFORK_Q(dip)) {
-+		fa = xfs_dinode_verify_fork(dip, mp, XFS_ATTR_FORK);
-+		if (fa)
-+			return fa;
-+	} else {
-+		/*
-+		 * If there is no fork offset, this may be a freshly-made inode
-+		 * in a new disk cluster, in which case di_aformat is zeroed.
-+		 * Otherwise, such an inode must be in EXTENTS format; this goes
-+		 * for freed inodes as well.
-+		 */
-+		switch (dip->di_aformat) {
-+		case 0:
-+		case XFS_DINODE_FMT_EXTENTS:
-+			break;
-+		default:
-+			return __this_address;
-+		}
-+		if (dip->di_anextents)
-+			return __this_address;
-+	}
-+
-+	/* extent size hint validation */
-+	fa = xfs_inode_validate_extsize(mp, be32_to_cpu(dip->di_extsize),
-+			mode, flags);
-+	if (fa)
-+		return fa;
- 
- 	/* only version 3 or greater inodes are extensively verified here */
- 	if (dip->di_version < 3)
--- 
-2.7.4
-
+PC
