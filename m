@@ -2,110 +2,102 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9B6C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F18F6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:49:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 267042065C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:46:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="vkg/zj/0"
+	by mail.kernel.org (Postfix) with ESMTP id B48142065C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:49:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgENUp7 (ORCPT
+        id S1727885AbgENUtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 16:45:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37964 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725975AbgENUp6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 16:45:58 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A2A2C061A0C;
-        Thu, 14 May 2020 13:45:58 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id BF3CB22EEB;
-        Thu, 14 May 2020 22:45:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1589489154;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DMXKBlWL/MST7cL34EcyY2r7dUnEYA7BplVDp3fsnk0=;
-        b=vkg/zj/0PDSbf5X0pK+in32oGplSgPjZpIyY9VFe7AbF/2ZsjfhevzzkEFvlj0qRy3JA0c
-        1CSKjkXkWnIGZ95mLlXpOIqKRhQvgXP6n4LMjJosWwuh08bDDGHGGq619bZyreTcqDdXnr
-        T5BtNH3gx2QelwgM2PzR7k5O5g5eGkA=
+        Thu, 14 May 2020 16:49:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:44304 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725975AbgENUtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 16:49:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D64281042;
+        Thu, 14 May 2020 13:49:19 -0700 (PDT)
+Received: from [192.168.122.166] (unknown [10.119.48.101])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8082E3F68F;
+        Thu, 14 May 2020 13:49:19 -0700 (PDT)
+Subject: Re: [PATCH] net: phy: Fix c45 no phy detected logic
+To:     Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, linux@armlinux.org.uk,
+        davem@davemloft.net, linux-kernel@vger.kernel.org
+References: <20200514170025.1379981-1-jeremy.linton@arm.com>
+ <e1826c60-736f-d496-4c4f-7229efee018b@gmail.com>
+From:   Jeremy Linton <jeremy.linton@arm.com>
+Message-ID: <337071a2-0eaf-6143-f6c0-b451d681733d@arm.com>
+Date:   Thu, 14 May 2020 15:49:18 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <e1826c60-736f-d496-4c4f-7229efee018b@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 14 May 2020 22:45:53 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 02/16] mfd: mfd-core: Don't overwrite the dma_mask of
- the child device
-In-Reply-To: <20200428152543.GI5677@sirena.org.uk>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-3-michael@walle.cc>
- <20200428124548.GS185537@smile.fi.intel.com>
- <3cd3705a-4f48-6a46-e869-3ee11dc17323@arm.com>
- <20200428142938.GX185537@smile.fi.intel.com>
- <6ccad285-7b5f-3037-d4d5-ff4d9571b612@arm.com>
- <20200428152543.GI5677@sirena.org.uk>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <8fb998f882938680d98f1c2f6f8254c1@walle.cc>
-X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-04-28 17:25, schrieb Mark Brown:
-> On Tue, Apr 28, 2020 at 03:49:49PM +0100, Robin Murphy wrote:
-> 
->> For better or worse, the platform bus is the dumping ground for random 
->> crap,
->> so we just have to deal with all the abstraction breakage that leaks 
->> out of
->> that.
-> 
-> The reason we're using the platform bus for this is that historically
-> people were creating buses which were essentially carbon copies of the
-> platform bus with the name changed and it was felt that rather than
-> duplicate code it was better to just use platform devices with no MMIO
-> ranges defined.  If there's some assumptions about DMA for platform
-> devices floating about somewhere it might be reasonable to revisit this
-> and create a non-DMA variant of platform devices since there is a
-> meaningful difference.
+Hi,
 
-Was there any conclusion? Should I keep or drop this patch in the next 
-version
-of this series?
+On 5/14/20 2:59 PM, Heiner Kallweit wrote:
+> On 14.05.2020 19:00, Jeremy Linton wrote:
+>> The commit "disregard Clause 22 registers present bit..." clears
+>> the low bit of the devices_in_package data which is being used
+>> in get_phy_c45_ids() to determine if a phy/register is responding
+>> correctly. That check is against 0x1FFFFFFF, but since the low
+>> bit is always cleared, the check can never be true. This leads to
+>> detecting c45 phy devices where none exist.
+>>
+>> Lets fix this by also clearing the low bit in the mask to 0x1FFFFFFE.
+>> This allows us to continue to autoprobe standards compliant devices
+>> without also gaining a large number of bogus ones.
+>>
+>> Fixes: 3b5e74e0afe3 ("net: phy: disregard "Clause 22 registers present" bit in get_phy_c45_devs_in_pkg")
+>> Cc: Heiner Kallweit <hkallweit1@gmail.com>
+>> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+>> ---
+>>   drivers/net/phy/phy_device.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+>> index ac2784192472..b93d984d35cc 100644
+>> --- a/drivers/net/phy/phy_device.c
+>> +++ b/drivers/net/phy/phy_device.c
+>> @@ -723,7 +723,7 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
+>>   		if (phy_reg < 0)
+>>   			return -EIO;
+>>   
+>> -		if ((*devs & 0x1fffffff) == 0x1fffffff) {
+>> +		if ((*devs & 0x1ffffffe) == 0x1ffffffe) {
+>>   			/*  If mostly Fs, there is no device there,
+> 
+> Looks good to me, it would just be good to extend the comment and explain
+> why we exclude bit 0 here.
 
--- 
--michael
+Sure, sounds good.
+
+> 
+> 
+>>   			 *  then let's continue to probe more, as some
+>>   			 *  10G PHYs have zero Devices In package,
+>> @@ -733,7 +733,7 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
+>>   			if (phy_reg < 0)
+>>   				return -EIO;
+>>   			/* no device there, let's get out of here */
+>> -			if ((*devs & 0x1fffffff) == 0x1fffffff) {
+>> +			if ((*devs & 0x1ffffffe) == 0x1ffffffe) {
+>>   				*phy_id = 0xffffffff;
+>>   				return 0;
+>>   			} else {
+>>
+> 
+
