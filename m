@@ -2,186 +2,122 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8692FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C38FFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 610F420575
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:06:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="cydZVY1Z"
+	by mail.kernel.org (Postfix) with ESMTP id ACEAC206D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:09:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbgENGG0 (ORCPT
+        id S1725979AbgENGJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 02:06:26 -0400
-Received: from mga11.intel.com ([192.55.52.93]:61729 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725794AbgENGGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 02:06:25 -0400
-IronPort-SDR: 6FtP6rZlKTVvoaS/Iv6G288xQx+lp5U0/QYuc0ryCZ39qVXdk4bBRFh9G3WP/heV2RMcpg8TiF
- 1CqVBpaGHCKA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 23:06:24 -0700
-IronPort-SDR: pjpswNHL1LItcqQqR0fzRL65fOpKrj/ga7S2zR7VS3eQ4cbekctr5P9OPZKMt9jqWnx6CAQmMF
- 3w8qJ9IVCRXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,390,1583222400"; 
-   d="scan'208";a="297917468"
-Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
-  by fmsmga002.fm.intel.com with ESMTP; 13 May 2020 23:06:24 -0700
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 13 May 2020 23:06:24 -0700
-Received: from orsmsx605.amr.corp.intel.com (10.22.229.18) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 13 May 2020 23:06:24 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- orsmsx605.amr.corp.intel.com (10.22.229.18) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 13 May 2020 23:06:23 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.177)
- by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 13 May 2020 23:06:18 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dwZBNKXeV3HIwNwVulLFM4f/XM+j4rks0B5QzZqwnHZKmTgWGWb5vrnv9ZMnaYS06ohOvq/+oc126z0ZaelwtHp/V2Kjeg2p+cyNBf6eyTXcXqhccThWqsIE3Ed/XjJQccjBy4m2DNmbkf90KTQRA4QfRp4dGFxeG/dsUPnB/tMnef8yqV2irRtRhpu/VrOV5+Y+y3VRFlzrtHyYBW+Ai4PY6RIhHl1OCfYV95ZaseT83Wns7sE16UqSg8tK5UWUaISb+eQBrzRqpvcQjmd9COBy5x8xUhgQDkbY/vIfdGv/LmibfNgUPA5meShNWAkeLJ755+RmOYuYp2zBMI/ktA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hY3FKjgb/YoeIrUuIKW0TOhPbruKuygvzwU1nCqRyks=;
- b=HkLR8uY+nkfZLL2HfNqOmw922oeNmRJlCcxSY4VTT4bufwD1YzeM2xe1+MEMKUsUgT+eGRxRrIT3RFSRik//ooJGD+tKgozBzumOhUPlSvmiN34lQyz2vN0gaZ0FXe4gwr4WseO+OqEoaI5bORriWrOpZEG6jJKRBTlTkgkHuQGueJzoBGrxTbrB1Rbn2AiHKtZzxcc3u5ueXQLqH+GuDsX0clMUp8qb8DWWbQMJAkdu3mgIxj+nLe22WOdnBS+cyq3Vnupx09WoZWvGR/piPJf62RXRz2DwC5PmhJWWEYl2RxrDZ7DqQB4ZmgAbqMMv3hW6WOf++ytwsCAgwl+tzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hY3FKjgb/YoeIrUuIKW0TOhPbruKuygvzwU1nCqRyks=;
- b=cydZVY1ZZb2QdIz8+5vesoly+mKUNukewoXlpCxYnbM1xX0hE7vuoehsyoxfZCRnQgd+EOcsCwZo+Qm+FC+yvtgrNfrZwdJA/okFg87BilX6E2zQmhqXIB9W9J2Oj+0tHj0V5uOl3B0UiAUVhltBxu+yI3VgTZet/dxoRUBNV8g=
-Received: from DM6PR11MB3819.namprd11.prod.outlook.com (2603:10b6:5:13f::31)
- by DM6PR11MB3627.namprd11.prod.outlook.com (2603:10b6:5:13b::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.24; Thu, 14 May
- 2020 06:06:13 +0000
-Received: from DM6PR11MB3819.namprd11.prod.outlook.com
- ([fe80::98a:bb06:5551:e5a3]) by DM6PR11MB3819.namprd11.prod.outlook.com
- ([fe80::98a:bb06:5551:e5a3%3]) with mapi id 15.20.2979.033; Thu, 14 May 2020
- 06:06:13 +0000
-From:   "Wu, Hao" <hao.wu@intel.com>
-To:     Souptick Joarder <jrdr.linux@gmail.com>
-CC:     "mdf@kernel.org" <mdf@kernel.org>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Xu, Yilun" <yilun.xu@intel.com>
-Subject: RE: [PATCH] fpga: dfl: afu: Corrected error handling levels
-Thread-Topic: [PATCH] fpga: dfl: afu: Corrected error handling levels
-Thread-Index: AQHWKVq9Jcnvngz3AkiOgohHnshzdKim3E6AgAA7lpA=
-Date:   Thu, 14 May 2020 06:06:13 +0000
-Message-ID: <DM6PR11MB38193B495FB1DB4697F0094F85BC0@DM6PR11MB3819.namprd11.prod.outlook.com>
-References: <1589397725-29697-1-git-send-email-jrdr.linux@gmail.com>
- <20200514022935.GE29933@yilunxu-OptiPlex-7050>
-In-Reply-To: <20200514022935.GE29933@yilunxu-OptiPlex-7050>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.55.52.218]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9258c4c2-9c30-44a3-9db4-08d7f7cce828
-x-ms-traffictypediagnostic: DM6PR11MB3627:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB3627AE8C6D1CD52B7CC2357885BC0@DM6PR11MB3627.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 040359335D
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: QxV2CACWXf1mQGPl4A1tXK6yPTx4B2iba2UuHmKEpZE5WjO8+uQz3Ik43mnvatnO3OD/3FiYGv1zY7kmtIql0LR6d5t1+ZKhLDpgjtdSScaHhKyZulr2giwTsZf91knUJvoaIEbpOoWd1lAtVLLNe+PQLfczYWlfHZsyxHM7juZc2PzrK6WB6Yp2ujrFppO0i4Zb6gugAvI04toWsWEDViH0JNWcrRucnqq1OjbE5XkN6d6fUlouN3I1ux14nfnOks/W/tjrtqKVGdO0WlqaXPrrV6b5qlazq+PWSQgJN1Y8hgwouoJETlOtWCqaKg2GNIxKUqBlR1V/JneI1M0ePZWLAy0ltrAUbExgQJPs8XQYARfSwkzm6qRaXjh+NvIQPQ/CIMf4v2ikr2VDx+Ngw6ymKjlIh+KTNXbguTWhrcl2jnMSX+sfpi492t/Xf2BH
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3819.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(39860400002)(346002)(376002)(396003)(136003)(8936002)(33656002)(478600001)(186003)(107886003)(4326008)(26005)(6916009)(66476007)(52536014)(71200400001)(9686003)(55016002)(7696005)(53546011)(66446008)(64756008)(6506007)(54906003)(2906002)(316002)(76116006)(66946007)(66556008)(5660300002)(8676002)(86362001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: vykd7C68Skrjz2om6hY1sG8QwDxn924VZZ248gWAFPTVm5kTwExUK9fyGCKioeZ2Ryx4FpwbAre73DCflrcCspke3fgurQpqfBB3ZhIpbxtu6WSlCLGzfO1yEFMH3ZHO0vw5jO2fRkrNEglpRvLvm/YMWduUYSfeFmKDZpzpXvrnboj/7kAqf2BBLNEiDbUzczU6D5vW8KwytOLcB5Ecv8rfn4Zr4+0ZKujLWJE0LFKNt08LtqrXdIwHz6ZRDTZClHKwBGGEgqjNifBcIzjKUeiK9iNHP8htQBWiBzLSSJKMHA3lcbftssXFv30AGvU5qeUCYK0HVNQpjOwnRh58lRIK+3VRy4FroW9PPcmr05oWo2k9obovAg4ZZrQiAGELKlCLw2EAcW928bV79w9G7PQJXiBSJMdtCqmb5SRPT6G3bRa0SgF9rV4rO811puD8sTIQ+BEiHlSpwmg2T/tOyuouxGTgNj//FzetQXRRiB8=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 14 May 2020 02:09:48 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:15998 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725794AbgENGJr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 02:09:47 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04E622Bf064520;
+        Thu, 14 May 2020 02:09:20 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 310sywrywj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 May 2020 02:09:19 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04E60OBR021023;
+        Thu, 14 May 2020 06:09:17 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04ams.nl.ibm.com with ESMTP id 3100ub2ykr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 May 2020 06:09:17 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04E69F4F64553214
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 May 2020 06:09:15 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2DC85A404D;
+        Thu, 14 May 2020 06:09:15 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 12D47A4053;
+        Thu, 14 May 2020 06:09:15 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Thu, 14 May 2020 06:09:15 +0000 (GMT)
+Date:   Thu, 14 May 2020 08:09:14 +0200
+From:   Sven Schnelle <svens@linux.ibm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+Subject: Re: [tracing] 06e0a548ba:
+ WARNING:at_kernel/trace/ring_buffer.c:#ring_buffer_iter_peek
+Message-ID: <20200514060914.GA7686@tuxmaker.boeblingen.de.ibm.com>
+References: <20200429090508.GG5770@shao2-debian>
+ <20200513091906.GA12720@tuxmaker.boeblingen.de.ibm.com>
+ <20200513092922.6d79f6ee@gandalf.local.home>
+ <20200513161557.GA73453@tuxmaker.boeblingen.de.ibm.com>
+ <20200513153033.3be208ec@gandalf.local.home>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9258c4c2-9c30-44a3-9db4-08d7f7cce828
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2020 06:06:13.5260
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yAqGcX9yhxbq5CKWeKOAMoJbM95UA+eUo0Mnl38Qz+ZuzBdcsGTM2ybAsG0wUQRVR/ymkYsYkmYS4ne8nNwj8w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3627
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513153033.3be208ec@gandalf.local.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-13_09:2020-05-13,2020-05-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ spamscore=0 bulkscore=0 impostorscore=0 cotscore=-2147483648 phishscore=0
+ lowpriorityscore=0 adultscore=0 mlxlogscore=999 malwarescore=0
+ clxscore=1015 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005140049
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Xu, Yilun <yilun.xu@intel.com>
-> Sent: Thursday, May 14, 2020 10:30 AM
-> To: Souptick Joarder <jrdr.linux@gmail.com>
-> Cc: Wu, Hao <hao.wu@intel.com>; mdf@kernel.org; linux-
-> fpga@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH] fpga: dfl: afu: Corrected error handling levels
->=20
-> The patch looks good to me.
->=20
-> Maybe we could add the Fixes tag:
->   Fixes: fa8dda1edef9 (fpga: dfl: afu: add
-> DFL_FPGA_PORT_DMA_MAP/UNMAP ioctls support)
+Hi Steve,
 
-Thanks for catching this problem.
+On Wed, May 13, 2020 at 03:30:33PM -0400, Steven Rostedt wrote:
+> On Wed, 13 May 2020 18:15:57 +0200
+> Sven Schnelle <svens@linux.ibm.com> wrote:
+> 
+> > Thanks for looking into this. I've attached my /proc/config.gz to this Mail.
+> > The x86 system is my Laptop which is a Thinkpad X280 with 4 HT CPUs (so 8 cpus
+> > in total). I've tried disabling preemption, but this didn't help.
+> > 
+> > It's always this check that causes the loop:
+> > 
+> > if (iter->head >= rb_page_size(iter->head_page)) {
+> > 	rb_inc_iter(iter);
+> > 	goto again;
+> > }
+> > 
+> > On the first loop iter->head is some value > 0 and rb_page_size returns
+> > 0, afterwards it gets twice to this check with both values 0. The third
+> > time the warning is triggered. Maybe that information helps.
+> 
+> I figured out what was causing this, and that's just that the writer and
+> the iterator could end up almost "in sync" where the writer writes to each
+> of the pages the iterator is trying to read, and this can trigger the three
+> failures of "zero commits" per page.
+> 
+> I had a way to detect this, but then realized that it may be possible for
+> an active writer to possibly trigger the other failures to get an event,
+> that I just decided to force it to try three times, and simply return NULL
+> if an active writer is messing with the iterator. The iterator is a "best
+> effort" to read the buffer if there's an active writer. The consumer read
+> (trace_pipe) is made for that.
+> 
+> This patch should solve you issues.
+> 
+> (care to give a Tested-by: if it works for you?)
 
-With this line,
-Acked-by: Wu Hao <hao.wu@intel.com>
+Well, as there's no longer a RB_WARN_ON that indeed fixes the issue :-)
+
+Tested-by: Sven Schnelle <svens@linux.ibm.com>
 
 Thanks!
-Hao
 
->=20
-> Thanks,
-> Yilun
->=20
-> On Thu, May 14, 2020 at 12:52:05AM +0530, Souptick Joarder wrote:
-> > Corrected error handling goto sequnece. Level put_pages should
-> > be called when pinned pages >=3D 0 && pinned !=3D npages. Level
-> > free_pages should be called when pinned pages < 0.
-> >
-> > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-> > ---
-> >  drivers/fpga/dfl-afu-dma-region.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/fpga/dfl-afu-dma-region.c b/drivers/fpga/dfl-afu-d=
-ma-
-> region.c
-> > index 62f9244..5942343 100644
-> > --- a/drivers/fpga/dfl-afu-dma-region.c
-> > +++ b/drivers/fpga/dfl-afu-dma-region.c
-> > @@ -61,10 +61,10 @@ static int afu_dma_pin_pages(struct
-> dfl_feature_platform_data *pdata,
-> >  				     region->pages);
-> >  	if (pinned < 0) {
-> >  		ret =3D pinned;
-> > -		goto put_pages;
-> > +		goto free_pages;
-> >  	} else if (pinned !=3D npages) {
-> >  		ret =3D -EFAULT;
-> > -		goto free_pages;
-> > +		goto put_pages;
-> >  	}
-> >
-> >  	dev_dbg(dev, "%d pages pinned\n", pinned);
-> > --
-> > 1.9.1
+Sven
