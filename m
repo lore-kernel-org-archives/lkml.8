@@ -2,104 +2,125 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C9F4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5B2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 675EB2065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:50:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589471434;
-	bh=5tSjNChQ6lIWRMBCkikt2nPuu1u6XyTfuXs2AiZn6Ws=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=LKjYEclXOdkoRpF+xeucOyosuwoWTQdDIvJSnep6hVrjM7Sw52vNwg+YnnUMygMcS
-	 HxCcXcc1bvLiuXHj+x9kKxaFsGFb9z5ohFQmTLZn0NFQ44QXpbmJXIe+6nQpkhjVnV
-	 aJDgfA9GPCFH3a7Zcqy6CoJ8YAe5/8+lO9sS/T1s=
+	by mail.kernel.org (Postfix) with ESMTP id 1E9CA20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:50:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sCkEKquF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbgENPud (ORCPT
+        id S1727999AbgENPuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 14 May 2020 11:50:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48216 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727850AbgENPud (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 14 May 2020 11:50:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbgENPud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 11:50:33 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3C24206A5;
-        Thu, 14 May 2020 15:50:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589471432;
-        bh=5tSjNChQ6lIWRMBCkikt2nPuu1u6XyTfuXs2AiZn6Ws=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=PJPRRTfSUaf9HnO7ggpV1YaRRzlO36Yg5u5DvUb3QyKw34quNnibbBMuEqvwvaR5s
-         rPOIao0VbaPs5gIhJRITJEvZwsQzlNZvZfJfMdbjVPNX9Z9pGpN/vT7B+660iGyMjB
-         rNj1sUjoWWp1KF65oOlaWbiLYS18Y4C2f478GyY4=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 86A6C35229C5; Thu, 14 May 2020 08:50:32 -0700 (PDT)
-Date:   Thu, 14 May 2020 08:50:32 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Josh Triplett <josh@joshtriplett.org>
-Subject: Re: [PATCH 07/10] rcu: Temporarily assume that nohz full CPUs might
- not be NOCB
-Message-ID: <20200514155032.GN2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200513164714.22557-1-frederic@kernel.org>
- <20200513164714.22557-8-frederic@kernel.org>
- <20200513182527.GU2869@paulmck-ThinkPad-P72>
- <20200513230827.GC18303@lenoir>
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FD2AC061A0C;
+        Thu, 14 May 2020 08:50:32 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id j2so3210576qtr.12;
+        Thu, 14 May 2020 08:50:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=CF7ZKxURTQoS3eBunm8YHC86iEwPWBFHZIqxXqgVG6E=;
+        b=sCkEKquFt1u2MzkNsA6N/+LlFtJ5OmiaoTyx1J0oyhEc//gXyVmJIFG2FUmXqVQ9yL
+         ujQBK8DBn3QL8QNSRo66yZlW6LGLhR2Lb0cwITWt9eOcjuXph8pWsCT6+5U7pUpK1/Xq
+         An22fTS+g4OybLC3Jcf67HReJcMa5hxb18E2c2A/+8FvbBy5WFD4trMn5nkCCHeXqZtZ
+         M/4pWLHHOTBI1IM91vuo7IJF4PBuIsKYIP+0p7K4itvlkUBY6KvARcFnlCKHo5BLGJCE
+         NBOApuVSEE/Fv0wqaRjD4LKBbiOjKgCWWCEe69k6PgLwogDAaPwAJJjNaNEyzj3VcXl4
+         8ltw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=CF7ZKxURTQoS3eBunm8YHC86iEwPWBFHZIqxXqgVG6E=;
+        b=astb9NHNkzm/YX6pHev19Eo4nSop3vvCbmBBhffzAdUkbLsS+ZsvNSPrHhp5SmORW5
+         AY5uQ1Tw4bn1ZBqkKjWkfG2NYl9RZginC0mPXZ7mEFuDaHxtLYz7naypWRlBVXAsWXNH
+         ySIohdignA2YTrYmbU30D+g8ng7qpA+6PH17bXP6Fox/LJmljtgDtoj8L5+AvAX91dyp
+         sIRtvsS5aO2c5H1/4Vhmgw+bGsiffjwyy2HdPyk3aAIVKEi/hPGA9xszDC6O5WkRCRWK
+         k6zEzQUC20b8a6gIS31ya3kadFiOkwhmyzN0W35JlO2gwjzaE+WDg9F+GqpQH1Deyo3o
+         UuUQ==
+X-Gm-Message-State: AOAM53388RxNn8P0Y7OsSs9Jsq6N3vNF7rQ5En991DaNn2k4eaibjeZ8
+        DWFqZjWjgKRmo5vMA0xJTJA=
+X-Google-Smtp-Source: ABdhPJzGUelMbU9E5cvSADE9jYdPywHzq6svHabobIyAONSg5/xZ0WrUco59mbwgZ/9ietBO+zV0oQ==
+X-Received: by 2002:ac8:188c:: with SMTP id s12mr5288182qtj.172.1589471431535;
+        Thu, 14 May 2020 08:50:31 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id d9sm2722040qtj.77.2020.05.14.08.50.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 08:50:30 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Thu, 14 May 2020 11:50:28 -0400
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Borislav Petkov <bp@suse.de>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: gcc-10: kernel stack is corrupted and fails to boot
+Message-ID: <20200514155028.GA2336285@rani.riverdale.lan>
+References: <20200513222038.GC6733@zn.tnic>
+ <CAHk-=wgybuOF+Jp2XYWqM7Xn1CW6szWQw_FgVoFh5jx_4YoCVw@mail.gmail.com>
+ <20200513233616.GD6733@zn.tnic>
+ <CAHk-=wjZXFe08MiNRevJFGDvX0O6kcQTiK8GFBS7hwUAzB+LQw@mail.gmail.com>
+ <CAKwvOd=o_wuiVpw5KVzLEt25W-A9Ah9fzftPZLG+yutqJmWbOg@mail.gmail.com>
+ <CAHk-=wg6G+p1RRjR6UZBEuSCDs9=iWBsxrDPTEwqh+y5RayqKA@mail.gmail.com>
+ <CALCETrUYA60fWu+=MviKx0NmW+_ppsOcv-ShUXdbyM4EjyfzHQ@mail.gmail.com>
+ <CAHk-=wgiGxRgJGS-zyer1C_x2MQUVo6iZn0=aJyuFTqJWk-mpA@mail.gmail.com>
+ <20200514052234.GA1894416@rani.riverdale.lan>
+ <CAK8P3a1Cfzu7L30bFP-Sf2_GbkN_10CCJsbefTXyfnGF16uHMA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200513230827.GC18303@lenoir>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK8P3a1Cfzu7L30bFP-Sf2_GbkN_10CCJsbefTXyfnGF16uHMA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 01:08:28AM +0200, Frederic Weisbecker wrote:
-> On Wed, May 13, 2020 at 11:25:27AM -0700, Paul E. McKenney wrote:
-> > On Wed, May 13, 2020 at 06:47:11PM +0200, Frederic Weisbecker wrote:
-> > > So far nohz_full CPUs had to be nocb. This requirement may change
-> > > temporarily as we are working on preparing RCU to be able to toggle the
-> > > nocb state of a CPU. Once that is done and nohz_full can be toggled as
-> > > well dynamically, we'll restore that initial requirement.
-> > 
-> > Would it simplify anything to make the CPU exit nohz_full first and
-> > then exit rcu_nocb and vice versa in the other direction?  That way the
-> > assumption about nohz_full CPUs always being rcu_nocb could remain while
-> > still allowing runtime changes to both states.
+On Thu, May 14, 2020 at 10:40:44AM +0200, Arnd Bergmann wrote:
+> On Thu, May 14, 2020 at 7:22 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> > On Wed, May 13, 2020 at 09:52:07PM -0700, Linus Torvalds wrote:
+> > > On Wed, May 13, 2020, 20:50 Andy Lutomirski <luto@amacapital.net> wrote:
+> > The gcc docs [1,2] at least don't inspire much confidence that this will
+> > continue working with plain asm("") though:
+> >
+> > "Note that GCC’s optimizers can move asm statements relative to other
+> > code, including across jumps."
+> > ...
+> > "Note that the compiler can move even volatile asm instructions relative
+> > to other code, including across jump instructions."
+> >
+> > Even if we don't include an instruction in it I think it should at least
+> > have a memory clobber, to stop the compiler from deciding that it can be
+> > moved before the call so it can do the tail-call optimization.
 > 
-> That's the future plan but for now nohz_full can't even be exited yet.
-> RCU is unlucky enough to be chosen as the starting point of this whole work :-)
-
-But testing could still start with CPUs marked rcu_nocb but not marked
-nohz_full, right?  I must confess that I am a bit concerned about the
-increase in state space.
-
-> > Of course, given that setup, it would not be possible to cause a CPU to
-> > exit rcu_nocb state if it was still in nohz_full state.
+> I think LTO would still be able to notice that cpu_startup_entry() can
+> be annotated __attribute__((noreturn)) and optimize the callers
+> accordingly, which in turn would allow a tail call again after dead code
+> elimination.
 > 
-> Right.
-> 
-> > My fear is that allowing a CPU to be in nohz_full state without also
-> > being in rcu_nocb state will cause needless confusion and bug reports.
-> 
-> Well, it should only be visible to those who work on it since there
-> won't be a proper interface before we achieve the whole.
+>      Arnd
 
-Fair point, but I am also concerned about the welfare of the people
-working on it.  ;-)
-
-							Thanx, Paul
+Yes, with LTO the only solution is to actually compile the caller
+without stack checking I think.  Although at present gcc actually
+doesn't tail-call optimize calls to noreturn functions that could easily
+change.
