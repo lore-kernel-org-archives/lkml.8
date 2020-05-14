@@ -2,77 +2,93 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26175C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB85EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 035F72053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B48CC2053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:45:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbgENKoF (ORCPT
+        id S1726102AbgENKpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 06:44:05 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:45405 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbgENKoE (ORCPT
+        Thu, 14 May 2020 06:45:50 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:40025 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbgENKpu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 06:44:04 -0400
-Received: by mail-il1-f198.google.com with SMTP id t10so2758563ilf.12
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 03:44:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=hoXGVtl4km8jJ8wNjtYih/eDPSljKbLmILj3chomVUg=;
-        b=Gacd2PhcMKcZmWHuTT52knSM5Ipzv/VSeHnZvPVwgR7LPmSAhSmqV9IvsOx8RnOtfY
-         aQQf6w29ZJoMFHNXeNmQXjsYA6h1Cjqx2No5u5QWnL1DrpCn0Pwg/NIukxmljnO6ZtKd
-         zT8OicSsxihYyKCtnErx3APVuooY9XqMT/9QROyy//SXj+c4yJCmhKHP4mN/pf2vKwFH
-         QwzwnHP1RXGpEjtcBWzOeZXgh1gh4OQrfLpM0aPGVUQDeOvHJIERVMKLDIYQmIZHJaIR
-         7bLKFGT2OlWydd0KWnTFGGaYQan9gvFz1ehH8reEioAhDVuSX2wKqiSAE+EabHRu8lf2
-         v/PQ==
-X-Gm-Message-State: AOAM532h4VvVJTsmS/pRcQoCbE7Zvg68Gdn69gwrMzRWlGcUgNr4xhDq
-        J/7ydBY0i3unE0qKCB4QFTWqhRpVOk8h9it9fjlQx38NDkbO
-X-Google-Smtp-Source: ABdhPJzXo+5o8hNjij+UzCHkt9MgIvEAIQE+bNQv2oX8TNmIwCsWtTIm+byzrRQU1GzPoCsb/WkxdGdHVzDOB8z2t/DmzKj+OJKn
+        Thu, 14 May 2020 06:45:50 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 49N7Vb5M23z1rtMh;
+        Thu, 14 May 2020 12:45:43 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 49N7Vb2L9jz1shf3;
+        Thu, 14 May 2020 12:45:43 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id 9fyzBC6ghdJH; Thu, 14 May 2020 12:45:42 +0200 (CEST)
+X-Auth-Info: pVwDJJtpUfoBr64P3JEQiSPJmEfJwtHfz/pV6AvkiZkIHmkeB4dn0AXJn6kIlp8+
+Received: from igel.home (ppp-46-244-180-168.dynamic.mnet-online.de [46.244.180.168])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Thu, 14 May 2020 12:45:42 +0200 (CEST)
+Received: by igel.home (Postfix, from userid 1000)
+        id B4FD12C1E36; Thu, 14 May 2020 12:45:41 +0200 (CEST)
+From:   Andreas Schwab <schwab@linux-m68k.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ia64: enable HAVE_COPY_THREAD_TLS, switch to
+ kernel_clone_args
+References: <3908561D78D1C84285E8C5FCA982C28F7F6266E0@ORSMSX115.amr.corp.intel.com>
+        <79e58d9b-5a39-390c-2f0c-0d87b63442b4@physik.fu-berlin.de>
+        <20200514074606.vkc35syhdep23rzh@wittgenstein>
+        <6b298416-1e64-eee7-0bb4-3b1f7f67adc6@physik.fu-berlin.de>
+        <d6c94d4f-a431-9de5-7a0f-661894dbec01@physik.fu-berlin.de>
+        <20200514100459.pt7dxq2faghdds2c@wittgenstein>
+        <2e22b0d2-b9ce-420d-48a0-0d9134108a5c@physik.fu-berlin.de>
+        <20200514101540.25hvle74w63t66fs@wittgenstein>
+        <20200514101914.fu7xhgaxtb5fy2ky@wittgenstein>
+        <4aad9ad5-b0e9-12b0-0ad2-ac23fceae87b@physik.fu-berlin.de>
+        <20200514103259.tdfjc5ds4igpmoxj@wittgenstein>
+X-Yow:  NOW, I'm taking the NEXT FLIGHT to ACAPULCO so I can write POEMS about
+ BROKEN GUITAR STRINGS and sensuous PRE-TEENS!!
+Date:   Thu, 14 May 2020 12:45:41 +0200
+In-Reply-To: <20200514103259.tdfjc5ds4igpmoxj@wittgenstein> (Christian
+        Brauner's message of "Thu, 14 May 2020 12:32:59 +0200")
+Message-ID: <877dxe6bhm.fsf@igel.home>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.0.91 (gnu/linux)
 MIME-Version: 1.0
-X-Received: by 2002:a92:8747:: with SMTP id d7mr3992371ilm.235.1589453044173;
- Thu, 14 May 2020 03:44:04 -0700 (PDT)
-Date:   Thu, 14 May 2020 03:44:04 -0700
-In-Reply-To: <20200514092004.GA1577276@kroah.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000015d1cd05a5996049@google.com>
-Subject: Re: WARNING in memtype_reserve
-From:   syzbot <syzbot+353be47c9ce21b68b7ed@syzkaller.appspotmail.com>
-To:     bp@alien8.de, dave.hansen@linux.intel.com,
-        dmitry.torokhov@gmail.com, ebiederm@xmission.com,
-        gregkh@linuxfoundation.org, hpa@zytor.com, jeremy.linton@arm.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        luto@kernel.org, mingo@redhat.com, peterz@infradead.org,
-        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mai 14 2020, Christian Brauner wrote:
 
-syzbot has tested the proposed patch and the reproducer did not trigger crash:
+>         pid = syscall(189 /* __NR_clone2 */, SIGCHLD, stack, STACK_SIZE, NULL, NULL);
 
-Reported-and-tested-by: syzbot+353be47c9ce21b68b7ed@syzkaller.appspotmail.com
+Syscall 189 doesn't exist on ia64, they start with 1024 (and __NR_clone2
+is 1213).
 
-Tested on:
+Andreas.
 
-commit:         d5eeab8d Merge tag 'scsi-fixes' of git://git.kernel.org/pu..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b0212dbee046bc1f
-dashboard link: https://syzkaller.appspot.com/bug?extid=353be47c9ce21b68b7ed
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=12bd6806100000
-
-Note: testing is done by a robot and is best-effort only.
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
