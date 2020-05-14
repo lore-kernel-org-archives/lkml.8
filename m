@@ -2,61 +2,64 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 836DDC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE340C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61D362065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A075220727
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:43:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jneSebl7"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FfZY3MR8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgENMnb (ORCPT
+        id S1727884AbgENMn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 08:43:31 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:35546 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbgENMn3 (ORCPT
+        Thu, 14 May 2020 08:43:59 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33114 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbgENMn6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 08:43:29 -0400
+        Thu, 14 May 2020 08:43:58 -0400
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04EChB9A128213;
-        Thu, 14 May 2020 07:43:11 -0500
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04EChGG5097203;
+        Thu, 14 May 2020 07:43:16 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589460191;
-        bh=yY/LsSZIBi414qmKI1QeADfQF07kR8esflMsRRh0bLs=;
-        h=From:To:CC:Subject:Date;
-        b=jneSebl7NqXDTM8Jh6ybrZf+/0jIVV7Jpitgb9atH0qfGrZIK2LSlUtDQO66TBc0D
-         rgp9UB8BBi/13H84VM9hrSV3M3ta6YVt736qbI0ljbXC11MdqWm3a6fqPyfYlHV8SY
-         0WwcGbQGA3EWWcur+pdSW5UXM89AhEjiABxkn8d4=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04EChBPE121673
+        s=ti-com-17Q1; t=1589460196;
+        bh=HlDA7roPZoOfauhzxUkVsNVj1Ph1YT27Vtoau0p6J5I=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=FfZY3MR8phk6TIfCDXaZbxGQra58C6/erV4EN29DgQN2xq0H95dWxb9aD5o+aHONl
+         hQAfCM0uq2OLqkefPDUNlOFDNpibFqC3wWtvtE4vRQZpEDEsakMIWlrkOiRmpOlj/A
+         bNV+EnM2xjvkhFJ4ETuuErVipoqrIjKL8XCJ15aA=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04EChGlk121909
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 14 May 2020 07:43:11 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 14 May 2020 07:43:16 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 14
- May 2020 07:43:10 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ May 2020 07:43:16 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 14 May 2020 07:43:10 -0500
+ Frontend Transport; Thu, 14 May 2020 07:43:15 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04EChA9a030574;
-        Thu, 14 May 2020 07:43:10 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04EChFmK030774;
+        Thu, 14 May 2020 07:43:15 -0500
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
         <tiwai@suse.com>
 CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v3 1/3] ASoC: tlv320adcx140: Add controls for PDM clk
-Date:   Thu, 14 May 2020 07:33:36 -0500
-Message-ID: <20200514123338.20392-1-dmurphy@ti.com>
+        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 2/3] ASoC: tlv320adcx140: Add device tree property for PDM edges
+Date:   Thu, 14 May 2020 07:33:37 -0500
+Message-ID: <20200514123338.20392-2-dmurphy@ti.com>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200514123338.20392-1-dmurphy@ti.com>
+References: <20200514123338.20392-1-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -66,60 +69,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add ALSA controls to configure the PDM clocks.
-The clocks need to be configurable to accommodate various microphones
-that use clocks for low power/low resolution modes to high power/high
-resolution modes.
+Add a device tree property to configure the PDM sampling edge for each
+digital microphone.
 
+CC: Rob Herring <robh@kernel.org>
 Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- sound/soc/codecs/tlv320adcx140.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
 
-diff --git a/sound/soc/codecs/tlv320adcx140.c b/sound/soc/codecs/tlv320adcx140.c
-index 0f713efde046..97634e0ca0ba 100644
---- a/sound/soc/codecs/tlv320adcx140.c
-+++ b/sound/soc/codecs/tlv320adcx140.c
-@@ -180,6 +180,17 @@ static const struct snd_kcontrol_new decimation_filter_controls[] = {
- 	SOC_DAPM_ENUM("Decimation Filter", decimation_filter_enum),
- };
+v3 - Updated description to be more descriptive and fixed example.
+
+ .../bindings/sound/tlv320adcx140.yaml         | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml b/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
+index ab2268c0ee67..daa6cc0e031b 100644
+--- a/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
++++ b/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
+@@ -63,6 +63,29 @@ properties:
+       - $ref: /schemas/types.yaml#/definitions/uint32
+       - enum: [0, 1, 2]
  
-+static const char * const pdmclk_text[] = {
-+	"2.8224 MHz", "1.4112 MHz", "705.6 kHz", "5.6448 MHz"
-+};
++  ti,pdm-edge-select:
++    description: |
++       Defines the PDMCLK sampling edge configuration for the PDM inputs.  This
++       array is defined as <PDMIN1 PDMIN2 PDMIN3 PDMIN4>.
 +
-+static SOC_ENUM_SINGLE_DECL(pdmclk_select_enum, ADCX140_PDMCLK_CFG, 0,
-+			    pdmclk_text);
++       0 - (default) Odd channel is latched on the negative edge and even
++       channel is latched on the the positive edge.
++       1 - Odd channel is latched on the positive edge and even channel is
++       latched on the the negative edge.
 +
-+static const struct snd_kcontrol_new pdmclk_div_controls[] = {
-+	SOC_DAPM_ENUM("PDM Clk Divider Select", pdmclk_select_enum),
-+};
++       PDMIN1 - PDMCLK latching edge used for channel 1 and 2 data
++       PDMIN2 - PDMCLK latching edge used for channel 3 and 4 data
++       PDMIN3 - PDMCLK latching edge used for channel 5 and 6 data
++       PDMIN4 - PDMCLK latching edge used for channel 7 and 8 data
 +
- static const char * const resistor_text[] = {
- 	"2.5 kOhm", "10 kOhm", "20 kOhm"
- };
-@@ -416,6 +427,9 @@ static const struct snd_soc_dapm_widget adcx140_dapm_widgets[] = {
- 	SND_SOC_DAPM_MUX("IN4 Analog Mic Resistor", SND_SOC_NOPM, 0, 0,
- 			in4_resistor_controls),
- 
-+	SND_SOC_DAPM_MUX("PDM Clk Div Select", SND_SOC_NOPM, 0, 0,
-+			pdmclk_div_controls),
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-array
++      - minItems: 1
++        maxItems: 4
++        items:
++          maximum: 1
++        default: [0, 0, 0, 0]
 +
- 	SND_SOC_DAPM_MUX("Decimation Filter", SND_SOC_NOPM, 0, 0,
- 			decimation_filter_controls),
- };
-@@ -493,6 +507,11 @@ static const struct snd_soc_dapm_route adcx140_audio_map[] = {
- 	{"IN4 Analog Mic Resistor", "10 kOhm", "MIC4M Input Mux"},
- 	{"IN4 Analog Mic Resistor", "20 kOhm", "MIC4M Input Mux"},
- 
-+	{"PDM Clk Div Select", "2.8224 MHz", "MIC1P Input Mux"},
-+	{"PDM Clk Div Select", "1.4112 MHz", "MIC1P Input Mux"},
-+	{"PDM Clk Div Select", "705.6 kHz", "MIC1P Input Mux"},
-+	{"PDM Clk Div Select", "5.6448 MHz", "MIC1P Input Mux"},
-+
- 	{"MIC1 Analog Mux", "Line In", "MIC1P"},
- 	{"MIC2 Analog Mux", "Line In", "MIC2P"},
- 	{"MIC3 Analog Mux", "Line In", "MIC3P"},
+ required:
+   - compatible
+   - reg
+@@ -77,6 +100,7 @@ examples:
+         compatible = "ti,tlv320adc5140";
+         reg = <0x4c>;
+         ti,mic-bias-source = <6>;
++        ti,pdm-edge-select = <0 1 0 1>;
+         reset-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
+       };
+     };
 -- 
 2.26.2
 
