@@ -2,90 +2,98 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F405C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FD9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5706120727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 165D020787
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:32:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbgENXcK (ORCPT
+        id S1728347AbgENXcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 19:32:10 -0400
-Received: from mga02.intel.com ([134.134.136.20]:5585 "EHLO mga02.intel.com"
+        Thu, 14 May 2020 19:32:32 -0400
+Received: from mga06.intel.com ([134.134.136.31]:15797 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727956AbgENXcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 19:32:10 -0400
-IronPort-SDR: UCSX5GmE8G1uZTSUHPN1JibF3jGVsL6KZE/1yWKG4q3ES3N1Y9if7d57b6yUa+p6rXyfYYCiPJ
- prhpcslIlhbg==
+        id S1728288AbgENXcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 19:32:32 -0400
+IronPort-SDR: vsyOoDT3emlGh5iOTYA/v1OE3N6hG3JRXGdkBowU334UgS3HTvGenrWxjxedQk7ynQ4151cObB
+ TAXcszonfLcA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 16:32:09 -0700
-IronPort-SDR: hag/P9iVoSNRCw+5TWpI+ii3mA+AAvc5yIwSVlTxUg74ofn6XhHd7CXmb/4pPGSfRJe9blrtCD
- AUtLqSb3lazw==
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 16:32:31 -0700
+IronPort-SDR: AGf3EJk7tM8SlSjLEDYCzZ23Rp2H3cq6MSyBBtVyJEpl4LUf6aIl2O9wJ2mcgH6a5YyUB3Yo0S
+ wQTHkMcurE2Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,392,1583222400"; 
-   d="scan'208";a="252217881"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga007.fm.intel.com with ESMTP; 14 May 2020 16:32:08 -0700
-Date:   Thu, 14 May 2020 16:32:08 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Michael Tsirkin <mst@redhat.com>,
-        Julia Suvorova <jsuvorov@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, x86@kernel.org
-Subject: Re: [PATCH RFC 0/5] KVM: x86: KVM_MEM_ALLONES memory
-Message-ID: <20200514233208.GI15847@linux.intel.com>
-References: <20200514180540.52407-1-vkuznets@redhat.com>
- <20200514220516.GC449815@xz-x1>
- <20200514225623.GF15847@linux.intel.com>
- <20200514232250.GA479802@xz-x1>
+   d="scan'208";a="341784788"
+Received: from ashadrin-mobl1.ccr.corp.intel.com ([10.249.38.112])
+  by orsmga001.jf.intel.com with ESMTP; 14 May 2020 16:32:23 -0700
+Message-ID: <2a2e2c8c4a9364fa515fe772d2216d77c45ae854.camel@linux.intel.com>
+Subject: Re: [PATCH v8 1/8] tpm: tpm_tis: Make implementation of read16,
+ read32 and write32 optional
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     amirmizi6@gmail.com, Eyal.Cohen@nuvoton.com,
+        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
+        robh+dt@kernel.org, benoit.houyere@st.com, mark.rutland@arm.com,
+        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com
+Date:   Fri, 15 May 2020 02:32:12 +0300
+In-Reply-To: <5e66f2d3e3f2c6af4bafd25f0d228774b8302e8d.camel@linux.intel.com>
+References: <20200512141431.83833-1-amirmizi6@gmail.com>
+         <20200512141431.83833-2-amirmizi6@gmail.com>
+         <5e66f2d3e3f2c6af4bafd25f0d228774b8302e8d.camel@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200514232250.GA479802@xz-x1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 07:22:50PM -0400, Peter Xu wrote:
-> On Thu, May 14, 2020 at 03:56:24PM -0700, Sean Christopherson wrote:
-> > On Thu, May 14, 2020 at 06:05:16PM -0400, Peter Xu wrote:
-> > > E.g., shm_open() with a handle and fill one 0xff page, then remap it to
-> > > anywhere needed in QEMU?
+On Thu, 2020-05-14 at 14:26 +0300, Jarkko Sakkinen wrote:
+> On Tue, 2020-05-12 at 17:14 +0300, amirmizi6@gmail.com wrote:
+> > From: Amir Mizinski <amirmizi6@gmail.com>
 > > 
-> > Mapping that 4k page over and over is going to get expensive, e.g. each
-> > duplicate will need a VMA and a memslot, plus any PTE overhead.  If the
-> > total sum of the holes is >2mb it'll even overflow the mumber of allowed
-> > memslots.
+> > Only tpm_tis can use memory-mapped I/O, which is truly mapped into
+> > the kernel's memory space. Therefore, using ioread16/ioread32/iowrite32
+> > turns into a straightforward pointer dereference.
+> > Every other driver requires more complicated operations to read more than
+> > one byte at a time and will just fall back to read_bytes/write_bytes.
+> > Therefore, move this common code out of tpm_tis_spi and into tpm_tis_core
+> > so that it is used automatically when low-level drivers do not implement
+> > the specialized methods.
+> > 
+> > Co-developed-by: Alexander Steffen <Alexander.Steffen@infineon.com>
+> > Signed-off-by: Alexander Steffen <Alexander.Steffen@infineon.com>
+> > Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 > 
-> What's the PTE overhead you mentioned?  We need to fill PTEs one by one on
-> fault even if the page is allocated in the kernel, am I right?
-
-It won't require host PTEs for every page if it's a kernel page.  I doubt
-PTEs are a significant overhead, especially compared to memslots, but it's
-still worth considering.
-
-My thought was to skimp on both host PTEs _and_ KVM SPTEs by always sending
-the PCI hole accesses down the slow MMIO path[*].
-
-[*] https://lkml.kernel.org/r/20200514194624.GB15847@linux.intel.com
-
-> 4K is only an example - we can also use more pages as the template.  However I
-> guess the kvm memslot count could be a limit..  Could I ask what's the normal
-> size of this 0xff region, and its distribution?
+> OK, so I applied this one:
 > 
-> Thanks,
+> http://git.infradead.org/users/jjs/linux-tpmdd.git/commit/fa05dc792ea02043f3c21467cb4485a38ac19bdf
 > 
-> -- 
-> Peter Xu
-> 
+> I.e. no need to carry this one any more in the series. Sorry that
+> I haven't done this before (should have).
+
+Dropped it. Breaks the compilation:
+
+ld: drivers/char/tpm/tpm_tis_spi_cr50.o:(.rodata+0x10): undefined reference to `tpm_tis_spi_read16'
+ld: drivers/char/tpm/tpm_tis_spi_cr50.o:(.rodata+0x18): undefined reference to `tpm_tis_spi_read32'
+ld: drivers/char/tpm/tpm_tis_spi_cr50.o:(.rodata+0x20): undefined reference to `tpm_tis_spi_write32'
+
+Please fix this issue in the next version of the patch and remove my
+reviewed-by. I will have to re-review the patch.
+
+/Jarkko
+
