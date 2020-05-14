@@ -2,96 +2,73 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA8BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A00C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 548AD206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C0972053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:40:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbgENKkC (ORCPT
+        id S1726707AbgENKkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 06:40:02 -0400
-Received: from smtp-1908.mail.infomaniak.ch ([185.125.25.8]:35641 "EHLO
-        smtp-1908.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726102AbgENKkB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 06:40:01 -0400
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49N7N05RDVzlhpy6;
-        Thu, 14 May 2020 12:40:00 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 49N7Mz3W0czljKBC;
-        Thu, 14 May 2020 12:39:59 +0200 (CEST)
-Subject: Re: [PATCH v17 05/10] fs,landlock: Support filesystem access-control
-To:     James Morris <jmorris@namei.org>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Cc:     linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-security-module@vger.kernel.org, x86@kernel.org
-References: <20200511192156.1618284-1-mic@digikod.net>
- <20200511192156.1618284-6-mic@digikod.net>
- <alpine.LRH.2.21.2005141335280.30052@namei.org>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <c159d845-6108-4b67-6527-405589fa5382@digikod.net>
-Date:   Thu, 14 May 2020 12:39:58 +0200
-User-Agent: 
+        Thu, 14 May 2020 06:40:46 -0400
+Received: from verein.lst.de ([213.95.11.211]:51250 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725978AbgENKkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 06:40:45 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 8A1C268BEB; Thu, 14 May 2020 12:40:40 +0200 (CEST)
+Date:   Thu, 14 May 2020 12:40:40 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Christine Caulfield <ccaulfie@redhat.com>,
+        David Teigland <teigland@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Jon Maloy <jmaloy@redhat.com>,
+        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org,
+        target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
+        linux-cifs@vger.kernel.org, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, netdev@vger.kernel.org,
+        linux-sctp@vger.kernel.org, ceph-devel@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org
+Subject: is it ok to always pull in sctp for dlm, was: Re: [PATCH 27/33]
+ sctp: export sctp_setsockopt_bindx
+Message-ID: <20200514104040.GA12979@lst.de>
+References: <20200513062649.2100053-1-hch@lst.de> <20200513062649.2100053-28-hch@lst.de> <20200513180058.GB2491@localhost.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LRH.2.21.2005141335280.30052@namei.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513180058.GB2491@localhost.localdomain>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 13, 2020 at 03:00:58PM -0300, Marcelo Ricardo Leitner wrote:
+> On Wed, May 13, 2020 at 08:26:42AM +0200, Christoph Hellwig wrote:
+> > And call it directly from dlm instead of going through kernel_setsockopt.
+> 
+> The advantage on using kernel_setsockopt here is that sctp module will
+> only be loaded if dlm actually creates a SCTP socket.  With this
+> change, sctp will be loaded on setups that may not be actually using
+> it. It's a quite big module and might expose the system.
+> 
+> I'm okay with the SCTP changes, but I'll defer to DLM folks to whether
+> that's too bad or what for DLM.
 
-On 14/05/2020 05:37, James Morris wrote:
-> On Mon, 11 May 2020, Mickaël Salaün wrote:
-> 
-> 
->> diff --git a/include/linux/fs.h b/include/linux/fs.h
->> index 45cc10cdf6dd..2276642f8e05 100644
->> --- a/include/linux/fs.h
->> +++ b/include/linux/fs.h
->> @@ -1517,6 +1517,11 @@ struct super_block {
->>  	/* Pending fsnotify inode refs */
->>  	atomic_long_t s_fsnotify_inode_refs;
->>  
->> +#ifdef CONFIG_SECURITY_LANDLOCK
->> +	/* References to Landlock underlying objects */
->> +	atomic_long_t s_landlock_inode_refs;
->> +#endif
->> +
-> 
-> This needs to be converted to the LSM API via superblock blob stacking.
-> 
-> See Casey's old patch: 
-> https://lore.kernel.org/linux-security-module/20190829232935.7099-2-casey@schaufler-ca.com/
-
-s_landlock_inode_refs is quite similar to s_fsnotify_inode_refs, but I
-can do it once the superblock security blob patch is upstream. Is it a
-blocker for now? What is the current status of lbs_superblock?
-
-Anyway, we also need to have a call to landlock_release_inodes() in
-generic_shutdown_super(), which does not fit the LSM framework, and I
-think it is not an issue. Landlock handling of inodes is quite similar
-to fsnotify.
+So for ipv6 I could just move the helpers inline as they were trivial
+and avoid that issue.  But some of the sctp stuff really is way too
+big for that, so the only other option would be to use symbol_get.
