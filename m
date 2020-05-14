@@ -2,36 +2,36 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AB0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8297C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A41B20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB26220675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:31:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726200AbgENIbV (ORCPT
+        id S1726278AbgENIbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 04:31:21 -0400
-Received: from mga18.intel.com ([134.134.136.126]:12077 "EHLO mga18.intel.com"
+        Thu, 14 May 2020 04:31:25 -0400
+Received: from mga18.intel.com ([134.134.136.126]:12089 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725999AbgENIbR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 04:31:17 -0400
-IronPort-SDR: 02XFEZLVyI27FuKIx1QIQrtczQXVcW89DVUxTR8icEeDRjXDGAOU/oJrfmd19G4hzAS/hX1Sau
- 1erzp7CzY4rw==
+        id S1726184AbgENIbX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 04:31:23 -0400
+IronPort-SDR: NOCT9Ix1cmtiGFN7BMH2ErFTTtsspIHovv/JYksSh5hTVkfLRyfTUzj0HwxqEeSWiVRBUAY+Wr
+ F0G+VE//oYYA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 01:31:09 -0700
-IronPort-SDR: ui5pev/3O5s9inemVpVoBPby6R+/hUPU/HyUpfcEzVlSXyj9LgkREi4cA8Cg5iAoBltOeesObj
- odan99aHHgYg==
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 01:31:22 -0700
+IronPort-SDR: Ox397vVNy8HAkIYHQRZ1Ofs2gGmD6NCWn3uCPgBNajFHD5ZQz2lLrg2ansqzL+3KjeVoAMTuZb
+ pE1ggiMwd9xQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,390,1583222400"; 
-   d="scan'208";a="341539902"
+   d="scan'208";a="341539958"
 Received: from sqa-gate.sh.intel.com (HELO clx-ap-likexu.tsp.org) ([10.239.48.212])
-  by orsmga001.jf.intel.com with ESMTP; 14 May 2020 01:31:05 -0700
+  by orsmga001.jf.intel.com with ESMTP; 14 May 2020 01:31:19 -0700
 From:   Like Xu <like.xu@linux.intel.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Paolo Bonzini <pbonzini@redhat.com>
@@ -43,10 +43,12 @@ Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         Joerg Roedel <joro@8bytes.org>,
         Thomas Gleixner <tglx@linutronix.de>, ak@linux.intel.com,
         wei.w.wang@intel.com, Like Xu <like.xu@linux.intel.com>
-Subject: [PATCH v11 00/11] Guest Last Branch Recording Enabling
-Date:   Thu, 14 May 2020 16:30:43 +0800
-Message-Id: <20200514083054.62538-1-like.xu@linux.intel.com>
+Subject: [PATCH v11 04/11] perf/x86: Add constraint to create guest LBR event without hw counter
+Date:   Thu, 14 May 2020 16:30:47 +0800
+Message-Id: <20200514083054.62538-5-like.xu@linux.intel.com>
 X-Mailer: git-send-email 2.21.3
+In-Reply-To: <20200514083054.62538-1-like.xu@linux.intel.com>
+References: <20200514083054.62538-1-like.xu@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,133 +56,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
-Would you mind acking the host perf patches if it looks good to you ?
+The hypervisor may request the perf subsystem to schedule a time window
+to directly access the LBR stack msrs for its own use. Normally, it would
+create a guest LBR event with callstack mode enabled, which is scheduled
+along with other ordinary LBR events on the host but in an exclusive way.
 
-Hi Paolo,
-Please help review the KVM proposal changes in this stable version.
+To avoid wasting a counter for the guest LBR event, the perf tracks it via
+needs_guest_lbr_without_counter() and assigns it with a fake VLBR counter
+with the help of new lbr_without_counter_constraint. As with the BTS event,
+there is actually no hardware counter assigned for the guest LBR event.
 
-Now, we can use upstream QEMU w/ '-cpu host' to test this feature, and
-disable it by clearing the LBR format bits in the IA32_PERF_CAPABILITIES.
-
-v10->v11 Changelog:
-- add '.config = INTEL_FIXED_VLBR_EVENT' to the guest LBR event config;
-- rewrite is_guest_lbr_event() with 'config == INTEL_FIXED_VLBR_EVENT';
-- emit pr_warn() on the host when guest LBR is temporarily unavailable;
-- drop the KVM_CAP_X86_GUEST_LBR patch;
-- rewrite MSR_IA32_PERF_CAPABILITIES patch LBR record format;
-- split 'kvm_pmu->lbr_already_available' into a separate patch;
-- split 'pmu_ops->availability_check' into a separate patch;
-- comments and naming refinement, misc;
-
-You may check more details in each commit.
-
-Previous:
-https://lore.kernel.org/kvm/20200423081412.164863-1-like.xu@linux.intel.com/
-
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Like Xu <like.xu@linux.intel.com>
 ---
+ arch/x86/events/core.c            |  1 +
+ arch/x86/events/intel/core.c      | 20 ++++++++++++++++++++
+ arch/x86/events/intel/lbr.c       |  3 +++
+ arch/x86/events/perf_event.h      |  6 ++++++
+ arch/x86/include/asm/perf_event.h | 22 +++++++++++++++++++++-
+ 5 files changed, 51 insertions(+), 1 deletion(-)
 
-The last branch recording (LBR) is a performance monitor unit (PMU)
-feature on Intel processors that records a running trace of the most
-recent branches taken by the processor in the LBR stack. This patch
-series is going to enable this feature for plenty of KVM guests.
-
-The userspace could configure whether it's enabled or not for each
-guest via MSR_IA32_PERF_CAPABILITIES msr. As a first step, a guest
-could only enable LBR feature if its cpu model is the same as the
-host since the LBR feature is still one of model specific features.
-
-If it's enabled on the guest, the guest LBR driver would accesses the
-LBR MSR (including IA32_DEBUGCTLMSR and records MSRs) as host does.
-The first guest access on the LBR related MSRs is always interceptible.
-The KVM trap would create a special LBR event (called guest LBR event)
-which enables the callstack mode and none of hardware counter is assigned.
-The host perf would enable and schedule this event as usual. 
-
-Guest's first access to a LBR registers gets trapped to KVM, which
-creates a guest LBR perf event. It's a regular LBR perf event which gets
-the LBR facility assigned from the perf subsystem. Once that succeeds,
-the LBR stack msrs are passed through to the guest for efficient accesses.
-However, if another host LBR event comes in and takes over the LBR
-facility, the LBR msrs will be made interceptible, and guest following
-accesses to the LBR msrs will be trapped and meaningless. 
-
-Because saving/restoring tens of LBR MSRs (e.g. 32 LBR stack entries) in
-VMX transition brings too excessive overhead to frequent vmx transition
-itself, the guest LBR event would help save/restore the LBR stack msrs
-during the context switching with the help of native LBR event callstack
-mechanism, including LBR_SELECT msr.
-
-If the guest no longer accesses the LBR-related MSRs within a scheduling
-time slice and the LBR enable bit is unset, vPMU would release its guest
-LBR event as a normal event of a unused vPMC and the pass-through
-state of the LBR stack msrs would be canceled.
-
----
-
-LBR testcase:
-echo 1 > /proc/sys/kernel/watchdog
-echo 25 > /proc/sys/kernel/perf_cpu_time_max_percent
-echo 5000 > /proc/sys/kernel/perf_event_max_sample_rate
-echo 0 > /proc/sys/kernel/perf_cpu_time_max_percent
-./perf record -b ./br_instr a
-
-- Perf report on the host:
-Samples: 72K of event 'cycles', Event count (approx.): 72512
-Overhead  Command   Source Shared Object           Source Symbol                           Target Symbol                           Basic Block Cycles
-  12.12%  br_instr  br_instr                       [.] cmp_end                             [.] lfsr_cond                           1
-  11.05%  br_instr  br_instr                       [.] lfsr_cond                           [.] cmp_end                             5
-   8.81%  br_instr  br_instr                       [.] lfsr_cond                           [.] cmp_end                             4
-   5.04%  br_instr  br_instr                       [.] cmp_end                             [.] lfsr_cond                           20
-   4.92%  br_instr  br_instr                       [.] lfsr_cond                           [.] cmp_end                             6
-   4.88%  br_instr  br_instr                       [.] cmp_end                             [.] lfsr_cond                           6
-   4.58%  br_instr  br_instr                       [.] cmp_end                             [.] lfsr_cond                           5
-
-- Perf report on the guest:
-Samples: 92K of event 'cycles', Event count (approx.): 92544
-Overhead  Command   Source Shared Object  Source Symbol                                   Target Symbol                                   Basic Block Cycles
-  12.03%  br_instr  br_instr              [.] cmp_end                                     [.] lfsr_cond                                   1
-  11.09%  br_instr  br_instr              [.] lfsr_cond                                   [.] cmp_end                                     5
-   8.57%  br_instr  br_instr              [.] lfsr_cond                                   [.] cmp_end                                     4
-   5.08%  br_instr  br_instr              [.] lfsr_cond                                   [.] cmp_end                                     6
-   5.06%  br_instr  br_instr              [.] cmp_end                                     [.] lfsr_cond                                   20
-   4.87%  br_instr  br_instr              [.] cmp_end                                     [.] lfsr_cond                                   6
-   4.70%  br_instr  br_instr              [.] cmp_end                                     [.] lfsr_cond                                   5
-
-Conclusion: the profiling results on the guest are similar to that on the host.
-
-Like Xu (9):
-  perf/x86/core: Refactor hw->idx checks and cleanup
-  perf/x86/lbr: Add interface to get basic information about LBR stack
-  perf/x86: Add constraint to create guest LBR event without hw counter
-  perf/x86: Keep LBR stack unchanged in host context for guest LBR event
-  KVM: x86: Expose MSR_IA32_PERF_CAPABILITIES for LBR record format
-  KVM: x86/pmu: Emulate LBR feature via guest LBR event
-  KVM: x86/pmu: Release guest LBR event via vPMU lazy release mechanism
-  KVM: x86/pmu: Check guest LBR availability in case host reclaims them
-  KVM: x86/pmu: Reduce the overhead of LBR passthrough or cancellation
-
-Wei Wang (2):
-  perf/x86: Fix variable types for LBR registers
-  KVM: x86/pmu: Tweak kvm_pmu_get_msr to pass 'struct msr_data' in
-
- arch/x86/events/core.c            |  26 ++-
- arch/x86/events/intel/core.c      | 105 ++++++----
- arch/x86/events/intel/lbr.c       |  56 +++++-
- arch/x86/events/perf_event.h      |  12 +-
- arch/x86/include/asm/kvm_host.h   |  13 ++
- arch/x86/include/asm/perf_event.h |  34 +++-
- arch/x86/kvm/cpuid.c              |   2 +-
- arch/x86/kvm/pmu.c                |  19 +-
- arch/x86/kvm/pmu.h                |  15 +-
- arch/x86/kvm/svm/pmu.c            |   7 +-
- arch/x86/kvm/vmx/capabilities.h   |  15 ++
- arch/x86/kvm/vmx/pmu_intel.c      | 320 +++++++++++++++++++++++++++++-
- arch/x86/kvm/vmx/vmx.c            |  12 +-
- arch/x86/kvm/vmx/vmx.h            |   2 +
- arch/x86/kvm/x86.c                |  18 +-
- 15 files changed, 564 insertions(+), 92 deletions(-)
-
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index f7a259dcbb06..2405926e2dba 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1104,6 +1104,7 @@ static inline void x86_assign_hw_event(struct perf_event *event,
+ 
+ 	switch (hwc->idx) {
+ 	case INTEL_PMC_IDX_FIXED_BTS:
++	case INTEL_PMC_IDX_FIXED_VLBR:
+ 		hwc->config_base = 0;
+ 		hwc->event_base	= 0;
+ 		break;
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index f1439acbf7e6..112bc8367d5b 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2621,6 +2621,22 @@ intel_bts_constraints(struct perf_event *event)
+ 	return NULL;
+ }
+ 
++/*
++ * Note, the event that satisfies this constraint will not be assigned
++ * with a normal hardware counter but a fake one like BTS event.
++ *
++ * The guest LBR event uses it in the __intel_get_event_constraints()
++ * to make sure LBR registers to be used exclusively for guest.
++ */
++static struct event_constraint *
++intel_guest_lbr_constraints(struct perf_event *event)
++{
++	if (unlikely(is_guest_lbr_event(event)))
++		return &guest_lbr_constraint;
++
++	return NULL;
++}
++
+ static int intel_alt_er(int idx, u64 config)
+ {
+ 	int alt_idx = idx;
+@@ -2811,6 +2827,10 @@ __intel_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+ {
+ 	struct event_constraint *c;
+ 
++	c = intel_guest_lbr_constraints(event);
++	if (c)
++		return c;
++
+ 	c = intel_bts_constraints(event);
+ 	if (c)
+ 		return c;
+diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+index 6c60dcaaaf69..0a91cbe3a7c7 100644
+--- a/arch/x86/events/intel/lbr.c
++++ b/arch/x86/events/intel/lbr.c
+@@ -1363,3 +1363,6 @@ int x86_perf_get_lbr(struct x86_pmu_lbr *stack)
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(x86_perf_get_lbr);
++
++struct event_constraint guest_lbr_constraint =
++	EVENT_CONSTRAINT(0, 1ULL << INTEL_PMC_IDX_FIXED_VLBR, 0);
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 1025bc6eb04f..34d76a2f5ebd 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -969,6 +969,11 @@ static inline bool intel_pmu_has_bts(struct perf_event *event)
+ 	return intel_pmu_has_bts_period(event, hwc->sample_period);
+ }
+ 
++static inline bool is_guest_lbr_event(struct perf_event *event)
++{
++	return event->attr.config == INTEL_FIXED_VLBR_EVENT;
++}
++
+ int intel_pmu_save_and_restart(struct perf_event *event);
+ 
+ struct event_constraint *
+@@ -989,6 +994,7 @@ void release_ds_buffers(void);
+ void reserve_ds_buffers(void);
+ 
+ extern struct event_constraint bts_constraint;
++extern struct event_constraint guest_lbr_constraint;
+ 
+ void intel_pmu_enable_bts(u64 config);
+ 
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 5071515f6b0f..d1938484854d 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -192,9 +192,29 @@ struct x86_pmu_capability {
+ #define GLOBAL_STATUS_UNC_OVF				BIT_ULL(61)
+ #define GLOBAL_STATUS_ASIF				BIT_ULL(60)
+ #define GLOBAL_STATUS_COUNTERS_FROZEN			BIT_ULL(59)
+-#define GLOBAL_STATUS_LBRS_FROZEN			BIT_ULL(58)
++#define GLOBAL_STATUS_LBRS_FROZEN_BIT			58
++#define GLOBAL_STATUS_LBRS_FROZEN			BIT_ULL(GLOBAL_STATUS_LBRS_FROZEN_BIT)
+ #define GLOBAL_STATUS_TRACE_TOPAPMI			BIT_ULL(55)
+ 
++/*
++ * We model guest LBR event tracing as another fixed-mode PMC like BTS.
++ *
++ * We choose bit 58 because it's used to indicate LBR stack frozen state
++ * for architectural perfmon v4, also we unconditionally mask that bit in
++ * the handle_pmi_common(), so it'll never be set in the overflow handling.
++ *
++ * With this fake counter assigned, the guest LBR event user (such as KVM),
++ * can program the LBR registers on its own, and we don't actually do anything
++ * with then in the host context.
++ */
++#define INTEL_PMC_IDX_FIXED_VLBR	GLOBAL_STATUS_LBRS_FROZEN_BIT
++
++/*
++ * Pseudo-encoding the guest LBR event as event=0x00,umask=0x1a,
++ * since it would claim bit 58 which is effectively Fixed25.
++ */
++#define INTEL_FIXED_VLBR_EVENT	0x1a00
++
+ /*
+  * Adaptive PEBS v4
+  */
 -- 
 2.21.3
 
