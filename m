@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EE1C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE804C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 011D520643
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD14220643
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:08:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483304;
-	bh=v9qJNlbuI6sHNC+a3yHkbKMRaoz/ym7JnLIvPA5p+5Y=;
+	s=default; t=1589483308;
+	bh=KuXimrsHA3zb0KgBizYd4QVjSY3d7N/R9dZqKgNYgYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IIurYioMkkGYhU8NMQMnvQg5a4uj8sdKkYOJ0d0xUSxNxQogb7cx4yfl7DjXGXRMh
-	 ho5WUWePzR0A5FjdH1dgHZRASbcKcGQvrwh4fOsZgV1fnTr8gfRzn+8PPirhJ1e4Vb
-	 5mqrN0Sh0j614u559fKy/R2diUVjMfbTLOjWC4QI=
+	b=tcByPCamsjfUuySqPs3FKbhWT6kvV3aHWma8IQqDwITEkw5iSLRooAhiy8i34drwd
+	 7bxzrQ0tno64zIvlM6ZUD0LFrVn+8xz0OHwlJ+pFsuUd1GDYOGpIX+z3kp7Aiz6UAA
+	 OYLffLxmedbD/zeBM3EdlHRzPGkObwKdvpdx5nkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730015AbgENTIX (ORCPT
+        id S1728632AbgENSxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:08:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52432 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:53:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728654AbgENSxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:53:21 -0400
+        id S1728559AbgENSxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:53:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE2D1206DC;
-        Thu, 14 May 2020 18:53:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF5BE20727;
+        Thu, 14 May 2020 18:53:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482400;
-        bh=v9qJNlbuI6sHNC+a3yHkbKMRaoz/ym7JnLIvPA5p+5Y=;
+        s=default; t=1589482383;
+        bh=KuXimrsHA3zb0KgBizYd4QVjSY3d7N/R9dZqKgNYgYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RzRNmCQ5SFItUjbnEsW4gnlljLWnAD0vW67WJKv2IyV0Atf8bws9LPqWs3dCEZpgK
-         eDTzj8Y6mkplNkAEfQgQum6RinhyHZ/p26DUaobT/ZSLV+j3MmS4cZo+s8hvGcvv2t
-         oQGHCf94vI3CpLtJiLFmROO/fsBncOzbhfdVdcI4=
+        b=d70w3SQQI4V43ciCzRlpOARZFsHYLYLyAI56BYRtpESrhsrFtOL0MFVU4C52wuI5t
+         IAscvocbs5Hs3o1+xYT7eCkmnMghzQK6V6PXww+fEWdKGEi9xnHjC+x5LYPHrGINDe
+         dNad4k4IqMyfzNkr4SHyNBPpyHcNa97D04sAD8fQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Kosina <jkosina@suse.cz>,
-        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 07/49] HID: alps: ALPS_1657 is too specific; use U1_UNICORN_LEGACY instead
-Date:   Thu, 14 May 2020 14:52:28 -0400
-Message-Id: <20200514185311.20294-7-sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 60/62] crypto: lrw - simplify error handling in create()
+Date:   Thu, 14 May 2020 14:51:45 -0400
+Message-Id: <20200514185147.19716-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200514185311.20294-1-sashal@kernel.org>
-References: <20200514185311.20294-1-sashal@kernel.org>
+In-Reply-To: <20200514185147.19716-1-sashal@kernel.org>
+References: <20200514185147.19716-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,53 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Kosina <jkosina@suse.cz>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 185af3e775b693f773d9a4b5a8c3cda69fc8ca0f ]
+[ Upstream commit d57063103332b95eac9c118900f35700a491da08 ]
 
-HID_DEVICE_ID_ALPS_1657 PID is too specific, as there are many other
-ALPS hardware IDs using this particular touchpad.
+Simplify the error handling in the LRW template's ->create() function by
+taking advantage of crypto_drop_skcipher() now accepting (as a no-op) a
+spawn that hasn't been grabbed yet.
 
-Rename the identifier to HID_DEVICE_ID_ALPS_U1_UNICORN_LEGACY in order
-to describe reality better.
-
-Fixes: 640e403b1fd24 ("HID: alps: Add AUI1657 device ID")
-Reported-by: Xiaojian Cao <xiaojian.cao@cn.alps.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-alps.c | 2 +-
- drivers/hid/hid-ids.h  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ crypto/lrw.c | 28 +++++++++++-----------------
+ 1 file changed, 11 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/hid/hid-alps.c b/drivers/hid/hid-alps.c
-index c2a2bd5288906..b2ad319a74b9a 100644
---- a/drivers/hid/hid-alps.c
-+++ b/drivers/hid/hid-alps.c
-@@ -802,7 +802,7 @@ static int alps_probe(struct hid_device *hdev, const struct hid_device_id *id)
- 		break;
- 	case HID_DEVICE_ID_ALPS_U1_DUAL:
- 	case HID_DEVICE_ID_ALPS_U1:
--	case HID_DEVICE_ID_ALPS_1657:
-+	case HID_DEVICE_ID_ALPS_U1_UNICORN_LEGACY:
- 		data->dev_type = U1;
- 		break;
- 	default:
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index cc2b6f497f539..48eba9c4f39a4 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -79,9 +79,9 @@
- #define HID_DEVICE_ID_ALPS_U1_DUAL_PTP	0x121F
- #define HID_DEVICE_ID_ALPS_U1_DUAL_3BTN_PTP	0x1220
- #define HID_DEVICE_ID_ALPS_U1		0x1215
-+#define HID_DEVICE_ID_ALPS_U1_UNICORN_LEGACY         0x121E
- #define HID_DEVICE_ID_ALPS_T4_BTNLESS	0x120C
- #define HID_DEVICE_ID_ALPS_1222		0x1222
--#define HID_DEVICE_ID_ALPS_1657         0x121E
+diff --git a/crypto/lrw.c b/crypto/lrw.c
+index 63c485c0d8a66..376d7ed3f1f87 100644
+--- a/crypto/lrw.c
++++ b/crypto/lrw.c
+@@ -343,15 +343,15 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
  
- #define USB_VENDOR_ID_AMI		0x046b
- #define USB_DEVICE_ID_AMI_VIRT_KEYBOARD_AND_MOUSE	0xff10
+ 	err = -EINVAL;
+ 	if (alg->base.cra_blocksize != LRW_BLOCK_SIZE)
+-		goto err_drop_spawn;
++		goto err_free_inst;
+ 
+ 	if (crypto_skcipher_alg_ivsize(alg))
+-		goto err_drop_spawn;
++		goto err_free_inst;
+ 
+ 	err = crypto_inst_setname(skcipher_crypto_instance(inst), "lrw",
+ 				  &alg->base);
+ 	if (err)
+-		goto err_drop_spawn;
++		goto err_free_inst;
+ 
+ 	err = -EINVAL;
+ 	cipher_name = alg->base.cra_name;
+@@ -364,20 +364,20 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
+ 
+ 		len = strlcpy(ecb_name, cipher_name + 4, sizeof(ecb_name));
+ 		if (len < 2 || len >= sizeof(ecb_name))
+-			goto err_drop_spawn;
++			goto err_free_inst;
+ 
+ 		if (ecb_name[len - 1] != ')')
+-			goto err_drop_spawn;
++			goto err_free_inst;
+ 
+ 		ecb_name[len - 1] = 0;
+ 
+ 		if (snprintf(inst->alg.base.cra_name, CRYPTO_MAX_ALG_NAME,
+ 			     "lrw(%s)", ecb_name) >= CRYPTO_MAX_ALG_NAME) {
+ 			err = -ENAMETOOLONG;
+-			goto err_drop_spawn;
++			goto err_free_inst;
+ 		}
+ 	} else
+-		goto err_drop_spawn;
++		goto err_free_inst;
+ 
+ 	inst->alg.base.cra_flags = alg->base.cra_flags & CRYPTO_ALG_ASYNC;
+ 	inst->alg.base.cra_priority = alg->base.cra_priority;
+@@ -403,17 +403,11 @@ static int create(struct crypto_template *tmpl, struct rtattr **tb)
+ 	inst->free = free;
+ 
+ 	err = skcipher_register_instance(tmpl, inst);
+-	if (err)
+-		goto err_drop_spawn;
+-
+-out:
+-	return err;
+-
+-err_drop_spawn:
+-	crypto_drop_skcipher(spawn);
++	if (err) {
+ err_free_inst:
+-	kfree(inst);
+-	goto out;
++		free(inst);
++	}
++	return err;
+ }
+ 
+ static struct crypto_template crypto_tmpl = {
 -- 
 2.20.1
 
