@@ -2,139 +2,77 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C22ABC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26175C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2D902053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:40:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589452849;
-	bh=ADFIiIM1Fe26/cRjvae/xxSYwcERBybNKGMvOKxuFr4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=Iw/HOAcN+QtcGGH6TpSnxjpVPA/71J/Vo8/WwLwoJxnHlvjP/adebM9OHay8w5wPJ
-	 RvqUPsBrYhTU3jiOv8p6CRT0hbs3Yiuztxu5Sx5mF1jog4HgH2EVN+PUTsUa08sF5O
-	 c/YjKOkVSapmdxzUBQwiPFgonHYix6cHQVVVwcg8=
+	by mail.kernel.org (Postfix) with ESMTP id 035F72053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:44:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbgENKkq (ORCPT
+        id S1726116AbgENKoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 06:40:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56162 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbgENKkp (ORCPT
+        Thu, 14 May 2020 06:44:05 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:45405 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726056AbgENKoE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 06:40:45 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEBF1C061A0C;
-        Thu, 14 May 2020 03:40:44 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id u15so2971295ljd.3;
-        Thu, 14 May 2020 03:40:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=ADFIiIM1Fe26/cRjvae/xxSYwcERBybNKGMvOKxuFr4=;
-        b=bcftHwObq2STzO4ObxkD57BKbGME8uRmzC1DIuh1WNyRkLm+RpMqlj3oJPYjCecTdW
-         qeixtywBTxIDWfCvWYfh6os9aQTjruOLHMxBvxna9zosjgHtlR1/HY7bSv6sut/GXHX/
-         pvBhPQC5M7xC+15QOoDF3w/ZH6a+Q5ovj01Yfxu4WBSwXYK/8LH0K0nuDiZBTb1GM2Op
-         kut8C6pqAxf65Gbn1I1gPekBSdzo6C9L843PuLCd0XUjd5VwwJ4mXYVJRxyMNgSNo2xE
-         ft3y4XmwxVLHPMgkYWzu8iztz4kyeJKaUSLTK9qY4Wctvx+DlxXKnwfKcOQXZdBCBvpa
-         3OlQ==
+        Thu, 14 May 2020 06:44:04 -0400
+Received: by mail-il1-f198.google.com with SMTP id t10so2758563ilf.12
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 03:44:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :date:message-id:mime-version;
-        bh=ADFIiIM1Fe26/cRjvae/xxSYwcERBybNKGMvOKxuFr4=;
-        b=b5dEz1obOCW315NuUCYtA6851gEfcQ8HLoRH+VrhMUW/wk0llCMMROD5GusiKViyVR
-         R8M15biqvnh7kj3tCg0QvVU2QGVObfoJmWfxWQi8xiGGgSCk09+dRjr2vzxO3Yrpa3d5
-         W8M5dm7jUMOuu/34gJpX4QlL5OChEbG4gCQ9kWL9nzzw1BmqW8CLFtGSriL2fbCSJAkC
-         Hqi1XvQDeK/A6k9S+wWQUead+kMdg0jx5iASy7UksYMK7SePFAAs5aHmcAmQnZpRoEG5
-         MOgCF+NIaMHpRmJFfGcJg+gWBzYEM9uZUE8SZn0iamIGF1vRSPGN3YyOtRFQsbJuiX/w
-         AR9Q==
-X-Gm-Message-State: AOAM531uffqI4NmcQff2Uzv95UmZXF+AVQFS6zkgVj+XL8Go21PvhFlW
-        cQ1xhs3ajHV9WoacLNnVv8dnZpuHvXPMgg==
-X-Google-Smtp-Source: ABdhPJxSqTSWM74zlVsYXQn6jKwYtKuDk62yq+Z8ixknh/c2vPrcCXyau8zXak4ww5Ml8u8ZzxOlMA==
-X-Received: by 2002:a2e:a417:: with SMTP id p23mr2491094ljn.19.1589452842932;
-        Thu, 14 May 2020 03:40:42 -0700 (PDT)
-Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
-        by smtp.gmail.com with ESMTPSA id f24sm1534475lfc.43.2020.05.14.03.40.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 14 May 2020 03:40:42 -0700 (PDT)
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Roger Quadros <rogerq@ti.com>
-Cc:     gregkh@linuxfoundation.org, sergei.shtylyov@cogentembedded.com,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] usb: dwc3: support continuous runtime PM with dual role
-In-Reply-To: <d1c38262-198c-c128-f2b7-3253bde37e5c@puri.sm>
-References: <20200319100207.19957-1-martin.kepplinger@puri.sm> <cb2db077-0f37-2221-84f6-a7adfd6ed1f1@ti.com> <d1c38262-198c-c128-f2b7-3253bde37e5c@puri.sm>
-Date:   Thu, 14 May 2020 13:40:37 +0300
-Message-ID: <87lflu4x5m.fsf@kernel.org>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=hoXGVtl4km8jJ8wNjtYih/eDPSljKbLmILj3chomVUg=;
+        b=Gacd2PhcMKcZmWHuTT52knSM5Ipzv/VSeHnZvPVwgR7LPmSAhSmqV9IvsOx8RnOtfY
+         aQQf6w29ZJoMFHNXeNmQXjsYA6h1Cjqx2No5u5QWnL1DrpCn0Pwg/NIukxmljnO6ZtKd
+         zT8OicSsxihYyKCtnErx3APVuooY9XqMT/9QROyy//SXj+c4yJCmhKHP4mN/pf2vKwFH
+         QwzwnHP1RXGpEjtcBWzOeZXgh1gh4OQrfLpM0aPGVUQDeOvHJIERVMKLDIYQmIZHJaIR
+         7bLKFGT2OlWydd0KWnTFGGaYQan9gvFz1ehH8reEioAhDVuSX2wKqiSAE+EabHRu8lf2
+         v/PQ==
+X-Gm-Message-State: AOAM532h4VvVJTsmS/pRcQoCbE7Zvg68Gdn69gwrMzRWlGcUgNr4xhDq
+        J/7ydBY0i3unE0qKCB4QFTWqhRpVOk8h9it9fjlQx38NDkbO
+X-Google-Smtp-Source: ABdhPJzXo+5o8hNjij+UzCHkt9MgIvEAIQE+bNQv2oX8TNmIwCsWtTIm+byzrRQU1GzPoCsb/WkxdGdHVzDOB8z2t/DmzKj+OJKn
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+X-Received: by 2002:a92:8747:: with SMTP id d7mr3992371ilm.235.1589453044173;
+ Thu, 14 May 2020 03:44:04 -0700 (PDT)
+Date:   Thu, 14 May 2020 03:44:04 -0700
+In-Reply-To: <20200514092004.GA1577276@kroah.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000015d1cd05a5996049@google.com>
+Subject: Re: WARNING in memtype_reserve
+From:   syzbot <syzbot+353be47c9ce21b68b7ed@syzkaller.appspotmail.com>
+To:     bp@alien8.de, dave.hansen@linux.intel.com,
+        dmitry.torokhov@gmail.com, ebiederm@xmission.com,
+        gregkh@linuxfoundation.org, hpa@zytor.com, jeremy.linton@arm.com,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        luto@kernel.org, mingo@redhat.com, peterz@infradead.org,
+        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-Martin Kepplinger <martin.kepplinger@puri.sm> writes:
+syzbot has tested the proposed patch and the reproducer did not trigger crash:
 
-> On 24.04.20 09:48, Roger Quadros wrote:
->>=20
->>=20
->> On 19/03/2020 12:02, Martin Kepplinger wrote:
->>> The DRD module calls dwc3_set_mode() on role switches, i.e. when a
->>> device is
->>> being plugged in. In order to support continuous runtime power
->>> management when
->>> plugging in / unplugging a cable, we need to call
->>> pm_runtime_get_sync() in
->>> this path.
->>>
->>> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
->>=20
->> Reviewed-by: Roger Quadros <rogerq@ti.com>
->>=20
->>=20
->
-> thank you very much Roger. Anything else that is holding this back?
+Reported-and-tested-by: syzbot+353be47c9ce21b68b7ed@syzkaller.appspotmail.com
 
-Merge window is holding it back :-) It has been in my tree for weeks:
+Tested on:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git/commit/?h=3Dt=
-esting/next&id=3Dc2cd3452d5f8b66d49a73138fba5baadd5b489bd
+commit:         d5eeab8d Merge tag 'scsi-fixes' of git://git.kernel.org/pu..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b0212dbee046bc1f
+dashboard link: https://syzkaller.appspot.com/bug?extid=353be47c9ce21b68b7ed
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=12bd6806100000
 
-Gotta wait for the next merge window for new features to be merged.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl69ICUACgkQzL64meEa
-mQZ7VQ/+Mq0/5vRDJKOzvBdxMlyHYA9lUQr02QNKN8h1S0qAap4a0JZ01VhuIf3Y
-XBALfQgHg0ljjY3THqZ6MjDNEjGPDm8ENsdXInXt6jrwlDucrJxBHTKG8ZBq/brC
-WMS5hA/uL1LWywn0ybeNCtuvl8tn3vIV7iNKATt0YtijfZxBt/IP+fd+4rlkEyPk
-tN41d1HZo4uh7RNBiUgFX3L36j1yrdadSdnLv383yRmUQoxpdsmsVs3Jp1PHYalb
-bIPjNTlgJfyQ8vikb+1/OQSOe4ARIIXkViDeQG4MODjzU/cwiy4spipcwXk7HMQG
-VeeBXFXyZyljxddSWGLMHOSmBKl0s5o20ClnjmPGBpDnAsgt96tPqwC6Tb+jb0R4
-hpJDVn0MFRpcAk/4plccqKVE9behUXNWHLzyMGuwKkQ8Js/0oNOIw6KW0oUynMnw
-3rFvADz3+fct78F7M/zr82adrCtSF7l0gw4WvfpCqImu+59PApGg6ivv+F+ALwkZ
-7UDGevdubjw23+8tfZH7muURNJJDMleyl2E0ZDOwHtb/XB5FKVs8DxXSv9zUFEZq
-kUx1qbMjze8hONtM3Mzuy4vnpU68K1/r2OdAOtbPmAGbSRZNw9Gf/TPjHi0TVubg
-wbs8QRbxrd69glmDuH7pnb5uWphtUItieKQ5P9+Xsq0w99kNprM=
-=CQVk
------END PGP SIGNATURE-----
---=-=-=--
+Note: testing is done by a robot and is best-effort only.
