@@ -2,91 +2,109 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82233C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C459C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FBA0206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:21:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="TFWtNwcb"
+	by mail.kernel.org (Postfix) with ESMTP id 025A420675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 20:22:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbgENUVD (ORCPT
+        id S1727975AbgENUWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 16:21:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726035AbgENUVD (ORCPT
+        Thu, 14 May 2020 16:22:00 -0400
+Received: from mail-oo1-f65.google.com ([209.85.161.65]:40878 "EHLO
+        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbgENUV7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 16:21:03 -0400
-Received: from mo6-p02-ob.smtp.rzone.de (mo6-p02-ob.smtp.rzone.de [IPv6:2a01:238:20a:202:5302::5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E4C6C061A0C;
-        Thu, 14 May 2020 13:21:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1589487661;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=t8MuLBhVs0CMy4EvOYJ57JJKkaJSMB56O8oh0kRWzwM=;
-        b=TFWtNwcbADVlS9IEKb4EkbBvWnHIx9UlctRRawUHne3E56LNzrNNGxWxesIxoh2zma
-        v7KUt1Y1+peCAf3W0O2nHClAjdA1vWsdUYmx6QOV0vacneZ/5AHRtN+EUiFrHYGx/S2C
-        vuoCl2feDl6TGknBuoSUNs1N2G31iTLTY0aC5GDOFTle64KaZU/8+Ve9TykKIVtrEUME
-        Ku+cR22qWMr2qJrbI6T6uPYTHubYlnyMwg7Qk0A8nK/ZR5fpZQuhp6sGq2HKsej02cl/
-        1Qa2uYhr18+O51VZa8VwOXSopEQsi0LADYPt8hDUc7OG3iGlhFqmA/YyNxh+ohr4Y1k7
-        iMiw==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPaJfSc9C1S"
-X-RZG-CLASS-ID: mo00
-Received: from tauon.chronox.de
-        by smtp.strato.de (RZmta 46.6.2 DYNA|AUTH)
-        with ESMTPSA id u08bf3w4EKKsxtN
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Thu, 14 May 2020 22:20:54 +0200 (CEST)
-From:   Stephan Mueller <smueller@chronox.de>
-To:     =?utf-8?B?xYF1a2Fzeg==?= Stelmach <l.stelmach@samsung.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Markus Elfring <elfring@users.sourceforge.net>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Stefan Wahren <wahrenst@gmx.net>, linux-crypto@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH 2/2] hwrng: exynos - Set the quality value
-Date:   Thu, 14 May 2020 22:20:54 +0200
-Message-ID: <8196280.CLNGmrtAO5@tauon.chronox.de>
-In-Reply-To: <20200514190734.32746-3-l.stelmach@samsung.com>
-References: <20200514190734.32746-1-l.stelmach@samsung.com> <CGME20200514190740eucas1p293129b2ef3ba706652a9327e55db9649@eucas1p2.samsung.com> <20200514190734.32746-3-l.stelmach@samsung.com>
+        Thu, 14 May 2020 16:21:59 -0400
+Received: by mail-oo1-f65.google.com with SMTP id r1so1012676oog.7;
+        Thu, 14 May 2020 13:21:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rlIQF5j5vsfBPOtZybt4E5c1BhvLEXxG3/+FEaTp6cQ=;
+        b=DumUi0JZRpcBebsYX6Et40ImnssPFQE5Ipg7MSQoZyKi0jH71bysjM5tykoybrC+Om
+         Pu/1P0663FeGAc0i5kwned78sR5rFX84RxAUNjqVUa0EmlB8j/9bIgM6KVTHSCsohp0Z
+         84P6B/UpYKwY9Qz5hyqCVBz4UEsZ24U/np3w8+QtLaQmgYJ6qqyDnyT3PgSDPbuy6Vsa
+         mrmM0DPk9wbd3JpoebUBFTRtgBGnq+TSna80qu0EuGQWTF5w5LK9U7RyvISYXHZtj4VT
+         vTUH4gj90oliEHk57uWdqIIsSJ5SeoNIJYUhP6KhlW+PM+S7mGjLlYXBGXqZFKa+DVG0
+         Ib9g==
+X-Gm-Message-State: AOAM533qQ9hwEoVmg2PmNH70k1egCjsPxbqoSCIZNhb7jJQh26oiF7Ht
+        u/QpEyZS8p3FHf601x2xAGJTbr6rhMjqbe74Gns=
+X-Google-Smtp-Source: ABdhPJwHZYLoAUW61n9j258U9+ByCYD6QyGX6G3qS+2hqB9LkqYOP+sHVtDrwpGhxf2U+Oq5OCAoTbA4VCmhRTC+280=
+X-Received: by 2002:a4a:d44a:: with SMTP id p10mr5187382oos.11.1589487717414;
+ Thu, 14 May 2020 13:21:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+References: <20200509234124.GM23230@ZenIV.linux.org.uk> <20200509234557.1124086-1-viro@ZenIV.linux.org.uk>
+ <CGME20200509234610eucas1p258be307cde10392b26c322354db78a9b@eucas1p2.samsung.com>
+ <20200509234557.1124086-11-viro@ZenIV.linux.org.uk> <6f89732b-fba9-a947-6c61-5d1680747f3b@samsung.com>
+ <20200514140720.GB23230@ZenIV.linux.org.uk> <f6fcfa46-6271-45ea-37c2-62bcf0a607cb@samsung.com>
+ <20200514174131.GD23230@ZenIV.linux.org.uk>
+In-Reply-To: <20200514174131.GD23230@ZenIV.linux.org.uk>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 14 May 2020 22:21:46 +0200
+Message-ID: <CAMuHMdV78Y2Y_vkvbs2nt5LjM7D9te3ozr71_o2uGoNHSK4u=Q@mail.gmail.com>
+Subject: Re: [PATCH 11/20] amifb: get rid of pointless access_ok() calls
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, 14. Mai 2020, 21:07:34 CEST schrieb =C5=81ukasz Stelmach:
+Hi Al,
 
-Hi =C5=81ukasz,
+On Thu, May 14, 2020 at 7:43 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> On Thu, May 14, 2020 at 04:25:35PM +0200, Bartlomiej Zolnierkiewicz wrote:
+> > Thank you for in-detail explanations, for this patch:
+> >
+> > Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> >
+> > Could you also please take care of adding missing checks for {get,put}_user()
+> > failures later?
+>
+> Umm...  OK; put_user() side is trivial -  the interesting part is what to do
+> about get_user() failures halfway through.  Right now it treats them as
+> "we'd read zeroes".  On anything else I would say "screw it, memdup_user()
+> the damn thing on the way in and copy from there", but... Amiga has how
+> much RAM, again?
 
-> The value has been estimaded by obtainig 1024 chunks of data 128 bytes
-> (1024 bits) each from the generator and finding chunk with minimal
-> entropy using the ent(1) tool. The value was 6.332937 bits of entropy
-> in each 8 bits of data.
+In theory, up to 3.5 GiB ;-)
+In practice, 16 MiB is already a lot (mine has 12).
 
-Dto - see the other comment.
+> OTOH, from my reading of that code it does appear to be limited to
+> 4Kb of data to copy, so it's probably OK...  Hell knows - I'm really
+> confused by those #ifdef __mc68000__ in there; the driver *is*
+> amiga-only:
+> obj-$(CONFIG_FB_AMIGA)            += amifb.o c2p_planar.o
+> config FB_AMIGA
+>         tristate "Amiga native chipset support"
+>         depends on FB && AMIGA
+> and AMIGA is defined only in arch/m68k/Kconfig.machine.  So how the
+> hell can it *not* be true?  OTOH, it looks like hand-optimized
+> asm equivalents of C they have in #else, so that #else might be
+> meant to document what's going on...
 
-Ciao
-Stephan
+These #ifdefs are relics from APUS (Amiga Power-Up System), which
+added a PPC board.  APUS support was killed off a long time ago,
+when arch/ppc/ was still king, but these #ifdefs were missed, because
+they didn't test for CONFIG_APUS.
 
+Gr{oetje,eeting}s,
 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
