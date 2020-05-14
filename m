@@ -7,68 +7,68 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B289FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B01DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0FFF2078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A35D82065C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 00:22:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Na/d5Qrk"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ef/7kJ1O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733057AbgENAVw (ORCPT
+        id S1733099AbgENAWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 20:21:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44476 "EHLO
+        Wed, 13 May 2020 20:22:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732847AbgENAVw (ORCPT
+        by vger.kernel.org with ESMTP id S1732847AbgENAWM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 20:21:52 -0400
+        Wed, 13 May 2020 20:22:12 -0400
 Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15A06C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 17:21:52 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id g2so953976vsb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 17:21:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E424C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 17:22:12 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id v26so856494vsa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 17:22:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tpGKrAWxnYteSKZx7BseBLlhQnaeajEX7687cVAYxvo=;
-        b=Na/d5QrkKWMd5tBXEQIOgp0ETgPkUHKtgmGm/sLF6yNvFjZqEKLtpDkpMNCJjQuGh4
-         m+pWKEf2Dt08HwhWCRjZSTVVkTRDd1BnZ2KqkRFwiv3vY/wdr/WVJpe3WBgXKXtOozjM
-         S124A/tHJN4q3DSHmZKFkknmBOJKhcz0ZjtA8=
+        bh=ar6IwW9xd9CUZqFR53TmmUgiYezSnsTH5c4aEJicFwY=;
+        b=Ef/7kJ1OgQsBcYpqbjKZ80BhEPfGQ8T9NYpeCZF59s3/0hMpMXJml0o+s1v92bHvKY
+         QDlxZ4CnYPvspa+kIKFiyrzrTdxHTL207udAMd/8wY3VIp6nrIh6R2lN3X1eDX2PeoVO
+         qoJUGpC8qzQpxqEOhoWeJs6B7skgnSLpXzZKY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tpGKrAWxnYteSKZx7BseBLlhQnaeajEX7687cVAYxvo=;
-        b=ncByJ12/rEQDOG8pJuZxstpfq3ZOSpnku67+IOxFqxrDCplVOWU7lvPggzSbGNNpqm
-         bq7+ptQsDRnj/7mzfXM1og+QhrGKuRQGL8kmgoqGTgUfaYNL9fZyOLhX/z9fNTrRQoSg
-         xEt2CZ51dxFCtTFY1+NjHBiflhhZuJl2nEfS43D3zSeQzhZr55pZc0xDjyxtw/wwpuTX
-         9KoPqU1fS5F29SCnqeATcC3hwgBXjJDe1kZAPJQQK0lO/oAXr5l4YLgdgxzepJtcJbxa
-         Da3CpVUlwIER0HGBMPZ7/ioSMFqH4ZcDMJmh8O6ZR/Hqb7rHLka7LWx6p+Lh+XfVWZtT
-         Vwjg==
-X-Gm-Message-State: AOAM530CSkIfC1LYows0H9VDbNw4CztX0faEDMxWCzlcsrq2hBusXQqH
-        QJlPxkvVZKKfefOmBxgMzlGqdk8J21w=
-X-Google-Smtp-Source: ABdhPJyRgBMuMO5bpUOB0NZTXCCXsDpmlbw4khkv07bXL16F6DRoNaZtKzMdkCCVYDlyNlnkLPZGng==
-X-Received: by 2002:a67:ee0d:: with SMTP id f13mr1625128vsp.188.1589415710759;
-        Wed, 13 May 2020 17:21:50 -0700 (PDT)
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
-        by smtp.gmail.com with ESMTPSA id c94sm328087uac.2.2020.05.13.17.21.49
+        bh=ar6IwW9xd9CUZqFR53TmmUgiYezSnsTH5c4aEJicFwY=;
+        b=n1SE/V8aBhLWavnZKS6qMBexVKKKE7tJ3CgJ0fc/4Wy2AMITyWG1+fReQHUDQak8XA
+         xgIEPev+kkTGFlIJgh+wj/uDMVWELFb6FDjRH5QylzD0fM4lrSc3Nhl+ivSCzVzWLaeR
+         n8ZVIzKsqsV7zzlSovSk6hPWLc5HIS0uhy/sgiPw1auyy/d27E9SesrI39XmMpkEAOaO
+         dHuc6FJEvpDXToD2BjWErz1PCXcQSwN9dzwzbi5P3NUbCa/CPvTKxPx07gEqsU6TssAE
+         Ugcsj7llC/M56v8JVk10si0AoOH4YIr/8mPm8zcbSa6A/7unYXAofUkpsiqu1itrdnHn
+         9PpA==
+X-Gm-Message-State: AOAM531y42RQQUmFn8N6+Dz8hbYGLc0V4SVk0AH36Slx8Lj1TErmTwpA
+        CjFV/a9CuFnMz6oVPu2HgVGBfeDVG+Y=
+X-Google-Smtp-Source: ABdhPJw2+qTjC58C6E/qn2v05o9KbCxHT6ICdyIfVH2H634Hl2EyhARc8w1aFDDaKw/5HtWPvdD16g==
+X-Received: by 2002:a67:d81b:: with SMTP id e27mr1564953vsj.40.1589415730766;
+        Wed, 13 May 2020 17:22:10 -0700 (PDT)
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
+        by smtp.gmail.com with ESMTPSA id v16sm340442vsq.18.2020.05.13.17.22.09
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 May 2020 17:21:50 -0700 (PDT)
-Received: by mail-ua1-f49.google.com with SMTP id y10so496190uao.8
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 17:21:49 -0700 (PDT)
-X-Received: by 2002:ab0:6147:: with SMTP id w7mr427477uan.8.1589415709444;
- Wed, 13 May 2020 17:21:49 -0700 (PDT)
+        Wed, 13 May 2020 17:22:09 -0700 (PDT)
+Received: by mail-vs1-f44.google.com with SMTP id 62so963607vsi.2
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 17:22:09 -0700 (PDT)
+X-Received: by 2002:a67:f5d6:: with SMTP id t22mr1506572vso.73.1589415729146;
+ Wed, 13 May 2020 17:22:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200509214159.19680-1-liwei391@huawei.com> <20200509214159.19680-3-liwei391@huawei.com>
-In-Reply-To: <20200509214159.19680-3-liwei391@huawei.com>
+References: <20200509214159.19680-1-liwei391@huawei.com> <20200509214159.19680-4-liwei391@huawei.com>
+In-Reply-To: <20200509214159.19680-4-liwei391@huawei.com>
 From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 13 May 2020 17:21:38 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VVz4QnQ6AWAsCMxw6Zne6es0omvJ--Gnag=PXkMPt42g@mail.gmail.com>
-Message-ID: <CAD=FV=VVz4QnQ6AWAsCMxw6Zne6es0omvJ--Gnag=PXkMPt42g@mail.gmail.com>
-Subject: Re: [PATCH 2/4] arm64: Extract kprobes_save_local_irqflag() and kprobes_restore_local_irqflag()
+Date:   Wed, 13 May 2020 17:21:58 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Xkhs6eivpp7+r0qyfgbBgpSiHpwNY8o=JDBwYSBWadJA@mail.gmail.com>
+Message-ID: <CAD=FV=Xkhs6eivpp7+r0qyfgbBgpSiHpwNY8o=JDBwYSBWadJA@mail.gmail.com>
+Subject: Re: [PATCH 3/4] arm64: kgdb: Fix single-stepping into the irq handler wrongly
 To:     Wei Li <liwei391@huawei.com>
 Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
         Jason Wessel <jason.wessel@windriver.com>,
@@ -90,134 +90,122 @@ Hi,
 
 On Sat, May 9, 2020 at 6:49 AM Wei Li <liwei391@huawei.com> wrote:
 >
-> PSTATE.I and PSTATE.D are very important for single-step working.
+> After the single-step exception handling oops is fixed, when we execute
+> single-step in kdb/kgdb, we may see it jumps to the irq_handler (where
+> PSTATE.D is cleared) instead of the next instruction.
 >
-> Without disabling interrupt on local CPU, there is a chance of
-> interrupt occurrence in the period of exception return and start of
-> out-of-line single-step, that result in wrongly single stepping
-> into the interrupt handler. And if D bit is set then, it results into
-> undefined exception and when it's handler enables dbg then single-step
-> exception is generated, not as expected.
+> Add the prepare and cleanup work for single-step when enabling and
+> disabling to maintain the PSTATE.I and PSTATE.D carefully.
 >
-> As they are maintained well in kprobes_save_local_irqflag() and
-> kprobes_restore_local_irqflag() for kprobe module, extract them as
-> kernel_prepare_single_step() and kernel_cleanup_single_step() for
-> general use.
+> Before this patch:
+> * kdb:
+> Entering kdb (current=0xffff8000119e2dc0, pid 0) on processor 0 due to Keyboard Entry
+> [0]kdb> bp printk
+> Instruction(i) BP #0 at 0xffff8000101486cc (printk)
+>     is enabled   addr at ffff8000101486cc, hardtype=0 installed=0
 >
+> [0]kdb> g
+>
+> / # echo h > /proc/sysrq-trigger
+>
+> Entering kdb (current=0xffff0000fada65c0, pid 267) on processor 0 due to Breakpoint @ 0xffff8000101486cc
+> [0]kdb> ss
+>
+> Entering kdb (current=0xffff0000fada65c0, pid 267) on processor 0 due to SS trap @ 0xffff800010082ab8
+> [0]kdb> 0xffff800010082ab8
+> 0xffff800010082ab8 = 0xffff800010082ab8 (el1_irq+0x78)
+> [0]kdb>
+>
+>    0xffff800010082ab0 <+112>:   nop
+>    0xffff800010082ab4 <+116>:   msr     daifclr, #0xd
+>    0xffff800010082ab8 <+120>:   adrp    x1, 0xffff8000113a7000 <cpu_ops+1288>
+>    0xffff800010082abc <+124>:   ldr     x1, [x1, #1408]
+>
+> * kgdb:
+> (gdb) target remote 127.1:23002
+> Remote debugging using 127.1:23002
+> arch_kgdb_breakpoint () at /home/liwei/main_code/linux/arch/arm64/include/asm/kgdb.h:21
+> 21              asm ("brk %0" : : "I" (KGDB_COMPILED_DBG_BRK_IMM));
+> (gdb) b printk
+> Breakpoint 1 at 0xffff8000101486cc: file /home/liwei/main_code/linux/kernel/printk/printk.c, line 2076.
+> (gdb) c
+> Continuing.
+> [New Thread 287]
+> [Switching to Thread 283]
+>
+> Thread 177 hit Breakpoint 1, printk (fmt=0xffff80001130c9d8 "\001\066sysrq: HELP : ")
+>     at /home/liwei/main_code/linux/kernel/printk/printk.c:2076
+> 2076    {
+> (gdb) stepi
+> el1_irq () at /home/liwei/main_code/linux/arch/arm64/kernel/entry.S:608
+> 608             irq_handler
+> (gdb)
+>
+> After this patch:
+> * kdb:
+> Entering kdb (current=0xffff8000119d2dc0, pid 0) on processor 0 due to Keyboard Entry
+> [0]kdb> bp printk
+> Instruction(i) BP #0 at 0xffff80001014874c (printk)
+>     is enabled   addr at ffff80001014874c, hardtype=0 installed=0
+>
+> [0]kdb> g
+>
+> / # echo h > /proc/sysrq-trigger
+>
+> Entering kdb (current=0xffff0000fa6948c0, pid 265) on processor 0 due to Breakpoint @ 0xffff80001014874c
+> [0]kdb> ss
+>
+> Entering kdb (current=0xffff0000fa6948c0, pid 265) on processor 0 due to SS trap @ 0xffff800010148750
+> [0]kdb>
+>
+> * kgdb:
+> (gdb) target remote 127.1:23002
+> Remote debugging using 127.1:23002
+> arch_kgdb_breakpoint () at /home/liwei/main_code/linux/arch/arm64/include/asm/kgdb.h:21
+> 21              asm ("brk %0" : : "I" (KGDB_COMPILED_DBG_BRK_IMM));
+> (gdb) b printk
+> Breakpoint 1 at 0xffff80001014874c: file /home/liwei/main_code/linux/kernel/printk/printk.c, line 2076.
+> (gdb) c
+> Continuing.
+> [New Thread 277]
+> [Switching to Thread 276]
+>
+> Thread 171 hit Breakpoint 1, printk (fmt=0xffff8000112fc130 "\001\066sysrq: HELP : ")
+>     at /home/liwei/main_code/linux/kernel/printk/printk.c:2076
+> 2076    {
+> (gdb) stepi
+> 0xffff800010148750      2076    {
+> (gdb)
+>
+> Fixes: 44679a4f142b ("arm64: KGDB: Add step debugging support")
 > Signed-off-by: Wei Li <liwei391@huawei.com>
 > ---
->  arch/arm64/include/asm/debug-monitors.h |  4 ++++
->  arch/arm64/kernel/debug-monitors.c      | 26 +++++++++++++++++++++++
->  arch/arm64/kernel/probes/kprobes.c      | 28 ++-----------------------
->  3 files changed, 32 insertions(+), 26 deletions(-)
+>  arch/arm64/kernel/kgdb.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
 >
-> diff --git a/arch/arm64/include/asm/debug-monitors.h b/arch/arm64/include/asm/debug-monitors.h
-> index 7619f473155f..b62469f3475b 100644
-> --- a/arch/arm64/include/asm/debug-monitors.h
-> +++ b/arch/arm64/include/asm/debug-monitors.h
-> @@ -113,6 +113,10 @@ void user_fastforward_single_step(struct task_struct *task);
->  void kernel_enable_single_step(struct pt_regs *regs);
->  void kernel_disable_single_step(void);
->  int kernel_active_single_step(void);
-> +void kernel_prepare_single_step(unsigned long *flags,
-> +                                               struct pt_regs *regs);
-> +void kernel_cleanup_single_step(unsigned long flags,
-> +                                               struct pt_regs *regs);
+> diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
+> index 1a157ca33262..3910ac06c261 100644
+> --- a/arch/arm64/kernel/kgdb.c
+> +++ b/arch/arm64/kernel/kgdb.c
+> @@ -100,6 +100,8 @@ struct dbg_reg_def_t dbg_reg_def[DBG_MAX_REG_NUM] = {
+>         { "fpcr", 4, -1 },
+>  };
 >
->  #ifdef CONFIG_HAVE_HW_BREAKPOINT
->  int reinstall_suspended_bps(struct pt_regs *regs);
-> diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
-> index 48222a4760c2..25ce6b5a52d2 100644
-> --- a/arch/arm64/kernel/debug-monitors.c
-> +++ b/arch/arm64/kernel/debug-monitors.c
-> @@ -429,6 +429,32 @@ int kernel_active_single_step(void)
->  }
->  NOKPROBE_SYMBOL(kernel_active_single_step);
->
-> +/*
-> + * Interrupts need to be disabled before single-step mode is set, and not
-> + * reenabled until after single-step mode ends.
-> + * Without disabling interrupt on local CPU, there is a chance of
-> + * interrupt occurrence in the period of exception return and  start of
-> + * out-of-line single-step, that result in wrongly single stepping
-> + * into the interrupt handler.
-> + */
-> +void kernel_prepare_single_step(unsigned long *flags,
-> +                                               struct pt_regs *regs)
-> +{
-> +       *flags = regs->pstate & DAIF_MASK;
-> +       regs->pstate |= PSR_I_BIT;
-> +       /* Unmask PSTATE.D for enabling software step exceptions. */
-> +       regs->pstate &= ~PSR_D_BIT;
-> +}
-> +NOKPROBE_SYMBOL(kernel_prepare_single_step);
-
-nit: why not just return unsigned long rather than passing by reference?
-
-
+> +static DEFINE_PER_CPU(unsigned long, kgdb_ss_flags);
 > +
-> +void kernel_cleanup_single_step(unsigned long flags,
-> +                                               struct pt_regs *regs)
-> +{
-> +       regs->pstate &= ~DAIF_MASK;
-> +       regs->pstate |= flags;
-> +}
-> +NOKPROBE_SYMBOL(kernel_cleanup_single_step);
-> +
->  /* ptrace API */
->  void user_enable_single_step(struct task_struct *task)
+>  char *dbg_get_reg(int regno, void *mem, struct pt_regs *regs)
 >  {
-> diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
-> index d1c95dcf1d78..c655b6b543e3 100644
-> --- a/arch/arm64/kernel/probes/kprobes.c
-> +++ b/arch/arm64/kernel/probes/kprobes.c
-> @@ -168,30 +168,6 @@ static void __kprobes set_current_kprobe(struct kprobe *p)
->         __this_cpu_write(current_kprobe, p);
->  }
->
-> -/*
-> - * Interrupts need to be disabled before single-step mode is set, and not
-> - * reenabled until after single-step mode ends.
-> - * Without disabling interrupt on local CPU, there is a chance of
-> - * interrupt occurrence in the period of exception return and  start of
-> - * out-of-line single-step, that result in wrongly single stepping
-> - * into the interrupt handler.
-> - */
-> -static void __kprobes kprobes_save_local_irqflag(struct kprobe_ctlblk *kcb,
-> -                                               struct pt_regs *regs)
-> -{
-> -       kcb->saved_irqflag = regs->pstate & DAIF_MASK;
-> -       regs->pstate |= PSR_I_BIT;
-> -       /* Unmask PSTATE.D for enabling software step exceptions. */
-> -       regs->pstate &= ~PSR_D_BIT;
-> -}
-> -
-> -static void __kprobes kprobes_restore_local_irqflag(struct kprobe_ctlblk *kcb,
-> -                                               struct pt_regs *regs)
-> -{
-> -       regs->pstate &= ~DAIF_MASK;
-> -       regs->pstate |= kcb->saved_irqflag;
-> -}
-> -
->  static void __kprobes
->  set_ss_context(struct kprobe_ctlblk *kcb, unsigned long addr)
->  {
-> @@ -227,7 +203,7 @@ static void __kprobes setup_singlestep(struct kprobe *p,
->                 set_ss_context(kcb, slot);      /* mark pending ss */
->
->                 /* IRQs and single stepping do not mix well. */
-> -               kprobes_save_local_irqflag(kcb, regs);
-> +               kernel_prepare_single_step(&kcb->saved_irqflag, regs);
+>         if (regno >= DBG_MAX_REG_NUM || regno < 0)
+> @@ -200,8 +202,11 @@ int kgdb_arch_handle_exception(int exception_vector, int signo,
+>                 /*
+>                  * Received continue command, disable single step
+>                  */
+> -               if (kernel_active_single_step())
+> +               if (kernel_active_single_step()) {
+> +                       kernel_cleanup_single_step(per_cpu(kgdb_ss_flags,
+> +                                       raw_smp_processor_id()), linux_regs);
 
-Is there some reason to have two functions?  It seems like every time
-you call kernel_enable_single_step() you'd want to call
-kernel_prepare_single_step().  ...and every time you call
-kernel_disable_single_step() you'd want to call
-kernel_cleanup_single_step().
-
-Maybe you can just add the flags parameter to
-kernel_enable_single_step() / kernel_disable_single_step() and put the
-code in there?
+I don't think you need the raw_ version of smp_processor_id(), do you?
 
 
 -Doug
