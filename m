@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD30BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18232C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9CE22065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1EEE20575
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:00:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="KxSaq5XT"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="1dSFkxEr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726201AbgENIAP (ORCPT
+        id S1726287AbgENIAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 04:00:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59196 "EHLO
+        Thu, 14 May 2020 04:00:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726116AbgENIAJ (ORCPT
+        by vger.kernel.org with ESMTP id S1726144AbgENIAL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 04:00:09 -0400
+        Thu, 14 May 2020 04:00:11 -0400
 Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F470C05BD0A
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:00:07 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id f13so756954wmc.5
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:00:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F648C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:00:10 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id m24so19556291wml.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:00:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=MAzJNRl7denaMJiKd3+TRewxkBzsyKS+1FyrOm5aCWE=;
-        b=KxSaq5XTxVnVtwBXUOoDMp6SZenmSrmrS6gLUnxY6vLkzVplpObQpbGhAWb5e3scZb
-         G32p4TJzF966nh1yZL9JpgsEt6Uc5gC99jEqeY5/lBrPjylopUDYUbnK02TMyTRx3iz6
-         YucGl5to1Lmqvw4cFTcJf3TNiiFaLe8dp/49nGOEraC/fqVDh809GAiaP+eWfz3RQ9ZD
-         q3nxMOvfy/S+ebWg7OjLrnGysj3nnHoIdEeh8QBNvJq/80dzMrMvHc/0O4SezOAYmzRh
-         oynPjujMBWCtxL8iaOIFsZG06Pg2JdJBv8jBrp/PxoUNR0FZktPl1YfltiLh7wYyhe3h
-         Z3Ig==
+        bh=960aYk+7qjUCxv3nxz7wYsvEJGuss0o+v4xW/qsO27M=;
+        b=1dSFkxErs5IgQZQB4I5++tl6Djzi/CzZEIBnYx339dfUV4I61PUyud3aT4fwNNzNcx
+         v5HIcFgNEcVjDy1umMcmQchjN2Qm9/jz5aQZGBfG0MN7QYDwFq9SI1Lxl9wqtVPyNXFc
+         6LVT/omKGSYddx9jUaMiEBeLSaLvclEwZmvDFtiBorLaMmC9DI3tPHSo/e3HeHXcx035
+         ZJ0UbnRVUGYfNXOM4O1L/pR++et2VuIwgSxCs5Bq+wGGfbo8t7CvToEae+0071vFdSZq
+         y9b/T2Cnn+xwyz6iyLCiSKg9xdF+OHQQZTBk87vITrH3/whLEgig++rjfdXFZNsyvHIz
+         Am/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MAzJNRl7denaMJiKd3+TRewxkBzsyKS+1FyrOm5aCWE=;
-        b=pD0ZKOHGCGlMz9TZeMBYRpTEW7QrnqrOTJRGqSRcLOTLTSvMRpisGbozD2bhmMoPIK
-         yStWalV7X0kmk44b1nekZ+wdzjTLczQUZXdJHnBY0kUxFm36bmZvEqNm0Skn0mMD9vII
-         EBKHquZjPRQxAQqEl+nF2tnN+1hiTRv6eOvF8uXjXj63rtrfVf8yexTaZPAXeJRhEZ4x
-         /4ynC5B2fhYWUXhMPRtaDQcA0cOySYTbKydBKTYQGIgZLTwjEm/jpsy+gNd0SXXX3TXA
-         UUjdJ4iVVlKGwL2BDU5H54P9cIxU1IpqpmIU5sEuRzcdwo4uQqKHtBZeoWys8XUFR41V
-         q4YA==
-X-Gm-Message-State: AGi0PubvTSQmMQ6gvJhA7yLvov54kc115CUML7cwOyH2/hA8/iRSX97a
-        qiKV6cLHForLODGT/kx6wkKZcg==
-X-Google-Smtp-Source: APiQypIcLG6kxXh59WxYMGwxMY8DTBtvFFG3hqTEALY2eBNk672ZnvUMGUIpRZsXEJD2i9XhJXK2gQ==
-X-Received: by 2002:a1c:7e03:: with SMTP id z3mr35139048wmc.88.1589443205805;
-        Thu, 14 May 2020 01:00:05 -0700 (PDT)
+        bh=960aYk+7qjUCxv3nxz7wYsvEJGuss0o+v4xW/qsO27M=;
+        b=RamxktzbbtjFJCtyNhUGUn/8UuRjsv2aIl5NwFjKY3mapIa7fT1a3n2aazBrUPeaRU
+         aYrEEULLVQrEaSgfm3WKAeU9GcUyJJfwIp/8v1rlImvXitVAOyqS04gkQvnLjvoI6F4m
+         RRquYdO0aQUesT9YwsB13O3ZGd6Dp/05vHl5217MD/iekwrLNfUjNEIMtE4GF7hZfVLQ
+         qwKEUzw0F3e8Ft12uPfbxS+C+tlpej4jsGQT8MZiRJEw1rBPehFiiQj/PVG70GvEiACS
+         R1hucUHwFOm/lB22OGGrA2PTP8Bvh4Cp3+xX7TeirBVjViCYL+BYCOBio4WU/RbXiGne
+         L1cA==
+X-Gm-Message-State: AOAM533voxU/28REOBBRVwZ2ZLdo3QbQ7Fc6/Fu72dcfoiu+pbKbZAy0
+        kbrfULFsNxIk9LPuJVRxtJtBbQ==
+X-Google-Smtp-Source: ABdhPJxpTdP2zY7sNzXIcpkSTenXVHVMvIGknxxkl3kd2ljlHbFx4UsDatBg25EwP7kACYrAaYfLpw==
+X-Received: by 2002:a1c:2707:: with SMTP id n7mr84160wmn.147.1589443208862;
+        Thu, 14 May 2020 01:00:08 -0700 (PDT)
 Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id 81sm23337446wme.16.2020.05.14.01.00.04
+        by smtp.gmail.com with ESMTPSA id 81sm23337446wme.16.2020.05.14.01.00.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 01:00:05 -0700 (PDT)
+        Thu, 14 May 2020 01:00:08 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>,
         "David S . Miller" <davem@davemloft.net>,
@@ -78,9 +78,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Pedro Tsai <pedro.tsai@mediatek.com>,
         Andrew Perepech <andrew.perepech@mediatek.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v3 01/15] dt-bindings: convert the binding document for mediatek PERICFG to yaml
-Date:   Thu, 14 May 2020 09:59:28 +0200
-Message-Id: <20200514075942.10136-2-brgl@bgdev.pl>
+Subject: [PATCH v3 03/15] dt-bindings: net: add a binding document for MediaTek Ethernet MAC
+Date:   Thu, 14 May 2020 09:59:30 +0200
+Message-Id: <20200514075942.10136-4-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200514075942.10136-1-brgl@bgdev.pl>
 References: <20200514075942.10136-1-brgl@bgdev.pl>
@@ -93,128 +93,109 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Convert the DT binding .txt file for MediaTek's peripheral configuration
-controller to YAML. There's one special case where the compatible has
-three positions. Otherwise, it's a pretty normal syscon.
+This adds yaml DT bindings for the MediaTek Ethernet MAC present on the
+mt8* family of SoCs.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- .../arm/mediatek/mediatek,pericfg.txt         | 36 -----------
- .../arm/mediatek/mediatek,pericfg.yaml        | 63 +++++++++++++++++++
- 2 files changed, 63 insertions(+), 36 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
+ .../bindings/net/mediatek,eth-mac.yaml        | 89 +++++++++++++++++++
+ 1 file changed, 89 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
-deleted file mode 100644
-index ecf027a9003a..000000000000
---- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.txt
-+++ /dev/null
-@@ -1,36 +0,0 @@
--Mediatek pericfg controller
--===========================
--
--The Mediatek pericfg controller provides various clocks and reset
--outputs to the system.
--
--Required Properties:
--
--- compatible: Should be one of:
--	- "mediatek,mt2701-pericfg", "syscon"
--	- "mediatek,mt2712-pericfg", "syscon"
--	- "mediatek,mt7622-pericfg", "syscon"
--	- "mediatek,mt7623-pericfg", "mediatek,mt2701-pericfg", "syscon"
--	- "mediatek,mt7629-pericfg", "syscon"
--	- "mediatek,mt8135-pericfg", "syscon"
--	- "mediatek,mt8173-pericfg", "syscon"
--	- "mediatek,mt8183-pericfg", "syscon"
--- #clock-cells: Must be 1
--- #reset-cells: Must be 1
--
--The pericfg controller uses the common clk binding from
--Documentation/devicetree/bindings/clock/clock-bindings.txt
--The available clocks are defined in dt-bindings/clock/mt*-clk.h.
--Also it uses the common reset controller binding from
--Documentation/devicetree/bindings/reset/reset.txt.
--The available reset outputs are defined in
--dt-bindings/reset/mt*-resets.h
--
--Example:
--
--pericfg: power-controller@10003000 {
--	compatible = "mediatek,mt8173-pericfg", "syscon";
--	reg = <0 0x10003000 0 0x1000>;
--	#clock-cells = <1>;
--	#reset-cells = <1>;
--};
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
+diff --git a/Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml b/Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml
 new file mode 100644
-index 000000000000..1340c6288024
+index 000000000000..8ffd0b762c0f
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
-@@ -0,0 +1,63 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++++ b/Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml
+@@ -0,0 +1,89 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: "http://devicetree.org/schemas/arm/mediatek/mediatek,pericfg.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++$id: http://devicetree.org/schemas/net/mediatek,eth-mac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: MediaTek Peripheral Configuration Controller
++title: MediaTek Ethernet MAC Controller
 +
 +maintainers:
 +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
 +
 +description:
-+  The Mediatek pericfg controller provides various clocks and reset outputs
-+  to the system.
++  This Ethernet MAC is used on the MT8* family of SoCs from MediaTek.
++  It's compliant with 802.3 standards and supports half- and full-duplex
++  modes with flow-control as well as CRC offloading and VLAN tags.
++
++allOf:
++  - $ref: "ethernet-controller.yaml#"
 +
 +properties:
 +  compatible:
-+    oneOf:
-+      - items:
-+        - enum:
-+          - mediatek,mt2701-pericfg
-+          - mediatek,mt2712-pericfg
-+          - mediatek,mt7622-pericfg
-+          - mediatek,mt7629-pericfg
-+          - mediatek,mt8135-pericfg
-+          - mediatek,mt8173-pericfg
-+          - mediatek,mt8183-pericfg
-+        - const: syscon
-+      - items:
-+        # Special case for mt7623 for backward compatibility
-+        - const: mediatek,mt7623-pericfg
-+        - const: mediatek,mt2701-pericfg
-+        - const: syscon
++    enum:
++      - mediatek,mt8516-eth
++      - mediatek,mt8518-eth
++      - mediatek,mt8175-eth
 +
 +  reg:
 +    maxItems: 1
 +
-+  '#clock-cells':
-+    const: 1
++  interrupts:
++    maxItems: 1
 +
-+  '#reset-cells':
-+    const: 1
++  clocks:
++    minItems: 3
++    maxItems: 3
++
++  clock-names:
++    additionalItems: false
++    items:
++      - const: core
++      - const: reg
++      - const: trans
++
++  mediatek,pericfg:
++    $ref: /schemas/types.yaml#definitions/phandle
++    description:
++      Phandle to the device containing the PERICFG register range. This is used
++      to control the MII mode.
++
++  mdio:
++    type: object
++    description:
++      Creates and registers an MDIO bus.
 +
 +required:
 +  - compatible
 +  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - mediatek,pericfg
++  - phy-handle
 +
 +examples:
 +  - |
-+    pericfg@10003000 {
-+        compatible = "mediatek,mt8173-pericfg", "syscon";
-+        reg = <0x10003000 0x1000>;
-+        #clock-cells = <1>;
-+        #reset-cells = <1>;
-+    };
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/mt8516-clk.h>
 +
-+  - |
-+    pericfg@10003000 {
-+        compatible =  "mediatek,mt7623-pericfg", "mediatek,mt2701-pericfg", "syscon";
-+        reg = <0x10003000 0x1000>;
-+        #clock-cells = <1>;
-+        #reset-cells = <1>;
++    ethernet: ethernet@11180000 {
++        compatible = "mediatek,mt8516-eth";
++        reg = <0x11180000 0x1000>;
++        mediatek,pericfg = <&pericfg>;
++        interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_LOW>;
++        clocks = <&topckgen CLK_TOP_RG_ETH>,
++                 <&topckgen CLK_TOP_66M_ETH>,
++                 <&topckgen CLK_TOP_133M_ETH>;
++        clock-names = "core", "reg", "trans";
++        phy-handle = <&eth_phy>;
++        phy-mode = "rmii";
++
++        mdio {
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            eth_phy: ethernet-phy@0 {
++                reg = <0>;
++            };
++        };
 +    };
 -- 
 2.25.0
