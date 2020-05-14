@@ -4,56 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C22C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71E782065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F31972065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:06:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483187;
-	bh=sCPjoIJecCKKcl4sRs7D5KHmbz3FxC1giUdKL3F29A0=;
+	s=default; t=1589483192;
+	bh=gmJHuoKP4vuZXIRcNdIkm9jGlWqb1LToHSB1kWzEJSk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mvOsm7KZSQrnPhhkZLfnj/uzsxmfMXFUVLqZW1iYr6y6aHbVsqFGkBoQXEz0HglBG
-	 wSZpnMes6k3By4ssbf8Ig6W5lEzPUnSKvEDPkgMxsVR3wN+zwNDX/onjnYf1i3pUUI
-	 nRrGgYtAJLQwyvhZpt0PKUhdKGztvbvky1lQIYSQ=
+	b=wnRKXnAj16PfNjl9TMoZczg5MhfOG1swn/vgqbBQa40XWJahoE74jT+d/76TVqg01
+	 5yhRF+e90ZdKZl15Pk90xv9VeTuNcAlb9BRRd3nbAHaWqt1J1bpMPwRRSpHscBWshj
+	 XhGAeH6DHRWkxFQqGFLYHi1KTxhtUftUTGyBw01s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729762AbgENTG0 (ORCPT
+        id S1728837AbgENSxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:06:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53330 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:53:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728850AbgENSxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:53:50 -0400
+        id S1728736AbgENSxd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:53:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C21920767;
-        Thu, 14 May 2020 18:53:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8BF42078C;
+        Thu, 14 May 2020 18:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482430;
-        bh=sCPjoIJecCKKcl4sRs7D5KHmbz3FxC1giUdKL3F29A0=;
+        s=default; t=1589482412;
+        bh=gmJHuoKP4vuZXIRcNdIkm9jGlWqb1LToHSB1kWzEJSk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aMBU3NtQDPHgpwV1OOq3Xz7b/j9nA9d3jtwnDm26iouQYbEtDmrKebV2laNa6U+1V
-         pslo46m05pwcbLIdG6omdq7Mc15XX/T4w0WKnQKPPJoy0wO9j3v63OAulcTyudEX6c
-         vi2poaWusRprKQDuFU9BUAa7ktk1dYQRXrvUmizU=
+        b=pG2Dp1DYlDFTGW+3TyFYytkgfY0UA4Jr19c5t4LguOvcLY31igehy8afPuLZ+YVTZ
+         1akwvmoktYn3RT/u/2CPMLrXLwoZ6PnUPqxrRfLv19KURCldXbDYOP9oOEzPX5KNvt
+         gbgv+ViFpFn5uODSGa+14JZSO3229OIWSrzqGrnI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 31/49] sun6i: dsi: fix gcc-4.8
-Date:   Thu, 14 May 2020 14:52:52 -0400
-Message-Id: <20200514185311.20294-31-sashal@kernel.org>
+Cc:     Gavin Shan <gshan@redhat.com>, Shay Agroskin <shayagr@amazon.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 17/49] net/ena: Fix build warning in ena_xdp_set()
+Date:   Thu, 14 May 2020 14:52:38 -0400
+Message-Id: <20200514185311.20294-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185311.20294-1-sashal@kernel.org>
 References: <20200514185311.20294-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,44 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Gavin Shan <gshan@redhat.com>
 
-[ Upstream commit 3a3a71f97c30983f1627c2c550d43566e9b634d2 ]
+[ Upstream commit caec66198d137c26f0d234abc498866a58c64150 ]
 
-Older compilers warn about initializers with incorrect curly
-braces:
+This fixes the following build warning in ena_xdp_set(), which is
+observed on aarch64 with 64KB page size.
 
-drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c: In function 'sun6i_dsi_encoder_enable':
-drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c:720:8: error: missing braces around initializer [-Werror=missing-braces]
-  union phy_configure_opts opts = { 0 };
-        ^
-drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c:720:8: error: (near initialization for 'opts.mipi_dphy') [-Werror=missing-braces]
+   In file included from ./include/net/inet_sock.h:19,
+      from ./include/net/ip.h:27,
+      from drivers/net/ethernet/amazon/ena/ena_netdev.c:46:
+   drivers/net/ethernet/amazon/ena/ena_netdev.c: In function         \
+   ‘ena_xdp_set’:                                                    \
+   drivers/net/ethernet/amazon/ena/ena_netdev.c:557:6: warning:      \
+   format ‘%lu’                                                      \
+   expects argument of type ‘long unsigned int’, but argument 4      \
+   has type ‘int’                                                    \
+   [-Wformat=] "Failed to set xdp program, the current MTU (%d) is   \
+   larger than the maximum allowed MTU (%lu) while xdp is on",
 
-Use the GNU empty initializer extension to avoid this.
-
-Fixes: bb3b6fcb6849 ("sun6i: dsi: Convert to generic phy handling")
-Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200428215105.3928459-1-arnd@arndb.de
+Signed-off-by: Gavin Shan <gshan@redhat.com>
+Acked-by: Shay Agroskin <shayagr@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 2 +-
+ drivers/net/ethernet/amazon/ena/ena_netdev.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index f83522717488a..4f944ace665d5 100644
---- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -718,7 +718,7 @@ static void sun6i_dsi_encoder_enable(struct drm_encoder *encoder)
- 	struct drm_display_mode *mode = &encoder->crtc->state->adjusted_mode;
- 	struct sun6i_dsi *dsi = encoder_to_sun6i_dsi(encoder);
- 	struct mipi_dsi_device *device = dsi->device;
--	union phy_configure_opts opts = { 0 };
-+	union phy_configure_opts opts = { };
- 	struct phy_configure_opts_mipi_dphy *cfg = &opts.mipi_dphy;
- 	u16 delay;
- 
+diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.h b/drivers/net/ethernet/amazon/ena/ena_netdev.h
+index dc02950a96b8d..28412f11a9ca0 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.h
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.h
+@@ -68,7 +68,7 @@
+  * 16kB.
+  */
+ #if PAGE_SIZE > SZ_16K
+-#define ENA_PAGE_SIZE SZ_16K
++#define ENA_PAGE_SIZE (_AC(SZ_16K, UL))
+ #else
+ #define ENA_PAGE_SIZE PAGE_SIZE
+ #endif
 -- 
 2.20.1
 
