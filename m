@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA24AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A96CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A5AC2065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C52AD2065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:09:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483349;
-	bh=LIAMOJa5wfbbix5mguD+xD+vK9hdv1xD7K/rHhBz43g=;
+	s=default; t=1589483360;
+	bh=lcueI47yo6BlEzNwWWuUHfShAOnbiSny5HrrmS9O73I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mPIkmozBP+dNF7LjtHEEmeO/EzCk8CAWUjtbQ3zWe6rzFt0j6dPEybq6zATJpCcMX
-	 QOWzk3iGQVZX2oAf62vER3H5QfAcLw27A4/jONsrBV3XJqH0tfoj6TRd+feRF175WB
-	 mGZDmU57dFrRITqJ8wPzCLk3lNuY5Hyr7voA2QCM=
+	b=udFgAE0PVTz0pusVOvHVhDiFpx4Uxj3qHV4x7cdTCOv84DTy9dMDqHY7o2IQvLMwY
+	 dWcuIYr7fQQOtykTCyIGVDjjq7h2/WD4wXyxIaQVTm2oRNC39buPCpjTpWsXRdjUJl
+	 Z5VYAP9MvDcKrdn/UECCy9EBTPnu+24gQcx44//c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729689AbgENTJI (ORCPT
+        id S1730229AbgENTJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:09:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51892 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 15:09:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728535AbgENSxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:53:00 -0400
+        id S1728485AbgENSww (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:52:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4FAB207D4;
-        Thu, 14 May 2020 18:52:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98C452065F;
+        Thu, 14 May 2020 18:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482380;
-        bh=LIAMOJa5wfbbix5mguD+xD+vK9hdv1xD7K/rHhBz43g=;
+        s=default; t=1589482372;
+        bh=lcueI47yo6BlEzNwWWuUHfShAOnbiSny5HrrmS9O73I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bORhiR2KWc9RumwqGGlRd6NjeSn56vPFf5XttCKDDIq2Q8jSJKUsByKNs4DKj4nYJ
-         fkSyrU/nC49qN8gTN+9n7iD04sdNKqJgNLv5VF9gTgm1dJv0GkMcFpaA8+l7+B9b/1
-         Pz6Pz5EmUmR8BNrsRx5Z9AVrrCQhGgtJqlBEA7Ng=
+        b=PzPZ+c6/YiZJo8ZCY8lgZb3g8Oxvs+KHC0AQLbrpYo1r/POk4g+d46FLMYkGuU2mv
+         cNB172hVMhi8uvMY/LeyRJey0inTqRQ+kKDfmNGny7OJW0z+dZnWJrxmzoE+COJLDQ
+         no6AuMKwrp5v9AeLxs7mHjniXJcwGOe86wBbq7AE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-kbuild@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 57/62] gcc-10: disable 'stringop-overflow' warning for now
-Date:   Thu, 14 May 2020 14:51:42 -0400
-Message-Id: <20200514185147.19716-57-sashal@kernel.org>
+Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Florian Faineli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 50/62] net: mscc: ocelot: ANA_AUTOAGE_AGE_PERIOD holds a value in seconds, not ms
+Date:   Thu, 14 May 2020 14:51:35 -0400
+Message-Id: <20200514185147.19716-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185147.19716-1-sashal@kernel.org>
 References: <20200514185147.19716-1-sashal@kernel.org>
@@ -58,34 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-[ Upstream commit 5a76021c2eff7fcf2f0918a08fd8a37ce7922921 ]
+[ Upstream commit c0d7eccbc76115b7eb337956c03d47d6a889cf8c ]
 
-This is the final array bounds warning removal for gcc-10 for now.
+One may notice that automatically-learnt entries 'never' expire, even
+though the bridge configures the address age period at 300 seconds.
 
-Again, the warning is good, and we should re-enable all these warnings
-when we have converted all the legacy array declaration cases to
-flexible arrays. But in the meantime, it's just noise.
+Actually the value written to hardware corresponds to a time interval
+1000 times higher than intended, i.e. 83 hours.
 
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: a556c76adc05 ("net: mscc: Add initial Ocelot switch support")
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Reviewed-by: Florian Faineli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/mscc/ocelot.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index bc5e9a5fc5cbf..dde725d9c17d2 100644
---- a/Makefile
-+++ b/Makefile
-@@ -861,6 +861,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-truncation)
- # We'll want to enable this eventually, but it's not going away for 5.7 at least
- KBUILD_CFLAGS += $(call cc-disable-warning, zero-length-bounds)
- KBUILD_CFLAGS += $(call cc-disable-warning, array-bounds)
-+KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
+diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
+index 33ef8690eafe9..419e2ce2eac07 100644
+--- a/drivers/net/ethernet/mscc/ocelot.c
++++ b/drivers/net/ethernet/mscc/ocelot.c
+@@ -1444,8 +1444,15 @@ static void ocelot_port_attr_stp_state_set(struct ocelot *ocelot, int port,
  
- # Enabled with W=2, disabled by default as noisy
- KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
+ void ocelot_set_ageing_time(struct ocelot *ocelot, unsigned int msecs)
+ {
+-	ocelot_write(ocelot, ANA_AUTOAGE_AGE_PERIOD(msecs / 2),
+-		     ANA_AUTOAGE);
++	unsigned int age_period = ANA_AUTOAGE_AGE_PERIOD(msecs / 2000);
++
++	/* Setting AGE_PERIOD to zero effectively disables automatic aging,
++	 * which is clearly not what our intention is. So avoid that.
++	 */
++	if (!age_period)
++		age_period = 1;
++
++	ocelot_rmw(ocelot, age_period, ANA_AUTOAGE_AGE_PERIOD_M, ANA_AUTOAGE);
+ }
+ EXPORT_SYMBOL(ocelot_set_ageing_time);
+ 
 -- 
 2.20.1
 
