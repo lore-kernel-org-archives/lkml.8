@@ -2,251 +2,153 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85304C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB74C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FE242065C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 513D52065C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:45:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YjE6uPBG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728510AbgENXnb (ORCPT
+        id S1728520AbgENXpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 19:43:31 -0400
-Received: from smtprelay0252.hostedemail.com ([216.40.44.252]:36744 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728415AbgENXna (ORCPT
+        Thu, 14 May 2020 19:45:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726294AbgENXpI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 19:43:30 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 5EDA418029D8F;
-        Thu, 14 May 2020 23:43:28 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: face85_754dbffefb147
-X-Filterd-Recvd-Size: 8593
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 14 May 2020 23:43:25 +0000 (UTC)
-Message-ID: <28145b05ee792b89ab9cb560f4f9989fd3d5d93b.camel@perches.com>
-Subject: Re: [PATCH v2 bpf-next 4/7] printk: add type-printing %pT format
- specifier which uses BTF
-From:   Joe Perches <joe@perches.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Alan Maguire <alan.maguire@oracle.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        bpf <bpf@vger.kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Yonghong Song <yhs@fb.com>, Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>
-Date:   Thu, 14 May 2020 16:43:24 -0700
-In-Reply-To: <397fb29abb20d11003a18919ee0c44918fc1a165.camel@perches.com>
-References: <1589263005-7887-1-git-send-email-alan.maguire@oracle.com>
-         <1589263005-7887-5-git-send-email-alan.maguire@oracle.com>
-         <1b63a6b193073674b6e0f9f95c62ce2af1b977cc.camel@perches.com>
-         <CAADnVQK8osy9W8-u-K=ucqe5q-+Uik41fBw6d-SfG-m6rgVwDQ@mail.gmail.com>
-         <397fb29abb20d11003a18919ee0c44918fc1a165.camel@perches.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.1-2 
+        Thu, 14 May 2020 19:45:08 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 651D6C05BD09
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 16:45:08 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id p21so98491pgm.13
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 16:45:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TS6m3tA7iP1dUmXkdet+rM4d6JbY2zF/WsqwIammF8E=;
+        b=YjE6uPBGNr4Xe2rTD6hCoXF0Vo9fHrPRc8MeseKVAqIDzm93Jk/d4QULhMOfJ8ilHN
+         Zi+1iu5vNwfDcdCueh1FAVNZq4QKsfXe4HeVxZ3O4Sm3d4u9KQh5EYd4GWvVNH8cfzkT
+         qmyscxwZ7Tq16XPqH5qqJR6toOuYAZyl+KBnU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TS6m3tA7iP1dUmXkdet+rM4d6JbY2zF/WsqwIammF8E=;
+        b=D3RWO8mUXiA0J3r1EqnJFVUov0ZD64VkFkYxIsHdPbdM67GeaITKYabryI7Zk4GyWi
+         yMirFHijQ5/iNa7ud9Juv7BR8Ha5tPSBVsaafFVmUpeWTN8jKDwPT00q7N2XwRmcQhCd
+         /k3x5Xk/ytBnK373CY6hujJuTjxzh4dRhcOR3Ka9nHZ3E2aSJzUiDmeaIVNSYKkaWCga
+         wlahrDNb/jYNph1HGRIzznqVLndjXunDXZzBs/dk3Oade64ufuJbuhg33oKvWWuVBP4V
+         +frlIRP98qyJ9N9BePbpwt0tPCkylAn0MiaODn4PIfmKdfFaGt373HyFoj6Y7j2yy07I
+         ii/Q==
+X-Gm-Message-State: AOAM530b1zwZ5kT9ktxCkjfbIdw7oslq+GHWFTUOdvfWQXdXCsE5i80I
+        VC8ETiEl7mmwKhwQRe8m1qWCLA==
+X-Google-Smtp-Source: ABdhPJx4mHQv2BFmu1UqFEL0Rzavx5iPrdT2xRUY4noa8VccK+9T65lv35xK9Ign6IhTDiC7W+uE/Q==
+X-Received: by 2002:a63:1845:: with SMTP id 5mr519761pgy.69.1589499907739;
+        Thu, 14 May 2020 16:45:07 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id w84sm265543pfc.116.2020.05.14.16.45.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 May 2020 16:45:07 -0700 (PDT)
+Date:   Thu, 14 May 2020 16:45:06 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Sharat Masetty <smasetty@codeaurora.org>
+Cc:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
+        georgi.djakov@linaro.org
+Subject: Re: [PATCH 2/6] arm64: dts: qcom: sc7180: Add opp-peak-kBps to GPU
+ opp
+Message-ID: <20200514234506.GS4525@google.com>
+References: <1589453659-27581-1-git-send-email-smasetty@codeaurora.org>
+ <1589453659-27581-3-git-send-email-smasetty@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1589453659-27581-3-git-send-email-smasetty@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-05-13 at 16:22 -0700, Joe Perches wrote:
-> On Wed, 2020-05-13 at 16:07 -0700, Alexei Starovoitov wrote:
-> > On Wed, May 13, 2020 at 4:05 PM Joe Perches <joe@perches.com> wrote:
-> > > On Tue, 2020-05-12 at 06:56 +0100, Alan Maguire wrote:
-> > > > printk supports multiple pointer object type specifiers (printing
-> > > > netdev features etc).  Extend this support using BTF to cover
-> > > > arbitrary types.  "%pT" specifies the typed format, and the pointer
-> > > > argument is a "struct btf_ptr *" where struct btf_ptr is as follows:
-> > > > 
-> > > > struct btf_ptr {
-> > > >       void *ptr;
-> > > >       const char *type;
-> > > >       u32 id;
-> > > > };
-> > > > 
-> > > > Either the "type" string ("struct sk_buff") or the BTF "id" can be
-> > > > used to identify the type to use in displaying the associated "ptr"
-> > > > value.  A convenience function to create and point at the struct
-> > > > is provided:
-> > > > 
-> > > >       printk(KERN_INFO "%pT", BTF_PTR_TYPE(skb, struct sk_buff));
-> > > > 
-> > > > When invoked, BTF information is used to traverse the sk_buff *
-> > > > and display it.  Support is present for structs, unions, enums,
-> > > > typedefs and core types (though in the latter case there's not
-> > > > much value in using this feature of course).
-> > > > 
-> > > > Default output is indented, but compact output can be specified
-> > > > via the 'c' option.  Type names/member values can be suppressed
-> > > > using the 'N' option.  Zero values are not displayed by default
-> > > > but can be using the '0' option.  Pointer values are obfuscated
-> > > > unless the 'x' option is specified.  As an example:
-> > > > 
-> > > >   struct sk_buff *skb = alloc_skb(64, GFP_KERNEL);
-> > > >   pr_info("%pT", BTF_PTR_TYPE(skb, struct sk_buff));
-> > > > 
-> > > > ...gives us:
-> > > > 
-> > > > (struct sk_buff){
-> > > >  .transport_header = (__u16)65535,
-> > > >        .mac_header = (__u16)65535,
-> > > >  .end = (sk_buff_data_t)192,
-> > > >  .head = (unsigned char *)000000006b71155a,
-> > > >  .data = (unsigned char *)000000006b71155a,
-> > > >  .truesize = (unsigned int)768,
-> > > >  .users = (refcount_t){
-> > > >   .refs = (atomic_t){
-> > > >    .counter = (int)1,
-> > > 
-> > > Given
-> > > 
-> > >   #define BTF_INT_ENCODING(VAL)   (((VAL) & 0x0f000000) >> 24)
-> > > 
-> > > Maybe
-> > > 
-> > >   #define BTF_INT_SIGNED  (1 << 0)
-> > >   #define BTF_INT_CHAR    (1 << 1)
-> > >   #define BTF_INT_BOOL    (1 << 2)
-> > > 
-> > > could be extended to include
-> > > 
-> > >   #define BTF_INT_HEX     (1 << 3)
-> > > 
-> > > So hex values can be appropriately pretty-printed.
-> > 
-> > Nack to that.
+On Thu, May 14, 2020 at 04:24:15PM +0530, Sharat Masetty wrote:
+
+> Subject: arm64: dts: qcom: sc7180: Add opp-peak-kBps to GPU opp
+
+nit: s/opp/OPPs/
+
+>
+> Add opp-peak-kBps bindings to the GPU opp table, listing the peak
+> GPU -> DDR bandwidth requirement for each opp level. This will be
+> used to scale the DDR bandwidth along with the GPU frequency dynamically.
 > 
-> why?
+> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 0ce9921..89f7767 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1392,36 +1392,43 @@
+>  				opp-800000000 {
+>  					opp-hz = /bits/ 64 <800000000>;
+>  					opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
+> +					opp-peak-kBps = <8532000>;
+>  				};
+> 
+>  				opp-650000000 {
+>  					opp-hz = /bits/ 64 <650000000>;
+>  					opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
+> +					opp-peak-kBps = <7216000>;
+>  				};
+> 
+>  				opp-565000000 {
+>  					opp-hz = /bits/ 64 <565000000>;
+>  					opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
+> +					opp-peak-kBps = <5412000>;
+>  				};
+> 
+>  				opp-430000000 {
+>  					opp-hz = /bits/ 64 <430000000>;
+>  					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
+> +					opp-peak-kBps = <5412000>;
 
-Tell me what's wrong with the idea.
-
-Here's a possible implementation:
----
- Documentation/bpf/btf.rst      |  5 +++--
- include/uapi/linux/btf.h       |  1 +
- kernel/bpf/btf.c               |  5 ++++-
- tools/bpf/bpftool/btf.c        |  2 ++
- tools/bpf/bpftool/btf_dumper.c | 13 +++++++++++++
- tools/include/uapi/linux/btf.h |  1 +
- 6 files changed, 24 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/bpf/btf.rst b/Documentation/bpf/btf.rst
-index 4d565d202ce3..56aaa189e7fb 100644
---- a/Documentation/bpf/btf.rst
-+++ b/Documentation/bpf/btf.rst
-@@ -139,10 +139,11 @@ The ``BTF_INT_ENCODING`` has the following attributes::
-   #define BTF_INT_SIGNED  (1 << 0)
-   #define BTF_INT_CHAR    (1 << 1)
-   #define BTF_INT_BOOL    (1 << 2)
-+  #define BTF_INT_HEX     (1 << 3)
- 
- The ``BTF_INT_ENCODING()`` provides extra information: signedness, char, or
--bool, for the int type. The char and bool encoding are mostly useful for
--pretty print. At most one encoding can be specified for the int type.
-+bool, for the int type. The char, bool and hex encodings are mostly useful
-+for pretty print. At most one encoding can be specified for the int type.
- 
- The ``BTF_INT_BITS()`` specifies the number of actual bits held by this int
- type. For example, a 4-bit bitfield encodes ``BTF_INT_BITS()`` equals to 4.
-diff --git a/include/uapi/linux/btf.h b/include/uapi/linux/btf.h
-index 5a667107ad2c..36f309209786 100644
---- a/include/uapi/linux/btf.h
-+++ b/include/uapi/linux/btf.h
-@@ -90,6 +90,7 @@ struct btf_type {
- #define BTF_INT_SIGNED	(1 << 0)
- #define BTF_INT_CHAR	(1 << 1)
- #define BTF_INT_BOOL	(1 << 2)
-+#define BTF_INT_HEX	(1 << 3)
- 
- /* BTF_KIND_ENUM is followed by multiple "struct btf_enum".
-  * The exact number of btf_enum is stored in the vlen (of the
-diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-index 58c9af1d4808..90bdc0635321 100644
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -501,6 +501,8 @@ static const char *btf_int_encoding_str(u8 encoding)
- 		return "CHAR";
- 	else if (encoding == BTF_INT_BOOL)
- 		return "BOOL";
-+	else if (encoding == BTF_INT_HEX)
-+		return "HEX";
- 	else
- 		return "UNKN";
- }
-@@ -1404,7 +1406,8 @@ static s32 btf_int_check_meta(struct btf_verifier_env *env,
- 	if (encoding &&
- 	    encoding != BTF_INT_SIGNED &&
- 	    encoding != BTF_INT_CHAR &&
--	    encoding != BTF_INT_BOOL) {
-+	    encoding != BTF_INT_BOOL &&
-+	    encoding != BTF_INT_HEX) {
- 		btf_verifier_log_type(env, t, "Unsupported encoding");
- 		return -ENOTSUPP;
- 	}
-diff --git a/tools/bpf/bpftool/btf.c b/tools/bpf/bpftool/btf.c
-index 41a1346934a1..44a129c40873 100644
---- a/tools/bpf/bpftool/btf.c
-+++ b/tools/bpf/bpftool/btf.c
-@@ -59,6 +59,8 @@ static const char *btf_int_enc_str(__u8 encoding)
- 		return "CHAR";
- 	case BTF_INT_BOOL:
- 		return "BOOL";
-+	case BTF_INT_HEX:
-+		return "HEX";
- 	default:
- 		return "UNKN";
- 	}
-diff --git a/tools/bpf/bpftool/btf_dumper.c b/tools/bpf/bpftool/btf_dumper.c
-index ede162f83eea..96947ef92565 100644
---- a/tools/bpf/bpftool/btf_dumper.c
-+++ b/tools/bpf/bpftool/btf_dumper.c
-@@ -418,6 +418,19 @@ static int btf_dumper_int(const struct btf_type *t, __u8 bit_offset,
- 	case BTF_INT_BOOL:
- 		jsonw_bool(jw, *(int *)data);
- 		break;
-+	case BTF_INT_HEX:
-+		if (BTF_INT_BITS(*int_type) == 64)
-+			jsonw_printf(jw, "%llx", *(long long *)data);
-+		else if (BTF_INT_BITS(*int_type) == 32)
-+			jsonw_printf(jw, "%x", *(int *)data);
-+		else if (BTF_INT_BITS(*int_type) == 16)
-+			jsonw_printf(jw, "%hx", *(short *)data);
-+		else if (BTF_INT_BITS(*int_type) == 8)
-+			jsonw_printf(jw, "%hhx", *(char *)data);
-+		else
-+			btf_dumper_int_bits(*int_type, bit_offset, data, jw,
-+					    is_plain_text);
-+		break;
- 	default:
- 		/* shouldn't happen */
- 		return -EINVAL;
-diff --git a/tools/include/uapi/linux/btf.h b/tools/include/uapi/linux/btf.h
-index 5a667107ad2c..36f309209786 100644
---- a/tools/include/uapi/linux/btf.h
-+++ b/tools/include/uapi/linux/btf.h
-@@ -90,6 +90,7 @@ struct btf_type {
- #define BTF_INT_SIGNED	(1 << 0)
- #define BTF_INT_CHAR	(1 << 1)
- #define BTF_INT_BOOL	(1 << 2)
-+#define BTF_INT_HEX	(1 << 3)
- 
- /* BTF_KIND_ENUM is followed by multiple "struct btf_enum".
-  * The exact number of btf_enum is stored in the vlen (of the
+I suppose it's intentional that the bandwidth is the same as for opp-565000000,
+just want to mention it for if it's a C&P error.
 
 
+>  				};
+> 
+>  				opp-355000000 {
+>  					opp-hz = /bits/ 64 <355000000>;
+>  					opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
+> +					opp-peak-kBps = <3072000>;
+>  				};
+> 
+>  				opp-267000000 {
+>  					opp-hz = /bits/ 64 <267000000>;
+>  					opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
+> +					opp-peak-kBps = <3072000>;
+>  				};
+
+ditto
+
+>  				opp-180000000 {
+>  					opp-hz = /bits/ 64 <180000000>;
+>  					opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
+> +					opp-peak-kBps = <1804000>;
+>  				};
+>  			};
+>  		};
+
+assuming the repeated bandwidths are indeed intentional:
+
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
