@@ -2,101 +2,104 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D00DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6758C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C95620657
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 817EB20657
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:46:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgENSob (ORCPT
+        id S1727792AbgENSqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:44:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47160 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726667AbgENSob (ORCPT
+        Thu, 14 May 2020 14:46:46 -0400
+Received: from smtp-42ac.mail.infomaniak.ch ([84.16.66.172]:46207 "EHLO
+        smtp-42ac.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726778AbgENSqp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:44:31 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 055B6C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 11:44:31 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jZIq1-0005j2-Pr; Thu, 14 May 2020 20:44:09 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 019A81004CE; Thu, 14 May 2020 20:44:08 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [patch V4 part 4 08/24] x86/entry: Provide IDTENTRY_IST
-In-Reply-To: <CALCETrWKi=+GUbAi+3OJ3CMaegz2HqQYNQKdwmRHb_xoc+YVgQ@mail.gmail.com>
-References: <20200505134926.578885807@linutronix.de> <20200505135314.137125609@linutronix.de> <CALCETrWKi=+GUbAi+3OJ3CMaegz2HqQYNQKdwmRHb_xoc+YVgQ@mail.gmail.com>
-Date:   Thu, 14 May 2020 20:44:08 +0200
-Message-ID: <87v9kyxsp3.fsf@nanos.tec.linutronix.de>
+        Thu, 14 May 2020 14:46:45 -0400
+Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
+        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49NL912MZTzlhTr0;
+        Thu, 14 May 2020 20:46:13 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 49NL8x2tM0zljT02;
+        Thu, 14 May 2020 20:46:09 +0200 (CEST)
+Subject: Re: [PATCH v17 05/10] fs,landlock: Support filesystem access-control
+To:     Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>
+Cc:     linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-security-module@vger.kernel.org, x86@kernel.org
+References: <20200511192156.1618284-1-mic@digikod.net>
+ <20200511192156.1618284-6-mic@digikod.net>
+ <alpine.LRH.2.21.2005141335280.30052@namei.org>
+ <c159d845-6108-4b67-6527-405589fa5382@digikod.net>
+ <bcfa8f74-5bc9-b363-5372-b254ba2e88a7@schaufler-ca.com>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <2d781760-341e-2f7a-9586-558fcf41a097@digikod.net>
+Date:   Thu, 14 May 2020 20:46:08 +0200
+User-Agent: 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <bcfa8f74-5bc9-b363-5372-b254ba2e88a7@schaufler-ca.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Lutomirski <luto@kernel.org> writes:
-> On Tue, May 5, 2020 at 7:16 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->>
->> Same as IDTENTRY but for exceptions which run on Interrupt STacks (IST) on
->> 64bit. For 32bit this maps to IDTENTRY.
->>
->> There are 3 variants which will be used:
->>       IDTENTRY_MCE
->>       IDTENTRY_DB
->>       IDTENTRY_NMI
->>
->> These map to IDTENTRY_IST, but only the MCE and DB variants are emitting
->> ASM code as the NMI entry needs hand crafted ASM still.
->>
->> The function defines do not contain any idtenter/exit calls as these
->> exceptions need special treatment.
->
-> Okay I guess, but in the long run I'm guessing that we'll want to
-> merge a bunch of this to DECLARE_IDTENTRY_NOASM and just manually emit
-> the special cases in entry_32/64.S.
 
-The ASM is still the paranoid muck which is emitted nicely.
+On 14/05/2020 17:58, Casey Schaufler wrote:
+> On 5/14/2020 3:39 AM, Mickaël Salaün wrote:
+>> On 14/05/2020 05:37, James Morris wrote:
+>>> On Mon, 11 May 2020, Mickaël Salaün wrote:
+>>>
+>>>
+>>>> diff --git a/include/linux/fs.h b/include/linux/fs.h
+>>>> index 45cc10cdf6dd..2276642f8e05 100644
+>>>> --- a/include/linux/fs.h
+>>>> +++ b/include/linux/fs.h
+>>>> @@ -1517,6 +1517,11 @@ struct super_block {
+>>>>  	/* Pending fsnotify inode refs */
+>>>>  	atomic_long_t s_fsnotify_inode_refs;
+>>>>  
+>>>> +#ifdef CONFIG_SECURITY_LANDLOCK
+>>>> +	/* References to Landlock underlying objects */
+>>>> +	atomic_long_t s_landlock_inode_refs;
+>>>> +#endif
+>>>> +
+>>> This needs to be converted to the LSM API via superblock blob stacking.
+>>>
+>>> See Casey's old patch: 
+>>> https://lore.kernel.org/linux-security-module/20190829232935.7099-2-casey@schaufler-ca.com/
+>> s_landlock_inode_refs is quite similar to s_fsnotify_inode_refs, but I
+>> can do it once the superblock security blob patch is upstream. Is it a
+>> blocker for now? What is the current status of lbs_superblock?
+> 
+> As no currently stackable modules conflict over the superblock
+> (SELinux and Smack are the existing users) there has been no need
+> to move its management into the infrastructure. The active push for
+> stacking does not (yet) include everything needed for SELinux+Smack.
+> It includes what is needed for SELinux+AppArmor and Smack+AppArmor.
+> That does not include the superblock blob.
+> 
+> You can include a patch in the landlock set that provides infrastructure
+> management of the superblock blob. Feel free to glean it from my proposal.
 
-But on the C side this needs a different treatment than the regular
-exceptions which all use idtentry_enter() before and idtentry_exit()
-after the handler function body.
-
-Those need magic things before and after nmi_enter/exit(). That's why
-the C function is directly called and does not have any automatically
-emitted enter/exit stuff like the other IDTENTRY variants.
-
-Thanks,
-
-        tglx
-
-
+OK, I'll add it to the next series.
