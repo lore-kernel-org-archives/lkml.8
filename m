@@ -2,197 +2,88 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	LONGWORDS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 02:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A5BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 02:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB2E020659
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 02:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2BF820659
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 02:40:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B2FcAITD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726011AbgENCg4 (ORCPT
+        id S1726027AbgENCkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 22:36:56 -0400
-Received: from mga14.intel.com ([192.55.52.115]:48749 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725895AbgENCg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 22:36:56 -0400
-IronPort-SDR: ddwHQ7jI6Csmyn3h04NfbL20Ja0noSINLfLOyNybVMm3+hce84ILXPEbEEjYHl3OpxgMIFcgJ0
- Eq1MIV8v3n2g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 19:36:55 -0700
-IronPort-SDR: uHaF1o94MY1758wZ6tBXyGzbj+CuUFwHvOqmtiDa8begXcrGK0tYZy6w7p4hPK8Kje0cYa04Di
- X/REmB4w5V1A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,390,1583222400"; 
-   d="scan'208";a="297868968"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 13 May 2020 19:36:54 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jZ3jy-0006KY-5Y; Thu, 14 May 2020 10:36:54 +0800
-Date:   Thu, 14 May 2020 10:36:43 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:locking/kcsan] BUILD SUCCESS
- ffed638b6a2180da8fd002a46632d746af72b299
-Message-ID: <5ebcaebb.CFDhn4QIodngiN1S%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Wed, 13 May 2020 22:40:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37772 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725895AbgENCkU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 May 2020 22:40:20 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAC01C061A0C
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 19:40:19 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id s9so1293351lfp.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 19:40:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K4cErI3AscpNO2jykaWdRgxSDShuBARQicHYOzOkFX0=;
+        b=B2FcAITDo8OkHtW3DZIV1grkQJEgpVzfrgtp/B4KO+r0+kVVTEKA5QPhZSmo9nYnJE
+         oADABPqGsbNupidK8+8SNhVQoDPHaTV+bo9PpZ5Z4udffLQDL0vO+GBzvy8BVkpiJFmq
+         W4U98ognAFTPWJZOaiTdbiJpgVb6lU6CWvmlbycvoAjNF0/FAk5brvEc6gwxqhZUV4bW
+         pkux2Xu5Wz+C8sipIYZqPLzsGszAVdWrt5EsCwU9slksUIRqa0d/kzXYOL9XAtF6vasB
+         CEaP4R19egNzfMHOEfu+OXnO2Sd19pjXXK5T1/73tpSA9aWJDH7MkzbLCyLBuEIRuywl
+         mjnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K4cErI3AscpNO2jykaWdRgxSDShuBARQicHYOzOkFX0=;
+        b=J9mVFXC1FND6+bCzHXRQ7H2hr/yEVJXZCpKYKOD7NTqY5pdf4HMuQT5oD8VnZ1dOqs
+         6QjWW0YKuU004zuV4KQ8AzKREcTa59h+GUygTp6JfbK8l6Yt/Z3PeiAK+BsujkFz5w6T
+         NUjux08ytv3QDm5zur+qG3ohddWFhF6AaEBs4j6vtYQatvaT8ebre4BmzqZBAB5SzVCk
+         caMab61H2FWb+v+MH31X3oolrxlUNQU6bBDH06AMoVr4kZQTQCP4E5IImTWJJLbFkKRc
+         sdAg2zFlnRpfOwtMV34qbgCKLh5UvIxrAh8FicDFtzb/5caxI8pg0/3P69kV/gbs89h1
+         7iJA==
+X-Gm-Message-State: AOAM530Tip+HKUTWSPH3p6O3cQIEm0slDc21NuidSYw5ddyPScNl2hMT
+        OIWkmxv6S0WdnZSDE9m02zLXgzaV3HdZ3x+/nAA=
+X-Google-Smtp-Source: ABdhPJykFjdGurpWwc8+7/0JB93hVc0BVhXikueHs05N38p4BgNJAr9FiqZ/ZNaYTXcIraPsA0gJlt3IUDxXjvHlfU8=
+X-Received: by 2002:a19:4b57:: with SMTP id y84mr1607420lfa.214.1589424018105;
+ Wed, 13 May 2020 19:40:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20200513150007.1315395-1-lkundrak@v3.sk> <20200513150007.1315395-3-lkundrak@v3.sk>
+ <CAOMZO5B582=tZ_YBCyVYFtGh=z5hZKFxP7XoUHEmH3jZsk2uYQ@mail.gmail.com>
+In-Reply-To: <CAOMZO5B582=tZ_YBCyVYFtGh=z5hZKFxP7XoUHEmH3jZsk2uYQ@mail.gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 13 May 2020 23:41:31 -0300
+Message-ID: <CAOMZO5BdiXCVXs+8jP7PoRvgKd1sxCu4KhjvJBvL=Qig2WOs4g@mail.gmail.com>
+Subject: Re: [PATCH 2/3] drm/etnaviv: Don't ignore errors on getting clocks
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        The etnaviv authors <etnaviv@lists.freedesktop.org>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Russell King <linux+etnaviv@armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  locking/kcsan
-branch HEAD: ffed638b6a2180da8fd002a46632d746af72b299  READ_ONCE: Fix comment describing 2x32-bit atomicity
+On Wed, May 13, 2020 at 2:09 PM Fabio Estevam <festevam@gmail.com> wrote:
 
-elapsed time: 853m
+> The binding doc Documentation/devicetree/bindings/gpu/vivante,gc.yaml
+> says that only the 'reg' clock could be optional, the others are
+> required.
 
-configs tested: 130
-configs skipped: 11
+arch/arm/boot/dts/dove.dtsi only uses the 'core' clock.
+arch/arm/boot/dts/stm32mp157.dtsi uses 'bus' and 'core'
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                               allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-m68k                             allyesconfig
-sparc                            allyesconfig
-mips                          rm200_defconfig
-riscv                    nommu_virt_defconfig
-mips                      pistachio_defconfig
-xtensa                           alldefconfig
-sh                           se7722_defconfig
-arm                        cerfcube_defconfig
-arm                         assabet_defconfig
-openrisc                         alldefconfig
-parisc                              defconfig
-m68k                          amiga_defconfig
-mips                malta_qemu_32r6_defconfig
-i386                              allnoconfig
-s390                       zfcpdump_defconfig
-m68k                       m5249evb_defconfig
-m68k                          sun3x_defconfig
-sh                           se7619_defconfig
-mips                        qi_lb60_defconfig
-arc                        nsim_700_defconfig
-arm                         lubbock_defconfig
-arm                          tango4_defconfig
-sh                            shmin_defconfig
-mips                           mtx1_defconfig
-mips                        nlm_xlr_defconfig
-arm                         s3c2410_defconfig
-sh                ecovec24-romimage_defconfig
-arc                            hsdk_defconfig
-arm                          iop32x_defconfig
-riscv                             allnoconfig
-mips                      pic32mzda_defconfig
-mips                  mips_paravirt_defconfig
-arm                         orion5x_defconfig
-riscv                          rv32_defconfig
-powerpc                      ppc44x_defconfig
-m68k                       m5475evb_defconfig
-sh                   rts7751r2dplus_defconfig
-arm                         shannon_defconfig
-nios2                            alldefconfig
-sh                   secureedge5410_defconfig
-arm                      footbridge_defconfig
-arc                          axs101_defconfig
-mips                     loongson1c_defconfig
-c6x                        evmc6472_defconfig
-um                               alldefconfig
-arm                        clps711x_defconfig
-powerpc                    adder875_defconfig
-parisc                generic-64bit_defconfig
-arm                        vexpress_defconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              debian-10.3
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                              allnoconfig
-m68k                           sun3_defconfig
-m68k                                defconfig
-nios2                               defconfig
-nios2                            allyesconfig
-openrisc                            defconfig
-c6x                              allyesconfig
-c6x                               allnoconfig
-openrisc                         allyesconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                             allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-h8300                            allmodconfig
-xtensa                              defconfig
-arc                                 defconfig
-arc                              allyesconfig
-sh                               allmodconfig
-sh                                allnoconfig
-microblaze                        allnoconfig
-mips                             allyesconfig
-mips                              allnoconfig
-mips                             allmodconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                           allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          rhel-kconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a005-20200513
-x86_64               randconfig-a003-20200513
-x86_64               randconfig-a006-20200513
-x86_64               randconfig-a004-20200513
-x86_64               randconfig-a001-20200513
-x86_64               randconfig-a002-20200513
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                            allmodconfig
-s390                             allyesconfig
-s390                              allnoconfig
-s390                             allmodconfig
-s390                                defconfig
-x86_64                              defconfig
-sparc                               defconfig
-sparc64                             defconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                          allmodconfig
-um                               allmodconfig
-um                                allnoconfig
-um                               allyesconfig
-um                                  defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                    rhel-7.6-kselftests
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Maybe the binding needs to be updated and it seems that using
+devm_clk_get_optional() like you propose is safe.
