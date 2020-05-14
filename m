@@ -2,65 +2,153 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7524BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A971C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6A5205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02F68205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:41:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X+1M/fmb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgENOjR (ORCPT
+        id S1727876AbgENOlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:39:17 -0400
-Received: from verein.lst.de ([213.95.11.211]:52180 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726066AbgENOjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:39:17 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id CC6FD68BEB; Thu, 14 May 2020 16:39:13 +0200 (CEST)
-Date:   Thu, 14 May 2020 16:39:13 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Hillf Danton <hdanton@sina.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        syzbot+353be47c9ce21b68b7ed@syzkaller.appspotmail.com,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH] USB: usbfs: fix mmap dma mismatch
-Message-ID: <20200514143913.GA27798@lst.de>
-References: <20200514112711.1858252-1-gregkh@linuxfoundation.org> <20200514115829.GA15995@lst.de> <20200514120944.GA2005274@kroah.com>
+        Thu, 14 May 2020 10:41:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37342 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbgENOlo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 10:41:44 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 489D9C05BD09
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:41:44 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id a5so12627755pjh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:41:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=IpKyFs1yszxKs0lfKzxRyfm8sy/4V4zXUkzdtSdkHLU=;
+        b=X+1M/fmbQRViUiNWq5i8Wnhzf2ZxZWa44EfPqXFdhzGNfFrnMMGFlC9RiMxXJ091Ma
+         NG/CNZqhzV1Qho131HIRtHnMmH2dd1a0u/Lnxs7n0oy487ROOuwOgwTDBO2IRRCDsPb3
+         hmLh+/ITWKzvGRhNGI8R89GJSU8kqpyPsfmQQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IpKyFs1yszxKs0lfKzxRyfm8sy/4V4zXUkzdtSdkHLU=;
+        b=j2E+1I7cpo6BceyMZ+3uc9kpE3cZScDhA4zYUOnWjdWEAU+35eeRxyNZiVSMScJtgC
+         AAGua+eZAuZEzIH+BoLQz5DnLg5l2/o3l3CStk2PJyfI9CDdO8uvFnusXN9XPGHPUgem
+         RFXQjnQiQx7BNJvkYFL7Izj0KqBTKpNKFa4CoQmGJbiAHphxa3I374awK/WtctvuCFgz
+         eNYihPPw5814JxCNNutF2g9rvGqwEXK3ae+SxwllyTvR2/gk5t+vsH7Z3l9h10dftady
+         lhIV++hhAdQKR6JPIn/zjZ5u/Xl4e/7a1eSZddX2WRTa4gwAM4A7DOeTRS89o3V5XhMn
+         YgtA==
+X-Gm-Message-State: AOAM532QrAZnh06kbYheh3LfuuaP6+i6rfkVnNaMw6DVr7k4I12F5u3r
+        kz132TdevkHYn/nP5hsuRcuzzw==
+X-Google-Smtp-Source: ABdhPJw803NLliwJdw3Qk5o4x+XH/SQaDwZsQ2JFMZ1iNHIhcyH1GCLb3+bU8sx5k7WA09KC4Ps+iQ==
+X-Received: by 2002:a17:902:b608:: with SMTP id b8mr4282064pls.163.1589467303571;
+        Thu, 14 May 2020 07:41:43 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g10sm2542952pfk.103.2020.05.14.07.41.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 07:41:41 -0700 (PDT)
+Date:   Thu, 14 May 2020 07:41:40 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH v5 3/6] fs: Enable to enforce noexec mounts or file exec
+ through O_MAYEXEC
+Message-ID: <202005140739.F3A4D8F3@keescook>
+References: <20200505153156.925111-1-mic@digikod.net>
+ <20200505153156.925111-4-mic@digikod.net>
+ <CAEjxPJ7y2G5hW0WTH0rSrDZrorzcJ7nrQBjfps2OWV5t1BUYHw@mail.gmail.com>
+ <202005131525.D08BFB3@keescook>
+ <202005132002.91B8B63@keescook>
+ <CAEjxPJ7WjeQAz3XSCtgpYiRtH+Jx-UkSTaEcnVyz_jwXKE3dkw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200514120944.GA2005274@kroah.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <CAEjxPJ7WjeQAz3XSCtgpYiRtH+Jx-UkSTaEcnVyz_jwXKE3dkw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 02:09:44PM +0200, Greg Kroah-Hartman wrote:
-> > > +		if (dma_mmap_coherent(hcd->self.sysdev, vma, mem, dma_handle,
-> > > +				      size)) {
-> > > +			dec_usb_memory_use_count(usbm, &usbm->vma_use_count);
-> > > +			return -EAGAIN;
-> > > +		}
-> > 
-> > What about a goto label to share the error handling path?
+On Thu, May 14, 2020 at 08:22:01AM -0400, Stephen Smalley wrote:
+> On Wed, May 13, 2020 at 11:05 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > On Wed, May 13, 2020 at 04:27:39PM -0700, Kees Cook wrote:
+> > > Like, couldn't just the entire thing just be:
+> > >
+> > > diff --git a/fs/namei.c b/fs/namei.c
+> > > index a320371899cf..0ab18e19f5da 100644
+> > > --- a/fs/namei.c
+> > > +++ b/fs/namei.c
+> > > @@ -2849,6 +2849,13 @@ static int may_open(const struct path *path, int acc_mode, int flag)
+> > >               break;
+> > >       }
+> > >
+> > > +     if (unlikely(mask & MAY_OPENEXEC)) {
+> > > +             if (sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_MOUNT &&
+> > > +                 path_noexec(path))
+> > > +                     return -EACCES;
+> > > +             if (sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_FILE)
+> > > +                     acc_mode |= MAY_EXEC;
+> > > +     }
+> > >       error = inode_permission(inode, MAY_OPEN | acc_mode);
+> > >       if (error)
+> > >               return error;
+> > >
+> >
+> > FYI, I've confirmed this now. Effectively with patch 2 dropped, patch 3
+> > reduced to this plus the Kconfig and sysctl changes, the self tests
+> > pass.
+> >
+> > I think this makes things much cleaner and correct.
 > 
-> I thought about that, but that's a bit messier than the duplicated lines
-> here :)
+> I think that covers inode-based security modules but not path-based
+> ones (they don't implement the inode_permission hook).  For those, I
+> would tentatively guess that we need to make sure FMODE_EXEC is set on
+> the open file and then they need to check for that in their file_open
+> hooks.
 
-Actually the error handling looks weird, we can just use normal unwinding
-here with an extra call to usb_free_coherent.  Also -EAGAIN is a strange
-error to return in this case, as it is simply incorrect.  I think passing
-through the errors from dma_mmap_coherent and remap_pfn_range would make
-a lot more sense.
+Does there need to be an FMODE_OPENEXEC, or is the presence of
+FMODE_OPEN with FMODE_EXEC sufficient?
 
-Last but not least I wonder if this is the right place to open code
-the localmem and has_dma checks - from a layering POV it should be
-a usb_mmap_coherent helper at the same level as usb_alloc_coherent.
+-- 
+Kees Cook
