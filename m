@@ -2,170 +2,163 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46624C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3038C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C2782065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A5F120671
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:13:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589479988;
+	bh=K6NKA083JKcvBkEFVEjRKQHwmmMVK7aiJCAoZ7eOmPc=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=0sN2AKrs0T8KIKH8eaQxa4p7hwOtx/0UxlvQ/hK33/TKSPhl/v08pVvCPyM23XpVB
+	 J9NuIS2Ckk6d6xcDxaDJhrmomBiNXc8XD4Rw2i7DD+M0NDbNg1rDxZSceOakVpO08A
+	 QUOp4aHH+JVPbZ4HMrGpbCUqJ+BHtPfMFzPQVrmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgENSLC (ORCPT
+        id S1726388AbgENSNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:11:02 -0400
-Received: from mga09.intel.com ([134.134.136.24]:36739 "EHLO mga09.intel.com"
+        Thu, 14 May 2020 14:13:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726075AbgENSLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:11:02 -0400
-IronPort-SDR: gAlNNrmRDDR7z0RrNAKRFZOAGkU/0iucxXqfsnt98Cr0IQvB/KelSVqCzOkw4iKD4p39NTQ/82
- 9nc3OS4XB78g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 11:11:00 -0700
-IronPort-SDR: 1WuFxPK59P5nJ3Hi4zIjWhsSgVASxzmr6OkywUNv5lNFuz1V1hZpbXLsOrINiQjBCF9CvGxa+q
- Ax8nJ+flm+aA==
-X-IronPort-AV: E=Sophos;i="5.73,392,1583222400"; 
-   d="scan'208";a="280943080"
-Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.254.66.120]) ([10.254.66.120])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 11:11:00 -0700
-Subject: Re: [PATCH V3 1/4] x86/resctrl: Enable user to view and select thread
- throttling mode
-To:     Babu Moger <babu.moger@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "fenghua.yu@intel.com" <fenghua.yu@intel.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "tony.luck@intel.com" <tony.luck@intel.com>
-Cc:     "kuo-lang.tseng@intel.com" <kuo-lang.tseng@intel.com>,
-        "ravi.v.shankar@intel.com" <ravi.v.shankar@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <cover.1588808537.git.reinette.chatre@intel.com>
- <56f9ee29b04599cdf502565dc223a70912a449f6.1588808538.git.reinette.chatre@intel.com>
- <0d1fc0a8-7544-861e-a2f6-42c34ad798d9@amd.com>
-From:   Reinette Chatre <reinette.chatre@intel.com>
-Message-ID: <591cfbf0-fe1d-d96c-9842-79e62e76fbfe@intel.com>
-Date:   Thu, 14 May 2020 11:10:59 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1726075AbgENSNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:13:07 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 852782065D;
+        Thu, 14 May 2020 18:13:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589479986;
+        bh=K6NKA083JKcvBkEFVEjRKQHwmmMVK7aiJCAoZ7eOmPc=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=d1aPOCTNwyHeaHG+iWHrF7E5IEnHDZ9yqNqPDhmaywtwCiK6dUsAeOL88r96MJ8Kf
+         QjTMsb6UqmRbcmSQpStcJhOkJ2UY9WXErwxnMEnW27qbq1+xF64ZrvkP6V12VM07f5
+         E/26dgoExPmjEz/8fAYOseLEnfQ8QuUWfEg1O5Bw=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id A9E2835229C8; Thu, 14 May 2020 11:13:05 -0700 (PDT)
+Date:   Thu, 14 May 2020 11:13:05 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Amol Grover <frextrite@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: Default enable RCU list lockdep debugging with PROVE_RCU
+Message-ID: <20200514181305.GT2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200514222535.259cb69e@canb.auug.org.au>
+ <ADC503BE-32C0-46BB-A65E-59FFEC30ED57@lca.pw>
+ <20200514133328.GG2869@paulmck-ThinkPad-P72>
+ <ADE40EB3-1B1C-4CCF-9B8A-1F2BC585BCFB@lca.pw>
+ <20200514135402.GI2869@paulmck-ThinkPad-P72>
+ <CC392959-36FD-459F-BD13-8F50C22FC615@lca.pw>
+ <20200514153400.GJ2869@paulmck-ThinkPad-P72>
+ <6089C62B-52AA-47CB-BCA0-9096B3482509@lca.pw>
 MIME-Version: 1.0
-In-Reply-To: <0d1fc0a8-7544-861e-a2f6-42c34ad798d9@amd.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6089C62B-52AA-47CB-BCA0-9096B3482509@lca.pw>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Babu,
-
-Thank you very much for taking a look.
-
-On 5/14/2020 9:45 AM, Babu Moger wrote:
-> Hi Reinnette,
-> 
-> The patches did not apply on my tree. I got the latest tree today. You
-
-Which tree did you use as baseline? These patches should apply cleanly
-on top of the other resctrl patches already queued for inclusion into
-v5.8 as found on the x86/cache branch of the tip repo.
-
-> might want to check again.
-> Hunk #1 FAILED at 29.
-> 1 out of 7 hunks FAILED -- saving rejects to file
-> arch/x86/kernel/cpu/resctrl/rdtgroup.c.rej
+On Thu, May 14, 2020 at 11:46:23AM -0400, Qian Cai wrote:
 > 
 > 
->> -----Original Message-----
->> From: Reinette Chatre <reinette.chatre@intel.com>
->> Sent: Wednesday, May 6, 2020 6:50 PM
->> To: tglx@linutronix.de; fenghua.yu@intel.com; bp@alien8.de;
->> tony.luck@intel.com
->> Cc: kuo-lang.tseng@intel.com; ravi.v.shankar@intel.com; mingo@redhat.com;
->> Moger, Babu <Babu.Moger@amd.com>; hpa@zytor.com; x86@kernel.org;
->> linux-kernel@vger.kernel.org; Reinette Chatre <reinette.chatre@intel.com>
->> Subject: [PATCH V3 1/4] x86/resctrl: Enable user to view and select thread
->> throttling mode
->>
-
-...
-
->> diff --git a/arch/x86/kernel/cpu/resctrl/core.c
->> b/arch/x86/kernel/cpu/resctrl/core.c
->> index 12f967c6b603..1bc686777069 100644
->> --- a/arch/x86/kernel/cpu/resctrl/core.c
->> +++ b/arch/x86/kernel/cpu/resctrl/core.c
->> @@ -250,6 +250,30 @@ static inline bool rdt_get_mb_table(struct rdt_resource
->> *r)
->>  	return false;
->>  }
->>
->> +/*
->> + * Model-specific test to determine if platform where memory bandwidth
->> + * control is applied to a core can be configured to apply either the
->> + * maximum or minimum of the per-thread delay values.
->> + * By default, platforms where memory bandwidth control is applied to a
->> + * core will select the maximum delay value of the per-thread CLOS.
->> + *
->> + * NOTE: delay value programmed to hardware is inverse of bandwidth
->> + * percentage configured via user interface.
->> + */
->> +bool mba_cfg_supports_min_max_intel(void)
->> +{
->> +	switch (boot_cpu_data.x86_model) {
->> +	case INTEL_FAM6_ATOM_TREMONT_D:
->> +	case INTEL_FAM6_ICELAKE_X:
->> +	case INTEL_FAM6_ICELAKE_D:
->> +		return true;
->> +	default:
->> +		return false;
->> +	}
->> +
->> +	return false;
->> +}
+> > On May 14, 2020, at 11:34 AM, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > 
+> > On Thu, May 14, 2020 at 10:03:21AM -0400, Qian Cai wrote:
+> >> 
+> >> 
+> >>> On May 14, 2020, at 9:54 AM, Paul E. McKenney <paulmck@kernel.org> wrote:
+> >>> 
+> >>> On Thu, May 14, 2020 at 09:44:28AM -0400, Qian Cai wrote:
+> >>>> 
+> >>>> 
+> >>>>> On May 14, 2020, at 9:33 AM, Paul E. McKenney <paulmck@kernel.org> wrote:
+> >>>>> 
+> >>>>> On Thu, May 14, 2020 at 08:31:13AM -0400, Qian Cai wrote:
+> >>>>>> 
+> >>>>>> 
+> >>>>>>> On May 14, 2020, at 8:25 AM, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >>>>>>> 
+> >>>>>>> Hi Paul,
+> >>>>>>> 
+> >>>>>>> This patch in the rcu tree
+> >>>>>>> 
+> >>>>>>> d13fee049fa8 ("Default enable RCU list lockdep debugging with PROVE_RCU")
+> >>>>>>> 
+> >>>>>>> is causing whack-a-mole in the syzbot testing of linux-next.  Because
+> >>>>>>> they always do a debug build of linux-next, no testing is getting done. :-(
+> >>>>>>> 
+> >>>>>>> Can we find another way to find all the bugs that are being discovered
+> >>>>>>> (very slowly)?
+> >>>>>> 
+> >>>>>> Alternatively, could syzbot to use PROVE_RCU=n temporarily because it can’t keep up with it? I personally found PROVE_RCU_LIST=y is still useful for my linux-next testing, and don’t want to lose that coverage overnight.
+> >>>>> 
+> >>>>> The problem is that PROVE_RCU is exactly PROVE_LOCKING, and asking people
+> >>>>> to test without PROVE_LOCKING is a no-go in my opinion.  But of course
+> >>>>> on the other hand if there is no testing of RCU list lockdep debugging,
+> >>>>> those issues will never be found, let alone fixed.
+> >>>>> 
+> >>>>> One approach would be to do as Stephen asks (either remove d13fee049fa8
+> >>>>> or pull it out of -next) and have testers force-enable the RCU list
+> >>>>> lockdep debugging.
+> >>>>> 
+> >>>>> Would that work for you?
+> >>>> 
+> >>>> Alternatively, how about having
+> >>>> 
+> >>>> PROVE_RCU_LIST=n if DEBUG_AID_FOR_SYZBOT
+> >>>> 
+> >>>> since it is only syzbot can’t keep up with it?
+> >>> 
+> >>> Sound good to me, assuming that this works for the syzkaller guys.
+> >>> Or could there be a "select PROVE_RCU_LIST" for the people who would
+> >>> like to test it.
+> >>> 
+> >>> Alternatively, if we revert d13fee049fa8 from -next, I could provide
+> >>> you a script that updates your .config to set both RCU_EXPERT and
+> >>> PROVE_RCU_LIST.
+> >>> 
+> >>> There are a lot of ways to appraoch this.
+> >>> 
+> >>> So what would work best for everyone?
+> >> 
+> >> 
+> >> If PROVE_RCU_LIST=n if DEBUG_AID_FOR_SYZBOT works for syzbot guys, that would be great, so other testing agents could still report/fix those RCU-list bugs and then pave a way for syzbot to return back once all those false positives had been sorted out.
+> > 
+> > On that, I must defer to the syzbot guys.
+> > 
+> >> Otherwise,  “select PROVE_RCU_LIST” *might* be better than buried into RCU_EXPERT where we will probably never saw those false positives been addressed since my configs does not cover a wide range of subsystems and probably not many other bots would enable RCU_EXPERT.
+> > 
+> > Yet another option would be to edit your local kernel/rcu/Kconfig.debug
+> > and change the code to the following:
+> > 
+> > 	config PROVE_RCU_LIST
+> > 		def_bool y
+> > 		help
+> > 		  Enable RCU lockdep checking for list usages. It is default
+> > 		  enabled with CONFIG_PROVE_RCU.
+> > 
+> > Removing the RCU_EXPERT dependency would not go over at all well with
+> > some people whose opinions are difficult to ignore.  ;-)
 > 
-> I see that you are calling this function multiple times. Why don't you
+> I am trying to not getting into a game of carrying any custom patch myself.
+> 
+> Let’s see what syzbot guys will say, and then I’ll enable RCU_EXPERT myself if needed, but again we probably never see PROVE_RCU_LIST to be used again in syzbot for this path. I surely have no cycles to expand the testing coverage for more subsystems at the moment.
 
-It is called:
-- once during initialization
-- once per package initialization (when first CPU on a package comes online)
-- once per read from or write to the new "thread_throttle_mode" file
+Fair enough!  And yes, the Linux kernel is quite large, so I certainly am
+not asking you to test the whole thing yourself.
 
-> make it as a property in rdt_resource. Set it only once during the
-> init(may be in get_mem_config_intel). Then you can use it wherever
-> required. This also probably help James to make everything architecture
-> independent. What do you think?
-
-If I understand correctly this would require understanding how each
-architecture behaves in this regard to ensure the property within
-rdt_resource is initialized correctly. While it could just be set within
-get_mem_config_intel as you suggest, this property would be present in
-AMD's resource and thus need a value ... could you please provide
-guidance what this property should be on AMD? I looked at the bandwidth
-enforcement section of
-https://developer.amd.com/wp-content/resources/56375.pdf but it is not
-obvious to me where bandwidth is actually enforced and how this
-enforcement is affected when threads and/or cores are running tasks with
-different CLOS that have different bandwidth limits assigned.
-
-With AMD's properties understood then the new "thread_throttle_mode"
-file could be visible on all platforms, not just Intel, and display
-accurate values for all and be architecture independent.
-
-Alternatively, the new property could have values: UNDEFINED, MIN, MAX,
-or PER_THREAD ... with AMD having UNDEFINED and the
-"thread_throttle_mode" continues to be visible on Intel platforms only.
-
-I would appreciate your thoughts on this.
-
-> I assume that this property is probably not part of CPUID.
-
-Correct. This specific property is model specific, but also transient in
-that it is replaced by X86_FEATURE_PER_THREAD_MBA (that is part of
-CPUID) in future platforms.
-
-Reinette
+								Thanx, Paul
