@@ -2,83 +2,131 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E93BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F7FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 349E720722
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:36:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eXqfYEcG"
+	by mail.kernel.org (Postfix) with ESMTP id AF4CC206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:37:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726176AbgENLgx (ORCPT
+        id S1726294AbgENLhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 07:36:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36642 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726011AbgENLgw (ORCPT
+        Thu, 14 May 2020 07:37:20 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:39720 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726190AbgENLhT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 07:36:52 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D487C061A0C;
-        Thu, 14 May 2020 04:36:52 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id a9so2319316lfb.8;
-        Thu, 14 May 2020 04:36:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zGigY40HNC0vIIg2KqrMRVX3IHwlm3zXsKb7MGlt1hE=;
-        b=eXqfYEcGXhSVo+xqDDZGlPliR281ArKBPClCeLdkTj649PZFDo0KHiPpfLyMmVbOBB
-         W2dQj8QZV3a6sYqgDyggORuRFa2RhWt1VedY9tRCcV24BFp8iju+JKwPzuGw6SgkGFC0
-         FYPhLZ6d8dJ+0ed1Vz+EjiCppgbgkPvQfwCnMiB40rE6yA+etGnSDSnR6RU+3PAGxAh5
-         MvmFq7mAeqKUD2LF/opZd7OUV514O06q53xXl0CwM4GzprAzGiDbIxZ6DqwMs413pFzx
-         MuL+s1EkiJla5d5R2yYkmTaEinqAnkxMNWo8Fuzb2uONO5X4z+d3Ctw0upZYvWtCu4pG
-         BEXg==
+        Thu, 14 May 2020 07:37:19 -0400
+Received: by mail-il1-f200.google.com with SMTP id q2so2899486ild.6
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 04:37:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zGigY40HNC0vIIg2KqrMRVX3IHwlm3zXsKb7MGlt1hE=;
-        b=aE/+sjiXbER8X7oh3vtRZ3oc+W5YM9kIoyCx5Uo3IqvgMuZ7yH1vV1edpglynp98mC
-         dPrdfBW9Gi0JVvHvegv1/f9fpyTK0/pB3r6/VZyVH3XgC0+LwuVNned+dFyfa5NTDs45
-         1uUnQ2uNmv3GokyxmDrNcYForzgghNL/p26lQZXLPc9bA0NciIp3s9B9y6bjlV3x0vq9
-         61lhLTY1ptidX+N9Ms440ohbTaSictFJchlX/fsu3TUqADBTZpUkOvLbkLunL4nWGE/d
-         UR6zLya7IDDEoCaY+1Om/JJpZPmmjK3H8NkQXZDe/L3zJiibKFb0QFWF71idU0KeteN9
-         MMPw==
-X-Gm-Message-State: AOAM533Nw8IakXS2KUQ63uPaT4VIfYRmRccRl+wwxP4A12A8X3ncOHRm
-        wXgzyvLF1Wg/gj5n4HY13Wrm+1K4nCrhiqdS8pG5Rw==
-X-Google-Smtp-Source: ABdhPJxBmTa1h8WlktzqD3pLbVyqrx3p3qFiTuM+yFXGEoO7RIjFXQifYAYsXge406O6IyIPcO5/3UB23gV5x4p5eQM=
-X-Received: by 2002:ac2:5e9c:: with SMTP id b28mr3067625lfq.50.1589456210950;
- Thu, 14 May 2020 04:36:50 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=4Mof+U9cD9u9+KN0Yeu8IB5SFQ1hpQEdck5Z1RIH1b8=;
+        b=bkTCW6LCGWqT0pM/l7Cnj3l/mybjDtfE7olKessuYszKlUGwy1Hy2ZToEAXw2s/4Si
+         dHk5hHdee7OMaoIR7IH7/dZY82uEnK+Ow2WJLVf2+E0v/WDVDDixPnBeSJmcgZ7wrnta
+         fMet3UKN7GdkIyvT538giziD676kpDQG0ejaXd37i8Ab2J5Pdqz7ug79idG2xy93QzvW
+         h2/pSF6Fb7nLu+s/m8FaqR+UMi4IAe94UmPKjBVlPL4/aGsG0zvGKdOwpqqQe8nXu7CB
+         uz2B6PS5V40LIEyhnNV5HI32zBIhYIHzbf70t5NcRgkC5hqMqGtB8ovUSLxHnjQd9xXN
+         R49g==
+X-Gm-Message-State: AGi0PuZoZKVnuEIZRFgSRdVM8QqxKV9NiiV0DJuH/lXPoVimitmyZwON
+        7DGmV+nhExhLIAk5KlKF9Wa4toUGOa9w3Q6tI8tO8QkG0v48
+X-Google-Smtp-Source: APiQypLuqE7mcXIlYj421PfwWvs20jce8sEeawo0C4lsAdsiUQeSoUMxGO9mNZ6AJQivuPzseLDRxcH6iG3Vm1TYrDrybJ/muj2D
 MIME-Version: 1.0
-References: <20200514113003.19067-1-geert@linux-m68k.org>
-In-Reply-To: <20200514113003.19067-1-geert@linux-m68k.org>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 14 May 2020 13:36:39 +0200
-Message-ID: <CANiq72=tpSaYkZHf9ip0A1Lhip+B4rWPf-fCJorq7oigaVe98Q@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: auxdisplay: hd44780: Convert to json-schema
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
+X-Received: by 2002:a02:b88e:: with SMTP id p14mr3883256jam.36.1589456238302;
+ Thu, 14 May 2020 04:37:18 -0700 (PDT)
+Date:   Thu, 14 May 2020 04:37:18 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000785a6905a59a1e4a@google.com>
+Subject: linux-next boot error: WARNING: suspicious RCU usage in bpq_device_event
+From:   syzbot <syzbot+bb82cafc737c002d11ca@syzkaller.appspotmail.com>
+To:     allison@lohutok.net, ap420073@gmail.com, davem@davemloft.net,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-next@vger.kernel.org, netdev@vger.kernel.org,
+        sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, xiyou.wangcong@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+Hello,
 
-On Thu, May 14, 2020 at 1:30 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Convert the Hitachi HD44780 Character LCD Controller Device Tree binding
-> documentation to json-schema.
+syzbot found the following crash on:
 
-Do you usually take these ones or should I?
+HEAD commit:    c9529331 Add linux-next specific files for 20200514
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=17119f48100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=404a80e135048067
+dashboard link: https://syzkaller.appspot.com/bug?extid=bb82cafc737c002d11ca
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-Cheers,
-Miguel
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+bb82cafc737c002d11ca@syzkaller.appspotmail.com
+
+=============================
+WARNING: suspicious RCU usage
+5.7.0-rc5-next-20200514-syzkaller #0 Not tainted
+-----------------------------
+drivers/net/hamradio/bpqether.c:149 RCU-list traversed in non-reader section!!
+
+other info that might help us debug this:
+
+
+rcu_scheduler_active = 2, debug_locks = 1
+1 lock held by ip/3967:
+ #0: ffffffff8a7bad88 (rtnl_mutex){+.+.}-{3:3}, at: rtnl_lock net/core/rtnetlink.c:72 [inline]
+ #0: ffffffff8a7bad88 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x3f9/0xad0 net/core/rtnetlink.c:5458
+
+stack backtrace:
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ bpq_get_ax25_dev drivers/net/hamradio/bpqether.c:149 [inline]
+ bpq_device_event+0x796/0x8ee drivers/net/hamradio/bpqether.c:538
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ __dev_notify_flags+0x121/0x2c0 net/core/dev.c:8279
+ dev_change_flags+0x100/0x160 net/core/dev.c:8317
+ do_setlink+0xa1c/0x35d0 net/core/rtnetlink.c:2605
+ __rtnl_newlink+0xad0/0x1590 net/core/rtnetlink.c:3273
+ rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3398
+ rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5461
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e6/0x810 net/socket.c:2352
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x7f76dcdfcdc7
+Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb cd 66 0f 1f 44 00 00 8b 05 4a 49 2b 00 85 c0 75 2e 48 63 ff 48 63 d2 b8 2e 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 8b 15 a1 f0 2a 00 f7 d8 64 89 02 48
+RSP: 002b:00007ffd45eccf28 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 000000005ebd27cd RCX: 00007f76dcdfcdc7
+RDX: 0000000000000000 RSI: 00007ffd45eccf70 RDI: 0000000000000003
+RBP: 00007ffd45eccf70 R08: 0000000000001000 R09: fefefeff77686d74
+R10: 00000000000005e9 R11: 0000000000000246 R12: 00007ffd45eccfb0
+R13: 0000561a2ddea3c0 R14: 00007ffd45ed5030 R15: 0000000000000000
+ip (3967) used greatest stack depth: 23144 bytes left
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
