@@ -2,138 +2,132 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA99C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 05:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FCAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 05:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51F4A206DC
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 05:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79D1C20575
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 05:22:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MkuhUNV2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ALjXcdek"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725951AbgENFRa (ORCPT
+        id S1725955AbgENFWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 01:17:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33834 "EHLO
+        Thu, 14 May 2020 01:22:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725794AbgENFR3 (ORCPT
+        by vger.kernel.org with ESMTP id S1725794AbgENFWi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 01:17:29 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13AD6C061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 22:17:28 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id z15so2583261pjb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 22:17:28 -0700 (PDT)
+        Thu, 14 May 2020 01:22:38 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEBEFC061A0C;
+        Wed, 13 May 2020 22:22:37 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id z80so1917923qka.0;
+        Wed, 13 May 2020 22:22:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GjJPgwHAWLCdp+4b5y9We0V/4Ec6i8aFUo1gPxwMZ7w=;
-        b=MkuhUNV21I7fxjv4MrVDEcmFSHwUJ9lvNGa8cXCPIn1dx62l2uSsNsmmCeUQUAS43c
-         nSBL/PzySbiBqaxWXoaUqcFN4ADbjC3t4Xb9Lvu49f4EjFmeUeGrJ3izVna5vv3tvv3q
-         CulRTby5nRpPCy1ASOPVRug05M2Ky27e6fZQ+faMWY3rzOeXkdzbjf/QghV0sgzv9sfU
-         7TRQ58vGck02M+Wrm/1GoCQ0sdlvDSoFrEOmQo+bQB6vZ1gPEqYB4BwIA7+BHFNlhp/p
-         d6BqcGuXO/C2zmjGPLXrbWachYsg3NZ1dIU9EauzT7U0aS9REMPNzBRSGJZ10hk/BUJG
-         lOvg==
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=z5uk4NHfluyoyKinmPhsA3PHI6OfQ+bSBmaBzpScwmw=;
+        b=ALjXcdekUDYnKCo9mbwP5NFpsZBLyExdioIUHbsWFR8MvK+SCWzM66peJ68x5i+6NS
+         TOOmRrj2tY83DX/ZtNXk+3bhZU5HSUuOQ0esn6RurOlg0teBADPC7yOfburIc4urfb6n
+         7n4JUkBeyLzl5VU5TiQ+C9scW2ttMORwDnmtP2+RkkBZhynOF49DvkJt2mCxSuY656Hz
+         G4yxgAxZOpC1i11vUkWVYXkRDMqkFtrbD3tDUp/5DopauJdPN7PH2VHfnB654FNKNREa
+         HWij1DcReST74ph02PNPwYOVxAoWSQckdWt159yP8xOOeQ8GdV3mDIHqeqpxDGM/K/yw
+         TJ2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GjJPgwHAWLCdp+4b5y9We0V/4Ec6i8aFUo1gPxwMZ7w=;
-        b=mrRchoOPfWagr2gRRsNB4dk4HngnRuUtekWatsvTUKsApPXpMnjV7oRfR90EjyWEof
-         /uhNSw6iErR0v8MxiaxpPb9AxalPqaAJxD+nSahKAYTjMSw7I5F3ISRkEZgTVFsf5YjT
-         53h6J+eVAPgY8bW3p1nz0/Lmo7dKXjvYQZEtLnl489BFYTp3OsRuD2iPPjBkGs6FAp1p
-         aq7kA57AAncWf9Cy5/DM1ySjlmETYKP0nA1+yN+74c1kTXYzrgmXhr+FgyOFP/rfeHJC
-         6i84rNnIZi8rvOc5stdwaiyfcrM/YfDwH/L1rkgK0dWddyM35cYmq8585ag52NytCgPO
-         av8A==
-X-Gm-Message-State: AOAM530midzuH3fhlY5Aje0SCK5Uq93fwPyLk8/+gxiLmPNueRNQrIE9
-        n3aqs8KJroHvvuXP8KDpv+7aCA==
-X-Google-Smtp-Source: ABdhPJwPKu284FGW2y3JeQslHbE7FXQ0tLPsAtF5Z1Sd1/eTKJSL1+BfVYzPKbw4EN2fAafX5g9fYw==
-X-Received: by 2002:a17:902:c406:: with SMTP id k6mr2369370plk.203.1589433447383;
-        Wed, 13 May 2020 22:17:27 -0700 (PDT)
-Received: from builder.lan (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a7sm1126526pfg.157.2020.05.13.22.17.26
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=z5uk4NHfluyoyKinmPhsA3PHI6OfQ+bSBmaBzpScwmw=;
+        b=m2IyCz5IKq4XHaRFM2UK6Mikp0a4IQjMX6vEX+bI7Z7x3876oeIu/R4Pa4RPyfkzP8
+         6xqV2yktp1gXeDpc+Ye3eyyEhDU43xu5iy8/GM23hKCUufMQzvv3d0rGVXh8BA5gvBGq
+         POsf0H8D/9fqOmIpmFIqJWUjqPEDNmbz4vF0N4FgsGkGWGrbCkyaJcZhJNX+hOdRSxX4
+         SgDwszU84DGR9VGd9R2R99QYhZagBeerWWbav9ISBAX0AX4dApzjZA6XhuJXJQpa8cHd
+         mxR0qwHgXzRCe+Ohgptv9K9/fwSbEqxKT8dCG7vAhZHUnYpB+xgd8NseiKAPn3kgv7j4
+         GfIQ==
+X-Gm-Message-State: AOAM531ObIRjK8BM4RyDZBt4hqlfbq8DfkpE3VFOSLmoSYB7gQMPmZlM
+        K5Qa8aLgcu+KlJg+AXOVPmUPGqnfNqY=
+X-Google-Smtp-Source: ABdhPJx3cdcn2+IV1zWsDjnGUc1Ywq5IEr5xgbyPAyNB5MNO81FbwGCmd9L8GBv5+A/27y4N235s7g==
+X-Received: by 2002:ae9:e858:: with SMTP id a85mr3191511qkg.478.1589433756973;
+        Wed, 13 May 2020 22:22:36 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id x19sm1813380qkb.136.2020.05.13.22.22.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 22:17:26 -0700 (PDT)
-Date:   Wed, 13 May 2020 22:15:56 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     ohad@wizery.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, loic.pallardy@st.com,
-        arnaud.pouliquen@st.com, linux-remoteproc@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 11/12] remoteproc: stm32: Introduce new loaded rsc ops
- for synchronisation
-Message-ID: <20200514051556.GB396285@builder.lan>
-References: <20200424202505.29562-1-mathieu.poirier@linaro.org>
- <20200424202505.29562-12-mathieu.poirier@linaro.org>
+        Wed, 13 May 2020 22:22:36 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Thu, 14 May 2020 01:22:34 -0400
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Borislav Petkov <bp@suse.de>, Arnd Bergmann <arnd@arndb.de>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: gcc-10: kernel stack is corrupted and fails to boot
+Message-ID: <20200514052234.GA1894416@rani.riverdale.lan>
+References: <20200513214128.GB6733@zn.tnic>
+ <CAK8P3a3XPCyNM7s3vbn8JYK6swA3ZpPtTWB+uhmAE3YEX-nmig@mail.gmail.com>
+ <20200513222038.GC6733@zn.tnic>
+ <CAHk-=wgybuOF+Jp2XYWqM7Xn1CW6szWQw_FgVoFh5jx_4YoCVw@mail.gmail.com>
+ <20200513233616.GD6733@zn.tnic>
+ <CAHk-=wjZXFe08MiNRevJFGDvX0O6kcQTiK8GFBS7hwUAzB+LQw@mail.gmail.com>
+ <CAKwvOd=o_wuiVpw5KVzLEt25W-A9Ah9fzftPZLG+yutqJmWbOg@mail.gmail.com>
+ <CAHk-=wg6G+p1RRjR6UZBEuSCDs9=iWBsxrDPTEwqh+y5RayqKA@mail.gmail.com>
+ <CALCETrUYA60fWu+=MviKx0NmW+_ppsOcv-ShUXdbyM4EjyfzHQ@mail.gmail.com>
+ <CAHk-=wgiGxRgJGS-zyer1C_x2MQUVo6iZn0=aJyuFTqJWk-mpA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200424202505.29562-12-mathieu.poirier@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=wgiGxRgJGS-zyer1C_x2MQUVo6iZn0=aJyuFTqJWk-mpA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 24 Apr 13:25 PDT 2020, Mathieu Poirier wrote:
-
-> Introduce new elf find loaded resource table rproc_ops functions to be
-> used when synchonising with an MCU.
+On Wed, May 13, 2020 at 09:52:07PM -0700, Linus Torvalds wrote:
+> On Wed, May 13, 2020, 20:50 Andy Lutomirski <luto@amacapital.net> wrote:
 > 
-> Mainly based on the work published by Arnaud Pouliquen [1].
+> >
+> > LTO isn’t a linker taking regular .o files full of regular machine
+> > code and optimizing it. That’s nuts.
+> >
 > 
-> [1]. https://patchwork.kernel.org/project/linux-remoteproc/list/?series=239877
+> Yeah, you're right. I wear originally thinking just an optimizing
+> assembler, and then started thinking about link-time optimizations in that
+> sense, but it was wrong to then go from that to LTO which has a very
+> specific meaning.
 > 
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Reviewed-by: Loic Pallardy <loic.pallardy@st.com>
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-
-But I would have preferred if we during probe (when we discover rsc_va)
-could just set it on the rproc.
-
-Regards,
-Bjorn
-
-> ---
->  drivers/remoteproc/stm32_rproc.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+> We do have assemblers that do some optimizations, but they tend to all be
+> at the single instruction level (eg things like turning "add $128" into
+> "sub $-128" which fits in a byte constant).
 > 
-> diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
-> index b8ae8aed5585..dcae6103e3df 100644
-> --- a/drivers/remoteproc/stm32_rproc.c
-> +++ b/drivers/remoteproc/stm32_rproc.c
-> @@ -319,6 +319,15 @@ static int stm32_rproc_sync_parse_fw(struct rproc *rproc,
->  	return stm32_rproc_sync_elf_load_rsc_table(rproc, fw);
->  }
->  
-> +static struct resource_table *
-> +stm32_rproc_sync_elf_find_loaded_rsc_table(struct rproc *rproc,
-> +					   const struct firmware *fw)
-> +{
-> +	struct stm32_rproc *ddata = rproc->priv;
-> +
-> +	return (struct resource_table *)ddata->rsc_va;
-> +}
-> +
->  static irqreturn_t stm32_rproc_wdg(int irq, void *data)
->  {
->  	struct platform_device *pdev = data;
-> @@ -593,6 +602,7 @@ static __maybe_unused struct rproc_ops st_rproc_sync_ops = {
->  	.start		= stm32_rproc_sync_start,
->  	.stop		= stm32_rproc_stop,
->  	.parse_fw       = stm32_rproc_sync_parse_fw,
-> +	.find_loaded_rsc_table = stm32_rproc_sync_elf_find_loaded_rsc_table,
->  };
->  
->  static const struct of_device_id stm32_rproc_match[] = {
-> -- 
-> 2.20.1
+>     Linus
 > 
+> >
+
+The gcc docs [1,2] at least don't inspire much confidence that this will
+continue working with plain asm("") though:
+
+"Note that GCC’s optimizers can move asm statements relative to other
+code, including across jumps."
+...
+"Note that the compiler can move even volatile asm instructions relative
+to other code, including across jump instructions."
+
+Even if we don't include an instruction in it I think it should at least
+have a memory clobber, to stop the compiler from deciding that it can be
+moved before the call so it can do the tail-call optimization.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Basic-Asm.html#Basic-Asm
+[2] https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#Volatile
