@@ -2,273 +2,375 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F50C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D34C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36AEE206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9B8220575
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:48:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="s128ETBu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hhtNT9NZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726061AbgENIqQ (ORCPT
+        id S1726070AbgENIsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 04:46:16 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:30495 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725878AbgENIqQ (ORCPT
+        Thu, 14 May 2020 04:48:36 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55981 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725977AbgENIsf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 04:46:16 -0400
-X-UUID: 51b8e2dc7501438591721c3eaf364e1f-20200514
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=amTnrBYThMWNAzE4kOQNiwnF8Vg1s+F3MbsxdNh/feY=;
-        b=s128ETBuz9FD/mVq4JlwleSWyXx6P6KK0+iAcdwMRIbKp9IQn4QZ/2GfzLYj3+28XrHb94cTOBqIw8dmdWMXITLRG8mGdw6qg6ZDBE9NPErWddCGg1EvMERCfsXaiWwgmmlNRzQYxg8ASfJEXxI8nQ6bt7pIDhwfa69j5lZfxfY=;
-X-UUID: 51b8e2dc7501438591721c3eaf364e1f-20200514
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <michael.kao@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1686435404; Thu, 14 May 2020 16:46:06 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 14 May 2020 16:46:04 +0800
-Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 14 May 2020 16:46:04 +0800
-Message-ID: <1589445965.21630.1.camel@mtksdccf07>
-Subject: Re: [RESEND PATCH] thermal: mediatek: add suspend/resume callback
-From:   Michael Kao <michael.kao@mediatek.com>
-To:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-CC:     Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "hsinyi@chromium.org" <hsinyi@chromium.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        Louis Yu =?UTF-8?Q?=28=E6=B8=B8=E6=94=BF=E9=8C=95=29?= 
-        <louis.yu@mediatek.com>
-Date:   Thu, 14 May 2020 16:46:05 +0800
-In-Reply-To: <20200408090558.12410-2-michael.kao@mediatek.com>
-References: <20200408090558.12410-1-michael.kao@mediatek.com>
-         <20200408090558.12410-2-michael.kao@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thu, 14 May 2020 04:48:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589446111;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=LQrKfZO1fcuI+nb6eAF+CfoZHKCUlkNNBNIC0Uw7KkA=;
+        b=hhtNT9NZy+N2g6m0VRRKqDnzUdo0vuaqmuWJW5q0uZxrrHiERplyN/OZAVO9EaRqm39/8b
+        5VSIY2Yxt3eTgNRwKloLwku/fFvN2j7o0Rs3P9T1ZxY+iSBFZBj8caZJFl+/zydlO2gBV8
+        8Ys0d0S3SR01N+8Kkkc8Q/VwiG2WvmU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-181-nbyB54ArPFe5JQU_X5H1dQ-1; Thu, 14 May 2020 04:48:26 -0400
+X-MC-Unique: nbyB54ArPFe5JQU_X5H1dQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 550008014D7;
+        Thu, 14 May 2020 08:48:22 +0000 (UTC)
+Received: from [10.36.114.168] (ovpn-114-168.ams2.redhat.com [10.36.114.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C983C39E;
+        Thu, 14 May 2020 08:48:02 +0000 (UTC)
+Subject: Re: [virtio-dev] [PATCH v3 00/15] virtio-mem: paravirtualized memory
+To:     teawater <teawaterz@linux.alibaba.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        virtio-dev@lists.oasis-open.org,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        kvm@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Sebastien Boeuf <sebastien.boeuf@intel.com>,
+        Samuel Ortiz <samuel.ortiz@intel.com>,
+        Robert Bradford <robert.bradford@intel.com>,
+        Luiz Capitulino <lcapitulino@redhat.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Young <dyoung@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Juergen Gross <jgross@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Len Brown <lenb@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Pingfan Liu <kernelfans@gmail.com>, Qian Cai <cai@lca.pw>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richard.weiyang@gmail.com>
+References: <20200507103119.11219-1-david@redhat.com>
+ <7848642F-6AA7-4B5E-AE0E-DB0857C94A93@linux.alibaba.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <31c5d2f9-c104-53e8-d9c8-cb45f7507c85@redhat.com>
+Date:   Thu, 14 May 2020 10:48:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <7848642F-6AA7-4B5E-AE0E-DB0857C94A93@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA0LTA4IGF0IDE3OjA1ICswODAwLCBNaWNoYWVsIEthbyAo6auY5oyv57+U
-KSB3cm90ZToNCj4gRnJvbTogTG91aXMgWXUgPGxvdWlzLnl1QG1lZGlhdGVrLmNvbT4NCj4gDQo+
-IEFkZCBzdXNwZW5kL3Jlc3VtZSBjYWxsYmFjayB0byBkaXNhYmxlL2VuYWJsZSBNZWRpYXRlayB0
-aGVybWFsIHNlbnNvcg0KPiByZXNwZWN0aXZlbHkuIFNpbmNlIHRoZXJtYWwgcG93ZXIgZG9tYWlu
-IGlzIG9mZiBpbiBzdXNwZW5kLCB0aGVybWFsIGRyaXZlcg0KPiBuZWVkcyByZS1pbml0aWFsaXph
-dGlvbiBkdXJpbmcgcmVzdW1lLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogTG91aXMgWXUgPGxvdWlz
-Lnl1QG1lZGlhdGVrLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogTWljaGFlbCBLYW8gPG1pY2hhZWwu
-a2FvQG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL3RoZXJtYWwvbXRrX3RoZXJtYWwu
-YyB8IDE1MiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tDQo+ICAxIGZpbGUgY2hh
-bmdlZCwgMTM0IGluc2VydGlvbnMoKyksIDE4IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvdGhlcm1hbC9tdGtfdGhlcm1hbC5jIGIvZHJpdmVycy90aGVybWFsL210a190
-aGVybWFsLmMNCj4gaW5kZXggNzZlMzA2MDNkNGQ1Li4zNmZkMzVmYWM3MzMgMTAwNjQ0DQo+IC0t
-LSBhL2RyaXZlcnMvdGhlcm1hbC9tdGtfdGhlcm1hbC5jDQo+ICsrKyBiL2RyaXZlcnMvdGhlcm1h
-bC9tdGtfdGhlcm1hbC5jDQo+IEBAIC0yMiw2ICsyMiw3IEBADQo+ICAjaW5jbHVkZSA8bGludXgv
-dGhlcm1hbC5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L3Jlc2V0Lmg+DQo+ICAjaW5jbHVkZSA8bGlu
-dXgvdHlwZXMuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9pb3BvbGwuaD4NCj4gDQo+ICAvKiBBVVhB
-REMgUmVnaXN0ZXJzICovDQo+ICAjZGVmaW5lIEFVWEFEQ19DT04xX1NFVF9WICAgICAgMHgwMDgN
-Cj4gQEAgLTMxLDYgKzMyLDggQEANCj4gDQo+ICAjZGVmaW5lIEFQTUlYRURfU1lTX1RTX0NPTjEg
-ICAgMHg2MDQNCj4gDQo+ICsjZGVmaW5lIEFQTUlYRURfU1lTX1RTX0NPTjFfQlVGRkVSX09GRiAw
-eDMwDQo+ICsNCj4gIC8qIFRoZXJtYWwgQ29udHJvbGxlciBSZWdpc3RlcnMgKi8NCj4gICNkZWZp
-bmUgVEVNUF9NT05DVEwwICAgICAgICAgICAweDAwMA0KPiAgI2RlZmluZSBURU1QX01PTkNUTDEg
-ICAgICAgICAgIDB4MDA0DQo+IEBAIC0zOCw2ICs0MSw3IEBADQo+ICAjZGVmaW5lIFRFTVBfTU9O
-SURFVDAgICAgICAgICAgMHgwMTQNCj4gICNkZWZpbmUgVEVNUF9NT05JREVUMSAgICAgICAgICAw
-eDAxOA0KPiAgI2RlZmluZSBURU1QX01TUkNUTDAgICAgICAgICAgIDB4MDM4DQo+ICsjZGVmaW5l
-IFRFTVBfTVNSQ1RMMSAgICAgICAgICAgMHgwM2MNCj4gICNkZWZpbmUgVEVNUF9BSEJQT0xMICAg
-ICAgICAgICAweDA0MA0KPiAgI2RlZmluZSBURU1QX0FIQlRPICAgICAgICAgICAgIDB4MDQ0DQo+
-ICAjZGVmaW5lIFRFTVBfQURDUE5QMCAgICAgICAgICAgMHgwNDgNCj4gQEAgLTg3LDYgKzkxLDkg
-QEANCj4gICNkZWZpbmUgVEVNUF9BRENWQUxJRE1BU0tfVkFMSURfSElHSCAgICAgICAgICAgQklU
-KDUpDQo+ICAjZGVmaW5lIFRFTVBfQURDVkFMSURNQVNLX1ZBTElEX1BPUyhiaXQpICAgICAgIChi
-aXQpDQo+IA0KPiArI2RlZmluZSBURU1QX01TUkNUTDFfQlVTX1NUQSAgIChCSVQoMCkgfCBCSVQo
-NykpDQo+ICsjZGVmaW5lIFRFTVBfTVNSQ1RMMV9TRU5TSU5HX1BPSU5UU19QQVVTRSAgICAgIDB4
-MTBFDQo+ICsNCj4gIC8qIE1UODE3MyB0aGVybWFsIHNlbnNvcnMgKi8NCj4gICNkZWZpbmUgTVQ4
-MTczX1RTMSAgICAgMA0KPiAgI2RlZmluZSBNVDgxNzNfVFMyICAgICAxDQo+IEBAIC0yNTAsNiAr
-MjU3LDEwIEBAIHN0cnVjdCBtdGtfdGhlcm1hbF9kYXRhIHsNCj4gIHN0cnVjdCBtdGtfdGhlcm1h
-bCB7DQo+ICAgICAgICAgc3RydWN0IGRldmljZSAqZGV2Ow0KPiAgICAgICAgIHZvaWQgX19pb21l
-bSAqdGhlcm1hbF9iYXNlOw0KPiArICAgICAgIHZvaWQgX19pb21lbSAqYXBtaXhlZF9iYXNlOw0K
-PiArICAgICAgIHZvaWQgX19pb21lbSAqYXV4YWRjX2Jhc2U7DQo+ICsgICAgICAgdTY0IGFwbWl4
-ZWRfcGh5c19iYXNlOw0KPiArICAgICAgIHU2NCBhdXhhZGNfcGh5c19iYXNlOw0KPiANCj4gICAg
-ICAgICBzdHJ1Y3QgY2xrICpjbGtfcGVyaV90aGVybTsNCj4gICAgICAgICBzdHJ1Y3QgY2xrICpj
-bGtfYXV4YWRjOw0KPiBAQCAtNTQxLDEzICs1NTIsMTMgQEAgc3RhdGljIGludCByYXdfdG9fbWNl
-bHNpdXMoc3RydWN0IG10a190aGVybWFsICptdCwgaW50IHNlbnNubywgczMyIHJhdykNCj4gIH0N
-Cj4gDQo+ICAvKioNCj4gLSAqIG10a190aGVybWFsX2dldF9iYW5rIC0gZ2V0IGJhbmsNCj4gKyAq
-IG10a190aGVybWFsX2xvY2tfYmFuayAtIGdldCBiYW5rDQo+ICAgKiBAYmFuazogICAgICBUaGUg
-YmFuaw0KPiAgICoNCj4gICAqIFRoZSBiYW5rIHJlZ2lzdGVycyBhcmUgYmFua2VkLCB3ZSBoYXZl
-IHRvIHNlbGVjdCBhIGJhbmsgaW4gdGhlDQo+ICAgKiBQVFBDT1JFU0VMIHJlZ2lzdGVyIHRvIGFj
-Y2VzcyBpdC4NCj4gICAqLw0KPiAtc3RhdGljIHZvaWQgbXRrX3RoZXJtYWxfZ2V0X2Jhbmsoc3Ry
-dWN0IG10a190aGVybWFsX2JhbmsgKmJhbmspDQo+ICtzdGF0aWMgdm9pZCBtdGtfdGhlcm1hbF9s
-b2NrX2Jhbmsoc3RydWN0IG10a190aGVybWFsX2JhbmsgKmJhbmspDQo+ICB7DQo+ICAgICAgICAg
-c3RydWN0IG10a190aGVybWFsICptdCA9IGJhbmstPm10Ow0KPiAgICAgICAgIHUzMiB2YWw7DQo+
-IEBAIC01NjMsMTIgKzU3NCwxMiBAQCBzdGF0aWMgdm9pZCBtdGtfdGhlcm1hbF9nZXRfYmFuayhz
-dHJ1Y3QgbXRrX3RoZXJtYWxfYmFuayAqYmFuaykNCj4gIH0NCj4gDQo+ICAvKioNCj4gLSAqIG10
-a190aGVybWFsX3B1dF9iYW5rIC0gcmVsZWFzZSBiYW5rDQo+ICsgKiBtdGtfdGhlcm1hbF91bmxv
-Y2tfYmFuayAtIHJlbGVhc2UgYmFuaw0KPiAgICogQGJhbms6ICAgICAgVGhlIGJhbmsNCj4gICAq
-DQo+IC0gKiByZWxlYXNlIGEgYmFuayBwcmV2aW91c2x5IHRha2VuIHdpdGggbXRrX3RoZXJtYWxf
-Z2V0X2JhbmssDQo+ICsgKiByZWxlYXNlIGEgYmFuayBwcmV2aW91c2x5IHRha2VuIHdpdGggbXRr
-X3RoZXJtYWxfbG9ja19iYW5rLA0KPiAgICovDQo+IC1zdGF0aWMgdm9pZCBtdGtfdGhlcm1hbF9w
-dXRfYmFuayhzdHJ1Y3QgbXRrX3RoZXJtYWxfYmFuayAqYmFuaykNCj4gK3N0YXRpYyB2b2lkIG10
-a190aGVybWFsX3VubG9ja19iYW5rKHN0cnVjdCBtdGtfdGhlcm1hbF9iYW5rICpiYW5rKQ0KPiAg
-ew0KPiAgICAgICAgIHN0cnVjdCBtdGtfdGhlcm1hbCAqbXQgPSBiYW5rLT5tdDsNCj4gDQo+IEBA
-IC02MjIsMTEgKzYzMywxMSBAQCBzdGF0aWMgaW50IG10a19yZWFkX3RlbXAodm9pZCAqZGF0YSwg
-aW50ICp0ZW1wZXJhdHVyZSkNCj4gICAgICAgICBmb3IgKGkgPSAwOyBpIDwgbXQtPmNvbmYtPm51
-bV9iYW5rczsgaSsrKSB7DQo+ICAgICAgICAgICAgICAgICBzdHJ1Y3QgbXRrX3RoZXJtYWxfYmFu
-ayAqYmFuayA9ICZtdC0+YmFua3NbaV07DQo+IA0KPiAtICAgICAgICAgICAgICAgbXRrX3RoZXJt
-YWxfZ2V0X2JhbmsoYmFuayk7DQo+ICsgICAgICAgICAgICAgICBtdGtfdGhlcm1hbF9sb2NrX2Jh
-bmsoYmFuayk7DQo+IA0KPiAgICAgICAgICAgICAgICAgdGVtcG1heCA9IG1heCh0ZW1wbWF4LCBt
-dGtfdGhlcm1hbF9iYW5rX3RlbXBlcmF0dXJlKGJhbmspKTsNCj4gDQo+IC0gICAgICAgICAgICAg
-ICBtdGtfdGhlcm1hbF9wdXRfYmFuayhiYW5rKTsNCj4gKyAgICAgICAgICAgICAgIG10a190aGVy
-bWFsX3VubG9ja19iYW5rKGJhbmspOw0KPiAgICAgICAgIH0NCj4gDQo+ICAgICAgICAgKnRlbXBl
-cmF0dXJlID0gdGVtcG1heDsNCj4gQEAgLTY1Miw3ICs2NjMsNyBAQCBzdGF0aWMgdm9pZCBtdGtf
-dGhlcm1hbF9pbml0X2Jhbmsoc3RydWN0IG10a190aGVybWFsICptdCwgaW50IG51bSwNCj4gICAg
-ICAgICBiYW5rLT5pZCA9IG51bTsNCj4gICAgICAgICBiYW5rLT5tdCA9IG10Ow0KPiANCj4gLSAg
-ICAgICBtdGtfdGhlcm1hbF9nZXRfYmFuayhiYW5rKTsNCj4gKyAgICAgICBtdGtfdGhlcm1hbF9s
-b2NrX2JhbmsoYmFuayk7DQo+IA0KPiAgICAgICAgIC8qIGJ1cyBjbG9jayA2Nk0gY291bnRpbmcg
-dW5pdCBpcyAxMiAqIDE1LjE1bnMgKiAyNTYgPSA0Ni41NDB1cyAqLw0KPiAgICAgICAgIHdyaXRl
-bChURU1QX01PTkNUTDFfUEVSSU9EX1VOSVQoMTIpLCBjb250cm9sbGVyX2Jhc2UgKyBURU1QX01P
-TkNUTDEpOw0KPiBAQCAtNzQzLDcgKzc1NCw0MyBAQCBzdGF0aWMgdm9pZCBtdGtfdGhlcm1hbF9p
-bml0X2Jhbmsoc3RydWN0IG10a190aGVybWFsICptdCwgaW50IG51bSwNCj4gICAgICAgICAgICAg
-ICAgVEVNUF9BRENXUklURUNUUkxfQURDX01VWF9XUklURSwNCj4gICAgICAgICAgICAgICAgY29u
-dHJvbGxlcl9iYXNlICsgVEVNUF9BRENXUklURUNUUkwpOw0KPiANCj4gLSAgICAgICBtdGtfdGhl
-cm1hbF9wdXRfYmFuayhiYW5rKTsNCj4gKyAgICAgICBtdGtfdGhlcm1hbF91bmxvY2tfYmFuayhi
-YW5rKTsNCj4gK30NCj4gKw0KPiArc3RhdGljIGludCBtdGtfdGhlcm1hbF9kaXNhYmxlX3NlbnNp
-bmcoc3RydWN0IG10a190aGVybWFsICptdCwgaW50IG51bSkNCj4gK3sNCj4gKyAgICAgICBzdHJ1
-Y3QgbXRrX3RoZXJtYWxfYmFuayAqYmFuayA9ICZtdC0+YmFua3NbbnVtXTsNCj4gKyAgICAgICB1
-MzIgdmFsOw0KPiArICAgICAgIHVuc2lnbmVkIGxvbmcgdGltZW91dDsNCj4gKyAgICAgICB2b2lk
-IF9faW9tZW0gKmFkZHI7DQo+ICsgICAgICAgaW50IHJldCA9IDA7DQo+ICsNCj4gKyAgICAgICBi
-YW5rLT5pZCA9IG51bTsNCj4gKyAgICAgICBiYW5rLT5tdCA9IG10Ow0KPiArDQo+ICsgICAgICAg
-bXRrX3RoZXJtYWxfbG9ja19iYW5rKGJhbmspOw0KPiArDQo+ICsgICAgICAgdmFsID0gcmVhZGwo
-bXQtPnRoZXJtYWxfYmFzZSArIFRFTVBfTVNSQ1RMMSk7DQo+ICsgICAgICAgLyogcGF1c2UgcGVy
-aW9kaWMgdGVtcGVyYXR1cmUgbWVhc3VyZW1lbnQgZm9yIHNlbnNpbmcgcG9pbnRzICovDQo+ICsg
-ICAgICAgd3JpdGVsKHZhbCB8IFRFTVBfTVNSQ1RMMV9TRU5TSU5HX1BPSU5UU19QQVVTRSwNCj4g
-KyAgICAgICAgICAgICAgbXQtPnRoZXJtYWxfYmFzZSArIFRFTVBfTVNSQ1RMMSk7DQo+ICsNCj4g
-KyAgICAgICAvKiB3YWl0IHVudGlsIHRlbXBlcmF0dXJlIG1lYXN1cmVtZW50IGJ1cyBpZGxlICov
-DQo+ICsgICAgICAgdGltZW91dCA9IGppZmZpZXMgKyBIWjsNCj4gKyAgICAgICBhZGRyID0gbXQt
-PnRoZXJtYWxfYmFzZSArIFRFTVBfTVNSQ1RMMTsNCj4gKw0KPiArICAgICAgIHJldCA9IHJlYWRs
-X3BvbGxfdGltZW91dChhZGRyLCB2YWwsICh2YWwgJiBURU1QX01TUkNUTDFfQlVTX1NUQSkgPT0g
-MHgwLA0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAwLCB0aW1lb3V0KTsNCj4g
-KyAgICAgICBpZiAocmV0IDwgMCkNCj4gKyAgICAgICAgICAgICAgIGdvdG8gb3V0Ow0KPiArDQo+
-ICsgICAgICAgLyogZGlzYWJsZSBwZXJpb2RpYyB0ZW1wZXJhdHVyZSBtZWFzdXJlbWVudCBvbiBz
-ZW5zaW5nIHBvaW50cyAqLw0KPiArICAgICAgIHdyaXRlbCgweDAsIG10LT50aGVybWFsX2Jhc2Ug
-KyBURU1QX01PTkNUTDApOw0KPiArDQo+ICtvdXQ6DQo+ICsgICAgICAgbXRrX3RoZXJtYWxfdW5s
-b2NrX2JhbmsoYmFuayk7DQo+ICsNCj4gKyAgICAgICByZXR1cm4gcmV0Ow0KPiAgfQ0KPiANCj4g
-IHN0YXRpYyB1NjQgb2ZfZ2V0X3BoeXNfYmFzZShzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wKQ0KPiBA
-QCAtODY4LDcgKzkxNSw2IEBAIHN0YXRpYyBpbnQgbXRrX3RoZXJtYWxfcHJvYmUoc3RydWN0IHBs
-YXRmb3JtX2RldmljZSAqcGRldikNCj4gICAgICAgICBzdHJ1Y3QgZGV2aWNlX25vZGUgKmF1eGFk
-YywgKmFwbWl4ZWRzeXMsICpucCA9IHBkZXYtPmRldi5vZl9ub2RlOw0KPiAgICAgICAgIHN0cnVj
-dCBtdGtfdGhlcm1hbCAqbXQ7DQo+ICAgICAgICAgc3RydWN0IHJlc291cmNlICpyZXM7DQo+IC0g
-ICAgICAgdTY0IGF1eGFkY19waHlzX2Jhc2UsIGFwbWl4ZWRfcGh5c19iYXNlOw0KPiAgICAgICAg
-IHN0cnVjdCB0aGVybWFsX3pvbmVfZGV2aWNlICp0emRldjsNCj4gDQo+ICAgICAgICAgbXQgPSBk
-ZXZtX2t6YWxsb2MoJnBkZXYtPmRldiwgc2l6ZW9mKCptdCksIEdGUF9LRVJORUwpOw0KPiBAQCAt
-OTA0LDExICs5NTAsMTEgQEAgc3RhdGljIGludCBtdGtfdGhlcm1hbF9wcm9iZShzdHJ1Y3QgcGxh
-dGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9ERVY7DQo+
-ICAgICAgICAgfQ0KPiANCj4gLSAgICAgICBhdXhhZGNfcGh5c19iYXNlID0gb2ZfZ2V0X3BoeXNf
-YmFzZShhdXhhZGMpOw0KPiArICAgICAgIG10LT5hdXhhZGNfcGh5c19iYXNlID0gb2ZfZ2V0X3Bo
-eXNfYmFzZShhdXhhZGMpOw0KPiANCj4gICAgICAgICBvZl9ub2RlX3B1dChhdXhhZGMpOw0KPiAN
-Cj4gLSAgICAgICBpZiAoYXV4YWRjX3BoeXNfYmFzZSA9PSBPRl9CQURfQUREUikgew0KPiArICAg
-ICAgIGlmIChtdC0+YXV4YWRjX3BoeXNfYmFzZSA9PSBPRl9CQURfQUREUikgew0KPiAgICAgICAg
-ICAgICAgICAgZGV2X2VycigmcGRldi0+ZGV2LCAiQ2FuJ3QgZ2V0IGF1eGFkYyBwaHlzIGFkZHJl
-c3NcbiIpOw0KPiAgICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7DQo+ICAgICAgICAgfQ0K
-PiBAQCAtOTE5LDExICs5NjUsMTIgQEAgc3RhdGljIGludCBtdGtfdGhlcm1hbF9wcm9iZShzdHJ1
-Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9E
-RVY7DQo+ICAgICAgICAgfQ0KPiANCj4gLSAgICAgICBhcG1peGVkX3BoeXNfYmFzZSA9IG9mX2dl
-dF9waHlzX2Jhc2UoYXBtaXhlZHN5cyk7DQo+ICsgICAgICAgbXQtPmFwbWl4ZWRfcGh5c19iYXNl
-ID0gb2ZfZ2V0X3BoeXNfYmFzZShhcG1peGVkc3lzKTsNCj4gKyAgICAgICBtdC0+YXBtaXhlZF9i
-YXNlID0gb2ZfaW9tYXAoYXBtaXhlZHN5cywgMCk7DQo+IA0KPiAgICAgICAgIG9mX25vZGVfcHV0
-KGFwbWl4ZWRzeXMpOw0KPiANCj4gLSAgICAgICBpZiAoYXBtaXhlZF9waHlzX2Jhc2UgPT0gT0Zf
-QkFEX0FERFIpIHsNCj4gKyAgICAgICBpZiAobXQtPmFwbWl4ZWRfcGh5c19iYXNlID09IE9GX0JB
-RF9BRERSKSB7DQo+ICAgICAgICAgICAgICAgICBkZXZfZXJyKCZwZGV2LT5kZXYsICJDYW4ndCBn
-ZXQgYXV4YWRjIHBoeXMgYWRkcmVzc1xuIik7DQo+ICAgICAgICAgICAgICAgICByZXR1cm4gLUVJ
-TlZBTDsNCj4gICAgICAgICB9DQo+IEBAIC05MzUsMTkgKzk4MiwxOSBAQCBzdGF0aWMgaW50IG10
-a190aGVybWFsX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAgICAgICAg
-cmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKG10LT5jbGtfYXV4YWRjKTsNCj4gICAgICAgICBpZiAo
-cmV0KSB7DQo+ICAgICAgICAgICAgICAgICBkZXZfZXJyKCZwZGV2LT5kZXYsICJDYW4ndCBlbmFi
-bGUgYXV4YWRjIGNsazogJWRcbiIsIHJldCk7DQo+IC0gICAgICAgICAgICAgICByZXR1cm4gcmV0
-Ow0KPiArICAgICAgICAgICAgICAgZ290byBlcnJfZGlzYWJsZV9jbGtfYXV4YWRjOw0KPiAgICAg
-ICAgIH0NCj4gDQo+ICAgICAgICAgcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKG10LT5jbGtfcGVy
-aV90aGVybSk7DQo+ICAgICAgICAgaWYgKHJldCkgew0KPiAgICAgICAgICAgICAgICAgZGV2X2Vy
-cigmcGRldi0+ZGV2LCAiQ2FuJ3QgZW5hYmxlIHBlcmkgY2xrOiAlZFxuIiwgcmV0KTsNCj4gLSAg
-ICAgICAgICAgICAgIGdvdG8gZXJyX2Rpc2FibGVfY2xrX2F1eGFkYzsNCj4gKyAgICAgICAgICAg
-ICAgIGdvdG8gZXJyX2Rpc2FibGVfY2xrX3BlcmlfdGhlcm07DQo+ICAgICAgICAgfQ0KPiANCj4g
-ICAgICAgICBmb3IgKGN0cmxfaWQgPSAwOyBjdHJsX2lkIDwgbXQtPmNvbmYtPm51bV9jb250cm9s
-bGVyIDsgY3RybF9pZCsrKQ0KPiAgICAgICAgICAgICAgICAgZm9yIChpID0gMDsgaSA8IG10LT5j
-b25mLT5udW1fYmFua3M7IGkrKykNCj4gLSAgICAgICAgICAgICAgICAgICAgICAgbXRrX3RoZXJt
-YWxfaW5pdF9iYW5rKG10LCBpLCBhcG1peGVkX3BoeXNfYmFzZSwNCj4gLSAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGF1eGFkY19waHlzX2Jhc2UsIGN0cmxfaWQp
-Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICBtdGtfdGhlcm1hbF9pbml0X2JhbmsobXQsIGks
-IG10LT5hcG1peGVkX3BoeXNfYmFzZSwNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIG10LT5hdXhhZGNfcGh5c19iYXNlLCBjdHJsX2lkKTsNCj4gDQo+ICAg
-ICAgICAgcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgbXQpOw0KPiANCj4gQEAgLTk3OCwxMSAr
-MTAyNSw4MCBAQCBzdGF0aWMgaW50IG10a190aGVybWFsX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1f
-ZGV2aWNlICpwZGV2KQ0KPiAgICAgICAgIHJldHVybiAwOw0KPiAgfQ0KPiANCj4gK3N0YXRpYyBp
-bnQgX19tYXliZV91bnVzZWQgbXRrX3RoZXJtYWxfc3VzcGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYp
-DQo+ICt7DQo+ICsgICAgICAgc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiA9IHRvX3BsYXRm
-b3JtX2RldmljZShkZXYpOw0KPiArICAgICAgIHN0cnVjdCBtdGtfdGhlcm1hbCAqbXQgPSBwbGF0
-Zm9ybV9nZXRfZHJ2ZGF0YShwZGV2KTsNCj4gKyAgICAgICBpbnQgaSwgcmV0Ow0KPiArDQo+ICsg
-ICAgICAgZm9yIChpID0gMDsgaSA8IG10LT5jb25mLT5udW1fYmFua3M7IGkrKykgew0KPiArICAg
-ICAgICAgICAgICAgcmV0ID0gbXRrX3RoZXJtYWxfZGlzYWJsZV9zZW5zaW5nKG10LCBpKTsNCj4g
-KyAgICAgICAgICAgICAgIGlmIChyZXQpDQo+ICsgICAgICAgICAgICAgICAgICAgICAgIGdvdG8g
-b3V0Ow0KPiArICAgICAgIH0NCj4gKw0KPiArICAgICAgIC8qIGRpc2FibGUgYnVmZmVyICovDQo+
-ICsgICAgICAgd3JpdGVsKHJlYWRsKG10LT5hcG1peGVkX2Jhc2UgKyBBUE1JWEVEX1NZU19UU19D
-T04xKSB8DQo+ICsgICAgICAgICAgICAgIEFQTUlYRURfU1lTX1RTX0NPTjFfQlVGRkVSX09GRiwN
-Cj4gKyAgICAgICAgICAgICAgbXQtPmFwbWl4ZWRfYmFzZSArIEFQTUlYRURfU1lTX1RTX0NPTjEp
-Ow0KPiArDQo+ICsgICAgICAgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKG10LT5jbGtfcGVyaV90aGVy
-bSk7DQo+ICsgICAgICAgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKG10LT5jbGtfYXV4YWRjKTsNCj4g
-Kw0KPiArICAgICAgIHJldHVybiAwOw0KPiArDQo+ICtvdXQ6DQo+ICsgICAgICAgZGV2X2Vycigm
-cGRldi0+ZGV2LCAiRmFpbGVkIHRvIHdhaXQgdW50aWwgYnVzIGlkbGVcbiIpOw0KPiArDQo+ICsg
-ICAgICAgcmV0dXJuIHJldDsNCj4gK30NCj4gKw0KPiArc3RhdGljIGludCBfX21heWJlX3VudXNl
-ZCBtdGtfdGhlcm1hbF9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQ0KPiArew0KPiArICAgICAg
-IHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYgPSB0b19wbGF0Zm9ybV9kZXZpY2UoZGV2KTsN
-Cj4gKyAgICAgICBzdHJ1Y3QgbXRrX3RoZXJtYWwgKm10ID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEo
-cGRldik7DQo+ICsgICAgICAgaW50IGksIHJldCwgY3RybF9pZDsNCj4gKw0KPiArICAgICAgIHJl
-dCA9IGRldmljZV9yZXNldCgmcGRldi0+ZGV2KTsNCj4gKyAgICAgICBpZiAocmV0KQ0KPiArICAg
-ICAgICAgICAgICAgcmV0dXJuIHJldDsNCj4gKw0KPiArICAgICAgIHJldCA9IGNsa19wcmVwYXJl
-X2VuYWJsZShtdC0+Y2xrX2F1eGFkYyk7DQo+ICsgICAgICAgaWYgKHJldCkgew0KPiArICAgICAg
-ICAgICAgICAgZGV2X2VycigmcGRldi0+ZGV2LCAiQ2FuJ3QgZW5hYmxlIGF1eGFkYyBjbGs6ICVk
-XG4iLCByZXQpOw0KPiArICAgICAgICAgICAgICAgZ290byBlcnJfZGlzYWJsZV9jbGtfYXV4YWRj
-Ow0KPiArICAgICAgIH0NCj4gKw0KPiArICAgICAgIHJldCA9IGNsa19wcmVwYXJlX2VuYWJsZSht
-dC0+Y2xrX3BlcmlfdGhlcm0pOw0KPiArICAgICAgIGlmIChyZXQpIHsNCj4gKyAgICAgICAgICAg
-ICAgIGRldl9lcnIoJnBkZXYtPmRldiwgIkNhbid0IGVuYWJsZSBwZXJpIGNsazogJWRcbiIsIHJl
-dCk7DQo+ICsgICAgICAgICAgICAgICBnb3RvIGVycl9kaXNhYmxlX2Nsa19wZXJpX3RoZXJtOw0K
-PiArICAgICAgIH0NCj4gKw0KPiArICAgICAgIGZvciAoY3RybF9pZCA9IDA7IGN0cmxfaWQgPCBt
-dC0+Y29uZi0+bnVtX2NvbnRyb2xsZXIgOyBjdHJsX2lkKyspDQo+ICsgICAgICAgICAgICAgICBm
-b3IgKGkgPSAwOyBpIDwgbXQtPmNvbmYtPm51bV9iYW5rczsgaSsrKQ0KPiArICAgICAgICAgICAg
-ICAgICAgICAgICBtdGtfdGhlcm1hbF9pbml0X2JhbmsobXQsIGksIG10LT5hcG1peGVkX3BoeXNf
-YmFzZSwNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG10
-LT5hdXhhZGNfcGh5c19iYXNlLCBjdHJsX2lkKTsNCj4gKw0KPiArICAgICAgIHJldHVybiAwOw0K
-PiArDQo+ICtlcnJfZGlzYWJsZV9jbGtfcGVyaV90aGVybToNCj4gKyAgICAgICBjbGtfZGlzYWJs
-ZV91bnByZXBhcmUobXQtPmNsa19wZXJpX3RoZXJtKTsNCj4gK2Vycl9kaXNhYmxlX2Nsa19hdXhh
-ZGM6DQo+ICsgICAgICAgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKG10LT5jbGtfYXV4YWRjKTsNCj4g
-Kw0KPiArICAgICAgIHJldHVybiByZXQ7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBTSU1QTEVfREVW
-X1BNX09QUyhtdGtfdGhlcm1hbF9wbV9vcHMsDQo+ICsgICAgICAgICAgICAgICAgICAgICAgICBt
-dGtfdGhlcm1hbF9zdXNwZW5kLCBtdGtfdGhlcm1hbF9yZXN1bWUpOw0KPiArDQo+ICBzdGF0aWMg
-c3RydWN0IHBsYXRmb3JtX2RyaXZlciBtdGtfdGhlcm1hbF9kcml2ZXIgPSB7DQo+ICAgICAgICAg
-LnByb2JlID0gbXRrX3RoZXJtYWxfcHJvYmUsDQo+ICAgICAgICAgLnJlbW92ZSA9IG10a190aGVy
-bWFsX3JlbW92ZSwNCj4gICAgICAgICAuZHJpdmVyID0gew0KPiAgICAgICAgICAgICAgICAgLm5h
-bWUgPSAibXRrLXRoZXJtYWwiLA0KPiArICAgICAgICAgICAgICAgLnBtID0gJm10a190aGVybWFs
-X3BtX29wcywNCj4gICAgICAgICAgICAgICAgIC5vZl9tYXRjaF90YWJsZSA9IG10a190aGVybWFs
-X29mX21hdGNoLA0KPiAgICAgICAgIH0sDQo+ICB9Ow0KPiAtLQ0KPiAyLjE4LjANCj4gDQpIaSBE
-YW5pZWwsDQpKdXN0IGdlbnRseSBwaW5nLiAgICBNYW55IHRoYW5rcy4NCg==
+On 14.05.20 08:44, teawater wrote:
+> Hi David,
+> 
+> I got a kernel warning with v2 and v3.
+
+Hi Hui,
+
+thanks for playing with the latest versions. Surprisingly, I can
+reproduce even by hotplugging a DIMM instead as well - that's good, so
+it's not related to virtio-mem, lol. Seems to be some QEMU setup issue
+with older machine types.
+
+Can you switch to a newer qemu machine version, especially
+pc-i440fx-5.0? Both, hotplugging DIMMs and virtio-mem works for me with
+that QEMU machine just fine.
+
+What also seems to make it work with pc-i440fx-2.1, is giving the
+machine 4G of initial memory (-m 4g,slots=10,maxmem=5G).
+
+Cheers!
+
+
+> // start a QEMU that is get from https://github.com/davidhildenbrand/qemu/tree/virtio-mem-v2 and setup a file as a ide disk.
+> /home/teawater/qemu/qemu/x86_64-softmmu/qemu-system-x86_64 -machine pc-i440fx-2.1,accel=kvm,usb=off -cpu host -no-reboot -nographic -device ide-hd,drive=hd -drive if=none,id=hd,file=/home/teawater/old.img,format=raw -kernel /home/teawater/kernel/bk2/arch/x86/boot/bzImage -append "console=ttyS0 root=/dev/sda nokaslr swiotlb=noforce" -m 1g,slots=10,maxmem=2G -smp 1 -s -monitor unix:/home/teawater/qemu/m,server,nowait
+> 
+> // Setup virtio-mem and plug 256m memory in qemu monitor:
+> object_add memory-backend-ram,id=mem1,size=256m
+> device_add virtio-mem-pci,id=vm0,memdev=mem1
+> qom-set vm0 requested-size 256M
+> 
+> // Go back to the terminal and access file system will got following kernel warning.
+> [   19.515549] pci 0000:00:04.0: [1af4:1015] type 00 class 0x00ff00
+> [   19.516227] pci 0000:00:04.0: reg 0x10: [io  0x0000-0x007f]
+> [   19.517196] pci 0000:00:04.0: BAR 0: assigned [io  0x1000-0x107f]
+> [   19.517843] virtio-pci 0000:00:04.0: enabling device (0000 -> 0001)
+> [   19.535957] PCI Interrupt Link [LNKD] enabled at IRQ 11
+> [   19.536507] virtio-pci 0000:00:04.0: virtio_pci: leaving for legacy driver
+> [   19.537528] virtio_mem virtio0: start address: 0x100000000
+> [   19.538094] virtio_mem virtio0: region size: 0x10000000
+> [   19.538621] virtio_mem virtio0: device block size: 0x200000
+> [   19.539186] virtio_mem virtio0: memory block size: 0x8000000
+> [   19.539752] virtio_mem virtio0: subblock size: 0x400000
+> [   19.540357] virtio_mem virtio0: plugged size: 0x0
+> [   19.540834] virtio_mem virtio0: requested size: 0x0
+> [   20.170441] virtio_mem virtio0: plugged size: 0x0
+> [   20.170933] virtio_mem virtio0: requested size: 0x10000000
+> [   20.172247] Built 1 zonelists, mobility grouping on.  Total pages: 266012
+> [   20.172955] Policy zone: Normal
+> 
+> / # ls
+> [   26.724565] ------------[ cut here ]------------
+> [   26.725047] ata_piix 0000:00:01.1: DMA addr 0x000000010fc14000+49152 overflow (mask ffffffff, bus limit 0).
+> [   26.726024] WARNING: CPU: 0 PID: 179 at /home/teawater/kernel/linux2/kernel/dma/direct.c:364 dma_direct_map_page+0x118/0x130
+> [   26.727141] Modules linked in:
+> [   26.727456] CPU: 0 PID: 179 Comm: ls Not tainted 5.6.0-rc5-next-20200311+ #9
+> [   26.728163] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
+> [   26.729305] RIP: 0010:dma_direct_map_page+0x118/0x130
+> [   26.729825] Code: 8b 1f e8 3b 70 59 00 48 8d 4c 24 08 48 89 c6 4c 89 2c 24 4d 89 e1 49 89 e8 48 89 da 48 c7 c7 08 6c 34 82 31 c0 e8 d8 8e f7 ff <00
+> [   26.731683] RSP: 0000:ffffc90000213838 EFLAGS: 00010082
+> [   26.732205] RAX: 0000000000000000 RBX: ffff88803ebeb1b0 RCX: ffffffff82665148
+> [   26.732913] RDX: 0000000000000001 RSI: 0000000000000092 RDI: 0000000000000046
+> [   26.733621] RBP: 000000000000c000 R08: 00000000000001df R09: 00000000000001df
+> [   26.734338] R10: 0000000000000000 R11: ffffc900002135a8 R12: 00000000ffffffff
+> [   26.735054] R13: 0000000000000000 R14: 0000000000000000 R15: ffff88803d55f5b0
+> [   26.735772] FS:  00000000024e9880(0000) GS:ffff88803ec00000(0000) knlGS:0000000000000000
+> [   26.736579] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   26.737162] CR2: 00000000005bfc7f CR3: 0000000107e12004 CR4: 0000000000360ef0
+> [   26.737879] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [   26.738591] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [   26.739307] Call Trace:
+> [   26.739564]  dma_direct_map_sg+0x64/0xb0
+> [   26.739969]  ? ata_scsi_write_same_xlat+0x350/0x350
+> [   26.740461]  ata_qc_issue+0x214/0x260
+> [   26.740839]  ata_scsi_queuecmd+0x16a/0x490
+> [   26.741255]  scsi_queue_rq+0x679/0xa60
+> [   26.741639]  blk_mq_dispatch_rq_list+0x90/0x510
+> [   26.742099]  ? elv_rb_del+0x1f/0x30
+> [   26.742456]  ? deadline_remove_request+0x6a/0xb0
+> [   26.742926]  blk_mq_do_dispatch_sched+0x78/0x100
+> [   26.743397]  blk_mq_sched_dispatch_requests+0xf9/0x170
+> [   26.743924]  __blk_mq_run_hw_queue+0x7e/0x130
+> [   26.744365]  __blk_mq_delay_run_hw_queue+0x107/0x150
+> [   26.744874]  blk_mq_run_hw_queue+0x61/0x100
+> [   26.745299]  blk_mq_sched_insert_requests+0x71/0x110
+> [   26.745798]  blk_mq_flush_plug_list+0x14b/0x210
+> [   26.746258]  blk_flush_plug_list+0xbf/0xe0
+> [   26.746675]  blk_finish_plug+0x27/0x40
+> [   26.747056]  read_pages+0x7c/0x190
+> [   26.747399]  __do_page_cache_readahead+0x19c/0x1b0
+> [   26.747886]  filemap_fault+0x54e/0x9a0
+> [   26.748268]  ? alloc_set_pte+0x102/0x610
+> [   26.748673]  ? walk_component+0x64/0x2e0
+> [   26.749072]  ? filemap_map_pages+0xfa/0x3f0
+> [   26.749498]  ext4_filemap_fault+0x2c/0x3b
+> [   26.749911]  __do_fault+0x38/0xb0
+> [   26.750251]  __handle_mm_fault+0xd2a/0x16d0
+> [   26.750678]  handle_mm_fault+0xe2/0x1f0
+> [   26.751069]  do_page_fault+0x250/0x590
+> [   26.751448]  async_page_fault+0x34/0x40
+> [   26.751841] RIP: 0033:0x5bfc7f
+> [   26.752155] Code: Bad RIP value.
+> [   26.752481] RSP: 002b:00007ffef0289cd8 EFLAGS: 00010246
+> [   26.752999] RAX: 0000000000000001 RBX: 00007ffef028af81 RCX: 00007ffef028af84
+> [   26.753715] RDX: 00007ffef0289e01 RSI: 00007ffef0289ea8 RDI: 0000000000000001
+> [   26.754424] RBP: 00000000000000ac R08: 0000000000000001 R09: 0000000000000006
+> [   26.755144] R10: 000000000089fc18 R11: 0000000000000246 R12: 00007ffef0289ea8
+> [   26.755853] R13: 000000000043a5f0 R14: 0000000000000000 R15: 0000000000000000
+> [   26.756560] ---[ end trace 23cc3e9021358587 ]---
+> [   26.778034] ata2.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x0
+> [   26.778690] ata2.00: failed command: READ DMA
+> [   26.779131] ata2.00: cmd c8/00:e8:92:ad:00/00:00:00:00:00/e0 tag 0 dma 118784 in
+> [   26.779131]          res 50/00:00:0a:80:03/00:00:00:00:00/a0 Emask 0x40 (internal error)
+> [   26.780691] ata2.00: status: { DRDY }
+> [   26.781603] ata2.00: configured for MWDMA2
+> [   26.782034] sd 1:0:0:0: [sda] tag#0 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE cmd_age=0s
+> [   26.782958] sd 1:0:0:0: [sda] tag#0 Sense Key : Illegal Request [current]
+> [   26.783646] sd 1:0:0:0: [sda] tag#0 Add. Sense: Unaligned write command
+> [   26.784321] sd 1:0:0:0: [sda] tag#0 CDB: Read(10) 28 00 00 00 ad 92 00 00 e8 00
+> [   26.785056] blk_update_request: I/O error, dev sda, sector 44434 op 0x0:(READ) flags 0x80700 phys_seg 3 prio class 0
+> [   26.786118] ata2: EH complete
+> [   26.810033] ata2.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x0
+> [   26.810690] ata2.00: failed command: READ DMA
+> [   26.811133] ata2.00: cmd c8/00:08:fa:ad:00/00:00:00:00:00/e0 tag 0 dma 4096 in
+> [   26.811133]          res 50/00:00:00:00:00/00:00:00:00:00/a0 Emask 0x40 (internal error)
+> [   26.812681] ata2.00: status: { DRDY }
+> [   26.813569] ata2.00: configured for MWDMA2
+> [   26.813992] ata2: EH complete
+> [   26.826031] ata2.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x0
+> [   26.826687] ata2.00: failed command: READ DMA
+> [   26.827131] ata2.00: cmd c8/00:08:fa:ad:00/00:00:00:00:00/e0 tag 0 dma 4096 in
+> [   26.827131]          res 50/00:00:00:00:00/00:00:00:00:00/a0 Emask 0x40 (internal error)
+> [   26.828668] ata2.00: status: { DRDY }
+> [   26.829552] ata2.00: configured for MWDMA2
+> [   26.829972] ata2: EH complete
+> [   26.842030] ata2.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x0
+> [   26.842686] ata2.00: failed command: READ DMA
+> [   26.843127] ata2.00: cmd c8/00:08:fa:ad:00/00:00:00:00:00/e0 tag 0 dma 4096 in
+> [   26.843127]          res 50/00:00:00:00:00/00:00:00:00:00/a0 Emask 0x40 (internal error)
+> [   26.844656] ata2.00: status: { DRDY }
+> [   26.845538] ata2.00: configured for MWDMA2
+> [   26.845961] ata2: EH complete
+> [   26.858030] ata2.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x0
+> [   26.858690] ata2.00: failed command: READ DMA
+> [   26.859132] ata2.00: cmd c8/00:08:fa:ad:00/00:00:00:00:00/e0 tag 0 dma 4096 in
+> [   26.859132]          res 50/00:00:00:00:00/00:00:00:00:00/a0 Emask 0x40 (internal error)
+> [   26.860656] ata2.00: status: { DRDY }
+> [   26.861542] ata2.00: configured for MWDMA2
+> [   26.861960] ata2: EH complete
+> [   26.874030] ata2.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x0
+> [   26.874693] ata2.00: failed command: READ DMA
+> [   26.875131] ata2.00: cmd c8/00:08:fa:ad:00/00:00:00:00:00/e0 tag 0 dma 4096 in
+> [   26.875131]          res 50/00:00:00:00:00/00:00:00:00:00/a0 Emask 0x40 (internal error)
+> [   26.876675] ata2.00: status: { DRDY }
+> [   26.877554] ata2.00: configured for MWDMA2
+> [   26.877976] ata2: EH complete
+> [   26.890030] ata2.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x0
+> [   26.890655] ata2.00: failed command: READ DMA
+> [   26.891082] ata2.00: cmd c8/00:08:fa:ad:00/00:00:00:00:00/e0 tag 0 dma 4096 in
+> [   26.891082]          res 50/00:00:00:00:00/00:00:00:00:00/a0 Emask 0x40 (internal error)
+> [   26.892544] ata2.00: status: { DRDY }
+> [   26.893408] ata2.00: configured for MWDMA2
+> [   26.893812] sd 1:0:0:0: [sda] tag#0 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE cmd_age=0s
+> [   26.894698] sd 1:0:0:0: [sda] tag#0 Sense Key : Illegal Request [current]
+> [   26.895356] sd 1:0:0:0: [sda] tag#0 Add. Sense: Unaligned write command
+> [   26.895993] sd 1:0:0:0: [sda] tag#0 CDB: Read(10) 28 00 00 00 ad fa 00 00 08 00
+> [   26.896693] blk_update_request: I/O error, dev sda, sector 44538 op 0x0:(READ) flags 0x0 phys_seg 1 prio class 0
+> [   26.897668] ata2: EH complete
+> [   26.922032] ata2.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x0
+> [   26.922652] ata2.00: failed command: READ DMA
+> [   26.923080] ata2.00: cmd c8/00:08:fa:ad:00/00:00:00:00:00/e0 tag 0 dma 4096 in
+> [   26.923080]          res 50/00:00:00:00:00/00:00:00:00:00/a0 Emask 0x40 (internal error)
+> [   26.924538] ata2.00: status: { DRDY }
+> [   26.925404] ata2.00: configured for MWDMA2
+> [   26.925807] ata2: EH complete
+> [   26.938031] ata2.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x0
+> [   26.938650] ata2.00: failed command: READ DMA
+> [   26.939076] ata2.00: cmd c8/00:08:fa:ad:00/00:00:00:00:00/e0 tag 0 dma 4096 in
+> [   26.939076]          res 50/00:00:00:00:00/00:00:00:00:00/a0 Emask 0x40 (internal error)
+> [   26.940529] ata2.00: status: { DRDY }
+> [   26.941391] ata2.00: configured for MWDMA2
+> [   26.941793] ata2: EH complete
+> [   26.954031] ata2.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x0
+> [   26.954652] ata2.00: failed command: READ DMA
+> [   26.955079] ata2.00: cmd c8/00:08:fa:ad:00/00:00:00:00:00/e0 tag 0 dma 4096 in
+> [   26.955079]          res 50/00:00:00:00:00/00:00:00:00:00/a0 Emask 0x40 (internal error)
+> [   26.956536] ata2.00: status: { DRDY }
+> [   26.957400] ata2.00: configured for MWDMA2
+> [   26.957800] ata2: EH complete
+> [   26.970031] ata2.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x0
+> [   26.970653] ata2.00: failed command: READ DMA
+> [   26.971079] ata2.00: cmd c8/00:08:fa:ad:00/00:00:00:00:00/e0 tag 0 dma 4096 in
+> [   26.971079]          res 50/00:00:00:00:00/00:00:00:00:00/a0 Emask 0x40 (internal error)
+> [   26.972536] ata2.00: status: { DRDY }
+> [   26.973402] ata2.00: configured for MWDMA2
+> [   26.973804] ata2: EH complete
+> [   26.986030] ata2.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x0
+> [   26.986654] ata2.00: failed command: READ DMA
+> [   26.987082] ata2.00: cmd c8/00:08:fa:ad:00/00:00:00:00:00/e0 tag 0 dma 4096 in
+> [   26.987082]          res 50/00:00:00:00:00/00:00:00:00:00/a0 Emask 0x40 (internal error)
+> [   26.988541] ata2.00: status: { DRDY }
+> [   26.989406] ata2.00: configured for MWDMA2
+> [   26.989807] ata2: EH complete
+> [   27.002031] ata2.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x0
+> [   27.002653] ata2.00: failed command: READ DMA
+> [   27.003083] ata2.00: cmd c8/00:08:fa:ad:00/00:00:00:00:00/e0 tag 0 dma 4096 in
+> [   27.003083]          res 50/00:00:00:00:00/00:00:00:00:00/a0 Emask 0x40 (internal error)
+> [   27.004541] ata2.00: status: { DRDY }
+> [   27.005404] ata2.00: configured for MWDMA2
+> [   27.005806] sd 1:0:0:0: [sda] tag#0 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE cmd_age=0s
+> [   27.006688] sd 1:0:0:0: [sda] tag#0 Sense Key : Illegal Request [current]
+> [   27.007346] sd 1:0:0:0: [sda] tag#0 Add. Sense: Unaligned write command
+> [   27.007982] sd 1:0:0:0: [sda] tag#0 CDB: Read(10) 28 00 00 00 ad fa 00 00 08 00
+> [   27.008680] blk_update_request: I/O error, dev sda, sector 44538 op 0x0:(READ) flags 0x0 phys_seg 1 prio class 0
+> [   27.009649] ata2: EH complete
+> Bus error
+> 
+> I cannot reproduce this warning with set file as nvdimm with following command.
+> sudo /home/teawater/qemu/qemu/x86_64-softmmu/qemu-system-x86_64 -machine pc,accel=kvm,kernel_irqchip,nvdimm -no-reboot -nographic -kernel /home/teawater/kernel/bk2/arch/x86/boot/bzImage -append "console=ttyS0 root=/dev/pmem0 swiotlb=noforce" -m 1g,slots=1,maxmem=2G -smp 1 -device nvdimm,id=nv0,memdev=mem0 -object memory-backend-file,id=mem0,mem-path=/home/teawater/old.img,size=268435456 -monitor unix:/home/teawater/qemu/m,server,nowait
+> 
+> Best,
+> Hui
+
+
+-- 
+Thanks,
+
+David / dhildenb
 
