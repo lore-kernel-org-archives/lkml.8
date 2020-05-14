@@ -2,66 +2,60 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0432C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85304C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 946242065C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FE242065C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:43:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728470AbgENXn0 (ORCPT
+        id S1728510AbgENXnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 19:43:26 -0400
-Received: from mga01.intel.com ([192.55.52.88]:36669 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728415AbgENXnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 19:43:25 -0400
-IronPort-SDR: dE/OXNRPB65SD0Pv1u1815GybNs5OFpSgSeW4coafxYAUNLpAO/BXsUBUkoc/bVJYED4clYbb2
- onOqAxQhm6wQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 16:43:24 -0700
-IronPort-SDR: 0PcKf5kROprlU7FvR2CjmctlO7VJLKQn4o6TWazGRw3DBXAE4dQdy6dZGq6zvM7ICAe8BiPuVr
- 5UquiIXhVxpQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,392,1583222400"; 
-   d="scan'208";a="410262240"
-Received: from ashadrin-mobl1.ccr.corp.intel.com ([10.249.38.112])
-  by orsmga004.jf.intel.com with ESMTP; 14 May 2020 16:43:17 -0700
-Message-ID: <b59e8ef4070f1aba31b4351910d6e819802eb551.camel@linux.intel.com>
-Subject: Re: [PATCH v4 2/4] KEYS: trusted: Introduce TEE based Trusted Keys
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        James Bottomley <jejb@linux.ibm.com>, dhowells@redhat.com,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Janne Karhunen <janne.karhunen@gmail.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Markus Wamser <Markus.Wamser@mixed-mode.de>,
-        "open list:ASYMMETRIC KEYS" <keyrings@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        op-tee@lists.trustedfirmware.org,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>
-Date:   Fri, 15 May 2020 02:43:04 +0300
-In-Reply-To: <CAFA6WYPr1iL-uJgSRu_61uv=2DhuEdDVdQLDuyPEOOK2jEgvyg@mail.gmail.com>
-References: <1588758017-30426-1-git-send-email-sumit.garg@linaro.org>
-         <1588758017-30426-3-git-send-email-sumit.garg@linaro.org>
-         <ef2093f96eae7e9e6785f2c0ad00604d8adfd3be.camel@linux.intel.com>
-         <CAFA6WYPr1iL-uJgSRu_61uv=2DhuEdDVdQLDuyPEOOK2jEgvyg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 14 May 2020 19:43:31 -0400
+Received: from smtprelay0252.hostedemail.com ([216.40.44.252]:36744 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728415AbgENXna (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 19:43:30 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 5EDA418029D8F;
+        Thu, 14 May 2020 23:43:28 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: face85_754dbffefb147
+X-Filterd-Recvd-Size: 8593
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf14.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 14 May 2020 23:43:25 +0000 (UTC)
+Message-ID: <28145b05ee792b89ab9cb560f4f9989fd3d5d93b.camel@perches.com>
+Subject: Re: [PATCH v2 bpf-next 4/7] printk: add type-printing %pT format
+ specifier which uses BTF
+From:   Joe Perches <joe@perches.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Alan Maguire <alan.maguire@oracle.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        bpf <bpf@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Yonghong Song <yhs@fb.com>, Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>
+Date:   Thu, 14 May 2020 16:43:24 -0700
+In-Reply-To: <397fb29abb20d11003a18919ee0c44918fc1a165.camel@perches.com>
+References: <1589263005-7887-1-git-send-email-alan.maguire@oracle.com>
+         <1589263005-7887-5-git-send-email-alan.maguire@oracle.com>
+         <1b63a6b193073674b6e0f9f95c62ce2af1b977cc.camel@perches.com>
+         <CAADnVQK8osy9W8-u-K=ucqe5q-+Uik41fBw6d-SfG-m6rgVwDQ@mail.gmail.com>
+         <397fb29abb20d11003a18919ee0c44918fc1a165.camel@perches.com>
+Content-Type: text/plain; charset="ISO-8859-1"
 User-Agent: Evolution 3.36.1-2 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -70,77 +64,189 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-05-14 at 12:57 +0530, Sumit Garg wrote:
-> On Thu, 14 May 2020 at 05:58, Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> > On Wed, 2020-05-06 at 15:10 +0530, Sumit Garg wrote:
-> > > Add support for TEE based trusted keys where TEE provides the functionality
-> > > to seal and unseal trusted keys using hardware unique key.
+On Wed, 2020-05-13 at 16:22 -0700, Joe Perches wrote:
+> On Wed, 2020-05-13 at 16:07 -0700, Alexei Starovoitov wrote:
+> > On Wed, May 13, 2020 at 4:05 PM Joe Perches <joe@perches.com> wrote:
+> > > On Tue, 2020-05-12 at 06:56 +0100, Alan Maguire wrote:
+> > > > printk supports multiple pointer object type specifiers (printing
+> > > > netdev features etc).  Extend this support using BTF to cover
+> > > > arbitrary types.  "%pT" specifies the typed format, and the pointer
+> > > > argument is a "struct btf_ptr *" where struct btf_ptr is as follows:
+> > > > 
+> > > > struct btf_ptr {
+> > > >       void *ptr;
+> > > >       const char *type;
+> > > >       u32 id;
+> > > > };
+> > > > 
+> > > > Either the "type" string ("struct sk_buff") or the BTF "id" can be
+> > > > used to identify the type to use in displaying the associated "ptr"
+> > > > value.  A convenience function to create and point at the struct
+> > > > is provided:
+> > > > 
+> > > >       printk(KERN_INFO "%pT", BTF_PTR_TYPE(skb, struct sk_buff));
+> > > > 
+> > > > When invoked, BTF information is used to traverse the sk_buff *
+> > > > and display it.  Support is present for structs, unions, enums,
+> > > > typedefs and core types (though in the latter case there's not
+> > > > much value in using this feature of course).
+> > > > 
+> > > > Default output is indented, but compact output can be specified
+> > > > via the 'c' option.  Type names/member values can be suppressed
+> > > > using the 'N' option.  Zero values are not displayed by default
+> > > > but can be using the '0' option.  Pointer values are obfuscated
+> > > > unless the 'x' option is specified.  As an example:
+> > > > 
+> > > >   struct sk_buff *skb = alloc_skb(64, GFP_KERNEL);
+> > > >   pr_info("%pT", BTF_PTR_TYPE(skb, struct sk_buff));
+> > > > 
+> > > > ...gives us:
+> > > > 
+> > > > (struct sk_buff){
+> > > >  .transport_header = (__u16)65535,
+> > > >        .mac_header = (__u16)65535,
+> > > >  .end = (sk_buff_data_t)192,
+> > > >  .head = (unsigned char *)000000006b71155a,
+> > > >  .data = (unsigned char *)000000006b71155a,
+> > > >  .truesize = (unsigned int)768,
+> > > >  .users = (refcount_t){
+> > > >   .refs = (atomic_t){
+> > > >    .counter = (int)1,
 > > > 
-> > > Refer to Documentation/tee.txt for detailed information about TEE.
+> > > Given
 > > > 
-> > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > >   #define BTF_INT_ENCODING(VAL)   (((VAL) & 0x0f000000) >> 24)
+> > > 
+> > > Maybe
+> > > 
+> > >   #define BTF_INT_SIGNED  (1 << 0)
+> > >   #define BTF_INT_CHAR    (1 << 1)
+> > >   #define BTF_INT_BOOL    (1 << 2)
+> > > 
+> > > could be extended to include
+> > > 
+> > >   #define BTF_INT_HEX     (1 << 3)
+> > > 
+> > > So hex values can be appropriately pretty-printed.
 > > 
-> > The implementation looks solid but how or who could possibly test this?
-> > 
-> > I do posses (personally, not from employer) bunch of ARM boards but my
-> > TZ knowledge is somewhat limited (e.g. how can I get something running
-> > in TZ).
-> > 
+> > Nack to that.
 > 
-> Although, it should be fairly easy to test this implementation on an
-> ARM board which supports OP-TEE. But since you are new to ARM
-> TrustZone world, I would suggest you get used to OP-TEE on Qemu based
-> setup. You could find pretty good documentation for this here [1] but
-> for simplicity let me document steps here to test this trusted keys
-> feature from scratch:
+> why?
 > 
-> # Install prerequisites as mentioned here [2]
-> 
-> # Get the source code
-> $ mkdir -p <optee-project>
-> $ cd <optee-project>
-> $ repo init -u https://github.com/OP-TEE/manifest.git -m qemu_v8.xml
-> $ repo sync -j4 --no-clone-bundle
-> 
-> # Get the toolchain
-> $ cd <optee-project>/build
-> $ make -j2 toolchains
-> 
-> # As trusted keys work is based on latest tpmdd/master, so we can
-> change Linux base as follows:
-> $ cd <optee-project>/linux
-> $ git remote add tpmdd git://git.infradead.org/users/jjs/linux-tpmdd.git
-> $ git pull tpmdd
-> $ git checkout -b tpmdd-master remotes/tpmdd/master
-> # Cherry-pick and apply TEE features patch-set from this PR[3]
-> # Apply this Linux trusted keys patch-set.
-> 
-> # Now move on to build the source code
-> $ cd <optee-project>/build
-> # Apply attached "keyctl_change" patch
-> $ patch -p1 < keyctl_change
-> $ make -j`nproc`
-> CFG_IN_TREE_EARLY_TAS=trusted_keys/f04a0fe7-1f5d-4b9b-abf7-619b85b4ce8c
-> 
-> # Run QEMU setup
-> $ make run-only
-> # Type "c" on QEMU console to continue boot
-> 
-> # Now there should be two virtual consoles up, one for OP-TEE and
-> other for Linux
-> # On Linux console, you can play with "keyctl" utility to have trusted
-> and encrypted keys based on TEE.
-> 
-> Do let me know in case you are stuck while following the above steps.
-> 
-> [1] https://optee.readthedocs.io/en/latest/building/devices/qemu.html#qemu-v8
-> [2] https://optee.readthedocs.io/en/latest/building/prerequisites.html#prerequisites
-> [3] https://lkml.org/lkml/2020/5/4/1062
-> 
-> -Sumit
 
-Thanks I'll try this out as soon as the v5.8 release hassle is over!
+Tell me what's wrong with the idea.
 
-/Jarkko
+Here's a possible implementation:
+---
+ Documentation/bpf/btf.rst      |  5 +++--
+ include/uapi/linux/btf.h       |  1 +
+ kernel/bpf/btf.c               |  5 ++++-
+ tools/bpf/bpftool/btf.c        |  2 ++
+ tools/bpf/bpftool/btf_dumper.c | 13 +++++++++++++
+ tools/include/uapi/linux/btf.h |  1 +
+ 6 files changed, 24 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/bpf/btf.rst b/Documentation/bpf/btf.rst
+index 4d565d202ce3..56aaa189e7fb 100644
+--- a/Documentation/bpf/btf.rst
++++ b/Documentation/bpf/btf.rst
+@@ -139,10 +139,11 @@ The ``BTF_INT_ENCODING`` has the following attributes::
+   #define BTF_INT_SIGNED  (1 << 0)
+   #define BTF_INT_CHAR    (1 << 1)
+   #define BTF_INT_BOOL    (1 << 2)
++  #define BTF_INT_HEX     (1 << 3)
+ 
+ The ``BTF_INT_ENCODING()`` provides extra information: signedness, char, or
+-bool, for the int type. The char and bool encoding are mostly useful for
+-pretty print. At most one encoding can be specified for the int type.
++bool, for the int type. The char, bool and hex encodings are mostly useful
++for pretty print. At most one encoding can be specified for the int type.
+ 
+ The ``BTF_INT_BITS()`` specifies the number of actual bits held by this int
+ type. For example, a 4-bit bitfield encodes ``BTF_INT_BITS()`` equals to 4.
+diff --git a/include/uapi/linux/btf.h b/include/uapi/linux/btf.h
+index 5a667107ad2c..36f309209786 100644
+--- a/include/uapi/linux/btf.h
++++ b/include/uapi/linux/btf.h
+@@ -90,6 +90,7 @@ struct btf_type {
+ #define BTF_INT_SIGNED	(1 << 0)
+ #define BTF_INT_CHAR	(1 << 1)
+ #define BTF_INT_BOOL	(1 << 2)
++#define BTF_INT_HEX	(1 << 3)
+ 
+ /* BTF_KIND_ENUM is followed by multiple "struct btf_enum".
+  * The exact number of btf_enum is stored in the vlen (of the
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index 58c9af1d4808..90bdc0635321 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -501,6 +501,8 @@ static const char *btf_int_encoding_str(u8 encoding)
+ 		return "CHAR";
+ 	else if (encoding == BTF_INT_BOOL)
+ 		return "BOOL";
++	else if (encoding == BTF_INT_HEX)
++		return "HEX";
+ 	else
+ 		return "UNKN";
+ }
+@@ -1404,7 +1406,8 @@ static s32 btf_int_check_meta(struct btf_verifier_env *env,
+ 	if (encoding &&
+ 	    encoding != BTF_INT_SIGNED &&
+ 	    encoding != BTF_INT_CHAR &&
+-	    encoding != BTF_INT_BOOL) {
++	    encoding != BTF_INT_BOOL &&
++	    encoding != BTF_INT_HEX) {
+ 		btf_verifier_log_type(env, t, "Unsupported encoding");
+ 		return -ENOTSUPP;
+ 	}
+diff --git a/tools/bpf/bpftool/btf.c b/tools/bpf/bpftool/btf.c
+index 41a1346934a1..44a129c40873 100644
+--- a/tools/bpf/bpftool/btf.c
++++ b/tools/bpf/bpftool/btf.c
+@@ -59,6 +59,8 @@ static const char *btf_int_enc_str(__u8 encoding)
+ 		return "CHAR";
+ 	case BTF_INT_BOOL:
+ 		return "BOOL";
++	case BTF_INT_HEX:
++		return "HEX";
+ 	default:
+ 		return "UNKN";
+ 	}
+diff --git a/tools/bpf/bpftool/btf_dumper.c b/tools/bpf/bpftool/btf_dumper.c
+index ede162f83eea..96947ef92565 100644
+--- a/tools/bpf/bpftool/btf_dumper.c
++++ b/tools/bpf/bpftool/btf_dumper.c
+@@ -418,6 +418,19 @@ static int btf_dumper_int(const struct btf_type *t, __u8 bit_offset,
+ 	case BTF_INT_BOOL:
+ 		jsonw_bool(jw, *(int *)data);
+ 		break;
++	case BTF_INT_HEX:
++		if (BTF_INT_BITS(*int_type) == 64)
++			jsonw_printf(jw, "%llx", *(long long *)data);
++		else if (BTF_INT_BITS(*int_type) == 32)
++			jsonw_printf(jw, "%x", *(int *)data);
++		else if (BTF_INT_BITS(*int_type) == 16)
++			jsonw_printf(jw, "%hx", *(short *)data);
++		else if (BTF_INT_BITS(*int_type) == 8)
++			jsonw_printf(jw, "%hhx", *(char *)data);
++		else
++			btf_dumper_int_bits(*int_type, bit_offset, data, jw,
++					    is_plain_text);
++		break;
+ 	default:
+ 		/* shouldn't happen */
+ 		return -EINVAL;
+diff --git a/tools/include/uapi/linux/btf.h b/tools/include/uapi/linux/btf.h
+index 5a667107ad2c..36f309209786 100644
+--- a/tools/include/uapi/linux/btf.h
++++ b/tools/include/uapi/linux/btf.h
+@@ -90,6 +90,7 @@ struct btf_type {
+ #define BTF_INT_SIGNED	(1 << 0)
+ #define BTF_INT_CHAR	(1 << 1)
+ #define BTF_INT_BOOL	(1 << 2)
++#define BTF_INT_HEX	(1 << 3)
+ 
+ /* BTF_KIND_ENUM is followed by multiple "struct btf_enum".
+  * The exact number of btf_enum is stored in the vlen (of the
+
 
