@@ -2,90 +2,125 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C0EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9BF6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B360E206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CAEF20722
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:05:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589454344;
+	bh=nELbYhLTLS46UT3eKWckMNnd9vi5dumK/DwGj29Jobo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aBfaWhHVlWPj2e3KGSlgRtTJNaz2q1F6MMrxtIU8MyhsaxEgTj+E1V8I2RNhvNhrQ
+	 RBltNpVO4/DEU/lxiZl/0tN9RW1UoBZN8+YyxA0k9Qduhn/QhylgBd0IHjBcvifDH5
+	 vgOqRKjZzNPdqdPkhsuTU4rsjYvPvxYLq4RQTnFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726225AbgENLFb (ORCPT
+        id S1726294AbgENLFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 07:05:31 -0400
-Received: from mga06.intel.com ([134.134.136.31]:24211 "EHLO mga06.intel.com"
+        Thu, 14 May 2020 07:05:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725925AbgENLFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 07:05:31 -0400
-IronPort-SDR: W8MgbRY7hrIedxv8XmxWrm+oqE2e48nKqlMY3AXx9bRlR75A0fn9ejGJJ527NI7fbMCgru2W8X
- 2SodI9W7xBOw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 04:05:30 -0700
-IronPort-SDR: w0MadmGGvy/1pnfpiZYhtHgNO2uTk9eJ22jVhh0llLsYmnG3SszoGWen1fZolnLOyPoB5Fax5h
- /xGYI7hWa9Nw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,391,1583222400"; 
-   d="scan'208";a="251628387"
-Received: from apogrebi-mobl2.ger.corp.intel.com ([10.249.39.119])
-  by orsmga007.jf.intel.com with ESMTP; 14 May 2020 04:05:27 -0700
-Message-ID: <8bde92d77e32e85b66017c4b9d72008067c16bd9.camel@linux.intel.com>
-Subject: Re: [PATCH RESEND] tpm: eventlog: Replace zero-length array with
- flexible-array member
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Date:   Thu, 14 May 2020 14:05:27 +0300
-In-Reply-To: <20200513231416.GQ4897@embeddedor>
-References: <20200507040912.GA31382@embeddedor>
-         <20200513213905.GB31974@linux.intel.com> <20200513231416.GQ4897@embeddedor>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1-2 
+        id S1725925AbgENLFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 07:05:43 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B51CD20727;
+        Thu, 14 May 2020 11:05:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589454343;
+        bh=nELbYhLTLS46UT3eKWckMNnd9vi5dumK/DwGj29Jobo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NSf+2fJl0lCmVb5fGzNcpEhEWCWFrGtxrUiCqBb5UFXyMDXgO1LtsHtEjk6wL6RzX
+         mWlRJwJE99bnt6w7+8Az2L/q+pxZepBUaqFhbdi/+USl20Ms3kfRd5K/7kOaI+4GGP
+         CGiqmpDcCeJuWPUZSLAdQkbRfu3Gi8qpWGY4zgv4=
+Date:   Thu, 14 May 2020 12:05:38 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH v5 00/18] Rework READ_ONCE() to improve codegen
+Message-ID: <20200514110537.GC4280@willie-the-truck>
+References: <CANpmjNMariz3-keqwUsLHVrpk2r7ThLSKtkhHxTDa3SEGeznhA@mail.gmail.com>
+ <20200513123243.GO2957@hirez.programming.kicks-ass.net>
+ <20200513124021.GB20278@willie-the-truck>
+ <CANpmjNM5XW+ufJ6Mw2Tn7aShRCZaUPGcH=u=4Sk5kqLKyf3v5A@mail.gmail.com>
+ <20200513165008.GA24836@willie-the-truck>
+ <CANpmjNN=n59ue06s0MfmRFvKX=WB2NgLgbP6kG_MYCGy2R6PHg@mail.gmail.com>
+ <20200513174747.GB24836@willie-the-truck>
+ <CANpmjNNOpJk0tprXKB_deiNAv_UmmORf1-2uajLhnLWQQ1hvoA@mail.gmail.com>
+ <20200513212520.GC28594@willie-the-truck>
+ <CANpmjNOAi2K6knC9OFUGjpMo-rvtLDzKMb==J=vTRkmaWctFaQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNOAi2K6knC9OFUGjpMo-rvtLDzKMb==J=vTRkmaWctFaQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-05-13 at 18:14 -0500, Gustavo A. R. Silva wrote:
-> On Thu, May 14, 2020 at 12:39:05AM +0300, Jarkko Sakkinen wrote:
-> > > [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> > > [2] https://github.com/KSPP/linux/issues/21
-> > > [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> > > [4] https://github.com/KSPP/linux/issues/43
-> > > 
-> > > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> > 
-> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > 
+Hi Marco,
+
+On Thu, May 14, 2020 at 09:31:49AM +0200, Marco Elver wrote:
+> Ouch. With the __{READ,WRITE}_ONCE requirement, we're going to need
+> Clang 11 though.
 > 
-> Hi Jarkko,
+> Because without the data_race() around __*_ONCE,
+> arch_atomic_{read,set} will be broken for KCSAN, but we can't have
+> data_race() because it would still add
+> kcsan_{enable,disable}_current() calls to __no_sanitize functions (if
+> compilation unit is instrumented). We can't make arch_atomic functions
+> __no_sanitize_or_inline, because even in code that we want to
+> sanitize, they should remain __always_inline (so they work properly in
+> __no_sanitize functions). Therefore, Clang 11 with support for
+> distinguishing volatiles will be the compiler that will satisfy all
+> the constraints.
 > 
-> Thanks for your RB.
-> 
-> There is a v2 of this patch:
-> 
-> https://lore.kernel.org/lkml/20200508163826.GA768@embeddedor/
-> 
-> Thanks
-> --
-> Gustavo
+> If this is what we want, let me prepare a series on top of
+> -tip/locking/kcsan with all the things I think we need.
 
-Yup,
+Stepping back a second, the locking/kcsan branch is at least functional at
+the moment by virtue of KCSAN_SANITIZE := n being used liberally in
+arch/x86/. However, I still think we want to do better than that because (a)
+it would be good to get more x86 coverage and (b) enabling this for arm64,
+where objtool is not yet available, will be fragile if we have to whitelist
+object files. There's also a fair bit of arm64 low-level code spread around
+drivers/, so it feels like we'd end up with a really bad case of whack-a-mole.
 
-http://git.infradead.org/users/jjs/linux-tpmdd.git/commit/47c18d91f4adb2ca164c8dbee861543b4466167d
+Talking off-list, Clang >= 7 is pretty reasonable wrt inlining decisions
+and the behaviour for __always_inline is:
 
-Does this look correct?
+  * An __always_inline function inlined into a __no_sanitize function is
+    not instrumented
+  * An __always_inline function inlined into an instrumented function is
+    instrumented
+  * You can't mark a function as both __always_inline __no_sanitize, because
+    __no_sanitize functions are never inlined
 
+GCC, on the other hand, may still inline __no_sanitize functions and then
+subsequently instrument them.
 
-/Jarkko
+So if were willing to make KCSAN depend on Clang >= 7, then we could:
 
+  - Remove the data_race() from __{READ,WRITE}_ONCE()
+  - Wrap arch_atomic*() in data_race() when called from the instrumented
+    atomic wrappers
+
+At which point, I *think* everything works as expected. READ_ONCE_NOCHECK()
+won't generate any surprises, and Peter can happily use arch_atomic()
+from non-instrumented code.
+
+Thoughts? I don't see the need to support buggy compilers when enabling
+a new debug feature.
+
+Will
