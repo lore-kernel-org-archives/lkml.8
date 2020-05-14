@@ -2,133 +2,100 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D79C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C8AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E67E206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:36:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589441780;
-	bh=IXHEXF16rU/BSTFK9nrncTfh3TEkux3JqpB15nAsJQA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JJdEQ+GENXFl161zMNV1V+kwYbDFB1Fc7SmkMfeOZIxrsrvJ945ZL+UaMbgEWJOIv
-	 W9WRhNGu3YzHEpbMjVc1S5snNCgDIrxYO0NSpyvbHW2uaYX4Z/HwXshyd57HD3j49u
-	 MP9GU6Mem2VmQ7GHX2lPjZrpB1+N+3D47nwh+AP4=
+	by mail.kernel.org (Postfix) with ESMTP id 8C45C206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:37:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cpS3n/GT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbgENHgT (ORCPT
+        id S1726072AbgENHh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 03:36:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36690 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725946AbgENHgT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 03:36:19 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1927206BE;
-        Thu, 14 May 2020 07:36:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589441778;
-        bh=IXHEXF16rU/BSTFK9nrncTfh3TEkux3JqpB15nAsJQA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XxirtXwsu8vpXp4zzU02/RsjtslmALTiUWbZRwJFPlsgFZ5FBknRCs1fNJcfyi308
-         C73AzidmlE2O+eXroCd+aQR4+7pOtgXzMr43MU3W0Yf19IahA6CHTkljDJfsgtJYap
-         H7X4dOo6J5M+loGaqtYZ33z4HpquU/5E/OElF1PA=
-Date:   Thu, 14 May 2020 08:36:13 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     Dave Martin <Dave.Martin@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH V2] arm64/cpuinfo: Move HWCAP name arrays alongside their
- bit definitions
-Message-ID: <20200514073613.GB4280@willie-the-truck>
-References: <1588858150-26823-1-git-send-email-anshuman.khandual@arm.com>
- <20200513150405.GS21779@arm.com>
- <0999fa28-3ee7-3f02-4def-a0c6013ec6dd@arm.com>
+        Thu, 14 May 2020 03:37:28 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:60010 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbgENHh0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 03:37:26 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04E7bKZV054213;
+        Thu, 14 May 2020 02:37:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589441841;
+        bh=QGXAZUOwvDino56G8IWDdQ/NYT0jQ6NRH5b71pGNvrc=;
+        h=From:To:CC:Subject:Date;
+        b=cpS3n/GTSD1sKVTClUxFGXySVg4Fa/sMcsnTMldfYMfIpCPT2mDjZeB2SAYmLxHl0
+         8DhFnfb66dYVlVkapr8lZ6Zudp+4OOQPnR7mNidJHU+brlDVLmCkJsJYF3l0CM+Nxp
+         UN13c9NS5lN8KTC2YICC/UmU/BCX7xd9l4EW4W3I=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04E7bKIH002543
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 14 May 2020 02:37:20 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 14
+ May 2020 02:37:20 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 14 May 2020 02:37:20 -0500
+Received: from sokoban.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04E7bIm6009731;
+        Thu, 14 May 2020 02:37:19 -0500
+From:   Tero Kristo <t-kristo@ti.com>
+To:     <ssantosh@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <linux-omap@vger.kernel.org>, <tony@atomide.com>, <s-anna@ti.com>
+Subject: [PATCH 1/1] soc: ti: omap-prm: use atomic iopoll instead of sleeping one
+Date:   Thu, 14 May 2020 10:37:18 +0300
+Message-ID: <20200514073718.17690-1-t-kristo@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0999fa28-3ee7-3f02-4def-a0c6013ec6dd@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 07:14:58AM +0530, Anshuman Khandual wrote:
-> On 05/13/2020 08:34 PM, Dave Martin wrote:
-> > On Thu, May 07, 2020 at 06:59:10PM +0530, Anshuman Khandual wrote:
-> >> diff --git a/arch/arm64/include/asm/hwcap.h b/arch/arm64/include/asm/hwcap.h
-> >> index 0f00265248b5..589ac02e1ddd 100644
-> >> --- a/arch/arm64/include/asm/hwcap.h
-> >> +++ b/arch/arm64/include/asm/hwcap.h
-> >> @@ -8,18 +8,27 @@
-> >>  #include <uapi/asm/hwcap.h>
-> >>  #include <asm/cpufeature.h>
-> >>  
-> >> +#define COMPAT_HWCAP_SWP	(1 << 0)
-> >>  #define COMPAT_HWCAP_HALF	(1 << 1)
-> >>  #define COMPAT_HWCAP_THUMB	(1 << 2)
-> >> +#define COMPAT_HWCAP_26BIT	(1 << 3)
-> >>  #define COMPAT_HWCAP_FAST_MULT	(1 << 4)
-> >> +#define COMPAT_HWCAP_FPA	(1 << 5)
-> >>  #define COMPAT_HWCAP_VFP	(1 << 6)
-> >>  #define COMPAT_HWCAP_EDSP	(1 << 7)
-> >> +#define COMPAT_HWCAP_JAVA	(1 << 8)
-> >> +#define COMPAT_HWCAP_IWMMXT	(1 << 9)
-> >> +#define COMPAT_HWCAP_CRUNCH	(1 << 10)
-> >> +#define COMPAT_HWCAP_THUMBEE	(1 << 11)
-> >>  #define COMPAT_HWCAP_NEON	(1 << 12)
-> >>  #define COMPAT_HWCAP_VFPv3	(1 << 13)
-> >> +#define COMPAT_HWCAP_VFPV3D16	(1 << 14)
-> >>  #define COMPAT_HWCAP_TLS	(1 << 15)
-> >>  #define COMPAT_HWCAP_VFPv4	(1 << 16)
-> >>  #define COMPAT_HWCAP_IDIVA	(1 << 17)
-> >>  #define COMPAT_HWCAP_IDIVT	(1 << 18)
-> >>  #define COMPAT_HWCAP_IDIV	(COMPAT_HWCAP_IDIVA|COMPAT_HWCAP_IDIVT)
-> >> +#define COMPAT_HWCAP_VFPD32	(1 << 19)
-> >>  #define COMPAT_HWCAP_LPAE	(1 << 20)
-> >>  #define COMPAT_HWCAP_EVTSTRM	(1 << 21)
-> > 
-> > With the possible exception of SWP (does the swp emulation allow us to
-> > report this as supported?), I think all these weren't mentioned because
-> > they aren't included in ARMv8 and so can never be reported.
-> > 
-> > If we find ourselves reporting them, there's a bug somewhere.
-> > 
-> > So, can we just default all obsolete string entries to NULL?
-> > 
-> > When generating the cpuinfo strings we could WARN and just emit an empty
-> > string for that hwcap.
-> 
-> All these above will be a change in the existing user visible behavior on
-> the system and this patch never intended to create one.
+The reset handling APIs for omap-prm can be invoked PM runtime which
+runs in atomic context. For this to work properly, switch to atomic
+iopoll version instead of the current which can sleep. Otherwise,
+this throws a "BUG: scheduling while atomic" warning. Issue is seen
+rather easily when CONFIG_PREEMPT is enabled.
 
-Why is it a change? We've never reported e.g. "java" on an arm64 kernel, so
-I agree with Dave that we shouldn't be adding this string. If it /ever/ ends
-up in userspace it's because something has gone horribly wrong. NULL would
-be much better. Couldn't you achieve that by simply omitting these entries?
-e.g. deleting things like:
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+---
+ drivers/soc/ti/omap_prm.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-	[COMPAT_KERNEL_HWCAP(JAVA)]     = "java",
+diff --git a/drivers/soc/ti/omap_prm.c b/drivers/soc/ti/omap_prm.c
+index 96c6f777519c..c9b3f9ebf0bb 100644
+--- a/drivers/soc/ti/omap_prm.c
++++ b/drivers/soc/ti/omap_prm.c
+@@ -256,10 +256,10 @@ static int omap_reset_deassert(struct reset_controller_dev *rcdev,
+ 		goto exit;
+ 
+ 	/* wait for the status to be set */
+-	ret = readl_relaxed_poll_timeout(reset->prm->base +
+-					 reset->prm->data->rstst,
+-					 v, v & BIT(st_bit), 1,
+-					 OMAP_RESET_MAX_WAIT);
++	ret = readl_relaxed_poll_timeout_atomic(reset->prm->base +
++						 reset->prm->data->rstst,
++						 v, v & BIT(st_bit), 1,
++						 OMAP_RESET_MAX_WAIT);
+ 	if (ret)
+ 		pr_err("%s: timedout waiting for %s:%lu\n", __func__,
+ 		       reset->prm->data->name, id);
+-- 
+2.17.1
 
-completely (including the COMPAT_HWCAP_JAVA definition)?
-
-> Hence, I will just defer this to maintainers on whether we should change
-> existing /proc/cpuinfo output (including non-practically-possible ones on
-> ARMv8) or even treat swap emulation as SWP.
-
-SWP is fine because we emulate it and so userspace can use it. Removing that
-*would* be a change in behaviour. I don't think the compat ABI is broken
-here, so please don't change it without good reason.
-
-Will
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
