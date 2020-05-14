@@ -2,49 +2,49 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A8AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70D18206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94273206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:18:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgENNR7 (ORCPT
+        id S1727969AbgENNSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:17:59 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:2428 "EHLO
+        Thu, 14 May 2020 09:18:02 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:6458 "EHLO
         mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727893AbgENNR5 (ORCPT
+        by vger.kernel.org with ESMTP id S1727939AbgENNR7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:17:57 -0400
+        Thu, 14 May 2020 09:17:59 -0400
 Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04ED9cC4020505;
-        Thu, 14 May 2020 09:17:38 -0400
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04ED9YD5020380;
+        Thu, 14 May 2020 09:17:44 -0400
 Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 3100x5yeav-1
+        by mx0a-00128a01.pphosted.com with ESMTP id 3100x5yebe-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 May 2020 09:17:38 -0400
+        Thu, 14 May 2020 09:17:44 -0400
 Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 04EDHadV059571
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 04EDHheX059637
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Thu, 14 May 2020 09:17:36 -0400
+        Thu, 14 May 2020 09:17:43 -0400
 Received: from SCSQCASHYB6.ad.analog.com (10.77.17.132) by
  SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 14 May 2020 06:17:35 -0700
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by
+ 15.1.1779.2; Thu, 14 May 2020 06:17:42 -0700
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
  SCSQCASHYB6.ad.analog.com (10.77.17.132) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 14 May 2020 06:17:19 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 14 May 2020 06:17:34 -0700
+ 15.1.1779.2; Thu, 14 May 2020 06:17:26 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Thu, 14 May 2020 06:17:41 -0700
 Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 04EDHUaj017033;
-        Thu, 14 May 2020 09:17:30 -0400
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 04EDHUam017033;
+        Thu, 14 May 2020 09:17:37 -0400
 From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
 To:     <linux-iio@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
@@ -55,10 +55,12 @@ CC:     <ludovic.desroches@microchip.com>, <eugen.hristev@microchip.com>,
         <alexandre.belloni@bootlin.com>, <alexandre.torgue@st.com>,
         <mcoquelin.stm32@gmail.com>, <ak@it-klinger.de>,
         Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v2 0/8] iio: core: wrap IIO device into an iio_dev_opaque object
-Date:   Thu, 14 May 2020 16:17:02 +0300
-Message-ID: <20200514131710.84201-1-alexandru.ardelean@analog.com>
+Subject: [PATCH v2 3/8] iio: at91_adc: pass ref to IIO device via param for int function
+Date:   Thu, 14 May 2020 16:17:05 +0300
+Message-ID: <20200514131710.84201-4-alexandru.ardelean@analog.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200514131710.84201-1-alexandru.ardelean@analog.com>
+References: <20200514131710.84201-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-ADIRoutedOnPrem: True
@@ -74,52 +76,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change starts to hide some internal fields of the IIO device into
-the framework.
+Since there will be some changes to how iio_priv_to_dev() is implemented,
+it could be that the helper becomes a bit slower, as it will be hidden away
+in the IIO core.
 
-Because the iio_priv_to_dev() will be hidden some pre-work is done to
-try to remove it from some interrupt handlers.
-iio_priv_to_dev() will become a function call and won't be expandable
-into place (as-is now as an inline function).
+For this driver, the IIO device can be passed directly as a parameter to
+the at91_ts_sample() function, thus making it immune to the change of
+iio_priv_to_dev().
+The function gets called in an interrupt context.
 
-Changelog v1 -> v2:
-- add pre-work patches that remove some calls to iio_priv_to_dev() from
-  interrupt handlers
-- renamed iio_dev_priv -> iio_dev_opaque
-- moved the iio_dev_opaque to 'include/linux/iio/iio-opaque.h' this way
-  it should be usable for debugging
-- the iio_priv() call, is still an inline function that returns an
-  'indio_dev->priv' reference; this field is added to 'struct iio_dev';
-  the reference is computed in iio_device_alloc() and should be
-  cacheline aligned
-- the to_iio_dev_opaque() container is in the
-  'include/linux/iio/iio-opaque.h' header; it's still implemented with
-  some pointer arithmetic; one idea was to do it via an
-  'indio_dev->opaque' field; that may still be an optionif there are
-  some opinions in that direction
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/iio/adc/at91_adc.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Alexandru Ardelean (8):
-  iio: proximity: ping: pass reference to IIO device via call-stack
-  iio: at91-sama5d2_adc: pass ref to IIO device via param for int
-    function
-  iio: at91_adc: pass ref to IIO device via param for int function
-  iio: stm32-dfsdm-adc: pass iio device as arg for the interrupt handler
-  iio: stm32-adc: pass iio device as arg for the interrupt handler
-  iio: core: wrap IIO device into an iio_dev_opaque object
-  iio: core: simplify alloc alignment code
-  iio: core: move debugfs data on the private iio dev info
-
- drivers/iio/adc/at91-sama5d2_adc.c |  7 ++-
- drivers/iio/adc/at91_adc.c         |  5 +-
- drivers/iio/adc/stm32-adc.c        | 10 ++--
- drivers/iio/adc/stm32-dfsdm-adc.c  |  6 +--
- drivers/iio/industrialio-core.c    | 75 ++++++++++++++++++++----------
- drivers/iio/proximity/ping.c       |  5 +-
- include/linux/iio/iio-opaque.h     | 27 +++++++++++
- include/linux/iio/iio.h            | 24 +++-------
- 8 files changed, 99 insertions(+), 60 deletions(-)
- create mode 100644 include/linux/iio/iio-opaque.h
-
+diff --git a/drivers/iio/adc/at91_adc.c b/drivers/iio/adc/at91_adc.c
+index 0368b6dc6d60..5999defe47cd 100644
+--- a/drivers/iio/adc/at91_adc.c
++++ b/drivers/iio/adc/at91_adc.c
+@@ -287,13 +287,12 @@ static void handle_adc_eoc_trigger(int irq, struct iio_dev *idev)
+ 	}
+ }
+ 
+-static int at91_ts_sample(struct at91_adc_state *st)
++static int at91_ts_sample(struct iio_dev *idev, struct at91_adc_state *st)
+ {
+ 	unsigned int xscale, yscale, reg, z1, z2;
+ 	unsigned int x, y, pres, xpos, ypos;
+ 	unsigned int rxp = 1;
+ 	unsigned int factor = 1000;
+-	struct iio_dev *idev = iio_priv_to_dev(st);
+ 
+ 	unsigned int xyz_mask_bits = st->res;
+ 	unsigned int xyz_mask = (1 << xyz_mask_bits) - 1;
+@@ -449,7 +448,7 @@ static irqreturn_t at91_adc_9x5_interrupt(int irq, void *private)
+ 
+ 		if (status & AT91_ADC_ISR_PENS) {
+ 			/* validate data by pen contact */
+-			at91_ts_sample(st);
++			at91_ts_sample(idev, st);
+ 		} else {
+ 			/* triggered by event that is no pen contact, just read
+ 			 * them to clean the interrupt and discard all.
 -- 
 2.17.1
 
