@@ -2,333 +2,135 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B69C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5785AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A93920728
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32DD42065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:59:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R8aBBc58"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="B3UIZ7fC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgENL6r (ORCPT
+        id S1726872AbgENL7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 07:58:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgENL6q (ORCPT
+        Thu, 14 May 2020 07:59:30 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:63304 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725955AbgENL7a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 07:58:46 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F666C061A0F
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 04:58:46 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id a2so24091936oia.11
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 04:58:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Fpk0hNsCOglL/2RiZ/taM4Uob0Oi6tgMAZ91Mdpcrng=;
-        b=R8aBBc58S+9LAVSoMXBmxC2JYUMMKiCiceCU5rzSKbMQgEDD/XcSdAaCAyB+5xN0Q7
-         JEFnTn0Wpu//X7QHhXVtHdrx5Yq20uJzu01dazx6xQ7yHo0HT4ZDi9mODO7ajUpUg81m
-         zdIMxCuilazsLiwQWimD65Sdx7rcttUUZ/8vTw+ujaEnHKeF87r5/fg6fe10Zekjo6lw
-         QoC7WXRjHL7iP/qiCWL7cmEuIOfQz6HhlOeDfkB+2JpaeZC0OFyQ9q4F+PGCPc8z+XvP
-         wLycdPa6GnyEI54C2ZNCRE3Fs4fMRmqNtCFRBC19a2u1CgTWMbaDB1/IXS+IQXv5X7u3
-         j+DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Fpk0hNsCOglL/2RiZ/taM4Uob0Oi6tgMAZ91Mdpcrng=;
-        b=Tw9OMopgqakqemuxA27rmjRXSXZ3BdTO0wJwSEmN/5srH4uiPo/5ZqPPGEFJRcTcNJ
-         E7mC5VMVfrtAoVOoYZwmtZJKXX4uLvd7UapQ2+/mHvbdIjb19LBFamEsKu63RlLjwtSo
-         LexTjKR/jD1dzH828ehzrrT0tZbkFsncsfJq2lKNZF2lj9HDtYEUodlN6+NZtavG4fC4
-         58R7z12z4Ue3CN1J3VInUq7Q0TVAZOIz0OvizwZaSmmaIYTJ1QFD5QFTa9Gc8l8q1fES
-         warF6hhsea5q+AuAVG9xHX+ehBLoeU5bw58JH9CfugX4eswXWl6mnYzstxuj5Hxbt5Dw
-         H/nQ==
-X-Gm-Message-State: AOAM533/g27etChTGlXU7p8n0NPedugVEBEJgzX5k+IQ17h5bK2koKpk
-        NQhdoUbO4JBh+d/8i+7Zuli8aDOl6ZelUas0lSXXBw==
-X-Google-Smtp-Source: ABdhPJzCX0TOx5vID9im/1aJ65Mt6GUohvi8QeVvhJ3wVsZfBSVKGX53DsP3qe/J+Me4/N9Vp86rNizuUZgFe2kFwps=
-X-Received: by 2002:a05:6808:9ab:: with SMTP id e11mr4695683oig.119.1589457525751;
- Thu, 14 May 2020 04:58:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200508204200.13481-1-sumit.semwal@linaro.org>
- <20200508204200.13481-5-sumit.semwal@linaro.org> <20200512052541.GF1302550@yoga>
-In-Reply-To: <20200512052541.GF1302550@yoga>
-From:   Sumit Semwal <sumit.semwal@linaro.org>
-Date:   Thu, 14 May 2020 17:28:34 +0530
-Message-ID: <CAO_48GHuuRZwbkDr7b0Rp1_hTfw05qh0hSmjnnsiVsTfVBrARw@mail.gmail.com>
-Subject: Re: [v2 4/4] regulator: qcom: labibb: Add SC interrupt handling
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     agross@kernel.org, lgirdwood@gmail.com,
-        Mark Brown <broonie@kernel.org>, robh+dt@kernel.org,
-        Nisha Kumari <nishakumari@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, kgunda@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 14 May 2020 07:59:30 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1589457569; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=GWge08NUpx9hYk85PE+U6cP3rNMxXJ52WIEvWFBmNxA=; b=B3UIZ7fCnhcpHa+WJIcTpIAA/QdBu/6UFqr0TkLwsdA3RlhfQrA891uhLbMaPX88GK8eRqy/
+ ZJTpDa55Qf+42ZpmeggG0+gGRl+tSoogeZJohqAFLtOh8MZnO9TlbApwRXsR1AqYrGzXM5f7
+ S0gpy9YXMC822l+qFpemfCwX6rA=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5ebd32a1.7fa3df0c8ce0-smtp-out-n05;
+ Thu, 14 May 2020 11:59:29 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0195AC433F2; Thu, 14 May 2020 11:59:29 +0000 (UTC)
+Received: from charante-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: charante)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B1A7DC433D2;
+        Thu, 14 May 2020 11:59:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B1A7DC433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=charante@codeaurora.org
+From:   Charan Teja Reddy <charante@codeaurora.org>
+To:     akpm@linux-foundation.org, linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org, vinmenon@codeaurora.org,
+        Charan Teja Reddy <charante@codeaurora.org>
+Subject: [PATCH v2] mm, page_alloc: reset the zone->watermark_boost early
+Date:   Thu, 14 May 2020 17:28:31 +0530
+Message-Id: <1589457511-4255-1-git-send-email-charante@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Bjorn,
+Updating the zone watermarks by any means, like min_free_kbytes,
+water_mark_scale_factor e.t.c, when ->watermark_boost is set will result
+into the higher low and high watermarks than the user asked.
 
-Thanks for the review comments.
+Below are the steps pursued to reproduce the problem on system setup
+of Android kernel running on Snapdragon hardware.
+1) Default settings of the system are as below:
+   #cat /proc/sys/vm/min_free_kbytes = 5162
+   #cat /proc/zoneinfo | grep -e boost -e low -e "high " -e min -e Node
+	Node 0, zone   Normal
+		min      797
+		low      8340
+		high     8539
 
-On Tue, 12 May 2020 at 10:55, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Fri 08 May 13:42 PDT 2020, Sumit Semwal wrote:
->
-> > From: Nisha Kumari <nishakumari@codeaurora.org>
-> >
-> > Add Short circuit interrupt handling and recovery for the lab and
-> > ibb regulators on qcom platforms.
-> >
-> > The client panel drivers need to register for REGULATOR_EVENT_OVER_CURRENT
-> > notification which will be triggered on short circuit. They should
-> > try to enable the regulator once, and if it doesn't get enabled,
-> > handle shutting down the panel accordingly.
-> >
-> > Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
-> > Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
-> >
-> > --
-> > v2: sumits: reworked handling to user regmap_read_poll_timeout, and handle it
-> >     per-regulator instead of clearing both lab and ibb errors on either irq
-> >     triggering. Also added REGULATOR_EVENT_OVER_CURRENT handling and
-> >     notification to clients.
-> > ---
-> >  drivers/regulator/qcom-labibb-regulator.c | 103 +++++++++++++++++++++-
-> >  1 file changed, 100 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/regulator/qcom-labibb-regulator.c b/drivers/regulator/qcom-labibb-regulator.c
-> > index a9dc7c060375..3539631c9f96 100644
-> > --- a/drivers/regulator/qcom-labibb-regulator.c
-> > +++ b/drivers/regulator/qcom-labibb-regulator.c
-> > @@ -1,6 +1,7 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >  // Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> >
-> > +#include <linux/interrupt.h>
-> >  #include <linux/module.h>
-> >  #include <linux/of_irq.h>
-> >  #include <linux/of.h>
-> > @@ -18,11 +19,15 @@
-> >  #define REG_LABIBB_ENABLE_CTL                0x46
-> >  #define LABIBB_STATUS1_VREG_OK_BIT   BIT(7)
-> >  #define LABIBB_CONTROL_ENABLE                BIT(7)
-> > +#define LABIBB_STATUS1_SC_DETECT_BIT BIT(6)
-> >
-> >  #define LAB_ENABLE_CTL_MASK          BIT(7)
-> >  #define IBB_ENABLE_CTL_MASK          (BIT(7) | BIT(6))
-> >
-> >  #define POWER_DELAY                  8000
-> > +#define POLLING_SCP_DONE_INTERVAL_US 5000
-> > +#define POLLING_SCP_TIMEOUT          16000
-> > +
-> >
-> >  struct labibb_regulator {
-> >       struct regulator_desc           desc;
-> > @@ -30,6 +35,8 @@ struct labibb_regulator {
-> >       struct regmap                   *regmap;
-> >       struct regulator_dev            *rdev;
-> >       u16                             base;
-> > +     int                             sc_irq;
-> > +     int                             vreg_enabled;
-> >       u8                              type;
-> >  };
-> >
-> > @@ -112,9 +119,10 @@ static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
-> >               return ret;
-> >       }
-> >
-> > -     if (ret)
-> > +     if (ret) {
-> > +             reg->vreg_enabled = 1;
-> >               return 0;
-> > -
-> > +     }
-> >
-> >       dev_err(reg->dev, "Can't enable %s\n", reg->desc.name);
-> >       return -EINVAL;
-> > @@ -140,8 +148,10 @@ static int qcom_labibb_regulator_disable(struct regulator_dev *rdev)
-> >               return ret;
-> >       }
-> >
-> > -     if (!ret)
-> > +     if (!ret) {
-> > +             reg->vreg_enabled = 0;
-> >               return 0;
-> > +     }
-> >
-> >       dev_err(reg->dev, "Can't disable %s\n", reg->desc.name);
-> >       return -EINVAL;
-> > @@ -153,6 +163,70 @@ static struct regulator_ops qcom_labibb_ops = {
-> >       .is_enabled             = qcom_labibb_regulator_is_enabled,
-> >  };
-> >
-> > +
-> > +static irqreturn_t labibb_sc_err_handler(int irq, void *_reg)
-> > +{
-> > +     int ret, count;
-> > +     u16 reg;
-> > +     u8 sc_err_mask;
-> > +     unsigned int val;
-> > +     struct labibb_regulator *labibb_reg = (struct labibb_regulator *)_reg;
->
-> No need to explicitly typecast a void *.
-ok.
->
-> > +     bool in_sc_err, reg_en, scp_done = false;
->
-> reg_en is unused.
->
-Yes, will remove.
-> > +
-> > +     if (irq == labibb_reg->sc_irq)
->
-> When is this false?
-Shouldn't be; will remove the check.
->
-> > +             reg = labibb_reg->base + REG_LABIBB_STATUS1;
-> > +     else
-> > +             return IRQ_HANDLED;
-> > +
-> > +     sc_err_mask = LABIBB_STATUS1_SC_DETECT_BIT;
-> > +
-> > +     ret = regmap_bulk_read(labibb_reg->regmap, reg, &val, 1);
->
-> Just inline reg->base + REG_LABIBB_STATUS1 in this call.
-Ok.
->
-> > +     if (ret < 0) {
-> > +             dev_err(labibb_reg->dev, "Read failed, ret=%d\n", ret);
-> > +             return IRQ_HANDLED;
-> > +     }
-> > +     dev_dbg(labibb_reg->dev, "%s SC error triggered! STATUS1 = %d\n",
-> > +             labibb_reg->desc.name, val);
-> > +
-> > +     in_sc_err = !!(val & sc_err_mask);
-> > +
-> > +     /*
-> > +      * The SC(short circuit) fault would trigger PBS(Portable Batch
-> > +      * System) to disable regulators for protection. This would
-> > +      * cause the SC_DETECT status being cleared so that it's not
-> > +      * able to get the SC fault status.
-> > +      * Check if the regulator is enabled in the driver but
-> > +      * disabled in hardware, this means a SC fault had happened
-> > +      * and SCP handling is completed by PBS.
-> > +      */
-> > +     if (!in_sc_err) {
->
->         if (!(val & LABIBB_STATUS1_SC_DETECT_BIT)) {
->
-> > +
-> > +             reg = labibb_reg->base + REG_LABIBB_ENABLE_CTL;
-> > +
-> > +             ret = regmap_read_poll_timeout(labibb_reg->regmap,
-> > +                                     reg, val,
-> > +                                     !(val & LABIBB_CONTROL_ENABLE),
-> > +                                     POLLING_SCP_DONE_INTERVAL_US,
-> > +                                     POLLING_SCP_TIMEOUT);
-> > +
-> > +             if (!ret && labibb_reg->vreg_enabled) {
->
-> Wouldn't be fine to assume that if you get a short circuit IRQ the
-> regulator is enabled?
-So this is from my understanding of the previous patchset by the
-author, as documented in the comment: I understood it to mean that if
-we aren't able to read back the 'ENABLE' bit from the hardware (so
-it's disabled in hw?) but the driver has it's vreg->enabled set, that
-means the SC fault had happened but was handled by the PBS?
->
-> If you are worried about racing with a disable this won't work anyways,
-> and you better enable_irq()/disable_irq() in regulator enable/disable,
-> respectively.
->
-It didn't seem to be about the disable race, but being handled by the PBS.
+2) Monitor the zone->watermark_boost(by adding a debug print in
+the kernel) and whenever it is greater than zero value, write the
+same value of min_free_kbytes obtained from step 1.
+   #echo 5162 > /proc/sys/vm/min_free_kbytes
 
-> > +                     dev_dbg(labibb_reg->dev,
-> > +                             "%s has been disabled by SCP\n",
-> > +                             labibb_reg->desc.name);
-> > +                     scp_done = true;
-> > +             }
->
-> If you flip the poll check around you will get here by not being in an
-> short-circuit condition and you conclude that the regulator is still on;
-> in which case you can just return here.
->
-> That way you can drop in_sc_err and scp_done and flatten below
-> conditional section.
-Yeah I think that's related to the PBS v/s regulator's handling of the
-short-circuit, afaiu.
->
-> > +     }
-> > +
-> > +     if (in_sc_err || scp_done) {
-> > +             regulator_lock(labibb_reg->rdev);
-> > +             regulator_notifier_call_chain(labibb_reg->rdev,
-> > +                                             REGULATOR_EVENT_OVER_CURRENT,
-> > +                                             NULL);
-> > +             regulator_unlock(labibb_reg->rdev);
-> > +     }
-> > +     return IRQ_HANDLED;
-> > +}
-> > +
-> >  static int register_labibb_regulator(struct qcom_labibb *labibb,
-> >                               const struct labibb_regulator_data *reg_data,
-> >                               struct device_node *of_node)
-> > @@ -181,6 +255,29 @@ static int register_labibb_regulator(struct qcom_labibb *labibb,
-> >       reg->desc.type = REGULATOR_VOLTAGE;
-> >       reg->desc.ops = &qcom_labibb_ops;
-> >
-> > +     reg->sc_irq = -EINVAL;
-> > +     ret = of_irq_get_byname(of_node, reg_data->irq_name);
-> > +     if (ret < 0)
-> > +             dev_dbg(labibb->dev,
->
-> Isn't this an error?
-yes, will change.
->
-> > +                     "Unable to get %s, ret = %d\n",
-> > +                     reg_data->irq_name, ret);
-> > +     else
-> > +             reg->sc_irq = ret;
-> > +
-> > +     if (reg->sc_irq > 0) {
-> > +             ret = devm_request_threaded_irq(labibb->dev,
-> > +                                             reg->sc_irq,
-> > +                                             NULL, labibb_sc_err_handler,
-> > +                                             IRQF_ONESHOT |
-> > +                                             IRQF_TRIGGER_RISING,
->
-> Omit IRQF_TRIGGER_RISING and let that come from DT.
-Ok. That's anyways coming from the DT.
+3) Then read the zone watermarks in the system while the
+->watermark_boost is zero. This should show the same values of
+watermarks as step 1 but shown a higher values than asked.
+   #cat /proc/zoneinfo | grep -e boost -e low -e "high " -e min -e Node
+	Node 0, zone   Normal
+		min      797
+		low      21148
+		high     21347
 
->
-> > +                                             reg_data->irq_name, labibb);
-> > +             if (ret) {
-> > +                     dev_err(labibb->dev, "Failed to register '%s' irq ret=%d\n",
-> > +                             reg_data->irq_name, ret);
-> > +                     return ret;
-> > +             }
-> > +     }
-> > +
->
-> Regards,
-> Bjorn
->
-> >       cfg.dev = labibb->dev;
-> >       cfg.driver_data = reg;
-> >       cfg.regmap = labibb->regmap;
-> > --
-> > 2.26.2
-> >
-Best,
-Sumit.
+These higher values are because of updating the zone watermarks using
+the macro min_wmark_pages(zone) which also adds the
+zone->watermark_boost.
+	#define min_wmark_pages(z) (z->_watermark[WMARK_MIN] +
+					z->watermark_boost)
+
+So the steps that lead to the issue is like below:
+1) On the extfrag event, watermarks are boosted by storing the required
+value in ->watermark_boost.
+
+2) User tries to update the zone watermarks level in the system through
+min_free_kbytes or watermark_scale_factor.
+
+3) Later, when kswapd woke up, it resets the zone->watermark_boost to
+zero.
+
+In step 2), we use the min_wmark_pages() macro to store the watermarks
+in the zone structure thus the values are always offsetted by
+->watermark_boost value. This can be avoided by resetting the
+->watermark_boost to zero before it is used.
+
+Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
+---
+
+v2: Improve the commit message
+
+v1: (https://patchwork.kernel.org/patch/11540751/)
+
+ mm/page_alloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index cef05d3..d001d61 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -7761,9 +7761,9 @@ static void __setup_per_zone_wmarks(void)
+ 			    mult_frac(zone_managed_pages(zone),
+ 				      watermark_scale_factor, 10000));
+ 
++		zone->watermark_boost = 0;
+ 		zone->_watermark[WMARK_LOW]  = min_wmark_pages(zone) + tmp;
+ 		zone->_watermark[WMARK_HIGH] = min_wmark_pages(zone) + tmp * 2;
+-		zone->watermark_boost = 0;
+ 
+ 		spin_unlock_irqrestore(&zone->lock, flags);
+ 	}
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+member of the Code Aurora Forum, hosted by The Linux Foundation
