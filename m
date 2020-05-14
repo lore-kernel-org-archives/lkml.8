@@ -2,111 +2,90 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56728C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCE7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E60A20671
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:07:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="kN0PmvDM"
+	by mail.kernel.org (Postfix) with ESMTP id EB19320671
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:07:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgENOHA (ORCPT
+        id S1727772AbgENOHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:07:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60086 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726087AbgENOG7 (ORCPT
+        Thu, 14 May 2020 10:07:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726087AbgENOHY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:06:59 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B6B8C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:06:59 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id n11so1284633pgl.9
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:06:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Q6a5nhhtlwC3I5RzWhkpkIibe9GsSPKfDndfMfvdcTU=;
-        b=kN0PmvDMVtljFEv8ZZiWnVY21ZcFZaTdWSR1rQHlizhryKZoT6g9M4GrlsOwKVeqJq
-         ntH4vWDYpi91xUTxHfxrLJIJzhXSE+RLmZiXwTZ9Owk/SsspqFBnyMD8YCSLlgaSkK46
-         eF0z/hFDoYIVfwK9h6M5JYCKKus1Bv7kWrO2ZNsAMHINFO3qgY1FwSzhCeiVmBwXTGNg
-         cHPze5zERq3uZ3+sW6yXhCusceImIEWPrA6W5Dzj8mfjw3giik3sNdVcQCk0KFgbY77k
-         eeStU+Y2el2jtJs633pADino/pFOdlt+CZ8sNVncMD6jYCxLRfcV+UUaD0iyePkQydpt
-         hnbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Q6a5nhhtlwC3I5RzWhkpkIibe9GsSPKfDndfMfvdcTU=;
-        b=bGdLopEvowBo1RtMGA81p7u9pNqC8aAUhJ8809ZZHW3XvTxjQAtU/LvfRWrCuP5hib
-         PgoHX6LNMhSToMy9caTeXBRz2iUW1m1WvbGzEjxCBKPhzuXJnavusZCMFE8+x2xEboLE
-         LCq0N6ifaIdOg1cwhTP2UQvgZdKphRhRLZ56SOB+Osw76HPk175D0/LFf2YKQOiaY2qh
-         t2jB4Ly5yn3CBQbJ9GYn6C8SnOLCGKWLz68tOiuoBfYLIPSQE3zWm9NKxSC+SydL9JVK
-         RONETwqKMxnpviUJ1eGTBCA8ml1UjI4V6bYTlEYtS+ySuoMaBPdbELPbKSKMUu3PqWNk
-         tdvg==
-X-Gm-Message-State: AOAM530AYzGABGmc/ylZOrv0R0evJsA06pLcA6AGHAzTRr9NmkeGgQ9O
-        PA+3vJVp7NFamwk/2rbqB0JMFg==
-X-Google-Smtp-Source: ABdhPJznyMcs2R1vd0kHKH4cBcFVIp8kNX0MWajfDDv2D4gE7p+9fLnw22AzwjVOeCG7+qIXLh5N4w==
-X-Received: by 2002:a63:5225:: with SMTP id g37mr4043696pgb.230.1589465219177;
-        Thu, 14 May 2020 07:06:59 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:a45a:373e:9b20:39ea? ([2605:e000:100e:8c61:a45a:373e:9b20:39ea])
-        by smtp.gmail.com with ESMTPSA id g16sm2450843pfh.217.2020.05.14.07.06.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 May 2020 07:06:57 -0700 (PDT)
-Subject: Re: linux-next: build failure after merge of the block tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>
-References: <20200514185737.701b40dd@canb.auug.org.au>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <b2fafdce-2616-cad4-79c8-c8186e4e0272@kernel.dk>
-Date:   Thu, 14 May 2020 08:06:55 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 14 May 2020 10:07:24 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0F12C061A0C;
+        Thu, 14 May 2020 07:07:24 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jZEW8-008HXc-IU; Thu, 14 May 2020 14:07:20 +0000
+Date:   Thu, 14 May 2020 15:07:20 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 11/20] amifb: get rid of pointless access_ok() calls
+Message-ID: <20200514140720.GB23230@ZenIV.linux.org.uk>
+References: <20200509234124.GM23230@ZenIV.linux.org.uk>
+ <20200509234557.1124086-1-viro@ZenIV.linux.org.uk>
+ <CGME20200509234610eucas1p258be307cde10392b26c322354db78a9b@eucas1p2.samsung.com>
+ <20200509234557.1124086-11-viro@ZenIV.linux.org.uk>
+ <6f89732b-fba9-a947-6c61-5d1680747f3b@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20200514185737.701b40dd@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6f89732b-fba9-a947-6c61-5d1680747f3b@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/14/20 2:57 AM, Stephen Rothwell wrote:
-> Hi all,
+On Thu, May 14, 2020 at 03:45:09PM +0200, Bartlomiej Zolnierkiewicz wrote:
 > 
-> After merging the block tree, today's linux-next build (x86_64
-> allnoconfig) failed like this:
+> Hi Al,
 > 
-> In file included from include/linux/blk-cgroup.h:23,
->                  from include/linux/writeback.h:14,
->                  from include/linux/memcontrol.h:22,
->                  from include/linux/swap.h:9,
->                  from include/linux/suspend.h:5,
->                  from arch/x86/kernel/asm-offsets.c:13:
-> include/linux/blkdev.h: In function 'blk_io_schedule':
-> include/linux/blkdev.h:1857:26: error: 'sysctl_hung_task_timeout_secs' undeclared (first use in this function)
->  1857 |  unsigned long timeout = sysctl_hung_task_timeout_secs * HZ / 2;
->       |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> On 5/10/20 1:45 AM, Al Viro wrote:
+> > From: Al Viro <viro@zeniv.linux.org.uk>
+> > 
+> > addresses passed only to get_user() and put_user()
 > 
-> Caused by commit
+> This driver lacks checks for {get,put}_user() return values so it will
+> now return 0 ("success") even if {get,put}_user() fails.
 > 
->   e6249cdd46e4 ("block: add blk_io_schedule() for avoiding task hung in sync dio")
-> 
-> linux/sched/sysctl.h was not included since CONFIG_BLOCK is not defined.
-> I have applied the following patch for today.
+> Am I missing something?
 
-Sorry about that, it's fixed in the current tree.
+"now" is interesting, considering
+/* We let the MMU do all checking */
+static inline int access_ok(const void __user *addr,
+                            unsigned long size)
+{
+        return 1;
+}
+in arch/m68k/include/asm/uaccess_mm.h
 
--- 
-Jens Axboe
+Again, access_ok() is *NOT* about checking if memory is readable/writable/there
+in the first place.  All it does is a static check that address is in
+"userland" range - on architectures that have kernel and userland sharing the
+address space.  On architectures where we have separate ASI or equivalents
+thereof for kernel and for userland the fscker is always true.
 
+If MMU will prevent access to kernel memory by uaccess insns for given address
+range, access_ok() is fine with it.  It does not do anything else.
+
+And yes, get_user()/put_user() callers should handle the fact that those can
+fail.  Which they bloody well can _after_ _success_ of access_ok().  And
+without any races whatsoever.
+
+IOW, the lack of such checks is a bug, but it's quite independent from the
+bogus access_ok() call.  On any architecture.  mmap() something, munmap()
+it and pass the address where it used to be to that ioctl().  Failing
+get_user()/put_user() is guaranteed, so's succeeding access_ok().
+
+And that code is built only on amiga, so access_ok() always succeeds, anyway.
