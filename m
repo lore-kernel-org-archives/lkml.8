@@ -2,167 +2,113 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064E9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FAFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0B23205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41AD320671
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:06:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="gYeH/Ebn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bE86Yvyf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgENODZ (ORCPT
+        id S1726665AbgENOGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:03:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59528 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726037AbgENODY (ORCPT
+        Thu, 14 May 2020 10:06:02 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44321 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726146AbgENOGC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:03:24 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DADEC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:03:24 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id 190so3069919qki.1
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:03:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=DPPma3BWcIsf3J/I70N8Nn3h+M8824Udo5W6dirat1Q=;
-        b=gYeH/EbnoXl71eid3pRmazK7xy05PoyQl4HRdQVxqc3vUTmfBZVm9mX8lKWNLWkS9W
-         0g3moK8CoN2hVva4yEIlApR1lxdLjtLTKKwduXuSnphKSuR1+nZP58OquuLTWh7djnNq
-         opJ+ui5SlJPvbZPokEDbddfDUxGwaPThaNyeWfGSxOxpCIa1EEatvy082rKKhmVJAGM1
-         FNLOxXGfj9+Hiu8SAoQvjk58tPQisRePOCGIqtimdEnhlLV1HO6GSy7houWypJKmcYK+
-         YDa/SmNui5MHlfB5K80qDpWGHNntYbYLMjhBFThcth4RwTTXXtqUjsOokOTtc73nsa+/
-         LpyA==
+        Thu, 14 May 2020 10:06:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589465160;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NbY83E69uffAESaWml+T0AXcFZ6rmqCOkFWMnK8Nufs=;
+        b=bE86YvyfZvtUCPkzAdLoxdk4poU67w0zrR+nhpvgnNTiOFGAPkXR7K4GylpCwTJHG0tovd
+        r26yCRpPZans0fpd1zLlLjfWeJ97VOvX6Cyvj0sQR9RBesGbxCRpz2Iu9gcKB1a2SqTtrW
+        Nm5VPRKM0I0Ecw+odcfqxGOQ+FzGypA=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-134-JnYc5_S1P5WlPb0cZcqGqA-1; Thu, 14 May 2020 10:05:57 -0400
+X-MC-Unique: JnYc5_S1P5WlPb0cZcqGqA-1
+Received: by mail-qt1-f200.google.com with SMTP id e44so3648229qta.9
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:05:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=DPPma3BWcIsf3J/I70N8Nn3h+M8824Udo5W6dirat1Q=;
-        b=oU04hEOqOkSI/tg0p1OGaOsoq41Inkp7woQk1ipYwG81R4mOl/UPGzz3cHXR2gJj7C
-         P87tA6/GhJdYMrXei7ih752Pa5k4tEBjrGt7C3TVkwfPcMU1+rYOVT4Qifyy4OYFPI5y
-         zjwkW5iWz2EJSZqbpGMikOfarXLLdUCs8JIWoD+xmG3kh7F2lG2qEHKkJ+CmxeABvIoa
-         owSbupqHOlSXcOf9jJJZ/U3QS1y2+WJBjrK/5Gx10QwtmoHxgoOZampGccYURflbi10F
-         UqiOQ/GVs1VKmsUoAofka/7R5Zuhjsw6d5onQYikpvFxknQSjzXGhU3cN7QlVCRN50Ca
-         Oxug==
-X-Gm-Message-State: AOAM531awBuWaqJ19CSu4nLsnu6OO0HWLOwpmWbQ2wGumGzdMrY+jTsf
-        vGh4FctgwIv/a026x/a+R+ZgLg==
-X-Google-Smtp-Source: ABdhPJyXJtAqYOZRYhFZ7uYjxNZfKgwQhSgvkhQokfCdKf9HbVI5MRMO3cZ7ualj7v4u6dbRGv3N7w==
-X-Received: by 2002:a37:658a:: with SMTP id z132mr4906470qkb.267.1589465002907;
-        Thu, 14 May 2020 07:03:22 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id k138sm2650919qke.55.2020.05.14.07.03.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 May 2020 07:03:22 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: Default enable RCU list lockdep debugging with PROVE_RCU
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20200514135402.GI2869@paulmck-ThinkPad-P72>
-Date:   Thu, 14 May 2020 10:03:21 -0400
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Amol Grover <frextrite@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <CC392959-36FD-459F-BD13-8F50C22FC615@lca.pw>
-References: <20200514222535.259cb69e@canb.auug.org.au>
- <ADC503BE-32C0-46BB-A65E-59FFEC30ED57@lca.pw>
- <20200514133328.GG2869@paulmck-ThinkPad-P72>
- <ADE40EB3-1B1C-4CCF-9B8A-1F2BC585BCFB@lca.pw>
- <20200514135402.GI2869@paulmck-ThinkPad-P72>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=NbY83E69uffAESaWml+T0AXcFZ6rmqCOkFWMnK8Nufs=;
+        b=Pkx1DdPnzGcBs9pYGsRwTP8Au0NK/Ynyjhqt/2waUbf0Z3aAxrM/DQA/xj3r+CarVJ
+         d4Kbx6VubXgf+gUonOS5WUTnThLu94uhjVIICmsQsb0dXquqYiH/4fLkDt+7GQTQdKFq
+         Re6kEbOmwIiRbbsdvF3SzmmomieJVamvymAKv4BzOub3W+s9xhPV2BQ3NPagL8diFtCz
+         H0Dor2ezZH8f05dAxEI5lFlnUNHweoD0mWq6BLiP2uXyD5vRzlqY4Z10GwZ5vY11hiaC
+         JSyAFuOb5WWpe8q+p7ravu5qkSo12or1cKAcyqreaBSYHkplUE2IfaBhc17Dmg7YSECW
+         Rmvg==
+X-Gm-Message-State: AOAM531MtiknxvmgypqNxzPYuQjBZHWnpWAVwAMDt6/VE447L6eglqCw
+        xxR8RrLoFh9obp9VWz4vNiHRebZCkk96ysoNcWKrWMDBAqMH32jlTdfR9Lcn3syy9fxwj8z+XTD
+        j3zZC4q8W3tbaoFVTBQJgSuIt
+X-Received: by 2002:a05:620a:4c9:: with SMTP id 9mr4749672qks.487.1589465156872;
+        Thu, 14 May 2020 07:05:56 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyo2fADFfavryjF15PayRQMc7FxwNus8UzpkWG2jA0/z5miZ85649I/y0hblRMmuuaFVkmfuQ==
+X-Received: by 2002:a05:620a:4c9:: with SMTP id 9mr4749650qks.487.1589465156577;
+        Thu, 14 May 2020 07:05:56 -0700 (PDT)
+Received: from dev.jcline.org.com ([136.56.87.133])
+        by smtp.gmail.com with ESMTPSA id z65sm2536791qkc.91.2020.05.14.07.05.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 07:05:55 -0700 (PDT)
+From:   Jeremy Cline <jcline@redhat.com>
+To:     James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>
+Cc:     Matthew Garrett <matthewgarrett@google.com>,
+        David Howells <dhowells@redhat.com>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jeremy Cline <jcline@redhat.com>,
+        "Frank Ch . Eigler" <fche@redhat.com>
+Subject: [PATCH RESEND] lockdown: Allow unprivileged users to see lockdown status
+Date:   Thu, 14 May 2020 10:05:46 -0400
+Message-Id: <20200514140546.826698-1-jcline@redhat.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200220151738.1492852-1-jcline@redhat.com>
+References: <20200220151738.1492852-1-jcline@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+A number of userspace tools, such as systemtap, need a way to see the
+current lockdown state so they can gracefully deal with the kernel being
+locked down. The state is already exposed in
+/sys/kernel/security/lockdown, but is only readable by root. Adjust the
+permissions so unprivileged users can read the state.
 
+Fixes: 000d388ed3bb ("security: Add a static lockdown policy LSM")
+Cc: Frank Ch. Eigler <fche@redhat.com>
+Signed-off-by: Jeremy Cline <jcline@redhat.com>
+---
+ security/lockdown/lockdown.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> On May 14, 2020, at 9:54 AM, Paul E. McKenney <paulmck@kernel.org> =
-wrote:
->=20
-> On Thu, May 14, 2020 at 09:44:28AM -0400, Qian Cai wrote:
->>=20
->>=20
->>> On May 14, 2020, at 9:33 AM, Paul E. McKenney <paulmck@kernel.org> =
-wrote:
->>>=20
->>> On Thu, May 14, 2020 at 08:31:13AM -0400, Qian Cai wrote:
->>>>=20
->>>>=20
->>>>> On May 14, 2020, at 8:25 AM, Stephen Rothwell =
-<sfr@canb.auug.org.au> wrote:
->>>>>=20
->>>>> Hi Paul,
->>>>>=20
->>>>> This patch in the rcu tree
->>>>>=20
->>>>> d13fee049fa8 ("Default enable RCU list lockdep debugging with =
-PROVE_RCU")
->>>>>=20
->>>>> is causing whack-a-mole in the syzbot testing of linux-next.  =
-Because
->>>>> they always do a debug build of linux-next, no testing is getting =
-done. :-(
->>>>>=20
->>>>> Can we find another way to find all the bugs that are being =
-discovered
->>>>> (very slowly)?
->>>>=20
->>>> Alternatively, could syzbot to use PROVE_RCU=3Dn temporarily =
-because it can=E2=80=99t keep up with it? I personally found =
-PROVE_RCU_LIST=3Dy is still useful for my linux-next testing, and =
-don=E2=80=99t want to lose that coverage overnight.
->>>=20
->>> The problem is that PROVE_RCU is exactly PROVE_LOCKING, and asking =
-people
->>> to test without PROVE_LOCKING is a no-go in my opinion.  But of =
-course
->>> on the other hand if there is no testing of RCU list lockdep =
-debugging,
->>> those issues will never be found, let alone fixed.
->>>=20
->>> One approach would be to do as Stephen asks (either remove =
-d13fee049fa8
->>> or pull it out of -next) and have testers force-enable the RCU list
->>> lockdep debugging.
->>>=20
->>> Would that work for you?
->>=20
->> Alternatively, how about having
->>=20
->> PROVE_RCU_LIST=3Dn if DEBUG_AID_FOR_SYZBOT
->>=20
->> since it is only syzbot can=E2=80=99t keep up with it?
->=20
-> Sound good to me, assuming that this works for the syzkaller guys.
-> Or could there be a "select PROVE_RCU_LIST" for the people who would
-> like to test it.
->=20
-> Alternatively, if we revert d13fee049fa8 from -next, I could provide
-> you a script that updates your .config to set both RCU_EXPERT and
-> PROVE_RCU_LIST.
->=20
-> There are a lot of ways to appraoch this.
->=20
-> So what would work best for everyone?
+diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+index 5a952617a0eba..87cbdc64d272c 100644
+--- a/security/lockdown/lockdown.c
++++ b/security/lockdown/lockdown.c
+@@ -150,7 +150,7 @@ static int __init lockdown_secfs_init(void)
+ {
+ 	struct dentry *dentry;
+ 
+-	dentry = securityfs_create_file("lockdown", 0600, NULL, NULL,
++	dentry = securityfs_create_file("lockdown", 0644, NULL, NULL,
+ 					&lockdown_ops);
+ 	return PTR_ERR_OR_ZERO(dentry);
+ }
+-- 
+2.26.2
 
-
-If PROVE_RCU_LIST=3Dn if DEBUG_AID_FOR_SYZBOT works for syzbot guys, =
-that would be great, so other testing agents could still report/fix =
-those RCU-list bugs and then pave a way for syzbot to return back once =
-all those false positives had been sorted out.
-
-Otherwise,  =E2=80=9Cselect PROVE_RCU_LIST=E2=80=9D *might* be better =
-than buried into RCU_EXPERT where we will probably never saw those false =
-positives been addressed since my configs does not cover a wide range of =
-subsystems and probably not many other bots would enable RCU_EXPERT.=
