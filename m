@@ -2,139 +2,88 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 894ABC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F61C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74EDF2065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 712972065D
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 10:10:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726117AbgENKKF (ORCPT
+        id S1726141AbgENKKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 06:10:05 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:52220 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgENKKF (ORCPT
+        Thu, 14 May 2020 06:10:11 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:44205 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbgENKKL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 06:10:05 -0400
-Received: from 89-64-84-17.dynamic.chello.pl (89.64.84.17) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id bfcb0575ef1464d6; Thu, 14 May 2020 12:10:02 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>,
-        Chris Chiu <chiu@endlessm.com>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH[RFT]] ACPI: EC: s2idle: Avoid flushing EC work when EC GPE is inactive
-Date:   Thu, 14 May 2020 12:10:01 +0200
-Message-ID: <4502272.pByIgeXik9@kreacher>
+        Thu, 14 May 2020 06:10:11 -0400
+Received: from [192.168.1.11] (lfbn-gre-1-325-105.w90-112.abo.wanadoo.fr [90.112.45.105])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 6A02C20000B;
+        Thu, 14 May 2020 10:10:04 +0000 (UTC)
+Subject: Re: [PATCH 04/10] riscv: Fix print_vm_layout build error if NOMMU
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Hulk Robot <hulkci@huawei.com>
+References: <20200511022001.179767-1-wangkefeng.wang@huawei.com>
+ <20200511022001.179767-5-wangkefeng.wang@huawei.com>
+From:   Alex Ghiti <alex@ghiti.fr>
+Message-ID: <1daca195-f63c-2693-068f-6d624aa1b899@ghiti.fr>
+Date:   Thu, 14 May 2020 06:10:04 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20200511022001.179767-5-wangkefeng.wang@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Hi,
 
-Flushing the EC work while suspended to idle when the EC GPE status
-is not set causes some EC wakeup events (notably power button and
-lid ones) to be missed after a series of spurious wakeups on the Dell
-XPS13 9360 in my office.
-
-If that happens, the machine cannot be woken up from suspend-to-idle
-by a power button press or lid status change and it needs to be woken
-up in some other way (eg. by a key press).
-
-Flushing the EC work only after successful dispatching the EC GPE,
-which means that its status has been set, avoids the issue, so change
-the code in question accordingly.
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-
-Hi Chris,
-
-Please check if the key press wakeup still works on your system with this patch
-applied (on top of https://patchwork.kernel.org/patch/11538065/).
-
-Thanks!
-
----
- drivers/acpi/ec.c    |    6 +++++-
- drivers/acpi/sleep.c |   15 ++++-----------
- 2 files changed, 9 insertions(+), 12 deletions(-)
-
-Index: linux-pm/drivers/acpi/ec.c
-===================================================================
---- linux-pm.orig/drivers/acpi/ec.c
-+++ linux-pm/drivers/acpi/ec.c
-@@ -2020,9 +2020,13 @@ bool acpi_ec_dispatch_gpe(void)
- 	 * to allow the caller to process events properly after that.
- 	 */
- 	ret = acpi_dispatch_gpe(NULL, first_ec->gpe);
--	if (ret == ACPI_INTERRUPT_HANDLED)
-+	if (ret == ACPI_INTERRUPT_HANDLED) {
- 		pm_pr_dbg("EC GPE dispatched\n");
- 
-+		/* Flush the event and query workqueues. */
-+		acpi_ec_flush_work();
-+	}
-+
- 	return false;
- }
- #endif /* CONFIG_PM_SLEEP */
-Index: linux-pm/drivers/acpi/sleep.c
-===================================================================
---- linux-pm.orig/drivers/acpi/sleep.c
-+++ linux-pm/drivers/acpi/sleep.c
-@@ -980,13 +980,6 @@ static int acpi_s2idle_prepare_late(void
- 	return 0;
- }
- 
--static void acpi_s2idle_sync(void)
--{
--	/* The EC driver uses special workqueues that need to be flushed. */
--	acpi_ec_flush_work();
--	acpi_os_wait_events_complete(); /* synchronize Notify handling */
--}
--
- static bool acpi_s2idle_wake(void)
- {
- 	if (!acpi_sci_irq_valid())
-@@ -1018,7 +1011,7 @@ static bool acpi_s2idle_wake(void)
- 			return true;
- 
- 		/*
--		 * Cancel the wakeup and process all pending events in case
-+		 * Cancel the SCI wakeup and process all pending events in case
- 		 * there are any wakeup ones in there.
- 		 *
- 		 * Note that if any non-EC GPEs are active at this point, the
-@@ -1026,8 +1019,7 @@ static bool acpi_s2idle_wake(void)
- 		 * should be missed by canceling the wakeup here.
- 		 */
- 		pm_system_cancel_wakeup();
--
--		acpi_s2idle_sync();
-+		acpi_os_wait_events_complete();
- 
- 		/*
- 		 * The SCI is in the "suspended" state now and it cannot produce
-@@ -1060,7 +1052,8 @@ static void acpi_s2idle_restore(void)
- 	 * of GPEs.
- 	 */
- 	acpi_os_wait_events_complete(); /* synchronize GPE processing */
--	acpi_s2idle_sync();
-+	acpi_ec_flush_work(); /* flush the EC driver's workqueues */
-+	acpi_os_wait_events_complete(); /* synchronize Notify handling */
- 
- 	s2idle_wakeup = false;
- 
+On 5/10/20 10:19 PM, Kefeng Wang wrote:
+> arch/riscv/mm/init.c: In function ‘print_vm_layout’:
+> arch/riscv/mm/init.c:68:37: error: ‘FIXADDR_START’ undeclared (first use in this function);
+> arch/riscv/mm/init.c:69:20: error: ‘FIXADDR_TOP’ undeclared
+> arch/riscv/mm/init.c:70:37: error: ‘PCI_IO_START’ undeclared
+> arch/riscv/mm/init.c:71:20: error: ‘PCI_IO_END’ undeclared
+> arch/riscv/mm/init.c:72:38: error: ‘VMEMMAP_START’ undeclared
+> arch/riscv/mm/init.c:73:20: error: ‘VMEMMAP_END’ undeclared (first use in this function);
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+>   arch/riscv/mm/init.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index dfcaebc3928f..58c39c44b9c9 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -49,7 +49,7 @@ static void setup_zero_page(void)
+>   	memset((void *)empty_zero_page, 0, PAGE_SIZE);
+>   }
+>   
+> -#ifdef CONFIG_DEBUG_VM
+> +#if defined(CONFIG_MMU) && defined(DEBUG_VM)
 
 
+Shouldn't it be CONFIG_DEBUG_VM ?
+
+
+>   static inline void print_mlk(char *name, unsigned long b, unsigned long t)
+>   {
+>   	pr_notice("%12s : 0x%08lx - 0x%08lx   (%4ld kB)\n", name, b, t,
+
+
+Alex
 
