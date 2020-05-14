@@ -2,114 +2,187 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD73DC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99036C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1C68206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7355B206C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:40:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="yCM4XEEX"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CTHytnE2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726075AbgENHkT (ORCPT
+        id S1726105AbgENHk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 03:40:19 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:44234 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725911AbgENHkS (ORCPT
+        Thu, 14 May 2020 03:40:27 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:45846 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbgENHk0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 03:40:18 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04E7X8dr013496;
-        Thu, 14 May 2020 09:40:05 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=SpEvreKtB+MBazylqO4KkqjFJKRyk5rMPdajWCqdW74=;
- b=yCM4XEEXFY9SoRsTSHZEY9AEh57E74V74fmTZXm3ck9QbjUUud4TOF6GD4yR33DLlOC4
- 3MlDS1Y/SNxkbP3U9iYJiwjihRZ4AguTw6iLZxUmefK9etQZphd0rK1DIE3yKtaFKOSy
- CTzIAKDrjVaBA3H388fZT29cVei7U/T/btNO+CO56VPMk/Y+gY0XGDLLPgNFUMER/AM+
- wt0ewGUjoWttF5l8Zr+LzseFAzU6K1KK5XRJMWMCxF+6+nj1DzY8MrdxVntnS8tQggYx
- uofT9FaTm2lVVxeqc7LFLn2CJ8YS7EjV6CeOBfXEEMeyNYjoO6NJ7kge80OCiyZDPybq 1w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3100vyhjd7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 14 May 2020 09:40:05 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3AC3A10002A;
-        Thu, 14 May 2020 09:39:55 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E1C3C2A594D;
-        Thu, 14 May 2020 09:39:55 +0200 (CEST)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE3.st.com
- (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 14 May
- 2020 09:39:55 +0200
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Thu, 14 May 2020 09:39:55 +0200
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.co" <mark.rutland@arm.co>,
-        "Alexandre TORGUE" <alexandre.torgue@st.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        Amelie DELAUNAY <amelie.delaunay@st.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v3] dt-bindings: mfd: Convert stmfx bindings to
- json-schema
-Thread-Topic: [PATCH v3] dt-bindings: mfd: Convert stmfx bindings to
- json-schema
-Thread-Index: AQHV6An9BN3fbiJe+Uu+wK6+EyGnQqgtoL2AgHnzXwA=
-Date:   Thu, 14 May 2020 07:39:55 +0000
-Message-ID: <70ee04c9-4f65-6909-32bc-a379c21a031e@st.com>
-References: <20200220162246.8334-1-benjamin.gaignard@st.com>
- <20200226162125.GA13349@bogus>
-In-Reply-To: <20200226162125.GA13349@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Thu, 14 May 2020 03:40:26 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04E7eLFN125466;
+        Thu, 14 May 2020 02:40:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1589442021;
+        bh=KG3memjsCcwE/u1z7H7YBFsNgxZt+svqBex7nCFVKpE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=CTHytnE2rppXj7kocZdax12mZ/nnkBlHwpK+0Fqn4TYklkDFHYad9/Un2+J18cE6d
+         BQGf7D9/IE6lPc/omfJ/e8XkG3hQNA83W/GxNiwziMRxn4dH4SLsdYq658taMaofSc
+         gm4Cw3bqVaFvq6bOqZfRjEBX91A8F73gETubfTts=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04E7eLso027858;
+        Thu, 14 May 2020 02:40:21 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 14
+ May 2020 02:40:21 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 14 May 2020 02:40:21 -0500
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04E7eIsV043167;
+        Thu, 14 May 2020 02:40:19 -0500
+Subject: Re: [PATCH 3/3] usb: dwc3: keystone: Turn on USB3 PHY before
+ controller
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+CC:     <balbi@kernel.org>, <robh+dt@kernel.org>, <vigneshr@ti.com>,
+        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200513130709.10239-1-rogerq@ti.com>
+ <20200513130709.10239-4-rogerq@ti.com> <1589420265.5899.0.camel@mhfsdcap03>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <baaaf89c-4baf-4218-e22e-53cd1a64ec02@ti.com>
+Date:   Thu, 14 May 2020 10:40:18 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.44]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <38B5556472D33343A6C2240B0D499256@st.com>
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
- definitions=2020-05-14_01:2020-05-13,2020-05-14 signatures=0
+In-Reply-To: <1589420265.5899.0.camel@mhfsdcap03>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDIvMjYvMjAgNToyMSBQTSwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+IE9uIFRodSwgMjAg
-RmViIDIwMjAgMTc6MjI6NDYgKzAxMDAsIEJlbmphbWluIEdhaWduYXJkIHdyb3RlOg0KPj4gQ29u
-dmVydCBzdG1meCBiaW5kaW5ncyB0byBqc29uLXNjaGVtYQ0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6
-IEJlbmphbWluIEdhaWduYXJkIDxiZW5qYW1pbi5nYWlnbmFyZEBzdC5jb20+DQo+PiAtLS0NCj4+
-ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N0LHN0bWZ4LnlhbWwgICAgICAgICAgfCAx
-MjQgKysrKysrKysrKysrKysrKysrKysrDQo+PiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9tZmQvc3RtZngudHh0ICAgIHwgIDI4IC0tLS0tDQo+PiAgIC4uLi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3BpbmN0cmwvcGluY3RybC1zdG1meC50eHQgIHwgMTE2IC0tLS0tLS0tLS0tLS0t
-LS0tLS0NCj4+ICAgMyBmaWxlcyBjaGFuZ2VkLCAxMjQgaW5zZXJ0aW9ucygrKSwgMTQ0IGRlbGV0
-aW9ucygtKQ0KPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL21mZC9zdCxzdG1meC55YW1sDQo+PiAgIGRlbGV0ZSBtb2RlIDEwMDY0NCBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N0bWZ4LnR4dA0KPj4gICBkZWxldGUg
-bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvcGlu
-Y3RybC1zdG1meC50eHQNCj4+DQpIaSBMZWUsIFJvYiwNCg0KSSBoYXZlbid0IGJlZW4gYWJsZSB0
-byBmb3VuZCB0aGlzIHBhdGNoIGluIC1uZXh0IGJyYW5jaGVzLCBjYW4gb25lIG9mIA0KeW91IG1l
-cmdlIGl0ID8NCg0KVGhhbmtzLA0KQmVuamFtaW4NCj4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5n
-IDxyb2JoQGtlcm5lbC5vcmc+DQo=
+
+
+On 14/05/2020 04:37, Chunfeng Yun wrote:
+> On Wed, 2020-05-13 at 16:07 +0300, Roger Quadros wrote:
+>> The Local Power Sleep Controller (LPSC) dependency on AM65
+>> requires SERDES0 to be powered on before USB.
+>>
+>> We need to power up SERDES0 power domain and hold it on
+>> throughout the reset, init, power on sequence.
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> ---
+>>   drivers/usb/dwc3/dwc3-keystone.c | 47 +++++++++++++++++++++++++++++++-
+>>   1 file changed, 46 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/usb/dwc3/dwc3-keystone.c b/drivers/usb/dwc3/dwc3-keystone.c
+>> index 1e14a6f4884b..46d46f3507fc 100644
+>> --- a/drivers/usb/dwc3/dwc3-keystone.c
+>> +++ b/drivers/usb/dwc3/dwc3-keystone.c
+>> @@ -14,6 +14,7 @@
+>>   #include <linux/dma-mapping.h>
+>>   #include <linux/io.h>
+>>   #include <linux/of_platform.h>
+>> +#include <linux/phy/phy.h>
+>>   #include <linux/pm_runtime.h>
+>>   
+>>   /* USBSS register offsets */
+>> @@ -34,6 +35,7 @@
+>>   struct dwc3_keystone {
+>>   	struct device			*dev;
+>>   	void __iomem			*usbss;
+>> +	struct phy			*usb3_phy;
+>>   };
+>>   
+>>   static inline u32 kdwc3_readl(void __iomem *base, u32 offset)
+>> @@ -95,8 +97,44 @@ static int kdwc3_probe(struct platform_device *pdev)
+>>   	if (IS_ERR(kdwc->usbss))
+>>   		return PTR_ERR(kdwc->usbss);
+>>   
+>> -	pm_runtime_enable(kdwc->dev);
+>> +	/* PSC dependency on AM65 needs SERDES0 to be powered before USB0 */
+>> +	kdwc->usb3_phy = devm_phy_get(dev, "usb3-phy");
+> Use devm_phy_optional_get() instead?
+
+Indeed, it seems better suited.
+
+cheers,
+-roger
+
+> 
+>> +	if (IS_ERR(kdwc->usb3_phy)) {
+>> +		error = PTR_ERR(kdwc->usb3_phy);
+>> +		if (error == -ENOSYS || error == -ENODEV) {
+>> +			kdwc->usb3_phy = NULL;
+>> +		} else {
+>> +			if (error != -EPROBE_DEFER) {
+>> +				dev_err(dev, "couldn't get usb3 phy: %d\n",
+>> +					error);
+>> +			}
+>> +
+>> +			return error;
+>> +		}
+>> +	}
+>> +
+>> +	phy_pm_runtime_get_sync(kdwc->usb3_phy);
+>> +
+>> +	error = phy_reset(kdwc->usb3_phy);
+>> +	if (error < 0) {
+>> +		dev_err(dev, "usb3 phy reset failed: %d\n", error);
+>> +		return error;
+>> +	}
+>> +
+>> +	error = phy_init(kdwc->usb3_phy);
+>> +	if (error < 0) {
+>> +		dev_err(dev, "usb3 phy init failed: %d\n", error);
+>> +		return error;
+>> +	}
+>>   
+>> +	error = phy_power_on(kdwc->usb3_phy);
+>> +	if (error < 0) {
+>> +		dev_err(dev, "usb3 phy power on failed: %d\n", error);
+>> +		phy_exit(kdwc->usb3_phy);
+>> +		return error;
+>> +	}
+>> +
+>> +	pm_runtime_enable(kdwc->dev);
+>>   	error = pm_runtime_get_sync(kdwc->dev);
+>>   	if (error < 0) {
+>>   		dev_err(kdwc->dev, "pm_runtime_get_sync failed, error %d\n",
+>> @@ -138,6 +176,9 @@ static int kdwc3_probe(struct platform_device *pdev)
+>>   err_irq:
+>>   	pm_runtime_put_sync(kdwc->dev);
+>>   	pm_runtime_disable(kdwc->dev);
+>> +	phy_power_off(kdwc->usb3_phy);
+>> +	phy_exit(kdwc->usb3_phy);
+>> +	phy_pm_runtime_put_sync(kdwc->usb3_phy);
+>>   
+>>   	return error;
+>>   }
+>> @@ -163,6 +204,10 @@ static int kdwc3_remove(struct platform_device *pdev)
+>>   	pm_runtime_put_sync(kdwc->dev);
+>>   	pm_runtime_disable(kdwc->dev);
+>>   
+>> +	phy_power_off(kdwc->usb3_phy);
+>> +	phy_exit(kdwc->usb3_phy);
+>> +	phy_pm_runtime_put_sync(kdwc->usb3_phy);
+>> +
+>>   	platform_set_drvdata(pdev, NULL);
+>>   
+>>   	return 0;
+> 
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
