@@ -2,128 +2,98 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDEA7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F32C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A812D2065D
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:32:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WZ4TnpnZ"
+	by mail.kernel.org (Postfix) with ESMTP id 0F2A020728
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 13:33:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1589463211;
+	bh=fCSUwMf7Ao1rkoQxej32piTB4hAp14IcBswN1PhYQ8E=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=SX8YPX6t72EY9Uc71r9WleR+o3rOoHJ18Y3A2+7rxRm9LIE0aimVtFYagCP1wCUYR
+	 fzak7ddr8F2Mown/Q70HKN+WXx8BVbY8qrrMZLVOee2GYb2l9ru4GvOTEGPwE9l3oJ
+	 68+FjcyKhw4anj8b+FWeUOiFMDcNCfM6ZDdpf8o4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726146AbgENNcE (ORCPT
+        id S1726294AbgENNda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 09:32:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23391 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726011AbgENNcE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 09:32:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1589463122;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=g/nCRkuyNaXAXNqjpWErasCkRfXCzT/klwC/USw0eGw=;
-        b=WZ4TnpnZxfOD9BzIE9eAf/0q0YSlXgVelKjHlAmN0oprR+ZqQ8TOkjhN0WXj1D2GnqPRFs
-        +D+UsxLAaCcW6PJrUMKEFZtX2IdSAGCDMoXH8oFYUpIlTsEMkTWRsxgv2nN/hY9bwcRW20
-        t7XRVhk7D/2Jpcr0CZJm7tt2lPe1FE8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-486-zew_sHqfPiWLNdzseJ9lRQ-1; Thu, 14 May 2020 09:32:01 -0400
-X-MC-Unique: zew_sHqfPiWLNdzseJ9lRQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 14 May 2020 09:33:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39028 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726056AbgENNd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 09:33:29 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1871F461;
-        Thu, 14 May 2020 13:31:59 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-117-0.rdu2.redhat.com [10.10.117.0])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7F7F576E64;
-        Thu, 14 May 2020 13:31:58 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id E9FB3220206; Thu, 14 May 2020 09:31:57 -0400 (EDT)
-Date:   Thu, 14 May 2020 09:31:57 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, x86@kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Gavin Shan <gshan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/8] KVM: x86: interrupt based APF page-ready event
- delivery
-Message-ID: <20200514133157.GB206709@redhat.com>
-References: <20200511164752.2158645-1-vkuznets@redhat.com>
- <20200511164752.2158645-5-vkuznets@redhat.com>
- <20200512142411.GA138129@redhat.com>
- <87lflxm9sy.fsf@vitty.brq.redhat.com>
- <20200512180704.GE138129@redhat.com>
- <877dxgmcjv.fsf@vitty.brq.redhat.com>
- <20200513135350.GB173965@redhat.com>
- <87ftc3lxqc.fsf@vitty.brq.redhat.com>
- <20200513184641.GF173965@redhat.com>
- <87zhabdjlm.fsf@vitty.brq.redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id CFEF02065D;
+        Thu, 14 May 2020 13:33:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1589463208;
+        bh=fCSUwMf7Ao1rkoQxej32piTB4hAp14IcBswN1PhYQ8E=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=ay0oyqYKLgSp6hVXVo2r22o8XMbY1zIy/VJmtbHr5lrHw5qWwzVZsmlaKMEQc8N0N
+         26+LBgiiUECDRJuopBcT2loxPskxHPTZ8pcfKiZOHAOKnXDpHTs+xcWmx+GzJNLxFK
+         DrYI7/LeRUGKWZmMqwEP8i96/sB+msaTyI9BbpQA=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 4E69035206A2; Thu, 14 May 2020 06:33:28 -0700 (PDT)
+Date:   Thu, 14 May 2020 06:33:28 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Amol Grover <frextrite@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: Default enable RCU list lockdep debugging with PROVE_RCU
+Message-ID: <20200514133328.GG2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200514222535.259cb69e@canb.auug.org.au>
+ <ADC503BE-32C0-46BB-A65E-59FFEC30ED57@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87zhabdjlm.fsf@vitty.brq.redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ADC503BE-32C0-46BB-A65E-59FFEC30ED57@lca.pw>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 10:08:37AM +0200, Vitaly Kuznetsov wrote:
-> Vivek Goyal <vgoyal@redhat.com> writes:
+On Thu, May 14, 2020 at 08:31:13AM -0400, Qian Cai wrote:
 > 
-> > On Wed, May 13, 2020 at 04:23:55PM +0200, Vitaly Kuznetsov wrote:
-> >
-> > [..]
-> >> >> Also,
-> >> >> kdump kernel may not even support APF so it will get very confused when
-> >> >> APF events get delivered.
-> >> >
-> >> > New kernel can just ignore these events if it does not support async
-> >> > pf? 
-> >> >
-> >> > This is somewhat similar to devices still doing interrupts in new
-> >> > kernel. And solution for that seemed to be doing a "reset" of devices
-> >> > in new kernel. We probably need similar logic where in new kernel
-> >> > we simply disable "async pf" so that we don't get new notifications.
-> >> 
-> >> Right and that's what we're doing - just disabling new notifications.
-> >
-> > Nice.
-> >
-> > So why there is a need to deliver "page ready" notifications
-> > to guest after guest has disabled async pf. Atleast kdump does not
-> > seem to need it. It will boot into second kernel anyway, irrespective
-> > of the fact whether it receives page ready or not.
 > 
-> We don't deliver anything to the guest after it disables APF (neither
-> 'page ready' for what was previously missing, nor 'page not ready' for
-> new faults), kvm_arch_can_inject_async_page_present() is just another
-> misnomer, it should be named something like
-> 'kvm_arch_can_unqueue_async_page_present()' meaning that 'page ready'
-> notification can be 'unqueued' from internal KVM queue. We will either
-> deliver it (when guest has APF enabled) or just drop it (when guest has
-> APF disabled). The only case when it has to stay in the queue is when
-> guest has APF enabled and the slot is still busy (so it didn't get to
-> process a previously delivered notification). We will try to deliver it
-> again after guest writes to MSR_KVM_ASYNC_PF_ACK.
+> > On May 14, 2020, at 8:25 AM, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > 
+> > Hi Paul,
+> > 
+> > This patch in the rcu tree
+> > 
+> >  d13fee049fa8 ("Default enable RCU list lockdep debugging with PROVE_RCU")
+> > 
+> > is causing whack-a-mole in the syzbot testing of linux-next.  Because
+> > they always do a debug build of linux-next, no testing is getting done. :-(
+> > 
+> > Can we find another way to find all the bugs that are being discovered
+> > (very slowly)?
+> 
+> Alternatively, could syzbot to use PROVE_RCU=n temporarily because it can’t keep up with it? I personally found PROVE_RCU_LIST=y is still useful for my linux-next testing, and don’t want to lose that coverage overnight.
 
-This makes sense. Renaming this function to make it more clear will
-help understanding code better.
+The problem is that PROVE_RCU is exactly PROVE_LOCKING, and asking people
+to test without PROVE_LOCKING is a no-go in my opinion.  But of course
+on the other hand if there is no testing of RCU list lockdep debugging,
+those issues will never be found, let alone fixed.
 
-Vivek
+One approach would be to do as Stephen asks (either remove d13fee049fa8
+or pull it out of -next) and have testers force-enable the RCU list
+lockdep debugging.
 
+Would that work for you?
+
+							Thanx, Paul
