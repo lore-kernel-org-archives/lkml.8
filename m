@@ -2,169 +2,130 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C167C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7365C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 795932065C
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCB912065C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:59:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="O723LZIF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h3ybH72x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbgENT66 (ORCPT
+        id S1729087AbgENT7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:58:58 -0400
-Received: from mail26.static.mailgun.info ([104.130.122.26]:50625 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729031AbgENT64 (ORCPT
+        Thu, 14 May 2020 15:59:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727918AbgENT7R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 15:58:56 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1589486335; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=4BMhupYJpODeOQiXNtxQqXSXYewQj0c5zkqBomiKNvA=; b=O723LZIFuO9ApLyHRA8NwnNeOStoYh34guNonffo1MI21RzC2/Uq7RQTHZxjkQMIvscFZFZz
- Dcv9jDMmZOcVNv3KGyc/t1JxoYrlZvubDoenIKHhL2tiChR+bcIVAKtCow926VkB5OwioWiG
- E0ZFu82ge9HuAP3ya+lrH99EzOU=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5ebda2e961db07dc42de69ba (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 14 May 2020 19:58:33
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D3CA3C432C2; Thu, 14 May 2020 19:58:32 +0000 (UTC)
-Received: from blr-ubuntu-311.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5FE4AC433F2;
-        Thu, 14 May 2020 19:58:28 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5FE4AC433F2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>, Leo Yan <leo.yan@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Tingwei Zhang <tingwei@codeaurora.org>,
-        coresight@lists.linaro.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCHv2 1/2] coresight: etm4x: Add support to skip trace unit power up
-Date:   Fri, 15 May 2020 01:27:55 +0530
-Message-Id: <7f2aeb36979ebfef30ea8356e6aa3111a611d6b5.1589485594.git.saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <cover.1589485594.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1589485594.git.saiprakash.ranjan@codeaurora.org>
+        Thu, 14 May 2020 15:59:17 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 998B5C061A0C;
+        Thu, 14 May 2020 12:59:16 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id l17so270517wrr.4;
+        Thu, 14 May 2020 12:59:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GX62db5RbtdxmRE1tpvcuQzwPjxV9Q6SgfpCbAoUODQ=;
+        b=h3ybH72xJL+TMk9/Kq+QSS6x1TuTMFCBzjRWb8B1CMTkGGw8bw46eLR12XInmwA4Is
+         Jz/TUUSgUINXr3nR/ATcmRV16vXdyX3CFUehDpkSKDKEMj0xNzyq40lvzPvanaAMLZai
+         2zDQRMdjQgIse/SbbnKRN1M2y4q1id+TNgqhblFaCIe1llJUuk9i1dHNrRQnj0NtP1xT
+         ESzMGktRPymxjICSFIl8NX2gvW1qioMrvpVBTSCU1TaUVJqjwTm+SSBRJrngPZBgGdWu
+         Mr15L/JRwzCKkz+a5pBRKanfa1AYOzvKtGnvzR+Z1I2ifROlcpLuyAcTiW8UaKydgKwV
+         M1UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GX62db5RbtdxmRE1tpvcuQzwPjxV9Q6SgfpCbAoUODQ=;
+        b=bFnOBCybZb4BWxZbSYo/pO+Uqfmz+oZpc5XJ/X/1pYPRnRJuFlJrHxGUu/F7fPR/Z3
+         Tg09jUWa7zUvU1ao539A+mHnqkc9n8UonGaBjjZnn87oSdiJc03zO1mpLTh77+qAp5b8
+         rcVEozxm8dHcXcU9koONjy58VigZT1+ldmvIlJyjjaXyK5IuUen0JrdEtZrIYophSES8
+         6D/JFUei1/G5W0MAx1Knx0WmnuOfTj6o84wkAv8te60+jImwFEQoFHRSe59mFwsJNvAL
+         zR3uasomACRcdPpitAUBorPWwZ5TiISD0zVZ0g0eMIzOj8ErgiPImQTpCWz8dZ/jIRO3
+         8fgg==
+X-Gm-Message-State: AOAM532rAkOXBifRCj78vmkWeankBIazUN4W91MqbuVma/5/nR0tjx5Z
+        YvIN5yIiDyolp/4HlJBVRcML1qC0
+X-Google-Smtp-Source: ABdhPJwo3PfdvoWHAOvcwLzyEDtL9tV8gOiTHS6goTXvcE5JmeWn0CxmE4ZZbxoHG39ZHJVQ9PZ+RQ==
+X-Received: by 2002:a5d:4008:: with SMTP id n8mr138181wrp.82.1589486355078;
+        Thu, 14 May 2020 12:59:15 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f28:5200:44a3:4c94:7927:e2e6? (p200300EA8F28520044A34C947927E2E6.dip0.t-ipconnect.de. [2003:ea:8f28:5200:44a3:4c94:7927:e2e6])
+        by smtp.googlemail.com with ESMTPSA id p10sm33814wrn.10.2020.05.14.12.59.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 May 2020 12:59:14 -0700 (PDT)
+Subject: Re: [PATCH] net: phy: Fix c45 no phy detected logic
+To:     Jeremy Linton <jeremy.linton@arm.com>, netdev@vger.kernel.org
+Cc:     andrew@lunn.ch, f.fainelli@gmail.com, linux@armlinux.org.uk,
+        davem@davemloft.net, linux-kernel@vger.kernel.org
+References: <20200514170025.1379981-1-jeremy.linton@arm.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <e1826c60-736f-d496-4c4f-7229efee018b@gmail.com>
+Date:   Thu, 14 May 2020 21:59:07 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200514170025.1379981-1-jeremy.linton@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tingwei Zhang <tingwei@codeaurora.org>
+On 14.05.2020 19:00, Jeremy Linton wrote:
+> The commit "disregard Clause 22 registers present bit..." clears
+> the low bit of the devices_in_package data which is being used
+> in get_phy_c45_ids() to determine if a phy/register is responding
+> correctly. That check is against 0x1FFFFFFF, but since the low
+> bit is always cleared, the check can never be true. This leads to
+> detecting c45 phy devices where none exist.
+> 
+> Lets fix this by also clearing the low bit in the mask to 0x1FFFFFFE.
+> This allows us to continue to autoprobe standards compliant devices
+> without also gaining a large number of bogus ones.
+> 
+> Fixes: 3b5e74e0afe3 ("net: phy: disregard "Clause 22 registers present" bit in get_phy_c45_devs_in_pkg")
+> Cc: Heiner Kallweit <hkallweit1@gmail.com>
+> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+> ---
+>  drivers/net/phy/phy_device.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+> index ac2784192472..b93d984d35cc 100644
+> --- a/drivers/net/phy/phy_device.c
+> +++ b/drivers/net/phy/phy_device.c
+> @@ -723,7 +723,7 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
+>  		if (phy_reg < 0)
+>  			return -EIO;
+>  
+> -		if ((*devs & 0x1fffffff) == 0x1fffffff) {
+> +		if ((*devs & 0x1ffffffe) == 0x1ffffffe) {
+>  			/*  If mostly Fs, there is no device there,
 
-On some Qualcomm Technologies Inc. SoCs like SC7180, there
-exists a hardware errata where the APSS (Application Processor
-SubSystem)/CPU watchdog counter is stopped when the trace unit
-power up ETM register is set (TRCPDCR.PU = 1). Since the ETMs
-share the same power domain as that of respective CPU cores,
-they are powered on when the CPU core is powered on. So we can
-skip powering up of trace unit after checking for this errata
-via new property called "qcom,skip-power-up".
+Looks good to me, it would just be good to extend the comment and explain
+why we exclude bit 0 here.
 
-Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
-Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
----
- drivers/hwtracing/coresight/coresight-etm4x.c | 27 ++++++++++++-------
- drivers/hwtracing/coresight/coresight-etm4x.h |  3 +++
- 2 files changed, 20 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-index fb0f5f4f3a91..b38214326fa4 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-@@ -196,12 +196,14 @@ static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
- 	writel_relaxed(config->vmid_mask0, drvdata->base + TRCVMIDCCTLR0);
- 	writel_relaxed(config->vmid_mask1, drvdata->base + TRCVMIDCCTLR1);
- 
--	/*
--	 * Request to keep the trace unit powered and also
--	 * emulation of powerdown
--	 */
--	writel_relaxed(readl_relaxed(drvdata->base + TRCPDCR) | TRCPDCR_PU,
--		       drvdata->base + TRCPDCR);
-+	if (!drvdata->skip_power_up) {
-+		/*
-+		 * Request to keep the trace unit powered and also
-+		 * emulation of powerdown
-+		 */
-+		writel_relaxed(readl_relaxed(drvdata->base + TRCPDCR) | TRCPDCR_PU,
-+			       drvdata->base + TRCPDCR);
-+	}
- 
- 	/* Enable the trace unit */
- 	writel_relaxed(1, drvdata->base + TRCPRGCTLR);
-@@ -476,10 +478,12 @@ static void etm4_disable_hw(void *info)
- 
- 	CS_UNLOCK(drvdata->base);
- 
--	/* power can be removed from the trace unit now */
--	control = readl_relaxed(drvdata->base + TRCPDCR);
--	control &= ~TRCPDCR_PU;
--	writel_relaxed(control, drvdata->base + TRCPDCR);
-+	if (!drvdata->skip_power_up) {
-+		/* power can be removed from the trace unit now */
-+		control = readl_relaxed(drvdata->base + TRCPDCR);
-+		control &= ~TRCPDCR_PU;
-+		writel_relaxed(control, drvdata->base + TRCPDCR);
-+	}
- 
- 	control = readl_relaxed(drvdata->base + TRCPRGCTLR);
- 
-@@ -1429,6 +1433,9 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
- 			return -ENOMEM;
- 	}
- 
-+	if (fwnode_property_present(dev_fwnode(dev), "qcom,skip-power-up"))
-+		drvdata->skip_power_up = true;
-+
- 	/* Validity for the resource is already checked by the AMBA core */
- 	base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(base))
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x.h b/drivers/hwtracing/coresight/coresight-etm4x.h
-index 4a695bf90582..72c9a55e67df 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x.h
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.h
-@@ -407,6 +407,8 @@ struct etmv4_save_state {
-  * @config:	structure holding configuration parameters.
-  * @save_state:	State to be preserved across power loss
-  * @state_needs_restore: True when there is context to restore after PM exit
-+ * @skip_power_up: Indicates if an implementation can skip powering up
-+ *		   the trace unit.
-  */
- struct etmv4_drvdata {
- 	void __iomem			*base;
-@@ -454,6 +456,7 @@ struct etmv4_drvdata {
- 	struct etmv4_config		config;
- 	struct etmv4_save_state		*save_state;
- 	bool				state_needs_restore;
-+	bool				skip_power_up;
- };
- 
- /* Address comparator access types */
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+>  			 *  then let's continue to probe more, as some
+>  			 *  10G PHYs have zero Devices In package,
+> @@ -733,7 +733,7 @@ static int get_phy_c45_ids(struct mii_bus *bus, int addr, u32 *phy_id,
+>  			if (phy_reg < 0)
+>  				return -EIO;
+>  			/* no device there, let's get out of here */
+> -			if ((*devs & 0x1fffffff) == 0x1fffffff) {
+> +			if ((*devs & 0x1ffffffe) == 0x1ffffffe) {
+>  				*phy_id = 0xffffffff;
+>  				return 0;
+>  			} else {
+> 
 
