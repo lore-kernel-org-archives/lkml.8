@@ -2,103 +2,88 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BB6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F71AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A220206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E75E0206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 11:16:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="flkRAYIJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbgENLPr (ORCPT
+        id S1726582AbgENLQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 07:15:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60458 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbgENLPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 07:15:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3141EB04C;
-        Thu, 14 May 2020 11:15:48 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 8D5B21E12A8; Thu, 14 May 2020 13:15:44 +0200 (CEST)
-Date:   Thu, 14 May 2020 13:15:44 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     ira.weiny@intel.com
-Cc:     linux-ext4@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V1 9/9] Documentation/dax: Update DAX enablement for ext4
-Message-ID: <20200514111544.GG9569@quack2.suse.cz>
-References: <20200514065316.2500078-1-ira.weiny@intel.com>
- <20200514065316.2500078-10-ira.weiny@intel.com>
+        Thu, 14 May 2020 07:16:04 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21950 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726010AbgENLQD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 07:16:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589454962;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=y8RbUxHYnrrR8+JblLME7HF9A4PH2pMKn/uDVIUW1T4=;
+        b=flkRAYIJv8SB41e8jml9aHa7M6qGaNh60UAcc9iwzQywzcRIqu6hRJ/0pytS4a4skGTGS8
+        Iwqn3x93Gi36zUWPQAlvFRfKftZpl9X5VcCWRXGFmqbzSl2rre0iiDH4457Rv1sIWanE4v
+        iLp3/I0DJHAsJyUuEtn1Uy6QFKfGEZk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-283-h-yimdJeMiexqtghCnu3GA-1; Thu, 14 May 2020 07:15:58 -0400
+X-MC-Unique: h-yimdJeMiexqtghCnu3GA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F11E21005512;
+        Thu, 14 May 2020 11:15:56 +0000 (UTC)
+Received: from [10.72.12.111] (ovpn-12-111.pek2.redhat.com [10.72.12.111])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 692D810013D9;
+        Thu, 14 May 2020 11:15:54 +0000 (UTC)
+Subject: Re: netfilter: does the API break or something else ?
+To:     Phil Sutter <phil@nwl.cc>, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Patrick Donnelly <pdonnell@redhat.com>
+References: <cf0d02b2-b1db-7ef6-41b8-7c345b7d53d5@redhat.com>
+ <20200514105422.GO17795@orbyte.nwl.cc>
+From:   Xiubo Li <xiubli@redhat.com>
+Message-ID: <13fdc06c-42b2-7239-7c40-dc4814c5e5c4@redhat.com>
+Date:   Thu, 14 May 2020 19:15:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200514065316.2500078-10-ira.weiny@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200514105422.GO17795@orbyte.nwl.cc>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 13-05-20 23:53:15, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> Update the document to reflect ext4 and xfs now behave the same.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+On 2020/5/14 18:54, Phil Sutter wrote:
+> Hi,
+>
+> On Wed, May 13, 2020 at 11:20:35PM +0800, Xiubo Li wrote:
+>> Recently I hit one netfilter issue, it seems the API breaks or something
+>> else.
+> Just for the record, this was caused by a misconfigured kernel.
 
-Looks good to me. You can add:
+Yeah, thanks Phil for your help.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+BRs
 
-								Honza
+Xiubo
 
-> 
-> ---
-> Changes from RFC:
-> 	Update with ext2 text...
-> ---
->  Documentation/filesystems/dax.txt | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/filesystems/dax.txt b/Documentation/filesystems/dax.txt
-> index 735fb4b54117..265c4f808dbf 100644
-> --- a/Documentation/filesystems/dax.txt
-> +++ b/Documentation/filesystems/dax.txt
-> @@ -25,7 +25,7 @@ size when creating the filesystem.
->  Currently 3 filesystems support DAX: ext2, ext4 and xfs.  Enabling DAX on them
->  is different.
->  
-> -Enabling DAX on ext4 and ext2
-> +Enabling DAX on ext2
->  -----------------------------
->  
->  When mounting the filesystem, use the "-o dax" option on the command line or
-> @@ -33,8 +33,8 @@ add 'dax' to the options in /etc/fstab.  This works to enable DAX on all files
->  within the filesystem.  It is equivalent to the '-o dax=always' behavior below.
->  
->  
-> -Enabling DAX on xfs
-> --------------------
-> +Enabling DAX on xfs and ext4
-> +----------------------------
->  
->  Summary
->  -------
-> -- 
-> 2.25.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+
+> Cheers, Phil
+>
+
