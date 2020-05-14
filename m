@@ -2,185 +2,143 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DATE_IN_PAST_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F011CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E25C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA287206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C8C9205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:08:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FJPRMdQo"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="ZHpBqhG0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgENPIK (ORCPT
+        id S1727891AbgENPIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 11:08:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41464 "EHLO
+        Thu, 14 May 2020 11:08:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbgENPII (ORCPT
+        with ESMTP id S1726240AbgENPIv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 11:08:08 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72ECDC061A0C;
-        Thu, 14 May 2020 08:08:08 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id 79so3358454iou.2;
-        Thu, 14 May 2020 08:08:08 -0700 (PDT)
+        Thu, 14 May 2020 11:08:51 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 445C7C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 08:08:50 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id q9so894062pjm.2
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 08:08:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Gbex69XR4ZtBuJoqVeoYUx9nyFHm1kZR6S5jk554FrE=;
-        b=FJPRMdQokqht7U+y1ela4OESMPvwo+hnpZbq+e01yT4sc7YmX6KhRapTLoooJGnaer
-         no8q5/+yTTtmbVYURRxBEfQhhZ9J+LhKOFz0bqgGBx4PJ2Bw2ftahjLfUzXNEEvP8ccI
-         2pAP6Y2aYPKnolxMJQZEZL2TjJA9jwPSwcgeBX6VoDfVfbkeZdHE4f3iGkIRzsuBERI3
-         b0XGSa3ns7gvk1VcwnfVu1eKrphDamt+YQi9Z3l0nVtOAJFrtU66CW6UaoIx+NrhyDWG
-         bpqevwejD/G29RpG/FpMT46mNvKB9gZs0esEtTpKHnxOjUpQp/TrM51cnY7zblKAAa2T
-         Tr+Q==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=4GWceYLJdSvfpD/nEJEfI5ey8cVcCIdOsUccPiJ0f+g=;
+        b=ZHpBqhG0m51QPbBQAghcB7ijlWVcZJPoBgxlLqjhXfvHNcyjjE0ZeLxjz2LpkZaPSI
+         wfl0maSFHqiH67JXXhCnUZ3tjLB4NubdlCMlUenRyVKFgeRck/51yRG2tu36+oxfV7nZ
+         6vQ5koZy5BvJmCIkqeuI9PJ79ql2l83G9qOpwERUi8j/QTscWO6vRPsfQ6AfVP5LSEGW
+         7lY/WVEBS7PNWMvC/HlBG0Pfzr7P6fH73Niyg3qT2NMaiJ1Z9JHiq2QPJrBSuiDO82jE
+         88DIjStmeJnA9xXJC8lNUf7s0doE706rROSri9ZaB9hKL2Rf4PrNL++m1IANj0RrOHAm
+         TLHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Gbex69XR4ZtBuJoqVeoYUx9nyFHm1kZR6S5jk554FrE=;
-        b=M3wnIGSuqEf/qElsJ2WUpn2RRaXc3cntoA1CwXzU51tnS1ApY+QV+CVJDqaY0/SbaS
-         UeEGqmvBlTpzPbXxysWj5Xo0HEw5lzkMSDI1BcrkwkWDvWNAgyPp5nAO3lEJKnPBktOz
-         X3bZMiEtf+0RX5LRWSG57/+o9lgeDy+8DT9PPCea2lwKpMZ9CYxJEWEigp5rhVo6HUIO
-         vH1Y3uB76cV/FXU4ymPHjk1VipvTtH+rImpeOOGoddhgNtIwmPOZ8bejzzt5sErQnhld
-         YsIKFi4oJx7x6uIJQ92bNry1nRHlxBoS/8KUkf4oJreeKD8R5QWdpZh9HCilYIzigmHP
-         nozQ==
-X-Gm-Message-State: AOAM5300q5phDhsOdufNkig62F0I6Oz8vysH8qLAPGztnqR8yo7D4Gwf
-        LF8YfkYG3NGflJqKS5rerIUELXd5FAZCMTFLSeo=
-X-Google-Smtp-Source: ABdhPJxG7GXTkoxbTPKumJL1X0BkUdzHfDr7LxNY1mkd2t1RPi+rTYGSq8vStSCW40203NqyVRJ+wEEs4doBgLVXPhg=
-X-Received: by 2002:a5d:8b8e:: with SMTP id p14mr4506860iol.110.1589468887821;
- Thu, 14 May 2020 08:08:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <1589269010-18472-1-git-send-email-dillon.minfei@gmail.com>
- <1589269010-18472-3-git-send-email-dillon.minfei@gmail.com> <da9fbb80-571d-1217-4028-e413a0c7db84@st.com>
-In-Reply-To: <da9fbb80-571d-1217-4028-e413a0c7db84@st.com>
-From:   dillon min <dillon.minfei@gmail.com>
-Date:   Thu, 14 May 2020 15:07:32 +0800
-Message-ID: <CAL9mu0KJ0j6Rxf7YjKxVWKz_d+B6vrwqqxJM-fmzG=NonLeDYQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] ARM: dts: stm32: enable l3gd20 on stm32429-disco board
-To:     Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Mark Brown <broonie@kernel.org>, p.zabel@pengutronix.de,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Hua Dillon <dillonhua@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=4GWceYLJdSvfpD/nEJEfI5ey8cVcCIdOsUccPiJ0f+g=;
+        b=IDjRGIRP7bQppRwPblc+pbKRgIxpjf4kxWXcfKM6HGx+Ts5lA+BnTZ4dqkxNlQoCAG
+         NuC659Nyl6PpOmarSuJLZ5OCfYt8VBddJF50QAeVFOF3pIZqLh3Mna7OhKzndInkKgIU
+         /J6UYvTf0AMdKrdMcesy3y4pccnxghF+M6AbD5Gl5DIizwtyEatfUF+kb67WdTmL87s0
+         DS9F0cWzPKXT8zSqB8vkTHtH4SRpgOPyWNGWHa9Rs8YKjqFjTYhkMOMd6QjtBnYa1a+n
+         VJwtgcjBB/7zweRRRDkxyTGM+rNNozVZ8Cv+qe4T9pY32Jnyx7hMd0gazbTQVuyK7L1l
+         tUoA==
+X-Gm-Message-State: AOAM533xM1xCVTFRc8SoJK90LyytFyQTPQ9T8GU44awWd6QDZQTaqgFo
+        N8GB20GLLHLs41ocXue8TS7R8A==
+X-Google-Smtp-Source: ABdhPJy2kpemGwELXXHbWwBr3CJp48A4SCCSACjEtGu0Wf8H+JphPNS/CoKn97mBSVju6wmYc2gP4g==
+X-Received: by 2002:a17:90a:f994:: with SMTP id cq20mr4309344pjb.52.1589468929278;
+        Thu, 14 May 2020 08:08:49 -0700 (PDT)
+Received: from ?IPv6:2600:1010:b044:c0a6:fc3e:abd:d4e0:e1e4? ([2600:1010:b044:c0a6:fc3e:abd:d4e0:e1e4])
+        by smtp.gmail.com with ESMTPSA id p66sm2495160pfb.65.2020.05.14.08.08.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 May 2020 08:08:48 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [patch V4 part 4 02/24] x86/int3: Avoid atomic instrumentation
+Date:   Thu, 14 May 2020 08:08:46 -0700
+Message-Id: <B72D7A5A-B54A-4128-9EB3-BF85E74DA5B1@amacapital.net>
+References: <878shuzhcx.fsf@nanos.tec.linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <JGross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>
+In-Reply-To: <878shuzhcx.fsf@nanos.tec.linutronix.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+X-Mailer: iPhone Mail (17E262)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexandre,
 
-Alexandre Torgue <alexandre.torgue@st.com> =E4=BA=8E2020=E5=B9=B45=E6=9C=88=
-14=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=8810:10=E5=86=99=E9=81=93=EF=
-=BC=9A
->
-> Hi Dillon
->
-> On 5/12/20 9:36 AM, dillon.minfei@gmail.com wrote:
-> > From: dillon min <dillon.minfei@gmail.com>
-> >
-> > L3gd20, st mems motion sensor, 3-axis digital output gyroscope,
-> > connect to stm32f429 via spi5
-> >
-> > Signed-off-by: dillon min <dillon.minfei@gmail.com>
-> > ---
-> >
-> > Hi Alexandre,
-> >
-> > V2:
-> >      1, insert blank line at stm32f420-disco.dts line 143
-> >      2, add more description about l3gd20 in commit message
-> >
-> > V1:
-> >      enable l3gd20 dts binding on stm32f429-disco
-> >
-> > thanks.
-> >
-> > dillon,
-> >
-> >   arch/arm/boot/dts/stm32f429-disco.dts | 25 +++++++++++++++++++++++++
-> >   1 file changed, 25 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/=
-stm32f429-disco.dts
-> > index 30c0f67..1bfb903 100644
-> > --- a/arch/arm/boot/dts/stm32f429-disco.dts
-> > +++ b/arch/arm/boot/dts/stm32f429-disco.dts
-> > @@ -49,6 +49,8 @@
-> >   #include "stm32f429.dtsi"
-> >   #include "stm32f429-pinctrl.dtsi"
-> >   #include <dt-bindings/input/input.h>
-> > +#include <dt-bindings/interrupt-controller/irq.h>
-> > +#include <dt-bindings/gpio/gpio.h>
-> >
-> >   / {
-> >       model =3D "STMicroelectronics STM32F429i-DISCO board";
-> > @@ -127,3 +129,26 @@
-> >       pinctrl-names =3D "default";
-> >       status =3D "okay";
-> >   };
-> > +
-> > +&spi5 {
-> > +     status =3D "okay";
-> > +     pinctrl-0 =3D <&spi5_pins>;
-> > +     pinctrl-names =3D "default";
-> > +     #address-cells =3D <1>;
-> > +     #size-cells =3D <0>;
-> > +     cs-gpios =3D <&gpioc 1 GPIO_ACTIVE_LOW>;
-> > +     dmas =3D <&dma2 3 2 0x400 0x0>,
-> > +            <&dma2 4 2 0x400 0x0>;
-> > +     dma-names =3D "rx", "tx";
-> > +
->
-> You added this spi5 node in this patch but also in the display series. I
-> will have issue to merge. Even if I could fix it easily, as you are
-> going to resend, the good practice could be to have several patches in
-> one series: one patch for spi5 controller, another for gyro and another
-> for display.
->
-> And also same remark than Linus did in display series move DMA to soc
-> dtsi file please.
 
-Sure, how about this patch sequence:
-1 add spi5 dma to soc (stm32f429.dtsi)
-2 add pin map for spi5 (stm32f4-pinctrl.dtsi)
-3 add spi5 controller with gyro (stm32f429-disco.dts)
-4 add spi modification to support gyro (spi-stm32.c)
+> On May 14, 2020, at 8:06 AM, Thomas Gleixner <tglx@linutronix.de> wrote:
+>=20
+> =EF=BB=BFPeter Zijlstra <peterz@infradead.org> writes:
+>>> On Thu, May 14, 2020 at 02:51:32PM +0200, Thomas Gleixner wrote:
+>>> Peter Zijlstra <peterz@infradead.org> writes:
+>>>> On Wed, May 13, 2020 at 09:57:52PM -0700, Andy Lutomirski wrote:
+>>>>> On Tue, May 5, 2020 at 7:15 AM Thomas Gleixner <tglx@linutronix.de> wr=
+ote:
+>>>>>>=20
+>>>>>> From: Peter Zijlstra <peterz@infradead.org>
+>>>>>>=20
+>>>>>> Use arch_atomic_*() and READ_ONCE_NOCHECK() to ensure nothing untowar=
+d
+>>>>>> creeps in and ruins things.
+>>>>>>=20
+>>>>>> That is; this is the INT3 text poke handler, strictly limit the code
+>>>>>> that runs in it, lest it inadvertenly hits yet another INT3.
+>>>>>=20
+>>>>>=20
+>>>>> Acked-by: Andy Lutomirski <luto@kernel.org>
+>>>>>=20
+>>>>> Does objtool catch this error?
+>>>>=20
+>>>> It does not. I'll put it on the (endless) todo list..
+>>>=20
+>>> Well, at least it detects when that code calls out into something which
+>>> is not in the non-instrumentable section.
+>>=20
+>> True, but the more specific problem is that noinstr code can use
+>> jump_label/static_call just fine.
+>>=20
+>> So a more specific test is validating none of that happens in the INT3
+>> handler before poke_int3_handler(). Which is what I think Andy was
+>> after.
+>=20
+> Indeed. Forgot about that one.
+>=20
+> Hmm, alternatives and jumplabel patch locations in entry.text and
+> noinstr.text can be valid at least during early boot where we know that
+> we don't run those code pathes...
 
-5 add ltdc pin map for stm32f429-disco board (stm32f4-pinctrl.dtsi)
-6 add ilitek-ili9341 dts bindings for disco (stm32f429-disco.dts,
-depends on above step 3)
-7 add yaml document about ilitek-ili9341 (ilitek,ili9341.yaml)
-8 add clk changes to support ltdc driver (clk-stm32f4.c)
+Alternatives should be valid regardless. Isn=E2=80=99t the world essentially=
+ stopped while we apply them?
 
-so, i will combine gyro and display two patches to one patchset next
-time. right ?
-
-thanks.
->
->
-> > +     l3gd20: l3gd20@0 {
-> > +             compatible =3D "st,l3gd20-gyro";
-> > +             spi-max-frequency =3D <10000000>;
-> > +             st,drdy-int-pin =3D <2>;
-> > +             interrupt-parent =3D <&gpioa>;
-> > +             interrupts =3D <1 IRQ_TYPE_EDGE_RISING>,
-> > +                             <2 IRQ_TYPE_EDGE_RISING>;
-> > +             reg =3D <0>;
-> > +             status =3D "okay";
-> > +     };
-> > +};
-> >
+>=20
+> Thanks,
+>=20
+>        tglx
