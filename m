@@ -2,181 +2,152 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 752EEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C537C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57209205CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:00:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XILpPMuJ"
+	by mail.kernel.org (Postfix) with ESMTP id 0720C205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:00:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgENPAZ (ORCPT
+        id S1728055AbgENPA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 11:00:25 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50410 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727991AbgENPAW (ORCPT
+        Thu, 14 May 2020 11:00:29 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:60264 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727991AbgENPA1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 11:00:22 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04EF04GF032483;
-        Thu, 14 May 2020 10:00:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1589468404;
-        bh=bDHfeg2mPHd8gN2CoYU7iU5rAUI8DfJtiyLth9bqm8Q=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=XILpPMuJnHCkbsdfHqkWOg9NpMw2zFY8iYdg5WcRu8E48J//kLV6GRNQCHRS2LgKw
-         5VBvswXO0u+Q66POCghVoQmZmgDky622apKVGwJzAHjiQsTB8lAvhMhevkqM9Dmybu
-         SCBw6b7HCWvshLaqcyIJGMfqwBzrdbljV5O2x7Fs=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04EF03Ti127742;
-        Thu, 14 May 2020 10:00:04 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 14
- May 2020 10:00:01 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 14 May 2020 10:00:01 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04EExgAl019279;
-        Thu, 14 May 2020 09:59:57 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>, <linux-pci@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-ntb@googlegroups.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 03/19] PCI: endpoint: Add API to get reference to EPC from device-tree
-Date:   Thu, 14 May 2020 20:29:11 +0530
-Message-ID: <20200514145927.17555-4-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200514145927.17555-1-kishon@ti.com>
-References: <20200514145927.17555-1-kishon@ti.com>
+        Thu, 14 May 2020 11:00:27 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jZFLM-0008Eb-OC; Thu, 14 May 2020 09:00:16 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jZFLI-0002l2-0S; Thu, 14 May 2020 09:00:16 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+References: <87eerszyim.fsf_-_@x220.int.ebiederm.org>
+        <ee83587b-8a1c-3c4f-cc0f-7bc98afabae1@I-love.SAKURA.ne.jp>
+        <CAHk-=wgQ2ovXMW=5ZHCpowkE1PwPQSL7oV4YXzBxd6eqNRXxnQ@mail.gmail.com>
+        <87sgg6v8we.fsf@x220.int.ebiederm.org>
+        <202005111428.B094E3B76A@keescook>
+        <874kslq9jm.fsf@x220.int.ebiederm.org>
+        <202005121218.ED0B728DA@keescook>
+        <87lflwq4hu.fsf@x220.int.ebiederm.org>
+        <202005121606.5575978B@keescook> <202005121625.20B35A3@keescook>
+        <202005121649.4ED677068@keescook>
+Date:   Thu, 14 May 2020 09:56:36 -0500
+In-Reply-To: <202005121649.4ED677068@keescook> (Kees Cook's message of "Tue,
+        12 May 2020 16:51:29 -0700")
+Message-ID: <87sgg2ftuj.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-XM-SPF: eid=1jZFLI-0002l2-0S;;;mid=<87sgg2ftuj.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX184UonXunbqRpJTjGc7cdgy0PX4+YlZfjw=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 3/5] exec: Remove recursion from search_binary_handler
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add of_pci_epc_get() and of_pci_epc_get_by_name() to get reference
-to EPC from device-tree. This is added in preparation to define
-an endpoint function device in device tree.
+Kees Cook <keescook@chromium.org> writes:
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/endpoint/pci-epc-core.c | 61 +++++++++++++++++++++++++++++
- include/linux/pci-epc.h             |  3 ++
- 2 files changed, 64 insertions(+)
+> On Tue, May 12, 2020 at 04:47:14PM -0700, Kees Cook wrote:
+>> And now I wonder if qemu actually uses the resulting AT_EXECFD ...
+>
+> It does, though I'm not sure if this is to support crossing mount points,
+> dropping privileges, or something else, since it does fall back to just
+> trying to open the file.
+>
+>     execfd = qemu_getauxval(AT_EXECFD);
+>     if (execfd == 0) {
+>         execfd = open(filename, O_RDONLY);
+>         if (execfd < 0) {
+>             printf("Error while loading %s: %s\n", filename, strerror(errno));
+>             _exit(EXIT_FAILURE);
+>         }
+>     }
 
-diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index 82ba0dc7f2f5..177a3fc1a0dd 100644
---- a/drivers/pci/endpoint/pci-epc-core.c
-+++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -83,6 +83,66 @@ struct pci_epc *pci_epc_get(const char *epc_name)
- }
- EXPORT_SYMBOL_GPL(pci_epc_get);
- 
-+/**
-+ * of_pci_epc_get() - get PCI endpoint controller from device node and index
-+ * @node: device node which contains the phandle to endpoint controller
-+ * @index: index of the endpoint controller in "epcs" property
-+ *
-+ * Returns the EPC corresponding to the _index_ entry in "epcs" property
-+ * present in device node, after getting a refcount  to it or -ENODEV if
-+ * there is no such EPC or -EPROBE_DEFER if there is a phandle to the phy,
-+ * but the device is not yet loaded.
-+ */
-+struct pci_epc *of_pci_epc_get(struct device_node *node, int index)
-+{
-+	struct device_node *epc_node;
-+	struct class_dev_iter iter;
-+	struct pci_epc *epc;
-+	struct device *dev;
-+
-+	epc_node = of_parse_phandle(node, "epcs", index);
-+	if (!epc_node)
-+		return ERR_PTR(-ENODEV);
-+
-+	class_dev_iter_init(&iter, pci_epc_class, NULL, NULL);
-+	while ((dev = class_dev_iter_next(&iter))) {
-+		epc = to_pci_epc(dev);
-+		if (epc_node != epc->dev.of_node)
-+			continue;
-+
-+		of_node_put(epc_node);
-+		class_dev_iter_exit(&iter);
-+		get_device(&epc->dev);
-+		return epc;
-+	}
-+
-+	of_node_put(epc_node);
-+	class_dev_iter_exit(&iter);
-+	return ERR_PTR(-EPROBE_DEFER);
-+}
-+EXPORT_SYMBOL_GPL(of_pci_epc_get);
-+
-+/**
-+ * of_pci_epc_get_by_name() - get PCI endpoint controller from device node
-+ *                            and string
-+ * @node: device node which contains the phandle to endpoint controller
-+ * @epc_name: name of endpoint controller as present in "epc-names" property
-+ *
-+ * Returns the EPC corresponding to the epc_name in "epc-names" property
-+ * present in device node.
-+ */
-+struct pci_epc *of_pci_epc_get_by_name(struct device_node *node,
-+				       const char *epc_name)
-+{
-+	int index = 0;
-+
-+	if (epc_name)
-+		index = of_property_match_string(node, "epc-names", epc_name);
-+
-+	return of_pci_epc_get(node, index);
-+}
-+EXPORT_SYMBOL_GPL(of_pci_epc_get_by_name);
-+
- /**
-  * pci_epc_get_first_free_bar() - helper to get first unreserved BAR
-  * @epc_features: pci_epc_features structure that holds the reserved bar bitmap
-@@ -629,6 +689,7 @@ __pci_epc_create(struct device *dev, const struct pci_epc_ops *ops,
- 	device_initialize(&epc->dev);
- 	epc->dev.class = pci_epc_class;
- 	epc->dev.parent = dev;
-+	epc->dev.of_node = dev->of_node;
- 	epc->ops = ops;
- 
- 	ret = dev_set_name(&epc->dev, "%s", dev_name(dev));
-diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-index cc66bec8be90..dd3c2d566c3d 100644
---- a/include/linux/pci-epc.h
-+++ b/include/linux/pci-epc.h
-@@ -211,6 +211,9 @@ int pci_epc_mem_init(struct pci_epc *epc, phys_addr_t base,
- int pci_epc_multi_mem_init(struct pci_epc *epc,
- 			   struct pci_epc_mem_window *window,
- 			   unsigned int num_windows);
-+struct pci_epc *of_pci_epc_get(struct device_node *node, int index);
-+struct pci_epc *of_pci_epc_get_by_name(struct device_node *node,
-+				       const char *epc_name);
- void pci_epc_mem_exit(struct pci_epc *epc);
- void __iomem *pci_epc_mem_alloc_addr(struct pci_epc *epc,
- 				     phys_addr_t *phys_addr, size_t size);
--- 
-2.17.1
+My hunch is that the fallback exists from a time when the kernel did not
+implement AT_EXECFD, or so that qemu can run on kernels that don't
+implement AT_EXECFD.  It doesn't really matter unless the executable is
+suid, or otherwise changes privileges.
+
+
+I looked into this a bit to remind myself why exec works the way it
+works, with changing privileges.
+
+The classic attack is pointing a symlink at a #! script that is suid or
+otherwise changes privileges.  The kernel will open the script and set
+the privileges, read the interpreter from the first line, and proceed to
+exec the interpreter.  The interpreter will then open the script using
+the pathname supplied by the kernel.  The name of the symlink.
+Before the interpreter reopens the script the attack would replace
+the symlink with a script that does something else, but gets to run
+with the privileges of the script.
+
+
+Defending against that time of check vs time of use attack is why
+bprm_fill_uid, and cap_bprm_set_creds use the credentials derived from
+the interpreter instead of the credentials derived from the script.
+
+
+The other defense is to replace the pathname of the executable that the
+intepreter will open with /dev/fd/N.
+
+All of this predates Linux entirely.  I do remember this was fixed at
+some point in Linux but I don't remember the details.  I can just read
+the solution that was picked in the code.
+
+
+
+All of this makes me wonder how are the LSMs protected against this
+attack.
+
+Let's see the following LSMS implement brpm_set_creds:
+tomoyo   - Abuses bprm_set_creds to call tomoyo_load_policy [ safe ]
+smack    - Requires CAP_MAC_ADMIN to smack setxattrs        [ vulnerable? ]
+           Uses those xattrs in smack_bprm_set_creds
+apparmor - Everything is based on names so the symlink      [ safe? ]
+           attack won't work as it has the wrong name.
+           As long as the trusted names can't be renamed
+           apparmor appears good.
+selinux  - Appears to let anyone set selinux xattrs         [ safe? ]
+           Requires permission for a sid transfer
+           As the attack appears not to allow anything that
+           would not be allowed anyway it looks like selinux
+           is safe.
+
+LSM folks, especially Casey am I reading this correctly?  Did I
+correctly infer how your LSMs deal with the time of check to time of use
+attack on the script name?
+
+Eric
 
