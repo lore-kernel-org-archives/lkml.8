@@ -2,105 +2,140 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30117C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CF0C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BE5720748
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:34:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="NKfqO3cB"
+	by mail.kernel.org (Postfix) with ESMTP id 77A1920728
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 15:35:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgENPeV (ORCPT
+        id S1727830AbgENPf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 11:34:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726056AbgENPeU (ORCPT
+        Thu, 14 May 2020 11:35:56 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64534 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726117AbgENPf4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 11:34:20 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4388DC061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 08:34:20 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id t9so12714819pjw.0
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 08:34:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pHBtRb+khIWZrefMw1X6pZevwAXg2al9wRn3xvVihy0=;
-        b=NKfqO3cBoDTJpRGDur9/vcfgahx0lBedFqcgsjMK5GrbeaiqjKRKo69vkHmriZS2YU
-         41ZEqi2d3AA/wTkGLGuHxDFYqqPbROqzoN6W3+cKiL295Y2PywCH80nC5qzvJooEBQzF
-         gfb59SXnKKXMNi24xbx5OWXcIGgMND1y38Y8Diz+rgTR2BZLBDczGNu2karytqb+DHyi
-         WgXg3n/PHRZikL+qMeQWro/Tmr34EPbgqMl7Lt6Xh9/w3LgSDcD8mQVCrgZ8VQF2TCwn
-         IofsrNrRQrSnR64lPkQf37JEaxZBwr6y6+yApHCSytNjb6sQLDNwGEp+dlYiDiIjqg1y
-         golw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pHBtRb+khIWZrefMw1X6pZevwAXg2al9wRn3xvVihy0=;
-        b=B3ZQLqQWdPjL0Bgc7VlnIrIP+1LYJMyCFc4JjkmD/F4TWvRt/Q3HhYtzuGjMGVyXdA
-         KgPuBJyf9CPgekyGecalXZfGTFk8JkCbbCf6e3afJNIriDO2cSSxAvj9SL49TlZj9gnZ
-         Nww9ev3K/eKM5YEb6McQ0CFdSw70GNM81PaxEBoQybThQkt6vb/8aJ19Pk2Jpa9z83iu
-         yX9oE+1UPqePvxQ6D+lq97jpgbT0RMZ6eAJVofMQ9B+/5D2rSgfX2agbDRrX6G7fEOwN
-         2sXjNB2nSW+8es45qrGBzZlcClY6/PsuIkGKheKE0PWDr/gZS/TNf1eqocwNsdipHEzL
-         KOAw==
-X-Gm-Message-State: AOAM531YQVjCOlIudORKLPWe1uaV+Awt1J1hOWmfECMxd0Zefj5QOIo7
-        MXjRQ4N4M4HzKes6H7RjEBDZrw==
-X-Google-Smtp-Source: ABdhPJxQeND4OmYcB5YLpPsjAyico6RefXvZ40FYUlf8Ik8uL8AM1uknT2uGEy9hWNhk3iyew0TVrA==
-X-Received: by 2002:a17:90a:358c:: with SMTP id r12mr10677883pjb.161.1589470459745;
-        Thu, 14 May 2020 08:34:19 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:85e7:ddeb:bb07:3741? ([2605:e000:100e:8c61:85e7:ddeb:bb07:3741])
-        by smtp.gmail.com with ESMTPSA id k4sm2339675pgg.88.2020.05.14.08.34.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 May 2020 08:34:18 -0700 (PDT)
-Subject: Re: [PATCH block/for-linus] iocost: don't let vrate run wild while
- there's no saturation signal
-To:     Tejun Heo <tj@kernel.org>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, newella@fb.com
-References: <20191015001811.GI18794@devbig004.ftw2.facebook.com>
- <20200514145114.GG16815@mtj.duckdns.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <c3ea36e8-b888-4db0-0333-936523c98476@kernel.dk>
-Date:   Thu, 14 May 2020 09:34:17 -0600
+        Thu, 14 May 2020 11:35:56 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04EFWcfO134212;
+        Thu, 14 May 2020 11:35:48 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 310v92ywww-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 May 2020 11:35:47 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04EFWpfh135593;
+        Thu, 14 May 2020 11:35:47 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 310v92ywv4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 May 2020 11:35:47 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 04EFYjkt025388;
+        Thu, 14 May 2020 15:35:43 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma03fra.de.ibm.com with ESMTP id 3100ub1k6p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 14 May 2020 15:35:43 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04EFZeog64225342
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 14 May 2020 15:35:40 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6C02EA4064;
+        Thu, 14 May 2020 15:35:40 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 749B0A4054;
+        Thu, 14 May 2020 15:35:38 +0000 (GMT)
+Received: from [9.85.86.4] (unknown [9.85.86.4])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 14 May 2020 15:35:38 +0000 (GMT)
+Subject: Re: [RFC 1/1] Weighted approach to gather and use history in TEO
+ governor
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Doug Smythies <dsmythies@telus.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
+        pratik.sampat@in.ibm.com, pratik.r.sampat@gmail.com
+References: <20200511141055.43029-1-psampat@linux.ibm.com>
+ <20200511141055.43029-2-psampat@linux.ibm.com>
+ <20200512173722.GM2978@hirez.programming.kicks-ass.net>
+ <09b8bf40-e371-e1eb-d77e-6c676f22dd29@linux.ibm.com>
+ <CAJZ5v0jOGRQv1EUEhkba30OKuS8aupdoGConKJH9C=R6DxptFA@mail.gmail.com>
+From:   Pratik Sampat <psampat@linux.ibm.com>
+Message-ID: <47e3d97d-7dd3-85f5-d790-42b95760c64e@linux.ibm.com>
+Date:   Thu, 14 May 2020 21:05:37 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200514145114.GG16815@mtj.duckdns.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <CAJZ5v0jOGRQv1EUEhkba30OKuS8aupdoGConKJH9C=R6DxptFA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-14_05:2020-05-14,2020-05-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 cotscore=-2147483648
+ impostorscore=0 suspectscore=0 phishscore=0 adultscore=0 mlxscore=0
+ mlxlogscore=999 spamscore=0 clxscore=1015 bulkscore=0 priorityscore=1501
+ lowpriorityscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005140133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/14/20 8:51 AM, Tejun Heo wrote:
-> On Mon, Oct 14, 2019 at 05:18:11PM -0700, Tejun Heo wrote:
->> When the QoS targets are met and nothing is being throttled, there's
->> no way to tell how saturated the underlying device is - it could be
->> almost entirely idle, at the cusp of saturation or anywhere inbetween.
->> Given that there's no information, it's best to keep vrate as-is in
->> this state.  Before 7cd806a9a953 ("iocost: improve nr_lagging
->> handling"), this was the case - if the device isn't missing QoS
->> targets and nothing is being throttled, busy_level was reset to zero.
-> ...
->> Signed-off-by: Tejun Heo <tj@kernel.org>
->> Reported-by: Andy Newell <newella@fb.com>
->> Fixes: 7cd806a9a953 ("iocost: improve nr_lagging handling")
-> 
-> Jens, this one fell through the cracks. It still applies with only a small
-> offset. Can you please apply?
 
-Looks like it did, queued up for 5.8 now.
 
--- 
-Jens Axboe
+On 13/05/20 8:19 pm, Rafael J. Wysocki wrote:
+> On Wed, May 13, 2020 at 7:31 AM Pratik Sampat <psampat@linux.ibm.com> wrote:
+>> Thanks for your comment.
+>>
+>>
+>> On 12/05/20 11:07 pm, Peter Zijlstra wrote:
+>>> Just a quick note..
+>>>
+>>> On Mon, May 11, 2020 at 07:40:55PM +0530, Pratik Rajesh Sampat wrote:
+>>>
+>>>> +    /*
+>>>> +     * Rearrange the weight distribution of the state, increase the weight
+>>>> +     * by the LEARNING RATE % for the idle state that was supposed to be
+>>>> +     * chosen and reduce by the same amount for rest of the states
+>>>> +     *
+>>>> +     * If the weights are greater than (100 - LEARNING_RATE) % or lesser
+>>>> +     * than LEARNING_RATE %, do not increase or decrease the confidence
+>>>> +     * respectively
+>>>> +     */
+>>>> +    for (i = 0; i < drv->state_count; i++) {
+>>>> +            unsigned int delta;
+>>>> +
+>>>> +            if (idx == -1)
+>>>> +                    break;
+>>>> +            if (i ==  idx) {
+>>>> +                    delta = (LEARNING_RATE * cpu_data->state_mat[last_idx][i]) / 100;
+>>> 100 is a crap number to divide by as a computer. We bio-puddings happend
+>>> to have 10 digits, so 100 makes sense to us, but it does not to our
+>>> binary friends.
+>>>
+>>>
+>> Absolutely! I just wrote the code exactly the way I did the Math on paper,
+>> definitely need to figure out an optimal way of doing things.
+> There is no particular reason to use percent in computations at all.
+> You may as well use 1/1024 parts instead (and then use shifts instead
+> of divisions).
+
+Yes you're right. Looking at it now the whole percent system and divisions
+does seem quite unnecessary and we can achieve it rather with bitwise
+operations.
+
+Thanks!
 
