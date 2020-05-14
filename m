@@ -2,98 +2,71 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBA9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CAA4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4C0E206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:27:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589437674;
-	bh=ZZL/VqoacdeBCG/xZqKQotkNP7fuRxsK35yGhyyUx20=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=soOCu7Id5iFZiRUw1QN2DizXkevVBfLUvzhkEQjQQBtwavmY5r3V1hn6Kko/MCL7j
-	 i0y5YBgKul+MKPYQ61s/XNqZffQMYDXOJ5M5MgUebvjU3OnsJBz9EEZOeOQyqA3WAo
-	 Z3WVVAlQnvebbTVfse1owOT+gIL+RxcjfmDXJAOc=
+	by mail.kernel.org (Postfix) with ESMTP id 1EE64206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:28:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726145AbgENG1y (ORCPT
+        id S1726117AbgENG2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 02:27:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51222 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 02:28:24 -0400
+Received: from verein.lst.de ([213.95.11.211]:50237 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbgENG1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 02:27:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AEED206B6;
-        Thu, 14 May 2020 06:27:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589437672;
-        bh=ZZL/VqoacdeBCG/xZqKQotkNP7fuRxsK35yGhyyUx20=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VGwF8ASJoWP8ykgSGEL/7yAp6tuDZFLCWd4GHadPK/Jy0EBZUBanEEfCeTEKkWSl/
-         gTpl4Q/qikRRcaE8ItuVW2nz+/MdymI14MUHKX8IVb5daWtH8bphPFAUaSuXKS/9ww
-         ky/9xD1YMqx6jyqbMhrZX2Kyl0nxHS2VmJkHP6fo=
-Date:   Thu, 14 May 2020 08:27:50 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+353be47c9ce21b68b7ed@syzkaller.appspotmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>, jeremy.linton@arm.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, x86@kernel.org
-Subject: Validating dma_mmap_coherent() parameters before calling (was Re:
- WARNING in memtype_reserve)
-Message-ID: <20200514062750.GA1488715@kroah.com>
-References: <000000000000f0d8d205a531f1a3@google.com>
- <20200509074507.GC1831917@kroah.com>
- <87wo5l4ecm.fsf@nanos.tec.linutronix.de>
- <20200513124445.GA1082735@kroah.com>
- <87zhab249p.fsf@nanos.tec.linutronix.de>
- <20200514035458.14760-1-hdanton@sina.com>
- <20200514061417.GA8367@lst.de>
+        id S1725818AbgENG2X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 02:28:23 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 8CB5568C65; Thu, 14 May 2020 08:28:20 +0200 (CEST)
+Date:   Thu, 14 May 2020 08:28:20 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Jon Maloy <jmaloy@redhat.com>,
+        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-nvme@lists.infradead.org,
+        target-devel@vger.kernel.org, linux-afs@lists.infradead.org,
+        linux-cifs@vger.kernel.org, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, netdev@vger.kernel.org,
+        linux-sctp@vger.kernel.org, ceph-devel@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 27/33] sctp: export sctp_setsockopt_bindx
+Message-ID: <20200514062820.GC8564@lst.de>
+References: <20200513062649.2100053-1-hch@lst.de> <20200513062649.2100053-28-hch@lst.de> <20200513180058.GB2491@localhost.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200514061417.GA8367@lst.de>
+In-Reply-To: <20200513180058.GB2491@localhost.localdomain>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 08:14:17AM +0200, Christoph Hellwig wrote:
-> Guys, can you please start formal thread on this?  I have no
-> idea where this came from and what the rationale is.  Btw, if the
-> pfn is crap in dma_direct_mmap then the dma_addr_t passed in is
-> crap, as it is derived from that.  What is the caller, and how is
-> this triggered?
+On Wed, May 13, 2020 at 03:00:58PM -0300, Marcelo Ricardo Leitner wrote:
+> On Wed, May 13, 2020 at 08:26:42AM +0200, Christoph Hellwig wrote:
+> > And call it directly from dlm instead of going through kernel_setsockopt.
+> 
+> The advantage on using kernel_setsockopt here is that sctp module will
+> only be loaded if dlm actually creates a SCTP socket.  With this
+> change, sctp will be loaded on setups that may not be actually using
+> it. It's a quite big module and might expose the system.
 
+True.  Not that the intent is to kill kernel space callers of setsockopt,
+as I plan to remove the set_fs address space override used for it.  So
+if always pulling in sctp is not an option for the DLM maintainers we'd
+have to do tricks using symbol_get() or similar.
 
-Ok, to summarize, commit 2bef9aed6f0e ("usb: usbfs: correct kernel->user
-page attribute mismatch") changed a call from remap_pfn_range() to
-dma_mmap_coherent() for usb data buffers being sent from userspace.
-
-Details on why this was changed is in the commit changelog, but this has
-triggered a WARN_ON() in memtype_reserve when I think some odd data
-buffers were sent to it by syzbot fuzzing.
-
-The warning caught the wrong data, but triggered syzbot.
-
-So, the question is, should all callers of dma_mmap_coherent() validate
-the parms better before it is called, or should the call chain here
-properly sanitize things on their own.
-
-Note, usbfs is not the only direct-from-userspace caller of
-dma_mmap_coherent(), it's also used in other userspace apis (frame
-buffer drivers, fastrpc, some SoC drivers) but it looks like nothing has
-fuzzed those apis before to trigger this.
-
-Does that help explain things better?
-
-thanks,
-
-greg k-h
+The same would also apply for ipv6, although I'm not sure how common
+modular ipv6 is in practice.
