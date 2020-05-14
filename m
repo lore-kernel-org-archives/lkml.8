@@ -4,40 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A323BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBAAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA4920728
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:58:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0660D20734
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 12:58:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbgENM6p (ORCPT
+        id S1726492AbgENM6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 08:58:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51984 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 08:58:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726037AbgENM6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 08:58:44 -0400
+        id S1726051AbgENM6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 08:58:45 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCFB820727;
+        by mail.kernel.org (Postfix) with ESMTPSA id CCA78206D4;
         Thu, 14 May 2020 12:58:43 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1jZDRi-000GAE-L9; Thu, 14 May 2020 08:58:42 -0400
-Message-ID: <20200514125842.537090292@goodmis.org>
+        id 1jZDRi-000G9h-GO; Thu, 14 May 2020 08:58:42 -0400
+Message-ID: <20200514125842.392454557@goodmis.org>
 User-Agent: quilt/0.66
-Date:   Thu, 14 May 2020 08:58:19 -0400
+Date:   Thu, 14 May 2020 08:58:18 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        kernel test robot <lkp@intel.com>,
-        Sven Schnelle <svens@linux.ibm.com>
-Subject: [for-linus][PATCH 2/3] ring-buffer: Dont deactivate the ring buffer on failed iterator
- reads
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, stable@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [for-linus][PATCH 1/3] x86/ftrace: Have ftrace trampolines turn read-only at the end of
+ system boot up
 References: <20200514125817.850882486@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -48,78 +52,238 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-If the function tracer is running and the trace file is read (which uses the
-ring buffer iterator), the iterator can get in sync with the writes, and
-caues it to fail to find a page with content it can read three times. This
-causes a warning and deactivation of the ring buffer code.
+Booting one of my machines, it triggered the following crash:
 
-Looking at the other cases of failure to get an event, it appears that
-there's a chance that the writer could cause them too. Since the iterator is
-a "best effort" to read the ring buffer if there's an active writer (the
-consumer reader is made for this case "see trace_pipe"), if it fails to get
-an event after three tries, simply give up and return NULL. Don't warn, nor
-disable the ring buffer on this failure.
+ Kernel/User page tables isolation: enabled
+ ftrace: allocating 36577 entries in 143 pages
+ Starting tracer 'function'
+ BUG: unable to handle page fault for address: ffffffffa000005c
+ #PF: supervisor write access in kernel mode
+ #PF: error_code(0x0003) - permissions violation
+ PGD 2014067 P4D 2014067 PUD 2015063 PMD 7b253067 PTE 7b252061
+ Oops: 0003 [#1] PREEMPT SMP PTI
+ CPU: 0 PID: 0 Comm: swapper Not tainted 5.4.0-test+ #24
+ Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./To be filled by O.E.M., BIOS SDBLI944.86P 05/08/2007
+ RIP: 0010:text_poke_early+0x4a/0x58
+ Code: 34 24 48 89 54 24 08 e8 bf 72 0b 00 48 8b 34 24 48 8b 4c 24 08 84 c0 74 0b 48 89 df f3 a4 48 83 c4 10 5b c3 9c 58 fa 48 89 df <f3> a4 50 9d 48 83 c4 10 5b e9 d6 f9 ff ff
+0 41 57 49
+ RSP: 0000:ffffffff82003d38 EFLAGS: 00010046
+ RAX: 0000000000000046 RBX: ffffffffa000005c RCX: 0000000000000005
+ RDX: 0000000000000005 RSI: ffffffff825b9a90 RDI: ffffffffa000005c
+ RBP: ffffffffa000005c R08: 0000000000000000 R09: ffffffff8206e6e0
+ R10: ffff88807b01f4c0 R11: ffffffff8176c106 R12: ffffffff8206e6e0
+ R13: ffffffff824f2440 R14: 0000000000000000 R15: ffffffff8206eac0
+ FS:  0000000000000000(0000) GS:ffff88807d400000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: ffffffffa000005c CR3: 0000000002012000 CR4: 00000000000006b0
+ Call Trace:
+  text_poke_bp+0x27/0x64
+  ? mutex_lock+0x36/0x5d
+  arch_ftrace_update_trampoline+0x287/0x2d5
+  ? ftrace_replace_code+0x14b/0x160
+  ? ftrace_update_ftrace_func+0x65/0x6c
+  __register_ftrace_function+0x6d/0x81
+  ftrace_startup+0x23/0xc1
+  register_ftrace_function+0x20/0x37
+  func_set_flag+0x59/0x77
+  __set_tracer_option.isra.19+0x20/0x3e
+  trace_set_options+0xd6/0x13e
+  apply_trace_boot_options+0x44/0x6d
+  register_tracer+0x19e/0x1ac
+  early_trace_init+0x21b/0x2c9
+  start_kernel+0x241/0x518
+  ? load_ucode_intel_bsp+0x21/0x52
+  secondary_startup_64+0xa4/0xb0
 
-Link: https://lore.kernel.org/r/20200429090508.GG5770@shao2-debian
+I was able to trigger it on other machines, when I added to the kernel
+command line of both "ftrace=function" and "trace_options=func_stack_trace".
 
-Reported-by: kernel test robot <lkp@intel.com>
-Fixes: ff84c50cfb4b ("ring-buffer: Do not die if rb_iter_peek() fails more than thrice")
-Tested-by: Sven Schnelle <svens@linux.ibm.com>
+The cause is the "ftrace=function" would register the function tracer
+and create a trampoline, and it will set it as executable and
+read-only. Then the "trace_options=func_stack_trace" would then update
+the same trampoline to include the stack tracer version of the function
+tracer. But since the trampoline already exists, it updates it with
+text_poke_bp(). The problem is that text_poke_bp() called while
+system_state == SYSTEM_BOOTING, it will simply do a memcpy() and not
+the page mapping, as it would think that the text is still read-write.
+But in this case it is not, and we take a fault and crash.
+
+Instead, lets keep the ftrace trampolines read-write during boot up,
+and then when the kernel executable text is set to read-only, the
+ftrace trampolines get set to read-only as well.
+
+Link: https://lkml.kernel.org/r/20200430202147.4dc6e2de@oasis.local.home
+
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: stable@vger.kernel.org
+Fixes: 768ae4406a5c ("x86/ftrace: Use text_poke()")
+Acked-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/ring_buffer.c | 22 +++++++---------------
- 1 file changed, 7 insertions(+), 15 deletions(-)
+ arch/x86/include/asm/ftrace.h  |  6 ++++++
+ arch/x86/kernel/ftrace.c       | 29 ++++++++++++++++++++++++++++-
+ arch/x86/mm/init_64.c          |  3 +++
+ include/linux/ftrace.h         | 23 +++++++++++++++++++++++
+ kernel/trace/ftrace_internal.h | 22 ----------------------
+ 5 files changed, 60 insertions(+), 23 deletions(-)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 6f0b42ceeb00..448d5f528764 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -4034,7 +4034,6 @@ rb_iter_peek(struct ring_buffer_iter *iter, u64 *ts)
- 	struct ring_buffer_per_cpu *cpu_buffer;
- 	struct ring_buffer_event *event;
- 	int nr_loops = 0;
--	bool failed = false;
+diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
+index 85be2f506272..89af0d2c62aa 100644
+--- a/arch/x86/include/asm/ftrace.h
++++ b/arch/x86/include/asm/ftrace.h
+@@ -56,6 +56,12 @@ struct dyn_arch_ftrace {
  
- 	if (ts)
- 		*ts = 0;
-@@ -4056,19 +4055,14 @@ rb_iter_peek(struct ring_buffer_iter *iter, u64 *ts)
- 		return NULL;
+ #ifndef __ASSEMBLY__
  
- 	/*
--	 * We repeat when a time extend is encountered or we hit
--	 * the end of the page. Since the time extend is always attached
--	 * to a data event, we should never loop more than three times.
--	 * Once for going to next page, once on time extend, and
--	 * finally once to get the event.
--	 * We should never hit the following condition more than thrice,
--	 * unless the buffer is very small, and there's a writer
--	 * that is causing the reader to fail getting an event.
-+	 * As the writer can mess with what the iterator is trying
-+	 * to read, just give up if we fail to get an event after
-+	 * three tries. The iterator is not as reliable when reading
-+	 * the ring buffer with an active write as the consumer is.
-+	 * Do not warn if the three failures is reached.
- 	 */
--	if (++nr_loops > 3) {
--		RB_WARN_ON(cpu_buffer, !failed);
-+	if (++nr_loops > 3)
- 		return NULL;
--	}
++#if defined(CONFIG_FUNCTION_TRACER) && defined(CONFIG_DYNAMIC_FTRACE)
++extern void set_ftrace_ops_ro(void);
++#else
++static inline void set_ftrace_ops_ro(void) { }
++#endif
++
+ #define ARCH_HAS_SYSCALL_MATCH_SYM_NAME
+ static inline bool arch_syscall_match_sym_name(const char *sym, const char *name)
+ {
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index 37a0aeaf89e7..b0e641793be4 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -407,7 +407,8 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
  
- 	if (rb_per_cpu_empty(cpu_buffer))
- 		return NULL;
-@@ -4079,10 +4073,8 @@ rb_iter_peek(struct ring_buffer_iter *iter, u64 *ts)
- 	}
+ 	set_vm_flush_reset_perms(trampoline);
  
- 	event = rb_iter_head_event(iter);
--	if (!event) {
--		failed = true;
-+	if (!event)
- 		goto again;
--	}
+-	set_memory_ro((unsigned long)trampoline, npages);
++	if (likely(system_state != SYSTEM_BOOTING))
++		set_memory_ro((unsigned long)trampoline, npages);
+ 	set_memory_x((unsigned long)trampoline, npages);
+ 	return (unsigned long)trampoline;
+ fail:
+@@ -415,6 +416,32 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 	return 0;
+ }
  
- 	switch (event->type_len) {
- 	case RINGBUF_TYPE_PADDING:
++void set_ftrace_ops_ro(void)
++{
++	struct ftrace_ops *ops;
++	unsigned long start_offset;
++	unsigned long end_offset;
++	unsigned long npages;
++	unsigned long size;
++
++	do_for_each_ftrace_op(ops, ftrace_ops_list) {
++		if (!(ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP))
++			continue;
++
++		if (ops->flags & FTRACE_OPS_FL_SAVE_REGS) {
++			start_offset = (unsigned long)ftrace_regs_caller;
++			end_offset = (unsigned long)ftrace_regs_caller_end;
++		} else {
++			start_offset = (unsigned long)ftrace_caller;
++			end_offset = (unsigned long)ftrace_epilogue;
++		}
++		size = end_offset - start_offset;
++		size = size + RET_SIZE + sizeof(void *);
++		npages = DIV_ROUND_UP(size, PAGE_SIZE);
++		set_memory_ro((unsigned long)ops->trampoline, npages);
++	} while_for_each_ftrace_op(ops);
++}
++
+ static unsigned long calc_trampoline_call_offset(bool save_regs)
+ {
+ 	unsigned long start_offset;
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index 3b289c2f75cd..8b5f73f5e207 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -54,6 +54,7 @@
+ #include <asm/init.h>
+ #include <asm/uv/uv.h>
+ #include <asm/setup.h>
++#include <asm/ftrace.h>
+ 
+ #include "mm_internal.h"
+ 
+@@ -1291,6 +1292,8 @@ void mark_rodata_ro(void)
+ 	all_end = roundup((unsigned long)_brk_end, PMD_SIZE);
+ 	set_memory_nx(text_end, (all_end - text_end) >> PAGE_SHIFT);
+ 
++	set_ftrace_ops_ro();
++
+ #ifdef CONFIG_CPA_DEBUG
+ 	printk(KERN_INFO "Testing CPA: undo %lx-%lx\n", start, end);
+ 	set_memory_rw(start, (end-start) >> PAGE_SHIFT);
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index db95244a62d4..ab4bd15cbcdb 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -210,6 +210,29 @@ struct ftrace_ops {
+ #endif
+ };
+ 
++extern struct ftrace_ops __rcu *ftrace_ops_list;
++extern struct ftrace_ops ftrace_list_end;
++
++/*
++ * Traverse the ftrace_global_list, invoking all entries.  The reason that we
++ * can use rcu_dereference_raw_check() is that elements removed from this list
++ * are simply leaked, so there is no need to interact with a grace-period
++ * mechanism.  The rcu_dereference_raw_check() calls are needed to handle
++ * concurrent insertions into the ftrace_global_list.
++ *
++ * Silly Alpha and silly pointer-speculation compiler optimizations!
++ */
++#define do_for_each_ftrace_op(op, list)			\
++	op = rcu_dereference_raw_check(list);			\
++	do
++
++/*
++ * Optimized for just a single item in the list (as that is the normal case).
++ */
++#define while_for_each_ftrace_op(op)				\
++	while (likely(op = rcu_dereference_raw_check((op)->next)) &&	\
++	       unlikely((op) != &ftrace_list_end))
++
+ /*
+  * Type of the current tracing.
+  */
+diff --git a/kernel/trace/ftrace_internal.h b/kernel/trace/ftrace_internal.h
+index 0456e0a3dab1..382775edf690 100644
+--- a/kernel/trace/ftrace_internal.h
++++ b/kernel/trace/ftrace_internal.h
+@@ -4,28 +4,6 @@
+ 
+ #ifdef CONFIG_FUNCTION_TRACER
+ 
+-/*
+- * Traverse the ftrace_global_list, invoking all entries.  The reason that we
+- * can use rcu_dereference_raw_check() is that elements removed from this list
+- * are simply leaked, so there is no need to interact with a grace-period
+- * mechanism.  The rcu_dereference_raw_check() calls are needed to handle
+- * concurrent insertions into the ftrace_global_list.
+- *
+- * Silly Alpha and silly pointer-speculation compiler optimizations!
+- */
+-#define do_for_each_ftrace_op(op, list)			\
+-	op = rcu_dereference_raw_check(list);			\
+-	do
+-
+-/*
+- * Optimized for just a single item in the list (as that is the normal case).
+- */
+-#define while_for_each_ftrace_op(op)				\
+-	while (likely(op = rcu_dereference_raw_check((op)->next)) &&	\
+-	       unlikely((op) != &ftrace_list_end))
+-
+-extern struct ftrace_ops __rcu *ftrace_ops_list;
+-extern struct ftrace_ops ftrace_list_end;
+ extern struct mutex ftrace_lock;
+ extern struct ftrace_ops global_ops;
+ 
 -- 
 2.26.2
 
