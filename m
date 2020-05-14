@@ -2,96 +2,118 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FE9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB057C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F72D206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC1ED20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 08:25:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wO+FIfxE"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="vgKyk2WV";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vQ2dab9d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbgENIZ1 (ORCPT
+        id S1726191AbgENIZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 04:25:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725935AbgENIZ0 (ORCPT
+        Thu, 14 May 2020 04:25:46 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:39501 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725935AbgENIZp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 04:25:26 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DD45C061A0C
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:25:26 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id v12so2662621wrp.12
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 01:25:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=ZbgmSmFGHrTn1PgWbNozA+/Dhn/9LaUmkwFWI+wUR/I=;
-        b=wO+FIfxEhhg0FIndKHw5mC+KR9nIXPmVUmFr2o2AT90th3322mJsYGDc1GHqdR3wRM
-         E+4l8zjkhAWR5GPOxqEhB8oL1MWbe6eSkASr0dNjKZnYCH1PgGdG7qtIfmm049ekRJv8
-         AYDH42N3eHwKyuwo/GZLQkOHG1KFXCto4mVVLNts7bpJHjUQhA9vXwidawYgBCeVQzQR
-         b+Te5bSfQMmVnBj6z9+2tg1kmWg+bKOEle5xugMRZ5ubVI8G98jORAuwo2lqpR8HHMMH
-         Eqk2se46TEeIAHzg0WD1p9c9uWi/3Ne7Twp7F8sfmTERRvOqj5Clw+ung56SMPs9tCrq
-         mA9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ZbgmSmFGHrTn1PgWbNozA+/Dhn/9LaUmkwFWI+wUR/I=;
-        b=JFzTRUjRNgHANdI5R8IZtNVooRZK2SFhQFIe3vYqGli/GX6r2xQ9TqAzFMAAHmA4qy
-         5c1T5oCQvEiWjJO3NY0xZlpJYif3Q5moCt4AGZYosgDMQBTXMD3sW3PKnW+nyFfKctNG
-         42M5Aux/jQqpcxf6LuyoUTtBYx+W8Q6HtaJb3RmrGFs9ORRYFY2u45YYTGQqQkbBYHEi
-         sGKasYTwgNDFXmJkw7XSeKRL+TS5PTzSEpxWOhQjukwuK1UymrIBtYF6l7gTj4NTen2G
-         a5Z33bzYNXqP6/wIQhtrSE5+Jum8nyphZ0il5epmx4NwS4tDPS5t6ymPZC1NO+d2Toed
-         WXlQ==
-X-Gm-Message-State: AOAM531Fh29bEEmHL/3Ud77Zg3DNJy6/4Rgpn9tzA48R4eifyrRPOOSf
-        aRSCEr04Hk6VdWULdc+5FbSyXdOvEapXqw==
-X-Google-Smtp-Source: ABdhPJzxyGw1QivQbkc+cA1lizk0D/rln2dXXvS9C0IXtdTX5Z+I4vGLO+GUrVb89lJquwnukUo1jQ==
-X-Received: by 2002:a05:6000:1c5:: with SMTP id t5mr4344696wrx.229.1589444725034;
-        Thu, 14 May 2020 01:25:25 -0700 (PDT)
-Received: from lmecxl0524.lme.st.com (2a01cb058702ff00bc4b798f4f30d41e.ipv6.abo.wanadoo.fr. [2a01:cb05:8702:ff00:bc4b:798f:4f30:d41e])
-        by smtp.gmail.com with ESMTPSA id w15sm13739673wmi.35.2020.05.14.01.25.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 01:25:24 -0700 (PDT)
-From:   Etienne Carriere <etienne.carriere@linaro.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, sudeep.holla@arm.com,
-        etienne.carriere@linaro.org
-Subject: [PATCH] firmware: arm_scmi: fix SMCCC_RET_NOT_SUPPORTED management
-Date:   Thu, 14 May 2020 10:24:28 +0200
-Message-Id: <20200514082428.27864-1-etienne.carriere@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Thu, 14 May 2020 04:25:45 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailout.nyi.internal (Postfix) with ESMTP id 435655C0221;
+        Thu, 14 May 2020 04:25:44 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Thu, 14 May 2020 04:25:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        /xysc5mZRRwSPhJfTdSoHNPvt4tx6ue/BYIZHaszruM=; b=vgKyk2WVbBTezi5J
+        KZZxhb5cZm9Y59EZs1jkDIEB3QN/51GbotXc56FPv7Xfcym56gv3O1qR+nljkg5u
+        9idmRjW8ePiEQlecNuBuJQMR4LbrOqBGXTBX0nE1nXFcEUdhaX57FmZCO4ejJA+J
+        Yhd88QhBv40BAsI1Uw7//IWhAdOnxk0Q1hU+xUGjlQRutLzOhGiVppZIn5WlmQyD
+        Wt0ryMujwkZVPejYBHC9M/ajKDJuwtJswUPv/MxVIas0AzIhh+strqXutV3caOqg
+        PBBB+ny9WUpKGb9ebSby/tJeHZOH3yKkcXhC0E4lF/15UEI2E3uNoEZMgFXPOQnU
+        RcxNuw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=/xysc5mZRRwSPhJfTdSoHNPvt4tx6ue/BYIZHaszr
+        uM=; b=vQ2dab9dHMuPMC/E2g2BRHkokaNfzXVMkruZHrf1jsACbLHGamb8VmNqE
+        P5ZMhljttd/zS6DTJl7pPkbGBq5pIdNs6F9L+H9NXWVaZBO/E5ezTCv5r4n8PfTn
+        vd6wIwoC+xrNjrmwgGSL04apsHcNpNL65tRPQsCT+TJUjv4g1hOkyGCcJZtzrS3H
+        GxdexL1hxNOW5HIFBTmpckbYeFUC/rVVBmsvfPKukng83zIWcsShNYxamcdefhnC
+        GOA11+klUWv8VNUT+ToY+DAEhUTixAU0HSzzWg+P0gDoXzDTQZ0lupWKqCnoPlvF
+        QS2xTtr/Z+jSUz7/eNmgrBk3ZPE8w==
+X-ME-Sender: <xms:hwC9Xo-am4RF6LNTv7m07mH48iDckWHKMZFJz4JNxG9SYk4P3qqlIA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrleeigddtudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
+    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnhepfe
+    efteetvdeguddvveefveeftedtffduudehueeihfeuvefgveehffeludeggfejnecukfhp
+    peduudekrddvtdekrddukeejrddvhedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomheprhgrvhgvnhesthhhvghmrgifrdhnvght
+X-ME-Proxy: <xmx:hwC9Xgtl5wjK72rTScXd71Y-TFGpnL1_uTrxuWn3nX2w28PKsMdFiw>
+    <xmx:hwC9XuA_0lZdHSpSDYw85PV35YMnEkEQa8qWZUpt-wi_mJk0mXcCFg>
+    <xmx:hwC9XofeS0RrUpnYeV3V6IFkhOLUBIv4FGnrR_tWrcfFjyCZx6PQ4A>
+    <xmx:iAC9XmaibCZ2K5m1rscL-SbvJiOKKfft5rL7AmEL5B5DeSmZEnf0bg>
+Received: from mickey.themaw.net (unknown [118.208.187.250])
+        by mail.messagingengine.com (Postfix) with ESMTPA id BEA023060A88;
+        Thu, 14 May 2020 04:25:40 -0400 (EDT)
+Message-ID: <a98e32eb5ad4486fc58e5ce79700a20abecbd69b.camel@themaw.net>
+Subject: Re: [PATCH 02/14] autofs: switch to kernel_write
+From:   Ian Kent <raven@themaw.net>
+To:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>
+Cc:     David Howells <dhowells@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        netfilter-devel@vger.kernel.org
+Date:   Thu, 14 May 2020 16:25:36 +0800
+In-Reply-To: <20200513065656.2110441-3-hch@lst.de>
+References: <20200513065656.2110441-1-hch@lst.de>
+         <20200513065656.2110441-3-hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix management of argument a0 output value of arm_smccc_1_1_invoke() that
-should consider only SMCCC_RET_NOT_SUPPORTED as reporting an unsupported
-function ID as correctly stated in the inline comment.
+On Wed, 2020-05-13 at 08:56 +0200, Christoph Hellwig wrote:
+> While pipes don't really need sb_writers projection, __kernel_write
+> is an
+> interface better kept private, and the additional rw_verify_area does
+> not
+> hurt here.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Signed-off-by: Etienne Carriere <etienne.carriere@linaro.org>
----
- drivers/firmware/arm_scmi/smc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Right, should be fine AFAICS.
+Acked-by: Ian Kent <raven@themaw.net>
 
-diff --git a/drivers/firmware/arm_scmi/smc.c b/drivers/firmware/arm_scmi/smc.c
-index 49bc4b0e8428..637ad439545f 100644
---- a/drivers/firmware/arm_scmi/smc.c
-+++ b/drivers/firmware/arm_scmi/smc.c
-@@ -115,7 +115,7 @@ static int smc_send_message(struct scmi_chan_info *cinfo,
- 	mutex_unlock(&scmi_info->shmem_lock);
- 
- 	/* Only SMCCC_RET_NOT_SUPPORTED is valid error code */
--	if (res.a0)
-+	if (res.a0 == SMCCC_RET_NOT_SUPPORTED)
- 		return -EOPNOTSUPP;
- 	return 0;
- }
--- 
-2.17.1
+> ---
+>  fs/autofs/waitq.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/autofs/waitq.c b/fs/autofs/waitq.c
+> index b04c528b19d34..74c886f7c51cb 100644
+> --- a/fs/autofs/waitq.c
+> +++ b/fs/autofs/waitq.c
+> @@ -53,7 +53,7 @@ static int autofs_write(struct autofs_sb_info *sbi,
+>  
+>  	mutex_lock(&sbi->pipe_mutex);
+>  	while (bytes) {
+> -		wr = __kernel_write(file, data, bytes, &file->f_pos);
+> +		wr = kernel_write(file, data, bytes, &file->f_pos);
+>  		if (wr <= 0)
+>  			break;
+>  		data += wr;
 
