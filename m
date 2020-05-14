@@ -2,100 +2,96 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A65AEC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C68A9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 850D92065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0E042065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 16:52:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hwyr+/vK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726179AbgENQuD (ORCPT
+        id S1726161AbgENQv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 12:50:03 -0400
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:48766 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726090AbgENQuB (ORCPT
+        Thu, 14 May 2020 12:51:59 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37523 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726027AbgENQv6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 12:50:01 -0400
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 04EGnFxN006865;
-        Thu, 14 May 2020 19:49:15 +0300
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
-        id 205E7639C0; Thu, 14 May 2020 19:49:15 +0300 (IDT)
-From:   amirmizi6@gmail.com
-To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        robh+dt@kernel.org,
-        "benoit.houyere@st.com--to=mark.rutland"@arm.com,
-        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
-        Amir Mizinski <amirmizi6@gmail.com>,
-        kbuild test robot <lkp@intel.com>
-Subject: [PATCH v1] tpm: tpm_tis: make implementation of read16, read32 and write32 optional fix
-Date:   Thu, 14 May 2020 19:48:25 +0300
-Message-Id: <20200514164825.35377-2-amirmizi6@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200514164825.35377-1-amirmizi6@gmail.com>
-References: <20200514164825.35377-1-amirmizi6@gmail.com>
+        Thu, 14 May 2020 12:51:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1589475116;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=9NDpO6ne1oX6puFusLi9MT5jheUbCdzi50HXZXuFYME=;
+        b=hwyr+/vKTbWHwZCtBx79ITs4/RpbAj7IB+BwfwyKGTl14nRKurSIclDhipNSVCpiSCfaDi
+        MfQsC8LO4IRPwtk4TW6mwy5ibBrbjpzIpzNWf8GM02X3vPQMQlPFJWFRkXv0CZlXaRTxoo
+        kUvsaXdblexf8pLVFDIoKodXvqksVp8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-295-xOZiXWc8OXyREJq3fKHouQ-1; Thu, 14 May 2020 12:51:54 -0400
+X-MC-Unique: xOZiXWc8OXyREJq3fKHouQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 388EA1899528;
+        Thu, 14 May 2020 16:51:53 +0000 (UTC)
+Received: from gimli.home (ovpn-113-111.phx2.redhat.com [10.3.113.111])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 424465C1BE;
+        Thu, 14 May 2020 16:51:47 +0000 (UTC)
+Subject: [PATCH 0/2] vfio/type1/pci: IOMMU PFNMAP invalidation
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, cohuck@redhat.com, jgg@ziepe.ca,
+        peterx@redhat.com
+Date:   Thu, 14 May 2020 10:51:46 -0600
+Message-ID: <158947414729.12590.4345248265094886807.stgit@gimli.home>
+User-Agent: StGit/0.19-dirty
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Mizinski <amirmizi6@gmail.com>
+This is a follow-on series to "vfio-pci: Block user access to disabled
+device MMIO"[1], which extends user access blocking of disabled MMIO
+ranges to include unmapping the ranges from the IOMMU.  The first patch
+adds an invalidation callback path, allowing vfio bus drivers to signal
+the IOMMU backend to unmap ranges with vma level granularity.  This
+signaling is done both when the MMIO range becomes inaccessible due to
+memory disabling, as well as when a vma is closed, making up for the
+lack of tracking or pinning for non-page backed vmas.  The second
+patch adds registration and testing interfaces such that the IOMMU
+backend driver can test whether a given PFNMAP vma is provided by a
+vfio bus driver supporting invalidation.  We can then implement more
+restricted semantics to only allow PFNMAP DMA mappings when we have
+such support, which becomes the new default.
 
-Removed SPI extern function definitions and unused callback functions for
-CR50 driver.
+Jason, if you'd like Suggested-by credit for the ideas here I'd be
+glad to add it.  Thanks,
 
-Fixes: fa05dc792ea0 ("tpm: tpm_tis: make implementation of read16, read32 and write32 optional")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+Alex
+
+[1]https://lore.kernel.org/kvm/158871401328.15589.17598154478222071285.stgit@gimli.home/
+
 ---
- drivers/char/tpm/tpm_tis_spi.h      | 4 ----
- drivers/char/tpm/tpm_tis_spi_cr50.c | 3 ---
- 2 files changed, 7 deletions(-)
 
-diff --git a/drivers/char/tpm/tpm_tis_spi.h b/drivers/char/tpm/tpm_tis_spi.h
-index bba7397..d0f66f6 100644
---- a/drivers/char/tpm/tpm_tis_spi.h
-+++ b/drivers/char/tpm/tpm_tis_spi.h
-@@ -31,10 +31,6 @@ extern int tpm_tis_spi_init(struct spi_device *spi, struct tpm_tis_spi_phy *phy,
- extern int tpm_tis_spi_transfer(struct tpm_tis_data *data, u32 addr, u16 len,
- 				u8 *in, const u8 *out);
- 
--extern int tpm_tis_spi_read16(struct tpm_tis_data *data, u32 addr, u16 *result);
--extern int tpm_tis_spi_read32(struct tpm_tis_data *data, u32 addr, u32 *result);
--extern int tpm_tis_spi_write32(struct tpm_tis_data *data, u32 addr, u32 value);
--
- #ifdef CONFIG_TCG_TIS_SPI_CR50
- extern int cr50_spi_probe(struct spi_device *spi);
- #else
-diff --git a/drivers/char/tpm/tpm_tis_spi_cr50.c b/drivers/char/tpm/tpm_tis_spi_cr50.c
-index 37d72e8..f339d20 100644
---- a/drivers/char/tpm/tpm_tis_spi_cr50.c
-+++ b/drivers/char/tpm/tpm_tis_spi_cr50.c
-@@ -215,9 +215,6 @@ static int tpm_tis_spi_cr50_write_bytes(struct tpm_tis_data *data, u32 addr,
- static const struct tpm_tis_phy_ops tpm_spi_cr50_phy_ops = {
- 	.read_bytes = tpm_tis_spi_cr50_read_bytes,
- 	.write_bytes = tpm_tis_spi_cr50_write_bytes,
--	.read16 = tpm_tis_spi_read16,
--	.read32 = tpm_tis_spi_read32,
--	.write32 = tpm_tis_spi_write32,
- };
- 
- static void cr50_print_fw_version(struct tpm_tis_data *data)
--- 
-2.7.4
+Alex Williamson (2):
+      vfio: Introduce bus driver to IOMMU invalidation interface
+      vfio: Introduce strict PFNMAP mappings
+
+
+ drivers/vfio/pci/vfio_pci.c         |   41 ++++++++++-
+ drivers/vfio/pci/vfio_pci_private.h |    1 
+ drivers/vfio/vfio.c                 |   76 ++++++++++++++++++++
+ drivers/vfio/vfio_iommu_type1.c     |  130 +++++++++++++++++++++++++++--------
+ include/linux/vfio.h                |    9 ++
+ 5 files changed, 222 insertions(+), 35 deletions(-)
 
