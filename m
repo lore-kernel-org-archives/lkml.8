@@ -2,256 +2,162 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MIME_QP_LONG_LINE,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBDBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02273C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1D362065F
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0373E205CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 01:26:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="X24JRh3l"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="NPXN95my"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbgENBWJ (ORCPT
+        id S1728164AbgENB0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 May 2020 21:22:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53914 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725943AbgENBWJ (ORCPT
+        Wed, 13 May 2020 21:26:16 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:23608 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725925AbgENB0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 May 2020 21:22:09 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2753FC061A0C
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 18:22:09 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id x10so531397plr.4
-        for <linux-kernel@vger.kernel.org>; Wed, 13 May 2020 18:22:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=VD8Mh+Zu25loZd3eIZEvguIOjhQMdb9v1tRfNrEYMdw=;
-        b=X24JRh3lPbmUOn1qNM97Jr2bsHZN90c55eYkVyEU+rh0cxeBc1XRL0xUVq3JqffW1/
-         qgCSl05s4Ogp8dhbR/JWZ0uOGmjza45j63mMlSyidsSsKMPDrRR2MQcrf0iMmp8nPX0y
-         ropTBDRw8y3LNR3h1Z45LbzhHnCzdx56cGLHImg5FWYs0G3oLFWJC/2nQPZCIs59ebDL
-         LUqfqFGhKXRNePB9A33fERLEcNXIcUTDWzzsT28NTH8gRTdZS4TunIOM1GQuZQvCnzOW
-         TSfSfRnf7Z/Eha6UDk0S4WNV+2cQsx8i4rKrAWD1NK1MP/au5SnvcG+X+yWmgOgNbpus
-         EkEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=VD8Mh+Zu25loZd3eIZEvguIOjhQMdb9v1tRfNrEYMdw=;
-        b=pVvhP+tZ6W+d55rmPfbUNf7WtRmD66UQpBS5Ge6oioY9u+HO/QNvatbV1vO23eFu8y
-         KSgznWJgn6eG+WOWNyWXblSrvDggCq0QuHlEaCqxxYmbXcj60xMTAUjcZCtU+EPgc8B2
-         VZWeiUxv07C7Noi4nvAqB+Oa6oKFQQLnvTeM8kHrotvw2y94C495RMiHW8IExfw78FUW
-         AtQ2ntmeh+bm8MVefXkomjjF1a1WxdQH/xm2lTMxgUQvfrLvMD/oipbhGPelCMxA2myZ
-         ZM/uS8h1EMHHTbf7zaRIxAZ1yvJcXWP5wNwh7hFYFbq3ognQMK8CxaijkPx1+gMLSysB
-         AgpA==
-X-Gm-Message-State: AGi0PuaPd/37V40TLNi1DeOC3DLuBmJkYB3gzz0+gjFHCItnz4X0xSzJ
-        DgU4mv6QLq+scQNQ5k3Eq4+7yA==
-X-Google-Smtp-Source: APiQypL5Bbjggza8/WuOl8kcrOIQ/wf1rMiD3jDFpF8TQn4zC3rPva8Wc1xsCFoIef4+3rMTEJP0bg==
-X-Received: by 2002:a17:90a:f108:: with SMTP id cc8mr38157615pjb.198.1589419328671;
-        Wed, 13 May 2020 18:22:08 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:4dac:bfc1:d4fa:716f? ([2601:646:c200:1ef2:4dac:bfc1:d4fa:716f])
-        by smtp.gmail.com with ESMTPSA id j13sm16845527pje.1.2020.05.13.18.22.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 May 2020 18:22:08 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
+        Wed, 13 May 2020 21:26:16 -0400
+Received: from pps.filterd (m0170390.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04E1M4kd000852;
+        Wed, 13 May 2020 21:26:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : subject :
+ date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=3WizmGW4J+5cCpHjPx+8L4kEw/KH/xKY6PYq4exd70o=;
+ b=NPXN95myrqzW+O6wVKsGu2H8eIwflBlsdaT5ID4hlzT9NTgBZ3RYnmq/eCsXPVu++Sy1
+ oOekCsXp0jB1LROqaFxUrM1eFGOagXDU7ZTMTshHM5v+ggMXBTBOpQkqiXQzYv2xkEAk
+ w381DTe6qg1Qs3fyw4LvER/xK1Ugv2Jku5V0SNFh/006NSOedfVJolMzu75R/lxIrUbd
+ MnMl0WuBeFGT4kDpG1E5MxIs3O+7FDou+pvDHiwOGHtfT7VFN8u2hKjUjeySZsxS69Si
+ Jhauauwdiu0g3HlShsNGxgoWCcjHWoZYbVlhNrqqqcIbkoRUfdpJPyZkiuW04Ukr7Q7j Ow== 
+Received: from mx0a-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0a-00154904.pphosted.com with ESMTP id 310r9y0hkh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 13 May 2020 21:26:15 -0400
+Received: from pps.filterd (m0089484.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04E1Jqgl013732;
+        Wed, 13 May 2020 21:26:14 -0400
+Received: from ausc60pc101.us.dell.com (ausc60pc101.us.dell.com [143.166.85.206])
+        by mx0b-00154901.pphosted.com with ESMTP id 310t1phkq1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 May 2020 21:26:14 -0400
+X-LoopCount0: from 10.166.132.128
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="1555477687"
+From:   <Mario.Limonciello@dell.com>
+To:     <koba.ko@canonical.com>, <mjg59@srcf.ucam.org>,
+        <pali.rohar@gmail.com>, <dvhart@infradead.org>,
+        <andy@infradead.org>, <platform-driver-x86@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] V2: platform/x86: dell-laptop: don't register
+ platform::micmute if the related tokens don't exist.
+Thread-Topic: [PATCH] V2: platform/x86: dell-laptop: don't register
+ platform::micmute if the related tokens don't exist.
+Thread-Index: AQHWJzXMujFpc2Vn3kCSXk0rEt48Sqimzstw
+Date:   Thu, 14 May 2020 01:26:11 +0000
+Message-ID: <135a804acc8247648ff8e811843f68ce@AUSX13MPC105.AMER.DELL.COM>
+References: <20200511014456.5149-1-koba.ko@canonical.com>
+In-Reply-To: <20200511014456.5149-1-koba.ko@canonical.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-05-14T01:26:07.7014683Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=e25616ff-1345-4e3d-8350-933663a7d7b1;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [143.166.24.40]
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [patch V4 part 1 05/36] x86/entry: Flip _TIF_SIGPENDING and _TIF_NOTIFY_RESUME handling
-Date:   Wed, 13 May 2020 18:22:05 -0700
-Message-Id: <21988538-1533-4C4B-A8B0-B298BC4517BB@amacapital.net>
-References: <87v9kzz862.fsf@nanos.tec.linutronix.de>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, paulmck <paulmck@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <JGross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-In-Reply-To: <87v9kzz862.fsf@nanos.tec.linutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-X-Mailer: iPhone Mail (17E262)
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.676
+ definitions=2020-05-13_09:2020-05-13,2020-05-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ cotscore=-2147483648 bulkscore=0 mlxlogscore=999 impostorscore=0
+ adultscore=0 lowpriorityscore=0 suspectscore=0 spamscore=0 malwarescore=0
+ clxscore=1015 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005140010
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999
+ phishscore=0 mlxscore=0 suspectscore=0 adultscore=0 malwarescore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005140010
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> -----Original Message-----
+> From: koba.ko@canonical.com <koba.ko@canonical.com>
+> Sent: Sunday, May 10, 2020 8:45 PM
+> To: Matthew Garrett; Pali Roh=E1r; Darren Hart; Andy Shevchenko; platform=
+-driver-
+> x86@vger.kernel.org; linux-kernel@vger.kernel.org; Limonciello, Mario
+> Subject: [PATCH] V2: platform/x86: dell-laptop: don't register
+> platform::micmute if the related tokens don't exist.
+>=20
+>=20
+> [EXTERNAL EMAIL]
+>=20
+> From: Koba Ko <koba.ko@canonical.com>
+>=20
+> On dell G3-3590, error message is issued during boot up,
+> "platform::micmute: Setting an LED's brightness failed (-19)",
+> but there's no micmute led on the machine.
+>=20
+> Get the related tokens of SMBIOS, GLOBAL_MIC_MUTE_DISABLE/ENABLE.
+> If one of two tokens doesn't exist,
+> don't call led_classdev_register() for platform::micmute.
+> After that, you wouldn't see the platform::micmute in /sys/class/leds/,
+> and the error message wouldn't see in dmesg.
+>=20
+> Signed-off-by: Koba Ko <koba.ko@canonical.com>
+> ---
+> Changelog:
+> 1. Refine the typo of comment.
+> ---
+>  drivers/platform/x86/dell-laptop.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/platform/x86/dell-laptop.c b/drivers/platform/x86/de=
+ll-
+> laptop.c
+> index 1e46022fb2c5..afc1ded83e56 100644
+> --- a/drivers/platform/x86/dell-laptop.c
+> +++ b/drivers/platform/x86/dell-laptop.c
+> @@ -2208,10 +2208,13 @@ static int __init dell_init(void)
+>=20
+>  	dell_laptop_register_notifier(&dell_laptop_notifier);
+>=20
+> -	micmute_led_cdev.brightness =3D ledtrig_audio_get(LED_AUDIO_MICMUTE);
+> -	ret =3D led_classdev_register(&platform_device->dev, &micmute_led_cdev)=
+;
+> -	if (ret < 0)
+> -		goto fail_led;
+> +	if (dell_smbios_find_token(GLOBAL_MIC_MUTE_DISABLE) &&
+> +	    dell_smbios_find_token(GLOBAL_MIC_MUTE_ENABLE)) {
+> +		micmute_led_cdev.brightness =3D ledtrig_audio_get(LED_AUDIO_MICMUTE);
+> +		ret =3D led_classdev_register(&platform_device->dev,
+> &micmute_led_cdev);
+> +		if (ret < 0)
+> +			goto fail_led;
+> +	}
+>=20
+>  	if (acpi_video_get_backlight_type() !=3D acpi_backlight_vendor)
+>  		return 0;
+> --
+> 2.17.1
 
+Reviewed-by: Mario Limonciello <Mario.limonciello@dell.com>
 
-> On May 13, 2020, at 5:12 PM, Thomas Gleixner <tglx@linutronix.de> wrote:
->=20
-> =EF=BB=BFSteven, Mathieu
->=20
-> (combo reply)
->=20
-> Steven Rostedt <rostedt@goodmis.org> writes:
->> On Wed, 13 May 2020 16:56:41 -0400 (EDT)
->>>> +        /* deal with pending signal delivery */
->>>> +        if (cached_flags & _TIF_SIGPENDING)
->>>> +            do_signal(regs);
->>=20
->> Looking deeper into this, it appears that do_signal() can freeze or kill t=
-he
->> task.
->>=20
->> That is, it wont go back to user space here, but simply schedule out (bei=
-ng
->> traced) or even exit (killed).
->>=20
->> Before the resume hooks would never be called in such cases, and now they=
-
->> are.
->=20
-> It theoretically matters because pending task work might kill the
-> task. That's the concern Andy and Peter had. Assume the following:
->=20
-> usermode
->=20
-> -> exception
->    set not fatal signal
->=20
->    -> exception
->        queue task work to kill task
->    <- return
->=20
->  <- return
->=20
-> The same could happen when the non fatal signal is set from a remote CPU.
->=20
-> So in theory that would result in:
->=20
->   handle non fatal signal first
->=20
->   handle task work which kills task
->=20
-> which would be the wrong order.
->=20
-> But that's just illusion.
->=20
->>> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
->=20
->>> Also, color me confused: is "do_signal()" actually running any user-spac=
-e,
->>> or just setting up the user-space stack for eventual return to signal
->>> handler ?
->=20
-> I'm surprised that you can't answer that question yourself. How did you
-> ever make rseq work and how did rseq_signal_deliver() end up in
-> setup_rt_frame()?
->=20
-> Hint: Tracing might answer that question
->=20
-> And to cut it short:
->=20
->    Exit to user space happnes only through ONE channel, i.e. leaving
->    prepare_exit_to usermode().
->=20
->      exit_to_usermode_loop <-prepare_exit_to_usermode
->      do_signal <-exit_to_usermode_loop
->      get_signal <-do_signal
->      setup_sigcontext <-do_signal
->      do_syscall_64 <-entry_SYSCALL_64_after_hwframe
->      syscall_trace_enter <-do_syscall_64
->=20
->      sys_rt_sigreturn()
->      restore_altstack <-__ia32_sys_rt_sigreturn
->      syscall_slow_exit_work <-do_syscall_64
->      exit_to_usermode_loop <-do_syscall_64
->=20
->>> Also, it might be OK, but we're changing the order of two things which
->>> have effects on each other: restartable sequences abort fixup for preemp=
-tion
->>> and do_signal(), which also have effects on rseq abort.
->>>=20
->>> Because those two will cause the abort to trigger, I suspect changing
->>> the order might be OK, but we really need to think this through.
->=20
-> That's a purely academic problem. The order is completely
-> irrelevant. You have to handle any order anyway:
->=20
-> usermode
->=20
->  -> exception / syscall
->       sets signal
->=20
->   <- return
->=20
->  prepare_exit_to_usemode()
->      cached_flags =3D READ_ONCE(t->flags);
->      exit_to_user_mode_loop(regs, cached_flags) {
->        while (cached_flags) {
->           local_irq_enable();
->=20
->           handle(cached_flags & RESCHED);
->           handle(cached_flags & UPROBE);
->           handle(cached_flags & PATCHING);
->           handle(cached_flags & SIGNAL);
->           handle(cached_flags & NOTIFY_RESUME);
->           handle(cached_flags & RETURN_NOTIFY);
->=20
->           local_irq_disable();
->=20
->           cached_flags =3D READ_ONCE(t->flags);
->         }
->=20
-> cached_flag is a momentary snapshot when attempting to return to user
-> space.
->=20
-> But after reenabling interrupts any of the relevant flag bits can be set
-> by an exception/interrupt or from remote. If preemption is enabled the
-> task can be scheduled out, migrated at any point before disabling
-> interrupts again. Even after disabling interrupts and before re-reading
-> cached flags there might be a remote change of flags.
->=20
-> That said, even for the case Andy and Peter were looking at (MCE) the
-> ordering is completely irrelevant.
->=20
-> I should have thought about this before, so thanks to both of you for
-> making me look at it again for the very wrong reasons.
->=20
-> Consider the patch dropped.
-
-I disagree.
-
-There is only one relevant MCE case: #MC hits user code and tries to recover=
-.
-
-Right now, this works via the ist_begin_non_atomic hack. But the series chan=
-ges it so that it uses task_work(). So now the kernel ends up in prepare_exi=
-t_to_usermode() and the machine check work is pending, but a signal might *a=
-lso* be pending due to another CPU setting the bit.
-
-If we process the signal first, we could block on userfaultfd or whatever, a=
-nd now we could take forever to finish.
-
-Heck, even with the order changed, we could get preempted, return to another=
- user task, and get a new machine check. Ick.
-
-So I agree that this patch is problematic, and it doesn=E2=80=99t fully fix t=
-he problem, but I do believe that the task_work thing is problematic.
-
-Rumor has it that it gets improved a bit farther along in the series, but I=E2=
-=80=99m still plodding through.
-
-
-
->=20
-> Thanks,
->=20
->        tglx
