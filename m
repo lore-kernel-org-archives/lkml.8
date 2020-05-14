@@ -2,144 +2,99 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7117C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8360C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A373420734
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:09:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gLiR8Cd3"
+	by mail.kernel.org (Postfix) with ESMTP id 904CA2065C
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 21:12:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbgENVJ5 (ORCPT
+        id S1728191AbgENVMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 17:09:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728035AbgENVJm (ORCPT
+        Thu, 14 May 2020 17:12:21 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:56445 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727951AbgENVMV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 17:09:42 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3D62C061A0E;
-        Thu, 14 May 2020 14:09:41 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id g4so5126309ljl.2;
-        Thu, 14 May 2020 14:09:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KheAdp9M1dfbG4eEm8dhaFoYt33Uw8W6nHGfCYpBQ1U=;
-        b=gLiR8Cd33hBDhgcqV4vb/slAGpWjDL9p3Rlr92Yqo+TGnWCFldIjfFWkxpfV3P7Uz+
-         O1tJy7aA4cLjD+pLXjqLzcIiWL55PtMEubj46qyQlgxfEmTfanFYlsAQXieCN6D62rtg
-         p19Q3gDAAaLIwyC8wHvfxQg0ud80YMVij3hzBMpp8ZjeNXWiTNHro+EYnIXpvFeVdF9H
-         e8Lhq15JBDEU/8X5voT+kE+4CjzGmiZ5iFsoYd1uiQnf6+z4OsKXozVqNoYawaLqFgoO
-         9lCosisXPV8c0ENv1qRoXOBQRAQ2JCzvUlwzys3KvJ2ehFAyDkQ+tPV5s2BmG9jzSYHx
-         J+Qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KheAdp9M1dfbG4eEm8dhaFoYt33Uw8W6nHGfCYpBQ1U=;
-        b=g9RvpPvTI9fSgkTaLacYvG7v0Jp5g4DbwAoho22tFNJh6YRjAtv4ZP/fLU4kABRTUi
-         v5yMixMCtM+Wdsyx0Ul5ra/2AQ3MgptOzeYEoaiQ0InZf/ASzbQ+SQ5f5xI4kpWMr477
-         nzVRKdPP3DJJsebxZrvL+JfYDdCX43i3HhZ1Uwj4iDfDhGMnm8SHmoATDj3+iMCXFGXP
-         qzHL1zFo6kWHbTkVsEtrWJmoWv0rYKUjq4CvInW/+MH+SM2qjgWKUzK5NNfZIdvefEYo
-         HqfIunn2BjqV+znf2qqiDBksJ5WCftoiJ4FFWum2EJA1RDGPUJerv/r/lha25zGSGlNf
-         rBqQ==
-X-Gm-Message-State: AOAM530kDWalTbn4cwSioN0kPNXQYTBkfdCiFfRpYyLG7ARK/KLMRK5r
-        nbWLMFf140SBk5QNW0Id36s=
-X-Google-Smtp-Source: ABdhPJw8fhDNpHCQC51ItCJfok/1aWb8KwJn6He0iS2C3z3YUOfwjJ+4h/7EGYjUKQFCuiWcV40bAA==
-X-Received: by 2002:a2e:9bc3:: with SMTP id w3mr130955ljj.170.1589490580297;
-        Thu, 14 May 2020 14:09:40 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.gmail.com with ESMTPSA id g3sm45215ljk.27.2020.05.14.14.09.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 14:09:39 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 3/4] media: staging: tegra-vde: Turn ON power domain on shutdown
-Date:   Fri, 15 May 2020 00:08:46 +0300
-Message-Id: <20200514210847.9269-4-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200514210847.9269-1-digetx@gmail.com>
-References: <20200514210847.9269-1-digetx@gmail.com>
+        Thu, 14 May 2020 17:12:21 -0400
+Received: from mail-qv1-f47.google.com ([209.85.219.47]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MGiAs-1jMdpB0NFq-00DqYR for <linux-kernel@vger.kernel.org>; Thu, 14 May
+ 2020 23:12:19 +0200
+Received: by mail-qv1-f47.google.com with SMTP id v15so37125qvr.8
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 14:12:18 -0700 (PDT)
+X-Gm-Message-State: AOAM531yCoJpyJ+CP0pbwG8cjse8rhpMDWgqhQywde2WVGjGYHPsKJfr
+        e1PZY3vrfwV8I2bmXpctoEPuTCL/djKtMNVj/ks=
+X-Google-Smtp-Source: ABdhPJw+hOXAPKqhss7jyQwmscQ+zLP90XxY8njrxYkgNmAOyzRHjnKyJ1EnZ5pV37wBywYSy8Mi3+xNly2MaNrB+Gw=
+X-Received: by 2002:a0c:eb11:: with SMTP id j17mr396214qvp.197.1589490737968;
+ Thu, 14 May 2020 14:12:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200503145017.GA5074@afzalpc> <CAK8P3a3OC5UO72rTDWi6+XgmExJmkATEjscq8hns8Bng06OpcQ@mail.gmail.com>
+ <20200504091018.GA24897@afzalpc> <CAK8P3a25sZ9B+AE=EJyJZSU91CkBLLR6p2nixw_=UAbczg3RiQ@mail.gmail.com>
+ <20200511142113.GA31707@afzalpc> <CAK8P3a0=+aBJLTvHOskTv=tba_s5b5MzWrYG8mxH3iLNy4hfBw@mail.gmail.com>
+ <20200512104758.GA12980@afzalpc> <CAK8P3a1DQWG1+ab2+vQ2XCAKYxPUjJk5g3W3094j-adDXSQfzQ@mail.gmail.com>
+ <20200514111755.GA4997@afzalpc> <CAK8P3a2PNZY-9L9+SFDLtrp731ZGo6Nbs-7jY6E2PwWXa0kfKw@mail.gmail.com>
+ <20200514162535.GP1551@shell.armlinux.org.uk>
+In-Reply-To: <20200514162535.GP1551@shell.armlinux.org.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 14 May 2020 23:12:01 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2KR+O5Ua5hsNgzLQV5-V1pat6JH_WM10Es-oUhXO2OgA@mail.gmail.com>
+Message-ID: <CAK8P3a2KR+O5Ua5hsNgzLQV5-V1pat6JH_WM10Es-oUhXO2OgA@mail.gmail.com>
+Subject: Re: ARM: static kernel in vmalloc space
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     afzal mohammed <afzal.mohd.ma@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:9U2falEcLllQAn3jNc9KAf297+bJuds4lQ+bmMyTLrrjtnr7BwG
+ W43qgl53aPs+ZnWlsiqS/0Akfr1GMstY4usQbNFIaX4FPJS5yiRfm5xfCxBBVta2OYMa1MB
+ ea0/Xo4nQW6jqDDyprK/s1pi9PewIbMF2MMr/le34a8yxc/wiij+hkwgcO0VXsjRfvRmfgd
+ TU2z33vKUJ9eVIfTlhDHQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:55XKTpTDyD4=:ndYmtHh06pmOoLnuWpOqsw
+ ypa/gE/xCZc2vNBX9d7qQGG9GdVLW5wWZGr3cdNJVAnjXqpNNriqp5nB5hE0KjqLEVbhohu3m
+ 39+2awWt3QGQZIj1YPhiCO3di/0qQa/YJi0b7/c7SxvxKpkYe7UvSbzOnflpJAelX8jjLE9tI
+ Ar2oGeZGwpM96x+cYhASre7MqwbglNsghQqYp3ebVUOd8iSNyZw8oJaIjIsCbe5dErIBF3Hmu
+ 3dHecHGKgSt1p8XmUr8STvAun4s/YuzGtfYibw+bRVjz7fvg+yG6QIDTKcJmBZzI2jo8z5MWQ
+ CIRKZusMptM89AkM16VRjB1z66GB+j+gJbHHCgDrcixMIUgIdrs3h2kIafWLO+c4FFbGqZ5Sv
+ Nk1lTD/Xs/VvwoGNcUTWeRpJ47AljIsqnr1MZb4hp5cHbw0uEfNnfQ+80jnJTiktSXmYpajmz
+ BMV+/+isVxxibDf6XL9bk7F4BcwFrRhVTzLLLqaPdX4NqcuPHdpZmupAcYLVsghlu4aEUS3jD
+ SWusCFYo44+A+Qw2TVoGrijK2lHqDnr/Xl+ou2NLDMFwoF5QIarZFfDQ/dcVmmHcEchrbL0YE
+ XGLAHAUqV+yTP3IIN1Hls1douJYCL1hOd+3dVLaUXsN7b1EL5GAQNIvn171+zLZ6eFDkM1XVR
+ OI8S3t9MT7/NBuotTh74FeGHXMSuq882MPmMnGwvwU1P5JFet090xR41RshssXw7qtHmaDZLQ
+ UIwQyYhNJZw4IjgHXTDwZ3IpFd8Jlr23iRgYonKiOiKccU6WSpPZm+WsNnPLNGvW8YLJ5vqr5
+ Nl08Lklz0dmfPD9H/fySM5yLVRp5Dkx2e+8vUiVlPTWYtJGuig=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On some devices bootloader isn't ready to a clamped VDE power, and thus,
-machine hangs on a warm reboot (CPU reset). The VDE power partition is
-turned ON by default on a cold boot, hence VDE driver should keep power
-partition enabled on system's reboot too. This fixes hang on a warm reboot
-on a Tegra20 Acer A500 device, which is handy if Embedded Controller
-driver is unavailable, i.e. cold reboot can't be performed.
+On Thu, May 14, 2020 at 6:25 PM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+> On Thu, May 14, 2020 at 02:41:11PM +0200, Arnd Bergmann wrote:
+> > On Thu, May 14, 2020 at 1:18 PM afzal mohammed <afzal.mohd.ma@gmail.com> wrote:
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/staging/media/tegra-vde/vde.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+> > It's clearly possible to do something very similar for older chips
+> > (v6 or v7 without LPAE, possibly even v5), it just gets harder
+> > while providing less benefit.
+>
+> Forget about doing this for anything without a PIPT cache - or you're
+> going to end up having to flush the data cache each time you enter or
+> exit the kernel.
 
-diff --git a/drivers/staging/media/tegra-vde/vde.c b/drivers/staging/media/tegra-vde/vde.c
-index 85cbbc8f70d3..b64e35b86fb4 100644
---- a/drivers/staging/media/tegra-vde/vde.c
-+++ b/drivers/staging/media/tegra-vde/vde.c
-@@ -1085,9 +1085,17 @@ static int tegra_vde_remove(struct platform_device *pdev)
- 	struct tegra_vde *vde = platform_get_drvdata(pdev);
- 	struct device *dev = &pdev->dev;
- 
-+	pm_runtime_get_sync(dev);
- 	pm_runtime_dont_use_autosuspend(dev);
- 	pm_runtime_disable(dev);
- 
-+	/*
-+	 * Balance RPM state, the VDE power domain is left ON and hardware
-+	 * is clock-gated. It's safe to reboot machine now.
-+	 */
-+	pm_runtime_put_noidle(dev);
-+	clk_disable_unprepare(vde->clk);
-+
- 	misc_deregister(&vde->miscdev);
- 
- 	tegra_vde_dmabuf_cache_unmap_all(vde);
-@@ -1099,6 +1107,16 @@ static int tegra_vde_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static void tegra_vde_shutdown(struct platform_device *pdev)
-+{
-+	/*
-+	 * On some devices bootloader isn't ready to a power-gated VDE on
-+	 * a warm-reboot, machine will hang in that case.
-+	 */
-+	if (pm_runtime_status_suspended(&pdev->dev))
-+		tegra_vde_runtime_resume(&pdev->dev);
-+}
-+
- static __maybe_unused int tegra_vde_pm_suspend(struct device *dev)
- {
- 	struct tegra_vde *vde = dev_get_drvdata(dev);
-@@ -1144,6 +1162,7 @@ MODULE_DEVICE_TABLE(of, tegra_vde_of_match);
- static struct platform_driver tegra_vde_driver = {
- 	.probe		= tegra_vde_probe,
- 	.remove		= tegra_vde_remove,
-+	.shutdown	= tegra_vde_shutdown,
- 	.driver		= {
- 		.name		= "tegra-vde",
- 		.of_match_table = tegra_vde_of_match,
--- 
-2.26.0
+Right, let's forget I said anything about v5 or earlier ;-)
 
+I expected the non-aliasing VIPT caches to work the same as PIPT, can
+you clarify if there is something to be aware of for those? I see that some
+ARMv8 chips and most ARMv6 chips (not OMAP2 and Realview) are
+of that kind, and at we clearly don't want to break running on ARMv8 at
+least.
+
+Anyway my point was that it's best to only do it for LPAE anyway, everything
+else being a distraction, as the only non-LPAE SoCs I could find with
+support for over 2GB are some of the higher-end i.MX6 versions and the
+original highbank.
+
+      Arnd
