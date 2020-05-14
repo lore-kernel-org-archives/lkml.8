@@ -2,294 +2,158 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE1DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C3FC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A079206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:13:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589483606;
-	bh=t6LAsFMJGab9q7la8bLiLmD71GRJ1pRvNju7JJgwi5k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CFphqWGlKlg6mENN0P4sW3fXq1A44YM1c40r9Y008SeWxFYBKp82SbZLv1Cuz0Y1p
-	 wzYQ9P/TFNpWvSjYCXL8pFry5MW34NV+9v8U9vMQyz+/oeoUvRpvRv4LQuPbIPBxmA
-	 IaY2fQk+ejAuO1pba6pwdCGE1tw59rs0kmOIKUDQ=
+	by mail.kernel.org (Postfix) with ESMTP id 2758720675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 19:16:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbgENTNZ (ORCPT
+        id S1727976AbgENTQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 15:13:25 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41490 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727095AbgENTNW (ORCPT
+        Thu, 14 May 2020 15:16:23 -0400
+Received: from smtp-42ac.mail.infomaniak.ch ([84.16.66.172]:43509 "EHLO
+        smtp-42ac.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727835AbgENTQT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 15:13:22 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 63so3282307oto.8;
-        Thu, 14 May 2020 12:13:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1hsjDRxDrqUiJ2zCntl33FowRx8SVYyc1frPwk5HdUU=;
-        b=cwzNovdlpIPu1wa5aa2sP2i9ZnCqjbGhgfUhFHRy7vtS4NmFvdW1BSz4uPc2LxaVJ1
-         ORadOSM2H5Ts+HLI9wgIUpDz3D5txQWtBRx5QlMf4X/J3japAslN3PsY09IS2F2vd+UU
-         2lbCESoYLeN4wKvbMuCBRCcjXPkBbKZConF8gFAJ/3ol6bTiooCmEAd13lNT+ZolDgMk
-         3thaR2OO9xLU+u3LgJ6Wae1vOMR5z08uSXdv5HUe1jZ49a2U+Ca+Bysd1g8JzVarFidw
-         9hqaJx8tEdffeEBvrJQBGB6VpPi8LH3Tv1ZCQ15RZp52GfTG3bCIq+SW5HZnEMsIAMKA
-         oZiQ==
-X-Gm-Message-State: AOAM530HFGn2VmhS1M53zx9NMWCoPM5H9Ajyzw47lS124p+/VLbZ47F2
-        9xByX2ZngMMwzc1mRDRXS8/xF3w=
-X-Google-Smtp-Source: ABdhPJwChB1vgd/fyeUGCU9oe4078K6mWpRpBkNggNqyJzVVUwQdfjyt0tHZ3CPD6L5pc+JJINTcWQ==
-X-Received: by 2002:a9d:7cd1:: with SMTP id r17mr4811626otn.355.1589483600453;
-        Thu, 14 May 2020 12:13:20 -0700 (PDT)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y17sm1008975oou.13.2020.05.14.12.13.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 12:13:19 -0700 (PDT)
-Received: (nullmailer pid 19245 invoked by uid 1000);
-        Thu, 14 May 2020 19:13:18 -0000
-Date:   Thu, 14 May 2020 14:13:18 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-mips@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: clk: Add Baikal-T1 CCU PLLs binding
-Message-ID: <20200514191318.GA10192@bogus>
-References: <20200306130053.BCBFC803078F@mail.baikalelectronics.ru>
- <20200506222300.30895-1-Sergey.Semin@baikalelectronics.ru>
- <20200506222300.30895-2-Sergey.Semin@baikalelectronics.ru>
+        Thu, 14 May 2020 15:16:19 -0400
+Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
+        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 49NLqj360nzlhjYr;
+        Thu, 14 May 2020 21:16:17 +0200 (CEST)
+Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
+        by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 49NLqf39VKzljTrt;
+        Thu, 14 May 2020 21:16:14 +0200 (CEST)
+Subject: Re: [PATCH v5 3/6] fs: Enable to enforce noexec mounts or file exec
+ through O_MAYEXEC
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        John Johansen <john.johansen@canonical.com>,
+        Kentaro Takeda <takedakn@nttdata.co.jp>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Heimes <christian@python.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Deven Bowers <deven.desai@linux.microsoft.com>,
+        Eric Chiang <ericchiang@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Scott Shell <scottsh@microsoft.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steve Dower <steve.dower@python.org>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>
+References: <20200505153156.925111-1-mic@digikod.net>
+ <20200505153156.925111-4-mic@digikod.net>
+ <CAEjxPJ7y2G5hW0WTH0rSrDZrorzcJ7nrQBjfps2OWV5t1BUYHw@mail.gmail.com>
+ <202005131525.D08BFB3@keescook> <202005132002.91B8B63@keescook>
+ <CAEjxPJ7WjeQAz3XSCtgpYiRtH+Jx-UkSTaEcnVyz_jwXKE3dkw@mail.gmail.com>
+ <202005140830.2475344F86@keescook>
+ <CAEjxPJ4R_juwvRbKiCg5OGuhAi1ZuVytK4fKCDT_kT6VKc8iRg@mail.gmail.com>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Message-ID: <b740d658-a2da-5773-7a10-59a0ca52ac6b@digikod.net>
+Date:   Thu, 14 May 2020 21:16:13 +0200
+User-Agent: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200506222300.30895-2-Sergey.Semin@baikalelectronics.ru>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAEjxPJ4R_juwvRbKiCg5OGuhAi1ZuVytK4fKCDT_kT6VKc8iRg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 07, 2020 at 01:22:57AM +0300, Serge Semin wrote:
-> Baikal-T1 Clocks Control Unit is responsible for transformation of a
-> signal coming from an external oscillator into clocks of various
-> frequencies to propagate them then to the corresponding clocks
-> consumers (either individual IP-blocks or clock domains). In order
-> to create a set of high-frequency clocks the external signal is
-> firstly handled by the embedded into CCU PLLs. So the corresponding
-> dts-node is just a normal clock-provider node with standard set of
-> properties. Note as being part of the Baikal-T1 System Controller its
-> DT node is supposed to be a child the system controller node.
+
+On 14/05/2020 18:10, Stephen Smalley wrote:
+> On Thu, May 14, 2020 at 11:45 AM Kees Cook <keescook@chromium.org> wrote:
+>>
+>> On Thu, May 14, 2020 at 08:22:01AM -0400, Stephen Smalley wrote:
+>>> On Wed, May 13, 2020 at 11:05 PM Kees Cook <keescook@chromium.org> wrote:
+>>>>
+>>>> On Wed, May 13, 2020 at 04:27:39PM -0700, Kees Cook wrote:
+>>>>> Like, couldn't just the entire thing just be:
+>>>>>
+>>>>> diff --git a/fs/namei.c b/fs/namei.c
+>>>>> index a320371899cf..0ab18e19f5da 100644
+>>>>> --- a/fs/namei.c
+>>>>> +++ b/fs/namei.c
+>>>>> @@ -2849,6 +2849,13 @@ static int may_open(const struct path *path, int acc_mode, int flag)
+>>>>>               break;
+>>>>>       }
+>>>>>
+>>>>> +     if (unlikely(mask & MAY_OPENEXEC)) {
+>>>>> +             if (sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_MOUNT &&
+>>>>> +                 path_noexec(path))
+>>>>> +                     return -EACCES;
+>>>>> +             if (sysctl_omayexec_enforce & OMAYEXEC_ENFORCE_FILE)
+>>>>> +                     acc_mode |= MAY_EXEC;
+>>>>> +     }
+>>>>>       error = inode_permission(inode, MAY_OPEN | acc_mode);
+>>>>>       if (error)
+>>>>>               return error;
+>>>>>
+>>>>
+>>>> FYI, I've confirmed this now. Effectively with patch 2 dropped, patch 3
+>>>> reduced to this plus the Kconfig and sysctl changes, the self tests
+>>>> pass.
+>>>>
+>>>> I think this makes things much cleaner and correct.
+>>>
+>>> I think that covers inode-based security modules but not path-based
+>>> ones (they don't implement the inode_permission hook).  For those, I
+>>> would tentatively guess that we need to make sure FMODE_EXEC is set on
+>>> the open file and then they need to check for that in their file_open
+>>> hooks.
+>>
+>> I kept confusing myself about what order things happened in, so I made
+>> these handy notes about the call graph:
+>>
+>> openat2(dfd, char * filename, open_how)
+>>     do_filp_open(dfd, filename, open_flags)
+>>         path_openat(nameidata, open_flags, flags)
+>>             do_open(nameidata, file, open_flags)
+>>                 may_open(path, acc_mode, open_flag)
+>>                     inode_permission(inode, MAY_OPEN | acc_mode)
+>>                         security_inode_permission(inode, acc_mode)
+>>                 vfs_open(path, file)
+>>                     do_dentry_open(file, path->dentry->d_inode, open)
+>>                         if (unlikely(f->f_flags & FMODE_EXEC && !S_ISREG(inode->i_mode))) ...
+>>                         security_file_open(f)
+>>                         open()
+>>
+>> So, it looks like adding FMODE_EXEC into f_flags in do_open() is needed in
+>> addition to injecting MAY_EXEC into acc_mode in do_open()? Hmmm
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: linux-mips@vger.kernel.org
-> 
-> ---
-> 
-> Changelog v2:
-> - Rearrange the SoBs.
-> - Discard comments in the bindings file header.
-> - Add dual GPL/BSD license.
-> - Add spaces around the ASCII-graphics in the binding description.
-> - Remove reference to Documentation/devicetree/bindings/clock/clock-bindings.txt
->   file.
-> - Discard redundant object check against "/schemas/clock/clock.yaml#" schema.
-> - Discard redundant descriptions of the "#clock-cells" property.
-> - Remove "reg" property since from now the clock DT node is supposed to be
->   a child of the syscon-compatible system controller node.
-> - Remove "clock-output-names" property support.
-> - Replace "additionalProperties: false" with "unevaluatedProperties: false".
-> - Lowercase the nodes name in the examples.
-> - Use "clock-controller" node name suffix in the examples.
-> - Remove unnecessary comments in the clocks dt-bindings header file.
-> ---
->  .../bindings/clock/baikal,bt1-ccu-pll.yaml    | 127 ++++++++++++++++++
->  include/dt-bindings/clock/bt1-ccu.h           |  16 +++
->  2 files changed, 143 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml
->  create mode 100644 include/dt-bindings/clock/bt1-ccu.h
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml b/Documentation/devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml
-> new file mode 100644
-> index 000000000000..571181758ef2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml
-> @@ -0,0 +1,127 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2020 BAIKAL ELECTRONICS, JSC
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/baikal,bt1-ccu-pll.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Baikal-T1 Clock Control Unit PLL
-> +
-> +maintainers:
-> +  - Serge Semin <fancer.lancer@gmail.com>
-> +
-> +description: |
-> +  Clocks Control Unit is the core of Baikal-T1 SoC System Controller
-> +  responsible for the chip subsystems clocking and resetting. The CCU is
-> +  connected with an external fixed rate oscillator, which signal is transformed
-> +  into clocks of various frequencies and then propagated to either individual
-> +  IP-blocks or to groups of blocks (clock domains). The transformation is done
-> +  by means of PLLs and gateable/non-gateable dividers embedded into the CCU.
-> +  It's logically divided into the next components:
-> +  1) External oscillator (normally XTAL's 25 MHz crystal oscillator, but
-> +     in general can provide any frequency supported by the CCU PLLs).
-> +  2) PLLs clocks generators (PLLs) - described in this binding file.
-> +  3) AXI-bus clock dividers (AXI).
-> +  4) System devices reference clock dividers (SYS).
-> +  which are connected with each other as shown on the next figure:
-> +
-> +          +---------------+
-> +          | Baikal-T1 CCU |
-> +          |   +----+------|- MIPS P5600 cores
-> +          | +-|PLLs|------|- DDR controller
-> +          | | +----+      |
-> +  +----+  | |  |  |       |
-> +  |XTAL|--|-+  |  | +---+-|
-> +  +----+  | |  |  +-|AXI|-|- AXI-bus
-> +          | |  |    +---+-|
-> +          | |  |          |
-> +          | |  +----+---+-|- APB-bus
-> +          | +-------|SYS|-|- Low-speed Devices
-> +          |         +---+-|- High-speed Devices
-> +          +---------------+
+> Just do both in build_open_flags() and be done with it? Looks like he
+> was already setting FMODE_EXEC in patch 1 so we just need to teach
+> AppArmor/TOMOYO to check for it and perform file execute checking in
+> that case if !current->in_execve?
 
-Are you going to just duplicate all this for each sub-block? 
-
-> +
-> +  Each CCU sub-block is represented as a separate dts-node and has an
-> +  individual driver to be bound with.
-> +
-> +  In order to create signals of wide range frequencies the external oscillator
-> +  output is primarily connected to a set of CCU PLLs. There are five PLLs
-> +  to create a clock for the MIPS P5600 cores, the embedded DDR controller,
-> +  SATA, Ethernet and PCIe domains. The last three domains though named by the
-> +  biggest system interfaces in fact include nearly all of the rest SoC
-> +  peripherals. Each of the PLLs is based on True Circuits TSMC CLN28HPM core
-> +  with an interface wrapper (so called safe PLL' clocks switcher) to simplify
-> +  the PLL configuration procedure. The PLLs work as depicted on the next
-> +  diagram:
-> +
-> +      +--------------------------+
-> +      |                          |
-> +      +-->+---+    +---+   +---+ |  +---+   0|\
-> +  CLKF--->|/NF|--->|PFD|...|VCO|-+->|/OD|--->| |
-> +          +---+ +->+---+   +---+ /->+---+    | |--->CLKOUT
-> +  CLKOD---------C----------------+          1| |
-> +       +--------C--------------------------->|/
-> +       |        |                             ^
-> +  Rclk-+->+---+ |                             |
-> +  CLKR--->|/NR|-+                             |
-> +          +---+                               |
-> +  BYPASS--------------------------------------+
-> +  BWADJ--->
-> +
-> +  where Rclk is the reference clock coming  from XTAL, NR - reference clock
-> +  divider, NF - PLL clock multiplier, OD - VCO output clock divider, CLKOUT -
-> +  output clock, BWADJ is the PLL bandwidth adjustment parameter. At this moment
-> +  the binding supports the PLL dividers configuration in accordance with a
-> +  requested rate, while bypassing and bandwidth adjustment settings can be
-> +  added in future if it gets to be necessary.
-> +
-> +  The PLLs CLKOUT is then either directly connected with the corresponding
-> +  clocks consumer (like P5600 cores or DDR controller) or passed over a CCU
-> +  divider to create a signal required for the clock domain.
-> +
-> +  The CCU PLL dts-node uses the common clock bindings with no custom
-> +  parameters. The list of exported clocks can be found in
-> +  'include/dt-bindings/clock/bt1-ccu.h'. Since CCU PLL is a part of the
-> +  Baikal-T1 SoC System Controller its DT node is supposed to be a child of
-> +  later one.
-
-The schema can and should express this. IOW, either move this into the 
-system controller schema or reference this ($ref) from it.
-
-> +
-> +properties:
-> +  compatible:
-> +    const: baikal,bt1-ccu-pll
-> +
-> +  "#clock-cells":
-> +    const: 1
-> +
-> +  clocks:
-> +    description: External reference clock
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: ref_clk
-> +
-> +unevaluatedProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - "#clock-cells"
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  # Clock Control Unit PLL node:
-> +  - |
-> +    clock-controller-pll {
-> +      compatible = "baikal,bt1-ccu-pll";
-> +      #clock-cells = <1>;
-> +
-> +      clocks = <&clk25m>;
-> +      clock-names = "ref_clk";
-
-If there's a register range within the system controller for the pll, 
-then add 'reg' even if Linux doesn't use it.
-
-> +    };
-> +  # Required external oscillator:
-> +  - |
-> +    clk25m: clock-oscillator-25m {
-> +      compatible = "fixed-clock";
-> +      #clock-cells = <0>;
-> +      clock-frequency  = <25000000>;
-> +      clock-output-names = "clk25m";
-> +    };
-> +...
-> diff --git a/include/dt-bindings/clock/bt1-ccu.h b/include/dt-bindings/clock/bt1-ccu.h
-> new file mode 100644
-> index 000000000000..931a4bea67c0
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/bt1-ccu.h
-> @@ -0,0 +1,16 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (C) 2020 BAIKAL ELECTRONICS, JSC
-> + *
-> + * Baikal-T1 CCU clock indices
-> + */
-> +#ifndef __DT_BINDINGS_CLOCK_BT1_CCU_H
-> +#define __DT_BINDINGS_CLOCK_BT1_CCU_H
-> +
-> +#define CCU_CPU_PLL			0
-> +#define CCU_SATA_PLL			1
-> +#define CCU_DDR_PLL			2
-> +#define CCU_PCIE_PLL			3
-> +#define CCU_ETH_PLL			4
-> +
-> +#endif /* __DT_BINDINGS_CLOCK_BT1_CCU_H */
-> -- 
-> 2.25.1
-> 
+I can postpone the file permission check for another series to make this
+one simpler (i.e. mount noexec only). Because it depends on the sysctl
+setting, it is OK to add this check later, if needed. In the meantime,
+AppArmor and Tomoyo could be getting ready for this.
