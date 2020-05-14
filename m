@@ -4,51 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BB4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09570C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE15A20727
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD0032065F
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:54:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482452;
-	bh=DZ5qTTuGiQ8ince+iTyYGDPiQ52kRRQ7QbhT+igfATI=;
+	s=default; t=1589482457;
+	bh=MlcSKljYgpljWuTEmbal7pi1lzXa0+HQgb/c7fOshqM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=raMrwLNTLF5VYU/zM1yDZY0PX/S1NzSCwqu/nkgnTg9YASLHv/mHgVRjLDGRCZN6k
-	 2Ir5SOoJLqat8FU3L5xnkSY7ldEIiw2Pog7mHMlgYHltlXEbLplcn7fBU88VaLpEbo
-	 qOEiDDlwssG951vMeH7qr43mzqZ53+pAQ0XOs00c=
+	b=2mMd8ouW9znslS5gkNQr6bgfcSsPo7HO1L1CWk9//8/5Vsqru5urOsmG7LhO8ra4U
+	 m8dS3062dn3Yjx9K+KxeiZdOxEM3AU5s6JSKe7hbgLua9o/jata3H2CRHHQCVb+Gta
+	 Z24NW+195c0fl0+Wko8MHL2MAmuW7aRGkNQM/71U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbgENSyL (ORCPT
+        id S1728994AbgENSyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:54:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53612 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:54:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728891AbgENSx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 14:53:58 -0400
+        id S1728921AbgENSyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 14:54:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AF9120767;
-        Thu, 14 May 2020 18:53:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4203320801;
+        Thu, 14 May 2020 18:54:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482437;
-        bh=DZ5qTTuGiQ8ince+iTyYGDPiQ52kRRQ7QbhT+igfATI=;
+        s=default; t=1589482441;
+        bh=MlcSKljYgpljWuTEmbal7pi1lzXa0+HQgb/c7fOshqM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LkajXWRpMQX7e39SsJxMzDoEBxT90h4qptYtW4WU4lFVnaYHlswFaF2dOgebB/qxW
-         4ptlkcDEdRtdWINqqm/oWSu6+EJwTUusi/PeqlJdapKhOMGZBR35I9H3dSah/pdsdc
-         KzTujFDVBk1WlcDHDCVHY1HpmUrLRq1FNp0zKnSA=
+        b=SOuUr+VSpsCNrMrR1vx794VS1Tbyc88OIpE4ZLmf8QjxuNoqyRdrfPYLpC48RlmhV
+         PFGmqQkoEdw/G+umHVQ7+xZqSNoNNYl8qcSTSpluLjhZNwpuYI2htXZfU7Acr8w2s7
+         RjTR3Z/SyExqajy7Q0XagWYJHhDLf8ikqYKr0VgM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aurabindo Pillai <aurabindo.pillai@amd.com>,
-        Harry Wentland <Harry.Wentland@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 37/49] drm/amd/display: Prevent dpcd reads with passive dongles
-Date:   Thu, 14 May 2020 14:52:58 -0400
-Message-Id: <20200514185311.20294-37-sashal@kernel.org>
+Cc:     Aymeric Agon-Rambosson <aymeric.agon@yandex.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Kieran Bingham <kbingham@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Nikolay Borisov <n.borisov.lkml@gmail.com>,
+        Jackie Liu <liuyun01@kylinos.cn>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 40/49] scripts/gdb: repair rb_first() and rb_last()
+Date:   Thu, 14 May 2020 14:53:01 -0400
+Message-Id: <20200514185311.20294-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185311.20294-1-sashal@kernel.org>
 References: <20200514185311.20294-1-sashal@kernel.org>
@@ -61,61 +67,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aurabindo Pillai <aurabindo.pillai@amd.com>
+From: Aymeric Agon-Rambosson <aymeric.agon@yandex.com>
 
-[ Upstream commit e6142dd511425cb827b5db869f489eb81f5f994d ]
+[ Upstream commit 50e36be1fb9572b2e4f2753340bdce3116bf2ce7 ]
 
-[why]
-During hotplug, a DP port may be connected to the sink through
-passive adapter which does not support DPCD reads. Issuing reads
-without checking for this condition will result in errors
+The current implementations of the rb_first() and rb_last() gdb
+functions have a variable that references itself in its instanciation,
+which causes the function to throw an error if a specific condition on
+the argument is met.  The original author rather intended to reference
+the argument and made a typo.  Referring the argument instead makes the
+function work as intended.
 
-[how]
-Ensure the link is in aux_mode before initiating operation that result
-in a DPCD read.
-
-Signed-off-by: Aurabindo Pillai <aurabindo.pillai@amd.com>
-Reviewed-by: Harry Wentland <Harry.Wentland@amd.com>
-Acked-by: Aurabindo Pillai <aurabindo.pillai@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Aymeric Agon-Rambosson <aymeric.agon@yandex.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Cc: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Kieran Bingham <kbingham@kernel.org>
+Cc: Douglas Anderson <dianders@chromium.org>
+Cc: Nikolay Borisov <n.borisov.lkml@gmail.com>
+Cc: Jackie Liu <liuyun01@kylinos.cn>
+Cc: Jason Wessel <jason.wessel@windriver.com>
+Link: http://lkml.kernel.org/r/20200427051029.354840-1-aymeric.agon@yandex.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c   | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ scripts/gdb/linux/rbtree.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index be61ae1430ed9..c9c2984138263 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -1422,17 +1422,22 @@ amdgpu_dm_update_connector_after_detect(struct amdgpu_dm_connector *aconnector)
- 		dc_sink_retain(aconnector->dc_sink);
- 		if (sink->dc_edid.length == 0) {
- 			aconnector->edid = NULL;
--			drm_dp_cec_unset_edid(&aconnector->dm_dp_aux.aux);
-+			if (aconnector->dc_link->aux_mode) {
-+				drm_dp_cec_unset_edid(
-+					&aconnector->dm_dp_aux.aux);
-+			}
- 		} else {
- 			aconnector->edid =
--				(struct edid *) sink->dc_edid.raw_edid;
--
-+				(struct edid *)sink->dc_edid.raw_edid;
+diff --git a/scripts/gdb/linux/rbtree.py b/scripts/gdb/linux/rbtree.py
+index 39db889b874c9..c4b9916079178 100644
+--- a/scripts/gdb/linux/rbtree.py
++++ b/scripts/gdb/linux/rbtree.py
+@@ -12,7 +12,7 @@ rb_node_type = utils.CachedType("struct rb_node")
  
- 			drm_connector_update_edid_property(connector,
--					aconnector->edid);
--			drm_dp_cec_set_edid(&aconnector->dm_dp_aux.aux,
--					    aconnector->edid);
-+							   aconnector->edid);
-+
-+			if (aconnector->dc_link->aux_mode)
-+				drm_dp_cec_set_edid(&aconnector->dm_dp_aux.aux,
-+						    aconnector->edid);
- 		}
-+
- 		amdgpu_dm_update_freesync_caps(connector, aconnector->edid);
+ def rb_first(root):
+     if root.type == rb_root_type.get_type():
+-        node = node.address.cast(rb_root_type.get_type().pointer())
++        node = root.address.cast(rb_root_type.get_type().pointer())
+     elif root.type != rb_root_type.get_type().pointer():
+         raise gdb.GdbError("Must be struct rb_root not {}".format(root.type))
  
- 	} else {
+@@ -28,7 +28,7 @@ def rb_first(root):
+ 
+ def rb_last(root):
+     if root.type == rb_root_type.get_type():
+-        node = node.address.cast(rb_root_type.get_type().pointer())
++        node = root.address.cast(rb_root_type.get_type().pointer())
+     elif root.type != rb_root_type.get_type().pointer():
+         raise gdb.GdbError("Must be struct rb_root not {}".format(root.type))
+ 
 -- 
 2.20.1
 
