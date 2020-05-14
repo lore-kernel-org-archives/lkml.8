@@ -2,89 +2,113 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CF9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF4EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3700F206C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 06:55:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F419D206BE
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 07:02:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UiSjcqLv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726022AbgENGz0 (ORCPT
+        id S1725999AbgENHCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 02:55:26 -0400
-Received: from mga07.intel.com ([134.134.136.100]:24279 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725831AbgENGz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 02:55:26 -0400
-IronPort-SDR: LmGVgLkRdaEFxxRrNnTbG+YU0GlEAgYw34/dzCUlj86jByMeJRw6Vgoc+9xFH6z0bNVLytw6bW
- tdG0oK4nQqHw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2020 23:55:25 -0700
-IronPort-SDR: 4EAhcH2eyjRNOzx8+C1/Q5Cp+otOL2Ga0272rzp6JWprrN/Q7Ido8gTOuH7YhUPeM66uO8vav/
- LKhqViWQUQGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,390,1583222400"; 
-   d="scan'208";a="464413086"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
-  by fmsmga006.fm.intel.com with ESMTP; 13 May 2020 23:55:25 -0700
-Date:   Wed, 13 May 2020 23:55:25 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     linux-ext4@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 8/9] fs/ext4: Introduce DAX inode flag
-Message-ID: <20200514065524.GC2140786@iweiny-DESK2.sc.intel.com>
-References: <20200513054324.2138483-1-ira.weiny@intel.com>
- <20200513054324.2138483-9-ira.weiny@intel.com>
- <20200513144706.GH27709@quack2.suse.cz>
- <20200513214154.GB2140786@iweiny-DESK2.sc.intel.com>
- <20200514064335.GB9569@quack2.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200514064335.GB9569@quack2.suse.cz>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+        Thu, 14 May 2020 03:02:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50212 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbgENHCX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 03:02:23 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65EC0C061A0C;
+        Thu, 14 May 2020 00:02:22 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id s20so821693plp.6;
+        Thu, 14 May 2020 00:02:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=exf19t930SX+cfRNGe3IOO9qF0esqQVEBJnT+ceqQ/8=;
+        b=UiSjcqLv1eEZMcvmQdBlNM5ZyA8GwZxaoMw9FDpacqki9xA2V/XiBs03oWn0+JpTvr
+         U2lS4lW8M7veY9L3habkuCeBuEk2nK3kwVsZ2K5f/NAIS7dErrdJg12dVvgXn4tX/Run
+         s2j2m4+t1Rh54mWaYSuiNGIeC11p/VWoJMHkXVOvCT5haLvCbopVP8BhFhduvokHT8pS
+         bTTJq2j8+5IE4NkpAd+8+g8dbxcTr02nwfVX4BhJb+cmJfx6lu3KcA74lvOAZuKO3pOh
+         k5zmgkmUMvINjGYMgwgk5wI5U+0MLBBbXTz/B9oMoucy6h6nFOdB5VgIU6fF/vzGejOP
+         qnjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=exf19t930SX+cfRNGe3IOO9qF0esqQVEBJnT+ceqQ/8=;
+        b=ZDqb0XzS+H7jHLGw8muXs7x5+MkmxDvBnVSGXW/ygtl4MASFJe6DImsbskANYw7n9V
+         lGLENLlVq8cdQSvuLp0FLhO436pW/sy9xnodB+4QMXhbOU/STgKBQ35UzZkU95FbslX5
+         NYyjhbUqxo51GPIKCX4cWsNTPvR0rBCmbxaUeKXy7igRKizPNZF+ZMKe8/2nsjXO+6I1
+         rZ7yeoNet4FKk1B0jqdMPgZWg3WVW5HERmboA9wngoWywUR4zjLELgLH4CMZ44dwFT0C
+         mH6paAEKy/d5Koy//rL+M0Bheqgm91VJeDwJQ12OY0EE9KvLmNjfTu4Sfsq+KKBs3jRI
+         XDag==
+X-Gm-Message-State: AOAM5325qP4kW7BVA3P0/xUxCAhVFPzmjBpXz2Qx31xa7+xyMr7hjZbw
+        8nFt2k5hT2+Q6BlNVIZplg==
+X-Google-Smtp-Source: ABdhPJxCYR2LmEz5QYdvaLfhTkPuGVvRQAIsEbKTvtGgBIEY6YC9lI6Y4UDTOB9L9yVvyTO172nIAQ==
+X-Received: by 2002:a17:902:8c8f:: with SMTP id t15mr2735774plo.183.1589439741756;
+        Thu, 14 May 2020 00:02:21 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4071:5b5:d53:89fb:f860:f992:54ab])
+        by smtp.gmail.com with ESMTPSA id i128sm1446807pfc.149.2020.05.14.00.02.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 May 2020 00:02:20 -0700 (PDT)
+From:   madhuparnabhowmik10@gmail.com
+To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        kuba@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sfr@canb.auug.org.au, frextrite@gmail.com, joel@joelfernandes.org,
+        paulmck@kernel.org, cai@lca.pw,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: [PATCH net] ipv6: Fix suspicious RCU usage warning in ip6mr
+Date:   Thu, 14 May 2020 12:32:04 +0530
+Message-Id: <20200514070204.3108-1-madhuparnabhowmik10@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 08:43:35AM +0200, Jan Kara wrote:
-> On Wed 13-05-20 14:41:55, Ira Weiny wrote:
-> > On Wed, May 13, 2020 at 04:47:06PM +0200, Jan Kara wrote:
-> > >
-> > > So I think you'll have to check
-> > > whether DAX flag is being changed,
-> > 
-> > ext4_dax_dontcache() does check if the flag is being changed.
-> 
-> Yes, but if you call it after inode flags change, you cannot determine that
-> just from flags and EXT4_I(inode)->i_flags. So that logic needs to change.
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-I just caught this email... just after sending V1.
+This patch fixes the following warning:
 
-I've moved where ext4_dax_dontcache() is called.  I think it is ok now with the
-current check.
+=============================
+WARNING: suspicious RCU usage
+5.7.0-rc4-next-20200507-syzkaller #0 Not tainted
+-----------------------------
+net/ipv6/ip6mr.c:124 RCU-list traversed in non-reader section!!
 
-LMK if I've messed it up...  :-/
+ipmr_new_table() returns an existing table, but there is no table at
+init. Therefore the condition: either holding rtnl or the list is empty
+is used.
 
-Ira
+Fixes: d13fee049f ("Default enable RCU list lockdep debugging with .."): WARNING: suspicious RCU usage
+Reported-by: kernel test robot <lkp@intel.com>
+Suggested-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+---
+ net/ipv6/ip6mr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> 								Honza
-> 
-> -- 
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
+diff --git a/net/ipv6/ip6mr.c b/net/ipv6/ip6mr.c
+index 65a54d74acc1..fbe282bb8036 100644
+--- a/net/ipv6/ip6mr.c
++++ b/net/ipv6/ip6mr.c
+@@ -98,7 +98,7 @@ static void ipmr_expire_process(struct timer_list *t);
+ #ifdef CONFIG_IPV6_MROUTE_MULTIPLE_TABLES
+ #define ip6mr_for_each_table(mrt, net) \
+ 	list_for_each_entry_rcu(mrt, &net->ipv6.mr6_tables, list, \
+-				lockdep_rtnl_is_held())
++				lockdep_rtnl_is_held() ||  list_empty(&net->ipv6.mr6_tables))
+ 
+ static struct mr_table *ip6mr_mr_table_iter(struct net *net,
+ 					    struct mr_table *mrt)
+-- 
+2.17.1
+
