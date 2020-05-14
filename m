@@ -2,146 +2,128 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 077DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F626C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0B57206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:22:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589476954;
-	bh=wIMgNNfo0EDDt8NmxxrijoMhNj8Je6+uJKEuTcKCsoQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hQ41RcBsXnIA81v8synSEt3zj6jcJOoxmFS3NU7Qox2IbIeBLtJuVrLFHQFLGUMgv
-	 5LiIQjNk1QBOJkoVeHpw/OZhvZuhoIDjyydU+V6Kmgs+AN1Cco9NiBAErHTzQ5Vnk8
-	 ujw87pjQrC+maAczATclQ7dqXZewNNmDKXdsqFfA=
+	by mail.kernel.org (Postfix) with ESMTP id 0DEEA20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 17:23:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726133AbgENRWe (ORCPT
+        id S1726140AbgENRXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 13:22:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41240 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 13:23:10 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:46908 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbgENRWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 13:22:33 -0400
-Received: from localhost (unknown [122.182.193.86])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 284E3206D8;
-        Thu, 14 May 2020 17:22:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589476953;
-        bh=wIMgNNfo0EDDt8NmxxrijoMhNj8Je6+uJKEuTcKCsoQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O2zdxtCScg6zANPn7hgKwfoSDOdN+BdSGrfM4Dc7c0P7Lt6SYzjA9JJaA1H1zyF37
-         JssAlZm3g2JNlmglXAcfxSlBz2sEo3wndutLsIhwwr4HxhPgp/TlWH0lm5E3+zndvO
-         K1q87xdcYjl3df/m9heCAUDSY31vKczdAalMRUyo=
-Date:   Thu, 14 May 2020 22:52:23 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Robert Foss <robert.foss@linaro.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] arm64: dts: qcom: apq8016-sbc-d3: Add Qualcomm
- APQ8016 SBC + D3 mezzanine
-Message-ID: <20200514172223.GF14092@vkoul-mobl>
-References: <20200422111014.616233-1-robert.foss@linaro.org>
+        id S1725975AbgENRXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 13:23:09 -0400
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1jZHZV-00021o-Ty; Thu, 14 May 2020 11:23:06 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1jZHZU-0001gu-B1; Thu, 14 May 2020 11:23:00 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
+Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Thu, 14 May 2020 11:22:46 -0600
+Message-Id: <20200514172253.6445-3-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200514172253.6445-1-logang@deltatee.com>
+References: <20200514172253.6445-1-logang@deltatee.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200422111014.616233-1-robert.foss@linaro.org>
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH v13 2/9] nvme: Create helper function to obtain command effects
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22-04-20, 13:10, Robert Foss wrote:
-> Add device treee support for the Qualcomm APQ8016 SBC, otherwise known as
-> the Dragonboard 410c with the D3 mezzanine expansion board.
-> 
-> The D3 mezzanine ships in a kit with a OmniVision 5640 sensor module,
-> which is what this DT targets.
-> 
-> Signed-off-by: Robert Foss <robert.foss@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/Makefile           |  1 +
->  arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts | 45 +++++++++++++++++++++
->  2 files changed, 46 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index cc103f7020fd..025362471929 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -1,5 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc-d3.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= apq8096-db820c.dtb
->  dtb-$(CONFIG_ARCH_QCOM) += apq8096-ifc6640.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= ipq6018-cp01-c1.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts
-> new file mode 100644
-> index 000000000000..1b85adeeada1
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-d3.dts
-> @@ -0,0 +1,45 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
+Separate the code to obtain command effects from the code
+to start a passthru request and open code nvme_known_admin_effects()
+in the new helper.
 
-Dual BSD + GPL please
+The new helper function will be necessary for nvmet passthru
+code to determine if we need to change out of interrupt context
+to handle the effects.
 
-> +/*
-> + * Copyright (c) 2015, The Linux Foundation. All rights reserved.
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+---
+ drivers/nvme/host/core.c | 39 ++++++++++++++++++++++-----------------
+ 1 file changed, 22 insertions(+), 17 deletions(-)
 
-we are in 2020 now :)
-
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "apq8016-sbc.dtsi"
-> +
-> +/ {
-> +	model = "Qualcomm Technologies, Inc. APQ 8016 SBC w/ D3 Mezzanine";
-> +	compatible = "qcom,apq8016-sbc", "qcom,apq8016", "qcom,sbc";
-> +};
-> +
-> +&cci_i2c0 {
-> +	/delete-node/ camera_rear@3b;
-> +
-> +	camera_rear@76 {
-> +		compatible = "ovti,ov5640";
-> +		reg = <0x76>;
-> +
-> +		enable-gpios = <&msmgpio 34 GPIO_ACTIVE_HIGH>;
-> +		reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&camera_rear_default>;
-> +
-> +		clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
-> +		clock-names = "xclk";
-> +		clock-frequency = <23880000>;
-> +
-> +		vdddo-supply = <&camera_vdddo_1v8>;
-> +		vdda-supply = <&camera_vdda_2v8>;
-> +		vddd-supply = <&camera_vddd_1v5>;
-> +
-> +		status = "ok";
-> +
-> +		port {
-> +			ov5640_ep: endpoint {
-> +				clock-lanes = <1>;
-> +				data-lanes = <0 2>;
-> +				remote-endpoint = <&csiphy0_ep>;
-> +			};
-> +		};
-> +	};
-> +};
-> -- 
-> 2.25.1
-
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index d22859543e4b..5062a83c3634 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1317,22 +1317,8 @@ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
+ 			metadata, meta_len, lower_32_bits(io.slba), NULL, 0);
+ }
+ 
+-static u32 nvme_known_admin_effects(u8 opcode)
+-{
+-	switch (opcode) {
+-	case nvme_admin_format_nvm:
+-		return NVME_CMD_EFFECTS_CSUPP | NVME_CMD_EFFECTS_LBCC |
+-					NVME_CMD_EFFECTS_CSE_MASK;
+-	case nvme_admin_sanitize_nvm:
+-		return NVME_CMD_EFFECTS_CSE_MASK;
+-	default:
+-		break;
+-	}
+-	return 0;
+-}
+-
+-static u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+-								u8 opcode)
++static u32 nvme_command_effects(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
++				u8 opcode)
+ {
+ 	u32 effects = 0;
+ 
+@@ -1348,7 +1334,26 @@ static u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+ 
+ 	if (ctrl->effects)
+ 		effects = le32_to_cpu(ctrl->effects->acs[opcode]);
+-	effects |= nvme_known_admin_effects(opcode);
++
++	switch (opcode) {
++	case nvme_admin_format_nvm:
++		effects |= NVME_CMD_EFFECTS_CSUPP | NVME_CMD_EFFECTS_LBCC |
++			NVME_CMD_EFFECTS_CSE_MASK;
++		break;
++	case nvme_admin_sanitize_nvm:
++		effects |= NVME_CMD_EFFECTS_CSE_MASK;
++		break;
++	default:
++		break;
++	}
++
++	return effects;
++}
++
++static u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
++			       u8 opcode)
++{
++	u32 effects = nvme_command_effects(ctrl, ns, opcode);
+ 
+ 	/*
+ 	 * For simplicity, IO to all namespaces is quiesced even if the command
 -- 
-~Vinod
+2.20.1
+
