@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE83C433E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2139FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9FBE207D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E68E8206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 18:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1589482409;
-	bh=/3mrCCMOqQSfx+M+6N2tALW8sGXfjx5AdWoOTNPFt4M=;
+	s=default; t=1589482412;
+	bh=RynSNIU6sbVrOBG5pwb//yZ0YoV84kck7xwd8Gr2kB4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ne622PIvoCqMetmyWJbHJ8AsmNdmbPkq9mrsbgwEG6FgJd/Sg11yaxydyNw+7/ZLa
-	 EF0OZXAIWqMpRqnwVXptjQQZwCqhWriz9IwoYVtIcZQyhAK7w0v1QRfr4sHWJgrHma
-	 JK8SohLuP0YMeti3U+prJorQaQ7iGkdMc9KlIGQc=
+	b=dPOOElHHuPtBd94p662XX57ETh7FuWZlGu+zjzkcBiSMFkj+phDshNDOY0euUkN2M
+	 HN9V4JseS3E2Xe5/ww5DH0dw7y+67esU7JvokAxvuYP/LvFmKeXX2adM2zzeqjX38G
+	 lEOtHTEazl7RZw054wZFlEQXT8H1SNP+JMFlkdc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728705AbgENSx2 (ORCPT
+        id S1728730AbgENSxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 14:53:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52392 "EHLO mail.kernel.org"
+        Thu, 14 May 2020 14:53:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728638AbgENSxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728648AbgENSxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 14 May 2020 14:53:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B27E62065F;
-        Thu, 14 May 2020 18:53:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D170820675;
+        Thu, 14 May 2020 18:53:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1589482398;
-        bh=/3mrCCMOqQSfx+M+6N2tALW8sGXfjx5AdWoOTNPFt4M=;
+        s=default; t=1589482399;
+        bh=RynSNIU6sbVrOBG5pwb//yZ0YoV84kck7xwd8Gr2kB4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cygbvBgwJqzytE/m/TgCBsljTRnEBJBIEYtCm9IEheT6z9se8BkzAAjUBNO246kVG
-         NBLmMio0iyubfZa5X0p57bu8DaxvbXqQrTG9Tq5THMYKHWO8j1OJsxnUFuW3pVDPvs
-         ozFqCwD10p1xRssYCakqK0RTdvrX0+2l8jMZ8+B0=
+        b=iw0cCK5yyXRR4un2Cwh7TJW9Azo0SrHfhH/FfbN4CqskHimb2X8OHI6gLZBtW+XrD
+         ULIOvwOO1M0HAnng585UtwG2+UxtGGBcCWYgAUPrJ2Dxq5ItPEG/jSCtN74d6LSsRP
+         D3h4fGtbOL4dkEK51iA2LouP7WUMwb9UOsSzpR8s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 05/49] HID: multitouch: add eGalaxTouch P80H84 support
-Date:   Thu, 14 May 2020 14:52:26 -0400
-Message-Id: <20200514185311.20294-5-sashal@kernel.org>
+Cc:     Artem Borisov <dedsa2002@gmail.com>, Jiri Kosina <jkosina@suse.cz>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 06/49] HID: alps: Add AUI1657 device ID
+Date:   Thu, 14 May 2020 14:52:27 -0400
+Message-Id: <20200514185311.20294-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200514185311.20294-1-sashal@kernel.org>
 References: <20200514185311.20294-1-sashal@kernel.org>
@@ -59,51 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
+From: Artem Borisov <dedsa2002@gmail.com>
 
-[ Upstream commit f9e82295eec141a0569649d400d249333d74aa91 ]
+[ Upstream commit 640e403b1fd24e7f31ac6f29f0b6a21d285ed729 ]
 
-Add support for P80H84 touchscreen from eGalaxy:
+This device is used on Lenovo V130-15IKB variants and uses
+the same registers as U1.
 
-  idVendor           0x0eef D-WAV Scientific Co., Ltd
-  idProduct          0xc002
-  iManufacturer           1 eGalax Inc.
-  iProduct                2 eGalaxTouch P80H84 2019 vDIVA_1204_T01 k4.02.146
-
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Artem Borisov <dedsa2002@gmail.com>
 Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h        | 1 +
- drivers/hid/hid-multitouch.c | 3 +++
- 2 files changed, 4 insertions(+)
+ drivers/hid/hid-alps.c | 1 +
+ drivers/hid/hid-ids.h  | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/hid/hid-alps.c b/drivers/hid/hid-alps.c
+index fa704153cb00d..c2a2bd5288906 100644
+--- a/drivers/hid/hid-alps.c
++++ b/drivers/hid/hid-alps.c
+@@ -802,6 +802,7 @@ static int alps_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ 		break;
+ 	case HID_DEVICE_ID_ALPS_U1_DUAL:
+ 	case HID_DEVICE_ID_ALPS_U1:
++	case HID_DEVICE_ID_ALPS_1657:
+ 		data->dev_type = U1;
+ 		break;
+ 	default:
 diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 646b98809ed37..ecb5ff8202ef3 100644
+index ecb5ff8202ef3..cc2b6f497f539 100644
 --- a/drivers/hid/hid-ids.h
 +++ b/drivers/hid/hid-ids.h
-@@ -385,6 +385,7 @@
- #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_7349	0x7349
- #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_73F7	0x73f7
- #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001	0xa001
-+#define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002	0xc002
+@@ -81,7 +81,7 @@
+ #define HID_DEVICE_ID_ALPS_U1		0x1215
+ #define HID_DEVICE_ID_ALPS_T4_BTNLESS	0x120C
+ #define HID_DEVICE_ID_ALPS_1222		0x1222
+-
++#define HID_DEVICE_ID_ALPS_1657         0x121E
  
- #define USB_VENDOR_ID_ELAN		0x04f3
- #define USB_DEVICE_ID_TOSHIBA_CLICK_L9W	0x0401
-diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-index 362805ddf3777..03c720b473063 100644
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -1922,6 +1922,9 @@ static const struct hid_device_id mt_devices[] = {
- 	{ .driver_data = MT_CLS_EGALAX_SERIAL,
- 		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
- 			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001) },
-+	{ .driver_data = MT_CLS_EGALAX,
-+		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
-+			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002) },
- 
- 	/* Elitegroup panel */
- 	{ .driver_data = MT_CLS_SERIAL,
+ #define USB_VENDOR_ID_AMI		0x046b
+ #define USB_DEVICE_ID_AMI_VIRT_KEYBOARD_AND_MOUSE	0xff10
 -- 
 2.20.1
 
