@@ -2,85 +2,111 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE94C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56728C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FAE42070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E60A20671
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 14:07:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FFVssbIp"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="kN0PmvDM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgENOGn (ORCPT
+        id S1727116AbgENOHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 10:06:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60044 "EHLO
+        Thu, 14 May 2020 10:07:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726087AbgENOGn (ORCPT
+        by vger.kernel.org with ESMTP id S1726087AbgENOG7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 10:06:43 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C523C061A0F
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:06:42 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id j5so4313902wrq.2
-        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:06:42 -0700 (PDT)
+        Thu, 14 May 2020 10:06:59 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B6B8C061A0C
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:06:59 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id n11so1284633pgl.9
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 07:06:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LNkj51r2L9rZ0K9EyWV0hvRQYzmcF5SBVqNFyVyFPAo=;
-        b=FFVssbIpXryFajjJXelTChxllm6xJFU04WJDqYHF38lQ/dFAnf2M7LYURSvd2MAZLH
-         1aFzJ5ydJ+ryiTLpYI4YhCocurxWwXswgOTYigjFTMJstIFj/kqzctDv7RL4JFBcM55O
-         +ZKs8WrMfnD+KDmRrrXs8Z/FeIbgrcGT3m7Rn28Ve7jUxrDRv4iah9/vpyOz9A7RC9kx
-         ilf3YTjrAeBfYkZnxl7oVDtVX5zOe0QTre9YKfBEldQO+nq+dZRH1JJTuU7lnGhbE/UG
-         yM7qAoLViyV1mRjKxwVf5+28hiHEm9lkR5c2ODp4AA2GEtpKS1GdNnrVQVkyTtf5kSgh
-         78OQ==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Q6a5nhhtlwC3I5RzWhkpkIibe9GsSPKfDndfMfvdcTU=;
+        b=kN0PmvDMVtljFEv8ZZiWnVY21ZcFZaTdWSR1rQHlizhryKZoT6g9M4GrlsOwKVeqJq
+         ntH4vWDYpi91xUTxHfxrLJIJzhXSE+RLmZiXwTZ9Owk/SsspqFBnyMD8YCSLlgaSkK46
+         eF0z/hFDoYIVfwK9h6M5JYCKKus1Bv7kWrO2ZNsAMHINFO3qgY1FwSzhCeiVmBwXTGNg
+         cHPze5zERq3uZ3+sW6yXhCusceImIEWPrA6W5Dzj8mfjw3giik3sNdVcQCk0KFgbY77k
+         eeStU+Y2el2jtJs633pADino/pFOdlt+CZ8sNVncMD6jYCxLRfcV+UUaD0iyePkQydpt
+         hnbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LNkj51r2L9rZ0K9EyWV0hvRQYzmcF5SBVqNFyVyFPAo=;
-        b=aP/yfu948JF4/kopyhih0Z0GLQta7ZynX8wTLcPK4wI87rnAnAy1M5hm/6pyuI6rRO
-         WwvA5sIOq6KKVmNy9Rw129kGzIbcdgheS12PpwjYqYghtXtpl8rUr51+vIJnwwg4OvA7
-         FCXrEithXwH6Qr6pwQKihCh9BpQDJ1QQCS11y0fZoY9supE2E34AzxpPnRSujMkYlZ2Y
-         Ph2ENpLLMml7ZZhAu7q1HVzIWsId7Kb9/ROL1d8cXk8a+XY26O4bevmzwmep1Kjy4UJk
-         UasnLNbkEpV1q0DAAN3A0Ns4dqalMuSDyAVrHurapY9gcGwe/WKUs65CrvVb+UgzoePf
-         YmNA==
-X-Gm-Message-State: AOAM533Bpx9d0dpYsVhzeuqK7kDmSyCJgkctVYKSi9qqm1WOQ+bjf4YW
-        fxO0p955vNnZzZu6JKpHRna21w==
-X-Google-Smtp-Source: ABdhPJwWfEo76YwG+HFwYeVUwbduEOE4F024tHFCHqVD7jVePGd1AlpWVV1SVylPxSX56t17X0n1JQ==
-X-Received: by 2002:a5d:5388:: with SMTP id d8mr5583058wrv.242.1589465200349;
-        Thu, 14 May 2020 07:06:40 -0700 (PDT)
-Received: from localhost.localdomain ([37.120.32.219])
-        by smtp.gmail.com with ESMTPSA id t22sm10487621wmj.37.2020.05.14.07.06.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 May 2020 07:06:39 -0700 (PDT)
-From:   Robert Foss <robert.foss@linaro.org>
-To:     bjorn.andersson@linaro.org
-Cc:     agross@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        Robert Foss <robert.foss@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcom: c630: Add WiFi node
-Date:   Thu, 14 May 2020 16:06:06 +0200
-Message-Id: <20200514140606.1343766-1-robert.foss@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20191018055841.3729591-1-bjorn.andersson@linaro.org>
-References: <20191018055841.3729591-1-bjorn.andersson@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Q6a5nhhtlwC3I5RzWhkpkIibe9GsSPKfDndfMfvdcTU=;
+        b=bGdLopEvowBo1RtMGA81p7u9pNqC8aAUhJ8809ZZHW3XvTxjQAtU/LvfRWrCuP5hib
+         PgoHX6LNMhSToMy9caTeXBRz2iUW1m1WvbGzEjxCBKPhzuXJnavusZCMFE8+x2xEboLE
+         LCq0N6ifaIdOg1cwhTP2UQvgZdKphRhRLZ56SOB+Osw76HPk175D0/LFf2YKQOiaY2qh
+         t2jB4Ly5yn3CBQbJ9GYn6C8SnOLCGKWLz68tOiuoBfYLIPSQE3zWm9NKxSC+SydL9JVK
+         RONETwqKMxnpviUJ1eGTBCA8ml1UjI4V6bYTlEYtS+ySuoMaBPdbELPbKSKMUu3PqWNk
+         tdvg==
+X-Gm-Message-State: AOAM530AYzGABGmc/ylZOrv0R0evJsA06pLcA6AGHAzTRr9NmkeGgQ9O
+        PA+3vJVp7NFamwk/2rbqB0JMFg==
+X-Google-Smtp-Source: ABdhPJznyMcs2R1vd0kHKH4cBcFVIp8kNX0MWajfDDv2D4gE7p+9fLnw22AzwjVOeCG7+qIXLh5N4w==
+X-Received: by 2002:a63:5225:: with SMTP id g37mr4043696pgb.230.1589465219177;
+        Thu, 14 May 2020 07:06:59 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:a45a:373e:9b20:39ea? ([2605:e000:100e:8c61:a45a:373e:9b20:39ea])
+        by smtp.gmail.com with ESMTPSA id g16sm2450843pfh.217.2020.05.14.07.06.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 May 2020 07:06:57 -0700 (PDT)
+Subject: Re: linux-next: build failure after merge of the block tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>
+References: <20200514185737.701b40dd@canb.auug.org.au>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <b2fafdce-2616-cad4-79c8-c8186e4e0272@kernel.dk>
+Date:   Thu, 14 May 2020 08:06:55 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200514185737.701b40dd@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Specify regulators and enable the &wifi node. The firmware uses the 8
-> bit version of the host capability message, so specify this quirk.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+On 5/14/20 2:57 AM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the block tree, today's linux-next build (x86_64
+> allnoconfig) failed like this:
+> 
+> In file included from include/linux/blk-cgroup.h:23,
+>                  from include/linux/writeback.h:14,
+>                  from include/linux/memcontrol.h:22,
+>                  from include/linux/swap.h:9,
+>                  from include/linux/suspend.h:5,
+>                  from arch/x86/kernel/asm-offsets.c:13:
+> include/linux/blkdev.h: In function 'blk_io_schedule':
+> include/linux/blkdev.h:1857:26: error: 'sysctl_hung_task_timeout_secs' undeclared (first use in this function)
+>  1857 |  unsigned long timeout = sysctl_hung_task_timeout_secs * HZ / 2;
+>       |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Caused by commit
+> 
+>   e6249cdd46e4 ("block: add blk_io_schedule() for avoiding task hung in sync dio")
+> 
+> linux/sched/sysctl.h was not included since CONFIG_BLOCK is not defined.
+> I have applied the following patch for today.
 
-Reviewed-by: Robert Foss <robert.foss@linaro.org>
+Sorry about that, it's fixed in the current tree.
+
+-- 
+Jens Axboe
+
