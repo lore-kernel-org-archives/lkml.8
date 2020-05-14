@@ -2,98 +2,99 @@ Return-Path: <SRS0=2JZx=64=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FD9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9846C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 165D020787
-	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:32:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86BB420758
+	for <linux-kernel@archiver.kernel.org>; Thu, 14 May 2020 23:38:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mYnOUX8G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbgENXcc (ORCPT
+        id S1728376AbgENXiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 14 May 2020 19:32:32 -0400
-Received: from mga06.intel.com ([134.134.136.31]:15797 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728288AbgENXcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 14 May 2020 19:32:32 -0400
-IronPort-SDR: vsyOoDT3emlGh5iOTYA/v1OE3N6hG3JRXGdkBowU334UgS3HTvGenrWxjxedQk7ynQ4151cObB
- TAXcszonfLcA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2020 16:32:31 -0700
-IronPort-SDR: AGf3EJk7tM8SlSjLEDYCzZ23Rp2H3cq6MSyBBtVyJEpl4LUf6aIl2O9wJ2mcgH6a5YyUB3Yo0S
- wQTHkMcurE2Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,392,1583222400"; 
-   d="scan'208";a="341784788"
-Received: from ashadrin-mobl1.ccr.corp.intel.com ([10.249.38.112])
-  by orsmga001.jf.intel.com with ESMTP; 14 May 2020 16:32:23 -0700
-Message-ID: <2a2e2c8c4a9364fa515fe772d2216d77c45ae854.camel@linux.intel.com>
-Subject: Re: [PATCH v8 1/8] tpm: tpm_tis: Make implementation of read16,
- read32 and write32 optional
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     amirmizi6@gmail.com, Eyal.Cohen@nuvoton.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        robh+dt@kernel.org, benoit.houyere@st.com, mark.rutland@arm.com,
-        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
-        arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com
-Date:   Fri, 15 May 2020 02:32:12 +0300
-In-Reply-To: <5e66f2d3e3f2c6af4bafd25f0d228774b8302e8d.camel@linux.intel.com>
-References: <20200512141431.83833-1-amirmizi6@gmail.com>
-         <20200512141431.83833-2-amirmizi6@gmail.com>
-         <5e66f2d3e3f2c6af4bafd25f0d228774b8302e8d.camel@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.1-2 
+        Thu, 14 May 2020 19:38:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728348AbgENXiC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 14 May 2020 19:38:02 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4111FC05BD43
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 16:38:02 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id x77so99249pfc.0
+        for <linux-kernel@vger.kernel.org>; Thu, 14 May 2020 16:38:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QK2T0t/Jj0JFQe8jONLMLZrHIHWtDY8wi6hh+6HVsZc=;
+        b=mYnOUX8GzYHSabSOa5Twez7NHxPD2GmAYqgM4bH8a0VNgWLtlOkVTW5tuAvMEvimR7
+         Etu0z5LT+oPBLhSpHfTCojRjVsrV0q4wrwVu37uzHLuWl78dm4a7u8QwE6iJ/SwN/uBR
+         hs/g4khJraR7/bYg5/+yRId7SUocqo1MZCIUc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QK2T0t/Jj0JFQe8jONLMLZrHIHWtDY8wi6hh+6HVsZc=;
+        b=T1UyU/rZranAlvCnS0WYhNevKiQLOLUcNz3M5XMUQOg4+XyAu6usuke7fbt2opEHNB
+         QzH1Sk0w7DXvZMWoKr130ftzgc4NGbT/RTz9wNOZKsoZQi84oRoWNBsJVNWYmXRJywKZ
+         /Kg5Hic/Sm+sgp+OXrlxX5mhYrBZbzW4mrq+nTE7XeojUn5a7x5f6PxdeXtxTqMSwJ/W
+         P+dX/E76Zvip/DaNr0gCLGyk5EWll/gOFICmFox9PQt3w9rIneR8PnHu0L5RDIlD8tjP
+         v62mZE5WWwpWPgQsBp+Shtd33+b/EOibuoEIdZLYQudZCoUU5tveRt/xseQEX/x7kOwG
+         GaCw==
+X-Gm-Message-State: AOAM532/mim6Lmtz5CpiUUERm4xUjSysoXITXQ1IHh6ZqQDLk2nEEFDc
+        7mADWMvfnEDvjG5JRBXlXszlXA==
+X-Google-Smtp-Source: ABdhPJzr+P5MYAMvALz8QCCQYXEbupCUs1nuQKmzDf3JHLzo0/rZUuIfcPI9IrPK0NfSNUeQxUHy5g==
+X-Received: by 2002:a63:4c5b:: with SMTP id m27mr502104pgl.198.1589499481632;
+        Thu, 14 May 2020 16:38:01 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id 14sm276163pfy.38.2020.05.14.16.38.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 May 2020 16:38:00 -0700 (PDT)
+Date:   Thu, 14 May 2020 16:37:59 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Sharat Masetty <smasetty@codeaurora.org>
+Cc:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jcrouse@codeaurora.org,
+        georgi.djakov@linaro.org
+Subject: Re: [PATCH 1/6] arm64: dts: qcom: sc7180: Add interconnect bindings
+ for GPU
+Message-ID: <20200514233759.GR4525@google.com>
+References: <1589453659-27581-1-git-send-email-smasetty@codeaurora.org>
+ <1589453659-27581-2-git-send-email-smasetty@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1589453659-27581-2-git-send-email-smasetty@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-05-14 at 14:26 +0300, Jarkko Sakkinen wrote:
-> On Tue, 2020-05-12 at 17:14 +0300, amirmizi6@gmail.com wrote:
-> > From: Amir Mizinski <amirmizi6@gmail.com>
-> > 
-> > Only tpm_tis can use memory-mapped I/O, which is truly mapped into
-> > the kernel's memory space. Therefore, using ioread16/ioread32/iowrite32
-> > turns into a straightforward pointer dereference.
-> > Every other driver requires more complicated operations to read more than
-> > one byte at a time and will just fall back to read_bytes/write_bytes.
-> > Therefore, move this common code out of tpm_tis_spi and into tpm_tis_core
-> > so that it is used automatically when low-level drivers do not implement
-> > the specialized methods.
-> > 
-> > Co-developed-by: Alexander Steffen <Alexander.Steffen@infineon.com>
-> > Signed-off-by: Alexander Steffen <Alexander.Steffen@infineon.com>
-> > Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
-> > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> 
-> OK, so I applied this one:
-> 
-> http://git.infradead.org/users/jjs/linux-tpmdd.git/commit/fa05dc792ea02043f3c21467cb4485a38ac19bdf
-> 
-> I.e. no need to carry this one any more in the series. Sorry that
-> I haven't done this before (should have).
+Hi Sharat,
 
-Dropped it. Breaks the compilation:
+On Thu, May 14, 2020 at 04:24:14PM +0530, Sharat Masetty wrote:
 
-ld: drivers/char/tpm/tpm_tis_spi_cr50.o:(.rodata+0x10): undefined reference to `tpm_tis_spi_read16'
-ld: drivers/char/tpm/tpm_tis_spi_cr50.o:(.rodata+0x18): undefined reference to `tpm_tis_spi_read32'
-ld: drivers/char/tpm/tpm_tis_spi_cr50.o:(.rodata+0x20): undefined reference to `tpm_tis_spi_write32'
+> Subject: arm64: dts: qcom: sc7180: Add interconnect bindings for GPU
+>
+> This patch adds the interconnect bindings to the GPU node. This enables
+> the GPU->DDR path bandwidth voting.
 
-Please fix this issue in the next version of the patch and remove my
-reviewed-by. I will have to re-review the patch.
+This patch doesn't add any bindings, it adds the interconnects/interconnect
+configuration for the GPU
 
-/Jarkko
+The order of the patches in this series is a bit odd. Typically you would
+start with the binding changes ("dt-bindings: drm/msm/gpu: Document gpu
+opp table" in this case), then the code needed to support these changes,
+and finally the DT bits for the specific devices/platforms making use
+of the new 'feature'.
 
+It doesn't really matter once the series has landed since the end result
+is exactly the same, however it's the logical order in which most
+reviewers read your patches, and typically also the order in which the
+patches land (especially when multiple trees are involved).
